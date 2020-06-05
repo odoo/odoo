@@ -199,7 +199,13 @@ class PurchaseOrder(models.Model):
         self = self.with_context(ctx)
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
+<<<<<<< HEAD
             if line.product_id:
+=======
+            if new_po.date_planned and not line.display_type:
+                line.date_planned = new_po.date_planned
+            elif line.product_id:
+>>>>>>> 8a48d176f3e... temp
                 seller = line.product_id._select_seller(
                     partner_id=line.partner_id, quantity=line.product_qty,
                     date=line.order_id.date_order and line.order_id.date_order.date(), uom_id=line.product_uom)
