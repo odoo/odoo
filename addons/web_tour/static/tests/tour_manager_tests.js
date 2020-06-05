@@ -20,7 +20,7 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
      * @param {Object[]} params.tours { {string} name, {Object} option, {Object[]} steps }
      */
     async function createTourManager({ consumed_tours, debug, template, tours }) {
-        const parent = testUtils.createParent({ debug });
+        const parent = await testUtils.createParent({ debug });
         const tourManager = new TourManager(parent, consumed_tours);
         tourManager.running_step_delay = 0;
         for (const { name, options, steps } of tours) {

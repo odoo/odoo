@@ -1060,7 +1060,7 @@ QUnit.module('fields', {}, function () {
             var fixture = $('#qunit-fixture');
             var self = this;
 
-            var model = testUtils.createModel({
+            var model = await testUtils.createModel({
                 Model: BasicModel,
                 data: this.data,
             });
@@ -1083,7 +1083,7 @@ QUnit.module('fields', {}, function () {
             });
             var parent = new StandaloneWidget(model);
             model.setParent(parent);
-            testUtils.mock.addMockEnvironment(parent, {
+            await testUtils.mock.addMockEnvironment(parent, {
                 data: self.data,
                 mockRPC: function (route, args) {
                     assert.step(args.method);
