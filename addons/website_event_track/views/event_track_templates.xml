@@ -9,6 +9,7 @@
         <script type="text/javascript" src="/website_event_track/static/src/js/website_event_exhibitor.js"></script>
         <script type="text/javascript" src="/website_event_track/static/src/js/website_event_youtube_embed.js"></script>
         <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track_set_customize_options.js"></script>
+        <script type="text/javascript" src="/website_event_track/static/src/js/website_event_track_timer.js"></script>
     </xpath>
 </template>
 
@@ -498,9 +499,101 @@
             <t t-set="exhibitor_image" t-value="website.image_url(exhibitor, 'image_512')"/>
             <div t-if="exhibitor.image_512" class="card-img-top"
                 t-attf-style="background-image: url(#{exhibitor_image});"/>
-            <div t-else="" class="o_wevent_exhibitor_gradient card-img-top position-relative">
+            <div t-else="" class="o_wevent_gradient card-img-top position-relative">
                 <div class="o_wevent_exhibitor_exhibitor_name position-absolute w-100 text-center text-white" t-esc="exhibitor.partner_name" />
                 <i class="fa fa-suitcase fa-2x mr-3 mb-3 position-absolute text-white-75"/>
+            </div>
+        </div>
+    </div>
+</template>
+
+<template id="lobby">
+    <t t-call="website_event.layout">
+        <div class="oe_structure" id="oe_structure_website_event_lobby_header">
+            <section class="s_banner parallax s_parallax_is_fixed s_parallax_no_overflow_hidden pb0 pt0">
+                <span class="s_parallax_bg oe_img_bg" style="background-image: url('/web/image/website.s_banner_default_image'); background-position: 50% 0;"/>
+            </section>
+            <section class="s_banner parallax s_parallax_is_fixed s_parallax_no_overflow_hidden pt0 pb0" style="background-image: none; background-color: rgb(101, 13, 139) !important;">
+                <span class="s_parallax_bg oe_img_bg text-center" style="background-image: url(&quot;/web/image/website.s_banner_default_image&quot;); background-position: 50% 0px;"/>
+                <div class="o_container_small">
+                    <div class="row s_nb_column_fixed">
+                        <div class="jumbotron rounded pb0 pt4 col-lg-7 offset-lg-2">
+                            <h1 class="text-center">
+                                <font style="font-size: 62px;" class="text-white">Welcome</font>
+                            </h1>
+                            <div class="text-center mb-3">
+                                <a href="#" class="btn btn-alpha text-center">Watch Video</a>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+        <div class="container o_wevent_lobby mt32 mb16 d-print-none">
+            <div>
+                <h5 class="m-0">Live</h5>
+                <hr class="mt-2 pb-1 mb-1" />
+            </div>
+            <t t-set="live_tracks" t-value="event.track_ids.filtered(lambda track: track.is_live)" />
+            <div class="row mx-n2 mt8" t-if="live_tracks">
+                <t t-foreach="live_tracks" t-as="track">
+                    <t t-call="website_event_track.lobby_card" />
+                </t>
+            </div>
+            <div t-else="" class="text-muted font-italic">
+                No live tracks currently.
+            </div>
+            <div>
+                <h5 class="m-0">Starting soon</h5>
+                <hr class="mt-2 pb-1 mb-1" />
+            </div>
+            <div class="row mx-n2 mt8" t-if="upcoming_tracks">
+                <t t-foreach="upcoming_tracks" t-as="track">
+                    <t t-call="website_event_track.lobby_card" />
+                </t>
+            </div>
+            <div t-else="" class="text-muted font-italic">
+                No upcoming tracks currently.
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="lobby_card">
+    <div class="col-md-4 col-sm-6 px-2 col-xs-12 d-flex flex-grow-1">
+        <div class="card o_wevent_track_card w-100 mb-4">
+            <a t-att-href="track.website_url + ('?open_video=1' if track.is_live else '')">
+                <div t-if="track.image" class="card-img-top"
+                    t-attf-style="background-image: url(/web/image/event.track/#{track.id}/image);"/>
+                <div t-elif="track.youtube_video_id"
+                    class="card-img-top"
+                    t-attf-style="background-image: url(https://img.youtube.com/vi/#{track.youtube_video_id}/mqdefault.jpg);"/>
+               <div t-else="" class="o_wevent_gradient card-img-top position-relative">
+                    <i class="fa fa-calendar fa-2x mr-3 mb-3 position-absolute text-white-75"/>
+                </div>
+            </a>
+            <div class="card-body">
+                <a class="card-title d-inline-block h5 mb-2"
+                    t-att-href="track.website_url + ('?open_video=1' if track.is_live else '')" t-esc="track.name" />
+                <div class="o_wevent_track_card_description">
+                    <span t-if="not is_html_empty(track.description)" t-esc="html2plaintext(track.description)" />
+                </div>
+                <div t-if="track.tag_ids">
+                    <ul t-if="track.tag_ids" class="list-inline m-0 mt-2">
+                        <li t-foreach="track.tag_ids" t-as="tag" t-attf-class="list-inline-item" t-if="tag.color != 0">
+                            <a t-attf-class="o_wevent_track_tag badge badge-pill o_tag_color_#{tag.color}"
+                                 t-attf-href="/event/#{ slug(event) }/track/tag/#{ slug(tag) }">
+                                <span t-field="tag.name"/>
+                            </a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <div t-if="track.date > datetime.datetime.now()" class="card-footer">
+                <div>
+                    <span>Starts in</span>
+                    <span class="o_wevent_track_countdown" t-att-data-start="track.date.isoformat()">-</span>
+                </div>
             </div>
         </div>
     </div>

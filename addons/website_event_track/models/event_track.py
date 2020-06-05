@@ -91,7 +91,7 @@ class Track(models.Model):
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
         'Priority', required=True, default='1')
-    image = fields.Image("Image", max_width=128, max_height=128)
+    image = fields.Image("Image", max_width=1024, max_height=1024)
     youtube_event_url = fields.Char('Youtube Event URL',
         help="Configure this URL so that event attendees can see your Track in video!")
     youtube_video_id = fields.Char('Youtube video ID', compute='_compute_youtube_video_id',

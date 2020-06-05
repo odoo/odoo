@@ -17,6 +17,10 @@ class EventType(models.Model):
     website_exhibitor = fields.Boolean(
         string='Exhibitors on Website', compute='_compute_website_menu_data',
         readonly=False, store=True)
+    website_lobby = fields.Boolean(
+        string="Lobby on Website", compute='_compute_website_menu_data',
+        readonly=False, store=True
+    )
 
     @api.depends('website_menu')
     def _compute_website_menu_data(self):
@@ -25,6 +29,7 @@ class EventType(models.Model):
                 event_type.website_track = False
                 event_type.website_track_proposal = False
                 event_type.website_exhibitor = False
+                event_type.website_lobby = False
 
 
 class Event(models.Model):
@@ -45,9 +50,13 @@ class Event(models.Model):
     website_exhibitor = fields.Boolean(
         'Exhibitors on Website', compute='_compute_website_exhibitor',
         readonly=False, store=True)
+    website_lobby = fields.Boolean(
+        'Lobby on Website', compute='_compute_website_lobby',
+        readonly=False, store=True)
     track_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Tracks Menus', domain=[('menu_type', '=', 'track')])
     track_proposal_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Event Proposals Menus', domain=[('menu_type', '=', 'track_proposal')])
     exhibitor_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Exhibitors Menus', domain=[('menu_type', '=', 'exhibitor')])
+    lobby_menu_ids = fields.One2many('website.event.menu', 'event_id', string='Lobby Menus', domain=[('menu_type', '=', 'lobby')])
     allowed_track_tag_ids = fields.Many2many('event.track.tag', relation='event_allowed_track_tags_rel', string='Available Track Tags')
     tracks_tag_ids = fields.Many2many(
         'event.track.tag', relation='event_track_tags_rel', string='Track Tags',
@@ -100,6 +109,14 @@ class Event(models.Model):
             elif not event.website_exhibitor:
                 event.website_exhibitor = False
 
+    @api.depends('event_type_id', 'website_lobby')
+    def _compute_website_lobby(self):
+        for event in self:
+            if event.event_type_id and event.event_type_id != event._origin.event_type_id:
+                event.website_lobby = event.event_type_id.website_lobby
+            elif not event.website_lobby:
+                event.website_lobby = False
+
     @api.depends('track_ids.tag_ids', 'track_ids.tag_ids.color')
     def _compute_tracks_tag_ids(self):
         for event in self:
@@ -108,69 +125,51 @@ class Event(models.Model):
     def _update_website_menus(self):
         super(Event, self)._update_website_menus()
         for event in self:
-            if event.website_track and not event.track_menu_ids:
-                for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_menu_entries()):
-                    menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
-                    event.env['website.event.menu'].create({
-                        'menu_id': menu.id,
-                        'event_id': event.id,
-                        'menu_type': menu_type,
-                    })
-            elif not event.website_track:
-                event.track_menu_ids.mapped('menu_id').unlink()
-            if event.website_track_proposal and not event.track_proposal_menu_ids:
-                for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_track_proposal_menu_entries()):
-                    menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
-                    event.env['website.event.menu'].create({
-                        'menu_id': menu.id,
-                        'event_id': event.id,
-                        'menu_type': menu_type,
-                    })
-            elif not event.website_track_proposal:
-                event.track_proposal_menu_ids.mapped('menu_id').unlink()
-            if event.website_exhibitor and not event.exhibitor_menu_ids:
-                for sequence, (name, url, xml_id, menu_type) in enumerate(event._get_exhibitor_menu_entries()):
-                    menu = super(Event, event)._create_menu(sequence, name, url, xml_id)
-                    event.env['website.event.menu'].create({
-                        'menu_id': menu.id,
-                        'event_id': event.id,
-                        'menu_type': menu_type,
-                    })
-            elif not event.website_exhibitor:
-                event.exhibitor_menu_ids.mapped('menu_id').unlink()
+            for menu_type, menu_entries in event._get_track_module_menu_entries().items():
+                if event['website_%s' % menu_type] and not event['%s_menu_ids' % menu_type]:
+                    for sequence, (name, url) in enumerate(menu_entries):
+                        menu = super(Event, event)._create_menu(sequence, name, url, False)
+                        event.env['website.event.menu'].create({
+                            'menu_id': menu.id,
+                            'event_id': event.id,
+                            'menu_type': menu_type,
+                        })
+                elif not event['website_%s' % menu_type]:
+                    event['%s_menu_ids' % menu_type].mapped('menu_id').unlink()
 
     def write(self, values):
-        track_activated = self.filtered(lambda event: event.website_track)
-        track_deactivated = self.filtered(lambda event: not event.website_track)
-        track_proposal_activated = self.filtered(lambda event: event.website_track_proposal)
-        track_proposal_deactivated = self.filtered(lambda event: not event.website_track_proposal)
-        exhibitor_activated = self.filtered(lambda event: event.website_exhibitor)
-        exhibitor_deactivated = self.filtered(lambda event: not event.website_exhibitor)
+        """ Checks menus:
+        - that were activated and are not anymore
+        - that were deactivated and are now active
+
+        Then calls '_update_website_menus' on matching ones. """
+
+        previous_values = {}
+        menu_types = ['track', 'track_proposal', 'exhibitor', 'lobby']
+        for menu_type in menu_types:
+            previous_values['%s_activated' % menu_type] = self.filtered(lambda event: event['website_%s' % menu_type])
+            previous_values['%s_deactivated' % menu_type] = self.filtered(lambda event: not event['website_%s' % menu_type])
+
         super(Event, self).write(values)
-        to_deactivate = track_activated.filtered(lambda event: not event.website_track)
-        to_activate = track_deactivated.filtered(lambda event: event.website_track)
-        track_proposal_to_deactivate = track_proposal_activated.filtered(lambda event: not event.website_track_proposal)
-        track_proposal_to_activate = track_proposal_deactivated.filtered(lambda event: event.website_track_proposal)
-        exhibitor_to_deactivate = exhibitor_activated.filtered(lambda event: not event.website_exhibitor)
-        exhibitor_to_activate = exhibitor_deactivated.filtered(lambda event: event.website_exhibitor)
-        (to_activate | to_deactivate | track_proposal_to_activate | track_proposal_to_deactivate | exhibitor_to_activate | exhibitor_to_deactivate)._update_website_menus()
 
-    def _get_track_menu_entries(self):
-        self.ensure_one()
-        res = [
-            (_('Talks'), '/event/%s/track' % slug(self), False, 'track'),
-            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 'track')]
-        return res
+        menus_to_update = self.env['event.event']
+        for menu_type in menu_types:
+            menus_to_update |= previous_values['%s_activated' % menu_type].filtered(lambda event: not event['website_%s' % menu_type])
+            menus_to_update |= previous_values['%s_deactivated' % menu_type].filtered(lambda event: event['website_%s' % menu_type])
 
-    def _get_track_proposal_menu_entries(self):
-        self.ensure_one()
-        res = [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 'track_proposal')]
-        return res
+        menus_to_update._update_website_menus()
 
-    def _get_exhibitor_menu_entries(self):
+    def _get_track_module_menu_entries(self):
         self.ensure_one()
-        res = [(_('Exhibitors'), '/event/%s/exhibitor' % slug(self), False, 'exhibitor')]
-        return res
+        return {
+            'track': [
+                (_('Talks'), '/event/%s/track' % slug(self)),
+                (_('Agenda'), '/event/%s/agenda' % slug(self))
+            ],
+            'track_proposal': [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self))],
+            'exhibitor': [(_('Exhibitors'), '/event/%s/exhibitor' % slug(self))],
+            'lobby': [(_('Lobby'), '/event/%s/lobby' % slug(self))]
+        }
 
     def toggle_website_track(self, val):
         self.website_track = val
@@ -180,3 +179,6 @@ class Event(models.Model):
 
     def toggle_website_exhibitor(self, val):
         self.website_exhibitor = val
+
+    def toggle_website_lobby(self, val):
+        self.website_lobby = val

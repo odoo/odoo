@@ -1,23 +1,23 @@
+.o_wevent_gradient {
+    background-image: linear-gradient(120deg, #875A7B, #68465f);
+    padding-top: 50%;
+    opacity: 0.8;
+
+    i {
+        right:0;
+        bottom: 0;
+    }
+}
+
 .o_wevent_exhibitor_card {
     .o_wevent_exhibitor_jitsi_link {
         cursor: pointer;
     }
 
-    .o_wevent_exhibitor_gradient {
-        background-image: linear-gradient(120deg, #875A7B, #68465f);
-        padding-top: 50%;
-        opacity: 0.8;
-
-        i {
-            right:0;
-            bottom: 0;
-        }
-
-        .o_wevent_exhibitor_exhibitor_name {
-            font-size: 1.2rem;
-            top: calc(50% - 1rem);
-            user-select: none;
-        }
+    .o_wevent_gradient .o_wevent_exhibitor_exhibitor_name {
+        font-size: 1.2rem;
+        top: calc(50% - 1rem);
+        user-select: none;
     }
 
     .card-img-top {
@@ -185,6 +185,29 @@
                 border-radius: 50%;
                 height: 32px;
             }
+        }
+    }
+}
+
+.o_wevent_lobby {
+    .o_wevent_track_card {
+        .card-img-top {
+            padding-top: 50%;
+            background-size: cover;
+            background-position: center;
+        }
+
+        // inspired from website_slides' "o_wslides_desc_truncate"
+        .o_wevent_track_card_description {
+            $line-height: 1.3;
+            max-height: 3 * $line-height * 1.2em;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            white-space: normal;
+            line-height: $line-height;
+            display: -webkit-box;
+            -webkit-box-orient: vertical;
+            -webkit-line-clamp: 3;
         }
     }
 }

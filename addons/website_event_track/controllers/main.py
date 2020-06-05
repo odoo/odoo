@@ -11,7 +11,7 @@ from werkzeug.exceptions import NotFound
 
 from odoo import fields, http
 from odoo.http import request
-from odoo.tools import plaintext2html, html2plaintext
+from odoo.tools import plaintext2html, html2plaintext, is_html_empty
 
 
 class WebsiteEventTrackController(http.Controller):
@@ -207,3 +207,21 @@ class WebsiteEventTrackController(http.Controller):
             'user_email': request.env.user.email_formatted if not request.env.user._is_public() else None,
         }
         return request.render("website_event_track.exhibitors", values)
+
+    @http.route('/event/<model("event.event"):event>/lobby', type='http', auth="public", website=True, sitemap=False)
+    def event_lobby(self, event):
+        if not event.can_access_from_current_website():
+            raise NotFound()
+
+        STARTING_SOON_HOURS_DELTA = 3
+        event = event._set_tz_context()
+        values = {
+            'event': event,
+            'upcoming_tracks': event.track_ids.filtered(lambda track:
+                track.date > fields.Datetime.now() and
+                track.date < fields.Datetime.now() + datetime.timedelta(hours=STARTING_SOON_HOURS_DELTA)),
+            'main_object': event,
+            'html2plaintext': html2plaintext,
+            'is_html_empty': is_html_empty
+        }
+        return request.render("website_event_track.lobby", values)

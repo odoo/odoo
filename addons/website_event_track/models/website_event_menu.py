@@ -13,5 +13,6 @@ class EventMenu(models.Model):
     menu_type = fields.Selection([
         ('track', 'Event Tracks Menus'),
         ('track_proposal', 'Event Proposals Menus'),
-        ('exhibitor', 'Exhibitors Menus')
+        ('exhibitor', 'Exhibitors Menus'),
+        ('lobby', 'Lobby Menus')
     ])
