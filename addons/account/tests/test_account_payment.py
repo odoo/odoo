@@ -8,8 +8,8 @@ from odoo.tests.common import Form
 class TestAccountPayment(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.payment_debit_account_id = cls.copy_account(cls.company_data['default_journal_bank'].payment_debit_account_id)
         cls.payment_credit_account_id = cls.copy_account(cls.company_data['default_journal_bank'].payment_credit_account_id)

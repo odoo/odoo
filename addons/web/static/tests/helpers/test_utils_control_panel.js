@@ -225,60 +225,8 @@ odoo.define('web.test_utils_control_panel', function (require) {
      * @param {EventTarget} el
      * @returns {Promise}
      */
-    async function toggleTimeRangeMenu(el) {
-        await click(getNode(el).querySelector(`div.o_time_range_menu > button`));
-    }
-
-    /**
-     * @param {EventTarget} el
-     * @param {string} fieldName
-     * @returns {Promise}
-     */
-    async function selectField(el, fieldName) {
-        await editSelect(
-            findItem(getNode(el), `div.o_time_range_section select`, 0),
-            fieldName
-        );
-    }
-
-    /**
-     * @param {EventTarget} el
-     * @param {string} range
-     * @returns {Promise}
-     */
-    async function selectRange(el, range) {
-        await editSelect(
-            findItem(getNode(el), `div.o_time_range_section select`, 1),
-            range
-        );
-    }
-
-    /**
-     * @param {EventTarget} el
-     * @param {string} comparisonRange
-     * @returns {Promise}
-     */
-    async function selectComparisonRange(el, comparisonRange) {
-        await editSelect(
-            findItem(getNode(el), `div.o_time_range_section select`, 2),
-            comparisonRange
-        );
-    }
-
-    /**
-     * @param {EventTarget} el
-     * @returns {Promise}
-     */
-    async function toggleTimeRangeMenuBox(el) {
-        await click(getNode(el).querySelector(`div.o_time_range_section input`));
-    }
-
-    /**
-     * @param {EventTarget} el
-     * @returns {Promise}
-     */
-    async function applyTimeRange(el) {
-        await click(getNode(el).querySelector(`div.o_time_range_menu ul button`));
+    async function toggleComparisonMenu(el) {
+        await click(getNode(el).querySelector(`div.o_comparison_menu > button`));
     }
 
     /**
@@ -420,13 +368,8 @@ odoo.define('web.test_utils_control_panel', function (require) {
         editFavoriteName,
         saveFavorite,
         deleteFavorite,
-        // TimeRangeMenu interactions
-        toggleTimeRangeMenu,
-        selectField,
-        selectRange,
-        selectComparisonRange,
-        toggleTimeRangeMenuBox,
-        applyTimeRange,
+        // ComparisonMenu interactions
+        toggleComparisonMenu,
         // SearchBar interactions
         getFacetTexts,
         removeFacet,

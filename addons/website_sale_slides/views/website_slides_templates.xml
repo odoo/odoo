@@ -142,7 +142,7 @@
 <template name="Allow Buy Now" id="course_option_buy_course_now" inherit_id="website_sale_slides.course_buy_course_button" active="False" customize_show="True">
     <xpath expr="//div[hasclass('buy_now_button')]" position="inside">
         <div style="margin-top:5px;">
-            <a role="button" class="btn btn-outline-primary btn-block" t-att-href="'/shop/cart/update?product_id=%s&amp;express=1' % channel.product_id.id">
+            <a role="button" class="btn btn-outline-primary btn-block post_link" t-att-href="'/shop/cart/update?product_id=%s&amp;express=1' % channel.product_id.id">
                 <i class="fa fa-bolt"></i> Buy Now
             </a>
         </div>

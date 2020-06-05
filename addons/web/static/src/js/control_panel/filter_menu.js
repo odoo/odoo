@@ -1,8 +1,9 @@
 odoo.define('web.FilterMenu', function (require) {
     "use strict";
 
-    const DropdownMenu = require('web.DropdownMenu');
     const CustomFilterItem = require('web.CustomFilterItem');
+    const DropdownMenu = require('web.DropdownMenu');
+    const { FACET_ICONS } = require("web.searchUtils");
     const { useModel } = require('web.model');
 
     /**
@@ -25,6 +26,13 @@ odoo.define('web.FilterMenu', function (require) {
         //---------------------------------------------------------------------
         // Getters
         //---------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        get icon() {
+            return FACET_ICONS.filter;
+        }
 
         /**
          * @override
@@ -61,9 +69,6 @@ odoo.define('web.FilterMenu', function (require) {
 
     FilterMenu.components = Object.assign({}, DropdownMenu.components, {
         CustomFilterItem,
-    });
-    FilterMenu.defaultProps = Object.assign({}, DropdownMenu.defaultProps, {
-        icon: 'fa fa-filter',
     });
     FilterMenu.props = Object.assign({}, DropdownMenu.props, {
         fields: Object,

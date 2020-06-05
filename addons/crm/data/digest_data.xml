@@ -9,20 +9,49 @@
 
     <data>
         <record id="digest_tip_crm_0" model="digest.tip">
-            <field name="name">CRM: try mailgateway</field>
-            <field name="sequence">2</field>
+            <field name="name">CRM: Create opportunities from incoming emails</field>
+            <field name="sequence">5</field>
             <field name="group_id" ref="sales_team.group_sale_salesman_all_leads"/>
             <field name="tip_description" type="html">
 <div>
     % set email = object.env['crm.team'].search([('alias_name','!=', False)],limit=1).alias_id.display_name
     % if email
-    <strong style="font-size: 16px;">Try the mail gateway</strong>
-    <div style="font-size: 14px;">Email sent to <strong>${email}</strong> generate opportunities in your pipeline.<br/>
-        <div style="text-align:center;margin-top:5px;margin-bottom:2px;">
-            <a href="mailto:${email}" style="background-color:#56b3b5;padding:2px;color:#FFFFFF;font-weight:bold;text-decoration:none;">Try Now</a>
-        </div>
+    <b class="font-16" style="font-size: 20px;line-height: 30px;">Create opportunities from incoming emails</b>
+    <p class="font-12" style="color:#888888;font-size: 15px; line-height: 25px; margin-top: 0;">Emails sent to <strong>${email}</strong> generate opportunities in your pipeline.</p>
+    <img src="/crm/static/src/img/tips-crm-pipeline.jpg" style="max-width: 580px" width="100%" />
+    <div style="text-align:center;margin-top:10px;">
+        <a href="mailto:${email}" target="_blank" style="display:inline-block;background-color:#875a7b;line-height:40px;text-decoration: none;color: #ffffff;border-radius: 3px;font-size:13px;font-weight:bold;text-align:center; padding:0 10px;">Try it now</a>
     </div>
     % endif
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_crm_1" model="digest.tip">
+            <field name="name">CRM: Enrich your contacts</field>
+            <field name="sequence">50</field>
+            <field name="group_id" ref="sales_team.group_sale_salesman_all_leads"/>
+            <field name="tip_description" type="html">
+<div>
+    <b class="font-16" style="font-size: 20px;line-height: 30px;">Enrich your contacts</b>
+    <p class="font-12" style="color:#888888;font-size: 15px; line-height: 25px; margin-top: 0;">Activate the "Partner Autocomplete" feature to fill in your Partner's details faster.</p>
+    <img src="/crm/static/src/img/tips-crm-autocomplete.jpg" style="max-width: 580px" width="100%" />
+    <div style="text-align:center;margin-top:10px;">
+        <a href="/web#action=base_setup.action_general_configuration" target="_blank" style="display:inline-block;background-color:#875a7b;line-height:40px;text-decoration: none;color: #ffffff;border-radius: 3px;font-size:13px;font-weight:bold;text-align:center; padding:0 10px;">Try it now</a>
+    </div>
+</div>
+            </field>
+        </record>
+        <record id="digest_tip_crm_2" model="digest.tip">
+            <field name="name">CRM: Get more leads</field>
+            <field name="sequence">2</field>
+            <field name="group_id" ref="sales_team.group_sale_salesman_all_leads"/>
+            <field name="tip_description" type="html">
+<div>
+    <b class="font-16" style="font-size: 20px;line-height: 30px;">Get more leads</b>
+    <p class="font-12" style="color:#888888;font-size: 15px; line-height: 25px; margin-top: 0;">Activate the lead mining feature from your CRM settings and start generating more leads.</p>
+    <div style="text-align:center;margin-top:10px;">
+        <a href="https://www.odoo.com/documentation/user/13.0/crm/acquire_leads/lead_mining.html" target="_blank" style="display:inline-block;background-color:#875a7b;line-height:40px;text-decoration: none;color: #ffffff;border-radius: 3px;font-size:13px;font-weight:bold;text-align:center; padding:0 10px;">Find out more</a>
+    </div>
 </div>
             </field>
         </record>

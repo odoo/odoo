@@ -616,6 +616,12 @@ body.editor_enable.editor_has_snippets {
     background-color: var(--o-we-snippets-bg-color);
     color: var(--o-we-snippets-color);
 
+    &.ui-draggable-dragging {
+        transform: rotate(3deg);
+        box-shadow: 0 5px 25px -10px black;
+        transition: transform 0.3s, box-shadow 0.3s;
+    }
+
     > :not(.oe_snippet_thumbnail) {
         display: none !important;
     }

@@ -150,6 +150,7 @@ var config = require('web.config');
 var publicWidget = require('web.public.widget');
 var VariantMixin = require('sale.VariantMixin');
 var wSaleUtils = require('website_sale.utils');
+const wUtils = require('website.utils');
 require("web.zoomodoo");
 
 
@@ -516,29 +517,18 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
      * @returns {Promise} never resolved
      */
     _submitForm: function () {
-        var $productCustomVariantValues = $('<input>', {
-            name: 'product_custom_attribute_values',
-            type: "hidden",
-            value: JSON.stringify(this.rootProduct.product_custom_attribute_values)
-        });
-        this.$form.append($productCustomVariantValues);
+        let params = this.rootProduct;
+        params.add_qty = params.quantity;
 
-        var $productNoVariantAttributeValues = $('<input>', {
-            name: 'no_variant_attribute_values',
-            type: "hidden",
-            value: JSON.stringify(this.rootProduct.no_variant_attribute_values)
-        });
-        this.$form.append($productNoVariantAttributeValues);
-
+        params.product_custom_attribute_values = JSON.stringify(params.product_custom_attribute_values);
+        params.no_variant_attribute_values = JSON.stringify(params.no_variant_attribute_values);
+        
         if (this.isBuyNow) {
-            this.$form.append($('<input>', {name: 'express', type: "hidden", value: true}));
+            params.express = true;
         }
 
-        this.$form.trigger('submit', [true]);
-
-        return new Promise(function () {});
+        return wUtils.sendRequest('/shop/cart/update', params);
     },
-
     /**
      * @private
      * @param {MouseEvent} ev

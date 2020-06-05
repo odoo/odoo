@@ -848,8 +848,8 @@ var ListRenderer = BasicRenderer.extend({
     },
     /**
      * Render a single <th> with the informations for a column. If it is not a
-     * field, the th will be empty. Otherwise, it will contains all relevant
-     * information for the field.
+     * field or nolabel attribute is set to "1", the th will be empty.
+     * Otherwise, it will contains all relevant information for the field.
      *
      * @private
      * @param {Object} node
@@ -874,7 +874,7 @@ var ListRenderer = BasicRenderer.extend({
         if (node.attrs.readOnly) {
             $th.addClass('oe_read_only');
         }
-        if (!field) {
+        if (!field || node.attrs.nolabel === '1') {
             return $th;
         }
         var description = string || field.string;

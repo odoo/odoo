@@ -17,7 +17,7 @@
     </record>
     <record id="frais_bancaires_htva_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="l10n_be.frais_bancaires_htva_template"/>
-        <field name="account_id" ref="a656" />
+        <field name="account_id" ref="a6560" />
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
         <field name="label">Frais bancaires HTVA</field>
@@ -28,7 +28,7 @@
     </record>
     <record id="frais_bancaires_tva21_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="l10n_be.frais_bancaires_tva21_template"/>
-        <field name="account_id" ref="a656"/>
+        <field name="account_id" ref="a6560"/>
         <field name="amount_type">percentage</field>
         <field name="tax_ids" eval="[(6, 0, [ref('l10n_be.attn_TVA-21-inclus-dans-prix')])]"/>
         <field name="amount_string">100</field>
@@ -53,7 +53,7 @@
     </record>
     <record id="compte_attente_line_template" model="account.reconcile.model.line.template">
         <field name="model_id" ref="l10n_be.compte_attente_template"/>
-        <field name="account_id" ref="a4990"/>
+        <field name="account_id" ref="a499"/>
         <field name="amount_type">percentage</field>
         <field name="amount_string">100</field>
         <field name="label"></field>

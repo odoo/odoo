@@ -27,7 +27,7 @@ class Digest(models.Model):
             query_res = self._cr.fetchone()
             record.kpi_account_total_revenue_value = query_res and query_res[0] or 0.0
 
-    def compute_kpis_actions(self, company, user):
-        res = super(Digest, self).compute_kpis_actions(company, user)
+    def _compute_kpis_actions(self, company, user):
+        res = super(Digest, self)._compute_kpis_actions(company, user)
         res['kpi_account_total_revenue'] = 'account.action_move_out_invoice_type&menu_id=%s' % self.env.ref('account.menu_finance').id
         return res

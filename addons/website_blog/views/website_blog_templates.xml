@@ -291,7 +291,7 @@ list of filtered posts (by date or tag).
         <div t-if="len(blogs) > 1">in <a t-attf-href="#{blog_url(blog=blog_post.blog_id)}"><b t-field="blog.name"/></a></div>
         <div t-if="len(blog_post.tag_ids) > 0">#
             <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                <a class="badge border mr-1" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
+                <a class="badge border mr-1 post_link" t-attf-href="#{blog_url(tag=slug(one_tag), date_begin=False, date_end=False)}" t-esc="one_tag.name"/>
             </t>
         </div>
     </div>

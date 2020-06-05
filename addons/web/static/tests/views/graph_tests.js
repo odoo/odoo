@@ -4,23 +4,51 @@ odoo.define('web.graph_view_tests', function (require) {
 var searchUtils = require('web.searchUtils');
 var GraphView = require('web.GraphView');
 var testUtils = require('web.test_utils');
+const { sortBy } = require('web.utils');
 
 const cpHelpers = testUtils.controlPanel;
-var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 var patchDate = testUtils.mock.patchDate;
 
-const { INTERVAL_OPTIONS, TIME_RANGE_OPTIONS, COMPARISON_TIME_RANGE_OPTIONS } = searchUtils;
+const { INTERVAL_OPTIONS, PERIOD_OPTIONS, COMPARISON_OPTIONS } = searchUtils;
 
 var INTERVAL_OPTION_IDS = Object.keys(INTERVAL_OPTIONS);
-var TIME_RANGE_OPTION_IDS = Object.keys(TIME_RANGE_OPTIONS);
-var COMPARISON_TIME_RANGE_OPTION_IDS = Object.keys(COMPARISON_TIME_RANGE_OPTIONS);
+
+const yearIds = [];
+const otherIds = [];
+for (const id of Object.keys(PERIOD_OPTIONS)) {
+    const option = PERIOD_OPTIONS[id];
+    if (option.granularity === 'year') {
+        yearIds.push(id);
+    } else {
+        otherIds.push(id);
+    }
+}
+const BASIC_DOMAIN_IDS = [];
+for (const yearId of yearIds) {
+    BASIC_DOMAIN_IDS.push(yearId);
+    for (const id of otherIds) {
+        BASIC_DOMAIN_IDS.push(`${yearId}__${id}`);
+    }
+}
+const GENERATOR_INDEXES = {};
+let index = 0;
+for (const id of Object.keys(PERIOD_OPTIONS)) {
+    GENERATOR_INDEXES[id] = index++;
+}
+
+const COMPARISON_OPTION_IDS = Object.keys(COMPARISON_OPTIONS);
+const COMPARISON_OPTION_INDEXES = {};
+index = 0;
+for (const comparisonOptionId of COMPARISON_OPTION_IDS) {
+    COMPARISON_OPTION_INDEXES[comparisonOptionId] = index++;
+}
 
 var f = (a, b) => [].concat(...a.map(d => b.map(e => [].concat(d, e))));
 var cartesian = (a, b, ...c) => (b ? cartesian(f(a, b), ...c) : a);
 
-var COMBINATIONS = cartesian(TIME_RANGE_OPTION_IDS, COMPARISON_TIME_RANGE_OPTION_IDS);
-var COMBINATIONS_WITH_DATE = cartesian(TIME_RANGE_OPTION_IDS, COMPARISON_TIME_RANGE_OPTION_IDS, INTERVAL_OPTION_IDS);
+var COMBINATIONS = cartesian(COMPARISON_OPTION_IDS, BASIC_DOMAIN_IDS);
+var COMBINATIONS_WITH_DATE = cartesian(COMPARISON_OPTION_IDS, BASIC_DOMAIN_IDS, INTERVAL_OPTION_IDS);
 
 QUnit.assert.checkDatasets = function (graph, keys, expectedDatasets) {
     keys = keys instanceof Array ? keys : [keys];
@@ -354,26 +382,33 @@ QUnit.module('Views', {
     QUnit.test('render pie chart in comparison mode', async function (assert) {
         assert.expect(2);
 
+        const unpatchDate = patchDate(2020, 4, 19, 1, 0, 0);
+
         var graph = await createView({
             View: GraphView,
             model: "foo",
             data: this.data,
-            context: {
-                time_ranges: {
-                    field: 'date',
-                    range: 'this_quarter',
-                    comparisonRange: 'previous_period',
-                }
-            },
+            context: { search_default_date_filter: 1, },
             arch: '<graph type="pie">' +
                         '<field name="product_id"/>' +
                 '</graph>',
+            archs: {
+                'foo,false,search': `
+                    <search>
+                        <filter name="date_filter" domain="[]" date="date" default_period="third_quarter"/>
+                    </search>
+                `,
+            },
         });
+
+        await cpHelpers.toggleComparisonMenu(graph);
+        await cpHelpers.toggleMenuItem(graph, 'Date: Previous period');
 
         assert.containsNone(graph, 'div.o_view_nocontent',
         "should not display the no content helper");
         assert.checkLegend(graph, 'No data');
 
+        unpatchDate();
         graph.destroy();
     });
 
@@ -1299,7 +1334,36 @@ QUnit.module('Views', {
             this.data.foo.records.push({id: 19, foo: 31, bar: false, product_id: 41, color_id: 14, date: "2016-12-15"});
             this.data.foo.records.push({id: 20, foo: 109, bar: true, product_id: 41, color_id: 7, date: "2015-06-01"});
 
+            this.data.foo.records = sortBy(this.data.foo.records, 'date');
+
             this.unpatchDate = patchDate(2016, 11, 20, 1, 0, 0);
+
+            const graph = await createView({
+                View: GraphView,
+                model: "foo",
+                data: this.data,
+                arch: `
+                    <graph string="Partners" type="bar">
+                        <field name="foo" type="measure"/>
+                    </graph>
+                `,
+                archs: {
+                    'foo,false,search': `
+                        <search>
+                            <filter name="date" string="Date" context="{'group_by': 'date'}"/>
+                            <filter name="date_filter" string="Date Filter" date="date"/>
+                            <filter name="bar" string="Bar" context="{'group_by': 'bar'}"/>
+                            <filter name="product_id" string="Product" context="{'group_by': 'product_id'}"/>
+                            <filter name="color_id" string="Color" context="{'group_by': 'color_id'}"/>
+                        </search>
+                    `,
+                },
+                viewOptions: {
+                    additionalMeasures: ['product_id'],
+                },
+            });
+
+            this.graph = graph;
 
             var checkOnlyToCheck = true;
             var exhaustiveTest = false || checkOnlyToCheck;
@@ -1326,7 +1390,6 @@ QUnit.module('Views', {
                 for await (var combination of graphGenerator(combinations)) {
                     // we can check particular combinations here
                     if (combination.toString() in self.combinationsToCheck) {
-                        var graph = self.actionManager.getCurrentController().widget;
                         if (self.combinationsToCheck[combination].errorMessage) {
                             assert.strictEqual(
                                 graph.$('.o_nocontent_help p').eq(1).text().trim(),
@@ -1343,17 +1406,22 @@ QUnit.module('Views', {
 
             const GROUPBY_NAMES = ['Date', 'Bar', 'Product', 'Color'];
 
-            // time range menu is assumed to be closed
-            this.selectTimeRanges = async function (timeRangeOption, comparisonTimeRangeOption) {
-                comparisonTimeRangeOption = comparisonTimeRangeOption || 'previous_period';
-                await cpHelpers.toggleTimeRangeMenu(document);
-                await cpHelpers.selectRange(document, timeRangeOption);
-                if (!document.querySelector('div.o_time_range_section input').checked) {
-                    await cpHelpers.toggleTimeRangeMenuBox(document);
+            this.selectTimeRanges = async function (comparisonOptionId, basicDomainId) {
+                const facetEls = graph.el.querySelectorAll('.o_searchview_facet');
+                const facetIndex = [...facetEls].findIndex(el => !!el.querySelector('span.fa-filter'));
+                if (facetIndex > -1) {
+                    await cpHelpers.removeFacet(graph, facetIndex);
                 }
-                await cpHelpers.selectComparisonRange(document, comparisonTimeRangeOption);
-                await cpHelpers.applyTimeRange(document);
-                await cpHelpers.toggleTimeRangeMenu(document);
+                const [yearId, otherId] = basicDomainId.split('__');
+                await cpHelpers.toggleFilterMenu(graph);
+                await cpHelpers.toggleMenuItem(graph, 'Date Filter');
+                await cpHelpers.toggleMenuItemOption(graph, 'Date Filter', GENERATOR_INDEXES[yearId]);
+                if (otherId) {
+                    await cpHelpers.toggleMenuItemOption(graph, 'Date Filter', GENERATOR_INDEXES[otherId]);
+                }
+                const itemIndex = COMPARISON_OPTION_INDEXES[comparisonOptionId];
+                await cpHelpers.toggleComparisonMenu(graph);
+                await cpHelpers.toggleMenuItem(graph, itemIndex);
             };
 
             // groupby menu is assumed to be closed
@@ -1361,42 +1429,42 @@ QUnit.module('Views', {
                 intervalOption = intervalOption || 'month';
                 const optionIndex = INTERVAL_OPTION_IDS.indexOf(intervalOption);
 
-                await cpHelpers.toggleGroupByMenu(document);
+                await cpHelpers.toggleGroupByMenu(graph);
                 let wasSelected = false;
                 if (this.keepFirst) {
-                    if (cpHelpers.isItemSelected(document, 2)) {
+                    if (cpHelpers.isItemSelected(graph, 2)) {
                         wasSelected = true;
-                        await cpHelpers.toggleMenuItem(document, 2);
+                        await cpHelpers.toggleMenuItem(graph, 2);
                     }
                 }
-                await cpHelpers.toggleMenuItem(document, 0);
-                if (!cpHelpers.isOptionSelected(document, 0, optionIndex)) {
-                    await cpHelpers.toggleMenuItemOption(document, 0, optionIndex);
+                await cpHelpers.toggleMenuItem(graph, 0);
+                if (!cpHelpers.isOptionSelected(graph, 0, optionIndex)) {
+                    await cpHelpers.toggleMenuItemOption(graph, 0, optionIndex);
                 }
                 for (let i = 0; i < INTERVAL_OPTION_IDS.length; i++) {
                     const oId = INTERVAL_OPTION_IDS[i];
-                    if (oId !== intervalOption && cpHelpers.isOptionSelected(document, 0, i)) {
-                        await cpHelpers.toggleMenuItemOption(document, 0, i);
+                    if (oId !== intervalOption && cpHelpers.isOptionSelected(graph, 0, i)) {
+                        await cpHelpers.toggleMenuItemOption(graph, 0, i);
                     }
                 }
 
                 if (this.keepFirst) {
-                    if (wasSelected && !cpHelpers.isItemSelected(document, 2)) {
-                        await cpHelpers.toggleMenuItem(document, 2);
+                    if (wasSelected && !cpHelpers.isItemSelected(graph, 2)) {
+                        await cpHelpers.toggleMenuItem(graph, 2);
                     }
                 }
-                await cpHelpers.toggleGroupByMenu(document);
+                await cpHelpers.toggleGroupByMenu(graph);
 
             };
 
             // groupby menu is assumed to be closed
             this.selectGroupBy = async function (groupByName) {
-                await cpHelpers.toggleGroupByMenu(document);
+                await cpHelpers.toggleGroupByMenu(graph);
                 const index = GROUPBY_NAMES.indexOf(groupByName);
-                if (!cpHelpers.isItemSelected(document, index)) {
-                    await cpHelpers.toggleMenuItem(document, index);
+                if (!cpHelpers.isItemSelected(graph, index)) {
+                    await cpHelpers.toggleMenuItem(graph, index);
                 }
-                await cpHelpers.toggleGroupByMenu(document);
+                await cpHelpers.toggleGroupByMenu(graph);
             };
 
             this.setConfig = async function (combination) {
@@ -1410,53 +1478,27 @@ QUnit.module('Views', {
                 await testUtils.dom.click($(`.o_control_panel .o_graph_button[data-mode="${mode}"]`));
             };
 
-            // // create an action manager to test the interactions with the search view
-            this.actionManager = await createActionManager({
-                data: this.data,
-                archs: {
-                    'foo,false,graph': '<graph string="Partners" type="bar">' +
-                        '<field name="foo" type="measure"/>' +
-                    '</graph>',
-                    'foo,false,search': '<search>' +
-                        '<filter name="date" string="Date" context="{\'group_by\': \'date\'}"/>' +
-                        '<filter name="bar" string="Bar" context="{\'group_by\': \'bar\'}"/>' +
-                        '<filter name="product_id" string="Product" context="{\'group_by\': \'product_id\'}"/>' +
-                        '<filter name="color_id" string="Color" context="{\'group_by\': \'color_id\'}"/>' +
-                    '</search>',
-                },
-            });
-
-            await this.actionManager.doAction({
-                res_model: 'foo',
-                type: 'ir.actions.act_window',
-                views: [[false, 'graph']],
-                flags: {
-                    graph: {
-                        additionalMeasures: ['product_id'],
-                    }
-                },
-            });
         },
         afterEach: function () {
             this.unpatchDate();
-            this.actionManager.destroy();
+            this.graph.destroy();
         },
     }, function () {
         QUnit.test('comparison with one groupby equal to comparison date field', async function (assert) {
             assert.expect(11);
 
             this.combinationsToCheck = {
-                'last_30_days,previous_period,day': {
-                    labels: [...Array(7).keys()].map(x => [x]),
-                    legend: ["Last 30 Days", "Previous Period"],
+                'previous_period,this_year__this_month,day': {
+                    labels: [...Array(6).keys()].map(x => [x]),
+                    legend: ["December 2016", "November 2016"],
                     datasets: [
                         {
-                            data: [26, 53, 2, 63, 110, 48, 48],
-                            label: "Last 30 Days",
+                            data: [110, 48, 26, 53, 63, 4],
+                            label: "December 2016",
                         },
                         {
-                            data: [24, 53],
-                            label: "Previous Period",
+                            data: [53, 24, 2, 48],
+                            label: "November 2016",
                         }
                     ],
                 }
@@ -1466,25 +1508,24 @@ QUnit.module('Views', {
             await this.testCombinations(combinations, assert);
             await this.setMode('line');
             await this.testCombinations(combinations, assert);
-            this.combinationsToCheck['last_30_days,previous_period,day'] = {
-                labels: [...Array(7).keys()].map(x => [x]),
+            this.combinationsToCheck['previous_period,this_year__this_month,day'] = {
+                labels: [...Array(6).keys()].map(x => [x]),
                 legend: [
-                    "2016-12-15,2016-11-03",
-                    "2016-12-17,2016-11-01",
-                    "2016-11-22",
+                    "2016-12-01,2016-11-01",
+                    "2016-12-10,2016-11-03",
+                    "2016-12-15,2016-11-22",
+                    "2016-12-17,2016-11-30",
                     "2016-12-19",
-                    "2016-12-01",
-                    "2016-12-10",
-                    "2016-11-30",
+                    "2016-12-20"
                 ],
                 datasets: [
                     {
-                        data: [26, 53, 2, 63, 110, 48, 48],
-                        label: "Last 30 Days",
+                        data: [ 110, 48, 26, 53, 63, 4],
+                        label: "December 2016",
                     },
                     {
-                        data: [24, 53, 0, 0, 0, 0, 0],
-                        label: "Previous Period",
+                        data: [ 53, 24, 2, 48, 0, 0],
+                        label: "November 2016",
                     }
                 ],
             };
@@ -1492,8 +1533,8 @@ QUnit.module('Views', {
             await this.testCombinations(combinations, assert);
 
             // isNotVisible can not have two elements so checking visibility of first element
-            assert.isNotVisible(this.actionManager.$('button[data-order]:first'),
-                "there should not be order button in comparison mode")
+            assert.isNotVisible(this.graph.$('button[data-order]:first'),
+                "there should not be order button in comparison mode");
             assert.ok(true, "No combination causes a crash");
         });
 
@@ -1501,17 +1542,17 @@ QUnit.module('Views', {
             assert.expect(10);
 
             this.combinationsToCheck = {
-                'last_30_days,previous_period': {
+                'previous_period,this_year__this_month': {
                     labels: [[]],
-                    legend: ["Last 30 Days", "Previous Period"],
+                    legend: ["December 2016", "November 2016"],
                     datasets: [
                         {
-                            data: [350],
-                            label: "Last 30 Days",
+                            data: [304],
+                            label: "December 2016",
                         },
                         {
-                            data: [77],
-                            label: "Previous Period",
+                            data: [127],
+                            label: "November 2016",
                         }
                     ],
                 }
@@ -1520,34 +1561,34 @@ QUnit.module('Views', {
             var combinations = COMBINATIONS;
             await this.testCombinations(combinations, assert);
 
-            this.combinationsToCheck['last_30_days,previous_period'] = {
+            this.combinationsToCheck['previous_period,this_year__this_month'] = {
                 labels: [[''], [], ['']],
-                legend: ["Last 30 Days", "Previous Period"],
+                legend: ["December 2016", "November 2016"],
                 datasets: [
                     {
-                        data: [undefined, 350],
-                        label: "Last 30 Days",
+                        data: [undefined, 304],
+                        label: "December 2016",
                     },
                     {
-                        data: [undefined, 77],
-                        label: "Previous Period",
+                        data: [undefined, 127],
+                        label: "November 2016",
                     }
                 ],
             };
             await this.setMode('line');
             await this.testCombinations(combinations, assert);
 
-            this.combinationsToCheck['last_30_days,previous_period'] =  {
+            this.combinationsToCheck['previous_period,this_year__this_month'] =  {
                 labels: [[]],
                 legend: ["Total"],
                 datasets: [
                     {
-                        data: [350],
-                        label: "Last 30 Days",
+                        data: [304],
+                        label: "December 2016",
                     },
                     {
-                        data: [77],
-                        label: "Previous Period",
+                        data: [127],
+                        label: "November 2016",
                     }
                 ],
             };
@@ -1561,17 +1602,17 @@ QUnit.module('Views', {
             assert.expect(10);
 
             this.combinationsToCheck = {
-                'last_30_days,previous_period': {
-                    labels: [["xphone"],["xpad"],["Undefined"]],
-                    legend: ["Last 30 Days", "Previous Period"],
+                'previous_period,this_year__this_month': {
+                    labels: [["xpad"], ["xphone"],["Undefined"]],
+                    legend: ["December 2016", "November 2016"],
                     datasets: [
                         {
-                            data: [151, 151, 48],
-                            label: "Last 30 Days",
+                            data: [ 155, 149, 0],
+                            label: "December 2016",
                         },
                         {
-                            data: [24, 53, 0],
-                            label: "Previous Period",
+                            data: [ 53, 26, 48],
+                            label: "November 2016",
                         }
                     ],
                 }
@@ -1581,34 +1622,34 @@ QUnit.module('Views', {
             await this.selectGroupBy('Product');
             await this.testCombinations(combinations, assert);
 
-            this.combinationsToCheck['last_30_days,previous_period'] = {
-                labels: [["xphone"],["xpad"]],
-                legend: ["Last 30 Days", "Previous Period"],
+            this.combinationsToCheck['previous_period,this_year__this_month'] = {
+                labels: [["xpad"], ["xphone"]],
+                legend: ["December 2016", "November 2016"],
                 datasets: [
                     {
-                        data: [151, 151],
-                        label: "Last 30 Days",
+                        data: [155, 149],
+                        label: "December 2016",
                     },
                     {
-                        data: [24, 53],
-                        label: "Previous Period",
+                        data: [53, 26],
+                        label: "November 2016",
                     }
                 ],
             };
             await this.setMode('line');
             await this.testCombinations(combinations, assert);
 
-            this.combinationsToCheck['last_30_days,previous_period'] = {
-                labels: [["xphone"],["xpad"],["Undefined"]],
-                legend: ["xphone", "xpad", "Undefined"],
+            this.combinationsToCheck['previous_period,this_year__this_month'] = {
+                labels: [["xpad"], ["xphone"], ["Undefined"]],
+                legend: ["xpad", "xphone", "Undefined"],
                 datasets: [
                     {
-                        data: [151, 151, 48],
-                        label: "Last 30 Days",
+                        data: [ 155, 149, 0],
+                        label: "December 2016",
                     },
                     {
-                        data: [24, 53, 0],
-                        label: "Previous Period",
+                        data: [ 53, 26, 48],
+                        label: "November 2016",
                     }
                 ],
             };
@@ -1623,27 +1664,37 @@ QUnit.module('Views', {
 
             this.keepFirst = true;
             this.combinationsToCheck = {
-                'last_7_days,previous_period,day': {
-                    labels: [...Array(3).keys()].map(x => [x]),
+                'previous_period,this_year__this_month,day': {
+                    labels: [...Array(6).keys()].map(x => [x]),
                     legend: [
-                        "Last 7 Days/xphone",
-                        "Last 7 Days/xpad",
-                        "Previous Period/xphone"
+                        "December 2016/xpad",
+                        "December 2016/xphone",
+                        "November 2016/xpad",
+                        "November 2016/xphone",
+                        "November 2016/Undefined"
                     ],
                     datasets: [
                         {
-                            data: [3, 53, 0],
-                            label: "Last 7 Days/xphone",
+                          data: [ 65, 0, 23, 0, 63, 4],
+                          label: "December 2016/xpad"
                         },
                         {
-                            data: [23, 0, 63],
-                            label: "Last 7 Days/xpad",
+                          data: [ 45, 48, 3, 53, 0, 0],
+                          label: "December 2016/xphone"
                         },
                         {
-                            data: [48],
-                            label: "Previous Period/xphone",
+                          data: [ 53, 0, 0, 0],
+                          label: "November 2016/xpad"
+                        },
+                        {
+                          data: [ 0, 24, 2, 0],
+                          label: "November 2016/xphone"
+                        },
+                        {
+                          data: [ 0, 0, 0, 48],
+                          label: "November 2016/Undefined"
                         }
-                    ],
+                      ]
                 }
             };
 
@@ -1654,24 +1705,29 @@ QUnit.module('Views', {
             await this.testCombinations(combinations, assert);
 
 
-            this.combinationsToCheck['last_7_days,previous_period,day'] = {
-                labels: [[0,"xphone"], [1,"xphone"], [2, "xpad"], [0, "xpad"]],
+            this.combinationsToCheck['previous_period,this_year__this_month,day'] = {
+                labels: [[0, "xpad"], [0, "xphone"], [1, "xphone"], [2, "xphone"], [2, "xpad"], [3, "xphone"], [4, "xpad"], [5, "xpad"], [3, "Undefined"]],
                 legend: [
-                    "2016-12-15,2016-12-10/xphone",
-                    "2016-12-17/xphone",
+                    "2016-12-01,2016-11-01/xpad",
+                    "2016-12-01,2016-11-01/xphone",
+                    "2016-12-10,2016-11-03/xphone",
+                    "2016-12-15,2016-11-22/xphone",
+                    "2016-12-15,2016-11-22/xpad",
+                    "2016-12-17,2016-11-30/xphone",
                     "2016-12-19/xpad",
-                    "2016-12-15,2016-12-10/xpad"
+                    "2016-12-20/xpad",
+                    "2016-12-17,2016-11-30/Undefine..."
                 ],
                 datasets: [
                     {
-                        data: [3, 53, 63, 23],
-                        label: "Last 7 Days",
+                      "data": [ 65, 45, 48, 3, 23, 53, 63, 4, 0],
+                      "label": "December 2016"
                     },
                     {
-                        data: [48, 0, 0, 0],
-                        label: "Previous Period",
+                      "data": [ 53, 0, 24, 2, 0, 0, 0, 0, 48],
+                      "label": "November 2016"
                     }
-                ],
+                  ],
             };
 
             await this.setMode('pie');
@@ -1686,60 +1742,60 @@ QUnit.module('Views', {
             assert.expect(8);
 
             this.combinationsToCheck = {
-                'this_year,previous_period,quarter': {
+                'previous_period,this_year,quarter': {
                     labels: [["xphone"], ["xpad"],["Undefined"]],
                     legend: [
-                        "This Year/Q4 2016",
-                        "This Year/Q3 2016",
-                        "Previous Period/Q2 2015"
+                        "2016/Q3 2016",
+                        "2016/Q4 2016",
+                        "2015/Q2 2015"
                     ],
                     datasets: [
                         {
-                            data: [175, 208, 48],
-                            label: "This Year/Q4 2016",
+                            data: [-156, 48, 53],
+                            label: "2016/Q3 2016",
                         },
                         {
-                            data: [-156, 48, 53],
-                            label: "This Year/Q3 2016",
+                            data: [175, 208, 48],
+                            label: "2016/Q4 2016",
                         },
                         {
                             data: [0, 109, 0],
-                            label: "Previous Period/Q2 2015",
+                            label: "2015/Q2 2015",
                         },
                     ]
                 }
             };
 
-            var combinations = COMBINATIONS_WITH_DATE;
+            const combinations = COMBINATIONS_WITH_DATE;
             await this.selectGroupBy('Product');
             await this.testCombinations(combinations, assert);
 
-            this.combinationsToCheck['this_year,previous_period,quarter'] = {
+            this.combinationsToCheck['previous_period,this_year,quarter'] = {
                 labels: [["xphone"], ["xpad"]],
                 legend: [
-                    "This Year/Q4 2016",
-                    "This Year/Q3 2016",
-                    "Previous Period/Q2 2015"
+                    "2016/Q3 2016",
+                    "2016/Q4 2016",
+                    "2015/Q2 2015"
                 ],
                 datasets: [
                     {
-                        data: [175, 208],
-                        label: "This Year/Q4 2016",
+                        data: [-156, 48],
+                        label: "2016/Q3 2016",
                     },
                     {
-                        data: [-156, 48],
-                        label: "This Year/Q3 2016",
+                        data: [175, 208],
+                        label: "2016/Q4 2016",
                     },
                     {
                         data: [0, 109],
-                        label: "Previous Period/Q2 2015",
+                        label: "2015/Q2 2015",
                     },
                 ]
             };
             await this.setMode('line');
             await this.testCombinations(combinations, assert);
 
-            this.combinationsToCheck['this_year,previous_period,quarter'] = {
+            this.combinationsToCheck['previous_period,this_year,quarter'] = {
                 errorMessage: 'Pie chart cannot mix positive and negative numbers. ' +
                                 'Try to change your domain to only display positive results'
             };
@@ -1752,17 +1808,17 @@ QUnit.module('Views', {
             assert.expect(10);
 
             this.combinationsToCheck = {
-                'last_month,previous_year': {
-                    labels: [["xphone"],["Undefined"], ["xpad"]],
-                    legend: ["Last Month/true", "Last Month/false"],
+                'previous_year,this_year__last_month': {
+                    labels: [["xpad"], ["xphone"],["Undefined"] ],
+                    legend: ["November 2016/false", "November 2016/true"],
                     datasets: [
                         {
-                            data: [2, 0, 0],
-                            label: "Last Month/true",
+                            data: [53, 24, 48],
+                            label: "November 2016/false",
                         },
                         {
-                            data: [24, 48, 53],
-                            label: "Last Month/false",
+                            data: [0, 2, 0],
+                            label: "November 2016/true",
                         }
                     ],
                 }
@@ -1773,48 +1829,43 @@ QUnit.module('Views', {
             await this.selectGroupBy('Bar');
             await this.testCombinations(combinations, assert);
 
-            this.combinationsToCheck['last_month,previous_year'] = {
-                labels: [["xphone"], ["xpad"]],
-                legend: ["Last Month/true", "Last Month/false"],
+            this.combinationsToCheck['previous_year,this_year__last_month'] = {
+                labels: [["xpad"], ["xphone"] ],
+                legend: ["November 2016/false", "November 2016/true"],
                 datasets: [
                     {
-                        data: [2, 0],
-                        label: "Last Month/true",
+                        data: [53, 24],
+                        label: "November 2016/false",
                     },
                     {
-                        data: [24, 53],
-                        label: "Last Month/false",
+                        data: [0, 2],
+                        label: "November 2016/true",
                     }
                 ],
             };
             await this.setMode('line');
             await this.testCombinations(combinations, assert);
 
-            this.combinationsToCheck['last_month,previous_year'] = {
-                labels: [
-                    ["xphone", true],
-                    ["xphone", false],
-                    ["Undefined", false],
-                    ["xpad", false],
-                    ["No data"]
-                ],
+            this.combinationsToCheck['previous_year,this_year__last_month'] = {
+                labels:
+                [["xpad", false], ["xphone", false], ["xphone", true], ["Undefined", false], ["No data"]],
                 legend: [
-                    "xphone/true",
-                    "xphone/false",
-                    "Undefined/false",
                     "xpad/false",
+                    "xphone/false",
+                    "xphone/true",
+                    "Undefined/false",
                     "No data"
                 ],
                 datasets: [
                     {
-                        data: [2, 24, 48, 53],
-                        label: "Last Month",
+                      "data": [ 53, 24, 2, 48],
+                      "label": "November 2016"
                     },
                     {
-                        data: [undefined, undefined, undefined, undefined, 1],
-                        label: "Previous Year",
+                      "data": [ undefined, undefined, undefined, undefined, 1],
+                      "label": "November 2015"
                     }
-                ],
+                  ],
             };
             await this.setMode('pie');
             await this.testCombinations(combinations, assert);

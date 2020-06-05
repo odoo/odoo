@@ -37,7 +37,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
             assert.expect(1);
 
             const model = createControlPanelModel();
-            assert.deepEqual(sanitizeFilters(model), [{ type: 'timeRange' }]);
+            assert.deepEqual(sanitizeFilters(model), []);
         });
 
         QUnit.test('one field tag', function (assert) {
@@ -55,7 +55,6 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     fieldType: "many2one",
                     type: "field"
                 },
-                { type: 'timeRange' },
             ]);
         });
 
@@ -67,7 +66,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
             </search>`;
             const fields = this.fields;
             const model = createControlPanelModel({ viewInfo: { arch, fields } });
-            assert.deepEqual(sanitizeFilters(model), [{ type: 'timeRange' }]);
+            assert.deepEqual(sanitizeFilters(model), []);
         });
 
         QUnit.test('one separator tag and one field tag', function (assert) {
@@ -86,7 +85,6 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     fieldType: "many2one",
                     type: "field"
                 },
-                { type: 'timeRange' },
             ]);
         });
 
@@ -104,7 +102,40 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     domain: "[]",
                     type: "filter",
                 },
-                { type: 'timeRange' },
+            ]);
+        });
+
+        QUnit.test('one filter tag with date attribute', function (assert) {
+            assert.expect(1);
+            const arch = `
+                <search>
+                    <filter name="date_filter" string="Date" date="date_field"/>
+                </search>`;
+            const fields = this.fields;
+            const model = createControlPanelModel({ viewInfo: { arch, fields } });
+            const dateFilterId = Object.values(model.state.filters)[0].id;
+            assert.deepEqual(sanitizeFilters(model), [
+                {
+                    defaultOptionId: "this_month",
+                    description: "Date",
+                    fieldName: "date_field",
+                    fieldType: "date",
+                    isDateFilter: true,
+                    hasOptions: true,
+                    type: "filter"
+                  },
+                  {
+                    comparisonOptionId: "previous_period",
+                    dateFilterId,
+                    description: "Date: Previous Period",
+                    type: "comparison"
+                  },
+                  {
+                    comparisonOptionId: "previous_year",
+                    dateFilterId,
+                    description: "Date: Previous Year",
+                    type: "comparison"
+                  }
             ]);
         });
 
@@ -125,7 +156,6 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     hasOptions: true,
                     type: "groupBy",
                 },
-                { type: 'timeRange' },
             ]);
         });
 
@@ -149,7 +179,6 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     domain: "[('bar', '=', 3)]",
                     type: "filter",
                 },
-                { type: 'timeRange' },
             ]);
         });
 
@@ -174,7 +203,6 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     domain: "[('bar', '=', 3)]",
                     type: "filter",
                 },
-                { type: 'timeRange' },
             ]);
         });
 
@@ -199,7 +227,6 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     fieldType: "many2one",
                     type: "field",
                 },
-                { type: 'timeRange' },
             ]);
         });
 
@@ -225,7 +252,6 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     fieldType: "many2one",
                     type: "field"
                 },
-                { type: 'timeRange' },
             ]);
         });
 
@@ -266,7 +292,6 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     type: "favorite",
                     userId: 2
                 },
-                { type: 'timeRange' }
             ]);
 
         });
@@ -286,7 +311,6 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     isDefault: true,
                     type: 'filter'
                 },
-                { type: 'timeRange' },
             ]);
 
         });
@@ -328,7 +352,6 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     isDefault: true,
                     type: 'groupBy',
                 },
-                { type: 'timeRange' },
             ]);
 
         });

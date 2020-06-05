@@ -8,16 +8,15 @@
 
     <data>
         <record id="digest_tip_hr_recruitment_0" model="digest.tip">
-            <field name="name">HR Recruitment: try mailgateway</field>
+            <field name="name">Recruitment: Create new applicants from incoming emails</field>
             <field name="sequence">4</field>
             <field name="group_id" ref="hr_recruitment.group_hr_recruitment_user"/>
             <field name="tip_description" type="html">
 <div>
-    <strong style="font-size: 16px;">Try the mail gateway</strong>
-    <div style="font-size: 14px;">New applicants can be generated from incoming emails. You just need to set email aliases in configuration of job positions.<br/>
-        <div style="text-align:center;margin-top:5px;margin-bottom:2px;">
-            <a href="/web#action=hr_recruitment.action_hr_job_config" style="background-color:#56b3b5;padding:2px;color:#FFFFFF;font-weight:bold;text-decoration:none;">Set Email Aliases</a>
-        </div>
+    <b class="font-16" style="font-size: 20px;line-height: 30px">Create new applicants from incoming emails</b>
+    <p class="font-12" style="color:#888888;font-size: 15px; line-height: 25px; margin-top: 0">You just need to set email aliases in your job positions' settings.</p>
+    <div style="text-align:center;margin-top:5px;margin-bottom:10px;">
+        <a href="/web#action=hr_recruitment.action_hr_job_config" target="_blank" style="display:inline-block;background-color:#875a7b;line-height:40px;text-decoration: none;color: #ffffff;border-radius: 3px;font-size:13px;font-weight:bold;text-align:center; padding:0 10px;">Set Email Aliases</a>
     </div>
 </div>
             </field>

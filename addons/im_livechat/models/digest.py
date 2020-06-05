@@ -42,8 +42,8 @@ class Digest(models.Model):
                 ('partner_id', '=', self.env.user.partner_id.id)], ['partner_id', 'time_to_answer'], ['partner_id'])
             record.kpi_livechat_response_value = "%.2f" % sum([response['time_to_answer'] for response in response_time]) or 0
 
-    def compute_kpis_actions(self, company, user):
-        res = super(Digest, self).compute_kpis_actions(company, user)
+    def _compute_kpis_actions(self, company, user):
+        res = super(Digest, self)._compute_kpis_actions(company, user)
         res['kpi_livechat_rating'] = 'im_livechat.rating_rating_action_livechat_report'
         res['kpi_livechat_conversations'] = 'im_livechat.im_livechat_report_operator_action'
         res['kpi_livechat_response'] = 'im_livechat.im_livechat_report_channel_time_to_answer_action'

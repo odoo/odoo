@@ -6,11 +6,9 @@ odoo.define('web.ControlPanelModel', function (require) {
     const { parseArch } = require('web.viewUtils');
     const pyUtils = require('web.py_utils');
 
-    const { COMPARISON_TIME_RANGE_OPTIONS,
-        DEFAULT_INTERVAL, DEFAULT_PERIOD, FACET_ICONS,
-        INTERVAL_OPTIONS, OPTION_GENERATORS,
-        TIME_RANGE_OPTIONS, YEAR_OPTIONS,
-        rankPeriod, rankInterval } = require('web.searchUtils');
+    const { DEFAULT_INTERVAL, DEFAULT_PERIOD, FACET_ICONS,
+        getComparisonOptions, getIntervalOptions, getPeriodOptions,
+        constructDateDomain, rankInterval, yearSelected } = require('web.searchUtils');
 
     const FAVORITE_PRIVATE_GROUP = 1;
     const FAVORITE_SHARED_GROUP = 2;
@@ -41,9 +39,14 @@ odoo.define('web.ControlPanelModel', function (require) {
      *      @prop {number} groupId the id of some group, actually the group itself,
      *                     the (active) 'groups' are reconstructed in _getGroups.
      *      @prop {string} description the description of the filter
-     *      @prop {string} type 'filter'|'groupBy'|'timeRange'|'field'|'favorite'
+     *      @prop {string} type 'filter'|'groupBy'|'comparison'|'field'|'favorite'
      *
      * Other properties can be present according to the corresponding filter type:
+     *
+     * • type 'comparison':
+     *      @prop {string} comparisonOptionId option identifier (@see COMPARISON_OPTIONS).
+     *      @prop {string} dateFilterId the id of a date filter (filter of type 'filter'
+     *                                      with isDateFilter=true)
      *
      * • type 'filter':
      *      @prop {number} groupNumber used to separate items in the 'Filters' menu
@@ -53,15 +56,15 @@ odoo.define('web.ControlPanelModel', function (require) {
      *      @if isDefault = true:
      *          > @prop {number} [defaultRank=-5] used to determine the order of
      *          >                activation of default filters
-     *      @prop {boolean} [hasOptions] true if the filter comes from an arch node
+     *      @prop {boolean} [isDateFilter] true if the filter comes from an arch node
      *                      with a valid 'date' attribute.
-     *      @if hasOptions = true
+     *      @if isDateFilter = true
+     *          > @prop {boolean} [hasOptions=true]
      *          > @prop {string} defaultOptionId option identifier determined by
-     *          >                default_period attribute (@see OPTION_GENERATORS).
+     *          >                default_period attribute (@see PERIOD_OPTIONS).
      *          >                Default set to DEFAULT_PERIOD.
      *          > @prop {string} fieldName determined by the value of 'date' attribute
      *          > @prop {string} fieldType 'date' or 'datetime', type of the corresponding field
-     *          > @prop {Objecŧ[]} basicDomains of the form { description, domain }[]
      *      @else
      *          > @prop {string} domain
      *
@@ -79,9 +82,6 @@ odoo.define('web.ControlPanelModel', function (require) {
      *          > @prop {string} defaultOptionId option identifier (see INTERVAL_OPTIONS)
      *                           default set to DEFAULT_INTERVAL.
      *
-     * • type 'timeRange':
-     *      no extra key, a single filter has that type
-     *
      * • type 'field':
      *      @prop {string} fieldName
      *      @prop {string} fieldType
@@ -97,6 +97,8 @@ odoo.define('web.ControlPanelModel', function (require) {
      *          > @prop {Object} defaultAutocompleteValue of the form { value, label, operator }
      *
      * • type: 'favorite':
+     *      @prop {Object} [comparison] of the form {comparisonId, fieldName, fieldDescription,
+     *                      range, rangeDescription, comparisonRange, comparisonRangeDescription, }
      *      @prop {Object} context
      *      @prop {string} domain
      *      @prop {string[]} groupBys
@@ -106,7 +108,6 @@ odoo.define('web.ControlPanelModel', function (require) {
      *      @prop {number} serverSideId
      *      @prop {number} userId
      *      @prop {boolean} [isDefault]
-     *      @prop {Object} [timeRanges] of the form { fieldName, rangeId[, comparisonRangeId] }
      *
      *-------------------------------------------------------------------------
      * Query
@@ -120,16 +121,16 @@ odoo.define('web.ControlPanelModel', function (require) {
      *
      * Other properties must be defined according to the corresponding filter type.
      *
+     * • type 'comparison':
+     *      @prop {string} dateFilterId the id of a date filter (filter of type 'filter'
+     *                                      with hasOptions=true)
+     *      @prop {string} type 'comparison', help when searching if a comparison is active
+     *
      * • type 'filter' with hasOptions=true:
-     *      @prop {string} optionId option identifier (@see OPTION_GENERATORS)
+     *      @prop {string} optionId option identifier (@see PERIOD_OPTIONS)
      *
      * • type 'groupBy' with hasOptions=true:
      *      @prop {string} optionId option identifier (@see INTERVAL_OPTIONS)
-     *
-     * • type 'timeRange':
-     *      @prop {string} fieldName name of a field
-     *      @prop {string} rangeId option identifier (see TIME_RANGE_OPTIONS)
-     *      @prop {string} [comparisonRangeId] option identifier (see COMPARISON_TIME_RANGE_OPTIONS)
      *
      * • type 'field':
      *      @prop {string} label description put in the facet (can be temporarilly missing)
@@ -173,6 +174,17 @@ odoo.define('web.ControlPanelModel', function (require) {
         }
 
         //---------------------------------------------------------------------
+        // Getters
+        //---------------------------------------------------------------------
+
+        /**
+         * @returns {(Object | undefined)}
+         */
+        get activeComparison() {
+            return this.state.query.find(queryElem => queryElem.type === 'comparison');
+        }
+
+        //---------------------------------------------------------------------
         // Public
         //---------------------------------------------------------------------
 
@@ -192,30 +204,6 @@ odoo.define('web.ControlPanelModel', function (require) {
                 this.state.query.push({ filterId, groupId, label, value, operator });
             } else {
                 queryElem.label = label;
-            }
-        }
-
-        /**
-         * Activate the unique filter of type 'timeRange' with provided 'options' fieldName, rangeId,
-         * and optional comparisonRangeId.
-         * @param {string} fieldName
-         * @param {string} rangeId
-         * @param {string} [comparisonRangeId]
-         */
-        activateTimeRange(fieldName, rangeId, comparisonRangeId) {
-            const filter = Object.values(this.state.filters).find(f => f.type === 'timeRange');
-            const detail = { fieldName, rangeId };
-            if (comparisonRangeId) {
-                detail.comparisonRangeId = comparisonRangeId;
-            }
-            const queryElem = this.state.query.find(queryElem => queryElem.filterId === filter.id);
-            if (queryElem) {
-                Object.assign(queryElem, detail);
-                if (!comparisonRangeId) {
-                    delete queryElem.comparisonRangeId;
-                }
-            } else {
-                this.state.query.push(Object.assign({ groupId: filter.groupId, filterId: filter.id }, detail));
             }
         }
 
@@ -311,6 +299,7 @@ odoo.define('web.ControlPanelModel', function (require) {
             this.state.query = this.state.query.filter(
                 queryElem => queryElem.groupId !== groupId
             );
+            this._checkComparisonStatus();
         }
 
         /**
@@ -347,7 +336,7 @@ odoo.define('web.ControlPanelModel', function (require) {
          */
         getFacets() {
             const accept = type => {
-                if (type === 'groupBy' && !this.searchMenuTypes.includes('groupBy')) {
+                if (['groupBy', 'comparison'].includes(type) && !this.searchMenuTypes.includes(type)) {
                     return false;
                 }
                 return true;
@@ -384,11 +373,13 @@ odoo.define('web.ControlPanelModel', function (require) {
             const filters = Object.values(this.state.filters).reduce(
                 (filters, filter) => {
                     if (filter.type === type && !filter.invisible) {
-                        const activities = this.state.query.filter(
+                        const filterQueryElements = this.state.query.filter(
                             queryElem => queryElem.filterId === filter.id
                         );
-                        const enrichedFilter = this._enrichFilterCopy(filter, activities);
-                        filters.push(enrichedFilter);
+                        const enrichedFilter = this._enrichFilterCopy(filter, filterQueryElements);
+                        if (enrichedFilter) {
+                            filters.push(enrichedFilter);
+                        }
                     }
                     return filters;
                 },
@@ -419,7 +410,7 @@ odoo.define('web.ControlPanelModel', function (require) {
             } else {
                 query.groupBy = [];
             }
-            if (this.searchMenuTypes.includes('timeRange')) {
+            if (this.searchMenuTypes.includes('comparison')) {
                 const timeRanges = this._getTimeRanges(requireEvaluation);
                 query.timeRanges = timeRanges || {};
             }
@@ -440,6 +431,24 @@ odoo.define('web.ControlPanelModel', function (require) {
          * method to trigger a 'search' event + reload the components.
          */
         search() { }
+
+        /**
+         * Activate/Deactivate a filter of type 'comparison' with provided id.
+         * At most one filter of type 'comparison' can be activated at every time.
+         * @param {string} filterId
+         */
+        toggleComparison(filterId) {
+            const { groupId, dateFilterId } = this.state.filters[filterId];
+            const queryElem = this.state.query.find(queryElem =>
+                queryElem.type === 'comparison' &&
+                queryElem.filterId === filterId
+            );
+            // make sure only one comparison can be active
+            this.state.query = this.state.query.filter(queryElem => queryElem.type !== 'comparison');
+            if (!queryElem) {
+                this.state.query.push({ groupId, filterId, dateFilterId, type: 'comparison', });
+            }
+        }
 
         /**
          * Activate or deactivate the simple filter with given filterId, i.e.
@@ -471,22 +480,15 @@ odoo.define('web.ControlPanelModel', function (require) {
         toggleFilterWithOptions(filterId, optionId) {
             const filter = this.state.filters[filterId];
             optionId = optionId || filter.defaultOptionId;
-
-            const noYearSelected = (filterId) => !this.state.query.some(queryElem => {
-                return queryElem.filterId === filterId && YEAR_OPTIONS[queryElem.optionId];
-            });
-
-            const defaultYearId = (optionId) => {
-                const year = this.optionGenerators.find(o => o.id === optionId).defaultYear;
-                return this.optionGenerators.find(o => o.setParam.year === year).id;
-            };
+            const option = this.optionGenerators.find(o => o.id === optionId);
 
             const index = this.state.query.findIndex(
                 queryElem => queryElem.filterId === filterId && queryElem.optionId === optionId
             );
+
             if (index >= 0) {
                 this.state.query.splice(index, 1);
-                if (filter.type === 'filter' && noYearSelected(filterId)) {
+                if (filter.type === 'filter' && !yearSelected(this._getSelectedOptionIds(filterId))) {
                     // This is the case where optionId was the last option
                     // of type 'year' to be there before being removed above.
                     // Since other options of type 'month' or 'quarter' do
@@ -497,15 +499,18 @@ odoo.define('web.ControlPanelModel', function (require) {
                 }
             } else {
                 this.state.query.push({ groupId: filter.groupId, filterId, optionId });
-                if (filter.type === 'filter' && noYearSelected(filterId)) {
+                if (filter.type === 'filter' && !yearSelected(this._getSelectedOptionIds(filterId))) {
                     // Here we add 'this_year' as options if no option of type
                     // year is already selected.
                     this.state.query.push({
                         groupId: filter.groupId,
                         filterId,
-                        optionId: defaultYearId(optionId),
+                        optionId: option.defaultYearId,
                     });
                 }
+            }
+            if (filter.type === 'filter') {
+                this._checkComparisonStatus();
             }
         }
 
@@ -533,16 +538,6 @@ odoo.define('web.ControlPanelModel', function (require) {
         //---------------------------------------------------------------------
         // Private
         //---------------------------------------------------------------------
-
-        /**
-         * Activate the filter of type timeRange with the options set in the key
-         * time_ranges of actionContext (if any).
-         * @private
-         */
-        _activateDefaultTimeRanges() {
-            const { field, range, comparisonRange } = this.actionContext.time_ranges;
-            this.activateTimeRange(field, range, comparisonRange);
-        }
 
         /**
          * Activate the default favorite (if any) or all default filters.
@@ -583,25 +578,109 @@ odoo.define('web.ControlPanelModel', function (require) {
                         }
                     });
             }
-            if (this.actionContext.time_ranges) {
-                this._activateDefaultTimeRanges();
-            }
         }
 
         /**
          * This function populates the 'filters' object at initialization.
          * The filters come from:
-         *     - config.viewInfo.arch (types 'filter', 'groupBy', 'field'),
+         *     - config.viewInfo.arch (types 'comparison', 'filter', 'groupBy', 'field'),
          *     - config.dynamicFilters (type 'filter'),
          *     - config.viewInfo.favoriteFilters (type 'favorite'),
-         *     - code itself (type 'timeRange')
          * @private
          */
         _addFilters() {
             this._createGroupOfFiltersFromArch();
             this._createGroupOfDynamicFilters();
             this._createGroupOfFavorites();
-            this._createGroupOfTimeRanges();
+        }
+
+        /**
+         * If a comparison is active, check if it should become inactive.
+         * The comparison should become inactive if the corresponding date filter has become
+         * inactive.
+         * @private
+         */
+        _checkComparisonStatus() {
+            const activeComparison = this.activeComparison;
+            if (!activeComparison) {
+                return;
+            }
+            const { dateFilterId } = activeComparison;
+            const dateFilterIsActive = this.state.query.some(
+                queryElem => queryElem.filterId === dateFilterId
+            );
+            if (!dateFilterIsActive) {
+                this.state.query = this.state.query.filter(
+                    queryElem => queryElem.type !== 'comparison'
+                );
+            }
+        }
+
+        /**
+         * Returns the active comparison timeRanges object.
+         * @private
+         * @param {Object} comparisonFilter
+         * @returns {Object | undefined}
+         */
+        _computeTimeRanges(comparisonFilter) {
+            const { filterId } = this.activeComparison;
+            if (filterId !== comparisonFilter.id) {
+                return;
+            }
+            const { dateFilterId, comparisonOptionId } = comparisonFilter;
+            const {
+                fieldName,
+                fieldType,
+                description: dateFilterDescription,
+            } = this.state.filters[dateFilterId];
+
+            const selectedOptionIds = this._getSelectedOptionIds(dateFilterId);
+
+            // compute range and range description
+            const { domain: range, description: rangeDescription } = constructDateDomain(
+                this.referenceMoment, fieldName, fieldType, selectedOptionIds,
+            );
+
+            // compute comparisonRange and comparisonRange description
+            const {
+                domain: comparisonRange,
+                description: comparisonRangeDescription,
+            } = constructDateDomain(
+                this.referenceMoment, fieldName, fieldType, selectedOptionIds, comparisonOptionId
+            );
+
+            return {
+                comparisonId: comparisonOptionId,
+                fieldName,
+                fieldDescription: dateFilterDescription,
+                range,
+                rangeDescription,
+                comparisonRange,
+                comparisonRangeDescription,
+            };
+        }
+
+        /**
+         * Starting from the array of date filters, create the filters of type
+         * 'comparison'.
+         * @private
+         * @param {Object[]} dateFilters
+         */
+        _createGroupOfComparisons(dateFilters) {
+            const preFilters = [];
+            for (const dateFilter of dateFilters) {
+                for (const comparisonOption of this.comparisonOptions) {
+                    const { id: dateFilterId, description } = dateFilter;
+                    const preFilter = {
+                        type: 'comparison',
+                        comparisonOptionId: comparisonOption.id,
+                        description: `${description}: ${comparisonOption.description}`,
+                        dateFilterId,
+                    };
+                    preFilters.push(preFilter);
+                }
+            }
+            this._createGroupOfFilters(preFilters);
         }
 
         /**
@@ -717,15 +796,12 @@ odoo.define('web.ControlPanelModel', function (require) {
             if (pregroupOfGroupBys.length) {
                 this._createGroupOfFilters(pregroupOfGroupBys);
             }
-        }
-
-        /**
-         * Add a single filter of type 'timeRange' to filters.
-         * @private
-         */
-        _createGroupOfTimeRanges() {
-            const pregroup = [{ type: 'timeRange' }];
-            this._createGroupOfFilters(pregroup);
+            const dateFilters = Object.values(this.state.filters).filter(
+                (filter) =>  filter.isDateFilter
+            );
+            if (dateFilters.length) {
+                this._createGroupOfComparisons(dateFilters);
+            }
         }
 
         /**
@@ -734,19 +810,21 @@ odoo.define('web.ControlPanelModel', function (require) {
          * mechanism different from __notifyComponents. Here we use the fact
          * that the controlPanelModel is an (owl) EventBus to communicate with
          * the parent.
+         * @private
          */
         _dispatch() {
             this.trigger('search', this.getQuery());
         }
 
         /**
-         * Returns a copy of the provided filter with additional information
+         * Returns undefined or a copy of the provided filter with additional information
          * used only outside of the control panel model, like in search bar or in the
-         * various menus.
+         * various menus. The value undefined is returned if the filter should not appear
+         * for some reason.
          * @private
          * @param {Object} filter
          * @param {Object[]} filterQueryElements
-         * @returns {Object}
+         * @returns {Object|undefined}
          */
         _enrichFilterCopy(filter, filterQueryElements) {
             const isActive = Boolean(filterQueryElements.length);
@@ -761,6 +839,16 @@ odoo.define('web.ControlPanelModel', function (require) {
             }
 
             switch (f.type) {
+                case 'comparison': {
+                    const { dateFilterId } = filter;
+                    const dateFilterIsActive = this.state.query.some(
+                        queryElem => queryElem.filterId === dateFilterId
+                    );
+                    if (!dateFilterIsActive) {
+                        return;
+                    }
+                    break;
+                }
                 case 'filter':
                     if (f.hasOptions) {
                         f.options = _enrichOptions(this.optionGenerators);
@@ -775,12 +863,6 @@ odoo.define('web.ControlPanelModel', function (require) {
                     f.autoCompleteValues = filterQueryElements.map(
                         ({ label, value, operator }) => ({ label, value, operator })
                     );
-                    break;
-                case 'timeRange':
-                    if (filterQueryElements.length) {
-                        const timeRange = this._extractTimeRange(filterQueryElements[0]);
-                        Object.assign(f, timeRange);
-                    }
                     break;
             }
             return f;
@@ -842,11 +924,11 @@ odoo.define('web.ControlPanelModel', function (require) {
                         filter.context = attrs.context;
                     }
                     if (attrs.date) {
+                        filter.isDateFilter = true;
                         filter.hasOptions = true;
                         filter.fieldName = attrs.date;
                         filter.fieldType = this.fields[attrs.date].type;
                         filter.defaultOptionId = attrs.default_period || DEFAULT_PERIOD;
-                        filter.basicDomains = this._getDateFilterBasicDomains(filter);
                     } else {
                         filter.domain = attrs.domain || '[]';
                     }
@@ -865,7 +947,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                         filter.defaultRank = attrs.defaultRank;
                     }
                     break;
-                case 'field':
+                case 'field': {
                     const field = this.fields[attrs.name];
                     filter.fieldName = attrs.name;
                     filter.fieldType = field.type;
@@ -885,81 +967,12 @@ odoo.define('web.ControlPanelModel', function (require) {
                         filter.defaultAutocompleteValue = attrs.defaultAutocompleteValue;
                     }
                     break;
+                }
             }
             if (filter.fieldName && !attrs.string) {
                 const { string } = this.fields[filter.fieldName];
                 filter.description = string;
             }
-        }
-
-        /**
-         * For filter of type 'filter' with hasOptions=true,
-         * returns an array of domains or descriptions according to key.
-         * @param {Object} filter
-         * @param {Object[]} filterQueryElements
-         * @param {'domain'|'description'} key
-         * @returns {string[]}
-         */
-        _extractInfoFromBasicDomains(filter, filterQueryElements, key) {
-            const results = [];
-            const yearIds = [];
-            const otherOptionIds = [];
-            filterQueryElements.forEach(({ optionId }) => {
-                if (YEAR_OPTIONS[optionId]) {
-                    yearIds.push(optionId);
-                } else {
-                    otherOptionIds.push(optionId);
-                }
-            });
-
-            const sortOptionIds = (a, b) => rankPeriod(a) - rankPeriod(b);
-            yearIds.sort(sortOptionIds);
-            otherOptionIds.sort(sortOptionIds);
-
-            // the following case corresponds to years selected only
-            if (otherOptionIds.length === 0) {
-                yearIds.forEach(yearId => {
-                    const d = filter.basicDomains[yearId];
-                    results.push(d[key]);
-                });
-            } else {
-                otherOptionIds.forEach(optionId => {
-                    yearIds.forEach(yearId => {
-                        const d = filter.basicDomains[`${yearId}__${optionId}`];
-                        results.push(d[key]);
-                    });
-                });
-            }
-            return results;
-        }
-
-        /**
-         * Construct a timeRange object from the given fieldName, rangeId, comparisonRangeId
-         * parameters.
-         * @private
-         * @param {string} fieldName
-         * @param {string} rangeId
-         * @param {string} comparisonRangeId
-         * @returns {Object}
-         */
-        _extractTimeRange({ fieldName, rangeId, comparisonRangeId }) {
-            const field = this.fields[fieldName];
-            const timeRange = {
-                fieldName,
-                fieldDescription: field.string || fieldName,
-                rangeId,
-                range: Domain.prototype.constructDomain(fieldName, rangeId, field.type),
-                rangeDescription: TIME_RANGE_OPTIONS[rangeId].description.toString(),
-            };
-            if (comparisonRangeId) {
-                timeRange.comparisonRangeId = comparisonRangeId;
-                timeRange.comparisonRange = Domain.prototype.constructDomain(
-                    fieldName, rangeId, field.type, comparisonRangeId
-                );
-                const { description } = COMPARISON_TIME_RANGE_OPTIONS[comparisonRangeId];
-                timeRange.comparisonRangeDescription = description.toString();
-            }
-            return timeRange;
         }
 
         /**
@@ -1003,13 +1016,8 @@ odoo.define('web.ControlPanelModel', function (require) {
             if ('groupBys' in favorite) {
                 context.group_by = favorite.groupBys;
             }
-            if ('timeRanges' in favorite) {
-                const { fieldName, rangeId, comparisonRangeId } = favorite.timeRanges;
-                context.time_ranges = {
-                    field: fieldName,
-                    range: rangeId,
-                    comparisonRange: comparisonRangeId,
-                };
+            if ('comparison' in favorite) {
+                context.comparison = favorite.comparison;
             }
             if (Object.keys(context).length) {
                 irFilter.context = context;
@@ -1078,56 +1086,21 @@ odoo.define('web.ControlPanelModel', function (require) {
         }
 
         /**
-         * Construct an object containing domains based on this.referenceMoment and
-         * the field associated with the provided date filter.
+         * Compute the string representation or the description of the current domain associated
+         * with a date filter starting from its corresponding query elements.
          * @private
          * @param {Object} filter
-         * @returns {Object}
-         */
-        _getDateFilterBasicDomains({ fieldName, fieldType }) {
-            const _constructBasicDomain = (y, o) => {
-                const setParam = Object.assign({}, y.setParam, o ? o.setParam : {});
-                const granularity = o ? o.granularity : y.granularity;
-                const date = this.referenceMoment.clone().set(setParam);
-                let leftBound = date.clone().startOf(granularity).locale('en');
-                let rightBound = date.clone().endOf(granularity).locale('en');
-                if (fieldType === 'date') {
-                    leftBound = leftBound.format('YYYY-MM-DD');
-                    rightBound = rightBound.format('YYYY-MM-DD');
-                } else {
-                    leftBound = leftBound.utc().format('YYYY-MM-DD HH:mm:ss');
-                    rightBound = rightBound.utc().format('YYYY-MM-DD HH:mm:ss');
-                }
-                const domain = Domain.prototype.arrayToString([
-                    '&',
-                    [fieldName, '>=', leftBound],
-                    [fieldName, '<=', rightBound]
-                ]);
-                const description = o ? o.description + " " + y.description : y.description;
-                return { domain, description };
-            };
-
-            const domains = {};
-            this.optionGenerators.filter(y => y.groupNumber === 2).forEach(y => {
-                domains[y.id] = _constructBasicDomain(y);
-                this.optionGenerators.filter(y => y.groupNumber === 1).forEach(o => {
-                    domains[y.id + '__' + o.id] = _constructBasicDomain(y, o);
-                });
-            });
-            return domains;
-        }
-
-        /**
-         * Compute the string representation of the current domain associated to a date filter
-         * starting from its corresponding query elements.
-         * @private
-         * @param {Object} filter
-         * @param {Objec[]} filterQueryElements
+         * @param {Object[]} filterQueryElements
+         * @param {'domain'|'description'} [key='domain']
          * @returns {string}
          */
-        _getDateFilterDomain(filter, filterQueryElements) {
-            const domains = this._extractInfoFromBasicDomains(filter, filterQueryElements, 'domain');
-            return pyUtils.assembleDomains(domains, 'OR');
+        _getDateFilterDomain(filter, filterQueryElements, key = 'domain') {
+            const { fieldName, fieldType } = filter;
+            const selectedOptionIds = filterQueryElements.map(queryElem => queryElem.optionId);
+            const dateFilterRange = constructDateDomain(
+                this.referenceMoment, fieldName, fieldType, selectedOptionIds,
+            );
+            return dateFilterRange[key];
         }
 
         /**
@@ -1205,6 +1178,10 @@ odoo.define('web.ControlPanelModel', function (require) {
          */
         _getFilterDomain(filter, filterQueryElements) {
             if (filter.type === 'filter' && filter.hasOptions) {
+                const { dateFilterId } = this.activeComparison || {};
+                if (this.searchMenuTypes.includes('comparison') && dateFilterId === filter.id) {
+                    return "[]";
+                }
                 return this._getDateFilterDomain(filter, filterQueryElements);
             } else if (filter.type === 'field') {
                 return this._getAutoCompletionFilterDomain(filter, filterQueryElements);
@@ -1307,7 +1284,7 @@ odoo.define('web.ControlPanelModel', function (require) {
         /**
          * Reconstruct the (active) groups from the query elements.
          * @private
-         * @returns {Objec[]}
+         * @returns {Object[]}
          */
         _getGroups() {
             const groups = this.state.query.reduce(
@@ -1356,37 +1333,20 @@ odoo.define('web.ControlPanelModel', function (require) {
         }
 
         /**
-         * Returns the last timeRanges object found in the query.
-         * TimeRanges objects can be associated with filters of type 'favorite'
-         * or 'timeRange'.
+         * Starting from the id of a date filter, returns the array of option ids currently selected
+         * for the corresponding filter.
          * @private
-         * @param {boolean} [evaluation=false]
-         * @returns {(Object|undefined)}
+         * @param {string} dateFilterId
+         * @returns {string[]}
          */
-        _getTimeRanges(evaluation = false) {
-            let timeRanges;
-            for (const queryElem of this.state.query.slice().reverse()) {
-                const filter = this.state.filters[queryElem.filterId];
-                if (filter.type === 'timeRange') {
-                    timeRanges = this._extractTimeRange(queryElem);
-                    break;
-                } else if (filter.type === 'favorite' && filter.timeRanges) {
-                    // we want to make sure that last is not observed! (it is change below in case of evaluation)
-                    timeRanges = this._extractTimeRange(filter.timeRanges);
-                    break;
+        _getSelectedOptionIds(dateFilterId) {
+            const selectedOptionIds = [];
+            for (const queryElem of this.state.query) {
+                if (queryElem.filterId === dateFilterId) {
+                    selectedOptionIds.push(queryElem.optionId);
                 }
             }
-            if (timeRanges) {
-                if (evaluation) {
-                    timeRanges.range = Domain.prototype.stringToArray(timeRanges.range);
-                    if (timeRanges.comparisonRangeId) {
-                        timeRanges.comparisonRange = Domain.prototype.stringToArray(
-                            timeRanges.comparisonRange
-                        );
-                    }
-                }
-                return timeRanges;
-            }
+            return selectedOptionIds;
         }
 
         /**
@@ -1407,15 +1367,10 @@ odoo.define('web.ControlPanelModel', function (require) {
                 groupBys = context.group_by;
                 delete context.group_by;
             }
-            let timeRanges;
-            if (context.time_ranges) {
-                const { field, range, comparisonRange } = context.time_ranges;
-                timeRanges = this._extractTimeRange({
-                    fieldName: field,
-                    rangeId: range,
-                    comparisonRangeId: comparisonRange,
-                });
-                delete context.time_ranges;
+            let comparison;
+            if (context.comparison) {
+                comparison = context.comparison;
+                delete context.comparison;
             }
             let sort;
             try {
@@ -1460,8 +1415,8 @@ odoo.define('web.ControlPanelModel', function (require) {
             if (irFilter.is_default) {
                 favorite.isDefault = irFilter.is_default;
             }
-            if (timeRanges) {
-                favorite.timeRanges = timeRanges;
+            if (comparison) {
+                favorite.comparison = comparison;
             }
             return favorite;
         }
@@ -1470,6 +1425,7 @@ odoo.define('web.ControlPanelModel', function (require) {
          * Group the query elements in group.activities by qe -> qe.filterId
          * and changes the form of group.activities to make it more suitable for further
          * computations.
+         * @private
          * @param {Object} group
          */
         _mergeActivities(group) {
@@ -1477,7 +1433,7 @@ odoo.define('web.ControlPanelModel', function (require) {
             let res = [];
             switch (type) {
                 case 'filter':
-                case 'groupBy':
+                case 'groupBy': {
                     for (const activity of activities) {
                         const { filterId } = activity;
                         let a = res.find(({ filter }) => filter.id === filterId);
@@ -1491,9 +1447,10 @@ odoo.define('web.ControlPanelModel', function (require) {
                         a.filterQueryElements.push(activity);
                     }
                     break;
+                }
                 case 'favorite':
                 case 'field':
-                case 'timeRange':
+                case 'comparison': {
                     // all activities in the group have same filterId
                     const { filterId } = group.activities[0];
                     const filter = this.state.filters[filterId];
@@ -1502,6 +1459,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                         filterQueryElements: group.activities
                     });
                     break;
+                }
             }
             if (type === 'groupBy') {
                 res.forEach(activity => {
@@ -1608,7 +1566,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                 userId,
             });
             if (timeRanges) {
-                preFilter.timeRanges = timeRanges;
+                preFilter.comparison = timeRanges;
             }
             const irFilter = this._favoriteToIrFilter(preFilter);
             const serverSideId = await this.env.dataManager.create_filter(irFilter);
@@ -1648,25 +1606,47 @@ odoo.define('web.ControlPanelModel', function (require) {
             } else {
                 let facetDescription;
                 for (const { filter, filterQueryElements } of activities) {
-                    if (type === 'timeRange') {
-                        const tr = this._extractTimeRange(filterQueryElements[0]);
-                        facetDescription = `${tr.fieldDescription}: ${tr.rangeDescription}`;
-                        if (tr.comparisonRangeDescription) {
-                            facetDescription += ` / ${tr.comparisonRangeDescription}`;
-                        }
-                    } else { // filter and favorite
-                        facetDescription = filter.description;
-                        if (filter.hasOptions) {
-                            const descriptions = this._extractInfoFromBasicDomains(
-                                filter, filterQueryElements, 'description'
-                            );
-                            facetDescription += `: ${descriptions.join(" / ")}`;
-                        }
+                    // filter, favorite and comparison
+                    facetDescription = filter.description;
+                    if (filter.isDateFilter) {
+                        const description = this._getDateFilterDomain(
+                            filter, filterQueryElements, 'description'
+                        );
+                        facetDescription += `: ${description}`;
                     }
                     facetDescriptions.push(facetDescription);
                 }
             }
             return facetDescriptions;
+        }
+
+        /**
+         * Returns the last timeRanges object found in the query.
+         * TimeRanges objects can be associated with filters of type 'favorite'
+         * or 'comparison'.
+         * @private
+         * @param {boolean} [evaluation=false]
+         * @returns {(Object|undefined)}
+         */
+        _getTimeRanges(evaluation) {
+            let timeRanges;
+            for (const queryElem of this.state.query.slice().reverse()) {
+                const filter = this.state.filters[queryElem.filterId];
+                if (filter.type === 'comparison') {
+                    timeRanges = this._computeTimeRanges(filter);
+                    break;
+                } else if (filter.type === 'favorite' && filter.comparison) {
+                    timeRanges = filter.comparison;
+                    break;
+                }
+            }
+            if (timeRanges) {
+                if (evaluation) {
+                    timeRanges.range = Domain.prototype.stringToArray(timeRanges.range);
+                    timeRanges.comparisonRange = Domain.prototype.stringToArray(timeRanges.comparisonRange);
+                }
+                return timeRanges;
+            }
         }
 
         /**
@@ -1713,26 +1693,9 @@ odoo.define('web.ControlPanelModel', function (require) {
             this.dynamicFilters = config.dynamicFilters || [];
 
             this.referenceMoment = moment();
-            const setDescriptions = options => {
-                return Object.values(options).map(o => {
-                    const oClone = JSON.parse(JSON.stringify(o));
-                    const description = o.description ?
-                        o.description.toString() :
-                        this.referenceMoment.clone().add(o.addParam).format(o.format);
-                    return Object.assign(oClone, { description });
-                });
-            };
-            const process = (options) => {
-                return options.map(o => {
-                    const date = this.referenceMoment.clone().set(o.setParam).add(o.addParam);
-                    delete o.addParam;
-                    o.setParam[o.granularity] = date[o.granularity]();
-                    o.defaultYear = date.year();
-                    return o;
-                });
-            };
-            this.optionGenerators = process(setDescriptions(OPTION_GENERATORS));
-            this.intervalOptions = setDescriptions(INTERVAL_OPTIONS);
+            this.optionGenerators = getPeriodOptions(this.referenceMoment);
+            this.intervalOptions = getIntervalOptions();
+            this.comparisonOptions = getComparisonOptions();
         }
     }
 

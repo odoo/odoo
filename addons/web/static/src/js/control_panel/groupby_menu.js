@@ -1,9 +1,9 @@
 odoo.define('web.GroupByMenu', function (require) {
     "use strict";
 
-    const { GROUPABLE_TYPES } = require('web.searchUtils');
-    const DropdownMenu = require('web.DropdownMenu');
     const CustomGroupByItem = require('web.CustomGroupByItem');
+    const DropdownMenu = require('web.DropdownMenu');
+    const { FACET_ICONS, GROUPABLE_TYPES } = require('web.searchUtils');
     const { useModel } = require('web.model');
 
     /**
@@ -30,6 +30,13 @@ odoo.define('web.GroupByMenu', function (require) {
         //---------------------------------------------------------------------
         // Getters
         //---------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        get icon() {
+            return FACET_ICONS.groupBy;
+        }
 
         /**
          * @override
@@ -81,9 +88,6 @@ odoo.define('web.GroupByMenu', function (require) {
 
     GroupByMenu.components = Object.assign({}, DropdownMenu.components, {
         CustomGroupByItem,
-    });
-    GroupByMenu.defaultProps = Object.assign({}, DropdownMenu.defaultProps, {
-        icon: 'fa fa-bars',
     });
     GroupByMenu.props = Object.assign({}, DropdownMenu.props, {
         fields: Object,

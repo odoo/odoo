@@ -1,19 +1,23 @@
 # -*- coding: utf-8 -*-
-from odoo import fields, tools
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo import fields
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestReconciliationMatchingRules(AccountTestCommon):
+class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestReconciliationMatchingRules, cls).setUpClass()
-        cls.company = cls.env.user.company_id
-        cls.account_pay = cls.a_pay
-        cls.account_rcv = cls.a_recv
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
+        cls.company = cls.company_data['company']
+
+        cls.account_pay = cls.company_data['default_account_payable']
+        cls.account_rcv = cls.company_data['default_account_receivable']
+        cls.account_bnk = cls.company_data['default_journal_bank'].default_debit_account_id
+        cls.account_cash = cls.company_data['default_journal_cash'].default_debit_account_id
 
         cls.partner_1 = cls.env['res.partner'].create({'name': 'partner_1', 'company_id': cls.company.id})
         cls.partner_2 = cls.env['res.partner'].create({'name': 'partner_2', 'company_id': cls.company.id})

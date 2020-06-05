@@ -1,11 +1,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import unittest
 from odoo.tests import tagged
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.exceptions import UserError
-# noinspection PyUnresolvedReferences
-from ..models.account_move \
-    import AccountInvoiceFinnish
 
 
 @tagged('standard', 'at_install')
@@ -16,8 +12,8 @@ class PaymentReferenceTest(AccountTestInvoicingCommon):
     """
 
     @classmethod
-    def setUpClass(cls):
-        super(PaymentReferenceTest, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref='l10n_fi.fi_chart_template'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.invoice = cls.init_invoice('out_invoice')
 
@@ -36,8 +32,7 @@ class PaymentReferenceTest(AccountTestInvoicingCommon):
         self.assertEqual('1261', compute('26'))
 
         # Excess length
-        self.assertEqual('12345678901234567894',
-                          compute('123456789012345678901234567890'))
+        self.assertEqual('12345678901234567894', compute('123456789012345678901234567890'))
 
         # Invalid
         with self.assertRaises(UserError):
@@ -58,8 +53,7 @@ class PaymentReferenceTest(AccountTestInvoicingCommon):
         self.assertEqual('RF041261', compute('26'))
 
         # Excess length
-        self.assertEqual('RF0912345678901234567894',
-                          compute('123456789012345678901234567890'))
+        self.assertEqual('RF0912345678901234567894', compute('123456789012345678901234567890'))
 
         # Invalid
         with self.assertRaises(UserError):

@@ -1,15 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import logging
-import time
-
 from odoo import fields
 from odoo.addons.base.tests.common import SavepointCaseWithUserDemo
-from odoo.exceptions import ValidationError
 from odoo.tests.common import SavepointCase, HttpCase, tagged, Form
 
+import time
 import logging
+
+from contextlib import contextmanager
+from unittest.mock import patch
 
 _logger = logging.getLogger(__name__)
 
@@ -613,12 +612,9 @@ class AccountTestInvoicingCommon(SavepointCase):
     def setUpClass(cls, chart_template_ref=None):
         super(AccountTestInvoicingCommon, cls).setUpClass()
 
-        chart_template = None
         if chart_template_ref:
             chart_template = cls.env.ref(chart_template_ref)
-        if not chart_template:
-            chart_template = cls.env.user.company_id.chart_template_id
-        if not chart_template:
+        else:
             chart_template = cls.env.ref('l10n_generic_coa.configurable_chart_template', raise_if_not_found=False)
         if not chart_template:
             cls.skipTest(cls, "Accounting Tests skipped because the user's company has no chart of accounts.")
@@ -636,8 +632,8 @@ class AccountTestInvoicingCommon(SavepointCase):
         cls.env = cls.env(user=user)
         cls.cr = cls.env.cr
 
-        cls.company_data_2 = cls.setup_company_data('company_2_data')
-        cls.company_data = cls.setup_company_data('company_1_data')
+        cls.company_data_2 = cls.setup_company_data('company_2_data', chart_template=chart_template)
+        cls.company_data = cls.setup_company_data('company_1_data', chart_template=chart_template)
 
         user.write({
             'company_ids': [(6, 0, (cls.company_data['company'] + cls.company_data_2['company']).ids)],
@@ -759,11 +755,12 @@ class AccountTestInvoicingCommon(SavepointCase):
         })
 
     @classmethod
-    def setup_company_data(cls, company_name, **kwargs):
+    def setup_company_data(cls, company_name, chart_template=None, **kwargs):
         ''' Create a new company having the name passed as parameter.
         A chart of accounts will be installed to this company: the same as the current company one.
         The current user will get access to this company.
 
+        :param chart_template: The chart template to be used on this new company.
         :param company_name: The name of the company.
         :return: A dictionary will be returned containing all relevant accounting data for testing.
         '''
@@ -779,7 +776,7 @@ class AccountTestInvoicingCommon(SavepointCase):
                 account = cls.env['account.account'].search(domain, limit=1)
             return account
 
-        chart_template = cls.env.user.company_id.chart_template_id
+        chart_template = chart_template or cls.env.company.chart_template_id
         currency = cls.env.user.company_id.currency_id
         company = cls.env['res.company'].create({
             'name': company_name,
@@ -788,7 +785,7 @@ class AccountTestInvoicingCommon(SavepointCase):
         })
         cls.env.user.company_ids |= company
 
-        chart_template.with_company(company).try_loading()
+        chart_template.try_loading(company=company)
 
         # The currency could be different after the installation of the chart template.
         company.write({'currency_id': kwargs.get('currency_id', currency.id)})
@@ -949,11 +946,28 @@ class AccountTestInvoicingCommon(SavepointCase):
             ],
         })
 
+    @contextmanager
+    def mocked_today(self, forced_today):
+        ''' Helper to make easily a python "with statement" mocking the "today" date.
+        :param forced_today:    The expected "today" date as a str or Date object.
+        :return:                An object to be used like 'with self.mocked_today(<today>):'.
+        '''
+
+        if isinstance(forced_today, str):
+            forced_today = fields.Date.from_string(forced_today)
+
+        def today(*args, **kwargs):
+            return forced_today
+
+        with patch.object(fields.Date, 'today', today):
+            with patch.object(fields.Date, 'context_today', today):
+                yield
+
     @classmethod
-    def init_invoice(cls, move_type):
+    def init_invoice(cls, move_type, partner=None, invoice_date=None):
         move_form = Form(cls.env['account.move'].with_context(default_move_type=move_type))
-        move_form.invoice_date = fields.Date.from_string('2019-01-01')
-        move_form.partner_id = cls.partner_a
+        move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
+        move_form.partner_id = partner or cls.partner_a
         with move_form.invoice_line_ids.new() as line_form:
             line_form.product_id = cls.product_a
         with move_form.invoice_line_ids.new() as line_form:

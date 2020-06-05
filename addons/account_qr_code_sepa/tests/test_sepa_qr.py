@@ -3,13 +3,14 @@
 from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
+
 class TestSEPAQRCode(AccountTestInvoicingCommon):
     """ Tests the generation of Swiss QR-codes on invoices
     """
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSEPAQRCode, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.company_data['company'].qr_code = True
         cls.acc_sepa_iban = cls.env['res.partner.bank'].create({

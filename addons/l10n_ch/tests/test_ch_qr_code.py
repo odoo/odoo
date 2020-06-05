@@ -3,13 +3,14 @@
 from odoo.exceptions import UserError
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
+
 class TestSwissQRCode(AccountTestInvoicingCommon):
     """ Tests the generation of Swiss QR-codes on invoices
     """
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSwissQRCode, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref='l10n_ch.l10nch_chart_template'):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.company_data['company'].qr_code = True
         cls.company_data['company'].country_id = None

@@ -7,8 +7,8 @@ import time
 class TestTransferWizard(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.company = cls.company_data['company']
         cls.receivable_account = cls.company_data['default_account_receivable']

@@ -352,7 +352,7 @@ QUnit.test('activity view: activity widget', async function (assert) {
 
     activity.destroy();
 });
-QUnit.test('activity view: no group_by_menu and no time_range_menu', async function (assert) {
+QUnit.test('activity view: no group_by_menu and no comparison_menu', async function (assert) {
     assert.expect(4);
 
     var actionManager = await createActionManager({

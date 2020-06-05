@@ -62,9 +62,8 @@
                             class="o_group_by_menu"
                             fields="fields"
                         />
-                        <TimeRangeMenu t-if="props.searchMenuTypes.includes('timeRange')"
-                            class="o_time_range_menu"
-                            fields="fields"
+                        <ComparisonMenu t-if="props.searchMenuTypes.includes('comparison') and model.getFiltersOfType('comparison').length"
+                            class="o_comparison_menu"
                         />
                         <FavoriteMenu t-if="props.searchMenuTypes.includes('favorite')"
                             class="o_favorite_menu"
@@ -160,7 +159,7 @@
             t-on-click="state.open = !state.open"
             t-on-keydown="_onButtonKeydown"
             >
-            <i t-if="props.icon" t-att-class="props.icon"/>
+            <i t-if="icon" t-att-class="icon"/>
             <span class="o_dropdown_title" t-esc="title"/>
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-caret-{{ state.open ? 'down' : 'right' }}"/>
             <i t-elif="displayChevron" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
@@ -216,18 +215,6 @@
             <li t-if="items.length" class="dropdown-divider" role="separator"/>
             <CustomGroupByItem fields="fields"/>
         </t>
-    </xpath>
-</t>
-
-<t t-name="web.TimeRangeMenu" t-inherit="web.DropdownMenu" t-inherit-mode="primary" owl="1">
-    <xpath expr="//ul[@role='menu']/t[@t-foreach]" position="replace">
-        <li class="o_menu_item dropdown-item-text" role="menuitem">
-            <t t-if="fields.length" t-call="web.TimeRangeEditor"/>
-            <t t-else="">No date field available.</t>
-        </li>
-        <li class="o_menu_item dropdown-item-text" role="menuitem">
-            <button type="button" class="btn btn-primary" t-on-click="_onApply">Apply</button>
-        </li>
     </xpath>
 </t>
 
@@ -575,7 +562,7 @@
             t-on-keydown="_onFacetKeydown(facet, facet_index)"
             >
             <span t-if="facet.title" class="o_searchview_facet_label" t-esc="facet.title"/>
-            <span t-else="" t-attf-class="o_searchview_facet_label fa {{ facet.icon }}"/>
+            <span t-else="" t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
             <div class="o_facet_values">
                 <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                     <span t-if="!facetValue_first" class="o_facet_values_sep" t-esc="facet.separator"/>
@@ -638,52 +625,6 @@
             items="actionItems"
             icon="'fa fa-cog'"
         />
-    </div>
-</t>
-
-<t t-name="web.TimeRangeEditor" owl="1">
-    <div class="o_time_range_editor">
-        <div class="o_time_range_section">
-            <label t-attf-for="field_select_{{ domId }}">Based On</label>
-            <select t-attf-id="field_select_{{ domId }}" class="o_input" t-model="state.fieldName">
-                <option t-foreach="fields" t-as="field" t-key="field.name"
-                    t-att-selected="state.fieldName === field.name"
-                    t-att-value="field.name"
-                    t-esc="field.description"
-                />
-            </select>
-        </div>
-        <div class="o_time_range_section">
-            <label t-attf-for="range_select_{{ domId }}">Range</label>
-            <select t-attf-id="range_select_{{ domId }}" class="o_input" t-model="state.rangeId">
-                <optgroup t-foreach="periodGroups" t-as="group" t-key="group" label="">
-                    <t t-foreach="Object.values(periodOptions)" t-as="option" t-key="option_index">
-                        <option t-if="option.groupNumber === group"
-                            t-att-selected="state.rangeId === option.id"
-                            t-att-value="option.id"
-                            t-esc="option.description"
-                        />
-                    </t>
-                </optgroup>
-            </select>
-        </div>
-        <div class="o_time_range_section">
-            <div class="custom-control custom-checkbox">
-                <input type="checkbox" t-attf-id="checkbox_select_{{ domId }}"
-                    class="custom-control-input"
-                    t-att-checked="state.comparisonRangeId"
-                    t-on-click="_onCheckboxClick"
-                />
-                <label t-attf-for="checkbox_select_{{ domId }}" class="custom-control-label">Compare To</label>
-            </div>
-            <select t-if="state.comparisonRangeId" class="o_input" t-model="state.comparisonRangeId">
-                <option t-foreach="Object.values(comparisonTimeRangeOptions)" t-as="option" t-key="option_index"
-                    t-att-selected="state.comparisonRangeId === option.id"
-                    t-att-value="option.id"
-                    t-esc="option.description"
-                />
-            </select>
-        </div>
     </div>
 </t>
 
