@@ -121,7 +121,7 @@ odoo.define('web.test_utils', async function (require) {
     return {
         mock: {
             addMockEnvironment: testUtilsMock.addMockEnvironment,
-            getMockedOwlEnv: testUtilsMock.getMockedOwlEnv,
+            addMockEnvironmentOwl: testUtilsMock.addMockEnvironmentOwl,
             intercept: testUtilsMock.intercept,
             patch: testUtilsMock.patch,
             patchDate: testUtilsMock.patchDate,
