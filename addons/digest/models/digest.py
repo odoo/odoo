@@ -2,13 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import math
 import pytz
 
 from datetime import datetime, date
 from dateutil.relativedelta import relativedelta
 
-from odoo import api, fields, models, tools
+from odoo import api, fields, models, tools, _
 from odoo.addons.base.models.ir_mail_server import MailDeliveryException
 from odoo.exceptions import AccessError
 from odoo.tools.float_utils import float_round
@@ -23,15 +22,12 @@ class Digest(models.Model):
     # Digest description
     name = fields.Char(string='Name', required=True, translate=True)
     user_ids = fields.Many2many('res.users', string='Recipients', domain="[('share', '=', False)]")
-    periodicity = fields.Selection([('weekly', 'Weekly'),
+    periodicity = fields.Selection([('daily', 'Daily'),
+                                    ('weekly', 'Weekly'),
                                     ('monthly', 'Monthly'),
                                     ('quarterly', 'Quarterly')],
-                                   string='Periodicity', default='weekly', required=True)
+                                   string='Periodicity', default='daily', required=True)
     next_run_date = fields.Date(string='Next Send Date')
-    template_id = fields.Many2one('mail.template', string='Email Template',
-                                  domain="[('model','=','digest.digest')]",
-                                  default=lambda self: self.env.ref('digest.digest_mail_template'),
-                                  required=True)
     currency_id = fields.Many2one(related="company_id.currency_id", string='Currency', readonly=False)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     available_fields = fields.Char(compute='_compute_available_fields')
@@ -77,15 +73,21 @@ class Digest(models.Model):
 
     @api.model
     def create(self, vals):
-        vals['next_run_date'] = date.today() + relativedelta(days=3)
-        return super(Digest, self).create(vals)
+        digest = super(Digest, self).create(vals)
+        if not digest.next_run_date:
+             digest.next_run_date = digest._get_next_run_date()
+        return digest
+
+    # ------------------------------------------------------------
+    # ACTIONS
+    # ------------------------------------------------------------
 
     def action_subscribe(self):
-        if self.env.user not in self.user_ids:
+        if self.env.user.has_group('base.group_user') and self.env.user not in self.user_ids:
             self.sudo().user_ids |= self.env.user
 
     def action_unsubcribe(self):
-        if self.env.user in self.user_ids:
+        if self.env.user.has_group('base.group_user') and self.env.user in self.user_ids:
             self.sudo().user_ids -= self.env.user
 
     def action_activate(self):
@@ -94,53 +96,145 @@ class Digest(models.Model):
     def action_deactivate(self):
         self.state = 'deactivated'
 
+    def action_set_periodicity(self, periodicity):
+        self.periodicity = periodicity
+
     def action_send(self):
+        to_slowdown = self._check_daily_logs()
         for digest in self:
             for user in digest.user_ids:
-                subject = '%s: %s' % (user.company_id.name, digest.name)
-                digest.template_id.with_context(user=user).send_mail(digest.id, force_send=True, raise_exception=True, email_values={'email_to': user.email, 'subject': subject})
+                digest.with_context(
+                    digest_slowdown=digest in to_slowdown,
+                    lang=user.lang
+                )._action_send_to_user(user, tips_count=1)
+            if digest in to_slowdown:
+                digest.write({'periodicity': 'weekly'})
             digest.next_run_date = digest._get_next_run_date()
 
+    def _action_send_to_user(self, user, tips_count=1):
+        rendered_body = self.env['mail.render.mixin']._render_template(
+            'digest.digest_mail_main',
+            'digest.digest',
+            self.ids,
+            engine='qweb',
+            add_context={
+                'company': user.company_id,
+                'user': user,
+                'tips_count': tips_count,
+                'datetime': datetime,  # TDE TEMP FIXME
+                'display_mobile_banner': True,
+                'kpi_data': self.compute_kpis(user.company_id, user),
+                'tips': self.compute_tips(user.company_id, user, tips_count=tips_count),
+                'preferences': self.compute_preferences(user.company_id, user),
+            },
+            post_process=True
+        )[self.id]
+        full_mail = self.env['mail.render.mixin']._render_encapsulate(
+            'digest.digest_mail_layout',
+            rendered_body,
+            add_context={
+                'company': user.company_id,
+                'user': user,
+            },
+        )
+        # create a mail_mail based on values, without attachments
+        mail_values = {
+            'subject': '%s: %s' % (user.company_id.name, self.name),
+            'email_from': self.company_id.partner_id.email_formatted if self.company_id else self.env.user.email_formatted,
+            'email_to': user.email_formatted,
+            'body_html': full_mail,
+            'auto_delete': True,
+        }
+        mail = self.env['mail.mail'].sudo().create(mail_values)
+        mail.send(raise_exception=False)
+        return True
+
+    @api.model
+    def _cron_send_digest_email(self):
+        digests = self.search([('next_run_date', '<=', fields.Date.today()), ('state', '=', 'activated')])
+        for digest in digests:
+            try:
+                digest.action_send()
+            except MailDeliveryException as e:
+                _logger.warning('MailDeliveryException while sending digest %d. Digest is now scheduled for next cron update.')
+
+    # ------------------------------------------------------------
+    # KPIS
+    # ------------------------------------------------------------
+
     def compute_kpis(self, company, user):
+        """ Compute KPIs to display in the digest template. It is expected to be
+        a list of KPIs, each containing values for 3 columns display.
+
+        :return list: result [{
+            'kpi_name': 'kpi_mail_message',
+            'kpi_fullname': 'Messages',  # translated
+            'kpi_action': 'crm.crm_lead_action_pipeline',  # xml id of an action to execute
+            'kpi_col1': {
+                'value': '12.0',
+                'margin': 32.36,
+                'col_subtitle': 'Yesterday',  # translated
+            },
+            'kpi_col2': { ... },
+            'kpi_col3':  { ... },
+        }, { ... }] """
         self.ensure_one()
-        res = {}
-        for tf_name, tf in self._compute_timeframes(company).items():
+        digest_fields = self._get_kpi_fields()
+        invalid_fields = []
+        kpis = [
+            dict(kpi_name=field_name,
+                 kpi_fullname=self._fields[field_name].string,
+                 kpi_action=False,
+                 kpi_col1=dict(),
+                 kpi_col2=dict(),
+                 kpi_col3=dict(),
+                 )
+            for field_name in digest_fields
+        ]
+        kpis_actions = self._compute_kpis_actions(company, user)
+
+        for col_index, (tf_name, tf) in enumerate(self._compute_timeframes(company)):
             digest = self.with_context(start_date=tf[0][0], end_date=tf[0][1]).with_user(user).with_company(company)
             previous_digest = self.with_context(start_date=tf[1][0], end_date=tf[1][1]).with_user(user).with_company(company)
-            kpis = {}
-            for field_name, field in self._fields.items():
-                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and self[field_name]:
+            for index, field_name in enumerate(digest_fields):
+                kpi_values = kpis[index]
+                kpi_values['kpi_action'] = kpis_actions.get(field_name)
+                try:
+                    compute_value = digest[field_name + '_value']
+                    # Context start and end date is different each time so invalidate to recompute.
+                    digest.invalidate_cache([field_name + '_value'])
+                    previous_value = previous_digest[field_name + '_value']
+                    # Context start and end date is different each time so invalidate to recompute.
+                    previous_digest.invalidate_cache([field_name + '_value'])
+                except AccessError:  # no access rights -> just skip that digest details from that user's digest email
+                    invalid_fields.append(field_name)
+                    continue
+                margin = self._get_margin_value(compute_value, previous_value)
+                if self._fields['%s_value' % field_name].type == 'monetary':
+                    converted_amount = self._format_human_readable_amount(compute_value)
+                    compute_value = self._format_currency_amount(converted_amount, company.currency_id)
+                kpi_values['kpi_col%s' % (col_index + 1)].update({
+                    'value': compute_value,
+                    'margin': margin,
+                    'col_subtitle': tf_name,
+                })
 
-                    try:
-                        compute_value = digest[field_name + '_value']
-                        # Context start and end date is different each time so invalidate to recompute.
-                        digest.invalidate_cache([field_name + '_value'])
-                        previous_value = previous_digest[field_name + '_value']
-                        # Context start and end date is different each time so invalidate to recompute.
-                        previous_digest.invalidate_cache([field_name + '_value'])
-                    except AccessError:  # no access rights -> just skip that digest details from that user's digest email
-                        continue
-                    margin = self._get_margin_value(compute_value, previous_value)
-                    if self._fields[field_name+'_value'].type == 'monetary':
-                        converted_amount = self._format_human_readable_amount(compute_value)
-                        kpis.update({field_name: {field_name: self._format_currency_amount(converted_amount, company.currency_id), 'margin': margin}})
-                    else:
-                        kpis.update({field_name: {field_name: compute_value, 'margin': margin}})
+        # filter failed KPIs
+        return [kpi for kpi in kpis if kpi['kpi_name'] not in invalid_fields]
 
-                res.update({tf_name: kpis})
-        return res
+    def compute_tips(self, company, user, tips_count=1):
+        tips = self.env['digest.tip'].search([
+            ('user_ids', '!=', user.id),
+            '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
+        ], limit=tips_count)
+        tip_descriptions = [
+            self.env['mail.render.mixin']._render_template(tools.html_sanitize(tip.tip_description), 'digest.tip', tip.ids, post_process=True)[tip.id]
+            for tip in tips
+        ]
+        tips.user_ids += user
+        return tip_descriptions
 
-    def compute_tips(self, company, user):
-        tip = self.env['digest.tip'].search([('user_ids', '!=', user.id), '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)], limit=1)
-        if not tip:
-            return False
-        tip.user_ids += user
-        body = tools.html_sanitize(tip.tip_description)
-        # FIXME: sanitize ? links ?
-        tip_description = self.env['mail.render.mixin']._render_template(body, 'digest.tip', self.ids)[self.id]
-        return tip_description
-
-    def compute_kpis_actions(self, company, user):
+    def _compute_kpis_actions(self, company, user):
         """ Give an optional action to display in digest email linked to some KPIs.
 
         :return dict: key: kpi name (field name), value: an action that will be
@@ -148,8 +242,34 @@ class Digest(models.Model):
         """
         return {}
 
+    def compute_preferences(self, company, user):
+        """ Give an optional text for preferences, like a shortcut for configuration.
+
+        :return string: html to put in template
+        """
+        preferences = []
+        if self._context.get('digest_slowdown'):
+            preferences.append(_("We have noticed you did not connect these last few days so we've automatically switched your preference to weekly Digests."))
+        elif self.periodicity == 'daily' and user.has_group('base.group_erp_manager'):
+            preferences.append('%s <a href="/digest/%s/set_periodicity?periodicity=weekly" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a>' % (
+                _('Prefer a broader overview ?'),
+                self.id,
+                _('Switch to weekly Digests')
+            ))
+        if user.has_group('base.group_erp_manager'):
+            preferences.append('%s <a href="/web#view_type=form&amp;model=%s&amp;id=%s" target="_blank" style="color:#875A7B; font-weight: bold;">%s</a>' % (
+                _('Want to customize this email?'),
+                self._name,
+                self.id,
+                _('Choose the metrics you care about')
+            ))
+
+        return preferences
+
     def _get_next_run_date(self):
         self.ensure_one()
+        if self.periodicity == 'daily':
+            delta = relativedelta(days=1)
         if self.periodicity == 'weekly':
             delta = relativedelta(weeks=1)
         elif self.periodicity == 'monthly':
@@ -164,23 +284,45 @@ class Digest(models.Model):
         if tz_name:
             now = pytz.timezone(tz_name).localize(now)
         start_date = now.date()
-        return {
-            'yesterday': (
+        return [
+            (_('Yesterday'), (
                 (start_date + relativedelta(days=-1), start_date),
-                (start_date + relativedelta(days=-2), start_date + relativedelta(days=-1))),
-            'lastweek': (
+                (start_date + relativedelta(days=-2), start_date + relativedelta(days=-1)))
+            ), (_('Last 7 Days'), (
                 (start_date + relativedelta(weeks=-1), start_date),
-                (start_date + relativedelta(weeks=-2), start_date + relativedelta(weeks=-1))),
-            'lastmonth': (
+                (start_date + relativedelta(weeks=-2), start_date + relativedelta(weeks=-1)))
+            ), (_('Last 30 Days'), (
                 (start_date + relativedelta(months=-1), start_date),
-                (start_date + relativedelta(months=-2), start_date + relativedelta(months=-1))),
-        }
+                (start_date + relativedelta(months=-2), start_date + relativedelta(months=-1)))
+            )
+        ]
+
+    # ------------------------------------------------------------
+    # FORMATTING / TOOLS
+    # ------------------------------------------------------------
+
+    def _get_kpi_fields(self):
+        return [field_name for field_name, field in self._fields.items()
+                if field.type == 'boolean' and field_name.startswith(('kpi_', 'x_kpi_', 'x_studio_kpi_')) and self[field_name]
+               ]
 
     def _get_margin_value(self, value, previous_value=0.0):
         margin = 0.0
         if (value != previous_value) and (value != 0.0 and previous_value != 0.0):
             margin = float_round((float(value-previous_value) / previous_value or 1) * 100, precision_digits=2)
         return margin
+
+    def _check_daily_logs(self):
+        three_days_ago = datetime.now().replace(hour=0, minute=0, second=0, microsecond=0) - relativedelta(days=3)
+        to_slowdown = self.env['digest.digest']
+        for digest in self.filtered(lambda digest: digest.periodicity == 'daily'):
+            users_logs = self.env['res.users.log'].sudo().search_count([
+                ('create_uid', 'in', digest.user_ids.ids),
+                ('create_date', '>=', three_days_ago)
+            ])
+            if not users_logs:
+                to_slowdown += digest
+        return to_slowdown
 
     def _format_currency_amount(self, amount, currency_id):
         pre = currency_id.position == 'before'
@@ -193,12 +335,3 @@ class Digest(models.Model):
                 return "%3.2f%s%s" % (amount, unit, suffix)
             amount /= 1000.0
         return "%.2f%s%s" % (amount, 'T', suffix)
-
-    @api.model
-    def _cron_send_digest_email(self):
-        digests = self.search([('next_run_date', '=', fields.Date.today()), ('state', '=', 'activated')])
-        for digest in digests:
-            try:
-                digest.action_send()
-            except MailDeliveryException as e:
-                _logger.warning('MailDeliveryException while sending digest %d. Digest is now scheduled for next cron update.')
