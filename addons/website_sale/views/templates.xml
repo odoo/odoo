@@ -1772,4 +1772,44 @@
             </div>
         </div>
     </template>
+
+
+    <record id="view_website_sale_website_form" model="ir.ui.view">
+        <field name="name">website_sale.website.form</field>
+        <field name="model">website</field>
+        <field name="inherit_id" ref="website.view_website_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook" position="inside">
+                <page string="Product Page Extra Fields" groups="base.group_no_one">
+                    <field name="shop_extra_field_ids" context="{'default_website_id': active_id}">
+                        <tree editable="bottom">
+                            <field name="sequence" widget="handle"/>
+                            <field name="field_id"/>
+                        </tree>
+                    </field>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+    <template id="ecom_show_extra_fields" inherit_id="website_sale.product" active="False" customize_show="True" name="Show Extra Fields">
+        <xpath expr="//div[@id='product_details']" position="inside">
+            <hr/>
+            <p class="text-muted">
+                <t t-foreach='website.shop_extra_field_ids' t-as='field' t-if='product[field.name]'>
+                    <b><t t-esc='field.label'/>: </b>
+                    <t t-if='field.field_id.ttype != "binary"'>
+                        <span t-esc='product[field.name]' t-options="{'widget': field.field_id.ttype}"/>
+                    </t>
+                    <t t-else=''>
+                        <a target='_blank' t-attf-href='/web/content/product.template/#{product.id}/#{field.name}?download=1'>
+                            <i class='fa fa-file'></i>
+                        </a>
+                    </t>
+                    <br/>
+                </t>
+            </p>
+        </xpath>
+    </template>
+
 </odoo>
