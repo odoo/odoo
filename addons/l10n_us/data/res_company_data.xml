@@ -1,6 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-<record model="res.company" id="base.main_company">
-    <field name="paperformat_id" ref="base.paperformat_us"/>
-</record>
+<odoo noupdate="1">
+
+    <function model="res.company" name="write">
+        <value model="base" eval="obj().env.user.company_id.id"/>
+        <value eval="{
+            'paperformat_id': ref('base.paperformat_us'),
+        }"/>
+    </function>
+
 </odoo>
