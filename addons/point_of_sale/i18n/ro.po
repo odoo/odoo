@@ -59,7 +59,7 @@ msgstr "$ 8.50"
 #: code:addons/point_of_sale/models/pos_payment.py:0
 #, python-format
 msgid "%s %s"
-msgstr ""
+msgstr "%s %s"
 
 #. module: point_of_sale
 #. openerp-web
@@ -72,7 +72,7 @@ msgstr "&nbsp;"
 #. module: point_of_sale
 #: model:ir.actions.report,print_report_name:point_of_sale.pos_invoice_report
 msgid "'Invoice - %s' % (object.name)"
-msgstr ""
+msgstr "'Factură client - %s' % (object.name)"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -94,7 +94,7 @@ msgstr "+ Tranzacții"
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid ", we advise you to close it and to create a new one."
-msgstr ""
+msgstr ", vă sfătuim să o închideți și să creați una nouă."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -139,17 +139,17 @@ msgstr ""
 #: code:addons/point_of_sale/models/pos_order.py:0
 #, python-format
 msgid "<p>Dear %s,<br/>Here is your electronic ticket for the %s. </p>"
-msgstr ""
+msgstr "<p>Dragă %s,<br/>Aici este biletul dvs. electronic pentru %s. </p>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Barcode Scanner</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Scaner Cod Bare</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Default Pricelist</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Lista prețuri implicită</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -159,7 +159,7 @@ msgstr "<span class=\"o_form_label\">Note contabile</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Login with Employees</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Conectați-vă cu angajații</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -234,6 +234,9 @@ msgid ""
 " Are you sure you want to close the session and post the accounting "
 "entries?</span>"
 msgstr ""
+"<span>Există o diferență între închiderea preconizată și cea efectivă în "
+"numerar. Ești sigur că vrei să închizi sesiunea și să postezi înregistrările"
+" contabile?</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -243,7 +246,7 @@ msgstr "<span>Vizualizează</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "= Expected in Cash"
-msgstr ""
+msgstr "= Așteptat în numerar"
 
 #. module: point_of_sale
 #. openerp-web
@@ -260,6 +263,9 @@ msgid ""
 "install a Chart of Accounts through the Invoicing/Accounting settings before"
 " launching a PoS session."
 msgstr ""
+"Un grafic de conturi nu este încă instalat în compania dvs. curentă. Vă "
+"rugăm să instalați o diagramă de conturi prin setările de facturare / "
+"contabilitate înainte de a lansa o sesiune PoS."
 
 #. module: point_of_sale
 #. openerp-web
@@ -326,16 +332,18 @@ msgstr "ABC"
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Accept customer tips or convert their change to a tip"
 msgstr ""
+"Acceptați sfaturile clienților sau convertiți schimbarea acestora într-un "
+"sfat"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with a Vantiv payment terminal"
-msgstr ""
+msgstr "Acceptați plățile cu terminal de plăți Vantiv"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
 msgid "Accept payments with an Adyen payment terminal"
-msgstr ""
+msgstr "Acceptați plățile cu terminal de plată Adyen"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_payment_method_view_search
@@ -399,7 +407,7 @@ msgstr "Stare activitate"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Actual in Cash"
-msgstr ""
+msgstr "Curent în numerar"
 
 #. module: point_of_sale
 #. openerp-web
@@ -441,7 +449,7 @@ msgstr "Administrator"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Advanced Pricelists"
-msgstr ""
+msgstr "Listă de prețuri"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.res_config_settings_view_form
@@ -451,7 +459,7 @@ msgstr "Adyen"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_res_config_settings__module_pos_adyen
 msgid "Adyen Payment Terminal"
-msgstr ""
+msgstr "Terminal plată Adyen"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_config.py:0
@@ -493,7 +501,7 @@ msgstr "Permite discount global în comenzi"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__allowed_pricelist_ids
 msgid "Allowed Pricelists"
-msgstr ""
+msgstr "Listă prețuri permise"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_make_payment__amount
@@ -559,12 +567,13 @@ msgstr "Atribute"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Authorized Difference"
-msgstr ""
+msgstr "Diferența autorizată"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_session__rescue
 msgid "Auto-generated session for orphan orders, ignored in constraints"
 msgstr ""
+"Sesiune generată automat pentru comenzi orfane, ignorată prin constrângeri"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_print_auto
@@ -574,12 +583,12 @@ msgstr "Tipărire automată a bonului"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__iface_cashdrawer
 msgid "Automatically open the cashdrawer."
-msgstr ""
+msgstr "Deschideți automat cashdrawer-ul."
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_available_categ_ids
 msgid "Available PoS Product Categories"
-msgstr ""
+msgstr "Categorii de produse PoS disponibile"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__available_pricelist_ids
@@ -590,7 +599,7 @@ msgstr "Liste de prețuri disponibile"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Available Product Categories"
-msgstr ""
+msgstr "Categorii de produse disponibile"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_product_product__available_in_pos
@@ -619,7 +628,7 @@ msgstr "Înapoi"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Backspace"
-msgstr ""
+msgstr "Backspace"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
@@ -641,7 +650,7 @@ msgstr "Extras bancă"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_cashbox
 msgid "Bank Statement Cashbox"
-msgstr ""
+msgstr "Extras de cont CashBox"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_bank_statement_line
@@ -727,7 +736,7 @@ msgstr "Anulează"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Cancel Payment Request"
-msgstr ""
+msgstr "Anulare Cerere Plată"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_order__state__cancel
@@ -765,7 +774,7 @@ msgstr "Controlul numerarului"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 msgid "Cash In/Out"
-msgstr ""
+msgstr "Cash In / Out"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_payment_method__cash_journal_id
@@ -786,7 +795,7 @@ msgstr "Extrase de casă"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.account_cashbox_line_view_tree
 msgid "Cashbox balance"
-msgstr ""
+msgstr "Soldul CashBox"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_cashdrawer
@@ -872,7 +881,7 @@ msgstr "Rest:"
 #: code:addons/point_of_sale/static/src/js/gui.js:0
 #, python-format
 msgid "Changes could not be saved"
-msgstr ""
+msgstr "Modificările nu au putut fi salvate"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__to_weight
@@ -881,6 +890,8 @@ msgid ""
 "Check if the product should be weighted using the hardware scale "
 "integration."
 msgstr ""
+"Verificați dacă produsul trebuie cântărit folosind integrarea pe scară "
+"hardware."
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_product_product__available_in_pos
@@ -920,11 +931,13 @@ msgid ""
 "Choose a specific fiscal position at the order depending on the kind of "
 "customer (tax exempt, onsite vs. takeaway, etc.)."
 msgstr ""
+"Alegeți o poziție fiscală specifică la comandă, în funcție de tipul de "
+"client (scutit de impozit, la fața locului, etc.)."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Choose among fiscal positions when processing an order"
-msgstr ""
+msgstr "Alegeți dintre pozițiile fiscale atunci când prelucrați o comandă"
 
 #. module: point_of_sale
 #. openerp-web
@@ -944,28 +957,28 @@ msgstr "Client"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Client Screen Connected"
-msgstr ""
+msgstr "Ecranul Client Conectat"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Client Screen Disconnected"
-msgstr ""
+msgstr "Ecranul Client Deconenctat"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/chrome.js:0
 #, python-format
 msgid "Client Screen Unsupported. Please upgrade the IoT Box"
-msgstr ""
+msgstr "Ecranul clientului nu este acceptat. Actualizați caseta IoT"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Client Screen Warning"
-msgstr ""
+msgstr "Avertisment ecran client"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1018,7 +1031,7 @@ msgstr "Companie"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__company_has_template
 msgid "Company has chart of accounts"
-msgstr ""
+msgstr "Compania are grafic de conturi"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_config_settings
@@ -1033,7 +1046,7 @@ msgstr "Configurare"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Configuration for journal entries of PoS orders"
-msgstr ""
+msgstr "Configurare pentru intrările în jurnal de comenzi PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -1056,27 +1069,27 @@ msgstr "Confirmă"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect Devices"
-msgstr ""
+msgstr "Conectați dispozitivele"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS"
-msgstr ""
+msgstr "Conectați dispozitivele la PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connect devices to your PoS through an IoT Box"
-msgstr ""
+msgstr "Conectare dispozitive la PoS printr-o cutie IoT"
 
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_config__other_devices
 msgid "Connect devices to your PoS without an IoT Box."
-msgstr ""
+msgstr "Conectați dispozitivele la PoS fără un IoT Box."
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Connected Devices"
-msgstr ""
+msgstr "Dispozitive conectate"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1090,35 +1103,35 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Connecting to Proxy"
-msgstr ""
+msgstr "Conectare la proxy"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/models.js:0
 #, python-format
 msgid "Connecting to the IoT Box"
-msgstr ""
+msgstr "Conectarea la caseta IoT"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Connection error"
-msgstr ""
+msgstr "Eroare conexiune"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Connection to IoT Box failed"
-msgstr ""
+msgstr "Conectarea la caseta IoT a eșuat"
 
 #. module: point_of_sale
 #. openerp-web
 #: code:addons/point_of_sale/static/src/js/printers.js:0
 #, python-format
 msgid "Connection to the printer failed"
-msgstr ""
+msgstr "Conectarea la imprimantă nu a reușit"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_res_partner
@@ -1143,7 +1156,7 @@ msgstr "Rată conversie"
 #. module: point_of_sale
 #: model:ir.model.fields,help:point_of_sale.field_pos_payment__currency_rate
 msgid "Conversion rate from company currency to order currency."
-msgstr ""
+msgstr "Rata de conversie din moneda companiei în moneda de comandă."
 
 #. module: point_of_sale
 #. openerp-web
@@ -1162,12 +1175,12 @@ msgstr "Țară"
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
 msgid "Create a new PoS config"
-msgstr ""
+msgstr "Creați o nouă configurare PoS"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid "Create a new product variant"
-msgstr ""
+msgstr "Creați o nouă variantă de produs"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_closing_balance_confirm_wizard__create_uid
@@ -1226,12 +1239,12 @@ msgstr "Sesiune curentă"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_user_id
 msgid "Current Session Responsible"
-msgstr ""
+msgstr "Sesiunea curentă responsabilă"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__current_session_state
 msgid "Current Session State"
-msgstr ""
+msgstr "Starea actuală a sesiunii"
 
 #. module: point_of_sale
 #. openerp-web
@@ -1251,12 +1264,12 @@ msgstr "Client"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Customer Display"
-msgstr ""
+msgstr "Afișarea clienților"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_customer_facing_display
 msgid "Customer Facing Display"
-msgstr ""
+msgstr "Afișare orientată către client"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_order.py:0
@@ -1311,7 +1324,7 @@ msgstr "Poziție fiscală implicită"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Default Opening"
-msgstr ""
+msgstr "Deschidere implicită"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__pricelist_id
@@ -1415,7 +1428,7 @@ msgstr "Deselectează client"
 #: model:product.product,name:point_of_sale.desk_organizer
 #: model:product.template,name:point_of_sale.desk_organizer_product_template
 msgid "Desk Organizer"
-msgstr ""
+msgstr "Organizator birou"
 
 #. module: point_of_sale
 #: model:product.product,name:point_of_sale.desk_pad
@@ -1463,7 +1476,7 @@ msgstr "Redu"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_pos_form
 msgid "Disc.%"
-msgstr ""
+msgstr "Disc.%"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.report_saledetails
@@ -1523,7 +1536,7 @@ msgstr "Reduceri"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Dismiss"
-msgstr ""
+msgstr "Destituire"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_config__iface_display_categ_images
@@ -1564,7 +1577,7 @@ msgstr ""
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Don't show again"
-msgstr ""
+msgstr "Nu arăta din nou"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -1596,7 +1609,7 @@ msgstr "Descarcă"
 #: code:addons/point_of_sale/static/src/xml/pos.xml:0
 #, python-format
 msgid "Download Paid Orders"
-msgstr ""
+msgstr "Descărcați comenzi plătite"
 
 #. module: point_of_sale
 #. openerp-web
