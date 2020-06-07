@@ -848,7 +848,7 @@ class Field(MetaField('DummyField', (object,), {})):
             def add_not_null():
                 # flush values before adding NOT NULL constraint
                 model.flush([self.name])
-                model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
+                model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name, postpone=self.compute)
 
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
