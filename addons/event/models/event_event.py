@@ -97,6 +97,7 @@ class EventEvent(models.Model):
     _description = 'Event'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_begin'
+    _pre_compute = True
 
     def _get_default_stage_id(self):
         event_stages = self.env['event.stage'].search([])
@@ -189,7 +190,7 @@ class EventEvent(models.Model):
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
-        'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
+        string='Country', related='address_id.country_id', readonly=False, store=True)
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
@@ -363,8 +364,10 @@ class EventEvent(models.Model):
         """
         for event in self:
             if not event.event_type_id:
-                if not event.seats_max:
-                    event.seats_max = 0
+                event.seats_max = event.seats_max or 0
+                event.seats_limited = event.seats_limited
+                event.auto_confirm = event.auto_confirm
+                event.tag_ids = event.tag_ids
                 continue
 
             event.seats_max = event.event_type_id.seats_max
@@ -401,8 +404,7 @@ class EventEvent(models.Model):
                         for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
                     }) for line in event.event_type_id.event_type_mail_ids
                 ]
-            if command:
-                event.event_mail_ids = command
+            event.event_mail_ids = command if command else event.event_mail_ids
 
     @api.depends('event_type_id')
     def _compute_event_ticket_ids(self):
@@ -471,15 +473,13 @@ class EventEvent(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['event.stage'].search([])
 
-    @api.model
-    def create(self, vals):
-        # Temporary fix for ``seats_limited`` and ``date_tz`` required fields (see ``_compute_from_event_type``
-        vals.update(self._sync_required_computed(vals))
-
-        res = super(EventEvent, self).create(vals)
-        if res.organizer_id:
-            res.message_subscribe([res.organizer_id.id])
-        return res
+    @api.model_create_multi
+    def create(self, vals_list):
+        events = super(EventEvent, self).create(vals_list)
+        for res in events:
+            if res.organizer_id:
+                res.message_subscribe([res.organizer_id.id])
+        return events
 
     def write(self, vals):
         res = super(EventEvent, self).write(vals)

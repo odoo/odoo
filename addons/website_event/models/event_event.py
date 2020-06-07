@@ -66,8 +66,10 @@ class Event(models.Model):
                 event.website_menu = False
             elif event.event_type_id:
                 event.website_menu = event.event_type_id.website_menu
+            else:
+                event.website_menu = event.website_menu
 
-    @api.model
+    @api.model_create_multi
     def create(self, vals):
         res = super(Event, self).create(vals)
         res._update_website_menus()
