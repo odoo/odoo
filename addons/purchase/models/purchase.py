@@ -874,6 +874,8 @@ class PurchaseOrderLine(models.Model):
                     line.order_id.message_post_with_view('purchase.track_po_line_template',
                                                          values={'line': line, 'product_qty': values['product_qty']},
                                                          subtype_id=self.env.ref('mail.mt_note').id)
+        if 'order_id' in values and self.filtered(lambda x: x.order_id.state != 'draft' and not x.order_id):
+            raise UserError("You cannot change the purchase order of those lines.")
         return super(PurchaseOrderLine, self).write(values)
 
     def unlink(self):
