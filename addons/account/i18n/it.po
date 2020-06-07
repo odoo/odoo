@@ -26,8 +26,8 @@
 # Paolo Valier, 2019
 # Luana Andronico <andronicoluana@gmail.com>, 2019
 # Simone Sanfilippo <s.sanfilippo@hinge16.eu>, 2019
-# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # Lorenzo Battistini <lb@takobi.online>, 2020
+# Sergio Zanchetta <primes2h@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Lorenzo Battistini <lb@takobi.online>, 2020\n"
+"Last-Translator: Sergio Zanchetta <primes2h@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +56,7 @@ msgstr ""
 " * Lo stato «Aperta» si usa quando alla fattura creata viene assegnato un numero. Lo stato permane finché non viene pagata.\n"
 " * Lo stato «In pagamento» è usato quando i pagamenti sono stati generati in un registro contabile per l'intero ammontare della fattura, ma alcune registrazioni non sono ancora state riconciliate con la banca.\n"
 " * Lo stato «Pagata» è impostato automaticamente dopo il pagamento della fattura, a prescindere dalla riconciliazione delle relative registrazioni contabili.\n"
-" * Lo stato «Annullata» viene usato dopo l'annullamento di una fattura."
+" * Lo stato «Annullata» viene usato quando l'utente annulla una fattura."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__code_digits
@@ -247,7 +247,7 @@ msgstr ""
 "            La preghiamo di provvedere quanto prima al pagamento.\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Per ulteriori domande, non esiti a contattarci.\n"
+"        Per ulteriori domande non esiti a contattarci.\n"
 "    </p>\n"
 "</div>\n"
 "            "
@@ -599,7 +599,7 @@ msgstr "<span>Quantità</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Riferimento</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -1447,7 +1447,7 @@ msgstr "Aggiungi una nota interna..."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Add contacts to notify..."
-msgstr "Aggiungere un contatto da notificare..."
+msgstr "Aggiungi un contatto da notificare..."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_send__partner_ids
@@ -9286,7 +9286,7 @@ msgstr "Invio denaro"
 #. module: account
 #: model:ir.actions.act_window,name:account.account_send_payment_receipt_by_email_action
 msgid "Send Receipt By Email"
-msgstr "Invia ricevuta con e-mail"
+msgstr "Invia ricevuta tramite e-mail"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_open_account_onboarding_sample_invoice

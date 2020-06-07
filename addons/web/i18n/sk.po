@@ -11,6 +11,7 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2018
 # gebri <gebri@inmail.sk>, 2018
 # Jan Prokop, 2019
+# Damian brencic <brencicdamian12313@gmail.com>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
@@ -128,6 +129,9 @@ msgid ""
 "                        &lt;body class=\"ie9\"&gt;\n"
 "                    &lt;![endif]--&gt;"
 msgstr ""
+"&lt;!--[if lt IE 10]&gt;\n"
+"                        &lt;body class=\"ie9\"&gt;\n"
+"                    &lt;![endif]--&gt;"
 
 #. module: web
 #. openerp-web
@@ -227,12 +231,12 @@ msgstr "<i class=\"fa fa-building-o\" role=\"img\" aria-label=\"Fiscal number\"/
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-globe\" role=\"img\" aria-label=\"Website\" title=\"Website\"/>"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
 msgid "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-phone\" role=\"img\" aria-label=\"Phone\" title=\"Phone\"/>"
 
 #. module: web
 #. openerp-web
@@ -261,14 +265,14 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:632
 #, python-format
 msgid "ALL"
-msgstr ""
+msgstr "Všetky"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:633
 #, python-format
 msgid "ANY"
-msgstr ""
+msgstr "Akýkoľvek"
 
 #. module: web
 #. openerp-web
@@ -317,7 +321,7 @@ msgstr "Aktivovať"
 #: code:addons/web/static/src/xml/base.xml:248
 #, python-format
 msgid "Activate Assets Debugging"
-msgstr ""
+msgstr "Aktivovať odstránenia chýb kódu"
 
 #. module: web
 #. openerp-web
@@ -719,7 +723,7 @@ msgstr "Bity, Kb,Mb,Gb,Tb,Pb,Eb,Zb,Yb"
 #: code:addons/web/static/src/xml/base.xml:1222
 #, python-format
 msgid "CLEAR"
-msgstr ""
+msgstr "ČISTÝ"
 
 #. module: web
 #. openerp-web
@@ -1590,7 +1594,7 @@ msgstr "Od %s do %s"
 #: code:addons/web/static/src/xml/kanban.xml:89
 #, python-format
 msgid "Fushia"
-msgstr ""
+msgstr "Fushia"
 
 #. module: web
 #. openerp-web
@@ -1704,7 +1708,7 @@ msgstr "Stlačte ESCAPE pre zahodenie"
 #: code:addons/web/static/src/xml/colorpicker.xml:41
 #, python-format
 msgid "Hue"
-msgstr ""
+msgstr "Hue"
 
 #. module: web
 #. openerp-web
@@ -1786,7 +1790,7 @@ msgstr "Neplatný mód pre graf"
 #: code:addons/web/static/src/js/tools/debug_manager.js:209
 #, python-format
 msgid "JS Mobile Tests"
-msgstr ""
+msgstr "JS Mobile Tests"
 
 #. module: web
 #. openerp-web
@@ -2398,7 +2402,7 @@ msgstr "Iba celočíselná hodnota by mala byť platná."
 #: code:addons/web/static/src/js/fields/basic_fields.js:1982
 #, python-format
 msgid "Only Integer or Float Value should be valid."
-msgstr ""
+msgstr "Platná by mala byť iba celočíselná alebo plávajúca hodnota."
 
 #. module: web
 #: code:addons/web/controllers/main.py:502
@@ -2719,7 +2723,7 @@ msgstr "Červená"
 #: code:addons/web/static/src/xml/base.xml:249
 #, python-format
 msgid "Regenerate Assets Bundles"
-msgstr ""
+msgstr "Obnoviť zväzky aktív"
 
 #. module: web
 #. openerp-web
@@ -2733,7 +2737,7 @@ msgstr "Závislosť nepovolená"
 #: code:addons/web/static/src/xml/base.xml:771
 #, python-format
 msgid "Relation to follow"
-msgstr ""
+msgstr "Vzťah na sledovanie"
 
 #. module: web
 #. openerp-web
@@ -2810,28 +2814,28 @@ msgstr "Obnoviť"
 #: code:addons/web/static/src/xml/base.xml:240
 #, python-format
 msgid "Run Click Everywhere Test"
-msgstr ""
+msgstr "Spustiť test kliknutím hocikde"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:239
 #, python-format
 msgid "Run JS Mobile Tests"
-msgstr ""
+msgstr "Spustite mobilné testy JS"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:238
 #, python-format
 msgid "Run JS Tests"
-msgstr ""
+msgstr "Spustite JS testy"
 
 #. module: web
 #. openerp-web
 #: code:addons/web/static/src/xml/base.xml:1226
 #, python-format
 msgid "SEE RESULT"
-msgstr ""
+msgstr "ZOBRAZIŤ VÝSLEDOK"
 
 #. module: web
 #. openerp-web
@@ -3184,6 +3188,8 @@ msgid ""
 "The field chain is not valid. Did you maybe use a non-existing field name or"
 " followed a non-relational field?"
 msgstr ""
+"Reťazec poľa nie je platný. Použili ste možno neexistujúci názov poľa alebo "
+"ste sledovali nesúvisiace pole?"
 
 #. module: web
 #. openerp-web
@@ -3644,7 +3650,7 @@ msgstr "Porovnávacie testy webu"
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_mobile_suite
 msgid "Web Mobile Tests"
-msgstr ""
+msgstr "Webové mobilné testy"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.qunit_suite
@@ -3765,7 +3771,7 @@ msgstr "Vytvárate nové %s, ste si istý že ešte neexestuje?"
 #: code:addons/web/static/src/js/widgets/model_field_selector.js:467
 #, python-format
 msgid "You cannot follow relations for this field chain construction"
-msgstr ""
+msgstr "Nemôžete sledovať vzťahy pre túto konštrukciu reťazí poľa"
 
 #. module: web
 #: code:addons/web/controllers/main.py:819
@@ -3828,7 +3834,7 @@ msgstr ""
 #: code:addons/web/static/src/js/views/kanban/kanban_record.js:246
 #, python-format
 msgid "[No widget %s]"
-msgstr ""
+msgstr "[Žiadny widget %s]"
 
 #. module: web
 #. openerp-web
@@ -4047,7 +4053,7 @@ msgstr "je true"
 #: code:addons/web/static/src/js/core/utils.js:113
 #, python-format
 msgid "kMGTPE"
-msgstr ""
+msgstr "kMGTPE"
 
 #. module: web
 #. openerp-web
