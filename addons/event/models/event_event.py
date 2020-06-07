@@ -97,6 +97,7 @@ class EventEvent(models.Model):
     _description = 'Event'
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _order = 'date_begin'
+    _pre_compute = True
 
     def _get_default_stage_id(self):
         event_stages = self.env['event.stage'].search([])
@@ -189,7 +190,7 @@ class EventEvent(models.Model):
         'res.partner', string='Venue', default=lambda self: self.env.company.partner_id.id,
         tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
     country_id = fields.Many2one(
-        'res.country', 'Country', related='address_id.country_id', readonly=False, store=True)
+        string='Country', related='address_id.country_id', readonly=False, store=True)
     # badge fields
     badge_front = fields.Html(string='Badge Front')
     badge_back = fields.Html(string='Badge Back')
@@ -367,13 +368,22 @@ class EventEvent(models.Model):
                     event.seats_max = 0
                 if not event.event_ticket_ids:
                     event.event_ticket_ids = False
+                else:
+                    event.event_ticket_ids = event.event_ticket_ids
+                event.auto_confirm = event.auto_confirm
+                event.event_mail_ids = event.event_mail_ids
+                event.tag_ids = event.tag_ids
                 continue
 
             if event.event_type_id.seats_max:
                 event.seats_max = event.event_type_id.seats_max
+            else:
+                event.seats_max = event.seats_max
 
             if event.event_type_id.auto_confirm:
                 event.auto_confirm = event.event_type_id.auto_confirm
+            else:
+                event.auto_confirm = event.auto_confirm
 
             # compute mailing information (force only if activated and mailing defined)
             if event.event_type_id.use_mail_schedule and event.event_type_id.event_type_mail_ids:
@@ -381,8 +391,9 @@ class EventEvent(models.Model):
                     (0, 0, {
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
-                        })
-                    for line in event.event_type_id.event_type_mail_ids]
+                    }) for line in event.event_type_id.event_type_mail_ids]
+            else:
+                event.event_mail_ids = event.event_mail_ids
 
             # compute tickets information (force only if activated and tickets defined)
             if event.event_type_id.use_ticket and event.event_type_id.event_type_ticket_ids:
@@ -392,9 +403,13 @@ class EventEvent(models.Model):
                         for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
                         })
                     for line in event.event_type_id.event_type_ticket_ids]
+            else:
+                event.event_ticket_ids = event.event_ticket_ids
 
             if event.event_type_id.tag_ids:
                 event.tag_ids = event.event_type_id.tag_ids
+            else:
+                event.tag_ids = event.tag_ids
 
     @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):
@@ -422,15 +437,17 @@ class EventEvent(models.Model):
     def _read_group_stage_ids(self, stages, domain, order):
         return self.env['event.stage'].search([])
 
-    @api.model
-    def create(self, vals):
-        # Temporary fix for ``seats_limited`` and ``date_tz`` required fields (see ``_compute_from_event_type``
-        vals.update(self._sync_required_computed(vals))
+    @api.model_create_multi
+    def create(self, vals_list):
+        # for vals in vals_list:
+        #     # Temporary fix for ``seats_limited`` and ``date_tz`` required fields (see ``_compute_from_event_type``
+        #     vals.update(self._sync_required_computed(vals))
 
-        res = super(EventEvent, self).create(vals)
-        if res.organizer_id:
-            res.message_subscribe([res.organizer_id.id])
-        return res
+        events = super(EventEvent, self).create(vals_list)
+        for res in events:
+            if res.organizer_id:
+                res.message_subscribe([res.organizer_id.id])
+        return events
 
     def write(self, vals):
         res = super(EventEvent, self).write(vals)

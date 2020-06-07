@@ -43,3 +43,5 @@ class EventEvent(models.Model):
                     })
                     for question in event.event_type_id.question_ids
                 ]
+            else:
+                event.question_ids = event.question_ids
