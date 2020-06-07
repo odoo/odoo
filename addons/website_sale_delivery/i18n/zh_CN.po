@@ -3,15 +3,17 @@
 # 	* website_sale_delivery
 # 
 # Translators:
+# 钟小华 <mackz@sina.com>, 2016
+# mrshelly <mrshelly@hotmail.com>, 2016
+# 苏州远鼎 <tiexinliu@126.com>, 2016
+# lttlsnk <lttlsnk@gmail.com>, 2017
+# 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2018
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2018
+# e2f_cn c5 <jarvisn@ecinnovations.com>, 2018
+# snow wang <147156565@qq.com>, 2018
 # Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
-# lttlsnk <lttlsnk@gmail.com>, 2019
-# e2f_cn c5 <jarvisn@ecinnovations.com>, 2019
-# bf2549c5415a9287249cba2b8a5823c7, 2019
 # 琥珀棋子 <hopekee@163.com>, 2019
-# snow wang <147156565@qq.com>, 2019
-# inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Felix Yuen <fyu@odoo.com>, 2019
 # 
 msgid ""
@@ -19,7 +21,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
 "Last-Translator: Felix Yuen <fyu@odoo.com>, 2019\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
@@ -49,7 +51,7 @@ msgstr "选择配送方式"
 #. module: website_sale_delivery
 #: model:ir.model,name:website_sale_delivery.model_res_country
 msgid "Country"
-msgstr "国家/地区"
+msgstr "国家"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
@@ -79,12 +81,12 @@ msgstr "说明"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
 msgid "Description displayed on the eCommerce and on online quotations."
-msgstr "详情显示在电子商务和在线报价单上。"
+msgstr "描述显示在电子商务和在线报价单上。"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,field_description:website_sale_delivery.field_delivery_carrier__website_description
 msgid "Description for Online Quotations"
-msgstr "在线报价单的详情"
+msgstr "在线报价单的描述"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
@@ -105,12 +107,20 @@ msgid "Free"
 msgstr "空闲"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:72
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"It seems that a delivery method is not compatible with your address. Please "
+"refresh the page and try again."
+msgstr ""
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address."
 " Please contact us for more information."
-msgstr "你当前的订单上没有可供的送货方式及送货地址，请联系我们获取更多信息。"
+msgstr "订单上没有选择正确的送货方式及送货地址，请完善。"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_search_inherit_website_sale_delivery
@@ -138,12 +148,12 @@ msgstr "送货方式"
 #: code:addons/website_sale_delivery/controllers/main.py:71
 #, python-format
 msgid "Sorry, we are unable to ship your order"
-msgstr "报歉，你的订单我们无法运送"
+msgstr "报歉，您的订单我们无法运送"
 
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order__amount_delivery
 msgid "The amount without tax."
-msgstr "未税金额。"
+msgstr "不含税金的总额。"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form

@@ -3,8 +3,9 @@
 # 	* website_sale_delivery
 # 
 # Translators:
+# Cas Vissers <casvissers@brahoo.nl>, 2017
+# Erwin van der Ploeg <erwin@odooexperts.nl>, 2017
 # Martin Trigaux, 2019
-# Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
 # Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
 # Gunther Clauwaert <gclauwae@hotmail.com>, 2019
 # 
@@ -13,7 +14,7 @@ msgstr ""
 "Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-12 11:33+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"PO-Revision-Date: 2016-08-05 13:14+0000\n"
 "Last-Translator: Gunther Clauwaert <gclauwae@hotmail.com>, 2019\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
@@ -66,7 +67,7 @@ msgstr "Levering wordt geüpdatet na het kiezen van een nieuwe levermethode"
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.cart_delivery
 msgid "Delivery:"
-msgstr "Levering:"
+msgstr "Ontvangst:"
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.view_delivery_carrier_form_website_delivery
@@ -102,7 +103,15 @@ msgid "Free"
 msgstr "Gratis"
 
 #. module: website_sale_delivery
-#: code:addons/website_sale_delivery/controllers/main.py:72
+#: code:addons/website_sale_delivery/controllers/main.py:0
+#, python-format
+msgid ""
+"It seems that a delivery method is not compatible with your address. Please "
+"refresh the page and try again."
+msgstr ""
+
+#. module: website_sale_delivery
+#: code:addons/website_sale_delivery/controllers/main.py:0
 #, python-format
 msgid ""
 "No shipping method is available for your current order and shipping address."
@@ -142,7 +151,7 @@ msgstr "Sorry, het is niet mogelijk om uw order te verzenden."
 #. module: website_sale_delivery
 #: model:ir.model.fields,help:website_sale_delivery.field_sale_order__amount_delivery
 msgid "The amount without tax."
-msgstr "Het bedrag excl. BTW."
+msgstr "Het bedrag zonder BTW."
 
 #. module: website_sale_delivery
 #: model_terms:ir.ui.view,arch_db:website_sale_delivery.res_config_settings_view_form
