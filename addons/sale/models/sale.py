@@ -1246,6 +1246,9 @@ class SaleOrderLine(models.Model):
             precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
             self.filtered(
                 lambda r: r.state == 'sale' and float_compare(r.product_uom_qty, values['product_uom_qty'], precision_digits=precision) != 0)._update_line_quantity(values)
+            
+        if 'order_id' in values and self.filtered(lambda x: x.order_id and x.order_id.state != 'draft'):
+            raise UserError("You cannot change the sale order of those lines.")
 
         # Prevent writing on a locked SO.
         protected_fields = self._get_protected_fields()
@@ -1702,7 +1705,7 @@ class SaleOrderLine(models.Model):
     def _get_protected_fields(self):
         return [
             'product_id', 'name', 'price_unit', 'product_uom', 'product_uom_qty',
-            'tax_id', 'analytic_tag_ids'
+            'tax_id', 'analytic_tag_ids', 'order_id'
         ]
 
     @api.onchange('product_id', 'price_unit', 'product_uom', 'product_uom_qty', 'tax_id')
