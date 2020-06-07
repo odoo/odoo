@@ -557,6 +557,8 @@ class Field(MetaField('DummyField', (object,), {})):
             # update 'target' only if 'record' and 'target' are both real or
             # both new (see `test_base_objects.py`, `test_basic`)
             if target and bool(target.id) == bool(record.id):
+                if field.pre_compute and target[field.name] == record_value[record]:
+                    continue
                 target[field.name] = record_value[record]
 
     def _search_related(self, records, operator, value):
