@@ -761,6 +761,11 @@ class MrpWorkorder(models.Model):
             if not workorder.date_planned_start or end_date < workorder.date_planned_start:
                 vals['date_planned_start'] = end_date
             workorder.write(vals)
+
+            # Community-only: without quality checks, finishing a workorder should
+            # start the next one.
+            if not workorder._fields.get('check_ids'):
+                workorder._start_nextworkorder()
         return True
 
     def end_previous(self, doall=False):
