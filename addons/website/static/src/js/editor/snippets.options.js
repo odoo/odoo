@@ -2020,6 +2020,7 @@ options.registry.CoverProperties = options.Class.extend({
             this.$target.removeClass('o_record_has_cover');
         } else {
             this.$image.css('background-image', `url('${widgetValue}')`);
+            this.$target.addClass('o_record_has_cover');
             const $defaultSizeBtn = this.$el.find('.o_record_cover_opt_size_default');
             $defaultSizeBtn.click();
             $defaultSizeBtn.closest('we-select').click();
@@ -2084,10 +2085,8 @@ options.registry.CoverProperties = options.Class.extend({
      * @override
      */
     _computeWidgetVisibility: function (widgetName, params) {
-        const hasCover = this.$target.hasClass('o_record_has_cover');
         if (params.coverOptName) {
-            var notAllowed = (this.$target.data(`use_${params.coverOptName}`) !== 'True');
-            return (hasCover && !notAllowed);
+            return this.$target.data(`use_${params.coverOptName}`) === 'True';
         }
         return this._super(...arguments);
     },

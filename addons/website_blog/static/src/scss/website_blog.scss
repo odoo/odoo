@@ -138,12 +138,34 @@ $o-wblog-loader-size: 50px;
     // Blog Post Page Cover
     // ==============================================
     .o_wblog_post_page_cover {
-        // By default (no image defined), inner filters elements are hidden.
-        .o_record_cover_component {
-            display: none;
+
+        // Cover sizes
+        // ==============================================
+        &.cover_auto {
+            padding: 3rem 0;
+            // The actual height will always be 'auto'. The following
+            // min-height rule is set to trigger the page transition only.
+            min-height: 1px;
         }
 
-        // If a cover image is defined, show filters + adapt inner typography
+        // "Regular Cover" design sizes
+        // ==============================================
+        &.o_wblog_post_page_cover_regular {
+            &.o_full_screen_height {
+                min-height: 350px;
+            }
+
+            &.o_half_screen_height {
+                min-height: 250px;
+            }
+
+            &.cover_auto {
+                min-height: 150px;
+                padding: 0;
+            }
+        }
+
+        // If a cover image is defined, adapt inner typography
         &.o_record_has_cover {
             .o_record_cover_image:after {
                 content: "";
@@ -151,41 +173,14 @@ $o-wblog-loader-size: 50px;
                 @include o-position-absolute(0,0,50%,0);
                 @include o-wbblog-scrim-gradient(rgba(black, 0.5), transparent);
             }
-            .o_record_cover_component {
-                display: block;
-            }
 
             .o_wblog_post_title {
                 color: white;
             }
 
-            // Cover sizes
-            // ==============================================
-            &.cover_auto {
-                padding: 3rem 0;
-                // The actual height will always be 'auto'. The following
-                // min-height rule is set to trigger the page transition only.
-                min-height: 1px;
-            }
-
-            // "Regular Cover" design sizes
-            // ==============================================
             &.o_wblog_post_page_cover_regular {
                 .o_record_cover_image:after {
                     visibility: hidden;
-                }
-
-                &.o_full_screen_height {
-                    min-height: 350px;
-                }
-
-                &.o_half_screen_height {
-                    min-height: 250px;
-                }
-
-                &.cover_auto {
-                    min-height: 150px;
-                    padding: 0;
                 }
             }
         }
