@@ -352,7 +352,7 @@ var TranslatorMenuBar = Widget.extend({
      */
     _onRTEChange: function (ev) {
         var $node = $(ev.data.target);
-        $node.find('p').each(function () { // remove <p/> element which might have been inserted because of copy-paste
+        $node.find('p,div').each(function () { // remove P,DIV elements which might have been inserted because of copy-paste
             var $p = $(this);
             $p.after($p.html()).remove();
         });
