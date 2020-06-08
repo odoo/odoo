@@ -108,7 +108,6 @@
                 <script type="text/javascript" src="/mail/static/src/components/thread_textual_typing_status/thread_textual_typing_status.js"></script>
                 <script type="text/javascript" src="/mail/static/src/components/thread_typing_icon/thread_typing_icon.js"></script>
                 <script type="text/javascript" src="/mail/static/src/components/thread_viewer/thread_viewer.js"></script>
-                <script type="text/javascript" src="/mail/static/src/env/env.js"></script>
                 <script type="text/javascript" src="/mail/static/src/model/model_core.js"></script>
                 <script type="text/javascript" src="/mail/static/src/model/model_errors.js"></script>
                 <script type="text/javascript" src="/mail/static/src/model/model_field.js"></script>
@@ -210,6 +209,12 @@
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/components/thread_viewer/thread_viewer.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/widgets/discuss/discuss.scss"/>
                 <link rel="stylesheet" type="text/scss" href="/mail/static/src/widgets/form_renderer/form_renderer.scss"/>
+            </xpath>
+        </template>
+
+        <template id="assets_backend_prod_only" name="mail prod only assets" inherit_id="web.assets_backend_prod_only">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/mail/static/src/js/main.js"></script>
             </xpath>
         </template>
 

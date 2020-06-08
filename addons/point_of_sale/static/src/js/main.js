@@ -1,6 +1,7 @@
 odoo.define('web.web_client', function (require) {
     'use strict';
 
+    const AbstractService = require('web.AbstractService');
     const env = require('web.env');
     const WebClient = require('web.AbstractWebClient');
     const Chrome = require('point_of_sale.Chrome');
@@ -37,6 +38,7 @@ odoo.define('web.web_client', function (require) {
         configureGui({ component: chrome });
     }
 
+    AbstractService.prototype.deployServices(env);
     const webClient = new WebClient();
     startPosApp(webClient);
     return webClient;

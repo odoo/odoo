@@ -879,6 +879,10 @@
         </t>
     </template>
 
+    <template id="web.assets_backend_prod_only">
+        <script type="text/javascript" src="/web/static/src/js/main.js"></script>
+    </template>
+
     <template id="web.webclient_bootstrap">
         <t t-call="web.layout">
             <t t-set="head_web">
@@ -891,9 +895,8 @@
                 <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
+                <t t-call-assets="web.assets_backend_prod_only" t-css="false"/>
                 <t t-call="web.conditional_assets_tests"/>
-
-                <script type="text/javascript" src="/web/static/src/js/main.js"></script>
             </t>
             <t t-set="head" t-value="head_web + (head or '')"/>
             <t t-set="body_classname" t-value="'o_web_client'"/>
