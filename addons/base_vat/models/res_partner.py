@@ -460,6 +460,15 @@ class ResPartner(models.Model):
         except ImportError:
             return True
 
+    def check_vat_ua(self, vat):
+        if self.is_company:
+            if len(vat) == 12:
+                return True
+        else:
+            if len(vat) == 10 or len(vat) == 9:
+                return True
+        return False
+
     def default_compact(self, vat):
         return vat
 
