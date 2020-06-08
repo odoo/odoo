@@ -132,7 +132,14 @@ var MessagingMenu = Widget.extend({
     _markAsRead: function ($preview) {
         var previewID = $preview.data('preview-id');
         if (previewID === 'mailbox_inbox') {
-            var messageIDs = [].concat($preview.data('message-ids'));
+            var messageIDs = $preview.data('message-ids');
+
+            if (typeof messageIDs === 'string') {
+                messageIDs = messageIDs.split(',').map(id => Number(id));
+            } else {
+                messageIDs = [$preview.data('message-ids')];
+            }
+
             this.call('mail_service', 'markMessagesAsRead', messageIDs);
         } else if (previewID === 'mail_failure') {
             var documentModel = $preview.data('document-model');
