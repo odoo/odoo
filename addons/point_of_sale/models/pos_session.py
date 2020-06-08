@@ -298,9 +298,19 @@ class PosSession(models.Model):
         self._check_if_no_draft_orders()
         if self.update_stock_at_closing:
             self._create_picking_at_end_of_session()
-        self.with_company(self.company_id)._create_account_move()
+        # Users without any accounting rights won't be able to create the journal entry. If this
+        # case, switch to sudo for creation and posting.
+        sudo = False
+        if (
+            not self.env['account.move'].check_access_rights('create', raise_exception=False)
+            and self.user_has_groups('point_of_sale.group_pos_user')
+        ):
+            sudo = True
+            self.sudo().with_company(self.company_id)._create_account_move()
+        else:
+            self.with_company(self.company_id)._create_account_move()
         if self.move_id.line_ids:
-            self.move_id.post()
+            self.move_id.post() if not sudo else self.move_id.sudo().post()
             # Set the uninvoiced orders' state to 'done'
             self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
         else:
