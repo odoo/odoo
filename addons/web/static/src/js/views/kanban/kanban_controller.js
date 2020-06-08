@@ -73,13 +73,6 @@ var KanbanController = BasicController.extend({
             this.$buttons.appendTo($node);
         }
     },
-    // reload(params) {
-    //     const searchQuery = this._controlPanelModel.getQuery();
-    //     if (params && params.activeFilter) {
-    //         debugger;
-    //     }
-    //     return this._super.apply(this, arguments);
-    // },
     /**
      * In grouped mode, set 'Create' button as btn-secondary if there is no column
      * (except if we can't create new columns)
@@ -401,9 +394,8 @@ var KanbanController = BasicController.extend({
     async _onLoadActiveFilter(ev) {
         const columnID = ev.data.columnID;
         const filter = ev.data.activeFilter;
-        const searchQuery = this._controlPanelModel.getQuery();
-        const dbID = await this.model.loadActiveFilter(columnID, searchQuery, filter);
-        var data = this.model.get(dbID);
+        const dbID = await this.model.loadActiveFilter(columnID, filter);
+        const data = this.model.get(dbID);
         this.renderer.updateColumn(dbID, data);
         ev.data.callback();
     },
