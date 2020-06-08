@@ -32,10 +32,10 @@
                     <span>&#8226;<field name="on_time_rate" widget="integer" class="oe_inline"/>% On-Time Delivery</span>
                 </button>
             </xpath>
-            <xpath expr="//div[@name='confirmation']" position="attributes">
+            <xpath expr="//div[@name='reminder']" position="attributes">
                 <attribute name="attrs">{'invisible': [('effective_date', '!=', False)]}</attribute>
             </xpath>
-            <xpath expr="//div[@name='date_planned_and_confirmation']" position="after">
+            <xpath expr="//div[@name='reminder']" position="after">
                 <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">

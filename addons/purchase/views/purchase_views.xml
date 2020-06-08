@@ -184,19 +184,18 @@
                                 <span class="text-muted" attrs="{'invisible': [('mail_reception_confirmed','=', False)]}">(confirmed by vendor)</span>
                             </div>
                             <label for="date_planned"/>
-                            <div name="date_planned_and_confirmation">
-                                <div name="date_planned_div" class="o_row">
-                                    <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
-                                    <field name="mail_reminder_confirmed" invisible="1"/>
-                                    <span class="text-muted" attrs="{'invisible': [('mail_reminder_confirmed', '=', False)]}">(confirmed by vendor)</span>
-                                </div>
-                                <div name="confirmation" class="oe_edit_only o_row" groups='purchase.group_send_reminder'>
-                                    <field name="receipt_reminder_email"/>
-                                    <label for="receipt_reminder_email" string="Ask confirmation"/>
-                                    <div class="o_row oe_inline" attrs="{'invisible': [('receipt_reminder_email', '=', False)]}">
-                                        <field name="reminder_date_before_receipt" class="oe_inline"/>
-                                        days before <button name="send_reminder_preview" icon="fa-info-circle" type="object" class="o_purchase_toaster_button oe_inline" attrs="{'x': 'name', 'invisible': [('name', '=', '1')]}"/>
-                                    </div>
+                            <div name="date_planned_div" class="o_row">
+                                <field name="date_planned" attrs="{'readonly': [('state', 'not in', ('draft', 'sent', 'to approve', 'purchase'))]}"/>
+                                <field name="mail_reminder_confirmed" invisible="1"/>
+                                <span class="text-muted" attrs="{'invisible': [('mail_reminder_confirmed', '=', False)]}">(confirmed by vendor)</span>
+                            </div>
+                            <label for="receipt_reminder_email" invisible='1'/>
+                            <div name="reminder" class="o_row" groups='purchase.group_send_reminder' title="Automatically send a confirmation email to the vendor X days before the expected receipt date, asking him to confirm the exact date.">
+                                <field name="receipt_reminder_email"/>
+                                <span>Ask confirmation</span>
+                                <div class="o_row oe_inline" attrs="{'invisible': [('receipt_reminder_email', '=', False)]}">
+                                    <field name="reminder_date_before_receipt" class="oe_inline"/>
+                                    days before <button name="send_reminder_preview" icon="fa-info-circle" type="object" class="o_purchase_toaster_button oe_inline" attrs="{'x': 'name', 'invisible': [('name', '=', '1')]}"/>
                                 </div>
                             </div>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>
