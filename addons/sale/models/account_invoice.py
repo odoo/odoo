@@ -36,7 +36,7 @@ class AccountInvoice(models.Model):
 
     @api.multi
     def unlink(self):
-        downpayment_lines = self.mapped('invoice_line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment)
+        downpayment_lines = self.mapped('invoice_line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('invoice_line_ids'))
         res = super(AccountInvoice, self).unlink()
         if downpayment_lines:
             downpayment_lines.unlink()
