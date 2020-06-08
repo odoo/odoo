@@ -689,7 +689,14 @@ class PosSession(models.Model):
                     .filtered(lambda t: t.company_id.id == order_line.order_id.company_id.id)
         sign = -1 if order_line.qty >= 0 else 1
         price = sign * order_line.price_unit * (1 - (order_line.discount or 0.0) / 100.0)
-        taxes = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=order_line.qty<0).get('taxes', [])
+        # The 'is_refund' parameter is used to compute the tax tags. Ultimately, the tags are part
+        # of the key used for summing taxes. Since the POS UI doesn't support the tags, inconsistencies
+        # may arise in 'Round Globally'.
+        if self.company_id.tax_calculation_rounding_method == 'round_globally':
+            is_refund = all(line.qty < 0 for line in order_line.order_id.lines)
+        else:
+            is_refund = order_line.qty < 0
+        taxes = tax_ids.compute_all(price_unit=price, quantity=abs(order_line.qty), currency=self.currency_id, is_refund=is_refund).get('taxes', [])
         date_order = order_line.order_id.date_order
         taxes = [{'date_order': date_order, **tax} for tax in taxes]
         return {
