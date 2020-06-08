@@ -97,13 +97,14 @@ class GoogleSync(models.AbstractModel):
         have no clue that the event must must deleted from Google Calendar at the next sync.
         """
         synced = self.filtered('google_id')
-        # LUL TODO find a way to get rid of this context key
-        if self.env.context.get('archive_on_error') and self._active_name:
-            synced.write({self._active_name: False})
-            self = self - synced
-        elif synced:
-            raise UserError(_("You cannot delete a record synchronized with Google Calendar, archive it instead."))
+
+        synced.write({self._active_name: False})
+
+        # for unsynced events, we use the parent unlink
+        self = self - synced
         return super().unlink()
+
+
 
     @api.model
     @ormcache_context('google_ids', keys=('active_test',))
