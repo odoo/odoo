@@ -645,16 +645,18 @@ class IrModelFields(models.Model):
 
     @api.onchange('ttype', 'model_id', 'relation')
     def _onchange_ttype(self):
-        if self.ttype == 'many2many' and self.model_id and self.relation:
-            if self.relation not in self.env:
-                return {
-                    'warning': {
-                        'title': _('Model %s does not exist') % self.relation,
-                        'message': _('Please specify a valid model for the object relation'),
+        if self.ttype == 'many2many':
+            self.on_delete = 'cascade'
+            if self.model_id and self.relation:
+                if self.relation not in self.env:
+                    return {
+                        'warning': {
+                            'title': _('Model %s does not exist') % self.relation,
+                            'message': _('Please specify a valid model for the object relation'),
+                        }
                     }
-                }
-            names = self._custom_many2many_names(self.model_id.model, self.relation)
-            self.relation_table, self.column1, self.column2 = names
+                names = self._custom_many2many_names(self.model_id.model, self.relation)
+                self.relation_table, self.column1, self.column2 = names
         else:
             self.relation_table = False
             self.column1 = False
@@ -687,6 +689,12 @@ class IrModelFields(models.Model):
                     "The m2o field %s is required but declares its ondelete policy "
                     "as being 'set null'. Only 'restrict' and 'cascade' make sense."
                     % (rec.name)
+                )}}
+            elif rec.ttype == 'many2many' and rec.on_delete == 'set null' and rec.relation:
+                return {'warning': {'title': _("Warning"), 'message': _(
+                    "The m2m field %s of model %s declares its ondelete policy "
+                    "as being 'set null'. Only 'restrict' and 'cascade' make sense."
+                    % (rec.name, rec.relation)
                 )}}
 
     def _get(self, model_name, name):
@@ -981,7 +989,7 @@ class IrModelFields(models.Model):
             'index': bool(field.index),
             'store': bool(field.store),
             'copied': bool(field.copy),
-            'on_delete': field.ondelete if field.type == 'many2one' else None,
+            'on_delete': field.ondelete if field.type in ['many2one', 'many2many'] else None,
             'related': ".".join(field.related) if field.related else None,
             'readonly': bool(field.readonly),
             'required': bool(field.required),
@@ -1103,6 +1111,7 @@ class IrModelFields(models.Model):
             if not self.pool.loaded and field_data['relation'] not in self.env:
                 return
             attrs['comodel_name'] = field_data['relation']
+            # attrs['ondelete'] = field_data['on_delete']
             rel, col1, col2 = self._custom_many2many_names(field_data['model'], field_data['relation'])
             attrs['relation'] = field_data['relation_table'] or rel
             attrs['column1'] = field_data['column1'] or col1
