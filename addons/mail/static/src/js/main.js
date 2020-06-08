@@ -1,4 +1,4 @@
-odoo.define('mail/static/src/env/env.js', function (require) {
+odoo.define('mail/static/src/js/main.js', function (require) {
 'use strict';
 
 const ModelManager = require('mail/static/src/model/model_manager.js');
