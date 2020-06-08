@@ -57,6 +57,7 @@ class StockWarehouse(models.Model):
                     self.Routing(warehouse.sam_loc_id, warehouse.lot_stock_id, warehouse.sam_type_id, 'push'),
                 ],
             })
+            result[warehouse.id].update(warehouse._get_receive_rules_dict())
         return result
 
     @api.model
@@ -88,6 +89,7 @@ class StockWarehouse(models.Model):
                 }
             }
         })
+        routes.update(self._get_receive_routes_values('manufacture_to_resupply'))
         return routes
 
     def _get_route_name(self, route_type):
