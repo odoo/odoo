@@ -12,4 +12,4 @@ class ReportLayout(models.Model):
     image = fields.Char(string="Preview image src")
     pdf = fields.Char(string="Preview pdf src")
 
-    name = fields.Char()
+    name = fields.Char(translate=True)
