@@ -12,6 +12,7 @@ from odoo.tools import html2plaintext
 class SendSMS(models.TransientModel):
     _name = 'sms.composer'
     _description = 'Send SMS Wizard'
+    _pre_compute = True
 
     @api.model
     def default_get(self, fields):
@@ -74,14 +75,15 @@ class SendSMS(models.TransientModel):
         readonly=False, store=True, required=True)
 
     @api.depends('res_ids_count', 'active_domain_count')
-    @api.depends_context('default_composition_mode')
     def _compute_composition_mode(self):
         for composer in self:
-            if self.env.context.get('default_composition_mode') == 'guess' or not composer.composition_mode:
+            if self.env.context.get('composition_mode_default') == 'guess' or not composer.composition_mode:
                 if composer.res_ids_count > 1 or (composer.use_active_domain and composer.active_domain_count > 1):
                     composer.composition_mode = 'mass'
                 else:
                     composer.composition_mode = 'comment'
+            else:
+                composer.composition_mode = composer.composition_mode
 
     @api.depends('res_model', 'res_id', 'res_ids', 'active_domain')
     def _compute_recipients_count(self):
@@ -167,22 +169,8 @@ class SendSMS(models.TransientModel):
                 record.body = record.template_id._render_field('body', [record.res_id], compute_lang=True)[record.res_id]
             elif record.template_id:
                 record.body = record.template_id.body
-
-    # ------------------------------------------------------------
-    # CRUD
-    # ------------------------------------------------------------
-
-    @api.model
-    def create(self, values):
-        # TDE FIXME: currently have to compute manually to avoid required issue, waiting VFE branch
-        if not values.get('body') or not values.get('composition_mode'):
-            values_wdef = self._add_missing_default_values(values)
-            cache_composer = self.new(values_wdef)
-            cache_composer._compute_body()
-            cache_composer._compute_composition_mode()
-            values['body'] = values.get('body') or cache_composer.body
-            values['composition_mode'] = values.get('composition_mode') or cache_composer.composition_mode
-        return super(SendSMS, self).create(values)
+            else:
+                record.body = record.body
 
     # ------------------------------------------------------------
     # Actions
