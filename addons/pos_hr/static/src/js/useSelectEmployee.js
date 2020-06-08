@@ -8,9 +8,9 @@ odoo.define('pos_hr.useSelectEmployee', function (require) {
         const current = Component.current;
 
         async function askPin(employee) {
-            const { confirmed, payload: inputPin } = await this.showPopup('NumberPopup', {
+            const { confirmed, payload: inputPin } = await current.showPopup('NumberPopup', {
                 isPassword: true,
-                title: this.env._t(`Pin of '${employee.name}'`),
+                title: current.env._t(`Pin of '${employee.name}'`),
                 startingValue: null,
             });
 
@@ -22,15 +22,15 @@ odoo.define('pos_hr.useSelectEmployee', function (require) {
                 // NOTE: This hook is used in a popup, so use
                 // Gui because a popup can't show other popup.
                 await Gui.showPopup('ErrorPopup', {
-                    title: this.env._t('Incorrect Pin'),
+                    title: current.env._t('Incorrect Pin'),
                 });
                 return false;
             }
         }
 
         async function selectEmployee(selectionList) {
-            const { confirmed, payload: employee } = await this.showPopup('SelectEmployeePopup', {
-                title: this.env._t('Select Cashier or Scan Badge'),
+            const { confirmed, payload: employee } = await current.showPopup('SelectEmployeePopup', {
+                title: current.env._t('Select Cashier or Scan Badge'),
                 list: selectionList,
             });
 
