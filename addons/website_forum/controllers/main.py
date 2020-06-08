@@ -235,8 +235,6 @@ class WebsiteForum(WebsiteProfile):
         if question.state == 'pending' and user.karma < forum.karma_post and question.create_uid != user:
             raise werkzeug.exceptions.NotFound()
 
-        # increment view counter
-        question.sudo().set_viewed()
         if question.parent_id:
             redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(question.parent_id))
             return werkzeug.utils.redirect(redirect_url, 301)
@@ -245,13 +243,17 @@ class WebsiteForum(WebsiteProfile):
         values.update({
             'main_object': question,
             'question': question,
-            'can_bump': (question.forum_id.allow_bump and not question.child_ids and (datetime.today() - question.write_date).days > 9),
+            'can_bump': (question.forum_id.allow_bump and not question.child_count and (datetime.today() - question.write_date).days > 9),
             'header': {'question_data': True},
             'filters': filters,
             'reversed': reversed,
         })
         if (request.httprequest.referrer or "").startswith(request.httprequest.url_root):
             values['back_button_url'] = request.httprequest.referrer
+
+        # increment view counter
+        question.sudo().set_viewed()
+
         return request.render("website_forum.post_description_full", values)
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/toggle_favourite', type='json', auth="user", methods=['POST'], website=True)

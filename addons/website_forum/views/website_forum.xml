@@ -288,7 +288,7 @@
         </div>
         <div>
             <span class="mx-1 d-none d-sm-inline">&amp;nbsp;|</span>
-            <a t-if="len(question.child_ids)&gt;0" class="font-weight-bold" t-attf-href="/forum/#{ slug(question.forum_id) }/question/#{ slug(question) }">
+            <a t-if="question.child_count" class="font-weight-bold" t-attf-href="/forum/#{ slug(question.forum_id) }/question/#{ slug(question) }">
                 <t t-esc="question.child_count"/>
                 <t t-if="question.child_count == 1">Answer</t>
                 <t t-else="">Answers</t>
@@ -1181,10 +1181,10 @@
                     <t t-set="_collapse_uid" t-value="_question_comment_collapse_uid"/>
                 </t>
 
-                <section t-if="question.child_ids" t-attf-class="#{question.website_message_ids and 'mt-5' or 'mt-4'}">
+                <section t-if="question.child_count" t-attf-class="#{question.website_message_ids and 'mt-5' or 'mt-4'}">
                     <h5>
-                        <t t-esc="len(question.child_ids)"/>
-                        <t t-if="len(question.child_ids) == 1">Answer</t>
+                        <t t-esc="question.child_count"/>
+                        <t t-if="question.child_count == 1">Answer</t>
                         <t t-else="">Answers</t>
                     </h5>
 
