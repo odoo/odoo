@@ -3325,6 +3325,43 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('Daterange field hide on scroll', async function (assert) {
+        assert.expect(3);
+
+        this.data.partner.fields.date_end = {string: 'Date End', type: 'date'};
+        this.data.partner.records[0].date_end = '2017-02-08';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form>
+                    <field name="date" widget="daterange" options="{'related_end_date': 'date_end'}"/>
+                </form>`,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            }
+        });
+
+        // click to daterange picker input to open daterange picker.
+        await testUtils.dom.click(form.el.querySelector('.o_field_date_range'));
+        // get daterangepicker using querySelector.
+        const dateRangePicker = document.body.querySelector('.daterangepicker');
+        // check daterangepicker is not null.
+        assert.ok(dateRangePicker, "there should be 1 daterangepicker.");
+        // check date range picker should be opened.
+        assert.strictEqual(dateRangePicker.style.display, 'block',
+            "date range picker should be opened");
+        // dispatch wheel event for close daterange picker.
+        form.el.dispatchEvent(new Event('scroll'));
+        // check date range picker should be closed.
+        assert.strictEqual(dateRangePicker.style.display, 'none',
+            "date range picker should be closed");
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDate');
 
     QUnit.test('date field: toggle datepicker [REQUIRE FOCUS]', async function (assert) {
