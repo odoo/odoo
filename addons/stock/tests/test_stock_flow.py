@@ -1723,8 +1723,7 @@ class TestStockFlow(TestStockCommon):
             'location_id': self.stock_location,
             'location_dest_id': self.customer_location})
 
-        with self.assertRaises(UserError):
-            move_mto_alone._action_confirm()
+        move_mto_alone._action_confirm()
         move_with_ancestors._action_confirm()
         other_move._action_confirm()
 
@@ -1732,7 +1731,7 @@ class TestStockFlow(TestStockCommon):
         move_with_ancestors._do_unreserve()
         other_move._do_unreserve()
 
-        self.assertEqual(move_mto_alone.state, "draft")
+        self.assertEqual(move_mto_alone.state, "waiting")
         self.assertEqual(move_with_ancestors.state, "waiting")
         self.assertEqual(other_move.state, "confirmed")
 

@@ -176,16 +176,17 @@ class TestProcRule(TransactionCase):
         orderpoint_form.product_max_qty = 5.0
         orderpoint = orderpoint_form.save()
 
-        self.env['stock.rule'].create({
-            'name': 'Rule Supplier',
-            'route_id': warehouse.reception_route_id.id,
-            'location_id': warehouse.lot_stock_id.id,
-            'location_src_id': self.env.ref('stock.stock_location_suppliers').id,
-            'action': 'pull',
-            'delay': 9.0,
-            'procure_method': 'make_to_stock',
-            'picking_type_id': warehouse.in_type_id.id,
-        })
+        # get auto-created pull rule from when warehouse is created
+        rule = self.env['stock.rule'].search([
+            ('route_id', '=', warehouse.reception_route_id.id),
+            ('location_id', '=', warehouse.lot_stock_id.id),
+            ('location_src_id', '=', self.env.ref('stock.stock_location_suppliers').id),
+            ('action', '=', 'pull'),
+            ('procure_method', '=', 'make_to_stock'),
+            ('picking_type_id', '=', warehouse.in_type_id.id)])
+
+        # add a delay [i.e. lead days] so procurement will be triggered based on forecasted stock
+        rule.delay = 9.0
 
         delivery_move = self.env['stock.move'].create({
             'name': 'Delivery',
