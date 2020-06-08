@@ -89,7 +89,7 @@ class AccountPaymentRegister(models.TransientModel):
         compute='_compute_payment_difference')
     payment_difference_handling = fields.Selection([
         ('open', 'Keep open'),
-        ('reconcile', 'Mark invoice as fully paid'),
+        ('reconcile', 'Mark as fully paid'),
     ], default='open', string="Payment Difference Handling")
     writeoff_account_id = fields.Many2one('account.account', string="Difference Account", copy=False,
         domain="[('deprecated', '=', False), ('company_id', '=', company_id)]")
