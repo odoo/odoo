@@ -35,7 +35,7 @@ class AccountMove(models.Model):
     l10n_ar_afip_service_start = fields.Date(string='AFIP Service Start Date', readonly=True, states={'draft': [('readonly', False)]})
     l10n_ar_afip_service_end = fields.Date(string='AFIP Service End Date', readonly=True, states={'draft': [('readonly', False)]})
 
-    @api.constrains('type', 'journal_id', 'l10n_latam_use_documents')
+    @api.constrains('type', 'journal_id')
     def _check_moves_use_documents(self):
         """ Do not let to create not invoices entries in journals that use documents """
         not_invoices = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and x.journal_id.type in ['sale', 'purchase'] and x.l10n_latam_use_documents and not x.is_invoice())
