@@ -237,6 +237,37 @@ $o-wslides-fs-side-width: 300px;
     @include media-breakpoint-up(md) {
         border-top-width: 0;
     }
+
+    .o_wslides_js_channel_unsubscribe {
+        > .fa-times {
+            display: none;
+        }
+
+        &:hover {
+            > .fa-check {
+                display: none;
+            }
+
+            > .fa-times {
+                display: inline-block;
+            }
+        }
+    }
+
+    .o_wslides_js_channel_enroll {
+        cursor: pointer;
+
+        &:hover, &:hover .o_wslides_enroll_msg small {
+            font-weight: bold;
+        }
+    }
+
+    .o_wslides_enroll_msg {
+        p {
+            display: inline-block;
+            margin-bottom: 0px;
+        }
+    }
 }
 
 @mixin o-wslides-tabs($tab-active-color: $o-wslides-color-bg) {

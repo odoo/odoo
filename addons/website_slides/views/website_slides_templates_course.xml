@@ -294,10 +294,25 @@
                         <t t-else="">Join Course</t>
                     </span>
                 </a>
+                
                 <div t-if="not channel.is_member and channel.enroll == 'invite'" class="text-center">
-                    <div class="alert my-0 bg-100 p-2">Private Course</div>
-                    <div t-if="channel.enroll_msg" t-field="channel.enroll_msg"/>
-                    <small t-if="not channel.enroll_msg">Contact website administrator.</small>
+                    <div t-attf-class="alert my-0 bg-100 p-2 #{'o_wslides_js_channel_enroll' if not is_public_user else ''}"
+                         t-att-data-channel-id="channel.id">
+                        Private Course
+                        <div t-if="is_public_user">
+                            <small>
+                                Please <a t-att-href="'/web/login?redirect=/slides/%s' % (slug(channel))">sign in</a> to contact responsible.
+                            </small>
+                        </div>
+                        <div t-elif="channel.has_requested_access">
+                            <small class="text-success">
+                                Request already sent
+                            </small>
+                        </div>
+                        <div t-else="" class="o_wslides_enroll_msg">
+                            <small t-field="channel.enroll_msg"/>
+                        </div>
+                    </div>
                 </div>
                 <t t-if="channel.is_member">
                     <button class="d-flex align-items-center alert my-0 px-2 px-xl-3 bg-100 w-100 o_wslides_js_channel_unsubscribe"
@@ -310,6 +325,7 @@
                         </t>
                         <h6 class="d-flex flex-grow-1 my-0">You're enrolled</h6>
                         <i class="fa fa-check"/>
+                        <i class="fa fa-times"/>
                     </button>
                     <div class="d-flex align-items-center pt-3">
                         <t t-if="channel.completed">
@@ -331,6 +347,10 @@
 
         <div id="o_wslides_sidebar_collapse" class="collapse d-md-block">
             <table class="table table-sm mt-3">
+                <tr>
+                    <th class="border-top-0">Responsible</th>
+                    <td class="border-top-0"><span t-field="channel.user_id"/></td>
+                </tr>
                 <tr>
                     <th class="border-top-0">Last Update</th>
                     <td class="border-top-0"><t t-esc="channel.slide_last_update" t-options="{'widget': 'date'}"/></td>
