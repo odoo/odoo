@@ -36,7 +36,7 @@ class AccountMove(models.Model):
             self.fiscal_position_id = fiscal_position
 
     def unlink(self):
-        downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment)
+        downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
         res = super(AccountMove, self).unlink()
         if downpayment_lines:
             downpayment_lines.unlink()
