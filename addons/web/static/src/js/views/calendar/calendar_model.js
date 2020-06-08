@@ -533,23 +533,24 @@ return AbstractModel.extend({
         }
 
         var field = this.fields[filter.fieldName];
+
         return this._rpc({
                 model: filter.write_model,
                 method: 'search_read',
                 domain: [["user_id", "=", session.uid]],
-                fields: [filter.write_field],
+                fields: [filter.write_field, 'active'],
             })
             .then(function (res) {
                 var records = _.map(res, function (record) {
                     var _value = record[filter.write_field];
+                    var checked = record['active'];
                     var value = _.isArray(_value) ? _value[0] : _value;
-                    var f = _.find(filter.filters, function (f) {return f.value === value;});
                     var formater = fieldUtils.format[_.contains(['many2many', 'one2many'], field.type) ? 'many2one' : field.type];
                     return {
                         'id': record.id,
                         'value': value,
                         'label': formater(_value, field),
-                        'active': !f || f.active,
+                        'active': checked,
                     };
                 });
                 records.sort(function (f1,f2) {

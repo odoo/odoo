@@ -4,7 +4,6 @@ odoo.define('calendar.CalendarController', function (require) {
     const Controller = require('web.CalendarController');
     const Dialog = require('web.Dialog');
     const { qweb, _t } = require('web.core');
-    const rpc = require ('web.rpc')
 
     const CalendarController = Controller.extend({
 
@@ -27,16 +26,19 @@ odoo.define('calendar.CalendarController', function (require) {
         },
 
         _onChangeFilter(event) {
-            this._super.apply(this, arguments);
-
             // We want to save the state of the check boxes in the database
-            rpc.query({
-                model: 'calendar.contacts',
-                method: 'get_check_filters',
-            }, null).then(function (event) {
-                console.log('done')
-            })
 
+            const _super = this._super // keep the context inside the arrow function below
+
+            this._rpc({
+                model: 'calendar.contacts',
+                method: 'update_check_filter',
+                args: [{
+                    data: event.data
+                }]
+            }, null).then(event => {
+                _super.apply(this, arguments);
+            })
         },
 
         // TODO factorize duplicated code
