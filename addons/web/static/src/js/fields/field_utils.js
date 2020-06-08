@@ -200,10 +200,16 @@ function formatFloatFactor(value, field, options) {
  * instead of 0.25.
  *
  * @param {float} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options]
+ * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30
+ *        otherwise, format like 01:30
  * @returns {string}
  */
-function formatFloatTime(value) {
-    var pattern = '%02d:%02d';
+function formatFloatTime(value, field, options) {
+    options = options || {};
+    var pattern = options.noLeadingZeroHour ? '%1d:%02d' : '%02d:%02d';
     if (value < 0) {
         value = Math.abs(value);
         pattern = '-' + pattern;
