@@ -495,7 +495,14 @@
                     <button name="action_submit_sheet" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_sheet_submit"/>
                     <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr_expense.group_hr_expense_team_approver" class="oe_highlight o_expense_sheet_approve"/>
                     <button name="action_sheet_move_create" string="Post Journal Entries" type="object" groups="account.group_account_manager" attrs="{'invisible': [('state', '!=', 'approve')]}" class="oe_highlight o_expense_sheet_post"/>
-                    <button name="%(hr_expense.hr_expense_sheet_register_payment_wizard_action)d" type="action" string="Register Payment" class="oe_highlight o_expense_sheet_pay" attrs="{'invisible': [('state', '!=', 'post')]}" context="{'default_amount': total_amount, 'partner_id': address_id}" groups="account.group_account_manager"/>
+                    <button name="action_register_payment"
+                            type="object"
+                            class="oe_highlight o_expense_sheet_pay"
+                            attrs="{'invisible': [('state', '!=', 'post')]}"
+                            context="{'dont_redirect_to_payments': True}"
+                            string="Register Payment"
+                            groups="account.group_account_manager"/>
+                    <button name="reset_expense_sheets" string="Reset to Draft" type="object" attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['submit', 'cancel'])]}"/>
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_team_approver" />
                     <button name="reset_expense_sheets" string="Reset to Draft" type="object" attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['submit', 'cancel'])]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="draft,submit,approve,post,done"/>
@@ -556,6 +563,9 @@
                                     <label for="total_amount"/>
                                 </div>
                                 <field name="total_amount" nolabel="1" class="oe_subtotal_footer_separator"/>
+                                <field name="amount_residual"
+                                       class="oe_subtotal_footer_separator"
+                                       attrs="{'invisible': [('state', 'not in', ('post', 'done'))]}"/>
                             </group>
                         </page>
                         <page name="other_info" string="Other Info">
@@ -871,6 +881,19 @@ if records:
             <field name="code">
 if records:
     action = records.action_sheet_move_create()
+            </field>
+        </record>
+
+        <record id="action_expense_sheet_register_payment" model="ir.actions.server">
+            <field name="name">Register Payment</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+            <field name="model_id" ref="hr_expense.model_hr_expense_sheet"/>
+            <field name="binding_model_id" ref="hr_expense.model_hr_expense_sheet"/>
+            <field name="binding_view_types">list</field>
+            <field name="state">code</field>
+            <field name="code">
+                if records:
+                    action = records.action_register_payment()
             </field>
         </record>
 
