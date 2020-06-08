@@ -48,6 +48,7 @@ Featuring
         'wizard/slide_channel_invite_views.xml',
         'data/gamification_data.xml',
         'data/mail_data.xml',
+        'data/mail_activity_data.xml',
         'data/slide_data.xml',
         'data/website_data.xml',
     ],
@@ -57,6 +58,9 @@ Featuring
         'data/slide_channel_demo.xml',
         'data/slide_slide_demo.xml',
         'data/slide_user_demo.xml',
+    ],
+    'qweb': [
+        'static/src/xml/activity.xml',
     ],
     'installable': True,
     'application': True,

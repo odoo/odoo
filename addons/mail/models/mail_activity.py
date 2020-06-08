@@ -8,6 +8,7 @@ import logging
 import pytz
 
 from odoo import api, exceptions, fields, models, _
+from odoo.osv import expression
 
 from odoo.tools.misc import clean_context
 from odoo.addons.base.models.ir_model import MODULE_UNINSTALL_FLAG
@@ -162,6 +163,7 @@ class MailActivity(models.Model):
         'res.users', 'Assigned to',
         default=lambda self: self.env.user,
         index=True, required=True)
+    request_partner_id = fields.Many2one('res.partner', string='Requesting Partner')
     state = fields.Selection([
         ('overdue', 'Overdue'),
         ('today', 'Today'),
@@ -781,6 +783,38 @@ class MailActivityMixin(models.AbstractModel):
             )
         return True
 
+    def activity_search(self, act_type_xmlids='', user_id=None, additional_domain=None):
+        """ Search automated activities on current record set, given a list of activity
+        types xml IDs. It is useful when dealing with specific types involved in automatic
+        activities management.
+
+        :param act_type_xmlids: list of activity types xml IDs
+        :param user_id: if set, restrict to activities of that user_id;
+        :param additional_domain: if set, filter on that domain;
+        """
+        if self.env.context.get('mail_activity_automation_skip'):
+            return False
+
+        Data = self.env['ir.model.data'].sudo()
+        activity_types_ids = [type_id for type_id in (Data.xmlid_to_res_id(xmlid, raise_if_not_found=False) for xmlid in act_type_xmlids) if type_id]
+        if not any(activity_types_ids):
+            return False
+
+        domain = [
+            '&', '&', '&',
+            ('res_model', '=', self._name),
+            ('res_id', 'in', self.ids),
+            ('automated', '=', True),
+            ('activity_type_id', 'in', activity_types_ids)
+        ]
+
+        if user_id:
+            domain = expression.AND([domain, [('user_id', '=', user_id)]])
+        if additional_domain:
+            domain = expression.AND([domain, additional_domain])
+
+        return self.env['mail.activity'].search(domain)
+
     def activity_schedule(self, act_type_xmlid='', date_deadline=None, summary='', note='', **act_values):
         """ Schedule an activity on each record of the current record set.
         This method allow to provide as parameter act_type_xmlid. This is an
@@ -864,16 +898,7 @@ class MailActivityMixin(models.AbstractModel):
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
-        domain = [
-            '&', '&', '&',
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('automated', '=', True),
-            ('activity_type_id', 'in', activity_types_ids)
-        ]
-        if user_id:
-            domain = ['&'] + domain + [('user_id', '=', user_id)]
-        activities = self.env['mail.activity'].search(domain)
+        activities = self.activity_search(act_type_xmlids, user_id=user_id)
         if activities:
             write_vals = {}
             if date_deadline:
@@ -894,16 +919,7 @@ class MailActivityMixin(models.AbstractModel):
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
-        domain = [
-            '&', '&', '&',
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('automated', '=', True),
-            ('activity_type_id', 'in', activity_types_ids)
-        ]
-        if user_id:
-            domain = ['&'] + domain + [('user_id', '=', user_id)]
-        activities = self.env['mail.activity'].search(domain)
+        activities = self.activity_search(act_type_xmlids, user_id=user_id)
         if activities:
             activities.action_feedback(feedback=feedback)
         return True
@@ -919,14 +935,5 @@ class MailActivityMixin(models.AbstractModel):
         activity_types_ids = [act_type_id for act_type_id in activity_types_ids if act_type_id]
         if not any(activity_types_ids):
             return False
-        domain = [
-            '&', '&', '&',
-            ('res_model', '=', self._name),
-            ('res_id', 'in', self.ids),
-            ('automated', '=', True),
-            ('activity_type_id', 'in', activity_types_ids)
-        ]
-        if user_id:
-            domain = ['&'] + domain + [('user_id', '=', user_id)]
-        self.env['mail.activity'].search(domain).unlink()
+        self.activity_search(act_type_xmlids, user_id=user_id).unlink()
         return True

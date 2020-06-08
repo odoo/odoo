@@ -78,12 +78,16 @@ class Channel(models.Model):
     _description = 'Course'
     _inherit = [
         'mail.thread', 'rating.mixin',
+        'mail.activity.mixin',
         'image.mixin',
         'website.seo.metadata', 'website.published.multi.mixin']
     _order = 'sequence, id'
 
     def _default_access_token(self):
         return str(uuid.uuid4())
+
+    def _get_default_enroll_msg(self):
+        return _('Contact Responsible')
 
     # description
     name = fields.Char('Name', translate=True, required=True)
@@ -145,7 +149,7 @@ class Channel(models.Model):
         help='Condition to enroll: everyone, on invite, on payment (sale bridge).')
     enroll_msg = fields.Html(
         'Enroll Message', help="Message explaining the enroll process",
-        default=False, translate=tools.html_translate, sanitize_attributes=False)
+        default=_get_default_enroll_msg, translate=tools.html_translate, sanitize_attributes=False)
     enroll_group_ids = fields.Many2many('res.groups', string='Auto Enroll Groups', help="Members of those groups are automatically added as members of the channel.")
     visibility = fields.Selection([
         ('public', 'Public'), ('members', 'Members Only')],
@@ -156,6 +160,7 @@ class Channel(models.Model):
         string='Members', help="All members of the channel.", context={'active_test': False}, copy=False, depends=['channel_partner_ids'])
     members_count = fields.Integer('Attendees count', compute='_compute_members_count')
     members_done_count = fields.Integer('Attendees Done Count', compute='_compute_members_done_count')
+    has_requested_access = fields.Boolean(string='Access Requested', compute='_compute_has_requested_access', compute_sudo=False)
     is_member = fields.Boolean(string='Is Member', compute='_compute_is_member', compute_sudo=False)
     channel_partner_ids = fields.One2many('slide.channel.partner', 'channel_id', string='Members Information', groups='website_slides.group_website_slides_officer', depends=['partner_ids'])
     upload_group_ids = fields.Many2many(
@@ -196,6 +201,17 @@ class Channel(models.Model):
         data = dict((res['channel_id'][0], res['channel_id_count']) for res in read_group_res)
         for channel in self:
             channel.members_done_count = data.get(channel.id, 0)
+
+    @api.depends('activity_ids.request_partner_id')
+    @api.depends_context('uid')
+    @api.model
+    def _compute_has_requested_access(self):
+        requested_cids = self.sudo().activity_search(
+            ['website_slides.mail_activity_data_access_request'],
+            additional_domain=[('request_partner_id', '=', self.env.user.partner_id.id)]
+        ).mapped('res_id')
+        for channel in self:
+            channel.has_requested_access = channel.id in requested_cids
 
     @api.depends('channel_partner_ids.partner_id')
     @api.depends_context('uid')
@@ -391,6 +407,7 @@ class Channel(models.Model):
 
         if vals.get('user_id'):
             self._action_add_members(self.env['res.users'].sudo().browse(vals['user_id']).partner_id)
+            self.activity_reschedule(['website_slides.mail_activity_data_access_request'], new_user_id=vals.get('user_id'))
         if 'enroll_group_ids' in vals:
             self._add_groups_members()
 
@@ -587,14 +604,63 @@ class Channel(models.Model):
         action['domain'] = [('res_id', 'in', self.ids)]
         return action
 
+    def action_request_access(self):
+        """ Request access to the channel. Returns a dict with keys being either 'error'
+        (specific error raised) or 'done' (request done or not). """
+        if self.env.user.has_group('base.group_public'):
+            return {'error': _('You have to sign in before')}
+        if not self.is_published:
+            return {'error': _('Course not published yet')}
+        if self.is_member:
+            return {'error': _('Already member')}
+        if self.enroll == 'invite':
+            activities = self.sudo()._action_request_access(self.env.user.partner_id)
+            if activities:
+                return {'done': True}
+            return {'error': _('Already Requested')}
+        return {'done': False}
+
+    def action_grant_access(self, partner_id):
+        partner = self.env['res.partner'].browse(partner_id).exists()
+        if partner:
+            if self._action_add_members(partner):
+                self.activity_search(
+                    ['website_slides.mail_activity_data_access_request'],
+                    user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)]
+                ).action_feedback(feedback=_('Access Granted'))
+
+    def action_refuse_access(self, partner_id):
+        partner = self.env['res.partner'].browse(partner_id).exists()
+        if partner:
+            self.activity_search(
+                ['website_slides.mail_activity_data_access_request'],
+                user_id=self.user_id.id, additional_domain=[('request_partner_id', '=', partner.id)]
+            ).action_feedback(feedback=_('Access Refused'))
+
     # ---------------------------------------------------------
-    # Rating Mixin API
+    # Mailing Mixin API
     # ---------------------------------------------------------
 
     def _rating_domain(self):
         """ Only take the published rating into account to compute avg and count """
         domain = super(Channel, self)._rating_domain()
         return expression.AND([domain, [('is_internal', '=', False)]])
+
+    def _action_request_access(self, partner):
+        activities = self.env['mail.activity']
+        requested_cids = self.sudo().activity_search(
+            ['website_slides.mail_activity_data_access_request'],
+            additional_domain=[('request_partner_id', '=', partner.id)]
+        ).mapped('res_id')
+        for channel in self:
+            if channel.id not in requested_cids:
+                activities += channel.activity_schedule(
+                    'website_slides.mail_activity_data_access_request',
+                    note=_('<b>%s</b> is requesting access to this course.') % partner.name,
+                    user_id=channel.user_id.id,
+                    request_partner_id=partner.id
+                )
+        return activities
 
     # ---------------------------------------------------------
     # Data / Misc
