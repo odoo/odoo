@@ -205,7 +205,7 @@
         z-index: 0;
 
         .o_record_cover_component {
-            display: none;
+            z-index: -1;
         }
         &.o_record_has_cover {
             .o_record_cover_image {
@@ -216,10 +216,6 @@
                     display: block;
                     @include o-position-absolute(0,0,50%,0);
                 }
-            }
-            .o_record_cover_component {
-                display: block;
-                z-index: -1;
             }
             .o_wevent_event_title {
                 color: white;
