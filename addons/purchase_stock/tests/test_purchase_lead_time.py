@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, time
 from unittest.mock import patch
 
 from odoo import fields
@@ -33,7 +33,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Purchase Lead Time - Delivery Lead Time.')
 
         # Check scheduled date of purchase order
-        schedule_date = order_date + timedelta(days=self.product_1.seller_ids.delay)
+        schedule_date = datetime.combine(order_date + timedelta(days=self.product_1.seller_ids.delay), time.max).replace(microsecond=0, second=0)
         self.assertEqual(purchase.order_line.date_planned, schedule_date, 'Schedule date should be equal to: Order date of Purchase order + Delivery Lead Time.')
 
         # check the picking created or not
@@ -70,11 +70,11 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(purchase2.date_order, order_date, 'Order date should be equal to: Date of the procurement order - Delivery Lead Time.')
 
         # Check scheduled date of purchase order line for product_1
-        schedule_date_1 = order_date + timedelta(days=self.product_1.seller_ids.delay)
+        schedule_date_1 = datetime.combine(order_date + timedelta(days=self.product_1.seller_ids.delay), time.max).replace(microsecond=0, second=0)
         self.assertEqual(order_line_pro_1.date_planned, schedule_date_1, 'Schedule date of purchase order line for product_1 should be equal to: Order date of purchase order + Delivery Lead Time of product_1.')
 
         # Check scheduled date of purchase order line for product_2
-        schedule_date_2 = order_date + timedelta(days=self.product_2.seller_ids.delay)
+        schedule_date_2 = datetime.combine(order_date + timedelta(days=self.product_2.seller_ids.delay), time.max).replace(microsecond=0, second=0)
         self.assertEqual(order_line_pro_2.date_planned, schedule_date_2, 'Schedule date of purchase order line for product_2 should be equal to: Order date of purchase order + Delivery Lead Time of product_2.')
 
         # Check scheduled date of purchase order
