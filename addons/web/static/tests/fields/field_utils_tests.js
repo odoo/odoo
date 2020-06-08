@@ -166,6 +166,23 @@ QUnit.test('format percentage', function (assert) {
     core._t.database.parameters = originalParameters;
 });
 
+QUnit.test('format float time', function (assert) {
+    assert.expect(7);
+
+    assert.strictEqual(fieldUtils.format.float_time(2), '02:00');
+    assert.strictEqual(fieldUtils.format.float_time(3.5), '03:30');
+    assert.strictEqual(fieldUtils.format.float_time(0.25), '00:15');
+
+    assert.strictEqual(fieldUtils.format.float_time(-0.5), '-00:30');
+
+    const options = {
+        noLeadingZeroHour: true,
+    };
+    assert.strictEqual(fieldUtils.format.float_time(2, null, options), '2:00');
+    assert.strictEqual(fieldUtils.format.float_time(3.5, null, options), '3:30');
+    assert.strictEqual(fieldUtils.format.float_time(-0.5, null, options), '-0:30');
+});
+
 QUnit.test('parse float', function(assert) {
     assert.expect(10);
 
