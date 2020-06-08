@@ -154,8 +154,9 @@ function _isColorCombinationName(name) {
  */
 function _computeColorClasses(colorNames, prefix = 'bg-') {
     let hasCCClasses = false;
+    const isBgPrefix = (prefix === 'bg-');
     const classes = colorNames.map(c => {
-        if (_isColorCombinationName(c)) {
+        if (isBgPrefix && _isColorCombinationName(c)) {
             hasCCClasses = true;
             return `o_cc${c}`;
         }
