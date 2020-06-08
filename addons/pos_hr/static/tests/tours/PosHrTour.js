@@ -11,6 +11,9 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
 
     startSteps();
 
+    SelectionPopup.check.isShown();
+    SelectionPopup.do.clickItem('Mitchell Admin');
+    PosHr.check.cashierNameIs('Mitchell Admin');
     PosHr.do.clickCashierName();
     SelectionPopup.check.isShown();
     SelectionPopup.check.hasSelectionItem('Pos Employee1');

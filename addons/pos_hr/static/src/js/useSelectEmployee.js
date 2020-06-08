@@ -2,7 +2,6 @@ odoo.define('pos_hr.useSelectEmployee', function (require) {
     'use strict';
 
     const { Component } = owl;
-    const { Gui } = require('point_of_sale.Gui');
 
     function useSelectEmployee() {
         const current = Component.current;
@@ -19,20 +18,22 @@ odoo.define('pos_hr.useSelectEmployee', function (require) {
             if (employee.pin === Sha1.hash(inputPin)) {
                 return employee;
             } else {
-                // NOTE: This hook is used in a popup, so use
-                // Gui because a popup can't show other popup.
-                await Gui.showPopup('ErrorPopup', {
+                await current.showPopup('ErrorPopup', {
                     title: current.env._t('Incorrect Pin'),
                 });
                 return false;
             }
         }
 
-        async function selectEmployee(selectionList) {
-            const { confirmed, payload: employee } = await current.showPopup('SelectEmployeePopup', {
-                title: current.env._t('Select Cashier or Scan Badge'),
-                list: selectionList,
-            });
+        async function selectEmployee(selectionList, options = { hideCancelButton: false }) {
+            const { confirmed, payload: employee } = await current.showPopup(
+                'SelectEmployeePopup',
+                {
+                    title: current.env._t('Select Cashier or Scan Badge'),
+                    list: selectionList,
+                    hideCancelButton: options.hideCancelButton,
+                }
+            );
 
             if (!confirmed) return false;
 

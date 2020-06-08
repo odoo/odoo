@@ -62,13 +62,13 @@ odoo.define('pos_hr.EmployeeBadge', function (require) {
             if (!this.env.pos.config.module_pos_hr) return;
 
             const list = this.env.pos.employees
-                .filter((employee) => employee.id !== this.cashier.id)
                 .map((employee) => {
                     return {
                         id: employee.id,
                         item: employee,
                         label: employee.name,
-                        isSelected: false,
+                        isSelected: this.cashier.id == employee.id,
+                        barcode: employee.barcode,
                     };
                 });
 
