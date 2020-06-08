@@ -456,17 +456,13 @@ class ResPartner(models.Model):
         return False
 
     def check_vat_ua(self, vat):
-        '''
-        Check Ukraine VAT number.
-        Method copied from vatnumber 1.2 lib https://code.google.com/archive/p/vatnumber/
-        '''
-        if len(vat) != 8:
-            return False
-        try:
-            int(vat)
-        except ValueError:
-            return False
-        return True
+        if self.is_company:
+            if len(vat) == 12:
+                return True
+        else:
+            if len(vat) == 10 or len(vat) == 9:
+                return True
+        return False
 
     def _fix_vat_number(self, vat, country_id):
         code = self.env['res.country'].browse(country_id).code if country_id else False
