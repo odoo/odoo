@@ -12,6 +12,7 @@ from odoo.tools import html2plaintext
 class SendSMS(models.TransientModel):
     _name = 'sms.composer'
     _description = 'Send SMS Wizard'
+    _pre_compute = True
 
     @api.model
     def default_get(self, fields):
@@ -167,22 +168,24 @@ class SendSMS(models.TransientModel):
                 record.body = record.template_id._render_field('body', [record.res_id], compute_lang=True)[record.res_id]
             elif record.template_id:
                 record.body = record.template_id.body
+            else:
+                record.body = record.body
 
     # ------------------------------------------------------------
     # CRUD
     # ------------------------------------------------------------
 
-    @api.model
-    def create(self, values):
-        # TDE FIXME: currently have to compute manually to avoid required issue, waiting VFE branch
-        if not values.get('body') or not values.get('composition_mode'):
-            values_wdef = self._add_missing_default_values([values])
-            cache_composer = self.new(values_wdef[0])
-            cache_composer._compute_body()
-            cache_composer._compute_composition_mode()
-            values['body'] = values.get('body') or cache_composer.body
-            values['composition_mode'] = values.get('composition_mode') or cache_composer.composition_mode
-        return super(SendSMS, self).create(values)
+    # @api.model
+    # def create(self, values):
+    #     # TDE FIXME: currently have to compute manually to avoid required issue, waiting VFE branch
+    #     if not values.get('body') or not values.get('composition_mode'):
+    #         values_wdef = self._add_missing_default_values([values])
+    #         cache_composer = self.new(values_wdef[0])
+    #         cache_composer._compute_body()
+    #         cache_composer._compute_composition_mode()
+    #         values['body'] = values.get('body') or cache_composer.body
+    #         values['composition_mode'] = values.get('composition_mode') or cache_composer.composition_mode
+    #     return super(SendSMS, self).create(values)
 
     # ------------------------------------------------------------
     # Actions
