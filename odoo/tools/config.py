@@ -510,10 +510,6 @@ class configmanager(object):
         if opt.pg_path:
             self.options['pg_path'] = opt.pg_path
 
-        if self.options.get('language', False):
-            if len(self.options['language']) > 5:
-                raise Exception('ERROR: The Lang name must take max 5 chars, Eg: -lfr_BE')
-
         self.options['test_enable'] = bool(self.options['test_tags'])
 
         if opt.save:
