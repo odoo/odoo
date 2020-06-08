@@ -643,6 +643,20 @@ class Survey(http.Controller):
             ('Content-Disposition', report_content_disposition),
         ])
 
+    def _get_user_input_domain(self, survey, line_filter_domain, **post):
+        user_input_domain = ['&', ('test_entry', '=', False), ('survey_id', '=', survey.id)]
+        if line_filter_domain:
+            matching_line_ids = request.env['survey.user_input.line'].sudo().search(line_filter_domain).ids
+            user_input_domain = expression.AND([
+                [('user_input_line_ids', 'in', matching_line_ids)],
+                user_input_domain
+            ])
+        if post.get('finished'):
+            user_input_domain = expression.AND([[('state', '=', 'done')], user_input_domain])
+        else:
+            user_input_domain = expression.AND([[('state', '!=', 'new')], user_input_domain])
+        return user_input_domain
+
     def _extract_filters_data(self, survey, post):
         search_filters = []
         line_filter_domain, line_choices = [], []
@@ -670,17 +684,7 @@ class Survey(http.Controller):
         if line_choices:
             line_filter_domain = expression.AND([[('suggested_answer_id', 'in', line_choices)], line_filter_domain])
 
-        user_input_domain = ['&', ('test_entry', '=', False), ('survey_id', '=', survey.id)]
-        if line_filter_domain:
-            matching_line_ids = request.env['survey.user_input.line'].sudo().search(line_filter_domain).ids
-            user_input_domain = expression.AND([
-                [('user_input_line_ids', 'in', matching_line_ids)],
-                user_input_domain
-            ])
-        if post.get('finished'):
-            user_input_domain = expression.AND([[('state', '=', 'done')], user_input_domain])
-        else:
-            user_input_domain = expression.AND([[('state', '!=', 'new')], user_input_domain])
+        user_input_domain = self._get_user_input_domain(survey, line_filter_domain, **post)
         user_input_lines = request.env['survey.user_input'].sudo().search(user_input_domain).mapped('user_input_line_ids')
 
         return user_input_lines, search_filters
