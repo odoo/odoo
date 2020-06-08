@@ -3713,18 +3713,8 @@ Record ids: %(records)s
             # Specific context to know when we are in this specific case.
             new_obj = self.with_context(create_pre_compute=True).new(vals)
 
-            for field in missing_fields:
-                # computed stored fields with a column
-                # have to be computed before create
-                # s.t. required and constraints can be applied on those fields.
-                field_value = field.convert_to_write(new_obj[field.name], self)
-                vals[field.name] = field_value
-
             # While we already have a new of the main record,
             # Try to pre compute the computed fields of its x2m fields.
-            if not x2m_stored_fields:
-                return vals
-
             x2m_precomputables = [
                 field for field in x2m_stored_fields
                 if field.name in vals
@@ -3741,6 +3731,13 @@ Record ids: %(records)s
                     # values for the create to avoid useless recomputations.
                     field_value = field.convert_to_write(new_obj[field.name], self)
                     vals[field.name] = field_value
+
+            for field in missing_fields:
+                # computed stored fields with a column
+                # have to be computed before create
+                # s.t. required and constraints can be applied on those fields.
+                field_value = field.convert_to_write(new_obj[field.name], self)
+                vals[field.name] = field_value
 
         return vals
 
