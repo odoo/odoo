@@ -92,7 +92,7 @@ var session = require('web.session');
 var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
 var localStorage = require('web.local_storage');
-var viewNoData = require('web.viewNoData');
+var FakeServer = require('web.viewNoData');
 
 var _t = core._t;
 
@@ -643,7 +643,7 @@ var BasicModel = AbstractModel.extend({
                 getFieldNames: element.getFieldNames,
                 id: element.id,
                 isDirty: element.isDirty,
-                isSample: this.localData[element.id].isSample,
+                isSample: this.isSample,
                 limit: element.limit,
                 model: element.model,
                 offset: element.offset,
@@ -703,7 +703,7 @@ var BasicModel = AbstractModel.extend({
             id: element.id,
             isDirty: element.isDirty,
             isOpen: element.isOpen,
-            isSample: element.isSample,
+            isSample: this.isSample,
             limit: element.limit,
             model: element.model,
             offset: element.offset,
@@ -1417,6 +1417,49 @@ var BasicModel = AbstractModel.extend({
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
+    
+    /**
+    * @private
+    * @override
+    */
+    _rpc: function(params, options) {
+        var self = this;
+        options = options || {};
+        options.renderSample = options.renderSample || this.renderSample;
+        var fakeServer = new FakeServer(this, params, options);
+        if (this.isSample === false && this.renderSample === false) {
+            return this._super.apply(this, arguments);
+        } else if (!this.isSample) {
+            return this._super.apply(this, arguments).then(function (result) {
+                const isEmpty = fakeServer.isEmpty(result);
+                self.isSample = isEmpty && fakeServer.options.renderSample !== false;
+                if (isEmpty && fakeServer.options.renderSample) {
+                    return fakeServer._performRpc(result);    
+                } else {
+                    
+                }
+                return result
+            });
+        } else if (options.renderSample !== false) {
+            return fakeServer.performRpc();
+        } else {
+            return this._super.apply(this, arguments);
+        }
+        /*if (!this.isSample) {
+            return this._super.apply(this, arguments).then(function (result) {
+                const isEmpty = fakeServer.isEmpty(result);
+                self.isSample = isEmpty && fakeServer.options.renderSample !== false;
+                if (isEmpty && fakeServer.options.renderSample) {
+                    return fakeServer._performRpc(result);    
+                }
+                return result
+            });
+        } else if (options.renderSample !== false) {
+            return fakeServer.performRpc();
+        } else {
+            return this._super.apply(this, arguments);
+        }*/
+    },
 
     /**
      * Add a default record to a list object. This method actually makes a new
@@ -3973,7 +4016,7 @@ var BasicModel = AbstractModel.extend({
             groupsOffset: 0,
             id: _.uniqueId(params.modelName + '_'),
             isOpen: params.isOpen,
-            isSample: params.isSample,
+            isSample: this.isSample,
             limit: type === 'record' ? 1 : (params.limit || Number.MAX_SAFE_INTEGER),
             loadMoreOffset: 0,
             model: params.modelName,
@@ -4587,7 +4630,7 @@ var BasicModel = AbstractModel.extend({
                 expand: expand,
                 expand_limit: expand ? list.limit : null,
                 expand_orderby: expand ? list.orderedBy : null,
-            })
+            }, options)
             .then(function (result) {
                 var groups = result.groups;
                 list.groupsCount = result.length;
@@ -4664,8 +4707,8 @@ var BasicModel = AbstractModel.extend({
                     }
                     list.data.push(newGroup.id);
                     list.count += newGroup.count;
-                    let previousGroup = previousGroups.find(group => group.id === newGroup.id);
-                    if (newGroup.isOpen && (!previousGroup || (previousGroup && previousGroup.isSample) || (newGroup.count > 0))) {
+                    //let previousGroup = previousGroups.find(group => group.id === newGroup.id);
+                    if (newGroup.isOpen && (self.isSample || newGroup.count > 0)) {//&& (!previousGroup || (previousGroup && previousGroup.isSample) || (newGroup.count > 0))) {
                         openGroupCount++;
                         if (group.__data) {
                             // bypass the search_read when the group's records have been obtained
@@ -4676,7 +4719,7 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._load(newGroup, options));
                     }
                 });
-                list.isSample = viewNoData.isSample = list.count > 0 ? false : true;
+                //list.isSample = list.count > 0 ? false : true;
 
                 if (options.keepEmptyGroups) {
                     // Find the groups that were available in a previous
@@ -4786,6 +4829,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise<string>} resolves to the id of the resource
      */
     _reload: function (id, options) {
+        this.isSample = false;
         options = options || {};
         var element = this.localData[id];
 
@@ -4849,7 +4893,7 @@ var BasicModel = AbstractModel.extend({
         if (element.type === 'record') {
             element.offset = _.indexOf(element.res_ids, element.res_id);
         }
-        var loadOptions = _.pick(options, 'fieldNames', 'viewType');
+        var loadOptions = _.pick(options, 'fieldNames', 'viewType', 'renderSample');
         return this._load(element, loadOptions).then(function (result) {
             return result.id;
         });
@@ -4902,11 +4946,10 @@ var BasicModel = AbstractModel.extend({
         }
         return prom.then(function (result) {
             delete list.__data;
-            if (viewNoData.isSample && result.length === 0) {
+            /*if (viewNoData.isSample && result.length === 0) {
                 result = viewNoData._makeSampleData(self, list.fields);
-            }
+            }*/
             list.count = result.length;
-            list.isSample = result.isSample;
             var ids = _.pluck(result.records, 'id');
             var data = _.map(result.records, function (record) {
                 var dataPoint = self._makeDataPoint({
@@ -4917,7 +4960,6 @@ var BasicModel = AbstractModel.extend({
                     modelName: list.model,
                     parentID: list.id,
                     viewType: list.viewType,
-                    isSample: list.isSample,
                 });
 
                 // add many2one records

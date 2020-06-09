@@ -213,6 +213,8 @@ var KanbanController = BasicController.extend({
                 'o_view_nocontent_smiling_face'
             ];
             return classesList.some(c => element.classList.contains(c));
+        } else {
+            return element.classList.contains('o_record_sample');
         }
         return false;
     },
@@ -395,6 +397,8 @@ var KanbanController = BasicController.extend({
         var values = ev.data.values;
         var column = ev.target;
         var onFailure = ev.data.onFailure || function () {};
+        this.model.isSample = false;
+        this.model.renderSample = false;
 
         // function that updates the kanban view once the record has been added
         // it receives the local id of the created record in arguments

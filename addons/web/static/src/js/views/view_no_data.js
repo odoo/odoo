@@ -1,21 +1,55 @@
 odoo.define('web.viewNoData', function (require) {
     "use strict";
 
-    var viewNoData = {
-        isSample: true,
-        _makeSampleData: function(model, listFields) {
+    var Class = require('web.Class');
+
+    var FakeServer = Class.extend({
+        init: function (model, params, options) {
+            this.model = model;
+            this.params = params;
+            this.route = params.route;
+            this.method = params.method;
+            this.options = options || {};
             this.session = model.getSession();
-            var sampleData = {
+        },
+        isEmpty: function (result) {
+            var self = this;
+            if (_.isEmpty(result) || result.length === 0) {
+                return true;
+            } else {
+                switch (this.method) {
+                    case 'web_read_group':
+                        let total = 0;
+                        _.each(result.groups, function (group) {
+                            total += group[self.model.defaultGroupedBy[0] + '_count'];
+                        });
+                        return !total;
+                }
+            }
+            return false;
+        },
+        performRpc: function () {
+            return Promise.resolve(this._performRpc());
+        },
+        _performRpc: function (result) {
+            switch (this.route) {
+                case '/web/dataset/search_read':
+                    return this._fakeSearchRead();
+            }
+            return result || {};
+        },
+        _fakeSearchRead: function () {
+            const listFields = Object.values(this.model.localData).find(x => x.model === this.params.model).fields;
+            var result = {
                 length: 0,
                 records: [],
-                isSample: true,
             };
-            for(this.i = 0; this.i < 4; this.i++) {
-                sampleData.records.push(this._buildSampleData(listFields));
+            for (; result.length < 4; result.length++) {
+                result.records.push(this._buildSampleRecords(listFields));
             }
-            return sampleData;
+            return result;
         },
-        _buildSampleData: function (listFields) {
+        _buildSampleRecords: function (listFields) {
             var self = this;
             let data = {};
             let date = new moment().add({
@@ -23,6 +57,7 @@ odoo.define('web.viewNoData', function (require) {
             }).format("YYYY-MM-DD HH:mm:ss");
             let sampleUser = ["John Miller", "Henry Campbell", "Carrie Helle", "Wendi Baltz", "Thomas Passot"];
             let sampleText = ["Laoreet id", "Volutpat blandit", "Integer vitae", "Viverra nam", "In massa"];
+            let randomID = Math.floor(Math.random() * 5);
             Object.keys(listFields).forEach(function (field) {
                 if (!field.includes("activity_exception")) {
                     let f = listFields[field];
@@ -32,13 +67,13 @@ odoo.define('web.viewNoData', function (require) {
                         } else if (field.includes("dashboard")) {
                             data[field] = false;
                         } else if (field === "name") {
-                            data[field] = `REF000${self.i}`;
+                            data[field] = `REF000${randomID}`;
                         } else if (field.includes("email")) {
-                            data[field] = `sample${self.i}@sample.demo`;
+                            data[field] = `sample${randomID}@sample.demo`;
                         } else if (field.includes("phone")) {
-                            data[field] = `+1 555 754 000${self.i}`;
+                            data[field] = `+1 555 754 000${randomID}`;
                         } else {
-                            data[field] = sampleText[Math.floor(Math.random() * 5)];
+                            data[field] = sampleText[randomID];
                         }
                     } else if (f.type === "selection") {
                         if ((Math.random() > 0.4 || f.store) && f.selection.length > 0) {
@@ -48,11 +83,11 @@ odoo.define('web.viewNoData', function (require) {
                         data[field] = Math.floor(Math.random() * 100000);
                     } else if (f.type === "many2one") {
                         if (field === "user_id" || field === "partner_id" || field === "employee_id") {
-                            data[field] = [1, sampleUser[Math.floor(Math.random() * 5)]];
+                            data[field] = [1, sampleUser[randomID]];
                         } else if (f.relation === 'res.currency') {
                             data[field] = [self.session.company_currency_id];
                         } else {
-                            data[field] = [1, sampleText[Math.floor(Math.random() * 5)]];
+                            data[field] = [1, sampleText[randomID]];
                         }
                     } else if (f.type === "one2many" || f.type === "many2many") {
                         data[field] = [];
@@ -77,19 +112,7 @@ odoo.define('web.viewNoData', function (require) {
             });
             return data;
         },
-        _makeSampleRow: function(groupedBy, records) {
-            return [{
-                name: `REF0000`,
-                groupId: `group0`,
-                groupedBy: groupedBy,
-                groupedByField: groupedBy[0],
-                id: `row0`,
-                isGroup: false,
-                isOpen: true,
-                path: `[0,"test 0"]`,
-                records: records,
-            }];
-        },
-    };
-    return viewNoData;
+    });
+
+    return FakeServer;
 });

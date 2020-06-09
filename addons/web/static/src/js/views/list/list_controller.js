@@ -522,9 +522,9 @@ var ListController = BasicController.extend({
     /**
      * @override
      */
-    _shouldBounceOnClick() {
+    _shouldBounceOnClick(element) {
         const state = this.model.get(this.handle, {raw: true});
-        return !state.count;
+        return !state.count || element.tBodies[0].firstElementChild.classList.contains('o_record_sample');
     },
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.

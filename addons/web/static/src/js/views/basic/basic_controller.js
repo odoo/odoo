@@ -58,6 +58,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // add classname to reflect the (absence of) access rights (used to
         // correctly display the nocontent helper)
         this.$el.toggleClass('o_cannot_create', !this.activeActions.create);
+        this.renderer.renderSample = this.renderer.sampleType !== "helper" && this.model.isSample;
         await this._super(...arguments);
     },
 
@@ -192,6 +193,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     update: async function (params, options) {
         this.mode = params.mode || this.mode;
+        this.model.renderSample = params.renderSample = this.renderer.sampleType !== "helper" && this.model.isSample && JSON.stringify(this.initialState.domain) === JSON.stringify(params.domain);
         return this._super(params, options);
     },
     /**

@@ -1114,11 +1114,6 @@ var ListRenderer = BasicRenderer.extend({
                 self._renderNoContentHelper().insertAfter(self.$el);
             }
             if (self.renderSample) {
-                self.$el.find('.o_data_row').on('click', (evt) => {
-                    evt.preventDefault();
-                    evt.stopPropagation();
-                    self.getParent().$buttons.find('.btn-primary:visible:first').odooBounce();
-                });
                 if (self.state.data.length > 0) {
                     self.$('tfoot').addClass('o_record_sample');
                 } else {
