@@ -16,7 +16,7 @@ odoo.define('web.PivotModel', function (require) {
  * Basicaly the pivot table presents aggregated values for various groups of records
  * in one domain. If a comparison is asked for, two domains are considered.
  *
- * Let us consider a simple example and let us fix the vocabulary:
+ * Let us consider a simple example and let us fix the vocabulary (let us suppose we are in June 2020):
  * ___________________________________________________________________________________________________________________________________________
  * |                    |   Total                                                                                                             |
  * |                    |_____________________________________________________________________________________________________________________|
@@ -24,14 +24,14 @@ odoo.define('web.PivotModel', function (require) {
  * |                    |_______________________________________|______________________________________|______________________________________|
  * |                    |   Sales total                         |  Sales total                         |  Sales total                         |
  * |                    |_______________________________________|______________________________________|______________________________________|
- * |                    |   This Month | Last Month | Variation |  This Month | Last Month | Variation |  This Month | Last Month | Variation |
+ * |                    |   May 2020   | June 2020  | Variation |  May 2020   | June 2020  | Variation |  May 2020   | June 2020  | Variation |
  * |____________________|______________|____________|___________|_____________|____________|___________|_____________|____________|___________|
- * | Total              |    110       |     85     |  29.4%    |     30      |    40      |   -25%    |    140      |    125     |     12%   |
- * |    Europe          |     35       |     25     |    40%    |     30      |    40      |   -25%    |     65      |     65     |      0%   |
- * |        Brussels    |     15       |      0     |   100%    |     30      |    30      |     0%    |     45      |     30     |     50%   |
- * |        Paris       |     20       |     25     |   -20%    |      0      |    10      |  -100%    |     20      |     35     |  -42.8%   |
- * |    North America   |     75       |     60     |    25%    |             |            |           |     75      |     60     |     25%   |
- * |        Washington  |     75       |     60     |    25%    |             |            |           |     75      |     60     |     25%   |
+ * | Total              |     85       |     110    |  29.4%    |     40      |    30      |   -25%    |    125      |    140     |     12%   |
+ * |    Europe          |     25       |     35     |    40%    |     40      |    30      |   -25%    |     65      |     65     |      0%   |
+ * |        Brussels    |      0       |     15     |   100%    |     30      |    30      |     0%    |     30      |     45     |     50%   |
+ * |        Paris       |     25       |     20     |   -20%    |     10      |     0      |  -100%    |     35      |     20     |  -42.8%   |
+ * |    North America   |     60       |     75     |    25%    |             |            |           |     60      |     75     |     25%   |
+ * |        Washington  |     60       |     75     |    25%    |             |            |           |     60      |     75     |     25%   |
  * |____________________|______________|____________|___________|_____________|____________|___________|_____________|____________|___________|
  *
  *
@@ -49,7 +49,7 @@ odoo.define('web.PivotModel', function (require) {
  *
  * The measure is the field 'sales_total'.
  *
- * Two domains are considered: 'This Month' and 'Last Month'.
+ * Two domains are considered: 'May 2020' and 'June 2020'.
  *
  * In the model,
  *
@@ -57,9 +57,9 @@ odoo.define('web.PivotModel', function (require) {
  *      - colGroupBys is the list [sale_team_id]
  *      - measures is the list [sales_total]
  *      - domains is the list [d1, d2] with d1 and d2 domain expressions
- *          for say sale_date in this month and last month, for instance
- *          d1 = [['sale_date', >=, 2019-05-01], ['sale_date', '<', 2019-05-31]]
- *      - origins is the list ['This Month', 'Last Month']
+ *          for say sale_date in May 2020 and June 2020, for instance
+ *          d1 = [['sale_date', >=, 2020-05-01], ['sale_date', '<=', 2020-05-31]]
+ *      - origins is the list ['May 2020', 'June 2020']
  *
  * DATA:
  *
@@ -116,7 +116,7 @@ odoo.define('web.PivotModel', function (require) {
  * A given list is thus of the form [f1,..., fi, g1,..., gj] or better [[f1,...,fi], [g1,...,gj]]
  *
  * For each list of fields possible and each domain considered, one read_group is done
- * and gives results of the form (an exceptions for list [])
+ * and gives results of the form (an exception for list [])
  *
  * g = {
  *  f1: v1, ..., fi: vi,
@@ -132,10 +132,10 @@ odoo.define('web.PivotModel', function (require) {
  * For example, g = {
  *      continent_id: [1, 'Europe']
  *      sale_team_id: [1, 'Sale Team 1']
- *      sales_count: 35,
+ *      sales_count: 25,
  *      __count: 4
  *      __domain: [
- *                  ['sale_date', >=, 2019-05-01], ['sale_date', '<', 2019-05-31],
+ *                  ['sale_date', >=, 2020-05-01], ['sale_date', '<=', 2020-05-31],
  *                  ['continent_id', '=', 1],
  *                  ['sale_team_id', '=', 1]
  *                ]
@@ -256,9 +256,9 @@ odoo.define('web.PivotModel', function (require) {
  *
  *              In the example:
  *                  {
- *                      "[[], []]": [{'sales_total': 110}, {'sales_total': 85}]                      (total/total)
+ *                      "[[], []]": [{'sales_total': 125}, {'sales_total': 140}]                      (total/total)
  *                      ...
- *                      "[[1, 2], [2]]": [{'sales_total': 0}, {'sales_total': 10}]                   (Europe/Paris/Sale Team 2)
+ *                      "[[1, 2], [2]]": [{'sales_total': 10}, {'sales_total': 0}]                   (Europe/Paris/Sale Team 2)
  *                      ...
  *                  }
  *
@@ -765,7 +765,7 @@ var PivotModel = AbstractModel.extend({
             return self.measurements[key][originIndex][measure];
         });
         if (originIndexes.length > 1) {
-            return computeVariation(values[0], values[1]);
+            return computeVariation(values[1], values[0]);
         } else {
             return values[0];
         }
@@ -1398,12 +1398,8 @@ var PivotModel = AbstractModel.extend({
     _computeDerivedParams: function () {
         const { range, rangeDescription, comparisonRange, comparisonRangeDescription } = this.data.timeRanges;
         if (range) {
-            this.data.domains = [this.data.domain.concat(range)];
-            this.data.origins = [rangeDescription];
-            if (comparisonRange) {
-                this.data.domains.push(this.data.domain.concat(comparisonRange));
-                this.data.origins.push(comparisonRangeDescription);
-            }
+            this.data.domains = [this.data.domain.concat(comparisonRange), this.data.domain.concat(range)];
+            this.data.origins = [comparisonRangeDescription, rangeDescription];
         } else {
             this.data.domains = [this.data.domain];
             this.data.origins = [""];
