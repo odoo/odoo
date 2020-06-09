@@ -224,10 +224,6 @@
           </div>
         </div>
         <h3 class="font-weight-normal">Pricing</h3>
-
-        <form t-attf-action="/my/purchase/#{order.id}/update?access_token=#{order.access_token}" method="post">
-          <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-
           <table class="table table-sm">
             <thead class="bg-100">
               <tr>
@@ -235,7 +231,7 @@
                 <th class="text-right d-none d-sm-table-cell">Unit Price</th>
                 <th class="text-right">Quantity</th>
                 <th class="text-right">Scheduled Date</th>
-                <th class="text-right">Updated Date</th>
+                <th class="text-right" style="color:#3aadaa"><strong>Update Dates Here</strong></th>
                 <th class="text-right">Subtotal</th>
               </tr>
             </thead>
@@ -253,17 +249,20 @@
                     <span t-esc="ol.product_qty"/>
                   </td>
                   <td class="text-right">
-                    <span t-esc="ol.date_planned"/>
+                    <span t-esc="ol.date_planned.date()"/>
                   </td>
                   <td class="text-right">
-                    <div class="container">
-                      <div class="form-group">
-                        <div class="input-group date">
-                            <input type="text" class="form-control datetimepicker-input o-purchase-datetimepicker" t-attf-id="datetimepicker_#{ol.id}" t-att-name="ol.id"
-                              data-toggle="datetimepicker" data-date-format="YYYY-MM-DD HH:mm:ss" t-attf-data-target="#datetimepicker_#{ol.id}"/>
+                    <form t-attf-action="/my/purchase/#{order.id}/update?access_token=#{order.access_token}" method="post">
+                      <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                      <div class="container">
+                        <div class="form-group">
+                          <div class="input-group date">
+                              <input type="text" class="form-control datetimepicker-input o-purchase-datetimepicker" t-attf-id="datetimepicker_#{ol.id}" t-att-name="ol.id"
+                                data-toggle="datetimepicker" data-date-format="YYYY-MM-DD" t-attf-data-target="#datetimepicker_#{ol.id}"/>
+                          </div>
                         </div>
                       </div>
-                    </div>
+                    </form>
                   </td>
                   <td class="text-right">
                     <span t-field="ol.price_subtotal" t-options='{"widget": "monetary", "display_currency": order.currency_id}'/>
@@ -304,8 +303,6 @@
               </table>
             </div>
           </div>
-          <input class="btn btn-primary" type="submit" value="Send Updated Dates"/>
-        </form>
       </div>
     </xpath>
   </template>

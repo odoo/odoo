@@ -144,3 +144,41 @@ class TestPurchase(SavepointCase):
         messages_send = po.message_ids - old_messages
         # check no reminder send
         self.assertFalse(messages_send)
+
+    def test_update_date_planned(self):
+        po = Form(self.env['purchase.order'])
+        po.partner_id = self.vendor
+        with po.order_line.new() as po_line:
+            po_line.product_id = self.product_consu
+            po_line.product_qty = 1
+            po_line.price_unit = 100
+            po_line.date_planned = '2020-06-06 00:00:00'
+        with po.order_line.new() as po_line:
+            po_line.product_id = self.product_consu2
+            po_line.product_qty = 10
+            po_line.price_unit = 200
+            po_line.date_planned = '2020-06-06 00:00:00'
+        po = po.save()
+        po.button_confirm()
+
+        # update first line
+        po._update_date_planned_for_lines([(po.order_line[0], fields.Datetime.today())])
+        self.assertEqual(po.order_line[0].date_planned, fields.Datetime.today())
+        activity = self.env['mail.activity'].search([
+            ('summary', '=', 'Date Updated'),
+            ('res_model_id', '=', 'purchase.order'),
+            ('res_id', '=', po.id),
+        ])
+        self.assertTrue(activity)
+        self.assertEqual(
+            activity.note,
+            '<p> vendor1 modified receipt dates for the following products:</p><p> \xa0 - Product A from 2020-06-06 to %s </p>' % fields.Date.today()
+        )
+
+        # update second line
+        po._update_date_planned_for_lines([(po.order_line[1], fields.Datetime.today())])
+        self.assertEqual(po.order_line[1].date_planned, fields.Datetime.today())
+        self.assertEqual(
+            activity.note,
+            '<p> vendor1 modified receipt dates for the following products:</p><p> \xa0 - Product A from 2020-06-06 to %s </p><p> \xa0 - Product B from 2020-06-06 to %s </p>' % (fields.Date.today(), fields.Date.today())
+        )
