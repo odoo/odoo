@@ -80,7 +80,7 @@ class ResUsers(models.Model):
             token = state.get('t')
             values = self._generate_signup_values(provider, validation, params)
             try:
-                _, login, _ = self.signup(values, token)
+                _, login, _ = self.with_context(validate_email=True).signup(values, token)
                 return login
             except (SignupError, UserError):
                 raise access_denied_exception

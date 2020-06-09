@@ -64,3 +64,8 @@ class Users(models.Model):
         if token == validation_token and self.karma == 0:
             return self.write({'karma': VALIDATION_KARMA_GAIN})
         return False
+
+    def create(self, vals):
+        if self.env.context.get('validate_email', False):
+            vals.update({'karma': VALIDATION_KARMA_GAIN})
+        return super().create(vals)
