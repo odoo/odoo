@@ -478,9 +478,9 @@ QUnit.module('Views', {
         assert.hasClass(pivot.$('table'), 'o_enable_linking',
             "root node should have classname 'o_enable_linking'");
         // here we click on the group corresponding to Total/Total/This Month
-        pivot.$('.o_pivot_cell_value').eq(0).click(); // should trigger a do_action with appropriate domain
+        pivot.$('.o_pivot_cell_value').eq(1).click(); // should trigger a do_action with appropriate domain
         // here we click on the group corresponding to xphone/Total/This Month
-        pivot.$('.o_pivot_cell_value').eq(3).click(); // should trigger a do_action with appropriate domain
+        pivot.$('.o_pivot_cell_value').eq(4).click(); // should trigger a do_action with appropriate domain
 
         unpatchDate();
         pivot.destroy();
@@ -2018,7 +2018,7 @@ QUnit.module('Views', {
         assert.containsN(pivot, '.o_pivot thead tr:last th', 9,
             "last header row should contains 9 cells (3*[December 2016, November 2016, Variation]");
         var values = [
-            "13", "0", "100%", "0", "19", "-100%", "13", "19", "-31.58%"
+            "19", "0", "-100%", "0", "13", "100%", "19", "13", "-31.58%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2026,9 +2026,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_pivot .o_pivot_header_cell_closed').eq(2));
         await testUtils.dom.click(pivot.$('.o_pivot .o_pivot_field_menu a[data-field="product_id"]'));
         values = [
-            "13", "0", "100%", "0", "19", "-100%", "13", "19", "-31.58%",
-            "12", "0", "100%",                     "12", "0" , "100%",
-            "1" , "0", "100%", "0", "19", "-100%", "1" , "19", "-94.74%"
+            "19", "0", "-100%", "0", "13", "100%", "19", "13", "-31.58%",
+            "19", "0", "-100%", "0", "1" , "100%", "19", "1", "-94.74%",
+                                "0", "12", "100%", "0" , "12", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2036,26 +2036,26 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$('.o_control_panel div.o_pivot_measures_list a[data-field="foo"]'));
         await testUtils.dom.click(pivot.$('.o_control_panel div.o_pivot_measures_list a[data-field="product_id"]'));
         values = [
-            "2", "0", "100%", "0", "1", "-100%", "2", "1", "100%",
-            "1", "0", "100%",                    "1", "0", "100%",
-            "1", "0", "100%", "0", "1", "-100%", "1", "1", "0%"
+            "1", "0", "-100%", "0", "2", "100%", "1", "2", "100%",
+            "1", "0", "-100%", "0", "1", "100%", "1", "1", "0%",
+                               "0", "1", "100%", "0", "1", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         await testUtils.dom.click(pivot.$('.o_control_panel div.o_pivot_measures_list a[data-field="__count"]'));
         await testUtils.dom.click(pivot.$('.o_control_panel div.o_pivot_measures_list a[data-field="product_id"]'));
         values = [
-            "2", "0", "100%", "0", "2", "-100%", "2", "2", "0%",
-            "1", "0", "100%",                    "1", "0", "100%",
-            "1", "0", "100%", "0", "2", "-100%", "1", "2", "-50%"
+            "2", "0", "-100%", "0", "2", "100%", "2", "2", "0%",
+            "2", "0", "-100%", "0", "1", "100%", "2", "1", "-50%",
+                               "0", "1", "100%", "0", "1", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         await testUtils.dom.clickFirst(pivot.$('.o_pivot .o_pivot_header_cell_opened'));
         values = [
             "2", "2", "0%",
-            "1", "0", "100%",
-            "1", "2", "-50%"
+            "2", "1", "-50%",
+            "0", "1", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2149,12 +2149,12 @@ QUnit.module('Views', {
         assert.verifySteps([
             // col group headers
             '["Total",""]',
-            '["December 2016","November 2016"]',
+            '["November 2016","December 2016"]',
             // measure headers
             '["Foo","Foo","Foo"]',
             // origin headers
-            '["December 2016","November 2016","Variation","December 2016","November 2016"' +
-                ',"Variation","December 2016","November 2016","Variation"]',
+            '["November 2016","December 2016","Variation","November 2016","December 2016"' +
+                ',"Variation","November 2016","December 2016","Variation"]',
             // number of 'measures'
             '1',
             // number of 'origins'
@@ -2217,9 +2217,9 @@ QUnit.module('Views', {
         await cpHelpers.toggleMenuItem(pivot, 'Date: Previous period');
 
         var values = [
-            "4", "0", "100%",
-            "2", "0", "100%",
-            "2", "0", "100%"
+            "0", "4", "100%",
+            "0", "2", "100%",
+            "0", "2", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join(','));
         assert.strictEqual(pivot.$('.o_pivot_header_cell_closed').length, 3,
@@ -2266,66 +2266,66 @@ QUnit.module('Views', {
 
         // initial sanity check
         var values = [
-            "12", "17", "-29.41%", "1", "2", "-50%" , "13", "19", "-31.58%",
-            "12", "0" , "100%",                       "12", "0" , "100%",
-                                   "1", "0", "100%" , "1" , "0" , "100%",
-            "0" , "17", "-100%",                      "0" , "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%"
+            "17", "12", "-29.41%", "2", "1", "-50%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                      "17", "0", "-100%",
+                                   "2", "0", "-100%", "2", "0", "-100%",
+            "0", "12" , "100%",                       "0", "12" , "100%",
+                                   "0", "1", "100%" , "0" , "1" , "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // click on 'Foo' in column Total/Company (should sort by the period of interest, ASC)
         await testUtils.dom.click(pivot.$('.o_pivot_measure_row').eq(0));
         values = [
-            "12", "17", "-29.41%", "1", "2", "-50%" , "13", "19", "-31.58%",
-                                   "1", "0", "100%" , "1" , "0" , "100%",
-            "0" , "17", "-100%",                      "0" , "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%",
-            "12", "0" , "100%",                       "12", "0" , "100%"
+            "17", "12", "-29.41%", "2", "1", "-50%" , "19", "13", "-31.58%",
+                                   "2", "0", "-100%", "2", "0", "-100%",
+            "0", "12", "100%",                        "0", "12", "100%",
+                                   "0", "1", "100%", "0", "1", "100%",
+            "17", "0", "-100%",                      "17", "0", "-100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // click again on 'Foo' in column Total/Company (should sort by the period of interest, DESC)
         await testUtils.dom.click(pivot.$('.o_pivot_measure_row').eq(0));
         values = [
-            "12", "17", "-29.41%", "1", "2", "-50%" , "13", "19", "-31.58%",
-            "12", "0" , "100%",                       "12", "0" , "100%",
-                                   "1", "0", "100%" , "1" , "0" , "100%",
-            "0" , "17", "-100%",                      "0" , "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%"
+            "17", "12", "-29.41%", "2", "1", "-50%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                      "17", "0", "-100%",
+                                   "2", "0", "-100%", "2", "0", "-100%",
+            "0", "12", "100%",                       "0", "12", "100%",
+                                   "0", "1", "100%", "0", "1", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // click on 'This Month' in column Total/Individual/Foo
         await testUtils.dom.click(pivot.$('.o_pivot_origin_row').eq(3));
         values = [
-            "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
-            "12", "0",  "100%",                       "12", "0" , "100%",
-            "0",  "17", "-100%",                      "0",  "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%",
-                                   "1", "0", "100%",  "1" , "0",  "100%"
+            "17", "12", "-29.41%", "2", "1", "-50%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                      "17", "0", "-100%",
+            "0", "12", "100%",                       "0", "12" , "100%",
+                                   "0", "1", "100%", "0", "1", "100%",
+                                   "2", "0", "-100%",  "2", "0",  "-100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // click on 'Previous Period' in column Total/Individual/Foo
         await testUtils.dom.click(pivot.$('.o_pivot_origin_row').eq(4));
         values = [
-            "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
-            "12", "0",  "100%",                       "12", "0" , "100%",
-                                   "1", "0", "100%",  "1" , "0",  "100%",
-            "0",  "17", "-100%",                      "0",  "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%"
+            "17", "12", "-29.41%", "2", "1", "-50%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                      "17", "0", "-100%",
+                                   "2", "0", "-100%", "2", "0", "-100%",
+            "0", "12", "100%",                       "0", "12", "100%",
+                                   "0", "1", "100%", "0", "1", "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
         // click on 'Variation' in column Total/Foo
         await testUtils.dom.click(pivot.$('.o_pivot_origin_row').eq(8));
         values = [
-            "12", "17", "-29.41%", "1", "2", "-50%",  "13", "19", "-31.58%",
-            "0",  "17", "-100%",                      "0",  "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%",
-            "12", "0",  "100%",                       "12", "0" , "100%",
-                                   "1", "0", "100%",  "1" , "0",  "100%"
+            "17", "12", "-29.41%", "2", "1", "-50%",  "19", "13", "-31.58%",
+            "17",  "0", "-100%",                      "17",  "0", "-100%",
+                                   "2", "0", "-100%", "2" , "0" , "-100%",
+            "0", "12",  "100%",                       "0", "12" , "100%",
+                                   "0", "1", "100%",  "0" , "1",  "100%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2439,11 +2439,13 @@ QUnit.module('Views', {
 
         // initial sanity check
         var values = [
-            "12", "17", "-29.41%", "1", "2", "-50%" , "13", "19", "-31.58%",
-            "12", "0" , "100%",                       "12", "0" , "100%",
-                                   "1", "0", "100%" , "1" , "0" , "100%",
-            "0" , "17", "-100%",                      "0" , "17", "-100%",
-                                   "0", "2", "-100%", "0" , "2" , "-100%"
+            "17", "12", "-29.41%", "2", "1", "-50%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                      "17", "0", "-100%",
+                                   "2", "0", "-100%", "2", "0", "-100%",
+            "0", "12", "100%",                       "0", "12", "100%",
+                                   "0", "1", "100%", "0", "1", "100%",
+            
+                                
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2451,9 +2453,9 @@ QUnit.module('Views', {
         await testUtils.dom.click(pivot.$buttons.find('.o_pivot_flip_button'));
 
         values = [
-            "12", "0",  "100%", "1",  "0",  "100%", "0",  "17", "-100%", "0",  "2",  "-100%", "13", "19", "-31.58%",
-            "12", "0",  "100%",                     "0",  "17", "-100%",                      "12", "17", "-29.41%",
-                                "1",  "0",  "100%" ,                      "0",  "2",  "-100%", "1",  "2",  "-50%"
+            "17", "0", "-100%", "2", "0", "-100%", "0", "12", "100%", "0", "1", "100%", "19", "13", "-31.58%",
+            "17", "0", "-100%",                    "0", "12", "100%",                   "17", "12", "-29.41%",
+                                "2", "0", "-100%",                    "0",  "1", "100%", "2",  "1",  "-50%"
         ];
         assert.strictEqual(getCurrentValues(pivot), values.join());
 
@@ -2547,7 +2549,7 @@ QUnit.module('Views', {
             pivot.$('th').slice(0, 7).text(),
             [
                 '', 'Total',                                                '',
-                    '2016-12-15', '2016-12-17', '2016-11-22', '2016-11-03',
+                    '2016-11-22', '2016-11-03', '2016-12-15', '2016-12-17',
             ].join(''),
             "The col headers should be as expected"
         );
