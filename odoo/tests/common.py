@@ -1695,42 +1695,12 @@ class Form(object):
 
     def _init_from_defaults(self, model):
         vals = self._values
-        fields = self._view['fields']
-        def cleanup(k, v):
-            if fields[k]['type'] == 'one2many':
-                return [
-                    # use None as "empty" value for UPDATE instead of {}
-                    (1, c[1], None) if c[0] == 1 and not c[2] else c
-                    for c in v
-                    if c[0] != 6 # o2m default gets a (6) at the start, nonsensical
-                ]
-            elif fields[k]['type'] == 'datetime' and isinstance(v, datetime):
-                return odoo.fields.Datetime.to_string(v)
-            elif fields[k]['type'] == 'date' and isinstance(v, date):
-                return odoo.fields.Datetime.to_string(v)
+        vals.clear()
+        vals['id'] = False
 
-            return v
-        defaults = {
-            k: cleanup(k, v)
-            for k, v in model.default_get(list(fields)).items()
-            if k in fields
-        }
-        vals.update(defaults)
-        # m2m should all be rep'd as command list
-        for k, v in vals.items():
-            if not v:
-                type_ = fields[k]['type']
-                if type_ == 'many2many':
-                    vals[k] = [(6, False, [])]
-                elif type_ == 'one2many':
-                    vals[k] = []
-                elif type_ in ('integer', 'float'):
-                    vals[k] = 0
-
-        # on creation, every field is considered changed by the client
-        # apparently
-        # and fields should be sent in view order, not whatever fields_view_get['fields'].keys() is
-        self._perform_onchange(self._view['fields_ordered'])
+        # call onchange with an empty list of fields; this retrieves default
+        # values, applies onchanges and return the result
+        self._perform_onchange([])
 
     def _init_from_values(self, values):
         self._values.update(
@@ -1929,6 +1899,9 @@ class Form(object):
         """
         values = {}
         for f in fields:
+            if f == 'id':
+                continue
+
             get_modifier = functools.partial(
                 self._get_modifier,
                 f, modmap=view['modifiers'],
@@ -1941,8 +1914,8 @@ class Form(object):
                 if get_modifier('required'):
                     raise AssertionError("{} is a required field ({})".format(f, view['modifiers'][f]))
 
-            # skip unmodified fields unless all_fields (also always ignore id)
-            if f == 'id' or not (all_fields or f in changed):
+            # skip unmodified fields unless all_fields
+            if not (all_fields or f in changed):
                 continue
 
             if get_modifier('readonly'):
@@ -1997,7 +1970,7 @@ class Form(object):
         # skip calling onchange() if there's no trigger on any of the changed
         # fields
         spec = self._view['onchange']
-        if not any(spec[f] for f in fields):
+        if fields and not any(spec[f] for f in fields):
             return
 
         record = self._model.browse(self._values.get('id'))
@@ -2012,7 +1985,7 @@ class Form(object):
         self._values.update(
             (k, self._cleanup_onchange(
                 self._view['fields'][k],
-                v, self._values[k],
+                v, self._values.get(k),
             ))
             for k, v in values.items()
             if k in self._view['fields']
