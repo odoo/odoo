@@ -46,10 +46,22 @@ class AccountMove(models.Model):
         return res
 
     @api.model
+<<<<<<< HEAD
     def _get_tax_key_for_group_add_base(self, line):
         tax_key = super(AccountMove, self)._get_tax_key_for_group_add_base(line)
 
         tax_key += [
             line.product_id.id,
         ]
+=======
+    def _get_tax_key_for_group_add_base(self, taxline):
+        if taxline.invoice_id.company_id.country_id.code == 'IN':
+            tax_key = [
+                taxline.tax_id.id,
+                taxline.l10n_in_product_id,
+                taxline.l10n_in_uom_id
+            ]
+        else:
+            tax_key = super(AccountInvoiceTax, self)._get_tax_key_for_group_add_base(taxline)
+>>>>>>> fccfdf740ac... temp
         return tax_key
