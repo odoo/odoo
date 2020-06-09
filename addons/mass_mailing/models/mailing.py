@@ -157,8 +157,7 @@ class MassMailing(models.Model):
             LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
             WHERE stats.mass_mailing_id IN %s
             GROUP BY stats.mass_mailing_id
-        """, (tuple(self.ids), ))
-
+        """, [tuple(self.ids) or (None,)])
         mass_mailing_data = self.env.cr.dictfetchall()
         mapped_data = dict([(m['id'], 100 * m['nb_clicks'] / m['nb_mails']) for m in mass_mailing_data])
         for mass_mailing in self:
@@ -166,6 +165,14 @@ class MassMailing(models.Model):
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
+        for key in (
+            'scheduled', 'expected', 'ignored', 'sent', 'delivered', 'opened',
+            'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
+            'opened_ratio', 'replied_ratio', 'bounced_ratio', 'clicks_ratio',
+        ):
+            self[key] = False
+        if not self.ids:
+            return
         self.env.cr.execute("""
             SELECT
                 m.id as mailing_id,
