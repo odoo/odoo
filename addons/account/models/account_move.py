@@ -525,6 +525,7 @@ class AccountMove(models.Model):
                 partner=base_line.partner_id,
                 is_refund=self.type in ('out_refund', 'in_refund'),
                 handle_price_include=handle_price_include,
+                date=move.invoice_date,
             )
 
             if base_line.currency_id:
@@ -536,6 +537,7 @@ class AccountMove(models.Model):
                     product=base_line.product_id,
                     partner=base_line.partner_id,
                     is_refund=self.type in ('out_refund', 'in_refund'),
+                    date=move.invoice_date,
                 )
                 for b_tax_res, ac_tax_res in zip(balance_taxes_res['taxes'], amount_currency_taxes_res['taxes']):
                     tax = self.env['account.tax'].browse(b_tax_res['id'])
@@ -2743,10 +2745,11 @@ class AccountMoveLine(models.Model):
             partner=partner or self.partner_id,
             taxes=taxes or self.tax_ids,
             move_type=move_type or self.move_id.type,
+            invoice_date=self.move_id.invoice_date,
         )
 
     @api.model
-    def _get_price_total_and_subtotal_model(self, price_unit, quantity, discount, currency, product, partner, taxes, move_type):
+    def _get_price_total_and_subtotal_model(self, price_unit, quantity, discount, currency, product, partner, taxes, move_type, invoice_date):
         ''' This method is used to compute 'price_total' & 'price_subtotal'.
 
         :param price_unit:  The current price unit.
@@ -2768,7 +2771,7 @@ class AccountMoveLine(models.Model):
         # Compute 'price_total'.
         if taxes:
             taxes_res = taxes._origin.compute_all(price_unit_wo_discount,
-                quantity=quantity, currency=currency, product=product, partner=partner, is_refund=move_type in ('out_refund', 'in_refund'))
+                quantity=quantity, currency=currency, product=product, partner=partner, is_refund=move_type in ('out_refund', 'in_refund'), date=invoice_date)
             res['price_subtotal'] = taxes_res['total_excluded']
             res['price_total'] = taxes_res['total_included']
         else:
@@ -2834,10 +2837,11 @@ class AccountMoveLine(models.Model):
             currency=currency or self.currency_id or self.move_id.currency_id,
             taxes=taxes or self.tax_ids,
             price_subtotal=price_subtotal or self.price_subtotal,
+            invoice_date=self.move_id.invoice_date,
         )
 
     @api.model
-    def _get_fields_onchange_balance_model(self, quantity, discount, balance, move_type, currency, taxes, price_subtotal):
+    def _get_fields_onchange_balance_model(self, quantity, discount, balance, move_type, currency, taxes, price_subtotal, invoice_date):
         ''' This method is used to recompute the values of 'quantity', 'discount', 'price_unit' due to a change made
         in some accounting fields such as 'balance'.
 
@@ -2886,7 +2890,7 @@ class AccountMoveLine(models.Model):
             # 220           | 10% incl, 5%  |                   | 200               | 230
             # 20            |               | 10% incl          | 20                | 20
             # 10            |               | 5%                | 10                | 10
-            taxes_res = taxes._origin.compute_all(balance, currency=currency, handle_price_include=False)
+            taxes_res = taxes._origin.compute_all(balance, currency=currency, handle_price_include=False, date=invoice_date)
             for tax_res in taxes_res['taxes']:
                 tax = self.env['account.tax'].browse(tax_res['id'])
                 if tax.price_include:
@@ -3273,6 +3277,7 @@ class AccountMoveLine(models.Model):
                         partner,
                         taxes,
                         move.type,
+                        move.invoice_date,
                     ).get('price_subtotal', 0.0)
                     vals.update(self._get_fields_onchange_balance_model(
                         vals.get('quantity', 0.0),
@@ -3281,7 +3286,8 @@ class AccountMoveLine(models.Model):
                         move.type,
                         currency,
                         taxes,
-                        price_subtotal
+                        price_subtotal,
+                        move.invoice_date,
                     ))
                     vals.update(self._get_price_total_and_subtotal_model(
                         vals.get('price_unit', 0.0),
@@ -3292,6 +3298,7 @@ class AccountMoveLine(models.Model):
                         partner,
                         taxes,
                         move.type,
+                        move.invoice_date,
                     ))
                 elif any(vals.get(field) for field in BUSINESS_FIELDS):
                     vals.update(self._get_price_total_and_subtotal_model(
@@ -3303,6 +3310,7 @@ class AccountMoveLine(models.Model):
                         partner,
                         taxes,
                         move.type,
+                        move.invoice_date,
                     ))
                     vals.update(self._get_fields_onchange_subtotal_model(
                         vals['price_subtotal'],

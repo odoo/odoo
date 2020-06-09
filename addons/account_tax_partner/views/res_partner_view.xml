@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <record model="ir.ui.view" id="view_partner_property_form">
+        <field name="name">res.partner.form.inherit</field>
+        <field name="inherit_id" ref="account.view_partner_property_form"/>
+        <field name="model">res.partner</field>
+        <field name="arch" type="xml">
+            <page name="accounting" position="inside">
+                <label for="tax_ids"/>
+                <field name="tax_ids">
+                    <tree editable="top">
+                        <field name="tax_id" options="{'no_create': True, 'no_open': True}"/>
+                        <field name="from_date"/>
+                        <field name="to_date"/>
+                        <field name="amount"/>
+                    </tree>
+                </field>
+            </page>
+        </field>
+    </record>
+
+</odoo>
+
