@@ -166,10 +166,7 @@ var Thread = AbstractThread.extend(ServicesMixin, {
         return this._unreadCounter !== 0;
     },
     /**
-     * Increments the needaction counter of this thread
-     * FIXME: this method makes only sense for channels. Not sure, but I think
-     * this method is necessary at this level because of the model
-     * im_support.SupportChannel
+     * Increments the needaction counter of this thread.
      *
      * @abstract
      */
