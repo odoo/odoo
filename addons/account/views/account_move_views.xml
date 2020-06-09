@@ -1106,14 +1106,15 @@
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter name="posted" string="Posted" domain="[('state', '=', 'posted')]"/>
+                    <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]"/>
                     <separator/>
                     <filter string="To Check" name="to_check" domain="[('to_check', '=', True)]"/>
                     <separator/>
-                    <filter name="in_payment" string="In Payment" domain="[('payment_state', '=', 'in_payment')]"/>
-                    <filter name="partial" string="Partially Paid" domain="[('payment_state', '=', 'partial')]"/>
-                    <filter name="paid" string="Paid" domain="[('payment_state', '=', 'paid')]"/>
-                    <filter name="unpaid" string="Not Paid" domain="[('payment_state', '=', 'not_paid')]"/>
-                    <filter name="reversed" string="Reversed" domain="[('payment_state', '=', 'reversed')]"/>
+                    <filter name="in_payment" string="In Payment" domain="[('payment_state', '=', 'in_payment'), ('state', '=', 'posted')]"/>
+                    <filter name="partial" string="Partially Paid" domain="[('payment_state', '=', 'partial'), ('state', '=', 'posted')]"/>
+                    <filter name="paid" string="Paid" domain="[('payment_state', '=', 'paid'), ('state', '=', 'posted')]"/>
+                    <filter name="unpaid" string="Not Paid" domain="[('payment_state', '=', 'not_paid'), ('state', '=', 'posted')]"/>
+                    <filter name="reversed" string="Reversed" domain="[('payment_state', '=', 'reversed'), ('state', '=', 'posted')]"/>
                     <filter name="late" string="Overdue" domain="['&amp;', ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'posted'), ('payment_state', 'in', ('not_paid', 'partial'))]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <filter name="invoice_date" string="Invoice Date" date="invoice_date"/>
