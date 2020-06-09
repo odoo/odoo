@@ -73,13 +73,7 @@ class StockPicking(models.Model):
                                 (production.qty_producing - production.qty_produced) * move.unit_factor, production.product_uom_id,
                                 rounding_method='HALF-UP')
                             move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
-                            vals = move._set_quantity_done_prepare_vals(new_qty)
-                            if vals['to_create']:
-                                for res in vals['to_create']:
-                                    move.move_line_ids.create(res)
-                            if vals['to_write']:
-                                for move_line, res in vals['to_write']:
-                                    move_line.write(res)
+                            move.move_line_ids = move._set_quantity_done_prepare_vals(new_qty)
                 productions |= production
             for subcontracted_production in productions:
                 if subcontracted_production.state == 'progress':

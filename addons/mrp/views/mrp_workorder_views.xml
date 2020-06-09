@@ -89,7 +89,6 @@
             <field name="is_user_working" invisible="1"/>
             <field name="working_state" invisible="1"/>
             <field name="production_state" invisible="1"/>
-            <field name="allowed_lots_domain" invisible="1"/>
             <field name="is_finished_lines_editable" invisible="1"/>
             <header>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
@@ -107,6 +106,7 @@
                 <field name="company_id" invisible="1"/>
                 <field name="product_tracking" invisible="1"/>
                 <field name="production_id" invisible="1"/>
+                <field name="product_id" invisible="1"/>
                 <field name="finished_lot_id" invisible="1"/>
                 <field name="qty_producing" invisible="1"/>
                 <group attrs="{'invisible': [('date_planned_start', '=', False)]}">

@@ -3,7 +3,7 @@
 
 from odoo import api, exceptions, fields, models, _
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round, float_repr, float_is_zero
+from odoo.tools import float_compare, float_round, float_is_zero
 
 
 class StockMoveLine(models.Model):
@@ -188,12 +188,6 @@ class StockMove(models.Model):
         if self.raw_material_production_id and self.has_tracking == 'none':
             mo = self.raw_material_production_id
             vals = self._update_quantity_done(mo)
-            if vals.get('to_create'):
-                for res in vals['to_create']:
-                    self.move_line_ids.new(res)
-            if vals.get('to_write'):
-                for move_line, res in vals['to_write']:
-                    move_line.update(res)
 
     @api.model
     def default_get(self, fields_list):
@@ -277,6 +271,11 @@ class StockMove(models.Model):
             production._action_cancel()
         return res
 
+    def _prepare_move_split_vals(self, qty):
+        defaults = super()._prepare_move_split_vals(qty)
+        defaults['workorder_id'] = False
+        return defaults
+
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         return {
             'picking_id': self.picking_id.id if self.picking_id else False,
@@ -298,10 +297,10 @@ class StockMove(models.Model):
         return vals
 
     def _get_upstream_documents_and_responsibles(self, visited):
-            if self.production_id and self.production_id.state not in ('done', 'cancel'):
-                return [(self.production_id, self.production_id.user_id, visited)]
-            else:
-                return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+        if self.production_id and self.production_id.state not in ('done', 'cancel'):
+            return [(self.production_id, self.production_id.user_id, visited)]
+        else:
+            return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
     def _delay_alert_get_documents(self):
         res = super(StockMove, self)._delay_alert_get_documents()
@@ -311,6 +310,16 @@ class StockMove(models.Model):
     def _should_be_assigned(self):
         res = super(StockMove, self)._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))
+
+    def _should_bypass_set_qty_producing(self):
+        if self.state in ('done', 'cancel'):
+            return True
+        # Do not update extra product quantities
+        if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
+            return True
+        if self.has_tracking != 'none' or self.state == 'done':
+            return True
+        return False
 
     def _should_bypass_reservation(self):
         res = super(StockMove, self)._should_bypass_reservation()
@@ -390,7 +399,7 @@ class StockMove(models.Model):
         new_qty = mo.product_uom_id._compute_quantity((mo.qty_producing - mo.qty_produced) * self.unit_factor, mo.product_uom_id, rounding_method='HALF-UP')
         if not self.is_quantity_done_editable:
             self.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
-            ml_values = self._set_quantity_done_prepare_vals(new_qty)
+            self.move_line_ids = self._set_quantity_done_prepare_vals(new_qty)
         else:
             self.quantity_done = new_qty
         return ml_values

@@ -539,7 +539,6 @@ class MrpProduction(models.Model):
 
     @api.onchange('product_qty', 'product_uom_id')
     def _onchange_product_qty(self):
-        product_qty = self.product_uom_id._compute_quantity(self.product_qty, self.product_uom_id)
         for workorder in self.workorder_ids:
             if not workorder.product_uom_id:
                 workorder.product_uom_id = self.product_uom_id
@@ -601,25 +600,7 @@ class MrpProduction(models.Model):
 
     @api.onchange('qty_producing', 'lot_producing_id')
     def _onchange_producing(self):
-        if self.product_id.tracking == 'serial':
-            qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
-            if qty_producing_uom != 1:
-                self.qty_producing = self.product_id.uom_id._compute_quantity(1, self.product_uom_id, rounding_method='HALF-UP')
-        for move in (self.move_raw_ids | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
-            if move.state in ('done', 'cancel'):
-                continue
-            # Do not update extra product quantities
-            if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
-                continue
-            if move.has_tracking != 'none' or move.state == 'done':
-                continue
-            vals = move._update_quantity_done(self)
-            if vals.get('to_create'):
-                for res in vals['to_create']:
-                    move.move_line_ids.new(res)
-            if vals.get('to_write'):
-                for move_line, res in vals['to_write']:
-                    move_line.update(res)
+        self._set_qty_producing()
 
     @api.onchange('bom_id')
     def _onchange_workorder_ids(self):
@@ -723,7 +704,6 @@ class MrpProduction(models.Model):
                         'product_uom_id': production.product_id.uom_id.id,
                         'operation_id': operation.id,
                         'state': 'pending',
-                        'qty_producing': production.product_id.tracking == 'serial' and 1.0 or product_qty,
                         'consumption': production.consumption,
                     }]
             production.workorder_ids = [(5, 0)] + [(0, 0, value) for value in workorders_values]
@@ -825,6 +805,19 @@ class MrpProduction(models.Model):
             'delay_alert': self.delay_alert
         }
         return data
+
+    def _set_qty_producing(self):
+        if self.product_id.tracking == 'serial':
+            qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
+            if qty_producing_uom != 1:
+                self.qty_producing = self.product_id.uom_id._compute_quantity(1, self.product_uom_id, rounding_method='HALF-UP')
+
+        for move in (self.move_raw_ids | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
+            if move._should_bypass_set_qty_producing():
+                continue
+            new_qty = self.product_uom_id._compute_quantity((self.qty_producing - self.qty_produced) * move.unit_factor, self.product_uom_id, rounding_method='HALF-UP')
+            move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
+            move.move_line_ids = move._set_quantity_done_prepare_vals(new_qty)
 
     def _update_raw_move(self, bom_line, line_data):
         """ :returns update_move, old_quantity, new_quantity """
@@ -981,24 +974,7 @@ class MrpProduction(models.Model):
         if self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids:
             self.move_finished_ids.filtered(lambda m: m.product_id == self.product_id).move_line_ids.lot_id = self.lot_producing_id
         if self.product_id.tracking == 'serial':
-            # copy/paste from _onchange_producing
-            qty_producing_uom = self.product_uom_id._compute_quantity(self.qty_producing, self.product_id.uom_id, rounding_method='HALF-UP')
-            if qty_producing_uom != 1:
-                self.qty_producing = self.product_id.uom_id._compute_quantity(1, self.product_uom_id, rounding_method='HALF-UP')
-            for move in (self.move_raw_ids | self.move_finished_ids.filtered(lambda m: m.product_id != self.product_id)):
-                if move.state in ('done', 'cancel'):
-                    continue
-                if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
-                    continue
-                if move.has_tracking != 'none':
-                    continue
-                vals = move._update_quantity_done(self)
-                if vals.get('to_create'):
-                    for res in vals['to_create']:
-                        move.move_line_ids.create(res)
-                if vals.get('to_write'):
-                    for move_line, res in vals['to_write']:
-                        move_line.write(res)
+            self._set_qty_producing()
 
     def action_confirm(self):
         self._check_company()
@@ -1265,8 +1241,6 @@ class MrpProduction(models.Model):
 
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
             moves_to_finish = moves_to_finish._action_done(cancel_backorder=cancel_backorder)
-            order.workorder_ids.mapped('raw_workorder_line_ids').unlink()
-            order.workorder_ids.mapped('finished_workorder_line_ids').unlink()
             order.action_assign()
             consume_move_lines = moves_to_do.mapped('move_line_ids')
             order.move_finished_ids.move_line_ids.consume_line_ids = [(6, 0, consume_move_lines.ids)]
@@ -1294,7 +1268,7 @@ class MrpProduction(models.Model):
             'origin': mo_source.origin
         }
 
-    def _generate_backorder_productions(self):
+    def _generate_backorder_productions(self, close_mo=True):
         backorders = self.env['mrp.production']
         for production in self:
             if production.backorder_sequence == 0:  # Activate backorder naming
@@ -1307,17 +1281,26 @@ class MrpProduction(models.Model):
                     wo.qty_producing = 1
                 else:
                     wo.qty_producing = wo.qty_remaining
-
-            production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write({
-                'raw_material_production_id': backorder_mo.id,
-            })
+            if close_mo:
+                production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write({
+                    'raw_material_production_id': backorder_mo.id,
+                })
+                production.move_finished_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write({
+                    'production_id': backorder_mo.id,
+                })
+            else:
+                for move in production.move_raw_ids | production.move_finished_ids:
+                    new_move = self.env['stock.move'].browse(move._split(move.unit_factor * production.qty_producing))
+                    if move.raw_material_production_id:
+                        new_move.raw_material_production_id = backorder_mo.id
+                    else:
+                        new_move.production_id = backorder_mo.id
             backorders |= backorder_mo
 
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
 
             for wo in backorder_mo.workorder_ids:
-                wo.duration_expected = wo._get_duration_expected()
-
+                wo.duration_expected = wo._get_duration_expected(wo.workcenter_id)
         backorders.action_confirm()
         # Remove the serial move line without reserved quantity. Post inventory will assigned all the non done moves
         # So those move lines are duplicated.

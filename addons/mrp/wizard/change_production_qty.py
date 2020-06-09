@@ -50,11 +50,11 @@ class ChangeProductionQty(models.TransientModel):
                 format_qty = '%.{precision}f'.format(precision=precision)
                 raise UserError(_("You have already processed %s. Please input a quantity higher than %s ") % (format_qty % produced, format_qty % produced))
             old_production_qty = production.product_qty
-            production.write({'product_qty': wizard.product_qty})
+            new_production_qty = wizard.product_qty
             done_moves = production.move_finished_ids.filtered(lambda x: x.state == 'done' and x.product_id == production.product_id)
             qty_produced = production.product_id.uom_id._compute_quantity(sum(done_moves.mapped('product_qty')), production.product_uom_id)
 
-            factor = (production.product_qty - qty_produced) / (old_production_qty - qty_produced)
+            factor = (new_production_qty - qty_produced) / (old_production_qty - qty_produced)
             update_info = production._update_raw_moves(factor)
             documents = {}
             for move, old_qty, new_qty in update_info:
@@ -67,9 +67,10 @@ class ChangeProductionQty(models.TransientModel):
                         else:
                             documents[key] = [value]
             production._log_manufacture_exception(documents)
-            finished_moves_modification = self._update_finished_moves(production, production.product_qty - qty_produced, old_production_qty - qty_produced)
+            finished_moves_modification = self._update_finished_moves(production, new_production_qty - qty_produced, old_production_qty - qty_produced)
             if finished_moves_modification:
                 production._log_downside_manufactured_quantity(finished_moves_modification)
+            production.write({'product_qty': new_production_qty})
 
             for wo in production.workorder_ids:
                 operation = wo.operation_id
@@ -80,9 +81,9 @@ class ChangeProductionQty(models.TransientModel):
                 else:
                     quantity = quantity if (quantity > 0) else 0
                 if float_is_zero(quantity, precision_digits=precision):
-                    wo.finished_lot_id = False
-                    wo._workorder_line_ids().unlink()
-                wo.qty_producing = quantity
+                    wo.check_ids.unlink()
+                else:
+                    wo.qty_producing = quantity
                 if wo.qty_produced < wo.qty_production and wo.state == 'done':
                     wo.state = 'progress'
                 if wo.qty_produced == wo.qty_production and wo.state == 'progress':
