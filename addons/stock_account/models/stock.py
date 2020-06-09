@@ -71,7 +71,7 @@ class StockMoveLine(models.Model):
             if move.state == 'done':
                 correction_value = move._run_valuation(line.qty_done)
                 if move.product_id.valuation == 'real_time' and (move._is_in() or move._is_out()):
-                    move.with_context(force_valuation_amount=correction_value)._account_entry_move()
+                    move.with_context(force_valuation_amount=correction_value, forced_quantity=line.qty_done)._account_entry_move()
         return lines
 
     @api.multi
@@ -369,7 +369,7 @@ class StockMove(models.Model):
             valued_quantity = 0
             for valued_move_line in valued_move_lines:
                 valued_quantity += valued_move_line.product_uom_id._compute_quantity(valued_move_line.qty_done, self.product_id.uom_id)
-            self.env['stock.move']._run_fifo(self, quantity=quantity)
+            value_to_return = self.env['stock.move']._run_fifo(self, quantity=quantity)
             if self.product_id.cost_method in ['standard', 'average']:
                 curr_rounding = self.company_id.currency_id.rounding
                 value = -float_round(self.product_id.standard_price * (valued_quantity if quantity is None else quantity), precision_rounding=curr_rounding)
