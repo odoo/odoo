@@ -227,8 +227,8 @@ var ThreadWindow = AbstractThreadWindow.extend({
      *
      * @private
      */
-    _open: function () {
-        this.call('mail_service', 'openThreadWindow', this.getID());
+    _open: function (channelID) {
+        this.call('mail_service', 'openThreadWindow', channelID || this.getID());
     },
     /**
      * Set the thread window in passive mode, so that new received message will
