@@ -440,6 +440,8 @@ class HomeStaticTemplateHelpers(object):
     EXTENSION_MODE = 'extension'
     DEFAULT_MODE = PRIMARY_MODE
 
+    MODULE_SEPARATOR = re.compile('[./]')
+
     def __init__(self, addons, db, checksum_only=False, debug=False):
         '''
         :param str|list addons: plain list or comma separated list of addons
@@ -463,7 +465,7 @@ class HomeStaticTemplateHelpers(object):
         :returns: (str, str)
         """
         original_template_name = template.attrib[self.STATIC_INHERIT_DIRECTIVE]
-        split_name_attempt = original_template_name.split('.', 1)
+        split_name_attempt = self._split_name(original_template_name)
         parent_addon, parent_name = tuple(split_name_attempt) if len(split_name_attempt) == 2 else (addon, original_template_name)
         if parent_addon not in self.template_dict:
             if original_template_name in self.template_dict[addon]:
@@ -496,7 +498,7 @@ class HomeStaticTemplateHelpers(object):
         for template_tree in list(all_templates_tree):
             if self.NAME_TEMPLATE_DIRECTIVE in template_tree.attrib:
                 template_name = template_tree.attrib[self.NAME_TEMPLATE_DIRECTIVE]
-                dotted_names = template_name.split('.', 1)
+                dotted_names = self._split_name(template_name)
                 if len(dotted_names) > 1 and dotted_names[0] == addon:
                     template_name = dotted_names[1]
             else:
@@ -591,6 +593,22 @@ class HomeStaticTemplateHelpers(object):
                 root.append(template)
 
         return etree.tostring(root, encoding='utf-8') if root is not None else b'', checksum.hexdigest()[:64]
+
+    def _split_name(self, fully_qualified_name):
+        """splits the fully qualified name of a template
+        into its parts
+
+        A fully qualified name is of the form
+            MODULE(SEPARATOR)TEMPLATE
+        where SEPARATOR is either dot (.) or forward slash (/)
+
+        In case the module name is absent, the template name is returned
+        as the sole element of the list
+
+        :param string name:
+        :returns: list(string)
+        """
+        return self.MODULE_SEPARATOR.split(fully_qualified_name, 1)
 
     def _get_qweb_templates(self):
         """One and only entry point that gets and evaluates static qweb templates
