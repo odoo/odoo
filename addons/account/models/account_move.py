@@ -353,9 +353,8 @@ class AccountMove(models.Model):
 
     @api.multi
     def action_post(self):
-        if self.mapped('line_ids.payment_id'):
-            if any(self.mapped('journal_id.post_at_bank_rec')):
-                raise UserError(_("A payment journal entry generated in a journal configured to post entries only when payments are reconciled with a bank statement cannot be manually posted. Those will be posted automatically after performing the bank reconciliation."))
+        if self.filtered(lambda x: x.journal_id.post_at_bank_rec).mapped('line_ids.payment_id').filtered(lambda x: x.state != 'reconciled'):
+            raise UserError(_("A payment journal entry generated in a journal configured to post entries only when payments are reconciled with a bank statement cannot be manually posted. Those will be posted automatically after performing the bank reconciliation."))
         return self.post()
 
     @api.multi
