@@ -286,43 +286,7 @@
                             </field>
                         </page>
                         <page string="Operations" name="operations" groups="mrp.group_mrp_routings">
-                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'default_production_id': id, 'default_qty_producing': product_qty, 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}">
-                                <tree editable="bottom">
-                                    <field name="consumption" invisible="1"/>
-                                    <field name="company_id" invisible="1"/>
-                                    <field name="is_produced" invisible="1"/>
-                                    <field name="is_user_working" invisible="1"/>
-                                    <field name="name" invisible="1"/>
-                                    <field name="product_uom_id" invisible="1" readonly="0"/>
-                                    <field name="qty_producing" invisible="1"/>
-                                    <field name="time_ids" invisible="1"/>
-                                    <field name="working_state" invisible="1"/>
-                                    <field name="operation_id" invisible="1" domain="['|', ('bom_id', '=', parent.bom_id), ('bom_id', '=', False)]" context="{'default_workcenter_id': workcenter_id, 'default_company_id': company_id}"/>
-                                    <field name="name" string="Operation"/>
-                                    <field name="workcenter_id"/>
-                                    <field name="date_planned_start" optional="show"/>
-                                    <field name="date_planned_finished" optional="hide"/>
-                                    <field name="date_start" optional="hide" readonly="1"/>
-                                    <field name="date_finished" optional="hide" readonly="1"/>
-                                    <field name="duration_expected" widget="float_time" sum="Total excepted duration"/>
-                                    <field name="duration" widget="mrp_time_counter" help="Time the currently logged user spent on this workorder."
-                                      attrs="{'invisible': ['|', ('parent.state','=', 'draft'), ('time_ids', '=', [])]}"/>
-                                    <button name="action_open_wizard" type="object" icon="fa-external-link" width="0" class="oe_edit_only"
-                                        context="{'default_workcenter_id': workcenter_id}"/>
-                                    <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
-                                    <button name="button_start" type="object" string="Start" width="0" class="btn-success"
-                                      attrs="{'invisible': ['|', '|', '|', ('parent.state','in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
-                                    <button name="button_pending" type="object" string="Pause" width="0" class="btn-warning"
-                                      attrs="{'invisible': ['|', '|', ('parent.state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
-                                    <button name="button_finish" type="object" string="Done" width="0" class="btn-success"
-                                      attrs="{'invisible': ['|', '|', ('parent.state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('is_user_working', '=', False)]}"/>
-                                    <button name="%(mrp.act_mrp_block_workcenter_wo)d" type="action" string="Block" context="{'default_workcenter_id': workcenter_id}" width="0" class="btn-danger"
-                                      attrs="{'invisible': ['|', ('parent.state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked')]}"/>
-                                    <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" width="0" class="btn-danger"
-                                      attrs="{'invisible': ['|', ('parent.state', 'in', ('draft', 'done')), ('working_state', '!=', 'blocked')]}"/>
-                                </tree>
-                            </field>
-                        </page>
+                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_production_id': id, 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/>                        </page>
                         <page string="Miscellaneous" name="miscellaneous" groups="stock.group_stock_multi_locations">
                             <group>
                                 <group>

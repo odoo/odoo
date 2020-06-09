@@ -158,47 +158,6 @@ class TestWarehouse(common.TestMrpCommon):
 #        scrap_move = production_3.move_raw_ids.filtered(lambda x: x.product_id == self.product_2 and x.scrapped)
 #        self.assertTrue(scrap_move, "There are no any scrap move created for production order.")
 
-    def test_putaway_after_manufacturing_1(self):
-        """ This test checks a manufactured product without tracking will go to
-        location defined in putaway strategy.
-        """
-        mo_laptop = self.new_mo_laptop()
-
-        mo_laptop.button_plan()
-        workorder = mo_laptop.workorder_ids[0]
-
-        workorder.button_start()
-        workorder.record_production()
-        mo_laptop.button_mark_done()
-
-        # We check if the laptop go in the depot and not in the stock
-        move = mo_laptop.move_finished_ids
-        location_dest = move.move_line_ids.location_dest_id
-        self.assertEqual(location_dest.id, self.depot_location.id)
-        self.assertNotEqual(location_dest.id, self.stock_location.id)
-
-    def test_putaway_after_manufacturing_2(self):
-        """ This test checks a tracked manufactured product will go to location
-        defined in putaway strategy.
-        """
-        self.laptop.tracking = 'serial'
-        mo_laptop = self.new_mo_laptop()
-
-        mo_laptop.button_plan()
-        workorder = mo_laptop.workorder_ids[0]
-
-        workorder.button_start()
-        serial = self.env['stock.production.lot'].create({'product_id': self.laptop.id, 'company_id': self.env.company.id})
-        workorder.finished_lot_id = serial
-        workorder.record_production()
-        mo_laptop.button_mark_done()
-
-        # We check if the laptop go in the depot and not in the stock
-        move = mo_laptop.move_finished_ids
-        location_dest = move.move_line_ids.location_dest_id
-        self.assertEqual(location_dest.id, self.depot_location.id)
-        self.assertNotEqual(location_dest.id, self.stock_location.id)
-
     def test_putaway_after_manufacturing_3(self):
         """ This test checks a tracked manufactured product will go to location
         defined in putaway strategy when the production is recorded with
