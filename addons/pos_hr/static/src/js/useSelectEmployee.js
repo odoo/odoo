@@ -7,9 +7,9 @@ odoo.define('pos_hr.useSelectEmployee', function (require) {
         const current = Component.current;
 
         async function askPin(employee) {
-            const { confirmed, payload: inputPin } = await this.showPopup('NumberPopup', {
+            const { confirmed, payload: inputPin } = await current.showPopup('NumberPopup', {
                 isPassword: true,
-                title: this.env._t('Password ?'),
+                title: current.env._t(`Pin of '${employee.name}'`),
                 startingValue: null,
             });
 
@@ -18,18 +18,22 @@ odoo.define('pos_hr.useSelectEmployee', function (require) {
             if (employee.pin === Sha1.hash(inputPin)) {
                 return employee;
             } else {
-                await this.showPopup('ErrorPopup', {
-                    title: this.env._t('Incorrect Password'),
+                await current.showPopup('ErrorPopup', {
+                    title: current.env._t('Incorrect Pin'),
                 });
                 return false;
             }
         }
 
-        async function selectEmployee(selectionList) {
-            const { confirmed, payload: employee } = await this.showPopup('SelectionPopup', {
-                title: this.env._t('Change Cashier'),
-                list: selectionList,
-            });
+        async function selectEmployee(selectionList, options = { hideCancelButton: false }) {
+            const { confirmed, payload: employee } = await current.showPopup(
+                'SelectEmployeePopup',
+                {
+                    title: current.env._t('Select Cashier or Scan Badge'),
+                    list: selectionList,
+                    hideCancelButton: options.hideCancelButton,
+                }
+            );
 
             if (!confirmed) return false;
 

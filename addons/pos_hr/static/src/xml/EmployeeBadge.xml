@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="EmployeeBadge" owl="1">
+        <div class="oe_status" t-on-mouseenter="onMouseEnter" t-on-mouseleave="onMouseLeave">
+            <span class="username" t-att-class="{ highlight: state.isMouseEnter }">
+                <t t-esc="text" />
+            </span>
+        </div>
+    </t>
+
+</templates>

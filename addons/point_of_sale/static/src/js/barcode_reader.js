@@ -25,10 +25,19 @@ var BarcodeReader = core.Class.extend({
         this.barcode_parser = attributes.barcode_parser;
 
         this.action_callback_stack = [];
+        this.isDisabled = false;
 
         core.bus.on('barcode_scanned', this, function (barcode) {
             this.scan(barcode);
         });
+    },
+
+    disable: function() {
+        this.isDisabled = true;
+    },
+
+    enable: function() {
+        this.isDisabled = false;
     },
 
     set_barcode_parser: function (barcode_parser) {
@@ -100,6 +109,7 @@ var BarcodeReader = core.Class.extend({
 
     scan: function (code) {
         if (!code) return;
+        if (this.isDisabled) return;
 
         const callbacks = Object.keys(this.exclusive_callbacks).length
             ? this.exclusive_callbacks

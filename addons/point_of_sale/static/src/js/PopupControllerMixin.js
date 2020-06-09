@@ -11,6 +11,10 @@ odoo.define('point_of_sale.PopupControllerMixin', function(require) {
      *     `<t t-if="popup.isShown" t-component="popup.component" t-props="popupProps" t-key="popup.name" />`
      *  2. The component should trigger `show-popup` event to show the popup and `close-popup` event
      *     to close. In PosComponent, `showPopup` is conveniently declared to satisfy this requirement.
+     *
+     * We also disable barcode reader by default when a popup is shown.
+     * It can still be manually enabled in the popup constructor.
+     *
      * @param {Function} x class definition to mix with during extension
      */
     const PopupControllerMixin = x =>
@@ -34,9 +38,11 @@ odoo.define('point_of_sale.PopupControllerMixin', function(require) {
                 this.popup.name = name;
                 this.popup.component = popupConstructor;
                 this.popupProps = Object.assign({}, props, { resolve });
+                if (this.env.pos.barcode_reader) this.env.pos.barcode_reader.disable();
             }
             __closePopup() {
                 this.popup.isShown = false;
+                if (this.env.pos.barcode_reader) this.env.pos.barcode_reader.enable();
             }
         };
 

@@ -29,13 +29,7 @@ odoo.define('point_of_sale.SelectionPopup', function(require) {
             this.list = useState([...this.props.list]);
         }
         selectItem(itemId) {
-            for (let item of this.list) {
-                if (item.id === itemId) {
-                    item.isSelected = true;
-                } else {
-                    item.isSelected = false;
-                }
-            }
+            this.selected = this.list.find(item => item.id === itemId);
             this.confirm();
         }
         /**
@@ -43,9 +37,8 @@ odoo.define('point_of_sale.SelectionPopup', function(require) {
          *
          * @override
          */
-        getPayload() {
-            const selected = this.props.list.find(item => item.isSelected);
-            return selected && selected.item;
+        getPayload() {;
+            return this.selected && this.selected.item;
         }
     }
     SelectionPopup.template = 'SelectionPopup';
@@ -54,6 +47,7 @@ odoo.define('point_of_sale.SelectionPopup', function(require) {
         cancelText: 'Cancel',
         title: 'Select',
         body: '',
+        hideCancelButton: false,
         list: [],
     };
 

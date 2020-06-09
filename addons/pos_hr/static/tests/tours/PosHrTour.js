@@ -11,12 +11,13 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
 
     startSteps();
 
-    PosHr.check.loginScreenIsShown();
-    PosHr.do.clickLoginButton();
+    SelectionPopup.check.isShown();
+    SelectionPopup.do.clickItem('Mitchell Admin');
+    PosHr.check.cashierNameIs('Mitchell Admin');
+    PosHr.do.clickCashierName();
     SelectionPopup.check.isShown();
     SelectionPopup.check.hasSelectionItem('Pos Employee1');
     SelectionPopup.check.hasSelectionItem('Pos Employee2');
-    SelectionPopup.check.hasSelectionItem('Mitchell Admin');
     SelectionPopup.do.clickItem('Pos Employee1');
     NumberPopup.check.isShown();
     NumberPopup.do.pressNumpad('2 5 8 1');
@@ -24,7 +25,7 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     NumberPopup.do.clickConfirm();
     ErrorPopup.check.isShown();
     ErrorPopup.do.clickConfirm();
-    PosHr.do.clickLoginButton();
+    PosHr.do.clickCashierName();
     SelectionPopup.do.clickItem('Pos Employee1');
     NumberPopup.check.isShown();
     NumberPopup.do.pressNumpad('2 5 8 0');
@@ -35,7 +36,6 @@ odoo.define('point_of_sale.tour.PosHr', function (require) {
     PosHr.do.clickCashierName();
     SelectionPopup.do.clickItem('Mitchell Admin');
     PosHr.check.cashierNameIs('Mitchell Admin');
-    PosHr.do.clickLockButton();
     PosHr.exec.login('Pos Employee2', '1234');
     ProductScreen.check.isShown();
 

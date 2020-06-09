@@ -6,22 +6,6 @@ odoo.define('pos_hr.tour.PosHrTourMethods', function (require) {
     const { NumberPopup } = require('point_of_sale.tour.NumberPopupTourMethods');
 
     class Do {
-        clickLoginButton() {
-            return [
-                {
-                    content: 'click login button',
-                    trigger: '.login-overlay .login-button.select-employee',
-                },
-            ];
-        }
-        clickLockButton() {
-            return [
-                {
-                    content: 'click lock button',
-                    trigger: '.header-button .lock-button',
-                },
-            ];
-        }
         clickCashierName() {
             return [
                 {
@@ -32,15 +16,6 @@ odoo.define('pos_hr.tour.PosHrTourMethods', function (require) {
         }
     }
     class Check {
-        loginScreenIsShown() {
-            return [
-                {
-                    content: 'login screen is shown',
-                    trigger: '.login-overlay .screen-login .login-body',
-                    run: () => {},
-                },
-            ];
-        }
         cashierNameIs(name) {
             return [
                 {
@@ -53,7 +28,7 @@ odoo.define('pos_hr.tour.PosHrTourMethods', function (require) {
     }
     class Execute {
         login(name, pin) {
-            const res = this._do.clickLoginButton();
+            const res = this._do.clickCashierName();
             res.push(...SelectionPopup._do.clickItem(name));
             if (pin) {
                 res.push(...NumberPopup._do.pressNumpad(pin.split('').join(' ')));
