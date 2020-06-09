@@ -1332,7 +1332,7 @@
     </xpath>
 </template>
 
-<!-- Features template -->
+<!-- Web Login template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">
         <t t-call="website.layout">
@@ -1346,6 +1346,14 @@
     </xpath>
 </template>
 
+<!-- Web Login side image switch -->
+<template id="login_layout_opt_switch" inherit_id="website.login_layout" active="False" customize_show="True" name="Side Image">
+    <xpath expr="//div[hasclass('login_layout_opt')]" position="replace">
+        <div class="login_layout_opt col-lg p-0" /> 
+    </xpath>
+</template>
+
+<!-- Web Login side image options -->
 <template id="login_layout_options" inherit_id="web_editor.snippet_options">
     <xpath expr="." position="inside">
         <div data-selector=".login_layout_opt">
@@ -1372,14 +1380,6 @@
             <we-input string="Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
         </we-multi>
         </div>
-    </xpath>
-</template>
-
-<template id="login_layout_opt_switch" inherit_id="website.login_layout" active="False" customize_show="True" name="Side Image">
-    <xpath expr="//div[hasclass('login_layout_opt')]" position="replace">
-        <div class="login_layout_opt col-lg p-0">
-            <div class="login_layout_opt_1" />
-        </div>    
     </xpath>
 </template>
 
