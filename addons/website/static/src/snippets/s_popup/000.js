@@ -15,7 +15,8 @@ const PopupWidget = publicWidget.Widget.extend({
      * @override
      */
     start: function () {
-        if (!utils.get_cookie(this.$el.attr('id'))) {
+        this._popupAlreadyShown = !!utils.get_cookie(this.$el.attr('id'));
+        if (!this._popupAlreadyShown) {
             this._bindPopup();
         }
         return this._super(...arguments);
@@ -66,6 +67,9 @@ const PopupWidget = publicWidget.Widget.extend({
      * @private
      */
     _showPopup: function () {
+        if (this._popupAlreadyShown) {
+            return;
+        }
         this.$target.find('.s_popup_main').removeClass('d-none');
     },
 
@@ -79,6 +83,7 @@ const PopupWidget = publicWidget.Widget.extend({
     _onCloseClick: function () {
         const nbDays = this.$el.find('.s_popup_main').data('consentsDuration');
         utils.set_cookie(this.$el.attr('id'), true, nbDays * 24 * 60 * 60);
+        this._popupAlreadyShown = true;
         this._hidePopup();
     },
 });
