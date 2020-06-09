@@ -374,13 +374,13 @@ class TestO2M(TransactionCase):
 
         with f.subs.edit(index=0) as s:
             self.assertEqual(s.v, 5)
-            self.assertEqual(s.value, False)
+            self.assertEqual(s.value, 2)
 
         r = f.save()
 
         self.assertEqual(
             [get(s) for s in r.subs],
-            [("5", 0, 5)]
+            [("5", 2, 5)]
         )
 
     def test_o2m_inner_default(self):
