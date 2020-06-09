@@ -59,18 +59,13 @@ class Team(models.Model):
             team.lead_all_assigned_month_count = counts.get(team.id, 0)
 
     def _compute_opportunities_data(self):
-        opportunity_data = self.env['crm.lead'].search([
+        opportunity_data = self.env['crm.lead'].read_group([
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
-        ]).read(['expected_revenue', 'team_id'])
-        counts = {}
-        amounts = {}
-        for datum in opportunity_data:
-            counts.setdefault(datum['team_id'][0], 0)
-            amounts.setdefault(datum['team_id'][0], 0)
-            counts[datum['team_id'][0]] += 1
-            amounts[datum['team_id'][0]] += (datum.get('expected_revenue', 0))
+        ], ['expected_revenue:sum', 'team_id'], ['team_id'])
+        counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
+        amounts = {datum['team_id'][0]: datum['expected_revenue'] for datum in opportunity_data}
         for team in self:
             team.opportunities_count = counts.get(team.id, 0)
             team.opportunities_amount = amounts.get(team.id, 0)
