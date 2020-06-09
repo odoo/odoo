@@ -44,6 +44,7 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
             }, options);
             this._areAccessKeyVisible = false;
             this.BrowserDetection = new BrowserDetection();
+            this.altKeyPressed = false;
         },
         /**
          * @override
@@ -150,37 +151,8 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
             if (!this._areAccessKeyVisible &&
                 (keyDownEvent.altKey || keyDownEvent.key === 'Alt') &&
                 !keyDownEvent.ctrlKey) {
-
-                this._areAccessKeyVisible = true;
-
-                this._setAccessKeyOnTopNavigation();
-
-                var usedAccessKey = this._getAllUsedAccessKeys();
-
-                if (this.options.autoAccessKeys) {
-                    var buttonsWithoutAccessKey = this.$el.find('button.btn:visible')
-                        .not('[accesskey]')
-                        .not('[disabled]')
-                        .not('[tabindex="-1"]');
-                    _.each(buttonsWithoutAccessKey, function (elem) {
-                        var buttonString = [elem.innerText, elem.title, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"].join('');
-                        for (var letterIndex = 0; letterIndex < buttonString.length; letterIndex++) {
-                            var candidateAccessKey = buttonString[letterIndex].toUpperCase();
-                            if (candidateAccessKey >= 'A' && candidateAccessKey <= 'Z' &&
-                                !_.includes(usedAccessKey, candidateAccessKey)) {
-                                elem.accessKey = candidateAccessKey;
-                                usedAccessKey.push(candidateAccessKey);
-                                break;
-                            }
-                        }
-                    });
-                }
-
-                var elementsWithoutAriaKeyshortcut = this.$el.find('[accesskey]').not('[aria-keyshortcuts]');
-                _.each(elementsWithoutAriaKeyshortcut, function (elem) {
-                    elem.setAttribute('aria-keyshortcuts', 'Alt+Shift+' + elem.accessKey);
-                });
-                this._addAccessKeyOverlays();
+                this.altKeyPressed = true;
+                this._showAccessKeyOverlay(keyDownEvent);
             }
             // on mac, there are a number of keys that are only accessible though the usage of
             // the ALT key (like the @ sign in most keyboards)
@@ -239,6 +211,46 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
             }
         },
         /**
+         * Display the overlay that shows the access keys.
+         *
+         * @private
+         */
+        _showAccessKeyOverlay: function () {
+            if (this.altKeyPressed) {
+                this._hideAccessKeyOverlay();
+                this._areAccessKeyVisible = true;
+
+                this._setAccessKeyOnTopNavigation();
+
+                var usedAccessKey = this._getAllUsedAccessKeys();
+
+                if (this.options.autoAccessKeys) {
+                    var buttonsWithoutAccessKey = this.$el.find('button.btn:visible')
+                        .not('[accesskey]')
+                        .not('[disabled]')
+                        .not('[tabindex="-1"]');
+                    _.each(buttonsWithoutAccessKey, function (elem) {
+                        var buttonString = [elem.innerText, elem.title, "ABCDEFGHIJKLMNOPQRSTUVWXYZ"].join('');
+                        for (var letterIndex = 0; letterIndex < buttonString.length; letterIndex++) {
+                            var candidateAccessKey = buttonString[letterIndex].toUpperCase();
+                            if (candidateAccessKey >= 'A' && candidateAccessKey <= 'Z' &&
+                                !_.includes(usedAccessKey, candidateAccessKey)) {
+                                elem.accessKey = candidateAccessKey;
+                                usedAccessKey.push(candidateAccessKey);
+                                break;
+                            }
+                        }
+                    });
+                }
+
+                var elementsWithoutAriaKeyshortcut = this.$el.find('[accesskey]').not('[aria-keyshortcuts]');
+                _.each(elementsWithoutAriaKeyshortcut, function (elem) {
+                    elem.setAttribute('aria-keyshortcuts', 'Alt+Shift+' + elem.accessKey);
+                });
+                this._addAccessKeyOverlays();
+            }
+        },
+        /**
          * hides the shortcut overlays when keyup event is triggered on the ALT key
          *
          * @private
@@ -246,12 +258,18 @@ odoo.define('web.KeyboardNavigationMixin', function (require) {
          * @return {undefined|false}
          */
         _onKeyUp: function (keyUpEvent) {
-            if ((keyUpEvent.altKey || keyUpEvent.key === 'Alt') && !keyUpEvent.ctrlKey) {
+            if (keyUpEvent.key === 'Alt' && !keyUpEvent.ctrlKey) {
+                this.altKeyPressed = false;
                 this._hideAccessKeyOverlay();
                 if (keyUpEvent.preventDefault) keyUpEvent.preventDefault(); else keyUpEvent.returnValue = false;
                 if (keyUpEvent.stopPropagation) keyUpEvent.stopPropagation();
                 if (keyUpEvent.cancelBubble) keyUpEvent.cancelBubble = true;
                 return false;
+            } else {
+                if (keyUpEvent.altKey) {
+                    this.altKeyPressed = true;
+                    this._showAccessKeyOverlay(keyUpEvent);
+                }
             }
         },
     };

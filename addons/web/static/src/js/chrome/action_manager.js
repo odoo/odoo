@@ -193,6 +193,7 @@ var ActionManager = Widget.extend({
      */
     getCurrentAction: function () {
         var controller = this.getCurrentController();
+        this.trigger_up('showAccessKeyOverlay', {});
         return controller ? this.actions[controller.actionID] : null;
     },
     /**
