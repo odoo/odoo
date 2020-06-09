@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.addons.account.tests.common import AccountTestCommon
@@ -224,3 +224,37 @@ class TestPurchaseOrder(AccountTestCommon):
         self.po.button_confirm()
         self.assertFalse(self.po.order_line.mapped('move_dest_ids'))
         self.assertEqual(self.po.picking_ids.move_lines[0].propagate_date, warehouse.buy_pull_id.propagate_date)
+
+    def test_update_date_planned(self):
+        po = self.PurchaseOrder.create(self.po_vals)
+        po.button_confirm()
+
+        today = datetime.today().replace(microsecond=0)
+        tomorrow = datetime.today().replace(microsecond=0) + timedelta(days=1)
+        # update first line
+        po._update_date_planned_for_lines([(po.order_line[0], tomorrow)])
+        self.assertEqual(po.order_line[0].date_planned, tomorrow)
+        activity = self.env['mail.activity'].search([
+            ('summary', '=', 'Date Updated'),
+            ('res_model_id', '=', 'purchase.order'),
+            ('res_id', '=', po.id),
+        ])
+        self.assertTrue(activity)
+        self.assertEqual(
+            activity.note,
+            '<p> Wood Corner Partner modified receipt dates for the following products:</p><p> \xa0 - Large Desk from %s to %s </p><p>Those dates have been updated accordingly on the receipt %s.</p>' % (today.date(), tomorrow.date(), po.picking_ids.name)
+        )
+
+        # receive products
+        wiz_act = po.picking_ids.button_validate()
+        wiz = Form(self.env[wiz_act['res_model']].with_context(wiz_act['context'])).save()
+        wiz.process()
+
+        # update second line
+        old_date = po.order_line[1].date_planned
+        po._update_date_planned_for_lines([(po.order_line[1], tomorrow)])
+        self.assertEqual(po.order_line[1].date_planned, old_date)
+        self.assertEqual(
+            activity.note,
+            '<p> Wood Corner Partner modified receipt dates for the following products:</p><p> \xa0 - Large Desk from %s to %s </p><p> \xa0 - Conference Chair from %s to %s </p><p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>' % (today.date(), tomorrow.date(), today.date(), tomorrow.date(), po.picking_ids.name)
+        )
