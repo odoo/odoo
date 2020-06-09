@@ -668,7 +668,7 @@
             <field name="name">Other Partners</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.partner</field>
-            <field name="domain">[('supplier','!=',1),('customer','!=',1)]</field>
+            <field name="domain">[('supplier_rank','=',0),('customer_rank','=',0)]</field>
             <field name="filter" eval="True"/>
         </record>
 
