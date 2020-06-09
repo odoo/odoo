@@ -189,12 +189,15 @@ def module_installed(environment):
 
     # Retrieve database installed modules
     # TODO The following code should move to ir.module.module.list_installed_modules()
-    Modules = environment['ir.module.module']
-    domain = [('state','=','installed'), ('name','in', loadable)]
-    modules = OrderedDict(
-        (module.name, module.dependencies_id.mapped('name'))
-        for module in Modules.search(domain)
-    )
+    environment.cr.execute("""
+           SELECT mod.name, array_agg(dep.name)
+             FROM ir_module_module mod
+        LEFT JOIN ir_module_module_dependency dep ON (dep.module_id = mod.id)
+            WHERE mod.state = 'installed' AND mod.name = any(%s)
+         GROUP BY mod.name, mod.sequence
+         ORDER BY sequence, name
+    """, [loadable])
+    modules = OrderedDict(environment.cr.fetchall())
 
     sorted_modules = topological_sort(modules)
     return sorted_modules
