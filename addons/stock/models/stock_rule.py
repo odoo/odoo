@@ -51,7 +51,7 @@ class StockRule(models.Model):
     sequence = fields.Integer('Sequence', default=20)
     company_id = fields.Many2one('res.company', 'Company',
         default=lambda self: self.env.company,
-        domain=[('company_id', '?=', 'route_company_id')])
+        domain="[('id', '=?', route_company_id)]")
     location_id = fields.Many2one('stock.location', 'Destination Location', required=True, check_company=True)
     location_src_id = fields.Many2one('stock.location', 'Source Location', check_company=True)
     route_id = fields.Many2one('stock.location.route', 'Route', required=True, ondelete='cascade')
