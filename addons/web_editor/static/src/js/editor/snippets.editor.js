@@ -2057,8 +2057,6 @@ var SnippetsMenu = Widget.extend({
      * @param {Event} ev
      */
     _onInvisibleEntryClick: async function (ev) {
-        this._addTabLoading();
-
         ev.preventDefault();
         const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
         const isVisible = await this._mutex.exec(async () => {
