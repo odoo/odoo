@@ -151,21 +151,31 @@ class MassMailing(models.Model):
             mass_mailing.total = len(mass_mailing.sudo()._get_recipients())
 
     def _compute_clicks_ratio(self):
-        self.env.cr.execute("""
-            SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mailing_trace_id)) AS nb_clicks, stats.mass_mailing_id AS id
-            FROM mailing_trace AS stats
-            LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
-            WHERE stats.mass_mailing_id IN %s
-            GROUP BY stats.mass_mailing_id
-        """, (tuple(self.ids), ))
-
-        mass_mailing_data = self.env.cr.dictfetchall()
+        if self.ids:
+            self.env.cr.execute("""
+                SELECT COUNT(DISTINCT(stats.id)) AS nb_mails, COUNT(DISTINCT(clicks.mailing_trace_id)) AS nb_clicks, stats.mass_mailing_id AS id
+                FROM mailing_trace AS stats
+                LEFT OUTER JOIN link_tracker_click AS clicks ON clicks.mailing_trace_id = stats.id
+                WHERE stats.mass_mailing_id IN %s
+                GROUP BY stats.mass_mailing_id
+            """, (tuple(self.ids), ))
+            mass_mailing_data = self.env.cr.dictfetchall()
+        else:
+            mass_mailing_data = []
         mapped_data = dict([(m['id'], 100 * m['nb_clicks'] / m['nb_mails']) for m in mass_mailing_data])
         for mass_mailing in self:
             mass_mailing.clicks_ratio = mapped_data.get(mass_mailing.id, 0)
 
     def _compute_statistics(self):
         """ Compute statistics of the mass mailing """
+        for key in (
+            'scheduled', 'expected', 'ignored', 'sent', 'delivered', 'opened',
+            'clicked', 'replied', 'bounced', 'failed', 'received_ratio',
+            'opened_ratio', 'replied_ratio', 'bounced_ratio', 'clicks_ratio',
+        ):
+            self[key] = False
+        if not self.ids:
+            return
         self.env.cr.execute("""
             SELECT
                 m.id as mailing_id,
