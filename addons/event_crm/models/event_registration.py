@@ -27,17 +27,18 @@ class EventRegistration(models.Model):
         """ Trigger rules based on registration creation, and check state for
         rules based on confirmed / done attendees. """
         registrations = super(EventRegistration, self).create(vals_list)
-        self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'create')]).sudo()._run_on_registrations(registrations)
 
         # handle triggers based on creation, then those based on confirm and done
         # as registrations can be automatically confirmed, or even created directly
         # with a state given in values
-        open_registrations = registrations.filtered(lambda reg: reg.state == 'open')
-        if open_registrations:
-            self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')]).sudo()._run_on_registrations(open_registrations)
-        done_registrations = registrations.filtered(lambda reg: reg.state == 'done')
-        if done_registrations:
-            self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')]).sudo()._run_on_registrations(done_registrations)
+        if not self.env.context.get('event_lead_rule_skip'):
+            self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'create')]).sudo()._run_on_registrations(registrations)
+            open_registrations = registrations.filtered(lambda reg: reg.state == 'open')
+            if open_registrations:
+                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')]).sudo()._run_on_registrations(open_registrations)
+            done_registrations = registrations.filtered(lambda reg: reg.state == 'done')
+            if done_registrations:
+                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')]).sudo()._run_on_registrations(done_registrations)
 
         return registrations
 
@@ -54,23 +55,36 @@ class EventRegistration(models.Model):
         Also trigger rules based on confirmed and done attendees (state written
         to open and done).
         """
-        to_update = self.filtered(lambda reg: reg.lead_ids)
+        to_update, event_lead_rule_skip = False, self.env.context.get('event_lead_rule_skip')
+        if not event_lead_rule_skip:
+            to_update = self.filtered(lambda reg: reg.lead_ids)
         if to_update:
             lead_tracked_vals = to_update._get_lead_tracked_values()
 
         res = super(EventRegistration, self).write(vals)
 
-        if to_update:
+        if not event_lead_rule_skip and to_update:
             to_update.flush()  # compute notably partner-based fields if necessary
             to_update.sudo()._update_leads(vals, lead_tracked_vals)
 
         # handle triggers based on state
-        if vals.get('state') == 'open':
-            self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')]).sudo()._run_on_registrations(self)
-        elif vals.get('state') == 'done':
-            self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')]).sudo()._run_on_registrations(self)
+        if not event_lead_rule_skip:
+            if vals.get('state') == 'open':
+                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'confirm')]).sudo()._run_on_registrations(self)
+            elif vals.get('state') == 'done':
+                self.env['event.lead.rule'].search([('lead_creation_trigger', '=', 'done')]).sudo()._run_on_registrations(self)
 
         return res
+
+    def _load_records_create(self, values):
+        """ In import mode: do not run rules those are intended to run when customers
+        buy tickets, not when bootstrapping a database. """
+        return super(EventRegistration, self.with_context(event_lead_rule_skip=True))._load_records_create(values)
+
+    def _load_records_write(self, values):
+        """ In import mode: do not run rules those are intended to run when customers
+        buy tickets, not when bootstrapping a database. """
+        return super(EventRegistration, self.with_context(event_lead_rule_skip=True))._load_records_write(values)
 
     def _update_leads(self, new_vals, lead_tracked_vals):
         """ Update leads linked to some registrations. Update is based depending
