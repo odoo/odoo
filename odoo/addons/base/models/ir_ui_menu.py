@@ -214,9 +214,12 @@ class IrUiMenu(models.Model):
             'parent_id': [-1, ''],
             'children': menu_roots_data,
             'all_menu_ids': menu_roots.ids,
+            'xmlid': '',
         }
 
-        menu_roots._set_menuitems_xmlids(menu_root)
+        xids = menu_roots._get_xids()
+        for item in menu_roots_data:
+            item['xmlid'] = xids.get(item['id'], '')
 
         return menu_root
 
@@ -228,62 +231,46 @@ class IrUiMenu(models.Model):
         :return: the menu root
         :rtype: dict('children': menu_nodes)
         """
+        menu_ids = self._visible_menu_ids(request.session.debug if request else False)
+        if not menu_ids:
+            return {
+                'id': False,
+                'name': 'root',
+                'children': [],
+            }
+
         fields = ['name', 'sequence', 'parent_id', 'action', 'web_icon', 'web_icon_data']
-        menu_roots = self.get_user_roots()
-        menu_roots_data = menu_roots.read(fields) if menu_roots else []
-        menu_root = {
+        menus = self.browse(menu_ids)
+        menu_items = menus.read(fields, load=False)
+        menu_items.sort(key=lambda it: (it['sequence'], it['id']))
+        menu_map = {menu_item['id']: menu_item for menu_item in menu_items}
+        xids = menus._get_xids()
+
+        roots = []
+        for menu_item in menu_items:
+            parent = menu_item['parent_id']
+            if parent:
+                menu_map[parent].setdefault('children', []).append(menu_item)
+            else:
+                roots.append(menu_item)
+            menu_item['xmlid'] = xids.get(menu_item['id'], '')
+            menu_item.setdefault('children', [])
+
+        return {
             'id': False,
             'name': 'root',
-            'parent_id': [-1, ''],
-            'children': menu_roots_data,
-            'all_menu_ids': menu_roots.ids,
+            'children': roots,
+            'xmlid': '',
         }
 
-        if not menu_roots_data:
-            return menu_root
+    def _get_xids(self):
+        if not self:
+            return {}
 
-        # menus are loaded fully unlike a regular tree view, cause there are a
-        # limited number of items (752 when all 6.1 addons are installed)
-        menus = self.search([('id', 'child_of', menu_roots.ids)])
-        menu_items = menus.read(fields)
-
-        # add roots at the end of the sequence, so that they will overwrite
-        # equivalent menu items from full menu read when put into id:item
-        # mapping, resulting in children being correctly set on the roots.
-        menu_items.extend(menu_roots_data)
-        menu_root['all_menu_ids'] = menus.ids  # includes menu_roots!
-
-        # make a tree using parent_id
-        menu_items_map = {menu_item["id"]: menu_item for menu_item in menu_items}
-        for menu_item in menu_items:
-            parent = menu_item['parent_id'] and menu_item['parent_id'][0]
-            if parent in menu_items_map:
-                menu_items_map[parent].setdefault(
-                    'children', []).append(menu_item)
-
-        # sort by sequence a tree using parent_id
-        for menu_item in menu_items:
-            menu_item.setdefault('children', []).sort(key=operator.itemgetter('sequence'))
-
-        (menu_roots + menus)._set_menuitems_xmlids(menu_root)
-
-        return menu_root
-
-    def _set_menuitems_xmlids(self, menu_root):
-        menuitems = self.env['ir.model.data'].sudo().search([
+        return {
+            imd.res_id: imd.complete_name
+            for imd in self.env['ir.model.data'].sudo().search([
                 ('res_id', 'in', self.ids),
                 ('model', '=', 'ir.ui.menu')
             ])
-
-        xmlids = {
-            menu.res_id: menu.complete_name
-            for menu in menuitems
         }
-
-        def _set_xmlids(tree, xmlids):
-            tree['xmlid'] = xmlids.get(tree['id'], '')
-            if 'children' in tree:
-                for child in tree['children']:
-                    _set_xmlids(child, xmlids)
-
-        _set_xmlids(menu_root, xmlids)
