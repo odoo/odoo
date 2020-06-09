@@ -360,7 +360,7 @@ class IrModuleModule(models.Model):
         # this will install 'self' if it is not installed yet
         self._theme_upgrade_upstream()
 
-        return website.button_go_website(force_edit=True)
+        return website.button_go_website(mode_edit=True)
 
     def button_remove_theme(self):
         """Remove the current theme of the current website."""

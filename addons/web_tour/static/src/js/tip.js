@@ -61,7 +61,7 @@ var Tip = Widget.extend({
         this.is_anchor_fixed_position = this.$anchor.css("position") === "fixed";
 
         if (this.info.optional === "true") {
-            this.info.content += "</br><button class='btn_consume_event'>Next Step</button>";
+            this.info.content += "<button class='btn btn-link btn_consume_event'>" + _t('Next Step') + "</button>";
         }
         // The body never needs to have the o_tooltip_parent class. It is a
         // safe place to put the tip in the DOM at initialization and be able

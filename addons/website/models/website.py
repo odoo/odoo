@@ -908,14 +908,13 @@ class Website(models.Model):
             return self.env["ir.actions.actions"]._for_xml_id("website.backend_dashboard")
         return self.env["ir.actions.actions"]._for_xml_id("website.action_website")
 
-    def button_go_website(self, force_edit):
+    def button_go_website(self, path='/', mode_edit=False):
         self._force()
-        param = ''
-        if force_edit:
-            param += '?enable_editor=1'
+        if mode_edit:
+            path += '?enable_editor=1'
         return {
             'type': 'ir.actions.act_url',
-            'url': '/%s' % param,
+            'url': path,
             'target': 'self',
         }
 
