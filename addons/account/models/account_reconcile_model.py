@@ -535,33 +535,7 @@ class AccountReconcileModel(models.Model):
             aml.amount_currency                 AS aml_amount_currency,
             account.internal_type               AS account_internal_type,
 
-            -- Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
-            (
-                aml.name IS NOT NULL
-                AND
-                substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                AND
-                    regexp_split_to_array(substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-            )
-            OR
-                regexp_split_to_array(substring(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-            OR
-            (
-                move.ref IS NOT NULL
-                AND
-                substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                AND
-                    regexp_split_to_array(substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-            )                                   AS communication_flag,
-            -- Determine a matching or not with the statement line communication using the move.payment_reference.
-            (
-                move.payment_reference IS NOT NULL
-                AND
-                regexp_replace(move.payment_reference, '\s+', '', 'g') = regexp_replace(st_line.payment_ref, '\s+', '', 'g')
-            )                                   AS payment_reference_flag
+            ''' + self._get_select_communication_flag() + r''', ''' + self._get_select_payment_reference_flag() + r'''
         FROM account_bank_statement_line st_line
         JOIN account_move st_line_move          ON st_line_move.id = st_line.move_id
         JOIN account_journal journal            ON journal.id = st_line_move.journal_id
@@ -662,6 +636,41 @@ class AccountReconcileModel(models.Model):
         query += ' ORDER BY aml_date_maturity, aml_id'
 
         return query, params
+
+    def _get_select_communication_flag(self):
+        return r'''
+            -- Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
+            (
+                aml.name IS NOT NULL
+                AND
+                substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                AND
+                    regexp_split_to_array(substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+            )
+            OR
+                regexp_split_to_array(substring(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+            OR
+            (
+                move.ref IS NOT NULL
+                AND
+                substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                AND
+                    regexp_split_to_array(substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.payment_ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+            )                                   AS communication_flag
+        '''
+
+    def _get_select_payment_reference_flag(self):
+        return r'''
+            -- Determine a matching or not with the statement line communication using the move.payment_reference.
+            (
+                move.payment_reference IS NOT NULL
+                AND
+                regexp_replace(move.payment_reference, '\s+', '', 'g') = regexp_replace(st_line.payment_ref, '\s+', '', 'g')
+            )                                   AS payment_reference_flag
+        '''
 
     def _get_partner_from_mapping(self, st_line):
         """ For invoice matching rules, matches the statement line against
