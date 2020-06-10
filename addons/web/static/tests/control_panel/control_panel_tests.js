@@ -53,7 +53,7 @@ odoo.define('web.control_panel_tests', function (require) {
         QUnit.test('fields and filters with groups/invisible attribute', async function (assert) {
             // navigation and automatic menu closure don't work here (i don't know why yet) -->
             // should be tested separatly
-            assert.expect(14);
+            assert.expect(16);
 
             const arch = `
                 <search>
@@ -61,6 +61,7 @@ odoo.define('web.control_panel_tests', function (require) {
                     <field name="foo" string="Foo A"/>
                     <filter name="filterA" string="FA" domain="[]"/>
                     <filter name="filterB" string="FB" invisible="1" domain="[]"/>
+                    <filter name="filterC" string="FC" invisible="not context.get('show_filterC')" domain="[]"/>
                     <filter name="groupByA" string="GA" context="{ 'group_by': 'date_field:day' }"/>
                     <filter name="groupByB" string="GB" context="{ 'group_by': 'date_field:day' }" invisible="1"/>
                 </search>`;
@@ -69,6 +70,7 @@ odoo.define('web.control_panel_tests', function (require) {
                 cpStoreConfig: {
                     viewInfo: { arch, fields: this.fields },
                     actionContext: {
+                        show_filterC: true,
                         search_default_display_name: 'value',
                         search_default_filterB: true,
                         search_default_groupByB: true
@@ -98,6 +100,7 @@ odoo.define('web.control_panel_tests', function (require) {
 
             selectorContainsValue('.o_menu_item a', "FA", true);
             selectorContainsValue('.o_menu_item a', "FB", false);
+            selectorContainsValue('.o_menu_item a', "FC", true);
 
             await cpHelpers.toggleGroupByMenu(controlPanel);
 
@@ -117,6 +120,7 @@ odoo.define('web.control_panel_tests', function (require) {
 
             selectorContainsValue('.o_menu_item a', "FA", true);
             selectorContainsValue('.o_menu_item a', "FB", false);
+            selectorContainsValue('.o_menu_item a', "FC", true);
 
             await cpHelpers.toggleGroupByMenu(controlPanel);
 
