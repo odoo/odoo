@@ -89,7 +89,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         cls.bank_journal = cls.env['account.journal'].search([('type', '=', 'bank'), ('company_id', '=', cls.company.id)], limit=1)
 
         cls.bank_st = cls.env['account.bank.statement'].create({
-            'name': 'test bank journal', 'journal_id': cls.bank_journal.id,
+            'journal_id': cls.bank_journal.id,
         })
         cls.bank_line_1 = cls.env['account.bank.statement.line'].create({
             'statement_id': cls.bank_st.id,
@@ -108,7 +108,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
         cash_journal = cls.env['account.journal'].search([('type', '=', 'cash'), ('company_id', '=', cls.company.id)], limit=1)
         cls.cash_st = cls.env['account.bank.statement'].create({
-            'name': 'test cash journal', 'journal_id': cash_journal.id,
+            'journal_id': cash_journal.id,
         })
         cls.cash_line_1 = cls.env['account.bank.statement.line'].create({
             'statement_id': cls.cash_st.id,
@@ -393,7 +393,6 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     def test_reverted_move_matching(self):
         AccountMove = self.env['account.move']
         move = AccountMove.create({
-            'name': 'To Revert',
             'journal_id': self.bank_journal.id,
         })
 
@@ -420,7 +419,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.assertTrue(move_reversed.exists())
 
         bank_st = self.env['account.bank.statement'].create({
-            'name': 'test bank journal', 'journal_id': self.bank_journal.id,
+            'journal_id': self.bank_journal.id,
         })
         bank_st.journal_id.default_credit_account_id = payment_bnk_line.account_id
         bank_st.journal_id.default_debit_account_id = payment_bnk_line.account_id

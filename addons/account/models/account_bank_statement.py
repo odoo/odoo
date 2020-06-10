@@ -438,7 +438,7 @@ class AccountBankStatement(models.Model):
             elif sequence_number_reset == 'month':
                 where_string += " AND date_trunc('month', date) = date_trunc('month', %(date)s) "
                 param['date'] = self.date
-        return where_string, param
+        return where_string, param, self._reset_mode_to_order(sequence_number_reset)
 
     def _get_starting_sequence(self):
         self.ensure_one()

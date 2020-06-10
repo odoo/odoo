@@ -1017,14 +1017,14 @@ class AccountMove(models.Model):
     def _get_last_sequence_domain(self, relaxed=False):
         self.ensure_one()
         if not self.date or not self.journal_id:
-            return "WHERE FALSE", {}
+            return "WHERE FALSE", {}, self._reset_mode_to_order(False)
         where_string = "WHERE journal_id = %(journal_id)s AND name != '/'"
         param = {'journal_id': self.journal_id.id}
 
+        domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', False))]
+        reference_move = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1) or self.search(domain, order='date asc', limit=1)
+        sequence_number_reset = self._deduce_sequence_number_reset(reference_move.name)
         if not relaxed:
-            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', False))]
-            reference_move = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1) or self.search(domain, order='date asc', limit=1)
-            sequence_number_reset = self._deduce_sequence_number_reset(reference_move.name)
             if sequence_number_reset == 'year':
                 where_string += " AND date_trunc('year', date) = date_trunc('year', %(date)s) "
                 param['date'] = self.date
@@ -1038,7 +1038,7 @@ class AccountMove(models.Model):
             else:
                 where_string += " AND move_type NOT IN ('out_refund', 'in_refund') "
 
-        return where_string, param
+        return where_string, param, self._reset_mode_to_order(sequence_number_reset)
 
     def _get_starting_sequence(self):
         self.ensure_one()
@@ -2175,6 +2175,7 @@ class AccountMove(models.Model):
 
         # Create the invoice.
         values = {
+            'name': '/',
             'invoice_source_email': from_mail_addresses[0],
             'partner_id': partners and partners[0].id or False,
         }

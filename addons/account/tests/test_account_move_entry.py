@@ -342,14 +342,15 @@ class TestAccountMove(AccountTestInvoicingCommon):
         copy2.post()
         self.assertEqual(copy2.name, 'MyMISC/2099/0001')
 
-        copy3 = copy2.copy()
-        self.assertEqual(copy3.name, '/')
         with self.assertRaises(AssertionError):
             with Form(copy2) as move_form:  # It is not editable in the form
                 move_form.name = 'MyMISC/2099/0002'
+
+        copy3 = copy2.copy()
+        self.assertEqual(copy3.name, '/')
         copy3.post()
         self.assertEqual(copy3.name, 'MyMISC/2099/0002')
-        copy3.name = 'MISC2/2016/00002'
+        copy3.name = 'MISC2/2016/00001'
 
         copy4 = copy2.copy()
         copy4.post()
@@ -359,11 +360,9 @@ class TestAccountMove(AccountTestInvoicingCommon):
         copy5.date = '2021-02-02'
         copy5.post()
         self.assertEqual(copy5.name, 'MyMISC/2021/0001')
-        copy5.name = 'N\'importe quoi?'
 
-        copy6 = copy5.copy()
-        copy6.post()
-        self.assertEqual(copy6.name, '1N\'importe quoi?')
+        with self.assertRaises(ValidationError):
+            copy5.name = "Garbage"
 
     def test_journal_sequence_format(self):
         """Test different format of sequences and what it becomes on another period"""
@@ -471,6 +470,15 @@ class TestAccountMove(AccountTestInvoicingCommon):
         self.assertEqual(copies[3].state, 'posted')
         self.assertEqual(copies[5].name, 'XMISC/2019/10005')
         self.assertEqual(copies[5].state, 'draft')
+
+    def test_journal_next_sequence(self):
+        prefix = "TEST_ORDER/2016/"
+        self.test_move.name = f"{prefix}1"
+        for c in range(2, 25):
+            copy = self.test_move.copy()
+            copy.name = "/"
+            copy.post()
+            self.assertEqual(copy.name, f"{prefix}{c}")
 
     def test_add_followers_on_post(self):
         # Add some existing partners, some from another company

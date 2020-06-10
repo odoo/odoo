@@ -16,9 +16,9 @@ class SequenceMixin(models.AbstractModel):
     _description = "Automatic sequence"
 
     _sequence_field = "name"
-    _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D+?)(?P<seq>\d*)(?P<suffix>\D*?)$'
-    _sequence_fixed_regex = r'^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'
+    _sequence_monthly_regex = r'^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d+)(?P<suffix>\D*?)$'
+    _sequence_yearly_regex = r'^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D+?)(?P<seq>\d+)(?P<suffix>\D*?)$'
+    _sequence_fixed_regex = r'^(?P<prefix1>.*?)(?P<seq>\d+)(?P<suffix>\D*?)$'
 
     @api.model
     def _deduce_sequence_number_reset(self, name):
@@ -32,18 +32,47 @@ class SequenceMixin(models.AbstractModel):
             sequence_dict = sequence.groupdict()
             return all(key in sequence_dict for key in (optional or [])) and all(sequence_dict.get(key) for key in (required or []))
 
-        if not name:
+        if not name or name == "/":
             return False
         sequence = re.match(self._sequence_monthly_regex, name)
-        if sequence and _check_grouping(sequence, ['prefix1', 'prefix2', 'prefix3', 'seq', 'suffix'], ['year', 'month']) and 2000 <= int(sequence.group('year')) <= 2100 and 0 < int(sequence.group('month')) <= 12:
+        if sequence and _check_grouping(sequence, ['prefix1', 'prefix2', 'prefix3', 'suffix'], ['year', 'month', 'seq']) and 2000 <= int(sequence.group('year')) <= 2100 and 0 < int(sequence.group('month')) <= 12:
             return 'month'
         sequence = re.match(self._sequence_yearly_regex, name)
-        if sequence and _check_grouping(sequence, ['prefix1', 'prefix2', 'seq', 'suffix'], ['year']) and 2000 <= int(sequence.group('year')) <= 2100:
+        if sequence and _check_grouping(sequence, ['prefix1', 'prefix2', 'suffix'], ['year', 'seq']) and 2000 <= int(sequence.group('year')) <= 2100:
             return 'year'
         sequence = re.match(self._sequence_fixed_regex, name)
-        if sequence and _check_grouping(sequence, ['prefix1', 'seq', 'suffix']):
+        if sequence and _check_grouping(sequence, ['prefix1', 'suffix'], ['seq']):
             return 'never'
-        raise ValidationError(_('The sequence regex should at least contain the prefix1, seq and suffix grouping keys. For instance:\n^(?P<prefix1>.*?)(?P<seq>\d*)(?P<suffix>\D*?)$'))
+        raise ValidationError(_('The sequence regex MUST include the `seq` grouping key and MAY include the `prefix1` and `suffix` grouping keys. For instance:\n^(?P<prefix1>.*?)(?P<seq>\d+)(?P<suffix>\D*?)$'))
+
+    def _constrains_regex_match(self):
+        try:
+            name = None
+            for rec in self:
+                name = rec[rec._sequence_field]
+                rec._deduce_sequence_number_reset(name)
+        except ValidationError:
+            raise ValidationError(_("Field %s should have a numeric part. Got %r") % (rec._sequence_field, name)) from None
+
+    def __init__(self, pool, cr):
+        api.constrains(self._sequence_field)(type(self)._constrains_regex_match)
+        return super().__init__(pool, cr)
+
+    def _reset_mode_to_order(self, mode):
+        """Generate an `ORDER BY` statement from a sequence matching regex"""
+        if not mode:
+            return f"{self._sequence_field} DESC"
+
+        regex = {
+            "month": self._sequence_monthly_regex,
+            "year": self._sequence_yearly_regex,
+            "never": self._sequence_fixed_regex,
+        }[mode]
+
+        regex = regex.replace(r"?P<seq>", "")
+        # convert other groups to non-capturing groups.
+        regex = re.sub(r"\?P<\w+>", "?:", regex)
+        return self.env.cr.mogrify(f"(regexp_match({self._sequence_field}, %s))[1]::integer DESC", [regex]).decode()
 
     def _get_last_sequence_domain(self, relaxed=False):
         """Get the sql domain to retreive the previous sequence number.
@@ -52,13 +81,14 @@ class SequenceMixin(models.AbstractModel):
 
         :param relaxed: see _get_last_sequence.
 
-        :returns: tuple(where_string, where_params): with
+        :returns: tuple(where_string, where_params, order_by): with
             where_string: the entire SQL WHERE clause as a string.
             where_params: a dictionary containing the parameters to substitute
                 at the execution of the query.
+            order_by: ORDER BY statement for the query
         """
         self.ensure_one()
-        return "", {}
+        return "", {}, self._reset_mode_to_order(False)
 
     def _get_starting_sequence(self):
         """Get a default sequence number.
@@ -72,7 +102,7 @@ class SequenceMixin(models.AbstractModel):
         return "00000000"
 
     def _get_highest_query(self):
-        return "SELECT {field} FROM {table} {where_string} ORDER BY {field} DESC LIMIT 1 FOR UPDATE"
+        return "SELECT {field} FROM {table} {where_string} ORDER BY {order_by} LIMIT 1 FOR UPDATE"
 
     def _get_last_sequence(self, relaxed=False):
         """Retrieve the previous sequence.
@@ -97,12 +127,17 @@ class SequenceMixin(models.AbstractModel):
         self.ensure_one()
         if self._sequence_field not in self._fields or not self._fields[self._sequence_field].store:
             raise ValidationError(_('%s is not a stored field') % self._sequence_field)
-        where_string, param = self._get_last_sequence_domain(relaxed)
+        where_string, param, order_by = self._get_last_sequence_domain(relaxed)
         if self.id or self.id.origin:
             where_string += " AND id != %(id)s "
             param['id'] = self.id or self.id.origin
 
-        query = self._get_highest_query().format(table=self._table, where_string=where_string, field=self._sequence_field)
+        query = self._get_highest_query().format(
+            table=self._table,
+            where_string=where_string,
+            field=self._sequence_field,
+            order_by=order_by,
+        )
 
         self.flush([self._sequence_field])
         self.env.cr.execute(query, param)

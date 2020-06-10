@@ -202,7 +202,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         invoice = self.account_invoice_model.create({
             'partner_id': self.partner_agrolait_id,
             'currency_id': self.currency_usd_id,
-            'name': 'Foreign invoice with exchange gain',
             'account_id': self.account_rcv_id,
             'move_type': 'out_invoice',
             'invoice_date': time.strftime('%Y-%m-%d'),
@@ -1512,7 +1511,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         # Purchase
         purchase_move = self.env['account.move'].create({
-            'name': 'invoice',
             'journal_id': self.purchase_journal.id,
         })
 
@@ -1577,7 +1575,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
         # Purchase
         purchase_move = self.env['account.move'].create({
-            'name': 'invoice',
             'journal_id': self.purchase_journal.id,
         })
 
@@ -1702,7 +1699,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         aml_obj = self.env['account.move.line'].with_context(
             check_move_validity=False)
         general_move1 = self.env['account.move'].create({
-            'name': 'general1',
             'journal_id': self.general_journal.id,
         })
         aml_obj.create({
@@ -1719,7 +1715,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         })
         general_move1.post()
         general_move2 = self.env['account.move'].create({
-            'name': 'general2',
             'journal_id': self.general_journal.id,
         })
         aml_obj.create({
@@ -1736,7 +1731,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         })
         general_move2.post()
         general_move3 = self.env['account.move'].create({
-            'name': 'general3',
             'journal_id': self.general_journal.id,
         })
         aml_obj.create({
