@@ -177,7 +177,7 @@ var ControlPanelView = Factory.extend({
                                 attrs.name ||
                                 attrs.domain ||
                                 'Ω';
-        if (attrs.invisible) {
+        if (JSON.parse(attrs.modifiers || '{}').invisible) {
             filter.invisible = true;
         }
         if (filter.type === 'filter') {
