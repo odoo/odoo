@@ -268,8 +268,10 @@ class EventRegistration(models.Model):
         self.ensure_one()
         return {
             'id': self.id,
+            'name': self.name,
             'partner_id': self.partner_id.id,
             'ticket_name': self.event_ticket_id.name or _('None'),
-            'name': self.name,
-            'event_name': self.event_id.name,
+            'event_id': self.event_id.id,
+            'event_display_name': self.event_id.display_name,
+            'company_name': self.event_id.company_id and self.event_id.company_id.name or False,
         }
