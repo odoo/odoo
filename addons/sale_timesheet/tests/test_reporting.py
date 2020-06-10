@@ -183,10 +183,10 @@ class TestReporting(TestCommonSaleTimesheet):
         # deliver project should now have cost and something to invoice
         project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
         project_so_1_timesheet_cost = timesheet1.amount + timesheet3.amount + timesheet5.amount
-        project_so_1_timesheet_sold_unit = timesheet3.unit_amount + timesheet5.unit_amount
+        project_so_1_timesheet_sold_unit = timesheet1.unit_amount + timesheet3.unit_amount + timesheet5.unit_amount
         self.assertTrue(float_is_zero(project_so_1_stat['amount_untaxed_invoiced'], precision_rounding=rounding), "The invoiced amount of the project from SO1 should be 0.0")
         self.assertEqual(float_compare(project_so_1_stat['amount_untaxed_to_invoice'], self.so_line_deliver_project.price_unit * project_so_1_timesheet_sold_unit, precision_rounding=rounding), 0, "The amount to invoice of the project from SO1 should only include timesheet linked to task")
-        self.assertEqual(float_compare(project_so_1_stat['timesheet_unit_amount'], project_so_1_timesheet_sold_unit + timesheet1.unit_amount, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO1 should include all timesheet in project")
+        self.assertEqual(float_compare(project_so_1_stat['timesheet_unit_amount'], project_so_1_timesheet_sold_unit, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO1 should include all timesheet in project")
         self.assertEqual(float_compare(project_so_1_stat['timesheet_cost'], project_so_1_timesheet_cost, precision_rounding=rounding), 0, "The timesheet cost of the project from SO1 should include all timesheet")
         self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_to_invoice'], precision_rounding=rounding), "The expense cost to reinvoice of the project from SO1 should be 0.0")
         self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
@@ -195,10 +195,10 @@ class TestReporting(TestCommonSaleTimesheet):
         # order project still have something to invoice but has costs now
         project_so_2_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_2.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
         project_so_2_timesheet_cost = timesheet2.amount + timesheet4.amount + timesheet6.amount
-        project_so_2_timesheet_sold_unit = timesheet4.unit_amount + timesheet6.unit_amount
+        project_so_2_timesheet_sold_unit = timesheet2.unit_amount + timesheet4.unit_amount + timesheet6.unit_amount
         self.assertTrue(float_is_zero(project_so_2_stat['amount_untaxed_invoiced'], precision_rounding=rounding), "The invoiced amount of the project from SO2 should be 0.0")
         self.assertEqual(float_compare(project_so_2_stat['amount_untaxed_to_invoice'], self.so_line_order_project.price_unit * self.so_line_order_project.qty_to_invoice, precision_rounding=rounding), 0, "The amount to invoice should be the one from the SO line, as we are in ordered quantity")
-        self.assertEqual(float_compare(project_so_2_stat['timesheet_unit_amount'], project_so_2_timesheet_sold_unit + timesheet2.unit_amount, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO2 should include all timesheet")
+        self.assertEqual(float_compare(project_so_2_stat['timesheet_unit_amount'], project_so_2_timesheet_sold_unit, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO2 should include all timesheet")
         self.assertEqual(float_compare(project_so_2_stat['timesheet_cost'], project_so_2_timesheet_cost, precision_rounding=rounding), 0, "The timesheet cost of the project from SO2 should include all timesheet")
         self.assertTrue(float_is_zero(project_so_2_stat['expense_amount_untaxed_to_invoice'], precision_rounding=rounding), "The expense cost to reinvoice of the project from SO2 should be 0.0")
         self.assertTrue(float_is_zero(project_so_2_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
@@ -238,11 +238,11 @@ class TestReporting(TestCommonSaleTimesheet):
         # deliver project should now have cost and something invoiced
         project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
         project_so_1_timesheet_cost = timesheet1.amount + timesheet3.amount + timesheet5.amount
-        project_so_1_timesheet_sold_unit = timesheet3.unit_amount + timesheet5.unit_amount
+        project_so_1_timesheet_sold_unit = timesheet1.unit_amount + timesheet3.unit_amount + timesheet5.unit_amount
 
         self.assertEqual(float_compare(project_so_1_stat['amount_untaxed_invoiced'], self.so_line_deliver_project.price_unit * project_so_1_timesheet_sold_unit, precision_rounding=rounding), 0, "The invoiced amount of the project from SO1 should only include timesheet linked to task")
         self.assertTrue(float_is_zero(project_so_1_stat['amount_untaxed_to_invoice'], precision_rounding=rounding), "The amount to invoice of the project from SO1 should be 0.0")
-        self.assertEqual(float_compare(project_so_1_stat['timesheet_unit_amount'], project_so_1_timesheet_sold_unit + timesheet1.unit_amount, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO1 should include all timesheet in project")
+        self.assertEqual(float_compare(project_so_1_stat['timesheet_unit_amount'], project_so_1_timesheet_sold_unit, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO1 should include all timesheet in project")
         self.assertEqual(float_compare(project_so_1_stat['timesheet_cost'], project_so_1_timesheet_cost, precision_rounding=rounding), 0, "The timesheet cost of the project from SO1 should include all timesheet")
         self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_to_invoice'], precision_rounding=rounding), "The expense cost to reinvoice of the project from SO1 should be 0.0")
         self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
@@ -251,10 +251,10 @@ class TestReporting(TestCommonSaleTimesheet):
         # order project has still nothing invoiced
         project_so_2_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_2.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
         project_so_2_timesheet_cost = timesheet2.amount + timesheet4.amount + timesheet6.amount
-        project_so_2_timesheet_sold_unit = timesheet4.unit_amount + timesheet6.unit_amount
+        project_so_2_timesheet_sold_unit = timesheet2.unit_amount + timesheet4.unit_amount + timesheet6.unit_amount
         self.assertTrue(float_is_zero(project_so_2_stat['amount_untaxed_invoiced'], precision_rounding=rounding), "The invoiced amount of the project from SO2 should be 0.0")
         self.assertEqual(float_compare(project_so_2_stat['amount_untaxed_to_invoice'], self.so_line_order_project.price_unit * self.so_line_order_project.qty_to_invoice, precision_rounding=rounding), 0, "The amount to invoice should be the one from the SO line, as we are in ordered quantity")
-        self.assertEqual(float_compare(project_so_2_stat['timesheet_unit_amount'], project_so_2_timesheet_sold_unit + timesheet2.unit_amount, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO2 should include all timesheet")
+        self.assertEqual(float_compare(project_so_2_stat['timesheet_unit_amount'], project_so_2_timesheet_sold_unit, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO2 should include all timesheet")
         self.assertEqual(float_compare(project_so_2_stat['timesheet_cost'], project_so_2_timesheet_cost, precision_rounding=rounding), 0, "The timesheet cost of the project from SO2 should include all timesheet")
         self.assertTrue(float_is_zero(project_so_2_stat['expense_amount_untaxed_to_invoice'], precision_rounding=rounding), "The expense cost to reinvoice of the project from SO2 should be 0.0")
         self.assertTrue(float_is_zero(project_so_2_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
@@ -293,10 +293,10 @@ class TestReporting(TestCommonSaleTimesheet):
         # deliver project should not be impacted by the invoice of the other SO
         project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
         project_so_1_timesheet_cost = timesheet1.amount + timesheet3.amount + timesheet5.amount
-        project_so_1_timesheet_sold_unit = timesheet3.unit_amount + timesheet5.unit_amount
+        project_so_1_timesheet_sold_unit = timesheet1.unit_amount + timesheet3.unit_amount + timesheet5.unit_amount
         self.assertEqual(float_compare(project_so_1_stat['amount_untaxed_invoiced'], self.so_line_deliver_project.price_unit * project_so_1_timesheet_sold_unit, precision_rounding=rounding), 0, "The invoiced amount of the project from SO1 should only include timesheet linked to task")
         self.assertTrue(float_is_zero(project_so_1_stat['amount_untaxed_to_invoice'], precision_rounding=rounding), "The amount to invoice of the project from SO1 should be 0.0")
-        self.assertEqual(float_compare(project_so_1_stat['timesheet_unit_amount'], project_so_1_timesheet_sold_unit + timesheet1.unit_amount, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO1 should include all timesheet in project")
+        self.assertEqual(float_compare(project_so_1_stat['timesheet_unit_amount'], project_so_1_timesheet_sold_unit, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO1 should include all timesheet in project")
         self.assertEqual(float_compare(project_so_1_stat['timesheet_cost'], project_so_1_timesheet_cost, precision_rounding=rounding), 0, "The timesheet cost of the project from SO1 should include all timesheet")
         self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_to_invoice'], precision_rounding=rounding), "The expense cost to reinvoice of the project from SO1 should be 0.0")
         self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
@@ -305,10 +305,10 @@ class TestReporting(TestCommonSaleTimesheet):
         # order project is now totally invoiced, as we are in ordered qty
         project_so_2_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_2.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
         project_so_2_timesheet_cost = timesheet2.amount + timesheet4.amount + timesheet6.amount
-        project_so_2_timesheet_sold_unit = timesheet4.unit_amount + timesheet6.unit_amount
+        project_so_2_timesheet_sold_unit = timesheet2.unit_amount + timesheet4.unit_amount + timesheet6.unit_amount
         self.assertEqual(float_compare(project_so_2_stat['amount_untaxed_invoiced'], self.so_line_order_project.price_unit * self.so_line_order_project.product_uom_qty, precision_rounding=rounding), 0, "The invoiced amount should be the one from the SO line, as we are in ordered quantity")
         self.assertTrue(float_is_zero(project_so_2_stat['amount_untaxed_to_invoice'], precision_rounding=rounding), "The amount to invoice should be the one 0.0, as all ordered quantity is invoiced")
-        self.assertEqual(float_compare(project_so_2_stat['timesheet_unit_amount'], project_so_2_timesheet_sold_unit + timesheet2.unit_amount, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO2 should include all timesheet")
+        self.assertEqual(float_compare(project_so_2_stat['timesheet_unit_amount'], project_so_2_timesheet_sold_unit, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO2 should include all timesheet")
         self.assertEqual(float_compare(project_so_2_stat['timesheet_cost'], project_so_2_timesheet_cost, precision_rounding=rounding), 0, "The timesheet cost of the project from SO2 should include all timesheet")
         self.assertTrue(float_is_zero(project_so_2_stat['expense_amount_untaxed_to_invoice'], precision_rounding=rounding), "The expense cost to reinvoice of the project from SO2 should be 0.0")
         self.assertTrue(float_is_zero(project_so_2_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
@@ -364,10 +364,10 @@ class TestReporting(TestCommonSaleTimesheet):
         # deliver project should now have expense cost, and expense to reinvoice as there is a still open sales order linked to the AA1
         project_so_1_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_1.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
         project_so_1_timesheet_cost = timesheet1.amount + timesheet3.amount + timesheet5.amount
-        project_so_1_timesheet_sold_unit = timesheet3.unit_amount + timesheet5.unit_amount
+        project_so_1_timesheet_sold_unit = timesheet1.unit_amount + timesheet3.unit_amount + timesheet5.unit_amount
         self.assertEqual(float_compare(project_so_1_stat['amount_untaxed_invoiced'], self.so_line_deliver_project.price_unit * project_so_1_timesheet_sold_unit, precision_rounding=rounding), 0, "The invoiced amount of the project from SO1 should only include timesheet linked to task")
         self.assertTrue(float_is_zero(project_so_1_stat['amount_untaxed_to_invoice'], precision_rounding=rounding), "The amount to invoice of the project from SO1 should be 0.0")
-        self.assertEqual(float_compare(project_so_1_stat['timesheet_unit_amount'], project_so_1_timesheet_sold_unit + timesheet1.unit_amount, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO1 should include all timesheet in project")
+        self.assertEqual(float_compare(project_so_1_stat['timesheet_unit_amount'], project_so_1_timesheet_sold_unit, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO1 should include all timesheet in project")
         self.assertEqual(float_compare(project_so_1_stat['timesheet_cost'], project_so_1_timesheet_cost, precision_rounding=rounding), 0, "The timesheet cost of the project from SO1 should include all timesheet")
         self.assertEqual(float_compare(project_so_1_stat['expense_amount_untaxed_to_invoice'], -1 * expense1.amount, precision_rounding=rounding), 0, "The expense cost to reinvoice of the project from SO1 should be 0.0")
         self.assertTrue(float_is_zero(project_so_1_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")
@@ -376,10 +376,10 @@ class TestReporting(TestCommonSaleTimesheet):
         # order project is not impacted by the expenses
         project_so_2_stat = self.env['project.profitability.report'].read_group([('project_id', 'in', project_so_2.ids)], ['project_id', 'amount_untaxed_to_invoice', 'amount_untaxed_invoiced', 'timesheet_unit_amount', 'timesheet_cost', 'expense_cost', 'expense_amount_untaxed_to_invoice', 'expense_amount_untaxed_invoiced'], ['project_id'])[0]
         project_so_2_timesheet_cost = timesheet2.amount + timesheet4.amount + timesheet6.amount
-        project_so_2_timesheet_sold_unit = timesheet4.unit_amount + timesheet6.unit_amount
+        project_so_2_timesheet_sold_unit = timesheet2.unit_amount + timesheet4.unit_amount + timesheet6.unit_amount
         self.assertEqual(float_compare(project_so_2_stat['amount_untaxed_invoiced'], self.so_line_order_project.price_unit * self.so_line_order_project.product_uom_qty, precision_rounding=rounding), 0, "The invoiced amount should be the one from the SO line, as we are in ordered quantity")
         self.assertTrue(float_is_zero(project_so_2_stat['amount_untaxed_to_invoice'], precision_rounding=rounding), "The amount to invoice should be the one 0.0, as all ordered quantity is invoiced")
-        self.assertEqual(float_compare(project_so_2_stat['timesheet_unit_amount'], project_so_2_timesheet_sold_unit + timesheet2.unit_amount, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO2 should include all timesheet")
+        self.assertEqual(float_compare(project_so_2_stat['timesheet_unit_amount'], project_so_2_timesheet_sold_unit, precision_rounding=rounding), 0, "The timesheet unit amount of the project from SO2 should include all timesheet")
         self.assertEqual(float_compare(project_so_2_stat['timesheet_cost'], project_so_2_timesheet_cost, precision_rounding=rounding), 0, "The timesheet cost of the project from SO2 should include all timesheet")
         self.assertTrue(float_is_zero(project_so_2_stat['expense_amount_untaxed_to_invoice'], precision_rounding=rounding), "The expense cost to reinvoice of the project from SO2 should be 0.0")
         self.assertTrue(float_is_zero(project_so_2_stat['expense_amount_untaxed_invoiced'], precision_rounding=rounding), "The expense invoiced amount of the project from SO1 should be 0.0")

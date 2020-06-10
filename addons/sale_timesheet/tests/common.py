@@ -231,7 +231,7 @@ class TestCommonSaleTimesheet(TestSaleCommon):
             'invoice_policy': 'delivery',
             'uom_id': cls.env.ref('uom.product_uom_hour').id,
             'uom_po_id': cls.env.ref('uom.product_uom_hour').id,
-            'default_code': 'SERV-DELI4',
+            'default_code': 'SERV-DELI5',
             'service_type': 'timesheet',
             'service_tracking': 'project_only',
             'project_template_id': cls.project_template.id,
