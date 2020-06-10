@@ -506,6 +506,7 @@ class HrPayslipLine(models.Model):
     amount = fields.Float(digits=dp.get_precision('Payroll'))
     quantity = fields.Float(digits=dp.get_precision('Payroll'), default=1.0)
     total = fields.Float(compute='_compute_total', string='Total', digits=dp.get_precision('Payroll'), store=True)
+    company_id = fields.Many2one(related='slip_id.company_id')
 
     @api.depends('quantity', 'amount', 'rate')
     def _compute_total(self):
@@ -573,6 +574,8 @@ class HrPayslipRun(models.Model):
     credit_note = fields.Boolean(string='Credit Note', readonly=True,
         states={'draft': [('readonly', False)]},
         help="If its checked, indicates that all payslips generated from here are refund payslips.")
+    company_id = fields.Many2one('res.company', string='Company', readonly=True, required=True,
+        default=lambda self: self.env['res.company']._company_default_get())
 
     @api.multi
     def draft_payslip_run(self):
