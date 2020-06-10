@@ -28,7 +28,7 @@ class EventRegistration(models.Model):
     utm_medium_id = fields.Many2one('utm.medium', 'Medium', index=True, ondelete='set null')
     # attendee
     partner_id = fields.Many2one(
-        'res.partner', string='Contact',
+        'res.partner', string='Booked by',
         states={'done': [('readonly', True)]})
     name = fields.Char(
         string='Attendee Name', index=True,
