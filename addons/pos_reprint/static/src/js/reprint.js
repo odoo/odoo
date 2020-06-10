@@ -21,6 +21,9 @@ var ReprintReceiptScreenWidget = screens.ReceiptScreenWidget.extend({
     click_back: function() {
         this._super();
         this.gui.show_screen('products');
+        // old order may be reprinted but
+        // the current is still open
+        this.pos.get_order()._printed = false;
     },
     get_receipt_render_env: function() {
         return this.pos.last_receipt_render_env;
