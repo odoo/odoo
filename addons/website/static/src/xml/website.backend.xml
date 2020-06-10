@@ -5,9 +5,21 @@
         <span class="o_stat_text">On Website</span>
     </div>
 
-    <t t-name="WidgetWebsiteButtonIcon">
-        <button type="button" class="btn oe_stat_button">
-            <i class="fa fa-fw o_button_icon fa-globe"/>
+    <t t-name="WidgetWebsitePublishButton" owl="1">
+        <div class="o_stat_info">
+            <t t-set="notHoverCSSClass" t-value="value ? 'text-success' : 'text-danger'"/>
+            <t t-set="hoverCSSClass" t-value="value ? 'text-danger' : 'text-success'"/>
+            <t t-set="notHoverText" t-value="value ? env._t('Published'): env._t('Unpublished')"/>
+             <t t-set="hoverText" t-value="value ? env._t('Unpublished'): env._t('Published')"/>
+            <span t-att-class="'o_stat_text o_not_hover ' + notHoverCSSClass" t-esc="notHoverText"/>
+            <span t-att-class="'o_stat_text o_hover ' + hoverCSSClass" t-esc="hoverText"/>
+        </div>
+    </t>
+
+    <t t-name="WidgetWebsiteButtonIcon" owl="1">
+        <t t-set="info" t-value="value ? env._t('Published'): env._t('Unpublished')"/>
+        <button type="button" class="btn oe_stat_button" t-att-aria-label="info" t-att-title="info" t-on-click="_onClick">
+            <i class="fa fa-fw o_button_icon fa-globe" t-att-class="!value ? 'text-danger': 'text-success'"/>
             <div class="o_stat_info">
                 <span class="o_stat_text">Go to<br/>Website</span>
             </div>
