@@ -112,6 +112,7 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
          * - the loading finishes and yields the state that the user requested
          */
         this._showAppPromResolve = null;
+        this._showAppProm = null;
     },
     /**
      * @override
@@ -158,7 +159,12 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
                 ]);
             }).then(function () {
                 if (session.session_is_valid()) {
-                    return self.show_application();
+                    self._showAppProm = new Promise(resolve => {
+                        self._showAppPromResolve = resolve;
+                    });
+                    return self.show_application().then(() => {
+                        self._showAppPromResolve = null;
+                    });
                 } else {
                     // database manager needs the webclient to keep going even
                     // though it has no valid session
@@ -235,12 +241,8 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         return this.loading.appendTo(this.$el);
     },
     show_application: function () {
-        const showAppProm = new Promise(resolve => {
-            this._showAppPromResolve = resolve;
-        });
-        return showAppProm.then(() => {
-            this._showAppPromResolve = null;
-        });
+        this._resolveShowAppProm();
+        return this._showAppProm;
     },
     clear_uncommitted_changes: function () {
         return this.action_manager.clearUncommittedChanges();
@@ -351,6 +353,16 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
             left: scrollingEl ? scrollingEl.scrollLeft : 0,
             top: scrollingEl ? scrollingEl.scrollTop : 0,
         };
+    },
+    /**
+     * Wraps the show_application resolver
+     * since we need to support multiple layers of initial loading proms
+     * @private
+     */
+    _resolveShowAppProm: function() {
+        if (this._showAppPromResolve) {
+            this._showAppPromResolve();
+        }
     },
 
     //--------------------------------------------------------------------------

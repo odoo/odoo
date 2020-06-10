@@ -80,7 +80,6 @@ return AbstractWebClient.extend({
             });
     },
     show_application: function () {
-        const showAppProm = this._super.apply(this, arguments);
         var self = this;
         this.set_title();
 
@@ -109,8 +108,8 @@ return AbstractWebClient.extend({
             } else {
                 return self.on_hashchange();
             }
-        });
-        return showAppProm;
+        }).then(() => this._resolveShowAppProm());
+        return this._showAppProm;
     },
 
     instanciate_menu_widgets: function () {
@@ -141,11 +140,7 @@ return AbstractWebClient.extend({
      * @param {JQueryEvent|null} ev
      */
     on_hashchange: function (ev) {
-        return this._hashChangeDp.add(this._on_hashchange(ev)).then(() => {
-            if (this._showAppPromResolve) {
-                this._showAppPromResolve();
-            }
-        });
+        return this._hashChangeDp.add(this._on_hashchange(ev)).then(() => this._resolveShowAppProm());
     },
     // --------------------------------------------------------------
     // URL state handling
