@@ -500,9 +500,70 @@ class AccountPayment(models.Model):
             if not pay.payment_method_id:
                 raise ValidationError(_("Please define a payment method on your payment."))
 
+<<<<<<< HEAD
     # -------------------------------------------------------------------------
     # LOW-LEVEL METHODS
     # -------------------------------------------------------------------------
+=======
+    @api.depends('move_line_ids.reconciled')
+    def _get_move_reconciled(self):
+        for payment in self:
+            rec = True
+            for aml in payment.move_line_ids.filtered(lambda x: x.account_id.reconcile):
+                if not aml.reconciled:
+                    rec = False
+                    break
+            payment.move_reconciled = rec
+
+    @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id', 'is_internal_transfer')
+    def _compute_destination_account_id(self):
+        self.destination_account_id = False
+        for payment in self:
+            payment = payment.with_company(payment.company_id)
+            if payment.invoice_ids:
+                payment.destination_account_id = payment.invoice_ids[0].mapped(
+                    'line_ids.account_id').filtered(
+                        lambda account: account.user_type_id.type in ('receivable', 'payable'))[0]
+            elif payment.is_internal_transfer:
+                if not payment.company_id.transfer_account_id.id:
+                    raise UserError(_('There is no Transfer Account defined in the accounting settings. Please define one to be able to confirm this transfer.'))
+                payment.destination_account_id = payment.company_id.transfer_account_id.id
+            elif payment.partner_id:
+                if payment.partner_type == 'customer':
+                    payment.destination_account_id = payment.partner_id.property_account_receivable_id.id
+                else:
+                    payment.destination_account_id = payment.partner_id.property_account_payable_id.id
+            elif payment.partner_type == 'customer':
+                default_account = self.env['ir.property'].with_company(payment.company_id).get('property_account_receivable_id', 'res.partner')
+                payment.destination_account_id = default_account.id
+            elif payment.partner_type == 'supplier':
+                default_account = self.env['ir.property'].with_company(payment.company_id).get('property_account_payable_id', 'res.partner')
+                payment.destination_account_id = default_account.id
+
+    @api.depends('move_line_ids.matched_debit_ids', 'move_line_ids.matched_credit_ids')
+    def _compute_reconciled_invoice_ids(self):
+        for record in self:
+            reconciled_moves = record.move_line_ids.mapped('matched_debit_ids.debit_move_id.move_id')\
+                               + record.move_line_ids.mapped('matched_credit_ids.credit_move_id.move_id')
+            record.reconciled_invoice_ids = reconciled_moves.filtered(lambda move: move.is_invoice())
+            record.has_invoices = bool(record.reconciled_invoice_ids)
+            record.reconciled_invoices_count = len(record.reconciled_invoice_ids)
+
+    def action_register_payment(self):
+        active_ids = self.env.context.get('active_ids')
+        if not active_ids:
+            return ''
+
+        return {
+            'name': _('Register Payment'),
+            'res_model': len(active_ids) == 1 and 'account.payment' or 'account.payment.register',
+            'view_mode': 'form',
+            'view_id': len(active_ids) != 1 and self.env.ref('account.view_account_payment_form_multi').id or self.env.ref('account.view_account_payment_invoice_form').id,
+            'context': self.env.context,
+            'target': 'new',
+            'type': 'ir.actions.act_window',
+        }
+>>>>>>> 77d548ca53c... temp
 
     @api.model_create_multi
     def create(self, vals_list):
