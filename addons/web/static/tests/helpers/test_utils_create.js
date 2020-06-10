@@ -192,6 +192,25 @@ odoo.define('web.test_utils_create', function (require) {
             fields: {},
         }, params.cpProps);
 
+        if (config.viewInfo && config.viewInfo.arch && config.viewInfo.fields) {
+            const { arch, fields } = config.viewInfo;
+            const model = "__mockmodel__";
+            const serverParams = {
+                model,
+                data: { [model]: { fields, records: [] } },
+            };
+            const mockServer = await testUtilsMock.addMockEnvironment(
+                new Widget(),
+                serverParams,
+            );
+            Object.assign(config.viewInfo, testUtilsMock.fieldsViewGet(mockServer, {
+                arch,
+                fields,
+                model,
+                viewOptions: { context: config.actionContext },
+            }));
+        }
+
         class Parent extends Component {
             constructor() {
                 super();
