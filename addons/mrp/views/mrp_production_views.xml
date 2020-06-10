@@ -331,7 +331,8 @@
                             </field>
                         </page>
                         <page string="Operations" name="operations" groups="mrp.group_mrp_routings">
-                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_production_id': id, 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/>                        </page>
+                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_production_id': id, 'default_qty_producing': product_qty, 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/> 
+                        </page>
                         <page string="Miscellaneous" name="miscellaneous" groups="stock.group_stock_multi_locations">
                             <group>
                                 <group>

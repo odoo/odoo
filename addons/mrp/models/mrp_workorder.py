@@ -45,6 +45,7 @@ class MrpWorkorder(models.Model):
         string='Production State', readonly=True,
         related='production_id.state',
         help='Technical: used in views only.')
+    production_bom_id = fields.Many2one('mrp.bom', related='production_id.bom_id')
     qty_production = fields.Float('Original Production Quantity', readonly=True, related='production_id.product_qty')
     company_id = fields.Many2one(related='production_id.company_id')
     qty_producing = fields.Float(
