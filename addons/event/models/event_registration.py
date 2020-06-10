@@ -28,7 +28,7 @@ class EventRegistration(models.Model):
     utm_medium_id = fields.Many2one('utm.medium', 'Medium', index=True, ondelete='set null')
     # attendee
     partner_id = fields.Many2one(
-        'res.partner', string='Contact',
+        'res.partner', string='Booked by',
         states={'done': [('readonly', True)]})
     name = fields.Char(
         string='Attendee Name', index=True,
@@ -268,8 +268,10 @@ class EventRegistration(models.Model):
         self.ensure_one()
         return {
             'id': self.id,
+            'name': self.name,
             'partner_id': self.partner_id.id,
             'ticket_name': self.event_ticket_id.name or _('None'),
-            'name': self.name,
-            'event_name': self.event_id.name,
+            'event_id': self.event_id.id,
+            'event_display_name': self.event_id.display_name,
+            'company_name': self.event_id.company_id and self.event_id.company_id.name or False,
         }
