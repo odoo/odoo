@@ -71,8 +71,9 @@ class SaleOrderLine(models.Model):
         order line has a product_uom_qty attribute that will be the number of
         registrations linked to this line. This method update existing registrations
         and create new one for missing one. """
-        Registration = self.env['event.registration'].sudo()
-        registrations = Registration.search([('sale_order_line_id', 'in', self.ids)])
+        RegistrationSudo = self.env['event.registration'].sudo()
+        registrations = RegistrationSudo.search([('sale_order_line_id', 'in', self.ids)])
+        registrations_vals = []
         for so_line in self.filtered('event_id'):
             existing_registrations = registrations.filtered(lambda self: self.sale_order_line_id.id == so_line.id)
             if confirm:
@@ -82,7 +83,6 @@ class SaleOrderLine(models.Model):
             if cancel_to_draft:
                 existing_registrations.filtered(lambda self: self.state == 'cancel').action_set_draft()
 
-            registrations_vals = []
             for count in range(int(so_line.product_uom_qty) - len(existing_registrations)):
                 values = {
                     'sale_order_line_id': so_line.id,
@@ -92,7 +92,9 @@ class SaleOrderLine(models.Model):
                 if registration_data:
                     values.update(registration_data.pop())
                 registrations_vals.append(values)
-            Registration.create(registrations_vals)
+
+        if registrations_vals:
+            RegistrationSudo.create(registrations_vals)
         return True
 
     @api.onchange('product_id')
