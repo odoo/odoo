@@ -34,7 +34,7 @@ class TestStandardPerformance(UtilPerf):
         url = '/web/image/res.country/4/image'
         self.assertEqual(self._get_url_hot_query(url), 4)
         url = '/web/image/res.users/2/image_256'
-        self.assertEqual(self._get_url_hot_query(url), 7)
+        self.assertEqual(self._get_url_hot_query(url), 8)
 
     def test_20_perf_sql_img_controller_bis(self):
         url = '/web/image/website/1/favicon'
