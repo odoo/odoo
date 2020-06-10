@@ -915,7 +915,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                 filter.isDefault = attrs.isDefault;
             }
             filter.description = attrs.string || attrs.help || attrs.name || attrs.domain || 'Ω';
-            if (attrs.invisible) {
+            if (JSON.parse(attrs.modifiers || '{}').invisible) {
                 filter.invisible = true;
             }
             switch (filter.type) {
