@@ -32,7 +32,7 @@ tags_to_remove = ['html', 'body']
 # allow new semantic HTML5 tags
 allowed_tags = frozenset({
     'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'article', 'aside',
-    'audio', 'b', 'basefont', 'bdo', 'big', 'blink', 'blockquote', 'body', 'br',
+    'audio', 'b', 'basefont', 'bdi', 'bdo', 'big', 'blink', 'blockquote', 'body', 'br',
     'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup',
     'command', 'datalist', 'dd', 'del', 'details', 'dfn', 'dir', 'div', 'dl',
     'dt', 'em', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form',
