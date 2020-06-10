@@ -3284,17 +3284,20 @@ var BasicModel = AbstractModel.extend({
      */
     _generateOnChangeData: function (record, options) {
         options = _.extend({}, options || {}, {withReadonly: true});
-        var commands = this._generateX2ManyCommands(record, options);
-        var data = _.extend(this.get(record.id, {raw: true}).data, commands);
-        // 'display_name' is automatically added to the list of fields to fetch,
-        // when fetching a record, even if it doesn't appear in the view. However,
-        // only the fields in the view must be passed to the onchange RPC, so we
-        // remove it from the data sent by RPC if it isn't in the view.
-        var hasDisplayName = _.some(record.fieldsInfo, function (fieldsInfo) {
-            return 'display_name' in fieldsInfo;
-        });
-        if (!hasDisplayName) {
-            delete data.display_name;
+        var data = {};
+        if (!options.firstOnChange) {
+            var commands = this._generateX2ManyCommands(record, options);
+            data = _.extend(this.get(record.id, {raw: true}).data, commands);
+            // 'display_name' is automatically added to the list of fields to fetch,
+            // when fetching a record, even if it doesn't appear in the view. However,
+            // only the fields in the view must be passed to the onchange RPC, so we
+            // remove it from the data sent by RPC if it isn't in the view.
+            var hasDisplayName = _.some(record.fieldsInfo, function (fieldsInfo) {
+                return 'display_name' in fieldsInfo;
+            });
+            if (!hasDisplayName) {
+                delete data.display_name;
+            }
         }
 
         // one2many records have a parentID
@@ -4113,68 +4116,63 @@ var BasicModel = AbstractModel.extend({
             fields = _.defaults({}, fields, parentRecord.fields);
         }
 
-        return this._rpc({
-                model: modelName,
-                method: 'default_get',
-                args: [fields_key],
-                context: params.context,
-            })
-            .then(function (result) {
-                var record = self._makeDataPoint({
-                    modelName: modelName,
-                    fields: fields,
-                    fieldsInfo: fieldsInfo,
-                    context: params.context,
-                    parentID: params.parentID,
-                    res_ids: params.res_ids,
-                    viewType: targetView,
+        var record = self._makeDataPoint({
+            modelName: modelName,
+            fields: fields,
+            fieldsInfo: fieldsInfo,
+            context: params.context,
+            parentID: params.parentID,
+            res_ids: params.res_ids,
+            viewType: targetView,
+        });
+
+        // Default values will be provided by the very first onchange (below).
+        var result = {}
+
+        // We want to overwrite the default value of the handle field (if any),
+        // in order for new lines to be added at the correct position.
+        // -> This is a rare case where the defaul_get from the server
+        //    will be ignored by the view for a certain field (usually "sequence").
+
+        var overrideDefaultFields = self._computeOverrideDefaultFields(
+            params.parentID,
+            params.position
+        );
+
+        if (overrideDefaultFields) {
+            result[overrideDefaultFields.field] = overrideDefaultFields.value;
+        }
+
+        return self.applyDefaultValues(record.id, result, {fieldNames: fieldNames})
+            .then(function () {
+                var def = new Promise(function (resolve, reject) {
+                    var always = function () {
+                        if (record._warning) {
+                            if (params.allowWarning) {
+                                delete record._warning;
+                            } else {
+                                reject();
+                            }
+                        }
+                        resolve();
+                    };
+                    self._performOnChange(record, [])
+                    .then(always).guardedCatch(always);
                 });
+                return def;
+            })
+            .then(function () {
+                return self._fetchRelationalData(record);
+            })
+            .then(function () {
+                return self._postprocess(record);
+            })
+            .then(function () {
+                // save initial changes, so they can be restored later,
+                // if we need to discard.
+                self.save(record.id, {savePoint: true});
 
-                // We want to overwrite the default value of the handle field (if any),
-                // in order for new lines to be added at the correct position.
-                // -> This is a rare case where the defaul_get from the server
-                //    will be ignored by the view for a certain field (usually "sequence").
-
-                var overrideDefaultFields = self._computeOverrideDefaultFields(
-                    params.parentID,
-                    params.position
-                );
-
-                if (overrideDefaultFields) {
-                    result[overrideDefaultFields.field] = overrideDefaultFields.value;
-                }
-
-                return self.applyDefaultValues(record.id, result, {fieldNames: fieldNames})
-                    .then(function () {
-                        var def = new Promise(function (resolve, reject) {
-                            var always = function () {
-                                if (record._warning) {
-                                    if (params.allowWarning) {
-                                        delete record._warning;
-                                    } else {
-                                        reject();
-                                    }
-                                }
-                                resolve();
-                            };
-                            self._performOnChange(record, fields_key)
-                            .then(always).guardedCatch(always);
-                        });
-                        return def;
-                    })
-                    .then(function () {
-                        return self._fetchRelationalData(record);
-                    })
-                    .then(function () {
-                        return self._postprocess(record);
-                    })
-                    .then(function () {
-                        // save initial changes, so they can be restored later,
-                        // if we need to discard.
-                        self.save(record.id, {savePoint: true});
-
-                        return record.id;
-                    });
+                return record.id;
             });
     },
     /**
@@ -4232,7 +4230,7 @@ var BasicModel = AbstractModel.extend({
     _performOnChange: function (record, fields, viewType) {
         var self = this;
         var onchangeSpec = this._buildOnchangeSpecs(record, viewType);
-        if (!onchangeSpec) {
+        if (fields && !onchangeSpec) {
             return Promise.resolve();
         }
         var idList = record.data.id ? [record.data.id] : [];
@@ -4245,7 +4243,10 @@ var BasicModel = AbstractModel.extend({
             options.fieldName = fields;
         }
         var context = this._getContext(record, options);
-        var currentData = this._generateOnChangeData(record, {changesOnly: false});
+        var currentData = this._generateOnChangeData(record, {
+            changesOnly: false,
+            firstOnChange: fields.length === 0,
+        });
 
         return self._rpc({
                 model: record.model,
