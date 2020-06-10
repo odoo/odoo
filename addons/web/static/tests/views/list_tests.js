@@ -3764,6 +3764,149 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('empty list with no_data="all"', async function (assert) {
+        assert.expect(9);
+
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree no_data="all">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field"/>
+                </tree>`,
+            domain: [['id', '<', 0]], // such that no record matches the domain
+            viewOptions: {
+                action: {
+                    help: '<p class="hello">click to add a partner</p>'
+                }
+            },
+        });
+
+        assert.containsOnce(list, '.o_list_table');
+        assert.containsN(list, '.o_data_row.o_record_sample', 4);
+        assert.containsOnce(list, '.o_nocontent_help .hello');
+
+        // reload with another domain -> should no longer display the sample records
+        await list.reload({ domain: [['int_field', '=', 38493 ]]});
+
+        assert.containsNone(list, '.o_list_table');
+        assert.containsOnce(list, '.o_nocontent_help .hello');
+
+        // reload with another domain matching records
+        await list.reload({ domain: [['id', '>', 0 ]]});
+
+        assert.containsOnce(list, '.o_list_table');
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list, '.o_record_sample');
+        assert.containNone(list, '.o_nocontent_help .hello');
+
+        list.destroy();
+    });
+
+    QUnit.test('non empty list with no_data="all"', async function (assert) {
+        assert.expect(7);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree no_data="all">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field"/>
+                </tree>`,
+            domain: [['id', '>', 0]], // such that there are records matching the domain
+            viewOptions: {
+                action: {
+                    help: '<p class="hello">click to add a partner</p>'
+                }
+            },
+        });
+
+        assert.containsOnce(list, '.o_list_table');
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list, '.o_record_sample');
+        assert.containsNone(list, '.o_nocontent_help');
+
+        // reload with another domain matching no record (should not display the sample records)
+        await list.reload({ domain: [['id', '<', 0 ]]});
+
+        assert.containsNone(list, '.o_list_table');
+        assert.containsNone(list, '.o_record_sample');
+        assert.containOnce(list, '.o_nocontent_help .hello');
+
+        list.destroy();
+    });
+
+    QUnit.test('empty list with no_data="sample"', async function (assert) {
+        assert.expect(7);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree no_data="sample">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field"/>
+                </tree>`,
+            domain: [['id', '<', 0]], // such that no record matches the domain
+        });
+
+        assert.containsOnce(list, '.o_list_table');
+        assert.containsN(list, '.o_data_row.o_record_sample', 4);
+
+        // reload with another domain -> should no longer display the sample records
+        await list.reload({ domain: [['int_field', '=', 38493 ]]});
+
+        assert.containsOnce(list, '.o_list_table');
+        assert.containsNone(list, '.o_data_row');
+
+        // reload with another domain matching records
+        await list.reload({ domain: [['id', '>', 0 ]]});
+
+        assert.containsOnce(list, '.o_list_table');
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list, '.o_record_sample');
+
+        list.destroy();
+    });
+
+    QUnit.test('non empty list with no_data="sample"', async function (assert) {
+        assert.expect(6);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree no_data="sample">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field"/>
+                </tree>`,
+            domain: [['id', '>', 0]], // such that there are records matching the domain
+        });
+
+        assert.containsOnce(list, '.o_list_table');
+        assert.containsN(list, '.o_data_row', 4);
+        assert.containsNone(list, '.o_record_sample');
+
+        // reload with another domain matching no record (should not display the sample records)
+        await list.reload({ domain: [['id', '<', 0 ]]});
+
+        assert.containsOnce(list, '.o_list_table');
+        assert.containsNone(list, '.o_data_row');
+        assert.containsNone(list, '.o_record_sample');
+
+        list.destroy();
+    });
+
     QUnit.test('groupby node with a button', async function (assert) {
         assert.expect(14);
 
