@@ -156,6 +156,9 @@ var ControlPanelView = Factory.extend({
                                 attrs.name ||
                                 attrs.domain ||
                                 'Ω';
+        if (JSON.parse(attrs.modifiers || '{}').invisible) {
+            filter.invisible = true;
+        }
         if (filter.type === 'filter') {
             filter.domain = attrs.domain;
             filter.context = pyUtils.eval('context', attrs.context);
@@ -216,9 +219,6 @@ var ControlPanelView = Factory.extend({
 
 
         _.each(preFilters, function (preFilter) {
-            if (preFilter.attrs && preFilter.attrs.invisible) {
-                return;
-            }
             if (preFilter.tag !== currentTag || _.contains(['separator', 'field'], preFilter.tag)) {
                 if (currentGroup.length) {
                     if (currentTag === 'groupBy') {
