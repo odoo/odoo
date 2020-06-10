@@ -44,7 +44,7 @@ class AccountAnalyticLine(models.Model):
             if self.task_id.billable_type == 'task_rate':
                 self.so_line = self.task_id.sale_line_id
             elif self.task_id.billable_type == 'employee_rate':
-                self.so_line = self._timesheet_determine_sale_line(self.task_id, self.employee_id)
+                self.so_line = self._timesheet_determine_sale_line(self.task_id, self.employee_id, self.project_id)
             else:
                 self.so_line = False
 
@@ -75,33 +75,40 @@ class AccountAnalyticLine(models.Model):
                 values['company_id'] = task.analytic_account_id.company_id.id
         values = super(AccountAnalyticLine, self)._timesheet_preprocess(values)
         # task implies so line (at create)
-        if 'task_id' in values and not values.get('so_line') and (values.get('employee_id') or self.mapped('employee_id')):
+        if any([field_name in values for field_name in ['task_id', 'project_id']]) and not values.get('so_line') and (values.get('employee_id') or self.mapped('employee_id')):
             if not values.get('employee_id') and len(self.mapped('employee_id')) > 1:
                 raise UserError(_('You can not modify timesheets from different employees'))
-            task = self.env['project.task'].sudo().browse(values['task_id'])
+            task = self.env['project.task'].sudo().browse(values['task_id']) if values.get('task_id') else self.env['project.task']
             employee = self.env['hr.employee'].sudo().browse(values['employee_id']) if values.get('employee_id') else self.mapped('employee_id')
-            values['so_line'] = self._timesheet_determine_sale_line(task, employee).id
+            project = self.env['project.project'].sudo().browse(values['project_id']) if values.get('project_id') else task.project_id
+            values['so_line'] = self._timesheet_determine_sale_line(task, employee, project).id
         return values
 
     def _timesheet_postprocess_values(self, values):
         result = super(AccountAnalyticLine, self)._timesheet_postprocess_values(values)
         # (re)compute the sale line
-        if any(field_name in values for field_name in ['task_id', 'employee_id']):
+        if any(field_name in values for field_name in ['task_id', 'employee_id', 'project_id']):
             for timesheet in self:
                 result[timesheet.id].update({
-                    'so_line': timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id).id,
+                    'so_line': timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id, timesheet.project_id).id,
                 })
         return result
 
     @api.model
-    def _timesheet_determine_sale_line(self, task, employee):
+    def _timesheet_determine_sale_line(self, task, employee, project):
         """ Deduce the SO line associated to the timesheet line:
             1/ timesheet on task rate: the so line will be the one from the task
             2/ timesheet on employee rate task: find the SO line in the map of the project (even for subtask), or fallback on the SO line of the task, or fallback
                 on the one on the project
             NOTE: this have to be consistent with `_compute_billable_type` on project.task.
         """
-        if task.billable_type != 'no':
+        if not project.allow_billable and project.sale_line_id and not task:
+            if project.billable_type == 'employee_rate':
+                map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', project.id), ('employee_id', '=', employee.id)])
+                if map_entry:
+                    return map_entry.sale_line_id
+            return project.sale_line_id
+        elif task.billable_type != 'no':
             if task.billable_type == 'employee_rate':
                 map_entry = self.env['project.sale.line.employee.map'].search([('project_id', '=', task.project_id.id), ('employee_id', '=', employee.id)])
                 if map_entry:
