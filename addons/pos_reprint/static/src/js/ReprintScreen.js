@@ -8,6 +8,9 @@ odoo.define('pos_reprint.ReprintScreen', function (require) {
         class ReprintScreen extends ReceiptScreen {
             confirm() {
                 this.props.resolve();
+                // old order may be reprinted but
+                // the current is still open
+                this.currentOrder._printed = false;
                 this.trigger('close-temp-screen');
             }
         }
