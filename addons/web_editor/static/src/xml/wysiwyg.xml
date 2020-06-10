@@ -307,7 +307,6 @@
     <t t-name="wysiwyg.widgets.image.existing.attachment">
         <t t-set="isOptimized" t-value="!!attachment.original_id"/>
         <div t-attf-class="o_existing_attachment_cell position-relative bg-light #{isOptimized and 'o_we_attachment_optimized d-none'}" t-att-data-id="attachment.id">
-            <i t-if="attachment.type === 'binary'" class="fa fa-cog o_existing_attachment_optimize p-2" title="Optimize" role="img" aria-label="Optimize"/>
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
             <div t-attf-class="d-flex align-items-center justify-content-center h-100 w-100">
                 <!-- 256 is 2 * ImageWidget.MIN_ROW_HEIGHT, hopefully the highest display width of any image -->
@@ -520,46 +519,40 @@
         </div>
     </div>
 
-    <!-- Crop Image Dialog (allows to crop image on the page) -->
-    <div t-name="wysiwyg.widgets.crop_image" class="o_crop_image_dialog">
-        <div t-if="widget.imageData.isExternalImage" class="alert alert-warning text-center" role="alert">
-            <i class="fa fa-exclamation-triangle fa-2x"/>
-            <h4>This image is an external image</h4>
-            <p>
-                This type of image is not supported for cropping.<br/>
-                If you want to crop it, please first download it from the original source and upload it in Odoo.
-            </p>
+    <!-- ImageCropWidget controls (allows to crop images on the page) -->
+    <div t-name="wysiwyg.widgets.crop" class="o_we_crop_widget" contenteditable="false">
+        <div class="o_we_cropper_wrapper">
+            <img class="o_we_cropper_img"/>
+            <div class="o_we_crop_buttons text-center mt16 position-absolute o_we_no_overlay" contenteditable="false">
+                <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-toggle="buttons">
+                    <t t-foreach="widget.aspectRatios" t-as="ratio">
+                        <t t-set="is_active" t-value="ratio.value === widget.aspectRatio"/>
+                        <label t-attf-class="{is_active and 'active' or ''}" data-action="ratio" t-att-data-value="ratio">
+                            <input type="radio" /><t t-esc="ratio_value.label"/>
+                        </label>
+                    </t>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Zoom In" data-action="zoom" data-value="0.1"><i class="fa fa-fw fa-search-plus"/></button>
+                    <button type="button" title="Zoom Out" data-action="zoom" data-value="-0.1"><i class="fa fa-fw fa-search-minus"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Rotate Left" data-action="rotate" data-value="-90"><i class="fa fa-fw fa-rotate-left"/></button>
+                    <button type="button" title="Rotate Right" data-action="rotate" data-value="90"><i class="fa fa-fw fa-rotate-right"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Flip Horizontal" data-action="flip" data-scale-direction="scaleX"><i class="fa fa-fw fa-arrows-h"/></button>
+                    <button type="button" title="Flip Vertical" data-action="flip" data-scale-direction="scaleY"><i class="fa fa-fw fa-arrows-v"/></button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Reset Image" data-action="reset"><i class="fa fa-refresh"/> Reset Image</button>
+                </div>
+                <div class="btn-group" role="group">
+                    <button type="button" title="Apply" data-action="apply" class="btn btn-primary"><i class="fa fa-check"/> Apply</button>
+                    <button type="button" title="Discard" data-action="discard" class="btn btn-danger"><i class="fa fa-times"/> Discard</button>
+                </div>
+            </div>
         </div>
-        <t t-else="">
-           <div class="o_crop_area">
-                <img class="img img-fluid o_cropper_image" t-att-src="widget.imageData.originalSrc"/>
-           </div>
-           <div class="o_crop_options text-center mt16">
-               <div class="btn-group btn-group-toggle" title="Aspect Ratio" data-toggle="buttons">
-                   <t t-foreach="widget.aspectRatioList" t-as="ratio">
-                       <t t-set="is_active" t-value="ratio[1] === widget.imageData.aspectRatio"/>
-                       <label t-attf-class="btn btn-secondary#{is_active and ' active' or ''}" data-event="ratio" t-att-data-label="ratio[1]" t-att-data-value="ratio[2]">
-                           <input type="radio" /><t t-esc="ratio[0]"/>
-                       </label>
-                   </t>
-               </div>
-               <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Zoom In" data-event="zoom" data-value="0.1"><i class="fa fa-search-plus"/></button>
-                   <button type="button" class="btn btn-secondary" title="Zoom Out" data-event="zoom" data-value="-0.1"><i class="fa fa-search-minus"/></button>
-               </div>
-               <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Rotate Left" data-event="rotate" data-value="-45"><i class="fa fa-rotate-left"/></button>
-                   <button type="button" class="btn btn-secondary" title="Rotate Right" data-event="rotate" data-value="45"><i class="fa fa-rotate-right"/></button>
-               </div>
-               <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Flip Horizontal" data-event="flip" data-value="horizontal" data-x="1"><i class="fa fa-arrows-h"/></button>
-                   <button type="button" class="btn btn-secondary" title="Flip Vertical" data-event="flip" data-value="vertical" data-y="1"><i class="fa fa-arrows-v"/></button>
-               </div>
-               <div class="btn-group" role="group">
-                   <button type="button" class="btn btn-secondary" title="Reset Image" data-event="reset"><i class="fa fa-refresh"/> Reset Image</button>
-               </div>
-           </div>
-       </t>
     </div>
 
 </templates>

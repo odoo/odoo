@@ -346,6 +346,7 @@
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
                     <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                    <filter name="filter_date_planned_start" string="Scheduled Date" date="date_planned_start"/>
                     <separator/>
                     <filter string="Warnings" name="activities_exception"
                         domain="[('activity_exception_decoration', '!=', False)]"/>
@@ -386,6 +387,7 @@
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_mrp_production_filter"/>
             <field name="domain">[('picking_type_id', '=', active_id)]</field>
+            <field name="context">{}</field>
         </record>
 
         <record id="mrp_production_action_unreserve_tree" model="ir.actions.server">

@@ -8,11 +8,11 @@ import pytz
 from datetime import datetime
 from psycopg2 import IntegrityError
 
-from odoo import http, SUPERUSER_ID
+from odoo import http, SUPERUSER_ID, _
 from odoo.http import request
 from odoo.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.translate import _
-from odoo.exceptions import ValidationError
+from odoo.exceptions import ValidationError, UserError
 from odoo.addons.base.models.ir_qweb_fields import nl2br
 
 
@@ -21,9 +21,22 @@ class WebsiteForm(http.Controller):
     # Check and insert values from the form on the model <model>
     @http.route('/website_form/<string:model_name>', type='http', auth="public", methods=['POST'], website=True)
     def website_form(self, model_name, **kwargs):
+        try:
+            if request.env['ir.http']._verify_request_recaptcha_token('website_form'):
+                return self._handle_website_form(model_name, **kwargs)
+            error = _("Suspicious activity detected by Google reCaptcha.")
+        except (ValidationError, UserError) as e:
+            error = e.args[0]
+        return json.dumps({
+            'error': error,
+        })
+
+    def _handle_website_form(self, model_name, **kwargs):
         model_record = request.env['ir.model'].sudo().search([('model', '=', model_name), ('website_form_access', '=', True)])
         if not model_record:
-            return json.dumps(False)
+            return json.dumps({
+                'error': _("The form's specified model does not exist")
+            })
 
         try:
             data = self.extract_data(model_record, request.params)
@@ -122,7 +135,7 @@ class WebsiteForm(http.Controller):
 
         authorized_fields = model.sudo()._get_form_writable_fields()
         error_fields = []
-
+        custom_fields = []
 
         for field_name, field_value in values.items():
             # If the value of the field if a file
@@ -151,7 +164,9 @@ class WebsiteForm(http.Controller):
 
             # If it's a custom field
             elif field_name != 'context':
-                data['custom'] += u"%s : %s\n" % (field_name, field_value)
+                custom_fields.append((field_name, field_value))
+
+        data['custom'] = "\n".join([u"%s : %s" % v for v in custom_fields])
 
         # Add metadata if enabled  # ICP for retrocompatibility
         if request.env['ir.config_parameter'].sudo().get_param('website_form_enable_metadata'):

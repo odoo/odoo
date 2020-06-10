@@ -198,16 +198,18 @@ var SnippetEditor = Widget.extend({
         if (!this.isShown() || !this.$target.length || !this.$target.is(':visible')) {
             return;
         }
-        var offset = this.$target.offset();
+        const $modal = this.$target.find('.modal');
+        const $target = $modal.length ? $modal : this.$target;
+        const offset = $target.offset();
         var manipulatorOffset = this.$el.parent().offset();
         offset.top -= manipulatorOffset.top;
         offset.left -= manipulatorOffset.left;
         this.$el.css({
-            width: this.$target.outerWidth(),
+            width: $target.outerWidth(),
             left: offset.left,
             top: offset.top,
         });
-        this.$('.o_handles').css('height', this.$target.outerHeight());
+        this.$('.o_handles').css('height', $target.outerHeight());
         this.$el.toggleClass('o_top_cover', offset.top < this.$editable.offset().top);
     },
     /**
@@ -218,6 +220,9 @@ var SnippetEditor = Widget.extend({
     getName: function () {
         if (this.$target.data('name') !== undefined) {
             return this.$target.data('name');
+        }
+        if (this.$target.is('img')) {
+            return _t("Image");
         }
         if (this.$target.parent('.row').length) {
             return _t("Column");
@@ -874,6 +879,7 @@ var SnippetsMenu = Widget.extend({
             '.o_we_no_overlay',
             '.ui-autocomplete',
             '.modal .close',
+            '.o_we_crop_widget',
         ].join(', ');
     },
     /**
@@ -2053,8 +2059,6 @@ var SnippetsMenu = Widget.extend({
      * @param {Event} ev
      */
     _onInvisibleEntryClick: async function (ev) {
-        this._addTabLoading();
-
         ev.preventDefault();
         const $snippet = $(this.invisibleDOMMap.get(ev.currentTarget));
         const isVisible = await this._mutex.exec(async () => {

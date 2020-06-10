@@ -336,32 +336,6 @@ body .modal {
         }
     }
 
-    // Crop Dialog
-    .o_crop_image_dialog .o_crop_area {
-        height: 350px;
-
-        .cropper-point {
-            background-color: white;
-            transition: all 400ms $o-we-md-ease 0s;
-            transform: scale(1.5, 1.5);
-            border-radius: 10px;
-            box-shadow: 0 0 1px 1px rgba(23, 23, 23, 0.5);
-            opacity: 1;
-
-            &:hover {
-                transform: scale(2.5, 2.5);
-            }
-        }
-
-        .cropper-line {
-            background: black;
-        }
-
-        .cropper-view-box {
-            outline: 2px solid white;
-        }
-    }
-
     // LINK EDITOR DIALOG COLOR SELECTOR
     .o_link_dialog {
         input.link-style:checked + span::after {
@@ -389,9 +363,7 @@ body .modal {
 
 // Highlight selected image/icon
 %o-we-selected-image {
-    $o-selected-image-color: rgba(150, 150, 220, 0.3);
-    background: $o-selected-image-color;
-    outline: 3px solid $o-selected-image-color;
+    outline: 3px solid rgba(150, 150, 220, 0.3);
 }
 
 img.o_we_selected_image {
@@ -400,6 +372,11 @@ img.o_we_selected_image {
 
 .fa.o_we_selected_image::before {
     @extend %o-we-selected-image;
+}
+// Override default image selection color from portal. It prevents your from
+// seeing the images' quality clearly in the wysiwyg.
+img::selection {
+    background: transparent;
 }
 
 .fa.mx-auto,
@@ -444,4 +421,62 @@ img.o_we_custom_image.mx-auto {
 
 .o_we_no_pointer_events {
     pointer-events: none;
+}
+
+.o_we_crop_widget {
+    background-color: rgba(128, 128, 128, 0.5);
+    @include o-position-absolute(0, 0, 0, 0);
+    z-index: 1024;
+
+    .o_we_cropper_wrapper {
+        position: absolute;
+    }
+
+    .o_we_crop_buttons {
+        margin-top: 0.5rem;
+        display: flex;
+        flex-wrap: wrap;
+
+        input[type=radio] {
+            display: none;
+        }
+
+        .btn-group {
+            border-radius: 0.25rem;
+            margin: 0.1rem;
+        }
+
+        button, label {
+            cursor: pointer !important;
+            padding: 0.2rem 0.3rem;
+        }
+
+        label {
+            display: flex;
+            align-items: center;
+        }
+
+        button:not(.btn), label {
+            margin: 0;
+            border: none;
+            border-right: 1px solid var(--o-we-bg-color-dark);
+            background-color: var(--o-we-bg-color);
+            color: var(--o-we-color);
+
+            &:hover {
+                background-color: var(--o-we-bg-color-dark);
+            }
+
+            &:first-child {
+                border-top-left-radius: 0.25rem;
+                border-bottom-left-radius: 0.25rem;
+            }
+
+            &:last-child {
+                border-top-right-radius: 0.25rem;
+                border-bottom-right-radius: 0.25rem;
+                border-right: none;
+            }
+        }
+    }
 }

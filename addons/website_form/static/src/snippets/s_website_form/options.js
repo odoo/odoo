@@ -9,7 +9,10 @@ const qweb = core.qweb;
 const _t = core._t;
 
 const FormEditor = options.Class.extend({
-    xmlDependencies: ['/website_form/static/src/xml/website_form_editor.xml'],
+    xmlDependencies: [
+        '/website_form/static/src/xml/website_form_editor.xml',
+        '/google_recaptcha/static/src/xml/recaptcha.xml',
+    ],
 
     //----------------------------------------------------------------------
     // Private
@@ -239,7 +242,7 @@ const FieldEditor = FormEditor.extend({
      * @returns {HTMLElement}
      */
     _getPlaceholderInput: function () {
-        return this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"] , textarea');
+        return this.$target[0].querySelector('input[type="text"], input[type="email"], input[type="number"], input[type="tel"], input[type="url"], textarea');
     },
     /**
      * Returns true if the field is a custom field, false if it is an existing field
@@ -340,8 +343,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         const proms = [this._super(...arguments)];
         // Disable text edition
         this.$target.attr('contentEditable', false);
-        // Make button editable
-        this.$target.find('.s_website_form_send').attr('contentEditable', true);
+        // Make button and recaptcha editable
+        this.$target.find('.s_website_form_send, .s_website_form_recaptcha').attr('contentEditable', true);
         // Get potential message
         this.$message = this.$target.parent().find('.s_website_form_end_message');
         this.showEndMessage = false;
@@ -479,6 +482,22 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
         this.$target[0].dataset.mark = value.trim();
         this._setLabelsMark();
     },
+    /**
+     * Toggle the recaptcha legal terms
+     */
+    toggleRecaptchaLegal: function (previewMode, value, params) {
+        const recaptchaLegalEl = this.$target[0].querySelector('.s_website_form_recaptcha');
+        if (recaptchaLegalEl) {
+            recaptchaLegalEl.remove();
+        } else {
+            const template = document.createElement('template');
+            const labelWidth = this.$target[0].querySelector('.s_website_form_label').style.width;
+            template.innerHTML = qweb.render("webite_form.s_website_form_recaptcha_legal", {labelWidth: labelWidth});
+            const legal = template.content.firstElementChild;
+            legal.setAttribute('contentEditable', true);
+            this.$target.find('.s_website_form_submit').before(legal);
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -503,6 +522,8 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
                 return this.$target[0].dataset.successMode;
             case 'setMark':
                 return this._getMark();
+            case 'toggleRecaptchaLegal':
+                return !this.$target[0].querySelector('.s_website_form_recaptcha') || '';
         }
         return this._super(...arguments);
     },
@@ -514,7 +535,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             return;
         }
         // Add Action select
-        const firstOption = uiFragment.querySelector(':first-child');
+        const firstOption = uiFragment.childNodes[0];
         uiFragment.insertBefore(this.selectActionEl.cloneNode(true), firstOption);
 
         // Add Action related options
@@ -643,7 +664,7 @@ options.registry.WebsiteFormEditor = FormEditor.extend({
             await formInfo.formFields.forEach(async field => {
                 field.formatInfo = formatInfo;
                 await this._fetchFieldRecords(field);
-                this.$target.find('.s_website_form_submit').before(this._renderField(field));
+                this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(this._renderField(field));
             });
         }
     },
@@ -839,6 +860,11 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
         await this._replaceField(field);
         this.rerender = true;
     },
+    selectType: async function (previewMode, value, params) {
+        const field = this._getActiveField();
+        field.type = value;
+        await this._replaceField(field);
+    },
     /**
      * Select the display of the multicheckbox field (vertical & horizontal)
      */
@@ -885,6 +911,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
                 return this._getPlaceholder();
             case 'selectLabelPosition':
                 return this._getLabelPosition();
+            case 'selectType':
+                return this._getFieldType();
             case 'multiCheckboxDisplay': {
                 const target = this._getMultipleInputs();
                 return target ? target.dataset.display : '';
@@ -899,6 +927,8 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      */
     _computeWidgetVisibility: function (widgetName, params) {
         switch (widgetName) {
+            case 'char_input_type_opt':
+                return !this.$target[0].classList.contains('s_website_form_custom') && ['char', 'email', 'tel', 'url'].includes(this.$target[0].dataset.type);
             case 'multi_check_display_opt':
                 return !!this._getMultipleInputs();
             case 'placeholder_opt':
@@ -1219,7 +1249,7 @@ options.registry.AddFieldForm = FormEditor.extend({
         const field = this._getCustomField('char', 'Custom Text');
         field.formatInfo = this._getDefaultFormat();
         const htmlField = this._renderField(field);
-        this.$target.find('.s_website_form_submit').before(htmlField);
+        this.$target.find('.s_website_form_submit, .s_website_form_recaptcha').first().before(htmlField);
         this.trigger_up('activate_snippet', {
             $snippet: $(htmlField),
         });

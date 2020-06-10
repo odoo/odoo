@@ -2,15 +2,14 @@ odoo.define('wysiwyg.widgets.media', function (require) {
 'use strict';
 
 var concurrency = require('web.concurrency');
-var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
 var fonts = require('wysiwyg.fonts');
-var ImageOptimizeDialog = require('wysiwyg.widgets.image_optimize_dialog').ImageOptimizeDialog;
 var utils = require('web.utils');
 var Widget = require('web.Widget');
 var session = require('web.session');
+const {removeOnImageChangeAttrs} = require('web_editor.image_processing');
 
 var QWeb = core.qweb;
 var _t = core._t;
@@ -123,21 +122,12 @@ var FileWidget = SearchableMediaWidget.extend({
         'input .o_we_url_input': '_onURLInputChange',
         'click .o_existing_attachment_cell': '_onAttachmentClick',
         'click .o_existing_attachment_remove': '_onRemoveClick',
-        'click .o_existing_attachment_optimize': '_onExistingOptimizeClick',
         'click .o_load_more': '_onLoadMoreClick',
     }),
     existingAttachmentsTemplate: undefined,
 
     IMAGE_MIMETYPES: ['image/gif', 'image/jpe', 'image/jpeg', 'image/jpg', 'image/gif', 'image/png', 'image/svg+xml'],
     NUMBER_OF_ATTACHMENTS_TO_DISPLAY: 30,
-
-    // This factor is used to take into account that an image displayed in a BS
-    // column might get bigger when displayed on a smaller breakpoint if that
-    // breakpoint leads to have less columns.
-    // Eg. col-lg-6 -> 480px per column -> col-md-12 -> 720px per column -> 1.5
-    // However this will not be enough if going from 3 or more columns to 1, but
-    // in that case, we consider it a snippet issue.
-    OPTIMIZE_SIZE_FACTOR: 1.5,
 
     /**
      * @constructor
@@ -261,20 +251,6 @@ var FileWidget = SearchableMediaWidget.extend({
             .replace(allImgClassModifiers, ' ');
     },
     /**
-     * Computes and returns the width that a new attachment should have to
-     * ideally occupy the space where it will be inserted.
-     * Only relevant for images.
-     *
-     * @see options.mediaWidth
-     * @see OPTIMIZE_SIZE_FACTOR
-     *
-     * @private
-     * @returns {integer}
-     */
-    _computeOptimizedWidth: function () {
-        return Math.min(1920, parseInt(this.options.mediaWidth * this.OPTIMIZE_SIZE_FACTOR));
-    },
-    /**
      * Returns the domain for attachments used in media dialog.
      * We look for attachments related to the current document. If there is a value for the model
      * field, it is used to search attachments, and the attachments from the current document are
@@ -356,52 +332,6 @@ var FileWidget = SearchableMediaWidget.extend({
         });
     },
     /**
-     * Opens the image optimize dialog for the given attachment.
-     *
-     * Hides the media dialog while the optimize dialog is open to avoid an
-     * overlap of modals.
-     *
-     * @private
-     * @param {object} attachment
-     * @param {boolean} isExisting: whether this is a new attachment that was
-     *  just uploaded, or an existing attachment
-     * @returns {Promise} resolved with the updated attachment object when the
-     *  optimize dialog is saved. Rejected if the dialog is otherwise closed.
-     */
-    _openImageOptimizeDialog: function (attachment, isExisting, $attachmentCell) {
-        var self = this;
-        var promise = new Promise(function (resolve, reject) {
-            self.trigger_up('hide_parent_dialog_request');
-            var optimizeDialog = new ImageOptimizeDialog(self, {
-                attachment: attachment,
-                isExisting: isExisting,
-                optimizedWidth: self._computeOptimizedWidth(),
-            }).open();
-            optimizeDialog.on('attachment_updated', self, function (ev) {
-                optimizeDialog.off('closed');
-                if (self.$media[0].getAttribute('src') === attachment.image_src) {
-                    self.$media[0].src = ev.data.image_src;
-                }
-                Object.assign(attachment, ev.data);
-                $attachmentCell.find('img')[0].src = attachment.image_src;
-                resolve(attachment);
-            });
-            optimizeDialog.on('closed', self, function () {
-                self.noSave = true;
-                if (isExisting) {
-                    reject();
-                } else {
-                    resolve(attachment);
-                }
-            });
-        });
-        var always = () => {
-            self.trigger_up('show_parent_dialog_request');
-        };
-        promise.then(always).guardedCatch(always);
-        return promise;
-    },
-    /**
      * Renders the existing attachments and returns the result as a string.
      *
      * @param {Object[]} attachments
@@ -444,11 +374,6 @@ var FileWidget = SearchableMediaWidget.extend({
         var img = this.selectedAttachments[0];
         if (!img || !img.id) {
             return this.media;
-        }
-
-        // Auto optimize unoptimized images.
-        if (['image/jpeg', 'image/jpe', 'image/jpg', 'image/png'].includes(img.mimetype) && img.type === 'binary' && !img.original_id) {
-            img = await this._optimizeAttachment(img);
         }
 
         if (!img.public && !img.access_token) {
@@ -496,38 +421,13 @@ var FileWidget = SearchableMediaWidget.extend({
             this.$media.css(style);
         }
 
-        // Remove crop related attributes
-        if (this.$media.attr('data-aspect-ratio')) {
-            var attrs = ['aspect-ratio', 'x', 'y', 'width', 'height', 'rotate', 'scale-x', 'scale-y'];
-            Object.keys(self.$media.data()).forEach(function (key) {
-                if (_.str.startsWith(key, 'crop:')) {
-                    attrs.push(key);
-                }
-            });
-            this.$media.removeClass('o_cropped_img_to_save');
-            attrs.forEach(attr => {
-                this.$media.removeData(attr);
-                this.$media.removeAttr('data-' + attr);
-            });
-        }
-        return this.media;
-    },
-    /**
-     * Creates and returns an optimized copy of an attachment.
-     *
-     * @private
-     * @param {object} attachment
-     */
-    _optimizeAttachment: function (attachment) {
-        return this._rpc({
-            route: `/web_editor/attachment/${attachment.id}/update`,
-            params: {
-                copy: true,
-                name: attachment.name,
-                quality: attachment.mimetype === 'image/png' ? 0 : 80,
-                width: this._computeOptimizedWidth(),
-            },
+        // Remove image modification attributes
+        removeOnImageChangeAttrs.forEach(attr => {
+            delete this.media.dataset[attr];
         });
+        this.media.classList.remove('o_modified_image_to_save');
+        this.$media.trigger('image_changed');
+        return this.media;
     },
     /**
      * @param {object} attachment
@@ -584,18 +484,6 @@ var FileWidget = SearchableMediaWidget.extend({
         var $attachment = $(ev.currentTarget);
         var attachment = _.find(this.attachments, {id: $attachment.data('id')});
         this._selectAttachement(attachment, !this.options.multiImages);
-    },
-    /**
-     * @private
-     */
-    _onExistingOptimizeClick: function (ev) {
-        var $a = $(ev.currentTarget).closest('.o_existing_attachment_cell');
-        var id = parseInt($a.data('id'), 10);
-        var attachment = _.findWhere(this.attachments, {id: id});
-        ev.stopPropagation();
-        return this._openImageOptimizeDialog(attachment, true, $a).then(newAttachment => {
-            this._handleNewAttachment(newAttachment);
-        });
     },
     /**
      * Handles change of the file input: create attachments with the new files

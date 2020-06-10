@@ -108,10 +108,14 @@ var EditorMenu = Widget.extend({
      *
      * @param {boolean} [reload=true]
      *        true if the page has to be reloaded after the save
-     * @returns {Deferred}
+     * @returns {Promise}
      */
-    save: function (reload) {
+    save: async function (reload) {
+        if (this._saving) {
+            return false;
+        }
         var self = this;
+        this._saving = true;
         this.trigger_up('edition_will_stopped');
         return this.wysiwyg.save(false).then(function (result) {
             var $wrapwrap = $('#wrapwrap');
@@ -125,6 +129,9 @@ var EditorMenu = Widget.extend({
                 self.trigger_up('edition_was_stopped');
                 self.destroy();
             }
+            return true;
+        }).guardedCatch(() => {
+            this._saving = false;
         });
     },
     /**

@@ -23,11 +23,11 @@ kanbanExamplesRegistry.add('utm_campaign', {
         description: _lt("Prepare your Campaign, test it with part of your audience and deploy it fully afterwards."),
     }, {
         name: _lt('Audience-driven Flow'),
-        columns: [_lt('New'), _lt('Gather Data'), _lt('List-Building'), _lt('Copywriting'), _lt('Sent')],
+        columns: [_lt('Gather Data'), _lt('List-Building'), _lt('Copywriting'), _lt('Sent')],
         description: _lt("Gather data, build a recipient list and write content based on your Marketing target."),
     }, {
         name: _lt('Approval-based Flow'),
-        columns: [_lt('New'), _lt('To be Approved'), _lt('Approved'), _lt('Deployed')],
+        columns: [_lt('To be Approved'), _lt('Approved'), _lt('Deployed')],
         description: _lt("Prepare Campaigns and get them approved before making them go live."),
     }],
 });

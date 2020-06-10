@@ -155,42 +155,17 @@ class Web_Editor(http.Controller):
         return True
 
     @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
-    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
+    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
         try:
             data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
         except UserError:
             pass  # not an image
-        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model, filters=filters)
+        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
-    def add_url(self, url, res_id=False, res_model='ir.ui.view', filters=False, **kwargs):
-        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model, filters=filters)
-        return attachment._get_media_info()
-
-    @http.route('/web_editor/attachment/<model("ir.attachment"):attachment>/update', type='json', auth='user', methods=['POST'], website=True)
-    def attachment_update(self, attachment, name=None, width=0, height=0, quality=0, copy=False, **kwargs):
-        if attachment.type == 'url':
-            raise UserError(_("You cannot change the quality, the width or the name of an URL attachment."))
-        if copy:
-            original = attachment
-            attachment = attachment.copy()
-            attachment.original_id = original
-            # Uniquify url by adding a path segment with the id before the name
-            if attachment.url:
-                url_fragments = attachment.url.split('/')
-                url_fragments.insert(-1, str(attachment.id))
-                attachment.url = '/'.join(url_fragments)
-        elif attachment.original_id:
-            attachment.datas = attachment.original_id.datas
-        data = {}
-        if name:
-            data['name'] = name
-        try:
-            data['datas'] = tools.image_process(attachment.datas, size=(width, height), quality=quality)
-        except UserError:
-            pass  # not an image
-        attachment.write(data)
+    def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
+        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
         return attachment._get_media_info()
 
     @http.route('/web_editor/attachment/remove', type='json', auth='user', website=True)
@@ -225,27 +200,33 @@ class Web_Editor(http.Controller):
         return removal_blocked_by
 
     @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
-    def get_image_info(self, image_id=None, xml_id=None):
-        """This route is used from CropImageDialog to get image info.
-        It is used to display the original image when we crop a previously
-        cropped image.
+    def get_image_info(self, src=''):
+        """This route is used to determine the original of an attachment so that
+        it can be used as a base to modify it again (crop/optimization/filters).
         """
-        if xml_id:
-            record = request.env['ir.attachment'].get_attachment_by_key(xml_id)
-        elif image_id:
-            record = request.env['ir.attachment'].browse(image_id)
-        result = {
-            'mimetype': record.mimetype,
+        id_match = re.search('^/web/image/([^/?]+)', src)
+        if id_match:
+            url_segment = id_match.group(1)
+            number_match = re.match('^(\d+)', url_segment)
+            if '.' in url_segment: # xml-id
+                attachment = request.env['ir.http']._xmlid_to_obj(request.env, url_segment)
+            elif number_match: # numeric id
+                attachment = request.env['ir.attachment'].browse(int(number_match.group(1)))
+        else:
+            # Find attachment by url. There can be multiple matches because of default
+            # snippet images referencing the same image in /static/, so we limit to 1
+            attachment = request.env['ir.attachment'].search([('url', '=like', src)], limit=1)
+        if not attachment:
+            return {
+                'attachment': False,
+                'original': False,
+            }
+        return {
+            'attachment': attachment.read(['id'])[0],
+            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
         }
-        # If we received the image ID and that image has an associated URL
-        # field, this should be a crop image attachment, so we return the ID
-        # and URL to confirm
-        if image_id and record.url:
-            result['id'] = record.id
-            result['originalSrc'] = record.url
-        return result
 
-    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view', filters=None):
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
         """Create and return a new attachment."""
         if not name and url:
             name = url.split("/").pop()
@@ -254,9 +235,6 @@ class Web_Editor(http.Controller):
             res_id = int(res_id)
         else:
             res_id = False
-
-        if filters:
-            name = filters + '_' + name
 
         attachment_data = {
             'name': name,
@@ -477,3 +455,39 @@ class Web_Editor(http.Controller):
                 and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
             View = View.sudo()
         return View._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
+
+    @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
+    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None):
+        """
+        Creates a modified copy of an attachment and returns its image_src to be
+        inserted into the DOM.
+        """
+        fields = {
+            'original_id': attachment.id,
+            'datas': data,
+            'type': 'binary',
+            'res_model': res_model or 'ir.ui.view',
+        }
+        if fields['res_model'] == 'ir.ui.view':
+            fields['res_id'] = 0
+        elif res_id:
+            fields['res_id'] = res_id
+        if name:
+            fields['name'] = name
+        attachment = attachment.copy(fields)
+        if attachment.url:
+            # Don't keep url if modifying static attachment because static images
+            # are only served from disk and don't fallback to attachments.
+            if re.match(r'^/\w+/static/', attachment.url):
+                attachment.url = None
+            # Uniquify url by adding a path segment with the id before the name.
+            # This allows us to keep the unsplash url format so it still reacts
+            # to the unsplash beacon.
+            else:
+                url_fragments = attachment.url.split('/')
+                url_fragments.insert(-1, str(attachment.id))
+                attachment.url = '/'.join(url_fragments)
+        if attachment.public:
+            return attachment.image_src
+        attachment.generate_access_token()
+        return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)

@@ -177,7 +177,7 @@ class Forum(models.Model):
     @api.model
     def create(self, values):
         res = super(Forum, self.with_context(mail_create_nolog=True, mail_create_nosubscribe=True)).create(values)
-        res._set_default_faq()
+        res._set_default_faq()  # will trigger a write and call update_website_count
         return res
 
     def write(self, vals):
@@ -199,7 +199,14 @@ class Forum(models.Model):
         if 'active' in vals:
             # archiving/unarchiving a forum does it on its posts, too
             self.env['forum.post'].with_context(active_test=False).search([('forum_id', 'in', self.ids)]).write({'active': vals['active']})
+
+        if 'active' in vals or 'website_id' in vals:
+            self._update_website_count()
         return res
+
+    def unlink(self):
+        self._update_website_count()
+        return super(Forum, self).unlink()
 
     @api.model
     def _tag_to_write_vals(self, tags=''):
@@ -237,6 +244,12 @@ class Forum(models.Model):
             'target': 'self',
             'url': self._compute_website_url(),
         }
+
+    @api.model
+    def _update_website_count(self):
+        for website in self.env['website'].sudo().search([]):
+            website.forums_count = self.env['forum.forum'].sudo().search_count(website.website_domain())
+
 
 class Post(models.Model):
 
@@ -281,7 +294,7 @@ class Post(models.Model):
     is_correct = fields.Boolean('Correct', help='Correct answer or answer accepted')
     parent_id = fields.Many2one('forum.post', string='Question', ondelete='cascade', readonly=True, index=True)
     self_reply = fields.Boolean('Reply to own question', compute='_is_self_reply', store=True)
-    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers')
+    child_ids = fields.One2many('forum.post', 'parent_id', string='Post Answers', domain=lambda self: [('forum_id', '=', self.forum_id.id)])
     child_count = fields.Integer('Answers', compute='_get_child_count', store=True)
     uid_has_answered = fields.Boolean('Has Answered', compute='_get_uid_has_answered')
     has_validated_answer = fields.Boolean('Is answered', compute='_get_has_validated_answer', store=True)
@@ -401,7 +414,7 @@ class Post(models.Model):
 
     def _get_uid_has_answered(self):
         for post in self:
-            post.uid_has_answered = any(answer.create_uid.id == post._uid for answer in post.child_ids)
+            post.uid_has_answered = post._uid in post.child_ids.create_uid.ids
 
     @api.depends('child_ids.is_correct')
     def _get_has_validated_answer(self):
@@ -838,7 +851,8 @@ class Post(models.Model):
         return result
 
     def set_viewed(self):
-        self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE id IN %s""", (self._ids,))
+        self.ensure_one()
+        self._cr.execute("""UPDATE forum_post SET views = views+1 WHERE views = %s and id = %s""", (self.views, self.id,))
         return True
 
     def get_access_action(self, access_uid=None):

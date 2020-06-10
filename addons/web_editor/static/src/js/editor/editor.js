@@ -171,7 +171,7 @@ var EditorMenuBar = Widget.extend({
         if (this.snippetsMenu) {
             await this.snippetsMenu.cleanForSave();
         }
-        await this.getParent().saveCroppedImages(this.rte.editable());
+        await this.getParent().saveModifiedImages(this.rte.editable());
         await this.rte.save();
 
         if (reload !== false) {

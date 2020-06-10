@@ -7,7 +7,7 @@
         This module adds a new building block in the website builder in order to build new forms from scratch in any website page.
     """,
     'version': '1.0',
-    'depends': ['website', 'mail'],
+    'depends': ['website', 'mail', 'google_recaptcha'],
     'data': [
         'data/mail_mail_data.xml',
         'views/assets.xml',

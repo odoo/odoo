@@ -7,9 +7,11 @@
             <search string="Fleet Costs Analysis">
                 <field name="name" filter_domain="[('name', 'ilike', self)]"/>
                 <field name="driver_id" filter_domain="[('driver_id', 'ilike', self)]"/>
-                <field name="date_start" />
+                <field name="date_start"/>
                 <filter string="Service" name="service" domain="[('cost_type', '=', 'service')]"/>
                 <filter string="Contract" name="contract" domain="[('cost_type', '=', 'contract')]"/>
+                <separator/>
+                <filter name="filter_date_start" date="date_start" default_period="this_year"/>
                 <group expand="1" string="Group By">
                     <filter string="Vehicle" name="vehicle" context="{'group_by':'vehicle_id'}"/>
                     <filter string="Driver" name="driver" context="{'group_by':'driver_id'}"/>
@@ -49,7 +51,7 @@
       <field name="res_model">fleet.vehicle.cost.report</field>
       <field name="view_mode">graph,pivot</field>
       <field name="view_id"></field>  
-      <field name="context">{ 'time_ranges': {'field':'date_start', 'range':'last_365_days'} }</field>
+      <field name="context" eval="{'search_default_filter_date_start': 1}"/>
       <field name="search_view_id" ref="fleet.fleet_costs_report_view_search"/>
       <field name="help" type="html">
         <p class="o_view_nocontent_empty_folder">

@@ -34,6 +34,8 @@
                 <filter name="Quotations" string="Quotations" domain="[('state','in', ('draft', 'sent'))]"/>
                 <filter name="Sales" string="Sales Orders" domain="[('state','not in',('draft', 'cancel', 'sent'))]"/>
                 <separator/>
+                <filter name="filter_date" date="date" default_period="this_month"/>
+                <separator/>
                 <field name="user_id"/>
                 <field name="team_id"/>
                 <field name="product_id"/>

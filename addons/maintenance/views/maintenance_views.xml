@@ -25,6 +25,10 @@
                 <separator/>
                 <filter string="Unscheduled" name="unscheduled" domain="[('schedule_date', '=', False)]"/>
                 <separator/>
+                <filter name="filter_request_date" date="request_date"/>
+                <filter name="filter_schedule_date" date="schedule_date"/>
+                <filter name="filter_close_date" date="close_date"/>
+                <separator/>
                 <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                 <separator/>
                 <filter invisible="1" string="Late Activities" name="activities_overdue"
