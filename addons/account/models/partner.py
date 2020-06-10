@@ -302,12 +302,13 @@ class ResPartner(models.Model):
         return self._asset_difference_search('payable', operator, operand)
 
     def _invoice_total(self):
+        self.total_invoiced = 0
         if not self.ids:
             return True
 
         all_partners_and_children = {}
         all_partner_ids = []
-        for partner in self:
+        for partner in self.filtered('id'):
             # price_total is in the company currency
             all_partners_and_children[partner] = self.with_context(active_test=False).search([('id', 'child_of', partner.id)]).ids
             all_partner_ids += all_partners_and_children[partner]

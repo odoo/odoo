@@ -420,7 +420,12 @@ class AccountPayment(models.Model):
         ''' Retrieve the invoices reconciled to the payments through the reconciliation (account.partial.reconcile). '''
         stored_payments = self.filtered('id')
         if not stored_payments:
+            self.reconciled_invoice_ids = False
+            self.reconciled_invoices_count = 0
+            self.reconciled_statement_ids = False
+            self.reconciled_statements_count = 0
             return
+
         self.env['account.move'].flush()
         self.env['account.move.line'].flush()
         self.env['account.partial.reconcile'].flush()
