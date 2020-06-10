@@ -302,6 +302,7 @@ class ResPartner(models.Model):
         return self._asset_difference_search('payable', operator, operand)
 
     def _invoice_total(self):
+        self.total_invoiced = 0
         account_invoice_report = self.env['account.invoice.report']
         if not self.ids:
             return True
