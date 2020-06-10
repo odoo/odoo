@@ -370,15 +370,16 @@ class account_payment(models.Model):
                 raise UserError(_('Transfer account not defined on the company.'))
             self.destination_account_id = self.company_id.transfer_account_id.id
         elif self.partner_id:
+            partner = self.partner_id.with_context(force_company=self.company_id.id)
             if self.partner_type == 'customer':
-                self.destination_account_id = self.partner_id.property_account_receivable_id.id
+                self.destination_account_id = partner.property_account_receivable_id.id
             else:
-                self.destination_account_id = self.partner_id.property_account_payable_id.id
+                self.destination_account_id = partner.property_account_payable_id.id
         elif self.partner_type == 'customer':
-            default_account = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
+            default_account = self.env['ir.property'].with_context(force_company=self.company_id.id).get('property_account_receivable_id', 'res.partner')
             self.destination_account_id = default_account.id
         elif self.partner_type == 'supplier':
-            default_account = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
+            default_account = self.env['ir.property'].with_context(force_company=self.company_id.id).get('property_account_payable_id', 'res.partner')
             self.destination_account_id = default_account.id
 
     @api.onchange('partner_type')
