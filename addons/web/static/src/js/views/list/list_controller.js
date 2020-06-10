@@ -524,7 +524,7 @@ var ListController = BasicController.extend({
      */
     _shouldBounceOnClick(element) {
         const state = this.model.get(this.handle, {raw: true});
-        return !state.count || element.tBodies[0].firstElementChild.classList.contains('o_record_sample');
+        return !state.count || (element.tBodies && element.tBodies[0].firstElementChild.classList.contains('o_record_sample'));
     },
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
@@ -657,6 +657,7 @@ var ListController = BasicController.extend({
         if (ev) {
             ev.stopPropagation();
         }
+
         var state = this.model.get(this.handle, {raw: true});
         if (this.editable && !state.groupedBy.length) {
             this._addRecord(this.handle);

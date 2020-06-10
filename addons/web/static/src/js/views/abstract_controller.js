@@ -289,6 +289,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         if (this.renderer instanceof owl.Component) {
             return this.renderer.update(state);
         }
+        if (this.model.renderSample === false) {
+            params.renderSample = false;
+        }
         return this.renderer.updateState(state, params);
     },
 

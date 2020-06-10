@@ -266,6 +266,9 @@ var AbstractView = Factory.extend({
         if (!this.model) {
             this.model = this._super.apply(this, arguments);
         }
+        if (this.rendererParams.sampleType === 'helper') {
+            this.model.renderSample = false;
+        }
         return this.model;
     },
     /**

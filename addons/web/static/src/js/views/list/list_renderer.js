@@ -104,6 +104,7 @@ var ListRenderer = BasicRenderer.extend({
         if (params.selectedRecords) {
             this.selection = params.selectedRecords;
         }
+        this.renderSample = params.renderSample;
         return this._super.apply(this, arguments);
     },
 
@@ -1030,16 +1031,6 @@ var ListRenderer = BasicRenderer.extend({
     _renderView: function () {
         var self = this;
 
-        if (this.sampleType !== "helper" && this.state.isSample && this.getParent().viewType === 'list' 
-            && JSON.stringify(this.initialDomain) === JSON.stringify(this.state.getDomain())) {
-            this.renderSample = true;
-        } else {
-            this.renderSample = false;
-            if (this.state.isSample) {
-                this.state.data = [];
-            }
-        }
-
         const oldPagers = this.pagers;
         this.pagers = [];
 
@@ -1109,7 +1100,7 @@ var ListRenderer = BasicRenderer.extend({
             }
         });
         return Promise.all([this._super.apply(this, arguments), prom]).then(function (){
-            if (self.sampleType !== "sample" && self.state.count === 0 && !self.arch.attrs.editable && !!self.noContentHelp) {
+            if (self.sampleType !== "sample" && !self.arch.attrs.editable && !!self.noContentHelp) {
                 self.$el.parent().find('.o_view_nocontent').remove()
                 self._renderNoContentHelper().insertAfter(self.$el);
             }
@@ -1120,7 +1111,6 @@ var ListRenderer = BasicRenderer.extend({
                     self.$('tfoot').remove();
                 }
             } else if (self.state.isSample) {
-                //self.$el.empty();
                 self.$('tfoot').remove();
             }
         });

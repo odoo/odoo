@@ -964,6 +964,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise<string>} resolves to the id of the resource
      */
     reload: function (id, options) {
+        this.isSample = undefined;
         return this.mutex.exec(this._reload.bind(this, id, options));
     },
     /**
@@ -1427,16 +1428,16 @@ var BasicModel = AbstractModel.extend({
         options = options || {};
         options.renderSample = options.renderSample || this.renderSample;
         var fakeServer = new FakeServer(this, params, options);
-        if (this.isSample === false && this.renderSample === false) {
+        if (this.isSample === false && this.renderSample === false || params.method === "create") {
             return this._super.apply(this, arguments);
         } else if (!this.isSample) {
             return this._super.apply(this, arguments).then(function (result) {
                 const isEmpty = fakeServer.isEmpty(result);
-                self.isSample = isEmpty && fakeServer.options.renderSample !== false;
-                if (isEmpty && fakeServer.options.renderSample) {
+                self.isSample = isEmpty;// && fakeServer.options.renderSample !== false;
+                if (isEmpty && self.renderSample !== false) {
                     return fakeServer._performRpc(result);    
                 } else {
-                    
+                    self.renderSample = false;
                 }
                 return result
             });
@@ -4829,7 +4830,6 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise<string>} resolves to the id of the resource
      */
     _reload: function (id, options) {
-        this.isSample = false;
         options = options || {};
         var element = this.localData[id];
 

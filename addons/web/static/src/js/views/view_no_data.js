@@ -21,7 +21,8 @@ odoo.define('web.viewNoData', function (require) {
                     case 'web_read_group':
                         let total = 0;
                         _.each(result.groups, function (group) {
-                            total += group[self.model.defaultGroupedBy[0] + '_count'];
+                            let counter = (self.model.defaultGroupedBy && self.model.defaultGroupedBy[0] + '_count') || Object.keys(group).find(key => key.includes('_count'));
+                            total += group[counter];
                         });
                         return !total;
                 }

@@ -397,6 +397,11 @@ var KanbanController = BasicController.extend({
         var values = ev.data.values;
         var column = ev.target;
         var onFailure = ev.data.onFailure || function () {};
+        if (this.model.localData[column.db_id].isSample) {
+            this.model.localData[column.db_id].data = [];
+            this.model.localData[column.db_id].res_ids = [];
+            this.model.localData[column.db_id].count = 0;
+        }
         this.model.isSample = false;
         this.model.renderSample = false;
 
