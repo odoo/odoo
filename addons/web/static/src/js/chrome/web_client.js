@@ -5,6 +5,7 @@ var AbstractWebClient = require('web.AbstractWebClient');
 var config = require('web.config');
 var core = require('web.core');
 var data_manager = require('web.data_manager');
+const { DropPrevious } = require('web.concurrency');
 var dom = require('web.dom');
 var Menu = require('web.Menu');
 var session = require('web.session');
@@ -14,6 +15,10 @@ return AbstractWebClient.extend({
         app_clicked: 'on_app_clicked',
         menu_clicked: 'on_menu_clicked',
     }),
+    init: function () {
+        this._super.apply(this, arguments);
+        this._hashChangeDp = new DropPrevious();
+    },
     start: function () {
         core.bus.on('change_menu_section', this, function (menuID) {
             this.do_push_state(_.extend($.bbq.getState(), {
@@ -75,10 +80,11 @@ return AbstractWebClient.extend({
             });
     },
     show_application: function () {
+        const showAppProm = this._super.apply(this, arguments);
         var self = this;
         this.set_title();
 
-        return this.menu_dp.add(this.instanciate_menu_widgets()).then(function () {
+        this.menu_dp.add(this.instanciate_menu_widgets()).then(function () {
             $(window).bind('hashchange', self.on_hashchange);
 
             // If the url's state is empty, we execute the user's home action if there is one (we
@@ -104,6 +110,7 @@ return AbstractWebClient.extend({
                 return self.on_hashchange();
             }
         });
+        return showAppProm;
     },
 
     instanciate_menu_widgets: function () {
@@ -123,11 +130,36 @@ return AbstractWebClient.extend({
             return Promise.all(proms);
         });
     },
-
+     /**
+     * Wraps the hashchange event calls into a DropPrevious
+     * in order to resolve the initial loading Promise
+     * Useful when the URL changes amidst loading
+     * either because the loading mechanism automatically loads the initial App
+     * or because the user changes the URL
+     *
+     * @public
+     * @param {JQueryEvent|null} ev
+     */
+    on_hashchange: function (ev) {
+        return this._hashChangeDp.add(this._on_hashchange(ev)).then(() => {
+            if (this._showAppPromResolve) {
+                this._showAppPromResolve();
+            }
+        });
+    },
     // --------------------------------------------------------------
     // URL state handling
     // --------------------------------------------------------------
-    on_hashchange: function (event) {
+    /**
+     * Called to load the state from the URL
+     * It may be called several times when loading the webClient
+     * In particular when the loading mechanism changes its own URL
+     * to load the default App.
+     *
+     * @private
+     * @param {JQueryEvent|null} ev
+     */
+    _on_hashchange: function (ev) {
         if (this._ignore_hashchange) {
             this._ignore_hashchange = false;
             return Promise.resolve();

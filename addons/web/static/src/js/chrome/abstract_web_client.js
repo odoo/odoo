@@ -103,6 +103,15 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         this.set('title_part', {"zopenerp": "Odoo"});
         this.env = env;
         core.bus.on('legacy_webclient_request', this, this._onLegacyWebclientRequest);
+
+        /* This is the resolver for the webClient's showApplication sequence
+         * it must be executed.
+         * It supports the use case where:
+         * - the webclient loads slowly
+         * - the user changes the url at any time
+         * - the loading finishes and yields the state that the user requested
+         */
+        this._showAppPromResolve = null;
     },
     /**
      * @override
@@ -226,6 +235,12 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         return this.loading.appendTo(this.$el);
     },
     show_application: function () {
+        const showAppProm = new Promise(resolve => {
+            this._showAppPromResolve = resolve;
+        });
+        return showAppProm.then(() => {
+            this._showAppPromResolve = null;
+        });
     },
     clear_uncommitted_changes: function () {
         return this.action_manager.clearUncommittedChanges();
