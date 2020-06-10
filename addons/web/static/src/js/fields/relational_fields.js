@@ -27,7 +27,9 @@ var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
+const { sprintf } = require("web.utils");
 
+const { escape } = owl.utils;
 var _t = core._t;
 var _lt = core._lt;
 var qweb = core.qweb;
@@ -543,91 +545,114 @@ var FieldMany2One = AbstractField.extend({
         this.m2o_value = this._formatValue(this.value);
     },
     /**
-     * Executes a name_search and process its result.
+     * Executes a 'name_search' and returns a list of formatted objects meant to
+     * be displayed in the autocomplete widget dropdown. These items are either:
+     * - a formatted version of a 'name_search' result
+     * - an option meant to display additional information or perform an action
      *
      * @private
-     * @param {string} search_val
-     * @returns {Promise}
+     * @param {string} [searchValue=""]
+     * @returns {Promise<{
+     *      label: string,
+     *      id?: number,
+     *      name?: string,
+     *      value?: string,
+     *      classname?: string,
+     *      action?: () => Promise<any>,
+     * }[]>}
      */
-    _search: function (search_val) {
-        var self = this;
-        var def = new Promise(function (resolve, reject) {
-            var context = self.record.getContext(self.recordParams);
-            var domain = self.record.getDomain(self.recordParams);
+    _search: async function (searchValue = "") {
+        const value = searchValue.trim();
+        const domain = this.record.getDomain(this.recordParams);
+        const context = Object.assign(
+            this.record.getContext(this.recordParams),
+            this.additionalContext
+        );
 
-            // Add the additionalContext
-            _.extend(context, self.additionalContext);
+        // Exclude black-listed ids from the domain
+        const blackListedIds = this._getSearchBlacklist();
+        if (blackListedIds.length) {
+            domain.push(['id', 'not in', blackListedIds]);
+        }
 
-            var blacklisted_ids = self._getSearchBlacklist();
-            if (blacklisted_ids.length > 0) {
-                domain.push(['id', 'not in', blacklisted_ids]);
+        const nameSearch = this._rpc({
+            model: this.field.relation,
+            method: "name_search",
+            kwargs: {
+                name: value,
+                args: domain,
+                operator: "ilike",
+                limit: this.limit + 1,
+                context,
             }
-
-            self._rpc({
-                model: self.field.relation,
-                method: "name_search",
-                kwargs: {
-                    name: search_val,
-                    args: domain,
-                    operator: "ilike",
-                    limit: self.limit + 1,
-                    context: context,
-                }}).then(function (result) {
-                // possible selections for the m2o
-                var values = _.map(result, function (x) {
-                    x[1] = self._getDisplayName(x[1]);
-                    return {
-                        label: _.str.escapeHTML(x[1].trim()) || data.noDisplayContent,
-                        value: x[1],
-                        name: x[1],
-                        id: x[0],
-                    };
-                });
-
-                // search more... if more results than limit
-                if (values.length > self.limit) {
-                    values = self._manageSearchMore(values, search_val, domain, context);
-                }
-                // quick create
-                var raw_result = _.map(result, function (x) { return x[1]; });
-                if (self.can_create && !self.nodeOptions.no_quick_create &&
-                    search_val.length > 0 && !_.contains(raw_result, search_val)) {
-                    values.push({
-                        label: _.str.sprintf(_t('Create "<strong>%s</strong>"'),
-                            $('<span />').text(search_val).html()),
-                        action: self._quickCreate.bind(self, search_val),
-                        classname: 'o_m2o_dropdown_option'
-                    });
-                }
-                // create and edit ...
-                if (self.can_create && !self.nodeOptions.no_create_edit && search_val.length > 0) {
-                    var createAndEditAction = function () {
-                        // Clear the value in case the user clicks on discard
-                        self.$('input').val('');
-                        return self._searchCreatePopup("form", false, self._createContext(search_val));
-                    };
-                    values.push({
-                        label: _t("Create and Edit..."),
-                        action: createAndEditAction,
-                        classname: 'o_m2o_dropdown_option',
-                    });
-                } else if (values.length === 0) {
-                    values.push({
-                        label: _t("No results to show..."),
-                    });
-                }
-                if (!self.value && !search_val.length && self.can_create
-                    && (!self.nodeOptions.no_quick_create || !self.nodeOptions.no_create_edit)) {
-                    values.push({
-                        label: _t("Start typing..."),
-                        classname: 'o_m2o_start_typing',
-                    });
-                }
-                resolve(values);
-            });
         });
-        this.orderer.add(def);
-        return def;
+        const results = await this.orderer.add(nameSearch);
+
+        // Format results to fit the options dropdown
+        let values = results.map((result) => {
+            const [id, fullName] = result;
+            const displayName = this._getDisplayName(fullName).trim();
+            result[1] = displayName;
+            return {
+                id,
+                label: escape(displayName) || data.noDisplayContent,
+                value: displayName,
+                name: displayName,
+            };
+        });
+
+        // Add "Search more..." option if results count is higher than the limit
+        if (this.limit < values.length) {
+            values = this._manageSearchMore(values, value, domain, context);
+        }
+        if (!this.can_create) {
+            return values;
+        }
+
+        // Additional options...
+        const canQuickCreate = !this.nodeOptions.no_quick_create;
+        const canCreateEdit = !this.nodeOptions.no_create_edit;
+        if (value.length) {
+            // "Quick create" option
+            const nameExists = results.some((result) => result[1] === value);
+            if (canQuickCreate && !nameExists) {
+                values.push({
+                    label: sprintf(
+                        _t(`Create "<strong>%s</strong>"`),
+                        escape(value)
+                    ),
+                    action: () => this._quickCreate(value),
+                    classname: 'o_m2o_dropdown_option'
+                });
+            }
+            // "Create and Edit" option
+            if (canCreateEdit) {
+                const valueContext = this._createContext(value);
+                values.push({
+                    label: _t("Create and Edit..."),
+                    action: () => {
+                        // Input value is cleared and the form popup opens
+                        this.el.querySelector(':scope input').value = "";
+                        return this._searchCreatePopup('form', false, valueContext);
+                    },
+                    classname: 'o_m2o_dropdown_option',
+                });
+            }
+            // "No results" option
+            if (!values.length) {
+                values.push({
+                    label: _t("No results to show..."),
+                });
+            }
+        } else if (!this.value && (canQuickCreate || canCreateEdit)) {
+            // "Start typing" option
+            values.push({
+                label: _t("Start typing..."),
+                classname: 'o_m2o_start_typing',
+            });
+        }
+
+        return values;
     },
     /**
      * all search/create popup handling
