@@ -12,6 +12,17 @@ import hashlib
 DEFAULT_PDF_DATETIME_FORMAT = "D:%Y%m%d%H%M%S+00'00'"
 
 
+# make sure values are unwrapped by calling the specialized __getitem__
+def _unwrapping_get(self, key, default=None):
+    try:
+        return self[key]
+    except KeyError:
+        return default
+
+
+DictionaryObject.get = _unwrapping_get
+
+
 class BrandedFileWriter(PdfFileWriter):
     def __init__(self):
         super().__init__()
@@ -25,7 +36,8 @@ PdfFileWriter = BrandedFileWriter
 
 
 def merge_pdf(pdf_data):
-    ''' Merge a collection of PDF documents in one
+    ''' Merge a collection of PDF documents in one.
+    Note that the attachments are not merged.
     :param list pdf_data: a list of PDF datastrings
     :return: a unique merged PDF datastring
     '''
@@ -40,7 +52,8 @@ def merge_pdf(pdf_data):
 
 
 def rotate_pdf(pdf):
-    ''' Rotate clockwise PDF (90°)
+    ''' Rotate clockwise PDF (90°) into a new PDF.
+    Note that the attachments are not copied.
     :param pdf: a PDF to rotate
     :return: a PDF rotated
     '''
