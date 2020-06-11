@@ -208,7 +208,7 @@ const CountdownWidget = publicWidget.Widget.extend({
 
                 $(canvas).toggleClass('d-none', hideCountdown);
                 if (hideCountdown) {
-                    return;
+                    continue;
                 }
 
                 // Draw canvas elements
