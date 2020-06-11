@@ -514,10 +514,9 @@ class HrExpense(models.Model):
                     'partner_type': 'supplier',
                     'journal_id': journal.id,
                     'date': expense.date,
-                    'state': 'reconciled',
                     'currency_id': expense.currency_id.id if different_currency else journal_currency.id,
                     'amount': abs(total_amount_currency) if different_currency else abs(total_amount),
-                    'name': expense.name,
+                    'ref': expense.name,
                 })
                 move_line_dst['payment_id'] = payment.id
 
