@@ -48,33 +48,11 @@ class Composer extends Component {
          * Reference of the text input component.
          */
         this._textInputRef = useRef('textInput');
-        /**
-         * Tracked focus counter from props. Useful to determine whether it
-         * should auto focus this composer when patched.
-         */
-        this._focusCount = 0;
-        // to focus if the prop changes
-        this._lastComposer = undefined;
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
     }
 
     mounted() {
-        this._lastComposer = this.composer;
-        if (this.props.isFocusOnMount) {
-            this.focus();
-        }
         document.addEventListener('click', this._onClickCaptureGlobal, true);
-    }
-
-    patched() {
-        // focus when changing composer
-        if (
-            this.props.isFocusOnMount &&
-            this._lastComposer !== this.composer
-        ) {
-            this.focus();
-        }
-        this._lastComposer = this.composer;
     }
 
     willUnmount() {
@@ -338,7 +316,6 @@ Object.assign(Composer, {
         isCompact: true,
         isDiscardOnClickAway: false,
         isExpandable: false,
-        isFocusOnMount: false,
         isLog: false,
     },
     props: {
@@ -382,7 +359,6 @@ Object.assign(Composer, {
         isCompact: Boolean,
         isDiscardOnClickAway: Boolean,
         isExpandable: Boolean,
-        isFocusOnMount: Boolean,
         isLog: Boolean,
     },
     template: 'mail.Composer',

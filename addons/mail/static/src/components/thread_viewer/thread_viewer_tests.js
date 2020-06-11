@@ -286,8 +286,8 @@ QUnit.test('message list asc order', async function (assert) {
     assert.verifySteps(['message_fetch_1', 'message_fetch_2']);
 });
 
-QUnit.test('mark channel as fetched when a new message is loaded and as seen when message is visible', async function (assert) {
-    assert.expect(7);
+QUnit.test('mark channel as fetched when a new message is loaded and as seen when focusing composer', async function (assert) {
+    assert.expect(8);
 
     await this.start({
         mockRPC(route, args) {
@@ -302,7 +302,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
                     'mail.channel',
                     'channel_fetched is called on the right channel model'
                 );
-                assert.step('rpc_channel_fetched:called');
+                assert.step('rpc:channel_fetch');
             } else if (args.method === 'channel_seen') {
                 assert.strictEqual(
                     args.args[0][0],
@@ -314,7 +314,79 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
                     'mail.channel',
                     'channel_seeb is called on the right channel model'
                 );
-                assert.step('rpc_channel_seen:called');
+                assert.step('rpc:channel_seen');
+            }
+            return this._super(...arguments);
+        }
+    });
+    const thread = this.env.models['mail.thread'].create({
+        // FIXME should not be needed, see task-2277537
+        composer: [['create']], // avoid initial focus
+        id: 100,
+        isPinned: true, // just to avoid joinChannel to be called
+        members: [['insert', [
+            {
+                email: "john@example.com",
+                id: this.env.session.partner_id,
+                name: "John",
+            },
+            {
+                email: "fred@example.com",
+                id: 10,
+                name: "Fred",
+            },
+        ]]],
+        message_unread_counter: 1, // seen would not be called if not > 0
+        model: 'mail.channel',
+    });
+
+    const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
+    await this.createThreadViewerComponent(threadViewer, { hasComposer: true });
+    const notifications = [
+        [['myDB', 'mail.channel', 100], {
+            channelId: 100,
+            id: 1,
+            body: "<p>fdsfsd</p>",
+            author_id: [10, "Fred"],
+            model: "mail.channel",
+            channel_ids: [100],
+        }]
+    ];
+
+    await afterNextRender(() =>
+        this.widget.call('bus_service', 'trigger', 'notification', notifications)
+    );
+    assert.verifySteps(
+        ['rpc:channel_fetch'],
+        "Channel should have been fetched but not seen yet"
+    );
+
+    await afterNextRender(() => thread.composer.focus());
+    assert.verifySteps(
+        ['rpc:channel_seen'],
+        "Channel should have been marked as seen after threadViewer got the focus"
+    );
+});
+
+QUnit.test('mark channel as fetched and seen when a new message is loaded if composer is focused', async function (assert) {
+    assert.expect(4);
+
+    await this.start({
+        mockRPC(route, args) {
+            if (args.method === 'channel_fetched' && args.args[0] === 100) {
+                throw new Error("'channel_fetched' RPC must not be called for created channel as message is directly seen");
+            } else if (args.method === 'channel_seen') {
+                assert.strictEqual(
+                    args.args[0][0],
+                    100,
+                    'channel_seen is called on the right channel id'
+                );
+                assert.strictEqual(
+                    args.model,
+                    'mail.channel',
+                    'channel_seen is called on the right channel model'
+                );
+                assert.step('rpc:channel_seen');
             }
             return this._super(...arguments);
         }
@@ -334,10 +406,12 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
                 name: "Fred",
             },
         ]]],
+        message_unread_counter: 1, // seen would not be called if not > 0
         model: 'mail.channel',
     });
+
     const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    await this.createThreadViewerComponent(threadViewer);
+    await this.createThreadViewerComponent(threadViewer, { hasComposer: true });
     const notifications = [
         [['myDB', 'mail.channel', 100], {
             channelId: 100,
@@ -348,15 +422,14 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
             channel_ids: [100],
         }]
     ];
-    await afterNextRender(() => {
-        this.widget.call('bus_service', 'trigger', 'notification', notifications);
-    });
+    await afterNextRender(() =>
+        this.widget.call('bus_service', 'trigger', 'notification', notifications)
+    );
     assert.verifySteps(
-        ['rpc_channel_fetched:called', 'rpc_channel_seen:called'],
-        "Channel should have been fetched before having been seen"
+        ['rpc:channel_seen'],
+        "Channel should have been mark as seen directly"
     );
 });
-
 });
 });
 });
