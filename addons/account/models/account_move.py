@@ -207,7 +207,7 @@ class AccountMove(models.Model):
         ('partial', 'Partially Paid'),
         ('reversed', 'Reversed'),
         ('invoicing_legacy', 'Invoicing App Legacy')],
-        string="Payment State", store=True, readonly=True, copy=False, tracking=True,
+        string="Payment Status", store=True, readonly=True, copy=False, tracking=True,
         compute='_compute_amount')
 
     # ==== Cash basis feature fields ====
