@@ -8,93 +8,89 @@ var _t = core._t;
 
 tour.register('crm_tour', {
     url: "/web",
+    rainbowManMessage: _t("Congrats, best of luck catching such big fish! :)"),
 }, [tour.stepUtils.showAppsMenuItem(), {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
-    content: _t("Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the <b>CRM</b> app."),
-    position: 'right',
-    edition: 'community'
+    content: _t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.'),
+    position: 'bottom',
+    edition: 'community',
 }, {
     trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
-    content: _t("Ready to boost your sales? Your <b>Pipeline</b> can be found here, under the <b>CRM</b> app."),
+    content: _t('Ready to boost your sales? Let\'s have a look at your <b>Pipeline</b>.'),
     position: 'bottom',
     edition: 'enterprise',
 }, {
-    trigger: ".o-kanban-button-new",
+    trigger: '.o-kanban-button-new',
     extra_trigger: '.o_opportunity_kanban',
-    content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
-    position: "bottom",
+    content: _t("<b>Create your first opportunity.</b>"),
+    position: 'bottom',
 }, {
-    trigger: ".o_kanban_quick_create input:first",
-    content: _t("<b>Choose a name</b> for your opportunity, example: <i>'Need a new website'</i>"),
+    trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id']",
+    content: _t('Look for a Contact or create a new one.<br><i>Tip : Did you know you can search by VAT Number as well?</i>'),
     position: "right",
+    run: function (actions) {
+        actions.text("Brandon Freeman", this.$anchor.find("input"));
+    },
+}, {
+    trigger: ".o_kanban_quick_create .o_field_widget[name='name']",
+    auto: true,
+}, {
+    trigger: '.o_kanban_quick_create .o_field_monetary[name="planned_revenue"]',
+    content: _t("Define here the Expected Revenue of this Opportunity."),
+    position: 'right',
 }, {
     trigger: ".o_kanban_quick_create .o_kanban_add",
-    content: _t("Click here to <b>add your opportunity</b>."),
+    content: _t("Now, <b>add your Opportunity</b> to your Pipeline."),
     position: "bottom",
 }, {
-    trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-child",
+    trigger: ".o_opportunity_kanban .o_kanban_group:first-child .o_kanban_record:last-child .oe_kanban_content",
+    extra_trigger: ".o_opportunity_kanban",
     content: _t("<b>Drag &amp; drop opportunities</b> between columns as you progress in your sales cycle."),
-    position: "right",
+    position: "bottom",
     run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(2) ",
 }, {
     trigger: ".o_kanban_record:not(.o_updating) .o_activity_color_default",
     extra_trigger: ".o_opportunity_kanban",
-    content: _t("This opportunity has <b>no activity planned</b>."),
-    position: "bottom"
+    content: _t("Looks like nothing is planned. :(<br><br><i>Tip : Schedule activities to keep track of everything you have to do!</i>"),
+    position: "bottom",
 }, {
     trigger: ".o_schedule_activity",
     extra_trigger: ".o_opportunity_kanban",
-    content: _t("Let's schedule an activity."),
-    position: "bottom"
+    content: _t("Let's <b>Schedule an Activity.</b>"),
+    position: "bottom",
+    width: 200,
 }, {
-    trigger: '.modal-body .o_field_many2one',
-    extra_trigger: ".o_opportunity_kanban",
-    content: _t("Choose an activity type.<br/>You can customize them in the general settings."),
+    trigger: '.modal-footer button[name="action_close_dialog"]',
+    content: _t("All set. Let’s <b>Schedule</b> it."),
     position: "bottom",
     run: function (actions) {
         actions.auto('.modal-footer button[special=cancel]');
     },
 }, {
+    id: "drag_opportunity_to_won_step",
+    trigger: ".o_opportunity_kanban .o_kanban_record:last-child",
+    content: _t("Drag your opportunity to <b>Won</b> when you get the deal. Congrats !"),
+    position: "bottom",
+    run: "drag_and_drop .o_opportunity_kanban .o_kanban_group:eq(3) ",
+},  {
     trigger: ".o_kanban_record",
     extra_trigger: ".o_opportunity_kanban",
-    content: _t("Click on the opportunity to zoom in."),
-    position: "bottom",
+    content: _t("Let’s have a look at an Opportunity."),
+    position: "right",
     run: function (actions) {
-        actions.auto(".o_kanban_record .oe_kanban_action[data-type=edit]");
+        actions.auto(".o_kanban_record");
     },
 }, {
-    trigger: ".o_lead_opportunity_form .o_chatter_button_new_message",
-    content: _t('<p><b>Send messages</b> to your prospect and get replies automatically attached to this opportunity.</p><p class="mb0">Type <i>\'@\'</i> to mention people - it\'s like cc-ing on emails.</p>'),
+    trigger: ".o_lead_opportunity_form .o_statusbar_status",
+    content: _t("This bar also allows you to switch stage."),
     position: "bottom"
 }, {
-    trigger: ".breadcrumb-item:not(.active):last",
-    extra_trigger: '.o_lead_opportunity_form',
-    content: _t("Use the breadcrumbs to <b>go back to your sales pipeline</b>."),
-    position: "bottom"
-}, tour.stepUtils.toggleHomeMenu(), tour.stepUtils.showAppsMenuItem(), {
-    trigger: '.o_app[data-menu-xmlid="base.menu_administration"]',
-    content: _t("Configuration options are available in the Settings app."),
+    trigger: ".breadcrumb-item:not(.active):first",
+    content: _t("Click on the breadcrumb to go back to the Pipeline."),
     position: "bottom",
-    edition: 'community'
-}, {
-    trigger: '.o_app[data-menu-xmlid="base.menu_administration"]',
-    content: _t("Configuration options are available in the Settings app."),
-    position: "bottom",
-    edition: 'enterprise'
-}, {
-    trigger: "div#invite_users .o_user_emails",
-    content: _t("<b>Invite coworkers</b> via email.<br/><i>Enter one email per line.</i>"),
-    position: "right"
-}, tour.stepUtils.toggleHomeMenu(), tour.stepUtils.showAppsMenuItem(), {
-    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
-    content: _t("Good job! You completed the tour of the CRM app."),
-    position: 'right',
-    edition: 'community'
-}, {
-    trigger: '.o_app[data-menu-xmlid="crm.crm_menu_root"]',
-    content: _t("Good job! You completed the tour of the CRM app."),
-    position: 'bottom',
-    edition: 'enterprise'
+    run: function (actions) {
+        actions.auto(".breadcrumb-item:not(.active):last");
+    }
 }]);
 
 });

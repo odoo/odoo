@@ -11,7 +11,7 @@
                         <field name="lead_id" invisible="1"/>
                     </group>
                 </group>
-                <group>
+                <group attrs="{'invisible': [('action','!=','exist')], 'required':[('action', '=','exist')]}">
                     <group>
                         <field name="partner_id" attrs="{'invisible': [('action','!=','exist')], 'required':[('action', '=','exist')]}"/>
                     </group>

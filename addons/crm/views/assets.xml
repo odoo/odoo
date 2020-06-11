@@ -1,14 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <template id="assets_tests" name="CRM Assets Tests" inherit_id="web.assets_tests">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/crm/static/src/js/tours/crm.js"></script>
-        </xpath>
-    </template>
-
     <template id="assets_backend" name="CRM assets backend" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
             <script type="text/javascript" src="/crm/static/src/js/systray_activity_menu.js"/>
+            <script type="text/javascript" src="/crm/static/src/js/tours/crm.js"></script>
         </xpath>
     </template>
 </odoo>
