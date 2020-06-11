@@ -255,7 +255,7 @@ class HrExpense(models.Model):
             'res_id': self.sheet_id.id
         }
 
-    def action_submit_expenses(self):
+    def _create_sheet_from_expenses(self):
         if any(expense.state != 'draft' or expense.sheet_id for expense in self):
             raise UserError(_("You cannot report twice the same line!"))
         if len(self.mapped('employee_id')) != 1:
@@ -264,18 +264,24 @@ class HrExpense(models.Model):
             raise UserError(_("You can not create report without product."))
 
         todo = self.filtered(lambda x: x.payment_mode=='own_account') or self.filtered(lambda x: x.payment_mode=='company_account')
+        sheet = self.env['hr.expense.sheet'].create({
+            'company_id': self.company_id.id,
+            'employee_id': self[0].employee_id.id,
+            'name': todo[0].name if len(todo) == 1 else '',
+            'expense_line_ids': [(6, 0, todo.ids)]
+        })
+        sheet._onchange_employee_id()
+        return sheet
+
+    def action_submit_expenses(self):
+        sheet = self._create_sheet_from_expenses()
         return {
             'name': _('New Expense Report'),
             'type': 'ir.actions.act_window',
             'view_mode': 'form',
             'res_model': 'hr.expense.sheet',
             'target': 'current',
-            'context': {
-                'default_expense_line_ids': todo.ids,
-                'default_company_id': self.company_id.id,
-                'default_employee_id': self[0].employee_id.id,
-                'default_name': todo[0].name if len(todo) == 1 else ''
-            }
+            'res_id': sheet.id,
         }
 
     def action_get_attachment_view(self):
