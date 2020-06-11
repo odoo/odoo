@@ -11,6 +11,23 @@ function factory(dependencies) {
     class Thread extends dependencies['mail.model'] {
 
         /**
+         * FIXME With this, whenever client is aware of new thread, this will
+         * (almost) always focus its composer when displayed. This shouldn't be
+         * the case, instead auto-focus of composer is flow-specific.
+         * See task-2277537
+         *
+         * @override
+         */
+        static create(data) {
+            if (!data.composer) {
+                data.composer = [['create', {
+                    isDoFocus: true,
+                }]];
+            }
+            return super.create(data);
+        }
+
+        /**
          * @override
          */
         init(...args) {
@@ -1140,7 +1157,6 @@ function factory(dependencies) {
             dependencies: ['viewersChatWindow'],
         }),
         composer: one2one('mail.composer', {
-            autocreate: true,
             inverse: 'thread',
             isCausal: true,
         }),

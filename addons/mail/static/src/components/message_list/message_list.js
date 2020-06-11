@@ -374,23 +374,17 @@ class MessageList extends Component {
     /**
      * @private
      */
-    _checkThreadMarkAsRead() {
+    _checkMostRecentMessageIsVisible() {
         const thread = this.threadViewer.thread;
         const threadCache = this.threadViewer.threadCache;
-        if (!threadCache) {
-            return;
-        }
-        if (threadCache.messages.length === 0) {
-            return;
-        }
-        if (!this.mostRecentMessageRef) {
-            return;
-        }
-        if (
+        const lastMessageIsVisible =
+            threadCache &&
+            threadCache.messages.length > 0 &&
+            this.mostRecentMessageRef &&
             threadCache === thread.mainCache &&
-            this.mostRecentMessageRef.isPartiallyVisible()
-        ) {
-            thread.markAsSeen();
+            this.mostRecentMessageRef.isPartiallyVisible();
+        if (lastMessageIsVisible) {
+            this.threadViewer.handleVisibleMessage(this.mostRecentMessageRef.message);
         }
     }
 
@@ -460,7 +454,7 @@ class MessageList extends Component {
      * @private
      */
     _update() {
-        this._checkThreadMarkAsRead();
+        this._checkMostRecentMessageIsVisible();
     }
 
     //--------------------------------------------------------------------------
@@ -492,7 +486,7 @@ class MessageList extends Component {
         if (this._isLoadMoreVisible()) {
             this._loadMore();
         }
-        this._checkThreadMarkAsRead();
+        this._checkMostRecentMessageIsVisible();
     }
 
 }
