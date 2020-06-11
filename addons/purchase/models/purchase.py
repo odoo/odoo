@@ -669,6 +669,7 @@ class PurchaseOrder(models.Model):
                     raise_exception=False,
                     email_values={'email_to': self.env.user.email, 'recipient_ids': []},
                     notif_layout="mail.mail_notification_paynow")
+            return {'toast_message': _("A sample email has been sent to %s.") % self.env.user.email}
 
     @api.model
     def _get_orders_to_remind(self):

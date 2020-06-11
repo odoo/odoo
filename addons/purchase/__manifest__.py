@@ -32,6 +32,7 @@
     ],
     'qweb': [
         "static/src/xml/purchase_dashboard.xml",
+        "static/src/xml/purchase_toaster_button.xml",
     ],
     'demo': [
         'data/purchase_demo.xml',
