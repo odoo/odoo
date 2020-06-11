@@ -23,7 +23,7 @@ var RatingPopupComposer = publicWidget.Widget.extend({
 
     init: function (parent, options) {
         this._super.apply(this, arguments);
-        this.rating_avg = Math.round(options['ratingAvg'] / 100) / 100 || 0.0;
+        this.rating_avg = Math.round(options['ratingAvg'] * 100) / 100 || 0.0;
         this.rating_total = options['ratingTotal'] || 0.0;
 
         this.options = _.defaults({}, options, {
