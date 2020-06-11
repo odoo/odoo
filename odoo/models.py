@@ -64,6 +64,8 @@ from .tools import date_utils
 _logger = logging.getLogger(__name__)
 _schema = logging.getLogger(__name__ + '.schema')
 _unlink = logging.getLogger(__name__ + '.unlink')
+_export = logging.getLogger(__name__ + '.export')
+_import = logging.getLogger(__name__ + '.import')
 
 regex_order = re.compile('^(\s*([a-z0-9:_]+|"[a-z0-9:_]+")(\s+(desc|asc))?\s*(,|$))+(?<!,)$', re.I)
 regex_object_name = re.compile(r'^[a-z0-9_.]+$')
@@ -947,6 +949,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         noupdate = self._context.get('noupdate', False)
         # add current module in context for the conversion of xml ids
         self = self.with_context(_import_current_module=current_module)
+        _import.info("user %d loads %d rows into %s", self.env.user, len(data), self._name)
 
         cr = self._cr
         cr.execute('SAVEPOINT model_load')

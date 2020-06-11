@@ -916,8 +916,6 @@ class Import(models.TransientModel):
                 }]
             }
 
-        _logger.info('importing %d rows...', len(data))
-
         name_create_enabled_fields = options.pop('name_create_enabled_fields', {})
         import_limit = options.pop('limit', None)
         model = self.env[self.res_model].with_context(import_file=True, name_create_enabled_fields=name_create_enabled_fields, _import_limit=import_limit)

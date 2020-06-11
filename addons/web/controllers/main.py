@@ -1845,6 +1845,7 @@ class ExportFormat(object):
             groupby_type = [Model._fields[x.split(':')[0]].type for x in groupby]
             domain = [('id', 'in', ids)] if ids else domain
             groups_data = Model.read_group(domain, [x if x != '.id' else 'id' for x in field_names], groupby, lazy=False)
+            odoo.models._export.info("user %d exports %d records from %s", request.env.user, sum(leaf['__count'] for leaf in groups_data), model)
 
             # read_group(lazy=False) returns a dict only for final groups (with actual data),
             # not for intermediary groups. The full group tree must be re-constructed.
@@ -1856,6 +1857,7 @@ class ExportFormat(object):
         else:
             Model = Model.with_context(import_compat=import_compat)
             records = Model.browse(ids) if ids else Model.search(domain, offset=0, limit=False, order=False)
+            _logger.info("user %d exports %d records from %s", request.env.user, len(records), model)
 
             if not Model._is_an_ordinary_table():
                 fields = [field for field in fields if field['name'] != 'id']
