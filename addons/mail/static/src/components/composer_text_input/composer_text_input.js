@@ -4,6 +4,7 @@ odoo.define('mail/static/src/components/composer_text_input/composer_text_input.
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const components = {
+    CannedResponseSuggestion: require('mail/static/src/components/canned_response_suggestion/canned_response_suggestion.js'),
     PartnerMentionSuggestion: require('mail/static/src/components/partner_mention_suggestion/partner_mention_suggestion.js'),
 };
 
@@ -160,6 +161,26 @@ class ComposerTextInput extends Component {
 
     /**
      * @private
+     * @param {Event} ev
+     */
+    _onCannedResponseSuggestionClicked(ev) {
+        this.composer.insertCannedResponse(ev.detail.cannedResponse);
+        this.composer.closeCannedResponseSuggestions();
+        this.composer.focus();
+    }
+
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onCannedResponseSuggestionMouseOver(ev) {
+        this.composer.update({
+            activeSuggestedCannedResponse: [['link', ev.detail.cannedResponse]],
+        });
+    }
+
+    /**
+     * @private
      */
     _onFocusinTextarea() {
         this.composer.update({ hasFocus: true });
@@ -198,7 +219,7 @@ class ComposerTextInput extends Component {
             case 'Home':
             case 'End':
             case 'Tab':
-                if (this.composer.hasSuggestedPartners) {
+                if (this.composer.hasSuggestedPartners || this.composer.hasSuggestedCannedResponses) {
                     // We use preventDefault here to avoid keys native actions but actions are handled in keyUp
                     ev.preventDefault();
                 }
@@ -215,7 +236,7 @@ class ComposerTextInput extends Component {
      * @param {KeyboardEvent} ev
      */
     _onKeydownTextareaEnter(ev) {
-        if (this.composer.hasSuggestedPartners) {
+        if (this.composer.hasSuggestedPartners || this.composer.hasSuggestedCannedResponses) {
             ev.preventDefault();
         } else {
             if (!this.props.hasSendOnEnterEnabled) {
@@ -249,7 +270,14 @@ class ComposerTextInput extends Component {
                 if (this.composer.hasSuggestedPartners) {
                     if (this.composer.activeSuggestedPartner) {
                         this.composer.insertMentionedPartner(this.composer.activeSuggestedPartner);
-                        this.composer.closeMentionSuggestions();
+                        this.composer.closePartnerSuggestions();
+                        this.composer.focus();
+                    }
+                }
+                if (this.composer.hasSuggestedCannedResponses) {
+                    if (this.composer.activeSuggestedCannedResponse) {
+                        this.composer.insertCannedResponse(this.composer.activeSuggestedCannedResponse);
+                        this.composer.closeCannedResponseSuggestions();
                         this.composer.focus();
                     }
                 }
@@ -259,21 +287,33 @@ class ComposerTextInput extends Component {
                 if (this.composer.hasSuggestedPartners) {
                     this.composer.setPreviousSuggestedPartnerActive();
                 }
+                if (this.composer.hasSuggestedCannedResponses) {
+                    this.composer.setPreviousSuggestedCannedResponseActive();
+                }
                 break;
             case 'ArrowDown':
             case 'PageDown':
                 if (this.composer.hasSuggestedPartners) {
                     this.composer.setNextSuggestedPartnerActive();
                 }
+                if (this.composer.hasSuggestedCannedResponses) {
+                    this.composer.setNextSuggestedCannedResponseActive();
+                }
                 break;
             case 'Home':
                 if (this.composer.hasSuggestedPartners) {
                     this.composer.setFirstSuggestedPartnerActive();
                 }
+                if (this.composer.hasSuggestedCannedResponses) {
+                    this.composer.setFirstSuggestedCannedResponseActive();
+                }
                 break;
             case 'End':
                 if (this.composer.hasSuggestedPartners) {
                     this.composer.setLastSuggestedPartnerActive();
+                }
+                if (this.composer.hasSuggestedCannedResponses) {
+                    this.composer.setLastSuggestedCannedResponseActive();
                 }
                 break;
             case 'Tab':
@@ -284,11 +324,19 @@ class ComposerTextInput extends Component {
                         this.composer.setNextSuggestedPartnerActive();
                     }
                 }
+                if (this.composer.hasSuggestedCannedResponses) {
+                    if (ev.shiftKey) {
+                        this.composer.setPreviousSuggestedCannedResponseActive();
+                    } else {
+                        this.composer.setNextSuggestedCannedResponseActive();
+                    }
+                }
                 break;
             // Otherwise, check if a mention is typed
             default:
                 this.saveStateInStore();
-                this.composer._detectDelimiter();
+                this.composer.detectDelimiter();
+                this.composer.detectDelimiterCannedResponse();
         }
     }
 
@@ -298,7 +346,9 @@ class ComposerTextInput extends Component {
      */
     _onKeyupTextareaEscape(ev) {
         if (this.composer.hasSuggestedPartners) {
-            this.composer.closeMentionSuggestions();
+            this.composer.closePartnerSuggestions();
+        } else if (this.composer.hasSuggestedCannedResponses) {
+            this.composer.closeCannedResponseSuggestions();
         } else {
             if (!this._isEmpty()) {
                 return;
@@ -313,7 +363,7 @@ class ComposerTextInput extends Component {
      */
     _onPartnerMentionSuggestionClicked(ev) {
         this.composer.insertMentionedPartner(ev.detail.partner);
-        this.composer.closeMentionSuggestions();
+        this.composer.closePartnerSuggestions();
         this.composer.focus();
     }
 

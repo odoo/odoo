@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.CannedResponseSuggestion" owl="1">
+        <a class="o_CannedResponseSuggestion dropdown-item" t-att-class="{ 'active': props.isActive }" href="#" role="menuitem" t-on-click="_onClick" t-on-mouseover="_onMouseOver">
+            <span class="o_CannedResponseSuggestion_source"><t t-esc="cannedResponse.source"/></span>
+            <span class="o_CannedResponseSuggestion_substitution"><t t-esc="cannedResponse.substitution"/></span>
+        </a>
+    </t>
+
+</templates>

@@ -1,0 +1,26 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_CannedResponseSuggestion {
+    display: flex;
+    width: map-get($sizes, 100);
+    padding: map-get($spacers, 2) map-get($spacers, 4);
+}
+
+.o_CannedResponseSuggestion_source {
+    padding-inline-end: map-get($spacers, 2);
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_CannedResponseSuggestion_substitution {
+    font-style: italic;
+    color: $gray-600;
+}
+
+.o_CannedResponseSuggestion_source {
+    font-weight: $font-weight-bold;
+}

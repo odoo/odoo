@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/messaging/messaging.js', function (require) 
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, many2one, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2one, one2one, one2many } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
@@ -132,9 +132,7 @@ function factory(dependencies) {
             autocreate: true,
             isCausal: true,
         }),
-        cannedResponses: attr({
-            default: {},
-        }),
+        cannedResponses: one2many('mail.canned_response'),
         chatWindowManager: one2one('mail.chat_window_manager', {
             autocreate: true,
             inverse: 'messaging',

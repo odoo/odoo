@@ -115,20 +115,12 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @param {Object[]} shortcodes
+         * @param {Object[]} cannedResponseSuggestionsData
          */
-        _initCannedResponses(shortcodes) {
-            const messaging = this.messaging;
-            const cannedResponses = shortcodes
-                .map(s => {
-                    const { id, source, substitution } = s;
-                    return { id, source, substitution };
-                })
-                .reduce((obj, cr) => {
-                    obj[cr.id] = cr;
-                    return obj;
-                }, {});
-            messaging.update({ cannedResponses });
+        _initCannedResponses(cannedResponseSuggestionsData) {
+            this.messaging.update({
+                cannedResponses: [['insert', cannedResponseSuggestionsData]],
+            });
         }
 
         /**

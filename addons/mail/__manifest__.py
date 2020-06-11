@@ -66,6 +66,7 @@
         'static/src/components/attachment_list/attachment_list.xml',
         'static/src/components/attachment_viewer/attachment_viewer.xml',
         'static/src/components/autocomplete_input/autocomplete_input.xml',
+        'static/src/components/canned_response_suggestion/canned_response_suggestion.xml',
         'static/src/components/chat_window/chat_window.xml',
         'static/src/components/chat_window_header/chat_window_header.xml',
         'static/src/components/chat_window_hidden_menu/chat_window_hidden_menu.xml',

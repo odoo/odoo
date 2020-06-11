@@ -36,6 +36,27 @@
                         </div>
                     </div>
                 </t>
+                <t t-if="composer.hasSuggestedCannedResponses">
+                    <div class="o_ComposerTextInput_mentionDropdown" t-att-class="{ 'o-lowPosition': props.hasMentionSuggestionsBelowPosition }">
+                        <div
+                            t-att-class="{
+                                'dropdown': props.hasMentionSuggestionsBelowPosition,
+                                'dropup': !props.hasMentionSuggestionsBelowPosition,
+                            }"
+                        >
+                            <div class="o_ComposerTextInput_mentionDropdownPropositionList dropdown-menu show">
+                                <t t-foreach="composer.suggestedCannedResponses" t-as="suggestedCannedResponse" t-key="suggestedCannedResponse.localId">
+                                    <CannedResponseSuggestion
+                                        isActive="suggestedCannedResponse === composer.activeSuggestedCannedResponse"
+                                        cannedResponseLocalId="suggestedCannedResponse.localId"
+                                        t-on-o-canned-response-suggestion-clicked="_onCannedResponseSuggestionClicked"
+                                        t-on-o-canned-response-suggestion-mouse-over="_onCannedResponseSuggestionMouseOver"
+                                    />
+                                </t>
+                            </div>
+                        </div>
+                    </div>
+                </t>
                 <textarea class="o_ComposerTextInput_textarea" t-esc="composer.textInputContent" placeholder="Write something..." t-on-focusin="_onFocusinTextarea" t-on-focusout="_onFocusoutTextarea" t-on-keydown="_onKeydownTextarea" t-on-keyup="_onKeyupTextarea" t-on-input="_onInputTextarea" t-ref="textarea"/>
             </t>
         </div>
