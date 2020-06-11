@@ -1115,15 +1115,25 @@ class AccountMove(models.Model):
                     JOIN account_move_line line ON line.move_id = move.id
                     JOIN account_partial_reconcile part ON part.debit_move_id = line.id OR part.credit_move_id = line.id
                     JOIN account_move_line rec_line ON
-                        (rec_line.id = part.credit_move_id AND line.id = part.debit_move_id)
-                        OR
                         (rec_line.id = part.debit_move_id AND line.id = part.credit_move_id)
                     JOIN account_payment payment ON payment.id = rec_line.payment_id
                     JOIN account_journal journal ON journal.id = rec_line.journal_id
                     WHERE payment.state IN ('posted', 'sent')
                     AND journal.post_at = 'bank_rec'
                     AND move.id IN %s
-                ''', [tuple(invoice_ids)]
+                UNION
+                    SELECT move.id
+                    FROM account_move move
+                    JOIN account_move_line line ON line.move_id = move.id
+                    JOIN account_partial_reconcile part ON part.debit_move_id = line.id OR part.credit_move_id = line.id
+                    JOIN account_move_line rec_line ON
+                        (rec_line.id = part.credit_move_id AND line.id = part.debit_move_id)
+                    JOIN account_payment payment ON payment.id = rec_line.payment_id
+                    JOIN account_journal journal ON journal.id = rec_line.journal_id
+                    WHERE payment.state IN ('posted', 'sent')
+                    AND journal.post_at = 'bank_rec'
+                    AND move.id IN %s
+                ''', [tuple(invoice_ids), tuple(invoice_ids)]
             )
             in_payment_set = set(res[0] for res in self._cr.fetchall())
         else:
