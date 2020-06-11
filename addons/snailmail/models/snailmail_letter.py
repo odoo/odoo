@@ -248,35 +248,42 @@ class SnailmailLetter(models.Model):
                 # TODO: in following versions, Add a link to a specifc activity on the letter
                 note = _('An error occured when sending the document by post.<br>Error: %s' % \
                     self._get_error_message(doc['error'] if response['request_code'] == 200 else response['reason']))
+                
+                record = self.env[letter.model].sudo().browse(letter.res_id).exists()
+                if record and hasattr(record, 'activity_ids'):
+                    domain = [
+                        ('summary', 'ilike', '[SNAILMAIL]'),
+                        ('res_id', '=', letter.res_id),
+                        ('res_model_id', '=', self.env['ir.model']._get(letter.model).id),
+                        ('activity_type_id', '=', self.env.ref('mail.mail_activity_data_warning').id),
+                    ]
+                    MailActivity = self.env['mail.activity']
+                    activity = MailActivity.search(domain, limit=1)
 
-                domain = [
-                    ('summary', 'ilike', '[SNAILMAIL]'),
-                    ('res_id', '=', letter.res_id),
-                    ('res_model_id', '=', self.env['ir.model']._get(letter.model).id),
-                    ('activity_type_id', '=', self.env.ref('mail.mail_activity_data_warning').id),
-                ]
-                MailActivity = self.env['mail.activity']
-                activity = MailActivity.search(domain, limit=1)
-
-                activity_data = {
-                    'activity_type_id': self.env.ref('mail.mail_activity_data_warning').id,
-                    'summary': '[SNAILMAIL] ' + _('Post letter: an error occured.'),
-                    'note': note,
-                    'date_deadline': fields.Date.today()
-                }
-                if activity:
-                    activity.update(activity_data)
-                else:
-                    activity_data.update({
-                        'user_id': letter.user_id.id,
-                        'res_id': letter.res_id,
-                        'res_model_id': self.env['ir.model']._get(letter.model).id,
-                    })
-                    MailActivity.create(activity_data)
+                    activity_data = {
+                        'activity_type_id': self.env.ref('mail.mail_activity_data_warning').id,
+                        'summary': '[SNAILMAIL] ' + _('Post letter: an error occured.'),
+                        'note': note,
+                        'date_deadline': fields.Date.today()
+                    }
+                    if activity:
+                        activity.update(activity_data)
+                    else:
+                        activity_data.update({
+                            'user_id': letter.user_id.id,
+                            'res_id': letter.res_id,
+                            'res_model_id': self.env['ir.model']._get(letter.model).id,
+                        })
+                        MailActivity.create(activity_data)
 
                 letter.write({'info_msg': note, 'state': 'error'})
 
         self.env.cr.commit()
+        
+    def _update_activity(self, note):
+        self.ensure_one()
+        
+        
 
     @api.multi
     def snailmail_print(self):
