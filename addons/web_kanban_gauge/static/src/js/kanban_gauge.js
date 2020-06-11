@@ -33,15 +33,7 @@ class GaugeWidget extends AbstractFieldOwl {
     }
 
     mounted() {
-        // current value
-        let val = this.value;
-        if (Array.isArray(JSON.parse(val))) {
-            val = JSON.parse(val);
-        }
-        let gaugeValue = Array.isArray(val) && val.length ? val[val.length - 1].value : val;
-        if (this.nodeOptions.gauge_value_field) {
-            gaugeValue = this.recordData[this.nodeOptions.gauge_value_field];
-        }
+        const gaugeValue = this.gaugeValue;
 
         // max_value
         let maxValue = this.nodeOptions.max_value || 100;
@@ -102,24 +94,41 @@ class GaugeWidget extends AbstractFieldOwl {
             }
         };
 
-        this.canvas = document.createElement("canvas");
-        this.el.innerHTML = '';
-        this.el.append(this.canvas);
+        const canvas = this.el.querySelector('canvas');
         this.el.style = this.nodeOptions.style;
         this.el.style.position = 'relative';
-        const context = this.canvas.getContext('2d');
+        const context = canvas.getContext('2d');
         this.chart = new Chart(context, config);
-
-        const humanValue = utils.human_number(gaugeValue, 1);
-        const value = document.createElement('span');
-        value.classList.add('o_gauge_value');
-        value.textContent = humanValue;
-        Object.assign(value.style, {'text-align': 'center', position: 'absolute', left: 0, right: 0, bottom: '6px', 'font-weight': 'bold'});
-        this.el.append(value);
     }
-};
 
-GaugeWidget.template = xml`<div class="oe_gauge"/>`;
+    //----------------------------------------------------------------------
+    // Getters
+    //----------------------------------------------------------------------
+
+    get gaugeValue() {
+        let val = this.value;
+        if (Array.isArray(JSON.parse(val))) {
+            val = JSON.parse(val);
+        }
+        let gaugeValue = Array.isArray(val) && val.length ? val[val.length - 1].value : val;
+        if (this.nodeOptions.gauge_value_field) {
+            gaugeValue = this.recordData[this.nodeOptions.gauge_value_field];
+        }
+        return gaugeValue;
+    }
+
+    get humanNumber() {
+        return utils.human_number(this.gaugeValue, 1);
+    }
+}
+
+GaugeWidget.template = xml`<div class="oe_gauge">
+                                <canvas></canvas>
+                                <span class="o_gauge_value"
+                                    style="text-align: center; position: absolute; left: 0; right: 0; bottom: 6px; font-weight: bold">
+                                    <t t-esc="humanNumber"/>
+                                </span>
+                            </div>`;
 
 fieldRegistryOwl.add("gauge", GaugeWidget);
 
