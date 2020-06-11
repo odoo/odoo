@@ -11,7 +11,7 @@ const {
 
 const {
     file: { createFile },
-    dom: { triggerEvent },
+    dom,
 } = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
@@ -1176,7 +1176,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     );
 
     await afterNextRender(() =>
-        triggerEvent(
+        dom.triggerEvent(
             chatWindow.querySelector('.o_ChatWindow .o_ComposerTextInput_textarea'),
             'keydown',
             { key: 'Tab' },
@@ -1222,7 +1222,7 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     );
 
     await afterNextRender(() =>
-        triggerEvent(
+        dom.triggerEvent(
             chatWindows[1].querySelector('.o_ComposerTextInput_textarea'),
             'keydown',
             { key: 'Tab' },
@@ -1234,6 +1234,70 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
         document.activeElement,
         "The 1st chatWindow composer must have focus (channel with ID 1)"
     );
+});
+
+QUnit.test('chat window: emojis are selectable', async function (assert) {
+    assert.expect(5);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: "channel",
+                id: 1,
+                name: "channel1",
+            }],
+        },
+    });
+    await this.start();
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_toggler`).click()
+    );
+    await afterNextRender(() =>
+        document.querySelector(`
+            .o_MessagingMenu_dropdownMenu
+            .o_NotificationList_preview[data-thread-local-id="${
+                this.env.models['mail.thread'].find(thread =>
+                    thread.id === 1 &&
+                    thread.model === 'mail.channel'
+                ).localId
+            }"]`
+        ).click()
+    );
+
+    assert.containsOnce(document.body, '.o_ChatWindow', "Only 1 chatWindow must be opened");
+    assert.strictEqual(
+        document.body.querySelector('.o_ComposerTextInput_textarea').value,
+        "",
+        "The chatWindow's textarea is empty"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonEmojis').focus()
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_Composer_buttonEmojis').click()
+    );
+    assert.containsOnce(document.body, '.o_popover .o_EmojisPopover', "The emoji popover is open");
+
+    // WARNING: in real life a click does at least what is done below
+    // Programmatically, it is quite impossible to reproduce entirely
+    // It happens that the chatwindow implementation reacts on focusout
+    // All that the test guarantees, is that focusout is dealt with
+    await afterNextRender(async () => {
+        await dom.triggerEvent(
+            document.querySelector('.o_Composer_buttonEmojis'),
+            'focusout',
+        );
+        await dom.click(document.querySelector('.o_EmojisPopover_emoji'))
+    });
+    assert.containsNone(document.body, '.o_popover', "The popover should have been destroyed");
+    assert.strictEqual(
+        document.body.querySelector('.o_ComposerTextInput_textarea').value,
+        "😊",
+        "The chatWindow's textarea contains the emoji"
+    );
+
 });
 
 });

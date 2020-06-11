@@ -53,6 +53,7 @@ odoo.define('web.test_utils_dom', function (require) {
         focus: { constructor: FocusEvent, processParameters: noBubble },
         focusin: { constructor: FocusEvent, processParameters: onlyBubble },
         blur: { constructor: FocusEvent, processParameters: noBubble },
+        focusout: { constructor: FocusEvent, processParameters: onlyBubble },
 
         cut: { constructor: ClipboardEvent, processParameters: onlyBubble },
         copy: { constructor: ClipboardEvent, processParameters: onlyBubble },

@@ -185,6 +185,19 @@ odoo.define('web.Popover', function () {
             }
             this.state.displayed = false;
         }
+        /**
+         * Stop focusout events
+         * Any focus transition must be handled by the generic click handler
+         * Otherwise transitions within the popover may trigger unwanted effects
+         * before the click had a chance to do its business
+         * https://w3c.github.io/uievents/#event-type-focusout
+         *
+         * @private
+         * @param {Event} ev
+         */
+        _onFocusOut(ev) {
+            ev.stopPropagation();
+        }
 
         /**
          * @private
