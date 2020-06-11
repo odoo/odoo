@@ -850,7 +850,7 @@ const InputUserValueWidget = UserValueWidget.extend({
         if (!params.unit) {
             return isSuperActive;
         }
-        return isSuperActive && parseInt(this._value) !== 0;
+        return isSuperActive && this._floatToStr(parseFloat(this._value)) !== '0';
     },
     /**
      * @override
