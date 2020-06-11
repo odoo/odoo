@@ -404,10 +404,34 @@ var MailManager =  AbstractService.extend({
         var partners = this._searchPartnerPrefetch(searchVal, limit);
         return new Promise(function (resolve, reject) {
             if (!partners.length) {
-                resolve(self._searchPartnerFetch(searchVal, limit));
+                resolve(self._searchPartnerFetch(searchVal, false, limit));
             } else {
                 resolve(partners);
             }
+        }).then(function (partners) {
+            var suggestions = _.map(partners, function (partner) {
+                return {
+                    id: partner.id,
+                    value: partner.name,
+                    label: partner.name
+                };
+            });
+            return _.sortBy(suggestions, 'label');
+        });
+    },
+    /**
+     * Search among partners, using the string 'searchVal'
+     *
+     * @param {string} searchVal
+     * @param {integer} channelID the id of the channel concerned
+     * @param {integer} limit max number of found partners in the response
+     * @returns {Promise<Object[]>} list of found partners (matching
+     *   'searchVal')
+     */
+    searchInvitePartner: function (searchVal, channelID, limit) {
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            resolve(self._searchPartnerFetch(searchVal, channelID, limit));
         }).then(function (partners) {
             var suggestions = _.map(partners, function (partner) {
                 return {
@@ -1131,11 +1155,11 @@ var MailManager =  AbstractService.extend({
      * @param {integer} limit
      * @returns {Promise<Object[]>} fetched partners matching 'searchVal'
      */
-    _searchPartnerFetch: function (searchVal, limit) {
+    _searchPartnerFetch: function (searchVal, channelID, limit) {
         return this._rpc({
                 model: 'res.partner',
-                method: 'im_search',
-                args: [searchVal, limit || 20],
+                method: 'search_partners_for_channel',
+                args: [searchVal, channelID, limit || 20],
             }, { shadow: true });
     },
     /**

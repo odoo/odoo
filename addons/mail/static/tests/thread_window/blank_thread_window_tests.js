@@ -195,7 +195,7 @@ QUnit.test('open new DM chat from blank thread window', async function (assert) 
         data: this.data,
         services: this.services,
         mockRPC: function (route, args) {
-            if (args.method === 'im_search') {
+            if (args.method === 'search_partners_for_channel') {
                 def.resolve();
                 return Promise.resolve([
                     { id: 1, name: 'DemoUser1' },
@@ -278,7 +278,7 @@ QUnit.test('open already detached DM chat from blank thread window', async funct
         data: this.data,
         services: this.services,
         mockRPC: function (route, args) {
-            if (args.method === 'im_search') {
+            if (args.method === 'search_partners_for_channel') {
                 def.resolve();
                 return Promise.resolve([
                     { id: 1, name: 'DemoUser1' },

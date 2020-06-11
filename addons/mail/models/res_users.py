@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import _, api, exceptions, fields, models, modules
-from odoo.addons.base.models.res_users import is_selection_groups
+from odoo.addons.base.models.res_users import is_selection_groups, is_boolean_group, get_boolean_group
 
 
 class Users(models.Model):
@@ -87,6 +87,8 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
     def write(self, vals):
         write_res = super(Users, self).write(vals)
         sel_groups = [vals[k] for k in vals if is_selection_groups(k) and vals[k]]
+        in_groups = [get_boolean_group(k) for k in vals if is_boolean_group(k) and vals[k]]
+
         if vals.get('groups_id'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
             user_group_ids = [command[1] for command in vals['groups_id'] if command[0] == 4]
@@ -94,6 +96,8 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
             self.env['mail.channel'].search([('group_ids', 'in', user_group_ids)])._subscribe_users()
         elif sel_groups:
             self.env['mail.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users()
+        elif in_groups:
+            self.env['mail.channel'].search([('group_ids', 'in', in_groups)])._subscribe_users()
         return write_res
 
     @api.model

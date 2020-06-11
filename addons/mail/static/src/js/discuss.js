@@ -62,7 +62,7 @@ var PartnerInviteDialog = Dialog.extend({
                 return $('<span>').text(item.text).prepend(status);
             },
             query: function (query) {
-                self.call('mail_service', 'searchPartner', query.term, 20)
+                self.call('mail_service', 'searchInvitePartner', query.term, self._channelID, 20)
                     .then(function (partners) {
                         query.callback({
                             results: _.map(partners, function (partner) {

@@ -107,36 +107,68 @@ class Partner(models.Model):
         return [users, partners]
 
     @api.model
-    def im_search(self, name, limit=20):
-        """ Search partner with a name and return its id, name and im_status.
+    def search_partners_for_channel(self, match, channel_id, limit=20):
+        """ Search for partners with name containing 'match' and return their id, name and im_status.
             Note : the user must be logged
-            :param name : the partner name to search
+            :param match : the string to match in the partner name
+            :param channel_id : the id of the mail channel to use to filter results
             :param limit : the limit of result to return
         """
         # This method is supposed to be used only in the context of channel creation or
         # extension via an invite. As both of these actions require the 'create' access
         # right, we check this specific ACL.
-        if self.env['mail.channel'].check_access_rights('create', raise_exception=False):
-            name = '%' + name + '%'
-            excluded_partner_ids = [self.env.user.partner_id.id]
-            self.env.cr.execute("""
-                SELECT
+        if self.env['mail.channel'].check_access_rights('create', raise_exception=False) and channel_id:
+            match = '%' + match + '%'
+
+            # exclude all partner already part of the channel
+            channel_data = self.env['mail.channel'].browse([channel_id])
+            excluded_partner_ids = [partner.id for partner in channel_data.channel_partner_ids]
+
+            channel_infos = channel_data.channel_info()[0]
+            is_mass_mailing_channel = channel_infos["mass_mailing"]
+            group_public_id = channel_infos["group_public_id"] if channel_infos["public"] == "groups" else []
+
+            query = """
+                SELECT DISTINCT ON (P.id) 
                     U.id as user_id,
                     P.id as id,
                     P.name as name,
+                    P.email,
                     CASE WHEN B.last_poll IS NULL THEN 'offline'
                          WHEN age(now() AT TIME ZONE 'UTC', B.last_poll) > interval %s THEN 'offline'
                          WHEN age(now() AT TIME ZONE 'UTC', B.last_presence) > interval %s THEN 'away'
                          ELSE 'online'
-                    END as im_status
-                FROM res_users U
-                    JOIN res_partner P ON P.id = U.partner_id
-                    LEFT JOIN bus_presence B ON B.user_id = U.id
-                WHERE P.name ILIKE %s
-                    AND P.id NOT IN %s
-                    AND U.active = 't'
-                LIMIT %s
-            """, ("%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, name, tuple(excluded_partner_ids), limit))
+                    END as im_status"""
+
+            if is_mass_mailing_channel:
+                query += """
+                    FROM res_partner P
+                        LEFT JOIN res_users U ON U.partner_id = P.id
+                        LEFT JOIN bus_presence B ON B.user_id = U.id
+                        LEFT JOIN res_groups_users_rel R ON R.uid = U.id
+                    WHERE P.name ILIKE %s
+                        AND P.id NOT IN %s
+                        AND P.active = 't'
+                        AND P.email IS NOT NULL """
+                query += "AND (R.gid IS NULL OR R.gid IN %s)" if len(group_public_id) > 0 else ""
+            else:
+                query += """
+                    FROM res_users U
+                        JOIN res_partner P ON P.id = U.partner_id
+                        LEFT JOIN bus_presence B ON B.user_id = U.id
+                        LEFT JOIN res_groups_users_rel R ON R.uid = U.id
+                    WHERE P.name ILIKE %s
+                        AND P.id NOT IN %s
+                        AND U.active = 't' """
+                query += "AND R.gid IN %s" if len(group_public_id) > 0 else ""
+
+            query += "LIMIT %s"
+            params = ["%s seconds" % DISCONNECTION_TIMER, "%s seconds" % AWAY_TIMER, match, tuple(excluded_partner_ids)]
+
+            if group_public_id:
+                params.append(tuple(group_public_id))
+            params.append(limit)
+            self.env.cr.execute(query, tuple(params))
             return self.env.cr.dictfetchall()
         else:
             return {}

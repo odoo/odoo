@@ -196,6 +196,30 @@ class Channel(models.Model):
         if not self.email_send:
             self.moderation = False
 
+            #  check if channel members are all users with discuss access,
+            #  if not : display a warning ( + remove non users members on save, see write())
+            all_members = self.mapped('channel_partner_ids')
+            partner_ids = [member.id.origin for member in all_members]
+            user_matches = self.env['res.users'].search([('partner_id', 'in', partner_ids)])
+            user_ids = [u.partner_id.id for u in user_matches]
+            not_users = [p for p in partner_ids if p not in user_ids]
+
+            if not_users:
+                not_users_nbr = len(not_users)
+                warning_message = \
+                    _("%s channel members are not users and will be removed if you disable the option to send messages by mail.") % not_users_nbr \
+                    if len(not_users) > 1 \
+                    else _("One channel member is not a user and will be removed if you disable the option to send the message by mail.")
+
+                warning_message += "".join("\n  - %s (id:%s)" % (m.name, m.id.origin) for m in all_members if m.id.origin in not_users)
+
+                return {
+                    'warning': {
+                        'title': _("Warning"),
+                        'message': warning_message
+                    }
+                }
+
     @api.onchange('moderation')
     def _onchange_moderation(self):
         if not self.moderation:
@@ -244,6 +268,10 @@ class Channel(models.Model):
 
         result = super(Channel, self).write(vals)
 
+        # remove non user member if channel is switched to normal mode (not email list)
+        if 'email_send' in vals and not vals.get('email_send'):
+            self._unsubscribe_non_users()
+
         if vals.get('group_ids'):
             self._subscribe_users()
 
@@ -263,6 +291,14 @@ class Channel(models.Model):
         if self.id:
             values['alias_force_thread_id'] = self.id
         return values
+
+    def _unsubscribe_non_users(self):
+        for mail_channel in self:
+            all_members = mail_channel.channel_partner_ids
+            partner_ids = [member.id for member in all_members]
+            user_matches = self.env['res.users'].search([('partner_id', 'in', partner_ids)])
+            user_ids = [u.partner_id.id for u in user_matches]
+            mail_channel.write({'channel_partner_ids': [(3, pid) for pid in partner_ids if pid not in user_ids]})
 
     def _subscribe_users(self):
         for mail_channel in self:
@@ -558,6 +594,7 @@ class Channel(models.Model):
                 'moderation': channel.moderation,
                 'is_moderator': self.env.uid in channel.moderator_ids.ids,
                 'group_based_subscription': bool(channel.group_ids),
+                'group_public_id': [g.id for g in channel.group_public_id],
                 'create_uid': channel.create_uid.id,
             }
             if extra_info:
