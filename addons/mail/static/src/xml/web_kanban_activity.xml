@@ -25,7 +25,7 @@
 
 <t t-name="mail.KanbanActivityDropdown">
     <span role="menuitem" t-if="_.isEmpty(records)" class="dropdown-item-text text-center o_no_activity">
-        No activities planned.
+        <i>Schedule activities to help you get things done.</i>
     </span>
     <div t-else="" aria-haspopup="true" role="menu" class="o_activity_log_container dropdown-item bg-100 p-0">
         <ul class="o_activity_log list-group list-group-flush mb-2" role="menu">
@@ -50,9 +50,9 @@
             </t>
         </ul>
     </div>
-    <div class="dropdown-divider mt-0"/>
-    <div role="menuitem" class="o_schedule_activity dropdown-header py-1 text-center">
-        <button class="btn btn-secondary mb-1">
+    <div class="dropdown-divider m-0"/>
+    <div role="menuitem" class="o_schedule_activity dropdown-header p-0 text-center">
+        <button class="btn btn-secondary btn-block p-3">
             <i class="fa fa-plus fa-fw"></i><strong>Schedule an activity</strong>
         </button>
     </div>

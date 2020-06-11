@@ -401,12 +401,16 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="name"/>
-                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}"/>
-                        <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" string='Organization / Contact'/>
+                        <field name="name" placeholder="e.g. Product Pricing" />
+                        <field name="email_from" string="Email" />
+                        <field name="phone" string="Phone" />
+                        <div class="o_row">
+                            <field name="planned_revenue" class="oe_inline mr-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                            <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
+                        </div>
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
-                        <field name="priority" nolabel="1" widget="priority"/>
                         <field name="partner_name" invisible="1"/>
                         <field name="contact_name" invisible="1"/>
                         <field name="country_id" invisible="1"/>
@@ -415,7 +419,6 @@
                         <field name="street" invisible="1"/>
                         <field name="street2" invisible="1"/>
                         <field name="zip" invisible="1"/>
-                        <field name="phone" invisible="1"/>
                         <field name="mobile" invisible="1"/>
                         <field name="website" invisible="1"/>
                         <field name="function" invisible="1"/>

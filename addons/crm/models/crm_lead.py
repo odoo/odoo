@@ -67,7 +67,9 @@ class Lead(models.Model):
     _primary_email = 'email_from'
 
     # Description
-    name = fields.Char('Opportunity', index=True, required=True)
+    name = fields.Char(
+        'Opportunity', index=True, required=True,
+        compute='_compute_name', readonly=False, store=True)
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user)
     user_email = fields.Char('User Email', related='user_id.email', readonly=True)
     user_login = fields.Char('User Login', related='user_id.login', readonly=True)
@@ -240,6 +242,12 @@ class Lead(models.Model):
             lead.day_close = abs((date_close - date_create).days)
 
     @api.depends('partner_id')
+    def _compute_name(self):
+        for lead in self:
+            if not lead.name and lead.partner_id and lead.partner_id.name:
+                lead.name = _("%s's opportunity") % lead.partner_id.name
+
+    @api.depends('partner_id')
     def _compute_partner_id_values(self):
         """ compute the new values when partner_id has changed """
         for lead in self:
@@ -387,6 +395,7 @@ class Lead(models.Model):
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
+
         return {
             'partner_name': partner_name,
             'contact_name': partner.name if not partner.is_company else False,
@@ -1077,7 +1086,7 @@ class Lead(models.Model):
         if self._context.get('default_type') == 'lead':
             help_title = _('Create a new lead')
         else:
-            help_title = _('Create an opportunity in your pipeline')
+            help_title = _('Create opportunities to keep an eye on all your ongoing sales talks.')
         alias_record = self.env['mail.alias'].search([
             ('alias_name', '!=', False),
             ('alias_name', '!=', ''),
@@ -1088,7 +1097,7 @@ class Lead(models.Model):
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
             email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
-            sub_title = _('or send an email to %s') % (email_link)
+            sub_title = _('Emails sent to %s automatically create opportunities.') % (email_link)
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
     # ------------------------------------------------------------

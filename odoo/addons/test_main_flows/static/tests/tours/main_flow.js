@@ -439,7 +439,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
     position: "bottom"
 }, {
-    trigger: ".o_kanban_quick_create input:first",
+    trigger: ".o_kanban_quick_create input[name='name']",
     content: _t("<b>Choose a name</b> for your opportunity."),
     position: "right",
     run: "text the_flow.opportunity",
@@ -463,7 +463,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     mobile: true,
     trigger: '.o_field_widget[name=name] input',
-    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Customer')",
+    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Organization / Contact')",
     content: _t('Let\'s enter the name.'),
     position: 'left',
     run: 'text the_flow.customer',
@@ -474,7 +474,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     mobile: true,
     trigger: ".modal-footer .btn-primary:contains('Save')",
-    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Customer')",
+    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Organization / Contact')",
     content: _t('Save'),
     position: 'right',
 }, {
