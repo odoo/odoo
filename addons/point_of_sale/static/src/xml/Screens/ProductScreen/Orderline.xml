@@ -34,7 +34,7 @@
                         <em>
                             <t t-esc="props.line.get_quantity_str()" />
                         </em>
-                        <t t-esc="props.line.get_unit().name" />
+                        <span> </span><t t-esc="props.line.get_unit().name" />
                         at
                         <t t-if="props.line.display_discount_policy() == 'without_discount' and
                             props.line.get_unit_display_price() != props.line.get_lst_price()">
