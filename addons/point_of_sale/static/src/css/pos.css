@@ -548,6 +548,10 @@ td {
     font-weight: bold;
     flex-grow: 1;
     flex-basis: 50%;
+    padding-bottom: 20px;
+}
+.pos .switchpane .btn-switchpane h1 {
+    margin-bottom: 0px;
 }
 
 .pos .switchpane .btn-switchpane.secondary {
@@ -742,6 +746,17 @@ td {
     border-radius: 100%;
 }
 
+@media screen and (max-width: 768px) {
+    .pos .actionpad .button.set-customer{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .pos .actionpad .button.set-customer.decentered{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+
 /*  ********* The Numpad ********* */
 
 .pos .numpad {
@@ -755,6 +770,7 @@ td {
     border-top: 1px solid;
     border-color: #bfbfbf;
     border-top-right-radius: 4px;
+    min-width: 216px;
 }
 .pos .numpad button {
     float: left/*rtl:ignore*/; /* rtlcss forced to keep ltr */
@@ -907,6 +923,8 @@ td {
 @media screen and (max-width: 768px) {
     .pos .breadcrumb-button.breadcrumb-home {
         width: auto;
+        font-size: 13px;
+        margin-left: 3px;
     }
 }
 
@@ -1132,6 +1150,10 @@ td {
         width: 32%;
         height: auto;
         margin: 0px !important;
+    }
+    .pos .product:active {
+        border: solid 50px #6ec89b;
+        box-sizing: border-box;
     }
     .pos .product:after {
         content: "";
@@ -1572,6 +1594,12 @@ td {
 @media screen and (max-width: 768px) {
       .pos .paymentlines-container {
           min-height: 0px;
+          border-bottom: none;
+          padding-bottom: 3px;
+      }
+      .pos .paymentlines {
+        margin-top: 0px;
+        margin-bottom: 0px;
       }
       .payment-status-container {
           font-size: 22px;
@@ -1585,6 +1613,9 @@ td {
           flex-grow: 1;
           border: 1px solid rgba(0,0,0,0.2);
           border-radius: 0px;
+          line-height: normal;
+          padding-top: 28px;
+          padding-bottom: 28px;
       }
       .payment-screen .payment-buttons .button .fa {
           display: none;
@@ -1769,11 +1800,10 @@ td {
 .pos .clientlist-screen .client-list{
     font-size: 16px;
     width: 100%;
-    line-height: 40px;
 }
 .pos .clientlist-screen .client-list th,
 .pos .clientlist-screen .client-list td {
-    padding: 0px 8px;
+    padding: 12px 8px;
 }
 .pos .clientlist-screen .client-list tr{
     transition: all 150ms linear;
@@ -1943,6 +1973,52 @@ td {
     left: 145px;
     color: #808080;
     cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    .searchbox-client.top-content-center {
+        display: flex
+    }
+    .pos .searchbox-client input {
+        width: auto;
+        flex-grow: 1;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .pos .clientlist-screen .client-details-box {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .pos .clientlist-screen .client-details-left{
+        width: auto;
+        float: none;
+        flex-grow: 1;
+    }
+    .pos .clientlist-screen .client-details-right{
+        width: auto;
+        float: none;
+        flex-grow: 1;
+    }
+    .pos .clientlist-screen .client-detail{
+        display: flex;
+        flex-direction: column;
+    }
+    .pos .clientlist-screen .client-details input,
+    .pos .clientlist-screen .client-details select
+    {
+        width: 100%;
+    }
+    .pos .clientlist-screen .client-details input.client-name {
+        width: 100%;
+    }
+    .pos .clientlist-screen .client-detail > .label{
+        width: auto;
+        text-align: left;
+    }
+    .pos .clientlist-screen .client-list td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
 }
 
 
@@ -2198,6 +2274,10 @@ td {
 }
 
 @media screen and (max-width: 768px) {
+    .paymentmethods {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
     .paymentmethods .button {
         border: solid 1px rgb(202, 202, 202);
         border-radius: 3px;
