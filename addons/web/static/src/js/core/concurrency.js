@@ -120,7 +120,7 @@ return {
          */
         add: function (promise) {
             if (this.currentDef) {
-                this.currentDef.reject();
+                this.currentDef.reject({promiseOutdated: true});
             }
             var rejection;
             var res = new Promise(function (resolve, reject) {

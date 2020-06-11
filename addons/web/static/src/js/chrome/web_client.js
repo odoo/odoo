@@ -141,7 +141,13 @@ return AbstractWebClient.extend({
      * @param {JQueryEvent|null} ev
      */
     on_hashchange: function (ev) {
-        return this._hashChangeDp.add(this._on_hashchange(ev)).then(() => this._resolveShowAppProm());
+        return this._hashChangeDp.add(this._on_hashchange(ev))
+            .then(() => this._resolveShowAppProm())
+            .guardedCatch((err) => {
+                if (!err || !err.promiseOutdated) {
+                    return Promise.reject(err);
+                }
+            });
     },
     // --------------------------------------------------------------
     // URL state handling
