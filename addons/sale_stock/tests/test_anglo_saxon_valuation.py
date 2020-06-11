@@ -6,6 +6,7 @@ from odoo.tests.common import SavepointCase
 from odoo.exceptions import UserError
 
 
+@tagged('post_install', '-at_install')
 class TestAngloSaxonValuation(SavepointCase):
     @classmethod
     def setUpClass(cls):
