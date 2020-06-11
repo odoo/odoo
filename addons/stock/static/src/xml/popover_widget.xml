@@ -1,18 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="stock.popoverButton">
-        <a tabindex="0" t-attf-class="p-1 fa #{ icon || 'fa-info-circle'} #{ color || 'text-primary'}"/>
+    <t t-name="stock.popoverButton" owl="1">
+        <Popover
+            position="placement"
+            title="popoverTitle">
+            <t t-set-slot="opened">
+                <t t-if="popoverContentTemplate === 'stock.popoverContent'" t-call="stock.popoverContent"/>
+                <t t-if="popoverContentTemplate === 'stock.PopoverStockRescheduling'" t-call="stock.PopoverStockRescheduling"/>
+                <t t-if="popoverContentTemplate === 'stock.leadDaysPopOver'" t-call="stock.leadDaysPopOver"/>
+                <!-- Following expression is not supported, posted issue https://github.com/odoo/owl/issues/709 -->
+                <!-- <t t-call="{{popoverContentTemplate}}"/> -->
+            </t>
+            <a tabindex="0"
+                t-attf-class="p-1 fa {{ icon }} {{ color }}"
+                role="button"/>
+        </Popover>
     </t>
 
-    <div t-name="stock.popoverContent">
+    <div t-name="stock.popoverContent" owl="1">
         <t t-esc="msg"/>
     </div>
 
-    <div t-name="stock.PopoverStockRescheduling">
+    <div t-name="stock.PopoverStockRescheduling" owl="1">
         <p>Preceding operations
             <t t-foreach="late_elements" t-as="late_element">
-                <a t-esc="late_element.name" href="#" t-att-element-id="late_element.id" t-att-element-model="late_element.model"/>,
+                <a t-esc="late_element.name" href="#" t-att-element-id="late_element.id" t-att-element-model="late_element.model" t-on-click.prevent.stop="_onClickElement"/>,
             </t>
          planned on <t t-esc="delay_alert_date"/>.</p>
     </div>

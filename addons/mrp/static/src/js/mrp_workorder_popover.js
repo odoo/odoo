@@ -1,51 +1,42 @@
 odoo.define('mrp.mrp_workorder_popover', function (require) {
-'use strict';
+    'use strict';
 
-var PopoverWidget = require('stock.popover_widget');
-var fieldRegistry = require('web.field_registry');
-var core = require('web.core');
-var _t = core._t;
+    const PopoverWidget = require('stock.popover_widget');
+    const fieldRegistryOwl = require('web.field_registry_owl');
 
+    /**
+     * Link to a Char field representing a JSON:
+     * {
+     *  'replan': <REPLAN_BOOL>, // Show the replan btn
+     *  'color': '<COLOR_CLASS>', // Color Class of the icon (d-none to hide)
+     *  'infos': [
+     *      {'msg' : '<MESSAGE>', 'color' : '<COLOR_CLASS>'},
+     *      {'msg' : '<MESSAGE>', 'color' : '<COLOR_CLASS>'},
+     *      ... ]
+     * }
+     */
+    class MrpWorkorderPopover extends PopoverWidget {
 
-/**
- * Link to a Char field representing a JSON:
- * {
- *  'replan': <REPLAN_BOOL>, // Show the replan btn
- *  'color': '<COLOR_CLASS>', // Color Class of the icon (d-none to hide)
- *  'infos': [
- *      {'msg' : '<MESSAGE>', 'color' : '<COLOR_CLASS>'},
- *      {'msg' : '<MESSAGE>', 'color' : '<COLOR_CLASS>'},
- *      ... ]
- * }
- */
-var MrpWorkorderPopover = PopoverWidget.extend({
-    popoverTemplate: 'mrp.workorderPopover',
-    title: _t('Scheduling Information'),
+        constructor() {
+            super(...arguments);
 
-    _render: function () {
-        this._super.apply(this, arguments);
-        if (! this.$popover) {
-          return;
+            this.popoverTemplate = 'mrp.workorderPopover';
+            this.title = this.env._t('Scheduling Information');
         }
-        var self = this;
-        this.$popover.find('.action_replan_button').click(function (e) {
-            self._onReplanClick(e);
-        });
-    },
 
-    _onReplanClick:function (e) {
-        var self = this;
-        this._rpc({
-            model: 'mrp.workorder',
-            method: 'action_replan',
-            args: [[self.res_id]]
-        }).then(function () {
-            self.trigger_up('reload');
-        });
-    },
-});
+        _onReplanClick(e) {
+            this.rpc({
+                model: 'mrp.workorder',
+                method: 'action_replan',
+                args: [[this.resId]]
+            }).then(() => {
+                this.trigger('reload');
+            });
+        }
+    }
 
-fieldRegistry.add('mrp_workorder_popover', MrpWorkorderPopover);
+    fieldRegistryOwl.add('mrp_workorder_popover', MrpWorkorderPopover);
 
-return MrpWorkorderPopover;
+    return MrpWorkorderPopover;
+
 });

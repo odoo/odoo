@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <templates id="template" xml:space="preserve">
-    <div t-name="stock.leadDaysPopOver">
+    <div t-name="stock.leadDaysPopOver" owl="1">
         <p>
             The forecasted stock on the <t t-esc="lead_days_date"/>
             is <t t-if="qty_to_order &lt;= 0"><t t-esc="qty_forecast"/> <t t-esc="product_uom_name"/></t><t t-else="">
-            below the minimum inventory of <t t-esc="product_min_qty"/> <t t-esc="product_uom_name"/>
-            : <t t-esc="qty_to_order"/> <t t-esc="product_uom_name"/> should be replenished to reach the maximum of 
+            below <br/> the minimum inventory of <t t-esc="product_min_qty"/> <t t-esc="product_uom_name"/>
+            : <t t-esc="qty_to_order"/> <t t-esc="product_uom_name"/> should <br/> be replenished to reach the maximum of 
             <t t-esc="product_max_qty"/> <t t-esc="product_uom_name"/>.</t>
         </p>
         <table t-if="lead_days_description" class="table table-borderless">

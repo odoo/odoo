@@ -1,39 +1,34 @@
 odoo.define('stock.PopoverStockPicking', function (require) {
-"use strict";
+    "use strict";
 
-var core = require('web.core');
+    const PopoverWidgetField = require('stock.popover_widget');
+    const fieldRegistryOwl = require('web.field_registry_owl');
 
-var PopoverWidgetField = require('stock.popover_widget');
-var registry = require('web.field_registry');
-var _t = core._t;
+    class PopoverStockPicking extends PopoverWidgetField {
 
-var PopoverStockPicking = PopoverWidgetField.extend({
-    title: _t('Planning Issue'),
-    trigger: 'focus',
-    color: 'text-danger',
-    icon: 'fa-exclamation-triangle',
+        constructor() {
+            super(...arguments);
 
-    _render: function () {
-        this._super();
-        if (this.$popover) {
-            var self = this;
-            this.$popover.find('a').on('click', function (ev) {
-                ev.preventDefault();
-                ev.stopPropagation();
-                self.do_action({
-                    type: 'ir.actions.act_window',
-                    res_model: ev.currentTarget.getAttribute('element-model'),
-                    res_id: parseInt(ev.currentTarget.getAttribute('element-id'), 10),
-                    views: [[false, 'form']],
-                    target: 'current'
-                });
-            });
+            this.title = this.env._t('Planning Issue');
+            this.color = 'text-danger';
+            this.icon = 'fa-exclamation-triangle';
         }
-    },
 
-});
+        _onClickElement(ev) {
+            const action = {
+                type: 'ir.actions.act_window',
+                res_model: ev.currentTarget.getAttribute('element-model'),
+                res_id: parseInt(ev.currentTarget.getAttribute('element-id'), 10),
+                views: [[false, 'form']],
+                target: 'current'
+            };
+            this.trigger('do-action', { action: action });
+        }
 
-registry.add('stock_rescheduling_popover', PopoverStockPicking);
+    }
 
-return PopoverStockPicking;
+    fieldRegistryOwl.add('stock_rescheduling_popover', PopoverStockPicking);
+
+    return PopoverStockPicking;
+
 });

@@ -43,11 +43,17 @@
         </button>
     </div>
 
-    <div t-name="sale_stock.DelayAlertWidget">
+    <div t-name="sale_stock.DelayAlertWidget" owl="1">
         <p>The delivery
             <t t-foreach="late_elements" t-as="late_element">
-                <a t-esc="late_element.name" href="#" t-att-element-id="late_element.id" t-att-element-model="model"/>,
+                <a t-esc="late_element.name" href="#" t-att-element-id="late_element.id" t-att-element-model="model" t-on-click="_onClickElement"/>,
             </t> will be late.
         </p>
     </div>
+
+    <t t-extend="stock.popoverButton">
+        <t t-jquery="Popover t" t-operation='inner'>
+            <t t-if="buttonPopoverTemplate === 'sale_stock.DelayAlertWidget'" t-call="sale_stock.DelayAlertWidget"/>
+        </t>
+    </t>
 </templates>

@@ -36,11 +36,18 @@
         </div>
     </form>
 
-    <div t-name="mrp.workorderPopover">
+    <div t-name="mrp.workorderPopover" owl="1">
         <t t-foreach="infos" t-as="info">
-            <i t-attf-class="fa fa-arrow-right mr-2 #{ info.color }"></i><t t-esc="info.msg"/><br/>
+            <i t-attf-class="fa fa-arrow-right mr-2 {{ info.color }}"></i><t t-esc="info.msg"/><br/>
         </t>
-        <button t-if="replan" class="btn btn-primary action_replan_button">Replan</button>
+        <button t-if="replan" class="btn btn-primary action_replan_button" t-on-click="_onReplanClick">Replan</button>
     </div>
+
+    <!-- Following inheritance is not needed if issue https://github.com/odoo/owl/issues/709 fixed -->
+    <t t-name="mrp.popoverButton" t-inherit="stock.popoverButton" t-inherit-mode="extension" owl="1">
+        <xpath expr="//Popover//t" position="inside">
+            <t t-if="popoverContentTemplate === 'mrp.workorderPopover'" t-call="mrp.workorderPopover"/>
+        </xpath>
+    </t>
 
 </templates>
