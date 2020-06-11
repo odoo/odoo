@@ -554,6 +554,9 @@ function factory(dependencies) {
                 'mainSuggestedPartners',
             ],
         }),
+        hasFocus: attr({
+            default: false,
+        }),
         hasSuggestedPartners: attr({
             compute: '_computeHasSuggestedPartners',
             dependencies: [
