@@ -161,6 +161,20 @@ class ComposerTextInput extends Component {
     /**
      * @private
      */
+    _onFocusinTextarea() {
+        this.composer.update({ hasFocus: true });
+    }
+
+    /**
+     * @private
+     */
+    _onFocusoutTextarea() {
+        this.composer.update({ hasFocus: false });
+    }
+
+    /**
+     * @private
+     */
     _onInputTextarea() {
         if (this._textareaLastInputValue !== this._textareaRef.el.value) {
             this.composer.handleCurrentPartnerIsTyping();

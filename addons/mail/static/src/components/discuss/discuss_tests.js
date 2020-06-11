@@ -1951,7 +1951,7 @@ QUnit.test('new messages separator', async function (assert) {
     // visible. This is necessary in order to display 'new messages' and not
     // remove from DOM right away from seeing last message.
     // AKU TODO: thread specific test
-    assert.expect(5);
+    assert.expect(6);
 
     let step = 0;
     Object.assign(this.data.initMessaging, {
@@ -2000,26 +2000,26 @@ QUnit.test('new messages separator', async function (assert) {
             return this._super(...arguments);
         },
     });
-    assert.strictEqual(
-        document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadViewer_messageList .o_MessageList_message
-        `).length,
+    assert.containsN(
+        document.body,
+        '.o_MessageList_message',
         25,
         "should have 25 messages"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadViewer_messageList .o_MessageList_separatorNewMessages
-        `).length,
-        0,
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
         "should not display 'new messages' separator"
     );
 
+    // scroll to top
     document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop = 0;
+    // composer is focused by default, we remove that focus
+    document.querySelector('.o_ComposerTextInput_textarea').blur();
     // simulate receiving a new message
     const data = {
         author_id: [36, "User26"],
-        body: "<p>boddy26</p>",
+        body: "<p>body26</p>",
         channel_ids: [20],
         date: "2019-04-20 10:00:00",
         id: 126,
@@ -2030,33 +2030,36 @@ QUnit.test('new messages separator', async function (assert) {
     };
     await afterNextRender(() => {
         const notifications = [[['my-db', 'mail.channel', 20], data]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications);
+        this.widget.call('bus_service', 'trigger', 'notification', notifications)
     });
-    assert.strictEqual(
-        document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadViewer_messageList .o_MessageList_message
-        `).length,
+    assert.containsN(
+        document.body,
+        '.o_MessageList_message',
         26,
         "should have 26 messages"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadViewer_messageList .o_MessageList_separatorNewMessages
-        `).length,
-        1,
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
         "should display 'new messages' separator"
     );
 
-    // scroll to bottom
     await afterNextRender(() => {
         document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollTop =
             document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList`).scrollHeight;
     });
-    assert.strictEqual(
-        document.querySelectorAll(`
-            .o_Discuss_thread .o_ThreadViewer_messageList .o_MessageList_separatorNewMessages
-        `).length,
-        0,
+
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
+        "should still display 'new messages' separator as composer is not focused"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ComposerTextInput_textarea').focus()
+    );
+    assert.containsNone(
+        document.body,
+        '.o_MessageList_separatorNewMessages',
         "should no longer display 'new messages' separator (message seen)"
     );
 });
@@ -3491,19 +3494,17 @@ QUnit.test('mark channel as seen on last message visible', async function (asser
             return this._super(...arguments);
         },
     });
-    assert.strictEqual(
-        document.querySelectorAll(`
-            .o_DiscussSidebar_item[data-thread-local-id="${
-                this.env.models['mail.thread'].find(thread =>
-                    thread.id === 10 &&
-                    thread.model === 'mail.channel'
-                ).localId
-            }"]
-        `).length,
-        1,
+    assert.containsOnce(
+        document.body,
+        `.o_DiscussSidebar_item[data-thread-local-id="${
+            this.env.models['mail.thread'].find(thread =>
+                thread.id === 10 &&
+                thread.model === 'mail.channel'
+            ).localId
+        }"]`,
         "should have discuss sidebar item with the channel"
     );
-    assert.ok(
+    assert.hasClass(
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
@@ -3511,7 +3512,8 @@ QUnit.test('mark channel as seen on last message visible', async function (asser
                     thread.model === 'mail.channel'
                 ).localId
             }"]
-        `).classList.contains('o-unread'),
+        `),
+        'o-unread',
         "sidebar item of channel ID 10 should be unread"
     );
 
@@ -3525,7 +3527,7 @@ QUnit.test('mark channel as seen on last message visible', async function (asser
             }"]
         `).click()
     );
-    assert.notOk(
+    assert.doesNotHaveClass(
         document.querySelector(`
             .o_DiscussSidebar_item[data-thread-local-id="${
                 this.env.models['mail.thread'].find(thread =>
@@ -3533,7 +3535,8 @@ QUnit.test('mark channel as seen on last message visible', async function (asser
                     thread.model === 'mail.channel'
                 ).localId
             }"]
-        `).classList.contains('o-unread'),
+        `),
+        'o-unread',
         "sidebar item of channel ID 10 should not longer be unread"
     );
 });
