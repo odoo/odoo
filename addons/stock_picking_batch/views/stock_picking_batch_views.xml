@@ -51,6 +51,8 @@
                 <field name="lot_id" groups="stock.group_production_lot" attrs="{'readonly': [('tracking', 'not in', ['lot', 'serial'])]}"/>
                 <field name="location_id"/>
                 <field name="location_dest_id"/>
+                <field name="package_id" groups="stock.group_tracking_lot"/>
+                <field name="result_package_id" groups="stock.group_tracking_lot"/>
                 <field name="product_uom_qty" readonly="1"/>
                 <field name="product_uom_id" options="{'no_create': True}"
                     groups="uom.group_uom" readonly="1" force_save="1"/>
