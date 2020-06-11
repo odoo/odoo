@@ -28,8 +28,8 @@
 # Jussi Heikkilä <jussi.heikkila@panimo.com>, 2019
 # Henri Komulainen <henri.komulainen@web-veistamo.fi>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
-# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -37,7 +37,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -795,7 +795,7 @@ msgstr "Vahvistettu myyntitilaus vaatii vahvistuspäivän."
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr "Hankkijaosapuolen% s on määritettävä päiväkirja."
+msgstr "Välittäjälle %s on määritettävä päiväkirja."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2034,13 +2034,13 @@ msgstr "Puutteellinen allekirjoitus."
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr "Virheellinen tunnus löytyi! Tokenin hankkija% s! =% S"
+msgstr "Virheellinen token löytyi! Tokenin välittäjä %s != %s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr "Virheellinen tunnus löytyi! Tunnuskumppani% s! =% S"
+msgstr "Virheellinen token löytyi! Tokenin kumppani %s != %s"
 
 #. module: sale
 #: code:addons/sale/models/account_invoice.py:0
@@ -3888,8 +3888,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
-"Analyyttiseen tiliin% s liitetty myyntitilaus% s peruutetaan. Et voi "
-"rekisteröidä kulua peruutetusta myyntitilauksesta."
+"Analyyttiseen tiliin %s liitetty myyntitilaus %s on peruttu. Et voi "
+"rekisteröidä kulua perutulle myyntitilaukselle."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3899,9 +3899,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
-"Analyyttiseen tiliin% s linkitetty myyntitilaus% s on tällä hetkellä "
-"lukittu. Et voi rekisteröidä kulua lukittuun myyntitilaukseen. Luo uusi "
-"analyyttiseen tiliin linkitetty SO."
+"Myyntitilaukseen %s linkitetty kustannuspaikka %s on lukittu. Et voi "
+"rekisteröidä kulua lukittuun myyntitilaukseen. Luo uusi myyntitilaus ja "
+"liitä se tähän kustannuspaikkaan."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3910,7 +3910,7 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
-"Analyyttiseen tiliin% s liitetty myyntitilaus% s on vahvistettava ennen "
+"Myyntitilaus, %s joka liittyy kustannuspaikkaan %s, on vahvistettava ennen "
 "kulujen rekisteröintiä."
 
 #. module: sale

@@ -789,7 +789,6 @@ class PosOrderLine(models.Model):
             values['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
         return super(PosOrderLine, self).create(values)
 
-    @api.model
     def write(self, values):
         if values.get('pack_lot_line_ids'):
             for pl in values.get('pack_lot_ids'):

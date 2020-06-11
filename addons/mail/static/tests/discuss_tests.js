@@ -2022,5 +2022,43 @@ QUnit.test('no crash on receiving needaction channel message notif with messagin
     discuss.destroy();
 });
 
+QUnit.test('load record form view', async function (assert) {
+    assert.expect(4);
+    this.data['mail.message'].records = [{
+        author_id: [5, 'Demo User'],
+        body: '<a id="test_redirect_link" href="#" data-oe-model="my.model" data-oe-id="10">Link</a>',
+        id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+        res_id: 100,
+        model: 'some.document',
+        record_name: 'SomeDocument',
+    }];
+    const discuss = await createDiscuss({
+        context: {},
+        params: {},
+        data: this.data,
+        services: this.services,
+        session: {
+            partner_id: 3,
+            user_context: { uid: 99 },
+        },
+        async mockRPC(route, args) {
+            if (args.model === 'my.model' && args.method === 'get_formview_id') {
+                const [resIds, uid] = args.args;
+                assert.step('get_redirect_form');
+                assert.deepEqual(resIds, [10],
+                    "should have have called with the correct ID");
+                assert.strictEqual(uid, 99,
+                    "should have have called with the current user");
+            }
+            return this._super(...arguments);
+        },
+    });
+    await testUtils.dom.click(discuss.$('#test_redirect_link'));
+    assert.verifySteps(['get_redirect_form']);
+    discuss.destroy();
+});
+
 });
 });

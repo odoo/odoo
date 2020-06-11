@@ -151,3 +151,66 @@ class TestPurchaseOrder(AccountingTestCase):
         self.invoice.post()
 
         self.assertEqual(self.po.order_line.mapped('qty_invoiced'), [3.0, 3.0], 'Purchase: Billed quantity should be 3.0')
+
+    def test_03_po_return_and_modify(self):
+        """Change the picking code of the delivery to internal. Make a PO for 10 units, go to the
+        picking and return 5, edit the PO line to 15 units.
+        The purpose of the test is to check the consistencies across the received quantities and the
+        procurement quantities.
+        """
+        # Change the code of the picking type delivery
+        self.env['stock.picking.type'].search([('code', '=', 'outgoing')]).write({'code': 'internal'})
+
+        # Sell and deliver 10 units
+        item1 = self.product_id_1
+        uom_unit = self.env.ref('uom.product_uom_unit')
+        po1 = self.env['purchase.order'].create({
+            'partner_id': self.partner_id.id,
+            'order_line': [
+                (0, 0, {
+                    'name': item1.name,
+                    'product_id': item1.id,
+                    'product_qty': 10,
+                    'product_uom': uom_unit.id,
+                    'price_unit': 123.0,
+                    'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
+                }),
+            ],
+        })
+        po1.button_confirm()
+
+        picking = po1.picking_ids
+        wiz_act = picking.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz.process()
+
+        # Return 5 units
+        stock_return_picking_form = Form(self.env['stock.return.picking'].with_context(
+            active_ids=picking.ids,
+            active_id=picking.ids[0],
+            active_model='stock.picking'
+        ))
+        return_wiz = stock_return_picking_form.save()
+        for return_move in return_wiz.product_return_moves:
+            return_move.write({
+                'quantity': 5,
+                'to_refund': True
+            })
+        res = return_wiz.create_returns()
+        return_pick = self.env['stock.picking'].browse(res['res_id'])
+        wiz_act = return_pick.button_validate()
+        wiz = self.env[wiz_act['res_model']].browse(wiz_act['res_id'])
+        wiz.process()
+
+        self.assertEqual(po1.order_line.qty_received, 5)
+
+        # Deliver 15 instead of 10.
+        po1.write({
+            'order_line': [
+                (1, po1.order_line[0].id, {'product_qty': 15}),
+            ]
+        })
+
+        # A new move of 10 unit (15 - 5 units)
+        self.assertEqual(po1.order_line.qty_received, 5)
+        self.assertEqual(po1.picking_ids[-1].move_lines.product_qty, 10)

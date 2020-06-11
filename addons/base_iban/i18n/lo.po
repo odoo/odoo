@@ -1,13 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_iban
+# 	* base_iban
+# 
+# Translators:
+# ສີສຸວັນ ສັງບົວບຸລົມ <sisouvan@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: ສີສຸວັນ ສັງບົວບຸລົມ <sisouvan@gmail.com>, 2020\n"
 "Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -16,38 +20,53 @@ msgstr ""
 "Plural-Forms: nplurals=1; plural=0;\n"
 
 #. module: base_iban
+#. openerp-web
+#: code:addons/base_iban/static/src/js/iban_widget.js:0
+#, python-format
+msgid "Account isn't IBAN compliant."
+msgstr ""
+
+#. module: base_iban
 #: model:ir.model,name:base_iban.model_res_partner_bank
 msgid "Bank Accounts"
-msgstr ""
+msgstr "ບັນຊີທະນາຄານ"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:57
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "Cannot compute the BBAN because the account number is not an IBAN."
-msgstr ""
+msgstr "ບໍ່ສາມາດຄິດໄລ່ BBAN ໄດ້ ເພາະວ່າ ເລກບັນຊີ ບໍ່ແມ່ນ ຂອງ IBAN."
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:26
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
-msgid "No IBAN !"
+msgid "IBAN"
 msgstr ""
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:34
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid ""
 "The IBAN does not seem to be correct. You should have entered something like this %s\n"
 "Where B = National bank code, S = Branch code, C = Account No, k = Check digit"
 msgstr ""
+"ເບິ່ງຄືວ່າ IBAN ບໍ່ຄ່ອຍຖືກຕ້ອງ. ທ່ານຕ້ອງໄດ້ປ້ອນ ບາງຢ່າງເຂົ້າໄປ ເຊັ່ນວ່າ  %s\n"
+"B ຢູ່ໃສ = ລະຫັດທະນາຄານແຫ່ງຊາດ, S = ລະຫັດສາຂາ, C = ເລກບັນຊີ, k = ຕົວເລກກວດສອບ"
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:30
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "The IBAN is invalid, it should begin with the country code"
+msgstr "IBAN ບໍ່ຖືກຕ້ອງ, ມັນຄວນຈະຂຶ້ນຕົ້ນດ້ວຍ ລະຫັດປະເທດ"
+
+#. module: base_iban
+#: code:addons/base_iban/models/res_partner_bank.py:0
+#, python-format
+msgid "There is no IBAN code."
 msgstr ""
 
 #. module: base_iban
-#: code:addons/base_iban/models/res_partner_bank.py:40
+#: code:addons/base_iban/models/res_partner_bank.py:0
 #, python-format
 msgid "This IBAN does not pass the validation check, please verify it."
-msgstr ""
+msgstr "IBAN ບໍ່ຜ່ານການກວດສອບຄວາມຖືກຕ້ອງ, ກະລຸນາກວດເບິ່ງຄືນໃໝ໋."

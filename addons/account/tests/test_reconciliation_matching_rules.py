@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 from odoo import fields
-from odoo.addons.account.tests.account_test_savepoint import AccountingSavepointCase
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestReconciliationMatchingRules(AccountingSavepointCase):
+class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
     @classmethod
     def _create_invoice_line(cls, amount, partner, type):
@@ -34,8 +34,8 @@ class TestReconciliationMatchingRules(AccountingSavepointCase):
             self.assertDictEqual(values, expected_values[st_line_id])
 
     @classmethod
-    def setUpClass(cls):
-        super(TestReconciliationMatchingRules, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
         
         cls.account_pay = cls.company_data['default_account_payable']
         cls.account_rcv = cls.company_data['default_account_receivable']

@@ -938,8 +938,8 @@ action = model.setting_init_bank_account_action()
                                 </div>
                                 <field name="match_same_currency" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
                                 <label for="match_total_amount"
-                                       attrs="{'invisible': ['|', '|', ('rule_type', '!=', 'invoice_matching'), ('match_same_currency', '=', False), ('match_partner', '=', False)]}"/>
-                                <div attrs="{'invisible': ['|', '|', ('rule_type', '!=', 'invoice_matching'), ('match_same_currency', '=', False), ('match_partner', '=', False)]}">
+                                       attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
+                                <div attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}">
                                     <field name="match_total_amount" class="oe_inline"/>
                                     <field name="match_total_amount_param" class="oe_inline"
                                            attrs="{'invisible': [('match_total_amount', '=', False)]}"/>

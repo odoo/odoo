@@ -1,46 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_payumoney
+# 	* payment_payumoney
 # 
 # Translators:
-# Martin Trigaux, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Joan Ignasi Florit <jfloritmir@gmail.com>, 2018
-# Quim - eccit <quim@eccit.com>, 2018
+# Martin Trigaux, 2020
+# RGB Consulting <odoo@rgbconsulting.com>, 2020
+# Quim - eccit <quim@eccit.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:22+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Quim - eccit <quim@eccit.com>, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: ca\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Adyen"
-msgstr "Adyen"
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Authorize.Net"
-msgstr "Authorize.Net"
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Buckaroo"
-msgstr "Buckaroo"
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Manual Configuration"
-msgstr "Configuració manual"
 
 #. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
@@ -53,35 +32,30 @@ msgid "Merchant Salt"
 msgstr ""
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Ogone"
-msgstr "Ogone"
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
+#: model:ir.model.fields.selection,name:payment_payumoney.selection__payment_acquirer__provider__payumoney
 msgid "PayUmoney"
 msgstr "PayUmoney"
 
 #. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:108
+#: code:addons/payment_payumoney/models/payment.py:0
 #, python-format
 msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
 msgstr ""
 
 #. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:102
+#: code:addons/payment_payumoney/models/payment.py:0
 #, python-format
 msgid "PayUmoney: received data for reference %s; multiple orders found"
 msgstr ""
 
 #. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:99
+#: code:addons/payment_payumoney/models/payment.py:0
 #, python-format
 msgid "PayUmoney: received data for reference %s; no order found"
 msgstr ""
 
 #. module: payment_payumoney
-#: code:addons/payment_payumoney/models/payment.py:94
+#: code:addons/payment_payumoney/models/payment.py:0
 #, python-format
 msgid ""
 "PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
@@ -99,26 +73,6 @@ msgid "Payment Transaction"
 msgstr "Transacció de pagament"
 
 #. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Paypal"
-msgstr "Paypal"
-
-#. module: payment_payumoney
 #: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
 msgid "Provider"
 msgstr "Proveïdor"
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Sips"
-msgstr "Sips"
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Stripe"
-msgstr "Stripe"
-
-#. module: payment_payumoney
-#: selection:payment.acquirer,provider:0
-msgid "Wire Transfer"
-msgstr "Transferència bancaria"

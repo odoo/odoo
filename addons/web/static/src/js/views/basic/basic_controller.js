@@ -735,6 +735,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @param {string} ev.data.handleField
      */
     _onResequenceRecords: function (ev) {
+        ev.stopPropagation(); // prevent other controllers from handling this request
         var self = this;
 
         this.trigger_up('mutexify', {

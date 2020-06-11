@@ -4,6 +4,7 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
@@ -11,7 +12,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 09:01+0000\n"
 "PO-Revision-Date: 2019-12-05 12:40+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,7 @@ msgstr "Companii"
 #, python-format
 msgid "The lock date for advisors is irreversible and can't be removed."
 msgstr ""
+"Data de blocare a consilierilor este ireversibilă și nu poate fi eliminată."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -36,18 +38,23 @@ msgstr ""
 msgid ""
 "The new lock date for advisors must be set after the previous lock date."
 msgstr ""
+"Noua dată de blocare a consilierilor trebuie să fie stabilită după data "
+"anterioară de blocare."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The new tax lock date must be set after the previous lock date."
 msgstr ""
+"Noua dată de blocare a impozitului trebuie stabilită după data anterioară de"
+" blocare"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
 #, python-format
 msgid "The tax lock date is irreversible and can't be removed."
 msgstr ""
+"Data de blocare a impozitului este ireversibilă și nu poate fi eliminată"
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -56,6 +63,9 @@ msgid ""
 "You cannot define stricter conditions on advisors than on users. Please make"
 " sure that the lock date on advisor is set before the lock date for users."
 msgstr ""
+"Nu puteți defini condiții mai stricte pentru consilieri decât pentru "
+"utilizatori. Vă rugăm să vă asigurați că data de blocare la consilier este "
+"setată înainte de data de blocare pentru utilizatori."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -64,6 +74,9 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " lock date for advisors is not set after the last day of the previous month."
 msgstr ""
+"Nu puteți bloca o perioadă care nu este încă terminată. Vă rugăm să vă "
+"asigurați că data de blocare a consilierilor nu este stabilită după ultima "
+"zi a lunii precedente."
 
 #. module: account_lock
 #: code:addons/account_lock/models/res_company.py:0
@@ -72,3 +85,6 @@ msgid ""
 "You cannot lock a period that is not finished yet. Please make sure that the"
 " tax lock date is not set after the last day of the previous month."
 msgstr ""
+"Nu puteți bloca o perioadă care nu este încă terminată. Vă rugăm să vă "
+"asigurați că data de blocare a taxelor nu este stabilită după ultima zi a "
+"lunii precedente."

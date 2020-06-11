@@ -661,7 +661,7 @@ class Survey(models.Model):
                 user_answer_correct = user_answer_lines_question.filtered(lambda line: line.answer_is_correct and not line.skipped).mapped('value_suggested')
                 user_answer_incorrect = user_answer_lines_question.filtered(lambda line: not line.answer_is_correct and not line.skipped)
 
-                if user_answer_correct == question_answer_correct:
+                if question_answer_correct and user_answer_correct == question_answer_correct:
                     res[user_answer]['correct'] += 1
                 elif user_answer_correct and user_answer_correct < question_answer_correct:
                     res[user_answer]['partial'] += 1

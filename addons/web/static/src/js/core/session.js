@@ -212,7 +212,17 @@ var Session = core.Class.extend(mixins.EventDispatcherMixin, {
         });
     },
     load_translations: function () {
-        return _t.database.load_translations(this, this.module_list, this.user_context.lang, this.translationURL);
+        var lang = this.user_context.lang;
+
+        if (!lang) {
+            this.trigger_up('context_get', {
+                callback: function (ctx) {
+                    lang = ctx.lang;
+                },
+            });
+        }
+
+        return _t.database.load_translations(this, this.module_list, lang, this.translationURL);
     },
     load_css: function (files) {
         var self = this;

@@ -49,15 +49,17 @@ class PurchaseOrder(models.Model):
                 for line in order.order_line.filtered(lambda l: not l.display_type)
             ):
                 order.invoice_status = 'to invoice'
-            elif all(
-                (line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received)
-                and float_compare(
-                    line.qty_invoiced,
-                    line.product_qty if line.product_id.purchase_method == 'purchase' else line.qty_received,
-                    precision_digits=precision,
+            elif (
+                all(
+                    float_compare(
+                        line.qty_invoiced,
+                        line.product_qty if line.product_id.purchase_method == "purchase" else line.qty_received,
+                        precision_digits=precision,
+                    )
+                    >= 0
+                    for line in order.order_line.filtered(lambda l: not l.display_type)
                 )
-                >= 0
-                for line in order.order_line.filtered(lambda l: not l.display_type)
+                and order.invoice_ids
             ):
                 order.invoice_status = 'invoiced'
             else:
@@ -197,7 +199,7 @@ class PurchaseOrder(models.Model):
         self = self.with_context(ctx)
         new_po = super(PurchaseOrder, self).copy(default=default)
         for line in new_po.order_line:
-            if new_po.date_planned:
+            if new_po.date_planned and not line.display_type:
                 line.date_planned = new_po.date_planned
             elif line.product_id:
                 seller = line.product_id._select_seller(

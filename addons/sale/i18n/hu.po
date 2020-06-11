@@ -7,12 +7,12 @@
 # Tamás Belinszky <tamasbelinszky@gmail.com>, 2019
 # Kovács Tibor <kovika@gmail.com>, 2019
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # Martin Trigaux, 2019
 # krnkris, 2019
 # Istvan <leki69@gmail.com>, 2019
-# gezza <geza.nagy@oregional.hu>, 2020
 # Tamás Németh <ntomasz81@gmail.com>, 2020
+# Ákos Nagy <akos.nagy@oregional.hu>, 2020
+# gezza <geza.nagy@oregional.hu>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2020\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -809,6 +809,9 @@ msgid ""
 "Apply manual discounts on sales order lines or display discounts computed "
 "from pricelists (option to activate in the pricelist configuration)."
 msgstr ""
+"Alkalmazzon kézi engedményeket az értékesítési rendelési sorokon, vagy "
+"jelenítse meg az árlistákból kiszámított kedvezményeket (aktiválás "
+"lehetősége az árlista konfigurációjában)."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -881,6 +884,10 @@ msgid ""
 "codes. Specific conditions can be set (products, customers, minimum purchase"
 " amount, period). Rewards can be discounts (% or amount) or free products."
 msgstr ""
+"Növelje eladásait kétféle kedvezményes programmal: promóciók és kuponkódok. "
+"Különleges feltételek állíthatók be (termékek, vásárlók, minimális vásárlási"
+" összeg, időszak). Jutalmak lehetnek kedvezmények (% vagy összeg) vagy "
+"ingyenes termékek."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__campaign_id
@@ -1014,7 +1021,7 @@ msgstr "Szállítási költség számítása és szállítás bposttal"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Compute shipping costs on orders"
-msgstr ""
+msgstr "Szállítási költségek számítása a rendeléseken"
 
 #. module: sale
 #: model:ir.model,name:sale.model_res_config_settings
@@ -1165,7 +1172,7 @@ msgstr "Egyedi értékek"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Egyéni fizetési utasítások"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__partner_id
@@ -1190,7 +1197,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_report__country_id
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Customer Country"
-msgstr ""
+msgstr "Ügyfél országa"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
@@ -1640,7 +1647,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid ""
 "Generate the invoice automatically when the online payment is confirmed"
-msgstr ""
+msgstr "Számla automatikus létrehozása az online fizetés megerősítésekor."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1650,7 +1657,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Grant discounts on sales order lines"
-msgstr ""
+msgstr "Kedvezmények nyújtása az értékesítési rendelési sorokon"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__weight
@@ -1982,7 +1989,7 @@ msgstr "Könyvelési napló tételsor"
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_sample_quotation_state__just_done
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_quotation_onboarding_state__just_done
 msgid "Just done"
-msgstr ""
+msgstr "Éppen elkészült"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value____last_update
@@ -2067,7 +2074,7 @@ msgstr "Fő melléklet"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Manage promotion &amp; coupon programs"
-msgstr ""
+msgstr "A promóciós &amp; kupon programok kezelése"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order_line__qty_delivered_method__manual
@@ -2489,7 +2496,7 @@ msgstr "Rendelések"
 #: model:ir.ui.menu,name:sale.menu_sale_order_invoice
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Orders to Invoice"
-msgstr ""
+msgstr "Számlázandó rendelések"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_orders_upselling
@@ -2553,7 +2560,7 @@ msgstr "Fizetés ezzel"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Fizetés egy másik fizetési szolgáltatóval"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -2574,7 +2581,7 @@ msgstr "Fizetés kézhezvevői"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Fizetési útmutató"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__payment_method
@@ -3534,12 +3541,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Stripe publikus kulcs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe titkos kulcs"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal

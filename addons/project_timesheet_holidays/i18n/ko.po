@@ -5,7 +5,7 @@
 # Translators:
 # Link Up링크업 <linkup.way@gmail.com>, 2019
 # Linkup <link-up@naver.com>, 2019
-# JH CHOI <hwangtog@gmail.com>, 2019
+# JH CHOI <hwangtog@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:17+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2019\n"
+"Last-Translator: JH CHOI <hwangtog@gmail.com>, 2020\n"
 "Language-Team: Korean (https://www.transifex.com/odoo/teams/41243/ko/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -39,6 +39,8 @@ msgid ""
 "the time off. If you don't want a timesheet, you should leave the internal "
 "project and task empty."
 msgstr ""
+"내부 프로젝트와 작업 모두 휴가에 대한 작업 기록표를 생성해야 합니다. 작업 기록표를 원하지 않으면 내부 프로젝트와 작업을 비워 두어야 "
+"합니다."
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_company
@@ -48,25 +50,25 @@ msgstr "회사"
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_res_config_settings
 msgid "Config Settings"
-msgstr "설정"
+msgstr "설정 구성"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_company__leave_timesheet_project_id
 #: model:ir.model.fields,help:project_timesheet_holidays.field_res_config_settings__leave_timesheet_project_id
 msgid "Default project value for timesheet generated from time off type."
-msgstr ""
+msgstr "휴가 유형에서 생성된 작업 기록의 기본 프로젝트 값입니다."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid "Generate Timesheet"
-msgstr "타임시트 생성"
+msgstr "작업 기록 생성"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_generate
 msgid ""
 "If checked, when validating a time off, timesheet will be generated in the "
 "Vacation Project of the company."
-msgstr ""
+msgstr "이 선택 사항을 선택하면 휴가 시간을 확인할 때 회사 휴가 계획에서 작업 기록표가 생성됩니다."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
@@ -85,7 +87,7 @@ msgstr "휴가 요청"
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
 msgid "Project"
-msgstr "프로젝트 관리"
+msgstr "프로젝트"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.res_config_settings_view_form
@@ -95,38 +97,38 @@ msgstr "작업"
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_hr_leave_type__timesheet_task_id
 msgid "Task for timesheet"
-msgstr ""
+msgstr "작업 기록에 대한 작업"
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #, python-format
 msgid "The Internal Project of a company should be in that company."
-msgstr ""
+msgstr "회사의 내부 프로젝트는 해당 회사에 있어야 합니다."
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,help:project_timesheet_holidays.field_hr_leave_type__timesheet_project_id
 msgid ""
 "The project will contain the timesheet generated when a time off is "
 "validated."
-msgstr ""
+msgstr "프로젝트에는 휴가가 확인될 때 ​​생성된 작업 기록표가 포함됩니다."
 
 #. module: project_timesheet_holidays
 #: code:addons/project_timesheet_holidays/models/res_company.py:0
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave
 #, python-format
 msgid "Time Off"
-msgstr "휴가 관리"
+msgstr "휴가"
 
 #. module: project_timesheet_holidays
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_company__leave_timesheet_task_id
 #: model:ir.model.fields,field_description:project_timesheet_holidays.field_res_config_settings__leave_timesheet_task_id
 msgid "Time Off Task"
-msgstr ""
+msgstr "휴가 작업"
 
 #. module: project_timesheet_holidays
 #: model:ir.model,name:project_timesheet_holidays.model_hr_leave_type
 msgid "Time Off Type"
-msgstr ""
+msgstr "휴가 유형"
 
 #. module: project_timesheet_holidays
 #: model_terms:ir.ui.view,arch_db:project_timesheet_holidays.hr_holiday_status_view_form_inherit
@@ -139,4 +141,4 @@ msgstr "작업 기록"
 msgid ""
 "You cannot delete timesheet lines attached to a leaves. Please cancel the "
 "leaves instead."
-msgstr ""
+msgstr "휴가에 연결된 작업 기록 내역은 삭제할 수 없습니다. 대신 휴가를 취소하십시오."

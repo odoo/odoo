@@ -84,6 +84,11 @@ class SaleCouponProgram(models.Model):
         if self.reward_product_id:
             self.reward_product_uom_id = self.reward_product_id.uom_id
 
+    @api.onchange('discount_type')
+    def _onchange_discount_type(self):
+        if self.discount_type == 'fixed_amount':
+            self.discount_apply_on = 'on_order'
+
     @api.model
     def create(self, vals):
         program = super(SaleCouponProgram, self).create(vals)

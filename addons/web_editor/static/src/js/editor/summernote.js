@@ -1049,6 +1049,7 @@ options.styleTags = weDefaultOptions.styleTags;
 
 $.summernote.pluginEvents.insertTable = function (event, editor, layoutInfo, sDim) {
   var $editable = layoutInfo.editable();
+  $editable.focus();
   var dimension = sDim.split('x');
   var r = range.create();
   if (!r) return;
@@ -1676,6 +1677,7 @@ function isFormatNode(node) {
 
 $.summernote.pluginEvents.insertUnorderedList = function (event, editor, layoutInfo, type) {
     var $editable = layoutInfo.editable();
+    $editable.focus();
     $editable.data('NoteHistory').recordUndo($editable);
 
     type = type || "UL";
@@ -2004,6 +2006,7 @@ $.summernote.pluginEvents.outdent = function (event, editor, layoutInfo) {
 $.summernote.pluginEvents.formatBlock = function (event, editor, layoutInfo, sTagName) {
     $.summernote.pluginEvents.applyFont(event, editor, layoutInfo, null, null, "Default");
     var $editable = layoutInfo.editable();
+    $editable.focus();
     $editable.data('NoteHistory').recordUndo($editable);
     event.preventDefault();
 

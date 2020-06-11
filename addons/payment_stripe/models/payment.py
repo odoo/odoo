@@ -49,7 +49,8 @@ class PaymentAcquirerStripe(models.Model):
             'payment_intent_data[description]': tx_values['reference'],
             'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email'),
         }
-        if tx_values.get('billing_partner_country').code.lower() == 'nl' and tx_values.get('currency').name.lower() == 'eur':
+        if tx_values.get('billing_partner_country').code and tx_values.get('billing_partner_country').code.lower() == 'nl' and \
+           tx_values.get('currency').name and tx_values.get('currency').name.lower() == 'eur':
             # enable iDEAL for NL-based customers (€ payments only)
             stripe_session_data['payment_method_types[1]'] = 'ideal'
         tx_values['session_id'] = self._create_stripe_session(stripe_session_data)
@@ -69,7 +70,11 @@ class PaymentAcquirerStripe(models.Model):
         # cfr https://stripe.com/docs/error-codes
         # these can be made customer-facing, as they usually indicate a problem with the payment
         # (e.g. insufficient funds, expired card, etc.)
-        if not resp.ok and (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
+        # if the context key `stripe_manual_payment` is set then these errors will be raised as ValidationError,
+        # otherwise, they will be silenced, and the will be returned no matter the status.
+        # This key should typically be set for payments in the present and unset for automated payments
+        # (e.g. through crons)
+        if not resp.ok and self._context.get('stripe_manual_payment') and (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
             try:
                 resp.raise_for_status()
             except HTTPError:
@@ -105,10 +110,14 @@ class PaymentAcquirerStripe(models.Model):
 
     @api.model
     def stripe_s2s_form_process(self, data):
-        if not data.get('card'):
-            # can't save the token if it's not a card (e.g. iDEAL)
+        if 'card' in data and not data.get('card'):
+            # coming back from a checkout payment and iDeal (or another non-card pm)
+            # can't save the token if it's not a card
+            # note that in the case of a s2s payment, 'card' wont be
+            # in the data dict because we need to fetch it from the stripe server
+            _logger.info('unable to save card info from Stripe since the payment was not done with a card')
             return self.env['payment.token']
-        last4 = data.get('card').get('last4')
+        last4 = data.get('card', {}).get('last4')
         if not last4:
             # PM was created with a setup intent, need to get last4 digits through
             # yet another call -_-

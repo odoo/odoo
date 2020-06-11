@@ -43,11 +43,11 @@
 # Marco Alejandro Martinez <martinezsuarezmarcoalejandro@gmail.com>, 2020
 # Jesus Vicente Alcala Rodriguez <jesus.alcala@jarsa.com.mx>, 2020
 # Juan José Scarafía <scarafia.juanjose@gmail.com>, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # VivianMontana23 <vivianpvm@gmail.com>, 2020
 # Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # Edilianny Sanchez - https://www.vauxoo.com/ <esanchez@vauxoo.com>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -55,7 +55,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -845,7 +845,7 @@ msgstr ""
 msgid ""
 "A transaction can't be linked to sales orders having different partners."
 msgstr ""
-"Una transacción no puede vincularse a pedidos de Venta que tengan socios "
+"Una transacción no puede vincularse a pedidos de Venta que tengan contactos "
 "diferentes."
 
 #. module: sale
@@ -1867,12 +1867,12 @@ msgstr "Seguidores (Canales)"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Seguidores (Empresas)"
+msgstr "Seguidores (Contactos)"
 
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr "Valores prohibidos en la línea de orden de venta no contable"
+msgstr "Valores prohibidos en la línea de pedido de venta virtual"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
@@ -2068,7 +2068,7 @@ msgstr "¡Se ha encontrado un token no válido! Adquiridor de tokens %s!=%s"
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr "¡Se ha encontrado un token no válido! Socio de token != %s"
+msgstr "¡Se ha encontrado un token no válido! Token de contacto != %s"
 
 #. module: sale
 #: code:addons/sale/models/account_invoice.py:0
@@ -2781,8 +2781,8 @@ msgid ""
 "Ordered Quantity: Invoice quantities ordered by the customer.\n"
 "Delivered Quantity: Invoice quantities delivered to the customer."
 msgstr ""
-"Cantidad pedida: cantidades de factura ordenadas por el cliente.\n"
-"Cantidad entregada: cantidades de factura entregadas al cliente."
+"Cantidad pedida: facturar cantidades pedidas por el cliente.\n"
+"Cantidad entregada: facturar cantidades entregadas al cliente."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__invoice_policy__order
@@ -2831,12 +2831,12 @@ msgstr "Factura PRO-FORMA"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
 msgid "Partner"
-msgstr "Empresa"
+msgstr "Contacto"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__country_id
 msgid "Partner Country"
-msgstr "País del Asociado"
+msgstr "País del Contacto"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3929,8 +3929,8 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s is cancelled. You "
 "cannot register an expense on a cancelled Sales Order."
 msgstr ""
-"La orden de venta %s vinculado a la cuenta analítica %s está cancelado. No "
-"puede registrar un gasto en una orden de venta cancelada."
+"El pedido de venta %s vinculado a la cuenta analítica %s está cancelado. No "
+"puede registrar un gasto en un pedido de venta cancelado."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3940,9 +3940,9 @@ msgid ""
 "You cannot register an expense on a locked Sales Order. Please create a new "
 "SO linked to this Analytic Account."
 msgstr ""
-"La orden de venta %s vinculado a la cuenta analítica %s está actualmente "
-"bloqueado No puede registrar un gasto en un pedido de ventas bloqueado. Cree"
-" un nuevo SO vinculado a esta cuenta analítica."
+"El pedido de venta %s vinculado a la cuenta analítica %s está actualmente "
+"bloqueado. No puede registrar un gasto en un pedido de ventas bloqueado. "
+"Cree un nuevo pedido vinculado a esta cuenta analítica."
 
 #. module: sale
 #: code:addons/sale/models/account_move.py:0
@@ -3951,7 +3951,7 @@ msgid ""
 "The Sales Order %s linked to the Analytic Account %s must be validated "
 "before registering expenses."
 msgstr ""
-"El pedido de Venta %s vinculado a la cuenta analítica%s debe ser validada "
+"El pedido de venta %s vinculado a la cuenta analítica%s debe estar validado "
 "antes de registrar gastos."
 
 #. module: sale
@@ -4136,9 +4136,9 @@ msgid ""
 "This is the delivery date promised to the customer. If set, the delivery "
 "order will be scheduled based on this date rather than product lead times."
 msgstr ""
-"Esta es la fecha de entrega prometida al cliente. Si se establece, el pedido"
-" de entrega se programará en función de esta fecha en lugar de los plazos de"
-" entrega del producto."
+"Ésta es la fecha de entrega prometida al cliente. Si se establece, la orden "
+"de entrega se programará en función de esta fecha en lugar de los plazos de "
+"entrega del producto."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
@@ -4167,7 +4167,7 @@ msgid ""
 msgstr ""
 "Este informe realiza un análisis de sus presupuestos y pedidos de venta. El "
 "análisis verifica los ingresos de sus ventas y las ordena por diferentes "
-"grupos de criterios (comercial, empresa, producto, etc.). Utilice este "
+"grupos de criterios (comercial, contacto, producto, etc.). Utilice este "
 "informe para realizar un análisis sobre sus ventas todavía no facturadas. Si"
 " desea analizar sus ingresos, debería utilizar el informe de análisis de "
 "facturas en la aplicación de Contabilidad."
@@ -4183,7 +4183,7 @@ msgid ""
 msgstr ""
 "Este informe realiza un análisis sobre sus presupuestos. El análisis "
 "comprueba sus ingresos por ventas y los ordena por diferentes criterios de "
-"agrupación (comercial, empresa, producto, etc). Use este informe para "
+"agrupación (comercial, contacto, producto, etc). Use este informe para "
 "realizar un análisis de las ventas aún no facturadas. Si quiere analizar su "
 "volumen de negocios, debe usar el informe de análisis de facturas en la "
 "aplicación de Contabilidad"
@@ -4514,8 +4514,8 @@ msgid ""
 "You can not delete a sent quotation or a confirmed sales order. You must "
 "first cancel it."
 msgstr ""
-"No puedes eliminar un presupuesto enviado o un Pedido de venta confirmada. "
-"Primero debes cancelar esto."
+"No puede eliminar un presupuesto enviado o un pedido de venta confirmado. "
+"Primero debe cancelarlo."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -4565,7 +4565,7 @@ msgid ""
 "You cannot change the type of a sale order line. Instead you should delete "
 "the current line and create a new line of the proper type."
 msgstr ""
-"No puede cambiar el tipo de una línea de orden de venta. En su lugar, debe "
+"No puede cambiar el tipo de una línea de pedido de venta. En su lugar, debe "
 "eliminar la línea actual y crear una nueva línea del tipo adecuado."
 
 #. module: sale
@@ -4580,7 +4580,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Your feedback..."
-msgstr "Tu feedback..."
+msgstr "Sus comentarios..."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template

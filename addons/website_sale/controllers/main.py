@@ -1230,7 +1230,7 @@ class WebsiteSale(http.Controller):
                 ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel, orderby='visit_datetime DESC')
             products_ids = [product['product_id'][0] for product in products]
             if products_ids:
-                viewed_products = request.env['product.product'].browse(products_ids)
+                viewed_products = request.env['product.product'].with_context(display_default_code=False).browse(products_ids)
 
                 FieldMonetary = request.env['ir.qweb.field.monetary']
                 monetary_options = {

@@ -350,7 +350,7 @@ class WebsiteSlides(WebsiteProfile):
 
         if search:
             domain += [
-                '|', '|', '|',
+                '|', '|',
                 ('name', 'ilike', search),
                 ('description', 'ilike', search),
                 ('html_content', 'ilike', search)]

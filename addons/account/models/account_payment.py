@@ -364,6 +364,7 @@ class account_payment(models.Model):
 
     @api.depends('invoice_ids', 'payment_type', 'partner_type', 'partner_id')
     def _compute_destination_account_id(self):
+        self.destination_account_id = False
         for payment in self:
             if payment.invoice_ids:
                 payment.destination_account_id = payment.invoice_ids[0].mapped(
@@ -708,7 +709,7 @@ class account_payment(models.Model):
         moves = self.mapped('move_line_ids.move_id')
         moves.filtered(lambda move: move.state == 'posted').button_draft()
         moves.with_context(force_delete=True).unlink()
-        self.write({'state': 'draft'})
+        self.write({'state': 'draft', 'invoice_ids': False})
 
     def _get_invoice_payment_amount(self, inv):
         """

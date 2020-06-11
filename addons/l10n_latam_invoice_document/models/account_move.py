@@ -21,7 +21,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_latam_document_number', inverse='_inverse_l10n_latam_document_number',
         string='Document Number', readonly=True, states={'draft': [('readonly', False)]})
     l10n_latam_use_documents = fields.Boolean(related='journal_id.l10n_latam_use_documents')
-    l10n_latam_country_code = fields.Char(
+    l10n_latam_country_code = fields.Char("Country Code (LATAM)",
         related='company_id.country_id.code', help='Technical field used to hide/show fields regarding the localization')
 
     def _get_sequence_prefix(self):

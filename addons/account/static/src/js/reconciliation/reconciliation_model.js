@@ -1692,6 +1692,7 @@ var ManualModel = StatementModel.extend({
             line.reconciliation_proposition = _.filter(line.reconciliation_proposition, function (p) {
                 return p.id !== prop.id && p.id !== prop.link && p.link !== prop.id && (!p.link || p.link !== prop.link);
             });
+            line.mv_lines_match = line.mv_lines_match || [];
             line.mv_lines_match.unshift(prop);
 
             // No proposition left and then, reset the st_line partner.

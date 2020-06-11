@@ -520,6 +520,9 @@ class Repair(models.Model):
                 # quant is created in operation.location_id.
                 move._set_quantity_done(operation.product_uom_qty)
 
+                if operation.lot_id:
+                    move.move_line_ids.lot_id = operation.lot_id
+
                 moves |= move
                 operation.write({'move_id': move.id, 'state': 'done'})
             move = Move.create({
@@ -723,7 +726,10 @@ class RepairFee(models.Model):
                 fp = self.env['account.fiscal.position'].browse(fp_id)
             self.tax_id = fp.map_tax(self.product_id.taxes_id, self.product_id, partner).ids
         if self.product_id:
-            self.name = self.product_id.display_name
+            if partner:
+                self.name = self.product_id.with_context(lang=partner.lang).display_name
+            else:
+                self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
             if self.product_id.description_sale:
                 self.name += '\n' + self.product_id.description_sale

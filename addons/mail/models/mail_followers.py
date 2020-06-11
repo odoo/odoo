@@ -330,7 +330,7 @@ GROUP BY fol.id%s""" % (
                 elif existing_policy in ('replace', 'update'):
                     fol_id, sids = next(((key, val[3]) for key, val in data_fols.items() if val[0] == res_id and val[1] == partner_id), (False, []))
                     new_sids = set(partner_subtypes[partner_id]) - set(sids)
-                    old_sids = set(sids) - set(partner_subtypes[partner_id])
+                    old_sids = set(sids  if sids[0] is not None else []) - set(partner_subtypes[partner_id])
                     if fol_id and new_sids:
                         update[fol_id] = {'subtype_ids': [(4, sid) for sid in new_sids]}
                     if fol_id and old_sids and existing_policy == 'replace':

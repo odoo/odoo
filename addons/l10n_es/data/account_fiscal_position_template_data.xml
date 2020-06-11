@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!-- © 2009-2011 Jordi Esteve - Zikzakmedia
-     © 2011 Ignacio Ibeas - Acysos
+     © 2011-2020 Ignacio Ibeas - Acysos
      © 2015 Carlos Liébana - Factor Libre
      © 2015 Albert Cabedo - GAFIC consultores
      © 2015 Vicent Cubells
@@ -41,10 +41,21 @@
 
         <record id="fp_extra" model="account.fiscal.position.template">
             <field name="sequence">4</field>
-            <field name="name">Régimen Extracomunitario / Canarias, Ceuta y Melilla</field>
+            <field name="name">Régimen Extracomunitario</field>
             <field name="chart_template_id" ref="account_chart_template_common"/>
             <field name="auto_apply" eval="True"/>
         </record>
+
+        <record id="fp_not_subject_tai" model="account.fiscal.position.template">
+            <field name="name">Régimen No sujeto por reglas de localización (TAI - Canarias, Ceuta, Melilla...)</field>
+            <field name="chart_template_id" ref="account_chart_template_common"/>
+            <field name="note">
+                Está posición fiscal solo aplica en el caso de vender desde territorio
+                nacional a una localización no sujeta, por ejemplo, Canarias, Ceuta o Melilla.
+                Más información: https://www.agenciatributaria.es/AEAT.internet/en_gb/Inicio/Ayuda/Modelos__Procedimientos_y_Servicios/Ayuda_Modelo_303/Informacion_general/Instrucciones_modelo_303.shtml
+            </field>
+        </record>
+
 
         <record id="fp_recargo" model="account.fiscal.position.template">
             <field name="name">Recargo de Equivalencia</field>
@@ -329,6 +340,99 @@
             <field name="position_id" ref="fp_intra"/>
             <field name="tax_src_id" ref="account_tax_template_s_iva21isp"/>
             <field name="tax_dest_id" ref="account_tax_template_s_iva0_ic"/>
+        </record>
+
+        <!-- Not subject by Localization Rules (TAI) -->
+
+        <record id="fptt_not_subject_tai_4b" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_p_iva4_bc"/>
+            <field name="tax_dest_id" ref="account_tax_template_p_iva0_ns_b"/>
+        </record>
+        <record id="fptt_not_subject_tai_4s" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_p_iva4_sc"/>
+            <field name="tax_dest_id" ref="account_tax_template_p_iva0_ns"/>
+        </record>
+        <record id="fptt_not_subject_tai_4_inv"
+            model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_p_iva4_bi"/>
+            <field name="tax_dest_id" ref="account_tax_template_p_iva0_ns_b"/>
+        </record>
+        <record id="fptt_not_subject_tai_10b" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_p_iva10_bc"/>
+            <field name="tax_dest_id" ref="account_tax_template_p_iva0_ns_b"/>
+        </record>
+        <record id="fptt_not_subject_tai_10s" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_p_iva10_sc"/>
+            <field name="tax_dest_id" ref="account_tax_template_p_iva0_ns"/>
+        </record>
+        <record id="fptt_not_subject_tai_10_inv"
+            model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_p_iva10_bi"/>
+            <field name="tax_dest_id" ref="account_tax_template_p_iva0_ns_b"/>
+        </record>
+        <record id="fptt_not_subject_tai_21b" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_p_iva21_bc"/>
+            <field name="tax_dest_id" ref="account_tax_template_p_iva0_ns_b"/>
+        </record>
+        <record id="fptt_not_subject_tai_21s" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_p_iva21_sc"/>
+            <field name="tax_dest_id" ref="account_tax_template_p_iva0_ns"/>
+        </record>
+        <record id="fptt_not_subject_tai_21_inv"
+            model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_p_iva21_bi"/>
+            <field name="tax_dest_id" ref="account_tax_template_p_iva0_ns_b"/>
+        </record>
+        <record id="fptt_not_subject_tai_ventas_4b"
+            model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_s_iva4b"/>
+            <field name="tax_dest_id" ref="account_tax_template_s_iva_ns_b"/>
+        </record>
+        <record id="fptt_not_subject_tai_ventas_4s"
+            model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_s_iva4s"/>
+            <field name="tax_dest_id" ref="account_tax_template_s_iva_ns"/>
+        </record>
+        <record id="fptt_not_subject_tai_ventas_10b"
+            model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_s_iva10b"/>
+            <field name="tax_dest_id" ref="account_tax_template_s_iva_ns_b"/>
+        </record>
+        <record id="fptt_not_subject_tai_ventas_10s"
+            model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_s_iva10s"/>
+            <field name="tax_dest_id" ref="account_tax_template_s_iva_ns"/>
+        </record>
+        <record id="fptt_not_subject_tai_ventas_21b"
+            model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_s_iva21b"/>
+            <field name="tax_dest_id" ref="account_tax_template_s_iva_ns_b"/>
+        </record>
+        <record id="fptt_not_subject_tai_ventas_21s"
+            model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_s_iva21s"/>
+            <field name="tax_dest_id" ref="account_tax_template_s_iva_ns"/>
+        </record>
+        <record id="fptt_not_subject_tai_ventas_21isp"
+            model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="fp_not_subject_tai"/>
+            <field name="tax_src_id" ref="account_tax_template_s_iva21isp"/>
+            <field name="tax_dest_id" ref="account_tax_template_s_iva_ns_b"/>
         </record>
 
         <!-- Recargo de equivalencia -->

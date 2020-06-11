@@ -13,6 +13,7 @@
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # ryan ryan <itechr@outlook.com>, 2019
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
+"Last-Translator: guohuadeng <guohuadeng@hotmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -55,6 +56,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"根据产品配置，接收数量可由机构自动计算:\n"
+" -手动:数量在\n"
+"线上手动设置-存货变动:数量来自已确认的拣选\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -102,7 +106,7 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
-msgstr ""
+msgstr "根据所安装的模块，这将允许您定义路由产品:是否会购买，制造，补充订单，等。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -338,7 +342,7 @@ msgstr "技术字段用于显示代发货地址"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date_minimum_delta
 msgid "The change must be higher than this value to be propagated"
-msgstr ""
+msgstr "要传播的更改必须大于此值"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -351,7 +355,7 @@ msgstr "您的采购订单上的数量表明少于账单。 你应该要求退�
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date
 msgid "The rescheduling is propagated to the next move."
-msgstr ""
+msgstr "重新调度被传播到下一个移动。"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0

@@ -24,7 +24,7 @@ class HrPlanWizard(models.TransientModel):
             responsible = activity_type.get_responsible_id(self.employee_id)
 
             if self.env['hr.employee'].with_user(responsible).check_access_rights('read', raise_exception=False):
-                self.env['mail.activity'].create({
+                activity = self.env['mail.activity'].create({
                     'res_id': self.employee_id.id,
                     'res_model_id': self.env['ir.model']._get('hr.employee').id,
                     'summary': activity_type.summary,
@@ -32,6 +32,7 @@ class HrPlanWizard(models.TransientModel):
                     'activity_type_id': activity_type.activity_type_id.id,
                     'user_id': responsible.id,
                 })
+                activity._onchange_activity_type_id()
 
         return {
             'type': 'ir.actions.act_window',

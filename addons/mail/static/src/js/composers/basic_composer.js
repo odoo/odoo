@@ -657,7 +657,6 @@ var BasicComposer = Widget.extend({
      */
     _onBodyFileDrop: function (ev) {
         ev.preventDefault();
-        ev.stopPropagation();
         this.$(".o_file_drop_zone_container").addClass("d-none");
     },
     /**

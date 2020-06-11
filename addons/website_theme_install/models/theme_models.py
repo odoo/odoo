@@ -212,6 +212,20 @@ class IrUiView(models.Model):
 
     theme_template_id = fields.Many2one('theme.ir.ui.view')
 
+    def write(self, vals):
+        no_arch_updated_views = other_views = self.env['ir.ui.view']
+        for record in self:
+            # Do not mark the view as user updated if original view arch is similar
+            arch = vals.get('arch', vals.get('arch_base'))
+            if record.theme_template_id and record.theme_template_id.arch == arch:
+                no_arch_updated_views += record
+            else:
+                other_views += record
+        res = super(IrUiView, other_views).write(vals)
+        if no_arch_updated_views:
+            vals['arch_updated'] = False
+            res &= super(IrUiView, no_arch_updated_views).write(vals)
+        return res
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'

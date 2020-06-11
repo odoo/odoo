@@ -12,6 +12,8 @@ import logging
 import os
 import subprocess
 import zipfile
+from threading import Thread
+import time
 
 from odoo import _
 from odoo.modules.module import get_resource_path
@@ -21,6 +23,18 @@ _logger = logging.getLogger(__name__)
 #----------------------------------------------------------
 # Helper
 #----------------------------------------------------------
+
+class IoTRestart(Thread):
+    """
+    Thread to restart odoo server in IoT Box when we must return a answer before
+    """
+    def __init__(self, delay):
+        Thread.__init__(self)
+        self.delay = delay
+
+    def run(self):
+        time.sleep(self.delay)
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
 
 def access_point():
     return get_ip() == '10.11.12.1'
@@ -79,7 +93,7 @@ def check_git_branch():
 
                 if db_branch != local_branch:
                     subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
-                    subprocess.check_call(["rm", "/home/pi/odoo/addons/hw_drivers/drivers/*"])
+                    subprocess.check_call(["rm", "-rf", "/home/pi/odoo/addons/hw_drivers/drivers/*"])
                     subprocess.check_call(git + ['branch', '-m', db_branch])
                     subprocess.check_call(git + ['remote', 'set-branches', 'origin', db_branch])
                     os.system('/home/pi/odoo/addons/point_of_sale/tools/posbox/configuration/posbox_update.sh')
@@ -208,13 +222,18 @@ def download_drivers(auto=True):
             resp = pm.request('POST', server, fields={'mac': get_mac_address(), 'auto': auto})
             if resp.data:
                 subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/"])
+                drivers_path = Path.home() / 'odoo/addons/hw_drivers/drivers'
                 zip_file = zipfile.ZipFile(io.BytesIO(resp.data))
-                zip_file.extractall(get_resource_path('hw_drivers', 'drivers'))
+                zip_file.extractall(drivers_path)
                 subprocess.check_call(["sudo", "mount", "-o", "remount,ro", "/"])
                 subprocess.check_call(["sudo", "mount", "-o", "remount,rw", "/root_bypass_ramdisks/etc/cups"])
         except Exception as e:
             _logger.error('Could not reach configured server')
             _logger.error('A error encountered : %s ' % e)
+
+def odoo_restart(delay):
+    IR = IoTRestart(delay)
+    IR.start()
 
 def read_file_first_line(filename):
     path = Path.home() / filename

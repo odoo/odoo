@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.account_test_savepoint import AccountingSavepointCase
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo.exceptions import UserError
 
 
 @tagged('post_install', '-at_install')
-class TestAccountAnalyticAccount(AccountingSavepointCase):
+class TestAccountAnalyticAccount(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super().setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.env.user.write({
             'groups_id': [

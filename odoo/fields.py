@@ -986,7 +986,13 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.compute and (record.id in env.all.tocompute.get(self, ())) \
                 and not env.is_protected(self, record):
             # self must be computed on record
-            recs = record if self.recursive else env.records_to_compute(self)
+            if self.recursive:
+                recs = record
+            else:
+                recs = env.records_to_compute(self)
+                # compute the field on real records only (if 'record' is real)
+                # or new records only (if 'record' is new)
+                recs = recs.filtered(lambda rec: bool(rec.id) == bool(record.id))
             try:
                 self.compute_value(recs)
             except (AccessError, MissingError):
@@ -2039,11 +2045,19 @@ class Binary(Field):
 class Image(Binary):
     """Encapsulates an image, extending :class:`Binary`.
 
-    :param int max_width: the maximum width of the image
-    :param int max_height: the maximum height of the image
+    If image size is greater than the ``max_width``/``max_height`` limit of pixels, the image will be
+    resized to the limit by keeping aspect ratio.
+
+    :param int max_width: the maximum width of the image (default: ``0``, no limit)
+    :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
         See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+
+    .. note::
+
+        If no ``max_width``/``max_height`` is specified (or is set to 0) and ``verify_resolution`` is False,
+        the field content won't be verified at all and a :class:`Binary` field should be used.
     """
     _slots = {
         'max_width': 0,
@@ -2148,9 +2162,11 @@ class Selection(Field):
                     ):
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
                     values = [kv[0] for kv in selection]
-                    labels.update(selection)
+                    labels = dict(selection)
                 else:
                     self.selection = selection
+                    values = None
+                    labels = {}
 
             if 'selection_add' in field.args:
                 selection_add = field.args['selection_add']

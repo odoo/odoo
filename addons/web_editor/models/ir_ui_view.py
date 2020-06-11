@@ -223,7 +223,7 @@ class IrUiView(models.Model):
     # Used by translation mechanism, SEO and optional templates
 
     @api.model
-    def _views_get(self, view_id, get_children=True, bundles=False, root=True):
+    def _views_get(self, view_id, get_children=True, bundles=False, root=True, visited=None):
         """ For a given view ``view_id``, should return:
                 * the view itself
                 * all views inheriting from it, enabled or not
@@ -237,6 +237,8 @@ class IrUiView(models.Model):
             _logger.warning("Could not find view object with view_id '%s'", view_id)
             return self.env['ir.ui.view']
 
+        if visited is None:
+            visited = []
         while root and view.inherit_id:
             view = view.inherit_id
 
@@ -251,8 +253,8 @@ class IrUiView(models.Model):
                 called_view = self._view_obj(child.get('t-call', child.get('t-call-assets')))
             except ValueError:
                 continue
-            if called_view and called_view not in views_to_return:
-                views_to_return += self._views_get(called_view, get_children=get_children, bundles=bundles)
+            if called_view and called_view not in views_to_return and called_view.id not in visited:
+                views_to_return += self._views_get(called_view, get_children=get_children, bundles=bundles, visited=visited + views_to_return.ids)
 
         if not get_children:
             return views_to_return
@@ -262,9 +264,10 @@ class IrUiView(models.Model):
         # Keep children in a deterministic order regardless of their applicability
         for extension in extensions.sorted(key=lambda v: v.id):
             # only return optional grandchildren if this child is enabled
-            for ext_view in self._views_get(extension, get_children=extension.active, root=False):
-                if ext_view not in views_to_return:
-                    views_to_return += ext_view
+            if extension.id not in visited:
+                for ext_view in self._views_get(extension, get_children=extension.active, root=False, visited=visited + views_to_return.ids):
+                    if ext_view not in views_to_return:
+                        views_to_return += ext_view
         return views_to_return
 
     @api.model

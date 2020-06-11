@@ -145,3 +145,7 @@ class Selection(models.Model):
     _inherit = 'test_new_api.selection'
 
     state = fields.Selection(selection_add=[('bar', 'Bar'), ('baz', 'Baz')])
+    other = fields.Selection('_other_values')
+
+    def _other_values(self):
+        return [('baz', 'Baz')]

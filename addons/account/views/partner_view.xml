@@ -39,13 +39,13 @@
                         <group>
                             <field name="tax_ids" widget="one2many" nolabel="1" context="{'append_type_to_tax_name': True}">
                                 <tree name="tax_map_tree" string="Tax Mapping" editable="bottom">
-                                    <field name="tax_src_id" domain="[('type_tax_use', '!=', None), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'append_type_to_tax_name': True}"/>
-                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', None), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'append_type_to_tax_name': True}"/>
+                                    <field name="tax_src_id" domain="[('type_tax_use', '!=', 'none'), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'append_type_to_tax_name': True}"/>
+                                    <field name="tax_dest_id" domain="[('type_tax_use', '!=', 'none'), '|', ('company_id', '=', False), ('company_id', '=', parent.company_id)]" context="{'append_type_to_tax_name': True}"/>
                                 </tree>
                                 <form name="tax_map_form" string="Tax Mapping">
                                     <group>
-                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', None)]" context="{'append_type_to_tax_name': True}"/>
-                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', None)]" context="{'append_type_to_tax_name': True}"/>
+                                        <field name="tax_src_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
+                                        <field name="tax_dest_id" domain="[('type_tax_use', '!=', 'none')]" context="{'append_type_to_tax_name': True}"/>
                                     </group>
                                 </form>
                             </field>

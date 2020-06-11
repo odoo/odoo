@@ -11,7 +11,7 @@ from pathlib import Path
 import subprocess
 import time
 from threading import Lock
-from usb import util
+import usb
 import urllib3
 try:
     from queue import Queue, Empty
@@ -120,8 +120,12 @@ class KeyboardUSBDriver(Driver):
 
     def _set_name(self):
         try:
-            manufacturer = util.get_string(self.dev, 256, self.dev.iManufacturer)
-            product = util.get_string(self.dev, 256, self.dev.iProduct)
+            if usb.__version__ == '1.0.0b1':
+                manufacturer = usb.util.get_string(self.dev, 256, self.dev.iManufacturer)
+                product = usb.util.get_string(self.dev, 256, self.dev.iProduct)
+            else:
+                manufacturer = usb.util.get_string(self.dev, self.dev.iManufacturer)
+                product = usb.util.get_string(self.dev, self.dev.iProduct)
             return ("%s - %s") % (manufacturer, product)
         except ValueError as e:
             _logger.warning(e)

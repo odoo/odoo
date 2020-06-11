@@ -48,7 +48,7 @@ class BaseLanguageImport(models.TransientModel):
                     raise UserError(_('File %r not imported due to a malformed file.\n\n' +
                                       'This issue can be caused by duplicates entries who are referring to the same field. ' +
                                       'Please check the content of the file you are trying to import.\n\n' +
-                                      'Technical Details:\n%s') % tools.ustr(e))
+                                      'Technical Details:\n%s') % (self.filename, tools.ustr(e)))
             except Exception as e:
                 _logger.exception('File unsuccessfully imported, due to format mismatch.')
                 raise UserError(

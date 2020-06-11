@@ -9,6 +9,7 @@
                     <field name="res_id" invisible="1"/>
                     <field name="res_model" invisible="1"/>
                     <field name="partner_id" invisible="1"/>
+                    <field name="partner_email" invisible="1"/>
                     <field name="amount_max" invisible="1"/>
                     <field name="description"/>
                     <field name="amount"/>
@@ -17,6 +18,9 @@
                 </group>
                 <group>
                     <field name="link" readonly="1" widget="CopyClipboardChar"/>
+                </group>
+                <group attrs="{'invisible':[('partner_email', '!=', False)]}">
+                    <p class="alert alert-warning font-weight-bold" role="alert">This partner has no email, which may cause issues with some payment acquirers. Setting an email for this partner is advised.</p>
                 </group>
                 <footer>
                     <button string="Close" class="btn-primary" special="cancel"/>

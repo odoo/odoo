@@ -32,7 +32,19 @@ var BusService =  CrossTab.extend(ServicesMixin, {
     sendNotification: function (title, content, callback) {
         if (window.Notification && Notification.permission === "granted") {
             if (this.isMasterTab()) {
-                this._sendNativeNotification(title, content, callback);
+                try {
+                    this._sendNativeNotification(title, content, callback);
+                } catch (error) {
+                    // Notification without Serviceworker in Chrome Android doesn't works anymore
+                    // So we fallback to do_notify() in this case
+                    // https://bugs.chromium.org/p/chromium/issues/detail?id=481856
+                    if (error.message.indexOf('ServiceWorkerRegistration') > -1) {
+                        this.do_notify(title, content);
+                        this._beep();
+                    } else {
+                        throw error;
+                    }
+                }
             }
         } else {
             this.do_notify(title, content);

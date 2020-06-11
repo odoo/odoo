@@ -174,7 +174,8 @@ class Message(models.Model):
                 (self._table, operator)
         self.env.cr.execute(query, (value,))
         ids = [t[0] for t in self.env.cr.fetchall()]
-        return [('id', 'in', ids)]
+        # return domain with an implicit AND
+        return [('id', 'in', ids), (1, '=', 1)]
 
     @api.depends('size')
     def _compute_double_size(self):
@@ -646,6 +647,7 @@ class Selection(models.Model):
     _description = "Selection"
 
     state = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
+    other = fields.Selection([('foo', 'Foo'), ('bar', 'Bar')])
 
 
 class RequiredM2O(models.Model):

@@ -53,6 +53,8 @@
                         <tree editable="bottom" decoration-success="product_uom_qty==qty_done" decoration-danger="(product_uom_qty &gt; 0) and (qty_done&gt;product_uom_qty)">
                             <field name="lot_id" attrs="{'column_invisible': [('parent.has_tracking', '=', 'none')]}" context="{'default_product_id': parent.product_id}"/>
                             <field name="lot_produced_ids" widget="many2many_tags" options="{'no_open': True, 'no_create': True}" domain="[('id', 'in', parent.order_finished_lot_ids)]" invisible="not context.get('final_lots')"/>
+                            <field name="owner_id" groups="stock.group_tracking_owner" options="{'no_open': True, 'no_create': True}" optional="hide"/>
+                            <field name="package_id" groups="stock.group_tracking_lot" options="{'no_open': True, 'no_create': True}" optional="hide"/>
                             <field name="product_uom_qty" string="Reserved" readonly="1" optional="show"/>
                             <field name="qty_done"/>
                             <field name="workorder_id" invisible="1"/>
@@ -73,7 +75,7 @@
             <field name="model">stock.move</field>
             <field name="priority">1000</field>
             <field name="arch" type="xml">
-                <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done&gt;product_uom_qty" decoration-success="not is_done and quantity_done - product_uom_qty &lt; 0.0001" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty and product_uom_qty - reserved_availability &gt; 0.0001">
+                <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" decoration-warning="quantity_done - product_uom_qty &gt; 0.0001" decoration-success="not is_done and quantity_done - product_uom_qty &lt; 0.0001" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty and product_uom_qty - reserved_availability &gt; 0.0001">
                     <field name="product_id" required="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="product_uom_category_id" invisible="1"/>
@@ -97,6 +99,17 @@
                     <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)], 'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" string="Reserved"/>
                     <field name="quantity_done" string="Consumed" attrs="{'column_invisible': [('parent.state', '=', 'draft')]}" readonly="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_move_kanban_inherit_mrp" model="ir.ui.view">
+            <field name="name">stock.move.kanban.inherit.mrp</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_kandan"/>
+            <field name="arch" type="xml">
+                <xpath expr="//templates" position="before">
+                    <field name="bom_line_id"/>
+                </xpath>
             </field>
         </record>
 
