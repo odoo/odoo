@@ -25,8 +25,9 @@ return AbstractWebClient.extend({
                 menu_id: menuID,
             }));
         });
-
-        return this._super.apply(this, arguments);
+        return this._super.apply(this, arguments)
+            .then(() => console.log('SUCCESS'))
+            .guardedCatch(() => console.log('FAILED'));
     },
     bind_events: function () {
         var self = this;
