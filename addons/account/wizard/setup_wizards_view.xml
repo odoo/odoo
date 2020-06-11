@@ -15,8 +15,9 @@
 
                                 <label for="fiscalyear_last_month" string="Fiscal Year End"/>
                                 <div>
-                                    <field name="fiscalyear_last_day"/>
-                                    <field name="fiscalyear_last_month"/>
+                                    <field name="fiscalyear_last_day" class="oe_inline text-center" style="width: 20% !important;"/>
+                                    <span style="width: 5%; display: inline-block"/>
+                                    <field name="fiscalyear_last_month" class="oe_inline" style="width: 75% !important;"/>
                                 </div>
                             </group>
                         </group>
@@ -82,10 +83,11 @@
                     <field name="reconcile" widget="boolean_toggle"/>
                     <field name="opening_debit"/>
                     <field name="opening_credit"/>
+                    <field name="opening_balance" optional="hide"/>
                     <field name="tax_ids" optional="hide" widget="many2many_tags"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags"/>
                     <field name="allowed_journal_ids" optional="hide" widget="many2many_tags"/>
-                    <button name="action_read_account" type="object" icon="fa-expand" string="Open" aria-label="Open" class="float-right"/>
+                    <button name="action_read_account" type="object" string="Setup" class="float-right"/>
                 </tree>
             </field>
         </record>

@@ -381,7 +381,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         copy6 = copy5.copy()
         copy6.post()
-        self.assertEqual(copy6.name, '1N\'importe quoi?')
+        self.assertEqual(copy6.name, 'N\'importe quoi?1')
 
     def test_journal_sequence_format(self):
         """Test different format of sequences and what it becomes on another period"""

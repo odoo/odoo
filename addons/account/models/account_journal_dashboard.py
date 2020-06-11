@@ -435,22 +435,25 @@ class account_journal(models.Model):
         statement_line_ids = self.env['account.move.line'].search(domain).mapped('statement_line_id')
         return statement_line_ids
 
+    def _select_action_to_open(self):
+        self.ensure_one()
+        if self._context.get('action_name'):
+            return self._context.get('action_name')
+        elif self.type == 'bank':
+            return 'action_bank_statement_tree'
+        elif self.type == 'cash':
+            return 'action_view_bank_statement_tree'
+        elif self.type == 'sale':
+            return 'action_move_out_invoice_type'
+        elif self.type == 'purchase':
+            return 'action_move_in_invoice_type'
+        else:
+            return 'action_move_journal_line'
+
     def open_action(self):
         """return action based on type for related journals"""
-        action_name = self._context.get('action_name')
-
-        # Find action based on journal.
-        if not action_name:
-            if self.type == 'bank':
-                action_name = 'action_bank_statement_tree'
-            elif self.type == 'cash':
-                action_name = 'action_view_bank_statement_tree'
-            elif self.type == 'sale':
-                action_name = 'action_move_out_invoice_type'
-            elif self.type == 'purchase':
-                action_name = 'action_move_in_invoice_type'
-            else:
-                action_name = 'action_move_journal_line'
+        self.ensure_one()
+        action_name = self._select_action_to_open()
 
         # Set 'account.' prefix if missing.
         if '.' not in action_name:

@@ -326,16 +326,28 @@
                     <field name="sequence" readonly="1" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                     <field name="journal_id" invisible="1" />
+                    <field name="is_reconciled" invisible="1"/>
+                    <field name="partner_bank_id" invisible="1"/>
+                    <field name="currency_id" invisible="1"/>
 
                     <!-- Displayed fields -->
-                    <field name="statement_id" />
+                    <field name="statement_id" optional="hide"/>
+                    <field name="move_id"/>
                     <field name="date"/>
                     <field name="payment_ref"/>
                     <field name="ref" groups="base.group_no_one"/>
                     <field name="partner_id"/>
                     <field name="amount"/>
+                    <field name="amount_currency" optional="hidden" groups="base.group_multi_currency"/>
+                    <field name="foreign_currency_id" optional="hidden" groups="base.group_multi_currency"/>
+                    <field name="account_number" optional="hidden"/>
                     <field name="transaction_type" optional="hidden"/>
                     <field name="narration" optional="hidden"/>
+
+                    <!-- Buttons -->
+                    <button name="button_undo_reconciliation" type="object"
+                            attrs="{'invisible': [('is_reconciled', '=', False)]}"
+                            string="Revert reconciliation" icon="fa-undo"/>
                 </tree>
             </field>
         </record>

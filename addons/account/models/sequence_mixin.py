@@ -122,9 +122,9 @@ class SequenceMixin(models.AbstractModel):
 
         sequence = re.match(self._sequence_fixed_regex, last_sequence)
         value = ("{prefix}{seq:0%sd}{suffix}" % len(sequence.group('seq'))).format(
-            prefix=sequence.group('prefix1'),
+            prefix=sequence.group('prefix1') if sequence.group('seq') else sequence.group('suffix'),
             seq=int(sequence.group('seq') or 0) + 1,
-            suffix=sequence.group('suffix'),
+            suffix=sequence.group('suffix') if sequence.group('seq') else "",
         )
         self[self._sequence_field] = value
         self.flush([self._sequence_field])
