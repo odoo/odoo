@@ -1036,7 +1036,10 @@ var ListRenderer = BasicRenderer.extend({
         // display the no content helper if there is no data to display
         var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp && this.sampleType !== "sample";
         this.$el.toggleClass('o_list_view', !displayNoContentHelper || this.sampleType !== "helper");
-        if (displayNoContentHelper && this.sampleType === "helper") {
+        if ((displayNoContentHelper && this.sampleType === "helper") || (this.state.isSample && this.state.count === 0 && this.sampleType !== "sample")) {
+            if (this.state.isSample && this.state.count === 0) {
+                self.$el.parent().find('.o_view_nocontent').remove();
+            }
             // destroy the previously instantiated pagers, if any
             oldPagers.forEach(pager => pager.destroy());
 

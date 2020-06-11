@@ -3801,7 +3801,7 @@ QUnit.module('Views', {
         assert.containsOnce(list, '.o_list_table');
         assert.containsN(list, '.o_data_row', 4);
         assert.containsNone(list, '.o_record_sample');
-        assert.containNone(list, '.o_nocontent_help .hello');
+        assert.containsNone(list, '.o_nocontent_help .hello');
 
         list.destroy();
     });
@@ -3837,7 +3837,7 @@ QUnit.module('Views', {
 
         assert.containsNone(list, '.o_list_table');
         assert.containsNone(list, '.o_record_sample');
-        assert.containOnce(list, '.o_nocontent_help .hello');
+        assert.containsOnce(list, '.o_nocontent_help .hello');
 
         list.destroy();
     });
