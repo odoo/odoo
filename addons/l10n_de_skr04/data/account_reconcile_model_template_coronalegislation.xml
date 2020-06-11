@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo noupdate="1">
+    <!-- Add temporarily lowered taxes reconcile model from 19 to 16%, and the reduced rate will drop from 7 to 5% until December 31, 2020 -->
+    <record id="reconcile_5731_coronalegislation" model="account.reconcile.model.template">
+        <field name="name">Skonto-EK-5%</field>
+        <field name="account_id" ref="chart_skr04_5731"/>
+        <field name="amount_type">percentage</field>
+        <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_vst_5_taxinclusive_skr04')])]"/>
+        <field name="amount">100</field>
+        <field name="label">Skonto-EK-5%</field>
+        <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+    </record>
+
+    <record id="reconcile_5736_coronalegislation" model="account.reconcile.model.template">
+        <field name="name">Skonto-EK-16%</field>
+        <field name="account_id" ref="chart_skr04_5736"/>
+        <field name="amount_type">percentage</field>
+        <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_vst_16_taxinclusive_skr04')])]"/>
+        <field name="amount">100</field>
+        <field name="label">Skonto-EK-16%</field>
+        <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+    </record>
+
+    <record id="reconcile_4731_coronalegislation" model="account.reconcile.model.template">
+        <field name="name">Skonto-VK-5%</field>
+        <field name="account_id" ref="chart_skr04_4731"/>
+        <field name="amount_type">percentage</field>
+        <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_ust_5_taxinclusive_skr04')])]"/>
+        <field name="amount">100</field>
+        <field name="label">Skonto-VK-5%</field>
+        <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+    </record>
+
+    <record id="reconcile_4736_coronalegislation" model="account.reconcile.model.template">
+        <field name="name">Skonto-VK-16%</field>
+        <field name="account_id" ref="chart_skr04_4736"/>
+        <field name="amount_type">percentage</field>
+        <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_ust_16_taxinclusive_skr04')])]"/>
+        <field name="amount">100</field>
+        <field name="label">Skonto-VK-16%</field>
+        <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+    </record>
+
+    <record id="reconcile_6931_coronalegislation" model="account.reconcile.model.template">
+        <field name="name">Forderungsverlust-5%</field>
+        <field name="account_id" ref="chart_skr04_6931"/>
+        <field name="amount_type">percentage</field>
+        <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_ust_5_taxinclusive_skr04')])]"/>
+        <field name="amount">100</field>
+        <field name="label">Forderungsverlust-5%</field>
+        <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+    </record>
+
+    <record id="reconcile_6936_coronalegislation" model="account.reconcile.model.template">
+        <field name="name">Forderungsverlust-16%</field>
+        <field name="account_id" ref="chart_skr04_6936"/>
+        <field name="amount_type">percentage</field>
+        <field name="tax_ids" eval="[(6, 0, [ref('l10n_de_skr04.tax_ust_16_taxinclusive_skr04')])]"/>
+        <field name="amount">100</field>
+        <field name="label">Forderungsverlust-16%</field>
+        <field name="chart_template_id" ref="l10n_chart_de_skr04"/>
+    </record>
+</odoo>

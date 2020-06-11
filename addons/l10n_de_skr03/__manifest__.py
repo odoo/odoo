@@ -51,6 +51,8 @@ German accounting chart and localization.
         'data/account_data.xml',
         'data/account_tax_fiscal_position_data.xml',
         'data/account_reconcile_model_template.xml',
+        'data/account_tax_fiscal_position_data_coronalegislation.xml',
+        'data/account_reconcile_model_template_coronalegislation.xml',
         'data/account_chart_template_data.xml',
     ],
     'auto_install': True
