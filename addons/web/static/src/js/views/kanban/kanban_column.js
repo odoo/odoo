@@ -147,7 +147,6 @@ var KanbanColumn = Widget.extend({
                 self._onToggleFold(event);
             }
         });
-
         if (this.barOptions) {
             this.$el.addClass('o_kanban_has_progressbar');
             this.progressBar = new KanbanColumnProgressBar(this, this.barOptions, this.data);
@@ -222,7 +221,7 @@ var KanbanColumn = Widget.extend({
         if (this.quickCreateWidget) {
             this.quickCreateWidget.cancel();
         }
-        if (!this.getParent().state.count) {
+        if (this.data.isSample) {
             this.$el.find('.o_record_sample').remove();
         }
     },

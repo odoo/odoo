@@ -44,7 +44,6 @@ var BasicView = AbstractView.extend({
         this.fieldsInfo[this.viewType] = this.fieldsView.fieldsInfo[this.viewType];
 
         this.rendererParams.viewType = this.viewType;
-        this.rendererParams.sampleType = this.arch.attrs.no_data || "helper";
 
         this.controllerParams.confirmOnDelete = true;
         this.controllerParams.archiveEnabled = 'active' in this.fields || 'x_active' in this.fields;

@@ -244,7 +244,6 @@ var KanbanRenderer = BasicRenderer.extend({
      */
     updateState: function (state, params) {
         this._setState(state);
-        this.renderSample = params.renderSample;
         return this._super.apply(this, arguments);
     },
 
@@ -397,7 +396,6 @@ var KanbanRenderer = BasicRenderer.extend({
         var self = this;
         var KanbanRecord = this.config.KanbanRecord;
         var kanbanRecord;
-
         _.each(this.state.data, function (record) {
             kanbanRecord = new KanbanRecord(self, record, self.recordOptions);
             self.widgets.push(kanbanRecord);
@@ -461,7 +459,7 @@ var KanbanRenderer = BasicRenderer.extend({
                 self.$el.toggleClass('o_kanban_grouped', isGrouped);
                 self.$el.toggleClass('o_kanban_ungrouped', !isGrouped);
                 let $records = $(fragment).find('.o_kanban_record');
-                if (self.renderSample) {
+                if (self.state.isSample) {
                     $records.addClass('o_record_sample');
                 }
                 self.$el.append(fragment);
@@ -479,7 +477,7 @@ var KanbanRenderer = BasicRenderer.extend({
     _toggleNoContentHelper: function (remove) {
         var displayNoContentHelper =
             !remove &&
-            !this._hasContent() &&
+            (!this._hasContent() || this.state.isSample) &&
             !!this.noContentHelp &&
             !(this.quickCreate && !this.quickCreate.folded) &&
             !this.state.isGroupedByM2ONoColumn &&

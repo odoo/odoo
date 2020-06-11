@@ -4,13 +4,12 @@ odoo.define('web.viewNoData', function (require) {
     var Class = require('web.Class');
 
     var FakeServer = Class.extend({
-        init: function (model, params, options) {
-            this.model = model;
+        init: function (params) {
             this.params = params;
             this.route = params.route;
             this.method = params.method;
-            this.options = options || {};
-            this.session = model.getSession();
+            this.listFields = params.fields,
+            this.session = params.session;
         },
         isEmpty: function (result) {
             var self = this;
@@ -21,7 +20,7 @@ odoo.define('web.viewNoData', function (require) {
                     case 'web_read_group':
                         let total = 0;
                         _.each(result.groups, function (group) {
-                            let counter = (self.model.defaultGroupedBy && self.model.defaultGroupedBy[0] + '_count') || Object.keys(group).find(key => key.includes('_count'));
+                            let counter = self.params.defaultGroupedBy || Object.keys(group).find(key => key.includes('_count'));
                             total += group[counter];
                         });
                         return !total;
@@ -29,18 +28,29 @@ odoo.define('web.viewNoData', function (require) {
             }
             return false;
         },
-        performRpc: function () {
-            return Promise.resolve(this._performRpc());
+        performRpc: function (result) {
+            return Promise.resolve(this._performRpc(result));
         },
         _performRpc: function (result) {
+            var self = this;
             switch (this.route) {
                 case '/web/dataset/search_read':
                     return this._fakeSearchRead();
             }
+            switch (this.method) {
+                case 'web_read_group':
+                    if (JSON.stringify(this.params.initialDomain) === JSON.stringify(this.params.domain)) {
+                        _.each(result.groups, function (group) {
+                            let counter = self.params.defaultGroupedBy || Object.keys(group).find(key => key.includes('_count'));
+                            group[counter] = 4;
+                        });
+                    }
+                    return result;
+            }
             return result || {};
         },
         _fakeSearchRead: function () {
-            const listFields = Object.values(this.model.localData).find(x => x.model === this.params.model).fields;
+            const listFields = this.listFields;
             var result = {
                 length: 0,
                 records: [],

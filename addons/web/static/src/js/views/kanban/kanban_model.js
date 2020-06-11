@@ -126,7 +126,7 @@ var KanbanModel = BasicModel.extend({
                 method: 'create',
                 args: [values],
                 context: context,
-            });
+            }, {groupID: groupID});
         }
         return def.then(function (resID) {
             return self.addRecordToGroup(group.id, resID);

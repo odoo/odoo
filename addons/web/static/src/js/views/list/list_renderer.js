@@ -104,7 +104,6 @@ var ListRenderer = BasicRenderer.extend({
         if (params.selectedRecords) {
             this.selection = params.selectedRecords;
         }
-        this.renderSample = params.renderSample;
         return this._super.apply(this, arguments);
     },
 
@@ -936,7 +935,7 @@ var ListRenderer = BasicRenderer.extend({
             $tr.prepend(this._renderSelector('td', !record.res_id));
         }
         this._setDecorationClasses($tr, this.rowDecorations, record);
-        if (this.renderSample) {
+        if (this.state.isSample) {
             $tr.addClass('o_record_sample');
         }
         return $tr;
@@ -1043,7 +1042,6 @@ var ListRenderer = BasicRenderer.extend({
 
             this.$el.removeClass('table-responsive');
             this.$el.html(this._renderNoContentHelper());
-            this.$el.removeClass('o_record_sample');
             return this._super.apply(this, arguments);
         }
 
@@ -1100,18 +1098,17 @@ var ListRenderer = BasicRenderer.extend({
             }
         });
         return Promise.all([this._super.apply(this, arguments), prom]).then(function (){
-            if (self.sampleType !== "sample" && !self.arch.attrs.editable && !!self.noContentHelp) {
-                self.$el.parent().find('.o_view_nocontent').remove()
-                self._renderNoContentHelper().insertAfter(self.$el);
-            }
-            if (self.renderSample) {
+            if (self.state.isSample) {
+                if (self.sampleType !== "sample" && !self.arch.attrs.editable && !!self.noContentHelp && !self.$el.parent().find('.o_view_nocontent').length) {
+                    self._renderNoContentHelper().insertAfter(self.$el);
+                }
                 if (self.state.data.length > 0) {
                     self.$('tfoot').addClass('o_record_sample');
                 } else {
                     self.$('tfoot').remove();
                 }
-            } else if (self.state.isSample) {
-                self.$('tfoot').remove();
+            } else {
+                self.$el.parent().find('.o_view_nocontent').remove();
             }
         });
     },

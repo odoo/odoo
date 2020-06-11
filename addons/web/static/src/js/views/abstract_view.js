@@ -131,6 +131,7 @@ var AbstractView = Factory.extend({
             arch: this.arch,
             isEmbedded: isEmbedded,
             noContentHelp: params.noContentHelp,
+            sampleType: this.arch.attrs.no_data || "helper",
         };
 
         this.controllerParams = {
@@ -161,7 +162,9 @@ var AbstractView = Factory.extend({
             modelName: params.modelName,
             res_id: currentId,
             res_ids: controllerState.resIds || params.ids || (currentId ? [currentId] : undefined),
+            initialDomain: params.domain,
         };
+        this.modelParams.sampleType = this.arch.attrs.no_data || "helper";
         var defaultOrder = this.arch.attrs.default_order;
         if (defaultOrder) {
             this.loadParams.orderedBy = _.map(defaultOrder.split(','), function (order) {
@@ -206,7 +209,9 @@ var AbstractView = Factory.extend({
             };
             this.controllerParams.controlPanelModel = controlPanelModel;
             this.controllerParams.controlPanelProps = controlPanelProps;
+            this.loadParams.initialDomain = this.controllerParams.controlPanelModel.getQuery().domain;
         }
+
 
         if (this.withSearchPanel) {
             this.searchPanelParams = {
@@ -265,9 +270,6 @@ var AbstractView = Factory.extend({
     getModel: function () {
         if (!this.model) {
             this.model = this._super.apply(this, arguments);
-        }
-        if (this.rendererParams.sampleType === 'helper') {
-            this.model.renderSample = false;
         }
         return this.model;
     },

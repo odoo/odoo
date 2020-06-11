@@ -154,7 +154,7 @@ var BasicModel = AbstractModel.extend({
     /**
      * @override
      */
-    init: function () {
+    init: function (parent, params) {
         // this mutex is necessary to make sure some operations are done
         // sequentially, for example, an onchange needs to be completed before a
         // save is performed.
@@ -165,6 +165,7 @@ var BasicModel = AbstractModel.extend({
         this.batchedRPCsRequests = [];
 
         this.localData = Object.create(null);
+        this.sampleType = params.sampleType;
         this._super.apply(this, arguments);
     },
 
@@ -793,6 +794,7 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise<string>} resolves to a local id, or handle
      */
     load: function (params) {
+        this.initialDomain = params.initialDomain;
         params.type = params.type || (params.res_id !== undefined ? 'record' : 'list');
         // FIXME: the following seems only to be used by the basic_model_tests
         // so it should probably be removed and the tests should be adapted
@@ -1423,43 +1425,34 @@ var BasicModel = AbstractModel.extend({
     * @private
     * @override
     */
-    _rpc: function(params, options) {
-        var self = this;
+    _rpc: async function(params, options) {
+        var data = Object.values(this.localData).find(x => x.model === params.model);
+        var fakeServerParams = _.extend(params, {
+            defaultGroupedBy: (this.defaultGroupedBy && this.defaultGroupedBy[0] + '_count') || false,
+            session: this.getSession(),
+            fields: data && data.fields,
+            initialDomain: this.initialDomain,
+        });
         options = options || {};
-        options.renderSample = options.renderSample || this.renderSample;
-        var fakeServer = new FakeServer(this, params, options);
-        if (this.isSample === false && this.renderSample === false || params.method === "create") {
+        var fakeServer = new FakeServer(fakeServerParams);
+        if (params.method === "create") {
+            this.isSample = false;
+            if (options.groupID) {
+                this.localData[options.groupID].data = [];
+                this.localData[options.groupID].res_ids = [];
+                this.localData[options.groupID].count = 0;
+            }
             return this._super.apply(this, arguments);
         } else if (!this.isSample) {
-            return this._super.apply(this, arguments).then(function (result) {
-                const isEmpty = fakeServer.isEmpty(result);
-                self.isSample = isEmpty;// && fakeServer.options.renderSample !== false;
-                if (isEmpty && self.renderSample !== false) {
-                    return fakeServer._performRpc(result);    
-                } else {
-                    self.renderSample = false;
-                }
-                return result
-            });
-        } else if (options.renderSample !== false) {
-            return fakeServer.performRpc();
+            const result = await this._super(...arguments);
+            this.isSample = fakeServer.isEmpty(result);
+            if (this.isSample && this.sampleType !== "helper" && JSON.stringify(this.initialDomain) === JSON.stringify(params.domain)) {
+                return fakeServer.performRpc(result);
+            }
+            return result;
         } else {
-            return this._super.apply(this, arguments);
+            return fakeServer.performRpc();
         }
-        /*if (!this.isSample) {
-            return this._super.apply(this, arguments).then(function (result) {
-                const isEmpty = fakeServer.isEmpty(result);
-                self.isSample = isEmpty && fakeServer.options.renderSample !== false;
-                if (isEmpty && fakeServer.options.renderSample) {
-                    return fakeServer._performRpc(result);    
-                }
-                return result
-            });
-        } else if (options.renderSample !== false) {
-            return fakeServer.performRpc();
-        } else {
-            return this._super.apply(this, arguments);
-        }*/
     },
 
     /**
@@ -4017,7 +4010,6 @@ var BasicModel = AbstractModel.extend({
             groupsOffset: 0,
             id: _.uniqueId(params.modelName + '_'),
             isOpen: params.isOpen,
-            isSample: this.isSample,
             limit: type === 'record' ? 1 : (params.limit || Number.MAX_SAFE_INTEGER),
             loadMoreOffset: 0,
             model: params.modelName,
@@ -4631,7 +4623,7 @@ var BasicModel = AbstractModel.extend({
                 expand: expand,
                 expand_limit: expand ? list.limit : null,
                 expand_orderby: expand ? list.orderedBy : null,
-            }, options)
+            })
             .then(function (result) {
                 var groups = result.groups;
                 list.groupsCount = result.length;
@@ -4709,7 +4701,7 @@ var BasicModel = AbstractModel.extend({
                     list.data.push(newGroup.id);
                     list.count += newGroup.count;
                     //let previousGroup = previousGroups.find(group => group.id === newGroup.id);
-                    if (newGroup.isOpen && (self.isSample || newGroup.count > 0)) {//&& (!previousGroup || (previousGroup && previousGroup.isSample) || (newGroup.count > 0))) {
+                    if (newGroup.isOpen && newGroup.count > 0) {
                         openGroupCount++;
                         if (group.__data) {
                             // bypass the search_read when the group's records have been obtained
@@ -4720,7 +4712,6 @@ var BasicModel = AbstractModel.extend({
                         defs.push(self._load(newGroup, options));
                     }
                 });
-                //list.isSample = list.count > 0 ? false : true;
 
                 if (options.keepEmptyGroups) {
                     // Find the groups that were available in a previous
@@ -4946,9 +4937,7 @@ var BasicModel = AbstractModel.extend({
         }
         return prom.then(function (result) {
             delete list.__data;
-            /*if (viewNoData.isSample && result.length === 0) {
-                result = viewNoData._makeSampleData(self, list.fields);
-            }*/
+            
             list.count = result.length;
             var ids = _.pluck(result.records, 'id');
             var data = _.map(result.records, function (record) {

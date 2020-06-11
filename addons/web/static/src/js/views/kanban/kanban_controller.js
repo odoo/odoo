@@ -205,16 +205,15 @@ var KanbanController = BasicController.extend({
      */
     _shouldBounceOnClick(element) {
         const state = this.model.get(this.handle, {raw: true});
-        if (!state.count) {
+        if (!state.count || state.isSample) {
             const classesList = [
                 'o_kanban_view',
                 'o_kanban_group',
                 'o_column_quick_create',
-                'o_view_nocontent_smiling_face'
+                'o_view_nocontent_smiling_face',
+                'o_record_sample',
             ];
             return classesList.some(c => element.classList.contains(c));
-        } else {
-            return element.classList.contains('o_record_sample');
         }
         return false;
     },
@@ -397,13 +396,6 @@ var KanbanController = BasicController.extend({
         var values = ev.data.values;
         var column = ev.target;
         var onFailure = ev.data.onFailure || function () {};
-        if (this.model.localData[column.db_id].isSample) {
-            this.model.localData[column.db_id].data = [];
-            this.model.localData[column.db_id].res_ids = [];
-            this.model.localData[column.db_id].count = 0;
-        }
-        this.model.isSample = false;
-        this.model.renderSample = false;
 
         // function that updates the kanban view once the record has been added
         // it receives the local id of the created record in arguments
