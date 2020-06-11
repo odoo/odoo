@@ -2,7 +2,6 @@ odoo.define('web_kanban_gauge.widget', function (require) {
 "use strict";
 
 const AbstractFieldOwl = require('web.AbstractFieldOwl');
-const ajax = require('web.ajax');
 const core = require('web.core');
 const fieldRegistryOwl = require('web.field_registry_owl');
 const utils = require('web.utils');
@@ -30,7 +29,7 @@ const _t = core._t;
 class GaugeWidget extends AbstractFieldOwl {
 
     async willStart() {
-        await ajax.loadJS('/web/static/lib/Chart/Chart.js');
+        await owl.utils.loadJS("/web/static/lib/Chart/Chart.js");
     }
 
     mounted() {
@@ -39,30 +38,24 @@ class GaugeWidget extends AbstractFieldOwl {
         if (Array.isArray(JSON.parse(val))) {
             val = JSON.parse(val);
         }
-        let gauge_value = Array.isArray(val) && val.length ? val[val.length-1].value : val;
+        let gaugeValue = Array.isArray(val) && val.length ? val[val.length - 1].value : val;
         if (this.nodeOptions.gauge_value_field) {
-            gauge_value = this.recordData[this.nodeOptions.gauge_value_field];
+            gaugeValue = this.recordData[this.nodeOptions.gauge_value_field];
         }
 
         // max_value
-        let max_value = this.nodeOptions.max_value || 100;
+        let maxValue = this.nodeOptions.max_value || 100;
         if (this.nodeOptions.max_field) {
-            max_value = this.recordData[this.nodeOptions.max_field];
+            maxValue = this.recordData[this.nodeOptions.max_field];
         }
-        max_value = Math.max(gauge_value, max_value);
-
-        // label
-        let label = this.nodeOptions.label || "";
-        if (this.nodeOptions.label_field) {
-            label = this.recordData[this.nodeOptions.label_field];
-        }
+        maxValue = Math.max(gaugeValue, maxValue);
 
         // title
         const title = this.nodeOptions.title || this.field.string;
 
-        let maxLabel = max_value;
-        if (gauge_value === 0 && max_value === 0) {
-            max_value = 1;
+        let maxLabel = maxValue;
+        if (gaugeValue === 0 && maxValue === 0) {
+            maxValue = 1;
             maxLabel = 0;
         }
         const config = {
@@ -70,8 +63,8 @@ class GaugeWidget extends AbstractFieldOwl {
             data: {
                 datasets: [{
                     data: [
-                        gauge_value,
-                        max_value - gauge_value
+                        gaugeValue,
+                        maxValue - gaugeValue
                     ],
                     backgroundColor: [
                         "#1f77b4", "#dddddd"
@@ -86,9 +79,9 @@ class GaugeWidget extends AbstractFieldOwl {
                 tooltips: {
                     displayColors: false,
                     callbacks: {
-                        label: function(tooltipItems) {
+                        label: function (tooltipItems) {
                             if (tooltipItems.index === 0) {
-                                return _t('Value: ') + gauge_value;
+                                return _t('Value: ') + gaugeValue;
                             }
                             return _t('Max: ') + maxLabel;
                         },
@@ -117,7 +110,7 @@ class GaugeWidget extends AbstractFieldOwl {
         const context = this.canvas.getContext('2d');
         this.chart = new Chart(context, config);
 
-        const humanValue = utils.human_number(gauge_value, 1);
+        const humanValue = utils.human_number(gaugeValue, 1);
         const value = document.createElement('span');
         value.classList.add('o_gauge_value');
         value.textContent = humanValue;
