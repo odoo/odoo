@@ -10,7 +10,7 @@
                         <t t-if="!env.isMobile"> Cancel</t>
                     </div>
                     <div class="searchbox-client top-content-center">
-                        <input placeholder="Search Customers" t-on-keyup="updateClientList" />
+                        <input placeholder="Search Customers" size="1" t-on-keyup="updateClientList" />
                         <span class="search-clear-client"></span>
                     </div>
                     <div class="button new-customer" role="img" aria-label="Add a customer"
@@ -53,8 +53,10 @@
                                         <thead>
                                             <tr>
                                                 <th>Name</th>
-                                                <th>Address</th>
-                                                <th t-if="!env.isMobile">Phone</th>
+                                                <th t-if="!env.isMobile">Address</th>
+                                                <th t-if="env.isMobile">ZIP</th>
+                                                <th>Email</th>
+
                                             </tr>
                                         </thead>
                                         <tbody class="client-list-contents">

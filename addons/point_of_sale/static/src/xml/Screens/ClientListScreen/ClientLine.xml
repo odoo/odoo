@@ -7,11 +7,14 @@
             <td>
                 <t t-esc="props.partner.name" />
             </td>
-            <td>
+            <td t-if="!env.isMobile">
                 <t t-esc="props.partner.address" />
             </td>
-            <td t-if="!env.isMobile">
-                <t t-esc="props.partner.phone or props.partner.mobile or ''" />
+            <td t-if="env.isMobile">
+                <t t-esc="props.partner.zip or ''" />
+            </td>
+            <td>
+                <t t-esc="props.partner.email or ''" />
             </td>
         </tr>
     </t>
