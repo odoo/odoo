@@ -387,6 +387,12 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
         for package in graph:
             migrations.migrate_module(package, 'end')
 
+        # STEP 3.6: warn about missing NOT NULL constraints
+        for (table, column), err_msg in registry._notnull_errors.items():
+            msg = "Table %r: column %r: unable to set constraint NOT NULL\n%s"
+            _logger.warning(msg, table, column, err_msg)
+        registry._notnull_errors.clear()
+
         # STEP 4: Finish and cleanup installations
         if processed_modules:
             env = api.Environment(cr, SUPERUSER_ID, {})
