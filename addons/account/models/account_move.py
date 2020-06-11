@@ -1198,7 +1198,7 @@ class AccountMoveLine(models.Model):
             self.env['account.move'].browse(list(move_ids))._post_validate()
         return result
 
-    def _get_updated_fields(self, vals):
+    def _check_updated_fields(self, vals):
         '''Return True if a field are modified'''
         for key in [k for k in vals.keys() if k in ('account_id', 'journal_id', 'date', 'move_id', 'debit', 'credit')]:
             for record in self:
@@ -1211,7 +1211,7 @@ class AccountMoveLine(models.Model):
     def write(self, vals):
         if ('account_id' in vals) and self.env['account.account'].browse(vals['account_id']).deprecated:
             raise UserError(_('You cannot use a deprecated account.'))
-        if self._get_updated_fields(vals):
+        if self._check_updated_fields(vals):
             self._update_check()
         if not self._context.get('allow_amount_currency') and any(key in vals for key in ('amount_currency', 'currency_id')):
             #hackish workaround to write the amount_currency when assigning a payment to an invoice through the 'add' button
