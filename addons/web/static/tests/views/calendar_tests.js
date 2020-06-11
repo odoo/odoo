@@ -111,11 +111,12 @@ QUnit.module('Views', {
                     id: {string: "ID", type: "integer"},
                     user_id: {string: "user", type: "many2one", relation: 'user'},
                     partner_id: {string: "partner", type: "many2one", relation: 'partner'},
+                    active: {string: "active", type: "boolean"}
                 },
                 records: [
-                    {id: 1, user_id: session.uid, partner_id: 1},
-                    {id: 2, user_id: session.uid, partner_id: 2},
-                    {id: 3, user_id: 4, partner_id: 3}
+                    {id: 1, user_id: session.uid, partner_id: 1, active: true},
+                    {id: 2, user_id: session.uid, partner_id: 2, active: true},
+                    {id: 3, user_id: 4, partner_id: 3, active: true}
                 ]
             },
         };
@@ -229,6 +230,7 @@ QUnit.module('Views', {
         assert.containsN(calendar, '.fc-event', 7,
             "should display 7 events ('event 5' counts for 2 because it spans two weeks and thus generate two fc-event elements)");
         await testUtils.dom.click(calendar.$('.o_calendar_filter input[type="checkbox"]').first());
+        console.log(calendar.$('.o_calendar_filter input[type="checkbox"]'))
         assert.containsN(calendar, '.fc-event', 4, "should now only display 4 event");
         await testUtils.dom.click(calendar.$('.o_calendar_filter input[type="checkbox"]').eq(1));
         assert.containsNone(calendar, '.fc-event', "should not display any event anymore");
