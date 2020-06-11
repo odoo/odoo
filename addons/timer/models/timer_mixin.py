@@ -119,13 +119,12 @@ class TimerMixin(models.AbstractModel):
                     pause = False
                 else:
                     resume = False
-            record.write({
+            record.update({
                 'display_timer_start_primary': start_p,
                 'display_timer_stop': stop,
                 'display_timer_pause': pause,
                 'display_timer_resume': resume,
             })
-            return {'start_p': start_p, 'stop': stop, 'pause': pause, 'resume': resume}
 
     @api.model
     def _timer_rounding(self, minutes_spent, minimum, rounding):
