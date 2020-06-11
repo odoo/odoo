@@ -171,7 +171,7 @@ var ActionManager = Widget.extend({
                 return action;
             });
         }).then(function(action) {
-            odoo.isReady = true;
+            self.trigger_up('webclient_started');
             return action;
         });
     },

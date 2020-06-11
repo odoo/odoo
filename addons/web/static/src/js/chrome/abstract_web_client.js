@@ -89,6 +89,7 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         getScrollPosition: '_onGetScrollPosition',
         scrollTo: '_onScrollTo',
         set_title_part: '_onSetTitlePart',
+        webclient_started: '_onWebClientStarted',
     },
     init: function (parent) {
         // a flag to determine that odoo is fully loaded
@@ -154,14 +155,6 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
                     // database manager needs the webclient to keep going even
                     // though it has no valid session
                     return Promise.resolve();
-                }
-            }).then(function () {
-                // Listen to 'scroll' event and propagate it on main bus
-                self.action_manager.$el.on('scroll', core.bus.trigger.bind(core.bus, 'scroll'));
-                odoo.isReady = true;
-                core.bus.trigger('web_client_ready');
-                if (session.uid === 1) {
-                    self.$el.addClass('o_is_superuser');
                 }
             });
     },
@@ -544,6 +537,24 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
             throw new Error('Unknown effect type: ' + type);
         }
     },
+    /**
+     * Reacts to the end of the loading of the WebClient as a whole
+     * It allows for signalling to the rest of the ecosystem that the interface is usable
+     *
+     * @private
+     */
+    _onWebClientStarted: function() {
+        if (!this.isStarted) {
+            // Listen to 'scroll' event and propagate it on main bus
+            this.action_manager.$el.on('scroll', core.bus.trigger.bind(core.bus, 'scroll'));
+            odoo.isReady = true;
+            core.bus.trigger('web_client_ready');
+            if (session.uid === 1) {
+                this.$el.addClass('o_is_superuser');
+            }
+            this.isStarted = true;
+        }
+    }
 });
 
 return AbstractWebClient;
