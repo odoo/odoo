@@ -2,7 +2,7 @@ odoo.define('website.backend.button', function (require) {
 'use strict';
 
 const AbstractFieldOwl = require('web.AbstractFieldOwl');
-const field_registry_owl = require('web.field_registry_owl');
+const fieldRegistry = require('web.field_registry_owl');
 
 class WebsitePublishButtonOWL extends AbstractFieldOwl {
     /**
@@ -10,9 +10,10 @@ class WebsitePublishButtonOWL extends AbstractFieldOwl {
      *
      * @override
      */
-    isSet() {
+    get isSet() {
         return true;
     }
+
 }
 
 WebsitePublishButtonOWL.supportedFieldTypes = ['boolean'];
@@ -20,9 +21,17 @@ WebsitePublishButtonOWL.template = 'WidgetWebsitePublishButton';
 
 class WidgetWebsiteButtonIconOWL extends AbstractFieldOwl {
     /**
+     * return information whether published/unpublished
+     *
+     * @returns {string}
+     */
+    get info() {
+        return this.value ? this.env._t('Published') : this.env._t('Unpublished')
+    }
+    /**
      * @override
      */
-    isSet() {
+    get isSet() {
         return true;
     }
     /**
@@ -43,7 +52,7 @@ class WidgetWebsiteButtonIconOWL extends AbstractFieldOwl {
 
 WidgetWebsiteButtonIconOWL.template = 'WidgetWebsiteButtonIcon';
 
-field_registry_owl
+fieldRegistry
     .add('website_redirect_button', WidgetWebsiteButtonIconOWL)
     .add('website_publish_button', WebsitePublishButtonOWL);
 });

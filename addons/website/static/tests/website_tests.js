@@ -24,6 +24,7 @@ QUnit.module('website', {
         };
     },
 }, function () {
+
     QUnit.test("website_redirect_button: display false value", async function (assert) {
         assert.expect(2);
 
@@ -44,8 +45,10 @@ QUnit.module('website', {
         assert.containsN(form, selector, 1, "there should be one text displayed");
         selector = '.oe_button_box .oe_stat_button[name="website_published"] .o_button_icon.fa-globe.text-danger';
         assert.containsOnce(form, selector, "there should be one icon in red");
+
         form.destroy();
     });
+
     QUnit.test("website_redirect_button: display true value", async function (assert) {
         assert.expect(2);
 
@@ -66,16 +69,17 @@ QUnit.module('website', {
         assert.containsN(form, selector, 1, "should be one text displayed");
         selector = '.oe_button_box .oe_stat_button[name="website_published"] .o_button_icon.fa-globe.text-success';
         assert.containsOnce(form, selector, "there should be one text in green");
+
         form.destroy();
     });
+
     QUnit.test("website_publish_button: display true value", async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         const form = await createView({
             View: FormView,
             model: 'blog_post',
             data: this.data,
-            debug: true,
             arch: `<form>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -87,19 +91,22 @@ QUnit.module('website', {
                 </form>`,
             res_id: 2,
         });
+
         const selector = '.oe_button_box .oe_stat_button[name="website_published"] .o_stat_text';
-        assert.containsN(form, `${selector}`, 2, 'should be two span displayed');
+        assert.containsN(form, selector, 2, 'should display two span');
         assert.containsOnce(form, `${selector}:first.text-success`, 'first span text should be green');
+        assert.containsOnce(form, `${selector}:eq(1).text-danger`, 'second span text should be danger');
+
         form.destroy();
     });
+
     QUnit.test("website_publish_button: display false value", async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
 
         const form = await createView({
             View: FormView,
             model: 'blog_post',
             data: this.data,
-            debug: true,
             arch: `<form>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
@@ -111,9 +118,12 @@ QUnit.module('website', {
                 </form>`,
             res_id: 1,
         });
+
         const selector = '.oe_button_box .oe_stat_button[name="website_published"] .o_stat_text';
-        assert.containsN(form, `${selector}`, 2, 'should be two span displayed');
-        assert.containsOnce(form, `${selector}:first.text-danger`, 'first span text should be green');
+        assert.containsN(form, selector, 2, 'should be two span displayed');
+        assert.containsOnce(form, `${selector}:first.text-danger`, 'first span text should be danger');
+        assert.containsOnce(form, `${selector}:eq(1).text-success`, 'first span text should be green');
+
         form.destroy();
     });
 });
