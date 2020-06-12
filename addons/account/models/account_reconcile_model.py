@@ -2,12 +2,28 @@
 
 from odoo import api, fields, models, _
 from odoo.tools import float_compare, float_is_zero
-from odoo.exceptions import UserError
+from odoo.exceptions import UserError, ValidationError
 import re
 from math import copysign
 import itertools
 from collections import defaultdict
 from dateutil.relativedelta import relativedelta
+
+class AccountReconcileModelPartnerMapping(models.Model):
+    _name = 'account.reconcile.model.partner.mapping'
+    _description = 'Partner mapping for reconciliation models'
+
+    model_id = fields.Many2one(comodel_name='account.reconcile.model', readonly=True, required=True)
+    partner_id = fields.Many2one(comodel_name='res.partner', string="Partner", required=True)
+    payment_ref_regex = fields.Char(string="Find Text in Label")
+    narration_regex = fields.Char(string="Find Text in Notes")
+
+    @api.constrains('narration_regex', 'payment_ref_regex')
+    def validate_regex(self):
+        for record in self:
+            if not (record.narration_regex or record.payment_ref_regex):
+                raise ValidationError(_("Please set at least one of the match texts to create a partner mapping."))
+
 
 class AccountReconcileModelLine(models.Model):
     _name = 'account.reconcile.model.line'
@@ -173,6 +189,13 @@ class AccountReconcileModel(models.Model):
         help='The reconciliation model will only be applied to the selected customer/vendor categories.')
 
     line_ids = fields.One2many('account.reconcile.model.line', 'model_id')
+    partner_mapping_line_ids = fields.One2many(string="Partner Mapping Lines",
+                                               comodel_name='account.reconcile.model.partner.mapping',
+                                               inverse_name='model_id',
+                                               help="The mapping uses regular expressions.\n"
+                                                    "- To Match the text at the beginning of the line (in label or notes), simply fill in your text.\n"
+                                                    "- To Match the text anywhere (in label or notes), put your text between .*\n"
+                                                    "  e.g: .*N°48748 abc123.*")
 
     past_months_limit = fields.Integer(string="Past Months Limit", default=18, help="Number of months in the past to consider entries from when applying this model.")
 
@@ -389,6 +412,10 @@ class AccountReconcileModel(models.Model):
             partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
 
             for rec_model in available_models:
+                if not partner:
+                    # The function takes care of returning something only for the rules supporting partner mapping
+                    partner = rec_model._get_partner_from_mapping(st_line)
+
                 if rec_model._is_applicable_for(st_line, partner):
                     lines_with_partner_per_model[rec_model].append((st_line, partner))
 
@@ -626,6 +653,25 @@ class AccountReconcileModel(models.Model):
         query += ' ORDER BY aml_date_maturity, aml_id'
 
         return query, params
+
+    def _get_partner_from_mapping(self, st_line):
+        """ For invoice matching rules, matches the statement line against
+        each regex defined in partner mapping, and returns the partner corresponding to
+        the first one matching.
+        """
+        self.ensure_one()
+
+        if self.rule_type != 'invoice_matching':
+            # Only invoice_matching rules support this option
+            return None
+
+        for partner_mapping in self.partner_mapping_line_ids:
+            match_payment_ref = re.match(partner_mapping.payment_ref_regex, st_line.payment_ref) if partner_mapping.payment_ref_regex else True
+            match_narration = re.match(partner_mapping.narration_regex, st_line.narration or '') if partner_mapping.narration_regex else True
+
+            if match_payment_ref and match_narration:
+                return partner_mapping.partner_id
+        return None
 
     def _get_writeoff_suggestion_query(self, st_lines_with_partner, excluded_ids=None):
         ''' Returns the query applying the current writeoff_suggestion reconciliation
