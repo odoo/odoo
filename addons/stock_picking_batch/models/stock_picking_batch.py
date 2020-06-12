@@ -3,7 +3,7 @@
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
-
+from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
 class StockPickingBatch(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
@@ -197,6 +197,30 @@ class StockPickingBatch(models.Model):
     def action_assign(self):
         self.ensure_one()
         self.picking_ids.action_assign()
+
+    def action_put_in_pack(self):
+        """ Action to put move lines with 'Done' quantities into a new pack
+        This method follows same logic to stock.picking.
+        """
+        self.ensure_one()
+        if self.state not in ('done', 'cancel'):
+            picking_move_lines = self.move_line_ids
+
+            move_line_ids = picking_move_lines.filtered(lambda ml:
+                float_compare(ml.qty_done, 0.0, precision_rounding=ml.product_uom_id.rounding) > 0
+                and not ml.result_package_id
+            )
+            if not move_line_ids:
+                move_line_ids = picking_move_lines.filtered(lambda ml: float_compare(ml.product_uom_qty, 0.0,
+                                     precision_rounding=ml.product_uom_id.rounding) > 0 and float_compare(ml.qty_done, 0.0,
+                                     precision_rounding=ml.product_uom_id.rounding) == 0)
+            if move_line_ids:
+                res = self.picking_ids[0]._pre_put_in_pack_hook(move_line_ids)
+                if not res:
+                    res = self.picking_ids[0]._put_in_pack(move_line_ids, False)
+                return res
+            else:
+                raise UserError(_("Please add 'Done' quantities to the batch picking to create a new pack."))
 
     # -------------------------------------------------------------------------
     # Miscellaneous
