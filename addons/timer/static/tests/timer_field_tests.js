@@ -12,6 +12,10 @@ QUnit.module('timer_timer', {
         this.data = {
             partner: {
                 fields: {
+                    action_timer_start: { string: "action_timer_start" },
+                    action_timer_stop: { string: "action_timer_stop" },
+                    action_timer_pause: { string: "action_timer_pause" },
+                    action_timer_resume: { string: "action_timer_resume" },
                     display_name: { string: "Displayed name", type: "text" },
                     display_timer_start_secondary: { string: "action_timer_start" },
                 },
@@ -29,12 +33,13 @@ QUnit.module('timer_timer', {
         };
     }
 }, function () {
-    QUnit.module('Timer');
+    QUnit.module('timer.timer');
 
-    QUnit.test('timer_toggle_button: basic rendering', async function (assert) {
-        assert.expect(1);
+    QUnit.only('timer_toggle_button: basic rendering', async function (assert) {
+        assert.expect(2);
 
         this.data.partner.fields.is_timer_running = {string: 'Is Timer Running', type: 'boolean', default: false};
+        this.data.partner.fields.value = {string: 'value', type: 'boolean', default: false};
 
         const kanban = await createView({
             View: KanbanView,
@@ -45,18 +50,21 @@ QUnit.module('timer_timer', {
                     <templates>
                         <t t-name="kanban-box">
                             <div>
-                                <field name="display_name" widget="timer_toggle_button"/>
+                                <field name="value"/>
+                                <field name="is_timer_running" widget="timer_toggle_button" options="{\'prevent_deletion\': True}"/>
                             </div>
                         </t>
                     </templates>
                 </kanban>`,
             res_id: 1,
-            mockRPC: function (route) {debugger
+            mockRPC: function (route, args) {
                 if (route === '/web/dataset/call_kw/partner/action_timer_start') {debugger
                     this.data.partner.records[0].is_timer_running = true;
+                    return Promise.resolve();
                 }
                 if (route === '/web/dataset/call_kw/partner/action_timer_stop') {debugger
                     this.data.partner.records[0].is_timer_running = false;
+                    return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
             },
@@ -65,6 +73,8 @@ QUnit.module('timer_timer', {
         assert.containsOnce(kanban, 'button.o-timer-button',
             "should have timer_toggle_button widget");
         await testUtils.dom.click(kanban.el.querySelector('.o_icon_button'));
+        assert.containsOnce(kanban, 'i.fa-stop-circle',
+            "should have stop icon");
 
         kanban.destroy();
     });
@@ -81,6 +91,9 @@ QUnit.module('timer_timer', {
     //                 '<div class="o_form_statusbar">' +
     //                     '<div class="o_statusbar_buttons">' +
     //                         '<button string="Start" name="action_timer_start" widget="timer_timer" class="btn btn-primary" type="object"/>' +
+    //                         '<button string="Stop" name="action_timer_stop" widget="timer_timer" class="btn btn-primary" type="object"/>' +
+    //                         '<button string="Pause" name="action_timer_pause" widget="timer_timer" class="btn btn-primary" type="object"/>' +
+    //                         '<button string="Resume" name="action_timer_resume" widget="timer_timer" class="btn btn-primary" type="object"/>' +
     //                     '</div>' +
     //                     '<field name="display_name" class="text-danger ml-auto h2 ml-4 font-weight-bold"/>' +
     //                 '</div>' +
@@ -95,7 +108,7 @@ QUnit.module('timer_timer', {
     // });
     // await testUtils.dom.click(form.el.querySelectorAll('button')[6]);
 
-    // //form.destroy();
+    // form.destroy();
     // });
 });
 });

@@ -2,6 +2,7 @@
 
 <templates>
     <div t-name="timerToggleButton" owl="1">
+        <t t-debug="true"/>
         <t t-set="title" t-value="value ? _lt('Stop') : _lt('Play');"/>
         <t t-set="name" t-value="value ? 'action_timer_stop' : 'action_timer_start'"/>
         <t t-set="label" t-value="value ? _lt('Stop') : _lt('Start')"/>

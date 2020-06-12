@@ -36,7 +36,7 @@ odoo.define('timer.timer_toggle_button', function (require) {
          * @private
          * @param {MouseEvent} event
          */
-        async _onToggleButton(ev) {
+        async _onToggleButton(ev) {debugger
             const context = this.record.getContext();
             const prevent_deletion = this.attrs.options && this.attrs.options.prevent_deletion || false;
             ev.stopPropagation();
