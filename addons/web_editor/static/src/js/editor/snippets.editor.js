@@ -10,6 +10,7 @@ var options = require('web_editor.snippets.options');
 var Wysiwyg = require('web_editor.wysiwyg');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
+const utils = require('web_editor.utils');
 
 var _t = core._t;
 
@@ -42,8 +43,10 @@ var SnippetEditor = Widget.extend({
      * @param {Object} templateOptions
      * @param {jQuery} $editable
      * @param {Object} options
+     * @param {function} manageOverlayVisibilityTowardsSnippetAnimationsCallback the callback function
+     * to be called in order to manage overlays visibility towards snippets animations
      */
-    init: function (parent, target, templateOptions, $editable, options) {
+    init: function (parent, target, templateOptions, $editable, options, manageOverlayVisibilityTowardsSnippetAnimationsCallback = null) {
         this._super.apply(this, arguments);
         this.options = options;
         this.$editable = $editable;
@@ -54,6 +57,7 @@ var SnippetEditor = Widget.extend({
         this.templateOptions = templateOptions;
         this.isTargetParentEditable = false;
         this.isTargetMovable = false;
+        this.manageOverlayVisibilityTowardsSnippetAnimationsCallback = manageOverlayVisibilityTowardsSnippetAnimationsCallback;
 
         this.__isStarted = new Promise(resolve => {
             this.__isStartedResolveFunc = resolve;
@@ -109,30 +113,29 @@ var SnippetEditor = Widget.extend({
             this.$el.add($customize).find('.oe_snippet_remove').addClass('d-none');
         }
 
-        var _animationsCount = 0;
-        var postAnimationCover = _.throttle(() => this.cover(), 100);
-        this.$target.on('transitionstart.snippet_editor, animationstart.snippet_editor', () => {
-            // We cannot rely on the fact each transition/animation start will
-            // trigger a transition/animation end as the element may be removed
-            // from the DOM before or it could simply be an infinite animation.
-            //
-            // By simplicity, for each start, we add a delayed operation that
-            // will decrease the animation counter after a fixed duration and
-            // do the post animation cover if none is registered anymore.
-            _animationsCount++;
-            setTimeout(() => {
-                if (!--_animationsCount) {
-                    postAnimationCover();
+        if (this.manageOverlayVisibilityTowardsSnippetAnimationsCallback) {
+            this.$target.on(
+                'animationstart.snippet_editor \
+                webkitAnimationStart.snippet_editor \
+                oanimationstart.snippet_editor \
+                msAnimationStart.snippet_editor',
+                (ev) => {
+                    ev.stopPropagation();
+                    this.manageOverlayVisibilityTowardsSnippetAnimationsCallback(this.$target, 1);
                 }
-            }, 500); // This delay have to be huge enough to take care of long
-                     // animations which will not trigger an animation end event
-                     // but if it is too small for some, this is the job of the
-                     // animation creator to manually ask for a re-cover
-        });
-        // On top of what is explained above, do the post animation cover for
-        // each detected transition/animation end so that the user does not see
-        // a flickering when not needed.
-        this.$target.on('transitionend.snippet_editor, animationend.snippet_editor', postAnimationCover);
+            );
+            this.$target.on(
+                'animationend.snippet_editor \
+                webkitAnimationEnd.snippet_editor \
+                oanimationend.snippet_editor \
+                msAnimationEnd.snippet_editor \
+                animationcancel.snippet_editor',
+                (ev) => {
+                    ev.stopPropagation();
+                    this.manageOverlayVisibilityTowardsSnippetAnimationsCallback(this.$target, -1);
+                }
+            );
+        }
 
         return Promise.all(defs).then(() => {
             this.__isStartedResolveFunc(this);
@@ -884,6 +887,11 @@ var SnippetsMenu = Widget.extend({
         this._mutex = new concurrency.Mutex();
 
         this.setSelectorEditableArea(options.$el, options.selectorEditableArea);
+        this.overlayRunningAnimationNextTimeout = 0;
+        this.overlayRunningAnimationCounters = {};
+        this.overlayRunningAnimationTimeoutHandler = null;
+        this.overlayPostAnimationHandler = null;
+        this.snippetAnimationKey = 0;
 
         this._notActivableElementsSelector = [
             '#web_editor-top-edit',
@@ -1116,6 +1124,64 @@ var SnippetsMenu = Widget.extend({
     getEditableArea: function () {
         return this.$editor.find(this.selectorEditableArea)
             .add(this.$editor.filter(this.selectorEditableArea));
+    },
+    /**
+     * Manages overlays visibility towards animations/transitions
+     * states of snippets. This prevents having the overlay lagging behind the snippet
+     * css animation (with animation previews from 'website_animate' among others).
+     *
+     * @private
+     * @param {jQuery} $snippet
+     * @param {number} [animationsCountDelta=0] The delta to apply on the animations count as integer
+     */
+    manageOverlayVisibilityTowardsSnippetAnimations: function (snippetAnimationKey, $snippet, animationsCountDelta = 0) {
+        if (!(snippetAnimationKey in this.overlayRunningAnimationCounters)) {
+            this.overlayRunningAnimationCounters[snippetAnimationKey] = 0;
+        }
+        this.overlayRunningAnimationCounters[snippetAnimationKey] += animationsCountDelta;
+        this.overlayRunningAnimationCounters[snippetAnimationKey] = Math.max(
+            0,
+            this.overlayRunningAnimationCounters[snippetAnimationKey]
+        );
+        if (this.overlayRunningAnimationCounters[snippetAnimationKey] > 0) {
+            if (animationsCountDelta > 0) {
+                const maxDuration = this._getElementMaxAnimationAndTransitionDuration($snippet);
+                const timeout = Date.now() + maxDuration;
+                this.$snippetEditorArea.addClass('invisible');
+                // The normal case would be to have the transitionend event to be
+                // fired but we cannot rely on it, so we use a timeout as fallback.
+                if (timeout > this.overlayRunningAnimationNextTimeout) {
+                    clearTimeout(this.overlayPostAnimationHandler);
+                    clearTimeout(this.overlayRunningAnimationTimeoutHandler);
+                    this.overlayRunningAnimationTimeoutHandler = setTimeout(
+                        () => {
+                            this.manageOverlayVisibilityTowardsSnippetAnimations(
+                                $snippet,
+                                -this.overlayRunningAnimationCounters[snippetAnimationKey]
+                            );
+                        },
+                        maxDuration
+                    );
+                    this.overlayRunningAnimationNextTimeout = timeout;
+                }
+            }
+        } else {
+            delete this.overlayRunningAnimationCounters[snippetAnimationKey];
+        }
+        if (_.isEmpty(this.overlayRunningAnimationCounters)) {
+            this.overlayRunningAnimationNextTimeout = 0;
+            // Using a Timeout here prevents the cancel animation events
+            // from occurring when changing rapidly the animation (which triggered overlay flicker).
+            clearTimeout(this.overlayRunningAnimationTimeoutHandler);
+            clearTimeout(this.overlayPostAnimationHandler);
+            this.overlayPostAnimationHandler = setTimeout(
+                () => {
+                    this._onOverlaysCoverUpdate();
+                    this.$snippetEditorArea.removeClass('invisible');
+                },
+                100
+            );
+        }
     },
     /**
      * Updates the cover dimensions of the current snippet editor.
@@ -1702,7 +1768,14 @@ var SnippetsMenu = Widget.extend({
             }
 
             let editableArea = self.getEditableArea();
-            snippetEditor = new SnippetEditor(parentEditor || self, $snippet, self.templateOptions, $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea), self.options);
+            snippetEditor = new SnippetEditor(
+                parentEditor || self,
+                $snippet,
+                self.templateOptions,
+                $snippet.closest('[data-oe-type="html"], .oe_structure').add(editableArea),
+                self.options,
+                self.manageOverlayVisibilityTowardsSnippetAnimations.bind(self, ++self.snippetAnimationKey)
+            );
             self.snippetEditors.push(snippetEditor);
             return snippetEditor.appendTo(self.$snippetEditorArea);
         }).then(function () {
@@ -1798,6 +1871,34 @@ var SnippetsMenu = Widget.extend({
                 scroll: false,
             }, options.jQueryDraggableOptions),
         });
+    },
+    /**
+     * Gets $element css animations and transitions max duration.
+     *
+     * @private
+     * @returns {Number} max duration (Integer) of the animations and transitions for the overlay target
+     */
+    _getElementMaxAnimationAndTransitionDuration: function ($element) {
+        const cssDurationProperties = ['animation-duration', 'transition-duration'];
+        let maxDuration = 0;
+        for (let index = 0, len = cssDurationProperties.length; index < len; index++) {
+            const key = cssDurationProperties[index];
+            const compStyle = window.getComputedStyle($element.get(0), null);
+            const durationProperty = compStyle.getPropertyValue(key);
+            // Safari returns null and typeof object, but Chrome returns 0s
+            if (durationProperty && durationProperty !== '0s') {
+                const transItems = durationProperty.toLowerCase().split(',');
+                // loop through transition values
+                for (let j = 0; j < transItems.length; j++) {
+                    let duration = transItems[j];
+                    duration = utils.convertValueToUnit(duration, 'ms');
+                    if (duration > maxDuration) {
+                        maxDuration = duration;
+                    }
+                }
+            }
+        }
+        return maxDuration;
     },
     /**
      * Creates a dropzone element and inserts it by replacing the given jQuery
