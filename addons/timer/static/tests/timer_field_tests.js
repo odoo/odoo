@@ -16,6 +16,8 @@ QUnit.module('timer_timer', {
                     timer_start: { string: "timer start", type: "datetime" },
                     timer_stop: { string: "timer stop", type: "datetime" },
                     timer_pause: { string: "action_timer_pause", type: "datetime" },
+                    is_timer_running: { string: "is timer running", type: "boolean" },
+                    value: { string: "is timer running", type: "datetime" },
                     // action_timer_resume: { string: "action_timer_resume" },
                     // display_name: { string: "Displayed name", type: "text" },
                     // display_timer_start_secondary: { string: "action_timer_start" },
@@ -30,6 +32,8 @@ QUnit.module('timer_timer', {
                     timer_start: "2020-01-01 00:00:00",
                     timer_stop: false,
                     timer_pause: false,
+                    is_timer_running: false,
+                    value: false,
                 }],
             },
         };
@@ -40,8 +44,8 @@ QUnit.module('timer_timer', {
     QUnit.only('timer_toggle_button: basic rendering', async function (assert) {
         assert.expect(2);
 
-        this.data.partner.fields.is_timer_running = {string: 'Is Timer Running', type: 'boolean', default: false};
-        this.data.partner.fields.value = {string: 'value', type: 'boolean', default: false};
+        //this.data.partner.fields.is_timer_running = {string: 'Is Timer Running', type: 'boolean', default: false};
+        //this.data.partner.fields.active = {string: 'Is Timer Running', type: 'boolean', default: false};
 
         const kanban = await createView({
             View: KanbanView,
@@ -60,12 +64,10 @@ QUnit.module('timer_timer', {
                 </kanban>`,
             res_id: 1,
             mockRPC: function (route, args) {
-                if (route === '/web/dataset/call_kw/partner/action_timer_start') {debugger
-                    this.data.partner.records[0].is_timer_running = true;
-                    return Promise.resolve();
+                if (route === '/web/dataset/call_kw/partner/action_timer_start') {
+                    return Promise.resolve(false);
                 }
-                if (route === '/web/dataset/call_kw/partner/action_timer_stop') {debugger
-                    this.data.partner.records[0].is_timer_running = false;
+                if (route === '/web/dataset/call_kw/partner/action_timer_stop') {
                     return Promise.resolve();
                 }
                 return this._super.apply(this, arguments);
