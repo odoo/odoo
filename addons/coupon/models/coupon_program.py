@@ -144,3 +144,18 @@ class CouponProgram(models.Model):
             domain = ast.literal_eval(self.rule_products_domain)
             return products.filtered_domain(domain)
         return products
+
+    def _generate_coupons(self, partner_id):
+        '''Generate coupons that can be used in the next order for the given partner_id.'''
+        generated_coupons = self.env['coupon.coupon']
+        for program in self:
+            generated_coupons |= self.env['coupon.coupon'].create({
+                'program_id': program.id,
+                'partner_id': partner_id,
+            })
+        return generated_coupons
+
+    def get_number_usage(self):
+        '''This returns the total number of usage of this program.'''
+        self.ensure_one()
+        return 0

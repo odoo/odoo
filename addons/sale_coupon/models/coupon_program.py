@@ -11,10 +11,8 @@ class CouponProgram(models.Model):
 
     # The api.depends is handled in `def modified` of `sale_coupon/models/sale_order.py`
     def _compute_order_count(self):
-        product_data = self.env['sale.order.line'].read_group([('product_id', 'in', self.mapped('discount_line_product_id').ids)], ['product_id'], ['product_id'])
-        mapped_data = dict([(m['product_id'][0], m['product_id_count']) for m in product_data])
         for program in self:
-            program.order_count = mapped_data.get(program.discount_line_product_id.id, 0)
+            program.order_count = self.env['sale.order.line'].search_count([('product_id', '=', program.discount_line_product_id.id)])
 
     def action_view_sales_orders(self):
         self.ensure_one()
@@ -194,3 +192,7 @@ class CouponProgram(models.Model):
         most_interesting_program = max(programs, key=lambda p: p.discount_percentage)
         # remove least interesting programs
         return self - (programs - most_interesting_program)
+
+    def get_number_usage(self):
+        res = super(CouponProgram, self).get_number_usage()
+        return res + self.order_count

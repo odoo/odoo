@@ -90,3 +90,24 @@ class Coupon(models.Model):
 
         expired_ids = [res[0] for res in self._cr.fetchall()]
         self.browse(expired_ids).write({'state': 'expired'})
+
+    def _check_coupon_code(self, order_date, partner_id, **kwargs):
+        """ Check the validity of this single coupon.
+            :param order_date Date:
+            :param partner_id int | boolean:
+        """
+        self.ensure_one()
+        message = {}
+        if self.state == 'used':
+            message = {'error': _('This coupon has already been used (%s).') % (self.code)}
+        elif self.state == 'reserved':
+            message = {'error': _('This coupon %s exists but the origin sales order is not validated yet.') % (self.code)}
+        elif self.state == 'cancel':
+            message = {'error': _('This coupon has been cancelled (%s).') % (self.code)}
+        elif self.state == 'expired' or (self.expiration_date and self.expiration_date < order_date):
+            message = {'error': _('This coupon is expired (%s).') % (self.code)}
+        elif not self.program_id.active:
+            message = {'error': _('The coupon program for %s is in draft or closed state') % (self.code)}
+        elif self.partner_id and self.partner_id.id != partner_id:
+            message = {'error': _('Invalid partner.')}
+        return message

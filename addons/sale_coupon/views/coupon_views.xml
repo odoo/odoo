@@ -17,8 +17,10 @@
         <field name="inherit_id" ref="coupon.coupon_view_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="order_id"/>
-                <field name="sales_order_id"/>
+                <field name="order_id" invisible="1"/>
+                <field name="sales_order_id" invisible="1"/>
+                <field name="order_id" readonly="1" attrs="{'invisible': [('order_id', '=', False)]}" />
+                <field name="sales_order_id" readonly="1" attrs="{'invisible': [('sales_order_id', '=', False)]}" />
             </xpath>
         </field>
     </record>
