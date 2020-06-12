@@ -30,7 +30,7 @@ class View(models.Model):
     visibility = fields.Selection([('', 'All'), ('connected', 'Signed In'), ('restricted_group', 'Restricted Group'), ('password', 'With Password')], default='')
     visibility_group = fields.Many2one('res.groups', copy=False)
     visibility_password = fields.Char(groups='base.group_system', copy=False)
-    visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer', string="Visibility Password")
+    visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
 
     @api.depends('visibility_password')
     def _get_pwd(self):
