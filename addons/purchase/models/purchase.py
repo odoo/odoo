@@ -526,15 +526,12 @@ class PurchaseOrder(models.Model):
         """Prepare the dict of values to create the new invoice for a purchase order.
         """
         self.ensure_one()
-        move_type = self._context.get('default_move_type', 'in_invoice')
-        journal = self.env['account.move'].with_context(default_move_type=move_type)._get_default_journal()
-        if not journal:
-            raise UserError(_('Please define an accounting purchase journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
+        self = self.with_company(self.company_id)
 
         partner_invoice_id = self.partner_id.address_get(['invoice'])['invoice']
-        invoice_vals = {
+        return {
             'ref': self.partner_ref or '',
-            'move_type': move_type,
+            'move_type': 'in_invoice',
             'narration': self.notes,
             'currency_id': self.currency_id.id,
             'invoice_user_id': self.user_id and self.user_id.id,
@@ -547,7 +544,6 @@ class PurchaseOrder(models.Model):
             'invoice_line_ids': [],
             'company_id': self.company_id.id,
         }
-        return invoice_vals
 
     def action_view_invoice(self, invoices=False):
         """This function returns an action that display existing vendor bills of
@@ -1081,9 +1077,9 @@ class PurchaseOrderLine(models.Model):
 
         return name
 
-    def _prepare_account_move_line(self, move=False):
+    def _prepare_account_move_line(self):
         self.ensure_one()
-        res = {
+        return {
             'display_type': self.display_type,
             'sequence': self.sequence,
             'name': '%s: %s' % (self.order_id.name, self.name),
@@ -1096,21 +1092,6 @@ class PurchaseOrderLine(models.Model):
             'analytic_tag_ids': [(6, 0, self.analytic_tag_ids.ids)],
             'purchase_line_id': self.id,
         }
-        if not move:
-            return res
-
-        if self.currency_id == move.company_id.currency_id:
-            currency = False
-        else:
-            currency = move.currency_id
-
-        res.update({
-            'move_id': move.id,
-            'currency_id': currency and currency.id or False,
-            'date_maturity': move.invoice_date_due,
-            'partner_id': move.partner_id.id,
-        })
-        return res
 
     @api.model
     def _prepare_add_missing_fields(self, values):

@@ -330,10 +330,6 @@ class Repair(models.Model):
             currency = repair.pricelist_id.currency_id
             company = repair.env.company
 
-            journal = repair.env['account.move'].with_context(type='out_invoice')._get_default_journal()
-            if not journal:
-                raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (company.name, company.id))
-
             if (partner_invoice.id, currency.id) not in grouped_invoices_vals:
                 grouped_invoices_vals[(partner_invoice.id, currency.id, company.id)] = []
             current_invoices_list = grouped_invoices_vals[(partner_invoice.id, currency.id, company.id)]
@@ -350,7 +346,8 @@ class Repair(models.Model):
                     'invoice_origin': repair.name,
                     'repair_ids': [(4, repair.id)],
                     'invoice_line_ids': [],
-                    'fiscal_position_id': fpos.id
+                    'fiscal_position_id': fpos.id,
+                    'company_id': company.id,
                 }
                 if partner_invoice.property_payment_term_id:
                     invoice_vals['invoice_payment_term_id'] = partner_invoice.property_payment_term_id.id

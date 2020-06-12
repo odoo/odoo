@@ -287,6 +287,7 @@ class TestAccountPayment(AccountTestInvoicingCommon):
             line_form.account_id = copy_receivable
             line_form.partner_id = self.partner_b
         with move_form.line_ids.new() as line_form:
+            line_form.name = 'write-off'
             line_form.currency_id = self.company_data['currency']
             line_form.amount_currency = -25.0
             line_form.account_id = self.company_data['default_account_revenue']

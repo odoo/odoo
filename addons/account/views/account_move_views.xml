@@ -643,7 +643,10 @@
                                     <label for="partner_id" string="Vendor" style="font-weight:bold;"
                                            attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}"/>
                                 </div>
-                                <field name="partner_id" widget="res_partner_many2one" nolabel="1"
+                                <field name="partner_id"
+                                       widget="res_partner_many2one"
+                                       nolabel="1"
+                                       on_change="1"
                                        context="{
                                             'res_partner_search_mode': (context.get('default_move_type', 'entry') in ('out_invoice', 'out_refund', 'out_receipt') and 'customer') or (context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') and 'supplier') or False,
                                             'show_address': 1, 'default_is_company': True, 'show_vat': True}"
@@ -661,7 +664,10 @@
                                        attrs="{'invisible': [('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
                                 <label name="invoice_vendor_bill_id_label" for="invoice_vendor_bill_id" string="Auto-Complete" class="oe_edit_only"
                                        attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('move_type', '!=', 'in_invoice')]}"/>
-                                <field name="invoice_vendor_bill_id" nolabel="1" class="oe_edit_only"
+                                <field name="invoice_vendor_bill_id"
+                                       nolabel="1"
+                                       class="oe_edit_only"
+                                       on_change="1"
                                        attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('move_type', '!=', 'in_invoice')]}"
                                        domain="[('company_id', '=', company_id), ('partner_id','child_of', [partner_id]), ('move_type','=','in_invoice')]"
                                        placeholder="Select an old vendor bill"
@@ -678,22 +684,24 @@
                                 <field name="invoice_date" nolabel="1" options="{'datepicker': {'warn_future': true}}"
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
 
-                                <field name="date" string="Accounting Date"
-                                       attrs="{
-                                            'invisible': [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))],
-                                            'readonly': [('state', '!=', 'draft')],
-                                       }"/>
+                                <field name="date"
+                                       string="Accounting Date"
+                                       on_change="1"
+                                       attrs="{'invisible': [('move_type', 'in', ('out_invoice', 'out_refund', 'out_receipt'))], 'readonly': [('state', '!=', 'draft')]}"/>
 
                                 <!-- Invoice payment terms (only invoices) + due date (only invoices / receipts) -->
                                 <label for="invoice_payment_term_id" string="Due Date"
                                        attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}"/>
                                 <div class="d-flex" attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}">
-                                    <field name="invoice_date_due" force_save="1"
+                                    <field name="invoice_date_due"
+                                           force_save="1"
+                                           on_change="1"
                                            placeholder="Date"
                                            attrs="{'invisible': [('invoice_payment_term_id', '!=', False)]}"/>
                                     <span class="o_form_label mx-3 oe_edit_only"
                                           attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', False)]}"> or </span>
                                     <field name="invoice_payment_term_id"
+                                           on_change="1"
                                            placeholder="Terms"/>
                                 </div>
 
@@ -711,8 +719,8 @@
                                     <span class="oe_inline o_form_label mr-3 ml-5 oe_edit_only"
                                         groups="base.group_multi_currency"> in </span>
                                     <field name="currency_id"
-                                        groups="base.group_multi_currency"
-                                        attrs="{'readonly': [('posted_before', '=', True)]}"/>
+                                           groups="base.group_multi_currency"
+                                           attrs="{'readonly': ['|', ('state', '!=', 'draft'), ('posted_before', '=', True)]}"/>
                                 </div>
                             </group>
                         </group>
@@ -722,8 +730,9 @@
                                   attrs="{'invisible': [('move_type', '=', 'entry')]}">
                                 <field name="invoice_line_ids"
                                        widget="section_and_note_one2many"
-                                       mode="tree,kanban"
-                                       context="{'default_move_type': context.get('default_move_type'), 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id}">
+                                       on_change="1"
+                                       context="{'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id}">
+                                       mode="tree,kanban">
                                     <tree editable="bottom" string="Journal Items" default_order="sequence, date desc, move_name desc, id">
                                         <control>
                                             <create name="add_line_control" string="Add a line"/>
@@ -767,9 +776,11 @@
                                                options="{'no_create': True}"
                                                optional="show"/>
                                         <field name="price_subtotal"
+                                               readonly="1"
                                                string="Subtotal"
                                                groups="account.group_show_line_subtotals_tax_excluded"/>
                                         <field name="price_total"
+                                               readonly="1"
                                                string="Total"
                                                groups="account.group_show_line_subtotals_tax_included"/>
 
@@ -927,8 +938,9 @@
                                     <span>This entry has been generated through the Invoicing app, before installing Accounting. Its balance has been imported separately.</span>
                                 </div>
                                 <field name="line_ids"
-                                       context="{'default_move_type': context.get('default_move_type'), 'line_ids': line_ids, 'journal_id': journal_id, 'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id}"
-                                       attrs="{'invisible': [('payment_state', '=', 'invoicing_legacy'), ('move_type', '!=', 'entry')]}">
+                                       on_change="1"
+                                       context="{'default_partner_id': commercial_partner_id, 'default_currency_id': currency_id or company_currency_id}"
+                                       attrs="{'invisible': [('payment_state', '=', 'invoicing_legacy'), ('move_type', '!=', 'entry')], 'readonly': [('state', '!=', 'draft')]}">
                                     <tree editable="bottom" string="Journal Items" decoration-muted="display_type in ('line_section', 'line_note')" default_order="sequence, date desc, move_name desc, id">
                                         <!-- Displayed fields -->
                                         <field name="account_id"
@@ -1067,8 +1079,11 @@
                                            attrs="{'invisible': [('move_type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund'))]}">
                                         <field name="company_id" groups="base.group_multi_company"/>
                                         <field name="invoice_incoterm_id"/>
-                                        <field name="fiscal_position_id"/>
-                                        <field name="invoice_cash_rounding_id" groups="account.group_cash_rounding"/>
+                                        <field name="fiscal_position_id"
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                        <field name="invoice_cash_rounding_id"
+                                               on_change="1"
+                                               groups="account.group_cash_rounding"/>
                                         <field name="invoice_source_email"
                                                widget="email"
                                                attrs="{'invisible': ['|', ('move_type', 'not in', ('in_invoice', 'in_refund')), ('invoice_source_email', '=', False)]}"/>

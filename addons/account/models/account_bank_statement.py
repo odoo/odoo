@@ -1,16 +1,12 @@
 # -*- coding: utf-8 -*-
 
 from odoo import api, fields, models, _
-from odoo.osv import expression
 from odoo.tools import float_is_zero
-from odoo.tools import float_compare, float_round, float_repr
 from odoo.tools.misc import formatLang, format_date
 from odoo.exceptions import UserError, ValidationError
+from .orm_utils import OrmUtils
 
-import time
-import math
 import base64
-import re
 
 
 class AccountCashboxLine(models.Model):
@@ -857,8 +853,39 @@ class AccountBankStatementLine(models.Model):
 
     def write(self, vals):
         # OVERRIDE
-        res = super().write(vals)
-        self._synchronize_to_moves(set(vals.keys()))
+
+        # Track some fields before/after writing.
+        snapshots0 = []
+
+        vals_list = []
+        for st_line in self:
+            vals_list.append(OrmUtils(st_line).cleanup_write_values(vals))
+            snapshots0.append(st_line._create_snapshot(fields=[
+                'payment_ref', 'amount', 'amount_currency',
+                'foreign_currency_id', 'currency_id', 'partner_id',
+            ]))
+
+        # ===================================================================================================
+        # Write: Writing is done in batch if possible.
+        # ===================================================================================================
+
+        if vals_list and all(vals == vals_list[0] for vals in vals_list):
+            self_ctx = self.with_context(skip_account_move_synchronization=True)
+            res = super(AccountBankStatementLine, self_ctx).write(vals_list[0])
+        else:
+            res = True
+            for st_line, vals in zip(self, vals_list):
+                st_line_ctx = self.with_context(skip_account_move_synchronization=True)
+                res |= super(AccountBankStatementLine, st_line_ctx).write(vals)
+
+        # ===================================================================================================
+        # After write
+        # ===================================================================================================
+
+        if not self._context.get('write_recursion'):
+            for st_line, snapshot0 in zip(self.with_context(write_recursion=True), snapshots0):
+                st_line._synchronize_to_moves(snapshot0)
+
         return res
 
     def unlink(self):
@@ -872,126 +899,118 @@ class AccountBankStatementLine(models.Model):
     # SYNCHRONIZATION account.bank.statement.line <-> account.move
     # -------------------------------------------------------------------------
 
-    def _synchronize_from_moves(self, changed_fields):
+    def _synchronize_from_moves(self):
         ''' Update the account.bank.statement.line regarding its related account.move.
         Also, check both models are still consistent.
-        :param changed_fields: A set containing all modified fields on account.move.
         '''
-        if self._context.get('skip_account_move_synchronization'):
-            return
-
-        for st_line in self.with_context(skip_account_move_synchronization=True):
+        for st_line in self:
             move = st_line.move_id
             move_vals_to_write = {}
             st_line_vals_to_write = {}
 
-            if 'state' in changed_fields:
-                if (st_line.state == 'open' and move.state != 'draft') or (st_line.state == 'posted' and move.state != 'posted'):
-                    raise UserError(_(
-                        "You can't manually change the state of journal entry %s, as it has been created by bank "
-                        "statement %s."
-                    ) % (st_line.move_id.display_name, st_line.statement_id.display_name))
+            if (st_line.state == 'open' and move.state != 'draft') or (st_line.state == 'posted' and move.state != 'posted'):
+                raise UserError(_(
+                    "You can't manually change the state of journal entry %s, as it has been created by bank "
+                    "statement %s."
+                ) % (st_line.move_id.display_name, st_line.statement_id.display_name))
 
-            if 'line_ids' in changed_fields:
-                liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
-                company_currency = st_line.journal_id.company_id.currency_id
-                journal_currency = st_line.journal_id.currency_id if st_line.journal_id.currency_id != company_currency else False
-
-                if len(liquidity_lines) != 1:
-                    raise UserError(_(
-                        "The journal entry %s reached an invalid state regarding its related statement line.\n"
-                        "To be consistent, the journal entry must always have exactly one journal item involving the "
-                        "bank/cash account."
-                    ) % st_line.move_id.display_name)
-
-                st_line_vals_to_write.update({
-                    'payment_ref': liquidity_lines.name,
-                    'partner_id': liquidity_lines.partner_id.id,
-                })
-
-                # Update 'amount' according to the liquidity line.
-
-                if journal_currency:
-                    st_line_vals_to_write.update({
-                        'amount': liquidity_lines.amount_currency,
-                    })
-                else:
-                    st_line_vals_to_write.update({
-                        'amount': liquidity_lines.balance,
-                    })
-
-                if len(suspense_lines) == 1:
-
-                    if journal_currency and suspense_lines.currency_id == journal_currency:
-
-                        # The suspense line is expressed in the journal's currency meaning the foreign currency
-                        # set on the statement line is no longer needed.
-
-                        st_line_vals_to_write.update({
-                            'amount_currency': 0.0,
-                            'foreign_currency_id': False,
-                        })
-
-                    elif not journal_currency and suspense_lines.currency_id == company_currency:
-
-                        # Don't set a specific foreign currency on the statement line.
-
-                        st_line_vals_to_write.update({
-                            'amount_currency': 0.0,
-                            'foreign_currency_id': False,
-                        })
-
-                    else:
-
-                        # Update the statement line regarding the foreign currency of the suspense line.
-
-                        st_line_vals_to_write.update({
-                            'amount_currency': -suspense_lines.amount_currency,
-                            'foreign_currency_id': suspense_lines.currency_id.id,
-                        })
-
-                move_vals_to_write.update({
-                    'partner_id': liquidity_lines.partner_id.id,
-                    'currency_id': (st_line.foreign_currency_id or journal_currency or company_currency).id,
-                })
-
-            move.write(move._cleanup_write_orm_values(move, move_vals_to_write))
-            st_line.write(move._cleanup_write_orm_values(st_line, st_line_vals_to_write))
-
-    def _synchronize_to_moves(self, changed_fields):
-        ''' Update the account.move regarding the modified account.bank.statement.line.
-        :param changed_fields: A list containing all modified fields on account.bank.statement.line.
-        '''
-        if self._context.get('skip_account_move_synchronization'):
-            return
-
-        if not any(field_name in changed_fields for field_name in (
-            'payment_ref', 'amount', 'amount_currency',
-            'foreign_currency_id', 'currency_id', 'partner_id',
-        )):
-            return
-
-        for st_line in self.with_context(skip_account_move_synchronization=True):
             liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
             company_currency = st_line.journal_id.company_id.currency_id
             journal_currency = st_line.journal_id.currency_id if st_line.journal_id.currency_id != company_currency else False
 
-            line_vals_list = self._prepare_move_line_default_vals()
-            line_ids_commands = [(1, liquidity_lines.id, line_vals_list[0])]
+            if len(liquidity_lines) != 1:
+                raise UserError(_(
+                    "The journal entry %s reached an invalid state regarding its related statement line.\n"
+                    "To be consistent, the journal entry must always have exactly one journal item involving the "
+                    "bank/cash account."
+                ) % st_line.move_id.display_name)
 
-            if suspense_lines:
-                line_ids_commands.append((1, suspense_lines.id, line_vals_list[1]))
-            else:
-                line_ids_commands.append((0, 0, line_vals_list[1]))
-
-            for line in other_lines:
-                line_ids_commands.append((2, line.id))
-
-            st_line.move_id.write({
-                'partner_id': st_line.partner_id.id,
-                'currency_id': (st_line.foreign_currency_id or journal_currency or company_currency).id,
-                'line_ids': line_ids_commands,
+            st_line_vals_to_write.update({
+                'payment_ref': liquidity_lines.name,
+                'partner_id': liquidity_lines.partner_id.id,
             })
+
+            # Update 'amount' according to the liquidity line.
+
+            if journal_currency:
+                st_line_vals_to_write.update({
+                    'amount': liquidity_lines.amount_currency,
+                })
+            else:
+                st_line_vals_to_write.update({
+                    'amount': liquidity_lines.balance,
+                })
+
+            if len(suspense_lines) == 1:
+
+                if journal_currency and suspense_lines.currency_id == journal_currency:
+
+                    # The suspense line is expressed in the journal's currency meaning the foreign currency
+                    # set on the statement line is no longer needed.
+
+                    st_line_vals_to_write.update({
+                        'amount_currency': 0.0,
+                        'foreign_currency_id': False,
+                    })
+
+                elif not journal_currency and suspense_lines.currency_id == company_currency:
+
+                    # Don't set a specific foreign currency on the statement line.
+
+                    st_line_vals_to_write.update({
+                        'amount_currency': 0.0,
+                        'foreign_currency_id': False,
+                    })
+
+                else:
+
+                    # Update the statement line regarding the foreign currency of the suspense line.
+
+                    st_line_vals_to_write.update({
+                        'amount_currency': -suspense_lines.amount_currency,
+                        'foreign_currency_id': suspense_lines.currency_id.id,
+                    })
+
+            move_vals_to_write.update({
+                'partner_id': liquidity_lines.partner_id.id,
+                'currency_id': (st_line.foreign_currency_id or journal_currency or company_currency).id,
+            })
+
+            move.write(move_vals_to_write)
+            st_line.write(st_line_vals_to_write)
+
+    def _synchronize_to_moves(self, snapshot0):
+        ''' Update the account.move regarding the modified account.bank.statement.line.
+        :param snapshot0: A snapshot of the record before edition.
+        '''
+        self.ensure_one()
+
+        if not snapshot0.any_has_changed([
+            'payment_ref', 'amount', 'amount_currency',
+            'foreign_currency_id', 'currency_id', 'partner_id',
+        ]):
+            return
+
+        liquidity_lines, suspense_lines, other_lines = self._seek_for_lines()
+        company_currency = self.journal_id.company_id.currency_id
+        currency = self.foreign_currency_id or self.journal_id.currency_id or company_currency
+
+        line_vals_list = self._prepare_move_line_default_vals()
+        line_ids_commands = [(1, liquidity_lines.id, line_vals_list[0])]
+
+        if suspense_lines:
+            line_ids_commands.append((1, suspense_lines.id, line_vals_list[1]))
+        else:
+            line_ids_commands.append((0, 0, line_vals_list[1]))
+
+        for line in other_lines:
+            line_ids_commands.append((2, line.id))
+
+        self.move_id.write({
+            'partner_id': self.partner_id.id,
+            'currency_id': currency.id,
+            'line_ids': line_ids_commands,
+        })
 
     # -------------------------------------------------------------------------
     # RECONCILIATION METHODS
@@ -1199,7 +1218,7 @@ class AccountBankStatementLine(models.Model):
         to_delete_commands = [(2, line.id) for line in suspense_lines + other_lines]
 
         # Cleanup previous lines.
-        self.move_id.with_context(check_move_validity=False, skip_account_move_synchronization=True, force_delete=True).write({
+        self.move_id.with_context(check_move_validity=False, write_recursion=True, force_delete=True).write({
             'line_ids': to_delete_commands + to_create_commands,
             'to_check': to_check,
         })

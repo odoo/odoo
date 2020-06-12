@@ -23,77 +23,66 @@ class AccountMove(models.Model):
             return [ref for ref in self.ref.split(', ') if ref and ref not in vendor_refs] + vendor_refs
         return vendor_refs
 
-    @api.onchange('purchase_vendor_bill_id', 'purchase_id')
-    def _onchange_purchase_auto_complete(self):
-        ''' Load from either an old purchase order, either an old vendor bill.
+    def _hook_pre_onchange(self, changed_fields):
+        # OVERRIDE
+        # Load from either an old purchase order, either an old vendor bill.
+        # When setting a 'purchase.bill.union' in 'purchase_vendor_bill_id':
+        # * If it's a vendor bill, 'invoice_vendor_bill_id' is set and the loading is done by the super call.
+        # * If it's a purchase order, 'purchase_id' is set and this method will load lines.
+        # /!\ All this not-stored fields must be empty at the end of this function.
 
-        When setting a 'purchase.bill.union' in 'purchase_vendor_bill_id':
-        * If it's a vendor bill, 'invoice_vendor_bill_id' is set and the loading is done by '_onchange_invoice_vendor_bill'.
-        * If it's a purchase order, 'purchase_id' is set and this method will load lines.
+        res = super()._hook_pre_onchange(changed_fields)
 
-        /!\ All this not-stored fields must be empty at the end of this function.
-        '''
         if self.purchase_vendor_bill_id.vendor_bill_id:
             self.invoice_vendor_bill_id = self.purchase_vendor_bill_id.vendor_bill_id
-            self._onchange_invoice_vendor_bill()
         elif self.purchase_vendor_bill_id.purchase_order_id:
             self.purchase_id = self.purchase_vendor_bill_id.purchase_order_id
         self.purchase_vendor_bill_id = False
 
-        if not self.purchase_id:
-            return
+        if self.purchase_id:
+            # Copy data from PO
+            invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
+            self.update({k: v for k, v in invoice_vals.items() if k in (
+                'narration', 'currency_id', 'fiscal_position_id', 'invoice_payment_term_id',
+            )})
 
-        # Copy data from PO
-        invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
-        del invoice_vals['ref']
-        self.update(invoice_vals)
+            # Copy purchase lines.
+            po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
+            for line in po_lines.filtered(lambda l: not l.display_type):
+                self.env['account.move.line'].new({
+                    **line._prepare_account_move_line(),
+                    'currency_id': self.currency_id.id,
+                    'move_id': self.id,
+                })
 
-        # Copy purchase lines.
-        po_lines = self.purchase_id.order_line - self.line_ids.mapped('purchase_line_id')
-        new_lines = self.env['account.move.line']
-        for line in po_lines.filtered(lambda l: not l.display_type):
-            new_line = new_lines.new(line._prepare_account_move_line(self))
-            new_line.account_id = new_line._get_computed_account()
-            new_line._onchange_price_subtotal()
-            new_lines += new_line
-        new_lines._onchange_mark_recompute_taxes()
+            # Compute invoice_origin.
+            origins = set(self.line_ids.mapped('purchase_line_id.order_id.name'))
+            self.invoice_origin = ','.join(list(origins))
 
-        # Compute invoice_origin.
-        origins = set(self.line_ids.mapped('purchase_line_id.order_id.name'))
-        self.invoice_origin = ','.join(list(origins))
+            # Compute ref.
+            refs = self._get_invoice_reference()
+            self.ref = ', '.join(refs)
 
-        # Compute ref.
-        refs = self._get_invoice_reference()
-        self.ref = ', '.join(refs)
+            # Compute payment_reference.
+            if len(refs) == 1:
+                self.payment_reference = refs[0]
 
-        # Compute payment_reference.
-        if len(refs) == 1:
-            self.payment_reference = refs[0]
+            self.purchase_id = False
 
-        self.purchase_id = False
-        self._onchange_currency()
-        self.partner_bank_id = self.bank_partner_id.bank_ids and self.bank_partner_id.bank_ids[0]
+        return res
 
-    @api.onchange('partner_id', 'company_id')
-    def _onchange_partner_id(self):
-        res = super(AccountMove, self)._onchange_partner_id()
-        if self.partner_id and\
-                self.move_type in ['in_invoice', 'in_refund'] and\
-                self.currency_id != self.partner_id.property_purchase_currency_id and\
-                self.partner_id.property_purchase_currency_id.id:
-            if not self.env.context.get('default_journal_id'):
-                journal_domain = [
-                    ('type', '=', 'purchase'),
-                    ('company_id', '=', self.company_id.id),
-                    ('currency_id', '=', self.partner_id.property_purchase_currency_id.id),
-                ]
-                default_journal_id = self.env['account.journal'].search(journal_domain, limit=1)
-                if default_journal_id:
-                    self.journal_id = default_journal_id
-            if self.env.context.get('default_currency_id'):
-                self.currency_id = self.env.context['default_currency_id']
-            if self.partner_id.property_purchase_currency_id:
-                self.currency_id = self.partner_id.property_purchase_currency_id
+    @api.depends('journal_id', 'partner_id')
+    def _compute_currency_id(self):
+        # OVERRIDE
+        res = super()._compute_currency_id()
+        for move in self:
+            if move.is_purchase_document(include_receipts=True) \
+                    and move.partner_id.property_purchase_currency_id \
+                    and not move.journal_id.currency_id:
+                move.currency_id = move.partner_id.property_purchase_currency_id
+            else:
+                move.currency_id = move.currency_id
+
         return res
 
     @api.model_create_multi

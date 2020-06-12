@@ -38,10 +38,10 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
         })
         po.button_confirm()
 
-        f = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        f.partner_id = po.partner_id
-        f.purchase_id = po
-        invoice = f.save()
+        move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
+        move_form.partner_id = po.partner_id
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po.id)
+        invoice = move_form.save()
         invoice.action_post()
         po.flush()
 

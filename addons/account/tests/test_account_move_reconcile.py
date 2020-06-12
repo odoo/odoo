@@ -1498,6 +1498,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'tax_repartition_line_id': self.cash_basis_tax_a_third_amount.invoice_repartition_line_ids.filtered(lambda line: line.repartition_type == 'tax').id,
                     'tax_tag_ids': [(6, 0, self.tax_tags[3].ids)],
                     'tax_exigible': False,
+                    'exclude_from_invoice_tab': True,
                 }),
 
                 # Receivable line
@@ -1505,6 +1506,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                     'debit': 0.0,
                     'credit': 133.33,
                     'account_id': self.extra_receivable_account_1.id,
+                    'exclude_from_invoice_tab': True,
                 }),
             ]
         })

@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
-
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
-from odoo import fields
-from odoo.tests.common import Form
 
 
 @tagged('post_install', '-at_install')
-class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
+class TestAccountPaymentTerm(AccountTestInvoicingCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
@@ -67,18 +64,9 @@ class TestAccountInvoiceRounding(AccountTestInvoicingCommon):
             ],
         })
 
-        cls.invoice = cls.init_invoice('out_refund', products=cls.product_a+cls.product_b)
-
-    def assertPaymentTerm(self, pay_term, invoice_date, dates):
-        with Form(self.invoice) as move_form:
-            move_form.invoice_payment_term_id = pay_term
-            move_form.invoice_date = invoice_date
-        self.assertEqual(
-            self.invoice.line_ids.filtered(
-                lambda l: l.account_id == self.company_data['default_account_receivable']
-            ).mapped('date_maturity'),
-            [fields.Date.from_string(date) for date in dates],
-        )
+    def assertPaymentTerm(self, payment_term, date, expected_dates):
+        due_dates = [vals[0] for vals in payment_term.compute(1000.0, date_ref=date)]
+        self.assertEqual(due_dates, expected_dates)
 
     def test_payment_term(self):
         self.assertPaymentTerm(self.pay_term_today, '2019-01-01', ['2019-01-01'])

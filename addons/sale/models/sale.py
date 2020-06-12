@@ -546,11 +546,9 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
-        journal = self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal()
-        if not journal:
-            raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
+        self = self.with_company(self.company_id)
 
-        invoice_vals = {
+        return {
             'ref': self.client_order_ref or '',
             'move_type': 'out_invoice',
             'narration': self.note,
@@ -564,7 +562,6 @@ class SaleOrder(models.Model):
             'partner_shipping_id': self.partner_shipping_id.id,
             'fiscal_position_id': (self.fiscal_position_id or self.fiscal_position_id.get_fiscal_position(self.partner_invoice_id.id)).id,
             'partner_bank_id': self.company_id.partner_id.bank_ids[:1].id,
-            'journal_id': journal.id,  # company comes from the journal
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'payment_reference': self.reference,
@@ -572,7 +569,6 @@ class SaleOrder(models.Model):
             'invoice_line_ids': [],
             'company_id': self.company_id.id,
         }
-        return invoice_vals
 
     def action_quotation_sent(self):
         if self.filtered(lambda so: so.state != 'draft'):
@@ -638,9 +634,10 @@ Reason(s) of this behavior could be:
                 return self.env['account.move']
 
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        invoice_grouping_keys = self._get_invoice_grouping_keys()
 
         # 1) Create invoices.
-        invoice_vals_list = []
+        invoice_vals_to_create = {}
         invoice_item_sequence = 0
         for order in self:
             order = order.with_company(order.company_id)
@@ -685,40 +682,46 @@ Reason(s) of this behavior could be:
 
             invoice_vals['invoice_line_ids'] = [(0, 0, invoice_line_id) for invoice_line_id in invoice_lines_vals]
 
-            invoice_vals_list.append(invoice_vals)
+            invoice_key = '-'.join(str(invoice_vals[field]) for field in invoice_grouping_keys)
+            invoice_vals_to_create.setdefault(invoice_key, {
+                'invoice_vals_list': [],
+                'company': order.company_id,
+            })
+            invoice_vals_to_create[invoice_key]['invoice_vals_list'].append(invoice_vals)
 
-        if not invoice_vals_list:
+        if not invoice_vals_to_create:
             raise self._nothing_to_invoice_error()
 
         # 2) Manage 'grouped' parameter: group by (partner_id, currency_id).
         if not grouped:
-            new_invoice_vals_list = []
-            invoice_grouping_keys = self._get_invoice_grouping_keys()
-            for grouping_keys, invoices in groupby(invoice_vals_list, key=lambda x: [x.get(grouping_key) for grouping_key in invoice_grouping_keys]):
+            for values in invoice_vals_to_create.values():
+                invoice_vals_list = values['invoice_vals_list']
                 origins = set()
                 payment_refs = set()
                 refs = set()
-                ref_invoice_vals = None
-                for invoice_vals in invoices:
-                    if not ref_invoice_vals:
-                        ref_invoice_vals = invoice_vals
+                grouped_invoice_vals = None
+                for invoice_vals in invoice_vals_list:
+                    if grouped_invoice_vals is None:
+                        grouped_invoice_vals = invoice_vals
                     else:
-                        ref_invoice_vals['invoice_line_ids'] += invoice_vals['invoice_line_ids']
+                        grouped_invoice_vals['invoice_line_ids'] += invoice_vals['invoice_line_ids']
                     origins.add(invoice_vals['invoice_origin'])
                     payment_refs.add(invoice_vals['payment_reference'])
                     refs.add(invoice_vals['ref'])
-                ref_invoice_vals.update({
+                grouped_invoice_vals.update({
                     'ref': ', '.join(refs)[:2000],
                     'invoice_origin': ', '.join(origins),
                     'payment_reference': len(payment_refs) == 1 and payment_refs.pop() or False,
                 })
-                new_invoice_vals_list.append(ref_invoice_vals)
-            invoice_vals_list = new_invoice_vals_list
+                values['invoice_vals_list'] = [grouped_invoice_vals]
 
         # 3) Create invoices.
         # Manage the creation of invoices in sudo because a salesperson must be able to generate an invoice from a
         # sale order without "billing" access rights. However, he should not be able to create an invoice from scratch.
-        moves = self.env['account.move'].sudo().with_context(default_move_type='out_invoice').create(invoice_vals_list)
+        moves = self.env['account.move']
+        for values in invoice_vals_to_create.values():
+            moves |= self.env['account.move'].sudo().with_company(values['company']).create(values['invoice_vals_list'])
+
         # 4) Some moves might actually be refunds: convert them if the total amount is negative
         # We do this after the moves have been created since we need taxes, etc. to know if the total
         # is actually negative or not

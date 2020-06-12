@@ -218,11 +218,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         # Balance Debit = 18.75
         # Counterpart Credit goes in Exchange diff
 
-        dest_journal_id = self.env['account.journal'].create({
-            'name': 'dest_journal_id',
-            'type': 'bank',
-        })
-
         # Setting up rates for USD (main_company is in EUR)
         self.env['res.currency.rate'].create({'name': time.strftime('%Y') + '-' + '07' + '-01',
             'rate': 0.5,
@@ -879,8 +874,8 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_usd.id,
             'line_ids': [
-                (0, False, {'credit': 83.31, 'account_id': inv1_receivable.account_id.id, 'name': 'Balance WriteOff'}),
-                (0, False, {'debit': 83.31, 'account_id': self.diff_expense_account.id, 'name': 'Balance WriteOff'}),
+                (0, False, {'credit': 83.31, 'account_id': inv1_receivable.account_id.id, 'currency_id': self.currency_euro_id, 'name': 'Balance WriteOff'}),
+                (0, False, {'debit': 83.31, 'account_id': self.diff_expense_account.id, 'currency_id': self.currency_euro_id, 'name': 'Balance WriteOff'}),
             ]
         })
 
@@ -1189,8 +1184,8 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'date': time.strftime('%Y') + '-07-15',
             'journal_id': self.bank_journal_usd.id,
             'line_ids': [
-                (0, False, {'credit': 0.05, 'account_id': inv1_receivable.account_id.id, 'name': 'Balance WriteOff'}),
-                (0, False, {'debit': 0.05, 'account_id': self.diff_expense_account.id, 'name': 'Balance WriteOff'}),
+                (0, False, {'credit': 0.05, 'account_id': inv1_receivable.account_id.id, 'currency_id': self.currency_euro_id, 'name': 'Balance WriteOff'}),
+                (0, False, {'debit': 0.05, 'account_id': self.diff_expense_account.id, 'currency_id': self.currency_euro_id, 'name': 'Balance WriteOff'}),
             ]
         })
         move_balance.action_post()

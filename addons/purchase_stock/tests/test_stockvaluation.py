@@ -380,7 +380,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_id
-        move_form.purchase_id = po1
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po1.id)
         invoice_po1 = move_form.save()
         invoice_po1.action_post()
 
@@ -405,7 +405,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = self.partner_id
-        move_form.purchase_id = po2
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
         invoice_po2 = move_form.save()
         invoice_po2.action_post()
 
@@ -429,7 +429,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # create a credit note for po2
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
         move_form.partner_id = self.partner_id
-        move_form.purchase_id = po2
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-po2.id)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.quantity = 10
         creditnote_po2 = move_form.save()
@@ -463,7 +463,7 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
         # Create an invoice with a different price
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = order.partner_id
-        move_form.purchase_id = order
+        move_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-order.id)
         with move_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 15.0
         invoice = move_form.save()
@@ -1211,7 +1211,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         # Create an invoice with a different price and a discount
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
+        invoice_form.partner_id = order.partner_id
+        invoice_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-order.id)
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 100.0
             line_form.discount = 10.0
@@ -1257,7 +1258,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         # Create an invoice with a different price and a discount
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
+        invoice_form.partner_id = order.partner_id
+        invoice_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-order.id)
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.tax_ids.clear()
             line_form.discount = 10.0
@@ -1303,7 +1305,8 @@ class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
         # Create an invoice with a different price and a discount
         invoice_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        invoice_form.purchase_id = order
+        invoice_form.partner_id = order.partner_id
+        invoice_form.purchase_vendor_bill_id = self.env['purchase.bill.union'].browse(-order.id)
         with invoice_form.invoice_line_ids.edit(0) as line_form:
             line_form.price_unit = 100.0
             line_form.discount = 10.0

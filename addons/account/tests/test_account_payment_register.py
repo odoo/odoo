@@ -47,6 +47,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'move_type': 'out_invoice',
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
+            'invoice_payment_term_id': cls.pay_terms_a.id,
             'partner_id': cls.partner_a.id,
             'currency_id': cls.currency_data['currency'].id,
             'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0})],
@@ -56,6 +57,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'move_type': 'out_invoice',
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
+            'invoice_payment_term_id': cls.pay_terms_a.id,
             'partner_id': cls.partner_a.id,
             'currency_id': cls.currency_data['currency'].id,
             'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0})],
@@ -67,6 +69,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'move_type': 'in_invoice',
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
+            'invoice_payment_term_id': cls.pay_terms_a.id,
             'partner_id': cls.partner_a.id,
             'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 1000.0})],
         })
@@ -74,6 +77,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'move_type': 'in_invoice',
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
+            'invoice_payment_term_id': cls.pay_terms_a.id,
             'partner_id': cls.partner_a.id,
             'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 2000.0})],
         })
@@ -81,6 +85,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
             'move_type': 'in_invoice',
             'date': '2017-01-01',
             'invoice_date': '2017-01-01',
+            'invoice_payment_term_id': cls.pay_terms_a.id,
             'partner_id': cls.partner_b.id,
             'currency_id': cls.currency_data['currency'].id,
             'invoice_line_ids': [(0, 0, {'product_id': cls.product_a.id, 'price_unit': 3000.0})],
@@ -424,6 +429,7 @@ class TestAccountPaymentRegister(AccountTestInvoicingCommon):
          and one with a vendor bill of 600, by splitting payments.
          '''
         active_ids = (self.in_invoice_1 + self.in_invoice_2 + self.in_invoice_3).ids
+
         payments = self.env['account.payment.register'].with_context(active_model='account.move', active_ids=active_ids).create({
             'group_payment': False,
         })._create_payments()

@@ -127,8 +127,16 @@ class AccountMove(models.Model):
                         price_unit, currency=move.currency_id, quantity=1.0, is_refund=move.move_type == 'in_refund')['total_excluded']
                     price_unit /= line.quantity
 
+                move_type = move.move_type
+                if move_type in move.get_outbound_types():
+                    sign = 1
+                else:
+                    sign = -1
+
                 price_unit_val_dif = price_unit - valuation_price_unit
                 price_subtotal = line.quantity * price_unit_val_dif
+                amount_currency = price_subtotal * sign
+                balance = line.currency_id._convert(amount_currency, line.company_id.currency_id, line.company_id, move.date)
 
                 # We consider there is a price difference if the subtotal is not zero. In case a
                 # discount has been applied, we can't round the price unit anymore, and hence we
@@ -153,6 +161,9 @@ class AccountMove(models.Model):
                         'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                         'exclude_from_invoice_tab': True,
                         'is_anglo_saxon_line': True,
+                        'amount_currency': amount_currency,
+                        'debit': balance if balance > 0.0 else 0.0,
+                        'credit': -balance if balance < 0.0 else 0.0,
                     }
                     vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
                     lines_vals_list.append(vals)
@@ -172,6 +183,9 @@ class AccountMove(models.Model):
                         'analytic_tag_ids': [(6, 0, line.analytic_tag_ids.ids)],
                         'exclude_from_invoice_tab': True,
                         'is_anglo_saxon_line': True,
+                        'amount_currency': -amount_currency,
+                        'debit': -balance if balance < 0.0 else 0.0,
+                        'credit': balance if balance > 0.0 else 0.0,
                     }
                     vals.update(line._get_fields_onchange_subtotal(price_subtotal=vals['price_subtotal']))
                     lines_vals_list.append(vals)
