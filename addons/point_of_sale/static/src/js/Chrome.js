@@ -134,6 +134,9 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 this.state.uiState = 'READY';
                 this.env.pos.on('change:selectedOrder', this._showSavedScreen, this);
                 this._showStartScreen();
+                if (_.isEmpty(this.env.pos.db.product_by_category_id)) {
+                    this._loadDemoData();
+                }
                 this.env.pos.push_orders(); // push order in the background, no need to await
                 // Allow using the app even if not all the images are loaded.
                 // Basically, preload the images in the background.
@@ -308,6 +311,21 @@ odoo.define('point_of_sale.Chrome', function(require) {
         }
 
         // MISC METHODS //
+
+        async _loadDemoData() {
+            const { confirmed } = await this.showPopup('ConfirmPopup', {
+                title: this.env._t('Load Demo Data'),
+                body: this.env._t(
+                    'Would you like to load demo data?'
+                ),
+            });
+            if (confirmed) {
+                await this.rpc({
+                    'route': '/pos/load_onboarding_data',
+                });
+                this.env.pos.load_server_data();
+            }
+        }
 
         _preloadImages() {
             for (let product of this.env.pos.db.get_product_by_category(0)) {
