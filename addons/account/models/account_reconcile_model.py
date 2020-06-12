@@ -174,6 +174,8 @@ class AccountReconcileModel(models.Model):
 
     line_ids = fields.One2many('account.reconcile.model.line', 'model_id')
 
+    past_months_limit = fields.Integer(string="Past Months Limit", default=18, help="Number of months in the past to consider entries from when applying this model.")
+
     decimal_separator = fields.Char(default=lambda self: self.env['res.lang']._lang_get(self.env.user.lang).decimal_point, help="Every character that is nor a digit nor this separator will be removed from the matching string")
     show_decimal_separator = fields.Boolean(compute='_compute_show_decimal_separator', help="Technical field to decide if we should show the decimal separator for the regex matching field.")
     number_entries = fields.Integer(string='Number of entries related to this model', compute='_compute_number_entries')
@@ -607,6 +609,13 @@ class AccountReconcileModel(models.Model):
             'sequence': self.sequence,
             'model_id': self.id,
         }
+
+        # If this reconciliation model defines a past_months_limit, we add a condition
+        # to the query to only search on move lines that are younger than this limit.
+        if self.past_months_limit:
+            date_limit = fields.Date.today() - relativedelta(months=self.past_months_limit)
+            query += "AND aml.date >= %(aml_date_limit)s"
+            params['aml_date_limit'] = date_limit
 
         # Filter out excluded account.move.line.
         if excluded_ids:
