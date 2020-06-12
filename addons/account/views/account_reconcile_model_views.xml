@@ -176,6 +176,16 @@
                            </field>
                        </group>
 
+                       <group string="Partner Mapping" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}">
+                           <field name="partner_mapping_line_ids" nolabel="1">
+                               <tree editable="bottom">
+                                   <field name="payment_ref_regex" attrs="{'required': [('narration_regex', '=', False)]}"/>
+                                   <field name="narration_regex" attrs="{'required': [('payment_ref_regex', '=', False)]}"/>
+                                   <field name="partner_id"/>
+                               </tree>
+                           </field>
+                       </group>
+
                     </sheet>
                 </form>
             </field>
