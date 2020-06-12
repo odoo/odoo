@@ -238,6 +238,12 @@ var SnippetEditor = Widget.extend({
     /**
      * @returns {boolean}
      */
+    isSticky: function () {
+        return this.$el && this.$el.hasClass('o_we_overlay_sticky');
+    },
+    /**
+     * @returns {boolean}
+     */
     isTargetVisible: function () {
         return (this.$target[0].dataset.invisible !== '1');
     },
@@ -328,8 +334,6 @@ var SnippetEditor = Widget.extend({
             this.$el.removeClass('o_we_overlay_preview');
             this.$el.toggleClass('o_we_overlay_sticky', show);
         }
-
-        show = this.$el.hasClass('o_we_overlay_sticky') ? true : show;
 
         // Show/hide overlay in preview mode or not
         this.$el.toggleClass('oe_active', show);
@@ -1340,6 +1344,12 @@ var SnippetsMenu = Widget.extend({
                     if (!previewMode && !editorToEnableHierarchy.includes(editor)) {
                         editor.toggleOptions(false);
                     }
+                }
+                // ... if no editors are to be enabled, look if any have been
+                // enabled previously by a click
+                if (!editorToEnable) {
+                     editorToEnable = this.snippetEditors.find(editor => editor.isSticky());
+                     previewMode = false;
                 }
                 // ... then enable the right editor
                 if (editorToEnable) {
