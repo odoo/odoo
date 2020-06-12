@@ -14,7 +14,7 @@ var Widget = require('web.Widget');
  * @param {boolean} [params.debug]
  * @returns {DocumentViewer}
  */
-var createViewer = function (params) {
+var createViewer = async function (params) {
     var parent = new Widget();
     var viewer = new DocumentViewer(parent, params.attachments, params.attachmentID);
 
@@ -32,7 +32,7 @@ var createViewer = function (params) {
             return Promise.resolve();
         }
     };
-    testUtils.mock.addMockEnvironment(parent, {
+    await testUtils.mock.addMockEnvironment(parent, {
         mockRPC: function () {
             if (params.mockRPC) {
                 var _super = this._super;

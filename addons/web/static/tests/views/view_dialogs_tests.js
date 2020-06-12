@@ -12,8 +12,7 @@ var createView = testUtils.createView;
 
 async function createParent(params) {
     var widget = new Widget();
-    params.server =  await testUtils.mock.addMockEnvironment(widget, params);
-    owl.Component.env = testUtils.mock.getMockedOwlEnv(params);
+    params.server = await testUtils.mock.addMockEnvironment(widget, params);
     return widget;
 }
 

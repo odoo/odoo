@@ -20,7 +20,6 @@ var data_manager = require('web.data_manager');
 var dom = require('web.dom');
 var KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
 var Loading = require('web.Loading');
-var local_storage = require('web.local_storage');
 var RainbowMan = require('web.RainbowMan');
 var session = require('web.session');
 var utils = require('web.utils');
@@ -103,7 +102,7 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         this.action_mutex = new concurrency.Mutex();
         this.set('title_part', {"zopenerp": "Odoo"});
         this.env = env;
-        core.bus.on('legacy_webclient_request', this, this._onLegacyWebclientRequest);
+        this.env.bus.on('set_title_part', this, this._onSetTitlePart);
     },
     /**
      * @override
@@ -206,6 +205,11 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
     set_action_manager: function () {
         var self = this;
         this.action_manager = new ActionManager(this, session.user_context);
+        this.env.bus.on('do-action', this, payload => {
+            this.action_manager.doAction(payload.action, payload.options)
+                .then(payload.on_success || (() => {}))
+                .guardedCatch(payload.on_fail || (() => {}));
+        });
         var fragment = document.createDocumentFragment();
         return this.action_manager.appendTo(fragment).then(function () {
             dom.append(self.$el, fragment, {
@@ -440,20 +444,6 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         ev.data.callback(this.getScrollPosition());
     },
     /**
-     * Services used to trigger_up some events (e.g. do_action, get_session,
-     * set_title_part) when the webclient was still instantiating them. Now that
-     * services have been moved to the env, the webclient is no longer their
-     * parent and they can thus no longer communicate with the webclient by
-     * trigger_up. Instead, they trigger those events on the bus, and we end up
-     * in this handler. Eventually, services should stop triggering events up.
-     *
-     * @private
-     * @param {CustomEvent} ev
-     */
-    _onLegacyWebclientRequest: function (ev) {
-        this._trigger_up(ev);
-    },
-    /**
      * Loads an action from the database given its ID.
      *
      * @private
@@ -502,13 +492,13 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
     },
     /**
      * @private
-     * @param {OdooEvent} ev
-     * @param {string} ev.data.part
-     * @param {string} [ev.data.title]
+     * @param {Object} payload
+     * @param {string} payload.part
+     * @param {string} [payload.title]
      */
-    _onSetTitlePart: function (ev) {
-        var part = ev.data.part;
-        var title = ev.data.title;
+    _onSetTitlePart: function (payload) {
+        var part = payload.part;
+        var title = payload.title;
         this.set_title_part(part, title);
     },
     /**

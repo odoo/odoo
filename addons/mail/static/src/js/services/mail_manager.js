@@ -1004,7 +1004,7 @@ var MailManager =  AbstractService.extend({
                 _t("%d Messages"),
                 this._outOfFocusUnreadMessageCounter
             );
-            this.trigger_up('set_title_part', {
+            this.env.bus.trigger('set_title_part', {
                 part: '_chat',
                 title: tabTitle
             });
@@ -1048,12 +1048,14 @@ var MailManager =  AbstractService.extend({
      * @param {string} viewID
      */
     _redirectToDocument: function (resModel, resID, viewID) {
-        this.do_action({
-            type: 'ir.actions.act_window',
-            view_mode: 'form',
-            res_model: resModel,
-            views: [[viewID || false, 'form']],
-            res_id: resID,
+        this.env.bus.trigger('do-action', {
+            action: {
+                type: 'ir.actions.act_window',
+                view_mode: 'form',
+                res_model: resModel,
+                views: [[viewID || false, 'form']],
+                res_id: resID,
+            },
         });
     },
     /**
@@ -1345,7 +1347,7 @@ var MailManager =  AbstractService.extend({
      */
     _onWindowFocus: function () {
         this._resetOutOfFocusUnreadMessageCounter();
-        this.trigger_up('set_title_part', { part: '_chat' });
+        this.env.bus.trigger('set_title_part', { part: '_chat' });
     },
 });
 
