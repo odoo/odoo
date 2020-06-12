@@ -22,7 +22,7 @@ odoo.define('web.Popover', function () {
         constructor() {
             super(...arguments);
             this.popoverRef = useRef('popover');
-            this.orderedPositions = ['top', 'right', 'bottom', 'left'];
+            this.orderedPositions = ['top', 'top-end', 'top-start', 'end', 'bottom', 'bottom-right', 'bottom-start', 'left'];
             this.state = useState({
                 displayed: false,
             });
@@ -261,26 +261,55 @@ odoo.define('web.Popover', function () {
             const targetWidth = targetElement.offsetWidth;
             const popoverHeight = popoverElement.offsetHeight;
             const popoverWidth = popoverElement.offsetWidth;
+
+            const topTopOffset = Math.round(targetTop - popoverHeight);
+            const centerTopOffset = Math.round(targetTop - (popoverHeight - targetHeight) / 2);
+            const bottomTopOffset = Math.round(targetTop + targetHeight);
+
+            const rightLeftOffset = Math.round(targetLeft + targetWidth);
+            const centerLeftOffset = Math.round(targetLeft - (popoverWidth - targetWidth) / 2);
+            const leftLeftOffset = Math.round(targetLeft - popoverWidth);
+
             return {
                 top: {
                     name: 'top',
-                    top: Math.round(targetTop - popoverHeight),
-                    left: Math.round(targetLeft - (popoverWidth - targetWidth) / 2),
+                    top: topTopOffset,
+                    left: centerLeftOffset,
+                },
+                'top-end': {
+                    name: 'top-right',
+                    top: topTopOffset,
+                    left: rightLeftOffset - targetWidth,
+                },
+                'top-start': {
+                    name: 'top-right',
+                    top: topTopOffset,
+                    left: leftLeftOffset + targetWidth,
                 },
                 right: {
                     name: 'right',
-                    top: Math.round(targetTop - (popoverHeight - targetHeight) / 2),
-                    left: Math.round(targetLeft + targetWidth),
+                    top: centerTopOffset,
+                    left: rightLeftOffset,
                 },
                 bottom: {
                     name: 'bottom',
-                    top: Math.round(targetTop + targetHeight),
-                    left: Math.round(targetLeft - (popoverWidth - targetWidth) / 2),
+                    top: bottomTopOffset,
+                    left: centerLeftOffset,
+                },
+                'bottom-end': {
+                    name: 'bottom-right',
+                    top: bottomTopOffset,
+                    left: rightLeftOffset - targetWidth,
+                },
+                'bottom-start': {
+                    name: 'bottom-right',
+                    top: bottomTopOffset,
+                    left: leftLeftOffset + targetWidth,
                 },
                 left: {
                     name: 'left',
-                    top: Math.round(targetTop - (popoverHeight - targetHeight) / 2),
-                    left: Math.round(targetLeft - popoverWidth),
+                    top: centerTopOffset,
+                    left: leftLeftOffset,
                 },
             };
         }
