@@ -1793,7 +1793,7 @@ var One2ManyKanbanRecord = KanbanRecord.extend({
                 if ($button.attr('warn')) {
                     $button.on('click', function (e) {
                         e.stopPropagation();
-                        self.do_warn(_t('Warning'), _t('Please click on the "save" button first.'));
+                        self.do_warn(false, _t('Please click on the "save" button first'));
                     });
                 } else {
                     $button.attr('disabled', 'disabled');

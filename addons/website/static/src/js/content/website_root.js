@@ -219,7 +219,6 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
             if (result) {
                 self.displayNotification({
                     type: 'success',
-                    title: _t("Congratulations"),
                     message: $data.data('description') ?
                         _.str.sprintf(_t("You've published your %s."), $data.data('description')) :
                         _t("Published with success."),

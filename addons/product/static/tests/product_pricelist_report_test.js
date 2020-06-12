@@ -94,7 +94,7 @@ QUnit.module('Product Pricelist', {
         // existing quantity can not be added.
         await testUtils.dom.click(actionManager.$('.o_add_qty'));
         let notificationElement = document.body.querySelector('.o_notification_manager .o_notification.bg-info');
-        assert.strictEqual(notificationElement.querySelector('.o_notification_title').textContent,
+        assert.strictEqual(notificationElement.querySelector('.o_notification_content').textContent,
             "Quantity already present (1).", "Existing Quantity can not be added");
 
         // adding few more quantities to check.
@@ -111,7 +111,7 @@ QUnit.module('Product Pricelist', {
 
         notificationElement = document.body.querySelector('.o_notification_manager .o_notification.bg-warning');
         assert.strictEqual(notificationElement.querySelector('.o_notification_content').textContent,
-            "Maximum 5 quantities can be displayed simultaneously. Remove a selected quantity to add others.",
+            "At most 5 quantities can be displayed simultaneously. Remove a selected quantity to add others.",
             "Can not add more then 5 quantities");
 
         // removing all the quantities should work

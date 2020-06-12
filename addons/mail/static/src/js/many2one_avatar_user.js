@@ -63,8 +63,7 @@ odoo.define('mail.Many2OneAvatarUser', function (require) {
          */
         _displayWarning() {
             this.displayNotification({
-                title: _t('Cannot chat with yourself'),
-                message: _t('Click on the avatar of other users to chat with them.'),
+                message: _t('You cannot chat with yourself'),
                 type: 'info',
             });
         },

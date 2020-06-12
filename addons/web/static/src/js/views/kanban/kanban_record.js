@@ -706,7 +706,7 @@ var KanbanRecord = Widget.extend({
                 }
                 break;
             default:
-                this.do_warn("Kanban: no action for type : " + type);
+                this.do_warn(false, _t("Kanban: no action for type: ") + type);
         }
     },
     /**
