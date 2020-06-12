@@ -458,3 +458,44 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1},
             self.bank_line_2.id: {'aml_ids': []},
         }, self.bank_st)
+
+    def test_partner_mapping_rule(self):
+        self.bank_line_1.write({'partner_id': None, 'payment_ref': 'toto42', 'narration': None})
+        self.bank_line_2.write({'partner_id': None})
+
+        # Without mapping, there should be no match
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': []},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
+
+        # We add some mapping for payment reference to rule_1
+        self.rule_1.write({
+            'partner_mapping_line_ids': [(0, 0, {
+                'partner_id': self.partner_1.id,
+                'payment_ref_regex': 'toto.*',
+            })]
+        })
+
+        # bank_line_1 should now match
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
+
+        # If we now add a narration regex to the same mapping line, nothing should match
+        self.rule_1.partner_mapping_line_ids.write({'narration_regex': ".*coincoin"})
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': []},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
+
+
+        # If we set the narration so that it matches the new mapping criterium, line_1 matches
+        self.bank_line_1.write({'narration': "42coincoin"})
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
