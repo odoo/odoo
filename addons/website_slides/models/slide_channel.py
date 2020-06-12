@@ -711,6 +711,18 @@ class Channel(models.Model):
 
         return category_data
 
+    def _move_category_slides(self, category, new_category):
+        if not category.slide_ids:
+            return
+        truncated_slide_ids = [slide_id for slide_id in self.slide_ids.ids if slide_id not in category.slide_ids.ids]
+        if new_category:
+            place_idx = truncated_slide_ids.index(new_category.id)
+            ordered_slide_ids = truncated_slide_ids[:place_idx] + category.slide_ids.ids + truncated_slide_ids[place_idx]
+        else:
+            ordered_slide_ids = category.slide_ids.ids + truncated_slide_ids
+        for index, slide_id in enumerate(ordered_slide_ids):
+            self.env['slide.slide'].browse([slide_id]).sequence = index + 1
+
     def _resequence_slides(self, slide, force_category=False):
         ids_to_resequence = self.slide_ids.ids
         index_of_added_slide = ids_to_resequence.index(slide.id)
