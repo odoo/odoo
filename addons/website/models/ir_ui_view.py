@@ -39,8 +39,9 @@ class View(models.Model):
     def _set_pwd(self):
         crypt_context = self.env.user._crypt_context()
         for r in self:
-            r.sudo().visibility_password = crypt_context.encrypt(r.visibility_password_display)
-            r.visibility = r.visibility  # double check access
+            if r.type == 'qweb':
+                r.sudo().visibility_password = r.visibility_password_display and crypt_context.encrypt(r.visibility_password_display) or ''
+                r.visibility = r.visibility  # double check access
 
     def _compute_first_page_id(self):
         for view in self:
