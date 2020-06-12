@@ -2,20 +2,15 @@
 
 <templates>
     <div t-name="timerToggleButton" owl="1">
-        <t t-debug="true"/>
-        <t t-set="title" t-value="value ? _lt('Stop') : _lt('Play');"/>
-        <t t-set="name" t-value="value ? 'action_timer_stop' : 'action_timer_start'"/>
-        <t t-set="label" t-value="value ? _lt('Stop') : _lt('Start')"/>
-        <t t-set="cssClaases" t-value="value ? 'fa-stop-circle o-timer-stop-button': 'fa-play-circle o-timer-play-button'"/>
         <button class="o_icon_button o-timer-button"
-            t-att-title="title"
-            t-att-name="name"
-            t-att-aria-label="label"
+            t-att-title="value ? env._t('Stop') : env._t('Play')"
+            t-att-name="value ? 'action_timer_stop' : 'action_timer_start"
+            t-att-aria-label="value ? env._t('Stop') : env._t('Start')"
             t-att-aria-pressed="value"
             type="button"
             role="button"
-            t-on-click="_onToggleButton">
-                <i t-att-class="'fa ' + cssClaases" t-att-title="title"/>
+            t-on-click.stop="_onToggleButton">
+                <i t-attf-class="fa {{ value ? 'fa-stop-circle o-timer-stop-button': 'fa-play-circle o-timer-play-button' }}" t-att-title="title"/>
         </button>
     </div>
 </templates>

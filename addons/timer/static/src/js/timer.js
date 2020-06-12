@@ -8,17 +8,21 @@ odoo.define('timer.timer', function (require) {
 
     class TimerFieldWidget extends AbstractFieldOwl {
 
-        constructor() {
-            super(...arguments);
+        mounted() {
+            this._startTimeCounter();
         }
 
-        mounted() {
+        patched() {
             this._startTimeCounter();
         }
 
         willUnmount() {
             clearInterval(this.timer);
         }
+
+        //----------------------------------------------------------------------
+        // Getters
+        //----------------------------------------------------------------------
 
         /**
          * @override
@@ -27,6 +31,10 @@ odoo.define('timer.timer', function (require) {
         isSet() {
             return true;
         }
+
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
 
         /**
          * @private
@@ -44,7 +52,7 @@ odoo.define('timer.timer', function (require) {
                         this.el.textContent = this.time.toString();
                     }
                 }, 1000);
-            } else if (!this.record.data.timer_pause){
+            } else if (!this.record.data.timer_pause) {
                 clearInterval(this.timer);
             }
         }

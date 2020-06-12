@@ -1,10 +1,8 @@
 odoo.define('timer.timer_toggle_button', function (require) {
     "use strict";
 
-    const { xml } = owl.tags;
     const fieldRegistryOwl = require('web.field_registry_owl');
     const { FieldBoolean } = require('web.basic_fields_owl');
-    const { _lt } = require('web.core');
 
     /**
      * The TimerToggleButton is used to display correctly the button
@@ -12,14 +10,10 @@ odoo.define('timer.timer_toggle_button', function (require) {
      * views.
      */
     class TimerToggleButton extends FieldBoolean {
-        /**
-         * @override
-         * @private
-         */
-        constructor() {
-            super(...arguments);
-            this._lt = _lt;
-        }
+
+        //----------------------------------------------------------------------
+        // Handlers
+        //----------------------------------------------------------------------
 
         /**
          * Toggle the button
@@ -36,14 +30,13 @@ odoo.define('timer.timer_toggle_button', function (require) {
          * @private
          * @param {MouseEvent} event
          */
-        async _onToggleButton(ev) {debugger
+        async _onToggleButton(ev) {
             const context = this.record.getContext();
-            const prevent_deletion = this.attrs.options && this.attrs.options.prevent_deletion || false;
-            ev.stopPropagation();
-            const result = await this.env.services.rpc({
+            const preventDeletion = this.attrs.options && this.attrs.options.prevent_deletion || false;
+            await this.env.services.rpc({
                 model: this.model,
                 method: this.value ? 'action_timer_stop' : 'action_timer_start',
-                context: Object.assign({}, context, {prevent_deletion: prevent_deletion}),
+                context: Object.assign({}, context, { prevent_deletion: preventDeletion}),
                 args: [this.resId]
             });
 

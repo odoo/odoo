@@ -1,6 +1,7 @@
 odoo.define('timer.timer_field', function (require) {
 "use strict";
 
+const concurrency = require('web.concurrency');
 const FormView = require('web.FormView');
 const KanbanView = require('web.KanbanView');
 const testUtils = require('web.test_utils');
@@ -12,21 +13,22 @@ QUnit.module('timer_timer', {
         this.data = {
             partner: {
                 fields: {
-                    action_timer_start: { string: "action_timer_start" },
-                    action_timer_stop: { string: "action_timer_stop" },
-                    action_timer_pause: { string: "action_timer_pause" },
-                    action_timer_resume: { string: "action_timer_resume" },
-                    display_name: { string: "Displayed name", type: "text" },
-                    display_timer_start_secondary: { string: "action_timer_start" },
+                    timer_start: { string: "timer start", type: "datetime" },
+                    timer_stop: { string: "timer stop", type: "datetime" },
+                    timer_pause: { string: "action_timer_pause", type: "datetime" },
+                    // action_timer_resume: { string: "action_timer_resume" },
+                    // display_name: { string: "Displayed name", type: "text" },
+                    // display_timer_start_secondary: { string: "action_timer_start" },
                 },
                 records: [{
                     id: 1,
-                    display_timer_pause: false,
-                    display_timer_resume: false,
-                    display_timer_start_secondary: true,
-                    display_timer_stop: false,
-                    display_timesheet_timer: true,
-                    timer_start: false,
+                    // display_timer_pause: false,
+                    // display_timer_resume: false,
+                    // display_timer_start_secondary: true,
+                    // display_timer_stop: false,
+                    // display_timesheet_timer: true,
+                    timer_start: "2020-01-01 00:00:00",
+                    timer_stop: false,
                     timer_pause: false,
                 }],
             },
@@ -79,36 +81,46 @@ QUnit.module('timer_timer', {
         kanban.destroy();
     });
 
-    // QUnit.only('timer button', async function (assert) {
-    //     assert.expect(1);
+    QUnit.test('timer field widget: basic rendering', async function (assert) {
+        assert.expect(4);
 
-    //     const form = await createView({
-    //     View: FormView,
-    //     model: 'partner',
-    //     data: this.data,
-    //     debug: true,
-    //     arch: '<form>' +
-    //                 '<div class="o_form_statusbar">' +
-    //                     '<div class="o_statusbar_buttons">' +
-    //                         '<button string="Start" name="action_timer_start" widget="timer_timer" class="btn btn-primary" type="object"/>' +
-    //                         '<button string="Stop" name="action_timer_stop" widget="timer_timer" class="btn btn-primary" type="object"/>' +
-    //                         '<button string="Pause" name="action_timer_pause" widget="timer_timer" class="btn btn-primary" type="object"/>' +
-    //                         '<button string="Resume" name="action_timer_resume" widget="timer_timer" class="btn btn-primary" type="object"/>' +
-    //                     '</div>' +
-    //                     '<field name="display_name" class="text-danger ml-auto h2 ml-4 font-weight-bold"/>' +
-    //                 '</div>' +
-    //             '</form>',
-    //     res_id: 1,
-    //     mockRPC: function (route, args) {debugger
-    //             if (route = "/web/dataset/call_kw/partner/read") {
-    //                 return Promise.resolve();
-    //             }
-    //             return this._super.apply(this, arguments);
-    //         },
-    // });
-    // await testUtils.dom.click(form.el.querySelectorAll('button')[6]);
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form>
+                    <div class="o_form_statusbar">
+                        <field name="timer_pause" invisible="1" />
+                        <field name="timer_start" widget="timer_timer" class="text-danger ml-auto h2 ml-4 font-weight-bold" />
+                    </div>
+                </form>`,
+            res_id: 1,
+            mockRPC: function (route, args) {
+                if (args.method === "get_server_time") {
+                    return Promise.resolve("2020-01-01 00:00:00");
+                }
+                return this._super.apply(this, arguments);
+            },
+        });
 
-    // form.destroy();
-    // });
+        await testUtils.nextTick();
+        assert.containsOnce(form, "div[name='timer_start']",
+            "should have timer widget");
+        assert.hasClass(form.$("div[name='timer_start']"), "text-danger",
+            "should have text-danger class on timer widget");
+
+        return concurrency.delay(1000).then(async () => {
+            assert.strictEqual(form.$("div[name='timer_start']").text(), "00:00:01",
+                "should have pouse time widget");
+            this.data.partner.records[0].timer_pause = "2020-01-01 01:00:00";
+            await form.reload();
+            return concurrency.delay(1000);
+        }).then(() => {
+            assert.strictEqual(form.$("div[name='timer_start']").text(), "01:00:00",
+                "should have pouse time widget");
+
+            form.destroy();
+        });
+    });
 });
 });
