@@ -40,7 +40,7 @@ class CustomerPortal(CustomerPortal):
 
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
-        values = self._prepare_portal_layout_values()
+        values = self._prepare_base_portal_values()
         partner = request.env.user.partner_id
         SaleOrder = request.env['sale.order']
 
@@ -92,7 +92,7 @@ class CustomerPortal(CustomerPortal):
 
     @http.route(['/my/orders', '/my/orders/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_orders(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
-        values = self._prepare_portal_layout_values()
+        values = self._prepare_base_portal_values()
         partner = request.env.user.partner_id
         SaleOrder = request.env['sale.order']
 

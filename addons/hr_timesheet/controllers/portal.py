@@ -24,7 +24,7 @@ class TimesheetCustomerPortal(CustomerPortal):
     @http.route(['/my/timesheets', '/my/timesheets/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_timesheets(self, page=1, sortby=None, filterby=None, search=None, search_in='all', groupby='project', **kw):
         Timesheet_sudo = request.env['account.analytic.line'].sudo()
-        values = self._prepare_portal_layout_values()
+        values = self._prepare_base_portal_values()
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
 
         searchbar_sortings = {

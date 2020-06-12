@@ -141,6 +141,9 @@ class CustomerPortal(Controller):
         return groups
 
     def _prepare_portal_layout_values(self):
+        return self._prepare_base_portal_values()
+
+    def _prepare_base_portal_values(self):
         # get customer sales rep
         sales_user = False
         partner = request.env.user.partner_id
@@ -160,7 +163,7 @@ class CustomerPortal(Controller):
 
     @route(['/my/account'], type='http', auth='user', website=True)
     def account(self, redirect=None, **post):
-        values = self._prepare_portal_layout_values()
+        values = self._prepare_base_portal_values()
         partner = request.env.user.partner_id
         values.update({
             'error': {},

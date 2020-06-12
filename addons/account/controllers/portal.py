@@ -31,7 +31,7 @@ class PortalAccount(CustomerPortal):
 
     @http.route(['/my/invoices', '/my/invoices/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_invoices(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
-        values = self._prepare_portal_layout_values()
+        values = self._prepare_base_portal_values()
         AccountInvoice = request.env['account.move']
 
         domain = [('move_type', 'in', ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]

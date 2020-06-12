@@ -33,7 +33,7 @@ class CustomerPortal(CustomerPortal):
 
     @http.route(['/my/projects', '/my/projects/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_projects(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
-        values = self._prepare_portal_layout_values()
+        values = self._prepare_base_portal_values()
         Project = request.env['project.project']
         domain = []
 
@@ -100,7 +100,7 @@ class CustomerPortal(CustomerPortal):
 
     @http.route(['/my/tasks', '/my/tasks/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_tasks(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, search=None, search_in='content', groupby=None, **kw):
-        values = self._prepare_portal_layout_values()
+        values = self._prepare_base_portal_values()
         searchbar_sortings = {
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Title'), 'order': 'name'},

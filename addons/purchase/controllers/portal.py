@@ -37,8 +37,7 @@ class CustomerPortal(CustomerPortal):
 
     @http.route(['/my/purchase', '/my/purchase/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_purchase_orders(self, page=1, date_begin=None, date_end=None, sortby=None, filterby=None, **kw):
-        values = self._prepare_portal_layout_values()
-        partner = request.env.user.partner_id
+        values = self._prepare_base_portal_values()
         PurchaseOrder = request.env['purchase.order']
 
         domain = []
