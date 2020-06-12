@@ -27,7 +27,7 @@ class CrmLead(models.Model):
         help="Last date this case was forwarded/assigned to a partner")
 
     def _merge_data(self, fields):
-        fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_assign']
+        fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_partner_assign']
         return super(CrmLead, self)._merge_data(fields)
 
     @api.onchange("partner_assigned_id")
@@ -36,7 +36,7 @@ class CrmLead(models.Model):
             if not lead.partner_assigned_id:
                 lead.date_partner_assign = False
             else:
-                lead.date_assign = fields.Date.context_today(lead)
+                lead.date_partner_assign = fields.Date.context_today(lead)
 
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
