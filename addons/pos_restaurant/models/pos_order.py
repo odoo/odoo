@@ -16,3 +16,10 @@ class PosOrder(models.Model):
         order_fields['table_id'] = ui_order.get('table_id', False)
         order_fields['customer_count'] = ui_order.get('customer_count', 0)
         return order_fields
+
+
+class PosOrderLine(models.Model):
+    _inherit = 'pos.order.line'
+    
+    note = fields.Char()
+    mp_skip = fields.Boolean()
