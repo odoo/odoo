@@ -1814,7 +1814,7 @@ class NameManager:
     """ An object that manages all the named elements in a view. """
 
     def __init__(self, validate, Model):
-        self.available_fields = collections.defaultdict(dict)
+        self.available_fields = dict()
         self.mandatory_fields = dict()
         self.mandatory_parent_fields = dict()
         self.available_actions = set()
@@ -1824,7 +1824,7 @@ class NameManager:
         self.fields_get = self.Model.fields_get()
 
     def has_field(self, name, info=()):
-        self.available_fields[name].update(info)
+        self.available_fields.setdefault(name, {}).update(info)
 
     def has_action(self, name):
         self.available_actions.add(name)
