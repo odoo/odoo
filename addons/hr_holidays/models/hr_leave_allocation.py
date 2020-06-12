@@ -69,7 +69,7 @@ class HolidaysAllocation(models.Model):
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     # duration
     number_of_days = fields.Float(
-        'Number of Days', compute='_compute_from_holiday_status_id', store=True, readonly=False, tracking=True,
+        'Number of Days', compute='_compute_from_holiday_status_id', store=True, readonly=False, tracking=True, default=1,
         help='Duration in days. Reference field to use when necessary.')
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
@@ -260,8 +260,10 @@ class HolidaysAllocation(models.Model):
         for allocation in self:
             if allocation.parent_id and allocation.parent_id.type_request_unit == "hour":
                 allocation.number_of_hours_display = allocation.number_of_days * HOURS_PER_DAY
-            else:
+            elif allocation.number_of_days:
                 allocation.number_of_hours_display = allocation.number_of_days * (allocation.employee_id.sudo().resource_id.calendar_id.hours_per_day or HOURS_PER_DAY)
+            else:
+                allocation.number_of_hours_display = 0.0
 
     @api.depends('number_of_hours_display', 'number_of_days_display')
     def _compute_duration_display(self):
@@ -339,12 +341,14 @@ class HolidaysAllocation(models.Model):
             elif not holiday.holiday_status_id and not holiday._origin.holiday_status_id:
                 holiday.holiday_status_id = default_holiday_status_id
 
-    @api.depends('holiday_status_id', 'allocation_type')
+    @api.depends('holiday_status_id', 'allocation_type', 'number_of_hours_display', 'number_of_days_display')
     def _compute_from_holiday_status_id(self):
         for allocation in self:
+            allocation.number_of_days = allocation.number_of_days_display
+            if allocation.type_request_unit == 'hour':
+                allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.sudo().resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+
             # set default values
-            if not allocation.number_of_days and not allocation._origin.number_of_days:
-                allocation.number_of_days = 1
             if not allocation.interval_number and not allocation._origin.interval_number:
                 allocation.interval_number = 1
             if not allocation.number_per_interval and not allocation._origin.number_per_interval:
@@ -360,7 +364,6 @@ class HolidaysAllocation(models.Model):
                     allocation.date_to = new_date_to
 
             if allocation.allocation_type == 'accrual':
-                allocation.number_of_days = 0
                 if allocation.holiday_status_id.request_unit == 'hour':
                     allocation.unit_per_interval = 'hours'
                 else:
