@@ -375,7 +375,7 @@ class SaleOrder(models.Model):
         user_id = partner_user.id
         if not self.env.context.get('not_self_saleperson'):
             user_id = user_id or self.env.uid
-        if self.user_id.id != user_id:
+        if user_id and self.user_id.id != user_id:
             values['user_id'] = user_id
 
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
