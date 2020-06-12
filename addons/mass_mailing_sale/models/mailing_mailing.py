@@ -16,13 +16,13 @@ class MassMailing(models.Model):
     def _compute_sale_quotation_count(self):
         has_so_access = self.env['sale.order'].check_access_rights('read', raise_exception=False)
         for mass_mailing in self:
-            mass_mailing.sale_quotation_count = self.env['sale.order'].search_count(self._get_sale_utm_domain()) if has_so_access else 0
+            mass_mailing.sale_quotation_count = self.env['sale.order'].search_count(mass_mailing._get_sale_utm_domain()) if has_so_access else 0
 
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
         for mass_mailing in self:
             if self.user_has_groups('sales_team.group_sale_salesman') and self.user_has_groups('account.group_account_invoice'):
-                domain = self._get_sale_utm_domain() + [('state', 'not in', ['draft', 'cancel'])]
+                domain = mass_mailing._get_sale_utm_domain() + [('state', 'not in', ['draft', 'cancel'])]
                 moves = self.env['account.move'].search_read(domain, ['amount_untaxed'])
                 mass_mailing.sale_invoiced_amount = sum(i['amount_untaxed'] for i in moves)
             else:
