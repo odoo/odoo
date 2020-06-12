@@ -124,7 +124,7 @@ var PortalComposer = publicWidget.Widget.extend({
                     resolve();
                 }).guardedCatch(function (error) {
                     self.displayNotification({
-                        message: _.str.sprintf(_t("The file <strong>%s</strong> could not be saved."),
+                        message: _.str.sprintf(_t("Could not save file <strong>%s</strong>"),
                             _.escape(file.name)),
                         type: 'warning',
                         sticky: true,

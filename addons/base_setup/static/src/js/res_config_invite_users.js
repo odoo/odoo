@@ -79,7 +79,10 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
                 // filter out invalid email addresses
                 var invalidEmails = _.reject(emails, this._validateEmail);
                 if (invalidEmails.length) {
-                    this.do_warn(_.str.sprintf(_t('The following email addresses are invalid: %s.'), invalidEmails.join(', ')));
+                    this.do_warn(false, _.str.sprintf(
+                        _t('Invalid email addresses: %s.'),
+                        invalidEmails.join(', ')
+                    ));
                 }
                 emails = _.difference(emails, invalidEmails);
 
@@ -90,7 +93,10 @@ odoo.define('base_setup.ResConfigInviteUsers', function (require) {
                     });
                     var existingEmails = _.intersection(emails, this.emails.concat(pendingEmails));
                     if (existingEmails.length) {
-                        this.do_warn(_.str.sprintf(_t('The following email addresses already exist: %s.'), existingEmails.join(', ')));
+                        this.do_warn(false, _.str.sprintf(
+                            _t('Email addresses already existing: %s.'),
+                            existingEmails.join(', ')
+                        ));
                     }
                     emails = _.difference(emails, existingEmails);
                 }

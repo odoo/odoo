@@ -453,7 +453,6 @@ odoo.define('web.favorite_menu_tests', function (require) {
                         notification: {
                             notify: function (params) {
                                 assert.deepEqual(params, {
-                                    title: "Error",
                                     message: "Filter with same name already exists.",
                                     type: "danger"
                                 });

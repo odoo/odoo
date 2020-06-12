@@ -60,7 +60,6 @@ odoo.define('web.CustomFavoriteItem', function (require) {
         _saveFavorite() {
             if (!this.state.description.length) {
                 this.env.services.notification.notify({
-                    title: this.env._t("Error"),
                     message: this.env._t("A name for your favorite filter is required."),
                     type: 'danger',
                 });
@@ -69,7 +68,6 @@ odoo.define('web.CustomFavoriteItem', function (require) {
             const favorites = this.model.getFiltersOfType('favorite');
             if (favorites.some(f => f.description === this.state.description)) {
                 this.env.services.notification.notify({
-                    title: this.env._t("Error"),
                     message: this.env._t("Filter with same name already exists."),
                     type: 'danger',
                 });

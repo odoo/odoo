@@ -110,7 +110,7 @@ var FieldBinarySignature = AbstractFieldBinary.extend({
         $img.on('error', function () {
             self._clearFile();
             $img.attr('src', self.placeholder);
-            self.do_warn(_t("Image"), _t("Could not display the selected image."));
+            self.do_warn(false, _t("Could not display the selected image"));
         });
     },
 

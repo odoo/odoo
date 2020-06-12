@@ -265,7 +265,7 @@ var BasicComposer = Widget.extend({
      */
     _doCheckAttachmentUpload: function () {
         if (_.find(this.get('attachment_ids'), function (file) { return file.upload; })) {
-            this.do_warn(_t("Uploading error"), _t("Please, wait while the file is uploading."));
+            this.do_warn(false, _t("Please wait while the file is uploading..."));
             return false;
         }
         return true;

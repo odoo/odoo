@@ -62,7 +62,7 @@ var AttachDocument = Widget.extend({
         });
         warnings.unshift('<ul>');
         warnings.push('</ul>');
-        this.do_warn(_t("The following fields are invalid:"), warnings.join(''));
+        this.do_warn(_t("Invalid fields:"), warnings.join(''));
      },
 
     //--------------------------------------------------------------------------
@@ -87,7 +87,7 @@ var AttachDocument = Widget.extend({
         // but due to this security restriction give warning to save record first.
         // https://stackoverflow.com/questions/29728705/trigger-click-on-input-file-on-asynchronous-ajax-done/29873845#29873845
         if (!this.res_id) {
-            return this.do_warn(_t('Warning : You have to save first before attaching a file.'));
+            return this.do_warn(false, _t('Please save before attaching a file'));
         }
         this.$('input.o_input_file').trigger('click');
     },

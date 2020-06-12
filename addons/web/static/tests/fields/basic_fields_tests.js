@@ -7236,7 +7236,10 @@ QUnit.module('basic_fields', {
                 call_service: function (ev) {
                     if (ev.data.service === 'notification') {
                         assert.strictEqual(ev.data.method, 'notify');
-                        assert.strictEqual(ev.data.args[0].title, 'Wrong value entered!');
+                        assert.strictEqual(
+                            ev.data.args[0].message,
+                            "Please enter a numerical value"
+                        );
                     }
                 }
             },

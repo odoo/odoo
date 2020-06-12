@@ -127,7 +127,6 @@ odoo.define('website_slides.quiz', function (require) {
 
             this.displayNotification({
                 type: 'warning',
-                title: _t('Quiz validation error'),
                 message: message,
                 sticky: true
             });
