@@ -30,7 +30,7 @@ class View(models.Model):
     visibility = fields.Selection([('', 'All'), ('connected', 'Signed In'), ('restricted_group', 'Restricted Group'), ('password', 'With Password')], default='')
     visibility_group = fields.Many2one('res.groups', copy=False)
     visibility_password = fields.Char(groups='base.group_system', copy=False)
-    visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer')
+    visibility_password_display = fields.Char(compute='_get_pwd', inverse='_set_pwd', groups='website.group_website_designer', string="Visibility Password")
 
     @api.depends('visibility_password')
     def _get_pwd(self):
@@ -40,8 +40,9 @@ class View(models.Model):
     def _set_pwd(self):
         crypt_context = self.env.user._crypt_context()
         for r in self:
-            r.sudo().visibility_password = crypt_context.encrypt(r.visibility_password_display)
-            r.visibility = r.visibility  # double check access
+            if r.type == 'qweb':
+                r.sudo().visibility_password = r.visibility_password_display and crypt_context.encrypt(r.visibility_password_display) or ''
+                r.visibility = r.visibility  # double check access
 
     def _compute_first_page_id(self):
         for view in self:
