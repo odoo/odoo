@@ -111,6 +111,7 @@
                     <notebook>
                         <page string="Detailed Operations" attrs="{'invisible': [('state', '=', 'draft')]}">
                             <field name="move_line_ids" context="{'tree_view_ref': 'stock_picking_batch.view_move_line_tree'}"/>
+                            <button class="oe_highlight" name="action_put_in_pack" type="object" string="Put in Pack" attrs="{'invisible': [('state', 'in', ('draft', 'done', 'cancel'))]}" groups="stock.group_tracking_lot"/>
                         </page>
                         <page string="Operations" attrs="{'invisible': [('state', '=', 'draft')]}">
                             <field name="move_ids" context="{'tree_view_ref': 'stock_picking_batch.view_picking_move_tree_inherited'}"/>

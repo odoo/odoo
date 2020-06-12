@@ -1280,7 +1280,7 @@ class Picking(models.Model):
         else:
             return {}
 
-    def _put_in_pack(self, move_line_ids):
+    def _put_in_pack(self, move_line_ids, create_package_level=True):
         package = False
         for pick in self:
             move_lines_to_pack = self.env['stock.move.line']
@@ -1312,20 +1312,21 @@ class Picking(models.Model):
                     ml.write(vals)
                     new_move_line.write({'product_uom_qty': done_to_keep})
                     move_lines_to_pack |= new_move_line
-            package_level = self.env['stock.package_level'].create({
-                'package_id': package.id,
-                'picking_id': pick.id,
-                'location_id': False,
-                'location_dest_id': move_line_ids.mapped('location_dest_id').id,
-                'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
-                'company_id': pick.company_id.id,
-            })
+            if create_package_level:
+                package_level = self.env['stock.package_level'].create({
+                    'package_id': package.id,
+                    'picking_id': pick.id,
+                    'location_id': False,
+                    'location_dest_id': move_line_ids.mapped('location_dest_id').id,
+                    'move_line_ids': [(6, 0, move_lines_to_pack.ids)],
+                    'company_id': pick.company_id.id,
+                })
             move_lines_to_pack.write({
                 'result_package_id': package.id,
             })
         return package
 
-    def put_in_pack(self):
+    def action_put_in_pack(self):
         self.ensure_one()
         if self.state not in ('done', 'cancel'):
             picking_move_lines = self.move_line_ids

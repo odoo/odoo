@@ -325,3 +325,43 @@ class TestBatchPicking(TransactionCase):
         # ensure that quantity for picking has been moved
         self.assertFalse(sum(quant_A.mapped('quantity')))
         self.assertFalse(sum(quant_B.mapped('quantity')))
+
+    def test_put_in_pack(self):
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 10.0)
+        self.env['stock.quant']._update_available_quantity(self.productB, self.stock_location, 10.0)
+
+        # Confirm batch, pickings should not be automatically assigned.
+        self.batch.action_confirm()
+        self.assertEqual(self.picking_client_1.state, 'confirmed', 'Picking 1 should be confirmed')
+        self.assertEqual(self.picking_client_2.state, 'confirmed', 'Picking 2 should be confirmed')
+        # Ask to assign, so pickings should be assigned now.
+        self.batch.action_assign()
+        self.assertEqual(self.picking_client_1.state, 'assigned', 'Picking 1 should be ready')
+        self.assertEqual(self.picking_client_2.state, 'assigned', 'Picking 2 should be ready')
+
+        # only do part of pickings + assign different destinations + try to pack (should get wizard to correct destination)
+        self.batch.move_line_ids.qty_done = 5
+        self.batch.move_line_ids[0].location_dest_id = self.stock_location.id
+        wizard_values = self.batch.action_put_in_pack()
+        wizard = self.env[(wizard_values.get('res_model'))].browse(wizard_values.get('res_id'))
+        wizard.location_dest_id = self.customer_location.id
+        package = wizard.action_done()
+
+        # a new package is made and done quantities should be in same package
+        self.assertTrue(package)
+        done_qty_move_lines = self.batch.move_line_ids.filtered(lambda ml: ml.qty_done == 5)
+        self.assertEqual(done_qty_move_lines[0].result_package_id.id, package.id)
+        self.assertEqual(done_qty_move_lines[1].result_package_id.id, package.id)
+
+        # not done quantities should be split into separate lines
+        self.assertEqual(len(self.batch.move_line_ids), 4)
+
+        # confirm w/ backorder
+        back_order_wizard_dict = self.batch.action_done()
+        self.assertTrue(back_order_wizard_dict)
+        back_order_wizard = Form(self.env[(back_order_wizard_dict.get('res_model'))].with_context(back_order_wizard_dict['context'])).save()
+        self.assertEqual(len(back_order_wizard.pick_ids), 2)
+        back_order_wizard.process()
+
+        # final package location should be correctly set based on wizard
+        self.assertEqual(package.location_id.id, self.customer_location.id)
