@@ -92,7 +92,7 @@ class TestEventCommon(common.SavepointCase):
             'date_tz': 'Europe/Brussels',
         })
 
-        # set country in order to format belgium numbers
+        # set country in order to format Belgian numbers
         cls.event_0.company_id.write({'country_id': cls.env.ref('base.be').id})
 
     @classmethod
