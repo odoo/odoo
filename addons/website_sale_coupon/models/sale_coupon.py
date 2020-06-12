@@ -7,7 +7,8 @@ from odoo import models
 class SaleCoupon(models.Model):
     _inherit = 'coupon.coupon'
 
-    def _check_coupon_code(self, order):
-        if self.program_id.website_id and self.program_id.website_id != order.website_id:
+    def _check_coupon_code(self, order_date, partner_id, **kwargs):
+        order = kwargs.get('order', False)
+        if order and self.program_id.website_id and self.program_id.website_id != order.website_id:
             return {'error': 'This coupon is not valid on this website.'}
-        return super()._check_coupon_code(order)
+        return super()._check_coupon_code(order_date, partner_id, **kwargs)
