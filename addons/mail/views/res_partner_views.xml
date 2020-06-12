@@ -60,6 +60,17 @@
             </field>
         </record>
 
+        <record id="res_partner_view_tree_inherit_mail" model="ir.ui.view">
+            <field name="name">res.partner.view.tree.inherit.mail</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="activity_ids" optional="show" widget="list_activity"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="res_partner_view_activity" model="ir.ui.view">
             <field name="name">res.partner.activity</field>
             <field name="model">res.partner</field>
