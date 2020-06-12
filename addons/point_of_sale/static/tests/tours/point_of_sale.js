@@ -55,7 +55,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
             var product_desk_pad = posmodel.db.search_product_in_category(0, 'Desk Pad')[0];
             var product_letter_tray = posmodel.db.search_product_in_category(0, 'Letter Tray')[0];
             var product_whiteboard = posmodel.db.search_product_in_category(0, 'Whiteboard')[0];
-            var product_miscellaneous = posmodel.db.search_product_in_category(0, 'Discount')[0];
 
             compare_backend_frontend(product_letter_tray, 'Public Pricelist', 0, undefined)()
                 .then(compare_backend_frontend(product_letter_tray, 'Public Pricelist', 1, undefined))
@@ -76,9 +75,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
                 .then(compare_backend_frontend(product_letter_tray, 'Category', 1, undefined))
                 .then(compare_backend_frontend(product_wall_shelf, 'Product template', 1, undefined))
                 .then(compare_backend_frontend(product_wall_shelf, 'Dates', 1, undefined))
-                .then(compare_backend_frontend(product_miscellaneous, 'Cost base', 1, undefined))
-                .then(compare_backend_frontend(product_miscellaneous, 'Pricelist base', 1, undefined))
-                .then(compare_backend_frontend(product_miscellaneous, 'Pricelist base 2', 1, undefined))
                 .then(compare_backend_frontend(product_small_shelf, 'Pricelist base rounding', 1, undefined))
                 .then(compare_backend_frontend(product_whiteboard, 'Public Pricelist', 1, undefined))
                 .then(function () {
@@ -106,10 +102,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('Fixed')",
     }, {
-        content: "prices should be updated in the product screen",
-        trigger: ".product:contains('Discount'):contains('$ 1.00')",
-        run: function () {}, // it's a check
-    }, {
         content: "open customer list",
         trigger: "button.set-customer",
     }, {
@@ -128,10 +120,6 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
     }, {
         content: "cancel pricelist dialog",
         trigger: ".button.cancel:visible",
-    }, {
-        content: "prices should be updated in the product screen",
-        trigger: ".product:contains('Discount'):contains('$ 0.00')",
-        run: function () {}, // it's a check
     }, {
         content: "open customer list",
         trigger: "button.set-customer",
@@ -194,19 +182,6 @@ shelf have not (their price was manually overridden)",
     }, {
         content: "select fixed pricelist",
         trigger: ".selection-item:contains('min_quantity ordering')",
-    }, {
-        content: "order 1 miscellaneous product",
-        trigger: ".product:contains('Discount')",
-    }, {
-        content: "order 1 miscellaneous product",
-        trigger: ".product:contains('Discount')",
-    }, {
-        content: "order 1 miscellaneous product",
-        trigger: ".product:contains('Discount')",
-    }, {
-        content: "verify there is one line with 3 miscellaneous products",
-        trigger: ".orderline:contains('Discount') em:contains('3.000')",
-        run: function () {}, // it's a check
     }, {
         content: "close the Point of Sale frontend",
         trigger: ".header-button",

@@ -20,7 +20,7 @@
             <field name="categ_id" ref="point_of_sale.product_category_pos"/>
             <field name="default_code">TIPS</field>
             <field name="weight">0.01</field>
-            <field name="available_in_pos" eval="True"/>
+            <field name="available_in_pos">False</field>
             <field name="taxes_id" eval="[(5,)]"/>
         </record>
 
@@ -31,7 +31,7 @@
 
         <record id="product_product_consumable" model="product.product">
             <field name="name">Discount</field>
-            <field name="available_in_pos">True</field>
+            <field name="available_in_pos">False</field>
             <field name="standard_price">0.00</field>
             <field name="list_price">0.00</field>
             <field name="weight">0.00</field>
