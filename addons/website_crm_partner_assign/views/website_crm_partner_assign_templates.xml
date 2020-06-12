@@ -214,7 +214,7 @@
                 <t t-set="url" t-value="'/my/leads'"/>
                 <t t-set="count" t-value="lead_count"/>
             </t>
-            <t t-call="portal.portal_docs_entry">
+            <t t-if="opp_count" t-call="portal.portal_docs_entry">
                 <t t-set="title">Opportunities</t>
                 <t t-set="url" t-value="'/my/opportunities'"/>
                 <t t-set="count" t-value="opp_count"/>
