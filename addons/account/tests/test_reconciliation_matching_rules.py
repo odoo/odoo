@@ -125,7 +125,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         if statements is None:
             statements = self.bank_st + self.cash_st
         statement_lines = statements.mapped('line_ids').sorted()
-        matching_values = rules._apply_rules(statement_lines)
+        matching_values = rules._apply_rules(statement_lines, None)
         for st_line_id, values in matching_values.items():
             values.pop('reconciled_lines', None)
             self.assertDictEqual(values, expected_values[st_line_id])
@@ -435,3 +435,26 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.bank_line_1.write({'partner_id': partner.id, 'foreign_currency_id': currency_statement.id, 'amount_currency': 100, 'payment_ref': 'test'})
         self.env['account.reconcile.model'].flush()
         self._check_statement_matching(self.rule_1, {self.bank_line_1.id: {'aml_ids': []}}, statements=self.bank_st)
+
+    def test_invoice_matching_rule_no_partner(self):
+        """ Tests that a statement line without any partner can be matched to the
+        right invoice if they have the same payment reference.
+        """
+        self.invoice_line_1.move_id.write({'payment_reference': 'Tournicoti66'})
+
+        self.bank_line_1.write({
+            'payment_ref': 'Tournicoti66',
+            'partner_id': None,
+        })
+
+        self.rule_1.write({
+            'line_ids': [(5, 0, 0)],
+            'match_partner': False,
+            'match_label': 'contains',
+            'match_label_param': 'Tournicoti', # So that we only match what we want to test
+        })
+
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)
