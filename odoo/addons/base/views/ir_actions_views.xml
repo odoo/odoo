@@ -268,7 +268,7 @@
                             <group name="action_content">
                                 <field name="model_id" options="{'no_create': True}"/>
                                 <field name="model_name" invisible="1"/>
-                                <field name="display_in_controlpanel"/>
+                                <field name="display_in_controlpanel" attrs="{'invisible': [('binding_model_id', '=', False)]}"/>
                             </group>
                             <group>
                                 <field name="state"/>
