@@ -47,7 +47,7 @@ tour.register('course_member', {
     }
 }, {
     trigger: '.o_wslides_fs_sidebar_header.navigation-success-1',
-    extra_trigger: '.o_wslides_progress_percentage:contains("20")',
+    extra_trigger: '.o_wslides_progress_percentage:contains("40")',
     run: function () {
         // check navigation with arrow keys
         var event = jQuery.Event("keydown");
