@@ -79,12 +79,12 @@ class TestPacking(TestPackingCommon):
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).qty_done = 1.0
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB).qty_done = 2.0
 
-        first_pack = pick_picking.put_in_pack()
+        first_pack = pick_picking.action_put_in_pack()
         self.assertEqual(len(pick_picking.package_level_ids), 1, 'Put some products in pack should create a package_level')
         self.assertEqual(pick_picking.package_level_ids[0].state, 'new', 'A new pack should be in state "new"')
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA and ml.qty_done == 0.0).qty_done = 4.0
         pick_picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productB and ml.qty_done == 0.0).qty_done = 3.0
-        second_pack = pick_picking.put_in_pack()
+        second_pack = pick_picking.action_put_in_pack()
         self.assertEqual(len(pick_picking.move_ids_without_package), 0)
         self.assertEqual(len(packing_picking.move_ids_without_package), 2)
         pick_picking.button_validate()
@@ -235,7 +235,7 @@ class TestPacking(TestPackingCommon):
         picking.action_confirm()
         picking.action_assign()
         picking.move_line_ids.filtered(lambda ml: ml.product_id == self.productA).qty_done = 5.0
-        picking.put_in_pack()
+        picking.action_put_in_pack()
         pack1 = self.env['stock.quant.package'].search([])[-1]
         picking.write({
             'move_line_ids': [(0, 0, {
@@ -261,7 +261,7 @@ class TestPacking(TestPackingCommon):
                 'state': 'confirmed',
             })]
         })
-        wizard_values = picking.put_in_pack()
+        wizard_values = picking.action_put_in_pack()
         wizard = self.env[(wizard_values.get('res_model'))].browse(wizard_values.get('res_id'))
         wizard.location_dest_id = shelf2_location.id
         wizard.action_done()
@@ -424,7 +424,7 @@ class TestPacking(TestPackingCommon):
         with receipt_form.move_line_ids_without_package.edit(1) as move_line:
             move_line.qty_done = 1
         receipt = receipt_form.save()
-        receipt.put_in_pack()
+        receipt.action_put_in_pack()
         receipt.button_validate()
 
         receipt_package = receipt.package_level_ids_details[0]
@@ -563,7 +563,7 @@ class TestPacking(TestPackingCommon):
         with receipt_form.move_line_ids_without_package.edit(1) as move_line:
             move_line.qty_done = 1
         receipt = receipt_form.save()
-        receipt.put_in_pack()
+        receipt.action_put_in_pack()
         receipt.button_validate()
 
         receipt_package = receipt.package_level_ids_details[0]
@@ -665,4 +665,4 @@ class TestPacking(TestPackingCommon):
         pick_picking.action_assign()
 
         pick_picking.move_line_ids.qty_done = 3
-        first_pack = pick_picking.put_in_pack()
+        first_pack = pick_picking.action_put_in_pack()

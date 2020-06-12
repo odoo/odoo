@@ -46,7 +46,7 @@ class ChooseDeliveryPackage(models.TransientModel):
             }
             return {'warning': warning_mess}
 
-    def put_in_pack(self):
+    def action_put_in_pack(self):
         picking_move_lines = self.picking_id.move_line_ids
         if not self.picking_id.picking_type_id.show_reserved:
             picking_move_lines = self.picking_id.move_line_nosuggest_ids
