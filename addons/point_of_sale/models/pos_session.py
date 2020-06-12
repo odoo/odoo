@@ -366,14 +366,17 @@ class PosSession(models.Model):
         })
         self.write({'move_id': account_move.id})
 
+        self_ctx = self.with_context(check_move_validity=False)
+
         data = {}
-        data = self._accumulate_amounts(data)
-        data = self._create_non_reconciliable_move_lines(data)
-        data = self._create_cash_statement_lines_and_cash_move_lines(data)
-        data = self._create_invoice_receivable_lines(data)
-        data = self._create_stock_output_lines(data)
+        data = self_ctx._accumulate_amounts(data)
+        data = self_ctx._create_non_reconciliable_move_lines(data)
+        data = self_ctx._create_cash_statement_lines_and_cash_move_lines(data)
+        data = self_ctx._create_invoice_receivable_lines(data)
+        data = self_ctx._create_stock_output_lines(data)
 
         if account_move.line_ids:
+            account_move._check_balanced()
             account_move._post()
 
         data = self._reconcile_account_move_lines(data)

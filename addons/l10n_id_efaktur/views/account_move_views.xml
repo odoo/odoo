@@ -9,7 +9,8 @@
                 <field name="partner_id" position="after">
                     <field name="l10n_id_need_kode_transaksi" invisible="1"/>
                     <field name="l10n_id_attachment_id" invisible="1"/>
-                    <field name="l10n_id_kode_transaksi" attrs="{'invisible': ['|', ('country_code', '!=', 'ID'), ('l10n_id_need_kode_transaksi', '=', False)], 'required': [('l10n_id_need_kode_transaksi', '=', True)]}"/>
+                    <field name="l10n_id_kode_transaksi"
+                           attrs="{'invisible': ['|', ('country_code', '!=', 'ID'), ('l10n_id_need_kode_transaksi', '=', False)], 'required': [('l10n_id_need_kode_transaksi', '=', True)], 'readonly': [('state', '!=', 'draft')]}"/>
                     <field name="l10n_id_replace_invoice_id" attrs="{'invisible': [('country_code', '!=', 'ID')], 'readonly': [('state', '!=','draft')]}" options="{'m2o_dialog': False, 'no_create': True}"/>
                 </field>
                 <button name="button_draft" position="after">

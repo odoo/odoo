@@ -58,6 +58,9 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
             })],
         })
 
+        if 'partner_shipping_id' in cls.invoice._fields:
+            cls.invoice.partner_shipping_id = False
+
         cls.expected_invoice_facturx_values = '''
             <CrossIndustryInvoice>
                 <ExchangedDocumentContext>
@@ -129,8 +132,9 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                             <RateApplicablePercent>20.0</RateApplicablePercent>
                         </ApplicableTradeTax>
                         <SpecifiedTradePaymentTerms>
+                            <Description>30% Advance End of Following Month</Description>
                             <DueDateDateTime>
-                                <DateTimeString>20170101</DateTimeString>
+                                <DateTimeString>20170228</DateTimeString>
                             </DueDateDateTime>
                         </SpecifiedTradePaymentTerms>
                         <SpecifiedTradeSettlementHeaderMonetarySummation>
@@ -190,11 +194,12 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
                         <BasisAmount currencyID="Gol">1000.000</BasisAmount>
                         <RateApplicablePercent>10.0</RateApplicablePercent>
                     </ApplicableTradeTax>
-                    <SpecifiedTradePaymentTerms>
-                        <DueDateDateTime>
-                            <DateTimeString>20170101</DateTimeString>
-                        </DueDateDateTime>
-                    </SpecifiedTradePaymentTerms>
+                        <SpecifiedTradePaymentTerms>
+                            <Description>30% Advance End of Following Month</Description>
+                            <DueDateDateTime>
+                                <DateTimeString>20170228</DateTimeString>
+                            </DueDateDateTime>
+                        </SpecifiedTradePaymentTerms>
                     <SpecifiedTradeSettlementHeaderMonetarySummation>
                         <LineTotalAmount currencyID="Gol">1000.000</LineTotalAmount>
                         <TaxBasisTotalAmount currencyID="Gol">1000.000</TaxBasisTotalAmount>
@@ -213,28 +218,40 @@ class TestAccountEdiFacturx(AccountEdiTestCommon):
     # Test import
     ####################################################
 
-    def test_invoice_edi_pdf(self):
-        invoice = self.env['account.move'].with_context(default_move_type='in_invoice').create({})
-        invoice_count = len(self.env['account.move'].search([]))
+    def test_update_invoice_from_pdf(self):
+        invoice = self.env['account.move'].create({'move_type': 'in_invoice'})
         self.update_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.pdf', invoice)
+        self.assertRecordValues(invoice, [{
+            'currency_id': self.env.ref('base.USD').id,
+            'amount_untaxed': 525.0,
+            'amount_tax': 0.0,
+            'amount_total': 525.0,
+        }])
 
-        self.assertEqual(len(self.env['account.move'].search([])), invoice_count)
-        self.assertEqual(invoice.amount_total, 525)
+    def test_create_invoice_from_pdf(self):
+        invoice = self.create_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.pdf')
+        self.assertRecordValues(invoice, [{
+            'currency_id': self.env.ref('base.USD').id,
+            'amount_untaxed': 525.0,
+            'amount_tax': 0.0,
+            'amount_total': 525.0,
+        }])
 
-        self.create_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.pdf')
-
-        self.assertEqual(invoice.amount_total, 525)
-        self.assertEqual(len(self.env['account.move'].search([])), invoice_count + 1)
-
-    def test_invoice_edi_xml(self):
-        invoice = self.env['account.move'].with_context(default_move_type='in_invoice').create({})
-        invoice_count = len(self.env['account.move'].search([]))
+    def test_update_invoice_from_xml(self):
+        invoice = self.env['account.move'].create({'move_type': 'in_invoice'})
         self.update_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.xml', invoice)
+        self.assertRecordValues(invoice, [{
+            'currency_id': self.env.ref('base.USD').id,
+            'amount_untaxed': 4610.0,
+            'amount_tax': 0.0,
+            'amount_total': 4610.0,
+        }])
 
-        self.assertEqual(len(self.env['account.move'].search([])), invoice_count)
-        self.assertEqual(invoice.amount_total, 4610)
-
-        self.create_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.xml')
-
-        self.assertEqual(invoice.amount_total, 4610)
-        self.assertEqual(len(self.env['account.move'].search([])), invoice_count + 1)
+    def test_create_invoice_from_xml(self):
+        invoice = self.create_invoice_from_file('account_edi_facturx', 'test_file', 'test_facturx.xml')
+        self.assertRecordValues(invoice, [{
+            'currency_id': self.env.ref('base.USD').id,
+            'amount_untaxed': 4610.0,
+            'amount_tax': 0.0,
+            'amount_total': 4610.0,
+        }])

@@ -24,7 +24,8 @@ class AccountMove(models.Model):
     l10n_id_replace_invoice_id = fields.Many2one('account.move', string="Replace Invoice",  domain="['|', '&', '&', ('state', '=', 'posted'), ('partner_id', '=', partner_id), ('reversal_move_id', '!=', False), ('state', '=', 'cancel')]", copy=False)
     l10n_id_attachment_id = fields.Many2one('ir.attachment', readonly=True, copy=False)
     l10n_id_csv_created = fields.Boolean('CSV Created', compute='_compute_csv_created', copy=False)
-    l10n_id_kode_transaksi = fields.Selection([
+    l10n_id_kode_transaksi = fields.Selection(
+        selection=[
             ('01', '01 Kepada Pihak yang Bukan Pemungut PPN (Customer Biasa)'),
             ('02', '02 Kepada Pemungut Bendaharawan (Dinas Kepemerintahan)'),
             ('03', '03 Kepada Pemungut Selain Bendaharawan (BUMN)'),
@@ -33,14 +34,17 @@ class AccountMove(models.Model):
             ('07', '07 Penyerahan yang PPN-nya Tidak Dipungut (Kawasan Ekonomi Khusus/ Batam)'),
             ('08', '08 Penyerahan yang PPN-nya Dibebaskan (Impor Barang Tertentu)'),
             ('09', '09 Penyerahan Aktiva ( Pasal 16D UU PPN )'),
-        ], string='Kode Transaksi', help='Dua digit pertama nomor pajak',
-        readonly=True, states={'draft': [('readonly', False)]}, copy=False)
+        ],
+        string='Kode Transaksi',
+        store=True, readonly=False, copy=False,
+        compute='_compute_l10n_id_kode_transaksi',
+        help='Dua digit pertama nomor pajak')
     l10n_id_need_kode_transaksi = fields.Boolean(compute='_compute_need_kode_transaksi')
 
-    @api.onchange('partner_id')
-    def _onchange_partner_id(self):
-        self.l10n_id_kode_transaksi = self.partner_id.l10n_id_kode_transaksi
-        return super(AccountMove, self)._onchange_partner_id()
+    @api.depends('partner_id')
+    def _compute_l10n_id_kode_transaksi(self):
+        for move in self:
+            move.l10n_id_kode_transaksi = move.partner_id.l10n_id_kode_transaksi
 
     @api.onchange('l10n_id_tax_number')
     def _onchange_l10n_id_tax_number(self):

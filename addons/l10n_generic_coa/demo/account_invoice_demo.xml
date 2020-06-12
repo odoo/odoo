@@ -85,39 +85,6 @@
         </record>
 
         <!-- ==== Post invoices ==== -->
-        <!-- Ensure every detail related to the partner is set (fiscal position, payment terms, bank,...)-->
-        <function model="account.move" name="_onchange_partner_id">
-            <value eval="[ref('demo_invoice_1')]"/>
-        </function>
-        <function model="account.move" name="_onchange_partner_id">
-            <value eval="[ref('demo_invoice_2')]"/>
-        </function>
-        <function model="account.move" name="_onchange_partner_id">
-            <value eval="[ref('demo_invoice_3')]"/>
-        </function>
-        <function model="account.move" name="_onchange_partner_id">
-            <value eval="[ref('demo_invoice_equipment_purchase')]"/>
-        </function>
-
-        <!-- Ensure the lines are consistent with the products (taxes, price, name) -->
-        <!-- check_move_validity=False because the dynamic lines are computed after, it is checked later at the post function -->
-        <function model="account.move.line" name="_onchange_product_id" context="{'check_move_validity': False}">
-            <value model="account.move.line" eval="obj().search([('move_id', 'in', [
-                ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'),
-                ref('demo_invoice_followup'), ref('demo_invoice_equipment_purchase'),
-            ])]).ids"/>
-        </function>
-
-        <!-- Recompute the taxes and receivable lines after the onchange executed above -->
-        <function model="account.move" name="_recompute_dynamic_lines" context="{'check_move_validity': False}">
-            <value eval="[
-                ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'),
-                ref('demo_invoice_followup'), ref('demo_invoice_equipment_purchase'),
-            ]"/>
-            <value name="recompute_all_taxes" eval="True"/>
-            <value name="recompute_tax_base_amount" eval="True"/>
-        </function>
-
         <function model="account.move" name="action_post">
             <value eval="[
                 ref('demo_invoice_1'), ref('demo_invoice_2'), ref('demo_invoice_3'),
