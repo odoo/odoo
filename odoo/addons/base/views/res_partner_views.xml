@@ -48,13 +48,13 @@
                     <field name="function" invisible="1"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
                     <field name="email" optional="show"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <field name="city" optional="hide"/>
+                    <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
+                    <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
-                    <field name="country_id" optional="hide"/>
+                    <field name="country_id" optional="show"/>
                     <field name="vat" optional="hide"/>
-                    <field name="category_id" optional="hide" widget="many2many_tags"/>
-                    <field name="user_id" invisible="1"/>
+                    <field name="category_id" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                     <field name="is_company" invisible="1"/>
                     <field name="parent_id" invisible="1"/>
                     <field name="active" invisible="1"/>
