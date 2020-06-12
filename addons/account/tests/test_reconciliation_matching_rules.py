@@ -499,3 +499,15 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1},
             self.bank_line_2.id: {'aml_ids': []},
         }, self.bank_st)
+
+    def test_partner_name_in_communication(self):
+        self.invoice_line_1.partner_id.write({'name': "Archibald Haddock"})
+        self.bank_line_1.write({'partner_id': None, 'payment_ref': '1234//HADDOCK-Archibald'})
+        self.bank_line_2.write({'partner_id': None})
+        self.rule_1.write({'match_partner': False})
+
+        # bank_line_1 should match, as its communication contains the invoice's partner name
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1},
+            self.bank_line_2.id: {'aml_ids': []},
+        }, self.bank_st)

@@ -626,6 +626,15 @@ class AccountReconcileModel(models.Model):
                             )
                         )
                     )
+                    OR
+                    (
+                        /* We also match statement lines without partners with amls
+                        whose partner's name's parts (splitting on space) are all present
+                        within the payment_ref, in any order, with any characters between them. */
+
+                        aml_partner.name IS NOT NULL
+                        AND st_line.payment_ref ~* concat('(?=.*', array_to_string(regexp_split_to_array(lower(aml_partner.name), ' '),'.*)(?=.*'), '.*)')
+                    )
                 """
 
             st_lines_queries.append(r"st_line.id = %s AND (%s)" % (st_line.id, st_line_subquery))
