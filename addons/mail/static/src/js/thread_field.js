@@ -95,7 +95,7 @@ var ThreadField = AbstractField.extend({
                     self.trigger_up('reload_mail_fields', { followers: true });
                 }
             }).guardedCatch(function () {
-                self.do_notify(_t("Sending Error"), _t("Your message has not been sent."));
+                self.do_notify(false, _t("Message not sent"));
                 return Promise.reject();
             });
     },

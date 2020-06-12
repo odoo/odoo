@@ -35,7 +35,10 @@ var QtyTagWidget = Widget.extend({
      */
     _onClickAddQty: function () {
         if (this.quantities.length >= this.MAX_QTY) {
-            this.do_notify(_t("Quantity cannot be displayed"), _.str.sprintf(_t("Maximum %d quantities can be displayed simultaneously. Remove a selected quantity to add others."), this.MAX_QTY));
+            this.do_notify(false, _.str.sprintf(
+                _t("At most %d quantities can be displayed simultaneously. Remove a selected quantity to add others."),
+                this.MAX_QTY
+            ));
             return;
         }
         const qty = parseInt(this.$('.o_product_qty').val());
@@ -48,12 +51,12 @@ var QtyTagWidget = Widget.extend({
                 this.renderElement();
             } else {
                 this.displayNotification({
-                    title: _.str.sprintf(_t("Quantity already present (%d)."), qty),
+                    message: _.str.sprintf(_t("Quantity already present (%d)."), qty),
                     type: 'info'
                 });
             }
         } else {
-            this.do_notify(_t("Please enter a positive whole number."));
+            this.do_notify(false, _t("Please enter a positive whole number"));
         }
     },
     /**

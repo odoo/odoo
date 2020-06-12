@@ -250,7 +250,7 @@ MailManager.include({
                 channelData.info !== 'creation'
             ) {
                 this.do_notify(
-                    _t("Invitation"),
+                    false,
                     _t("You have been invited to: ") + channelData.name);
             }
         }
@@ -530,7 +530,7 @@ MailManager.include({
             }
             this._removeChannel(channel);
             this._mailBus.trigger('unsubscribe_from_channel', data.id);
-            this.do_notify(_t("Unsubscribed"), message);
+            this.do_notify(false, message);
         }
     },
      /**

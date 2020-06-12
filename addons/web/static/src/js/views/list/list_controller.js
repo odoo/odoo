@@ -287,10 +287,10 @@ var ListController = BasicController.extend({
             });
             if (resIds.length === session.active_ids_limit) {
                 const msg = _.str.sprintf(
-                    _t("Of the %d records selected, only the first %d have been deleted."),
-                    state.count, resIds.length
+                    _t("Only the first %d records have been deleted (out of %d selected)"),
+                    resIds.length, state.count
                 );
-                this.do_notify(_t('Warning'), msg);
+                this.do_notify(false, msg);
             }
             this.reload();
         };

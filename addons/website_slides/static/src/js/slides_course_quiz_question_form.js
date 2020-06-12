@@ -177,7 +177,6 @@ var QuestionFormWidget = publicWidget.Widget.extend({
         } else {
             this.displayNotification({
                 type: 'warning',
-                title: _t('Unable to create question'),
                 message: _t('Please fill up the question'),
                 sticky: true
             });

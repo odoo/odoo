@@ -1680,7 +1680,7 @@ var AbstractFieldBinary = AbstractField.extend({
     },
     on_file_uploaded: function (size, name) {
         if (size === false) {
-            this.do_warn(_t("File Upload"), _t("There was a problem while uploading your file"));
+            this.do_warn(false, _t("There was a problem while uploading your file"));
             // TODO: use crashmanager
             console.warn("Error while uploading file : ", name);
         } else {
@@ -1823,7 +1823,7 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
 
         $img.one('error', function () {
             $img.attr('src', self.placeholder);
-            self.do_warn(_t("Image"), _t("Could not display the selected image."));
+            self.do_warn(false, _t("Could not display the selected image"));
         });
 
         return this._super.apply(this, arguments);
@@ -1963,7 +1963,7 @@ var FieldBinaryFile = AbstractFieldBinary.extend({
     },
     on_save_as: function (ev) {
         if (!this.value) {
-            this.do_warn(_t("Save As..."), _t("The field is empty, there's nothing to save !"));
+            this.do_warn(false, _t("The field is empty, there's nothing to save."));
             ev.stopPropagation();
         } else if (this.res_id) {
             framework.blockUI();
@@ -2643,7 +2643,7 @@ var FieldProgressBar = AbstractField.extend({
             // Cover all numbers with parseFloat
             parsedValue = field_utils.parse.float($input.val());
         } catch (error) {
-            this.do_warn(_t("Wrong value entered!"), _t("Only Integer or Float Value should be valid."));
+            this.do_warn(false, _t("Please enter a numerical value"));
         }
 
         if (parsedValue !== undefined) {

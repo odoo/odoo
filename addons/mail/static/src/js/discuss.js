@@ -96,10 +96,10 @@ var PartnerInviteDialog = Dialog.extend({
                     var names = _.escape(_.pluck(data, 'text').join(', '));
                     var notification =
                         _.str.sprintf(
-                            _t("You added <b>%s</b> to the conversation."),
+                            _t("You added <b>%s</b> to the conversation"),
                             names
                         );
-                    self.do_notify(_t("New people"), notification);
+                    self.do_notify(false, notification);
                     // Update list of members with the invited user, so that
                     // we can mention this user in this channel right away.
                     var channel = self.call('mail_service', 'getChannel', self._channelID);

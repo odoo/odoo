@@ -2037,8 +2037,7 @@ var SnippetsMenu = Widget.extend({
                         reason.event.preventDefault();
                         this.close();
                         self.displayNotification({
-                            title: _t("Something went wrong."),
-                            message: _.str.sprintf(_t("The module <strong>%s</strong> could not be installed."), name),
+                            message: _.str.sprintf(_t("Could not install module <strong>%s</strong>"), name),
                             type: 'danger',
                             sticky: true,
                         });

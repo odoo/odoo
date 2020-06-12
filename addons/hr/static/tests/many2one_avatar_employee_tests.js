@@ -156,7 +156,7 @@ QUnit.module('hr', {}, function () {
                 throw new Error('should not call mail_service');
             }
             if (ev.data.service === 'notification') {
-                assert.step(`display notification "${ev.data.args[0].title}"`);
+                assert.step(`display notification "${ev.data.args[0].message}"`);
             }
         }, true);
 
@@ -167,7 +167,7 @@ QUnit.module('hr', {}, function () {
         assert.verifySteps([
             'read foo 1',
             'read hr.employee 11',
-            'display notification "No user to chat with"',
+            'display notification "You can only chat with employees that have a dedicated user"',
         ]);
 
         form.destroy();
@@ -198,7 +198,7 @@ QUnit.module('hr', {}, function () {
                 throw new Error('should not call mail_service');
             }
             if (ev.data.service === 'notification') {
-                assert.step(`display notification "${ev.data.args[0].title}"`);
+                assert.step(`display notification "${ev.data.args[0].message}"`);
             }
         }, true);
 
@@ -209,7 +209,7 @@ QUnit.module('hr', {}, function () {
         assert.verifySteps([
             'read foo 1',
             'read hr.employee 11',
-            'display notification "Cannot chat with yourself"',
+            'display notification "You cannot chat with yourself"',
         ]);
 
         form.destroy();

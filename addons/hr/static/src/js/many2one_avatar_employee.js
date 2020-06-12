@@ -43,8 +43,7 @@ odoo.define('hr.Many2OneAvatarEmployee', function (require) {
                 // this is not ourself, so if we get here it means that the
                 // employee is not associated with any user
                 this.displayNotification({
-                    title: _t('No user to chat with'),
-                    message: _t('You can only chat with employees that have a dedicated user.'),
+                    message: _t('You can only chat with employees that have a dedicated user'),
                     type: 'info',
                 });
             } else {

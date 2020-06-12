@@ -151,7 +151,7 @@ QUnit.module('web_editor', {}, function () {
                         "className": undefined,
                         "message": "<ul><li>Header</li></ul>",
                         "sticky": undefined,
-                        "title": "The following fields are invalid:",
+                        "title": "Invalid fields:",
                         "type": "danger"
                       });
                 }
