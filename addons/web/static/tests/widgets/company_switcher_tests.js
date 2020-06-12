@@ -9,7 +9,7 @@ async function createSwitchCompanyMenu(params) {
     params = params || {};
     var target = params.debug ? document.body :  $('#qunit-fixture');
     var menu = new SwitchCompanyMenu();
-    testUtils.mock.addMockEnvironment(menu, params);
+    await testUtils.mock.addMockEnvironment(menu, params);
     await menu.appendTo(target)
     return menu
 }

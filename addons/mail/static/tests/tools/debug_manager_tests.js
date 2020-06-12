@@ -10,7 +10,7 @@ QUnit.module('Mail DebugManager', {}, function () {
     QUnit.test("Manage Messages", async function (assert) {
         assert.expect(3);
 
-        var debugManager = createDebugManager({
+        var debugManager = await createDebugManager({
             intercepts: {
                 do_action: function (event) {
                     assert.deepEqual(event.data.action, {

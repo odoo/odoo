@@ -38,7 +38,7 @@ QUnit.test('note activity menu widget: create note from activity menu', async fu
     assert.expect(15);
     var self = this;
     var activityMenu = new ActivityMenu();
-    testUtils.mock.addMockEnvironment(activityMenu, {
+    await testUtils.mock.addMockEnvironment(activityMenu, {
         services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {

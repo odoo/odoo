@@ -62,7 +62,7 @@ QUnit.module('Moderation', {
         this.services = mailTestUtils.getMailServices();
         this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
 
-        this.createParent = function (params) {
+        this.createParent = async function (params) {
             var widget = new Widget();
 
             // in non-debug mode, append thread windows in qunit-fixture
@@ -74,7 +74,7 @@ QUnit.module('Moderation', {
                 self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
-            testUtils.mock.addMockEnvironment(widget, params);
+            await testUtils.mock.addMockEnvironment(widget, params);
             return widget;
         };
     },
@@ -110,7 +110,7 @@ QUnit.test('moderator: moderated channel with pending moderation message', async
         res_id: 1,
     }];
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });

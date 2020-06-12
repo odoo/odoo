@@ -83,7 +83,7 @@ QUnit.test('activity menu widget: menu with no records', async function (assert)
     assert.expect(1);
 
     var activityMenu = new ActivityMenu();
-    testUtils.mock.addMockEnvironment(activityMenu, {
+    await testUtils.mock.addMockEnvironment(activityMenu, {
             services: this.services,
             mockRPC: function (route, args) {
                 if (args.method === 'systray_get_activities') {
@@ -102,7 +102,7 @@ QUnit.test('activity menu widget: activity menu with 3 records', async function 
     assert.expect(10);
     var self = this;
     var activityMenu = new ActivityMenu();
-    testUtils.mock.addMockEnvironment(activityMenu, {
+    await testUtils.mock.addMockEnvironment(activityMenu, {
         services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
@@ -163,7 +163,7 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
     assert.expect(12);
     var self = this;
     var activityMenu = new ActivityMenu();
-    testUtils.mock.addMockEnvironment(activityMenu, {
+    await testUtils.mock.addMockEnvironment(activityMenu, {
         services: this.services,
         session: this.session,
         mockRPC: function (route, args) {

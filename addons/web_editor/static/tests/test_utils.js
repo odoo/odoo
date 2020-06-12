@@ -293,12 +293,12 @@ function wysiwygData(data) {
  *
  * @param {object} params
  */
-function createWysiwyg(params) {
+async function createWysiwyg(params) {
     patch();
     params.data = wysiwygData(params.data);
 
     var parent = new Widget();
-    testUtils.mock.addMockEnvironment(parent, params);
+    await testUtils.mock.addMockEnvironment(parent, params);
 
     var wysiwygOptions = _.extend({}, params.wysiwygOptions, {
         recordInfo: {

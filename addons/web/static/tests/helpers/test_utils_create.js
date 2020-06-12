@@ -67,7 +67,6 @@ odoo.define('web.test_utils_create', function (require) {
         }
 
         params.server = mockServer;
-        Component.env = testUtilsMock.getMockedOwlEnv(params);
 
         const userContext = params.context && params.context.user_context || {};
         const actionManager = new ActionManager(widget, userContext);
@@ -142,7 +141,7 @@ odoo.define('web.test_utils_create', function (require) {
         if (!(constructor.prototype instanceof Component)) {
             throw new Error(`Argument "constructor" must be an Owl Component.`);
         }
-        const env = Object.assign(testUtilsMock.getMockedOwlEnv(params), params.env);
+        const cleanUp = await testUtilsMock.addMockEnvironmentOwl(Component, params);
         class Parent extends Component {
             constructor() {
                 super(...arguments);
@@ -154,7 +153,6 @@ odoo.define('web.test_utils_create', function (require) {
                 }
             }
         }
-        Parent.env = env;
         Parent.template = xml`<t t-component="Component" t-props="state" t-ref="component"/>`;
         const parent = new Parent();
         await parent.mount(prepareTarget(params.debug), { position: 'first-child' });
@@ -162,6 +160,7 @@ odoo.define('web.test_utils_create', function (require) {
         const originalDestroy = child.destroy;
         child.destroy = function () {
             child.destroy = originalDestroy;
+            cleanUp();
             parent.destroy();
         };
         return child;
@@ -241,9 +240,9 @@ odoo.define('web.test_utils_create', function (require) {
      * mock method, assuming that the user has access rights, and is an admin.
      *
      * @param {Object} [params={}]
-     * @returns {DebugManager}
+     * @returns {Promise<DebugManager>}
      */
-    function createDebugManager(params = {}) {
+    async function createDebugManager(params = {}) {
         const mockRPC = params.mockRPC;
         Object.assign(params, {
             async mockRPC(route, args) {
@@ -268,7 +267,7 @@ odoo.define('web.test_utils_create', function (require) {
             },
         });
         const debugManager = new DebugManager();
-        testUtilsMock.addMockEnvironment(debugManager, params);
+        await testUtilsMock.addMockEnvironment(debugManager, params);
         return debugManager;
     }
 
@@ -280,12 +279,12 @@ odoo.define('web.test_utils_create', function (require) {
      * @param {Class} params.Model the model class to use
      * @returns {Model}
      */
-    function createModel(params) {
+    async function createModel(params) {
         const widget = new Widget();
 
         const model = new params.Model(widget);
 
-        testUtilsMock.addMockEnvironment(widget, params);
+        await testUtilsMock.addMockEnvironment(widget, params);
 
         // override the model's 'destroy' so that it calls 'destroy' on the widget
         // instead, as the widget is the parent of the model and the mockServer.
@@ -304,11 +303,11 @@ odoo.define('web.test_utils_create', function (require) {
      *
      * @param {Object} params This object will be given to addMockEnvironment, so
      *   any parameters from that method applies
-     * @returns {Widget}
+     * @returns {Promise<Widget>}
      */
-    function createParent(params) {
+    async function createParent(params) {
         const widget = new Widget();
-        testUtilsMock.addMockEnvironment(widget, params);
+        await testUtilsMock.addMockEnvironment(widget, params);
         return widget;
     }
 
@@ -358,8 +357,6 @@ odoo.define('web.test_utils_create', function (require) {
         const viewInfo = testUtilsMock.fieldsViewGet(mockServer, params);
 
         params.server = mockServer;
-        const env = Object.assign(testUtilsMock.getMockedOwlEnv(params));
-        Component.env = env;
 
         // create the view
         const View = params.View;

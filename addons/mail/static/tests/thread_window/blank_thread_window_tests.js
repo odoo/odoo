@@ -32,7 +32,7 @@ QUnit.module('Blank', {
         this.services = mailTestUtils.getMailServices();
         this.ORIGINAL_THREAD_WINDOW_APPENDTO = this.services.mail_service.prototype.THREAD_WINDOW_APPENDTO;
 
-        this.createParent = function (params) {
+        this.createParent = async function (params) {
             var widget = new Widget();
 
             // in non-debug mode, append thread windows in qunit-fixture
@@ -44,7 +44,7 @@ QUnit.module('Blank', {
                 self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
-            testUtils.mock.addMockEnvironment(widget, params);
+            await testUtils.mock.addMockEnvironment(widget, params);
             return widget;
         };
 
@@ -90,7 +90,7 @@ QUnit.module('Blank', {
 QUnit.test('basic rendering blank thread window', async function (assert) {
     assert.expect(5);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });
@@ -117,7 +117,7 @@ QUnit.test('basic rendering blank thread window', async function (assert) {
 QUnit.test('close blank thread window', async function (assert) {
     assert.expect(1);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });
@@ -139,7 +139,7 @@ QUnit.test('fold blank thread window', async function (assert) {
     // (e.g. 400px)
     assert.expect(3);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
     });
@@ -191,7 +191,7 @@ QUnit.test('open new DM chat from blank thread window', async function (assert) 
         records: [],
     };
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
         mockRPC: function (route, args) {
@@ -274,7 +274,7 @@ QUnit.test('open already detached DM chat from blank thread window', async funct
         name: 'DemoUser1',
     }];
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
         mockRPC: function (route, args) {

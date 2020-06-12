@@ -51,7 +51,7 @@ QUnit.module('Typing', {
             await testUtils.nextMicrotaskTick();
         };
 
-        this.createParent = function (params) {
+        this.createParent = async function (params) {
             var widget = new Widget();
 
             // in non-debug mode, append thread windows in qunit-fixture
@@ -63,7 +63,7 @@ QUnit.module('Typing', {
                 self.services.mail_service.prototype.THREAD_WINDOW_APPENDTO = '#qunit-fixture';
             }
 
-            testUtils.mock.addMockEnvironment(widget, params);
+            await testUtils.mock.addMockEnvironment(widget, params);
             return widget;
         };
     },
@@ -76,7 +76,7 @@ QUnit.module('Typing', {
 QUnit.test('receive typing notification', async function (assert) {
     assert.expect(4);
 
-    var parent = this.createParent({
+    var parent = await this.createParent({
         data: this.data,
         services: this.services,
         mockRPC: function (route, args) {

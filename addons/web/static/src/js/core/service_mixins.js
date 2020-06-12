@@ -3,6 +3,8 @@ odoo.define('web.ServiceProviderMixin', function (require) {
 
 var core = require('web.core');
 
+// ServiceProviderMixin is deprecated. It is only used by the ProjectTimesheet
+// app. As soon as it no longer uses it, we can remove it.
 var ServiceProviderMixin = {
     services: {}, // dict containing deployed service instances
     UndeployedServices: {}, // dict containing classes of undeployed services

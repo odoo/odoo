@@ -6,20 +6,9 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
     const { Model } = require('web.model');
     const pyUtils = require('web.py_utils');
     const testUtils = require('web.test_utils');
-    const session = require('web.session');
 
     const cpHelpers = testUtils.controlPanel;
     const { createComponent } = testUtils;
-
-    function patchSession(newSession) {
-        // We have to patch the "legacy" session because field_utils is using it.
-        // TODO: remove it when the field_utils are re-written.
-        const initialSession = session;
-        Object.assign(session, newSession);
-        return function () {
-            Object.assign(session, initialSession);
-        };
-    }
 
     QUnit.module('Components', {
         beforeEach: function () {
@@ -203,11 +192,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
         QUnit.test('custom filter datetime with equal operator', async function (assert) {
             assert.expect(4);
 
-            patchSession({
-                getTZOffset: function () {
-                    return -240;
-                },
-            });
             class MockedControlPanelModel extends Model {
                 createNewFilters(preFilters) {
                     const preFilter = preFilters[0];
@@ -223,6 +207,11 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
                     fields: this.fields,
+                },
+                session: {
+                    getTZOffset() {
+                        return -240;
+                    },
                 },
                 env: { controlPanelModel },
             });
@@ -243,11 +232,6 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
         QUnit.test('custom filter datetime between operator', async function (assert) {
             assert.expect(4);
 
-            patchSession({
-                getTZOffset: function () {
-                    return -240;
-                },
-            });
             class MockedControlPanelModel extends Model {
                 createNewFilters(preFilters) {
                     const preFilter = preFilters[0];
@@ -264,6 +248,11 @@ odoo.define('web.filter_menu_generator_tests', function (require) {
             const cfi = await createComponent(CustomFilterItem, {
                 props: {
                     fields: this.fields,
+                },
+                session: {
+                    getTZOffset() {
+                        return -240;
+                    },
                 },
                 env: { controlPanelModel },
             });
