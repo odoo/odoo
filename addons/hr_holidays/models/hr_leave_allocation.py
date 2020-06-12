@@ -339,9 +339,13 @@ class HolidaysAllocation(models.Model):
             elif not holiday.holiday_status_id and not holiday._origin.holiday_status_id:
                 holiday.holiday_status_id = default_holiday_status_id
 
-    @api.depends('holiday_status_id', 'allocation_type')
+    @api.depends('holiday_status_id', 'allocation_type', 'number_of_hours_display', 'number_of_days_display')
     def _compute_from_holiday_status_id(self):
         for allocation in self:
+            allocation.number_of_days = allocation.number_of_days_display
+            if allocation.number_of_hours_display:
+                allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
+
             # set default values
             if not allocation.number_of_days and not allocation._origin.number_of_days:
                 allocation.number_of_days = 1
