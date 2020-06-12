@@ -34,6 +34,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
             useListener('loading-skip-callback', () => this._loadingSkipCallback());
             useListener('play-sound', this._onPlaySound);
             useListener('set-sync-status', this._onSetSyncStatus);
+            useListener('show-notification', this._onShowNotification);
+            useListener('close-notification', this._onCloseNotification);
             NumberBuffer.activate();
 
             this.chromeContext = useContext(contexts.chrome);
@@ -43,6 +45,11 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 debugWidgetIsShown: true,
                 hasBigScrollBars: false,
                 sound: { src: null },
+                notification: {
+                    isShown: false,
+                    message: '',
+                    duration: 2000,
+                }
             });
 
             this.loading = useState({
@@ -295,6 +302,15 @@ odoo.define('point_of_sale.Chrome', function(require) {
         }
         _onSetSyncStatus({ detail: { status, pending }}) {
             this.env.pos.set('synch', { status, pending });
+        }
+        _onShowNotification({ detail: { message, duration } }) {
+            this.state.notification.isShown = true;
+            this.state.notification.message = message;
+            this.state.notification.duration = duration;
+        }
+        _onCloseNotification() {
+            this.state.notification.isShown = false;
+            this.state.notification.message = '';
         }
 
         // TO PASS AS PARAMETERS //

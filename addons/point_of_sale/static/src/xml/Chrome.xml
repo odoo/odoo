@@ -69,6 +69,8 @@
                    t-key="popup.name" />
             </div>
 
+            <Notification t-if="state.notification.isShown" message="state.notification.message" duration="state.notification.duration" t-transition="fade"/>
+
             <NotificationSound t-if="state.sound.src" sound="state.sound" />
         </div>
     </t>
