@@ -59,7 +59,7 @@
                             <label for="discount_max_amount" string="Max Discount Amount" attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}"/>
                             <div attrs="{'invisible': ['|', ('reward_type', 'in', ('product', 'free_shipping')), ('discount_type', '!=', 'percentage')]}">
                                 <field name="discount_max_amount" class="oe_inline" widget='monetary' options="{'currency_field': 'currency_id'}"/>
-                                <span class="oe_grey">if 0, no limit</span>
+                                <span class="oe_grey"> if 0, no limit</span>
                             </div>
                         </group>
                     </group>

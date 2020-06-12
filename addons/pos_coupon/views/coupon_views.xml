@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="pos_coupon_view_form" model="ir.ui.view">
+        <field name="name">coupon.coupon.form</field>
+        <field name="model">coupon.coupon</field>
+        <field name="inherit_id" ref="coupon.coupon_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="pos_order_id" invisible="1"/>
+                <field name="source_pos_order_id" invisible="1"/>
+                <field name="pos_order_id" readonly="1" attrs="{'invisible': [('pos_order_id', '=', False)]}" />
+                <field name="source_pos_order_id" readonly="1" attrs="{'invisible': [('source_pos_order_id', '=', False)]}" />
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
