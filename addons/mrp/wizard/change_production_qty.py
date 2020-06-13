@@ -99,11 +99,4 @@ class ChangeProductionQty(models.TransientModel):
                 moves_finished = production.move_finished_ids.filtered(lambda move: move.operation_id == operation) #TODO: code does nothing, unless maybe by_products?
                 moves_raw.mapped('move_line_ids').write({'workorder_id': wo.id})
                 (moves_finished + moves_raw).write({'workorder_id': wo.id})
-                if wo.state not in ('done', 'cancel'):
-                    line_values = wo._update_workorder_lines()
-                    wo._workorder_line_ids().create(line_values['to_create'])
-                    if line_values['to_delete']:
-                        line_values['to_delete'].unlink()
-                    for line, vals in line_values['to_update'].items():
-                        line.write(vals)
         return {}

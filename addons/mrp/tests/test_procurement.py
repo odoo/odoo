@@ -39,7 +39,7 @@ class TestProcurement(TestMrpCommon):
         production_product_6.action_assign()
 
         # check production state is Confirmed
-        self.assertEqual(production_product_6.state, 'to_close')
+        self.assertEqual(production_product_6.state, 'confirmed')
 
         # Check procurement for product 4 created or not.
         # Check it created a purchase order
