@@ -60,30 +60,10 @@
         </field>
     </record>
 
-    <!-- <record model="ir.ui.view" id="mrp_production_workorder_tree_view_inherit">
-        <field name="name">mrp.production.work.order.tree</field>
-        <field name="model">mrp.workorder</field>
-        <field name="arch" type="xml">
-            <tree string="Work Orders" delete="0" create="0">
-                <field name="name"/>
-                <field name="date_planned_start" decoration-danger="date_planned_start&lt;current_date and state in ('ready')"/>
-                <field name="workcenter_id" widget="selection"/>
-                <field name="production_id"/>
-                <field name="product_id"/>
-                <field name="qty_production"/>
-                <field name="product_uom_id"/>
-                <field name="state"/>
-                <field name="activity_exception_decoration" widget="activity_exception"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="show_json_popover" invisible="1"/>
-                <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
-            </tree>
-        </field>
-    </record> -->
-
     <record model="ir.ui.view" id="mrp_production_workorder_tree_editable_view">
         <field name="name">mrp.production.work.order.tree.editable</field>
         <field name="model">mrp.workorder</field>
+        <field name="priority" eval="100"/>
         <field name="arch" type="xml">
             <tree editable="bottom">
                 <field name="consumption" invisible="1"/>
@@ -120,7 +100,22 @@
                   attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked')]}"/>
                 <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
                   attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done')), ('working_state', '!=', 'blocked')]}"/>
+                <field name="show_json_popover" invisible="1"/>
+                <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
             </tree>
+        </field>
+    </record>
+
+    <record id="mrp_production_workorder_tree_view" model="ir.ui.view">
+        <field name="name">mrp.production.work.order.tree</field>
+        <field name="model">mrp.workorder</field>
+        <field name="mode">primary</field>
+        <field name="priority" eval="10"/>
+        <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
+        <field name="arch" type="xml">
+            <field name="workcenter_id" position="after">
+                <field name="production_id"/>
+            </field>
         </field>
     </record>
 
@@ -132,7 +127,6 @@
             <field name="is_user_working" invisible="1"/>
             <field name="working_state" invisible="1"/>
             <field name="production_state" invisible="1"/>
-            <field name="is_finished_lines_editable" invisible="1"/>
             <header>
                 <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
             </header>

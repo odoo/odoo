@@ -56,6 +56,7 @@ class MrpWorkorder(models.Model):
         'Quantity', default=0.0,
         readonly=True,
         digits='Product Unit of Measure',
+        copy=False,
         help="The number of products already handled by this work order")
     is_produced = fields.Boolean(string="Has Been Produced",
         compute='_compute_is_produced')
@@ -139,7 +140,6 @@ class MrpWorkorder(models.Model):
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True, readonly=False)
-    is_finished_lines_editable = fields.Boolean(compute='_compute_is_finished_lines_editable')
     json_popover = fields.Char('Popover Data JSON', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Show Popover?', compute='_compute_json_popover')
     consumption = fields.Selection([
@@ -244,13 +244,6 @@ class MrpWorkorder(models.Model):
             'date_to': date_to,
         })
 
-    @api.depends('state')
-    def _compute_is_finished_lines_editable(self):
-        for workorder in self:
-            if self.user_has_groups('mrp.group_mrp_byproducts') and workorder.state not in ('cancel', 'done'):
-                workorder.is_finished_lines_editable = True
-            else:
-                workorder.is_finished_lines_editable = False
     def name_get(self):
         res = []
         for wo in self:
@@ -360,13 +353,15 @@ class MrpWorkorder(models.Model):
                 # Update MO dates if the start date of the first WO or the
                 # finished date of the last WO is update.
                 if workorder == workorder.production_id.workorder_ids[0] and 'date_planned_start' in values:
-                    workorder.production_id.with_context(force_date=True).write({
-                        'date_planned_start': fields.Datetime.to_datetime(values['date_planned_start'])
-                    })
+                    if values['date_planned_start']:
+                        workorder.production_id.with_context(force_date=True).write({
+                            'date_planned_start': fields.Datetime.to_datetime(values['date_planned_start'])
+                        })
                 if workorder == workorder.production_id.workorder_ids[-1] and 'date_planned_finished' in values:
-                    workorder.production_id.with_context(force_date=True).write({
-                        'date_planned_finished': fields.Datetime.to_datetime(values['date_planned_finished'])
-                    })
+                    if values['date_planned_finished']:
+                        workorder.production_id.with_context(force_date=True).write({
+                            'date_planned_finished': fields.Datetime.to_datetime(values['date_planned_finished'])
+                        })
         return super(MrpWorkorder, self).write(values)
 
     @api.model_create_multi
@@ -485,6 +480,9 @@ class MrpWorkorder(models.Model):
         if self.state in ('done', 'cancel'):
             return True
 
+        if self.product_tracking == 'serial':
+            self.qty_producing = 1.0
+
         # Need a loss in case of the real time exceeding the expected
         timeline = self.env['mrp.workcenter.productivity']
         if not self.duration_expected or self.duration < self.duration_expected:
@@ -549,10 +547,7 @@ class MrpWorkorder(models.Model):
                 vals['date_planned_start'] = end_date
             workorder.write(vals)
 
-            # Community-only: without quality checks, finishing a workorder should
-            # start the next one.
-            if not workorder._fields.get('check_ids'):
-                workorder._start_nextworkorder()
+            workorder._start_nextworkorder()
         return True
 
     def end_previous(self, doall=False):

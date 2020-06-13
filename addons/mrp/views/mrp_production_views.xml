@@ -174,23 +174,6 @@
                             <field name="move_finished_ids" invisible="1" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
                                 <tree editable="bottom">
                                     <field name="product_id"/>
-                                    <!-- <field name="move_line_ids" invisible="1">
-                                        <tree>
-                                            <field name="lot_id" invisible="1"/>
-                                            <field name="owner_id" invisible="1"/>
-                                            <field name="package_id" invisible="1"/>
-                                            <field name="result_package_id" invisible="1"/>
-                                            <field name="location_id" invisible="1"/>
-                                            <field name="location_dest_id" invisible="1"/>
-                                            <field name="qty_done" invisible="1"/>
-                                            <field name="product_id" invisible="1"/>
-                                            <field name="product_uom_id" invisible="1"/>
-                                            <field name="product_uom_qty" invisible="1"/>
-                                            <field name="state" invisible="1"/>
-                                            <field name="move_id" invisible="1"/>
-                                            <field name="id" invisible="1"/>
-                                        </tree>
-                                    </field> -->
                                     <field name="product_uom_qty"/>
                                     <field name="product_uom"/>
                                     <field name="operation_id"/>
@@ -272,7 +255,7 @@
                                     <field name="quantity_done" string="Consumed"
                                         decoration-success="not is_done and (quantity_done - should_consume_qty == 0)"
                                         decoration-warning="not is_done and (quantity_done - should_consume_qty &gt; 0.0001)"
-                                        attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('is_quantity_done_editable', '=', False)]}"/>
+                                        attrs="{'column_invisible': [('parent.state', '=', 'draft')], 'readonly': [('show_details_visible', '=', True)]}"/>
                                     <field name="show_details_visible" invisible="1"/>
                                     <button name="action_show_details" type="object" icon="fa-list" attrs="{'invisible': [('show_details_visible', '=', False)]}" options="{&quot;warn&quot;: true}"/>
                                 </tree>
@@ -331,8 +314,7 @@
                             </field>
                         </page>
                         <page string="Operations" name="operations" groups="mrp.group_mrp_routings">
-                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_production_id': id, 'default_qty_producing': product_qty, 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/> 
-                        </page>
+                            <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'default_production_id': id, 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/>                        </page>
                         <page string="Miscellaneous" name="miscellaneous" groups="stock.group_stock_multi_locations">
                             <group>
                                 <group>

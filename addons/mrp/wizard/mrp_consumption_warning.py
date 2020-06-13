@@ -31,6 +31,15 @@ class MrpConsumptionWarning(models.TransientModel):
     def action_confirm(self):
         return self.mrp_production_ids.with_context(skip_consumption=True).button_mark_done()
 
+    def action_cancel(self):
+        if self.env.context.get('from_workorder') and len(self.mrp_production_ids) == 1:
+            return {
+                'type': 'ir.actions.act_window',
+                'res_model': 'mrp.production',
+                'views': [[self.env.ref('mrp.mrp_production_form_view').id, 'form']],
+                'res_id': self.mrp_production_ids.id,
+                'target': 'main',
+            }
 
 class MrpConsumptionWarningLine(models.TransientModel):
     _name = 'mrp.consumption.warning.line'

@@ -202,7 +202,7 @@ class StockMove(models.Model):
             else:
                 move.is_locked = False
 
-    @api.depends('product_id', 'has_tracking')
+    @api.depends('product_id', 'has_tracking', 'move_line_ids')
     def _compute_show_details_visible(self):
         """ According to this field, the button that calls `action_show_details` will be displayed
         to work on a move from its picking form view, or not.
@@ -216,6 +216,8 @@ class StockMove(models.Model):
         for move in self:
             if not move.product_id:
                 move.show_details_visible = False
+            elif len(move.move_line_ids) > 1:
+                move.show_details_visible = True
             else:
                 move.show_details_visible = (((consignment_enabled and move.picking_id.picking_type_id.code != 'incoming') or
                                              show_details_visible or move.has_tracking != 'none') and

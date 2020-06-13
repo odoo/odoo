@@ -33,12 +33,12 @@
                         </tree>
                     </field>
                     <footer>
-                        <button name="action_confirm" string="Force" 
+                        <button name="action_confirm" string="Force"
                             groups="mrp.group_mrp_manager" attrs="{'invisible': [('consumption', '!=', 'strict')]}"
                             colspan="1" type="object" class="btn-primary"/>
                         <button name="action_confirm" string="Confirm" attrs="{'invisible': [('consumption', '=', 'strict')]}"
                             colspan="1" type="object" class="btn-primary"/>
-                        <button special="cancel" string="Review Consumption"
+                        <button name="action_cancel" string="Review Consumption"
                             colspan="1" type="object" class="btn-primary"/>
                     </footer>
                 </form>

@@ -71,7 +71,7 @@ class MrpProduction(models.Model):
 
     name = fields.Char(
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
-    backorder_sequence = fields.Integer("Backorder Sequence", default=0, help="Backorder sequence, if equals to 0 means there is not related backorder")
+    backorder_sequence = fields.Integer("Backorder Sequence", default=0, copy=False, help="Backorder sequence, if equals to 0 means there is not related backorder")
     origin = fields.Char(
         'Source', copy=False,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
@@ -294,10 +294,12 @@ class MrpProduction(models.Model):
                     production.date_planned_finished = max(production.mapped('move_finished_ids.date_expected'))
 
     def _set_date_planned_start(self):
-        self.move_raw_ids.write({'date_expected': self.date_planned_start})
+        if self.date_planned_start:
+            self.move_raw_ids.write({'date_expected': self.date_planned_start})
 
     def _set_date_planned_finished(self):
-        self.move_finished_ids.write({'date_expected': self.date_planned_finished})
+        if self.date_planned_finished:
+            self.move_finished_ids.write({'date_expected': self.date_planned_finished})
 
     def _compute_is_planned(self):
         for production in self:
@@ -541,9 +543,7 @@ class MrpProduction(models.Model):
     @api.onchange('product_qty', 'product_uom_id')
     def _onchange_product_qty(self):
         for workorder in self.workorder_ids:
-            if not workorder.product_uom_id:
-                workorder.product_uom_id = self.product_uom_id
-            workorder.qty_producing = self.product_id.tracking == 'serial' and 1.0 or product_qty
+            workorder.product_uom_id = self.product_uom_id
             workorder.duration_expected = workorder._get_duration_expected()
             if workorder.date_planned_start and workorder.duration_expected:
                 workorder.date_planned_finished = workorder.date_planned_start + relativedelta(minutes=workorder.duration_expected)
@@ -748,7 +748,7 @@ class MrpProduction(models.Model):
                         'name': operation.name,
                         'production_id': production.id,
                         'workcenter_id': operation.workcenter_id.id,
-                        'product_uom_id': production.product_id.uom_id.id,
+                        'product_uom_id': production.product_uom_id.id,
                         'operation_id': operation.id,
                         'state': 'pending',
                         'consumption': production.consumption,
@@ -1133,7 +1133,12 @@ class MrpProduction(models.Model):
             raise UserError(_("Some work orders are already done, you cannot unplan this manufacturing order."))
         elif any(wo.state == 'progress' for wo in self.workorder_ids):
             raise UserError(_("Some work orders have already started, you cannot unplan this manufacturing order."))
+
         self.workorder_ids.leave_id.unlink()
+        self.workorder_ids.write({
+            'date_planned_start': False,
+            'date_planned_finished': False,
+        })
 
     def _get_consumption_issues(self):
         """Compare the quantity consumed of the components, the expected quantity
@@ -1281,8 +1286,8 @@ class MrpProduction(models.Model):
                     finish_moves.quantity_done = order.product_uom_id._compute_quantity(order.qty_producing, uom, round='HALF-UP')
                     finish_moves.move_line_ids.product_uom_id = uom
                 else:
-                    finish_moves.quantity_done = float_round(self.qty_producing - self.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
-                finish_moves.move_line_ids.lot_id = self.lot_producing_id
+                    finish_moves.quantity_done = float_round(order.qty_producing - order.qty_produced, precision_rounding=order.product_uom_id.rounding, rounding_method='HALF-UP')
+                finish_moves.move_line_ids.lot_id = order.lot_producing_id
             order._cal_price(moves_to_do)
 
             moves_to_finish = order.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
@@ -1320,12 +1325,6 @@ class MrpProduction(models.Model):
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
             backorder_mo = production.copy(default=self._get_backorder_mo_vals(production))
-            for wo in backorder_mo.workorder_ids:
-                wo.qty_produced = 0
-                if wo.product_tracking == 'serial':
-                    wo.qty_producing = 1
-                else:
-                    wo.qty_producing = wo.qty_remaining
             if close_mo:
                 production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write({
                     'raw_material_production_id': backorder_mo.id,
@@ -1335,18 +1334,35 @@ class MrpProduction(models.Model):
                 })
             else:
                 for move in production.move_raw_ids | production.move_finished_ids:
-                    new_move = self.env['stock.move'].browse(move._split(move.unit_factor * production.qty_producing))
+                    new_move = self.env['stock.move'].browse(move._split(move.product_uom_qty - move.unit_factor * production.qty_producing))
                     if move.raw_material_production_id:
                         new_move.raw_material_production_id = backorder_mo.id
                     else:
                         new_move.production_id = backorder_mo.id
+                    (move | new_move)._do_unreserve()
+                    (move | new_move)._action_assign()
             backorders |= backorder_mo
+            for wo in backorder_mo.workorder_ids:
+                wo.qty_produced = 0
+                if wo.product_tracking == 'serial':
+                    wo.qty_producing = 1
+                else:
+                    wo.qty_producing = wo.qty_remaining
 
             production.name = self._get_name_backorder(production.name, production.backorder_sequence)
 
-            for wo in backorder_mo.workorder_ids:
-                wo.duration_expected = wo._get_duration_expected(wo.workcenter_id)
+            # We need to adapt `duration_expected` on both the original workorders and their
+            # backordered workorders. To do that, we use the original `duration_expected` and the
+            # ratio of the quantity really produced and the quantity to produce.
+            ratio = production.qty_producing / production.product_qty
+            for workorder in production.workorder_ids:
+                workorder.duration_expected = workorder.duration_expected * ratio
+            for workorder in backorder_mo.workorder_ids:
+                workorder.duration_expected = workorder.duration_expected * (1 - ratio)
         backorders.action_confirm()
+        for wo in backorders.workorder_ids:
+            if wo.component_id:
+                wo._update_component_quantity()
         # Remove the serial move line without reserved quantity. Post inventory will assigned all the non done moves
         # So those move lines are duplicated.
         backorders.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id.tracking == 'serial' and ml.product_qty == 0).unlink()
@@ -1392,6 +1408,14 @@ class MrpProduction(models.Model):
             workorder.duration_expected = workorder._get_duration_expected()
 
         if not backorders:
+            if self.env.context.get('from_workorder'):
+                return {
+                    'type': 'ir.actions.act_window',
+                    'res_model': 'mrp.production',
+                    'views': [[self.env.ref('mrp.mrp_production_form_view').id, 'form']],
+                    'res_id': self.id,
+                    'target': 'main',
+                }
             return True
         context = self.env.context.copy()
         context = {k: v for k, v in context.items() if not k.startswith('default_')}

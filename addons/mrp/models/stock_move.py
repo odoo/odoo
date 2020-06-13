@@ -153,7 +153,9 @@ class StockMove(models.Model):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
 
-    @api.depends('product_uom_qty', 'raw_material_production_id', 'raw_material_production_id.product_qty', 'raw_material_production_id.qty_produced')
+    @api.depends('product_uom_qty',
+        'raw_material_production_id', 'raw_material_production_id.product_qty', 'raw_material_production_id.qty_produced',
+        'production_id', 'production_id.product_qty', 'production_id.qty_produced')
     def _compute_unit_factor(self):
         for move in self:
             mo = move.raw_material_production_id or move.production_id
@@ -381,10 +383,6 @@ class StockMove(models.Model):
             return min(qty_ratios) // 1
         else:
             return 0.0
-
-    @api.depends('raw_material_production_id')
-    def _compute_is_quantity_done_editable(self):
-        return super()._compute_is_quantity_done_editable()
 
     def _show_details_in_draft(self):
         self.ensure_one()
