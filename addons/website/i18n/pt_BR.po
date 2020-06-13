@@ -30,6 +30,7 @@
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # Rafael H L Moretti <rafael.moretti@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
+# Fernando Colus <fcolus1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -37,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2020\n"
+"Last-Translator: Fernando Colus <fcolus1@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -883,6 +884,11 @@ msgid ""
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
+"Uma ação do servidor de código pode ser executada no site, usando um "
+"controlador dedicado. O endereço é <base> /website/action/ <website_path>. "
+"Defina este campo como \"Verdadeiro\" para permitir que os usuários executem"
+" esta ação. Se estiver definido como \"Falso\", a ação não poderá ser "
+"executada no site."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block
@@ -4239,7 +4245,7 @@ msgstr "Metadados SEO"
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__is_seo_optimized
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "SEO optimized"
-msgstr ""
+msgstr "Mecanismos de Pesquisa Otimizados"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -5594,7 +5600,7 @@ msgstr "Meta título site"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_og_img
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Imagem de gráfico aberto do site"
 
 #. module: website
 #: model:ir.model,name:website.model_website_rewrite
@@ -5647,6 +5653,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "White"
 msgstr "Branco"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_domain
+#: model:ir.model.fields,help:website.field_website__domain
+msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
