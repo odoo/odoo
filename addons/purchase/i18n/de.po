@@ -11,6 +11,7 @@
 # Anja Uebermuth <anja.uebermuth@arts.eu>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Wolfgang Taferner, 2019
+# Malin Kienke <malin.kienke@initos.com>, 2020
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # 
 msgid ""
@@ -93,7 +94,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        Wenn Sie Fragen haben, zögern Sie nicht und kontaktieren uns.\n"
 "        <br/><br/>\n"
-"        Mit freundlichen Grüßen,\n"
+"        Mit freundlichen Grüßen\n"
 "    </p>\n"
 "</div>"
 
@@ -121,12 +122,12 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"       Sehr geehrte (r) ${object.partner_id.name}\n"
+"       Guten Tag ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Hier im Anhang ist eine Angebotsanfrage<strong>${object.name}</strong>\n"
+"        Im Anhang finden Sie eine Angebotsanfrage <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            mit der Referenz: ${object.partner_ref}\n"
 "        % endif\n"
@@ -134,7 +135,7 @@ msgstr ""
 "        <br/><br/>\n"
 "      Bei Fragen stehen wir Ihnen gerne zur Verfügung.\n"
 "        <br/><br/>\n"
-"        Mit Freundliche Grüßen,\n"
+"        Mit freundlichen Grüßen\n"
 "    </p>\n"
 "</div>"
 
@@ -1847,8 +1848,8 @@ msgid ""
 "The quotation contains the history of the discussion\n"
 "                you had with your vendor."
 msgstr ""
-"Das Zitat enthält die Geschichte der Diskussion\n"
-"                Sie hatten mit Ihrem Verkäufer."
+"Die Angebotsanfrage enthält den Verlauf der Diskussion mit Ihrem "
+"Lieferanten."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
