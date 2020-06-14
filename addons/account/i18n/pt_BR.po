@@ -520,7 +520,7 @@ msgstr "<span role=\"separator\">Novo</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span role=\"separator\">Reconciliation</span>"
-msgstr "<span role=\"separator\">Reconciliação</span>"
+msgstr "<span role=\"separator\">Conciliação</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -855,9 +855,9 @@ msgid ""
 "reconciliation."
 msgstr ""
 "Uma entrada de diário de pagamento gerada em um diário configurado para "
-"lançar entradas somente quando os pagamentos são reconciliados com um "
+"lançar entradas somente quando os pagamentos são conciliados com um "
 "extrato bancário não pode ser lançada manualmente. Esses serão lançados "
-"automaticamente após a realização da reconciliação bancária."
+"automaticamente após a realização da conciliação bancária."
 
 #. module: account
 #: code:addons/account/models/reconciliation_widget.py:681
@@ -7605,11 +7605,10 @@ msgid ""
 "otherwise it would make a gap in the numbering. You should book an entry and"
 " make a regular revert of it in case you want to cancel it."
 msgstr ""
-"Operação não permitida. Desde que sua linha de instrução já recebeu um "
-"número, você não pode conciliá-lo inteiramente com entradas de diário "
-"existentes caso contrário, faria uma lacuna na numeração. Você deve "
-"registrar uma entrada e fazer um retorno regular dela caso você queira "
-"cancelá-la."
+"Operação não permitida. Como a linha do seu extrato já recebeu um número "
+"(%s), não é possível conciliá-lo totalmente com os lançamentos contábeis "
+"existentes, caso contrário, isso deixaria uma lacuna na numeração. Você deve"
+" reservar uma entrada e fazer uma reversão regular caso queira cancelá-la."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
