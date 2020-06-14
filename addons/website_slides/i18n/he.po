@@ -45,7 +45,7 @@ msgstr ""
 #. module: website_slides
 #: model:mail.template,subject:website_slides.slide_template_shared
 msgid "${user.name} shared a ${object.slide_type} with you!"
-msgstr ""
+msgstr "${user.name} שיתף ${object.slide_type} איתך!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_channel_form
@@ -183,7 +183,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "<i class=\"fa fa-home\"/> About"
-msgstr ""
+msgstr "<i class=\"fa fa-home\"/> אודות"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -286,6 +286,8 @@ msgid ""
 "<span class=\"fa fa-arrow-right\"/>\n"
 "                                    Create a Google Project and Get a Key"
 msgstr ""
+"<span class=\"fa fa-arrow-right\"/>\n"
+"                                    צור פרויקט של גוגל וקבל מפתח"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_email
@@ -336,7 +338,7 @@ msgstr ""
 #. module: website_slides
 #: sql_constraint:slide.tag:0
 msgid "A tag must be unique!"
-msgstr ""
+msgstr "תגית חייבת להיות ייחודית!"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.res_config_settings_view_form
@@ -519,6 +521,8 @@ msgid ""
 "Could not fetch data from url. Document or access right not available:\n"
 "%s"
 msgstr ""
+"לא ניתן היה להביא נתונים מכתובת האתר. מסמך או הרשאה אינם זמינים:\n"
+"%s"
 
 #. module: website_slides
 #: model_terms:ir.actions.act_window,help:website_slides.action_slide_channels
@@ -626,7 +630,7 @@ msgstr "השם המוצג"
 #: model:ir.model.fields,help:website_slides.field_slide_category__sequence
 #: model:ir.model.fields,help:website_slides.field_slide_channel__sequence
 msgid "Display order"
-msgstr ""
+msgstr "סדר תצוגה"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_form
@@ -745,7 +749,7 @@ msgstr ""
 #: code:addons/website_slides/static/src/js/slides_upload.js:91
 #, python-format
 msgid "File is too big. File size cannot exceed 25MB"
-msgstr ""
+msgstr "הקובץ גדול מדי. גודל הקובץ לא יכול לעלות על 25MB"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__message_follower_ids
@@ -857,6 +861,8 @@ msgid ""
 "Internal server error, please try again later or contact administrator.\n"
 "Here is the error message: %s"
 msgstr ""
+"שגיאת שרת פנימית, אנא נסה שוב מאוחר יותר או צור קשר עם מנהל המערכת.\n"
+"להלן הודעת השגיאה: %s"
 
 #. module: website_slides
 #. openerp-web
@@ -912,7 +918,7 @@ msgstr "שקופית אחרונה"
 #. module: website_slides
 #: selection:slide.channel,promote_strategy:0
 msgid "Latest Published"
-msgstr ""
+msgstr "פורסם לאחרונה"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_8
@@ -968,13 +974,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Viewed"
-msgstr ""
+msgstr "הנצפה ביותר"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 #: selection:slide.channel,promote_strategy:0
 msgid "Most Voted"
-msgstr ""
+msgstr "הנצפה ביותר"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__name
@@ -1054,7 +1060,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_presentations
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__nbr_presentations
 msgid "Number of Presentations"
-msgstr ""
+msgstr "מספר המצגות"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__nbr_videos
@@ -1173,13 +1179,13 @@ msgstr ""
 #: code:addons/website_slides/models/slides.py:562
 #, python-format
 msgid "Please enter valid Youtube or Google Doc URL"
-msgstr ""
+msgstr "הזן כתובת אתר חוקית ל- YouTube או ל- Google Doc"
 
 #. module: website_slides
 #: code:addons/website_slides/controllers/main.py:256
 #, python-format
 msgid "Please enter valid youtube or google doc url"
-msgstr ""
+msgstr "הזן כתובת אתר חוקית ל- YouTube או ל- Google Doc"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_embed__slide_id
@@ -1191,7 +1197,7 @@ msgstr "מצגת"
 #: model:mail.message.subtype,description:website_slides.mt_channel_slide_published
 #: model:mail.message.subtype,name:website_slides.mt_channel_slide_published
 msgid "Presentation Published"
-msgstr ""
+msgstr "המצגת פורסמה"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
@@ -1238,7 +1244,7 @@ msgstr ""
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_slide__date_published
 msgid "Publish Date"
-msgstr ""
+msgstr "תאריך פרסום"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
@@ -1253,7 +1259,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Related"
-msgstr ""
+msgstr "קשור"
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_id
@@ -1328,7 +1334,7 @@ msgstr ""
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_embed
 msgid "Select page to start with"
-msgstr ""
+msgstr "בחר דף להתחיל בו"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_category__sequence
@@ -1364,7 +1370,7 @@ msgstr "שתף בלינקדאין"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_social_media
 msgid "Share on Social Networks"
-msgstr ""
+msgstr "שתף ברשתות חברתיות"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_share
@@ -1394,18 +1400,18 @@ msgstr "שקופית"
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_channel
 msgid "Slide Channel"
-msgstr ""
+msgstr "ערוץ שקופית"
 
 #. module: website_slides
 #: model:ir.model,name:website_slides.model_slide_tag
 msgid "Slide Tag"
-msgstr ""
+msgstr "תגית שקופית"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.embed_slide
 #: model_terms:ir.ui.view,arch_db:website_slides.slide_detail_view
 msgid "Slide image"
-msgstr ""
+msgstr "תמונת שקופית"
 
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__custom_slide_id
@@ -1474,6 +1480,8 @@ msgid ""
 "The document type will be set automatically based on the document URL and "
 "properties (e.g. height and width for presentation and document)."
 msgstr ""
+"סוג המסמך יוגדר באופן אוטומטי על סמך כתובת האתר והמאפיינים של המסמך (למשל "
+"גובה ורוחב עבור המצגת והמסמך)."
 
 #. module: website_slides
 #: model:ir.model.fields,help:website_slides.field_slide_channel__website_url
@@ -1557,7 +1565,7 @@ msgstr ""
 #: code:addons/website_slides/models/slides.py:551
 #, python-format
 msgid "Unknown document"
-msgstr ""
+msgstr "מסמך לא ידוע"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_grid_view
@@ -1579,7 +1587,7 @@ msgstr "מונה הודעות שלא נקראו"
 #. module: website_slides
 #: model:ir.model.fields,field_description:website_slides.field_slide_channel__upload_group_ids
 msgid "Upload Groups"
-msgstr ""
+msgstr "העלה קבוצות"
 
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.home
@@ -1595,7 +1603,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_slides.slides_channel_header
 #, python-format
 msgid "Upload Presentation"
-msgstr ""
+msgstr "העלה מצגת"
 
 #. module: website_slides
 #. openerp-web
@@ -1649,7 +1657,7 @@ msgstr "גלוי באתר הנוכחי"
 #. module: website_slides
 #: model_terms:ir.ui.view,arch_db:website_slides.view_slide_slide_search
 msgid "Waiting for validation"
-msgstr ""
+msgstr "ממתין לאישור"
 
 #. module: website_slides
 #: model:slide.slide,description:website_slides.slide_7
@@ -1714,7 +1722,7 @@ msgstr "תמונת opengraph של אתר אינטרנט"
 #: code:addons/website_slides/static/src/js/slides_upload.js:116
 #, python-format
 msgid "You can not upload password protected file."
-msgstr ""
+msgstr "אינך יכול להעלות קובץ מוגן בסיסמה."
 
 #. module: website_slides
 #. openerp-web

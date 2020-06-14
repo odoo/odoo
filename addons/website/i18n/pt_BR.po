@@ -22,8 +22,10 @@
 # Marcelo Costa <marcelo@comdesk.com.br>, 2019
 # Eduardo Aparicio <eduardo.caparica@gmail.com>, 2019
 # Lauro de Lima <lauro@ciclix.com>, 2019
-# Marcel Savegnago <marcel.savegnago@gmail.com>, 2019
 # Rafael H L Moretti <rafael.moretti@gmail.com>, 2020
+# Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
+# Luiz Fernando <lfpsgs@outlook.com>, 2020
+# Fernando Colus <fcolus1@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -31,7 +33,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:33+0000\n"
-"Last-Translator: Rafael H L Moretti <rafael.moretti@gmail.com>, 2020\n"
+"Last-Translator: Fernando Colus <fcolus1@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -809,6 +811,11 @@ msgid ""
 "field as True to allow users to run this action. If it is set to False the "
 "action cannot be run through the website."
 msgstr ""
+"Uma ação do servidor de código pode ser executada no site, usando um "
+"controlador dedicado. O endereço é <base> /website/action/ <website_path>. "
+"Defina este campo como \"Verdadeiro\" para permitir que os usuários executem"
+" esta ação. Se estiver definido como \"Falso\", a ação não poderá ser "
+"executada no site."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_text_block
@@ -1819,6 +1826,11 @@ msgid "Email support"
 msgstr "Suporte de e-mail"
 
 #. module: website
+#: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
+msgid "Enable billing on your Google Project"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Enter email"
@@ -2002,7 +2014,7 @@ msgstr ""
 #. module: website
 #: selection:website,auth_signup_uninvited:0
 msgid "Free sign up"
-msgstr ""
+msgstr "Registre-se Grátis"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
@@ -3105,7 +3117,7 @@ msgstr "No Site"
 #. module: website
 #: selection:website,auth_signup_uninvited:0
 msgid "On invitation"
-msgstr ""
+msgstr "Com convite"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -3284,7 +3296,7 @@ msgstr "Menu Superior(pai)"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_menu__parent_path
 msgid "Parent Path"
-msgstr ""
+msgstr "Caminho Pai"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__partner_id
@@ -3543,7 +3555,7 @@ msgstr "Metadados SEO"
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__is_seo_optimized
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "SEO optimized"
-msgstr ""
+msgstr "Mecanismos de Pesquisa Otimizados"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -4592,7 +4604,7 @@ msgstr "Meta título site"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_og_img
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Imagem de gráfico aberto do site"
 
 #. module: website
 #: model:ir.actions.server,name:website.ir_actions_server_website_dashboard
