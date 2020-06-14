@@ -1349,6 +1349,29 @@ class TestFields(common.TransactionCase):
         self.assertNotEqual(new_disc.participants, disc.participants)
         self.assertEqual(new_disc.participants._origin, disc.participants)
 
+    def test_41_new_compute(self):
+        """ Check recomputation of fields on new records. """
+        move = self.env['test_new_api.move'].create({
+            'line_ids': [(0, 0, {'quantity': 1}), (0, 0, {'quantity': 1})],
+        })
+        move.flush()
+        line = move.line_ids[0]
+
+        new_move = move.new(origin=move)
+        new_line = line.new(origin=line)
+
+        # move_id is fetched from origin
+        self.assertEqual(new_line.move_id, move)
+        self.assertEqual(new_move.quantity, 2)
+        self.assertEqual(move.quantity, 2)
+
+        # modifying new_line must trigger recomputation on new_move, even if
+        # new_line.move_id is not new_move!
+        new_line.quantity = 2
+        self.assertEqual(new_line.move_id, move)
+        self.assertEqual(new_move.quantity, 3)
+        self.assertEqual(move.quantity, 2)
+
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_41_new_related(self):
         """ test the behavior of related fields starting on new records. """
