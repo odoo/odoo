@@ -31,6 +31,8 @@
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Marcelo Costa <marcelo@comdesk.com.br>, 2020
 # Guilherme Libardi <guilherme.libardig@gmail.com>, 2020
+# Fernando Colus <fcolus1@gmail.com>, 2020
+# Maurício Liell <mauricio@liell.com.br>, 2020
 # 
 msgid ""
 msgstr ""
@@ -38,7 +40,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-26 05:48+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Guilherme Libardi <guilherme.libardig@gmail.com>, 2020\n"
+"Last-Translator: Maurício Liell <mauricio@liell.com.br>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -138,7 +140,7 @@ msgstr "&amp;nbsp;"
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "&nbsp;("
-msgstr ""
+msgstr "&nbsp;("
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -291,7 +293,7 @@ msgstr ""
 #: code:addons/mail/static/src/js/tours/mail.js:0
 #, python-format
 msgid "<p>Create a channel here.</p>"
-msgstr ""
+msgstr "Crie um canal aqui."
 
 #. module: mail
 #. openerp-web
@@ -333,6 +335,8 @@ msgid ""
 "<span class=\"fa fa-info-circle\"/> Caution: It won't be possible to send "
 "this mail again to the recipients you did not select."
 msgstr ""
+"<span class=\"fa fa-info-circle\"/> Cuidado: Não será possível enviar esse "
+"e-mail novamente para os destinatários que você não selecionou."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -367,6 +371,12 @@ msgid ""
 "                                The email will be sent for all the records selected in the list.<br/>\n"
 "                                Confirming this wizard will probably take a few minutes blocking your browser."
 msgstr ""
+"<strong>\n"
+"                                    Todos os registros correspondentes ao seu filtro de pesquisa atual serão enviados,\n"
+"                                    e não apenas os selecionados.\n"
+"                                </strong><br/>\n"
+"                                O email será enviado para todos os registros selecionados na lista.<br/>\n"
+"                                 A confirmação deste assistente provavelmente levará alguns minutos bloqueando seu navegador."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_notification_email
@@ -374,6 +384,8 @@ msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
 msgstr ""
+"<strong>Comunicação Interna</strong>: A resposta publicará uma nota interna."
+" Os seguidores não receberão nenhuma notificação por e-mail."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -381,6 +393,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>Somente registros marcados na lista serão usados.</strong><br/>\n"
+"                                O e-mail será enviado para todos os registros selecionados na lista."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.message_activity_done
@@ -390,7 +404,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 msgid "<strong>Recommended Activities</strong>"
-msgstr ""
+msgstr "<strong>Atividades Recomendadas</strong>"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_alias__alias_defaults
@@ -431,14 +445,14 @@ msgstr "Aceitar"
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Accept selected messages"
-msgstr ""
+msgstr "Aceitar mensagens selecionadas"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Accept |"
-msgstr ""
+msgstr "Aceitar |"
 
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_message__moderation_status__accepted
@@ -598,7 +612,7 @@ msgstr "Adicionar"
 #: code:addons/mail/static/src/xml/chatter.xml:0
 #, python-format
 msgid "Add Attachments"
-msgstr ""
+msgstr "Adicionar Anexos"
 
 #. module: mail
 #. openerp-web
@@ -670,7 +684,7 @@ msgstr "Adicione um emoji"
 #: code:addons/mail/static/src/xml/composer.xml:0
 #, python-format
 msgid "Add attachment"
-msgstr ""
+msgstr "Adicionar Anexo"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
@@ -1849,6 +1863,8 @@ msgid ""
 "Do not keep a copy of the email in the document communication history (mass "
 "mailing only)"
 msgstr ""
+"Não mantenha uma cópia do email no histórico de comunicação do documento "
+"(apenas mala direta)"
 
 #. module: mail
 #. openerp-web
@@ -3328,7 +3344,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__mail_activity_type_id
 #: model:ir.model.fields,field_description:mail.field_mail_message__mail_activity_type_id
 msgid "Mail Activity Type"
-msgstr ""
+msgstr "Tipo de Atividade de email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_blacklist
@@ -3794,7 +3810,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail__moderation_status
 #: model:ir.model.fields,field_description:mail.field_mail_message__moderation_status
 msgid "Moderation Status"
-msgstr ""
+msgstr "Status de moderação"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_users__moderation_counter
@@ -4789,7 +4805,7 @@ msgstr "Canais Públicos"
 #. module: mail
 #: model:ir.model,name:mail.model_publisher_warranty_contract
 msgid "Publisher Warranty Contract"
-msgstr ""
+msgstr "Contrato de Garantia do Editor"
 
 #. module: mail
 #: model:ir.actions.server,name:mail.ir_cron_module_update_notification_ir_actions_server
@@ -5921,6 +5937,8 @@ msgid ""
 "Tracked values are stored in a separate model. This field allow to "
 "reconstruct the tracking and to generate statistics on the model."
 msgstr ""
+"Os valores rastreados são armazenados em um modelo separado. Este campo "
+"permite reconstruir o rastreamento e gerar estatísticas no modelo."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_message_view_form
@@ -6325,7 +6343,7 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "View %s"
-msgstr ""
+msgstr "Ver %s"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_ir_actions_act_window_view__view_mode

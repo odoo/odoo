@@ -28,7 +28,6 @@
 # Renzo Meister, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Michael Schütt <michael.schuett.lwl@gmail.com>, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2019
 # Tina Rittmüller <tr@ife.de>, 2019
 # f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2019
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
@@ -47,6 +46,7 @@
 # Martin Trigaux, 2020
 # Leon Grill <leg@odoo.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -54,7 +54,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-26 05:48+0000\n"
 "PO-Revision-Date: 2016-08-05 13:05+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2020\n"
+"Last-Translator: Ermin Trevisan <trevi@twanda.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -340,6 +340,12 @@ msgid ""
 "                            </span>\n"
 "                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers of the document and</span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('composition_mode', '!=', 'mass_mail')]}\">\n"
+"                                <strong>Email-Massenmail</strong> an\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">die ausgewählten Datensätze</span>\n"
+"                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">mit dem aktuellen Suchfilter</span>.\n"
+"                            </span>\n"
+"                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Followers des Dokuments und</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -418,6 +424,8 @@ msgid ""
 "<strong>Internal communication</strong>: Replying will post an internal "
 "note. Followers won't receive any email notification."
 msgstr ""
+"<strong>Interne Kommunikation</strong>: Antworten erzeugt eine interne "
+"Notiz. Followers werden keine Email-Benachrichtigung erhalten."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -454,6 +462,8 @@ msgstr ""
 #, python-format
 msgid "A next activity can only be planned on models that use the chatter"
 msgstr ""
+"Eine neue Aktivität kann nur in Modellen geplant werden, die den Chatter "
+"verwenden"
 
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
@@ -660,7 +670,7 @@ msgstr "Kanäle hinzufügen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_form
 msgid "Add Email Blacklist"
-msgstr ""
+msgstr "Schwarze Liste für E-Mails hinzufügen"
 
 #. module: mail
 #. openerp-web
@@ -740,7 +750,7 @@ msgstr "Kontakte als Empfänger hinzufügen"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Add this email address to white list of people"
-msgstr ""
+msgstr "Diese E-Mail-Adresse zur weissen Liste hinzufügen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__partner_ids
@@ -898,6 +908,8 @@ msgid ""
 "Are you sure you want to discard %s mail delivery failures. You won't be "
 "able to re-send these mails later!"
 msgstr ""
+"Sind Sie sicher, dass Sie die %s fehlgeschlagenen E-Mail-Sendungen löschen "
+"möchten? Diese E-mails können dann nicht mehr erneut versendet werden!"
 
 #. module: mail
 #. openerp-web
@@ -915,6 +927,8 @@ msgid ""
 "Assigned user %s has no access to the document and is not able to handle "
 "this activity."
 msgstr ""
+"Der zugewiesene Benutzer %s hat keinen Zugriff auf dieses Dokument und kann "
+"diese Aktivität nicht handhaben."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -1020,7 +1034,7 @@ msgstr "Automatisches Abonnement"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__automated
 msgid "Automated activity"
-msgstr ""
+msgstr "Automatische Aktivität"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_autovacuum
@@ -1262,7 +1276,7 @@ msgstr "Kanal-Mitteilung"
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_moderation_menu
 msgid "Channel Moderation"
-msgstr ""
+msgstr "Kanal-Moderation"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__channel_type
@@ -1280,7 +1294,7 @@ msgstr ""
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Channel settings"
-msgstr ""
+msgstr "Kanal-Einstellungen"
 
 #. module: mail
 #. openerp-web
@@ -1615,7 +1629,7 @@ msgstr "Dieser Benutzer hat eine Markierung zu dieser Nachricht erstellt"
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_channel__is_moderator
 msgid "Current user is a moderator of the channel"
-msgstr ""
+msgstr "Der aktuelle Benutzer ist Moderator dieses Kanals"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias__alias_bounced_content
@@ -1686,7 +1700,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__default_next_type_id
 msgid "Default Next Activity"
-msgstr ""
+msgstr "Standard-Folgeaktivität"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__summary
@@ -1730,7 +1744,7 @@ msgstr ""
 #. module: mail
 #: model_terms:ir.actions.act_window,help:mail.mail_shortcode_action
 msgid "Define a new chat shortcode"
-msgstr ""
+msgstr "Eines neues Chat-Kürzel definieren"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_from
@@ -1808,19 +1822,19 @@ msgstr "Verwerfen"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_cancel_view_form
 msgid "Discard delivery failures"
-msgstr ""
+msgstr "Fehlgeschlagene Sendungen löschen"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.mail_resend_cancel_action
 msgid "Discard mail delivery failures"
-msgstr ""
+msgstr "Fehlgeschlagene E-Mailsendungen löschen"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Discard selected messages"
-msgstr ""
+msgstr "Ausgewählte Nachrichten löschen"
 
 #. module: mail
 #. openerp-web
@@ -1994,7 +2008,7 @@ msgstr "Dropdownmenu"
 #: code:addons/mail/static/src/xml/followers.xml:0
 #, python-format
 msgid "Dropdown menu - Followers"
-msgstr ""
+msgstr "Dropdown-Menü Followers"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -2035,7 +2049,7 @@ msgstr "Bearbeiten"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_resend_message_view_form
 msgid "Edit Partners"
-msgstr ""
+msgstr "Partner bearbeiten"
 
 #. module: mail
 #. openerp-web
@@ -2085,7 +2099,7 @@ msgstr "E-Mail Aliases"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr ""
+msgstr "E-Mail-Aliases-Mixin"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
@@ -2172,7 +2186,7 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields.selection,name:mail.selection__mail_notification__failure_type__bounce
 msgid "Email address rejected by destination"
-msgstr ""
+msgstr "E-Mail-Adresse zurückgewiesen vom Zielort"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
