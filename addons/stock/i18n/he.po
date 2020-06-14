@@ -1638,7 +1638,7 @@ msgstr "מסלול יוצא ברירת המחדל למעקב"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__prefill_counted_quantity__counted
 msgid "Default to stock on hand"
-msgstr ""
+msgstr "ברירת מחדל למלאי זמין"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__prefill_counted_quantity__zero
@@ -1713,7 +1713,7 @@ msgstr "עיכוב"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__ship_only
 msgid "Deliver goods directly (1 step)"
-msgstr "ספק סחורה ישירות (צעד 1)"
+msgstr "שלח סחורה ישירות ללקוח (צעד 1)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -3195,7 +3195,7 @@ msgstr "איתור בו המערכת תאחסן מוצרים גמורים."
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
 msgid "Location: Store to"
-msgstr "איתור: אחסן ל"
+msgstr "איתור: אחסן ב-"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_putaway_search
@@ -3927,7 +3927,7 @@ msgstr "פלט"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__wh_output_stock_loc_id
 msgid "Output Location"
-msgstr "מיקום הפלט"
+msgstr "איתור משלוח"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_overprocessed_transfer__overprocessed_product_name
@@ -3988,7 +3988,7 @@ msgstr "סוג חבילה"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_pack_ship
 msgid "Pack goods, send goods in output and then deliver (3 steps)"
-msgstr "לארוז סחורות, לשלוח סחורה לאספקה ולאחר מכן לשלוח (3 שלבים)"
+msgstr "ארוז סחורה, שלח לאיזור משלוח ולאחר מכן שלח ללקוח (3 שלבים)"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_package_level__package_id
@@ -4081,10 +4081,10 @@ msgid ""
 " A package can also be unpacked, allowing the disposal of its former content"
 " as single units again."
 msgstr ""
-"חבילות בדרך כלל נוצרות ע\"י פעולות אריזה שבוצעו לפי העברות ויכולות להכיל "
-"מספר מוצרים שונים. לאחר מכן תוכל להשתמש בחבילה כדי להעביר את כל התוכן למקום "
-"אחר, או לארוז אותו לחבילה אחרת גדולה יותר. חבילה ניתן גם לפרוק, המאפשר את "
-"סילוק התוכן הקודם שלה וחזרה לחבילה רגילה."
+"חבילות בדרך כלל נוצרות ע\"י פעולות אריזה שבוצעו בהעברות ויכולות להכיל מספר "
+"מוצרים שונים. לאחר מכן תוכל להשתמש בחבילה כדי להעביר את כל התוכן למקום אחר "
+"או לארוז אותו בחבילה אחרת גדולה יותר. חבילה ניתנת גם לפירוק, המאפשר את סילוק"
+" התוכן הקודם שלה וחזרה לחבילה רגילה."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.quant_package_search_view
@@ -4258,12 +4258,12 @@ msgstr "עדיפות"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process operations faster with barcodes"
-msgstr "עבד פעולות מהר יותר עם ברקודים"
+msgstr "בצע פעולות מהר יותר עם ברקודים"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Process transfers in batch per worker"
-msgstr "עבד העברות בקבוצה לפי עובד"
+msgstr "בצע העברות בקבוצה לפי עובד"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -5346,7 +5346,7 @@ msgstr "שלח הודעת אישור אוטומטית לאחר ביצוע הזמ
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_warehouse__delivery_steps__pick_ship
 msgid "Send goods in output and then deliver (2 steps)"
-msgstr "שלח פריטים בפלט ולאחר מכן העבר (2 צעדים)"
+msgstr "שלח פריטים לאיזור משלוח ולאחר מכן שלח ללקוח (2 צעדים)"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -5817,7 +5817,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
 msgid "Store to"
-msgstr "אחסן ל"
+msgstr "אחסן ב-"
 
 #. module: stock
 #. openerp-web
@@ -6215,7 +6215,7 @@ msgid ""
 "            you select a lot, you can get the traceability of the products contained in lot."
 msgstr ""
 "זוהי רשימה של כל אצוות הייצור שתיעדת. בעת\n"
-"בחירת אצווה, אתה יכול לקבל את עקביות המוצרים הכלולים באצווה."
+"בחירת אצווה,אתה יכול לעקוב אחר המוצרים הכלולים באצווה."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quant__owner_id
@@ -6240,7 +6240,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
 msgid "This is used to correct the product quantities you have in stock."
-msgstr "זה משמש כדי לתקן את כמויות המוצר שיש לך במלאי."
+msgstr "היא משמשת כדי לתקן את כמויות המוצרים שיש לך במלאי."
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0
@@ -6716,7 +6716,7 @@ msgid ""
 "                a manufacturing order or a transfer."
 msgstr ""
 "השתמש בעוזר זה כדי לחדש את המלאי שלך.\n"
-"בהתאם לתצורת המוצר שלך, הפעלת חידוש מלאי עשויה לעורר בקשה להצעת מחיר,\n"
+"בהתאם לתצורת המוצר שלך, הפעלת חידוש מלאי עשויה לבצע בקשה להצעת מחיר,\n"
 "הוראת ייצור או העברה."
 
 #. module: stock
@@ -7332,7 +7332,7 @@ msgid ""
 "You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i>\n"
 "                        Odoo will process all the quantities."
 msgstr ""
-"לא רשמת עדיין את הכמות ש<i>בוצעה</i> , בלחיצה על <i>החל</i>\n"
+"לא רשמת עדיין את הכמות ש<i>בוצעה</i> , בלחיצה על <i>השתמש</i>\n"
 "                        Odoo ירשום את הכמות."
 
 #. module: stock

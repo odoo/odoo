@@ -15,6 +15,7 @@
 # Adam Levrinc <adam.levrinc@26house.com>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-01 12:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -12258,6 +12259,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"Súbor, z ktorého zobrazenie pochádza.\n"
+"                                                           Je užitočné (natvrdo) resetovať prerušené zobrazenia alebo čítať archy zo súboru v režime dev-xml."
 
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_act_window__filter
@@ -16310,7 +16313,7 @@ msgstr "Modely"
 #. module: base
 #: model:ir.model.fields,field_description:base.field_ir_ui_view__arch_updated
 msgid "Modified Architecture"
-msgstr ""
+msgstr "Modifikovaná architektúra"
 
 #. module: base
 #: model:ir.model,name:base.model_ir_module_module
@@ -22671,7 +22674,7 @@ msgstr ""
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_base
 msgid "This field is the same as `arch` field without translations"
-msgstr ""
+msgstr "Toto pole je rovnaké ako pole „arch“ bez prekladov"
 
 #. module: base
 #: model:ir.model.fields,help:base.field_res_lang__code
@@ -22686,11 +22689,13 @@ msgid ""
 "This field should be used when accessing view arch. It will use translation.\n"
 "                               Note that it will read `arch_db` or `arch_fs` if in dev-xml mode."
 msgstr ""
+"Toto pole uloží aktuálny `arch_db` pred zapísaním.\n"
+"Je užitočné (mäkké) vynulovať prerušené zobrazenie."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_db
 msgid "This field stores the view arch."
-msgstr ""
+msgstr "Toto pole ukladá archív pohľadu."
 
 #. module: base
 #: model:ir.model.fields,help:base.field_ir_ui_view__arch_prev
@@ -22698,6 +22703,8 @@ msgid ""
 "This field will save the current `arch_db` before writing on it.\n"
 "                                                                         Useful to (soft) reset a broken view."
 msgstr ""
+"Toto pole uloží aktuálny `arch_db` pred zapísaním.\n"
+"Je užitočné (mäkké) vynulovať prerušené zobrazenie."
 
 #. module: base
 #: code:addons/image.py:0
