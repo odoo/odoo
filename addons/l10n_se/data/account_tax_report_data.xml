@@ -2,363 +2,324 @@
 <odoo>
     <data>
 
-        <record id="tax_report" model="account.tax.report">
-            <field name="name">skatterapport</field>
+        <record id="tax_report_vat" model="account.tax.report">
+            <field name="name">VAT Report</field>
             <field name="country_id" ref="base.se"/>
         </record>
 
-        <!-- -->
-        <!--A-->
-        <!-- -->
-        <record id="tax_report_title_sales" model="account.tax.report.line">
-            <field name="name">Block A – Momspliktig försäljning eller uttag exklusive moms</field>
-            <field name="code">se_a</field>
+        <record id="tax_report_title_a" model="account.tax.report.line">
+            <field name="name">A. Momspliktig försäljning eller uttag exklusive moms</field>
+            <field name="code">se_vat_a</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">1</field>
-            <field name="report_id" ref="tax_report"/>
         </record>
 
-        <record id="tax_report_line_05" model="account.tax.report.line">
-            <field name="name">Fält 05 – Momspliktig försäljning som inte ingår i fält 06, 07 eller 08</field>
-            <field name="code">se_05</field>
-            <field name="tag_name">se_05</field>
+        <record id="tax_report_line_A05" model="account.tax.report.line">
+            <field name="name">A05. Momspliktig försäljning som inte ingår i ruta 06, 07 eller 08</field>
+            <field name="code">se_vat_a05</field>
+            <field name="tag_name">A05</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">1</field>
-            <field name="parent_id" ref="tax_report_title_sales"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_a"/>
         </record>
 
-        <record id="tax_report_line_06" model="account.tax.report.line">
-            <field name="name">Fält 06 – Momspliktiga uttag</field>
-            <field name="code">se_06</field>
-            <field name="tag_name">se_06</field>
+        <record id="tax_report_line_A06" model="account.tax.report.line">
+            <field name="name">A06. Momspliktiga uttag</field>
+            <field name="code">se_vat_a06</field>
+            <field name="tag_name">A06</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">2</field>
-            <field name="parent_id" ref="tax_report_title_sales"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_a"/>
         </record>
 
-        <record id="tax_report_line_07" model="account.tax.report.line">
-            <field name="name">Fält 07 – Beskattningsunderlag vid vinstmarginalbeskattning</field>
-            <field name="code">se_07</field>
-            <field name="tag_name">se_07</field>
+        <record id="tax_report_line_A07" model="account.tax.report.line">
+            <field name="name">A07. Beskattningsunderlag vid vinstmarginalbeskattning</field>
+            <field name="code">se_vat_a07</field>
+            <field name="tag_name">A07</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">3</field>
-            <field name="parent_id" ref="tax_report_title_sales"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_a"/>
         </record>
 
-        <record id="tax_report_line_08" model="account.tax.report.line">
-            <field name="name">Fält 08 – Hyresinkomster vid frivillig skattskyldighet</field>
-            <field name="code">se_08</field>
-            <field name="tag_name">se_08</field>
+        <record id="tax_report_line_A08" model="account.tax.report.line">
+            <field name="name">A08. Hyresinkomster vid frivillig skattskyldighet</field>
+            <field name="code">se_vat_a08</field>
+            <field name="tag_name">A08</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">4</field>
-            <field name="parent_id" ref="tax_report_title_sales"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_a"/>
         </record>
 
-        <!-- -->
-        <!--B-->
-        <!-- -->
-        <record id="tax_report_title_output_vat_sales" model="account.tax.report.line">
-            <field name="name">Block B – Utgående moms på försäljning eller uttag i fält 05–08</field>
-            <field name="code">se_b</field>
+        <record id="tax_report_title_b" model="account.tax.report.line">
+            <field name="name">B. Utgående moms på försäljning eller uttag i ruta 05-08</field>
+            <field name="code">se_vat_b</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">2</field>
-            <field name="report_id" ref="tax_report"/>
         </record>
 
-        <record id="tax_report_line_10" model="account.tax.report.line">
-            <field name="name">Fält 10 – Utgående moms 25 %</field>
-            <field name="code">se_10</field>
-            <field name="tag_name">se_10</field>
+        <record id="tax_report_line_B10" model="account.tax.report.line">
+            <field name="name">B10. Utgående moms 25%</field>
+            <field name="code">se_vat_b10</field>
+            <field name="tag_name">B10</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">1</field>
-            <field name="parent_id" ref="tax_report_title_output_vat_sales"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_b"/>
         </record>
 
-        <record id="tax_report_line_11" model="account.tax.report.line">
-            <field name="name">Fält 11 – Utgående moms 12 %</field>
-            <field name="code">se_11</field>
-            <field name="tag_name">se_11</field>
+        <record id="tax_report_line_B11" model="account.tax.report.line">
+            <field name="name">B11. Utgående moms 12%</field>
+            <field name="code">se_vat_b11</field>
+            <field name="tag_name">B11</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">2</field>
-            <field name="parent_id" ref="tax_report_title_output_vat_sales"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_b"/>
         </record>
 
-        <record id="tax_report_line_12" model="account.tax.report.line">
-            <field name="name">Fält 12 – Utgående moms 6 %</field>
-            <field name="code">se_12</field>
-            <field name="tag_name">se_12</field>
+        <record id="tax_report_line_B12" model="account.tax.report.line">
+            <field name="name">B12. Utgående moms 6%</field>
+            <field name="code">se_vat_b12</field>
+            <field name="tag_name">B12</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">3</field>
-            <field name="parent_id" ref="tax_report_title_output_vat_sales"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_b"/>
         </record>
 
-        <!-- -->
-        <!--C-->
-        <!-- -->
-        <record id="tax_report_title_purchases" model="account.tax.report.line">
-            <field name="name">Block C – Momspliktiga inköp vid omvänd skattskyldighet</field>
-            <field name="code">se_c</field>
+        <record id="tax_report_title_c" model="account.tax.report.line">
+            <field name="name">C. Momspliktiga inköp vid omvänd skattskyldighet</field>
+            <field name="code">se_vat_c</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">3</field>
-            <field name="report_id" ref="tax_report"/>
         </record>
 
-        <record id="tax_report_line_20" model="account.tax.report.line">
-            <field name="name">Fält 20 – Inköp av varor från annat EU-land</field>
-            <field name="code">se_20</field>
-            <field name="tag_name">se_20</field>
+        <record id="tax_report_line_C20" model="account.tax.report.line">
+            <field name="name">C20. Inköp av varor från ett annat EU-land</field>
+            <field name="code">se_vat_c20</field>
+            <field name="tag_name">C20</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">1</field>
-            <field name="parent_id" ref="tax_report_title_purchases"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_c"/>
         </record>
 
-        <record id="tax_report_line_21" model="account.tax.report.line">
-            <field name="name">Fält 21 – Inköp av tjänster från ett annat EU-land, enligt huvudregeln</field>
-            <field name="code">se_21</field>
-            <field name="tag_name">se_21</field>
+        <record id="tax_report_line_C21" model="account.tax.report.line">
+            <field name="name">C21. Inköp av tjänster från ett annat EU-land, enligt huvudregeln</field>
+            <field name="code">se_vat_c21</field>
+            <field name="tag_name">C21</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">2</field>
-            <field name="parent_id" ref="tax_report_title_purchases"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_c"/>
         </record>
 
-        <record id="tax_report_line_22" model="account.tax.report.line">
-            <field name="name">Fält 22 – Inköp av tjänster från länder utanför EU</field>
-            <field name="code">se_22</field>
-            <field name="tag_name">se_22</field>
+        <record id="tax_report_line_C22" model="account.tax.report.line">
+            <field name="name">C22. Inköp av tjänster från länder utanför EU</field>
+            <field name="code">se_vat_c22</field>
+            <field name="tag_name">C22</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">3</field>
-            <field name="parent_id" ref="tax_report_title_purchases"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_c"/>
         </record>
 
-        <record id="tax_report_line_23" model="account.tax.report.line">
-            <field name="name">Fält 23 – Inköp av varor i Sverige</field>
-            <field name="code">se_23</field>
-            <field name="tag_name">se_23</field>
-            <field name="sequence">3</field>
-            <field name="parent_id" ref="tax_report_title_purchases"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_24" model="account.tax.report.line">
-            <field name="name">Fält 24 – Övriga inköp av tjänster</field>
-            <field name="code">se_24</field>
-            <field name="tag_name">se_24</field>
+       <record id="tax_report_line_C23" model="account.tax.report.line">
+            <field name="name">C23. Inköp av varor i Sverige</field>
+            <field name="code">se_vat_c23</field>
+            <field name="tag_name">C23</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">4</field>
-            <field name="parent_id" ref="tax_report_title_purchases"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_c"/>
         </record>
 
-        <!-- -->
-        <!--D-->
-        <!-- -->
-        <record id="tax_report_title_output_vat_purchases" model="account.tax.report.line">
-            <field name="name">Block D – Utgående moms på inköp i fält 20–24</field>
-            <field name="code">se_d</field>
-            <field name="sequence">4</field>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_30" model="account.tax.report.line">
-            <field name="name">Fält 30 – Utgående moms 25 %</field>
-            <field name="code">se_30</field>
-            <field name="tag_name">se_30</field>
-            <field name="sequence">1</field>
-            <field name="parent_id" ref="tax_report_title_output_vat_purchases"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_31" model="account.tax.report.line">
-            <field name="name">Fält 31 – Utgående moms 12 %</field>
-            <field name="code">se_31</field>
-            <field name="tag_name">se_31</field>
-            <field name="sequence">2</field>
-            <field name="parent_id" ref="tax_report_title_output_vat_purchases"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_32" model="account.tax.report.line">
-            <field name="name">Fält 32 – Utgående moms 6 %</field>
-            <field name="code">se_32</field>
-            <field name="tag_name">se_32</field>
-            <field name="sequence">3</field>
-            <field name="parent_id" ref="tax_report_title_output_vat_purchases"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <!-- -->
-        <!--H-->
-        <!-- -->
-        <record id="tax_report_title_imports" model="account.tax.report.line">
-            <field name="name">Block H - moms vid import</field>
-            <field name="code">se_h</field>
+       <record id="tax_report_line_C24" model="account.tax.report.line">
+            <field name="name">C24. Övriga inköp av tjänster</field>
+            <field name="code">se_vat_c24</field>
+            <field name="tag_name">C24</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">5</field>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_c"/>
         </record>
 
-        <record id="tax_report_line_50" model="account.tax.report.line">
-            <field name="name">Fält 50 - Beskattningsunderlag vid import</field>
-            <field name="code">se_50</field>
-            <field name="tag_name">se_50</field>
-            <field name="sequence">1</field>
-            <field name="parent_id" ref="tax_report_title_imports"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <!-- -->
-        <!--I-->
-        <!-- -->
-        <record id="tax_report_title_output_vat_imports" model="account.tax.report.line">
-            <field name="name">Block I - Utgående moms på import i fält 50</field>
-            <field name="code">se_i</field>
-            <field name="sequence">6</field>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_60" model="account.tax.report.line">
-            <field name="name">Fält 60 – Utgående moms 25 %</field>
-            <field name="code">se_60</field>
-            <field name="tag_name">se_60</field>
-            <field name="sequence">1</field>
-            <field name="parent_id" ref="tax_report_title_output_vat_imports"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_61" model="account.tax.report.line">
-            <field name="name">Fält 61 – Utgående moms 12 %</field>
-            <field name="code">se_61</field>
-            <field name="tag_name">se_61</field>
-            <field name="sequence">2</field>
-            <field name="parent_id" ref="tax_report_title_output_vat_imports"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_62" model="account.tax.report.line">
-            <field name="name">Fält 62 – Utgående moms 6 %</field>
-            <field name="code">se_62</field>
-            <field name="tag_name">se_62</field>
-            <field name="sequence">3</field>
-            <field name="parent_id" ref="tax_report_title_output_vat_imports"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <!-- -->
-        <!--E-->
-        <!-- -->
-        <record id="tax_report_title_exempt_sales" model="account.tax.report.line">
-            <field name="name">Block E – Försäljning m.m. som är undantagen från moms</field>
-            <field name="code">se_e</field>
-            <field name="sequence">7</field>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_35" model="account.tax.report.line">
-            <field name="name">Fält 35 – Försäljning av varor till ett annat EU-land</field>
-            <field name="code">se_35</field>
-            <field name="tag_name">se_35</field>
-            <field name="sequence">1</field>
-            <field name="parent_id" ref="tax_report_title_exempt_sales"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_36" model="account.tax.report.line">
-            <field name="name">Fält 36 – Försäljning av varor utanför EU</field>
-            <field name="code">se_36</field>
-            <field name="tag_name">se_36</field>
-            <field name="sequence">2</field>
-            <field name="parent_id" ref="tax_report_title_exempt_sales"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_37" model="account.tax.report.line">
-            <field name="name">Fält 37 – Mellanmans inköp av varor vid trepartshandel</field>
-            <field name="code">se_37</field>
-            <field name="tag_name">se_37</field>
-            <field name="sequence">3</field>
-            <field name="parent_id" ref="tax_report_title_exempt_sales"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_38" model="account.tax.report.line">
-            <field name="name">Fält 38 – Mellanmans försäljning av varor vid trepartshandel</field>
-            <field name="code">se_38</field>
-            <field name="tag_name">se_38</field>
+        <record id="tax_report_title_d" model="account.tax.report.line">
+            <field name="name">D. Utgående moms på inköp i ruta 20–24</field>
+            <field name="code">se_vat_d</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">4</field>
-            <field name="parent_id" ref="tax_report_title_exempt_sales"/>
-            <field name="report_id" ref="tax_report"/>
         </record>
 
-        <record id="tax_report_line_39" model="account.tax.report.line">
-            <field name="name">Fält 39 – Försäljning av tjänster till en beskattningsbar person (näringsidkare) i ett
-                annat EU-land, enligt huvudregeln
-            </field>
-            <field name="code">se_39</field>
-            <field name="tag_name">se_39</field>
-            <field name="sequence">5</field>
-            <field name="parent_id" ref="tax_report_title_exempt_sales"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_40" model="account.tax.report.line">
-            <field name="name">Fält 40 – Övrig försäljning av tjänster omsatta utanför Sverige</field>
-            <field name="code">se_40</field>
-            <field name="tag_name">se_40</field>
-            <field name="sequence">6</field>
-            <field name="parent_id" ref="tax_report_title_exempt_sales"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_41" model="account.tax.report.line">
-            <field name="name">Fält 41 – Försäljning när köparen är skattskyldig i Sverige</field>
-            <field name="code">se_41</field>
-            <field name="tag_name">se_41</field>
-            <field name="sequence">7</field>
-            <field name="parent_id" ref="tax_report_title_exempt_sales"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_42" model="account.tax.report.line">
-            <field name="name">Fält 42 – Övrig försäljning m.m.</field>
-            <field name="code">se_42</field>
-            <field name="tag_name">se_42</field>
-            <field name="sequence">8</field>
-            <field name="parent_id" ref="tax_report_title_exempt_sales"/>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <!-- -->
-        <!--F-->
-        <!-- -->
-        <record id="tax_report_title_input_vat" model="account.tax.report.line">
-            <field name="name">Block F – Ingående moms</field>
-            <field name="code">se_f</field>
-            <field name="sequence">8</field>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_48" model="account.tax.report.line">
-            <field name="name">Fält 48 – Ingående moms att dra av</field>
-            <field name="code">se_48</field>
-            <field name="tag_name">se_48</field>
+        <record id="tax_report_line_D30" model="account.tax.report.line">
+            <field name="name">D30. Utgående moms 25%</field>
+            <field name="code">se_vat_d30</field>
+            <field name="tag_name">D30</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">1</field>
-            <field name="parent_id" ref="tax_report_title_input_vat"/>
-            <field name="report_id" ref="tax_report"/>
+            <field name="parent_id" ref="tax_report_title_d"/>
         </record>
 
-        <!-- -->
-        <!--G-->
-        <!-- -->
-        <record id="tax_report_title_vat_debt_credit" model="account.tax.report.line">
-            <field name="name">Block G – Moms att betala eller få tillbaka</field>
-            <field name="code">se_g</field>
-            <field name="formula">se_b+se_i+se_d+se_f</field>
+        <record id="tax_report_line_D31" model="account.tax.report.line">
+            <field name="name">D31. Utgående moms 12%</field>
+            <field name="code">se_vat_d31</field>
+            <field name="tag_name">D31</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="tax_report_title_d"/>
+        </record>
+
+        <record id="tax_report_line_D32" model="account.tax.report.line">
+            <field name="name">D32. Utgående moms 6%</field>
+            <field name="code">se_vat_d32</field>
+            <field name="tag_name">D32</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="tax_report_title_d"/>
+        </record>
+
+         <record id="tax_report_title_h" model="account.tax.report.line">
+            <field name="name">H. Import</field>
+            <field name="code">se_vat_a</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">5</field>
+        </record>
+
+        <record id="tax_report_line_H50" model="account.tax.report.line">
+            <field name="name">H50. Beskattningsunderlag vid import</field>
+            <field name="code">se_vat_d50</field>
+            <field name="tag_name">H50</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="tax_report_title_h"/>
+        </record>
+
+        <record id="tax_report_title_i" model="account.tax.report.line">
+            <field name="name">I. Utgående moms på import i ruta 50</field>
+            <field name="code">se_vat_i</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">6</field>
+        </record>
+
+        <record id="tax_report_line_I60" model="account.tax.report.line">
+            <field name="name">I60. Utgående moms 25%</field>
+            <field name="code">se_vat_i60</field>
+            <field name="tag_name">I60</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="tax_report_title_i"/>
+        </record>
+
+        <record id="tax_report_line_I61" model="account.tax.report.line">
+            <field name="name">I61. Utgående moms 12%</field>
+            <field name="code">se_vat_i61</field>
+            <field name="tag_name">I61</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="tax_report_title_i"/>
+        </record>
+
+        <record id="tax_report_line_I62" model="account.tax.report.line">
+            <field name="name">I62. Utgående moms 6%</field>
+            <field name="code">se_vat_i62</field>
+            <field name="tag_name">I62</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="tax_report_title_i"/>
+        </record>
+
+        <record id="tax_report_title_e" model="account.tax.report.line">
+            <field name="name">E. Försäljning m.m. som är undantagen från moms</field>
+            <field name="code">se_vat_e</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">7</field>
+        </record>
+
+        <record id="tax_report_line_E35" model="account.tax.report.line">
+            <field name="name">E35. Försäljning av varor till ett annat EU-land</field>
+            <field name="code">se_vat_e35</field>
+            <field name="tag_name">E35</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="tax_report_title_e"/>
+        </record>
+
+        <record id="tax_report_line_E36" model="account.tax.report.line">
+            <field name="name">E36. Försäljning av varor utanför EU</field>
+            <field name="code">se_vat_e36</field>
+            <field name="tag_name">E36</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">2</field>
+            <field name="parent_id" ref="tax_report_title_e"/>
+        </record>
+
+        <record id="tax_report_line_e37" model="account.tax.report.line">
+            <field name="name">E37. Mellanmans inköp av varor vid trepartshandel</field>
+            <field name="code">se_vat_e37</field>
+            <field name="tag_name">E37</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">3</field>
+            <field name="parent_id" ref="tax_report_title_e"/>
+        </record>
+
+        <record id="tax_report_line_E38" model="account.tax.report.line">
+            <field name="name">E38. Mellanmans försäljning av varor vid trepartshandel</field>
+            <field name="code">se_vat_e38</field>
+            <field name="tag_name">E38</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">4</field>
+            <field name="parent_id" ref="tax_report_title_e"/>
+        </record>
+
+        <record id="tax_report_line_E39" model="account.tax.report.line">
+            <field name="name">E39. Försäljning av tjänster till en beskattningsbar person (näringsidkare) i ett annat EU-land, enligt huvudregeln</field>
+            <field name="code">se_vat_e39</field>
+            <field name="tag_name">E39</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">5</field>
+            <field name="parent_id" ref="tax_report_title_e"/>
+        </record>
+
+        <record id="tax_report_line_E40" model="account.tax.report.line">
+            <field name="name">E40. Övrig försäljning av tjänster omsatta utanför Sverige</field>
+            <field name="code">se_vat_e40</field>
+            <field name="tag_name">E40</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">6</field>
+            <field name="parent_id" ref="tax_report_title_e"/>
+        </record>
+
+        <record id="tax_report_line_E41" model="account.tax.report.line">
+            <field name="name">E41. Försäljning när köparen är skattskyldig i Sverige</field>
+            <field name="code">se_vat_e41</field>
+            <field name="tag_name">E41</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">7</field>
+            <field name="parent_id" ref="tax_report_title_e"/>
+        </record>
+
+        <record id="tax_report_line_E42" model="account.tax.report.line">
+            <field name="name">E42. Övrig försäljning m.m.</field>
+            <field name="code">se_vat_e42</field>
+            <field name="tag_name">E42</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">8</field>
+            <field name="parent_id" ref="tax_report_title_e"/>
+        </record>
+
+        <record id="tax_report_title_f" model="account.tax.report.line">
+            <field name="name">F. Ingående moms</field>
+            <field name="code">se_vat_f</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">8</field>
+        </record>
+
+        <record id="tax_report_line_F48" model="account.tax.report.line">
+            <field name="name">F48. Ingående moms att dra av</field>
+            <field name="code">se_vat_f48</field>
+            <field name="tag_name">F48</field>
+            <field name="report_id" ref="tax_report_vat"/>
+            <field name="sequence">1</field>
+            <field name="parent_id" ref="tax_report_title_f"/>
+        </record>       
+
+        <record id="tax_report_line_g" model="account.tax.report.line">
+            <field name="name">G. Moms att betala eller få tillbaka</field>
+            <field name="formula">se_vat_b+se_vat_d+se_vat_i+se_vat_f</field>
+            <field name="report_id" ref="tax_report_vat"/>
             <field name="sequence">9</field>
-            <field name="report_id" ref="tax_report"/>
-        </record>
-
-        <record id="tax_report_line_49" model="account.tax.report.line">
-            <field name="name">Fält 49 – Moms att betala eller få tillbaka</field>
-            <field name="code">se_49</field>
-            <field name="formula">se_b+se_i+se_d+se_f</field>
-            <field name="sequence">1</field>
-            <field name="parent_id" ref="tax_report_title_vat_debt_credit"/>
-            <field name="report_id" ref="tax_report"/>
         </record>
 
     </data>

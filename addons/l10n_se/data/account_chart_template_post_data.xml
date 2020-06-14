@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!-- chart template -->
+        <record id="l10nse_chart_template" model="account.chart.template">
+            <field name="property_account_receivable_id" ref="coa_1510"/>
+            <field name="property_account_payable_id" ref="coa_2440"/>
+            <field name="property_account_expense_categ_id" ref="coa_4"/>
+            <field name="property_account_income_categ_id" ref="coa_3"/>
+            <field name="complete_tax_set" eval="True"/>
+            <field name="use_anglo_saxon" eval="True"/>
+            <field name="property_stock_account_input_categ_id" ref="coa_1469"/>
+            <field name="property_stock_account_output_categ_id" ref="coa_1469"/>
+            <field name="property_stock_valuation_account_id" ref="coa_1460"/>
+            <field name="income_currency_exchange_account_id" ref="coa_3960"/>
+            <field name="expense_currency_exchange_account_id" ref="coa_3960"/>
+            <field name="default_cash_difference_income_account_id" ref="coa_3740"/>
+            <field name="default_cash_difference_expense_account_id" ref="coa_3740"/>
+            <field name="default_pos_receivable_account_id" ref="coa_1510"/>
+
+        </record>
+    </data>
+</odoo>

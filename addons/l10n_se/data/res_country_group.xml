@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="non_europe" model="res.country.group">
+            <field name="name">Outside EU</field>
+        </record>
+        <!-- Create a list of non_eu countries based on base.europe list during upgrade and install. -->
+        <function model="res.country.group" name="_load_non_europe"/>
+
+    </data>
+</odoo>
+
