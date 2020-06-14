@@ -7,6 +7,7 @@ from datetime import date, datetime
 from psycopg2 import sql
 
 from odoo import api, fields, models, tools, SUPERUSER_ID
+from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
 from odoo.exceptions import UserError, AccessError
@@ -67,7 +68,9 @@ class Lead(models.Model):
     _primary_email = 'email_from'
 
     # Description
-    name = fields.Char('Opportunity', index=True, required=True)
+    name = fields.Char(
+        'Opportunity', index=True, required=True,
+        compute='_compute_name', readonly=False, store=True)
     user_id = fields.Many2one('res.users', string='Salesperson', index=True, tracking=True, default=lambda self: self.env.user)
     user_email = fields.Char('User Email', related='user_id.email', readonly=True)
     user_login = fields.Char('User Login', related='user_id.login', readonly=True)
@@ -95,6 +98,10 @@ class Lead(models.Model):
         ('red', 'Next activity late'),
         ('green', 'Next activity is planned')], string='Kanban State',
         compute='_compute_kanban_state')
+    activity_date_deadline_my = fields.Date(
+        'My Activities Deadline', compute='_compute_activity_date_deadline_my',
+        search='_search_activity_date_deadline_my', compute_sudo=False,
+        readonly=True, store=False, groups="base.group_user")
     tag_ids = fields.Many2many(
         'crm.tag', 'crm_tag_rel', 'lead_id', 'tag_id', string='Tags',
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
@@ -174,6 +181,7 @@ class Lead(models.Model):
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
     ]
 
+    @api.depends('activity_date_deadline')
     def _compute_kanban_state(self):
         today = date.today()
         for lead in self:
@@ -185,6 +193,25 @@ class Lead(models.Model):
                 else:
                     kanban_state = 'red'
             lead.kanban_state = kanban_state
+
+    @api.depends('activity_ids.date_deadline')
+    @api.depends_context('uid')
+    def _compute_activity_date_deadline_my(self):
+        todo_activities = []
+        if self.ids:
+            todo_activities = self.env['mail.activity'].search([
+                ('user_id', '=', self._uid),
+                ('res_model', '=', self._name),
+                ('res_id', 'in', self.ids)
+            ], order='date_deadline ASC')
+        for record in self:
+            record.activity_date_deadline_my = next(
+                (activity.date_deadline for activity in todo_activities if activity.res_id == record.id),
+                False
+            )
+
+    def _search_activity_date_deadline_my(self, operator, operand):
+        return ['&', ('activity_ids.user_id', '=', self._uid), ('activity_ids.date_deadline', operator, operand)]
 
     @api.depends('user_id', 'type')
     def _compute_team_id(self):
@@ -238,6 +265,12 @@ class Lead(models.Model):
             date_create = fields.Datetime.from_string(lead.create_date)
             date_close = fields.Datetime.from_string(lead.date_closed)
             lead.day_close = abs((date_close - date_create).days)
+
+    @api.depends('partner_id')
+    def _compute_name(self):
+        for lead in self:
+            if not lead.name and lead.partner_id and lead.partner_id.name:
+                lead.name = _("%s's opportunity") % lead.partner_id.name
 
     @api.depends('partner_id')
     def _compute_partner_id_values(self):
@@ -387,6 +420,7 @@ class Lead(models.Model):
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
+
         return {
             'partner_name': partner_name,
             'contact_name': partner.name if not partner.is_company else False,
@@ -445,6 +479,86 @@ class Lead(models.Model):
             self._update_probability()
 
         return write_result
+
+    @api.model
+    def search(self, args, offset=0, limit=None, order=None, count=False):
+        """ Override to support ordering on activity_date_deadline_my.
+
+        Ordering through web client calls search_read with an order parameter set.
+        Search_read then calls search. In this override we therefore override search
+        to intercept a search without count with an order on activity_date_deadline_my.
+        In that case we do the search in two steps.
+
+        First step: fill with deadline-based results
+
+          * Perform a read_group on my activities to get a mapping lead_id / deadline
+            Remember date_deadline is required, we always have a value for it. Only
+            the earliest deadline per lead is kept.
+          * Search leads linked to those activities that also match the asked domain
+            and order from the original search request.
+          * Results of that search will be at the top of returned results. Use limit
+            None because we have to search all leads linked to activities as ordering
+            on deadline is done in post processing.
+          * Reorder them according to deadline asc or desc depending on original
+            search ordering. Finally take only a subset of those leads to fill with
+            results matching asked offset / limit.
+
+        Second step: fill with other results. If first step does not gives results
+        enough to match offset and limit parameters we fill with a search on other
+        leads. We keep the asked domain and ordering while filtering out already
+        scanned leads to keep a coherent results.
+
+        All other search and search_read are left untouched by this override to avoid
+        side effects. Search_count is not affected by this override.
+        """
+        if count or not order or 'activity_date_deadline_my' not in order:
+            return super(Lead, self).search(args, offset=offset, limit=limit, order=order, count=count)
+        order_items = [order_item.strip().lower() for order_item in (order or self._order).split(',')]
+
+        # Perform a read_group on my activities to get a mapping lead_id / deadline
+        # Remember date_deadline is required, we always have a value for it. Only
+        # the earliest deadline per lead is kept.
+        activity_asc = any('activity_date_deadline_my asc' in item for item in order_items)
+        my_lead_activities = self.env['mail.activity'].read_group(
+            [('res_model', '=', self._name), ('user_id', '=', self.env.uid)],
+            ['res_id', 'date_deadline:min'],
+            ['res_id'],
+            orderby='date_deadline ASC'
+        )
+        my_lead_mapping = dict((item['res_id'], item['date_deadline']) for item in my_lead_activities)
+        my_lead_ids = list(my_lead_mapping.keys())
+        my_lead_domain = expression.AND([[('id', 'in', my_lead_ids)], args])
+        my_lead_order = ', '.join(item for item in order_items if 'activity_date_deadline_my' not in item)
+
+        # Search leads linked to those activities and order them. See docstring
+        # of this method for more details.
+        search_res = super(Lead, self).search(my_lead_domain, offset=0, limit=None, order=my_lead_order, count=count)
+        my_lead_ids_ordered = sorted(search_res.ids, key=lambda lead_id: my_lead_mapping[lead_id], reverse=not activity_asc)
+        # keep only requested window (offset + limit, or offset+)
+        my_lead_ids_keep = my_lead_ids_ordered[offset:(offset + limit)] if limit else my_lead_ids_ordered[offset:]
+        # keep list of already skipped lead ids to exclude them from future search
+        my_lead_ids_skip = my_lead_ids_ordered[:(offset + limit)] if limit else my_lead_ids_ordered
+
+        # do not go further if limit is achieved
+        if limit and len(my_lead_ids_keep) >= limit:
+            return self.browse(my_lead_ids_keep)
+
+        # Fill with remaining leads. If a limit is given, simply remove count of
+        # already fetched. Otherwise keep none. If an offset is set we have to
+        # reduce it by already fetch results hereabove. Order is updated to exclude
+        # activity_date_deadline_my when calling super() .
+        lead_limit = (limit - len(my_lead_ids_keep)) if limit else None
+        if offset:
+            lead_offset = max((offset - len(search_res), 0))
+        else:
+            lead_offset = 0
+        lead_order = ', '.join(item for item in order_items if 'activity_date_deadline_my' not in item)
+
+        other_lead_res = super(Lead, self).search(
+            expression.AND([[('id', 'not in', my_lead_ids_skip)], args]),
+            offset=lead_offset, limit=lead_limit, order=lead_order, count=count
+        )
+        return self.browse(my_lead_ids_keep) + other_lead_res
 
     def _update_probability(self):
         lead_probabilities = self.sudo()._pls_get_naive_bayes_probabilities()
@@ -1077,7 +1191,7 @@ class Lead(models.Model):
         if self._context.get('default_type') == 'lead':
             help_title = _('Create a new lead')
         else:
-            help_title = _('Create an opportunity in your pipeline')
+            help_title = _('Create opportunities to keep an eye on all your ongoing sales talks.')
         alias_record = self.env['mail.alias'].search([
             ('alias_name', '!=', False),
             ('alias_name', '!=', ''),
@@ -1088,7 +1202,7 @@ class Lead(models.Model):
         if alias_record and alias_record.alias_domain and alias_record.alias_name:
             email = '%s@%s' % (alias_record.alias_name, alias_record.alias_domain)
             email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
-            sub_title = _('or send an email to %s') % (email_link)
+            sub_title = _('Emails sent to %s automatically create opportunities.') % (email_link)
         return '<p class="o_view_nocontent_smiling_face">%s</p><p class="oe_view_nocontent_alias">%s</p>' % (help_title, sub_title)
 
     # ------------------------------------------------------------

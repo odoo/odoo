@@ -121,7 +121,7 @@ odoo.define('web.test_utils', async function (require) {
     return {
         mock: {
             addMockEnvironment: testUtilsMock.addMockEnvironment,
-            getMockedOwlEnv: testUtilsMock.getMockedOwlEnv,
+            addMockEnvironmentOwl: testUtilsMock.addMockEnvironmentOwl,
             intercept: testUtilsMock.intercept,
             patch: testUtilsMock.patch,
             patchDate: testUtilsMock.patchDate,
@@ -212,6 +212,7 @@ odoo.define('web.test_utils', async function (require) {
         },
         fields: {
             many2one: {
+                createAndEdit: testUtilsFields.clickM2OCreateAndEdit,
                 clickOpenDropdown: testUtilsFields.clickOpenM2ODropdown,
                 clickHighlightedItem: testUtilsFields.clickM2OHighlightedItem,
                 clickItem: testUtilsFields.clickM2OItem,

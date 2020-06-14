@@ -12,6 +12,7 @@ _logger = logging.getLogger(__name__)
 DEFAULT_ENDPOINT = 'https://iap-services.odoo.com'
 
 MAX_LEAD = 200
+
 MAX_CONTACT = 5
 
 CREDIT_PER_COMPANY = 1
@@ -28,19 +29,25 @@ class CRMLeadMiningRequest(models.Model):
         else:
             return 'opportunity'
 
+    def _default_country_ids(self):
+        return self.env.user.company_id.country_id
+
     name = fields.Char(string='Request Number', required=True, readonly=True, default=lambda self: _('New'), copy=False)
     state = fields.Selection([('draft', 'Draft'), ('done', 'Done'), ('error', 'Error')], string='Status', required=True, default='draft')
 
     # Request Data
-    lead_number = fields.Integer(string='Number of Leads', required=True, default=10)
+    lead_number = fields.Integer(string='Number of Leads', required=True, default=3)
     search_type = fields.Selection([('companies', 'Companies'), ('people', 'Companies and their Contacts')], string='Target', required=True, default='companies')
     error = fields.Text(string='Error', readonly=True)
 
     # Lead / Opportunity Data
+
     lead_type = fields.Selection([('lead', 'Leads'), ('opportunity', 'Opportunities')], string='Type', required=True, default=_default_lead_type)
     display_lead_label = fields.Char(compute='_compute_display_lead_label')
-    team_id = fields.Many2one('crm.team', string='Sales Team', domain="[('use_opportunities', '=', True)]")
-    user_id = fields.Many2one('res.users', string='Salesperson')
+    team_id = fields.Many2one(
+        'crm.team', string='Sales Team',
+        domain="[('use_opportunities', '=', True)]", readonly=False, compute='_compute_team_id', store=True)
+    user_id = fields.Many2one('res.users', string='Salesperson', default=lambda self: self.env.user)
     tag_ids = fields.Many2many('crm.tag', string='Tags')
     lead_ids = fields.One2many('crm.lead', 'lead_mining_request_id', string='Generated Lead / Opportunity')
     lead_count = fields.Integer(compute='_compute_lead_count', string='Number of Generated Leads')
@@ -49,12 +56,12 @@ class CRMLeadMiningRequest(models.Model):
     filter_on_size = fields.Boolean(string='Filter on Size', default=False)
     company_size_min = fields.Integer(string='Size', default=1)
     company_size_max = fields.Integer(default=1000)
-    country_ids = fields.Many2many('res.country', string='Countries')
+    country_ids = fields.Many2many('res.country', string='Countries', default=_default_country_ids)
     state_ids = fields.Many2many('res.country.state', string='States')
     industry_ids = fields.Many2many('crm.iap.lead.industry', string='Industries')
 
     # Contact Generation Filter
-    contact_number = fields.Integer(string='Number of Contacts', default=1)
+    contact_number = fields.Integer(string='Number of Contacts', default=10)
     contact_filter_type = fields.Selection([('role', 'Role'), ('seniority', 'Seniority')], string='Filter on', default='role')
     preferred_role_id = fields.Many2one('crm.iap.lead.role', string='Preferred Role')
     role_ids = fields.Many2many('crm.iap.lead.role', string='Other Roles')
@@ -97,6 +104,11 @@ class CRMLeadMiningRequest(models.Model):
             for m in leads_data)
         for request in self:
             request.lead_count = mapped_data.get(request.id, 0)
+
+    @api.depends('user_id')
+    def _compute_team_id(self):
+        for record in self:
+            record.team_id = record.user_id.sale_team_id
 
     @api.onchange('lead_number')
     def _onchange_lead_number(self):

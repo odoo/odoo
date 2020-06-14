@@ -1995,14 +1995,31 @@ Possible children elements of the search view are:
 
   * ``color``: determines the icon color
 
-  * ``disable_counters``: default is false. If set to true the counters won't be computed.
+  * ``enable_counters``: default is false. If set to true the record counters will be computed and
+    displayed if non-zero.
 
     This feature has been implemented in case performances would be too bad.
 
     Another way to solve performance issues is to properly override the
     ``search_panel_select_range`` and ``search_panel_select_multi_range`` methods.
 
-  Additional optional attributes are available in the ``multi`` case:
+  * ``expand``: default is false. If set to false categories or filters with 0 records will be hidden.
+
+  * ``limit``: default is 200. Integer determining the maximal number of values to fetch for the field.
+    If the limit is reached, no values will be displayed in the search panel and an error message will
+    appear instead because we consider that is useless / bad performance-wise. All values will be
+    fetched if set to 0.
+
+  Additional optional attributes are available according to the chosen case:
+
+  For the ``one`` case:
+
+  * ``hierarchize``: (only available for many2one fields) default is true. Handles the display style of categories :
+
+    If set to true child categories will appear under their related parent.
+    If not, all categories will be displayed on the same level.
+
+  For the ``multi`` case:
 
   * ``domain``: determines conditions that the comodel records have to satisfy.
 

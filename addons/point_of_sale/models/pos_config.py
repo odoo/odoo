@@ -133,8 +133,6 @@ class PosConfig(models.Model):
         help='The receipt will automatically be printed at the end of each order.')
     iface_print_skip_screen = fields.Boolean(string='Skip Preview Screen', default=True,
         help='The receipt screen will be skipped if the receipt can be printed automatically.')
-    iface_precompute_cash = fields.Boolean(string='Prefill Cash Payment',
-        help='The payment input will behave similarily to bank payment input, and will be prefilled with the exact due amount.')
     iface_tax_included = fields.Selection([('subtotal', 'Tax-Excluded Price'), ('total', 'Tax-Included Price')], string="Tax Display", default='subtotal', required=True)
     iface_start_categ_id = fields.Many2one('pos.category', string='Initial Category',
         help='The point of sale will display this product category by default. If no category is specified, all available products will be shown.')
@@ -358,6 +356,20 @@ class PosConfig(models.Model):
         ):
             raise ValidationError(_("All payment methods must be in the same currency as the Sales Journal or the company currency if that is not set."))
 
+    @api.constrains('payment_method_ids')
+    def _check_payment_method_receivable_accounts(self):
+        # This is normally not supposed to happen to have a payment method without a receivable account set,
+        # as this is a required field. However, it happens the receivable account cannot be found during upgrades
+        # and this is a bommer to block the upgrade for that point, given the user can correct this by himself,
+        # without requiring a manual intervention from our upgrade support.
+        # However, this must be ensured this receivable is well set before opening a POS session.
+        invalid_payment_methods = self.payment_method_ids.filtered(lambda method: not method.receivable_account_id)
+        if invalid_payment_methods:
+            method_names = ", ".join(method.name for method in invalid_payment_methods)
+            raise ValidationError(
+                _("You must configure an intermediary account for the payment methods: %s.") % method_names
+            )
+
     @api.constrains('company_id', 'available_pricelist_ids')
     def _check_companies(self):
         if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
@@ -570,6 +582,7 @@ class PosConfig(models.Model):
             self._check_company_payment()
             self._check_currencies()
             self._check_profit_loss_cash_journal()
+            self._check_payment_method_receivable_accounts()
             self.env['pos.session'].create({
                 'user_id': self.env.uid,
                 'config_id': self.id

@@ -136,7 +136,7 @@ QUnit.module('mail', {}, function () {
                 throw new Error('should not call mail_service');
             }
             if (ev.data.service === 'notification') {
-                assert.step(`display notification "${ev.data.args[0].title}"`);
+                assert.step(`display notification "${ev.data.args[0].message}"`);
             }
         }, true);
 
@@ -146,7 +146,7 @@ QUnit.module('mail', {}, function () {
 
         assert.verifySteps([
             'read foo 4',
-            'display notification "Cannot chat with yourself"',
+            'display notification "You cannot chat with yourself"',
         ]);
 
         form.destroy();

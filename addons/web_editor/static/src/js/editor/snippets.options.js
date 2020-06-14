@@ -850,7 +850,7 @@ const InputUserValueWidget = UserValueWidget.extend({
         if (!params.unit) {
             return isSuperActive;
         }
-        return isSuperActive && parseInt(this._value) !== 0;
+        return isSuperActive && this._floatToStr(parseFloat(this._value)) !== '0';
     },
     /**
      * @override
@@ -2063,6 +2063,12 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise<boolean>|boolean}
      */
     _computeWidgetVisibility: async function (widgetName, params) {
+        if (widgetName === 'move_up_opt' || widgetName === 'move_left_opt') {
+            return !this.$target.is(':first-child');
+        }
+        if (widgetName === 'move_down_opt' || widgetName === 'move_right_opt') {
+            return !this.$target.is(':last-child');
+        }
         return true;
     },
     /**
@@ -2237,14 +2243,18 @@ const SnippetOptionWidget = Widget.extend({
      * @returns {Promise}
      */
     _select: async function (previewMode, widget) {
+        let $applyTo = null;
+
         // Call each option method sequentially
         for (const methodName of widget.getMethodsNames()) {
             const widgetValue = widget.getValue(methodName);
             const params = widget.getMethodsParams(methodName);
 
             if (params.applyTo) {
-                const $subTargets = this.$(params.applyTo);
-                const proms = _.map($subTargets, subTargetEl => {
+                if (!$applyTo) {
+                    $applyTo = this.$(params.applyTo);
+                }
+                const proms = _.map($applyTo, subTargetEl => {
                     const proxy = createPropertyProxy(this, '$target', $(subTargetEl));
                     return this[methodName].call(proxy, previewMode, widgetValue, params);
                 });
@@ -2253,6 +2263,11 @@ const SnippetOptionWidget = Widget.extend({
                 await this[methodName](previewMode, widgetValue, params);
             }
         }
+
+        // We trigger the event on elements targeted by apply-to if any as
+        // this.$target could not be in an editable element while the elements
+        // targeted by apply-to are.
+        ($applyTo || this.$target).trigger('content_changed');
     },
     /**
      * Used to handle attribute or data attribute value change
@@ -2349,7 +2364,6 @@ const SnippetOptionWidget = Widget.extend({
 
             // Call widget option methods and update $target
             await this._select(previewMode, widget);
-            this.$target.trigger('content_changed');
 
             // Enabling an option and notifying that the $target has changed
             // may destroy the option (if the DOM is altered in such a way the

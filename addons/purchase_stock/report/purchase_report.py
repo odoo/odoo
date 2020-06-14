@@ -51,7 +51,7 @@ class PurchaseReport(models.Model):
         if avg_receipt_delay:
             query = """ SELECT AVG(receipt_delay.po_receipt_delay)::decimal(16,2) AS avg_receipt_delay
                           FROM (
-                              SELECT extract(epoch from age(po.effective_date,COALESCE(po.date_planned, po.expected_date)))/(24*60*60) AS po_receipt_delay
+                              SELECT extract(epoch from age(po.effective_date, po.date_planned))/(24*60*60) AS po_receipt_delay
                               FROM purchase_order po
                               WHERE po.id IN (
                                   SELECT "purchase_report"."order_id" FROM %s WHERE %s)

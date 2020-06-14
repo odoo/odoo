@@ -10,11 +10,28 @@ class EventRegistration(models.Model):
 
     is_paid = fields.Boolean('Is Paid')
     # TDE FIXME: maybe add an onchange on sale_order_id
-    sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade')
-    sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade')
+    sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade', copy=False)
+    sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade', copy=False)
+    payment_status = fields.Selection(string="Payment Status", selection=[
+            ('to_pay', 'Not Paid'),
+            ('paid', 'Paid'),
+            ('free', 'Free'),
+        ], compute="_compute_payment_status", compute_sudo=True)
     utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False, store=True)
     utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False, store=True)
     utm_medium_id = fields.Many2one(compute='_compute_utm_medium_id', readonly=False, store=True)
+
+    @api.depends('is_paid', 'sale_order_id.currency_id', 'sale_order_line_id.price_total')
+    def _compute_payment_status(self):
+        for record in self:
+            so = record.sale_order_id
+            so_line = record.sale_order_line_id
+            if not so or float_is_zero(so_line.price_total, precision_digits=so.currency_id.rounding):
+                record.payment_status = 'free'
+            elif record.is_paid:
+                record.payment_status = 'paid'
+            else:
+                record.payment_status = 'to_pay'
 
     @api.depends('sale_order_id')
     def _compute_utm_campaign_id(self):
@@ -102,18 +119,9 @@ class EventRegistration(models.Model):
 
     def _get_registration_summary(self):
         res = super(EventRegistration, self)._get_registration_summary()
-        order = self.sale_order_id.sudo()
-        order_line = self.sale_order_line_id.sudo()
-        has_to_pay = False
-        if not order or float_is_zero(order_line.price_total, precision_digits=order.currency_id.rounding):
-            payment_status = _('Free')
-        elif not order.invoice_ids or any(invoice.payment_state != 'paid' for invoice in order.invoice_ids):
-            payment_status = _('To pay')
-            has_to_pay = True
-        else:
-            payment_status = _('Paid')
         res.update({
-            'payment_status': payment_status,
-            'has_to_pay': has_to_pay
+            'payment_status': self.payment_status,
+            'payment_status_value': dict(self._fields['payment_status']._description_selection(self.env))[self.payment_status],
+            'has_to_pay': not self.is_paid,
         })
         return res

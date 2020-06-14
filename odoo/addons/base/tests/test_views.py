@@ -1853,7 +1853,7 @@ class TestViews(ViewCase):
                 %s
                 <searchpanel>
                     %s
-                    <field select="multi" name="groups_id" domain="[['%s', '=', %s]]"/>
+                    <field name="groups_id" select="multi" domain="[['%s', '=', %s]]" enable_counters="1"/>
                 </searchpanel>
             </search>
         """
@@ -1878,10 +1878,10 @@ class TestViews(ViewCase):
         arch = """
             <search>
                 <searchpanel>
-                    <field name="inherit_id"/>
+                    <field name="inherit_id" enable_counters="1"/>
                 </searchpanel>
                 <searchpanel>
-                    <field name="inherit_id"/>
+                    <field name="inherit_id" enable_counters="1"/>
                 </searchpanel>
             </search>
         """

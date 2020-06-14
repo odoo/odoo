@@ -5,14 +5,16 @@
         <div class="receipt-screen screen">
             <div class="screen-content">
                 <div class="top-content">
-                    <h1>
-                        Change: <span class="change-value">
-                            <t t-esc="change" /></span>
-                    </h1>
-                    <span class="button next" t-att-class="{ highlight: !locked }"
+                    <div class="top-content-center">
+                        <h1 t-if="!env.isMobile">
+                            Change: <span class="change-value">
+                                <t t-esc="change" /></span>
+                        </h1>
+                    </div>
+                    <div class="button next" t-att-class="{ highlight: !locked }"
                           t-on-click="orderDone">
                         Next Order <i class="fa fa-angle-double-right"></i>
-                    </span>
+                    </div>
                 </div>
                 <div class="centered-content touch-scrollable">
                     <div t-if="state.printInvoiceIsShown" class="button print_invoice"

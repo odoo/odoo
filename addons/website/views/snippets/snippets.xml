@@ -203,12 +203,20 @@
         </we-select>
     </div>
 
-    <div id="so_width" data-selector=".s_alert, .s_card">
+    <div id="so_width" data-selector=".s_alert, .s_card, .s_blockquote">
         <we-select string="Width">
             <we-button data-select-class="w-25">25%</we-button>
             <we-button data-select-class="w-50">50%</we-button>
             <we-button data-select-class="w-75">75%</we-button>
-            <we-button data-select-class="w-100">100%</we-button>
+            <we-button data-select-class="w-100" data-name="so_width_100">100%</we-button>
+        </we-select>
+    </div>
+
+    <div id="so_block_align" data-selector=".s_alert, .s_card, .s_blockquote">
+        <we-select string="Alignment" data-dependencies="!so_width_100">
+            <we-button data-select-class="mr-auto">Left</we-button>
+            <we-button data-select-class="mx-auto">Center</we-button>
+            <we-button data-select-class="ml-auto">Right</we-button>
         </we-select>
     </div>
 
@@ -271,14 +279,15 @@
     <!-- Move snippets around -->
     <div data-js="SnippetMove"
          data-selector="section, .accordion > .card, .s_showcase .row:not(.s_col_no_resize) > div">
-        <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true"/>
-        <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true"/>
+        <we-button class="fa fa-fw fa-angle-up" data-move-snippet="prev" data-no-preview="true" data-name="move_up_opt"/>
+        <we-button class="fa fa-fw fa-angle-down" data-move-snippet="next" data-no-preview="true" data-name="move_down_opt"/>
     </div>
     <div data-js="SnippetMove"
          data-selector=".row:not(.s_col_no_resize) > div, .nav-item"
-         data-exclude=".s_showcase .row > div">
-        <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true"/>
-        <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true"/>
+         data-exclude=".s_showcase .row > div"
+         data-name="move_horizontally_opt">
+        <we-button class="fa fa-fw fa-angle-left" data-move-snippet="prev" data-no-preview="true" data-name="move_left_opt"/>
+        <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true" data-name="move_right_opt"/>
     </div>
 
     <!-- Background Image -->
@@ -647,11 +656,11 @@
     </div>
 
     <!-- Cookies Bar -->
-    <div data-selector="#website_cookies_bar" data-js="CookiesBar" data-target=".s_popup_main">
+    <div data-selector="#website_cookies_bar" data-js="CookiesBar" data-target=".modal">
         <we-select string="Layout" class="o_we_inline">
             <we-button data-select-class="o_cookies_discrete" data-select-layout="discrete" data-trigger="position_bottom,s_popup_size_full">Discrete</we-button>
             <we-button data-select-class="o_cookies_classic" data-select-layout="classic" data-trigger="position_bottom,s_popup_size_full">Classic</we-button>
-            <we-button data-select-class="o_cookies_popup" data-select-layout="popup" data-trigger="position_centered,s_popup_size_md">Popup</we-button>
+            <we-button data-name="layout_popup_opt" data-select-class="o_cookies_popup" data-select-layout="popup" data-trigger="position_middle,s_popup_size_md">Popup</we-button>
         </we-select>
     </div>
 

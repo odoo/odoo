@@ -14,12 +14,12 @@ var Widget = require('web.Widget');
  * @param {boolean} [params.debug]
  * @returns {DocumentViewer}
  */
-var createViewer = function (params) {
+var createViewer = async function (params) {
     var parent = new Widget();
     var viewer = new DocumentViewer(parent, params.attachments, params.attachmentID);
 
     var mockRPC = function (route) {
-        if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1?model%3Dir.attachment') {
+        if (route === '/web/static/lib/pdfjs/web/viewer.html?file=/web/content/1?model%3Dir.attachment%26filename%3DfilePdf.pdf') {
             return Promise.resolve();
         }
         if (route === 'https://www.youtube.com/embed/FYqW0Gdwbzk') {
@@ -32,7 +32,7 @@ var createViewer = function (params) {
             return Promise.resolve();
         }
     };
-    testUtils.mock.addMockEnvironment(parent, {
+    await testUtils.mock.addMockEnvironment(parent, {
         mockRPC: function () {
             if (params.mockRPC) {
                 var _super = this._super;

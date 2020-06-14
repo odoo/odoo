@@ -2,6 +2,7 @@ odoo.define('web_editor.snippet.editor', function (require) {
 'use strict';
 
 var concurrency = require('web.concurrency');
+var Class = require('web.Class');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
@@ -17,6 +18,169 @@ var globalSelector = {
     all: () => $(),
     is: () => false,
 };
+
+/**
+ * Component that provides smooth scroll behaviour on drag.
+ *
+ * Do not forget to call unsetDraggable to ensure proper resource clearing.
+ * @see {@link unsetDraggable}.
+ */
+const SmoothOnDragComponent = Class.extend({
+    /**
+     * @constructor
+     * @param {jQuery} $element The element the smooth drag has to be set on
+     * @param {Object} jQueryDraggableOptions The configuration to be passed to
+     *        the jQuery draggable function
+     */
+    init($element, jQueryDraggableOptions) {
+        this.$element = $element;
+        this.$scrollTarget = $('html');
+        this.autoScrollHandler = null;
+        this.cursorAt = jQueryDraggableOptions.cursorAt || {left: 0, top: 0};
+        this.draggableOffset = 0;
+        this.mainNavBarHeight = $('.o_main_navbar').innerHeight();
+        this.scrollOffsetThreshold = 150;
+        this.scrollStep = 20;
+        this.scrollStepDirection = 1;
+        this.scrollStepDirectionEnum = {up: -1, down: 1};
+        this.scrollDecelerator = 0;
+        this.scrollTimer = 5;
+        this.visibleBottomOffset = 0;
+        this.visibleTopOffset = 0;
+
+        jQueryDraggableOptions.scroll = false;
+        const draggableOptions = Object.assign({}, jQueryDraggableOptions, {
+            start: (ev, ui) => this._onSmoothDragStart(ev, ui, jQueryDraggableOptions.start),
+            drag: (ev, ui) => this._onSmoothDrag(ev, ui, jQueryDraggableOptions.drag),
+            stop: (ev, ui) => this._onSmoothDragStop(ev, ui, jQueryDraggableOptions.stop),
+        });
+        this.$element.draggable(draggableOptions);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * Ensures correct clearing of resources.
+     */
+    unsetDraggable() {
+        this._stopSmoothScroll();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Starts the scroll process using the options.
+     * The options will be updated dynamically when the handler _onSmoothDrag
+     * will be called. The interval will be cleared when the handler
+     * _onSmoothDragStop will be called.
+     *
+     * @private
+     */
+    _startSmoothScroll() {
+        this._stopSmoothScroll();
+        this.autoScrollHandler = setInterval(
+            () => {
+                this.$scrollTarget.scrollTop(
+                    this.$scrollTarget.scrollTop() +
+                    this.scrollStepDirection *
+                    this.scrollStep *
+                    (1 - this.scrollDecelerator)
+                );
+            },
+            this.scrollTimer
+        );
+    },
+    /**
+     * Stops the scroll process if any is running.
+     *
+     * @private
+     */
+    _stopSmoothScroll() {
+        clearInterval(this.autoScrollHandler);
+    },
+    /**
+     * Updates the options depending on the offset position of the draggable
+     * helper. In the same time options are used by an interval to trigger
+     * scroll behaviour.
+     * @see {@link _startSmoothScroll} for interval implementation details.
+     *
+     * @private
+     * @param {number} dragTopOffset The offset position of the draggable helper
+     */
+    _updatePositionOptions(dragTopOffset) {
+        this.draggableOffset = this.cursorAt.top + dragTopOffset;
+        this.visibleBottomOffset = this.$scrollTarget.scrollTop() +
+            this.$scrollTarget.get(0).clientHeight - this.draggableOffset;
+        this.visibleTopOffset = this.draggableOffset - this.$scrollTarget.scrollTop();
+        if (this.visibleTopOffset <= this.scrollOffsetThreshold + this.mainNavBarHeight) {
+            this.scrollDecelerator = this.visibleTopOffset /
+                (this.scrollOffsetThreshold + this.mainNavBarHeight);
+            this.scrollStepDirection = this.scrollStepDirectionEnum.up;
+        } else if (this.visibleBottomOffset <= this.scrollOffsetThreshold) {
+            this.scrollDecelerator = this.visibleBottomOffset /
+                this.scrollOffsetThreshold;
+            this.scrollStepDirection = this.scrollStepDirectionEnum.down;
+        } else {
+            this.scrollDecelerator = 1;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Called when dragging the element.
+     * Updates the position options and call the provided callback if any.
+     *
+     * @private
+     * @param {Object} ev The jQuery drag handler event parameter.
+     * @param {Object} ui The jQuery drag handler ui parameter.
+     * @param {Function} onDragCallback The jQuery drag callback.
+     */
+    _onSmoothDrag(ev, ui, onDragCallback) {
+        this._updatePositionOptions(ui.offset.top);
+        if (typeof onDragCallback === 'function') {
+            onDragCallback.call(ui.helper, ev, ui);
+        }
+    },
+    /**
+     * Called when starting to drag the element.
+     * Updates the position params, starts smooth scrolling process and call the
+     * provided callback if any.
+     *
+     * @private
+     * @param {Object} ev The jQuery drag handler event parameter.
+     * @param {Object} ui The jQuery drag handler ui parameter.
+     * @param {Function} onDragStartCallBack The jQuery drag callback.
+     */
+    _onSmoothDragStart(ev, ui, onDragStartCallBack) {
+        this._updatePositionOptions(ui.offset.top);
+        this._startSmoothScroll();
+        if (typeof onDragStartCallBack === 'function') {
+            onDragStartCallBack.call(ui.helper, ev, ui);
+        }
+    },
+    /**
+     * Called when stopping to drag the element.
+     * Stops the smooth scrolling process and call the provided callback if any.
+     *
+     * @private
+     * @param {Object} ev The jQuery drag handler event parameter.
+     * @param {Object} ui The jQuery drag handler ui parameter.
+     * @param {Function} onDragEndCallBack The jQuery drag callback.
+     */
+    _onSmoothDragStop(ev, ui, onDragEndCallBack) {
+        this._stopSmoothScroll();
+        if (typeof onDragEndCallBack === 'function') {
+            onDragEndCallBack.call(ui.helper, ev, ui);
+        }
+    },
+});
 
 /**
  * Management of the overlay and option list for a snippet.
@@ -71,20 +235,21 @@ var SnippetEditor = Widget.extend({
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
             this.dropped = false;
-            this.$el.draggable({
-                greedy: true,
+            this.draggableComponent = new SmoothOnDragComponent(this.$el, {
                 appendTo: this.$body,
                 cursor: 'move',
-                handle: '.o_move_handle',
                 cursorAt: {
-                    left: 18,
-                    top: 14
+                    left: 10,
+                    top: 10
                 },
+                greedy: true,
+                handle: '.o_move_handle',
                 helper: () => {
                     var $clone = this.$el.clone().css({width: '24px', height: '24px', border: 0});
                     $clone.appendTo(this.$body).removeClass('d-none');
                     return $clone;
                 },
+                scroll: false,
                 start: this._onDragAndDropStart.bind(this),
                 stop: (...args) => {
                     // Delay our stop handler so that some summernote handlers
@@ -139,6 +304,9 @@ var SnippetEditor = Widget.extend({
      */
     destroy: function () {
         this._super(...arguments);
+        if (this.draggableComponent) {
+            this.draggableComponent.unsetDraggable();
+        }
         this.$target.removeData('snippet-editor');
         this.$target.off('.snippet_editor');
     },
@@ -238,6 +406,12 @@ var SnippetEditor = Widget.extend({
     /**
      * @returns {boolean}
      */
+    isSticky: function () {
+        return this.$el && this.$el.hasClass('o_we_overlay_sticky');
+    },
+    /**
+     * @returns {boolean}
+     */
     isTargetVisible: function () {
         return (this.$target[0].dataset.invisible !== '1');
     },
@@ -328,8 +502,6 @@ var SnippetEditor = Widget.extend({
             this.$el.removeClass('o_we_overlay_preview');
             this.$el.toggleClass('o_we_overlay_sticky', show);
         }
-
-        show = this.$el.hasClass('o_we_overlay_sticky') ? true : show;
 
         // Show/hide overlay in preview mode or not
         this.$el.toggleClass('oe_active', show);
@@ -1014,6 +1186,9 @@ var SnippetsMenu = Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
+        if (this.draggableComponent) {
+            this.draggableComponent.unsetDraggable();
+        }
         if (this.$window) {
             this.$snippetEditorArea.remove();
             this.$window.off('.snippets_menu');
@@ -1340,6 +1515,12 @@ var SnippetsMenu = Widget.extend({
                     if (!previewMode && !editorToEnableHierarchy.includes(editor)) {
                         editor.toggleOptions(false);
                     }
+                }
+                // ... if no editors are to be enabled, look if any have been
+                // enabled previously by a click
+                if (!editorToEnable) {
+                     editorToEnable = this.snippetEditors.find(editor => editor.isSticky());
+                     previewMode = false;
                 }
                 // ... then enable the right editor
                 if (editorToEnable) {
@@ -1748,17 +1929,20 @@ var SnippetsMenu = Widget.extend({
         var $tumb = $snippets.find('.oe_snippet_thumbnail_img:first');
         var $toInsert, dropped, $snippet;
 
-        $snippets.draggable({
-            greedy: true,
-            helper: function () {
-                const dragSnip = this.cloneNode(true);
-                dragSnip.querySelectorAll('.o_delete_btn, .o_image_ribbon').forEach(el => el.remove());
-                return dragSnip;
-            },
+        this.draggableComponent = new SmoothOnDragComponent($snippets, {
             appendTo: this.$body,
             cursor: 'move',
             distance: 0,
+            greedy: true,
             handle: '.oe_snippet_thumbnail',
+            helper: function () {
+                const dragSnip = this.cloneNode(true);
+                dragSnip.querySelectorAll('.o_delete_btn, .o_image_ribbon').forEach(
+                    el => el.remove()
+                );
+                return dragSnip;
+            },
+            scroll: false,
             start: function () {
                 dropped = false;
                 $snippet = $(this);
@@ -2037,8 +2221,7 @@ var SnippetsMenu = Widget.extend({
                         reason.event.preventDefault();
                         this.close();
                         self.displayNotification({
-                            title: _t("Something went wrong."),
-                            message: _.str.sprintf(_t("The module <strong>%s</strong> could not be installed."), name),
+                            message: _.str.sprintf(_t("Could not install module <strong>%s</strong>"), name),
                             type: 'danger',
                             sticky: true,
                         });
@@ -2256,6 +2439,7 @@ var SnippetsMenu = Widget.extend({
 return {
     Class: SnippetsMenu,
     Editor: SnippetEditor,
+    SmoothOnDragComponent: SmoothOnDragComponent,
     globalSelector: globalSelector,
 };
 });

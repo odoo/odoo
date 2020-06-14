@@ -439,7 +439,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
     content: _t("Click here to <b>create your first opportunity</b> and add it to your pipeline."),
     position: "bottom"
 }, {
-    trigger: ".o_kanban_quick_create input:first",
+    trigger: ".o_kanban_quick_create input[name='name']",
     content: _t("<b>Choose a name</b> for your opportunity."),
     position: "right",
     run: "text the_flow.opportunity",
@@ -463,7 +463,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     mobile: true,
     trigger: '.o_field_widget[name=name] input',
-    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Customer')",
+    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Organization / Contact')",
     content: _t('Let\'s enter the name.'),
     position: 'left',
     run: 'text the_flow.customer',
@@ -474,7 +474,7 @@ tour.stepUtils.autoExpandMoreButtons('.o_form_readonly'),
 }, {
     mobile: true,
     trigger: ".modal-footer .btn-primary:contains('Save')",
-    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Customer')",
+    extra_trigger: ".modal:not(.o_inactive_modal) .modal-title:contains('Organization / Contact')",
     content: _t('Save'),
     position: 'right',
 }, {
@@ -775,7 +775,7 @@ tour.stepUtils.openBuggerMenu("li.breadcrumb-item.active:contains('OP/')"),
     position: 'bottom',
 },
 ...tour.stepUtils.statusbarButtonsSteps('Create Bill', _t('go to Vendor Bills'), ".o_statusbar_status .btn.dropdown-toggle:contains('Purchase Order')"),
-...tour.stepUtils.statusbarButtonsSteps('Post', _t("Try to send it to email"), ".o_statusbar_status .btn.dropdown-toggle:contains('Draft')"),
+...tour.stepUtils.statusbarButtonsSteps('Validate', _t("Try to send it to email"), ".o_statusbar_status .btn.dropdown-toggle:contains('Draft')"),
 ...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".o_statusbar_status .btn.dropdown-toggle:contains('Posted')"),
 {
     trigger: ".modal-footer .btn-primary",
@@ -942,7 +942,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     content: _t("Create and View Invoices"),
     position: "bottom",
 },
-...tour.stepUtils.statusbarButtonsSteps('Post', _t("Validate"), ".breadcrumb-item.active:contains('Draft Invoice')"),
+...tour.stepUtils.statusbarButtonsSteps('Validate', _t("Validate"), ".breadcrumb-item.active:contains('Draft Invoice')"),
 ...tour.stepUtils.statusbarButtonsSteps('Register Payment', _t("Register Payment"), ".breadcrumb-item.active:contains('INV/')"),
 {
     trigger: ".modal-footer .btn-primary",
@@ -960,7 +960,7 @@ tour.stepUtils.mobileModifier(tour.stepUtils.autoExpandMoreButtons('.o_control_p
     position: 'bottom',
 }, {
     edition: "enterprise",
-    trigger: 'button[data-name=action_configure_bank_journal]',
+    trigger: 'a[data-name=action_configure_bank_journal]',
     content: _t('Configure Bank Journal'),
     position: 'bottom',
 }, {

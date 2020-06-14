@@ -12,8 +12,7 @@ var createView = testUtils.createView;
 
 async function createParent(params) {
     var widget = new Widget();
-    params.server =  await testUtils.mock.addMockEnvironment(widget, params);
-    owl.Component.env = testUtils.mock.getMockedOwlEnv(params);
+    params.server = await testUtils.mock.addMockEnvironment(widget, params);
     return widget;
 }
 
@@ -324,7 +323,7 @@ QUnit.module('Views', {
                     return Promise.resolve(false);
                 }
                 if (route === '/web/dataset/call_kw/instrument/create') {
-                    assert.deepEqual(args.args, [{badassery: [[6, false, [1]]], name: false}],
+                    assert.deepEqual(args.args, [{badassery: [[6, false, [1]]], name: "ABC"}],
                         'The method create should have been called with the right arguments');
                     return Promise.resolve(false);
                 }
@@ -334,8 +333,7 @@ QUnit.module('Views', {
 
         await testUtils.form.clickEdit(form);
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
-        await testUtils.dom.click(form.$('.o_field_widget .o_field_many2one[name=instrument] input'));
-        await testUtils.dom.click($('ul.ui-autocomplete.ui-front.ui-menu.ui-widget.ui-widget-content li.o_m2o_dropdown_option').first());
+        await testUtils.fields.many2one.createAndEdit("instrument");
 
         var $modal = $('.modal-lg');
 
@@ -495,7 +493,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('propagate can_create onto the search popup o2m', async function (assert) {
-        assert.expect(3);
+        assert.expect(4);
 
         this.data.instrument.records = [
             {id: 1, name: 'Tromblon1'},
@@ -539,9 +537,13 @@ QUnit.module('Views', {
 
         await testUtils.fields.many2one.clickOpenDropdown('instrument');
 
-        assert.notOk($('.ui-autocomplete a:contains(Create and Edit)').length,
-            'Create and edit not present in dropdown');
+        assert.containsNone(form, '.ui-autocomplete a:contains(Start typing...)');
 
+        await testUtils.fields.editInput(form.el.querySelector(".o_field_many2one[name=instrument] input"), "a");
+
+        assert.containsNone(form, '.ui-autocomplete a:contains(Create and Edit)');
+
+        await testUtils.fields.editInput(form.el.querySelector(".o_field_many2one[name=instrument] input"), "");
         await testUtils.fields.many2one.clickItem('instrument', 'Search More...');
 
         var $modal = $('.modal-dialog.modal-lg');

@@ -25,7 +25,7 @@
 
 <t t-name="mail.KanbanActivityDropdown">
     <span role="menuitem" t-if="_.isEmpty(records)" class="dropdown-item-text text-center o_no_activity">
-        No activities planned.
+        <i>Schedule activities to help you get things done.</i>
     </span>
     <div t-else="" aria-haspopup="true" role="menu" class="o_activity_log_container dropdown-item bg-100 p-0">
         <ul class="o_activity_log list-group list-group-flush mb-2" role="menu">
@@ -50,9 +50,9 @@
             </t>
         </ul>
     </div>
-    <div class="dropdown-divider mt-0"/>
-    <div role="menuitem" class="o_schedule_activity dropdown-header py-1 text-center">
-        <button class="btn btn-secondary mb-1">
+    <div class="dropdown-divider m-0"/>
+    <div role="menuitem" class="o_schedule_activity dropdown-header p-0 text-center">
+        <button class="btn btn-secondary btn-block p-3">
             <i class="fa fa-plus fa-fw"></i><strong>Schedule an activity</strong>
         </button>
     </div>
@@ -68,6 +68,7 @@
             </div>
             <div class="o_activity_title_entry mt-1" t-if="log.state != 'today'">
                 <span class="fa fa-clock-o fa-fw mr-2 text-center text-muted" role="img" aria-label="Deadline" title="Deadline"/>
+                <small t-if="log.user_id[0] !== session.uid and log.mail_template_ids" class="mr-1"><t t-esc="log.user_id[1]"/> -</small>
                 <small t-att-title="log.date_deadline"><t t-esc="log.label_delay" /></small>
             </div>
             <t t-if="log.mail_template_ids">
@@ -81,10 +82,6 @@
                     </small>
                 </div>
             </t>
-            <div t-if="log.user_id[0] != session.uid and log.mail_template_ids" class="o_activity_title_entry">
-                <span class="fa fa-user fa-fw mr-2 text-center text-muted" role="img" aria-label="User" title="User"/>
-                <span><t t-esc="log.user_id[1]" /></span>
-            </div>
         </div>
         <div t-if="log.can_write" class="flex-grow-1 text-right">
             <t t-if="log.activity_category === 'upload_file'">

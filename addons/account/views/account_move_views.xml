@@ -184,6 +184,8 @@
                     <field name="matching_number" string="Matching" optional="show"/>
                     <field name="reconcile_model_id" invisible="1"/>
                     <field name="date_maturity" optional="hide"/>
+                    <field name="analytic_account_id" optional="hide" groups="analytic.group_analytic_accounting"/>
+                    <field name="analytic_tag_ids" optional="hide" readonly="1" groups="analytic.group_analytic_tags"/>
                     <field name="debit" sum="Total Debit" readonly="1"/>
                     <field name="credit" sum="Total Credit" readonly="1"/>
                     <field name="balance" sum="Total Balance" readonly="1" optional="hide"/>
@@ -366,7 +368,7 @@
             <field name="arch" type="xml">
                 <xpath expr="//group" position="after">
                     <searchpanel class="account_root">
-                        <field name="account_root_id" disable_counters="1" icon="fa-filter"/>
+                        <field name="account_root_id" icon="fa-filter" limit="0"/>
                     </searchpanel>
                 </xpath>
             </field>
@@ -419,7 +421,7 @@
                     <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="state" optional="hide"/>
+                    <field name="state" optional="hide" decoration-success="state == 'posted'" decoration-info="state == 'draft'" widget="badge"/>
                     <field name="payment_state" decoration-success="payment_state == 'paid'" decoration-info="payment_state == 'partial' or payment_state == 'not_paid'" decoration-warning="payment_state == 'in_payment'" widget="badge"/>
                     <field name="move_type" invisible="context.get('default_move_type', True)"/>
                   </tree>
@@ -478,7 +480,10 @@
                         <!-- Post -->
                         <button name="action_post" string="Post" class="oe_highlight"
                                 type="object" groups="account.group_account_invoice"
-                                attrs="{'invisible': [('state', '!=', 'draft')]}"/>
+                                attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('move_type', '!=', 'entry')]}"/>
+                        <button name="action_post" string="Validate" class="oe_highlight"
+                                type="object" groups="account.group_account_invoice"
+                                attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('move_type', '=', 'entry')]}"/>
                         <!-- Send (only invoices) -->
                         <button name="action_invoice_sent"
                                 type="object"
@@ -508,9 +513,6 @@
                         <button name="action_reverse" string='Add Credit Note'
                                 type='object' groups="account.group_account_invoice"
                                 attrs="{'invisible': ['|', ('move_type', 'not in', ('out_invoice', 'in_invoice')), ('state', '!=', 'posted')]}"/>
-                        <!-- Duplicate -->
-                        <button name="action_duplicate" string="Duplicate" type="object" groups="account.group_account_invoice"
-                                attrs="{'invisible': [('move_type', '!=', 'entry')]}"/>
                         <!-- Cancel -->
                         <button name="button_cancel" string="Cancel Entry" type="object" groups="account.group_account_invoice"
                                 attrs="{'invisible' : ['|', ('id', '=', False), ('state', '!=', 'draft')]}"/>

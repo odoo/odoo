@@ -222,7 +222,10 @@
         <t t-call="SearchPanel.SectionHeader">
             <t t-set="section" t-value="category"/>
         </t>
-        <ul class="list-group d-block o_search_panel_field" t-att-data-field-name="category.fieldName">
+        <div t-if="category.errorMsg" class="alert alert-warning">
+            <span><t t-esc="category.errorMsg"/></span>
+        </div>
+        <ul t-else="" class="list-group d-block o_search_panel_field" t-att-data-field-name="category.fieldName">
             <li class="o_search_panel_category_value border-0 list-group-item" t-att-data-category-id="category.id">
                 <header t-att-class="'list-group-item-action' + (!category.activeValueId ? ' active' : '')">
                     <label class="o_search_panel_label mb0">
@@ -235,10 +238,6 @@
                 <t t-set="values" t-value="category.rootIds"/>
             </t>
         </ul>
-        <div t-if="category.limitAttained" class="alert alert-warning">
-            <span>For performance reasons, only 200 values were fetched. Some values might be missing.</span>
-            <span t-if="category.parentField">The values have not been hierarchized.</span>
-        </div>
     </section>
 </t>
 <t t-name="SearchPanel.CategoryValues">
@@ -246,14 +245,14 @@
         <t t-set="value" t-value="category.values[valueId]"/>
         <li class="o_search_panel_category_value border-0 list-group-item" t-att-data-id="value.id" t-att-data-category-id="category.id">
             <header t-att-class="'list-group-item-action' + (value.id === category.activeValueId ? ' active' : '')">
-                <label t-attf-class="o_search_panel_label mb0{{ category.disableCounters ? '' : ' o_with_counters' }}">
+                <label t-attf-class="o_search_panel_label mb0{{ category.enableCounters ? ' o_with_counters' : '' }}">
                     <div class="o_toggle_fold">
                         <i t-if="value.childrenIds.length" t-attf-class="fa fa-caret-{{ value.folded ? 'right' : 'down' }}"/>
                     </div>
                     <span class="o_search_panel_label_title"><t t-esc="value.display_name"/></span>
                 </label>
-                <span t-if="!category.disableCounters and value.__count > 0"
-                    class="text-muted ml-2 small"
+                <span t-if="category.enableCounters and value.__count > 0"
+                    class="o_search_panel_counter text-muted ml-2 small"
                     t-esc="value.__count"
                 />
             </header>
@@ -271,7 +270,10 @@
         <t t-call="SearchPanel.SectionHeader">
             <t t-set="section" t-value="filter"/>
         </t>
-        <ul class="list-group d-block o_search_panel_field" t-att-data-field-name="filter.fieldName">
+        <div t-if="filter.errorMsg" class="alert alert-warning">
+            <span><t t-esc="filter.errorMsg"/></span>
+        </div>
+        <ul t-else="" class="list-group d-block o_search_panel_field" t-att-data-field-name="filter.fieldName">
             <t t-if="filter.groups" t-call="SearchPanel.FilterGroups">
                 <t t-set="groups" t-value="filter.groups"/>
             </t>
@@ -280,9 +282,6 @@
                 <t t-set="values" t-value="filter.values"/>
             </t>
         </ul>
-        <div t-if="filter.limitAttained" class="alert alert-warning">
-            <span>For performance reasons, only 200 values were fetched. Some values might be missing.</span>
-        </div>
     </section>
 </t>
 <t t-name="SearchPanel.FilterGroups">
@@ -293,7 +292,7 @@
         <header class="o_search_panel_group_header">
             <div class="custom-control custom-checkbox">
                 <input type="checkbox" t-att-id="inputId" t-att-checked="group.state === 'checked' ? 'checked' : undefined" class="custom-control-input"/>
-                <label t-att-for="inputId" t-attf-class="o_search_panel_label custom-control-label{{ group.disableCounters ? '' : ' o_with_counters' }}" t-att-title="group.tooltip">
+                <label t-att-for="inputId" t-attf-class="o_search_panel_label custom-control-label{{ group.enableCounters ? ' o_with_counters' : '' }}" t-att-title="group.tooltip">
                     <span class="o_search_panel_label_title">
                         <span t-if="group.hex_color" t-attf-style="color: {{ group.hex_color }};">●</span>
                         <t t-esc="group.name"/>
@@ -326,8 +325,8 @@
                 <input type="checkbox" t-att-id="inputId" t-att-checked="value.checked ? 'checked' : undefined" class="custom-control-input"/>
                 <label t-att-for="inputId" class="o_search_panel_label custom-control-label" t-att-title="group &amp;&amp; group.tooltip">
                     <span class="o_search_panel_label_title" t-esc="value.display_name"/>
-                    <span t-if="!filter.disableCounters and value.__count > 0"
-                        class="text-muted ml-2 small"
+                    <span t-if="filter.enableCounters and value.__count > 0"
+                        class="o_search_panel_counter text-muted ml-2 small"
                         t-esc="value.__count"
                     />
                 </label>

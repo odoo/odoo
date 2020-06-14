@@ -24,6 +24,20 @@ odoo.define('web.test_utils_fields', function (require) {
     //-------------------------------------------------------------------------
 
     /**
+     * Autofills the input of a many2one field and clicks on the "Create and Edit" option.
+     *
+     * @param {string} fieldName
+     * @param {string} text Used as default value for the record name
+     * @see clickM2OItem
+     */
+    async function clickM2OCreateAndEdit(fieldName, text = "ABC") {
+        await clickOpenM2ODropdown(fieldName);
+        const match = document.querySelector(`.o_field_many2one[name=${fieldName}] input`);
+        await editInput(match, text);
+        return clickM2OItem(fieldName, "Create and Edit");
+    }
+
+    /**
      * Click on the active (highlighted) selection in a m2o dropdown.
      *
      * @param {string} fieldName
@@ -221,6 +235,7 @@ odoo.define('web.test_utils_fields', function (require) {
     }
 
     return {
+        clickM2OCreateAndEdit,
         clickM2OHighlightedItem,
         clickM2OItem,
         clickOpenM2ODropdown,

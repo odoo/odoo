@@ -171,7 +171,7 @@ var ActionManager = Widget.extend({
                 return action;
             });
         }).then(function(action) {
-            odoo.isReady = true;
+            self.trigger_up('webclient_started');
             return action;
         });
     },
@@ -536,7 +536,7 @@ var ActionManager = Widget.extend({
                 var message = _t('A popup window has been blocked. You ' +
                              'may need to change your browser settings to allow ' +
                              'popup windows for this page.');
-                this.do_warn(_t('Warning'), message, true);
+                this.do_warn(false, message, true);
             }
         }
 

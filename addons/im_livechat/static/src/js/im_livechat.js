@@ -240,8 +240,7 @@ var LivechatButton = Widget.extend({
         def.then(function (livechatData) {
             if (!livechatData || !livechatData.operator_pid) {
                 self.displayNotification({
-                    title: _t("Collaborators offline"),
-                    message: _t("None of our collaborators seem to be available, please try again later."),
+                    message: _t("No available collaborator, please try again later."),
                     sticky: true
                 });
             } else {
@@ -335,8 +334,7 @@ var LivechatButton = Widget.extend({
             .then(function (messageId) {
                 if (!messageId) {
                     self.displayNotification({
-                        title: _t("Session Expired"),
-                        message: _t("You took to long to send a message. Please refresh the page and try again."),
+                        message: _t("Session expired... Please refresh and try again."),
                         sticky: true
                     });
                     self._closeChat();

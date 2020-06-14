@@ -54,7 +54,7 @@ class AccountAccount(models.Model):
                                                            ('user_type_id', '=', data_unaffected_earnings.id)])
                 raise ValidationError(_('You cannot have more than one account with "Current Year Earnings" as type. (accounts: %s)') % [a.code for a in account_unaffected_earnings])
 
-    name = fields.Char(required=True, index=True)
+    name = fields.Char(string="Account Name", required=True, index=True)
     currency_id = fields.Many2one('res.currency', string='Account Currency',
         help="Forces all moves for this account to have this account currency.")
     code = fields.Char(size=64, required=True, index=True)
@@ -80,8 +80,9 @@ class AccountAccount(models.Model):
     root_id = fields.Many2one('account.root', compute='_compute_account_root', store=True)
     allowed_journal_ids = fields.Many2many('account.journal', string="Allowed Journals", help="Define in which journals this account can be used. If empty, can be used in all journals.")
 
-    opening_debit = fields.Monetary(string="Opening debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
-    opening_credit = fields.Monetary(string="Opening credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
+    opening_debit = fields.Monetary(string="Opening Debit", compute='_compute_opening_debit_credit', inverse='_set_opening_debit', help="Opening debit value for this account.")
+    opening_credit = fields.Monetary(string="Opening Credit", compute='_compute_opening_debit_credit', inverse='_set_opening_credit', help="Opening credit value for this account.")
+    opening_balance = fields.Monetary(string="Opening Balance", compute='_compute_opening_debit_credit', help="Opening balance value for this account.")
 
     _sql_constraints = [
         ('code_company_uniq', 'unique (code,company_id)', 'The code of the account must be unique per company !')
@@ -220,17 +221,25 @@ class AccountAccount(models.Model):
         raise UserError(_('Cannot generate an unused account code.'))
 
     def _compute_opening_debit_credit(self):
+        if not self:
+            return
+        self.env.cr.execute("""
+            SELECT line.account_id,
+                   SUM(line.balance) AS balance,
+                   SUM(line.debit) AS debit,
+                   SUM(line.credit) AS credit
+              FROM account_move_line line
+              JOIN res_company comp ON comp.id = line.company_id
+             WHERE line.move_id = comp.account_opening_move_id
+               AND line.account_id IN %s
+             GROUP BY line.account_id
+        """, [tuple(self.ids)])
+        result = {r['account_id']: r for r in self.env.cr.dictfetchall()}
         for record in self:
-            opening_debit = opening_credit = 0.0
-            if record.company_id.account_opening_move_id:
-                for line in self.env['account.move.line'].search([('account_id', '=', record.id),
-                                                                 ('move_id','=', record.company_id.account_opening_move_id.id)]):
-                    if line.debit:
-                        opening_debit += line.debit
-                    elif line.credit:
-                        opening_credit += line.credit
-            record.opening_debit = opening_debit
-            record.opening_credit = opening_credit
+            res = result.get(record.id) or {'debit': 0, 'credit': 0, 'balance': 0}
+            record.opening_debit = res['debit']
+            record.opening_credit = res['credit']
+            record.opening_balance = res['balance']
 
     def _set_opening_debit(self):
         self._set_opening_debit_credit(self.opening_debit, 'debit')

@@ -15,8 +15,8 @@ async function createLunchView(params) {
     var searchArch = params.archs[`${params.model},false,search`] || '<search></search>';
     var searchPanelArch = `
         <searchpanel>
-            <field name="category_id" select="multi" string="Categories"/>
-            <field name="supplier_id" select="multi" string="Vendors"/>
+            <field name="category_id" select="multi" string="Categories" enable_counters="1"/>
+            <field name="supplier_id" select="multi" string="Vendors" enable_counters="1"/>
         </searchpanel>
     `;
     searchArch = searchArch.split('</search>')[0] + searchPanelArch + '</search>';

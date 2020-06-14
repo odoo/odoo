@@ -3095,7 +3095,7 @@ QUnit.module('Views', {
                         if (params.type !== 'danger') {
                             return;
                         }
-                        assert.strictEqual(params.title, 'The following fields are invalid:',
+                        assert.strictEqual(params.title, 'Invalid fields:',
                             "should have a warning with correct title");
                         assert.strictEqual(params.message, '<ul><li>Foo</li></ul>',
                             "should have a warning with correct message");
@@ -7706,7 +7706,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('check if the view destroys all widgets and instances', async function (assert) {
-        assert.expect(1);
+        assert.expect(2);
 
         var instanceNumber = 0;
         await testUtils.mock.patch(mixins.ParentedMixin, {
@@ -7766,21 +7766,10 @@ QUnit.module('Views', {
         };
 
         var form = await createView(params);
-        form.destroy();
-
-        var initialInstanceNumber = instanceNumber;
-        instanceNumber = 0;
-
-        form = await createView(params);
-
-        // call destroy function of controller to ensure that it correctly destroys everything
-        form.__destroy();
-
-        // + 4 (parent)
-        assert.strictEqual(instanceNumber, initialInstanceNumber + 1,
-            "every widget must be destroyed exept the parent");
+        assert.ok(instanceNumber > 0);
 
         form.destroy();
+        assert.strictEqual(instanceNumber, 0);
 
         await testUtils.mock.unpatch(mixins.ParentedMixin);
     });
@@ -8626,8 +8615,6 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.module('FormViewTABMainButtons');
-
     QUnit.test('using tab in an empty required string field should not move to the next field', async function(assert) {
         assert.expect(3);
 
@@ -8705,8 +8692,6 @@ QUnit.module('Views', {
             "the first primary button (save) should be focused");
         form.destroy();
     });
-
-    QUnit.module('FormViewTABFormButtons');
 
     QUnit.test('In Edition mode, after navigating to the last field, the default button when pressing TAB is SAVE', async function (assert) {
         assert.expect(1);
@@ -9129,24 +9114,73 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('display building icon for company dependent field', async function (assert) {
+    QUnit.test('company_dependent field in form view, in multi company group', async function (assert) {
         assert.expect(2);
-        this.data.partner.fields.product_id.company_dependent = true;
 
-        var form = await createView({
+        this.data.partner.fields.product_id.company_dependent = true;
+        this.data.partner.fields.product_id.help = 'this is a tooltip';
+        this.data.partner.fields.foo.company_dependent = true;
+
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
-            arch: '<form>' +
-                    '<group>' +
-                        '<field name="trululu"/>' +
-                        '<field name="product_id"/>' +
-                    '</group>' +
-                '</form>',
+            arch: `
+                <form>
+                    <group>
+                        <field name="foo"/>
+                        <field name="product_id"/>
+                    </group>
+                </form>`,
+            session: {
+                display_switch_company_menu: true,
+            },
         });
 
-        assert.containsOnce(form, 'label.o_form_label:contains(Product) .fa.fa-sm.fa-building-o', 'Company dependent field shoud have a building icon');
-        assert.containsNone(form, 'label.o_form_label:contains(Trululu) .fa.fa-sm.fa-building-o', 'Regular field shoud not have a building icon');
+        const $productLabel = form.$('.o_form_label:eq(1)');
+        $productLabel.tooltip('show', false);
+        $productLabel.trigger($.Event('mouseenter'));
+        assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(),
+            "this is a tooltip\n\nValues set here are company-specific.");
+        $productLabel.trigger($.Event('mouseleave'));
+
+        const $fooLabel = form.$('.o_form_label:first');
+        $fooLabel.tooltip('show', false);
+        $fooLabel.trigger($.Event('mouseenter'));
+        assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(),
+            "Values set here are company-specific.");
+        $fooLabel.trigger($.Event('mouseleave'));
+
+        form.destroy();
+    });
+
+    QUnit.test('company_dependent field in form view, not in multi company group', async function (assert) {
+        assert.expect(1);
+
+        this.data.partner.fields.product_id.company_dependent = true;
+        this.data.partner.fields.product_id.help = 'this is a tooltip';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="product_id"/>
+                    </group>
+                </form>`,
+            session: {
+                display_switch_company_menu: false,
+            },
+        });
+
+        const $productLabel = form.$('.o_form_label');
+
+        $productLabel.tooltip('show', false);
+        $productLabel.trigger($.Event('mouseenter'));
+        assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(), "this is a tooltip");
+        $productLabel.trigger($.Event('mouseleave'));
 
         form.destroy();
     });

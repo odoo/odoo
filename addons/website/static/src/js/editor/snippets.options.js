@@ -1625,8 +1625,7 @@ options.registry.anchor = options.Class.extend({
             const anchor = decodeURIComponent(this._getAnchorLink());
             this.displayNotification({
               type: 'success',
-              title: _t("Copied !"),
-              message: _.str.sprintf(_t("The anchor has been copied to your clipboard.<br>Link: %s"), anchor),
+              message: _.str.sprintf(_t("Anchor copied to clipboard<br>Link: %s"), anchor),
               buttons: [{text: _t("Edit"), click: () => this.openAnchorDialog(), primary: true}],
             });
         });
@@ -1807,7 +1806,7 @@ options.registry.CookiesBar = options.registry.SnippetPopup.extend({
             websiteId: websiteId,
         }));
 
-        const $content = this.$target.find('.s_popup_content');
+        const $content = this.$target.find('.modal-content');
         const selectorsToKeep = [
             '.o_cookies_bar_text_button',
             '.o_cookies_bar_text_policy',
@@ -2026,6 +2025,15 @@ options.registry.SnippetMove = options.Class.extend({
                     $tabPane.next().after($tabPane);
                 }
                 break;
+        }
+        if (params.name === 'move_up_opt' || params.name === 'move_down_opt') {
+            $('html, body').animate(
+                {
+                    scrollTop: this.$target.offset().top - $(window).height() / 2,
+                },
+                500,
+                'linear',
+            );
         }
     },
 });

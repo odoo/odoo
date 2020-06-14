@@ -22,7 +22,7 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
             return [
                 {
                     content: `delete ${name} paymentline with ${amount} amount`,
-                    trigger: `.paymentlines .paymentline .col-name:contains("${name}") ~ .delete-button`,
+                    trigger: `.paymentlines .paymentline .payment-name:contains("${name}") ~ .delete-button`,
                 },
             ];
         }
@@ -175,12 +175,12 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
             return [
                 {
                     content: `line paid via '${paymentMethodName}' is selected`,
-                    trigger: `.paymentlines .paymentline.selected .col-name:contains("${paymentMethodName}")`,
+                    trigger: `.paymentlines .paymentline.selected .payment-name:contains("${paymentMethodName}")`,
                     run: () => {},
                 },
                 {
                     content: `amount tendered in the line is '${amount}'`,
-                    trigger: `.paymentlines .paymentline.selected .col-tendered:contains("${amount}")`,
+                    trigger: `.paymentlines .paymentline.selected .payment-amount:contains("${amount}")`,
                     run: () => {},
                 },
             ];

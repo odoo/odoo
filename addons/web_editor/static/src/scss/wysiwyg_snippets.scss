@@ -16,6 +16,18 @@ body.editor_enable.editor_has_snippets {
         // just for fake backdrop effect
         background-color: rgba(66, 66, 66, 0.4);
     }
+    > .oe_overlay.ui-draggable {
+        .o_handle {
+            display: none;
+        }
+        .o_overlay_move_options {
+            margin-top: -24px;
+            text-align: center;
+        }
+        .o_move_handle {
+            height: 24px;
+        }
+    }
 }
 
 // Mobile fix for mass mailing
@@ -1037,61 +1049,10 @@ body.editor_enable.editor_has_snippets {
 
         &.o_we_overlay_preview {
             pointer-events: none;
-            border-color: $o-we-handles-accent-color-preview;
 
             > .o_handles {
 
-                > .o_handle {
-                    border-style: dashed;
-                    background-color: transparent !important;
-
-                    &::before {
-                        content: '';
-                        @include o-position-absolute(0, 0, 0, 0);
-                        z-index: -1;
-                        display: block;
-                        border-width: inherit;
-                        border-style: solid;
-                        border-color: white;
-                    }
-                    &::after {
-                        display: none;
-                    }
-
-                    &.w {
-                        border-width: $o-we-handle-border-width-preview;
-                        border-right-width: 0;
-
-                        &::before {
-                            top: -$o-we-handle-border-width-preview;
-                            bottom: -$o-we-handle-border-width-preview;
-                            left: -$o-we-handle-border-width-preview;
-                        }
-                    }
-                    &.e {
-                        border-right-width: $o-we-handle-border-width-preview;
-
-                        &::before {
-                            right: -$o-we-handle-border-width-preview;
-                        }
-                    }
-                    &.n {
-                        border-top-width: $o-we-handle-border-width-preview;
-
-                        &::before {
-                            top: -$o-we-handle-border-width-preview;
-                        }
-                    }
-                    &.s {
-                        border-bottom-width: $o-we-handle-border-width-preview;
-
-                        &::before {
-                            bottom: -$o-we-handle-border-width-preview;
-                        }
-                    }
-                }
-
-                .o_overlay_options_wrap {
+                > .o_handle::after, .o_overlay_options_wrap {
                     display: none;
                 }
             }

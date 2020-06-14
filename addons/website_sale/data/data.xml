@@ -18,13 +18,19 @@
             <field name="state">open</field>
         </record>
 
-        <record id="website_sale.image_promo" model="product.style">
-            <field name="name">Sale Ribbon</field>
-            <field name="html_class">oe_ribbon_promo</field>
+        <record id="website_sale.sale_ribbon" model="product.ribbon">
+            <field name="html">Sale</field>
+            <field name="html_class">bg-success o_ribbon_left</field>
         </record>
-        <record id="website_sale.image_full" model="product.style">
-            <field name="name">Image Full</field>
-            <field name="html_class">oe_image_full</field>
+
+        <record id="website_sale.sold_out_ribbon" model="product.ribbon">
+            <field name="html">Sold out</field>
+            <field name="html_class">bg-danger o_ribbon_left</field>
+        </record>
+
+        <record id="website_sale.new_ribbon" model="product.ribbon">
+            <field name="html">New!</field>
+            <field name="html_class">bg-primary o_ribbon_left</field>
         </record>
 
         <record id="sales_team.salesteam_website_sales" model="crm.team">

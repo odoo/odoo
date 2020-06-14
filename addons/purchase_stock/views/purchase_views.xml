@@ -9,8 +9,8 @@
             <xpath expr="//header/button[@name='action_rfq_send']" position="after">
                 <button name="action_view_picking" string="Receive Products" class="oe_highlight" type="object" attrs="{'invisible': ['|', '|' , ('is_shipped', '=', True), ('state','not in', ('purchase','done')), ('picking_count', '=', 0)]}"/>
             </xpath>
-            <xpath expr="//header/button[@name='confirm_reminder_mail']" position="replace">
-                <button name="confirm_reminder_mail" string="Confirm Receipt Date" type="object" attrs="{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('effective_date', '!=', False)]}"/>
+            <xpath expr="//header/button[@name='confirm_reminder_mail']" position="attributes">
+                <attribute name="attrs">{'invisible': ['|', '|', ('state', 'not in', ('purchase', 'done')), ('mail_reminder_confirmed', '=', True), ('effective_date', '!=', False)]}</attribute>
             </xpath>
             <xpath expr="//div[hasclass('oe_button_box')]" position="inside">
                 <button type="object"
@@ -21,34 +21,21 @@
                     <field name="picking_ids" invisible="1"/>
                 </button>
             </xpath>
-            <xpath expr="//field[@name='partner_id']" position="replace">
-                <label for="partner_id"/>
-                <div>
-                    <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'supplier', 'show_vat': True}"
-                        placeholder="Name, TIN, Email, or Reference"
-                    />
-                    <div class="oe_edit_only">
-                        <button name="%(action_purchase_vendor_delay_report)d" type="action" class="oe_stat_button" context="{'search_default_partner_id': partner_id}">
-                            <field name="on_time_rate" class="text-muted" widget='percentpie'/>
-                        </button>
-                    </div>
-                </div>
-            </xpath>
             <xpath expr="//field[@name='currency_id']" position="after">
                 <field name="is_shipped" invisible="1"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/tree//field[@name='date_planned']" position="after">
                 <field name="move_dest_ids" invisible="1"/>
             </xpath>
-            <xpath expr="//div[@name='confirmation']" position="replace">
-                <div name="confirmation" class="oe_edit_only o_row" attrs="{'invisible': [('effective_date', '!=', False)]}" groups='purchase.group_send_reminder'>
-                    <field name="receipt_reminder_email"/>
-                    <span>Ask confirmation</span>
-                    <field name="reminder_date_before_receipt" attrs="{'readonly': [('receipt_reminder_email', '=', False)]}"/>
-                    <span> days before</span>
-                </div>
+            <xpath expr="//div[@name='date_planned_div']" position="inside">
+                <button name="%(action_purchase_vendor_delay_report)d" class="oe_link" type="action" context="{'search_default_partner_id': partner_id}" attrs="{'invisible': ['|', ('state', 'in', ['purchase', 'done']), ('partner_id', '=', False)]}">
+                    <span><field name="on_time_rate" widget="integer" class="oe_inline"/>% On-Time Delivery</span>
+                </button>
             </xpath>
-            <xpath expr="//div[@name='date_planned_and_confirmation']" position="after">
+            <xpath expr="//div[@name='reminder']" position="attributes">
+                <attribute name="attrs">{'invisible': [('effective_date', '!=', False)]}</attribute>
+            </xpath>
+            <xpath expr="//div[@name='reminder']" position="after">
                 <field name="effective_date" attrs="{'invisible': [('effective_date', '=', False)]}"/>
             </xpath>
             <xpath expr="//field[@name='order_line']/form//field[@name='invoice_lines']" position="after">

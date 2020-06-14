@@ -41,7 +41,7 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
     assert.expect(6);
     var self = this;
     var activityMenu = new ActivityMenu();
-    testUtils.mock.addMockEnvironment(activityMenu, {
+    await testUtils.mock.addMockEnvironment(activityMenu, {
         services: this.services,
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {

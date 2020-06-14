@@ -25,7 +25,7 @@ options.registry.countdown = options.Class.extend({
         if (widgetValue === 'message') {
             if (!this.$target.find('.s_countdown_end_message').length) {
                 const message = this.endMessage || qweb.render('website.s_countdown.end_message');
-                this.$target.find('.container').append(message);
+                this.$target.append(message);
             }
         } else {
             const $message = this.$target.find('.s_countdown_end_message').detach();

@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+<data noupdate="1">
+    <template id="mass_mailing.mass_mailing_kpi_link_trackers" name="Email Marketing: mailing link trackers statistic">
+        <table t-if="link_trackers" cellspacing="0" cellpadding="0" align="center" border="0" bgcolor="#eeeeee" style="width:100%; font-family: Arial,Helvetica,Verdana,sans-serif;">
+            <tr>
+                <td align="center" valign="top">
+                    <table bgcolor="#ffffff" cellspacing="0" cellpadding="0" width="650" align="center" border="0" style="border: 1px solid #eeeeee; border-bottom: none;border-top: none; width: 100%; max-width: 650px; padding:0 30px 30px 30px">
+                        <tr>
+                            <td style="width: 100%;">
+                                <table cellspacing="0" cellpadding="0" border="0" width="580" align="center" style="width:100%; max-width:580px;">
+                                    <tr>
+                                        <td align="left" style="border-bottom: 1px solid #eeeeee;">
+                                            <span style="color:#282f33; font-size: 15px; font-weight: bold; line-height: 30px">
+                                                <t t-esc="'Click Rate Report on %i Emails Sent' % object.sent"/>
+                                            </span>
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td style="margin: 0; padding:0;">
+                                <table cellspacing="0" cellpadding="0" border="0" width="580" align="center" style="width:100%; max-width:580px;">
+                                    <tr style="color: #875a7b; font-size: 16px; font-weight: 500; border-bottom: 1px solid #e7e7e7;">
+                                        <td style="width: 70%;padding: 10px 0; text-align: left;">Label</td>
+                                        <td style="width: 30%;padding: 10px 0; text-align: right;">%Click (Total)</td>
+                                    </tr>
+                                    <tr t-foreach="link_trackers" t-as="link_tracker" style="color: #888888; font-size: 15px; font-weight: 300;">
+                                        <td style="width: 70%;padding: 10px 0; text-align: left;">
+                                            <a t-att-href="link_tracker.absolute_url" target="_blank" style="color: #56b3b5; text-decoration: none;" t-esc="link_tracker.label or link_tracker.url"/>
+                                        </td>
+                                        <td style="width: 30%;padding: 10px 0; text-align: right;">
+                                            <t t-esc="int(link_tracker.count * 100 / object.sent) if object.sent else 0"/>% (<t t-esc="link_tracker.count"/>)
+                                        </td>
+                                    </tr>
+                                </table>
+                            </td>
+                        </tr>
+                    </table>
+                </td>
+            </tr>
+        </table>
+    </template>
+</data>
+</odoo>

@@ -78,6 +78,7 @@
                             <group>
                                 <field name="auto_reconcile" attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}"/>
                                 <field name="to_check" attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
+                                <field name="past_months_limit" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
                             </group>
                         </group>
                         <group string="Conditions on Bank Statement Line">
@@ -174,6 +175,17 @@
                                 </tree>
                            </field>
                        </group>
+
+                       <group string="Partner Mapping" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}">
+                           <field name="partner_mapping_line_ids" nolabel="1">
+                               <tree editable="bottom">
+                                   <field name="payment_ref_regex" attrs="{'required': [('narration_regex', '=', False)]}"/>
+                                   <field name="narration_regex" attrs="{'required': [('payment_ref_regex', '=', False)]}"/>
+                                   <field name="partner_id"/>
+                               </tree>
+                           </field>
+                       </group>
+
                     </sheet>
                 </form>
             </field>
