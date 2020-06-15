@@ -5,4 +5,19 @@
             <field name="kpi_account_total_revenue">True</field>
         </record>
     </data>
+
+    <data>
+        <record id="digest_tip_account_0" model="digest.tip">
+            <field name="name">Tip: No need to print, put in an envelop and post your invoices</field>
+            <field name="sequence">700</field>
+            <field name="group_id" ref="account.group_account_invoice" />
+            <field name="tip_description" type="html">
+                <div>
+                    <b class="font-16" style="font-size: 20px;line-height: 30px">No need to print, put in an envelop and post your invoices</b>
+                    <p class="font-12" style="color:#888888;font-size: 15px; line-height: 25px; margin-top: 0">Use the “<i>Send by Post</i>” option to post invoices automatically. For the cost of a local stamp, we do all the manual work: your invoice will be printed in the right country, put in an envelop and sent by snail mail. Use this feature from the list view to post hundreds of invoices in bulk.</p>
+                    <img src="/account/static/src/img/invoice-stamps.png" style="max-width: 580px" width="100%"/>
+                </div>
+            </field>
+        </record>
+    </data>
 </odoo>
