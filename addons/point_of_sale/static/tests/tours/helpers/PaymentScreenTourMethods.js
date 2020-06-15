@@ -191,9 +191,18 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
         }
     }
 
-    return {
-        Do,
-        Check,
-        PaymentScreen: createTourMethods('PaymentScreen', Do, Check),
-    };
+    class Execute {
+        pay(method, amount) {
+            const steps = [];
+            steps.push(...this._do.clickPaymentMethod(method));
+            for (let char of amount.split('')) {
+                steps.push(...this._do.pressNumpad(char));
+            }
+            steps.push(...this._check.validateButtonIsHighlighted());
+            steps.push(...this._do.clickValidate());
+            return steps;
+        }
+    }
+
+    return createTourMethods('PaymentScreen', Do, Check, Execute);
 });

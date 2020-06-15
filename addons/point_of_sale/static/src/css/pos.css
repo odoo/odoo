@@ -2838,3 +2838,182 @@ td {
     cursor: -moz-grabbing;
     cursor: -webkit-grabbing;
 }
+
+
+/* Order Management */
+
+.order-row {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+    background-color:  rgb(230,230,230);
+}
+
+.order-list .order-row:hover {
+    color: white;
+    background-color:  rgb(110,200,155);
+    font-weight: bold;
+}
+
+.order-row.highlight {
+    color: white;
+    background-color:  rgb(110,200,155);
+    font-weight: bold;
+}
+
+.order-row.lighter {
+    background-color: #f5f5f5;
+    cursor: pointer;
+}
+
+.order-row .header {
+    font-size: medium;
+    font-weight: bolder;
+    flex-grow: 1;
+    flex-basis: 0;
+    text-align: left;
+    padding: 10px 10px;
+    background-color: #cecece;
+    border-bottom: solid 1px;
+    border-top: solid 1px
+}
+
+.order-row .header.total {
+    text-align: right;
+}
+
+.order-row .item {
+    font-size: medium;
+    flex-grow: 1;
+    flex-basis: 0;
+    text-align: left;
+    padding: 10px 10px;
+    border-bottom: solid rgb(150,150,150) 1px;
+}
+
+.order-row .item.total {
+    text-align: right;
+}
+
+.order-management-screen .flex-container {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+}
+
+.order-management-screen .orders {
+    display: flex;
+    flex-direction: column;
+}
+
+.order-management-screen .order-list {
+    flex: 1;
+    overflow-y: auto;
+}
+
+.order-management-screen .control-panel {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0.5rem;
+}
+
+.order-management-screen .control-panel .item {
+    font-size: medium;
+}
+
+.order-management-screen .control-panel .item .page-controls {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    font-size: x-large;
+}
+
+.order-management-screen .control-panel .page-controls > div {
+    border: darkgray solid 1px;
+    border-radius: 2px;
+}
+
+.order-management-screen .control-panel .page-controls > div:hover {
+    color: rgb(110,200,155);
+}
+
+.order-management-screen .control-panel .page-controls .previous {
+    margin-right: 0.2rem;
+}
+
+.order-management-screen .control-panel .page-controls .next {
+    margin-left: 0.2rem;
+}
+
+
+.order-management-screen .control-panel .search-box {
+    flex: 1;
+    position: relative;
+    text-align: center;
+    margin: 0.2rem;
+}
+
+.order-management-screen .control-panel .search-box .clear {
+    position: relative;
+    right: 25px;
+    cursor: pointer;
+    color: #808080;
+    font-size: 13px;
+}
+
+.order-management-screen .control-panel .search-box .icon {
+    position: relative;
+    left: 25px;
+    color: #808080;
+    font-size: 13px;
+}
+
+.order-management-screen .control-panel .search-box input {
+    border: 1px solid #cecbcb;
+    padding: 10px 30px;
+    margin: auto;
+    background-color: white;
+    border-radius: 20px;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    font-size: 13px;
+}
+
+.order-management-screen .control-panel .search-box input:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
+    color: rgb(153, 153, 255);
+}
+
+.order-management-screen .control-panel .button {
+    line-height: 32px;
+    padding: 3px 13px;
+    font-size: 20px;
+    background: rgb(230, 230, 230);
+    border-radius: 3px;
+    border: solid 1px rgb(209, 209, 209);
+    cursor: pointer;
+    transition: all 150ms linear;
+}
+
+.order-management-screen .control-panel .button:hover {
+    background: #efefef;
+}
+
+.order-management-screen .back-to-list {
+    font-size: large;
+    padding: 10px;
+    background-color: #6EC89B;
+    color: white;
+}
+
+.order-receipt {
+    color: white;
+    font-size: medium;
+    text-align: center;
+}
+
+.order-receipt .title {
+    font-size: large;
+}

@@ -6,8 +6,8 @@ odoo.define('point_of_sale.ActionpadWidget', function(require) {
 
     /**
      * @props client
-     * @trigger click-customer
-     * @trigger click-pay
+     * @emits click-customer
+     * @emits click-pay
      */
     class ActionpadWidget extends PosComponent {
         get isLongName() {

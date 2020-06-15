@@ -16,6 +16,7 @@
                         <t t-if="!env.isMobile">
                             <CashierName />
                         </t>
+                        <OrderManagementButton t-if="env.pos.config.manage_orders" />
                         <SaleDetailsButton t-if="env.pos.proxy.printer" />
                         <ProxyStatus t-if="env.pos.config.use_proxy" />
                         <ClientScreenButton t-if="clientScreenButtonIsShown" />

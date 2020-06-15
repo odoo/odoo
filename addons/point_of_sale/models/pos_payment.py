@@ -27,6 +27,8 @@ class PosPayment(models.Model):
     card_type = fields.Char('Type of card used')
     transaction_id = fields.Char('Payment Transaction ID')
     payment_status = fields.Char('Payment Status')
+    ticket = fields.Char('Payment Receipt Info')
+    is_change = fields.Boolean(string='Is this payment change?', default=False)
 
     @api.model
     def name_get(self):
@@ -37,3 +39,17 @@ class PosPayment(models.Model):
             else:
                 res.append((payment.id, formatLang(self.env, payment.amount, currency_obj=payment.currency_id)))
         return res
+
+    def _export_for_ui(self, payment):
+        return {
+            'payment_method_id': payment.payment_method_id.id,
+            'amount': payment.amount,
+            'payment_status': payment.payment_status,
+            'card_type': payment.card_type,
+            'transaction_id': payment.transaction_id,
+            'ticket': payment.ticket,
+            'is_change': payment.is_change,
+        }
+
+    def export_for_ui(self):
+        return self.mapped(self._export_for_ui) if self else []

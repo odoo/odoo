@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
-    <t t-name="OrderSelector" owl="1">
-        <div class="order-selector">
+    <div class="order-selector" t-name="OrderSelector" owl="1">
+        <t t-if="chromeContext.showOrderSelector">
             <span class="orders">
                 <t t-foreach="orderList" t-as="order" t-key="order.cid">
                     <t t-if="order === env.pos.get_order()">
@@ -28,7 +28,7 @@
             <span class="order-button square deleteorder-button" t-on-click="deleteCurrentOrder">
                 <i class="fa fa-minus" role="img" aria-label="Delete order" title="Delete order" />
             </span>
-        </div>
-    </t>
+        </t>
+    </div>
 
 </templates>

@@ -35,5 +35,5 @@ odoo.define('point_of_sale.tour.SelectionPopupTourMethods', function (require) {
         }
     }
 
-    return { Do, Check, SelectionPopup: createTourMethods('SelectionPopup', Do, Check) };
+    return createTourMethods('SelectionPopup', Do, Check);
 });

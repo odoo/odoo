@@ -65,5 +65,5 @@ odoo.define('point_of_sale.tour.NumberPopupTourMethods', function (require) {
         }
     }
 
-    return { Do, Check, NumberPopup: createTourMethods('NumberPopup', Do, Check) };
+    return createTourMethods('NumberPopup', Do, Check);
 });

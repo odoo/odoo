@@ -149,6 +149,9 @@ class TestFrontend(odoo.tests.HttpCase):
             'taxes_id': [(6, 0, [])],
         })
 
+        pricelist = self.env['product.pricelist'].create({'name': 'Restaurant Pricelist'})
+        pos_config.write({'pricelist_id': pricelist.id})
+
         self.pos_config = pos_config
 
     def test_01_pos_restaurant(self):
@@ -171,3 +174,8 @@ class TestFrontend(odoo.tests.HttpCase):
         self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'SplitBillScreenTour', login="admin", step_delay=50)
         self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'ControlButtonsTour', login="admin", step_delay=50)
         self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'FloorScreenTour', login="admin", step_delay=50)
+
+    def test_03_order_management_integration(self):
+        self.pos_config.write({'manage_orders': True})
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'PosResOrderManagementScreenTour', login="admin", step_delay=50)

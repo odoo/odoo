@@ -10,7 +10,7 @@ odoo.define('point_of_sale.tour.ReceiptScreen', function (require) {
     startSteps();
 
     // pay exact amount
-    ProductScreen.exec.order('Letter Tray', '10');
+    ProductScreen.exec.addOrderline('Letter Tray', '10');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Bank');
     PaymentScreen.do.clickValidate();
@@ -20,9 +20,9 @@ odoo.define('point_of_sale.tour.ReceiptScreen', function (require) {
 
     // pay more than total price
     ProductScreen.do.clickHomeCategory();
-    ProductScreen.exec.order('Desk Pad', '6', '5.0');
-    ProductScreen.exec.order('Whiteboard Pen', '6', '6.1');
-    ProductScreen.exec.order('Monitor Stand', '6', '1.3');
+    ProductScreen.exec.addOrderline('Desk Pad', '6', '5.0');
+    ProductScreen.exec.addOrderline('Whiteboard Pen', '6', '6.1');
+    ProductScreen.exec.addOrderline('Monitor Stand', '6', '1.3');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Cash');
     PaymentScreen.do.pressNumpad('8 0 0');

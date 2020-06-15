@@ -45,9 +45,9 @@ models.load_models({
 // New orders are now associated with the current table, if any.
 var _super_order = models.Order.prototype;
 models.Order = models.Order.extend({
-    initialize: function() {
+    initialize: function(attr,options) {
         _super_order.initialize.apply(this,arguments);
-        if (!this.table) {
+        if (!this.table && !options.json) {
             this.table = this.pos.table;
         }
         this.customer_count = this.customer_count || 1;
@@ -192,16 +192,20 @@ models.PosModel = models.PosModel.extend({
         }
     },
 
-    set_order_on_table: function() {
+    /**
+     * @param {models.Order} order order to set
+     */
+    set_order_on_table: function(order) {
         var orders = this.get_order_list();
         if (orders.length) {
-            this.set_order(orders[0]); // and go to the first one ...
+            order = order ? orders.find((o) => o.uid === order.uid) : null;
+            this.set_order(order || orders[0]);
         } else {
             this.add_new_order();  // or create a new order with the current table
         }
     },
 
-    sync_to_server: function(table) {
+    sync_to_server: function(table, order) {
         var self = this;
         var ids_to_remove = this.db.get_ids_to_remove_from_server();
 
@@ -229,7 +233,7 @@ models.PosModel = models.PosModel.extend({
         }).catch(function(reason){
             self.set_synch('error');
         }).finally(function(){
-            self.set_order_on_table();
+            self.set_order_on_table(order);
         });
     },
 
@@ -247,8 +251,9 @@ models.PosModel = models.PosModel.extend({
      *
      * Switch table and make sure all nececery syncing tasks are done.
      * @param {object} table.
+     * @param {models.Order|undefined} order if provided, set to this order
      */
-    set_table: function(table) {
+    set_table: function(table, order) {
         if(!table){
             this.sync_from_server(table, this.get_order_list(), this.get_order_with_uid());
             this.set_order(null);
@@ -262,7 +267,7 @@ models.PosModel = models.PosModel.extend({
             this.set_order(null);
         } else {
             this.table = table;
-            this.sync_to_server(table);
+            this.sync_to_server(table, order);
         }
     },
 

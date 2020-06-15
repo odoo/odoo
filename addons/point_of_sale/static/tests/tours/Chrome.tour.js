@@ -12,17 +12,17 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
 
     // Order 1 is at Product Screen
     ProductScreen.do.clickHomeCategory();
-    ProductScreen.exec.order('Desk Pad', '1', '2');
+    ProductScreen.exec.addOrderline('Desk Pad', '1', '2');
 
     // Order 2 is at Payment Screen
     Chrome.do.newOrder();
-    ProductScreen.exec.order('Monitor Stand', '3', '4');
+    ProductScreen.exec.addOrderline('Monitor Stand', '3', '4');
     ProductScreen.do.clickPayButton();
     PaymentScreen.check.isShown();
 
     // Order 3 is at Receipt Screen
     Chrome.do.newOrder();
-    ProductScreen.exec.order('Whiteboard Pen', '5', '6');
+    ProductScreen.exec.addOrderline('Whiteboard Pen', '5', '6');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Bank');
     PaymentScreen.do.clickValidate();
@@ -71,7 +71,7 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     ReceiptScreen.do.clickNextOrder();
 
     // Invoice an order
-    ProductScreen.exec.order('Whiteboard Pen', '5', '6');
+    ProductScreen.exec.addOrderline('Whiteboard Pen', '5', '6');
     ProductScreen.do.clickCustomerButton();
     ProductScreen.do.clickCustomer('Nicole Ford');
     ProductScreen.do.clickSetCustomer();

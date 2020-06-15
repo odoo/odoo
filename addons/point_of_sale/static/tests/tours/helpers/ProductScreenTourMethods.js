@@ -181,10 +181,19 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+        totalAmountIs(amount) {
+            return [
+                {
+                    content: `order total amount is '${amount}'`,
+                    trigger: `.order-container .order .summary .value:contains("${amount}")`,
+                    run: () => {},
+                },
+            ];
+        }
     }
 
     class Execute {
-        order(productName, quantity, price) {
+        addOrderline(productName, quantity, price) {
             const res = this._do.clickDisplayedProduct(productName);
             if (price) {
                 res.push(...this._do.pressNumpad('Price'));
@@ -200,12 +209,14 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
             }
             return res;
         }
+        addMultiOrderlines(...list) {
+            const steps = [];
+            for (let [product, qty, price] of list) {
+                steps.push(...this.addOrderline(product, qty, price));
+            }
+            return steps;
+        }
     }
 
-    return {
-        Do,
-        Check,
-        Execute,
-        ProductScreen: createTourMethods('ProductScreen', Do, Check, Execute),
-    };
+    return createTourMethods('ProductScreen', Do, Check, Execute);
 });

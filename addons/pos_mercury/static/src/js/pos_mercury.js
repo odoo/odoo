@@ -119,6 +119,12 @@ pos_model.Paymentline = pos_model.Paymentline.extend({
     is_done: function () {
         var res = _paylineproto.is_done.apply(this);
         return res && !this.mercury_swipe_pending;
+    },
+    export_for_printing: function () {
+        const result = _paylineproto.export_for_printing.apply(this, arguments);
+        result.mercury_data = this.mercury_data;
+        result.mercury_auth_code = this.mercury_auth_code;
+        return result;
     }
 });
 
