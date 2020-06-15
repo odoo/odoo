@@ -214,12 +214,12 @@
                     </t>
 
                     <t t-name="JournalMiscelaneous">
-                        <div class="col-12 col-sm-5 mb-3 mb-sm-0 o_kanban_primary_left">
+                        <div class="col-12 col-sm-4 mb-3 mb-sm-0 o_kanban_primary_left">
                             <button type="object" name="action_create_new" class="btn btn-primary" groups="account.group_account_invoice">
                                 <span>New Entry</span>
                             </button>
                         </div>
-                        <div class="col-12 col-sm-7 o_kanban_primary_right">
+                        <div class="col-12 col-sm-8 o_kanban_primary_right">
                             <field name="json_activity_data" widget="kanban_vat_activity"/>
                             <t t-if="dashboard.number_to_check > 0">
                                 <div class="row">
