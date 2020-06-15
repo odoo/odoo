@@ -427,6 +427,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         }
         self._check_statement_matching(self.rule_0, expected_values, statements=bank_st)
 
+<<<<<<< HEAD
     def test_match_different_currencies(self):
         partner = self.env['res.partner'].create({'name': 'Bernard Gagnant'})
         self.rule_1.write({'match_partner_ids': [(6, 0, partner.ids)], 'match_same_currency': False})
@@ -532,6 +533,42 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         Both journal items should be suggested to the user because they represents 98% of the statement line amount
         (DAR).
         '''
+=======
+    def test_match_multi_currencies(self):
+        ''' Ensure the matching of candidates is made using the right statement line currency.
+        In this test, the value of the statement line is 100 USD = 300 GOL = 600 DAR and we want to match two journal
+        items of:
+        - 100 USD = 200 GOL (= 400 DAR from the statement line point of view)
+        - 11 USD = 220 DAR
+        Both journal items should be suggested to the user because they represents >95% of the statement line amount (620/600 ~=97)
+        (DAR).
+        '''
+        currency_data_2 = self.env['res.currency'].create({
+            'name': 'Dark Chocolate Coin',
+            'symbol': '🍫',
+            'currency_unit_label': 'Dark Choco',
+            'currency_subunit_label': 'Dark Cacao Powder',
+            'rounding': 0.001,
+            'position': 'after',
+        })
+        rate1 = self.env['res.currency.rate'].create({
+            'name': '2016-01-01',
+            'rate': 6.0,
+            'currency_id': currency_data_2.id,
+            'company_id': self.env.company.id,
+        })
+        rate2 = self.env['res.currency.rate'].create({
+            'name': '2017-01-01',
+            'rate': 4.0,
+            'currency_id': currency_data_2.id,
+            'company_id': self.env.company.id,
+        })
+        currency_data_2 = {
+            'currency': currency_data_2,
+            'rates': rate1 + rate2,
+        }
+
+>>>>>>> 67c0259e8e4... temp
         partner = self.env['res.partner'].create({'name': 'Bernard Perdant'})
 
         journal = self.env['account.journal'].create({
@@ -559,17 +596,29 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 (0, 0, {
                     'journal_id': journal.id,
                     'date': '2016-01-01',
+<<<<<<< HEAD
                     'payment_ref': 'line',
                     'partner_id': partner.id,
                     'foreign_currency_id': self.currency_data_2['currency'].id,
                     'amount': 300.0,            # Rate is 3 GOL = 1 USD in 2016.
                     'amount_currency': 900.0,   # Rate is 10 DAR = 1 USD in 2016 but the rate used by the bank is 9:1.
+=======
+                    'name': 'line',
+                    'partner_id': partner.id,
+                    'currency_id': currency_data_2['currency'].id,
+                    'amount': 300.0,            # Rate is 3 GOL = 1 USD in 2016.
+                    'amount_currency': 600.0,   # Rate is 6 DAR = 1 USD in 2016
+>>>>>>> 67c0259e8e4... temp
                 }),
             ],
         })
         statement_line = statement.line_ids
 
+<<<<<<< HEAD
         statement.button_post()
+=======
+        statement.button_open()
+>>>>>>> 67c0259e8e4... temp
 
         move = self.env['account.move'].create({
             'move_type': 'entry',
@@ -577,7 +626,11 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'journal_id': self.company_data['default_journal_sale'].id,
             'line_ids': [
                 # Rate is 2 GOL = 1 USD in 2017.
+<<<<<<< HEAD
                 # The statement line will consider this line equivalent to 600 DAR.
+=======
+                # The statement line will consider this line equivalent to 400 DAR.
+>>>>>>> 67c0259e8e4... temp
                 (0, 0, {
                     'account_id': self.company_data['default_account_receivable'].id,
                     'partner_id': partner.id,
@@ -590,22 +643,34 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
                 (0, 0, {
                     'account_id': self.company_data['default_account_receivable'].id,
                     'partner_id': partner.id,
+<<<<<<< HEAD
                     'currency_id': self.currency_data_2['currency'].id,
                     'debit': 14.0,
                     'credit': 0.0,
                     'amount_currency': 280.0,
+=======
+                    'currency_id': currency_data_2['currency'].id,
+                    'debit': 11.0,
+                    'credit': 0.0,
+                    'amount_currency': 220.0,
+>>>>>>> 67c0259e8e4... temp
                 }),
                 # Line to balance the journal entry:
                 (0, 0, {
                     'account_id': self.company_data['default_account_revenue'].id,
                     'debit': 0.0,
+<<<<<<< HEAD
                     'credit': 114.0,
+=======
+                    'credit': 111.0,
+>>>>>>> 67c0259e8e4... temp
                 }),
             ],
         })
         move.post()
 
         move_line_1 = move.line_ids.filtered(lambda line: line.debit == 100.0)
+<<<<<<< HEAD
         move_line_2 = move.line_ids.filtered(lambda line: line.debit == 14.0)
 
         self.env['account.reconcile.model'].flush()
@@ -614,3 +679,11 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             self._check_statement_matching(matching_rule, {
                 statement_line.id: {'aml_ids': (move_line_1 + move_line_2).ids, 'model': matching_rule}
             }, statements=statement)
+=======
+        move_line_2 = move.line_ids.filtered(lambda line: line.debit == 11.0)
+
+        self.env['account.reconcile.model'].flush()
+        self._check_statement_matching(matching_rule, {
+            statement_line.id: {'aml_ids': (move_line_1 + move_line_2).ids, 'model': matching_rule}
+        }, statements=statement)
+>>>>>>> 67c0259e8e4... temp

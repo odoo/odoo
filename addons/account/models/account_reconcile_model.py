@@ -812,7 +812,15 @@ class AccountReconcileModel(models.Model):
             if line_vals['currency_id']:
                 line_residual_after_reconciliation -= line_vals['amount_currency']
             else:
+<<<<<<< HEAD
                 line_residual_after_reconciliation -= line_vals['debit'] - line_vals['credit']
+=======
+                partial_residual = aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual']
+            partial_currency = aml['aml_currency_id'] and self.env['res.currency'].browse(aml['aml_currency_id']) or self.company_id.currency_id
+            if partial_currency != line_currency:
+                partial_residual = partial_currency._convert(partial_residual, line_currency, self.company_id, statement_line.date)
+            total_residual += partial_residual
+>>>>>>> 67c0259e8e4... temp
 
         # Statement line amount is equal to the total residual.
         if line_currency.is_zero(line_residual_after_reconciliation):
