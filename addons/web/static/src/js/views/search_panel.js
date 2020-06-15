@@ -46,6 +46,7 @@ function _processSearchPanelNode(node, fields) {
             description: attrs.string || fields[fieldName].string,
             enableCounters: !!pyUtils.py_eval(attrs.enable_counters || '0'),
             expand: !!pyUtils.py_eval(attrs.expand || '0'),
+            storeLastActive: !!pyUtils.py_eval(attrs.store_last_active || '0'),
             fieldName,
             icon: attrs.icon,
             id: sectionId,
@@ -467,8 +468,8 @@ const SearchPanel = Widget.extend({
         // set active value from context
         const value = this.defaultValues[category.fieldName];
         // if not set in context, or set to an unknown value, set active value
-        // from localStorage
-        if (!validValues.includes(value)) {
+        // from localStorage if storeLastActive is true
+        if (!validValues.includes(value) && category.storeLastActive) {
             const storageKey = this._getLocalStorageKey(category);
             return this.call('local_storage', 'getItem', storageKey);
         }
@@ -742,8 +743,10 @@ const SearchPanel = Widget.extend({
             value.folded = value.folded ? false : !hasChanged;
         }
         if (hasChanged) {
-            const storageKey = this._getLocalStorageKey(category);
-            this.call('local_storage', 'setItem', storageKey, valueId);
+            if (category.storeLastActive) {
+                const storageKey = this._getLocalStorageKey(category);
+                this.call('local_storage', 'setItem', storageKey, valueId);
+            }
             this._notifyDomainUpdated();
         } else {
             this._render();
