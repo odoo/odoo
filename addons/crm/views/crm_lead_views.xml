@@ -45,7 +45,7 @@
                             <label for="name" class="oe_edit_only" string="Lead" attrs="{'invisible': [('type', '=', 'opportunity')]}"/>
                             <label for="name" class="oe_edit_only" attrs="{'invisible': [('type', '=', 'lead')]}"/>
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
-                            <h2 class="o_row row no-gutters d-flex">
+                            <h2 class="o_row row no-gutters d-flex align-items-end">
                                 <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
                                     <label for="planned_revenue" class="oe_edit_only" />
                                     <div class="o_row">
@@ -238,7 +238,7 @@
                                     </group>
                                 </group>
                             </page>
-                            <page name="lead" string="Follow-up" attrs="{'invisible': [('type', '=', 'lead')]}">
+                            <page name="lead" string="Extra Information" attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <group>
                                     <group string="Contact Information">
                                         <field name="partner_name"/>
@@ -252,7 +252,7 @@
                                             <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                         </div>
                                         <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
-                                        <field name="lang_id"/>
+                                        <field name="lang_id" options="{'no_create': True}"/>
                                     </group>
                                     <group class="mt48">
                                         <label for="contact_name"/>
@@ -405,6 +405,7 @@
                         <field name="name" placeholder="e.g. Product Pricing" />
                         <field name="email_from" string="Email" />
                         <field name="phone" string="Phone" />
+                        <label for="planned_revenue"/>
                         <div class="o_row">
                             <field name="planned_revenue" class="oe_inline mr-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
