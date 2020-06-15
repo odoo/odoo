@@ -55,6 +55,7 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
             channel_livechat: [{
                 channel_type: 'livechat',
                 id: 20,
+                is_pinned: true,
                 livechat_visitor: {
                     country: false,
                     id: false,
