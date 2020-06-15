@@ -271,6 +271,9 @@ actual arch.
 
         for view in self:
             arch_fs = None
+            # while _compute_xml_id is costly, if this is moved inside the
+            # read_file conditional then studio computes xml_id record-by-record
+            # which is even slower so don't bother
             xml_id = view.xml_id or view.key
             read_file = self._context.get('read_arch_from_file') or \
                 ('xml' in config['dev_mode'] and not view.arch_updated)
