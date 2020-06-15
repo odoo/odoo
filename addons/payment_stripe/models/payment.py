@@ -253,7 +253,7 @@ class PaymentTransactionStripe(models.Model):
             _logger.error(error_msg)
             raise ValidationError(error_msg)
         elif len(tx) > 1:
-            error_msg = (_('Stripe: %s orders found for reference %s') % (len(tx), reference))
+            error_msg = _('Stripe: %(count)s orders found for reference %(reference)s', count=len(tx), reference=reference)
             _logger.error(error_msg)
             raise ValidationError(error_msg)
         return tx[0]

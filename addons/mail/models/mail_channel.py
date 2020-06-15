@@ -1016,6 +1016,6 @@ class Channel(models.Model):
             msg = _("You are alone in this channel.")
         else:
             dots = "..." if len(members) != len(self.channel_partner_ids) - 1 else ""
-            msg = _("Users in this channel: %s %s and you.") % (", ".join(members), dots)
+            msg = _("Users in this channel: %(members)s %(dots)s and you.", members=", ".join(members), dots=dots)
 
         self._send_transient_message(partner, msg)

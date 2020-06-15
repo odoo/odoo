@@ -22,7 +22,7 @@ class CalendarEvent(models.Model):
         for event in self:
             event._message_sms_with_template(
                 template_xmlid='calendar_sms.sms_template_data_calendar_reminder',
-                template_fallback=_("Event reminder: %s, %s.") % (event.name, event.display_time),
+                template_fallback=_("Event reminder: %(name)s, %(time)s.", name=event.name, time=event.display_time),
                 partner_ids=self._sms_get_default_partners().ids,
                 put_in_queue=False
             )

@@ -798,7 +798,12 @@ class MailThread(models.AbstractModel):
         # Existing Document: check if exists and model accepts the mailgateway; if not, fallback on create if allowed
         if thread_id:
             if not record_set.exists():
-                self._routing_warn(_('reply to missing document (%s,%s), fall back on document creation') % (model, thread_id), message_id, route, False)
+                self._routing_warn(
+                    _('reply to missing document (%(model)s,%(thread)s), fall back on document creation', model=model, thread=thread_id),
+                    message_id,
+                    route,
+                    False
+                )
                 thread_id = None
             elif not hasattr(record_set, 'message_update'):
                 self._routing_warn(_('reply to model %s that does not accept document update, fall back on document creation', model), message_id, route, False)
@@ -834,7 +839,12 @@ class MailThread(models.AbstractModel):
             else:
                 error_code = self.env['mail.alias.mixin']._alias_check_contact_on_record(obj, message, message_dict, alias)
             if error_code is not True:
-                self._routing_warn(_('alias %s: %s') % (alias.alias_name, error_code or _('unknown error')), message_id, route, False)
+                self._routing_warn(
+                    _('alias %(name)s: %(error)s', name=alias.alias_name, error=error_code or _('unknown error')),
+                    message_id,
+                    route,
+                    False
+                )
                 body = alias._get_alias_bounced_body(message_dict)
                 self._routing_create_bounce_email(email_from, body, message, references=message_id)
                 return False

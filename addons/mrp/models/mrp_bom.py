@@ -96,10 +96,12 @@ class MrpBom(models.Model):
                         % (bom.product_id.display_name, ", ".join([ptav.display_name for ptav in bom_line.bom_product_template_attribute_value_ids])))
                 for ptav in bom_line.bom_product_template_attribute_value_ids:
                     if ptav.product_tmpl_id != bom.product_tmpl_id:
-                        raise ValidationError(
-                            _("The attribute value %s set on product %s does not match the BoM product %s.") %
-                            (ptav.display_name, ptav.product_tmpl_id.display_name, bom_line.parent_product_tmpl_id.display_name)
-                        )
+                        raise ValidationError(_(
+                            "The attribute value %(attribute)s set on product %(product)s does not match the BoM product %(bom_product)s.",
+                            attribute=ptav.display_name,
+                            product=ptav.product_tmpl_id.display_name,
+                            bom_product=bom_line.parent_product_tmpl_id.display_name
+                        ))
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):

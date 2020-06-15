@@ -172,7 +172,13 @@ class StockPicking(models.Model):
         if res['tracking_number']:
             self.carrier_tracking_ref = res['tracking_number']
         order_currency = self.sale_id.currency_id or self.company_id.currency_id
-        msg = _("Shipment sent to carrier %s for shipping with tracking number %s<br/>Cost: %.2f %s") % (self.carrier_id.name, self.carrier_tracking_ref, self.carrier_price, order_currency.name)
+        msg = _(
+            "Shipment sent to carrier %(carrier_name)s for shipping with tracking number %(ref)s<br/>Cost: %(price).2f %(currency)s",
+            carrier_name=self.carrier_id.name,
+            ref=self.carrier_tracking_ref,
+            price=self.carrier_price,
+            currency=order_currency.name
+        )
         self.message_post(body=msg)
         self._add_delivery_cost_to_so()
 

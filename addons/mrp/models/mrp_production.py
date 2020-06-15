@@ -1596,7 +1596,9 @@ class MrpProduction(models.Model):
                     ('qty_done', '=', 1),
                     ('state', '=', 'done')
                 ]
-                message = _('The serial number %s used for byproduct %s has already been produced') % (move_line.lot_id.name, move_line.product_id.name)
+                message = _('The serial number %(number)s used for byproduct %(product_name)s has already been produced',
+                    number=move_line.lot_id.name,
+                    product_name=move_line.product_id.name)
                 co_prod_move_lines = self.move_finished_ids.move_line_ids.filtered(lambda ml: ml.product_id != self.product_id)
                 domain_unbuild = domain + [
                     ('production_id', '=', False),
@@ -1628,7 +1630,9 @@ class MrpProduction(models.Model):
                     ('qty_done', '=', 1),
                     ('state', '=', 'done')
                 ]
-                message = _('The serial number %s used for component %s has already been consumed') % (move_line.lot_id.name, move_line.product_id.name)
+                message = _('The serial number %(number)s used for component %(component)s has already been consumed',
+                    number=move_line.lot_id.name,
+                    component=move_line.product_id.name)
                 co_prod_move_lines = self.move_raw_ids.move_line_ids
                 domain_unbuild = domain + [
                     ('production_id', '=', False),

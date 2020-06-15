@@ -894,7 +894,11 @@ class Lead(models.Model):
             for message in opportunity.message_ids:
                 message.write({
                     'res_id': self.id,
-                    'subject': _("From %s : %s") % (opportunity.name, message.subject)
+                    'subject': _(
+                        "From %(source_name)s : %(source_subject)s",
+                        source_name=opportunity.name,
+                        source_subject=message.subject
+                    )
                 })
         return True
 

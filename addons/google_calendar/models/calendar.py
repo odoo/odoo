@@ -131,15 +131,27 @@ class Meeting(models.Model):
                 if minutes % (60*24) == 0:
                     interval = 'days'
                     duration = minutes / 60 / 24
-                    name = _("%s - %s Days") % (alarm_type_label, duration)
+                    name = _(
+                        "%(reminder_type)s - %(duration)s Days",
+                        reminder_type=alarm_type_label,
+                        duration=duration,
+                    )
                 elif minutes % 60 == 0:
                     interval = 'hours'
                     duration = minutes / 60
-                    name = _("%s - %s Hours") % (alarm_type_label, duration)
+                    name = _(
+                        "%(reminder_type)s - %(duration)s Hours",
+                        reminder_type=alarm_type_label,
+                        duration=duration,
+                    )
                 else:
                     interval = 'minutes'
                     duration = minutes
-                    name = _("%s - %s Minutes") % (alarm_type_label, duration)
+                    name = _(
+                        "%(reminder_type)s - %(duration)s Minutes",
+                        reminder_type=alarm_type_label,
+                        duration=duration,
+                    )
                 commands += [(0, 0, {'duration': duration, 'interval': interval, 'name': name, 'alarm_type': alarm_type})]
         return commands
 

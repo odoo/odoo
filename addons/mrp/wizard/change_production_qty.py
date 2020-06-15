@@ -48,7 +48,11 @@ class ChangeProductionQty(models.TransientModel):
             produced = sum(production.move_finished_ids.filtered(lambda m: m.product_id == production.product_id).mapped('quantity_done'))
             if wizard.product_qty < produced:
                 format_qty = '%.{precision}f'.format(precision=precision)
-                raise UserError(_("You have already processed %s. Please input a quantity higher than %s ") % (format_qty % produced, format_qty % produced))
+                raise UserError(_(
+                    "You have already processed %(quantity)s. Please input a quantity higher than %(minimum)s ",
+                    quantity=format_qty % produced,
+                    minimum=format_qty % produced
+                ))
             old_production_qty = production.product_qty
             new_production_qty = wizard.product_qty
             done_moves = production.move_finished_ids.filtered(lambda x: x.state == 'done' and x.product_id == production.product_id)

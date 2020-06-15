@@ -147,7 +147,11 @@ class AccountAccount(models.Model):
         if res:
             account = self.env['account.account'].browse(res[0])
             journal = self.env['account.journal'].browse(res[1])
-            raise ValidationError(_("The foreign currency set on the journal '%s' and the account '%s' must be the same.") % (journal.display_name, account.display_name))
+            raise ValidationError(_(
+                "The foreign currency set on the journal '%(journal)s' and the account '%(account)s' must be the same.",
+                journal=journal.display_name,
+                account=account.display_name
+            ))
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
