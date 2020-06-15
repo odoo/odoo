@@ -121,7 +121,7 @@ class EventEvent(models.Model):
     color = fields.Integer('Kanban Color Index')
     event_mail_ids = fields.One2many(
         'event.mail', 'event_id', string='Mail Schedule', copy=True,
-        compute='_compute_from_event_type', readonly=False, store=True)
+        compute='_compute_event_mail_ids', readonly=False, store=True)
     tag_ids = fields.Many2many(
         'event.tag', string="Tags", readonly=False,
         copy=True, store=True, compute="_compute_from_event_type")
@@ -165,7 +165,7 @@ class EventEvent(models.Model):
     registration_ids = fields.One2many('event.registration', 'event_id', string='Attendees')
     event_ticket_ids = fields.One2many(
         'event.event.ticket', 'event_id', string='Event Ticket', copy=True,
-        compute='_compute_from_event_type', readonly=False, store=True)
+        compute='_compute_event_ticket_ids', readonly=False, store=True)
     event_registrations_open = fields.Boolean(
         'Registration open', compute='_compute_event_registrations_open', compute_sudo=True,
         help='Registrations are open if event is not ended, seats are available on event and if tickets are sellable if ticketing is used.')
@@ -332,7 +332,7 @@ class EventEvent(models.Model):
     @api.depends('event_type_id')
     def _compute_date_tz(self):
         for event in self:
-            if event.event_type_id.use_timezone:
+            if event.event_type_id.use_timezone and event.event_type_id.default_timezone:
                 event.date_tz = event.event_type_id.default_timezone
             if not event.date_tz:
                 event.date_tz = self.env.user.tz or 'UTC'
@@ -359,44 +359,93 @@ class EventEvent(models.Model):
 
         Updated by this method
           * seats_max -> triggers _compute_seats (all seats computation)
+          * seats_limited
           * auto_confirm
-          * event_mail_ids
-          * event_ticket_ids -> triggers _compute_start_sale_date (start_sale_date computation)
+          * tag_ids
         """
         for event in self:
             if not event.event_type_id:
                 if not event.seats_max:
                     event.seats_max = 0
-                if not event.event_ticket_ids:
-                    event.event_ticket_ids = False
                 continue
 
-            if event.event_type_id.seats_max:
-                event.seats_max = event.event_type_id.seats_max
+            event.seats_max = event.event_type_id.seats_max
 
-            if event.event_type_id.auto_confirm:
-                event.auto_confirm = event.event_type_id.auto_confirm
+            if event.event_type_id.has_seats_limitation != event.seats_limited:
+                event.seats_limited = event.event_type_id.has_seats_limitation
 
-            # compute mailing information (force only if activated and mailing defined)
-            if event.event_type_id.use_mail_schedule and event.event_type_id.event_type_mail_ids:
-                event.event_mail_ids = [(5, 0, 0)] + [
+            event.auto_confirm = event.event_type_id.auto_confirm
+            event.tag_ids = event.event_type_id.tag_ids
+
+    @api.depends('event_type_id')
+    def _compute_event_mail_ids(self):
+        """ Update event mails from its event type. Depends are set only on
+        event_type_id itself to emulate an onchange. Changing event type content
+        itself should not trigger this method.
+
+        When synchronizing mails:
+
+          * lines that are not sent and have no registrations linked are remove;
+          * type lines are added;
+        """
+        for event in self:
+            if not event.event_type_id and not event.event_mail_ids:
+                event.event_mail_ids = False
+                continue
+
+            # lines to keep: those with already sent emails or registrations
+            mails_toremove = event._origin.event_mail_ids.filtered(lambda mail: not mail.mail_sent and not(mail.mail_registration_ids))
+            command = [(3, mail.id) for mail in mails_toremove]
+            if event.event_type_id.use_mail_schedule:
+                command += [
                     (0, 0, {
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.mail']._get_event_mail_fields_whitelist()
-                        })
-                    for line in event.event_type_id.event_type_mail_ids]
+                    }) for line in event.event_type_id.event_type_mail_ids
+                ]
+            if command:
+                event.event_mail_ids = command
 
-            # compute tickets information (force only if activated and tickets defined)
-            if event.event_type_id.use_ticket and event.event_type_id.event_type_ticket_ids:
-                event.event_ticket_ids = [(5, 0, 0)] + [
+    @api.depends('event_type_id')
+    def _compute_event_ticket_ids(self):
+        """ Update event tickets from its event type. Depends are set only on
+        event_type_id itself to emulate an onchange. Changing event type content
+        itself should not trigger this method.
+
+        When synchronizing tickets:
+
+          * lines that have no registrations linked are remove;
+          * type lines are added;
+
+        Note that updating event_ticket_ids triggers _compute_start_sale_date
+        (start_sale_date computation) so ensure result to avoid cache miss.
+        """
+        if self.ids or self._origin.ids:
+            # lines to keep: those with already sent emails or registrations
+            tickets_tokeep_ids = self.env['event.registration'].search(
+                [('event_id', 'in', self.ids or self._origin.ids)]
+            ).event_ticket_id.ids
+        else:
+            tickets_tokeep_ids = []
+        for event in self:
+            if not event.event_type_id and not event.event_ticket_ids:
+                event.event_ticket_ids = False
+                continue
+
+            # lines to keep: those with existing registrations
+            if tickets_tokeep_ids:
+                tickets_toremove = event._origin.event_ticket_ids.filtered(lambda ticket: ticket.id not in tickets_tokeep_ids)
+                command = [(3, ticket.id) for ticket in tickets_toremove]
+            else:
+                command = [(5, 0)]
+            if event.event_type_id.use_ticket:
+                command += [
                     (0, 0, {
                         attribute_name: line[attribute_name] if not isinstance(line[attribute_name], models.BaseModel) else line[attribute_name].id
                         for attribute_name in self.env['event.type.ticket']._get_event_ticket_fields_whitelist()
-                        })
-                    for line in event.event_type_id.event_type_ticket_ids]
-
-            if event.event_type_id.tag_ids:
-                event.tag_ids = event.event_type_id.tag_ids
+                    }) for line in event.event_type_id.event_type_ticket_ids
+                ]
+            event.event_ticket_ids = command
 
     @api.constrains('seats_max', 'seats_available', 'seats_limited')
     def _check_seats_limit(self):
