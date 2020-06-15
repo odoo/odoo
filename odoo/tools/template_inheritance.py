@@ -4,6 +4,7 @@ from lxml.builder import E
 import copy
 import itertools
 import logging
+from functools import lru_cache
 
 from odoo.tools.translate import _
 from odoo.tools import SKIPPED_ELEMENT_TYPES
@@ -12,7 +13,7 @@ _logger = logging.getLogger(__name__)
 
 def add_text_before(node, text):
     """ Add text before ``node`` in its XML tree. """
-    if text is None:
+    if not text:
         return
     prev = node.getprevious()
     if prev is not None:
@@ -24,7 +25,7 @@ def add_text_before(node, text):
 
 def add_text_inside(node, text):
     """ Add text inside ``node``. """
-    if text is None:
+    if not text:
         return
     if len(node):
         node[-1].tail = (node[-1].tail or "") + text
@@ -39,6 +40,7 @@ def remove_element(node):
     node.getparent().remove(node)
 
 
+xpath_cache = lru_cache(maxsize=None)(etree.ETXPath)
 def locate_node(arch, spec):
     """ Locate a node in a source (parent) architecture.
 
@@ -55,7 +57,7 @@ def locate_node(arch, spec):
     if spec.tag == 'xpath':
         expr = spec.get('expr')
         try:
-            xPath = etree.ETXPath(expr)
+            xPath = xpath_cache(expr)
         except etree.XPathSyntaxError:
             _logger.error("XPathSyntaxError while parsing xpath %r", expr)
             raise
@@ -121,18 +123,58 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                 etree.tostring(spec)
             )
 
-    while len(specs):
+    while specs:
         spec = specs.pop(0)
-        if isinstance(spec, SKIPPED_ELEMENT_TYPES):
-            continue
         if spec.tag == 'data':
-            specs += [c for c in spec]
+            specs.extend(spec)
+            continue
+        if isinstance(spec, SKIPPED_ELEMENT_TYPES):
             continue
         pre_locate(spec)
         node = locate_node(source, spec)
         if node is not None:
             pos = spec.get('position', 'inside')
-            if pos == 'replace':
+            if pos == 'inside':
+                add_text_inside(node, spec.text)
+                for child in spec:
+                    if child.get('position') == 'move':
+                        child = extract(child)
+                    node.append(child)
+            elif pos == 'after':
+                # add a sentinel element right after node, insert content of
+                # spec before the sentinel, then remove the sentinel element
+                sentinel = E.sentinel()
+                node.addnext(sentinel)
+                add_text_before(sentinel, spec.text)
+                for child in spec:
+                    if child.get('position') == 'move':
+                        child = extract(child)
+                    sentinel.addprevious(child)
+                remove_element(sentinel)
+            elif pos == 'attributes':
+                for child in spec.getiterator('attribute'):
+                    attribute = child.get('name')
+                    value = child.text or ''
+                    if child.get('add') or child.get('remove'):
+                        assert not child.text
+                        separator = child.get('separator', ',')
+                        if separator == ' ':
+                            separator = None    # squash spaces
+                        to_add = (
+                            s for s in (s.strip() for s in child.get('add', '').split(separator))
+                            if s
+                        )
+                        to_remove = {s.strip() for s in child.get('remove', '').split(separator)}
+                        values = (s.strip() for s in node.get(attribute, '').split(separator))
+                        value = (separator or ' ').join(itertools.chain(
+                            (v for v in values if v not in to_remove),
+                            to_add
+                        ))
+                    if value:
+                        node.set(attribute, value)
+                    elif attribute in node.attrib:
+                        del node.attrib[attribute]
+            elif pos == 'replace':
                 for loc in spec.xpath(".//*[text()='$0']"):
                     loc.text = ''
                     loc.append(copy.deepcopy(node))
@@ -167,46 +209,6 @@ def apply_inheritance_specs(source, specs_tree, inherit_branding=False, pre_loca
                             replaced_node_tag = node.tag
                         node.addprevious(child)
                     node.getparent().remove(node)
-            elif pos == 'attributes':
-                for child in spec.getiterator('attribute'):
-                    attribute = child.get('name')
-                    value = child.text or ''
-                    if child.get('add') or child.get('remove'):
-                        assert not child.text
-                        separator = child.get('separator', ',')
-                        if separator == ' ':
-                            separator = None    # squash spaces
-                        to_add = (
-                            s for s in (s.strip() for s in child.get('add', '').split(separator))
-                            if s
-                        )
-                        to_remove = {s.strip() for s in child.get('remove', '').split(separator)}
-                        values = (s.strip() for s in node.get(attribute, '').split(separator))
-                        value = (separator or ' ').join(itertools.chain(
-                            (v for v in values if v not in to_remove),
-                            to_add
-                        ))
-                    if value:
-                        node.set(attribute, value)
-                    elif attribute in node.attrib:
-                        del node.attrib[attribute]
-            elif pos == 'inside':
-                add_text_inside(node, spec.text)
-                for child in spec:
-                    if child.get('position') == 'move':
-                        child = extract(child)
-                    node.append(child)
-            elif pos == 'after':
-                # add a sentinel element right after node, insert content of
-                # spec before the sentinel, then remove the sentinel element
-                sentinel = E.sentinel()
-                node.addnext(sentinel)
-                add_text_before(sentinel, spec.text)
-                for child in spec:
-                    if child.get('position') == 'move':
-                        child = extract(child)
-                    sentinel.addprevious(child)
-                remove_element(sentinel)
             elif pos == 'before':
                 add_text_before(node, spec.text)
                 for child in spec:
