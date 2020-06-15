@@ -420,6 +420,11 @@ function factory(dependencies) {
         }
 
         /**
+         * This value is meant to be based on field body which is
+         * returned by the server (and has been sanitized before stored into db).
+         * Do not use this value in a 't-raw' if the message has been created
+         * directly from user input and not from server data as it's not escaped.
+         *
          * @private
          * @returns {string}
          */
@@ -473,6 +478,12 @@ function factory(dependencies) {
         author: many2one('mail.partner', {
             inverse: 'messagesAsAuthor',
         }),
+        /**
+         * This value is meant to be returned by the server
+         * (and has been sanitized before stored into db).
+         * Do not use this value in a 't-raw' if the message has been created
+         * directly from user input and not from server data as it's not escaped.
+         */
         body: attr({
             default: "",
         }),
@@ -559,6 +570,12 @@ function factory(dependencies) {
             default: false,
             related: 'originThread.isModeratedByCurrentPartner',
         }),
+        /**
+         * This value is meant to be based on field body which is
+         * returned by the server (and has been sanitized before stored into db).
+         * Do not use this value in a 't-raw' if the message has been created
+         * directly from user input and not from server data as it's not escaped.
+         */
         prettyBody: attr({
             compute: '_computePrettyBody',
             dependencies: ['body'],
