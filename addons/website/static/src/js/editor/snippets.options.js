@@ -1525,13 +1525,40 @@ options.registry.headerTemplates = options.Class.extend({
     selectClass: async function (previewMode, widgetValue, params) {
         await this._super(...arguments);
 
+        const $body = $(document.body);
+
+        let isPerspective = params.possibleValues.includes('o_header_hamburger_perspective');
+        let isBuilding = widgetValue.includes('o_header_hamburger_perspective');
+
+        let isTemplate = params.possibleValues.includes('o_hamburger_menu');
+        let isHamburger = widgetValue.includes('o_hamburger_menu') || params.variable === "offcanvas-type";
+        let isActive = $body.data('perspective-standby') === true || $body.hasClass('o_perspective');
+
         // Close collapse immediatly, in any circumstance
-        this.$('#top_menu_collapse').removeClass('show');
+        $('#top_menu_collapse').removeClass('show');
+
+        if (isBuilding || (isHamburger && isActive)) {
+            this.$target.trigger('togglePerspectiveOn');
+            $body.data('perspective-standby', false);
+        } else if (isPerspective & !isBuilding) {
+            this.$target.trigger('togglePerspectiveOff');
+            $body.data('perspective-standby', false);
+        } else if (isTemplate & !isHamburger) {
+            this.$target.trigger('togglePerspectiveOff');
+            $body.data('perspective-standby', true);
+        }
 
         // Open collapse if hamburger_menu is active only
         setTimeout(() => {
             $('.o_hamburger_menu #top_menu_collapse').collapse('show');
         }, 0);
+    },
+
+    setIntensity(previewMode, widgetValue, params) {
+        $('.o_hamburger_menu #top_menu_collapse').collapse('show');
+
+        // TODO: css variable is correclty assigned, but the value is not saved
+        document.getElementById('wrapwrap').style.setProperty('--perspective-intensity', widgetValue);
     },
 });
 

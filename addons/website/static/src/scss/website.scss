@@ -791,6 +791,13 @@ $-transition-duration: 200ms;
 @include o-offcanvas-layouts(o-website-value('offcanvas-type'));
 @include o-header-layouts(o-website-value('header-template'), $-transition-duration);
 
+@if o-website-value('header-effect') == 'perspective' {
+    body {
+        @include o-header-perspective(o-website-value('offcanvas-type'));
+    }
+}
+
+
 // Affixed Header
 header#top.o_header_affixed {
     display: block;

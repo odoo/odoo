@@ -16,6 +16,13 @@ const BaseAnimatedHeader = animations.Animation.extend({
         startEvents: 'resize',
         update: '_updateHeaderOnResize',
     }],
+    edit_events:  {
+        'togglePerspectiveOn': '_togglePerspectiveOn',
+        'togglePerspectiveOff': '_togglePerspectiveOff',
+    },
+    events:  {
+        'togglePerspectiveOn': '_togglePerspectiveOn',
+    },
 
     /**
      * @constructor
@@ -120,6 +127,61 @@ const BaseAnimatedHeader = animations.Animation.extend({
             clearTimeout(this._paddingLoopTimer);
         }
     },
+
+    _togglePerspectiveOn: function (ev) {
+        const $body = $(document.body);
+        const $wrapwrap = $body.find('#wrapwrap');
+
+        if ($body.find('#o_perspective_nav').length) {
+            this._togglePerspectiveOff();
+        }
+
+        let transitionDuration = 0;
+        let $perspHeader = this.$el.clone(true);
+        let $perspContainer = $perspHeader.find('#top_menu_container');
+
+        $perspHeader.attr('id', 'o_perspective_nav').addClass('h-0 position-fixed');
+        $perspContainer.empty();
+
+        this.$el.find('#top_menu_collapse').appendTo($perspContainer);
+
+        $body.addClass('o_perspective').prepend($perspHeader);
+
+        $body.toggleClass('o_hamburger_menu_left', $perspContainer.is('.o_hamburger_menu_left'))
+             .toggleClass('o_hamburger_menu_full', $perspContainer.is('.o_hamburger_menu_full'));
+
+        $perspHeader.find('#top_menu_collapse').on('show.bs.collapse.PerspectiveAnimatedHeader', function () {
+            $body.addClass('o_perspective_active overflow-hidden');
+            $wrapwrap.addClass('vh-100 overflow-hidden');
+
+            let value = $wrapwrap.css('transition-duration');
+            let multiply = value.indexOf('ms') !== -1 ? 1 : 1000;
+            transitionDuration = parseInt(parseFloat(value) * multiply, 10);
+
+        }).on('hide.bs.collapse.PerspectiveAnimatedHeader', function () {
+            $body.removeClass('o_perspective_active');
+
+        }).on('hidden.bs.collapse.PerspectiveAnimatedHeader', function () {
+            setTimeout(() => {
+                $body.removeClass('overflow-hidden');
+                $wrapwrap.removeClass('vh-100 overflow-hidden');
+            }, transitionDuration);
+        });
+    },
+
+    _togglePerspectiveOff: function (ev) {
+        let $body = $(document.body);
+        let $perspHeader = $body.find('#o_perspective_nav');
+
+        if ($perspHeader.length === 0) return;
+
+        $perspHeader.find('#top_menu_collapse').appendTo('#wrapwrap #top_menu_container');
+        $perspHeader.remove();
+
+        $body.removeClass('o_perspective o_hamburger_menu_left o_hamburger_menu_full')
+                .find('#top_menu_collapse').off('show.bs.collapse.PerspectiveAnimatedHeader hide.bs.collapse.PerspectiveAnimatedHeader hidden.bs.collapse.PerspectiveAnimatedHeader');
+    },
+
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -376,7 +438,7 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         var defs = [this._super.apply(this, arguments)];
-        this.noAutohide = this.$el.closest('.o_no_autohide_menu').length || this.$el.find('> .o_hanburger_menu').length;
+        this.noAutohide = this.$el.closest('.o_no_autohide_menu').length || this.$el.find('> .o_hanburger_menu').length || this.$el.closest('.o_header_hamburger_perspective').length;
         if (!this.noAutohide) {
             var $navbar = this.$el.closest('.navbar');
             defs.push(wUtils.onceAllImagesLoaded($navbar));
@@ -560,6 +622,15 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         $dropdown.removeClass('show');
         $dropdown.find(this.$dropdownToggles).attr('aria-expanded', 'false');
         $dropdown.find(this.$dropdownMenus).removeClass('show');
+    },
+});
+
+publicWidget.registry.headerHamburgerPerspective = animations.Animation.extend({
+    selector: 'header.o_header_hamburger_perspective',
+    disabledInEditableMode: true,
+
+    start: function () {
+        this.$el.trigger('togglePerspectiveOn');
     },
 });
 });

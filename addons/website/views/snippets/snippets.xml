@@ -499,7 +499,7 @@
             <we-button id="option_template_header_logo_menu"
                        data-name="header_logo_menu_opt"
                        data-customize-website-views=""
-                       data-trigger="header-hamburger-clean"
+                       data-trigger="header-hamburger-clean, header-hamburger-perspective-disable"
                        data-customize-website-variable="logo_menu"
                        data-select-class="navbar-expand-md flex-row"
                        string="Default"/>
@@ -513,11 +513,11 @@
                        data-name="header_vertical_opt"
                        data-customize-website-views="website.template_header_vertical"
                        data-customize-website-variable="vertical"
-                       data-trigger="header-hamburger-clean"
+                       data-trigger="header-hamburger-clean, header-hamburger-perspective-disable"
                        data-select-class="o_vertical_menu navbar-expand-md flex-md-column justify-content-center"
                        string="Vertical"/>
         </we-select>
-        <we-select string=" ⌙ Position" id="header_hamburger_select" class="flex-nowrap mt-n2 mb-3" data-variable="offcanvas-type" data-dependencies="header_hamburger" data-apply-to="#top_menu_container">
+        <we-select string=" ⌙ Position" id="header_hamburger_select" class="flex-nowrap mt-n2" data-variable="offcanvas-type" data-dependencies="header_hamburger" data-apply-to="#top_menu_container">
             <we-button id="option_template_header_hamburger_right"
                        data-customize-website-variable="right"
                        data-name="header-hamburger-clean"
@@ -535,6 +535,21 @@
                        data-customize-website-views="website.option_header_hamburger_full"
                        string="Center (Fullwidth)"/>
         </we-select>
+
+        <we-select string="Effects" data-dependencies="header_hamburger" data-variable="header-effect">
+            <we-button string="None"
+                       data-name="header-hamburger-perspective-disable"
+                       data-select-class=""/>
+            <we-button string="Perspective"
+                       data-customize-website-views="website.option_header_hamburger_perspective"
+                       data-name="header-hamburger-perspective"
+                       data-customize-website-variable="perspective"
+                       data-select-class="o_header_hamburger_perspective"/>
+        </we-select>
+
+        <we-range string="Intensity"
+                  data-dependencies="header-hamburger-perspective"
+                  data-set-intensity=""/>
     </div>
     <div id="so_header_theme_templates_options"
          data-selector="#wrapwrap > header"
