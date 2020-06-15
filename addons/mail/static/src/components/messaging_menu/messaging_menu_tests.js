@@ -455,6 +455,7 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -565,6 +566,7 @@ QUnit.test('filtered previews', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
             channel_direct_message: [{
@@ -574,6 +576,7 @@ QUnit.test('filtered previews', async function (assert) {
                     name: "Demo",
                 }],
                 id: 10,
+                is_pinned: true,
             }],
         },
     });
@@ -760,6 +763,7 @@ QUnit.test('open chat window from preview', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -795,6 +799,7 @@ QUnit.test('no code injection in message body preview', async function (assert) 
             channel_channel: [{
                 channel_type: "channel",
                 id: 1,
+                is_pinned: true,
                 name: "General",
             }],
         },

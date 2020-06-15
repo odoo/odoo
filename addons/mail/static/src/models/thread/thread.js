@@ -171,6 +171,16 @@ function factory(dependencies) {
             if ('is_moderator' in data) {
                 data2.is_moderator = data.is_moderator;
             }
+            if ('is_pinned' in data) {
+                data2.isServerPinned = data.is_pinned;
+                // FIXME: The following is admittedly odd.
+                // Fixing it should entail a deeper reflexion on the group_based_subscription
+                // and is_pinned functionalities, especially in python.
+                // task-2284357
+                if ('group_based_subscription' in data && data.group_based_subscription) {
+                    data2.isServerPinned = true;
+                }
+            }
             if ('mass_mailing' in data) {
                 data2.mass_mailing = data.mass_mailing;
             }
@@ -298,10 +308,7 @@ function factory(dependencies) {
                     }),
                 }
             });
-            const thread = this.insert(Object.assign(
-                { isPinned: true },
-                this.convertData(data)
-            ));
+            const thread = this.insert(this.convertData(data));
             if (autoselect) {
                 thread.open({ chatWindowMode: autoselectChatWindowMode });
             }
@@ -316,7 +323,7 @@ function factory(dependencies) {
          * @param {boolean} [param1.autoselect=false]
          */
         static async joinChannel(channelId, { autoselect = false } = {}) {
-            const channel = this.find(thread =>
+            let channel = this.find(thread =>
                 thread.id === channelId &&
                 thread.model === 'mail.channel'
             );
@@ -328,12 +335,17 @@ function factory(dependencies) {
                 method: 'channel_join_and_get_info',
                 args: [[channelId]]
             });
-            const thread = this.insert(Object.assign(
-                { isPinned: true },
-                this.convertData(data)
-            ));
+            // We just joined the channel because of the previous rpc
+            // the main assumption here is that we didn't have the channel
+            // in memory. If we did though, clear the pending state and
+            // let the server's data be the master
+            const convertedData = Object.assign(
+                { isPendingPinned: undefined },
+                this.convertData(data),
+            );
+            channel = this.insert(convertedData);
             if (autoselect) {
-                thread.open({ resetDiscussDomain: true });
+                channel.open({ resetDiscussDomain: true });
             }
         }
 
@@ -480,6 +492,20 @@ function factory(dependencies) {
                     state: this.pendingFoldState,
                 }
             }, { shadow: true }));
+        }
+
+        /**
+         * Notify server to leave the current channel. Useful for cross-tab
+         * and cross-device chat window state synchronization.
+         *
+         * Only makes sense if pendingServerState is set to 'unpin'.
+         */
+        async notifyUnPinToServer() {
+            return this.async(() => this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'execute_command',
+                args: [[this.id], 'leave']
+            }));
         }
 
         /**
@@ -728,19 +754,11 @@ function factory(dependencies) {
         /**
          * Unsubscribe current user from provided channel.
          */
-        async unsubscribe() {
-            if (this.channel_type === 'mail.channel') {
-                return this.async(() => this.env.services.rpc({
-                    model: 'mail.channel',
-                    method: 'action_unfollow',
-                    args: [[this.id]]
-                }));
-            }
-            return this.async(() => this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'channel_pin',
-                args: [this.uuid, false]
-            }));
+        unsubscribe() {
+            this.update({
+                pendingFoldState: 'closed',
+                isPendingPinned: false,
+            });
         }
 
         //----------------------------------------------------------------------
@@ -817,6 +835,14 @@ function factory(dependencies) {
                 return false;
             }
             return this.messaging.currentPartner.moderatedChannelIds.includes(this.id);
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeIsPinned() {
+            return this.isPendingPinned !== undefined ? this.isPendingPinned : this.isServerPinned;
         }
 
         /**
@@ -1059,6 +1085,17 @@ function factory(dependencies) {
             ) {
                 this.update({ pendingFoldState: undefined });
             }
+            if (
+                this.isPendingPinned === false &&
+                previous.isPendingPinned !== this.isPendingPinned
+            ) {
+                this.notifyUnPinToServer();
+            }
+            if (
+                this.isServerPinned === this.isPendingPinned
+            ) {
+                this.update({ isPendingPinned: undefined });
+            }
 
             // TODO FIXME prevent to open/close a channel on mobile when you
             // open/close it on desktop (task-2267593)
@@ -1090,6 +1127,7 @@ function factory(dependencies) {
         _updateBefore() {
             return {
                 foldState: this.foldState,
+                isPendingPinned: this.isPendingPinned,
                 pendingFoldState: this.pendingFoldState,
             };
         }
@@ -1222,7 +1260,36 @@ function factory(dependencies) {
                 'messagingCurrentPartner',
             ],
         }),
+        /**
+         * Determine if there is a pending pin state change, which is a change
+         * of pin state requested by the client but not yet confirmed by the
+         * server.
+         *
+         * This field can be updated to immediately change the pin state on the
+         * interface and to notify the server of the new state.
+         */
+        isPendingPinned: attr(),
+        /**
+         * Boolean that determines whether this thread is pinned
+         * in discuss and present in the messaging menu.
+         */
         isPinned: attr({
+            compute: '_computeIsPinned',
+            dependencies: [
+                'isPendingPinned',
+                'isServerPinned',
+            ],
+        }),
+        /**
+         * Determine the last pin state known by the server, which is the pin
+         * state displayed after initialization or when the last pending
+         * pin state change was confirmed by the server.
+         *
+         * This field should be considered read only in most situations. Only
+         * the code handling pin state change from the server should typically
+         * update it.
+         */
+        isServerPinned: attr({
             default: false,
         }),
         isTemporary: attr({

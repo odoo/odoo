@@ -281,6 +281,9 @@ class Channel(models.Model):
     def _action_unfollow(self, partner):
         channel_info = self.channel_info('unsubscribe')[0]  # must be computed before leaving the channel (access rights)
         result = self.write({'channel_partner_ids': [(3, partner.id)]})
+        # side effect of unsubscribe that wasn't taken into account because
+        # channel_info is called before actually unpinning the channel
+        channel_info['is_pinned'] = False
         self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', partner.id), channel_info)
         if not self.email_send:
             notification = _('<div class="o_mail_notification">left <a href="#" class="o_channel_redirect" data-oe-id="%s">#%s</a></div>') % (self.id, self.name,)
@@ -592,6 +595,7 @@ class Channel(models.Model):
                     info['is_minimized'] = partner_channel.is_minimized
                     info['seen_message_id'] = partner_channel.seen_message_id.id
                     info['custom_channel_name'] = partner_channel.custom_channel_name
+                    info['is_pinned'] = partner_channel.is_pinned
 
             # add members infos
             partner_ids = channel_partners.mapped('partner_id').ids

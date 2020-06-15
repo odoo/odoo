@@ -612,6 +612,7 @@ QUnit.test('composer text input cleared on message post', async function (assert
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -660,6 +661,7 @@ QUnit.test('composer with thread typing notification status', async function (as
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -691,6 +693,7 @@ QUnit.test('current partner notify is typing to other thread members', async fun
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 members: [{
                     email: 'admin@odoo.com',
                     id: 3,
@@ -746,6 +749,7 @@ QUnit.test('current partner is typing should not translate on textual typing sta
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 members: [{
                     email: 'admin@odoo.com',
                     id: 3,
@@ -809,6 +813,7 @@ QUnit.test('current partner notify no longer is typing to thread members after 5
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 members: [{
                     email: 'admin@odoo.com',
                     id: 3,
@@ -871,6 +876,7 @@ QUnit.test('current partner notify is typing again to other members every 50s of
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 members: [{
                     email: 'admin@odoo.com',
                     id: 3,
