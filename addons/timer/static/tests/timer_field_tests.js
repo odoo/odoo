@@ -17,23 +17,13 @@ QUnit.module('timer_timer', {
                     timer_stop: { string: "timer stop", type: "datetime" },
                     timer_pause: { string: "action_timer_pause", type: "datetime" },
                     is_timer_running: { string: "is timer running", type: "boolean" },
-                    value: { string: "is timer running", type: "datetime" },
-                    // action_timer_resume: { string: "action_timer_resume" },
-                    // display_name: { string: "Displayed name", type: "text" },
-                    // display_timer_start_secondary: { string: "action_timer_start" },
                 },
                 records: [{
                     id: 1,
-                    // display_timer_pause: false,
-                    // display_timer_resume: false,
-                    // display_timer_start_secondary: true,
-                    // display_timer_stop: false,
-                    // display_timesheet_timer: true,
                     timer_start: "2020-01-01 00:00:00",
                     timer_stop: false,
                     timer_pause: false,
                     is_timer_running: false,
-                    value: false,
                 }],
             },
         };
@@ -41,11 +31,8 @@ QUnit.module('timer_timer', {
 }, function () {
     QUnit.module('timer.timer');
 
-    QUnit.only('timer_toggle_button: basic rendering', async function (assert) {
-        assert.expect(2);
-
-        //this.data.partner.fields.is_timer_running = {string: 'Is Timer Running', type: 'boolean', default: false};
-        //this.data.partner.fields.active = {string: 'Is Timer Running', type: 'boolean', default: false};
+    QUnit.test('timer_toggle_button: basic rendering', async function (assert) {
+        assert.expect(3);
 
         const kanban = await createView({
             View: KanbanView,
@@ -56,31 +43,29 @@ QUnit.module('timer_timer', {
                     <templates>
                         <t t-name="kanban-box">
                             <div>
-                                <field name="value"/>
                                 <field name="is_timer_running" widget="timer_toggle_button" options="{\'prevent_deletion\': True}"/>
                             </div>
                         </t>
                     </templates>
                 </kanban>`,
             res_id: 1,
-            mockRPC: function (route, args) {
-                if (route === '/web/dataset/call_kw/partner/action_timer_start') {
-                    return Promise.resolve(false);
-                }
-                if (route === '/web/dataset/call_kw/partner/action_timer_stop') {
-                    return Promise.resolve();
-                }
-                return this._super.apply(this, arguments);
-            },
         });
 
         assert.containsOnce(kanban, 'button.o-timer-button',
             "should have timer_toggle_button widget");
-        await testUtils.dom.click(kanban.el.querySelector('.o_icon_button'));
-        assert.containsOnce(kanban, 'i.fa-stop-circle',
-            "should have stop icon");
+        assert.containsOnce(kanban, 'i.fa-play-circle',
+                "should have play icon");
 
-        kanban.destroy();
+        return concurrency.delay(1000).then(async () => {
+            this.data.partner.records[0].is_timer_running = "false";
+            await kanban.reload();
+            return concurrency.delay(1000);
+        }).then(() => {
+            assert.containsOnce(kanban, 'i.fa-stop-circle',
+                "should have stop icon");
+
+            kanban.destroy();
+        });
     });
 
     QUnit.test('timer field widget: basic rendering', async function (assert) {
