@@ -47,6 +47,7 @@ var FormView = BasicView.extend({
         this.controllerParams.mode = mode;
 
         this.rendererParams.mode = mode;
+        this.rendererParams.isFromFormViewDialog = params.isFromFormViewDialog;
     },
 
     //--------------------------------------------------------------------------

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.AttachmentList" owl="1">
+        <div class="o_AttachmentList">
+            <t t-foreach="props.attachmentLocalIds" t-as="attachmentLocalId" t-key="attachmentLocalId">
+                <Attachment
+                    class="o_AttachmentList_attachment"
+                    attachmentLocalId="attachmentLocalId"
+                    attachmentLocalIds="props.attachmentLocalIds"
+                    detailsMode="props.attachmentsDetailsMode"
+                    imageSize="props.attachmentsImageSize"
+                    isDownloadable="props.areAttachmentsDownloadable"
+                    isEditable="props.areAttachmentsEditable"
+                    showExtension="props.showAttachmentsExtensions"
+                    showFilename="props.showAttachmentsFilenames"
+                />
+            </t>
+        </div>
+    </t>
+
+</templates>

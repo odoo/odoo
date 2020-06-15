@@ -2,16 +2,28 @@
 <odoo>
     <data>
         <template id="assets_backend" name="mailbot assets" inherit_id="web.assets_backend">
-            <xpath expr="." position="inside">
+            <xpath expr="script[last()]" position="after">
+                <script type="text/javascript" src="/mail_bot/static/src/bugfix/bugfix.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/components/messaging_menu/messaging_menu.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/components/notification_alert/notification_alert.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/components/notification_list/notification_list.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/components/notification_request/notification_request.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/models/messaging/messaging.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/models/messaging_initializer/messaging_initializer.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/models/messaging_menu/messaging_menu.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/widgets/notification_alert/notification_alert.js"></script>
+            </xpath>
+            <xpath expr="link[last()]" position="after">
                 <link rel="stylesheet" type="text/scss" href="/mail_bot/static/src/scss/odoobot_style.scss"/>
-                <script type="text/javascript" src="/mail_bot/static/src/js/mailbot_service.js"></script>
-                <script type="text/javascript" src="/mail_bot/static/src/js/notification_alert.js"></script>
-                <script type="text/javascript" src="/mail_bot/static/src/js/systray_messaging_menu.js"></script>
+                <link rel="stylesheet" type="text/scss" href="/mail_bot/static/src/bugfix/bugfix.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/mail_bot/static/src/components/notification_request/notification_request.scss"/>
             </xpath>
         </template>
-        <template id="qunit_suite" name="mail_tests" inherit_id="web.qunit_suite_tests">
+        <template id="qunit_suite" name="mailbot_tests" inherit_id="web.qunit_suite_tests">
             <xpath expr="." position="inside">
-                <script type="text/javascript" src="/mail_bot/static/tests/systray_messaging_menu_tests.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/bugfix/bugfix_tests.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/components/messaging_menu/messaging_menu_tests.js"></script>
+                <script type="text/javascript" src="/mail_bot/static/src/widgets/notification_alert/notification_alert_tests.js"></script>
             </xpath>
         </template>
     </data>

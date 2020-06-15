@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.ThreadViewer" owl="1">
+        <div class="o_ThreadViewer" t-att-data-thread-local-id="threadViewer and threadViewer.thread and threadViewer.thread.localId">
+            <t t-if="threadViewer">
+                <t t-if="threadViewer.isShowingLoading" name="loadingCondition">
+                    <div class="o_ThreadViewer_loading">
+                        <span><i class="o_ThreadViewer_loadingIcon fa fa-spinner fa-spin" title="Loading..." role="img"/>Loading...</span>
+                    </div>
+                </t>
+                <t t-elif="threadViewer.threadCache.isLoaded">
+                    <MessageList
+                        class="o_ThreadViewer_messageList"
+                        hasMessageCheckbox="props.hasMessageCheckbox"
+                        hasSquashCloseMessages="props.hasSquashCloseMessages"
+                        haveMessagesAuthorRedirect="props.haveMessagesAuthorRedirect"
+                        haveMessagesMarkAsReadIcon="props.haveMessagesMarkAsReadIcon"
+                        haveMessagesReplyIcon="props.haveMessagesReplyIcon"
+                        order="props.order"
+                        selectedMessageLocalId="props.selectedMessageLocalId"
+                        threadViewerLocalId="threadViewer.localId"
+                        t-ref="messageList"
+                    />
+                </t>
+                <t t-if="props.hasComposer">
+                    <Composer
+                        class="o_ThreadViewer_composer"
+                        attachmentsDetailsMode="props.composerAttachmentsDetailsMode"
+                        composerLocalId="threadViewer.thread.composer.localId"
+                        hasCurrentPartnerAvatar="props.hasComposerCurrentPartnerAvatar"
+                        hasSendButton="props.hasComposerSendButton"
+                        hasThreadTyping="props.hasComposerThreadTyping"
+                        isFocusOnMount="!env.messaging.device.isMobile"
+                        showAttachmentsExtensions="props.showComposerAttachmentsExtensions"
+                        showAttachmentsFilenames="props.showComposerAttachmentsFilenames"
+                        t-ref="composer"
+                    />
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

@@ -617,7 +617,7 @@ class MailActivityMixin(models.AbstractModel):
     Activities come with a new JS widget for the form view. It is integrated in the
     Chatter widget although it is a separate widget. It displays activities linked
     to the current record and allow to schedule, edit and mark done activities.
-    Use widget="mail_activity" on activity_ids field in form view to use it.
+    Just include field activity_ids in the div.oe-chatter to use it.
 
     There is also a kanban widget defined. It defines a small widget to integrate
     in kanban vignettes. It allow to manage activities directly from the kanban

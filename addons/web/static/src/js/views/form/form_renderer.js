@@ -5,12 +5,13 @@ var BasicRenderer = require('web.BasicRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dom = require('web.dom');
+const { WidgetAdapterMixin } = require('web.OwlCompatibility');
 var viewUtils = require('web.viewUtils');
 
 var _t = core._t;
 var qweb = core.qweb;
 
-var FormRenderer = BasicRenderer.extend({
+var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
     className: "o_form_view",
     events: _.extend({}, BasicRenderer.prototype.events, {
         'click .o_notification_box .oe_field_translate': '_onTranslate',
@@ -44,9 +45,17 @@ var FormRenderer = BasicRenderer.extend({
         return this._super.apply(this, arguments);
     },
     /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        WidgetAdapterMixin.destroy.call(this);
+    },
+    /**
      * Called each time the form view is attached into the DOM
      */
     on_attach_callback: function () {
+        WidgetAdapterMixin.on_attach_callback.call(this);
         this._isInDom = true;
         this._super.apply(this, arguments);
     },
@@ -54,6 +63,7 @@ var FormRenderer = BasicRenderer.extend({
      * Called each time the renderer is detached from the DOM.
      */
     on_detach_callback: function () {
+        WidgetAdapterMixin.on_detach_callback.call(this);
         this._isInDom = false;
         this._super.apply(this, arguments);
     },
@@ -1007,7 +1017,7 @@ var FormRenderer = BasicRenderer.extend({
         this.$el.html($newContent);
         this.$el.toggleClass('o_form_nosheet', !this.has_sheet);
         if (this.has_sheet) {
-            this.$el.children().not('.oe_chatter')
+            this.$el.children().not('.o_FormRenderer_chatterContainer')
                 .wrapAll($('<div/>', {class: 'o_form_sheet_bg'}));
         }
         this.$el.toggleClass('o_form_editable', this.mode === 'edit');

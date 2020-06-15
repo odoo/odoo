@@ -6,7 +6,6 @@ var field_registry = require('web.field_registry');
 require('mail.Activity');
 
 var KanbanActivity = field_registry.get('kanban_activity');
-var MailActivity = field_registry.get('mail_activity');
 
 function applyInclude(Activity) {
     Activity.include({
@@ -42,6 +41,5 @@ function applyInclude(Activity) {
 }
 
 applyInclude(KanbanActivity);
-applyInclude(MailActivity);
 
 });

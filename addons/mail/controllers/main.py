@@ -272,6 +272,8 @@ class MailController(http.Controller):
             'is_moderator': request.env.user.is_moderator,
             'moderation_counter': request.env.user.moderation_counter,
             'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
+            'partner_root': request.env.ref('base.partner_root').sudo().mail_partner_format(),
+            'public_partner': request.env.ref('base.public_partner').sudo().mail_partner_format(),
         }
         return values
 
