@@ -24,10 +24,9 @@
                  class="o_notification_subtitle"/>
             <div t-if="widget.message" t-raw="widget.message"
                  class="mr-auto o_notification_content"/>
-            <t t-if="!widget.title" t-raw="closeButton"/>
             <div t-if="widget.buttons.length" class="mt-2 o_notification_buttons">
                 <button t-foreach="widget.buttons" t-as="button" type="button"
-                        t-attf-class="btn #{button.primary ? 'btn-primary' : 'btn-secondary'}">
+                        t-attf-class="btn btn-sm #{button.primary ? 'btn-primary' : 'btn-secondary'}">
                     <t t-if="button.icon">
                         <i t-if="button.icon.indexOf('fa-') === 0" t-attf-class="fa fa-fw o_button_icon #{button.icon}" role="img" t-att-aria-label="button.name" t-att-title="button.name"/>
                         <img t-else="" t-att-src="button.icon" t-att-alt="button.name"/>
@@ -35,6 +34,7 @@
                     <span t-esc="button.text"/>
                 </button>
             </div>
+            <t t-if="!widget.title" t-raw="closeButton"/>
         </div>
     </div>
 </t>
