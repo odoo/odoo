@@ -319,6 +319,16 @@ function beforeEach(self) {
                     string: "Id",
                     type: 'integer',
                 },
+                is_minimized: {
+                    // In python this belongs to mail.channel.partner. Here for simplicity.
+                    string: "isMinimized",
+                    type: "boolean",
+                },
+                is_pinned: {
+                    // In python this belongs to mail.channel.partner. Here for simplicity.
+                    string: "isPinned",
+                    type: "boolean",
+                },
                 message_unread_counter: {
                     string: "# unread messages",
                     type: 'integer',
@@ -328,7 +338,18 @@ function beforeEach(self) {
                     type: "char",
                     required: true,
                 },
+                state: {
+                    // In python this belongs to mail.channel.partner. Here for simplicity.
+                    string: "FoldState",
+                    type: "char",
+                },
+                uuid: {
+                    string: "UUID",
+                    type: "char",
+                    required: true,
+                },
             },
+            records: [],
         },
         'mail.followers': {
             fields: {

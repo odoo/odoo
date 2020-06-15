@@ -43,6 +43,7 @@ QUnit.test('moderated channel with pending moderation message', async function (
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
@@ -323,6 +324,7 @@ QUnit.test('accept pending moderation message', async function (assert) {
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
@@ -442,6 +444,7 @@ QUnit.test('reject pending moderation message (reject with explanation)', async 
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
@@ -619,6 +622,7 @@ QUnit.test('discard pending moderation message (reject without explanation)', as
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
@@ -749,6 +753,7 @@ QUnit.test('send message in moderated channel', async function (assert) {
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
@@ -834,6 +839,7 @@ QUnit.test('sent message accepted in moderated channel', async function (assert)
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
@@ -921,6 +927,7 @@ QUnit.test('sent message rejected in moderated channel', async function (assert)
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
@@ -994,6 +1001,7 @@ QUnit.test('as moderator, pending moderation message accessibility', async funct
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
@@ -1059,6 +1067,7 @@ QUnit.test('as author, pending moderation message should appear in origin thread
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
@@ -1100,6 +1109,7 @@ QUnit.test('new pending moderation message posted by me', async function (assert
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
@@ -1161,6 +1171,7 @@ QUnit.test('new pending moderation message posted by someone else when moderator
         channel_slots: {
             channel_channel: [{
                 id: 20,
+                is_pinned: true,
                 channel_type: "channel",
                 name: "general",
                 moderation: true,
