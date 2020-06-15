@@ -13,17 +13,17 @@
                             <field name="custom_colors" invisible="1" />
                             <field name="logo_primary_color" invisible="1" />
                             <field name="logo_secondary_color" invisible="1" />
-                            <field name="report_layout_id" widget="radio" string="Layout" class="mb-4" />
-                            <field name="logo" widget="image" class="mb-4" />
+                            <field name="report_layout_id" widget="radio" string="Layout"/>
+                            <field name="logo" widget="image"/>
                             <label for="primary_color" string="Colors" />
                             <div class="o_document_layout_colors">
-                                <field name="primary_color" widget="color" class="mb-4" />
-                                <field name="secondary_color" widget="color" class="mb-4" />
+                                <field name="primary_color" widget="color"/>
+                                <field name="secondary_color" widget="color"/>
                                 <button class="btn btn-link" title="Reset to logo colors" attrs="{'invisible': [('custom_colors', '=', False)]}">
-                                    <label for="custom_colors" class="fa fa-refresh mb-4" string="" />
+                                    <label for="custom_colors" class="fa fa-refresh" string="" />
                                 </button>
                             </div>
-                            <field name="font" widget="font" class="mb-4" />
+                            <field name="font" widget="font"/>
                             <field name="report_header" widget="char" placeholder="e.g. Global Business Solutions" />
                             <field name="report_footer" string="Footer" placeholder="e.g. Opening hours, bank accounts (one per line)" />
                             <field name="paperformat_id" required="1" />

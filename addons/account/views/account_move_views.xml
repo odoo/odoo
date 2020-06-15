@@ -998,8 +998,7 @@
                                         <label for="ref" string="Customer Reference" />
                                         <field name="ref" nolabel="1"/>
                                         <field name="invoice_user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
-                                        <field name="invoice_origin" string="Source Document" force_save="1"
-                                               attrs="{'invisible': [('invoice_origin', '=', False)]}"/>
+                                        <field name="invoice_origin" string="Source Document" force_save="1" invisible="1"/>
                                         <field name="partner_bank_id"
                                                context="{'default_partner_id': commercial_partner_id}"
                                                domain="[('partner_id', '=', bank_partner_id)]"
