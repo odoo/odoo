@@ -27,4 +27,7 @@
         'data/res_country_data.xml',
         'data/l10n_latam_identification_type_data.xml',
     ],
+    'demo': [
+        'demo/l10n_pe_demo.xml',
+    ],
 }
