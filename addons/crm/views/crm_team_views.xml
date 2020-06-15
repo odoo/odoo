@@ -126,8 +126,10 @@
                         <field name="alias_id" class="oe_read_only oe_inline"
                             string="Email Alias" required="0"/>
                         <div class="oe_edit_only oe_inline" name="edit_alias" style="display: inline;" >
-                            <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
-                            <button  icon="fa-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
+                            <div attrs="{'invisible': [('alias_domain', '=', False)]}">
+                                <field name="alias_name" class="oe_inline"/>@<field name="alias_domain" class="oe_inline" readonly="1"/>
+                            </div>
+                            <button icon="fa-arrow-right" type="action" name="%(base_setup.action_general_configuration)d" string="Configure a custom domain" class="p-0 btn-link" attrs="{'invisible': [('alias_domain', '!=', False)]}"/>
                         </div>
                     </div>
                     <field name="alias_contact"
