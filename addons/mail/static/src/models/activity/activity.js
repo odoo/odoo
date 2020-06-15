@@ -269,6 +269,12 @@ function factory(dependencies) {
         messagingCurrentPartner: many2one('mail.partner', {
             related: 'messaging.currentPartner',
         }),
+        /**
+         * This value is meant to be returned by the server
+         * (and has been sanitized before stored into db).
+         * Do not use this value in a 't-raw' if the activity has been created
+         * directly from user input and not from server data as it's not escaped.
+         */
         note: attr(),
         res_id: attr(),
         res_model: attr(),
