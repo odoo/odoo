@@ -368,7 +368,7 @@ class SaleOrder(models.Model):
         if not journal_id:
             raise UserError(_('Please define an accounting sales journal for this company.'))
         invoice_vals = {
-            'name': self.client_order_ref or '',
+            'name': self.client_order_ref,
             'origin': self.name,
             'type': 'out_invoice',
             'account_id': self.partner_invoice_id.property_account_receivable_id.id,
@@ -430,7 +430,7 @@ class SaleOrder(models.Model):
                     references[invoice] = order
                     invoices[group_key] = invoice
                     invoices_origin[group_key] = [invoice.origin]
-                    invoices_name[group_key] = [invoice.name]
+                    invoices_name[group_key] = [invoice.name or '']
                 elif group_key in invoices:
                     if order.name not in invoices_origin[group_key]:
                         invoices_origin[group_key].append(order.name)
