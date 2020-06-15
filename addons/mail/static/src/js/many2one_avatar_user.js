@@ -26,6 +26,7 @@ odoo.define('mail.Many2OneAvatarUser', function (require) {
     const { Many2OneAvatar } = require('web.relational_fields');
     const session = require('web.session');
 
+    const { Component } = owl;
 
     const Many2OneAvatarUser = Many2OneAvatar.extend({
         events: Object.assign({}, Many2OneAvatar.prototype.events, {
@@ -117,7 +118,11 @@ odoo.define('mail.Many2OneAvatarUser', function (require) {
                 partnerId = await this._resIdToPartnerId(this.value.res_id);
             }
             if (partnerId && partnerId !== session.partner_id) {
-                this.call('mail_service', 'openDMChatWindow', partnerId);
+                const env = Component.env;
+                const partner = env.models['mail.partner'].insert({
+                    id: partnerId,
+                });
+                partner.openChat();
             } else {
                 this._displayWarning(partnerId);
             }

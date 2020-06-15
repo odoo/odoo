@@ -2,7 +2,7 @@ odoo.define('website_livechat.tour_common', function(require) {
 'use strict';
 
 var session = require('web.session');
-var LivechatButton = require('im_livechat.im_livechat').LivechatButton;
+var LivechatButton = require('im_livechat.legacy.im_livechat.im_livechat').LivechatButton;
 
 /**
  * Alter this method for test purposes.

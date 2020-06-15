@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        AKU FIXME: use mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js component instead
+        @param {string} status
+    -->
+    <t t-name="mail.widgets.UserStatus">
+        <span>
+            <t t-if="status == 'online'">
+                <i class="o_mail_user_status o_user_online fa fa-circle" title="Online" role="img" aria-label="User is online"/>
+            </t>
+            <t t-if="status == 'away'">
+                <i class="fa fa-circle o_mail_user_status o_user_idle" title="Idle" role="img" aria-label="User is idle"/>
+            </t>
+            <t t-if="status == 'offline'">
+                <i class="o_mail_user_status fa fa-circle-o" title="Offline" role="img" aria-label="User is offline"/>
+            </t>
+            <t t-if="status == 'bot'">
+                <i class="o_mail_user_status o_user_online fa fa-heart" title="Bot" role="img" aria-label="User is a bot"/>
+            </t>
+        </span>
+    </t>
+
+</templates>

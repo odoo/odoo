@@ -86,5 +86,11 @@ class Invite(models.TransientModel):
                         partners_data.append(dict(pdata, type='customer'))
 
                 document._notify_record_by_email(message, {'partners': partners_data, 'channels': []}, send_after_commit=False)
+                # in case of failure, the web client must know the message was
+                # deleted to discard the related failure notification
+                self.env['bus.bus'].sendone(
+                    (self._cr.dbname, 'res.partner', self.env.user.partner_id.id),
+                    {'type': 'deletion', 'message_ids': message.ids}
+                )
                 message.unlink()
         return {'type': 'ir.actions.act_window_close'}

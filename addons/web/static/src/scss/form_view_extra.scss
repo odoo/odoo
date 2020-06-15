@@ -1,5 +1,4 @@
 .o_form_view {
-    $sheet-max-width: 1140px;
     $sheet-min-width: 650px;
     $sheet-padding: 16px;
 
@@ -12,7 +11,7 @@
 
         > .o_form_sheet {
             min-width: $sheet-min-width;
-            max-width: $sheet-max-width;
+            max-width: $o-form-view-sheet-max-width;
             min-height: 330px;
             border: 1px solid #c8c8d3;
             box-shadow: 0 4px 20px rgba(0,0,0,0.15);
@@ -88,15 +87,6 @@
         .o_td_label {
             border-right: none;
         }
-    }
-
-    // Chatter
-    .oe_chatter {
-        display: block;
-        min-width: $sheet-min-width + 2* $sheet-padding;
-        max-width: $sheet-max-width + 2* $sheet-padding;
-        margin: 0 auto;
-        padding: 16px 16px 48px;
     }
 }
 

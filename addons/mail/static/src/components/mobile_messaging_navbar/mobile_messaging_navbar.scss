@@ -1,0 +1,43 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_MobileMessagingNavbar {
+    display: flex;
+    flex: 0 0 auto;
+    z-index: 1;
+}
+
+.o_MobileMessagingNavbar_tab {
+    display: flex;
+    flex-flow: column;
+    align-items: center;
+    flex: 1 1 0;
+    padding: 8px;
+}
+
+.o_MobileMessagingNavbar_tabIcon {
+    margin-bottom: 4%;
+    font-size: 1.3em;
+}
+
+.o_MobileMessagingNavbar_tabLabel {
+    font-size: 0.8em;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_MobileMessagingNavbar {
+    background-color: white;
+    box-shadow: 0 0 8px gray('400');
+}
+
+.o_MobileMessagingNavbar_tab {
+    box-shadow: 1px 0 0 gray('400');
+
+    &.o-active {
+        color: $o-brand-primary;
+    }
+}

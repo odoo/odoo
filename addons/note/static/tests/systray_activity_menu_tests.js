@@ -1,8 +1,8 @@
 odoo.define('note.systray.ActivityMenuTests', function (require) {
 "use strict";
 
+const { start } = require('mail/static/src/utils/test_utils.js');
 var ActivityMenu = require('mail.systray.ActivityMenu');
-var mailTestUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
 
@@ -10,7 +10,6 @@ QUnit.module('note', {}, function () {
 
 QUnit.module("ActivityMenu", {
     beforeEach: function () {
-        this.services = mailTestUtils.getMailServices();
         this.data = {
             'mail.activity.menu': {
                 fields: {
@@ -31,15 +30,14 @@ QUnit.module("ActivityMenu", {
                 records: [],
             }
         };
-    }
+    },
 });
 
 QUnit.test('note activity menu widget: create note from activity menu', async function (assert) {
     assert.expect(15);
     var self = this;
-    var activityMenu = new ActivityMenu();
-    await testUtils.mock.addMockEnvironment(activityMenu, {
-        services: this.services,
+
+    const { widget } = await start({
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve(self.data['mail.activity.menu'].records);
@@ -71,6 +69,8 @@ QUnit.test('note activity menu widget: create note from activity menu', async fu
             return this._super(route, args);
         },
     });
+
+    const activityMenu = new ActivityMenu(widget);
     await activityMenu.appendTo($('#qunit-fixture'));
     assert.hasClass(activityMenu.$el,'o_mail_systray_item',
         'should be the instance of widget');
@@ -118,7 +118,7 @@ QUnit.test('note activity menu widget: create note from activity menu', async fu
         'ActivityMenu add note button should be displayed');
     assert.hasClass(activityMenu.$('.o_note'), 'd-none',
         'ActivityMenu add note input should be hidden');
-    activityMenu.destroy();
+    widget.destroy();
 });
 });
 });

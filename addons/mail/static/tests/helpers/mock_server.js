@@ -31,22 +31,36 @@ MockServer.include({
      * @private
      * @return {Object[]} list of channels previews
      */
-    _mockChannelFetchPreview: function (args) {
-        var self = this;
-        var ids = args.args[0]; // list of channel IDs to fetch preview
-        var model = args.model;
-        var channels = this._getRecords(model, [['id', 'in', ids]]);
-        var previews = _.map(channels, function (channel) {
-            var channelMessages = _.filter(self.data['mail.message'].records, function (message) {
-                return _.contains(message.channel_ids, channel.id);
-            });
-            var lastMessage = _.max(channelMessages, function (message) {
-                return message.id;
-            });
-            channel.last_message = lastMessage;
+    _mockChannelFetchPreview(args) {
+        const ids = args.args[0]; // list of channel IDs to fetch preview
+        const model = args.model;
+        const channels = this._getRecords(model, [['id', 'in', ids]]);
+        return channels.map(channel => {
+            if (!channel.last_message) {
+                const channelMessages = this.data['mail.message'].records.filter(
+                    message => message.channel_ids.includes(channel.id)
+                );
+                if (channelMessages.length > 0) {
+                    const lastMessageId = Math.max(...channelMessages.map(message => message.id));
+                    channel.last_message = channelMessages.find(
+                        message => message.id === lastMessageId
+                    );
+                }
+            }
             return channel;
         });
-        return previews;
+    },
+
+    /**
+     * Simulate the '/mail/read_followers' route
+     *
+     * @private
+     * @return {Object} list of followers
+     */
+    async _mockFollowersRead(args) {
+        const ids = args.follower_ids; // list of followers IDs to read
+        const followers = this._getRecords('mail.followers', [['id', 'in', ids]]);
+        return { followers };
     },
     /**
      * Simulate the 'get_activity_method' on 'mail.activity'
@@ -131,14 +145,24 @@ MockServer.include({
      */
     _mockInitMessaging: function () {
         return _.defaults(this.initMessagingData || {}, {
-            'needaction_inbox_counter': 0,
-            'starred_counter': 0,
-            'channel_slots': [],
-            'commands': [],
-            'mention_partner_suggestions': [],
-            'shortcodes': [],
-            'menu_id': false,
-            'mail_failures': [],
+            channel_slots: [],
+            commands: [],
+            mail_failures: [],
+            mention_partner_suggestions: [],
+            menu_id: false,
+            needaction_inbox_counter: 0,
+            partner_root: {
+                active: false,
+                display_name: "OdooBot",
+                id: 2,
+            },
+            public_partner: {
+                active: false,
+                display_name: "Public user",
+                id: 4,
+            },
+            shortcodes: [],
+            starred_counter: 0,
         });
     },
     /**
@@ -166,7 +190,10 @@ MockServer.include({
             return m1.id < m2.id ? 1 : -1;
         });
         // pick at most 'limit' messages
-        return messages.slice(0, args.kwargs.limit);
+        if (args.kwargs.limit) {
+            return messages.slice(0, args.kwargs.limit);
+        }
+        return messages;
     },
     /**
      * Simulate the 'message_format' Python method
@@ -184,6 +211,29 @@ MockServer.include({
             return m1.id < m2.id ? 1 : -1;
         });
         return messages;
+    },
+    /**
+     * Simulate the 'message_post' Python method
+     *
+     * @private
+     * @return {integer}
+     */
+    _mockMessagePost(args) {
+        const {
+            args: [res_id],
+            model: res_model,
+            kwargs: postData,
+        } = args;
+        const records = this.data['mail.message'].records;
+        const messageIds = records.map(message => message.id);
+        const id = Math.max(...messageIds, 0) + 1;
+        const record = Object.assign({
+            id,
+            res_id,
+            model: res_model,
+        }, postData);
+        records.push(record);
+        return id;
     },
     /**
      * Simulate the 'moderate' Python method
@@ -219,7 +269,7 @@ MockServer.include({
                 var dbName = undefined; // useless for tests
                 var messageData = message;
                 message.moderation_status = 'accepted';
-                var metaData = [dbName, 'mail.channel'];
+                var metaData = [dbName, 'mail.channel', message.res_id];
                 var notification = [metaData, messageData];
                 notifications.push(notification);
             });
@@ -255,7 +305,7 @@ MockServer.include({
     /**
      * @override
      */
-    _performRpc: function (route, args) {
+    async _performRpc(route, args) {
         // routes
         if (route === '/mail/init_messaging') {
             return Promise.resolve(this._mockInitMessaging(args));
@@ -266,6 +316,9 @@ MockServer.include({
         }
         if (args.method === 'channel_fetch_preview') {
             return Promise.resolve(this._mockChannelFetchPreview(args));
+        }
+        if (args.method === 'channel_fold') {
+            return;
         }
         if (args.method === 'channel_minimize') {
             return Promise.resolve();
@@ -284,6 +337,12 @@ MockServer.include({
         }
         if (args.method === 'message_format') {
             return Promise.resolve(this._mockMessageFormat(args));
+        }
+        if (args.method === 'message_post') {
+            return Promise.resolve(this._mockMessagePost(args));
+        }
+        if (route === '/mail/read_followers') {
+            return this._mockFollowersRead(args);
         }
         if (args.method === 'activity_format') {
             var res = this._mockRead(args.model, args.args, args.kwargs);

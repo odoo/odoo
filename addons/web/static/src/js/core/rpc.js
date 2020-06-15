@@ -3,7 +3,7 @@ odoo.define('web.rpc', function (require) {
 
 var ajax = require('web.ajax');
 
-return {
+const rpc = {
     /**
      * Perform a RPC.  Please note that this is not the preferred way to do a
      * rpc if you are in the context of a widget.  In that case, you should use
@@ -14,7 +14,7 @@ return {
      * @returns {Promise<any>}
      */
     query: function (params, options) {
-        var query = this.buildQuery(params);
+        var query = rpc.buildQuery(params);
         return ajax.rpc(query.route, query.params, options);
     },
     /**
@@ -66,14 +66,14 @@ return {
             // In kwargs, we look for "orderby" rather than "orderBy" (note the absence of capital B),
             // since the Python argument to the actual function is "orderby".
             orderBy = options.orderBy || params.orderBy || params.kwargs.orderby;
-            params.kwargs.orderby = orderBy ? this._serializeSort(orderBy) : orderBy;
+            params.kwargs.orderby = orderBy ? rpc._serializeSort(orderBy) : orderBy;
             params.kwargs.lazy = 'lazy' in options ? options.lazy : params.lazy;
 
             if (options.method === 'web_read_group') {
                 params.kwargs.expand = options.expand || params.expand || params.kwargs.expand;
                 params.kwargs.expand_limit = options.expand_limit || params.expand_limit || params.kwargs.expand_limit;
                 var expandOrderBy = options.expand_orderby || params.expand_orderby || params.kwargs.expand_orderby;
-                params.kwargs.expand_orderby = expandOrderBy ? this._serializeSort(expandOrderBy) : expandOrderBy;
+                params.kwargs.expand_orderby = expandOrderBy ? rpc._serializeSort(expandOrderBy) : expandOrderBy;
             }
         }
 
@@ -86,7 +86,7 @@ return {
             // In kwargs, we look for "order" rather than "orderBy" since the Python
             // argument to the actual function is "order".
             orderBy = options.orderBy || params.orderBy || params.kwargs.order;
-            params.kwargs.order = orderBy ? this._serializeSort(orderBy) : orderBy;
+            params.kwargs.order = orderBy ? rpc._serializeSort(orderBy) : orderBy;
         }
 
         if (options.route === '/web/dataset/search_read') {
@@ -97,7 +97,7 @@ return {
             params.limit = options.limit || params.limit;
             params.offset = options.offset || params.offset;
             orderBy = options.orderBy || params.orderBy;
-            params.sort = orderBy ? this._serializeSort(orderBy) : orderBy;
+            params.sort = orderBy ? rpc._serializeSort(orderBy) : orderBy;
             params.context = options.context || params.context || {};
         }
 
@@ -122,5 +122,7 @@ return {
         }).join(', ');
     },
 };
+
+return rpc;
 
 });

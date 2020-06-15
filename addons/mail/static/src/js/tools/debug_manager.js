@@ -11,7 +11,6 @@ var _t = core._t;
  */
 DebugManager.include({
     getMailMessages: function () {
-        var self = this;
         var selectedIDs = this._controller.getSelectedIds();
         if (!selectedIDs.length) {
             console.warn(_t("No message available"));

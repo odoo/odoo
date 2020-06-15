@@ -357,7 +357,7 @@
                         </page>
                     </notebook>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
+                        <field name="message_follower_ids" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
                     </div>
                 </sheet>
                 </form>
@@ -695,9 +695,9 @@
                     </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>

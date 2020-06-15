@@ -33,10 +33,7 @@ class LivechatController(http.Controller):
     def load_templates(self, **kwargs):
         base_url = request.httprequest.base_url
         templates = [
-            'mail/static/src/xml/abstract_thread_window.xml',
-            'mail/static/src/xml/discuss.xml',
-            'mail/static/src/xml/thread.xml',
-            'im_livechat/static/src/xml/im_livechat.xml',
+            'im_livechat/static/src/legacy/public_livechat.xml',
         ]
         return [tools.file_open(tmpl, 'rb').read() for tmpl in templates]
 
@@ -149,7 +146,7 @@ class LivechatController(http.Controller):
         """
         Channel = request.env['mail.channel']
         channel = Channel.sudo().search([('uuid', '=', uuid)], limit=1)
-        channel.notify_typing(is_typing=is_typing, is_website_user=True)
+        channel.notify_typing(is_typing=is_typing)
 
     @http.route('/im_livechat/email_livechat_transcript', type='json', auth='public', cors="*")
     def email_livechat_transcript(self, uuid, email):

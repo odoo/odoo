@@ -39,7 +39,11 @@ Help your customers with this chat, and analyse their feedback.
         'data/mail_shortcode_demo.xml',
     ],
     'depends': ["mail", "rating", "digest"],
-    'qweb': ['static/src/xml/*.xml'],
+    'qweb': [
+        'static/src/bugfix/bugfix.xml',
+        'static/src/components/discuss_sidebar/discuss_sidebar.xml',
+        'static/src/components/thread_icon/thread_icon.xml',
+    ],
     'installable': True,
     'auto_install': False,
     'application': True,

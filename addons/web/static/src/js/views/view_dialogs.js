@@ -200,6 +200,7 @@ var FormViewDialog = ViewDialog.extend({
                 model: self.model,
                 parentID: self.parentID,
                 recordID: self.recordID,
+                isFromFormViewDialog: true,
             });
             return formview.getController(self);
         }).then(function (formView) {

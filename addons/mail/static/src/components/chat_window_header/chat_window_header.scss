@@ -1,0 +1,95 @@
+// ------------------------------------------------------------------
+// Layout
+// ------------------------------------------------------------------
+
+.o_ChatWindowHeader {
+    display: flex;
+    align-items: center;
+    height: $o-mail-chat-window-header-height;
+
+    &.o-mobile {
+        height: $o-mail-chat-window-header-height-mobile;
+    }
+}
+
+.o_ChatWindowHeader_command {
+    padding: 0 8px;
+    display: flex;
+    height: 100%;
+    align-items: center;
+
+    &:hover {
+        background-color: rgba(0, 0, 0, 0.1);
+    }
+}
+
+.o_ChatWindowHeader_commandBack {
+    margin-right: 5px;
+}
+
+.o_ChatWindowHeader_item {
+    margin: 0 3px;
+
+    &.o_ChatWindowHeader_rightArea {
+        margin-right: 0;
+    }
+
+    &:first-child {
+        margin-left: 10px;
+
+        &.o_ChatWindowHeader_command {
+            margin-left: 0px; // no margin for commands
+        }
+    }
+
+    &.o_ChatWindowHeader_rightArea:last-child .o_ChatWindowHeader_command {
+        margin-right: 0px; // no margin for commands
+    }
+}
+
+.o_ChatWindowHeader_name {
+    max-height: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.o_ChatWindowHeader_rightArea {
+    display: flex;
+    height: 100%;
+    align-items: center;
+}
+
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_ChatWindowHeader {
+    background-color: $o-brand-odoo;
+    color: white;
+    cursor: pointer;
+
+    &:not(.o-mobile) {
+
+        &:hover .o_ChatWindowHeader_command {
+            opacity: 0.7;
+
+            &:hover {
+                opacity: 1;
+            }
+        }
+
+        &:not(:hover) .o_ChatWindowHeader_command {
+            opacity: 0.5;
+        }
+    }
+
+}
+
+.o_ChatWindowHeader_command.o-mobile {
+    font-size: 1.3rem;
+}
+
+.o_ChatWindowHeader_name {
+    user-select: none;
+}

@@ -55,6 +55,10 @@ A synchronization with an internal agenda (Meetings of the CRM module) is also p
         'data/hr_holidays_demo.xml',
     ],
     'qweb': [
+        'static/src/bugfix/bugfix.xml',
+        'static/src/components/partner_im_status_icon/partner_im_status_icon.xml',
+        'static/src/components/thread_icon/thread_icon.xml',
+        'static/src/components/thread_viewer/thread_viewer.xml',
         'static/src/xml/*.xml',
     ],
     'installable': True,

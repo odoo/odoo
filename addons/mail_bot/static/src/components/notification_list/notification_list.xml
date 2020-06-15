@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-inherit="mail.NotificationList" t-inherit-mode="extension">
+        <xpath expr="//*[@name='separatorCondition']" position="before">
+            <t t-if="notification.type === 'odoobotRequest'">
+                <NotificationRequest
+                    class="o_NotificationList_notificationRequest"
+                    t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
+                />
+            </t>
+        </xpath>
+    </t>
+</templates>

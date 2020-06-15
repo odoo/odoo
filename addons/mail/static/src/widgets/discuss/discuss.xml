@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <!--
+        @param {mail/static/src/widgets/discuss/discuss.js} widget
+    -->
+    <t t-name="mail.widgets.Discuss">
+        <div class="o_widget_Discuss"/>
+    </t>
+
+    <!-- @param {boolean} isMobile -->
+    <t t-name="mail.widgets.Discuss.DiscussControlButtons">
+        <div>
+            <button class="o_widget_Discuss_controlPanelButtonInvite o_invite o_hidden btn btn-primary" type="button" title="Invite people">Invite</button>
+            <button class="o_widget_Discuss_controlPanelButtonMarkAllRead o_hidden btn btn-secondary" type="button" title="Mark all as read">Mark all read</button>
+            <button class="o_widget_Discuss_controlPanelButtonUnstarAll o_unstar_all o_hidden btn btn-secondary" type="button" title="Unstar all messages">Unstar all</button>
+            <button class="o_widget_Discuss_controlPanelButtonMobileNewMessage o_mobile_new_message o_hidden btn btn-secondary" type="button" title="New Message">New Message</button>
+            <button class="o_widget_Discuss_controlPanelButtonMobileNewChannel o_mobile_new_channel o_hidden btn btn-secondary" title="New Channel" type="button">New Channel</button>
+            <button class="o_widget_Discuss_controlPanelButtonSelectAll btn btn-secondary o_hidden" title="Select all messages">Select All</button>
+            <button class="o_widget_Discuss_controlPanelButtonUnselectAll btn btn-secondary o_hidden" title="Unselect all messages">Unselect All</button>
+            <button class="o_widget_Discuss_controlPanelButtonModeration btn btn-secondary o_hidden o-accept" title="Accept selected messages">Accept</button>
+            <button class="o_widget_Discuss_controlPanelButtonModeration btn btn-secondary o_hidden o-reject" title="Reject selected messages">Reject</button>
+            <button class="o_widget_Discuss_controlPanelButtonModeration btn btn-secondary o_hidden o-discard" title="Discard selected messages">Discard</button>
+        </div>
+    </t>
+
+</templates>

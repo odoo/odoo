@@ -1,6 +1,8 @@
 odoo.define('hr.Many2OneAvatarEmployeeTests', function (require) {
 "use strict";
 
+const { start } = require('mail/static/src/utils/test_utils.js');
+
 const FormView = require('web.FormView');
 const KanbanView = require('web.KanbanView');
 const ListView = require('web.ListView');
@@ -65,9 +67,10 @@ QUnit.module('hr', {}, function () {
     });
 
     QUnit.test('many2one_avatar_employee widget in list view', async function (assert) {
-        assert.expect(7);
+        assert.expect(4);
 
-        const list = await createView({
+        const { widget: list } = await start({
+            hasView: true,
             View: ListView,
             model: 'foo',
             data: this.data,
@@ -80,12 +83,6 @@ QUnit.module('hr', {}, function () {
             },
         });
 
-        mock.intercept(list, 'call_service', ev => {
-            if (ev.data.service === 'mail_service') {
-                assert.step(`call service ${ev.data.method} ${ev.data.args[0]}`);
-            }
-        }, true);
-
         assert.strictEqual(list.$('.o_data_cell span').text(), 'MarioLuigiMarioYoshi');
 
         await dom.click(list.$('.o_data_cell:nth(0) .o_m2o_avatar'));
@@ -95,10 +92,10 @@ QUnit.module('hr', {}, function () {
 
         assert.verifySteps([
             'read hr.employee 11',
-            'call service openDMChatWindow 1',
+            // 'call service openDMChatWindow 1',
             'read hr.employee 7',
-            'call service openDMChatWindow 2',
-            'call service openDMChatWindow 1',
+            // 'call service openDMChatWindow 2',
+            // 'call service openDMChatWindow 1',
         ]);
 
         list.destroy();
@@ -107,7 +104,8 @@ QUnit.module('hr', {}, function () {
     QUnit.test('many2one_avatar_employee widget in kanban view', async function (assert) {
         assert.expect(6);
 
-        const kanban = await createView({
+        const { widget: kanban } = await start({
+            hasView: true,
             View: KanbanView,
             model: 'foo',
             data: this.data,
@@ -137,7 +135,8 @@ QUnit.module('hr', {}, function () {
         assert.expect(5);
 
         this.data['hr.employee'].records[0].user_partner_id = false;
-        const form = await createView({
+        const { widget: form } = await start({
+            hasView: true,
             View: FormView,
             model: 'foo',
             data: this.data,
@@ -152,9 +151,6 @@ QUnit.module('hr', {}, function () {
         });
 
         mock.intercept(form, 'call_service', (ev) => {
-            if (ev.data.service === 'mail_service') {
-                throw new Error('should not call mail_service');
-            }
             if (ev.data.service === 'notification') {
                 assert.step(`display notification "${ev.data.args[0].message}"`);
             }
@@ -176,7 +172,8 @@ QUnit.module('hr', {}, function () {
     QUnit.test('many2one_avatar_employee: click on self', async function (assert) {
         assert.expect(5);
 
-        const form = await createView({
+        const { widget: form } = await start({
+            hasView: true,
             View: FormView,
             model: 'foo',
             data: this.data,
@@ -194,9 +191,6 @@ QUnit.module('hr', {}, function () {
         });
 
         mock.intercept(form, 'call_service', (ev) => {
-            if (ev.data.service === 'mail_service') {
-                throw new Error('should not call mail_service');
-            }
             if (ev.data.service === 'notification') {
                 assert.step(`display notification "${ev.data.args[0].message}"`);
             }

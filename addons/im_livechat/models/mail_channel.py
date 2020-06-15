@@ -86,7 +86,7 @@ class MailChannel(models.Model):
                     res = channel.livechat_operator_id.with_context(im_livechat_use_username=True).name_get()[0]
                     channel_infos_dict[channel.id]['operator_pid'] = (res[0], res[1].replace(',', ''))
                 # add the anonymous or partner name
-                channel_infos_dict[channel.id]['correspondent_name'] = channel._channel_get_livechat_partner_name()
+                channel_infos_dict[channel.id]['livechat_visitor'] = channel._channel_get_livechat_visitor_info()
                 last_msg = self.env['mail.message'].search([("channel_ids", "in", [channel.id])], limit=1)
                 if last_msg:
                     channel_infos_dict[channel.id]['last_message_date'] = last_msg.date
@@ -98,6 +98,26 @@ class MailChannel(models.Model):
         pinned_channels = self.env['mail.channel.partner'].search([('partner_id', '=', self.env.user.partner_id.id), ('is_pinned', '=', True)]).mapped('channel_id')
         values['channel_livechat'] = self.search([('channel_type', '=', 'livechat'), ('id', 'in', pinned_channels.ids)]).channel_info()
         return values
+
+    def _channel_get_livechat_visitor_info(self):
+        partners = self.channel_partner_ids - self.livechat_operator_id
+        if partners:
+            return {
+                'country': partners[0].country_id.name_get() if partners[0].country_id else False,
+                'id': partners[0].id,
+                'name': partners[0].name,
+            }
+        if self.anonymous_name:
+            return {
+                'country': False,
+                'id': False,
+                'name': self.anonymous_name,
+            }
+        return {
+            'country': False,
+            'id': False,
+            'name': _("Visitor"),
+        }
 
     def _channel_get_livechat_partner_name(self):
         if self.livechat_operator_id in self.channel_partner_ids:

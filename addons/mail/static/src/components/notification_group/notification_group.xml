@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.NotificationGroup" owl="1">
+        <div class="o_NotificationGroup" t-on-click="_onClick">
+            <t t-if="group">
+                <div class="o_NotificationGroup_sidebar">
+                    <div class="o_NotificationGroup_imageContainer o_NotificationGroup_sidebarItem">
+                        <img class="o_NotificationGroup_image rounded-circle" t-att-src="image()" alt="Message delivery failure image"/>
+                    </div>
+                </div>
+                <div class="o_NotificationGroup_content">
+                    <div class="o_NotificationGroup_header">
+                        <span class="o_NotificationGroup_name">
+                            <t t-esc="group.res_model_name"/>
+                        </span>
+                        <span class="o_NotificationGroup_counter">
+                            (<t t-esc="group.notifications.length"/>)
+                        </span>
+                        <span class="o-autogrow"/>
+                        <span class="o_NotificationGroup_date">
+                            <t t-esc="group.date.fromNow()"/>
+                        </span>
+                    </div>
+                    <div class="o_NotificationGroup_core">
+                        <span class="o_NotificationGroup_coreItem o_NotificationGroup_inlineText">
+                            <t t-if="group.notification_type === 'email'">
+                                An error occurred when sending an email.
+                            </t>
+                        </span>
+                        <span class="o-autogrow"/>
+                        <span class="o_NotificationGroup_coreItem o_NotificationGroup_markAsRead fa fa-check" title="Discard message delivery failures" t-on-click="_onClickMarkAsRead" t-ref="markAsRead"/>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </t>
+
+</templates>
