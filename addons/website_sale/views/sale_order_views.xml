@@ -4,7 +4,7 @@
         <field name="name">sale.order.ecommerce.search.view</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="mode">primary</field> 
+        <field name="mode">primary</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="replace">
                 <filter string="Confirmed Orders" name="order_confirmed" domain="[('state', 'in', ('sale', 'done'))]"/>
@@ -23,7 +23,7 @@
         <field name="name">sale.order.ecommerce.search.unpaid.view</field>
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_sales_order_filter"/>
-        <field name="mode">primary</field> 
+        <field name="mode">primary</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
             <xpath expr="//filter[@name='my_sale_orders_filter']" position="attributes">
@@ -37,7 +37,7 @@
         <field name="model">sale.order</field>
         <field name="inherit_id" ref="sale.view_order_form"/>
         <field name="arch" type="xml">
-            <xpath expr="//field[@name='team_id']" position="after">
+            <xpath expr="//field[@name='partner_id']" position="after">
                 <field name="is_abandoned_cart" invisible="1"/>
                 <field name="cart_recovery_email_sent" invisible="1"/>
             </xpath>
