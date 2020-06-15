@@ -363,7 +363,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         copy6 = copy5.copy()
         copy6.post()
-        self.assertEqual(copy6.name, '1N\'importe quoi?')
+        self.assertEqual(copy6.name, 'MyMISC/2099/0003')
 
     def test_journal_sequence_format(self):
         """Test different format of sequences and what it becomes on another period"""
@@ -396,6 +396,15 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.assertEqual(next_move.name, sequence_next)
             self.assertEqual(next_move_month.name, sequence_next_month)
             self.assertEqual(next_move_year.name, sequence_next_year)
+
+    def test_journal_next_sequence(self):
+        prefix = "TEST_ORDER/2016/"
+        self.test_move.name = f"{prefix}1"
+        for c in range(2, 25):
+            copy = self.test_move.copy()
+            copy.name = "/"
+            copy.post()
+            self.assertEqual(copy.name, f"{prefix}{c}")
 
     def test_journal_override_sequence_regex(self):
         other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move

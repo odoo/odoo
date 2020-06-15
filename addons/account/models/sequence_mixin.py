@@ -72,7 +72,14 @@ class SequenceMixin(models.AbstractModel):
         return "00000000"
 
     def _get_highest_query(self):
-        return "SELECT {field} FROM {table} {where_string} ORDER BY {field} DESC LIMIT 1 FOR UPDATE"
+        regex = self._sequence_fixed_regex
+        regex_seq = re.sub(r"\?P<\w+>", "?:", regex.replace(r"?P<seq>", ""))  # make the seq the only matching group
+        regex_prefix = re.sub(r"\?P<\w+>", "?:", regex.replace(r"?P<prefix1>", ""))  # make prefix1 the only matching group
+        return self.env.cr.mogrify("""
+            SELECT {field} FROM {table} {where_string}
+            ORDER BY (regexp_match({field}, %s))[1] DESC, ('0' || (regexp_match({field}, %s))[1])::integer DESC
+            LIMIT 1 FOR UPDATE
+        """, (regex_prefix, regex_seq)).decode()
 
     def _get_last_sequence(self, relaxed=False):
         """Retrieve the previous sequence.
