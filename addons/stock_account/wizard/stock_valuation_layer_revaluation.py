@@ -74,12 +74,20 @@ class StockValuationLayerRevaluation(models.TransientModel):
         ])
 
         # Create a manual stock valuation layer
+        if self.reason:
+            description = _("Manual Stock Valuation: %s.", self.reason)
+        else:
+            description = _("Manual Stock Valuation: No Reason Given.")
+        if product_id.categ_id.property_cost_method == 'average':
+            description += _(
+                " Product cost updated from %(previous)s to %(new_cost)s.",
+                previous=product_id.standard_price,
+                new_cost=product_id.standard_price + self.added_value / self.current_quantity_svl
+            )
         revaluation_svl_vals = {
             'company_id': self.company_id.id,
             'product_id': product_id.id,
-            'description': _("Manual Stock Valuation: %s.%s") % (
-                self.reason or _("No Reason Given"),
-                product_id.categ_id.property_cost_method == 'average' and (_(" Product cost updated from %s to %s.") % (product_id.standard_price, product_id.standard_price + self.added_value / self.current_quantity_svl)) or ''),
+            'description': description,
             'value': self.added_value,
             'quantity': 0,
         }
