@@ -129,10 +129,5 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
 
     class Execute {}
 
-    return {
-        Do,
-        Check,
-        Execute,
-        FloorScreen: createTourMethods('FloorScreen', Do, Check, Execute),
-    };
+    return createTourMethods('FloorScreen', Do, Check, Execute);
 });

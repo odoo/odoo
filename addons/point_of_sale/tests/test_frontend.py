@@ -432,3 +432,8 @@ class TestUi(TestPointOfSaleHttpCommon):
         n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
         self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
         self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
+
+    def test_03_order_management(self):
+        self.main_pos_config.write({ 'manage_orders': True, 'module_account': True })
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'OrderManagementScreenTour', login="admin", step_delay=50)

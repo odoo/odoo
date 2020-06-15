@@ -124,10 +124,10 @@
 
             <!-- Payment Lines -->
 
-            <t t-foreach="paymentlines" t-as="line" t-key="line.cid">
+            <t t-foreach="receipt.paymentlines" t-as="line" t-key="line.cid">
                 <div>
                     <t t-esc="line.name" />
-                    <span t-esc="env.pos.format_currency_no_symbol(line.get_amount())" class="pos-receipt-right-align"/>
+                    <span t-esc="env.pos.format_currency_no_symbol(line.amount)" class="pos-receipt-right-align"/>
                 </div>
             </t>
             <br/>
@@ -174,7 +174,7 @@
             </div>
 
             <div class="after-footer">
-                <t t-foreach="paymentlines" t-as="line">
+                <t t-foreach="receipt.paymentlines" t-as="line">
                     <t t-if="line.ticket">
                         <br />
                         <div class="pos-payment-terminal-receipt">

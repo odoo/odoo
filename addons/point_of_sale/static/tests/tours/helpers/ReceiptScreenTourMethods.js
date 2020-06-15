@@ -51,9 +51,11 @@ odoo.define('point_of_sale.tour.ReceiptScreenTourMethods', function (require) {
         }
     }
 
-    return {
-        Do,
-        Check,
-        ReceiptScreen: createTourMethods('ReceiptScreen', Do, Check),
-    };
+    class Execute {
+        nextOrder() {
+            return [...this._check.isShown(), ...this._do.clickNextOrder()];
+        }
+    }
+
+    return  createTourMethods('ReceiptScreen', Do, Check, Execute);
 });

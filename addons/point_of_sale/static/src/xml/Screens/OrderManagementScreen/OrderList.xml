@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderList" owl="1">
+        <div class="orders">
+            <div class="order-row header">
+                <div class="header name">Order</div>
+                <div class="header date">Date</div>
+                <div class="header customer">Customer</div>
+                <div class="header total">Total</div>
+            </div>
+            <div class="order-list">
+                <t t-foreach="props.orders" t-as="order" t-key="order.cid">
+                    <OrderRow order="order" highlightedOrder="highlightedOrder" />
+                </t>
+            </div>
+        </div>
+    </t>
+
+</templates>

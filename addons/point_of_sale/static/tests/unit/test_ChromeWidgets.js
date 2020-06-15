@@ -54,6 +54,7 @@ odoo.define('point_of_sale.tests.ChromeWidgets', function (require) {
 
         class Parent extends PopupControllerMixin(PosComponent) {}
         Parent.env = makePosTestEnv();
+        Parent.env.chrome = new owl.Context({ showOrderSelector: true });
         Parent.template = xml/* html */ `
             <div>
                 <OrderSelector></OrderSelector>

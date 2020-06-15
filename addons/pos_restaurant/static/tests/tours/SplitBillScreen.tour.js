@@ -14,9 +14,9 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     startSteps();
 
     FloorScreen.do.clickTable('T2');
-    ProductScreen.exec.order('Water', '5', '1.2');
-    ProductScreen.exec.order('Minute Maid', '3', '1.2');
-    ProductScreen.exec.order('Coca-Cola', '1', '1.2');
+    ProductScreen.exec.addOrderline('Water', '5', '1.2');
+    ProductScreen.exec.addOrderline('Minute Maid', '3', '1.2');
+    ProductScreen.exec.addOrderline('Coca-Cola', '1', '1.2');
     ProductScreen.do.clickSplitBillButton();
 
     // Check if the screen contains all the orderlines

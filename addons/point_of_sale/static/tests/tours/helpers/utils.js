@@ -97,7 +97,11 @@ odoo.define('point_of_sale.tour.utils', function (require) {
     // we proxy get of the method to decorate the method call
     const proxyHandler = {
         get(target, key) {
-            return new Proxy(target[key].bind(target), methodProxyHandler);
+            const method = target[key];
+            if (!method) {
+                throw new Error(`Tour method '${key}' is not available.`);
+            }
+            return new Proxy(method.bind(target), methodProxyHandler);
         },
     };
 
@@ -131,12 +135,17 @@ odoo.define('point_of_sale.tour.utils', function (require) {
         methods.exec._do = methods.do;
         methods.exec._check = methods.check;
         return {
-            do: new Proxy(methods.do, proxyHandler),
-            check: new Proxy(methods.check, proxyHandler),
-            exec: new Proxy(methods.exec, proxyHandler),
-            _do: methods.do,
-            _check: methods.check,
-            _exec: methods.exec,
+            Do,
+            Check,
+            Execute,
+            [name]: {
+                do: new Proxy(methods.do, proxyHandler),
+                check: new Proxy(methods.check, proxyHandler),
+                exec: new Proxy(methods.exec, proxyHandler),
+                _do: methods.do,
+                _check: methods.check,
+                _exec: methods.exec,
+            },
         };
     }
 

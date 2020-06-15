@@ -45,7 +45,7 @@ odoo.define('pos_restaurant.chrome', function (require) {
              */
             _showSavedScreen(pos, newSelectedOrder) {
                 if (!newSelectedOrder) {
-                    this.showScreen('FloorScreen', { floor: pos.table.floor });
+                    this.showScreen('FloorScreen', { floor: pos.table ? pos.table.floor : null });
                 } else {
                     super._showSavedScreen(pos, newSelectedOrder);
                 }
@@ -68,7 +68,8 @@ odoo.define('pos_restaurant.chrome', function (require) {
                 if (this.tempScreen.isShown) {
                     this.trigger('close-temp-screen');
                 }
-                this.showScreen('FloorScreen', { floor: this.env.pos.table.floor });
+                const table = this.env.pos.table;
+                this.showScreen('FloorScreen', { floor: table ? table.floor : null });
             }
             _shouldResetIdleTimer() {
                 return this.env.pos.config.iface_floorplan && this.mainScreen.name !== 'FloorScreen';

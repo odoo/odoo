@@ -68,7 +68,7 @@ var PrinterMixin = {
             }
             // rpc call is okay but printing failed because
             // IoT box can't find a printer.
-            if (!sendPrintResult) {
+            if (!sendPrintResult || (sendPrintResult && !sendPrintResult.result)) {
                 this.receipt_queue.length = 0;
                 return this.printResultGenerator.IoTResultError();
             }

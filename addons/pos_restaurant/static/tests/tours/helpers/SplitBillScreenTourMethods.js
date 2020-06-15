@@ -61,10 +61,5 @@ odoo.define('pos_restaurant.tour.SplitBillScreenTourMethods', function (require)
 
     class Execute {}
 
-    return {
-        Do,
-        Check,
-        Execute,
-        SplitBillScreen: createTourMethods('SplitBillScreen', Do, Check, Execute),
-    };
+    return createTourMethods('SplitBillScreen', Do, Check, Execute);
 });
