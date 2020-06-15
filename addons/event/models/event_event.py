@@ -330,7 +330,7 @@ class EventEvent(models.Model):
     @api.depends('event_type_id')
     def _compute_date_tz(self):
         for event in self:
-            if event.event_type_id.use_timezone:
+            if event.event_type_id.use_timezone and event.event_type_id.default_timezone:
                 event.date_tz = event.event_type_id.default_timezone
             if not event.date_tz:
                 event.date_tz = self.env.user.tz or 'UTC'
