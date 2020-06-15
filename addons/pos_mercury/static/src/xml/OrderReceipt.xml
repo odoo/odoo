@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="pos_mercury.OrderReceipt" t-inherit="point_of_sale.OrderReceipt" t-inherit-mode="extension" owl="1">
-        <xpath expr="//t[@t-foreach='paymentlines']" position="inside">
+        <xpath expr="//t[@t-foreach='receipt.paymentlines']" position="inside">
             <t t-if="line.mercury_data">
                 <div class="pos-receipt-left-padding">
                     <span>APPROVAL CODE: </span>

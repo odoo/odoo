@@ -35,5 +35,5 @@ odoo.define('pos_restaurant.tour.TextAreaPopupTourMethods', function (require) {
         }
     }
 
-    return { Do, Check, TextAreaPopup: createTourMethods('TextAreaPopup', Do, Check) };
+    return createTourMethods('TextAreaPopup', Do, Check);
 });

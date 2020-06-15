@@ -16,7 +16,7 @@ odoo.define('pos_restaurant.tour.ControlButtons', function (require) {
 
     // Test TransferOrderButton
     FloorScreen.do.clickTable('T2');
-    ProductScreen.exec.order('Water', '5.0', '2.0');
+    ProductScreen.exec.addOrderline('Water', '5.0', '2.0');
     ProductScreen.do.clickTransferButton();
     FloorScreen.do.clickTable('T4');
     ProductScreen.do.clickOrderline('Water', '5.0', '2.0');
@@ -37,7 +37,7 @@ odoo.define('pos_restaurant.tour.ControlButtons', function (require) {
     TextAreaPopup.do.inputText('test note');
     TextAreaPopup.do.clickConfirm();
     ProductScreen.check.orderlineHasNote('Water', '5.0', 'test note');
-    ProductScreen.exec.order('Water', '8', '1.1');
+    ProductScreen.exec.addOrderline('Water', '8', '1.1');
     ProductScreen.check.selectedOrderlineHas('Water', '8', '8.80');
 
     // Test PrintBillButton

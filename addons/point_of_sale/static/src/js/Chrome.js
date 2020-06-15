@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.Chrome', function(require) {
     'use strict';
 
-    const { useState, useRef } = owl.hooks;
+    const { useState, useRef, useContext } = owl.hooks;
     const { debounce } = owl.utils;
     const { loadCSS } = require('web.ajax');
     const { useListener } = require('web.custom_hooks');
@@ -11,6 +11,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const PopupControllerMixin = require('point_of_sale.PopupControllerMixin');
     const Registries = require('point_of_sale.Registries');
+    const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
+    const contexts = require('point_of_sale.PosContext');
 
     // This is kind of a trick.
     // We get a reference to the whole exports so that
@@ -33,6 +35,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
             useListener('play-sound', this._onPlaySound);
             useListener('set-sync-status', this._onSetSyncStatus);
             NumberBuffer.activate();
+
+            this.chromeContext = useContext(contexts.chrome);
 
             this.state = useState({
                 uiState: 'LOADING', // 'LOADING' | 'READY' | 'CLOSING'
@@ -138,10 +142,13 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 if (_.isEmpty(this.env.pos.db.product_by_category_id)) {
                     this._loadDemoData();
                 }
-                this.env.pos.push_orders(); // push order in the background, no need to await
-                // Allow using the app even if not all the images are loaded.
-                // Basically, preload the images in the background.
-                setTimeout(() => this._preloadImages());
+                setTimeout(() => {
+                    // push order in the background, no need to await
+                    this.env.pos.push_orders();
+                    // Allow using the app even if not all the images are loaded.
+                    // Basically, preload the images in the background.
+                    this._preloadImages();
+                });
             } catch (error) {
                 let title = 'Unknown Error',
                     body;
@@ -202,14 +209,21 @@ odoo.define('point_of_sale.Chrome', function(require) {
         __closeTempScreen() {
             this.tempScreen.isShown = false;
         }
-        __showScreen({ detail: { name, props } }) {
+        __showScreen({ detail: { name, props = {} } }) {
+            const component = this.constructor.components[name];
             // 1. Set the information of the screen to display.
             this.mainScreen.name = name;
-            this.mainScreen.component = this.constructor.components[name];
-            this.mainScreenProps = props || {};
-            // 2. Save the screen to the order.
+            this.mainScreen.component = component;
+            this.mainScreenProps = props;
+
+            // 2. Set some options
+            this.chromeContext.showOrderSelector = !component.hideOrderSelector;
+
+            // 3. Save the screen to the order.
             //  - This screen is shown when the order is selected.
-            this._setScreenData(name, props);
+            if (!(component.prototype instanceof IndependentToOrderScreen)) {
+                this._setScreenData(name, props);
+            }
         }
         /**
          * Set the latest screen to the current order. This is done so that

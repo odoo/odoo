@@ -8,7 +8,7 @@ odoo.define('point_of_sale.tour.PaymentScreen', function (require) {
 
     startSteps();
 
-    ProductScreen.exec.order('Letter Tray', '10');
+    ProductScreen.exec.addOrderline('Letter Tray', '10');
     ProductScreen.do.clickPayButton();
     PaymentScreen.check.emptyPaymentlines('52.8');
 
