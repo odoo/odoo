@@ -21,16 +21,13 @@
             <field name="name">account.analytic.line.tree.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="top" string="Timesheet Activities" js_class="timesheet_tree">
+                <tree editable="top" string="Timesheet Activities">
                     <field name="date"/>
-                    <field name="project_id" required="1" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
-                    <field name="task_id" optional="show" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
+                    <field name="project_id" required="1" options="{'no_create_edit': True}" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
+                    <field name="task_id" optional="show" options="{'no_create_edit': True}" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="name" optional="show" required="0"/>
-                    <field name="is_timer_running" invisible="1"/>
-                    <field name="unit_amount" optional="show" widget="timesheet_uom_timer" sum="Total" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}" decoration-danger="unit_amount &gt; 24"/>
+                    <field name="unit_amount" optional="show" widget="timesheet_uom" sum="Total" decoration-danger="unit_amount &gt; 24"/>
                     <field name="company_id" invisible="1"/>
-                    <field name="timer_start" invisible="1"/>
-                    <field name="display_timer" invisible="1"/>
                     <field name="user_id" invisible="1"/>
                 </tree>
             </field>
@@ -93,9 +90,8 @@
                             </group>
                             <group>
                                 <field name="amount"/>
-                                <field name="unit_amount" widget="timesheet_uom" attrs="{'readonly': [('id', '!=', False), ('timer_start', '!=', False)]}" decoration-danger="unit_amount &gt; 24"/>
+                                <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                                 <field name="currency_id" invisible="1"/>
-                                <field name="timer_start" invisible="1"/>
                             </group>
                         </group>
                     </sheet>
@@ -160,15 +156,13 @@
             <field name="name">account.analytic.line.kanban</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" js_class="timesheet_kanban_view">
+                <kanban class="o_kanban_mobile">
                     <field name="date"/>
                     <field name="user_id"/>
                     <field name="name"/>
                     <field name="project_id"/>
                     <field name="task_id" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
                     <field name="unit_amount" widget="timesheet_uom"/>
-                    <field name="timer_start" invisible="1"/>
-                    <field name="display_timer" invisible="1"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">
@@ -184,9 +178,7 @@
                                             <span>
                                                 <t t-esc="record.name.value"/>
                                             </span>
-                                            <div class="float-right">
-                                                <field name="is_timer_running" widget="timer_toggle_button" options="{'prevent_deletion': True}" attrs="{ 'invisible': [('display_timer', '=', False)] }" />
-                                            </div>
+                                            <div class="float-right" id="bottom_right"/>
                                         </div>
                                     </div>
                                 </div>
@@ -214,7 +206,6 @@
             <field name="view_mode">tree,form</field>
             <field name="domain">[('project_id', '!=', False), ('user_id', '=', uid)]</field>
             <field name="context">{
-                "my_timesheet_display_timer": True,
                 "search_default_week":1,
             }</field>
             <field name="search_view_id" ref="hr_timesheet_line_my_timesheet_search"/>

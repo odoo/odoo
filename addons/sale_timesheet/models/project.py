@@ -176,14 +176,13 @@ class ProjectTask(models.Model):
     display_create_order = fields.Boolean(compute='_compute_display_create_order')
 
     @api.depends(
-        'allow_billable', 'allow_timesheets', 'sale_order_id', 'display_timesheet_timer',
-        'timer_start')
+        'allow_billable', 'allow_timesheets', 'sale_order_id')
     def _compute_display_create_order(self):
         for task in self:
             show = True
             if not task.allow_billable or not task.allow_timesheets or \
                 task.billable_type == 'employee_rate' or not task.partner_id or \
-                task.sale_order_id or (task.display_timesheet_timer and task.timer_start):
+                task.sale_order_id:
                 show = False
             task.display_create_order = show
 
