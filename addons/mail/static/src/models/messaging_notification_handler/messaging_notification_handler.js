@@ -453,11 +453,7 @@ function factory(dependencies) {
                 channel.members.includes(this.env.messaging.currentPartner)
             );
 
-            channel = this.env.models['mail.thread'].insert(Object.assign(
-                { isPinned: true },
-                convertedData,
-            ));
-
+            channel = this.env.models['mail.thread'].insert(convertedData);
             if (
                 channel.channel_type === 'channel' &&
                 data.info !== 'creation' &&
@@ -654,12 +650,14 @@ function factory(dependencies) {
                     owl.utils.escape(channel.name)
                 );
             }
+            // We assume that arriving here the server has effectively
+            // unpinned the channel
+            channel.update({ isServerPinned: false });
             this.env.services['notification'].notify({
                 message,
                 title: this.env._t("Unsubscribed"),
                 type: 'warning',
             });
-            channel.update({ isPinned: false });
         }
 
         /**

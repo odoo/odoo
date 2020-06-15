@@ -232,6 +232,7 @@ QUnit.test('chat window: basic rendering', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -332,6 +333,7 @@ QUnit.test('chat window: fold', async function (assert) {
                 channel_type: 'channel',
                 id: 20,
                 is_minimized: false,
+                is_pinned: true,
                 name: "General",
                 state: 'open',
                 uuid: 'channel-20-uuid',
@@ -439,6 +441,7 @@ QUnit.test('chat window: open / close', async function (assert) {
                 channel_type: 'channel',
                 id: 20,
                 is_minimized: false,
+                is_pinned: true,
                 name: "General",
                 state: 'open',
                 uuid: 'channel-20-uuid',
@@ -532,6 +535,7 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
                 channel_type: 'channel',
                 id: 20,
                 is_minimized: false,
+                is_pinned: true,
                 name: "General",
                 state: 'open',
                 uuid: 'channel-20-uuid',
@@ -583,6 +587,7 @@ QUnit.test('chat window: state conservation on toggle home menu', async function
                 channel_type: 'channel',
                 id: 20,
                 is_minimized: false,
+                is_pinned: true,
                 name: "General",
                 state: 'open',
                 uuid: 'channel-20-uuid',
@@ -731,6 +736,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
             channel_direct_message: [{
@@ -740,6 +746,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
                     name: "Demo",
                 }],
                 id: 10,
+                is_pinned: true,
             }],
         },
     });
@@ -891,6 +898,7 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
     const channel = {
         channel_type: "channel",
         id: 20,
+        is_pinned: true,
         name: "General",
     };
     const chat = {
@@ -900,6 +908,7 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
             name: "Demo",
         }],
         id: 10,
+        is_pinned: true,
     };
     this.data['mail.channel'].records = [channel, chat];
     Object.assign(this.data.initMessaging, {
@@ -1010,14 +1019,17 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
             channel_channel: [{
                 channel_type: "channel",
                 id: 1,
+                is_pinned: true,
                 name: "channel1",
             }, {
                 channel_type: "channel",
                 id: 2,
+                is_pinned: true,
                 name: "channel2",
             }, {
                 channel_type: "channel",
                 id: 3,
+                is_pinned: true,
                 name: "channel3",
             }],
         },
@@ -1172,10 +1184,12 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 1,
+                is_pinned: true,
                 name: "channel1",
             }, {
                 channel_type: "channel",
                 id: 2,
+                is_pinned: true,
                 name: "channel2",
             }],
         },

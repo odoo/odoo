@@ -61,6 +61,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
                     name: "Demo",
                 }],
                 id: 20,
+                is_pinned: true,
                 members: [{
                     email: 'admin@odoo.com',
                     id: 3,
