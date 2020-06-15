@@ -118,6 +118,9 @@
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="leave_manager_id"/>
             </xpath>
+            <xpath expr="//group[@name='managers']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
             <div name="button_box" position="inside">
                 <field name="current_leave_id" invisible="1"/>
                 <field name="show_leaves" invisible="1"/>
@@ -163,7 +166,7 @@
         <field name="inherit_id" ref="hr.view_employee_tree"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='work_location']" position="after">
-                <field name="leave_manager_id" optional="hide"/>
+                <field name="leave_manager_id" optional="hide" string="Time Off Approver"/>
             </xpath>
         </field>
     </record>
@@ -214,6 +217,9 @@
             </button>
             <xpath expr="//group[@name='managers']" position="inside">
                 <field name="leave_manager_id" attrs="{'readonly': [('can_edit', '=', False)]}"/>
+            </xpath>
+            <xpath expr="//group[@name='managers']" position="attributes">
+                <attribute name="invisible">0</attribute>
             </xpath>
             <xpath expr="//div[@name='button_box']" position="inside">
                 <field name="show_leaves" invisible="1"/>
