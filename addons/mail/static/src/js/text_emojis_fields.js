@@ -24,34 +24,10 @@ var FieldEmojiCommon = {
     },
 
     /**
-     * This will add an emoji button that shows the emojis selection dropdown.
-     *
-     * We use 'on_attach_callback' because we need the element to be attached to the form first.
-     * That's because the $emojisIcon element needs to be rendered outside of this $el
-     * (which is an text element, that can't 'contain' any other elements).
-     *
      * @override
      */
     on_attach_callback: function () {
-        if (!this.$emojisIcon) {
-            this.$emojisIcon = $(QWeb.render('mail.EmojisDropdown', {widget: this}));
-            this.$emojisIcon.find('.o_mail_emoji').on('click', this._onEmojiClick.bind(this));
-
-            if (this.$el.filter('span.o_field_translate').length) {
-                // multi-languages activated, place the button on the left of the translation button
-                this.$emojisIcon.addClass('o_mail_emojis_dropdown_translation');
-            }
-            if (this.$el.filter('textarea').length) {
-                this.$emojisIcon.addClass('o_mail_emojis_dropdown_textarea');
-            }
-            this.$el.last().after(this.$emojisIcon);
-        }
-
-        if (this.mode === 'edit') {
-            this.$emojisIcon.show();
-        } else {
-            this.$emojisIcon.hide();
-        }
+        this._attachEmojisDropdown();
     },
 
     //--------------------------------------------------------------------------
@@ -122,6 +98,37 @@ var FieldEmojiCommon = {
      */
     _triggerOnchange: function () {
         this.$input.trigger('change');
+    },
+
+    /**
+     * This will add an emoji button that shows the emojis selection dropdown.
+     *
+     * Should be used inside 'on_attach_callback' because we need the element to be attached to the form first.
+     * That's because the $emojisIcon element needs to be rendered outside of this $el
+     * (which is an text element, that can't 'contain' any other elements).
+     * 
+     * @private
+     */
+    _attachEmojisDropdown: function () {
+        if (!this.$emojisIcon) {
+            this.$emojisIcon = $(QWeb.render('mail.EmojisDropdown', {widget: this}));
+            this.$emojisIcon.find('.o_mail_emoji').on('click', this._onEmojiClick.bind(this));
+
+            if (this.$el.filter('span.o_field_translate').length) {
+                // multi-languages activated, place the button on the left of the translation button
+                this.$emojisIcon.addClass('o_mail_emojis_dropdown_translation');
+            }
+            if (this.$el.filter('textarea').length) {
+                this.$emojisIcon.addClass('o_mail_emojis_dropdown_textarea');
+            }
+            this.$el.last().after(this.$emojisIcon);
+        }
+
+        if (this.mode === 'edit') {
+            this.$emojisIcon.show();
+        } else {
+            this.$emojisIcon.hide();
+        }
     }
 };
 
@@ -138,6 +145,6 @@ var FieldCharEmojis = basicFields.FieldChar.extend(MailEmojisMixin, FieldEmojiCo
 registry.add('text_emojis', FieldTextEmojis);
 registry.add('char_emojis', FieldCharEmojis);
 
-return {FieldTextEmojis: FieldTextEmojis, FieldCharEmojis: FieldCharEmojis};
+return {FieldTextEmojis: FieldTextEmojis, FieldCharEmojis: FieldCharEmojis, FieldEmojiCommon: FieldEmojiCommon};
 
 });
