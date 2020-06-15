@@ -65,12 +65,3 @@ class WebsiteLivechat(LivechatController):
         if visitor_sudo:
             anonymous_name = visitor_sudo.display_name
         return super(WebsiteLivechat, self).get_session(channel_id, anonymous_name, previous_operator_id=previous_operator_id, **kwargs)
-
-    @http.route('/im_livechat/close_empty_livechat', type='json', auth="public")
-    def close_empty_livechat(self, uuid):
-        """ Called when an operator send a chat request to a visitor but does not speak to him and closes
-        the chatter. (when the operator does not complete the 'send chat request' flow in other terms)
-        This will clean the chat request and allows operators to send the visitor a new chat request."""
-        mail_channel = request.env['mail.channel'].sudo().search([('uuid', '=', uuid)])
-        if mail_channel:
-            mail_channel.channel_pin(uuid, False)

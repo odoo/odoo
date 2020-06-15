@@ -20,7 +20,11 @@ Allows users to send documents by post
         'security/ir.model.access.csv',
     ],
     'qweb': [
-        'static/src/xml/thread.xml',
+        'static/src/bugfix/bugfix.xml',
+        'static/src/components/message/message.xml',
+        'static/src/components/notification_group/notification_group.xml',
+        'static/src/components/snailmail_error_dialog/snailmail_error_dialog.xml',
+        'static/src/components/snailmail_notification_popover/snailmail_notification_popover.xml',
     ],
     'auto_install': True,
 }

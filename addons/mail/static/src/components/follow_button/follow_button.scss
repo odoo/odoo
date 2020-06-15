@@ -1,0 +1,19 @@
+// ------------------------------------------------------------------
+// Style
+// ------------------------------------------------------------------
+
+.o_FollowButton_follow {
+    color: gray('600');
+}
+
+.o_FollowButton_unfollow {
+    color: gray('600');
+
+    &.o-following {
+        color: $green;
+    }
+
+    &.o-unfollow {
+        color: $orange;
+    }
+}
