@@ -167,7 +167,7 @@ class AccountMove(models.Model):
         help='Technical field used to fit the generic behavior in mail templates.')
     is_move_sent = fields.Boolean(readonly=True, default=False, copy=False,
         help="It indicates that the invoice/payment has been sent.")
-    partner_bank_id = fields.Many2one('res.partner.bank', string='Bank Account',
+    partner_bank_id = fields.Many2one('res.partner.bank', string='Recipient Bank',
         help='Bank Account Number to which the invoice will be paid. A Company bank account if this is a Customer Invoice or Vendor Credit Note, otherwise a Partner bank account number.',
         check_company=True)
     payment_reference = fields.Char(string='Payment Reference', index=True, copy=False,
