@@ -9,8 +9,7 @@ from odoo.exceptions import UserError, AccessError
 from odoo.osv import expression
 
 class AccountAnalyticLine(models.Model):
-    _name = 'account.analytic.line'
-    _inherit = ['account.analytic.line', 'timer.mixin']
+    _inherit = 'account.analytic.line'
 
     @api.model
     def default_get(self, field_list):
@@ -48,9 +47,6 @@ class AccountAnalyticLine(models.Model):
     employee_id = fields.Many2one('hr.employee', "Employee", check_company=True, domain=_domain_employee_id)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
-    display_timer = fields.Boolean(
-        compute='_compute_display_timer',
-        help="Technical field used to display the timer if the encoding unit is 'Hours'.")
 
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
@@ -198,40 +194,3 @@ class AccountAnalyticLine(models.Model):
                     'amount': amount_converted,
                 })
         return result
-
-    def _compute_display_timer(self):
-        uom_hour = self.env.ref('uom.product_uom_hour')
-        for analytic_line in self:
-            analytic_line.display_timer = analytic_line.encoding_uom_id == uom_hour
-
-    def action_timer_start(self):
-        """ Start a timer if it isn't already started and the
-        timesheets allow to track time
-        """
-        if not self.user_timer_id.timer_start and self.display_timer:
-            super().action_timer_start()
-
-    def action_timer_stop(self):
-        """ Stop the current timer
-        """
-        if self.user_timer_id.timer_start and self.display_timer:
-            minutes_spent = super().action_timer_stop()
-            self._add_timesheet_time(minutes_spent)
-
-    def _add_timesheet_time(self, minutes_spent):
-        if self.unit_amount == 0 and minutes_spent < 1 and not self._context.get('prevent_deletion', False):
-            # Check if unit_amount equals 0 and minutes_spent is less than 1 minute,
-            # if yes, then remove the timesheet
-            self.unlink()
-        else:
-            if minutes_spent < 1:
-                amount = self.unit_amount
-            else:
-                minimum_duration = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_min_duration', 0))
-                rounding = int(self.env['ir.config_parameter'].sudo().get_param('hr_timesheet.timesheet_rounding', 0))
-                minutes_spent = self._timer_rounding(minutes_spent, minimum_duration, rounding)
-                amount = self.unit_amount + minutes_spent * 60 / 3600
-            self.write({'unit_amount': amount})
-
-    def _action_interrupt_user_timers(self):
-        self.action_timer_stop()

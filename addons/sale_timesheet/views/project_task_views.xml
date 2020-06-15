@@ -52,9 +52,9 @@
     <record id="project_project_view_form_simplified_inherit" model="ir.ui.view">
         <field name="name">project.project.view.form.simplified.inherit</field>
         <field name="model">project.project</field>
-        <field name="inherit_id" ref="hr_timesheet.project_project_view_form_simplified_inherit"/>
+        <field name="inherit_id" ref="hr_timesheet.project_project_view_form_simplified_inherit_timesheet"/>
         <field name="arch" type="xml">
-            <field name="allow_timesheet_timer" position="after">
+            <field name="allow_timesheets" position="after">
                 <field name="billable_type" invisible="1"/>
                 <field name="company_id" invisible="1"/>
                 <field name="allow_billable" attrs="{'invisible': [('billable_type', '=', 'employee_rate')]}"/>
