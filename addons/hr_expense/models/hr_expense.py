@@ -303,7 +303,6 @@ class HrExpense(models.Model):
             'name': todo[0].name if len(todo) == 1 else '',
             'expense_line_ids': [(6, 0, todo.ids)]
         })
-        sheet._onchange_employee_id()
         return sheet
 
     def action_submit_expenses(self):
