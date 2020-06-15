@@ -1,4 +1,4 @@
-odoo.define('timer.timer_field', function (require) {
+odoo.define('timer.timer_fields', function (require) {
 "use strict";
 
 const concurrency = require('web.concurrency');
@@ -29,16 +29,16 @@ QUnit.module('timer_timer', {
         };
     }
 }, function () {
-    QUnit.module('timer.timer');
+    QUnit.module('Timer');
 
     QUnit.test('timer_toggle_button: basic rendering', async function (assert) {
-        assert.expect(3);
+        assert.expect(6);
 
+        let isTimerRunning = false;
         const kanban = await createView({
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            debug: true,
             arch: `<kanban>
                     <templates>
                         <t t-name="kanban-box">
@@ -49,6 +49,21 @@ QUnit.module('timer_timer', {
                     </templates>
                 </kanban>`,
             res_id: 1,
+            intercepts: {
+                timer_changed: function (ev) {
+                    if (!isTimerRunning) {
+                        assert.strictEqual(ev.data.is_timer_running, true);
+                    } else {
+                        assert.strictEqual(ev.data.is_timer_running, false);
+                    }
+                }
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'action_timer_start' || args.method === 'action_timer_stop') {
+                    return Promise.resolve(true);
+                }
+                return this._super(...arguments);
+            },
         });
 
         assert.containsOnce(kanban, 'button.o-timer-button',
@@ -56,13 +71,21 @@ QUnit.module('timer_timer', {
         assert.containsOnce(kanban, 'i.fa-play-circle',
                 "should have play icon");
 
+        await testUtils.dom.click(kanban.$('.o-timer-button'));
+        isTimerRunning = true;
+        await kanban.reload();
+
         return concurrency.delay(1000).then(async () => {
-            this.data.partner.records[0].is_timer_running = "false";
-            await kanban.reload();
-            return concurrency.delay(1000);
-        }).then(() => {
             assert.containsOnce(kanban, 'i.fa-stop-circle',
                 "should have stop icon");
+
+            await testUtils.dom.click(kanban.$('.o-timer-button'));
+            await kanban.reload();
+
+            return concurrency.delay(1000);
+        }).then(() => {
+            assert.containsOnce(kanban, 'i.fa-play-circle',
+                "should have play icon");
 
             kanban.destroy();
         });
