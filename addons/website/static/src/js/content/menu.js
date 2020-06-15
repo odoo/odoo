@@ -81,9 +81,10 @@ const BaseAnimatedHeader = animations.Animation.extend({
      */
     _updateMainPaddingTop: function () {
         this.headerHeight = this.$el.outerHeight();
-        if (this.isOverlayHeader) {
+        if (this.isOverlayHeader || this.$navbarCollapses.hasClass('show')) {
             return;
         }
+
         const headerSize = this.el.classList.contains('o_header_affixed');
         this.$main.css('padding-top', headerSize ? this.headerHeight : '');
     },
@@ -146,10 +147,7 @@ const BaseAnimatedHeader = animations.Animation.extend({
             this.headerIsScrolled = headerIsScrolled;
         }
 
-        // Reset opened menus
-        if (this.$navbarCollapses.hasClass('show')) {
-            return;
-        }
+        // Close opened menus
         this.$dropdowns.removeClass('show');
         this.$navbarCollapses.removeClass('show').attr('aria-expanded', false);
     },
