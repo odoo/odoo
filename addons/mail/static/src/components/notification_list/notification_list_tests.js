@@ -36,11 +36,13 @@ QUnit.module('notification_list_tests.js', {
                     channel_channel: [{
                         channel_type: 'channel',
                         id: 100,
+                        is_pinned: true,
                         name: "Channel 2019",
                         message_unread_counter: 0,
                     }, {
                         channel_type: 'channel',
                         id: 200,
+                        is_pinned: true,
                         name: "Channel 2020",
                         message_unread_counter: 0,
                     }],

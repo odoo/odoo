@@ -22,9 +22,6 @@ QUnit.module('discuss_tests.js', {
         utilsBeforeEach(this);
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
             let { env, widget } = await utilsStart(Object.assign({}, params, {
                 autoOpenDiscuss: true,
                 data: this.data,
@@ -429,6 +426,7 @@ QUnit.test('sidebar: basic channel rendering', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -525,6 +523,7 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
                 message_needaction_counter: 10,
             }],
@@ -567,12 +566,14 @@ QUnit.test('sidebar: public/private channel rendering', async function (assert) 
             channel_channel: [{
                 channel_type: "channel",
                 id: 100,
+                is_pinned: true,
                 name: "channel1",
                 public: 'public',
             }],
             channel_private_group: [{
                 channel_type: "channel",
                 id: 101,
+                is_pinned: true,
                 name: "channel2",
                 public: 'private',
             }],
@@ -652,6 +653,7 @@ QUnit.test('sidebar: basic chat rendering', async function (assert) {
                     name: "Demo",
                 }],
                 id: 10,
+                is_pinned: true,
             }],
         },
     });
@@ -729,6 +731,7 @@ QUnit.test('sidebar: chat rendering with unread counter', async function (assert
                     name: "Demo",
                 }],
                 id: 10,
+                is_pinned: true,
                 message_unread_counter: 100,
             }],
         },
@@ -775,6 +778,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
                     name: "Partner1",
                 }],
                 id: 11,
+                is_pinned: true,
             }, {
                 channel_type: "chat",
                 direct_partner: [{
@@ -783,6 +787,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
                     name: "Partner2",
                 }],
                 id: 12,
+                is_pinned: true,
             }, {
                 channel_type: "chat",
                 direct_partner: [{
@@ -791,6 +796,7 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
                     name: "Partner3",
                 }],
                 id: 13,
+                is_pinned: true,
             }],
         },
     });
@@ -896,6 +902,7 @@ QUnit.test('sidebar: chat custom name', async function (assert) {
                     name: "Marc Demo",
                 }],
                 id: 10,
+                is_pinned: true,
             }],
         },
     });
@@ -921,6 +928,7 @@ QUnit.test('sidebar: rename chat', async function (assert) {
                     name: "Marc Demo",
                 }],
                 id: 10,
+                is_pinned: true,
             }],
         },
     });
@@ -990,6 +998,7 @@ QUnit.test('default thread rendering', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -1227,6 +1236,7 @@ QUnit.test('load single message from channel initially', async function (assert)
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -1310,6 +1320,7 @@ QUnit.test('basic rendering of message', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -1423,6 +1434,7 @@ QUnit.test('basic rendering of squashed message', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -1610,6 +1622,7 @@ QUnit.test('load all messages from channel initially, less than fetch limit (29 
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -1683,6 +1696,7 @@ QUnit.test('load more messages from channel', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -1807,6 +1821,7 @@ QUnit.test('auto-scroll to bottom of thread', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -1864,6 +1879,7 @@ QUnit.test('load more messages from channel (auto-load on scroll)', async functi
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -1959,6 +1975,7 @@ QUnit.test('new messages separator', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 message_unread_counter: 0,
                 name: "General",
                 seen_message_id: 125,
@@ -2073,10 +2090,12 @@ QUnit.test('restore thread scroll position', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 1,
+                is_pinned: true,
                 name: "channel1",
             }, {
                 channel_type: "channel",
                 id: 2,
+                is_pinned: true,
                 name: "channel2",
             }],
         },
@@ -2212,10 +2231,12 @@ QUnit.test('message origin redirect to channel', async function (assert) {
             channel_channel: [{
                 channel_type: 'channel',
                 id: 1,
+                is_pinned: true,
                 name: "channel1",
             }, {
                 channel_type: 'channel',
                 id: 2,
+                is_pinned: true,
                 name: "channel2",
             }],
         },
@@ -2435,6 +2456,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 1,
+                is_pinned: true,
                 name: "General",
             }],
             channel_direct_message: [{
@@ -2444,6 +2466,7 @@ QUnit.test('redirect to author (open chat)', async function (assert) {
                     name: "Demo",
                 }],
                 id: 10,
+                is_pinned: true,
             }],
         },
     });
@@ -2593,6 +2616,7 @@ QUnit.test('sidebar quick search', async function (assert) {
         channelsData.push({
             channel_type: 'channel',
             id,
+            is_pinned: true,
             name: `channel${id}`,
         });
     }
@@ -2668,6 +2692,7 @@ QUnit.test('basic control panel rendering', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -2748,6 +2773,7 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 message_needaction_counter: 2,
                 name: "General",
             }],
@@ -2973,6 +2999,7 @@ QUnit.test('toggle_star message', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -3103,10 +3130,12 @@ QUnit.test('composer state: text save and restore', async function (assert) {
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }, {
                 channel_type: 'channel',
                 id: 21,
+                is_pinned: true,
                 name: "Special",
             }],
         },
@@ -3168,10 +3197,12 @@ QUnit.test('composer state: attachments save and restore', async function (asser
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }, {
                 channel_type: 'channel',
                 id: 21,
+                is_pinned: true,
                 name: "Special",
             }],
         },
@@ -3278,6 +3309,7 @@ QUnit.test('post a simple message', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -3465,6 +3497,7 @@ QUnit.test('mark channel as seen on last message visible', async function (asser
             channel_channel: [{
                 channel_type: 'channel',
                 id: 10,
+                is_pinned: true,
                 message_unread_counter: 1,
                 name: "General",
             }],
@@ -3828,6 +3861,7 @@ QUnit.test('load recent messages from thread (already loaded some old messages)'
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -4245,6 +4279,7 @@ QUnit.test('receive new channel message: out of odoo focus (notification, channe
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 message_unread_counter: 0,
                 name: "General",
             }],
@@ -4298,9 +4333,11 @@ QUnit.test('receive new channel message: out of odoo focus (notification, chat)'
                 channel_type: "chat",
                 direct_partner: [{
                     id: 7,
+                    is_pinned: true,
                     name: "Demo User",
                 }],
                 id: 10,
+                is_pinned: true,
                 message_unread_counter: 0,
             }],
         },
@@ -4353,6 +4390,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 message_unread_counter: 0,
                 name: "General",
             }],
@@ -4363,6 +4401,7 @@ QUnit.test('receive new channel messages: out of odoo focus (tab title)', async 
                     name: "Demo User",
                 }],
                 id: 10,
+                is_pinned: true,
                 message_unread_counter: 0,
             }],
         },
@@ -4459,6 +4498,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 message_unread_counter: 0,
                 name: "General",
             }],
@@ -4469,6 +4509,7 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
                     name: "Demo User",
                 }],
                 id: 10,
+                is_pinned: true,
                 message_unread_counter: 0,
             }],
         },

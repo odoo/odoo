@@ -17,11 +17,9 @@ registerInstancePatchModel('mail.messaging_initializer', 'im_livechat/static/src
         this._super(initMessagingData);
         const { channel_livechat = [] } = initMessagingData;
         for (const data of channel_livechat) {
-            this.env.models['mail.thread'].insert(Object.assign(
-                {},
+            this.env.models['mail.thread'].insert(
                 this.env.models['mail.thread'].convertData(data),
-                { isPinned: true }
-            ));
+            );
         }
     },
 });

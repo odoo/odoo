@@ -50,7 +50,48 @@ MockServer.include({
             return channel;
         });
     },
-
+    /**
+     * Simulate the 'channel_fold' route of of mail.channel
+     * In particular sends a notification on the bus
+     *
+     * @private
+     */
+     _mockChannelFold(args) {
+        const { state, uuid } = args.kwargs;
+        const channel = this.data['mail.channel'].records.find(c => c.uuid === uuid);
+        channel.state = state;
+        // Should use something of the form session.partner_id or env.messaging.currentPartner
+        // This is a limitation of the architecture of JS tests
+        const notifConfirmFold = [
+            ["dbName", 'res.partner', undefined],
+            Object.assign({}, channel)
+        ];
+        this._widget.call('bus_service', 'trigger', 'notification', [notifConfirmFold]);
+    },
+    /**
+     * Simulate the 'execute_command' route of mail.channel
+     * In particular sends a notification on the bus
+     *
+     * @private
+     */
+     _mockExecuteCommand(args) {
+        const [ids, commandName] = args.args;
+        const channels = this.data['mail.channel'].records.filter(c => ids.includes(c.id));
+        if (commandName === 'leave') {
+            for (const channel of channels) {
+                channel.is_pinned = false;
+                // Should use something of the form session.partner_id or env.messaging.currentPartner
+                // This is a limitation of the architecture of JS tests
+                const notifConfirmUnpin = [
+                    ["dbName", 'res.partner', undefined],
+                    Object.assign({}, channel, { info: 'unsubscribe' })
+                ];
+                this._widget.call('bus_service', 'trigger', 'notification', [notifConfirmUnpin]);
+            }
+            return;
+        }
+        throw new Error(`mail/mock_server: the route execute_command doesn't implement the command "${commandName}"`);
+    },
     /**
      * Simulate the '/mail/read_followers' route
      *
@@ -318,7 +359,7 @@ MockServer.include({
             return Promise.resolve(this._mockChannelFetchPreview(args));
         }
         if (args.method === 'channel_fold') {
-            return;
+            return this._mockChannelFold(args);
         }
         if (args.method === 'channel_minimize') {
             return Promise.resolve();
@@ -328,6 +369,9 @@ MockServer.include({
         }
         if (args.method === 'channel_fetched') {
             return Promise.resolve();
+        }
+        if (args.method === 'execute_command') {
+            return this._mockExecuteCommand(args);
         }
         if (args.method === 'get_activity_data') {
             return Promise.resolve(this._mockGetActivityData(args));

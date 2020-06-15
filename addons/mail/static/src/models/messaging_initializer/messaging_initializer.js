@@ -22,19 +22,19 @@ function factory(dependencies) {
             this.messaging.update({
                 history: [['create', {
                     id: 'history',
-                    isPinned: true,
+                    isServerPinned: true,
                     model: 'mail.box',
                     name: this.env._t("History"),
                 }]],
                 inbox: [['create', {
                     id: 'inbox',
-                    isPinned: true,
+                    isServerPinned: true,
                     model: 'mail.box',
                     name: this.env._t("Inbox"),
                 }]],
                 starred: [['create', {
                     id: 'starred',
-                    isPinned: true,
+                    isServerPinned: true,
                     model: 'mail.box',
                     name: this.env._t("Starred"),
                 }]],
@@ -144,11 +144,9 @@ function factory(dependencies) {
             channel_private_group = [],
         } = {}) {
             for (const data of channel_channel.concat(channel_direct_message, channel_private_group)) {
-                this.env.models['mail.thread'].insert(Object.assign(
-                    {},
+                this.env.models['mail.thread'].insert(
                     this.env.models['mail.thread'].convertData(data),
-                    { isPinned: true }
-                ));
+                );
             }
         }
 
@@ -192,7 +190,7 @@ function factory(dependencies) {
                     moderation: [['create', {
                         counter: moderation_counter,
                         id: 'moderation',
-                        isPinned: true,
+                        isServerPinned: true,
                         model: 'mail.box',
                         name: this.env._t("Moderation"),
                     }]],

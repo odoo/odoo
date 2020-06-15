@@ -272,6 +272,23 @@ function factory(dependencies) {
             return [];
         }
 
+        /**
+         * @private
+         */
+        _onChangeThreadIsPinned() {
+            let thread = this.thread;
+            // No thread, or thread is being removed
+            // so we display discuss the messaging's Inbox.
+            if (
+                (!thread || !thread.isPinned) &&
+                this.messaging
+            ) {
+                thread = this.messaging.inbox;
+            }
+            if (thread && this.threadViewer && thread !== this.thread) {
+                this.threadViewer.update({ thread: [['link', thread]] });
+            }
+        }
     }
 
     Discuss.fields = {
@@ -358,12 +375,29 @@ function factory(dependencies) {
             default: false,
             dependencies: ['replyingToMessage'],
         }),
+        isThreadPinned: attr({
+            related: 'thread.isPinned',
+        }),
         /**
          * The menu_id of discuss app, received on mail/init_messaging and
          * used to open discuss from elsewhere.
          */
         menu_id: attr({
             default: null,
+        }),
+        messaging: one2one('mail.messaging', {
+            inverse: 'discuss',
+        }),
+        /**
+         * When a thread changes, or some properties of it change
+         * Computes whether we should display it or change it
+         */
+        onChangeThreadIsPinned: attr({
+            compute: '_onChangeThreadIsPinned',
+            dependencies: [
+                'isThreadPinned',
+                'thread',
+            ],
         }),
         renamingThreads: one2many('mail.thread'),
         replyingToMessage: one2one('mail.message', {

@@ -60,6 +60,7 @@ QUnit.test('receive other member typing status "is typing"', async function (ass
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 members: [{
                     email: 'admin@odoo.com',
                     id: 3,
@@ -120,6 +121,7 @@ QUnit.test('receive other member typing status "is typing" then "no longer is ty
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 members: [{
                     email: 'admin@odoo.com',
                     id: 3,
@@ -196,6 +198,7 @@ QUnit.test('assume other member typing status becomes "no longer is typing" afte
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 members: [{
                     email: 'admin@odoo.com',
                     id: 3,
@@ -264,6 +267,7 @@ QUnit.test ('other member typing status "is typing" refreshes 60 seconds timer o
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 members: [{
                     email: 'admin@odoo.com',
                     id: 3,
@@ -349,6 +353,7 @@ QUnit.test('receive several other members typing status "is typing"', async func
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
+                is_pinned: true,
                 members: [{
                     email: 'admin@odoo.com',
                     id: 3,

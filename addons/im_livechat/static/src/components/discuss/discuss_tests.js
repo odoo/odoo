@@ -43,6 +43,7 @@ QUnit.test('livechat in the sidebar', async function (assert) {
             channel_livechat: [{
                 channel_type: "livechat",
                 id: 1,
+                is_pinned: true,
                 livechat_visitor: {
                     country: false,
                     id: false,
