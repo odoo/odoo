@@ -3306,10 +3306,39 @@ class AccountMoveLine(models.Model):
                 if record.move_id.tax_cash_basis_rec_id:
                     reconciled_amls = record.move_id.tax_cash_basis_rec_id.debit_move_id + record.move_id.tax_cash_basis_rec_id.credit_move_id
                     invoice_aml = reconciled_amls.filtered(lambda x: x.journal_id.type in ('sale', 'purchase')) # To exclude the payment
-                else:
-                    invoice_aml = record
 
-                tag_amount = (tag.tax_negate and -1 or 1) * (invoice_aml.move_id.is_inbound() and -1 or 1) * record.balance
+                    if len(invoice_aml) > 1:
+
+                        caba_origin_inv_journal_type = invoice_aml.mapped('journal_id.type')[0]
+                        type_prefixes = {'sale': 'out', 'purchase': 'in'}
+
+                        if record.tax_repartition_line_id:
+                            # If tax_repartition_line_id is set, we know for sure we are on a tax line.
+                            # We can then simply check whether the repartition line is intended for invoices or refunds
+                            type_postfix = record.tax_repartition_line_id.invoice_tax_id and 'invoice' or 'refund'
+                            caba_origin_inv_type = "%s_%s" % (type_prefixes[caba_origin_inv_journal_type], type_postfix)
+
+                        elif record.tax_ids:
+                            # If it's a base line, we rely on debit/credit to guess the type of the CABA origin invoice.
+                            if (caba_origin_inv_journal_type == 'sale' and record.credit) \
+                               or (caba_origin_inv_journal_type == 'purchase' and record.debit):
+                                caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_invoice'
+                            else:
+                                caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_refund'
+
+                        else:
+                            # Default type for non-tax related lines is invoice. (in/out depending of the journal)
+                            caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_invoice'
+
+                        if caba_origin_inv_type not in invoice_aml.mapped('move_id.move_type'):
+                            caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_invoice'
+                    else:
+                        caba_origin_inv_type = invoice_aml.move_id.move_type
+
+                else:
+                    caba_origin_inv_type = record.move_id.move_type
+
+                tag_amount = (tag.tax_negate and -1 or 1) * (caba_origin_inv_type in record.move_id.get_inbound_types() and -1 or 1) * record.balance
 
                 if tag.tax_report_line_ids:
                     #Then, the tag comes from a report line, and hence has a + or - sign (also in its name)
