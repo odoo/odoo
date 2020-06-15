@@ -279,11 +279,6 @@ class SnailmailLetter(models.Model):
                 letter.write({'info_msg': note, 'state': 'error'})
 
         self.env.cr.commit()
-        
-    def _update_activity(self, note):
-        self.ensure_one()
-        
-        
 
     @api.multi
     def snailmail_print(self):
