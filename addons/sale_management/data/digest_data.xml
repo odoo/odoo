@@ -4,5 +4,30 @@
         <record id="digest.digest_digest_default" model="digest.digest">
             <field name="kpi_all_sale_total">True</field>
         </record>
+
+        <record id="digest_tip_sale1_management_0" model="digest.tip">
+            <field name="name">Tip: Odoo supports configurable products</field>
+            <field name="sequence">2200</field>
+            <field name="group_id" ref="sales_team.group_sale_manager" />
+            <field name="tip_description" type="html">
+                <div>
+                    <b class="font-16" style="font-size: 20px;line-height: 30px">Odoo supports configurable products</b>
+                    <p class="font-12" style="color:#888888;font-size: 15px; line-height: 25px; margin-top: 0">Struggling with a complex product catalog? Try out the Product Configurator to help sales configure a product with different options: colors, size, capacity, etc. Make SalesOrders encoding easier and error-proof. Watch our tutorial to learn more. (link)</p>
+                    <img src="/sale_management/static/src/img/Sales-configure-products.gif" style="max-width: 580px" width="100%"/>
+                </div>
+            </field>
+        </record>
+        <record id="digest_tip_sale_management_1" model="digest.tip">
+            <field name="name">Tip: Sell or buy products in bulk with matrixes</field>
+            <field name="sequence">2700</field>
+            <field name="group_id" ref="sales_team.group_sale_manager" />
+            <field name="tip_description" type="html">
+                <div>
+                    <b class="font-16" style="font-size: 20px;line-height: 30px">Sell or buy products in bulk with matrixes</b>
+                    <p class="font-12" style="color:#888888;font-size: 15px; line-height: 25px; margin-top: 0">Selling the same product in different sizes or colors? Try the product grid and populate your orders with multiple quantities of each variant. This feature also exists in the purchase application.</p>
+                    <img src="/sale_management/static/src/img/t-shirts.png" style="max-width: 580px" width="100%"/>
+                </div>
+            </field>
+        </record>
     </data>
 </odoo>
