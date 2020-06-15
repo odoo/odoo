@@ -367,17 +367,13 @@ class EventEvent(models.Model):
                     event.seats_max = 0
                 continue
 
-            if event.event_type_id.seats_max:
-                event.seats_max = event.event_type_id.seats_max
+            event.seats_max = event.event_type_id.seats_max
 
             if event.event_type_id.has_seats_limitation != event.seats_limited:
                 event.seats_limited = event.event_type_id.has_seats_limitation
 
-            if event.event_type_id.auto_confirm != event.auto_confirm:
-                event.auto_confirm = event.event_type_id.auto_confirm
-
-            if event.event_type_id.tag_ids:
-                event.tag_ids = event.event_type_id.tag_ids
+            event.auto_confirm = event.event_type_id.auto_confirm
+            event.tag_ids = event.event_type_id.tag_ids
 
     @api.depends('event_type_id')
     def _compute_event_mail_ids(self):
