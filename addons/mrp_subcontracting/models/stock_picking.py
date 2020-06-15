@@ -4,6 +4,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
+from odoo.tools import float_is_zero
 
 
 class StockPicking(models.Model):
@@ -43,7 +44,9 @@ class StockPicking(models.Model):
             for move in picking.move_lines:
                 if not move.is_subcontract:
                     continue
-                production = move.move_orig_ids.production_id
+                production = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))
+                if len(production) > 1:
+                    production = production[-1]
                 if move._has_tracked_subcontract_components():
                     move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel')).move_line_ids.unlink()
                     move_finished_ids = move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
@@ -58,20 +61,23 @@ class StockPicking(models.Model):
                             'location_dest_id': move_finished_ids.location_dest_id.id,
                         })
                 else:
-                    for move_line in move.move_line_ids:
-                        produce = self.env['mrp.product.produce'].with_context(default_production_id=production.id).create({
-                            'production_id': production.id,
-                            'qty_producing': move_line.qty_done,
-                            'product_uom_id': move_line.product_uom_id.id,
-                            'finished_lot_id': move_line.lot_id.id,
-                            'consumption': 'strict',
-                        })
-                        produce._generate_produce_lines()
-                        produce._record_production()
+                    if not move.move_line_ids.lot_id:
+                        qty_done_production_uom = move.product_uom._compute_quantity(move.quantity_done, production.product_uom_id)
+                        production.qty_producing += qty_done_production_uom
+                        for move in (production.move_raw_ids | production.move_finished_ids.filtered(lambda m: m.product_id != production.product_id)):
+                            if move.state in ('done', 'cancel'):
+                                continue
+                            if float_is_zero(move.product_uom_qty, precision_rounding=move.product_uom.rounding):
+                                continue
+                            new_qty = production.product_uom_id._compute_quantity(
+                                (production.qty_producing - production.qty_produced) * move.unit_factor, production.product_uom_id,
+                                rounding_method='HALF-UP')
+                            move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
+                            move.move_line_ids = move._set_quantity_done_prepare_vals(new_qty)
                 productions |= production
             for subcontracted_production in productions:
                 if subcontracted_production.state == 'progress':
-                    subcontracted_production.post_inventory()
+                    subcontracted_production._post_inventory()
                 else:
                     subcontracted_production.button_mark_done()
                 # For concistency, set the date on production move before the date
@@ -132,6 +138,7 @@ class StockPicking(models.Model):
         for move, bom in subcontract_details:
             mo = self.env['mrp.production'].with_company(move.company_id).create(self._prepare_subcontract_mo_vals(move, bom))
             self.env['stock.move'].create(mo._get_moves_raw_values())
+            self.env['stock.move'].create(mo._get_moves_finished_values())
             mo.action_confirm()
 
             # Link the finished to the receipt move.

@@ -47,7 +47,7 @@ class ProductProduct(models.Model):
         if not boms_to_recompute:
             boms_to_recompute = []
         total = 0
-        for opt in bom.routing_id.operation_ids:
+        for opt in bom.operation_ids:
             duration_expected = (
                 opt.workcenter_id.time_start +
                 opt.workcenter_id.time_stop +

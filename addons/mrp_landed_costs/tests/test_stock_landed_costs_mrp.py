@@ -37,16 +37,12 @@ class TestStockLandedCostsMrp(StockAccountTestCommon):
             'type': 'product',
             'categ_id': cls.categ_all.id
         })
-        cls.routing_1 = cls.env['mrp.routing'].create({
-            'name': 'Simple Line',
-        })
         cls.uom_unit = cls.env.ref('uom.product_uom_unit')
         cls.bom_refri = cls.env['mrp.bom'].create({
             'product_id': cls.product_refrigerator.id,
             'product_tmpl_id': cls.product_refrigerator.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
-            'routing_id': cls.routing_1.id,
             'type': 'normal',
         })
         cls.bom_refri_line1 = cls.env['mrp.bom.line'].create({
@@ -121,13 +117,10 @@ class TestStockLandedCostsMrp(StockAccountTestCommon):
         self.assertEqual(first_move.product_qty, 2.0)
 
         # produce product
-        produce_form = Form(self.env['mrp.product.produce'].with_user(self.allow_user).with_context({
-            'active_id': man_order.id,
-            'active_ids': [man_order.id],
-        }))
-        produce_form.qty_producing = 2.0
-        produce_wizard = produce_form.save()
-        produce_wizard.do_produce()
+        mo_form = Form(man_order.with_user(self.allow_user))
+        mo_form.qty_producing = 2
+        man_order = mo_form.save()
+
 
         man_order.button_mark_done()
 

@@ -202,7 +202,7 @@ class StockMove(models.Model):
             else:
                 move.is_locked = False
 
-    @api.depends('product_id', 'has_tracking')
+    @api.depends('product_id', 'has_tracking', 'move_line_ids')
     def _compute_show_details_visible(self):
         """ According to this field, the button that calls `action_show_details` will be displayed
         to work on a move from its picking form view, or not.
@@ -216,10 +216,12 @@ class StockMove(models.Model):
         for move in self:
             if not move.product_id:
                 move.show_details_visible = False
+            elif len(move.move_line_ids) > 1:
+                move.show_details_visible = True
             else:
                 move.show_details_visible = (((consignment_enabled and move.picking_id.picking_type_id.code != 'incoming') or
                                              show_details_visible or move.has_tracking != 'none') and
-                                             (move.state != 'draft' or (move.picking_id.immediate_transfer and move.state == 'draft')) and
+                                             move._show_details_in_draft() and
                                              move.picking_id.picking_type_id.show_operations is False)
 
     def _compute_show_reserved_availability(self):
@@ -280,9 +282,11 @@ class StockMove(models.Model):
         """ This will return the move lines to consider when applying _quantity_done_compute on a stock.move.
         In some context, such as MRP, it is necessary to compute quantity_done on filtered sock.move.line."""
         self.ensure_one()
-        return self.move_line_ids or self.move_line_nosuggest_ids
+        if self.picking_type_id.show_reserved is False:
+            return self.move_line_nosuggest_ids
+        return self.move_line_ids
 
-    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done')
+    @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done', 'picking_type_id')
     def _quantity_done_compute(self):
         """ This field represents the sum of the move lines `qty_done`. It allows the user to know
         if there is still work to do.
@@ -292,28 +296,36 @@ class StockMove(models.Model):
         field will be used in `_action_done` in order to know if the move will need a backorder or
         an extra move.
         """
-        move_lines = self.env['stock.move.line']
-        for move in self:
-            move_lines |= move._get_move_lines()
+        if not any(self._ids):
+            # onchange
+            for move in self:
+                quantity_done = 0
+                for move_line in move._get_move_lines():
+                    quantity_done += move_line.product_uom_id._compute_quantity(
+                        move_line.qty_done, move.product_uom, round=False)
+                move.quantity_done = quantity_done
+        else:
+            # compute
+            move_lines = self.env['stock.move.line']
+            for move in self:
+                move_lines |= move._get_move_lines()
 
-        data = self.env['stock.move.line'].read_group(
-            [('id', 'in', move_lines.ids)],
-            ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
-            lazy=False
-        )
-
-        rec = defaultdict(list)
-        for d in data:
-            rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
-
-        # In case we are in an onchange, move.id is a NewId, not an integer. Therefore, there is no
-        # match in the rec dictionary. By using move.ids[0] we get the correct integer value.
-        for move in self:
-            uom = move.product_uom
-            move.quantity_done = sum(
-                self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
-                for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
+            data = self.env['stock.move.line'].read_group(
+                [('id', 'in', move_lines.ids)],
+                ['move_id', 'product_uom_id', 'qty_done'], ['move_id', 'product_uom_id'],
+                lazy=False
             )
+
+            rec = defaultdict(list)
+            for d in data:
+                rec[d['move_id'][0]] += [(d['product_uom_id'][0], d['qty_done'])]
+
+            for move in self:
+                uom = move.product_uom
+                move.quantity_done = sum(
+                    self.env['uom.uom'].browse(line_uom_id)._compute_quantity(qty, uom, round=False)
+                     for line_uom_id, qty in rec.get(move.ids[0] if move.ids else move.id, [])
+                )
 
     def _quantity_done_set(self):
         quantity_done = self[0].quantity_done  # any call to create will invalidate `move.quantity_done`
@@ -327,7 +339,12 @@ class StockMove(models.Model):
             elif len(move_lines) == 1:
                 move_lines[0].qty_done = quantity_done
             else:
-                raise UserError(_("Cannot set the done quantity from this stock move, work directly with the move lines."))
+                # Bypass the error if we're trying to write the same value.
+                ml_quantity_done = 0
+                for move_line in move_lines:
+                    ml_quantity_done += move_line.product_uom_id._compute_quantity(move_line.qty_done, move.product_uom, round=False)
+                if float_compare(quantity_done, ml_quantity_done, precision_rounding=move.product_uom.rounding) != 0:
+                    raise UserError(_("Cannot set the done quantity from this stock move, work directly with the move lines."))
 
     def _set_product_qty(self):
         """ The meaning of product_qty field changed lately and is now a functional field computing the quantity
@@ -342,10 +359,19 @@ class StockMove(models.Model):
         and is represented by the aggregated `product_qty` on the linked move lines. If the move
         is force assigned, the value will be 0.
         """
-        result = {data['move_id'][0]: data['product_qty'] for data in
-            self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id','product_qty'], ['move_id'])}
-        for rec in self:
-            rec.reserved_availability = rec.product_id.uom_id._compute_quantity(result.get(rec.id, 0.0), rec.product_uom, rounding_method='HALF-UP')
+        if not any(self._ids):
+            # onchange
+            for move in self:
+                reserved_availability = sum(move.move_line_ids.mapped('product_qty'))
+                move.reserved_availability = move.product_id.uom_id._compute_quantity(
+                    reserved_availability, move.product_uom, rounding_method='HALF-UP')
+        else:
+            # compute
+            result = {data['move_id'][0]: data['product_qty'] for data in
+                      self.env['stock.move.line'].read_group([('move_id', 'in', self.ids)], ['move_id', 'product_qty'], ['move_id'])}
+            for move in self:
+                move.reserved_availability = move.product_id.uom_id._compute_quantity(
+                    result.get(move.id, 0.0), move.product_uom, rounding_method='HALF-UP')
 
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
     def _compute_product_availability(self):
@@ -989,6 +1015,8 @@ class StockMove(models.Model):
 
         to_assign = {}
         for move in self:
+            if move.state != 'draft':
+                continue
             # if the move is preceeded, then it's waiting (if preceeding move is done, then action_assign has been called already and its state is already available)
             if move.move_orig_ids:
                 move_waiting |= move
@@ -1525,13 +1553,8 @@ class StockMove(models.Model):
         else:
             return [(self.picking_id, self.product_id.responsible_id, visited)]
 
-    def _set_quantity_done(self, qty):
-        """
-        Set the given quantity as quantity done on the move through the move lines. The method is
-        able to handle move lines with a different UoM than the move (but honestly, this would be
-        looking for trouble...).
-        @param qty: quantity in the UoM of move.product_uom
-        """
+    def _set_quantity_done_prepare_vals(self, qty):
+        res = []
         for ml in self.move_line_ids:
             ml_qty = ml.product_uom_qty - ml.qty_done
             if float_compare(ml_qty, 0, precision_rounding=ml.product_uom_id.rounding) <= 0:
@@ -1548,7 +1571,7 @@ class StockMove(models.Model):
             # Assign qty_done and explicitly round to make sure there is no inconsistency between
             # ml.qty_done and qty.
             taken_qty = float_round(taken_qty, precision_rounding=ml.product_uom_id.rounding)
-            ml.qty_done += taken_qty
+            res.append((1, ml.id, {'qty_done': ml.qty_done + taken_qty}))
             if ml.product_uom_id != self.product_uom:
                 taken_qty = ml.product_uom_id._compute_quantity(ml_qty, self.product_uom, round=False)
             qty -= taken_qty
@@ -1556,9 +1579,27 @@ class StockMove(models.Model):
             if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) <= 0:
                 break
         if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) > 0:
-            vals = self._prepare_move_line_vals(quantity=0)
-            vals['qty_done'] = qty
-            ml = self.env['stock.move.line'].create(vals)
+            if self.product_id.tracking != 'serial':
+                vals = self._prepare_move_line_vals(quantity=0)
+                vals['qty_done'] = qty
+                res.append((0, 0, vals))
+            else:
+                uom_qty = self.product_uom._compute_quantity(qty, self.product_id.uom_id)
+                for i in range(0, int(uom_qty)):
+                    vals = self._prepare_move_line_vals(quantity=0)
+                    vals['qty_done'] = 1
+                    vals['product_uom_id'] = self.product_id.uom_id.id
+                    res.append((0, 0, vals))
+        return res
+
+    def _set_quantity_done(self, qty):
+        """
+        Set the given quantity as quantity done on the move through the move lines. The method is
+        able to handle move lines with a different UoM than the move (but honestly, this would be
+        looking for trouble...).
+        @param qty: quantity in the UoM of move.product_uom
+        """
+        self.move_line_ids = self._set_quantity_done_prepare_vals(qty)
 
     def _adjust_procure_method(self):
         """ This method will try to apply the procure method MTO on some moves if
@@ -1610,3 +1651,7 @@ class StockMove(models.Model):
                 mtso_free_qties_by_loc[move.location_id][move.product_id.id] -= needed_qty
             else:
                 move.procure_method = 'make_to_order'
+
+    def _show_details_in_draft(self):
+        self.ensure_one()
+        return self.state != 'draft' or (self.picking_id.immediate_transfer and self.state == 'draft')

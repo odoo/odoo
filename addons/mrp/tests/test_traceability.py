@@ -63,19 +63,22 @@ class TestTraceability(TestMrpCommon):
             mo.action_assign()
 
             # Start MO production
-            produce_form = Form(self.env['mrp.product.produce'].with_context({
-                'active_id': mo.id,
-                'active_ids': [mo.id],
-            }))
-
-            if finished_product.tracking != 'serial':
-                produce_form.qty_producing = 1
-
+            mo_form = Form(mo)
+            mo_form.qty_producing = 1
             if finished_product.tracking != 'none':
-                produce_form.finished_lot_id = self.env['stock.production.lot'].create({'name': 'Serial or Lot finished', 'product_id': finished_product.id, 'company_id': self.env.company.id})
-            produce_wizard = produce_form.save()
+                mo_form.lot_producing_id = self.env['stock.production.lot'].create({'name': 'Serial or Lot finished', 'product_id': finished_product.id, 'company_id': self.env.company.id})
+            mo = mo_form.save()
 
-            produce_wizard.do_produce()
+            details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+            with details_operation_form.move_line_ids.edit(0) as ml:
+                ml.qty_done = 1
+            details_operation_form.save()
+            details_operation_form = Form(mo.move_raw_ids[2], view=self.env.ref('stock.view_stock_move_operations'))
+            with details_operation_form.move_line_ids.edit(0) as ml:
+                ml.qty_done = 1
+            details_operation_form.save()
+
+
             mo.button_mark_done()
 
             self.assertEqual(mo.state, 'done', "Production order should be in done state.")
@@ -144,6 +147,7 @@ class TestTraceability(TestMrpCommon):
             'product_tmpl_id': product_final.product_tmpl_id.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
+            'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': product_1.id, 'product_qty': 1}),
@@ -160,104 +164,145 @@ class TestTraceability(TestMrpCommon):
         mo = mo_form.save()
         mo.action_confirm()
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': mo.id,
-            'active_ids': [mo.id],
-        }))
-        produce_form.finished_lot_id = self.env['stock.production.lot'].create({
+        mo_form = Form(mo)
+        mo_form.lot_producing_id = self.env['stock.production.lot'].create({
             'product_id': product_final.id,
             'name': 'Final_lot_1',
             'company_id': self.env.company.id,
         })
-        with produce_form.raw_workorder_line_ids.edit(0) as line:
-            line.lot_id = self.env['stock.production.lot'].create({
+        mo = mo_form.save()
+
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = self.env['stock.production.lot'].create({
                 'product_id': product_1.id,
                 'name': 'Raw_1_lot_1',
                 'company_id': self.env.company.id,
             })
-        with produce_form.raw_workorder_line_ids.edit(1) as line:
-            line.lot_id = self.env['stock.production.lot'].create({
+            ml.qty_done = 1
+        details_operation_form.save()
+        details_operation_form = Form(mo.move_raw_ids[1], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = self.env['stock.production.lot'].create({
                 'product_id': product_2.id,
                 'name': 'Raw_2_lot_1',
                 'company_id': self.env.company.id,
             })
-        with produce_form.finished_workorder_line_ids.edit(0) as line:
-            line.lot_id = self.env['stock.production.lot'].create({
+            ml.qty_done = 1
+        details_operation_form.save()
+        details_operation_form = Form(
+            mo.move_finished_ids.filtered(lambda m: m.product_id == byproduct_1),
+            view=self.env.ref('stock.view_stock_move_operations')
+        )
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = self.env['stock.production.lot'].create({
                 'product_id': byproduct_1.id,
                 'name': 'Byproduct_1_lot_1',
                 'company_id': self.env.company.id,
             })
-        with produce_form.finished_workorder_line_ids.edit(1) as line:
-            line.lot_id = self.env['stock.production.lot'].create({
+            ml.qty_done = 1
+        details_operation_form.save()
+        details_operation_form = Form(
+            mo.move_finished_ids.filtered(lambda m: m.product_id == byproduct_2),
+            view=self.env.ref('stock.view_stock_move_operations')
+        )
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = self.env['stock.production.lot'].create({
                 'product_id': byproduct_2.id,
                 'name': 'Byproduct_2_lot_1',
                 'company_id': self.env.company.id,
             })
-        produce_wizard = produce_form.save()
-        produce_wizard.continue_production()
+            ml.qty_done = 1
+        details_operation_form.save()
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': mo.id,
-            'active_ids': [mo.id],
-        }))
-        produce_form.finished_lot_id = self.env['stock.production.lot'].create({
+        action = mo.button_mark_done()
+        backorder = Form(self.env['mrp.production.backorder'].with_context(**action['context']))
+        backorder.save().action_backorder()
+        mo_backorder = mo.procurement_group_id.mrp_production_ids[-1]
+        mo_form = Form(mo_backorder)
+        mo_form.lot_producing_id = self.env['stock.production.lot'].create({
             'product_id': product_final.id,
             'name': 'Final_lot_2',
             'company_id': self.env.company.id,
         })
-        with produce_form.raw_workorder_line_ids.edit(0) as line:
-            line.lot_id = self.env['stock.production.lot'].create({
+        mo_form.qty_producing = 1
+        mo_backorder = mo_form.save()
+
+        details_operation_form = Form(
+            mo_backorder.move_raw_ids.filtered(lambda m: m.product_id == product_1),
+            view=self.env.ref('stock.view_stock_move_operations')
+        )
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = self.env['stock.production.lot'].create({
                 'product_id': product_1.id,
                 'name': 'Raw_1_lot_2',
                 'company_id': self.env.company.id,
             })
-        with produce_form.raw_workorder_line_ids.edit(1) as line:
-            line.lot_id = self.env['stock.production.lot'].create({
+            ml.qty_done = 1
+        details_operation_form.save()
+        details_operation_form = Form(
+            mo_backorder.move_raw_ids.filtered(lambda m: m.product_id == product_2),
+            view=self.env.ref('stock.view_stock_move_operations')
+        )
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = self.env['stock.production.lot'].create({
                 'product_id': product_2.id,
                 'name': 'Raw_2_lot_2',
                 'company_id': self.env.company.id,
             })
-        with produce_form.finished_workorder_line_ids.edit(0) as line:
-            line.lot_id = self.env['stock.production.lot'].create({
+            ml.qty_done = 1
+        details_operation_form.save()
+        details_operation_form = Form(
+            mo_backorder.move_finished_ids.filtered(lambda m: m.product_id == byproduct_1),
+            view=self.env.ref('stock.view_stock_move_operations')
+        )
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = self.env['stock.production.lot'].create({
                 'product_id': byproduct_1.id,
                 'name': 'Byproduct_1_lot_2',
                 'company_id': self.env.company.id,
             })
-        with produce_form.finished_workorder_line_ids.edit(1) as line:
-            line.lot_id = self.env['stock.production.lot'].create({
+            ml.qty_done = 1
+        details_operation_form.save()
+        details_operation_form = Form(
+            mo_backorder.move_finished_ids.filtered(lambda m: m.product_id == byproduct_2),
+            view=self.env.ref('stock.view_stock_move_operations')
+        )
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.lot_id = self.env['stock.production.lot'].create({
                 'product_id': byproduct_2.id,
                 'name': 'Byproduct_2_lot_2',
                 'company_id': self.env.company.id,
             })
-        produce_wizard = produce_form.save()
-        produce_wizard.do_produce()
-        mo.button_mark_done()
+            ml.qty_done = 1
+        details_operation_form.save()
 
-        self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 4)
-        self.assertEqual(len(mo.move_finished_ids.mapped('move_line_ids')), 6)
+        mo_backorder.button_mark_done()
 
+        # self.assertEqual(len(mo.move_raw_ids.mapped('move_line_ids')), 4)
+        # self.assertEqual(len(mo.move_finished_ids.mapped('move_line_ids')), 6)
+
+        mo = mo | mo_backorder
         raw_move_lines = mo.move_raw_ids.mapped('move_line_ids')
         raw_line_raw_1_lot_1 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_1_lot_1')
-        self.assertEqual(set(raw_line_raw_1_lot_1.lot_produced_ids.mapped('name')), set(['Final_lot_1', 'Byproduct_1_lot_1', 'Byproduct_2_lot_1']))
-        raw_line_raw_1_lot_2 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_1_lot_2')
-        self.assertEqual(set(raw_line_raw_1_lot_2.lot_produced_ids.mapped('name')), set(['Final_lot_2', 'Byproduct_1_lot_2', 'Byproduct_2_lot_2']))
+        self.assertEqual(set(raw_line_raw_1_lot_1.produce_line_ids.lot_id.mapped('name')), set(['Final_lot_1', 'Byproduct_1_lot_1', 'Byproduct_2_lot_1']))
         raw_line_raw_2_lot_1 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_2_lot_1')
-        self.assertEqual(set(raw_line_raw_2_lot_1.lot_produced_ids.mapped('name')), set(['Final_lot_1', 'Byproduct_1_lot_1', 'Byproduct_2_lot_1']))
-        raw_line_raw_2_lot_2 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_2_lot_2')
-        self.assertEqual(set(raw_line_raw_2_lot_2.lot_produced_ids.mapped('name')), set(['Final_lot_2', 'Byproduct_1_lot_2', 'Byproduct_2_lot_2']))
+        self.assertEqual(set(raw_line_raw_2_lot_1.produce_line_ids.lot_id.mapped('name')), set(['Final_lot_1', 'Byproduct_1_lot_1', 'Byproduct_2_lot_1']))
 
         finished_move_lines = mo.move_finished_ids.mapped('move_line_ids')
         finished_move_line_lot_1 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Final_lot_1')
-        self.assertEqual(finished_move_line_lot_1.consume_line_ids, raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
+        self.assertEqual(finished_move_line_lot_1.consume_line_ids.filtered(lambda l: l.qty_done), raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
         finished_move_line_lot_2 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Final_lot_2')
+        raw_line_raw_1_lot_2 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_1_lot_2')
+        raw_line_raw_2_lot_2 = raw_move_lines.filtered(lambda ml: ml.lot_id.name == 'Raw_2_lot_2')
         self.assertEqual(finished_move_line_lot_2.consume_line_ids, raw_line_raw_1_lot_2 | raw_line_raw_2_lot_2)
 
         byproduct_move_line_1_lot_1 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Byproduct_1_lot_1')
-        self.assertEqual(byproduct_move_line_1_lot_1.consume_line_ids, raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
+        self.assertEqual(byproduct_move_line_1_lot_1.consume_line_ids.filtered(lambda l: l.qty_done), raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
         byproduct_move_line_1_lot_2 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Byproduct_1_lot_2')
         self.assertEqual(byproduct_move_line_1_lot_2.consume_line_ids, raw_line_raw_1_lot_2 | raw_line_raw_2_lot_2)
 
         byproduct_move_line_2_lot_1 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Byproduct_2_lot_1')
-        self.assertEqual(byproduct_move_line_2_lot_1.consume_line_ids, raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
+        self.assertEqual(byproduct_move_line_2_lot_1.consume_line_ids.filtered(lambda l: l.qty_done), raw_line_raw_1_lot_1 | raw_line_raw_2_lot_1)
         byproduct_move_line_2_lot_2 = finished_move_lines.filtered(lambda ml: ml.lot_id.name == 'Byproduct_2_lot_2')
         self.assertEqual(byproduct_move_line_2_lot_2.consume_line_ids, raw_line_raw_1_lot_2 | raw_line_raw_2_lot_2)

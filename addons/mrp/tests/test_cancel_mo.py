@@ -33,10 +33,9 @@ class TestMrpCancelMO(TestMrpCommon):
         # Create MO
         manufacturing_order = self.generate_mo()[0]
         # Produce some quantity
-        produce_form = Form(self.env['mrp.product.produce'].with_context(active_id=manufacturing_order.id))
-        produce_form.qty_producing = 2
-        produce = produce_form.save()
-        produce.do_produce()
+        mo_form = Form(manufacturing_order)
+        mo_form.qty_producing = 2
+        manufacturing_order = mo_form.save()
         # Cancel it
         manufacturing_order.action_cancel()
         # Check it's cancelled
@@ -53,56 +52,17 @@ class TestMrpCancelMO(TestMrpCommon):
         after post inventory.
         """
         # Create MO
-        manufacturing_order = self.generate_mo()[0]
+        manufacturing_order = self.generate_mo(consumption='strict')[0]
         # Produce some quantity (not all to avoid to done the MO when post inventory)
-        produce_form = Form(self.env['mrp.product.produce'].with_context(active_id=manufacturing_order.id))
-        produce_form.qty_producing = 2
-        produce = produce_form.save()
-        produce.do_produce()
+        mo_form = Form(manufacturing_order)
+        mo_form.qty_producing = 2
+        manufacturing_order = mo_form.save()
         # Post Inventory
-        manufacturing_order.post_inventory()
+        manufacturing_order._post_inventory()
         # Cancel the MO
         manufacturing_order.action_cancel()
         # Check MO is marked as done and its SML are done or cancelled
         self.assertEqual(manufacturing_order.state, 'done', "MO should be in done state.")
-        self.assertEqual(manufacturing_order.move_raw_ids[0].state, 'done',
-            "Due to 'post_inventory', some move raw must stay in done state")
-        self.assertEqual(manufacturing_order.move_raw_ids[1].state, 'done',
-            "Due to 'post_inventory', some move raw must stay in done state")
-        self.assertEqual(manufacturing_order.move_raw_ids[2].state, 'cancel',
-            "The other move raw are cancelled like their MO.")
-        self.assertEqual(manufacturing_order.move_raw_ids[3].state, 'cancel',
-            "The other move raw are cancelled like their MO.")
-        self.assertEqual(manufacturing_order.move_finished_ids[0].state, 'done',
-            "Due to 'post_inventory', a move finished must stay in done state")
-        self.assertEqual(manufacturing_order.move_finished_ids[1].state, 'cancel',
-            "The other move finished is cancelled like its MO.")
-
-    def test_cancel_mo_with_routing(self):
-        """ Cancel a Manufacturing Order with routing (so generate a Work Order)
-        and produce some quantities. When cancelled, the MO must be marked as
-        done and the WO must be cancelled.
-        """
-        # Create MO
-        mo_data = self.generate_mo()
-        manufacturing_order = mo_data[0]
-        bom = mo_data[1]
-        bom.routing_id = self.routing_1
-
-        manufacturing_order.button_plan()
-        workorder = manufacturing_order.workorder_ids
-        # Produce some quantity
-        workorder.button_start()
-        workorder.qty_producing = 2
-        workorder._apply_update_workorder_lines()
-        workorder.record_production()
-        # Post Inventory
-        manufacturing_order.post_inventory()
-        # Cancel it
-        manufacturing_order.action_cancel()
-        # Check MO is done, WO is cancelled and its SML are done or cancelled
-        self.assertEqual(manufacturing_order.state, 'done', "MO should be in done state.")
-        self.assertEqual(workorder.state, 'cancel', "WO should be cancelled.")
         self.assertEqual(manufacturing_order.move_raw_ids[0].state, 'done',
             "Due to 'post_inventory', some move raw must stay in done state")
         self.assertEqual(manufacturing_order.move_raw_ids[1].state, 'done',
@@ -132,12 +92,11 @@ class TestMrpCancelMO(TestMrpCommon):
         # it (cannot be deleted)
         manufacturing_order = self.generate_mo()[0]
         # Produce some quantity (not all to avoid to done the MO when post inventory)
-        produce_form = Form(self.env['mrp.product.produce'].with_context(active_id=manufacturing_order.id))
-        produce_form.qty_producing = 2
-        produce = produce_form.save()
-        produce.do_produce()
+        mo_form = Form(manufacturing_order)
+        mo_form.qty_producing = 2
+        manufacturing_order = mo_form.save()
         # Post Inventory
-        manufacturing_order.post_inventory()
+        manufacturing_order._post_inventory()
         # Unlink the MO must raises an UserError since it cannot be really cancelled
         self.assertEqual(manufacturing_order.exists().state, 'progress')
         with self.assertRaises(UserError):

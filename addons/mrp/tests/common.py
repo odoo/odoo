@@ -7,7 +7,7 @@ from odoo.addons.stock.tests import common2
 class TestMrpCommon(common2.TestStockCommon):
 
     @classmethod
-    def generate_mo(self, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1):
+    def generate_mo(self, tracking_final='none', tracking_base_1='none', tracking_base_2='none', qty_final=5, qty_base_1=4, qty_base_2=1, picking_type_id=False, consumption=False):
         """ This function generate a manufacturing order with one final
         product and two consumed product. Arguments allows to choose
         the tracking/qty for each different products. It returns the
@@ -34,11 +34,14 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_uom_id': self.uom_unit.id,
             'product_qty': 1.0,
             'type': 'normal',
+            'consumption': consumption if consumption else 'flexible',
             'bom_line_ids': [
                 (0, 0, {'product_id': product_to_use_2.id, 'product_qty': qty_base_2}),
                 (0, 0, {'product_id': product_to_use_1.id, 'product_qty': qty_base_1})
             ]})
         mo_form = Form(self.env['mrp.production'])
+        if picking_type_id:
+            mo_form.picking_type_id = picking_type_id
         mo_form.product_id = product_to_build
         mo_form.bom_id = bom_1
         mo_form.product_qty = qty_final
@@ -91,40 +94,15 @@ class TestMrpCommon(common2.TestStockCommon):
             'time_stop': 5,
             'time_efficiency': 80,
         })
-        cls.routing_1 = cls.env['mrp.routing'].create({
-            'name': 'Simple Line',
-        })
-        cls.routing_2 = cls.env['mrp.routing'].create({
-            'name': 'Complicated Line',
-        })
-        cls.operation_1 = cls.env['mrp.routing.workcenter'].create({
-            'name': 'Gift Wrap Maching',
-            'workcenter_id': cls.workcenter_1.id,
-            'routing_id': cls.routing_1.id,
-            'time_cycle': 15,
-            'sequence': 1,
-        })
-        cls.operation_2 = cls.env['mrp.routing.workcenter'].create({
-            'name': 'Cutting Machine',
-            'workcenter_id': cls.workcenter_1.id,
-            'routing_id': cls.routing_2.id,
-            'time_cycle': 12,
-            'sequence': 1,
-        })
-        cls.operation_3 = cls.env['mrp.routing.workcenter'].create({
-            'name': 'Weld Machine',
-            'workcenter_id': cls.workcenter_1.id,
-            'routing_id': cls.routing_2.id,
-            'time_cycle': 18,
-            'sequence': 2,
-        })
 
         cls.bom_1 = cls.env['mrp.bom'].create({
             'product_id': cls.product_4.id,
             'product_tmpl_id': cls.product_4.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 4.0,
-            'routing_id': cls.routing_2.id,
+            'consumption': 'flexible',
+            'operation_ids': [
+            ],
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_2.id, 'product_qty': 2}),
@@ -134,8 +112,11 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_id': cls.product_5.id,
             'product_tmpl_id': cls.product_5.product_tmpl_id.id,
             'product_uom_id': cls.product_5.uom_id.id,
+            'consumption': 'flexible',
             'product_qty': 1.0,
-            'routing_id': cls.routing_1.id,
+            'operation_ids': [
+                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+            ],
             'type': 'phantom',
             'sequence': 2,
             'bom_line_ids': [
@@ -146,14 +127,19 @@ class TestMrpCommon(common2.TestStockCommon):
             'product_id': cls.product_6.id,
             'product_tmpl_id': cls.product_6.product_tmpl_id.id,
             'product_uom_id': cls.uom_dozen.id,
+            'consumption': 'flexible',
             'product_qty': 2.0,
-            'routing_id': cls.routing_2.id,
+            'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (0, 0, {'name': 'Weld Machine', 'workcenter_id': cls.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+            ],
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_5.id, 'product_qty': 2}),
                 (0, 0, {'product_id': cls.product_4.id, 'product_qty': 8}),
                 (0, 0, {'product_id': cls.product_2.id, 'product_qty': 12})
             ]})
+
         cls.stock_location_14 = cls.env['stock.location'].create({
             'name': 'Shelf 2',
             'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,

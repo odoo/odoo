@@ -49,6 +49,7 @@ class TestStockProductionLot(TestStockCommon):
             'product_tmpl_id': cls.product_apple_pie.product_tmpl_id.id,
             'product_uom_id': cls.uom_unit.id,
             'product_qty': 1.0,
+            'consumption': 'flexible',
             'type': 'normal',
             'bom_line_ids': [
                 (0, 0, {'product_id': cls.product_apple.id, 'product_qty': 3}),
@@ -64,14 +65,6 @@ class TestStockProductionLot(TestStockCommon):
             'time_stop': 5,
             'time_efficiency': 80,
         })
-        cls.routing = cls.env['mrp.routing'].create({'name': 'COOK'})
-        cls.operation = cls.env['mrp.routing.workcenter'].create({
-            'name': 'Bake in the oven',
-            'workcenter_id': cls.workcenter.id,
-            'routing_id': cls.routing.id,
-            'time_cycle': 15,
-            'sequence': 1,
-        })
 
     def test_01_product_produce(self):
         """ Checks user doesn't get a confirmation wizard when they produces with
@@ -84,16 +77,17 @@ class TestStockProductionLot(TestStockCommon):
         mo = mo_form.save()
         mo.action_confirm()
         # ... and tries to product with a non-expired lot as component.
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': mo.id,
-            'active_ids': [mo.id],
-        }))
-        with produce_form.raw_workorder_line_ids.edit(0) as line:
-            line.lot_id = self.lot_good_apple
-        product_produce = produce_form.save()
-        res = product_produce.do_produce()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.qty_done = 3
+            ml.lot_id = self.lot_good_apple
+        details_operation_form.save()
+        res = mo.button_mark_done()
         # Producing must not return a wizard in this case.
-        self.assertEqual(res['type'], 'ir.actions.act_window_close')
+        self.assertEqual(res, True)
 
     def test_02_product_produce_using_expired(self):
         """ Checks user gets a confirmation wizard when they produces with
@@ -106,72 +100,16 @@ class TestStockProductionLot(TestStockCommon):
         mo = mo_form.save()
         mo.action_confirm()
         # ... and tries to product with an expired lot as component.
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': mo.id,
-            'active_ids': [mo.id],
-        }))
-        with produce_form.raw_workorder_line_ids.edit(0) as line:
-            line.lot_id = self.lot_expired_apple
-        product_produce = produce_form.save()
-        res = product_produce.do_produce()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        details_operation_form = Form(mo.move_raw_ids[0], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.qty_done = 3
+            ml.lot_id = self.lot_expired_apple
+        details_operation_form.save()
+        res = mo.button_mark_done()
         # Producing must return a confirmation wizard.
         self.assertNotEqual(res, None)
         self.assertEqual(res['res_model'], 'expiry.picking.confirmation')
 
-    def test_03_workorder_without_expired_lot(self):
-        """ Checks user doesn't get a confirmation wizard when they makes a
-        workorder without expired components. """
-        # Set a routing on the BOM.
-        self.bom_apple_pie.routing_id = self.routing
-        # Creates the MO, starts it and plans the Work Order.
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_apple_pie
-        mo_form.bom_id = self.bom_apple_pie
-        mo_form.product_qty = 1
-        mo = mo_form.save()
-        mo.action_confirm()
-        mo.button_plan()
-
-        wo = mo.workorder_ids[0]
-        wo.button_start()
-        # Set a non-expired lot.
-        wo.raw_workorder_line_ids.write({
-            'qty_done': 3,
-            'lot_id': self.lot_good_apple,
-        })
-
-        res = wo.record_production()
-        # Try to record the production using non-expired lot must not return a wizard.
-        self.assertEqual(res, True)
-        mo.button_mark_done()
-
-    def test_04_workorder_with_expired_lot(self):
-        """ Checks user doesn't get a confirmation wizard when they makes a
-        workorder without expired components. """
-        # Set a routing on the BOM.
-        self.bom_apple_pie.routing_id = self.routing
-        # Creates the MO, starts it and plans the Work Order.
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = self.product_apple_pie
-        mo_form.bom_id = self.bom_apple_pie
-        mo_form.product_qty = 1
-        mo = mo_form.save()
-        mo.action_confirm()
-        mo.button_plan()
-
-        wo = mo.workorder_ids[0]
-        wo.button_start()
-        # Set an expired lot.
-        wo.raw_workorder_line_ids.write({
-            'qty_done': 3,
-            'lot_id': self.lot_expired_apple,
-        })
-
-        res = wo.record_production()
-        # Try to record the production using expired lot must return a
-        # confirmation wizard.
-        self.assertNotEqual(res, None)
-        self.assertEqual(res['res_model'], 'expiry.picking.confirmation')
-        with self.assertRaises(UserError):
-            # Cannot finish the MO as the Work Order is still ongoing.
-            mo.button_mark_done()
