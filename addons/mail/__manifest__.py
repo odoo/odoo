@@ -9,6 +9,7 @@
     'website': 'https://www.odoo.com/page/discuss',
     'depends': ['base', 'base_setup', 'bus', 'web_tour'],
     'data': [
+        'views/assets.xml',
         'views/mail_menus.xml',
         'wizard/invite_view.xml',
         'wizard/mail_blacklist_remove_view.xml',
@@ -35,7 +36,6 @@
         'security/ir.model.access.csv',
         'views/mail_alias_views.xml',
         'views/res_users_views.xml',
-        'views/mail_templates.xml',
         'views/mail_template_views.xml',
         'views/ir_actions_views.xml',
         'views/ir_model_views.xml',
