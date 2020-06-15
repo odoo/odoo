@@ -21,3 +21,14 @@
         color: $o-enterprise-color;
     }
 }
+.o_view_nocontent {
+    .o_nocontent_help {
+        .o_view_nocontent_expense_receipt:before {
+            @extend %o-nocontent-init-image;
+            @include size(300px, 230px);
+            background: transparent url(/hr_expense/static/img/nocontent.png) no-repeat center;
+            background-size: 300px 230px;
+            margin-bottom: 1rem;
+        }
+    }
+}
