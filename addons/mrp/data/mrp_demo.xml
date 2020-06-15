@@ -28,83 +28,6 @@
             <field name="resource_calendar_id" ref="resource.resource_calendar_std"/>
         </record>
 
-
-
-        <!-- Resource: mrp.routing -->
-
-        <record id="mrp_routing_0" model="mrp.routing">
-            <field name="name">Primary Assembly</field>
-        </record>
-
-        <record id="mrp_routing_1" model="mrp.routing">
-            <field name="name">Secondary Assembly</field>
-        </record>
-
-        <record id="mrp_routing_2" model="mrp.routing">
-            <field name="name">Manual Component's Assembly</field>
-        </record>
-
-        <record id="mrp_routing_3" model="mrp.routing">
-            <field name="name">Assemble Furniture</field>
-        </record>
-
-
-        <!-- Resource: mrp.routing.workcenter -->
-
-        <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
-            <field name="routing_id" ref="mrp_routing_0"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="name">Manual Assembly</field>
-            <field name="time_cycle">60</field>
-            <field name="sequence">5</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
-        </record>
-
-        <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
-            <field name="routing_id" ref="mrp_routing_1"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="name">Long time assembly</field>
-            <field name="time_cycle">180</field>
-            <field name="sequence">15</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
-        </record>
-
-        <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
-            <field name="routing_id" ref="mrp_routing_1"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="name">Testing</field>
-            <field name="time_cycle">60</field>
-            <field name="sequence">10</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
-        </record>
-
-        <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
-            <field name="routing_id" ref="mrp_routing_1"/>
-            <field name="workcenter_id" ref="mrp_workcenter_1"/>
-            <field name="name">Packing</field>
-            <field name="time_cycle">30</field>
-            <field name="sequence">5</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
-        </record>
-
-        <record id="mrp_routing_workcenter_2" model="mrp.routing.workcenter">
-            <field name="routing_id" ref="mrp_routing_2"/>
-            <field name="workcenter_id" ref="mrp_workcenter_2"/>
-            <field name="time_cycle">120</field>
-            <field name="sequence">5</field>
-            <field name="name">Manual Assembly</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
-        </record>
-
-        <record id="mrp_routing_workcenter_5" model="mrp.routing.workcenter">
-            <field name="routing_id" ref="mrp_routing_3"/>
-            <field name="workcenter_id" ref="mrp_workcenter_3"/>
-            <field name="time_cycle">120</field>
-            <field name="sequence">10</field>
-            <field name="name">Assembly</field>
-            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
-        </record>
-
         <!-- Resource: mrp.bom -->
 
         <record id="product.product_product_3_product_template" model="product.template">
@@ -114,7 +37,14 @@
             <field name="product_tmpl_id" ref="product.product_product_3_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
-            <field name="routing_id" ref="mrp_routing_0"/>
+        </record>
+        <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
+            <field name="bom_id" ref="mrp_bom_manufacture"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="name">Manual Assembly</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">5</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
         </record>
 
         <record id="mrp_bom_manufacture_line_1" model="mrp.bom.line">
@@ -296,7 +226,14 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">3</field>
             <field name="consumption">flexible</field>
-            <field name="routing_id" ref="mrp_routing_3"/>
+        </record>
+        <record id="mrp_routing_workcenter_5" model="mrp.routing.workcenter">
+            <field name="bom_id" ref="mrp_bom_desk"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="time_cycle">120</field>
+            <field name="sequence">10</field>
+            <field name="name">Assembly</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
         </record>
 
         <record id="mrp_bom_desk_line_1" model="mrp.bom.line">
@@ -350,8 +287,16 @@
             <field name="product_tmpl_id" ref="product_product_computer_desk_head_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
-            <field name="routing_id" ref="mrp_routing_0"/>
         </record>
+        <record id="mrp_routing_workcenter_0" model="mrp.routing.workcenter">
+            <field name="bom_id" ref="mrp_bom_table_top"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="name">Manual Assembly</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">5</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
+        </record>
+
         <record id="mrp_bom_line_wood_panel" model="mrp.bom.line">
             <field name="product_id" ref="product_product_wood_panel"/>
             <field name="product_qty">2</field>
@@ -371,7 +316,32 @@
             <field name="product_tmpl_id" ref="product_product_plastic_laminate_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">1</field>
-            <field name="routing_id" ref="mrp_routing_1"/>
+        </record>
+        <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
+            <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="name">Long time assembly</field>
+            <field name="time_cycle">180</field>
+            <field name="sequence">15</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
+            <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="name">Testing</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">10</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
+            <field name="bom_id" ref="mrp_bom_plastic_laminate"/>
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="name">Packing</field>
+            <field name="time_cycle">30</field>
+            <field name="sequence">5</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
         </record>
         <record id="mrp_bom_line_plastic_laminate" model="mrp.bom.line">
             <field name="product_id" ref="product_product_ply_veneer"/>
@@ -596,8 +566,33 @@
             <field name="product_tmpl_id" ref="product.product_product_27_product_template"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="sequence">2</field>
-            <field name="routing_id" ref="mrp_routing_1"/>
             <field name="code">SEC-ASSEM</field>
+        </record>
+        <record id="mrp_routing_workcenter_1" model="mrp.routing.workcenter">
+            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="name">Long time assembly</field>
+            <field name="time_cycle">180</field>
+            <field name="sequence">15</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_3" model="mrp.routing.workcenter">
+            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+            <field name="workcenter_id" ref="mrp_workcenter_3"/>
+            <field name="name">Testing</field>
+            <field name="time_cycle">60</field>
+            <field name="sequence">10</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/assebly-worksheet.pdf"/>
+        </record>
+
+        <record id="mrp_routing_workcenter_4" model="mrp.routing.workcenter">
+            <field name="bom_id" ref="mrp_bom_laptop_cust_rout"/>
+            <field name="workcenter_id" ref="mrp_workcenter_1"/>
+            <field name="name">Packing</field>
+            <field name="time_cycle">30</field>
+            <field name="sequence">5</field>
+            <field name="worksheet" type="base64" file="mrp/static/img/cutting-worksheet.pdf"/>
         </record>
         <record id="mrp_bom_laptop_cust_rout_line_1" model="mrp.bom.line">
             <field name="product_id" ref="product_product_drawer_drawer"/>
@@ -628,6 +623,10 @@
 
         <function model="stock.move" name="create">
             <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_raw_values()"/>
+        </function>
+
+        <function model="stock.move" name="create">
+            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_finished_values()"/>
         </function>
 
         <!-- Run Scheduler -->
@@ -677,6 +676,10 @@
             <field name="date_start" eval="(datetime.now() - timedelta(hours=1)).strftime('%Y-%m-%d %H:%M:%S')"/>
         </record>
 
+        <function model="mrp.production" name="_create_workorder">
+            <value eval="[ref('mrp.mrp_production_3')]"/>
+        </function>
+
         <function model="mrp.production" name="action_confirm">
             <value eval="[ref('mrp.mrp_production_3')]"/>
         </function>
@@ -689,32 +692,21 @@
             <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
         </function>
 
+        <function model="mrp.production" name="write">
+            <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
+            <value eval="{'qty_producing': 5, 'lot_producing_id': ref('mrp.lot_product_27_0')}"/>
+        </function>
+
         <function model="mrp.production" name="action_assign">
             <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
         </function>
 
-        <function model="mrp.product.produce" name="create">
-            <value model="mrp.product.produce" eval="dict(
-                obj().with_context(active_id=ref('mrp.mrp_production_laptop_cust')).default_get(list(obj().fields_get())),
-                **{
-                    'qty_producing': obj().env.ref('mrp.mrp_production_laptop_cust').product_qty,
-                    'finished_lot_id': ref('mrp.lot_product_27_0'),
-                }
-            )"/>
+        <function model="stock.move" name="write">
+            <value model="stock.move" eval="obj().env['stock.move'].search([('raw_material_production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]).ids"/>
+            <value eval="{'quantity_done': 5}"/>
         </function>
 
-        <function model="mrp.product.produce.line" name="create">
-            <value model="mrp.product.produce.line" eval="[dict(item,
-                 **{
-                     'raw_product_produce_id': obj().env['mrp.product.produce'].search([('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]).id
-                 }) for item in  obj().env['mrp.product.produce'].search([('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)])._update_workorder_lines()['to_create']]"/>
-        </function>
-
-        <function model="mrp.product.produce" name="do_produce">
-            <value model="mrp.product.produce" search="[('production_id', '=', obj().env.ref('mrp.mrp_production_laptop_cust').id)]"/>
-        </function>
-
-        <function model="mrp.production" name="post_inventory">
+        <function model="mrp.production" name="_post_inventory">
             <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
         </function>
 

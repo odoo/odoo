@@ -6,7 +6,7 @@
             <field name="name">Manufacturing Orders</field>
             <field name="res_model">mrp.production</field>
             <field name="view_mode">tree,kanban,form,gantt</field>
-            <field name="domain">[('routing_id', '!=', False),('routing_id.operation_ids.workcenter_id','=', active_id)]</field>
+            <field name="domain">[('bom_id', '!=', False), ('bom_id.operation_ids.workcenter_id', '=', active_id)]</field>
         </record>
 
         <record id="action_work_orders" model="ir.actions.act_window">
@@ -430,14 +430,6 @@
             groups="group_mrp_routings"
             parent="menu_mrp_configuration"
             sequence="90"/>
-
-        <menuitem id="menu_mrp_dashboard"
-            name="Overview"
-            action="mrp_workcenter_kanban_action"
-            groups="group_mrp_routings"
-            parent="menu_mrp_root"
-            sequence="5"/>
-
 
     <record id="oee_loss_form_view" model="ir.ui.view">
         <field name="name">mrp.workcenter.productivity.loss.form</field>

@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <!-- MO Consumption Warning -->
+        <record id="view_mrp_consumption_warning_form" model="ir.ui.view">
+            <field name="name">Consumption Warning</field>
+            <field name="model">mrp.consumption.warning</field>
+            <field name="arch" type="xml">
+                <form string="Consumption Warning">
+                    <field name="mrp_production_ids" invisible="1"/>
+                    <field name="consumption" invisible="1"/>
+                    <field name="mrp_production_count" invisible="1"/>
+                    <div class="m-2">
+                        You consumed a different quantity than expected for the following products.
+                        <b attrs="{'invisible': [('consumption', '=', 'strict')]}">
+                            Please confirm it has been done on purpose.
+                        </b>
+                        <b attrs="{'invisible': [('consumption', '!=', 'strict')]}">
+                            Please review your component consumption or ask a manager to validate 
+                            <span attrs="{'invisible':[('mrp_production_count', '!=', 1)]}">this manufacturing order</span>
+                            <span attrs="{'invisible':[('mrp_production_count', '=', 1)]}">these manufacturing orders</span>.
+                        </b>
+                    </div>
+                    <field name="mrp_consumption_warning_line_ids" nolabel="1">
+                        <tree create="0" delete="0" editable="top">
+                            <field name="mrp_production_id" attrs="{'column_invisible':[('parent.mrp_production_count', '=', 1)]}" force_save="1"/>
+                            <field name="consumption" invisible="1" force_save="1"/>
+                            <field name="product_id" force_save="1"/>
+                            <field name="product_uom_id" groups="uom.group_uom" force_save="1"/>
+                            <field name="product_expected_qty_uom" force_save="1"/>
+                            <field name="product_consumed_qty_uom" force_save="1"/>
+                        </tree>
+                    </field>
+                    <footer>
+                        <button name="action_confirm" string="Force"
+                            groups="mrp.group_mrp_manager" attrs="{'invisible': [('consumption', '!=', 'strict')]}"
+                            colspan="1" type="object" class="btn-primary"/>
+                        <button name="action_confirm" string="Confirm" attrs="{'invisible': [('consumption', '=', 'strict')]}"
+                            colspan="1" type="object" class="btn-primary"/>
+                        <button name="action_cancel" string="Review Consumption"
+                            colspan="1" type="object" class="btn-primary"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+
+        <record id="action_mrp_consumption_warning" model="ir.actions.act_window">
+            <field name="name">Consumption Warning</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.consumption.warning</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+    </data>
+</odoo>    

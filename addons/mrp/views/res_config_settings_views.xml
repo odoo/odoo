@@ -20,13 +20,10 @@
                                     <label for="group_mrp_routings" string="Work Orders"/>
                                     <a href="https://www.odoo.com/documentation/user/13.0/manufacturing/management/manufacturing_order.html#manage-manufacturing-with-routings-and-work-centers" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
-                                        Process operations at specific work centers based on the routing
+                                        Process operations at specific work centers
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
                                         <div class="mt8">
-                                            <div>
-                                                <button name="%(mrp.mrp_routing_action)d" icon="fa-arrow-right" type="action" string="Routings" class="btn-link"/>
-                                            </div>
                                             <div>
                                                 <button name="%(mrp.mrp_workcenter_action)d" icon="fa-arrow-right" type="action" string="Work Centers" class="btn-link"/>
                                             </div>
@@ -55,6 +52,17 @@
                                     <a href="https://www.odoo.com/documentation/user/13.0/quality.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Add quality checks to your work orders
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-lg-6 col-12 o_setting_box" id="mrp_lock" title="Makes confirmed manufacturing orders locked rather than unlocked by default. This only applies to new manufacturing orders, not previously created ones.">
+                                <div class="o_setting_left_pane">
+                                    <field name="group_locked_by_default"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="group_locked_by_default"/>
+                                    <div class="text-muted">
+                                        Prevent manufacturing users to modify quantities to consume, unless a manager has unlocked the document
                                     </div>
                                 </div>
                             </div>

@@ -126,12 +126,21 @@ class StockMove(models.Model):
         return res
 
     def _action_record_components(self):
-        action = self.env.ref('mrp.act_mrp_product_produce').read()[0]
-        action['context'] = dict(
-            default_production_id=self.move_orig_ids.production_id.id,
-            default_subcontract_move_id=self.id
-        )
-        return action
+        self.ensure_one()
+        production = self.move_orig_ids.production_id
+        view = self.env.ref('mrp.mrp_production_form_view')
+        return {
+            'name': _('Subcontract'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mrp.production',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'res_id': production.id,
+            'context': dict(self.env.context, subcontract_move_id=self.id),
+        }
+
 
     def _check_overprocessed_subcontract_qty(self):
         """ If a subcontracted move use tracked components. Do not allow to add
@@ -147,8 +156,8 @@ class StockMove(models.Model):
             if not move._has_tracked_subcontract_components():
                 continue
             rounding = move.product_uom.rounding
-            if float_compare(move.quantity_done, move.move_orig_ids.production_id.qty_produced, precision_rounding=rounding) > 0:
-                overprocessed_moves |= move
+#            if float_compare(move.quantity_done, move.move_orig_ids.production_id.qty_produced, precision_rounding=rounding) > 0:
+#                overprocessed_moves |= move
         if overprocessed_moves:
             raise UserError(_("""
 You have to use 'Records Components' button in order to register quantity for a

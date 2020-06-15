@@ -58,9 +58,6 @@ class TestMrpByProduct(common.TransactionCase):
         mnf_product_a = mnf_product_a_form.save()
         mnf_product_a.action_confirm()
 
-        # I compute the data of production order
-        context = {"active_model": "mrp.production", "active_ids": [mnf_product_a.id], "active_id": mnf_product_a.id}
-
         # I confirm the production order.
         self.assertEqual(mnf_product_a.state, 'confirmed', 'Production order should be in state confirmed')
 
@@ -71,19 +68,18 @@ class TestMrpByProduct(common.TransactionCase):
 
         # I consume and produce the production of products.
         # I create record for selecting mode and quantity of products to produce.
-        produce_form = Form(self.env['mrp.product.produce'].with_context(context))
-        produce_form.qty_producing = 2.00
-        product_consume = produce_form.save()
+        mo_form = Form(mnf_product_a)
+        mo_form.qty_producing = 2.00
+        mnf_product_a = mo_form.save()
         # I finish the production order.
         self.assertEqual(len(mnf_product_a.move_raw_ids), 1, "Wrong consume move on production order.")
-        product_consume.do_produce()
         consume_move_c = mnf_product_a.move_raw_ids
         by_product_move = mnf_product_a.move_finished_ids.filtered(lambda x: x.product_id.id == self.product_b.id)
         # Check sub production produced quantity...
         self.assertEqual(consume_move_c.product_uom_qty, 4, "Wrong consumed quantity of product c.")
         self.assertEqual(by_product_move.product_uom_qty, 2, "Wrong produced quantity of sub product.")
 
-        mnf_product_a.post_inventory()
+        mnf_product_a._post_inventory()
 
         # I see that stock moves of External Hard Disk including Headset USB are done now.
         self.assertFalse(any(move.state != 'done' for move in moves), 'Moves are not done!')

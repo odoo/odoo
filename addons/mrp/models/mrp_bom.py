@@ -48,10 +48,7 @@ class MrpBom(models.Model):
         help="Unit of Measure (Unit of Measure) is the unit of measurement for the inventory control", domain="[('category_id', '=', product_uom_category_id)]")
     product_uom_category_id = fields.Many2one(related='product_tmpl_id.uom_id.category_id')
     sequence = fields.Integer('Sequence', help="Gives the sequence order when displaying a list of bills of material.")
-    routing_id = fields.Many2one(
-        'mrp.routing', 'Routing', check_company=True,
-        help="The operations for producing this BoM.  When a routing is specified, the production orders will "
-             " be executed through work orders, otherwise everything is processed in the production order itself. ")
+    operation_ids = fields.One2many('mrp.routing.workcenter', 'bom_id', 'Operations', copy=True)
     ready_to_produce = fields.Selection([
         ('all_available', ' When all components are available'),
         ('asap', 'When components for 1st operation are available')], string='Manufacturing Readiness',
@@ -66,11 +63,15 @@ class MrpBom(models.Model):
         'res.company', 'Company', index=True,
         default=lambda self: self.env.company)
     consumption = fields.Selection([
-        ('strict', 'Strict'),
-        ('flexible', 'Flexible')],
-        help="Defines if you can consume more or less components than the quantity defined on the BoM.",
-        default='strict',
-        string='Consumption',
+        ('flexible', 'Allowed'),
+        ('warning', 'Allowed with warning'),
+        ('strict', 'Blocked')],
+        help="Defines if you can consume more or less components than the quantity defined on the BoM:\n"
+             "  * Allowed: allowed for all manufacturing users.\n"
+             "  * Allowed with warning: allowed for all manufacturing users with summary of consumption differences when closing the manufacturing order.\n"
+             "  * Blocked: only a manager can close a manufacturing order when the BoM consumption is not respected.",
+        default='warning',
+        string='Flexible Consumption',
         required=True
     )
 
@@ -118,11 +119,6 @@ class MrpBom(models.Model):
                 self.product_id = False
             for line in self.bom_line_ids:
                 line.bom_product_template_attribute_value_ids = False
-
-    @api.onchange('routing_id')
-    def onchange_routing_id(self):
-        for line in self.bom_line_ids:
-            line.operation_id = False
 
     @api.model
     def name_create(self, name):
@@ -261,12 +257,6 @@ class MrpBomLine(models.Model):
     sequence = fields.Integer(
         'Sequence', default=1,
         help="Gives the sequence order when displaying.")
-    routing_id = fields.Many2one(
-        'mrp.routing', 'Routing',
-        related='bom_id.routing_id', store=True, readonly=False,
-        help="The list of operations to produce the finished product. The routing is mainly used to "
-             "compute work center costs during operations and to plan future loads on work centers "
-             "based on production planning.")
     bom_id = fields.Many2one(
         'mrp.bom', 'Parent BoM',
         index=True, ondelete='cascade', required=True)
@@ -276,9 +266,10 @@ class MrpBomLine(models.Model):
         'product.template.attribute.value', string="Apply on Variants", ondelete='restrict',
         domain="[('id', 'in', possible_bom_product_template_attribute_value_ids)]",
         help="BOM Product Variants needed to apply this line.")
+    allowed_operation_ids = fields.Many2many('mrp.routing.workcenter', compute='_compute_allowed_operation_ids')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Consumed in Operation', check_company=True,
-        domain="[('routing_id', '=', routing_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]",
+        domain="[('id', 'in', allowed_operation_ids)]",
         help="The operation where the components are consumed, or the finished products created.")
     child_bom_id = fields.Many2one(
         'mrp.bom', 'Sub BoM', compute='_compute_child_bom_id')
@@ -326,6 +317,20 @@ class MrpBomLine(models.Model):
         """ If the BOM line refers to a BOM, return the ids of the child BOM lines """
         for line in self:
             line.child_line_ids = line.child_bom_id.bom_line_ids.ids or False
+
+    @api.depends('bom_id')
+    def _compute_allowed_operation_ids(self):
+        for bom_line in self:
+            if not bom_line.bom_id.operation_ids:
+                bom_line.allowed_operation_ids = self.env['mrp.routing.workcenter']
+            else:
+                operation_domain = [
+                    ('id', 'in', bom_line.bom_id.operation_ids.ids),
+                    '|',
+                        ('company_id', '=', bom_line.company_id.id),
+                        ('company_id', '=', False)
+                ]
+                bom_line.allowed_operation_ids = self.env['mrp.routing.workcenter'].search(operation_domain)
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
@@ -403,11 +408,24 @@ class MrpByProduct(models.Model):
         default=1.0, digits='Product Unit of Measure', required=True)
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)
     bom_id = fields.Many2one('mrp.bom', 'BoM', ondelete='cascade')
-    routing_id = fields.Many2one(
-        'mrp.routing', 'Routing', store=True, related='bom_id.routing_id')
+    allowed_operation_ids = fields.Many2many('mrp.routing.workcenter', compute='_compute_allowed_operation_ids')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Produced in Operation', check_company=True,
-        domain="[('routing_id', '=', routing_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
+        domain="[('id', 'in', allowed_operation_ids)]")
+
+    @api.depends('bom_id')
+    def _compute_allowed_operation_ids(self):
+        for byproduct in self:
+            if not byproduct.bom_id.operation_ids:
+                byproduct.allowed_operation_ids = self.env['mrp.routing.workcenter']
+            else:
+                operation_domain = [
+                    ('id', 'in', byproduct.bom_id.operation_ids.ids),
+                    '|',
+                        ('company_id', '=', byproduct.company_id.id),
+                        ('company_id', '=', False)
+                ]
+                byproduct.allowed_operation_ids = self.env['mrp.routing.workcenter'].search(operation_domain)
 
     @api.onchange('product_id')
     def onchange_product_id(self):
