@@ -389,11 +389,12 @@ class HolidaysAllocation(models.Model):
 
             res.append(
                 (allocation.id,
-                 _("Allocation of %s : %.2f %s to %s") %
-                 (allocation.holiday_status_id.sudo().name,
-                  allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
-                  'hours' if allocation.type_request_unit == 'hour' else 'days',
-                  target))
+                 _("Allocation of %(allocation_name)s : %(duration).2f %(duration_type)s to %(person)s",
+                   allocation_name=allocation.holiday_status_id.sudo().name,
+                   duration=allocation.number_of_hours_display if allocation.type_request_unit == 'hour' else allocation.number_of_days,
+                   duration_type='hours' if allocation.type_request_unit == 'hour' else 'days',
+                   person=target
+                ))
             )
         return res
 
@@ -410,7 +411,11 @@ class HolidaysAllocation(models.Model):
                 today = fields.Date.today()
 
                 if vstop < today:
-                    raise ValidationError(_('You can allocate %s only before %s.') % (allocation.holiday_status_id.display_name, allocation.holiday_status_id.validity_stop))
+                    raise ValidationError(_(
+                        'You can allocate %(allocation_type)s only before %(date)s.',
+                        allocation_type=allocation.holiday_status_id.display_name,
+                        date=allocation.holiday_status_id.validity_stop
+                    ))
 
     @api.model
     def create(self, values):
@@ -613,7 +618,12 @@ class HolidaysAllocation(models.Model):
     def activity_update(self):
         to_clean, to_do = self.env['hr.leave.allocation'], self.env['hr.leave.allocation']
         for allocation in self:
-            note = _('New Allocation Request created by %s: %s Days of %s') % (allocation.create_uid.name, allocation.number_of_days, allocation.holiday_status_id.name)
+            note = _(
+                'New Allocation Request created by %(user)s: %(count)s Days of %(allocation_type)s',
+                user=allocation.create_uid.name,
+                count=allocation.number_of_days,
+                allocation_type=allocation.holiday_status_id.name
+            )
             if allocation.state == 'draft':
                 to_clean |= allocation
             elif allocation.state == 'confirm':

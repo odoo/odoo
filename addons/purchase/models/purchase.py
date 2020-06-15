@@ -138,7 +138,12 @@ class PurchaseOrder(models.Model):
             companies = order.order_line.product_id.company_id
             if companies and companies != order.company_id:
                 bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
-                raise ValidationError((_("Your quotation contains products from company %s whereas your quotation belongs to company %s. \n Please change the company of your quotation or remove the products from other companies (%s).") % (', '.join(companies.mapped('display_name')), order.company_id.display_name, ', '.join(bad_products.mapped('display_name')))))
+                raise ValidationError(_(
+                    "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
+                    product_company=', '.join(companies.mapped('display_name')),
+                    quote_company=order.company_id.display_name,
+                    bad_products=', '.join(bad_products.mapped('display_name')),
+                ))
 
     def _compute_access_url(self):
         super(PurchaseOrder, self)._compute_access_url()
@@ -723,7 +728,12 @@ class PurchaseOrder(models.Model):
         on portal website."""
         note = _('<p> %s modified receipt dates for the following products:</p>', self.partner_id.name)
         for line, date in updated_dates:
-            note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned, date)
+            note += _(
+                '<p> &nbsp; - %(product_name)s from %(date_start)s to %(date_end)s </p>',
+                product_name=line.product_id.display_name,
+                date_start=line.date_planned,
+                date_end=date
+            )
         return note
 
 

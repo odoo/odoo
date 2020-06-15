@@ -433,7 +433,9 @@ class MailActivity(models.Model):
                 record.message_notify(
                     partner_ids=activity.user_id.partner_id.ids,
                     body=body,
-                    subject=_('%s: %s assigned to you') % (activity.res_name, activity.summary or activity.activity_type_id.name),
+                    subject=_('%(activity_name)s: %(summary)s assigned to you',
+                        activity_name=activity.res_name,
+                        summary=activity.summary or activity.activity_type_id.name),
                     record_name=activity.res_name,
                     model_description=model_description,
                     email_layout_xmlid='mail.mail_notification_light',

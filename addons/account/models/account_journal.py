@@ -270,7 +270,11 @@ class AccountJournal(models.Model):
         ''', [tuple(accounts.ids)])
         res = self._cr.fetchone()
         if res:
-            raise ValidationError(_("The account %s can't be shared between multiple journals: %s") % (res[0], ', '.join(res[1])))
+            raise ValidationError(_(
+                "The account %(account_name)s can't be shared between multiple journals: %(journals)s",
+                account_name=res[0],
+                journals=', '.join(res[1])
+            ))
 
     @api.constrains('type', 'default_credit_account_id', 'default_debit_account_id')
     def _check_type_default_credit_account_id_type(self):

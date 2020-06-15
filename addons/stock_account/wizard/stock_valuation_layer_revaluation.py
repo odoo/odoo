@@ -131,15 +131,23 @@ class StockValuationLayerRevaluation(models.TransientModel):
             'date': self.date or fields.Date.today(),
             'move_type': 'entry',
             'line_ids': [(0, 0, {
-                'name': _('%s changed stock valuation from %s to %s of %s') % (
-                    self.env.user.name, self.current_value_svl, self.current_value_svl + self.added_value, product_id.display_name),
+                'name': _('%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s',
+                    user=self.env.user.name,
+                    previous=self.current_value_svl,
+                    new_value=self.current_value_svl + self.added_value,
+                    product=product_id.display_name,
+                ),
                 'account_id': debit_account_id,
                 'debit': abs(self.added_value),
                 'credit': 0,
                 'product_id': product_id.id,
             }), (0, 0, {
-                'name': _('%s changed stock valuation from %s to %s of %s') % (
-                    self.env.user.name, self.current_value_svl, self.current_value_svl + self.added_value, product_id.display_name),
+                'name': _('%(user)s changed stock valuation from  %(previous)s to %(new_value)s - %(product)s',
+                    user=self.env.user.name,
+                    previous=self.current_value_svl,
+                    new_value=self.current_value_svl + self.added_value,
+                    product=product_id.display_name,
+                ),
                 'account_id': credit_account_id,
                 'debit': 0,
                 'credit': abs(self.added_value),

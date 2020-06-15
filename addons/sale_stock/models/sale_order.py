@@ -584,7 +584,13 @@ class SaleOrderLine(models.Model):
             return {
                 'warning': {
                     'title': _('Warning'),
-                    'message': _("This product is packaged by %.2f %s. You should sell %.2f %s.") % (pack.qty, default_uom.name, newqty, self.product_uom.name),
+                    'message': _(
+                        "This product is packaged by %(pack_size).2f %(pack_name)s. You should sell %(quantity).2f %(unit)s.",
+                        pack_size=pack.qty,
+                        pack_name=default_uom.name,
+                        quantity=newqty,
+                        unit=self.product_uom.name
+                    ),
                 },
             }
         return {}

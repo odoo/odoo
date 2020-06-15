@@ -111,11 +111,17 @@ class GoalDefinition(models.Model):
                 Model = self.env[definition.model_id.model]
                 field = Model._fields.get(definition.field_id.name)
                 if not (field and field.store):
-                    raise exceptions.UserError(
-                        _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not stored") % (definition.name, definition.field_id.name))
+                    raise exceptions.UserError(_(
+                        "The model configuration for the definition %(name)s seems incorrect, please check it.\n\n%(field_name)s not stored",
+                        name=definition.name,
+                        field_name=definition.field_id.name
+                    ))
             except KeyError as e:
-                raise exceptions.UserError(
-                    _("The model configuration for the definition %s seems incorrect, please check it.\n\n%s not found") % (definition.name, e))
+                raise exceptions.UserError(_(
+                    "The model configuration for the definition %(name)s seems incorrect, please check it.\n\n%(error)s not found",
+                    name=definition.name,
+                    error=e
+                ))
 
     @api.model
     def create(self, vals):

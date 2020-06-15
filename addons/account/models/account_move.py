@@ -65,9 +65,10 @@ class AccountMove(models.Model):
         if not journal:
             company = self.env['res.company'].browse(company_id)
 
-            error_msg = _("No journal could be found in company %s for any of those types: %s") % (
-                company.display_name,
-                ', '.join(journal_types),
+            error_msg = _(
+                "No journal could be found in company %(company_name)s for any of those types: %(journal_types)s",
+                company_name=company.display_name,
+                journal_types=', '.join(journal_types),
             )
             raise UserError(error_msg)
 
@@ -91,7 +92,11 @@ class AccountMove(models.Model):
             journal = self.env['account.journal'].browse(self._context['default_journal_id'])
 
             if move_type != 'entry' and journal.type not in journal_types:
-                raise UserError(_("Cannot create an invoice of type %s with a journal having %s as type.") % (move_type, journal.type))
+                raise UserError(_(
+                    "Cannot create an invoice of type %(move_type)s with a journal having %(journal_type)s as type.",
+                    move_type=move_type,
+                    journal_type=journal.type,
+                ))
         else:
             journal = self._search_default_journal(journal_types)
 
