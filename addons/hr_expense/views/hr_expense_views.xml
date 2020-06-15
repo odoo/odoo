@@ -9,6 +9,9 @@
                 <xpath expr="//group[@name='managers']" position="inside">
                     <field name="expense_manager_id" context="{'default_company_id': company_id}"/>
                 </xpath>
+                 <xpath expr="//group[@name='managers']" position="attributes">
+                    <attribute name="invisible">0</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -18,7 +21,7 @@
             <field name="inherit_id" ref="hr.view_employee_tree"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='work_location']" position="after">
-                    <field name="expense_manager_id" optional="hide"/>
+                    <field name="expense_manager_id" optional="hide" string="Expense Approver"/>
                 </xpath>
             </field>
         </record>
@@ -30,6 +33,9 @@
             <field name="arch" type="xml">
                 <xpath expr="//group[@name='managers']" position="inside">
                     <field name="expense_manager_id" attrs="{'readonly': [('can_edit', '=', False)]}" context="{'default_company_id': company_id}"/>
+                </xpath>
+                 <xpath expr="//group[@name='managers']" position="attributes">
+                    <attribute name="invisible">0</attribute>
                 </xpath>
             </field>
         </record>

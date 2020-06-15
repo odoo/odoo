@@ -89,12 +89,12 @@
                                 <field name="mobile_phone" widget="phone"/>
                                 <field name="work_phone" widget="phone"/>
                                 <field name="work_email" widget="email"/>
-                                <field name="work_location"/>
                                 <field name="company_id" groups="base.group_multi_company"/>
                             </group>
                             <group>
                                 <field name="department_id"/>
                                 <field name="parent_id"/>
+                                <field name="coach_id"/>
                             </group>
                         </group>
                         <notebook>
@@ -105,9 +105,10 @@
                                             <field name="address_id"
                                                 context="{'show_address': 1}"
                                                 options='{"always_reload": True, "highlight_first_line": True}'/>
+                                            <field name="work_location"/>
                                         </group>
-                                        <group name="managers" string="Responsibles">
-                                            <field name="coach_id"/>
+                                        <group name="managers" string="Approvers" class="hide-group-if-empty">
+                                            <!-- is overridden in other hr related modules -->
                                         </group>
                                         <group name="departure" string="Departure" attrs="{'invisible': [('active', '=', True)]}">
                                             <field name="departure_reason"/>
@@ -133,7 +134,12 @@
                                         <field name="private_email" string="Email"/>
                                         <field name="phone" class="o_force_ltr" groups="hr.group_hr_user" string="Phone"/>
                                         <field name="bank_account_id" context="{'default_partner_id': address_home_id}"/>
-                                        <field name="km_home_work" groups="hr.group_hr_user"/>
+                                        <label for="km_home_work"/>
+                                        <div class="o_row">
+                                            <field name="km_home_work" groups="hr.group_hr_user"/>
+                                            <span>Km</span>
+                                        </div>
+
                                     </group>
                                     <group string="Citizenship">
                                         <field name="country_id" options='{"no_open": True, "no_create": True}'/>
