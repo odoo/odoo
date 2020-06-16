@@ -420,6 +420,28 @@ class IrActionsServer(models.Model):
         if not self._check_m2m_recursion('child_ids'):
             raise ValidationError(_('Recursion found in child server actions'))
 
+    def _get_runner(self):
+        t = type(self)
+        fn = getattr(t, f'_run_action_{self.state}_multi', None)\
+          or getattr(t, f'run_action_{self.state}_multi', None)
+        if fn:
+            return fn, True
+
+        fn = getattr(t, f'_run_action_{self.state}', None)\
+          or getattr(t, f'run_action_{self.state}', None)
+        return fn, False
+
+    def _register_hook(self):
+        super()._register_hook()
+
+        for cls in type(self).mro():
+            for symbol in vars(cls).keys():
+                if symbol.startswith('run_action_'):
+                    _logger.warning(
+                        "RPC-public action methods are deprecated, found %r (in class %s.%s)",
+                        symbol, cls.__module__, cls.__name__
+                    )
+
     @api.onchange('crud_model_id')
     def _onchange_crud_model_id(self):
         self.link_field_id = False
@@ -437,14 +459,12 @@ class IrActionsServer(models.Model):
         self.filtered('binding_model_id').write({'binding_model_id': False})
         return True
 
-    @api.model
-    def run_action_code_multi(self, action, eval_context=None):
+    def _run_action_code_multi(self, action, eval_context=None):
         safe_eval(action.sudo().code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
         if 'action' in eval_context:
             return eval_context['action']
 
-    @api.model
-    def run_action_multi(self, action, eval_context=None):
+    def _run_action_multi(self, action, eval_context=None):
         res = False
         for act in action.child_ids.sorted():
             result = act.run()
@@ -452,8 +472,7 @@ class IrActionsServer(models.Model):
                 res = result
         return res
 
-    @api.model
-    def run_action_object_write(self, action, eval_context=None):
+    def _run_action_object_write(self, action, eval_context=None):
         """Apply specified write changes to active_id."""
         res = {}
         for exp in action.fields_lines:
@@ -466,8 +485,7 @@ class IrActionsServer(models.Model):
         else:
             self.env[action.model_id.model].browse(self._context.get('active_id')).write(res)
 
-    @api.model
-    def run_action_object_create(self, action, eval_context=None):
+    def _run_action_object_create(self, action, eval_context=None):
         """Create specified model object with specified values.
 
         If applicable, link active_id.<self.link_field_id> to the new record.
@@ -485,7 +503,6 @@ class IrActionsServer(models.Model):
             else:
                 record.write({action.link_field_id.name: res.id})
 
-    @api.model
     def _get_eval_context(self, action=None):
         """ Prepare the context used when evaluating python code, like the
         python formulas or code server actions.
@@ -528,8 +545,12 @@ class IrActionsServer(models.Model):
 
     def run(self):
         """ Runs the server action. For each server action, the
-        run_action_<STATE> method is called. This allows easy overriding
-        of the server actions.
+        :samp:`_run_action_{TYPE}[_multi]` method is called. This allows easy
+        overriding of the server actions.
+
+        The `_multi` suffix means the runner can operate on multiple records,
+        otherwise if there are multiple records the runner will be called once
+        for each
 
         :param dict context: context should contain following keys
 
@@ -551,30 +572,33 @@ class IrActionsServer(models.Model):
                 raise AccessError(_("You don't have enough access rights to run this action."))
 
             eval_context = self._get_eval_context(action)
-            if hasattr(self, 'run_action_%s_multi' % action.state):
+
+            runner, multi = action._get_runner()
+            if runner and multi:
                 # call the multi method
                 run_self = self.with_context(eval_context['env'].context)
-                func = getattr(run_self, 'run_action_%s_multi' % action.state)
-                res = func(action, eval_context=eval_context)
-
-            elif hasattr(self, 'run_action_%s' % action.state):
+                res = runner(run_self, action, eval_context=eval_context)
+            elif runner:
                 active_id = self._context.get('active_id')
                 if not active_id and self._context.get('onchange_self'):
                     active_id = self._context['onchange_self']._origin.id
                     if not active_id:  # onchange on new record
-                        func = getattr(self, 'run_action_%s' % action.state)
-                        res = func(action, eval_context=eval_context)
+                        res = runner(self, action, eval_context=eval_context)
                 active_ids = self._context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
                     run_self = self.with_context(active_ids=[active_id], active_id=active_id)
                     eval_context["env"].context = run_self._context
-                    # call the single method related to the action: run_action_<STATE>
-                    func = getattr(run_self, 'run_action_%s' % action.state)
-                    res = func(action, eval_context=eval_context)
+                    res = runner(run_self, action, eval_context=eval_context)
+            else:
+                _logger.warning(
+                    "Found no way to execute server action %r of type %r, ignoring it. "
+                    "Verify that the type is correct or add a method called "
+                    "`_run_action_<type>` or `_run_action_<type>_multi`.",
+                    action.name, action.state
+                )
         return res or False
 
-    @api.model
     def _run_actions(self, ids):
         """
             Run server actions with given ids.

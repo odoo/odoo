@@ -26,8 +26,7 @@ class ServerActions(models.Model):
             if action.state == 'sms' and not action.model_id.is_mail_thread:
                 raise ValidationError(_("Sending SMS can only be done on a mail.thread model"))
 
-    @api.model
-    def run_action_sms_multi(self, action, eval_context=None):
+    def _run_action_sms_multi(self, action, eval_context=None):
         # TDE CLEANME: when going to new api with server action, remove action
         if not action.sms_template_id or self._is_recompute(action):
             return False
