@@ -815,9 +815,9 @@ class GoogleCalendar(models.AbstractModel):
         for base_event in event_to_synchronize:
             for current_event in event_to_synchronize[base_event]:
                 event_to_synchronize[base_event][current_event].compute_OP(modeFull=not lastSync)
-            if self.get_print_log():
-                if not isinstance(event_to_synchronize[base_event][current_event].OP, NothingToDo):
-                    _logger.info(event_to_synchronize[base_event])
+                if self.get_print_log():
+                    if not isinstance(event_to_synchronize[base_event][current_event].OP, NothingToDo):
+                        _logger.info(event_to_synchronize[base_event])
 
         ######################
         #      DO ACTION     #
