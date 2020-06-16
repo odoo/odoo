@@ -103,7 +103,7 @@ class ResPartnerBank(models.Model):
         if qr_method == 'ch_qr':
             qr_code_vals = self._l10n_ch_get_qr_vals(amount, currency, debtor_partner, free_communication, structured_communication)
 
-            return '/report/barcode/?type=%s&value=%s&width=%s&height=%s&humanreadable=1&mask=ch_cross' % ('QR', werkzeug.urls.url_quote_plus('\n'.join(qr_code_vals)), 256, 256)
+            return '/report/barcode/?type=%s&value=%s&width=%s&height=%s&quiet=1&mask=ch_cross' % ('QR', werkzeug.urls.url_quote_plus('\n'.join(qr_code_vals)), 256, 256)
 
         return super()._get_qr_code_url(qr_method, amount, currency, debtor_partner, free_communication, structured_communication)
 
@@ -161,12 +161,27 @@ class ResPartnerBank(models.Model):
             'EPD',                                                # Mandatory trailer part
         ]
 
+    def _get_partner_address_lines(self, partner):
+        """ Returns a tuple of two elements containing the address lines to use
+        for this partner. Line 1 contains the street and number, line 2 contains
+        zip and city. Those two lines are limited to 70 characters
+        """
+        streets = [partner.street, partner.street2]
+        line_1 = ' '.join(filter(None, streets))
+        line_2 = partner.zip + ' ' + partner.city
+        return line_1[:70], line_2[:70]
+
     def _is_qr_iban(self):
         """ Tells whether or not this bank account has a QR-IBAN account number.
         QR-IBANs are specific identifiers used in Switzerland as references in
         QR-codes. They are formed like regular IBANs, but are actually something
         different.
         """
+        # for conveniance when invoice.invoice_partner_bank_id, could be replaced
+        # by a computed field
+        if not self:
+            return False
+
         self.ensure_one()
 
         iid_start_index = 4
@@ -210,7 +225,7 @@ class ResPartnerBank(models.Model):
             return partner.zip and \
                    partner.city and \
                    partner.country_id.code and \
-                   (self.partner_id.street or self.partner_id.street2)
+                   (partner.street or partner.street2)
 
         if qr_method == 'ch_qr':
             if not _partner_fields_set(self.partner_id):
