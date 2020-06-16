@@ -3157,43 +3157,16 @@ class AccountMoveLine(models.Model):
             audit_str = ''
             for tag in record.tag_ids:
 
-                # In case of cash basis entries, we need to consider the original invoice, not the current move
+                caba_origin_inv_type = record.move_id.type
+                caba_origin_inv_journal_type = record.journal_id.type
+
                 if record.move_id.tax_cash_basis_rec_id:
-                    reconciled_amls = record.move_id.tax_cash_basis_rec_id.debit_move_id + record.move_id.tax_cash_basis_rec_id.credit_move_id
-                    invoice_aml = reconciled_amls.filtered(lambda x: x.journal_id.type in ('sale', 'purchase')) # To exclude the payment
-
-                    if len(invoice_aml) > 1:
-
-                        caba_origin_inv_journal_type = invoice_aml.mapped('journal_id.type')[0]
-                        type_prefixes = {'sale': 'out', 'purchase': 'in'}
-
-                        if record.tax_repartition_line_id:
-                            # If tax_repartition_line_id is set, we know for sure we are on a tax line.
-                            # We can then simply check whether the repartition line is intended for invoices or refunds
-                            type_postfix = record.tax_repartition_line_id.invoice_tax_id and 'invoice' or 'refund'
-                            caba_origin_inv_type = "%s_%s" % (type_prefixes[caba_origin_inv_journal_type], type_postfix)
-
-                        elif record.tax_ids:
-                            # If it's a base line, we rely on debit/credit to guess the type of the CABA origin invoice.
-                            if (caba_origin_inv_journal_type == 'sale' and record.credit) \
-                               or (caba_origin_inv_journal_type == 'purchase' and record.debit):
-                                caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_invoice'
-                            else:
-                                caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_refund'
-
-                        else:
-                            # Default type for non-tax related lines is invoice. (in/out depending of the journal)
-                            caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_invoice'
-
-                        if caba_origin_inv_type not in invoice_aml.mapped('move_id.type'):
-                            caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_invoice'
-                    else:
-                        caba_origin_inv_type = invoice_aml.move_id.type
-
+                    # Cash basis entries are always treated as misc operations, applying the tag sign directly to the balance
+                    type_multiplicator = 1
                 else:
-                    caba_origin_inv_type = record.move_id.type
+                    type_multiplicator = (record.journal_id.type == 'sale' and -1 or 1) * (record.move_id.type in ('in_refund', 'out_refund') and -1 or 1)
 
-                tag_amount = (tag.tax_negate and -1 or 1) * (caba_origin_inv_type in record.move_id.get_inbound_types() and -1 or 1) * record.balance
+                tag_amount = type_multiplicator * (tag.tax_negate and -1 or 1) * record.balance
 
                 if tag.tax_report_line_ids:
                     #Then, the tag comes from a report line, and hence has a + or - sign (also in its name)
@@ -4152,6 +4125,35 @@ class AccountMoveLine(models.Model):
             ('statement_line_id', '!=', False),
         ]
 
+    def _convert_tags_for_cash_basis(self, tags):
+        """ Cash basis entries are managed by the tax report just like misc operations.
+        So it means that the tax report will not apply any additional multiplicator
+        to the balance of the cash basis lines.
+
+        For invoices move lines whose multiplicator would have been -1 (if their
+        taxes had not CABA), it will hence cause sign inversion if we directly copy
+        the tags from those lines. Instead, we need to invert all the signs from these
+        tags (if they come from tax report lines; tags created in data for financial
+        reports will stay onchanged).
+        """
+        self.ensure_one()
+        tax_multiplicator = (self.journal_id.type == 'sale' and -1 or 1) * (self.move_id.type in ('in_refund', 'out_refund') and -1 or 1)
+        if tax_multiplicator == -1:
+            # Take the opposite tags instead
+            rslt = self.env['account.account.tag']
+            for tag in tags:
+                if tag.tax_report_line_ids:
+                    # tag created by an account.tax.report.line
+                    new_tag = tag.tax_report_line_ids[0].tag_ids.filtered(lambda x: x.tax_negate != tag.tax_negate)
+                    rslt += new_tag
+                else:
+                    # tag created in data for use by an account.financial.html.report.line
+                    rslt += tag
+
+            return rslt
+
+        return tags
+
 
 class AccountPartialReconcile(models.Model):
     _name = "account.partial.reconcile"
@@ -4351,7 +4353,7 @@ class AccountPartialReconcile(models.Model):
                             'journal_id': newly_created_move.journal_id.id,
                             'tax_repartition_line_id': line.tax_repartition_line_id.id,
                             'tax_base_amount': line.tax_base_amount,
-                            'tag_ids': [(6, 0, line.tag_ids.ids)],
+                            'tag_ids': [(6, 0, line._convert_tags_for_cash_basis(line.tag_ids).ids)],
                         })
                         if line.account_id.reconcile and not line.reconciled:
                             #setting the account to allow reconciliation will help to fix rounding errors
@@ -4379,7 +4381,7 @@ class AccountPartialReconcile(models.Model):
                                 'journal_id': newly_created_move.journal_id.id,
                                 'tax_repartition_line_id': line.tax_repartition_line_id.id,
                                 'tax_base_amount': line.tax_base_amount,
-                                'tag_ids': [(6, 0, line.tag_ids.ids)],
+                                'tag_ids': [(6, 0, line._convert_tags_for_cash_basis(line.tag_ids).ids)],
                             })
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
                                 'name': line.name,
