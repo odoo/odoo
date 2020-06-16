@@ -429,7 +429,7 @@
     <t t-call="website_event.event_details">
         <section class="bg-200 mt-n5">
             <div class="container overflow-hidden">
-                <div class="row no-gutters mt-n4">
+                <div class="row no-gutters mt-n4 mb-3">
                     <!-- Description -->
                     <div id="o_wevent_event_main_col" class="col-lg-8 bg-white px-5 pt64 pb-0 shadow-sm">
                         <span t-field="event.description" itemprop="description"/>
@@ -506,21 +506,6 @@
                         </div>
                     </div>
                 </div>
-                <ul class="list-unstyled" id="comment">
-                    <li t-foreach="event.website_message_ids" t-as="comment" class="media mt-3">
-                        <div class="media-body">
-                            <t t-call="website.publish_management">
-                                <t t-set="object" t-value="comment"/>
-                                <t t-set="publish_edit" t-value="True"/>
-                            </t>
-                            <t t-raw="comment.body"/>
-                            <small class="float-right muted text-right">
-                                <div t-field="comment.author_id"/>
-                                <div t-field="comment.date" t-options='{"hide_seconds":"True"}'/>
-                            </small>
-                        </div>
-                    </li>
-                </ul>
             </div>
         </section>
     </t>
