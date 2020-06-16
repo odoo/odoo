@@ -76,6 +76,7 @@ function factory(dependencies) {
                 isComposerLog: true,
                 isComposerVisible: true,
             });
+            this.thread.composer.update({ isDoFocus: true });
         }
 
         showSendMessage() {
@@ -83,6 +84,7 @@ function factory(dependencies) {
                 isComposerLog: false,
                 isComposerVisible: true,
             });
+            this.thread.composer.update({ isDoFocus: true });
         }
 
         toggleActivityBoxVisibility() {
