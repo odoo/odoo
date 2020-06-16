@@ -4274,6 +4274,7 @@ class AccountMoveLine(models.Model):
             lambda move: move.is_invoice(include_receipts=True) and move.payment_state not in ('paid', 'in_payment')
         )
 
+<<<<<<< HEAD
         # ==== Check the lines can be reconciled together ====
         company = None
         account = None
@@ -4361,6 +4362,28 @@ class AccountMoveLine(models.Model):
                 'partial_reconcile_ids': [(6, 0, involved_partials.ids)],
                 'reconciled_line_ids': [(6, 0, involved_lines.ids)],
             })
+=======
+        reconciled_lines = self.filtered(lambda aml: float_is_zero(aml.balance, precision_rounding=aml.move_id.company_id.currency_id.rounding) and aml.reconciled)
+        (self - reconciled_lines)._check_reconcile_validity()
+        #reconcile everything that can be
+        remaining_moves = self.auto_reconcile_lines()
+
+        writeoff_to_reconcile = self.env['account.move.line']
+        #if writeoff_acc_id specified, then create write-off move with value the remaining amount from move in self
+        if writeoff_acc_id and writeoff_journal_id and remaining_moves:
+            all_aml_share_same_currency = all([x.currency_id == self[0].currency_id for x in self])
+            writeoff_vals = {
+                'account_id': writeoff_acc_id.id,
+                'journal_id': writeoff_journal_id.id
+            }
+            if not all_aml_share_same_currency:
+                writeoff_vals['amount_currency'] = False
+            writeoff_to_reconcile = remaining_moves._create_writeoff([writeoff_vals])
+            #add writeoff line to reconcile algorithm and finish the reconciliation
+            remaining_moves = (remaining_moves + writeoff_to_reconcile).auto_reconcile_lines()
+        # Check if reconciliation is total or needs an exchange rate entry to be created
+        (self + writeoff_to_reconcile).check_full_reconcile()
+>>>>>>> 8281d928407... temp
 
         # Trigger action for paid invoices
         not_paid_invoices\
