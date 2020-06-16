@@ -162,7 +162,7 @@ class Digest(models.Model):
             try:
                 digest.action_send()
             except MailDeliveryException as e:
-                _logger.warning('MailDeliveryException while sending digest %d. Digest is now scheduled for next cron update.')
+                _logger.warning('MailDeliveryException while sending digest %d. Digest is now scheduled for next cron update.', digest.id)
 
     # ------------------------------------------------------------
     # KPIS
