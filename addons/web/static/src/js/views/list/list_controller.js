@@ -59,6 +59,9 @@ var ListController = BasicController.extend({
         this.fieldChangedPrevented = false;
         this.isPageSelected = false; // true iff all records of the page are selected
         this.isDomainSelected = false; // true iff the user selected all records matching the domain
+        this.actionButtons = !config.device.isMobile &&
+            this.toolbarActions.action &&
+            this.toolbarActions.action.filter((action) => action.display_in_controlpanel);
         session.user_has_group('base.group_allow_export').then(has_group => {
             this.isExportEnable = has_group;
         });
@@ -127,12 +130,6 @@ var ListController = BasicController.extend({
             });
             this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
-        }
-        const actionButtons = !config.device.isMobile &&
-            this.toolbarActions.action &&
-            this.toolbarActions.action.filter((action) => action.display_in_controlpanel);
-        if (actionButtons) {
-            this.$actionButtons = this._generateActionButtons(actionButtons);
         }
         if ($node) {
             this.$buttons.appendTo($node);
@@ -613,7 +610,8 @@ var ListController = BasicController.extend({
         if (this.$('.o_list_action_button').length) {
             this.$('.o_list_action_button').remove();
         }
-        if (this.selectedRecords.length) {
+        if (this.selectedRecords.length && this.actionButtons) {
+            this.$actionButtons = this._generateActionButtons(this.actionButtons);
             this.$buttons.append(this.$actionButtons);
         }
     },
