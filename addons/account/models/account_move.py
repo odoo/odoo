@@ -1795,17 +1795,16 @@ class AccountPartialReconcile(models.Model):
 
     def _get_tax_cash_basis_base_key(self, tax, move, line):
         account_id = self._get_tax_cash_basis_base_account(line, tax)
-        return (line.id, account_id.id, tax.id, line.currency_id.id, line.partner_id.id)
+        return (line.id, account_id.id, tax.id, line.currency_id.id, line.partner_id.id, line.invoice_id.type)
 
     def _get_tax_cash_basis_base_common_vals(self, key, new_move):
         self.ensure_one()
-        line_id, account_id, tax_id, currency_id, partner_id = key
+        line_id, account_id, tax_id, currency_id, partner_id, invoice_type = key
 
         line = self.env['account.move.line'].browse(line_id)
         tax = self.env['account.tax'].browse(tax_id)
 
-        orig_inv_types = (self.debit_move_id + self.credit_move_id).mapped('invoice_id.type')
-        tax_rep_lines = tax.refund_repartition_line_ids if orig_inv_types in (['in_refund'], ['out_refund']) else tax.invoice_repartition_line_ids
+        tax_rep_lines = tax.refund_repartition_line_ids if invoice_type in ('in_refund', 'out_refund') else tax.invoice_repartition_line_ids
         base_tags = tax_rep_lines.filtered(lambda x: x.repartition_type == 'base').tag_ids
 
         return {
