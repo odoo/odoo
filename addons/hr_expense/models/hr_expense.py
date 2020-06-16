@@ -455,6 +455,8 @@ class HrExpense(models.Model):
 
         move_to_keep_draft = self.env['account.move']
 
+        company_payments = self.env['account.payment']
+
         for expense in self:
             company_currency = expense.company_id.currency_id
             different_currency = expense.currency_id != company_currency
@@ -495,13 +497,14 @@ class HrExpense(models.Model):
             expense.sheet_id.write({'account_move_id': move.id})
 
             if expense.payment_mode == 'company_account':
-                if journal.post_at == 'pay_val':
-                    payment.state = 'reconciled'
-                elif journal.post_at == 'bank_rec':
-                    payment.state = 'posted'
+                company_payments |= payment
+                if journal.post_at == 'bank_rec':
                     move_to_keep_draft |= move
 
                 expense.sheet_id.paid_expense_sheets()
+
+        company_payments.filtered(lambda x: x.journal_id.post_at == 'pay_val').write({'state':'reconciled'})
+        company_payments.filtered(lambda x: x.journal_id.post_at == 'bank_rec').write({'state':'posted'})
 
         # post the moves
         for move in move_group_by_sheet.values():
