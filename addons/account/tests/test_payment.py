@@ -26,10 +26,10 @@ class TestPayment(AccountingTestCase):
         self.payment_method_manual_in = self.env.ref("account.account_payment_method_manual_in")
         self.payment_method_manual_out = self.env.ref("account.account_payment_method_manual_out")
 
-        self.account_receivable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
-        self.account_payable = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
-        self.account_revenue = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1)
-
+        self.account_receivable = self.env['account.account'].sudo().search([('company_id', '=', company.id),('user_type_id', '=', self.env.ref('account.data_account_type_receivable').id)], limit=1)
+        self.account_payable = self.env['account.account'].search([('company_id', '=', company.id),('user_type_id', '=', self.env.ref('account.data_account_type_payable').id)], limit=1)
+        self.account_revenue = self.env['account.account'].search([('company_id', '=', company.id),('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1)
+        
         self.bank_journal_euro = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
         self.account_eur = self.bank_journal_euro.default_debit_account_id
 
