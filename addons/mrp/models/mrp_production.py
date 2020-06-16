@@ -1373,9 +1373,7 @@ class MrpProduction(models.Model):
             for workorder in backorder_mo.workorder_ids:
                 workorder.duration_expected = workorder.duration_expected * (1 - ratio)
         backorders.action_confirm()
-        for wo in backorders.workorder_ids:
-            if wo.component_id:
-                wo._update_component_quantity()
+
         # Remove the serial move line without reserved quantity. Post inventory will assigned all the non done moves
         # So those move lines are duplicated.
         backorders.move_raw_ids.move_line_ids.filtered(lambda ml: ml.product_id.tracking == 'serial' and ml.product_qty == 0).unlink()
