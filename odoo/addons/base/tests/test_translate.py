@@ -394,6 +394,25 @@ class TestTranslation(TransactionCase):
         ])
         self.assertEqual(translation_fr.src, 'Customers', "Did not set English version as source")
 
+    # opw-2266864
+    def test_108_duplicate_record_fr_with_no_en_name(self):
+        self.env.ref('base.lang_fr').active = True
+        self.env['res.users'].with_context(active_test=False).search([]).write({'lang': 'fr_FR'})
+
+        langs = self.env['res.lang'].get_installed()
+        self.assertEqual([('en_US', 'English (US)'), ('fr_FR', 'French / Français')], langs, "Test did not started with expected languages")
+
+        group = self.env['res.groups'].with_context(lang='fr_FR').create({'name': 'French Name'})
+
+        name = group.with_context(lang=None).read(['name'])
+        self.assertEqual(name[0]['name'], "French Name", "Reference field not updated")
+
+        new_group = group.copy()
+        new_name_french = new_group.with_context(lang='fr_FR').read(['name'])
+        new_name_en = new_group.with_context(lang='en_US').read(['name'])
+        self.assertNotEqual(new_group.name, group.name, "Name should have been changed during the copy process")
+        self.assertEqual(new_name_french, new_name_en, "Empty translations for name should have been filled during the copy process")
+
 class TestTranslationWrite(TransactionCase):
 
     def setUp(self):

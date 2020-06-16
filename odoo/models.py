@@ -4539,7 +4539,10 @@ Record ids: %(records)s
                     del vals['module']      # duplicated vals is not linked to any module
                     vals['res_id'] = target_id
                     if not callable(field.translate):
-                        vals['src'] = new_wo_lang[name]
+                        vals['src'] = new_val
+                        if not vals['value']:
+                            # avoid confusing empty translations and force new source
+                            vals['value'] = new_val
                     if vals['lang'] == old.env.lang and field.translate is True:
                         # update master record if the new_val was not changed by copy override
                         if new_val == old[name]:
