@@ -373,7 +373,7 @@ class IrActionsServer(models.Model):
         ('object_create', 'Create a new Record'),
         ('object_write', 'Update the Record'),
         ('multi', 'Execute several actions')], string='Action To Do',
-        default='object_write', required=True,
+        default='object_write', required=True, copy=True,
         help="Type of server action. The following values are available:\n"
              "- 'Execute Python Code': a block of python code that will be executed\n"
              "- 'Create': create a new record with new values\n"
