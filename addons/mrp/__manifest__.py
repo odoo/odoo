@@ -14,6 +14,7 @@
     'data': [
         'security/mrp_security.xml',
         'security/ir.model.access.csv',
+        'data/digest_data.xml',
         'data/mrp_data.xml',
         'wizard/change_production_qty_views.xml',
         'wizard/mrp_workcenter_block_view.xml',
