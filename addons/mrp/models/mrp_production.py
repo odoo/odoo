@@ -1318,17 +1318,18 @@ class MrpProduction(models.Model):
             return name[:-SIZE_BACK_ORDER_NUMERING-1] + seq_back
         return name + seq_back
 
-    def _get_backorder_mo_vals(self, mo_source):
-        next_seq = max(mo_source.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"))
+    def _get_backorder_mo_vals(self):
+        self.ensure_one()
+        next_seq = max(self.procurement_group_id.mrp_production_ids.mapped("backorder_sequence"))
         return {
-            'name': self._get_name_backorder(mo_source.name, next_seq + 1),
+            'name': self._get_name_backorder(self.name, next_seq + 1),
             'backorder_sequence': next_seq + 1,
-            'procurement_group_id': mo_source.procurement_group_id.id,
+            'procurement_group_id': self.procurement_group_id.id,
             'move_raw_ids': None,
             'move_finished_ids': None,
             'product_qty': self._get_quantity_to_backorder(),
             'lot_producing_id': False,
-            'origin': mo_source.origin
+            'origin': self.origin
         }
 
     def _generate_backorder_productions(self, close_mo=True):
@@ -1336,7 +1337,7 @@ class MrpProduction(models.Model):
         for production in self:
             if production.backorder_sequence == 0:  # Activate backorder naming
                 production.backorder_sequence = 1
-            backorder_mo = production.copy(default=self._get_backorder_mo_vals(production))
+            backorder_mo = production.copy(default=production._get_backorder_mo_vals())
             if close_mo:
                 production.move_raw_ids.filtered(lambda m: m.state not in ('done', 'cancel')).write({
                     'raw_material_production_id': backorder_mo.id,
