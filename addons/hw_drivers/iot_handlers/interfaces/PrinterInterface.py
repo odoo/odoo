@@ -16,16 +16,11 @@ class PrinterInterface(Interface):
         printer_devices = {}
         with cups_lock:
             printers = conn.getPrinters()
-            for printer in printers:
-                printers[printer]['supported'] = True # these printers are automatically supported
-                printers[printer]['device-make-and-model'] = printers[printer]['printer-make-and-model']
-                if 'usb' in printers[printer]['device-uri']:
-                    printers[printer]['device-class'] = 'direct'
-                else:
-                    printers[printer]['device-class'] = 'network'
             devices = conn.getDevices()
-            if printers:
-                devices.update(printers)
+            for printer in printers:
+                path = printers.get(printer).get('device-uri', False)
+                if path and path in devices:
+                    devices.get(path).update({'supported': True}) # these printers are automatically supported
         for path in devices:
             if 'uuid=' in path:
                 identifier = sub('[^a-zA-Z0-9_]', '', path.split('uuid=')[1])
