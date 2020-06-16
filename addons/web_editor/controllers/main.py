@@ -204,6 +204,7 @@ class Web_Editor(http.Controller):
         """This route is used to determine the original of an attachment so that
         it can be used as a base to modify it again (crop/optimization/filters).
         """
+        attachment = None
         id_match = re.search('^/web/image/([^/?]+)', src)
         if id_match:
             url_segment = id_match.group(1)
