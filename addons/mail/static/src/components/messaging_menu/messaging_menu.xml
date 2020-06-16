@@ -5,8 +5,8 @@
         <li class="o_MessagingMenu" t-att-class="{ show: messagingMenu.isOpen, 'o-mobile': env.messaging.device.isMobile }">
             <!-- TODO FIXME restore mobile stuff here (activeMobileThread) -->
             <t t-if="!env.messaging.device.isMobile or true">
-                <a class="o_MessagingMenu_toggler o-no-caret" t-att-class="{ show: messagingMenu.isOpen }" href="#" t-on-click="_onClickToggler" data-toggle="dropdown" data-display="static" title="Conversations" role="button" aria-expanded="false">
-                    <i class="o_MessagingMenu_icon fa fa-comments-o" role="img" aria-label="Messages"/>
+                <a class="o_MessagingMenu_toggler o-no-caret" t-att-class="{ show: messagingMenu.isOpen, 'o-no-notification': !messagingMenu.counter }" href="#" t-on-click="_onClickToggler" data-toggle="dropdown" data-display="static" title="Conversations" role="button" aria-expanded="false">
+                    <i class="o_MessagingMenu_icon fa fa-comments" role="img" aria-label="Messages"/>
                     <t t-if="!env.messaging.isInitialized">
                         <i class="o_MessagingMenu_loading fa fa-spinner fa-spin"/>
                     </t>
