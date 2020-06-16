@@ -3,14 +3,14 @@
 
 from odoo import models
 
-class IrTranslation(models.Model):
-    _inherit = "ir.translation"
+class IrModule(models.Model):
+    _inherit = "ir.module.module"
 
-    def _load_module_terms(self, modules, langs, overwrite=False):
+    def _update_translations(self, filter_lang=None, overwrite=False):
         """ Add missing website specific translation """
-        res = super()._load_module_terms(modules, langs)
+        res = super()._update_translations(filter_lang=filter_lang, overwrite=overwrite)
 
-        if not langs or not modules:
+        if not filter_lang or not self:
             return res
 
         if overwrite:
@@ -37,7 +37,7 @@ class IrTranslation(models.Model):
                AND generic.website_id IS NULL AND generic.type = 'qweb'
                AND specific.website_id IS NOT NULL""" + conflict_clause.format(
                    "(type, name, lang, res_id, md5(src))"
-        ), (tuple(langs), tuple(modules)))
+        ), (tuple(filter_lang), tuple(self.mapped("name"))))
 
         default_menu = self.env.ref('website.main_menu', raise_if_not_found=False)
         if not default_menu:
@@ -58,6 +58,6 @@ class IrTranslation(models.Model):
                AND o_menu.website_id IS NULL AND o_menu.parent_id = %s
                AND s_menu.website_id IS NOT NULL""" + conflict_clause.format(
                    "(type, lang, name, res_id) WHERE type = 'model'"
-        ), (tuple(langs), tuple(modules), default_menu.id))
+        ), (tuple(filter_lang), tuple(self.mapped("name")), default_menu.id))
 
         return res

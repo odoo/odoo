@@ -980,7 +980,7 @@ class TestCowViewSaving(common.TransactionCase):
         self.assertEqual(specific_view.with_context(lang='en_US').arch, '<div>hello</div>',
             "updating translation of base view doesn't update specific view")
 
-        Translation._load_module_terms(['website'], ['en_US'], overwrite=True)
+        self.env.ref("base.module_website")._update_translations(['en_US'], overwrite=True)
 
         specific_view.invalidate_cache(['arch_db', 'arch'])
         self.assertEqual(specific_view.with_context(lang='en_US').arch, '<div>hi</div>',
