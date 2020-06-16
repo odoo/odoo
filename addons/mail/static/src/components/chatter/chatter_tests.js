@@ -260,7 +260,7 @@ QUnit.test('show attachment box', async function (assert) {
 });
 
 QUnit.test('composer show/hide on log note/send message', async function (assert) {
-    assert.expect(8);
+    assert.expect(10);
 
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
@@ -292,6 +292,11 @@ QUnit.test('composer show/hide on log note/send message', async function (assert
         1,
         "should have a composer"
     );
+    assert.hasClass(
+        document.querySelector('.o_Chatter_composer'),
+        'o-focused',
+        "composer 'send message' in chatter should have focus just after being displayed"
+    );
 
     await afterNextRender(() =>
         document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
@@ -300,6 +305,11 @@ QUnit.test('composer show/hide on log note/send message', async function (assert
         document.querySelectorAll(`.o_Chatter_composer`).length,
         1,
         "should still have a composer"
+    );
+    assert.hasClass(
+        document.querySelector('.o_Chatter_composer'),
+        'o-focused',
+        "composer 'log note' in chatter should have focus just after being displayed"
     );
 
     await afterNextRender(() =>
