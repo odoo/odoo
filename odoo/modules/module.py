@@ -102,10 +102,6 @@ def initialize_sys_path():
     Setup the addons path ``odoo.addons.__path__`` with various defaults
     and explicit directories.
     """
-    # if getattr(initialize_sys_path, 'called', False): # only initialize once
-    #    return
-    initialize_sys_path.called = True
-
     # hook odoo.addons on data dir
     dd = os.path.normcase(tools.config.addons_data_dir)
     if os.access(dd, os.R_OK) and dd not in odoo.addons.__path__:
@@ -138,9 +134,10 @@ def initialize_sys_path():
     sys.modules["odoo.addons.base.maintenance.migrations"] = upgrade
 
     # hook deprecated module alias from openerp to odoo and "crm"-like to odoo.addons
-    if getattr(initialize_sys_path, 'called', False): # only initialize once
+    if not getattr(initialize_sys_path, 'called', False): # only initialize once
         sys.meta_path.insert(0, OdooHook())
         sys.meta_path.insert(0, AddonsHook())
+        initialize_sys_path.called = True
 
 
 def get_module_path(module, downloaded=False, display_warning=True):
