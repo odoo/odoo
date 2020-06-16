@@ -1,16 +1,13 @@
 // Systray icon and dropdown
 .o_mail_systray_item {
     > a {
-        opacity: 1;
         > i {
             font-size: larger;
         }
     }
     &.o_no_notification > a {
-        opacity: 0.5;
-        > i {
-            transform: translateY(0px);
-        }
+        @include o-mail-systray-no-notification-style();
+
         .o_notification_counter {
             display: none;
         }
