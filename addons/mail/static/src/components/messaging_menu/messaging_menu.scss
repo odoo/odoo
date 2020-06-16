@@ -14,6 +14,11 @@
     padding-top: 0;
     padding-bottom: 0;
     overflow-y: auto;
+    /**
+     * Override from bootstrap .dropdown-menu to fix top alignment with other
+     * systray menu.
+     */
+    margin-top: map-get($spacers, 0);
 
     &.o-messaging-not-initialized {
         align-items: center;
