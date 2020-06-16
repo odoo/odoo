@@ -863,8 +863,15 @@ class MrpProduction(models.Model):
             if move._should_bypass_set_qty_producing():
                 continue
             new_qty = self.product_uom_id._compute_quantity((self.qty_producing - self.qty_produced) * move.unit_factor, self.product_uom_id, rounding_method='HALF-UP')
-            move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
-            move.move_line_ids = move._set_quantity_done_prepare_vals(new_qty)
+            ml_to_unlink = self.env['stock.move.line']
+            for ml in move.move_line_ids:
+                if ml.state in ('done', 'cancel'):
+                    continue
+                if ml.product_uom_qty:
+                    ml.qty_done = 0.0
+                else:
+                    ml_to_unlink |= ml
+            move.move_line_ids = [(2, ml.id) for ml in ml_to_unlink] + move._set_quantity_done_prepare_vals(new_qty)
 
     def _update_raw_move(self, bom_line, line_data):
         """ :returns update_move, old_quantity, new_quantity """

@@ -241,8 +241,26 @@ class TestMrpOrder(TestMrpCommon):
         mo.action_assign()
 
         mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        ml_p1 = mo.move_raw_ids.filtered(lambda m: m.product_id == p1).move_line_ids
+        ml_p2 = mo.move_raw_ids.filtered(lambda m: m.product_id == p2).move_line_ids
+        self.assertEqual(len(ml_p1), 1)
+        self.assertEqual(len(ml_p2), 1)
+        self.assertEqual(ml_p1.qty_done, 4.0)
+        self.assertEqual(ml_p2.qty_done, 1.0)
+
+        mo_form = Form(mo)
+        mo_form.qty_producing = 0
+        mo_form.qty_producing = 1
         mo_form.qty_producing = 2
         mo = mo_form.save()
+        ml_p1 = mo.move_raw_ids.filtered(lambda m: m.product_id == p1).move_line_ids
+        ml_p2 = mo.move_raw_ids.filtered(lambda m: m.product_id == p2).move_line_ids
+        self.assertEqual(len(ml_p1), 1)
+        self.assertEqual(len(ml_p2), 1)
+        self.assertEqual(ml_p1.qty_done, 8.0)
+        self.assertEqual(ml_p2.qty_done, 2.0)
 
         mo._post_inventory()
 
