@@ -63,8 +63,7 @@ class ServerActions(models.Model):
             if action.state == 'next_activity' and not action.model_id.is_mail_thread:
                 raise ValidationError(_("A next activity can only be planned on models that use the chatter"))
 
-    @api.model
-    def run_action_followers_multi(self, action, eval_context=None):
+    def _run_action_followers_multi(self, action, eval_context=None):
         Model = self.env[action.model_name]
         if self.partner_ids or self.channel_ids and hasattr(Model, 'message_subscribe'):
             records = Model.browse(self._context.get('active_ids', self._context.get('active_id')))
@@ -98,8 +97,7 @@ class ServerActions(models.Model):
                     return True
         return False
 
-    @api.model
-    def run_action_email(self, action, eval_context=None):
+    def _run_action_email(self, action, eval_context=None):
         # TDE CLEANME: when going to new api with server action, remove action
         if not action.template_id or not self._context.get('active_id') or self._is_recompute(action):
             return False
@@ -111,8 +109,7 @@ class ServerActions(models.Model):
         action.template_id.with_context(cleaned_ctx).send_mail(self._context.get('active_id'), force_send=False, raise_exception=False)
         return False
 
-    @api.model
-    def run_action_next_activity(self, action, eval_context=None):
+    def _run_action_next_activity(self, action, eval_context=None):
         if not action.activity_type_id or not self._context.get('active_id') or self._is_recompute(action):
             return False
 
