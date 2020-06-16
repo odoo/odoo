@@ -307,6 +307,9 @@ class Field(MetaField('DummyField', (object,), {})):
         attrs['_modules'] = modules
 
         # initialize ``self`` with ``attrs``
+        if name == 'state':
+            # by default, `state` fields should be reset on copy
+            attrs['copy'] = attrs.get('copy', False)
         if attrs.get('compute'):
             # by default, computed fields are not stored, computed in superuser
             # mode if stored, not copied (unless stored and explicitly not

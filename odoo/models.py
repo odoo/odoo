@@ -4414,12 +4414,6 @@ Record ids: %(records)s
         seen_map[self._name].add(self.id)
 
         default = dict(default or [])
-        if 'state' not in default and 'state' in self._fields:
-            field = self._fields['state']
-            if field.default:
-                value = field.default(self)
-                value = field.convert_to_write(value, self)
-                default['state'] = value
 
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_path'])
