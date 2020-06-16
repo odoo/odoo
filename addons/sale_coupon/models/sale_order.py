@@ -89,7 +89,7 @@ class SaleOrder(models.Model):
             # do not give more free reward than products
             reward_product_qty = min(reward_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
             if program.rule_minimum_amount:
-                order_total = sum(line.price_total for line in order_lines.filtered(lambda x: x.product_id != program.reward_product_id))
+                order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
                 reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
         else:
             reward_product_qty = min(max_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
