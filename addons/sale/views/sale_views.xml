@@ -259,7 +259,7 @@
             <field name="name">sale.order.form</field>
             <field name="model">sale.order</field>
             <field name="arch" type="xml">
-              <form string="Sales Order" class="o_sale_order">
+              <form string="Sales Order" class="o_sale_order" js_class="sale_discount_form">
                 <header>
                     <field name="authorized_transaction_ids" invisible="1"/>
                     <button name="payment_action_capture" type="object"
@@ -567,7 +567,7 @@
                                         attrs="{'readonly': [('qty_invoiced', '&gt;', 0)]}"
                                         optional="show"
                                     />
-                                    <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show"/>
+                                    <field name="discount" string="Disc.%" groups="product.group_discount_per_so_line" optional="show" widget="product_discount"/>
                                     <field name="price_subtotal" widget="monetary" groups="account.group_show_line_subtotals_tax_excluded"/>
                                     <field name="price_total" widget="monetary" groups="account.group_show_line_subtotals_tax_included"/>
                                     <field name="state" invisible="1"/>
