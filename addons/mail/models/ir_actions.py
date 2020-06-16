@@ -13,7 +13,7 @@ class ServerActions(models.Model):
     _description = 'Server Action'
     _inherit = ['ir.actions.server']
 
-    state = fields.Selection(selection_add=[
+    action_type = fields.Selection(selection_add=[
         ('email', 'Send Email'),
         ('followers', 'Add Followers'),
         ('next_activity', 'Create Next Activity'),
@@ -51,16 +51,16 @@ class ServerActions(models.Model):
         if self.activity_date_deadline_range < 0:
             raise UserError(_("The 'Due Date In' value can't be negative."))
 
-    @api.constrains('state', 'model_id')
+    @api.constrains('action_type', 'model_id')
     def _check_mail_thread(self):
         for action in self:
-            if action.state == 'followers' and not action.model_id.is_mail_thread:
+            if action.action_type == 'followers' and not action.model_id.is_mail_thread:
                 raise ValidationError(_("Add Followers can only be done on a mail thread model"))
 
-    @api.constrains('state', 'model_id')
+    @api.constrains('action_type', 'model_id')
     def _check_activity_mixin(self):
         for action in self:
-            if action.state == 'next_activity' and not action.model_id.is_mail_thread:
+            if action.action_type == 'next_activity' and not action.model_id.is_mail_thread:
                 raise ValidationError(_("A next activity can only be planned on models that use the chatter"))
 
     @api.model

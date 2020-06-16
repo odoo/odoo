@@ -368,7 +368,7 @@ class IrActionsServer(models.Model):
         ('ir_actions_server', 'Server Action'),
         ('ir_cron', 'Scheduled Action')], string='Usage',
         default='ir_actions_server', required=True)
-    state = fields.Selection([
+    action_type = fields.Selection([
         ('code', 'Execute Python Code'),
         ('object_create', 'Create a new Record'),
         ('object_write', 'Update the Record'),
@@ -382,6 +382,10 @@ class IrActionsServer(models.Model):
              "- 'Send Email': automatically send an email (Discuss)\n"
              "- 'Add Followers': add followers to a record (Discuss)\n"
              "- 'Create Next Activity': create an activity (Discuss)")
+    state = fields.Selection(
+        related='action_type', readonly=False,
+        string="Action To Do (old)"
+    )
     # Generic
     sequence = fields.Integer(default=5,
                               help="When dealing with multiple actions, the execution order is "

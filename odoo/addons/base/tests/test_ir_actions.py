@@ -268,6 +268,10 @@ class TestServerActions(TestServerActionsBase):
         self.assertEqual([vals.get('name') for vals in bindings['action']], ['TestAction2', 'TestAction'])
         self.assertEqual([vals.get('sequence') for vals in bindings['action']], [1, 5])
 
+    def test_copy_action(self):
+        action2 = self.action.copy()
+        self.assertEqual(action2.action_type, 'code', "copying a server action should not reset the action type")
+        self.assertEqual(action2.state, 'code', "copying a server action should not reset the state")
 
 class TestCustomFields(common.TransactionCase):
     MODEL = 'res.partner'

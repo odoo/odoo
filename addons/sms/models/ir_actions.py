@@ -10,7 +10,7 @@ class ServerActions(models.Model):
     _name = 'ir.actions.server'
     _inherit = ['ir.actions.server']
 
-    state = fields.Selection(selection_add=[
+    action_type = fields.Selection(selection_add=[
         ('sms', 'Send SMS Text Message'),
     ], ondelete={'sms': 'cascade'})
     # SMS
@@ -20,7 +20,7 @@ class ServerActions(models.Model):
     )
     sms_mass_keep_log = fields.Boolean('Log as Note', default=True)
 
-    @api.constrains('state', 'model_id')
+    @api.constrains('action_type', 'model_id')
     def _check_sms_capability(self):
         for action in self:
             if action.state == 'sms' and not action.model_id.is_mail_thread:
