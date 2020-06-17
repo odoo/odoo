@@ -52,28 +52,23 @@
                 </div>
             </t>
             <t t-elif="props.line.payment_status == 'done'">
+                <div>
+                    Payment Successful
+                </div>
                 <t t-if="props.line.can_be_reversed">
-                    <div>
-                        Payment Successful
-                    </div>
                     <div class="button send_payment_reversal" title="Reverse Payment" t-on-click="trigger('send-payment-reverse', props.line)">
                         Reverse
                     </div>
                 </t>
                 <t t-else="">
-                    <div>
-                        Payment Successful
-                    </div>
                     <div></div>
                 </t>
             </t>
             <t t-elif="props.line.payment_status == 'reversed'">
-                <div class="paymentline electronic_payment">
-                    <div>
-                        Payment reversed
-                    </div>
-                    <div></div>
+                <div>
+                    Payment reversed
                 </div>
+                <div></div>
             </t>
         </div>
     </t>

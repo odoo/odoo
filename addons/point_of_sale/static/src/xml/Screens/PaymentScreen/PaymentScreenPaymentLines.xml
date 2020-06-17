@@ -19,11 +19,13 @@
                                         <t t-esc="formatLineAmount(line)" />
                                 </t>
                             </div>
-                            <div class="delete-button"
-                                 t-on-click="trigger('delete-payment-line', { cid: line.cid })"
-                                 aria-label="Delete" title="Delete">
-                                <i class="fa fa-times-circle" />
-                            </div>
+                            <t t-if="!line.payment_status or !['done', 'reversed'].includes(line.payment_status)">
+                                <div class="delete-button"
+                                    t-on-click="trigger('delete-payment-line', { cid: line.cid })"
+                                    aria-label="Delete" title="Delete">
+                                    <i class="fa fa-times-circle" />
+                                </div>
+                            </t>
                         </div>
                         <t t-if="line and line.payment_status">
                             <PaymentScreenElectronicPayment line="line" />
@@ -44,11 +46,13 @@
                                         <t t-esc="formatLineAmount(line)" />
                                 </t>
                             </div>
-                            <div class="delete-button"
-                                 t-on-click="trigger('delete-payment-line', { cid: line.cid })"
-                                 aria-label="Delete" title="Delete">
-                                <i class="fa fa-times-circle" />
-                            </div>
+                            <t t-if="!line.payment_status or !['done', 'reversed'].includes(line.payment_status)">
+                                <div class="delete-button"
+                                    t-on-click="trigger('delete-payment-line', { cid: line.cid })"
+                                    aria-label="Delete" title="Delete">
+                                    <i class="fa fa-times-circle" />
+                                </div>
+                            </t>
                         </div>
                     </t>
                 </t>

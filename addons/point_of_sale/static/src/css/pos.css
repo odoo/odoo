@@ -1564,8 +1564,19 @@ td {
 .paymentlines .electronic_payment {
     background: #e2e2e2;
     border-collapse: unset;
-    text-align: center;
     font-size: 16px;
+    padding-right: 0;
+}
+
+.paymentlines .electronic_payment div:first-child {
+    flex-grow: 2;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+
+.paymentlines .electronic_payment div:last-child {
+    flex-grow: 1;
+    text-align: center;
 }
 
 .payment-status-container {
