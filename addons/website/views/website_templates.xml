@@ -244,6 +244,16 @@
     </xpath>
 </template>
 
+<template id="top_menu_search" name="Website Search">
+    <ul t-attf-class="nav navbar-nav {{classes}}" id="top_menu_search">
+        <li class="nav-item">
+            <a href="#" class="o_top_menu_search nav-link">
+                <i class="fa fa-search"/>
+            </a>
+        </li>
+    </ul>
+</template>
+
 <template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
     <xpath expr="//head" position="inside">
         <t t-raw="website.custom_code_head"/>
