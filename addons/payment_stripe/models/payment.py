@@ -16,6 +16,7 @@ from odoo.http import request
 from odoo.tools.float_utils import float_round
 from odoo.tools import consteq
 from odoo.exceptions import ValidationError
+from .stripe_request import StripeApi
 
 from odoo.addons.payment_stripe.controllers.main import StripeController
 
@@ -23,8 +24,8 @@ _logger = logging.getLogger(__name__)
 
 # The following currencies are integer only, see https://stripe.com/docs/currencies#zero-decimal
 INT_CURRENCIES = [
-    u'BIF', u'XAF', u'XPF', u'CLP', u'KMF', u'DJF', u'GNF', u'JPY', u'MGA', u'PYG', u'RWF', u'KRW',
-    u'VUV', u'VND', u'XOF'
+    'BIF', 'XAF', 'XPF', 'CLP', 'KMF', 'DJF', 'GNF', 'JPY', 'MGA', 'PYG', 'RWF', 'KRW',
+    'VUV', 'VND', 'XOF'
 ]
 STRIPE_SIGNATURE_AGE_TOLERANCE = 600  # in seconds
 
@@ -61,12 +62,16 @@ class PaymentAcquirerStripe(models.Model):
             'success_url': urls.url_join(base_url, StripeController._success_url) + '?reference=%s' % tx_values['reference'],
             'cancel_url': urls.url_join(base_url, StripeController._cancel_url) + '?reference=%s' % tx_values['reference'],
             'payment_intent_data[description]': tx_values['reference'],
+            'payment_intent_data[capture_method]': 'manual' if self.capture_manually else 'automatic',
             'customer_email': tx_values.get('partner_email') or tx_values.get('billing_partner_email'),
         }
 
         self._add_available_payment_method_types(stripe_session_data, tx_values)
 
-        tx_values['session_id'] = self.with_context(stripe_manual_payment=True)._create_stripe_session(stripe_session_data)
+        session = StripeApi(self).create_checkout_session(**stripe_session_data)
+        tx_values['session_id'] = session['id']
+        tx = self.env['payment.transaction'].sudo().search([('reference', '=', tx_values['reference'])])
+        tx.stripe_payment_intent = session['payment_intent']
 
         return tx_values
 
@@ -100,55 +105,6 @@ class PaymentAcquirerStripe(models.Model):
         for idx, payment_method_type in enumerate(available_payment_method_types):
             stripe_session_data[f'payment_method_types[{idx}]'] = payment_method_type
 
-    def _stripe_request(self, url, data=False, method='POST'):
-        self.ensure_one()
-        url = urls.url_join(self._get_stripe_api_url(), url)
-        headers = {
-            'AUTHORIZATION': 'Bearer %s' % self.sudo().stripe_secret_key,
-            'Stripe-Version': '2019-05-16', # SetupIntent need a specific version
-            }
-        resp = requests.request(method, url, data=data, headers=headers)
-        # Stripe can send 4XX errors for payment failure (not badly-formed requests)
-        # check if error `code` is present in 4XX response and raise only if not
-        # cfr https://stripe.com/docs/error-codes
-        # these can be made customer-facing, as they usually indicate a problem with the payment
-        # (e.g. insufficient funds, expired card, etc.)
-        # if the context key `stripe_manual_payment` is set then these errors will be raised as ValidationError,
-        # otherwise, they will be silenced, and the will be returned no matter the status.
-        # This key should typically be set for payments in the present and unset for automated payments
-        # (e.g. through crons)
-        if not resp.ok and self._context.get('stripe_manual_payment') and (400 <= resp.status_code < 500 and resp.json().get('error', {}).get('code')):
-            try:
-                resp.raise_for_status()
-            except HTTPError:
-                _logger.error(resp.text)
-                stripe_error = resp.json().get('error', {}).get('message', '')
-                error_msg = " " + (_("Stripe gave us the following info about the problem: '%s'", stripe_error))
-                raise ValidationError(error_msg)
-        return resp.json()
-
-    def _create_stripe_session(self, kwargs):
-        self.ensure_one()
-        resp = self._stripe_request('checkout/sessions', kwargs)
-        if resp.get('payment_intent') and kwargs.get('client_reference_id'):
-            tx = self.env['payment.transaction'].sudo().search([('reference', '=', kwargs['client_reference_id'])])
-            tx.stripe_payment_intent = resp['payment_intent']
-        if 'id' not in resp and 'error' in resp:
-            _logger.error(resp['error']['message'])
-        return resp['id']
-
-    def _create_setup_intent(self, kwargs):
-        self.ensure_one()
-        params = {
-            'usage': 'off_session',
-        }
-        _logger.info('_stripe_create_setup_intent: Sending values to stripe, values:\n%s', pprint.pformat(params))
-
-        res = self._stripe_request('setup_intents', params)
-
-        _logger.info('_stripe_create_setup_intent: Values received:\n%s', pprint.pformat(res))
-        return res
-
     @api.model
     def _get_stripe_api_url(self):
         return 'https://api.stripe.com/v1/'
@@ -168,7 +124,7 @@ class PaymentAcquirerStripe(models.Model):
             # yet another call -_-
             acquirer_id = self.env['payment.acquirer'].browse(int(data['acquirer_id']))
             pm = data.get('payment_method')
-            res = acquirer_id._stripe_request('payment_methods/%s' % pm, data=False, method='GET')
+            res = StripeApi(acquirer_id.sudo()).get_payment_method(pm)
             last4 = res.get('card', {}).get('last4', '****')
 
         payment_token = self.env['payment.token'].sudo().create({
@@ -190,6 +146,7 @@ class PaymentAcquirerStripe(models.Model):
         """
         res = super(PaymentAcquirerStripe, self)._get_feature_support()
         res['tokenize'].append('stripe')
+        res['authorize'].append('stripe')
         return res
 
     def _handle_stripe_webhook(self, data):
@@ -262,8 +219,7 @@ class PaymentAcquirerStripe(models.Model):
 
         PaymentAcquirerStripe._verify_stripe_signature(odoo_tx.acquirer_id)
 
-        url = 'payment_intents/%s' % odoo_tx.stripe_payment_intent
-        stripe_tx = odoo_tx.acquirer_id._stripe_request(url)
+        stripe_tx = StripeApi(odoo_tx.acquirer_id.sudo()).get_payment_intent(odoo_tx)
 
         if 'error' in stripe_tx:
             error = stripe_tx['error']
@@ -298,62 +254,39 @@ class PaymentTransactionStripe(models.Model):
         if data.get('reference') and acquirer_name == 'stripe':
             transaction = self.env['payment.transaction'].search([('reference', '=', data['reference'])])
 
-            url = 'payment_intents/%s' % transaction.stripe_payment_intent
-            resp = transaction.acquirer_id._stripe_request(url)
-            if resp.get('charges') and resp.get('charges').get('total_count'):
-                resp = resp.get('charges').get('data')[0]
+            res = StripeApi(transaction.acquirer_id).get_payment_intent(transaction)
 
-            data.update(resp)
+            data.update(res)
             _logger.info('Stripe: entering form_feedback with post data %s' % pprint.pformat(data))
         return super(PaymentTransactionStripe, self).form_feedback(data, acquirer_name)
 
-    def _stripe_create_payment_intent(self, acquirer_ref=None, email=None):
-        if not self.payment_token_id.stripe_payment_method:
-            # old token before using sca, need to fetch data from the api
-            self.payment_token_id._stripe_sca_migrate_customer()
-
-        charge_params = {
-            'amount': int(self.amount if self.currency_id.name in INT_CURRENCIES else float_round(self.amount * 100, 2)),
-            'currency': self.currency_id.name.lower(),
-            'off_session': True,
-            'confirm': True,
-            'payment_method': self.payment_token_id.stripe_payment_method,
-            'customer': self.payment_token_id.acquirer_ref,
-            "description": self.reference,
-        }
-        if not self.env.context.get('off_session'):
-            charge_params.update(setup_future_usage='off_session', off_session=False)
-        _logger.info('_stripe_create_payment_intent: Sending values to stripe, values:\n%s', pprint.pformat(charge_params))
-
-        res = self.acquirer_id._stripe_request('payment_intents', charge_params)
-        if res.get('charges') and res.get('charges').get('total_count'):
-            res = res.get('charges').get('data')[0]
-
-        _logger.info('_stripe_create_payment_intent: Values received:\n%s', pprint.pformat(res))
-        return res
-
     def stripe_s2s_do_transaction(self, **kwargs):
         self.ensure_one()
-        result = self._stripe_create_payment_intent(acquirer_ref=self.payment_token_id.acquirer_ref, email=self.partner_email)
+
+        capture_method = 'manual' if self.acquirer_id.capture_manually else 'automatic'
+        result = StripeApi(self.acquirer_id).create_payment_intent(self, capture_method=capture_method)
+
         return self._stripe_s2s_validate_tree(result)
 
-    def _create_stripe_refund(self):
+    def stripe_s2s_capture_transaction(self, **kwargs):
+        self.ensure_one()
 
-        refund_params = {
-            'charge': self.acquirer_reference,
-            'amount': int(float_round(self.amount * 100, 2)), # by default, stripe refund the full amount (we don't really need to specify the value)
-            'metadata[reference]': self.reference,
-        }
+        result = StripeApi(self.acquirer_id).capture_payment_intent(self)
 
-        _logger.info('_create_stripe_refund: Sending values to stripe URL, values:\n%s', pprint.pformat(refund_params))
-        res = self.acquirer_id._stripe_request('refunds', refund_params)
-        _logger.info('_create_stripe_refund: Values received:\n%s', pprint.pformat(res))
+        return self._stripe_s2s_validate_tree(result)
 
-        return res
+    def stripe_s2s_void_transaction(self, **kwargs):
+        self.ensure_one()
+
+        result = StripeApi(self.acquirer_id).cancel_payment_intent(self)
+
+        return self._stripe_s2s_validate_tree(result)
 
     def stripe_s2s_do_refund(self, **kwargs):
         self.ensure_one()
-        result = self._create_stripe_refund()
+
+        result = StripeApi(self.acquirer_id).create_refund(self)
+
         return self._stripe_s2s_validate_tree(result)
 
     @api.model
@@ -385,8 +318,14 @@ class PaymentTransactionStripe(models.Model):
         return tx[0]
 
     def _stripe_s2s_validate_tree(self, tree):
+        """
+        Update self according to its counterpart from Stripe
+
+        :param tree: the payment_intent from Stripe
+        :return: True if and only if everything went well
+        """
         self.ensure_one()
-        if self.state not in ("draft", "pending"):
+        if self.state == 'done':
             _logger.info('Stripe: trying to validate an already validated tx (ref %s)', self.reference)
             return True
 
@@ -400,10 +339,15 @@ class PaymentTransactionStripe(models.Model):
             "stripe_payment_intent": pi_id or tx_id,
             "stripe_payment_intent_secret": tx_secret
         }
-        if status == 'succeeded':
+        if status in ('succeeded', 'requires_capture'):
             self.write(vals)
-            self._set_transaction_done()
-            self.execute_callback()
+            init_state = self.state
+            if status == 'succeeded':
+                self._set_transaction_done()
+            else:
+                self._set_transaction_authorized()
+            if init_state != 'authorized':
+                self.execute_callback()
             if self.type == 'form_save':
                 s2s_data = {
                     'customer': tree.get('customer'),
@@ -423,8 +367,12 @@ class PaymentTransactionStripe(models.Model):
             return True
         if status == 'requires_payment_method':
             self._set_transaction_cancel()
-            self.acquirer_id._stripe_request('payment_intents/%s/cancel' % self.stripe_payment_intent)
+            StripeApi(self.acquirer_id).cancel_payment_intent(self)
             return False
+        if status == 'canceled':
+            self.write({'state_message': tree.get('cancellation_reason')})
+            self._set_transaction_cancel()
+            return True
         else:
             error = tree.get("failure_message") or tree.get('error', {}).get('message')
             self._set_transaction_error(error)
@@ -455,20 +403,12 @@ class PaymentTokenStripe(models.Model):
             partner_id = self.env['res.partner'].browse(values.get('partner_id'))
             payment_acquirer = self.env['payment.acquirer'].browse(values.get('acquirer_id'))
 
-            # create customer to stipe
-            customer_data = {
-                'email': partner_id.email
-            }
-            cust_resp = payment_acquirer._stripe_request('customers', customer_data)
+            stripe_api = StripeApi(payment_acquirer)
+            customer_res = stripe_api.create_customer(email=partner_id.email)
+            stripe_api.attach_payment_method(values['stripe_payment_method'], customer_res.get('id'))
 
-            # link customer with payment method
-            api_url_payment_method = 'payment_methods/%s/attach' % values['stripe_payment_method']
-            method_data = {
-                'customer': cust_resp.get('id')
-            }
-            payment_acquirer._stripe_request(api_url_payment_method, method_data)
             return {
-                'acquirer_ref': cust_resp['id'],
+                'acquirer_ref': customer_res['id'],
             }
         return values
 
@@ -484,8 +424,8 @@ class PaymentTokenStripe(models.Model):
         This conversion will happen once per token, the first time it gets used following
         the installation of the module."""
         self.ensure_one()
-        url = "customers/%s" % (self.acquirer_ref)
-        data = self.acquirer_id._stripe_request(url, method="GET")
+        stripe_api = StripeApi(self.acquirer_id)
+        data = stripe_api.get_customer(self.acquirer_ref)
         sources = data.get('sources', {}).get('data', [])
         pm_ref = False
         if sources:
@@ -493,12 +433,7 @@ class PaymentTokenStripe(models.Model):
                 _logger.warning('stripe sca customer conversion: there should be a single saved source per customer!')
             pm_ref = sources[0].get('id')
         else:
-            url = 'payment_methods'
-            params = {
-                'type': 'card',
-                'customer': self.acquirer_ref,
-            }
-            payment_methods = self.acquirer_id._stripe_request(url, params, method='GET')
+            payment_methods = stripe_api.list_payment_methods(customer=self.acquirer_ref)
             cards = payment_methods.get('data', [])
             if len(cards) > 1:
                 _logger.warning('stripe sca customer conversion: there should be a single saved source per customer!')

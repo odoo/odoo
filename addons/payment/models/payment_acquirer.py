@@ -713,8 +713,12 @@ class PaymentTransaction(models.Model):
         elif self.state == 'authorized':
             message = _('The transaction %s with %s for %s has been authorized. Waiting for capture...')
         elif self.state == 'done':
-            message = _('The transaction %s with %s for %s has been confirmed. The related payment is posted: %s')
-            message_vals.append(self.payment_id._get_payment_chatter_link())
+            message = _('The transaction %s with %s for %s has been confirmed.')
+            if self.payment_id:
+                message += _(" The related payment is posted: %s")
+                message_vals.append(self.payment_id._get_payment_chatter_link())
+            else:
+                message += _(" Waiting for reconciliation...")
         elif self.state == 'cancel' and self.state_message:
             message = _('The transaction %s with %s for %s has been cancelled with the following message: %s')
             message_vals.append(self.state_message)
@@ -809,6 +813,7 @@ class PaymentTransaction(models.Model):
             'date': fields.Datetime.now(),
             'state_message': '',
         })
+        tx_to_process._log_payment_transaction_received()
 
     def _reconcile_after_transaction_done(self):
         # Validate invoices automatically upon the transaction is posted.

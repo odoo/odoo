@@ -7,6 +7,7 @@ from unittest.mock import patch
 from . import stripe_mocks
 from ..models.payment import STRIPE_SIGNATURE_AGE_TOLERANCE
 from odoo.tools import mute_logger
+from ..models.stripe_request import StripeApi
 
 
 class StripeCommon(PaymentAcquirerCommon):
@@ -35,7 +36,9 @@ class StripeCommon(PaymentAcquirerCommon):
 class StripeTest(StripeCommon):
 
     def run(self, result=None):
-        with mute_logger('odoo.addons.payment.models.payment_acquirer', 'odoo.addons.payment_stripe.models.payment'):
+        with mute_logger('odoo.addons.payment.models.payment_acquirer',
+                         'odoo.addons.payment_stripe.models.payment',
+                         'odoo.addons.payment_stripe.models.stripe_request'):
             StripeCommon.run(self, result)
 
     def test_10_stripe_s2s(self):
@@ -53,7 +56,7 @@ class StripeTest(StripeCommon):
         tx.with_context(off_session=True).stripe_s2s_do_transaction()
 
         # Check state
-        self.assertEqual(tx.state, 'done', 'Stripe: Transcation has been discarded.')
+        self.assertEqual(tx.state, 'done', 'Stripe: Transaction has been discarded.')
 
     def test_20_stripe_form_render(self):
         self.assertEqual(self.stripe.state, 'test', 'test without test environment')
@@ -77,8 +80,8 @@ class StripeTest(StripeCommon):
             'partner_country_id': self.country_france.id,
             'payment_token_id': self.token.id,
         })
-        res = tx.with_context(off_session=True)._stripe_create_payment_intent()
-        tx.stripe_payment_intent = res.get('payment_intent')
+        res = StripeApi(tx.acquirer_id).create_payment_intent(tx.with_context(off_session=True))
+        tx.stripe_payment_intent = res.get('id')
 
         # typical data posted by Stripe after client has successfully paid
         stripe_post_data = {'reference': ref}
@@ -114,8 +117,7 @@ class StripeTest(StripeCommon):
         self.assertEqual({'card'}, actual)
 
     def test_discarded_webhook(self):
-        with self.assertRaises(ValidationError):
-            self.env['payment.acquirer']._handle_stripe_webhook(dict(type='payment.intent.succeeded'))
+        self.assertFalse(self.env['payment.acquirer']._handle_stripe_webhook(dict(type='payment.intent.succeeded')))
 
     def test_handle_checkout_webhook_no_secret(self):
         self.stripe.stripe_webhook_secret = None
@@ -140,8 +142,8 @@ class StripeTest(StripeCommon):
             'type': 'server2server',
             'amount': 30
         })
-        res = tx.with_context(off_session=True)._stripe_create_payment_intent()
-        tx.stripe_payment_intent = res.get('payment_intent')
+        res = StripeApi(self.stripe).create_payment_intent(tx.with_context(off_session=True))
+        tx.stripe_payment_intent = res.get('id')
         stripe_object = stripe_mocks.checkout_session_object
 
         actual = self.stripe._handle_checkout_webhook(stripe_object)
@@ -165,7 +167,7 @@ class StripeTest(StripeCommon):
             'type': 'server2server',
             'amount': 10
         })
-        wrong_amount_stripe_payment_intent = bad_tx.with_context(off_session=True)._stripe_create_payment_intent()
+        wrong_amount_stripe_payment_intent = StripeApi(self.stripe).create_payment_intent(bad_tx.with_context(off_session=True))
         tx = self.env['payment.transaction'].create({
             'reference': 'tx_ref_test_handle_checkout_webhook',
             'currency_id': self.currency_euro.id,
@@ -175,7 +177,7 @@ class StripeTest(StripeCommon):
             'type': 'server2server',
             'amount': 30
         })
-        tx.stripe_payment_intent = wrong_amount_stripe_payment_intent.get('payment_intent')
+        tx.stripe_payment_intent = wrong_amount_stripe_payment_intent.get('id')
         stripe_object = stripe_mocks.checkout_session_object
 
         actual = self.env['payment.acquirer']._handle_checkout_webhook(stripe_object)

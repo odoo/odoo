@@ -25,7 +25,7 @@
                 <t t-if="invoice.state == 'posted' and last_tx.state == 'pending' and last_tx.acquirer_id.provider not in ('transfer', 'manual')">
                   <span class="badge badge-pill badge-warning"><span class="d-none d-md-inline"> Pending</span></span>
                 </t>
-                <t t-if="invoice.state == 'posted' and invoice.payment_state == 'paid' or last_tx.state == 'done'">
+                <t t-if="invoice.state == 'posted' and invoice.payment_state == 'paid'">
                     <span class="badge badge-pill badge-success"><i class="fa fa-fw fa-check"></i><span class="d-none d-md-inline"> Paid</span></span>
                 </t>
                 <t t-if="invoice.state == 'cancel'">
@@ -70,14 +70,18 @@
         <xpath expr="//t[@t-call='portal.portal_record_sidebar']//div[hasclass('o_download_pdf')]" position="before">
             <t t-set="tx_ids" t-value="invoice.transaction_ids.filtered(lambda tx: tx.state in ('pending', 'authorized', 'done'))"/>
             <t t-set="pending_manual_txs" t-value="tx_ids.filtered(lambda tx: tx.state == 'pending' and tx.acquirer_id.provider in ('transfer', 'manual'))"/>
+            <t t-set="last_tx" t-value="invoice.get_portal_last_transaction()"/>
             <div>
                 <a href="#" t-if="invoice.state == 'posted' and invoice.payment_state in ('not_paid', 'partial') and invoice.amount_total and invoice.move_type == 'out_invoice' and (pending_manual_txs or not tx_ids)"
 
                     class="btn btn-primary btn-block mb-2" data-toggle="modal" data-target="#pay_with">
                     <i class="fa fa-fw fa-arrow-circle-right"/> Pay Now
                 </a>
-                <div t-if="tx_ids and not pending_manual_txs and invoice.payment_state != 'paid'" class="alert alert-info py-1 mb-2" >
+                <div t-if="tx_ids and not pending_manual_txs and invoice.payment_state != 'paid' and last_tx.state not in ('authorized', 'done')" class="alert alert-info py-1 mb-2" >
                     <i class="fa fa-fw fa-check-circle"/> Pending
+                </div>
+                <div t-if="tx_ids and not pending_manual_txs and invoice.payment_state != 'paid' and last_tx.state == 'authorized'" class="alert alert-info py-1 mb-2" >
+                    <i class="fa fa-fw fa-check-circle"/> Authorized
                 </div>
                 <div t-if="invoice.payment_state == 'paid'" class="alert alert-success py-1 mb-2" >
                     <i class="fa fa-fw fa-check-circle"/> Paid
