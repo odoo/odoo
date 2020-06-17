@@ -172,11 +172,15 @@ class Theme(models.AbstractModel):
                 'navbar-font': 'null',
                 'buttons-font': 'null',
                 'color-palettes-number': 'null',
+                'btn-ripple': 'null',
                 'preheader-template': 'null',
                 'header-template': 'null',
                 'footer-template': 'null',
             }
         )
+
+        # Reinitialize effets
+        self.disable_view('website.option_ripple_effect')
 
         # Reinitialize preheader templates
         self.disable_view('website.template_preheader_magazine')
