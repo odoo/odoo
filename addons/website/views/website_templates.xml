@@ -721,6 +721,16 @@
 <template id="pager" name="Pager" inherit_id="portal.pager">
 </template>
 
+<!-- Effect options -->
+<template id="option_ripple_effect" inherit_id="website.assets_frontend" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/ripple_effect.scss"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/website/static/src/js/content/ripple_effect.js"/>
+    </xpath>
+</template>
+
 <!-- Layout options -->
 <template id="option_layout_boxed_variables" inherit_id="website._assets_primary_variables" active="False">
     <xpath expr="//link[last()]" position="after">
