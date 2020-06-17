@@ -891,9 +891,9 @@
         <we-checkbox string="Show Header"
                      data-customize-website-views="website.option_layout_hide_header|"
                      data-reload="/"/>
-        <we-select string="Layout">
-            <we-button data-customize-website-views="" data-name="layout_full_opt">Full</we-button>
-            <we-button data-customize-website-views="website.option_layout_boxed_variables" id="option_layout_boxed">Boxed</we-button>
+        <we-select string="Layout" data-variable="layout">
+            <we-button data-customize-website-variable="'full'" data-name="layout_full_opt">Full</we-button>
+            <we-button data-customize-website-variable="'boxed'">Boxed</we-button>
         </we-select>
         <we-row string="⌙ Background" data-no-preview="true">
             <we-colorpicker data-dependencies="!layout_full_opt"
