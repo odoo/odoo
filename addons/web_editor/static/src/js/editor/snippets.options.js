@@ -875,40 +875,22 @@ const ButtonGroupUserValueWidget = BaseSelectionUserValueWidget.extend({
     tagName: 'we-button-group',
 });
 
-const InputUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-input',
-    events: {
-        'input input': '_onInputInput',
-        'blur input': '_onInputBlur',
-        'keydown input': '_onInputKeydown',
-    },
-
+const UnitUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         const unit = this.el.dataset.unit || '';
         this.el.dataset.unit = unit;
         if (this.el.dataset.saveUnit === undefined) {
             this.el.dataset.saveUnit = unit;
         }
 
-        this.inputEl = document.createElement('input');
-        this.inputEl.setAttribute('type', 'text');
-        this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
-        this.inputEl.classList.toggle('text-left', !unit);
-        this.inputEl.classList.toggle('text-right', !!unit);
-        this.containerEl.appendChild(this.inputEl);
-
-        var unitEl = document.createElement('span');
-        unitEl.textContent = unit;
-        this.containerEl.appendChild(unitEl);
-
         return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
@@ -978,10 +960,7 @@ const InputUserValueWidget = UserValueWidget.extend({
                 return this._floatToStr(numValue);
             }).join(' ');
         }
-
-        await this._super(value, methodName);
-
-        this.inputEl.value = this._value;
+        return this._super(value, methodName);
     },
 
     //--------------------------------------------------------------------------
@@ -989,7 +968,7 @@ const InputUserValueWidget = UserValueWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Converts a floating value to a string, rounded to 3 digits without zeros.
+     * Converts a floating value to a string, rounded to 5 digits without zeros.
      *
      * @private
      * @param {number} value
@@ -997,6 +976,46 @@ const InputUserValueWidget = UserValueWidget.extend({
      */
     _floatToStr: function (value) {
         return `${parseFloat(value.toFixed(5))}`;
+    },
+});
+
+const InputUserValueWidget = UnitUserValueWidget.extend({
+    tagName: 'we-input',
+    events: {
+        'input input': '_onInputInput',
+        'blur input': '_onInputBlur',
+        'keydown input': '_onInputKeydown',
+    },
+
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+
+        const unit = this.el.dataset.unit;
+        this.inputEl = document.createElement('input');
+        this.inputEl.setAttribute('type', 'text');
+        this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
+        this.inputEl.classList.toggle('text-left', !unit);
+        this.inputEl.classList.toggle('text-right', !!unit);
+        this.containerEl.appendChild(this.inputEl);
+
+        var unitEl = document.createElement('span');
+        unitEl.textContent = unit;
+        this.containerEl.appendChild(unitEl);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async setValue() {
+        await this._super(...arguments);
+        this.inputEl.value = this._value;
     },
 
     //--------------------------------------------------------------------------
@@ -1550,7 +1569,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     },
 });
 
-const RangeUserValueWidget = UserValueWidget.extend({
+const RangeUserValueWidget = UnitUserValueWidget.extend({
     tagName: 'we-range',
     events: {
         'change input': '_onInputChange',
@@ -1563,6 +1582,16 @@ const RangeUserValueWidget = UserValueWidget.extend({
         await this._super(...arguments);
         this.input = document.createElement('input');
         this.input.type = "range";
+        let min = this.el.dataset.min && parseFloat(this.el.dataset.min) || 0;
+        let max = this.el.dataset.max && parseFloat(this.el.dataset.max) || 100;
+        const step = this.el.dataset.step && parseFloat(this.el.dataset.step) || 1;
+        if (min > max) {
+            [min, max] = [max, min];
+            this.input.classList.add('o_we_inverted_range');
+        }
+        this.input.setAttribute('min', min);
+        this.input.setAttribute('max', max);
+        this.input.setAttribute('step', step);
         this.containerEl.appendChild(this.input);
     },
 
@@ -1573,9 +1602,9 @@ const RangeUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    setValue(value, methodName) {
-        this.input.value = value;
-        return this._super(...arguments);
+    async setValue(value, methodName) {
+        await this._super(...arguments);
+        this.input.value = this._value;
     },
 
     //--------------------------------------------------------------------------
@@ -4356,6 +4385,7 @@ return {
     NULL_ID: NULL_ID,
     UserValueWidget: UserValueWidget,
     userValueWidgetsRegistry: userValueWidgetsRegistry,
+    UnitUserValueWidget: UnitUserValueWidget,
 
     addTitleAndAllowedAttributes: _addTitleAndAllowedAttributes,
     buildElement: _buildElement,
