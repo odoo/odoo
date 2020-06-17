@@ -72,7 +72,7 @@ $-seen-urls: ();
         }
     }
 
-    @if o-website-value('layout') == 'boxed' {
+    @if o-website-value('layout') != 'full' {
         > main {
             background-color: o-color('o-cc1-bg');
         }
@@ -107,6 +107,13 @@ $-seen-urls: ();
                         padding-right: 0;
                     }
                 }
+            }
+        }
+
+        @if o-website-value('layout') == 'framed' {
+            @include media-breakpoint-up(md) {
+                padding-top: $grid-gutter-width;
+                padding-bottom: $grid-gutter-width * 1.5;
             }
         }
     }
