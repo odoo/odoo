@@ -598,7 +598,7 @@ class ResCompany(models.Model):
         self.ensure_one()
 
         fiscal_country_key = 'account_fiscal_country_%s' % self.id
-        forced_country_code = self.env['ir.config_parameter'].get_param(fiscal_country_key)
+        forced_country_code = self.env['ir.config_parameter'].sudo().get_param(fiscal_country_key)
         forced_country = forced_country_code and self.env['res.country'].search([('code', 'ilike', forced_country_code)], limit=1)
 
         return forced_country or self.country_id
