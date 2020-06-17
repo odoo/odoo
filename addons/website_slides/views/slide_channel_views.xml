@@ -102,8 +102,9 @@
                                 <group>
                                     <group name="communication" string="Communication">
                                         <field string="Allow Rating" name="allow_comment"/>
-                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
+                                        <field name="publish_template_id" domain="[('model','=','slide.slide')]"/>
                                         <field name="share_template_id" domain="[('model','=','slide.slide')]" groups="base.group_no_one"/>
+                                        <field name="completed_template_id"/>
                                     </group>
                                     <group name="display" string="Display">
                                         <field name="visibility" widget="radio"/>
