@@ -629,6 +629,27 @@
                        string="Fade Out"/>
         </we-select>
 
+        <we-select string="Navbar Links Style" data-variable="header-links-style" data-reload="/">
+            <we-button data-name="option_header_navbar_links_default"
+                       data-customize-website-views=""
+                       data-customize-website-variable="'default'">Default</we-button>
+            <we-button data-name="option_header_navbar_links_fill"
+                       data-customize-website-views="website.header_navbar_pills_style"
+                       data-customize-website-variable="'fill'">Fill</we-button>
+            <we-button data-name="option_header_navbar_links_outline"
+                       data-customize-website-views=""
+                       data-customize-website-variable="'outline'">Outline</we-button>
+            <we-button data-name="option_header_navbar_links_pills"
+                       data-customize-website-views="website.header_navbar_pills_style"
+                       data-customize-website-variable="'pills'">Pills</we-button>
+            <we-button data-name="option_header_navbar_block"
+                       data-customize-website-views="website.header_navbar_pills_style"
+                       data-customize-website-variable="'block'">Block</we-button>
+            <we-button data-name="option_header_navbar_border_bottom"
+                       data-customize-website-views=""
+                       data-customize-website-variable="'border-bottom'">Border Bottom</we-button>
+        </we-select>
+
         <we-select id="option_header_dropdown" string="Sub Menus" data-dependencies="!header_hamburger_opt" data-no-preview="true">
             <we-button data-select-class="o_hoverable_dropdown"
                        data-customize-website-views="website.header_hoverable_dropdown">On Hover</we-button>
