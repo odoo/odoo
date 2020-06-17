@@ -19,7 +19,7 @@ class AttachmentViewer extends Component {
         super(...args);
         this.MIN_SCALE = MIN_SCALE;
         useStore(props => {
-            const attachmentViewer = this.env.messaging.attachmentViewer;
+            const attachmentViewer = this.env.models['mail.attachment_viewer'].get(props.localId);
             return {
                 attachment: attachmentViewer && attachmentViewer.attachment
                     ? attachmentViewer.attachment.__state
@@ -89,7 +89,7 @@ class AttachmentViewer extends Component {
      * @returns {mail.attachment_viewer}
      */
     get attachmentViewer() {
-        return this.env.messaging.attachmentViewer;
+        return this.env.models['mail.attachment_viewer'].get(this.props.localId);
     }
 
     /**
@@ -136,7 +136,7 @@ class AttachmentViewer extends Component {
      * @private
      */
     _close() {
-        this.attachmentViewer.delete();
+        this.attachmentViewer.close();
     }
 
     /**
@@ -582,7 +582,9 @@ class AttachmentViewer extends Component {
 }
 
 Object.assign(AttachmentViewer, {
-    props: {},
+    props: {
+        localId: String,
+    },
     template: 'mail.AttachmentViewer',
 });
 
