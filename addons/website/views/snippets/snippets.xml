@@ -696,6 +696,19 @@
                 data-customize-website-views="website.footer_no_copyright|portal.footer_language_selector"
                 data-no-preview="true"
                 data-reload="/"/>
+
+        <we-row string="Scroll Top Button">
+            <we-checkbox data-name="footer_scrolltop_opt"
+                         data-customize-website-views="website.option_footer_scrolltop"
+                         data-customize-website-variable="false|true"
+                         data-variable="footer-scrolltop"
+                         data-reload="/"/>
+            <we-select data-dependencies="footer_scrolltop_opt" data-apply-to="#o_footer_scrolltop_wrapper">
+                <we-button string="Left" data-select-class="justify-content-start"/>
+                <we-button string="Center" data-select-class="justify-content-center"/>
+                <we-button string="Right" data-select-class="justify-content-end"/>
+            </we-select>
+        </we-row>
     </div>
 
     <div data-js="HideFooter"

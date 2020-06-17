@@ -557,6 +557,20 @@
     </xpath>
 </template>
 
+<template id="option_footer_scrolltop" inherit_id="website.layout" active="False">
+    <xpath expr="//div[@id='footer']" position="after">
+        <div id="o_footer_scrolltop_wrapper" class="container h-0 d-flex align-items-center justify-content-center">
+            <a id="o_footer_scrolltop"
+               role="button"
+               href="#top"
+               title="Scroll To Top"
+               class="btn btn-primary rounded-circle d-flex align-items-center justify-content-center">
+                <span class="fa fa-1x fa-chevron-up"/>
+            </a>
+        </div>
+    </xpath>
+</template>
+
 <template id="cookies_bar" inherit_id="website.layout" name="Cookies Bar">
     <xpath expr="//footer" position="after">
         <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible" data-name="Cookies Bar" data-vcss="001" data-invisible="1">

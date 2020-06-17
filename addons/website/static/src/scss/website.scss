@@ -141,6 +141,7 @@ $-header-nav-link-height: $nav-link-height;
         @include o-apply-colors('copyright', $background: o-color('footer'));
     }
 }
+
 h2, h3, h4, h5, h6 {
     color: color('o-cc1-h2');
 }
@@ -886,6 +887,32 @@ header {
     margin-right: 0.2em;
     border-radius: $rounded-pill;
     vertical-align: top;
+}
+
+// Footer scrolltop button
+@if o-website-value('footer-scrolltop') {
+    #o_footer_scrolltop {
+        $-footer-color: o-color('footer');
+        $-copyright-color: o-color('copyright');
+        $-copyright-color: mix(rgba($-copyright-color, 1.0), $-footer-color, percentage(alpha($-copyright-color)));
+
+        box-sizing: content-box;
+        width: 3rem;
+        height: 3rem;
+        border: 0;
+        padding: 0;
+        @include o-apply-colors('footer', $with-extras: false, $background: $-footer-color);
+        text-decoration: none;
+
+        @if $-footer-color == $-copyright-color {
+            color: rgba(color-yiq($-footer-color), 0.5);
+        }
+
+        @include hover-focus {
+            @include o-apply-colors($-copyright-color, $with-extras: false, $background: $-footer-color);
+            text-decoration: none;
+        }
+    }
 }
 
 // Figure with special style
