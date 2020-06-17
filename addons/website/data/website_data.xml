@@ -698,6 +698,70 @@
             <field name="type">url</field>
             <field name="url">/website/static/src/img/snippets_demo/s_popup.jpg</field>
         </record>
+
+        <!-- Filter for Dynamic Snippet -->
+        <record id="dynamic_snippet_country_filter" model="ir.filters">
+            <field name="name">Countries</field>
+            <field name="model_id">res.country</field>
+            <field name="user_id" eval="False" />
+        </record>
+        <!-- Template for Dynamic Snippet -->
+        <template id="dynamic_filter_template_image_title_footer" name="Image Title Footer Card">
+            <t t-foreach="records" t-as="record">
+                <t t-set="fields" t-value="list(record['fields'].values())"/>
+                <t t-set="fieldsImg" t-value="list(record['image_fields'].values())"/>
+                <div class="card h-100" t-att-data-url="record['fields']['call_to_action_url']">
+                    <img t-if="len(fieldsImg) > 0" class="card-img-top p-3" loading="lazy" t-att-src="fieldsImg[0]"/>
+                    <div class="card-body">
+                        <h5 t-if="len(fields) > 0" class="card-title">
+                            <t t-raw="fields[0]"/>
+                        </h5>
+                        <div t-if="len(fields) > 1" class="card-text">
+                            <t t-raw="fields[1]"/>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center">
+                        <div t-if="len(fields) > 2" class="card-text">
+                            <t t-raw="fields[2]"/>
+                        </div>
+                        <a t-if="call_to_action" class="btn btn-primary ml-auto" t-att-href="record['fields']['call_to_action_url']">
+                            <i class="fa fa-fw fa-eye"/>
+                        </a>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <template id="dynamic_filter_template_header_image_footer_card" name="Header Image Footer Card">
+            <t t-foreach="records" t-as="record">
+                <t t-set="fields" t-value="list(record['fields'].values())"/>
+                <t t-set="fieldsImg" t-value="list(record['image_fields'].values())"/>
+                <div class="card h-100" t-att-data-url="record['fields']['call_to_action_url']">
+                    <h5 t-if="len(fields) > 0" class="card-header">
+                        <t t-raw="fields[0]"/>
+                    </h5>
+                    <div class="card-body">
+                        <img t-if="len(fieldsImg) > 0" class="card-img-top p-3" loading="lazy" t-att-src="fieldsImg[0]"/>
+                        <div t-if="len(fields) > 1" class="card-text">
+                            <t t-raw="fields[1]"/>
+                        </div>
+                    </div>
+                    <div class="card-footer d-flex align-items-center">
+                        <div t-if="len(fields) > 2" class="card-text">
+                            <t t-raw="fields[2]"/>
+                        </div>
+                    </div>
+                </div>
+            </t>
+        </template>
+        <!-- Dynamic Snippet Data Source -->
+        <record id="dynamic_snippet_data_source_country" model="website.snippet.filter">
+            <field name="field_names">name,code,image,phone_code</field>
+            <field name="filter_id" ref="website.dynamic_snippet_country_filter"/>
+            <field name="limit" eval="16"/>
+            <field name="name">Countries</field>
+            <field name="website_id" ref="website.default_website"/>
+        </record>
+
     </data>
     <data>
         <record id="group_multi_website" model="res.groups">
