@@ -1753,21 +1753,23 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         :rtype: list
         :return: list of pairs ``(id, text_repr)`` for all matching records.
         """
-        return self._name_search(name, args, operator, limit=limit)
+        ids = self._name_search(name, args, operator, limit=limit)
+        return self.browse(ids).sudo().name_get()
 
     @api.model
     def _name_search(self, name='', args=None, operator='ilike', limit=100, name_get_uid=None):
-        # private implementation of name_search, allows passing a dedicated user
-        # for the name_get part to solve some access rights issues
+        """ _name_search(name='', args=None, operator='ilike', limit=100, name_get_uid=None) -> ids
+
+        Private implementation of name_search, allows passing a dedicated user
+        for the name_get part to solve some access rights issues.
+        """
         args = list(args or [])
         # optimize out the default criterion of ``ilike ''`` that matches everything
         if not self._rec_name:
             _logger.warning("Cannot execute name_search, no _rec_name defined on %s", self._name)
         elif not (name == '' and operator == 'ilike'):
             args += [(self._rec_name, operator, name)]
-        ids = self._search(args, limit=limit, access_rights_uid=name_get_uid)
-        recs = self.browse(ids)
-        return lazy_name_get(recs.with_user(name_get_uid))
+        return self._search(args, limit=limit, access_rights_uid=name_get_uid)
 
     @api.model
     def _add_missing_default_values(self, values):

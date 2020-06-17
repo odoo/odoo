@@ -371,8 +371,7 @@ class ProductTemplateAttributeLine(models.Model):
         if name and operator in ('=', 'ilike', '=ilike', 'like', '=like'):
             args = args or []
             domain = ['|', ('attribute_id', operator, name), ('value_ids', operator, name)]
-            attribute_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-            return models.lazy_name_get(self.browse(attribute_ids).with_user(name_get_uid))
+            return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         return super(ProductTemplateAttributeLine, self)._name_search(name=name, args=args, operator=operator, limit=limit, name_get_uid=name_get_uid)
 
     def _without_no_variant_attributes(self):
