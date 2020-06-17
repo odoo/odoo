@@ -447,24 +447,6 @@ def check_leaf(element, internal=False):
 # SQL utils
 # --------------------------------------------------
 
-def select_from_where(cr, select_field, from_table, where_field, where_ids, where_operator):
-    # todo: merge into parent query as sub-query
-    res = []
-    if where_ids:
-        if where_operator in ['<', '>', '>=', '<=']:
-            cr.execute('SELECT DISTINCT "%s" FROM "%s" WHERE "%s" %s %%s' % \
-                (select_field, from_table, where_field, where_operator),
-                (where_ids[0],))  # TODO shouldn't this be min/max(where_ids) ?
-            res = [r[0] for r in cr.fetchall()]
-        else:  # TODO where_operator is supposed to be 'in'? It is called with child_of...
-            for i in range(0, len(where_ids), cr.IN_MAX):
-                subids = where_ids[i:i + cr.IN_MAX]
-                cr.execute('SELECT DISTINCT "%s" FROM "%s" WHERE "%s" IN %%s' % \
-                    (select_field, from_table, where_field), (tuple(subids),))
-                res.extend([r[0] for r in cr.fetchall()])
-    return res
-
-
 def get_unaccent_wrapper(cr):
     if odoo.registry(cr.dbname).has_unaccent:
         return lambda x: "unaccent(%s)" % (x,)
@@ -816,18 +798,18 @@ class expression(object):
                     if ids2 and inverse_is_int and domain:
                         ids2 = comodel.search([('id', 'in', ids2)] + domain, order='id').ids
 
-                    # determine ids1 in model related to ids2
-                    if not ids2:
-                        ids1 = []
-                    elif comodel._fields[field.inverse_name].store:
-                        ids1 = select_from_where(cr, field.inverse_name, comodel._table, 'id', ids2, operator)
+                    if ids2 and comodel._fields[field.inverse_name].store:
+                        op1 = 'not inselect' if operator in NEGATIVE_TERM_OPERATORS else 'inselect'
+                        subquery = 'SELECT "%s" FROM "%s" WHERE "id" IN %%s' % (field.inverse_name, comodel._table)
+                        subparams = [tuple(ids2)]
+                        push(('id', op1, (subquery, subparams)), model, alias, internal=True)
                     else:
+                        # determine ids1 in model related to ids2
                         recs = comodel.browse(ids2).sudo().with_context(prefetch_fields=False)
                         ids1 = unwrap_inverse(recs.mapped(field.inverse_name))
-
-                    # rewrite condition in terms of ids1
-                    op1 = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
-                    push(('id', op1, ids1), model, alias)
+                        # rewrite condition in terms of ids1
+                        op1 = 'not in' if operator in NEGATIVE_TERM_OPERATORS else 'in'
+                        push(('id', op1, ids1), model, alias)
 
                 else:
                     if comodel._fields[field.inverse_name].store and not (inverse_is_int and domain):
