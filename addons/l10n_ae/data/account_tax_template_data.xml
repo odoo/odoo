@@ -828,7 +828,7 @@
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base'),ref('tax_report_line_standard_rated_expense_base')],
+                'plus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
             }),
             (0,0, {
                 'factor_percent': -100,
@@ -840,14 +840,13 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('uae_account_3726'),
-                'plus_report_line_ids': [ref('tax_report_line_standard_rated_expense_vat')],
             }),
         ]"/>
         <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
             (0,0, {
                 'factor_percent': 100,
                 'repartition_type': 'base',
-                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base'),ref('tax_report_line_standard_rated_expense_base')],
+                'minus_report_line_ids': [ref('tax_report_line_expense_supplies_reverse_base')],
             }),
             (0,0, {
                 'factor_percent': -100,
@@ -859,7 +858,6 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('uae_account_3726'),
-                'minus_report_line_ids': [ref('tax_report_line_standard_rated_expense_vat')],
             }),
         ]"/>
     </record>
