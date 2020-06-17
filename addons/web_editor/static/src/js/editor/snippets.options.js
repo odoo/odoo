@@ -763,40 +763,22 @@ const SelectUserValueWidget = UserValueWidget.extend({
     },
 });
 
-const InputUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-input',
-    events: {
-        'input input': '_onInputInput',
-        'blur input': '_onInputBlur',
-        'keydown input': '_onInputKeydown',
-    },
-
+const UnitUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
         const unit = this.el.dataset.unit || '';
         this.el.dataset.unit = unit;
         if (this.el.dataset.saveUnit === undefined) {
             this.el.dataset.saveUnit = unit;
         }
 
-        this.inputEl = document.createElement('input');
-        this.inputEl.setAttribute('type', 'text');
-        this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
-        this.inputEl.classList.toggle('text-left', !unit);
-        this.inputEl.classList.toggle('text-right', !!unit);
-        this.containerEl.appendChild(this.inputEl);
-
-        var unitEl = document.createElement('span');
-        unitEl.textContent = unit;
-        this.containerEl.appendChild(unitEl);
-
         return this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
@@ -877,14 +859,7 @@ const InputUserValueWidget = UserValueWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @override
-     */
-    _updateUI: async function () {
-        await this._super(...arguments);
-        this.inputEl.value = this._value;
-    },
-    /**
-     * Converts a floating value to a string, rounded to 3 digits without zeros.
+     * Converts a floating value to a string, rounded to 5 digits without zeros.
      *
      * @private
      * @param {number} value
@@ -892,6 +867,46 @@ const InputUserValueWidget = UserValueWidget.extend({
      */
     _floatToStr: function (value) {
         return `${parseFloat(value.toFixed(5))}`;
+    },
+});
+
+const InputUserValueWidget = UnitUserValueWidget.extend({
+    tagName: 'we-input',
+    events: {
+        'input input': '_onInputInput',
+        'blur input': '_onInputBlur',
+        'keydown input': '_onInputKeydown',
+    },
+
+    /**
+     * @override
+     */
+    start: async function () {
+        await this._super(...arguments);
+
+        const unit = this.el.dataset.unit;
+        this.inputEl = document.createElement('input');
+        this.inputEl.setAttribute('type', 'text');
+        this.inputEl.setAttribute('placeholder', this.el.getAttribute('placeholder') || '');
+        this.inputEl.classList.toggle('text-left', !unit);
+        this.inputEl.classList.toggle('text-right', !!unit);
+        this.containerEl.appendChild(this.inputEl);
+
+        var unitEl = document.createElement('span');
+        unitEl.textContent = unit;
+        this.containerEl.appendChild(unitEl);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _updateUI: async function () {
+        await this._super(...arguments);
+        this.inputEl.value = this._value;
     },
 
     //--------------------------------------------------------------------------
@@ -1430,7 +1445,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     },
 });
 
-const RangeUserValueWidget = UserValueWidget.extend({
+const RangeUserValueWidget = UnitUserValueWidget.extend({
     tagName: 'we-range',
     events: {
         'change input': '_onInputChange',
@@ -1444,6 +1459,15 @@ const RangeUserValueWidget = UserValueWidget.extend({
         this.input = document.createElement('input');
         this.input.type = "range";
         this.input.className = "custom-range";
+        if (this.el.dataset.min) {
+            this.input.setAttribute('min', this.el.dataset.min);
+        }
+        if (this.el.dataset.max) {
+            this.input.setAttribute('max', this.el.dataset.max);
+        }
+        if (this.el.dataset.step) {
+            this.input.setAttribute('step', this.el.dataset.step);
+        }
         this.containerEl.appendChild(this.input);
     },
 
@@ -1455,8 +1479,8 @@ const RangeUserValueWidget = UserValueWidget.extend({
      * @override
      */
     setValue(value, methodName) {
-        this.input.value = value;
-        return this._super(...arguments);
+        this._super(...arguments);
+        this.input.value = this._value;
     },
 
     //--------------------------------------------------------------------------
@@ -3779,6 +3803,7 @@ return {
 
     UserValueWidget: UserValueWidget,
     userValueWidgetsRegistry: userValueWidgetsRegistry,
+    UnitUserValueWidget: UnitUserValueWidget,
 
     addTitleAndAllowedAttributes: _addTitleAndAllowedAttributes,
     buildElement: _buildElement,
