@@ -604,7 +604,6 @@ def run_unit_tests(module_name, position='at_install'):
     for m in mods:
         tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
         suite = unittest.TestSuite(t for t in tests if position_tag.check(t) and config_tags.check(t))
-
         if suite.countTestCases():
             t0 = time.time()
             t0_sql = odoo.sql_db.sql_counter

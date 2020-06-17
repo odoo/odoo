@@ -210,6 +210,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
 
         idref = {}
 
+        env = False
         if needs_update:
             env = api.Environment(cr, SUPERUSER_ID, {})
             # Can't put this line out of the loop: ir.module.module will be
@@ -222,6 +223,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             if package.state == 'to upgrade':
                 # upgrading the module information
                 module.write(module.get_values_from_terp(package.data))
+
             load_data(cr, idref, mode, kind='data', package=package, report=report)
             demo_loaded = package.dbdemo = load_demo(cr, package, idref, mode, report)
             cr.execute('update ir_module_module set demo=%s where id=%s', (demo_loaded, module_id))
@@ -233,9 +235,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             overwrite = odoo.tools.config["overwrite_existing_translations"]
             module.with_context(overwrite=overwrite)._update_translations()
 
-            if package.name is not None:
-                registry._init_modules.add(package.name)
+        if package.name is not None:
+            registry._init_modules.add(package.name)
 
+        if needs_update:
             if new_install:
                 post_init = package.info.get('post_init_hook')
                 if post_init:
@@ -250,15 +253,20 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             # (separately in their own transaction)
             cr.commit()
 
-            if tools.config.options['test_enable']:
-                report.record_result(load_test(idref, mode))
-                # Python tests
-                env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
-                report.record_result(odoo.modules.module.run_unit_tests(module_name))
-                # tests may have reset the environment
-                env = api.Environment(cr, SUPERUSER_ID, {})
-                module = env['ir.module.module'].browse(module_id)
+        if tools.config.options['test_enable']:
+            env = env or api.Environment(cr, SUPERUSER_ID, {})
+            if not needs_update and package.name != 'base':
+                registry.setup_models(cr)
+                #env['base'].flush()
+            report.record_result(load_test(idref, mode))
+            # Python tests
+            env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
+            report.record_result(odoo.modules.module.run_unit_tests(module_name))
+            # tests may have reset the environment
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            module = env['ir.module.module'].browse(module_id)
 
+        if needs_update:
             processed_modules.append(package.name)
 
             ver = adapt_version(package.data['version'])
@@ -273,8 +281,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                     delattr(package, kind)
             module.flush()
 
-        if package.name is not None:
-            registry._init_modules.add(package.name)
 
     _logger.log(25, "%s modules loaded in %.2fs, %s queries", len(graph), time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
 
