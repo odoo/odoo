@@ -72,13 +72,42 @@ $-seen-urls: ();
         }
     }
 
-    @if ($o-theme-layout == 'boxed') {
-        @include media-breakpoint-up(md) {
-            padding: 0 7.5%;
+    @if o-website-value('layout') == 'boxed' {
+        > main {
+            background-color: o-color('o-cc1-bg');
         }
 
-        #wrap {
-            background-color: o-color('o-cc1-bg');
+        @include media-breakpoint-up(sm) {
+            padding-right: $grid-gutter-width * 2;
+            padding-left: $grid-gutter-width * 2;
+
+            > * {
+                // When the website is visually acting like a container (eg.
+                // boxed layout), increase its maximum size to handle bigger
+                // horizontal paddings.
+                $-max-widths: ();
+                @each $key, $value in $container-max-widths {
+                    $-max-widths: map-merge($-max-widths, (
+                        #{$key}: $value + $grid-gutter-width * 2,
+                    ));
+                }
+                @include make-container(0);
+                @include make-container-max-widths($-max-widths);
+            }
+
+            > header .container {
+                max-width: 100% !important;
+            }
+
+            // Vertical alignment when top-menu has visually "no background"
+            @if o-color('menu') == o-color('body') {
+                > header {
+                    .navbar, .container {
+                        padding-left: 0;
+                        padding-right: 0;
+                    }
+                }
+            }
         }
     }
 }

@@ -14,7 +14,7 @@ $yiq-text-light: o-color('white') !default;
 //
 // Settings for the `<body>` element.
 
-$body-bg: if($o-theme-layout == 'full', o-color('o-cc1-bg'), o-color('body')) !default;
+$body-bg: if(o-website-value('layout') != 'full', o-color('body'), o-color('o-cc1-bg')) !default;
 $body-color: o-color('o-cc1-text') or color-yiq(o-color('o-cc1-bg')) !default;
 
 // Links
