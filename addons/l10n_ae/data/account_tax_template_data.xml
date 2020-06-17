@@ -216,6 +216,7 @@
         <field name="amount_type">group</field>
         <field name="description">Supplies subject to reverse charge provisions</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('uae_sale_tax_reverse_charge_5_child_dubai'), ref('uae_sale_tax_5_child_dubai')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_01_dubai'), ref('tag_ae_09')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
     <record id="uae_sale_tax_5_child_abu_dhabi" model="account.tax.template">
@@ -247,6 +248,7 @@
         <field name="amount_type">group</field>
         <field name="description">Supplies subject to reverse charge provisions</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('uae_sale_tax_reverse_charge_5_child_abu_dhabi'), ref('uae_sale_tax_5_child_abu_dhabi')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_01_abu_dhabi'), ref('tag_ae_09')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
     <record id="uae_sale_tax_5_child_sharjah" model="account.tax.template">
@@ -278,6 +280,7 @@
         <field name="amount_type">group</field>
         <field name="description">Supplies subject to reverse charge provisions</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('uae_sale_tax_reverse_charge_5_child_sharjah'), ref('uae_sale_tax_5_child_sharjah')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_01_sharjah'), ref('tag_ae_09')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
     <record id="uae_sale_tax_5_child_ajman" model="account.tax.template">
@@ -309,6 +312,7 @@
         <field name="amount_type">group</field>
         <field name="description">Supplies subject to reverse charge provisions</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('uae_sale_tax_reverse_charge_5_child_ajman'), ref('uae_sale_tax_5_child_ajman')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_01_ajman'), ref('tag_ae_09')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
     <record id="uae_sale_tax_5_child_umm_al_quwain" model="account.tax.template">
@@ -340,6 +344,7 @@
         <field name="amount_type">group</field>
         <field name="description">Supplies subject to reverse charge provisions</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('uae_sale_tax_reverse_charge_5_child_umm_al_quwain'), ref('uae_sale_tax_5_child_umm_al_quwain')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_01_umm_al_quwain'), ref('tag_ae_09')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
     <record id="uae_sale_tax_5_child_ras_al_khaima" model="account.tax.template">
@@ -371,6 +376,7 @@
         <field name="amount_type">group</field>
         <field name="description">Supplies subject to reverse charge provisions</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('uae_sale_tax_reverse_charge_5_child_ras_al_khaima'), ref('uae_sale_tax_5_child_ras_al_khaima')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_01_ras_al_khaima'), ref('tag_ae_09')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
     <record id="uae_sale_tax_5_child_fujairah" model="account.tax.template">
@@ -402,6 +408,7 @@
         <field name="amount_type">group</field>
         <field name="description">Supplies subject to reverse charge provisions</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('uae_sale_tax_reverse_charge_5_child_fujairah'), ref('uae_sale_tax_5_child_fujairah')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_01_fujairah'), ref('tag_ae_09')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
     <record id="uae_sale_tax_tourist_refund" model="account.tax.template">
@@ -501,6 +508,7 @@
         <field name="amount_type">group</field>
         <field name="description">Supplies subject to reverse charge provisions</field>
         <field name="children_tax_ids" eval="[(6, 0, [ref('uae_purchase_tax_reverse_charge_5'), ref('uae_purchase_tax_5_child_reverse')])]"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tag_ae_10')])]"/>
         <field name="chart_template_id" ref="uae_chart_template_standard"/>
     </record>
 </odoo>
