@@ -745,13 +745,6 @@
     </xpath>
 </template>
 
-<!-- Layout options -->
-<template id="option_layout_boxed_variables" inherit_id="website._assets_primary_variables" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/layout/option_layout_boxed_variables.scss"/>
-    </xpath>
-</template>
-
 <template id="kanban">
     <t t-set="step"><t t-esc="step or 0"/></t>
     <t t-set="scope"><t t-esc="scope or 0"/></t>
