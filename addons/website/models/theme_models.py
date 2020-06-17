@@ -172,10 +172,14 @@ class Theme(models.AbstractModel):
                 'navbar-font': 'null',
                 'buttons-font': 'null',
                 'color-palettes-number': 'null',
+                'btn-ripple': 'null',
                 'header-template': 'null',
                 'footer-template': 'null',
             }
         )
+
+        # Reinitialize effets
+        self.disable_view('website.option_ripple_effect')
 
         # Reinitialize header templates
         self.disable_view('website.template_header_hamburger')
