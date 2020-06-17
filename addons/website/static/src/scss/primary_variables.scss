@@ -240,6 +240,9 @@ $o-theme-generic-color-palettes: (
 // Website customizations
 //------------------------------------------------------------------------------
 
+$o-theme-preheader-contact-fa-opacity: 0.5;
+$o-theme-preheader-icon-size: 30px;
+
 $o-base-website-values-palette: (
     'logo-height': null, // Default to navbar height (see portal)
     'header-font-size': null, // Default to BS (normal font-size)
@@ -253,6 +256,8 @@ $o-base-website-values-palette: (
     'google-fonts': null,
     'btn-primary-outline': false,
     'btn-secondary-outline': false,
+    'preheader-template': null, // null, 'magazine', 'icons' or 'image'
+    'preheader-height': 1vw, // Only used in 'image' preheader-template
     'header-template': 'logo_menu',
     'footer-template': 'products_contacts_about_us',
 );
