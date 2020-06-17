@@ -115,6 +115,35 @@ $-seen-urls: ();
                 padding-top: $grid-gutter-width;
                 padding-bottom: $grid-gutter-width * 1.5;
             }
+        } @else if o-website-value('layout') == 'postcard' {
+            @include media-breakpoint-up(md) {
+                $-border-radius: $border-radius-lg;
+                // Don't know why (browser rounding mistake?) but the inner
+                // border radius must be 1px lower for this to be visually ok
+                // (despite the fact there is no border or any space)
+                $-inner-border-radius: $-border-radius - 0.0625rem;
+                > * {
+                    margin-bottom: $spacer * 2;
+                }
+                > header {
+                    &, &.o_header_affix {
+                        .navbar {
+                            @include border-bottom-radius($-border-radius);
+                        }
+                    }
+                }
+                > main, > footer {
+                    @include border-radius($-border-radius);
+
+                    .oe_structure > :first-child {
+                        @include border-top-radius($-inner-border-radius);
+                    }
+                }
+                > main .oe_structure > :last-child,
+                .o_footer_copyright {
+                    @include border-bottom-radius($-inner-border-radius);
+                }
+            }
         }
     }
 }
