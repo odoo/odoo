@@ -1666,7 +1666,7 @@ options.registry.collapse = options.Class.extend({
     },
 });
 
-options.registry.Header = options.Class.extend({
+options.registry.Header = options.registry.BackgroundImage.extend({
 
     //--------------------------------------------------------------------------
     // Private

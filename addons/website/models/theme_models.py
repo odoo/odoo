@@ -172,10 +172,16 @@ class Theme(models.AbstractModel):
                 'navbar-font': 'null',
                 'buttons-font': 'null',
                 'color-palettes-number': 'null',
+                'preheader-template': 'null',
                 'header-template': 'null',
                 'footer-template': 'null',
             }
         )
+
+        # Reinitialize preheader templates
+        self.disable_view('website.template_preheader_magazine')
+        self.disable_view('website.template_preheader_icons')
+        self.disable_view('website.template_preheader_image')
 
         # Reinitialize header templates
         self.disable_view('website.template_header_hamburger')
