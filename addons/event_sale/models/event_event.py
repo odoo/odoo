@@ -9,8 +9,11 @@ class Event(models.Model):
 
     sale_order_lines_ids = fields.One2many(
         'sale.order.line', 'event_id',
+        groups='sales_team.group_sale_salesman',
         string='All sale order lines pointing to this event')
-    sale_price_subtotal = fields.Monetary(string='Sales (Tax Excluded)', compute='_compute_sale_price_subtotal')
+    sale_price_subtotal = fields.Monetary(
+        string='Sales (Tax Excluded)', compute='_compute_sale_price_subtotal',
+        groups='sales_team.group_sale_salesman')
     currency_id = fields.Many2one(
         'res.currency', string='Currency',
         related='company_id.currency_id', readonly=True)
