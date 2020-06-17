@@ -331,32 +331,32 @@ $o-theme-font-configs: () !default;
 
 // Offcanvas Transitions Definition
 @mixin o-offcanvas-transition-default() {
-    #top_menu_collapse.collapsing #top_menu {
+    #top_menu_collapse.collapsing #top_menu_wrapper {
         transform: translateX(100%);
     }
 
-    #top_menu_collapse.show #top_menu {
+    #top_menu_collapse.show #top_menu_wrapper {
         transform: translateX(0);
     }
 }
 @mixin o-offcanvas-transition-left($-edit-mode: false) {
     .o_hamburger_menu_left {
-        #top_menu_collapse.collapsing #top_menu {
+        #top_menu_collapse.collapsing #top_menu_wrapper {
             transform: translateX(-100%);
         }
 
-        #top_menu_collapse.show #top_menu {
+        #top_menu_collapse.show #top_menu_wrapper {
             transform: if($-edit-mode, translateX($o-we-sidebar-width), translateX(0));
         }
     }
 }
 @mixin o-offcanvas-transition-full($-edit-mode: false) {
     .o_hamburger_menu_full {
-        #top_menu_collapse.collapsing #top_menu {
+        #top_menu_collapse.collapsing #top_menu_wrapper {
             transform: translateY(-100%);
         }
 
-        #top_menu_collapse.show #top_menu {
+        #top_menu_collapse.show #top_menu_wrapper {
             transform: translateY(0);
         }
     }
@@ -377,7 +377,7 @@ $o-theme-font-configs: () !default;
     }
 }
 @mixin o-offcanvas-layout-full($-edit-mode: false) {
-    #top_menu_container.o_hamburger_menu_full #top_menu {
+    #top_menu_container.o_hamburger_menu_full #top_menu_wrapper {
         width: if($-edit-mode, calc(100% - #{$o-we-sidebar-width}), 100%);
         max-width: none;
 
@@ -531,7 +531,7 @@ $o-theme-font-configs: () !default;
                         background: linear-gradient(180deg, currentColor 20%, transparent);
                     }
 
-                    #top_menu {
+                    #top_menu_wrapper {
                         align-self: baseline;
                     }
 

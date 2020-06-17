@@ -15,20 +15,13 @@
                         <span class="navbar-toggler-icon o_not_editable"/>
                     </button>
                     <div class="collapse navbar-collapse" id="top_menu_collapse">
-                        <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
-                        <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
-                            <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
-                            <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                    <b>
-                                        <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
-                                    </b>
-                                </a>
-                                <div class="dropdown-menu js_usermenu" role="menu">
-                                    <a id="o_logout" class="dropdown-item" t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a>
-                                </div>
-                            </li>
-                        </ul>
+                        <div id="top_menu_wrapper" class="d-flex flex-grow-1 justify-content-between">
+                            <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
+                            <ul class="nav navbar-nav ml-auto text-right" id="top_menu"/>
+                            <ul id="top_menu_user" class="nav navbar-nav">
+                                <t t-call="portal.portal_menu_user"/>
+                            </ul>
+                        </div>
                     </div>
                 </div>
             </nav>
@@ -40,6 +33,20 @@
                 </div>
             </div>
         </xpath>
+    </template>
+
+    <template id="portal_menu_user" name="Portal User Menu">
+        <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
+        <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
+            <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
+                <b>
+                    <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
+                </b>
+            </a>
+            <div class="dropdown-menu js_usermenu" role="menu">
+                <a id="o_logout" class="dropdown-item" t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a>
+            </div>
+        </li>
     </template>
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
@@ -102,8 +109,8 @@
         </t>
     </template>
 
-    <template id="portal_show_sign_in" inherit_id="portal.frontend_layout" name="Show Sign In">
-        <xpath expr="//ul[@id='top_menu']" position="inside">
+    <template id="portal_show_sign_in" inherit_id="portal.portal_menu_user" name="Show Sign In">
+        <xpath expr="." position="inside">
             <li class="nav-item divider" groups="base.group_public"/>
             <li groups="base.group_public" class="nav-item">
                 <a t-attf-href="/web/login" class="nav-link">
@@ -431,7 +438,7 @@
         </ul>
     </template>
 
-    <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.frontend_layout">
+    <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.portal_menu_user">
         <xpath expr="//a[@id='o_logout']" position="before">
             <a href="/my/home" role="menuitem" class="dropdown-item">My Account</a>
         </xpath>

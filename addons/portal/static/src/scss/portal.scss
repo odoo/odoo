@@ -79,8 +79,14 @@ header {
     }
 }
 @include media-breakpoint-up(md) {
-    .navbar-expand-md ul.nav > li.divider {
-        display: list-item;
+    > li.divider {
+        .navbar-expand-md ul.nav & {
+            display: list-item;
+        }
+
+        #top_menu:empty + #top_menu_user & {
+            display: none;
+        }
     }
 }
 ul.flex-column > li > a {

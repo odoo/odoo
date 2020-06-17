@@ -738,9 +738,11 @@ $-transition-duration: 200ms;
         cursor: pointer;
     }
 
-    #top_menu {
+    #top_menu_wrapper {
         overflow: auto;
         flex-wrap: nowrap;
+        flex-direction: column;
+        flex-grow: 0!important;
         max-width: 560px;
         background-color: o-color('menu');
         transition: transform $-transition-duration cubic-bezier(.694, .0482, .335, 1);
@@ -794,6 +796,16 @@ $-transition-duration: 200ms;
 @if o-website-value('header-effect') == 'perspective' {
     body {
         @include o-header-perspective(o-website-value('offcanvas-type'));
+    }
+}
+
+// General Header
+header#top {
+    .o_hide_labels .o_label {
+        display: none;
+    }
+    .o_hide_labels .badge {
+        margin-left: -0.25rem;
     }
 }
 

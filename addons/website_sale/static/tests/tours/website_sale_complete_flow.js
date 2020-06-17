@@ -153,7 +153,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     // Sign in as admin change config auth_signup -> b2b, sale_show_tax -> total and Logout
     {
         content: "Open Dropdown for logout",
-        trigger: '#top_menu li.dropdown:visible a:contains("abcd")',
+        trigger: '#top_menu_user li.dropdown:visible a:contains("abcd")',
     },
     {
         content: "Logout",
@@ -161,7 +161,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Sign in as admin",
-        trigger: '#top_menu li a b:contains("Sign in")',
+        trigger: '#top_menu_user li a b:contains("Sign in")',
     },
     {
         content: "Submit login",
@@ -282,12 +282,12 @@ odoo.define('website_sale_tour.tour', function (require) {
     {
         content: "Open Dropdown for See quotation",
         extra_trigger: '.oe_cart .oe_website_sale_tx_status',
-        trigger: '#top_menu li.dropdown:visible a:contains("abc")',
+        trigger: '#top_menu_user li.dropdown:visible a:contains("abc")',
     },
     {
         content: "My account",
-        extra_trigger: '#top_menu li.dropdown .js_usermenu.show',
-        trigger: '#top_menu .dropdown-menu a[href="/my/home"]:visible',
+        extra_trigger: '#top_menu_user li.dropdown .js_usermenu.show',
+        trigger: '#top_menu_user .dropdown-menu a[href="/my/home"]:visible',
     },
     {
         content: "See Quotations",
@@ -297,7 +297,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     // enable extra step on website checkout and check extra step on checkout process
     {
         content: "Open Dropdown for logout",
-        trigger: '#top_menu li.dropdown:visible a:contains("abc")',
+        trigger: '#top_menu_user li.dropdown:visible a:contains("abc")',
     },
     {
         content: "Logout",
@@ -305,7 +305,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Sign in as admin",
-        trigger: '#top_menu li a b:contains("Sign in")',
+        trigger: '#top_menu_user li a b:contains("Sign in")',
     },
     {
         content: "Submit login",
@@ -328,7 +328,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     {
         content: "Open Dropdown for logout",
         extra_trigger: '.progress-wizard-step:contains("Extra Info")',
-        trigger: '#top_menu li.dropdown:visible a:contains("Mitchell Admin")',
+        trigger: '#top_menu_user li.dropdown:visible a:contains("Mitchell Admin")',
     },
     {
         content: "Logout",
@@ -336,7 +336,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Sign in as abc",
-        trigger: '#top_menu li a b:contains("Sign in")',
+        trigger: '#top_menu_user li a b:contains("Sign in")',
     },
     {
         content: "Submit login",

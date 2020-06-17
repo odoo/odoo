@@ -238,7 +238,7 @@ tour.register('shop_wishlist', {
         // Test one impossible combination while other combinations are possible
         {
             content: "Archive the first variant",
-            trigger: '#top_menu:contains("Mitchell Admin")',
+            trigger: '#top_menu_user:contains("Mitchell Admin")',
             run: function () {
                 rpc.query({
                     model: 'product.product',
@@ -304,7 +304,7 @@ tour.register('shop_wishlist', {
         // test when all combinations are impossible
         {
             content: "Archive all variants",
-            trigger: '#top_menu:contains("Mitchell Admin")',
+            trigger: '#top_menu_user:contains("Mitchell Admin")',
             run: function () {
                 rpc.query({
                     model: 'product.product',
