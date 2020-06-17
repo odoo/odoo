@@ -31,7 +31,6 @@ class MailChannel(models.Model):
     _name = 'mail.channel'
     _inherit = ['mail.channel', 'rating.mixin']
 
-    anonymous_name = fields.Char('Anonymous Name')
     channel_type = fields.Selection(selection_add=[('livechat', 'Livechat Conversation')])
     livechat_active = fields.Boolean('Is livechat ongoing?', help='Livechat session is active until visitor leave the conversation.')
     livechat_channel_id = fields.Many2one('im_livechat.channel', 'Channel')

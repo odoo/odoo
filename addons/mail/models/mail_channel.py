@@ -122,6 +122,7 @@ class Channel(models.Model):
     moderation_notify_msg = fields.Text(string="Notification message")
     moderation_guidelines = fields.Boolean(string="Send guidelines to new subscribers", help="Newcomers on this moderated channel will automatically receive the guidelines.")
     moderation_guidelines_msg = fields.Text(string="Guidelines")
+    anonymous_name = fields.Char('Anonymous Name')
 
     @api.depends('channel_partner_ids')
     def _compute_is_subscribed(self):
@@ -562,6 +563,7 @@ class Channel(models.Model):
                 'is_moderator': self.env.uid in channel.moderator_ids.ids,
                 'group_based_subscription': bool(channel.group_ids),
                 'create_uid': channel.create_uid.id,
+                'anonymous_name': channel.anonymous_name,
             }
             if extra_info:
                 info['info'] = extra_info
