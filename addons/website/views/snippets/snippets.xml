@@ -602,6 +602,18 @@
                        data-customize-website-variable="address_logo"
                        string="Address - Logo"/>
         </we-select>
+        <we-row string="Scroll Top Button">
+            <we-checkbox data-name="footer_scrolltop_opt"
+                         data-customize-website-views="website.option_footer_scrolltop"
+                         data-customize-website-variable="false|true"
+                         data-variable="footer-scrolltop"
+                         data-reload="/"/>
+            <we-select data-dependencies="footer_scrolltop_opt" data-apply-to="#o_footer_scrolltop_wrapper > div">
+                <we-button string="Left" data-select-class="text-left"/>
+                <we-button string="Center" data-select-class="text-center"/>
+                <we-button string="Right" data-select-class="text-right"/>
+            </we-select>
+        </we-row>
     </div>
 
     <div data-selector=".o_footer_copyright"
