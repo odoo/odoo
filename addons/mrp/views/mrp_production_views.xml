@@ -253,10 +253,11 @@
                                     <field name="location_dest_id" domain="[('id', 'child_of', parent.location_dest_id)]" invisible="1"/>
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="should_consume_qty" invisible="1"/>
+                                    <field name="product_type" invisible="1"/>
                                     <field name="product_uom_qty" widget="mrp_should_consume" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', ('parent.state', 'not in', ('confirmed', 'planned', 'progress', 'to_close')), ('parent.is_locked', '=', True)]}" width="1"/>
                                     <field name="reserved_availability" invisible="1"/>
                                     <field name="availability_state" invisible="1"/>
-                                    <field name="availability_indication"
+                                    <field name="availability_indication" widget="forecast_button"
                                         decoration-bf="availability_state in ['late', 'partial', 'waiting']"
                                         decoration-warning="availability_state in ['partial', 'waiting']"
                                         decoration-danger="availability_state == 'late'"
