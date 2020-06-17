@@ -6,7 +6,7 @@ I declare that I am authorized and able to make this agreement and sign this dec
 
 Signed,
 
-Sarah Quast sarah.quast@tisso.de https://github.com/t-sq1
+Nihad Perva nihad.perva@tisso.de https://github.com/t-np
 
 List of contributors:
 
