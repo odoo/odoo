@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="website.s_dynamic_snippet.grid">
+        <!-- Content -->
+        <t t-set="colClass" t-value="'col-' + (12 / chunkSize).toString()"/>
+        <t t-set="rowIndexGenerator" t-value="Array.from(Array(Math.ceil(data.length/chunkSize)).keys())"/>
+        <t t-set="colIndexGenerator" t-value="Array.from(Array(chunkSize).keys())"/>
+        <t t-foreach="rowIndexGenerator" t-as="rowIndex">
+            <div class="row my-4">
+                <t t-foreach="colIndexGenerator" t-as="colIndex">
+                    <t t-if="(rowIndex * chunkSize + colIndex) &lt; data.length">
+                        <div t-attf-class="#{colClass}">
+                            <t t-raw="data[rowIndex * chunkSize + colIndex]"/>
+                        </div>
+                    </t>
+                </t>
+            </div>
+        </t>
+    </t>
+</templates>

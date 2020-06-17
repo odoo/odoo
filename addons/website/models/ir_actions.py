@@ -4,6 +4,7 @@ from werkzeug import urls
 
 from odoo import api, fields, models
 from odoo.http import request
+from odoo.tools.json import scriptsafe as json_scriptsafe
 
 
 class ServerAction(models.Model):
@@ -48,6 +49,7 @@ class ServerAction(models.Model):
         eval_context = super(ServerAction, self)._get_eval_context(action)
         if action.state == 'code':
             eval_context['request'] = request
+            eval_context['json'] = json_scriptsafe
         return eval_context
 
     @api.model
