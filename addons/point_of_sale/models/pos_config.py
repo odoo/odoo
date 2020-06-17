@@ -355,6 +355,12 @@ class PosConfig(models.Model):
                 _("You must configure an intermediary account for the payment methods: %s.") % method_names
             )
 
+    @api.constrains('module_pos_loyalty')
+    def _check_loyalties_product_availability(self):
+        if self.module_pos_loyalty:
+            for l in self.loyalty_id:
+                l._check_loyalties_product_availability()
+
     @api.constrains('company_id', 'available_pricelist_ids')
     def _check_companies(self):
         if any(self.available_pricelist_ids.mapped(lambda pl: pl.company_id.id not in (False, self.company_id.id))):
@@ -555,6 +561,8 @@ class PosConfig(models.Model):
             self._check_company_payment()
             self._check_currencies()
             self._check_payment_method_receivable_accounts()
+            self._check_loyalties_product_availability()
+
             self.env['pos.session'].create({
                 'user_id': self.env.uid,
                 'config_id': self.id
