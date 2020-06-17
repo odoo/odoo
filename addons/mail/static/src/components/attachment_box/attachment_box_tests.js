@@ -221,6 +221,87 @@ QUnit.test('attachment box: drop attachments', async function (assert) {
     );
 });
 
+QUnit.test('view attachments', async function (assert) {
+    assert.expect(7);
+
+    await this.start({
+        hasDialog: true,
+    });
+    const thread = this.env.models['mail.thread'].create({
+        attachments: [
+            ['insert', {
+                id: 143,
+                filename: 'Blah.txt',
+                mimetype: 'text/plain',
+                name: 'Blah.txt'
+            }],
+            ['insert', {
+                id: 144,
+                filename: 'Blu.txt',
+                mimetype: 'text/plain',
+                name: 'Blu.txt'
+            }]
+        ],
+        id: 100,
+        model: 'res.partner',
+    });
+    const firstAttachment = this.env.models['mail.attachment'].find(
+        attachment => attachment.id === 143
+    );
+    await this.createAttachmentBoxComponent(thread);
+
+    await afterNextRender(() =>
+        document.querySelector(`
+            .o_Attachment[data-attachment-local-id="${firstAttachment.localId}"]
+            .o_Attachment_image 
+        `).click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Dialog',
+        "a dialog should have been opened once attachment image is clicked",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentViewer',
+        "an attachment viewer should have been opened once attachment image is clicked",
+    );
+    assert.strictEqual(
+        document.querySelector('.o_AttachmentViewer_name').textContent,
+        'Blah.txt',
+        "attachment viewer iframe should point to clicked attachment",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentViewer_buttonNavigationNext',
+        "attachment viewer should allow to see next attachment",
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_AttachmentViewer_buttonNavigationNext').click()
+    );
+    assert.strictEqual(
+        document.querySelector('.o_AttachmentViewer_name').textContent,
+        'Blu.txt',
+        "attachment viewer iframe should point to next attachment of attachment box",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentViewer_buttonNavigationNext',
+        "attachment viewer should allow to see next attachment",
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_AttachmentViewer_buttonNavigationNext').click()
+    );
+    assert.strictEqual(
+        document.querySelector('.o_AttachmentViewer_name').textContent,
+        'Blah.txt',
+        "attachment viewer iframe should point anew to first attachment",
+    );
+});
+
+
 });
 });
 });

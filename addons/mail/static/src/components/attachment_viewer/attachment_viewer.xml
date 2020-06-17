@@ -2,7 +2,7 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.AttachmentViewer" owl="1">
-        <div class="o_AttachmentViewer" t-on-click="_onClick" t-on-keydown="_onKeydown" tabindex="0" t-att-data-dialog="attachmentViewer.dialog.localId">
+        <div class="o_AttachmentViewer" t-on-click="_onClick" t-on-keydown="_onKeydown" tabindex="0">
             <div class="o_AttachmentViewer_header" t-on-click="_onClickHeader">
                 <t t-if="attachmentViewer.attachment.fileType">
                     <div class="o_AttachmentViewer_headerItem o_AttachmentViewer_icon">

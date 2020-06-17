@@ -6,7 +6,22 @@ const { attr, many2many, many2one } = require('mail/static/src/model/model_field
 
 function factory(dependencies) {
 
-    class AttachmentViewer extends dependencies['mail.model'] {}
+    class AttachmentViewer extends dependencies['mail.model'] {
+
+        //----------------------------------------------------------------------
+        // Public
+        //----------------------------------------------------------------------
+
+        /**
+         * Close the attachment viewer by closing its linked dialog.
+         */
+        close() {
+            const dialog = this.env.models['mail.dialog'].find(dialog => dialog.record === this);
+            if (dialog) {
+                this.env.messaging.dialogManager.close(dialog);
+            }
+        }
+    }
 
     AttachmentViewer.fields = {
         /**

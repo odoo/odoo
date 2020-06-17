@@ -128,10 +128,6 @@ function factory(dependencies) {
     }
 
     Messaging.fields = {
-        attachmentViewer: one2one('mail.attachment_viewer', {
-            autocreate: true,
-            isCausal: true,
-        }),
         cannedResponses: attr({
             default: {},
         }),
