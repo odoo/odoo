@@ -540,8 +540,7 @@ class AccountJournal(models.Model):
         else:
             connector = '&' if operator in expression.NEGATIVE_TERM_OPERATORS else '|'
             domain = [connector, ('code', operator, name), ('name', operator, name)]
-        journal_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(journal_ids).with_user(name_get_uid))
+        return self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
 
     @api.depends('inbound_payment_method_ids', 'outbound_payment_method_ids')
     def _methods_compute(self):

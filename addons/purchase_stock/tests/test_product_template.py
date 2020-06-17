@@ -21,6 +21,6 @@ class TestProductTemplate(TransactionCase):
         'seller_ids': [seller.id],
         'purchase_ok': True,
       })
-      ns = self.env['product.template'].with_context(partner_id=partner.id)._name_search('VOB2', [['purchase_ok', '=', True]])
-      self.assertEqual(len(ns), 1, "_name_search should have 1 item")
-      self.assertEqual(ns[0][1]._value, '[VOB2A] Rubber Duck', "_name_search should return the expected result")
+      ns = self.env['product.template'].with_context(partner_id=partner.id).name_search('VOB2', [['purchase_ok', '=', True]])
+      self.assertEqual(len(ns), 1, "name_search should have 1 item")
+      self.assertEqual(ns[0][1], '[VOB2A] Rubber Duck', "name_search should return the expected result")
