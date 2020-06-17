@@ -771,6 +771,22 @@
     </xpath>
 </template>
 
+<!-- Footer options -->
+<template id="option_footer_scrolltop" inherit_id="website.layout" active="False">
+    <xpath expr="//div[@id='footer']" position="after">
+        <div id="o_footer_scrolltop_wrapper" class="mb-n3">
+            <div class="container text-center">
+                <a id="o_footer_scrolltop"
+                   href="#top"
+                   title="Scroll To Top"
+                   class="d-inline-flex align-items-center justify-content-center rounded-circle p-2">
+                    <span class="fa fa fa-angle-up fa-2x"/>
+                </a>
+            </div>
+        </div>
+    </xpath>
+</template>
+
 <template id="option_custom_body_pattern" inherit_id="website.assets_frontend" active="False">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/layout/option_custom_body_pattern.scss"/>
