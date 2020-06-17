@@ -25,12 +25,14 @@ const BaseAnimatedHeader = animations.Animation.extend({
         this.fixedHeader = false;
         this.scrolledPoint = 0;
         this.hasScrolled = false;
+        this.topGap = 0;
     },
     /**
      * @override
      */
     start: function () {
         this.$main = this.$el.next('main');
+        this.$preheader = this.$('#o_preheader');
         this.isOverlayHeader = !!this.$el.closest('.o_header_overlay, .o_header_overlay_theme').length;
         this.$dropdowns = this.$el.find('.dropdown, .dropdown-menu');
         this.$navbarCollapses = this.$el.find('.navbar-collapse');
@@ -81,6 +83,8 @@ const BaseAnimatedHeader = animations.Animation.extend({
      */
     _updateMainPaddingTop: function () {
         this.headerHeight = this.$el.outerHeight();
+        this.topGap = this.$preheader.outerHeight() || 0;
+
         if (this.isOverlayHeader) {
             return;
         }
@@ -199,8 +203,8 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
     _updateHeaderOnScroll: function (scroll) {
         this._super(...arguments);
 
-        const mainPosScrolled = (scroll > this.headerHeight);
-        const reachPosScrolled = (scroll > this.scrolledPoint);
+        const mainPosScrolled = (scroll > this.headerHeight + this.topGap);
+        const reachPosScrolled = (scroll > this.scrolledPoint + this.topGap);
 
         // Switch between static/fixed position of the header
         if (this.fixedHeader !== mainPosScrolled) {
@@ -210,7 +214,7 @@ publicWidget.registry.StandardAffixedHeader = BaseAnimatedHeader.extend({
         }
         // Show/hide header
         if (this.fixedHeaderShow !== reachPosScrolled) {
-            this.$el.css('transform', reachPosScrolled ? '' : 'translate(0, -100%)');
+            this.$el.css('transform', reachPosScrolled ? `translate(0, -${this.topGap}px)` : 'translate(0, -100%)');
             this.fixedHeaderShow = reachPosScrolled;
         }
     },
@@ -230,12 +234,16 @@ publicWidget.registry.FixedHeader = BaseAnimatedHeader.extend({
         this._super(...arguments);
         // Need to be 'unfixed' when the window is not scrolled so that the
         // transparent menu option still works.
-        if (scroll > this.scrolledPoint) {
+        if (scroll > (this.scrolledPoint + this.topGap)) {
             if (!this.$el.hasClass('o_header_affixed')) {
+                this.$el.css('transform', `translate(0, -${this.topGap}px)`);
+                void this.$el[0].offsetWidth; // Force a paint refresh
                 this._toggleFixedHeader(true);
             }
         } else {
             this._toggleFixedHeader(false);
+            void this.$el[0].offsetWidth; // Force a paint refresh
+            this.$el.css('transform', '');
         }
     },
 });
@@ -249,7 +257,9 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
         this.scrollingDownwards = true;
         this.hiddenHeader = false;
         this.position = 0;
+        this.atTop = true;
         this.checkPoint = 0;
+        this.scrollOffsetLimit = 200;
     },
     /**
      * @override
@@ -283,24 +293,31 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
         this._super(...arguments);
 
         const scrollingDownwards = (scroll > this.position);
+        const atTop = (scroll <= 0);
         if (scrollingDownwards !== this.scrollingDownwards) {
             this.checkPoint = scroll;
         }
 
+        this.scrollingDownwards = scrollingDownwards;
+        this.position = scroll;
+        this.atTop = atTop;
+
         if (scrollingDownwards) {
-            if (!this.hiddenHeader && scroll - this.checkPoint > 200) {
+            if (!this.hiddenHeader && scroll - this.checkPoint > (this.scrollOffsetLimit + this.topGap)) {
                 this.hiddenHeader = true;
                 this._hideHeader();
             }
         } else {
-            if (this.hiddenHeader && scroll - this.checkPoint < -100) {
+            if (this.hiddenHeader && scroll - this.checkPoint < -(this.scrollOffsetLimit + this.topGap) / 2) {
                 this.hiddenHeader = false;
                 this._showHeader();
             }
         }
 
-        this.scrollingDownwards = scrollingDownwards;
-        this.position = scroll;
+        if (atTop && !this.atTop) {
+            // Force reshowing the preheader when reaching the top again
+            this._showHeader();
+        }
     },
 });
 
@@ -321,7 +338,7 @@ publicWidget.registry.DisappearingHeader = BaseDisappearingHeader.extend({
      * @override
      */
     _showHeader: function () {
-        this.$el.css('transform', '');
+        this.$el.css('transform', this.atTop ? '' : `translate(0, -${this.topGap}px)`);
     },
 });
 
@@ -342,6 +359,7 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
      * @override
      */
     _showHeader: function () {
+        this.$el.css('transform', this.atTop ? '' : `translate(0, -${this.topGap}px)`);
         this.$el.stop(false, true).fadeIn();
     },
 });

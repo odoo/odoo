@@ -409,10 +409,12 @@
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
 
-    <div id="so_header_theme"
+    <div data-js="background"
+         id="so_header_theme"
          data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
+
         <we-checkbox string="Show Sign In" data-customize-website-views="portal.portal_show_sign_in" data-reload="/"/>
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="menu"
@@ -421,6 +423,51 @@
                      data-customize-website-views="website.header_shadow"
                      data-select-class="shadow"
                      data-no-preview="true"/>
+
+        <we-select string="Pre Header"
+                   id="preheader_templates_select"
+                   data-dependencies="!header_transparent_opt"
+                   data-variable="preheader-template"
+                   data-reload="/">
+            <we-button id="option_template_preheader_none"
+                       data-name="preheader_none_opt"
+                       data-customize-website-views=""
+                       data-customize-website-variable=""
+                       string="None"/>
+            <we-button id="option_template_preheader_magazine"
+                       data-name="preheader_magazine_opt"
+                       data-customize-website-views="website.template_preheader_magazine"
+                       data-customize-website-variable="magazine"
+                       string="Magazine"/>
+            <we-button id="option_template_preheader_icons"
+                       data-name="preheader_icons_opt"
+                       data-customize-website-views="website.template_preheader_icons"
+                       data-customize-website-variable="icons"
+                       string="Icons"/>
+            <we-button id="option_template_preheader_image"
+                       data-name="preheader_image_opt"
+                       data-customize-website-views="website.template_preheader_image"
+                       data-customize-website-variable="image"
+                       string="Image"/>
+        </we-select>
+        <we-colorpicker string="⌙ Colors"
+                        data-dependencies="!preheader_none_opt"
+                        data-customize-website-color=""
+                        data-color="preheader"
+                        data-with-combinations="true"/>
+        <we-imagepicker string="⌙ Background"
+                        data-apply-to=".o_preheader_image"
+                        data-dependencies="preheader_image_opt"
+                        data-background=""
+                        data-allow-videos="*"/>
+        <we-range string="⌙ Height"
+                  data-dependencies="preheader_image_opt"
+                  data-customize-website-variable="1vw"
+                  data-variable="preheader-height"
+                  data-unit="vw"
+                  data-max="5"
+                  data-step="0.1"/>
+
         <we-select string="Logo" data-reload="/">
             <we-button data-customize-website-views="website.website_name">Text</we-button>
             <we-button data-customize-website-views="website.layout_logo_show">Image</we-button>
@@ -441,6 +488,7 @@
             <we-fontfamilypicker data-variable="navbar-font-number"/>
             <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
         </we-row>
+
         <we-select id="header_templates_select" data-variable="header-template" string="Header Template" data-reload="/">
             <we-button id="option_template_header_logo_menu"
                        data-name="header_logo_menu_opt"
@@ -495,6 +543,7 @@
                        data-customize-website-views="website.header_visibility_fade_out"
                        string="Fade Out"/>
         </we-select>
+
         <we-checkbox string="Hoverable Dropdown"
                      data-customize-website-views="website.header_hoverable_dropdown"
                      data-select-class="o_hoverable_dropdown"

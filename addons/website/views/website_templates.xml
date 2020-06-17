@@ -218,6 +218,124 @@
     </xpath>
 </template>
 
+<!-- PreHeader templates -->
+<template id="template_preheader_magazine" inherit_id="website.layout" name="Template PreHeader Magazine" active="False">
+    <xpath expr="//header//nav[hasclass('navbar')]" position="before">
+        <div id="o_preheader" class="o_preheader_magazine navbar navbar-light o_colored_level o_cc navbar-expand flex-column">
+            <div class="container px-md-3">
+                <ul class="nav navbar-nav d-none d-md-flex flex-row align-items-center">
+                    <li class="navbar-text" t-esc="time.strftime('%Y')"/>
+                    <li class="navbar-text mx-2">&#183;</li>
+                    <li class="navbar-text small flex-grow-1">
+                        <p>Add your custom text here</p>
+                    </li>
+                </ul>
+                <nav class="nav navbar-nav flex-row w-100 w-md-auto ml-md-auto align-items-center">
+                    <li t-if="website.social_facebook" class="nav-item small">
+                        <a t-att-href="website.social_facebook" class="nav-link">
+                            <i class="fa fa-facebook"/>
+                        </a>
+                    </li>
+                    <li t-if="website.social_twitter" class="nav-item small">
+                        <a t-att-href="website.social_twitter" class="nav-link">
+                            <i class="fa fa-twitter"/>
+                        </a>
+                    </li>
+                    <li t-if="website.social_linkedin" class="nav-item small">
+                        <a t-att-href="website.social_linkedin" class="nav-link">
+                            <i class="fa fa-linkedin"/>
+                        </a>
+                    </li>
+                    <li t-if="website.social_youtube" class="nav-item small">
+                        <a t-att-href="website.social_youtube" class="nav-link">
+                            <i class="fa fa-youtube-play"/>
+                        </a>
+                    </li>
+                    <li t-if="website.social_github" class="nav-item small">
+                        <a t-att-href="website.social_github" class="nav-link">
+                            <i class="fa fa-github"/>
+                        </a>
+                    </li>
+                    <li t-if="website.social_instagram" class="nav-item small">
+                        <a t-att-href="website.social_instagram" class="nav-link">
+                            <i class="fa fa-instagram"/>
+                        </a>
+                    </li>
+                    <li t-if="res_company.email" class="nav-item small">
+                        <a t-attf-href="mailto:#{res_company.email}" class="nav-link">
+                            <i class="fa fa-envelope"/>
+                        </a>
+                    </li>
+                </nav>
+            </div>
+            <div class="container px-md-3">
+                <div class="o_preheader_magazine_divider w-100" style="border-bottom: 1px solid; opacity: .25;"/>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="template_preheader_icons" inherit_id="website.layout" name="Template PreHeader Icons" active="False">
+    <xpath expr="//header//nav[hasclass('navbar')]" position="before">
+        <div id="o_preheader" class="o_preheader_icons o_colored_level o_cc py-2">
+            <div class="container d-flex align-items-center small">
+                <!-- HOME -->
+                <div class="o_preheader_icons_btns_circle">
+                    <a href="/" class="d-none d-sm-inline-block mr-3 p-0 rounded-circle d-inline-flex align-items-center justify-content-center btn btn-primary"><i class="fa fa-home"/></a>
+                </div>
+                <!-- CONTACT -->
+                <ul id="o_preheader_contact" class="list-inline m-0">
+                    <li class="list-inline-item d-inline-block d-lg-none">
+                        <i class="fa fa-envelope fa-1x mr-1"/>
+                        <a href="/contactus">Contact us</a>
+                    </li>
+                    <li class="list-inline-item d-none d-lg-inline-block mr-3">
+                        <i class="fa fa-map-marker fa-1x mr-1"/>
+                        <a href="/contactus">Meet us</a>
+                    </li>
+                    <li t-if="res_company.phone" class="list-inline-item d-none d-lg-inline-block mr-3" t-ignore="true">
+                        <i class="fa fa-phone fa-1x mr-1"/>
+                        <a t-attf-href="tel:#{res_company.phone}" t-field="res_company.phone"/>
+                    </li>
+                    <li t-if="res_company.email" class="list-inline-item d-none d-lg-inline-block" t-ignore="true">
+                        <i class="fa fa-envelope fa-1x mr-1"/>
+                        <a t-attf-href="mailto:#{res_company.email}" t-field="res_company.email"/>
+                    </li>
+                </ul>
+                <!-- SOCIAL -->
+                <div class="o_preheader_icons_btns_circle ml-auto">
+                    <a t-if="website.social_facebook" t-att-href="website.social_facebook" target="_blank" class="p-0 rounded-circle d-inline-flex align-items-center justify-content-center btn btn-primary">
+                        <i class="fa fa-facebook"/>
+                    </a>
+                    <a t-if="website.social_twitter" t-att-href="website.social_twitter" target="_blank" class="p-0 rounded-circle d-inline-flex align-items-center justify-content-center btn btn-primary">
+                        <i class="fa fa-twitter"/>
+                    </a>
+                    <a t-if="website.social_linkedin" t-att-href="website.social_linkedin" target="_blank" class="p-0 rounded-circle d-inline-flex align-items-center justify-content-center btn btn-primary">
+                        <i class="fa fa-linkedin"/>
+                    </a>
+                    <a t-if="website.social_youtube" t-att-href="website.social_youtube" target="_blank" class="p-0 rounded-circle d-inline-flex align-items-center justify-content-center btn btn-primary">
+                        <i class="fa fa-youtube"/>
+                    </a>
+                    <a t-if="website.social_github" t-att-href="website.social_github" target="_blank" class="p-0 rounded-circle d-inline-flex align-items-center justify-content-center btn btn-primary">
+                        <i class="fa fa-github"/>
+                    </a>
+                    <a t-if="website.social_instagram" t-att-href="website.social_instagram" target="_blank" class="p-0 rounded-circle d-inline-flex align-items-center justify-content-center btn btn-primary">
+                        <i class="fa fa-instagram"/>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+<template id="template_preheader_image" inherit_id="website.layout" name="Template PreHeader Image" active="False">
+    <xpath expr="//header//nav[hasclass('navbar')]" position="before">
+        <div id="o_preheader" class="o_colored_level o_cc" contenteditable="false">
+            <div class="o_preheader_image w-100 h-100 oe_img_bg" style="background-image: url('/web/image/website.o_preheader_default_image');"/>
+        </div>
+    </xpath>
+</template>
+
 <!-- Navbar templates -->
 <template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Logo Hamburger" active="False">
     <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
