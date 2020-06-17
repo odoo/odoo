@@ -3188,7 +3188,7 @@ Fields:
                     if not (company <= corecord.company_ids):
                         inconsistent_fields.add(name)
                         inconsistent_recs |= record
-                elif not (corecord.company_id <= company):
+                elif not (corecord.company_id.id <= company.id):
                     inconsistent_fields.add(name)
                     inconsistent_recs |= record
 
