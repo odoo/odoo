@@ -12,6 +12,7 @@ from odoo.http import request
 import base64
 from collections import defaultdict
 import datetime
+import functools
 import logging
 import time
 
@@ -421,15 +422,17 @@ class IrActionsServer(models.Model):
             raise ValidationError(_('Recursion found in child server actions'))
 
     def _get_runner(self):
+        multi = True
         t = type(self)
         fn = getattr(t, f'_run_action_{self.state}_multi', None)\
           or getattr(t, f'run_action_{self.state}_multi', None)
-        if fn:
-            return fn, True
-
-        fn = getattr(t, f'_run_action_{self.state}', None)\
-          or getattr(t, f'run_action_{self.state}', None)
-        return fn, False
+        if not fn:
+            multi = False
+            fn = getattr(t, f'_run_action_{self.state}', None)\
+              or getattr(t, f'run_action_{self.state}', None)
+        if fn and fn.__name__.startswith('run_action_'):
+            fn = functools.partial(fn, self)
+        return fn, multi
 
     def _register_hook(self):
         super()._register_hook()
@@ -459,23 +462,23 @@ class IrActionsServer(models.Model):
         self.filtered('binding_model_id').write({'binding_model_id': False})
         return True
 
-    def _run_action_code_multi(self, action, eval_context=None):
-        safe_eval(action.sudo().code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
+    def _run_action_code_multi(self, eval_context=None):
+        safe_eval(self.sudo().code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
         if 'action' in eval_context:
             return eval_context['action']
 
-    def _run_action_multi(self, action, eval_context=None):
+    def _run_action_multi(self, eval_context=None):
         res = False
-        for act in action.child_ids.sorted():
+        for act in self.child_ids.sorted():
             result = act.run()
             if result:
                 res = result
         return res
 
-    def _run_action_object_write(self, action, eval_context=None):
+    def _run_action_object_write(self, eval_context=None):
         """Apply specified write changes to active_id."""
         res = {}
-        for exp in action.fields_lines:
+        for exp in self.fields_lines:
             res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
 
         if self._context.get('onchange_self'):
@@ -483,25 +486,25 @@ class IrActionsServer(models.Model):
             for field, new_value in res.items():
                 record_cached[field] = new_value
         else:
-            self.env[action.model_id.model].browse(self._context.get('active_id')).write(res)
+            self.env[self.model_id.model].browse(self._context.get('active_id')).write(res)
 
-    def _run_action_object_create(self, action, eval_context=None):
+    def _run_action_object_create(self, eval_context=None):
         """Create specified model object with specified values.
 
         If applicable, link active_id.<self.link_field_id> to the new record.
         """
         res = {}
-        for exp in action.fields_lines:
+        for exp in self.fields_lines:
             res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
 
-        res = self.env[action.crud_model_id.model].create(res)
+        res = self.env[self.crud_model_id.model].create(res)
 
-        if action.link_field_id:
-            record = self.env[action.model_id.model].browse(self._context.get('active_id'))
-            if action.link_field_id.ttype in ['one2many', 'many2many']:
-                record.write({action.link_field_id.name: [(4, res.id)]})
+        if self.link_field_id:
+            record = self.env[self.model_id.model].browse(self._context.get('active_id'))
+            if self.link_field_id.ttype in ['one2many', 'many2many']:
+                record.write({self.link_field_id.name: [(4, res.id)]})
             else:
-                record.write({action.link_field_id.name: res.id})
+                record.write({self.link_field_id.name: res.id})
 
     def _get_eval_context(self, action=None):
         """ Prepare the context used when evaluating python code, like the
@@ -576,20 +579,20 @@ class IrActionsServer(models.Model):
             runner, multi = action._get_runner()
             if runner and multi:
                 # call the multi method
-                run_self = self.with_context(eval_context['env'].context)
-                res = runner(run_self, action, eval_context=eval_context)
+                run_self = action.with_context(eval_context['env'].context)
+                res = runner(run_self, eval_context=eval_context)
             elif runner:
                 active_id = self._context.get('active_id')
                 if not active_id and self._context.get('onchange_self'):
                     active_id = self._context['onchange_self']._origin.id
                     if not active_id:  # onchange on new record
-                        res = runner(self, action, eval_context=eval_context)
+                        res = runner(action, eval_context=eval_context)
                 active_ids = self._context.get('active_ids', [active_id] if active_id else [])
                 for active_id in active_ids:
                     # run context dedicated to a particular active_id
-                    run_self = self.with_context(active_ids=[active_id], active_id=active_id)
+                    run_self = action.with_context(active_ids=[active_id], active_id=active_id)
                     eval_context["env"].context = run_self._context
-                    res = runner(run_self, action, eval_context=eval_context)
+                    res = runner(run_self, eval_context=eval_context)
             else:
                 _logger.warning(
                     "Found no way to execute server action %r of type %r, ignoring it. "
