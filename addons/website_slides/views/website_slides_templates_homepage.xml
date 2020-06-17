@@ -186,7 +186,7 @@
                         <a class="nav-link nav-item px-3" href="/slides"><i class="fa fa-chevron-left"/></a>
                     </div>
                     <!-- Clear filtering (mobile)-->
-                    <div class="form-inline text-nowrap ml-auto d-md-none" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
+                    <div class="form-inline text-nowrap ml-auto d-md-none" t-if="search_slide_type or search_my or search_tags">
                         <a href="/slides/all" class="btn btn-info mr-2" role="button" title="Clear filters">
                             <i class="fa fa-eraser"/> Clear filters
                         </a>
@@ -197,7 +197,6 @@
                             <input type="search" name="search" class="form-control"
                                 placeholder="Search courses" aria-label="Search"
                                 t-att-value="search_term"/>
-                            <input t-if="search_tags" type="hidden" name="tags" t-att-value="str(search_tags.ids)"/>
                             <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
                             <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
                             <div class="input-group-append">
@@ -225,8 +224,8 @@
                                         t-esc="tag_group.name"/>
                                     <div class="dropdown-menu" t-att-id="'navToogleTagGroup%s' % tag_group.id">
                                         <t t-foreach="tag_group.tag_ids" t-as="tag">
-                                            <a rel="nofollow" t-att-class="'dropdown-item %s' % ('active' if tag in search_tags else '')"
-                                                t-att-href="'/slides/all?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))"
+                                            <a rel="nofollow" t-att-class="'dropdown-item post_link %s' % ('active' if tag in search_tags else '')"
+                                                t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_type=search_slide_type)"
                                                 t-esc="tag.name"/>
                                         </t>
                                     </div>
@@ -234,7 +233,7 @@
                             </t>
                         </ul>
                         <!-- Clear filtering (desktop)-->
-                        <div class="form-inline ml-auto d-none d-md-flex" t-if="search_slide_type or search_my or search_tags or search_channel_tag_id">
+                        <div class="form-inline ml-auto d-none d-md-flex" t-if="search_slide_type or search_my or search_tags">
                             <a href="/slides/all" class="btn btn-info text-nowrap mr-2" role="button" title="Clear filters">
                                 <i class="fa fa-eraser"/> Clear filters
                             </a>
@@ -245,7 +244,6 @@
                                 <input type="search" name="search" class="form-control"
                                     placeholder="Search courses" aria-label="Search"
                                     t-att-value="search_term"/>
-                                <input t-if="search_tags" type="hidden" name="tags" t-att-value="str(search_tags.ids)"/>
                                 <input t-if="search_my" type="hidden" name="my" t-att-value="1"/>
                                 <input t-if="search_slide_type" type="hidden" name="slide_type" t-att-value="search_slide_type" />
                                 <div class="input-group-append">
@@ -269,26 +267,26 @@
                       <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
                       <i class="fa fa-tag mr-2 text-muted"/>
                       My Courses
-                      <a t-att-href="'/slides/all?%s' % keep_query('*', my=None)" class="btn border-0 py-1">&#215;</a>
+                      <a t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids), search=search_term)" class="btn border-0 py-1 post_link" t-att-rel="search_tags and 'nofollow'">&#215;</a>
                     </span>
                 </t>
                 <t t-if="search_term">
                       <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
                       <i class="fa fa-tag mr-2 text-muted"/>
                       <t t-esc="search_term"/>
-                      <a t-att-href="'/slides/all?%s' % keep_query('*', search=None)" class="btn border-0 py-1">&#215;</a>
+                      <a t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids), my=search_my, slide_type=search_slide_type)" class="btn border-0 py-1 post_link" t-att-rel="search_tags and 'nofollow'">&#215;</a>
                     </span>
                 </t>
                 <t t-foreach="search_tags" t-as="tag">
                     <span class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
                         <i class="fa fa-tag mr-2 text-muted"/>
                         <t t-esc="tag.display_name"/>
-                        <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((search_tags - tag).ids))" class="btn border-0 py-1">&#215;</a>
+                        <a t-att-href='slide_query_url(tag=slugify_tags(search_tags.ids, tag.id), my=search_my, search=search_term, slide_type=search_slide_type)' class="btn border-0 py-1 post_link" t-att-rel="search_tags and 'nofollow'">&#215;</a>
                     </span>
                 </t>
             </div>
             <div class="container o_wslides_home_main pb-5">
-                <div t-if="not channels and not search_term and not search_slide_type and not search_my and not search_tags and not search_channel_tag_id">
+                <div t-if="not channels and not search_term and not search_slide_type and not search_my and not search_tags">
                     <p class="h2">No Course created yet.</p>
                     <p groups="website_slides.group_website_slides_officer">Click on "New" in the top-right corner to write your first course.</p>
                 </div>
@@ -336,10 +334,10 @@
                 <div t-if="channel.tag_ids" class="mt-2 pt-1 o_wslides_desc_truncate_2">
                     <t t-foreach="channel.tag_ids" t-as="tag">
                         <t t-if="search_tags">
-                            <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((tag | search_tags).ids))" t-attf-class="badge #{'badge-primary' if tag in search_tags else 'o_wslides_channel_tag o_tag_color_0'}" t-esc="tag.name"/>
+                            <a t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_type=search_slide_type)" t-attf-class="badge post_link #{'badge-primary' if tag in search_tags else 'o_wslides_channel_tag o_tag_color_0'}" t-att-rel="search_tags and 'nofollow'" t-esc="tag.name"/>
                         </t>
                         <t t-else="">
-                            <a t-att-href="'/slides/all?%s' % keep_query('*', tags=str((tag | search_tags).ids))" t-attf-class="badge o_wslides_channel_tag #{'o_tag_color_'+str(tag.color)}" t-esc="tag.name"/>
+                            <a t-att-href="slide_query_url(tag=slugify_tags(search_tags.ids, toggle_tag_id=tag.id), my=search_my, search=search_term, slide_type=search_slide_type)" t-attf-class="badge post_link o_wslides_channel_tag #{'o_tag_color_'+str(tag.color)}" t-att-rel="search_tags and 'nofollow'" t-esc="tag.name"/>
                         </t>
                     </t>
                 </div>
