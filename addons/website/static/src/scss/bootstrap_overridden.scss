@@ -10,6 +10,14 @@ $yiq-contrasted-threshold: false !default;
 $yiq-text-dark: o-color('900') !default;
 $yiq-text-light: o-color('white') !default;
 
+// Spacing
+//
+// Control the default styling of most Bootstrap elements by modifying these
+// variables. Mostly focused on spacing.
+// You can add more entries to the $spacers map, should you need more variation.
+
+$spacer: 1rem !default; // Need to predefine as used below
+
 // Body
 //
 // Settings for the `<body>` element.
@@ -54,6 +62,13 @@ $headings-color: o-color('o-cc1-headings') !default;
 
 $text-muted: mute-color($body-color) !default;
 
+// Navbar
+
+// Increase default navbar padding for some navbar styles
+$navbar-padding-y: if(index(('fill', 'pills', 'outline'), o-website-value('header-links-style')), ($spacer / 2) * 1.25, null) !default;
+$navbar-nav-link-padding-x: if(index(('outline', 'block'), o-website-value('header-links-style')), .5rem * 3, null) !default;
+$navbar-nav-link-padding-x: if(o-website-value('header-links-style') == 'border-bottom', .5rem * 2, null) !default;
+
 // Jumbotron
 
 $jumbotron-bg: transparent !default;
@@ -66,3 +81,7 @@ $o-btn-outline-defaults: () !default;
         $o-btn-outline-defaults: append($o-btn-outline-defaults, $color);
     }
 }
+
+// Increase default navbar pills padding for 'pills' mode and add big radius
+$o-navbar-nav-pills-link-padding-x: if(o-website-value('header-links-style') == 'pills', 1rem * 1.5, null) !default;
+$o-navbar-nav-pills-link-border-radius: if(o-website-value('header-links-style') == 'pills', 10rem, null) !default;
