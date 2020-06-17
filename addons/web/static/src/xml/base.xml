@@ -142,9 +142,9 @@
     </div>
 </t>
 
-<t t-name="web.DialogButton.tooltip" owl="1">
-    <div class="oe_tooltip_string" role="tooltip">
-        <div class="tooltip-inner">
+<t t-name="web.DialogButton.popover" owl="1">
+    <div>
+        <div>
             <t>Hit ENTER to <t t-esc="title"/></t>
         </div>
     </div>
@@ -647,28 +647,31 @@
 
 <div t-name="Loading" class="o_loading"/>
 
-<t t-name="WidgetLabel.tooltip">
-    <div class="oe_tooltip_string" t-if="widget.string" role="tooltip">
+<t t-name="WidgetLabelTitle.popover">
+    <div t-if="widget.string">
         <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
     </div>
-    <p t-if="help" class="oe_tooltip_help" role="tooltip">
+</t>
+
+<t t-name="WidgetLabel.popover">
+    <p t-if="help">
         <t t-esc="help"/>
     </p>
-    <ul t-if="debug" class="oe_tooltip_technical" role="tooltip">
+    <ul t-if="debug">
         <li data-item="field" t-if="widget.name">
-            <span class="oe_tooltip_technical_title">Field:</span>
+            <span>Field:</span>
             <t t-esc="widget.name"/>
         </li>
         <li data-item="object">
-            <span class="oe_tooltip_technical_title">Object:</span>
+            <span>Object:</span>
             <t t-esc="widget.model"/>
         </li>
         <li data-item="type">
-            <span class="oe_tooltip_technical_title">Type:</span>
+            <span>Type:</span>
             <t t-esc="widget.field.type"/>
         </li>
         <li t-if="widget.attrs.widget" data-item="widget">
-            <span class="oe_tooltip_technical_title">Widget:</span>
+            <span>Widget:</span>
             <t t-set="description" t-value="widget.attrs.Widget.prototype.description"/>
             <t t-if="description">
                 <t t-esc="description"/> (<t t-esc="widget.attrs.widget"/>)
@@ -678,36 +681,36 @@
             </t>
         </li>
         <li t-if="widget.attrs.size || widget.field.size" data-item="size">
-            <span class="oe_tooltip_technical_title">Size:</span>
+            <span>Size:</span>
             <t t-esc="widget.attrs.size || widget.field.size"/>
         </li>
         <li t-if="widget.attrs.context || widget.field.context" data-item="context">
-            <span class="oe_tooltip_technical_title">Context:</span>
+            <span>Context:</span>
             <t t-esc="widget.attrs.context || JSON.stringify(widget.field.context)"/>
         </li>
         <li t-if="widget.attrs.domain || widget.field.domain" data-item="domain">
-            <span class="oe_tooltip_technical_title">Domain:</span>
+            <span>Domain:</span>
             <t t-esc="widget.attrs.domain || JSON.stringify(widget.field.domain)"/>
         </li>
         <li t-if="widget.attrs.modifiers and !_.isEmpty(widget.attrs.modifiers)" data-item="modifiers">
-            <span class="oe_tooltip_technical_title">Modifiers:</span>
+            <span>Modifiers:</span>
             <t t-esc="JSON.stringify(widget.attrs.modifiers)"/>
         </li>
         <li t-if="widget.field and widget.field.change_default" data-item="change_default">
-            <span class="oe_tooltip_technical_title">Change default:</span>
+            <span>Change default:</span>
             Yes
         </li>
         <li t-if="widget.attrs.on_change" data-item="on_change">
-            <span class="oe_tooltip_technical_title">On change:</span>
+            <span>On change:</span>
             <t t-esc="widget.attrs.on_change"/>
         </li>
         <li t-if="widget.field and widget.field.relation" data-item="relation">
-            <span class="oe_tooltip_technical_title">Relation:</span>
+            <span>Relation:</span>
             <t t-esc="widget.field.relation"/>
         </li>
         <li t-if="widget.field and widget.field.selection" data-item="selection">
-            <span class="oe_tooltip_technical_title">Selection:</span>
-            <ul class="oe_tooltip_technical">
+            <span>Selection:</span>
+            <ul>
                 <li t-foreach="widget.field.selection" t-as="option">
                     [<t t-esc="option[0]"/>]
                     <t t-if="option[1]"> - </t>
@@ -717,8 +720,8 @@
         </li>
     </ul>
 </t>
-<t t-name="WidgetButton.tooltip">
-    <div class="oe_tooltip_string" t-if="debug || node.attrs.string" role="tooltip">
+<t t-name="WidgetButtonTitle.popover">
+    <div t-if="debug || node.attrs.string">
         <t t-if="debug">
             Button
             <t t-if="node.attrs.string">: </t>
@@ -726,37 +729,39 @@
         </t>
         <t t-esc="node.attrs.string"/>
     </div>
-    <p t-if="node.attrs.help" class="oe_tooltip_help" role="tooltip">
+</t>
+<t t-name="WidgetButton.popover">
+    <p t-if="node.attrs.help">
         <t t-esc="node.attrs.help"/>
     </p>
-    <ul t-if="debug" class="oe_tooltip_technical" role="tooltip">
+    <ul t-if="debug">
         <li data-item="object">
-            <span class="oe_tooltip_technical_title">Object:</span>
+            <span>Object:</span>
             <t t-esc="state.model"/>
         </li>
         <li t-if="node.attrs.context" data-item="context">
-            <span class="oe_tooltip_technical_title">Context:</span>
+            <span>Context:</span>
             <t t-esc="node.attrs.context || widget.field.context"/>
         </li>
         <li t-if="node.attrs.modifiers and !_.isEmpty(node.attrs.modifiers)" data-item="modifiers">
-            <span class="oe_tooltip_technical_title">Modifiers:</span>
+            <span>Modifiers:</span>
             <t t-esc="JSON.stringify(node.attrs.modifiers)"/>
         </li>
         <li t-if="node.attrs.special" data-item="special">
-            <span class="oe_tooltip_technical_title">Special:</span>
+            <span>Special:</span>
             <t t-esc="node.attrs.special"/>
         </li>
         <t t-set="button_type" t-value="node.attrs.type"/>
         <li t-if="button_type" data-item="button_type">
-            <span class="oe_tooltip_technical_title">Button Type:</span>
+            <span>Button Type:</span>
             <t t-esc="button_type"/>
         </li>
         <li t-if="button_type === 'object'" data-item="button_method">
-            <span class="oe_tooltip_technical_title">Method:</span>
+            <span>Method:</span>
             <t t-esc="node.attrs.name"/>
         </li>
         <li t-if="button_type === 'action'" data-item="button_action">
-            <span class="oe_tooltip_technical_title">Action ID:</span>
+            <span>Action ID:</span>
             <t t-esc="node.attrs.name"/>
         </li>
     </ul>
@@ -897,17 +902,17 @@
         </button>
     </div>
 </t>
-<t t-name="SaveCancelButton.tooltip">
-    <div class="oe_tooltip_string" role="alert">
-        <div class="tooltip-inner">
+<t t-name="SaveCancelButton.popover">
+    <div role="alert">
+        <div>
             Hit ENTER to SAVE<br/>
             Hit ESCAPE to DISCARD
         </div>
     </div>
 </t>
-<t t-name="CreateButton.tooltip">
-    <div class="oe_tooltip_string" role="tooltip">
-        <div class="tooltip-inner">
+<t t-name="CreateButton.popover">
+    <div>
+        <div>
             Hit ENTER to CREATE<br/>
             Hit DOWN to navigate to the list below
         </div>

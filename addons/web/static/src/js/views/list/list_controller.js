@@ -121,12 +121,13 @@ var ListController = BasicController.extend({
             this.$buttons = $(qweb.render(this.buttons_template, {widget: this}));
             this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
             this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
-            this.$buttons.find('.o_list_button_add').tooltip({
+            this.$buttons.find('.o_list_button_add').popover({
+                html: true,
                 delay: {show: 200, hide: 0},
-                title: function () {
-                    return qweb.render('CreateButton.tooltip');
+                content: function () {
+                    return qweb.render('CreateButton.popover');
                 },
-                trigger: 'manual',
+                trigger: 'hover',
             });
             this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
@@ -238,7 +239,7 @@ var ListController = BasicController.extend({
     _assignCreateKeyboardBehavior: function($createButton) {
         var self = this;
         $createButton.on('keydown', function(e) {
-            $createButton.tooltip('hide');
+            $createButton.popover('hide');
             switch(e.which) {
                 case $.ui.keyCode.ENTER:
                     e.preventDefault();
@@ -255,7 +256,7 @@ var ListController = BasicController.extend({
                         !self.model.isInSampleMode()
                     ) {
                         e.preventDefault();
-                        $createButton.tooltip('show');
+                        $createButton.popover('show');
                     }
                     break;
             }

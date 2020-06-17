@@ -272,17 +272,17 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         return this._activateFieldWidget(record, currentIndex, {inc:-1});
     },
     /**
-     * Add a tooltip on a $node, depending on a field description
+     * Add a popover on a $node, depending on a field description
      *
      * @param {FieldWidget} widget
      * @param {$node} $node
      */
-    _addFieldTooltip: function (widget, $node) {
-        // optional argument $node, the jQuery element on which the tooltip
-        // should be attached if not given, the tooltip is attached on the
+    _addFieldPopover: function (widget, $node) {
+        // optional argument $node, the jQuery element on which the popover
+        // should be attached if not given, the popover is attached on the
         // widget's $el
         $node = $node.length ? $node : widget.$el;
-        $node.tooltip(this._getTooltipOptions(widget));
+        $node.popover(this._getPopoverOptions(widget));
     },
     /**
      * Does the necessary DOM updates to match the given modifiers data. The
@@ -409,24 +409,29 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         return null;
     },
     /**
-     * Get the options for the tooltip. This allow to change this options in another module.
+     * Get the options for the popover. This allow to change this options in another module.
      * @param widget
      * @return {{}}
      * @private
      */
-    _getTooltipOptions: function (widget) {
-        return {
-            title: function () {
-                let help = widget.attrs.help || widget.field.help || '';
-                if (session.display_switch_company_menu && widget.field.company_dependent) {
-                    help += (help ? '\n\n' : '') + _t('Values set here are company-specific.');
-                }
-                const debug = config.isDebug();
-                if (help || debug) {
-                    return qweb.render('WidgetLabel.tooltip', { debug, help, widget });
-                }
-            }
-        };
+    _getPopoverOptions: function (widget) {
+        const debug = config.isDebug();
+        let help = widget.attrs.help || widget.field.help || '';
+        if (session.display_switch_company_menu && widget.field.company_dependent) {
+            help += (help ? '\n\n' : '') + _t('Values set here are company-specific.');
+        }
+        if (help || debug) {
+            return {
+                html: true,
+                trigger: 'hover',
+                title: function() {
+                    return qweb.render('WidgetLabelTitle.popover', { debug, widget });
+                },
+                content: function() {
+                    return qweb.render('WidgetLabel.popover', { debug, help, widget });
+                },
+            };
+        }
     },
     /**
      * @private

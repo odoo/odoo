@@ -363,6 +363,7 @@ var Dialog = Widget.extend({
                     e.preventDefault();
                     var $primaryButton = $(e.target);
                     $primaryButton.tooltip({
+                        html: true,
                         delay: {show: 200, hide:0},
                         title: function(){
                             return QWeb.render('FormButton.tooltip',{title:$primaryButton.text().toUpperCase()});

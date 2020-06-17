@@ -154,12 +154,13 @@ var FormController = BasicController.extend({
                 this.$buttons.on('click', '.o_form_button_save', this._onSave.bind(this));
                 this.$buttons.on('click', '.o_form_button_cancel', this._onDiscard.bind(this));
                 this._assignSaveCancelKeyboardBehavior(this.$buttons.find('.o_form_buttons_edit'));
-                this.$buttons.find('.o_form_buttons_edit').tooltip({
+                this.$buttons.find('.o_form_buttons_edit').popover({
                     delay: {show: 200, hide:0},
-                    title: function(){
-                        return qweb.render('SaveCancelButton.tooltip');
+                    html: true,
+                    content: function(){
+                        return qweb.render('SaveCancelButton.popover');
                     },
-                    trigger: 'manual',
+                    trigger: 'hover',
                 });
             }
         }
@@ -326,7 +327,7 @@ var FormController = BasicController.extend({
                     break;
                 case $.ui.keyCode.TAB:
                     if (!e.shiftKey && e.target.classList.contains('btn-primary')) {
-                        $saveCancelButtonContainer.tooltip('show');
+                        $saveCancelButtonContainer.popover('show');
                         e.preventDefault();
                     }
                     break;
