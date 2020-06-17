@@ -920,6 +920,12 @@ class PurchaseOrderLine(models.Model):
                     line.order_id.message_post_with_view('purchase.track_po_line_template',
                                                          values={'line': line, 'product_qty': values['product_qty']},
                                                          subtype_id=self.env.ref('mail.mt_note').id)
+        if 'qty_received' in values:
+            for line in self:
+                if values['qty_received'] != line.qty_received and line.order_id.state == 'purchase':
+                    line.order_id.message_post_with_view('purchase.track_po_line_qty_received_template',
+                                                         values={'line': line, 'qty_received': values['qty_received']},
+                                                         subtype_id=self.env.ref('mail.mt_note').id)
         return super(PurchaseOrderLine, self).write(values)
 
     def unlink(self):

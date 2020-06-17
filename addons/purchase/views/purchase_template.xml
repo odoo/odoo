@@ -15,4 +15,14 @@
         </div>
     </template>
 
+    <template id="track_po_line_qty_received_template">
+        <div>
+            <strong>The received quantity has been updated.</strong>
+            <ul>
+                <li><t t-esc="line.product_id.display_name"/>:</li>
+                Received Quantity: <t t-esc="line.qty_received" /> -&gt; <t t-esc="float(qty_received)"/><br/>
+            </ul>
+        </div>
+    </template>
+
 </odoo>
