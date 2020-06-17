@@ -1,19 +1,20 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
-import json
-import logging
-import werkzeug
-import math
-
 from ast import literal_eval
 from collections import defaultdict
 
+import base64
+import json
+import logging
+import math
+import werkzeug
+
 from odoo import http, tools, _
-from odoo.addons.http_routing.models.ir_http import slug
-from odoo.addons.website_profile.controllers.main import WebsiteProfile
+from odoo.addons.http_routing.models.ir_http import slug, unslug
+from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
+from odoo.addons.website_profile.controllers.main import WebsiteProfile
 from odoo.exceptions import AccessError, UserError
 from odoo.http import request
 from odoo.osv import expression
@@ -201,21 +202,14 @@ class WebsiteSlides(WebsiteProfile):
 
         return channel_progress
 
-    def _extract_channel_tag_search(self, **post):
-        tags = request.env['slide.channel.tag']
-        if post.get('tags'):
-            try:
-                tag_ids = literal_eval(post['tags'])
-            except:
-                pass
-            else:
-                # perform a search to filter on existing / valid tags implicitely
-                tags = request.env['slide.channel.tag'].search([('id', 'in', tag_ids)])
-        return tags
-
-    def _build_channel_domain(self, base_domain, slide_type=None, my=False, **post):
+    def _build_channel_domain(self, base_domain, slide_type=None, slug_tags=None, my=False, **post):
         search_term = post.get('search')
-        tags = self._extract_channel_tag_search(**post)
+        if slug_tags:
+            tags = self._channel_search_tags_slug(slug_tags)
+        elif post.get('tags'):
+            tags = self._channel_search_tags_ids(post['tags'])
+        else:
+            tags = request.env['slide.channel.tag']
 
         domain = base_domain
         if search_term:
@@ -261,6 +255,41 @@ class WebsiteSlides(WebsiteProfile):
 
     # TAG UTILITIES
     # --------------------------------------------------
+
+    def _slugify_tags(self, tag_ids, toggle_tag_id=None):
+        """ Prepares a comma separated slugified tags for the sake of readable
+        URLs.
+
+        :param toggle_tag_id: add the tag being clicked (current_tag) to the already
+          selected tags (tag_ids) as well as in URL; if tag is already selected
+          by the user it is removed from the selected tags (and so from the URL);
+        """
+        tag_ids = list(tag_ids)  # required to avoid using the same list
+        if toggle_tag_id and toggle_tag_id in tag_ids:
+            tag_ids.remove(toggle_tag_id)
+        elif toggle_tag_id:
+            tag_ids.append(toggle_tag_id)
+        return ','.join(slug(tag) for tag in request.env['slide.channel.tag'].browse(tag_ids))
+
+    def _channel_search_tags_ids(self, search_tags):
+        """ Input: %5B4%5D """
+        ChannelTag = request.env['slide.channel.tag']
+        try:
+            tag_ids = literal_eval(search_tags or '')
+        except Exception:
+            return ChannelTag
+        # perform a search to filter on existing / valid tags implicitly
+        return ChannelTag.search([('id', 'in', tag_ids)]) if tag_ids else ChannelTag
+
+    def _channel_search_tags_slug(self, search_tags):
+        """ Input: hotels-1,adventure-2 """
+        ChannelTag = request.env['slide.channel.tag']
+        try:
+            tag_ids = list(filter(None, [unslug(tag)[1] for tag in (search_tags or '').split(',')]))
+        except Exception:
+            return ChannelTag
+        # perform a search to filter on existing / valid tags implicitly
+        return ChannelTag.search([('id', 'in', tag_ids)]) if tag_ids else ChannelTag
 
     def _create_or_get_channel_tag(self, tag_id, group_id):
         if not tag_id:
@@ -336,30 +365,43 @@ class WebsiteSlides(WebsiteProfile):
             'top3_users': self._get_top3_users(),
             'challenges': challenges,
             'challenges_done': challenges_done,
-            'search_tags': request.env['slide.channel.tag']
+            'search_tags': request.env['slide.channel.tag'],
+            'slide_query_url': QueryURL('/slides/all', ['tag']),
+            'slugify_tags': self._slugify_tags,
         })
 
         return request.render('website_slides.courses_home', values)
 
-    @http.route('/slides/all', type='http', auth="public", website=True, sitemap=True)
-    def slides_channel_all(self, slide_type=None, my=False, **post):
+    @http.route(['/slides/all', '/slides/all/tag/<string:slug_tags>'], type='http', auth="public", website=True, sitemap=True)
+    def slides_channel_all(self, slide_type=None, slug_tags=None, my=False, **post):
         """ Home page displaying a list of courses displayed according to some
         criterion and search terms.
 
           :param string slide_type: if provided, filter the course to contain at
            least one slide of type 'slide_type'. Used notably to display courses
            with certifications;
+          :param string slug_tags: if provided, filter the slide.channels having
+            the tag(s) (in comma separated slugified form);
           :param bool my: if provided, filter the slide.channels for which the
            current user is a member of
           :param dict post: post parameters, including
 
            * ``search``: filter on course description / name;
-           * ``channel_tag_id``: filter on courses containing this tag;
-           * ``channel_tag_group_id_<id>``: filter on courses containing this tag
-             in the tag group given by <id> (used in navigation based on tag group);
         """
+
+        if slug_tags and request.httprequest.method == 'GET':
+            # Redirect `tag-1,tag-2` to `tag-1` to disallow multi tags
+            # in GET request for proper bot indexation;
+            # if the search term is available, do not remove any existing
+            # tags because it is user who provided search term with GET
+            # request and so clearly it's not SEO bot.
+            tag_list = slug_tags.split(',')
+            if len(tag_list) > 1 and not post.get('search'):
+                url = QueryURL('/slides/all', ['tag'], tag=tag_list[0], my=my, slide_type=slide_type)()
+                return request.redirect(url, code=302)
+
         domain = request.website.website_domain()
-        domain = self._build_channel_domain(domain, slide_type=slide_type, my=my, **post)
+        domain = self._build_channel_domain(domain, slide_type=slide_type, slug_tags=slug_tags, my=my, **post)
 
         order = self._channel_order_by_criterion.get(post.get('sorting'))
 
@@ -368,7 +410,12 @@ class WebsiteSlides(WebsiteProfile):
 
         tag_groups = request.env['slide.channel.tag.group'].search(
             ['&', ('tag_ids', '!=', False), ('website_published', '=', True)])
-        search_tags = self._extract_channel_tag_search(**post)
+        if slug_tags:
+            search_tags = self._channel_search_tags_slug(slug_tags)
+        elif post.get('tags'):
+            search_tags = self._channel_search_tags_ids(post['tags'])
+        else:
+            search_tags = request.env['slide.channel.tag']
 
         values = self._prepare_user_values(**post)
         values.update({
@@ -378,8 +425,9 @@ class WebsiteSlides(WebsiteProfile):
             'search_slide_type': slide_type,
             'search_my': my,
             'search_tags': search_tags,
-            'search_channel_tag_id': post.get('channel_tag_id'),
             'top3_users': self._get_top3_users(),
+            'slugify_tags': self._slugify_tags,
+            'slide_query_url': QueryURL('/slides/all', ['tag']),
         })
 
         return request.render('website_slides.courses_all', values)
