@@ -136,12 +136,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # delete N lines: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=16, demo=16):
+        with self.assertQueryCount(__system__=14, demo=14):
             rec1.write({'line_ids': [(2, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=14, demo=14):
+        with self.assertQueryCount(__system__=12, demo=12):
             rec1.write({'line_ids': [(2, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -151,12 +151,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # unlink N lines: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=13, demo=13):
+        with self.assertQueryCount(__system__=11, demo=11):
             rec1.write({'line_ids': [(3, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=14, demo=14):
+        with self.assertQueryCount(__system__=12, demo=12):
             rec1.write({'line_ids': [(3, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -190,7 +190,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # empty N lines in rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=15, demo=15):
+        with self.assertQueryCount(__system__=13, demo=13):
             rec2.write({'line_ids': [(5,)]})
         self.assertFalse(rec2.line_ids)
 
@@ -262,12 +262,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # delete N tags: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=10, demo=10):
+        with self.assertQueryCount(__system__=8, demo=8):
             rec1.write({'tag_ids': [(2, tag.id) for tag in tags[0]]})
         self.assertEqual(rec1.tag_ids, tags[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=10, demo=10):
+        with self.assertQueryCount(__system__=8, demo=8):
             rec1.write({'tag_ids': [(2, tag.id) for tag in tags[1:]]})
         self.assertFalse(rec1.tag_ids)
         self.assertFalse(tags.exists())
