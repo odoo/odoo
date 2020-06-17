@@ -198,13 +198,7 @@ class User(models.Model):
             user.employee_id = self.env['hr.employee'].search([('id', 'in', user.employee_ids.ids), ('company_id', '=', self.env.company.id)], limit=1)
 
     def _search_company_employee(self, operator, value):
-        employees = self.env['hr.employee'].search([
-            ('name', operator, value),
-            '|',
-            ('company_id', '=', self.env.company.id),
-            ('company_id', '=', False)
-        ], order='company_id ASC')
-        return [('id', 'in', employees.mapped('user_id').ids)]
+        return [('employee_ids', operator, value)]
 
     def action_create_employee(self):
         self.ensure_one()
