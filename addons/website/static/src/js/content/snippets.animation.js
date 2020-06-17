@@ -912,8 +912,9 @@ registry.anchorSlide = publicWidget.Widget.extend({
      */
     _scrollTo: function ($el, scrollValue = 'true') {
         const headerHeight = this._computeHeaderHeight();
+        const offset = $el.css('position') !== 'fixed' ? $el.offset().top : $el.position().top;
         $('html, body').animate({
-            scrollTop: $el.offset().top - headerHeight,
+            scrollTop: offset - headerHeight,
         }, scrollValue === 'true' ? 500 : 0);
     },
     /**
