@@ -175,6 +175,7 @@ class Theme(models.AbstractModel):
                 'btn-ripple': 'null',
                 'header-template': 'null',
                 'footer-template': 'null',
+                'footer-scrolltop': 'null',
             }
         )
 
@@ -193,6 +194,9 @@ class Theme(models.AbstractModel):
         self.disable_view('website.template_footer_name_logo_links_about_us')
         self.disable_view('website.template_footer_logo_only')
         self.disable_view('website.template_footer_address_logo')
+
+        # Reinitialize footer scrolltop template
+        self.disable_view('website.option_footer_scrolltop')
 
     @api.model
     def _toggle_view(self, xml_id, active):
