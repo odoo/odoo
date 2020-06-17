@@ -28,6 +28,13 @@ $-editor-messages-margin-x: 2%;
     &:focus, &[data-oe-type] {
         min-height: 0.8em;
         min-width: 8px;
+
+        // TODO this feature just needs to be reviewed to not have to make
+        // exceptions such as this
+        &#o_footer_scrolltop_wrapper {
+            min-height: 0;
+            min-width: 0;
+        }
     }
     &.o_is_inline_editable {
         display: inline-block;
