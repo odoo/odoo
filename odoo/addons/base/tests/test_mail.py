@@ -326,7 +326,7 @@ class TestHtmlTools(BaseCase):
         for content in void_strings_samples:
             self.assertTrue(is_html_empty(content))
 
-        void_html_samples = ['<p><br></p>', '<p><br> </p>']
+        void_html_samples = ['<p><br></p>', '<p><br> </p>', '<p><br /></p >']
         for content in void_html_samples:
             self.assertTrue(is_html_empty(content), 'Failed with %s' % content)
 
