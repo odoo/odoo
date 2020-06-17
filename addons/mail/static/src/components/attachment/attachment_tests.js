@@ -6,6 +6,7 @@ const components = {
 };
 const {
     afterEach: utilsAfterEach,
+    afterNextRender,
     beforeEach: utilsBeforeEach,
     start: utilsStart,
 } = require('mail/static/src/utils/test_utils.js');
@@ -535,6 +536,49 @@ QUnit.test('auto layout with image', async function (assert) {
         document.querySelectorAll(`.o_Attachment_aside`).length,
         0,
         "attachment should not have an aside element"
+    );
+});
+
+QUnit.test('view attachment', async function (assert) {
+    assert.expect(3);
+
+    await this.start({
+        hasDialog: true,
+        async mockRPC(route, args) {
+            if (route.includes('web/image/750')) {
+                return;
+            }
+            return this._super(...arguments);
+        },
+    });
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.png",
+        id: 750,
+        mimetype: 'image/png',
+        name: "test.png",
+    });
+
+    await this.createAttachmentComponent(attachment, {
+        detailsMode: 'hover',
+        isDownloadable: false,
+        isEditable: false,
+    });
+
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment_image',
+        "attachment should have an image part"
+    );
+    await afterNextRender(() => document.querySelector('.o_Attachment_image').click());
+    assert.containsOnce(
+        document.body,
+        '.o_Dialog',
+        'a dialog should have been opened once attachment image is clicked',
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentViewer',
+        'an attachment viewer should have been opened once attachment image is clicked',
     );
 });
 
