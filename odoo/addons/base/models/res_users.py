@@ -622,7 +622,7 @@ class Users(models.Model):
             user_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)
         if not user_ids:
             user_ids = self._search(expression.AND([[('name', operator, name)], args]), limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(user_ids).with_user(name_get_uid))
+        return user_ids
 
     def copy(self, default=None):
         self.ensure_one()

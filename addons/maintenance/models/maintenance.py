@@ -107,7 +107,7 @@ class MaintenanceEquipment(models.Model):
             equipment_ids = self._search([('name', '=', name)] + args, limit=limit, access_rights_uid=name_get_uid)
         if not equipment_ids:
             equipment_ids = self._search([('name', operator, name)] + args, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(equipment_ids).with_user(name_get_uid))
+        return equipment_ids
 
     name = fields.Char('Equipment Name', required=True, translate=True)
     company_id = fields.Many2one('res.company', string='Company',

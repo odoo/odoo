@@ -48,8 +48,7 @@ class Bank(models.Model):
             domain = ['|', ('bic', '=ilike', name + '%'), ('name', operator, name)]
             if operator in expression.NEGATIVE_TERM_OPERATORS:
                 domain = ['&'] + domain
-        bank_ids = self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(bank_ids).with_user(name_get_uid))
+        return self._search(domain + args, limit=limit, access_rights_uid=name_get_uid)
 
     @api.onchange('country')
     def _onchange_country_id(self):

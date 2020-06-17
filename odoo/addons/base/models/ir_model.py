@@ -257,8 +257,7 @@ class IrModel(models.Model):
         if args is None:
             args = []
         domain = args + ['|', ('model', operator, name), ('name', operator, name)]
-        model_ids = self._search(domain, limit=limit, access_rights_uid=name_get_uid)
-        return models.lazy_name_get(self.browse(model_ids).with_user(name_get_uid))
+        return self._search(domain, limit=limit, access_rights_uid=name_get_uid)
 
     def _drop_table(self):
         for model in self:
