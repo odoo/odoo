@@ -629,6 +629,11 @@ class IrServerObjectLines(models.Model):
                     expr = int(line.value)
                 except Exception:
                     pass
+            elif line.col1.ttype == 'many2many':
+                try:
+                    expr = [(6, 0, [int(line.value)])]
+                except Exception:
+                    pass
             result[line.id] = expr
         return result
 
