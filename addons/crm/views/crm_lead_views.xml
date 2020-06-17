@@ -65,7 +65,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="action_schedule_meeting" type="object"
                                 class="oe_stat_button" icon="fa-calendar"
-                                context="{'partner_id': partner_id, 'search_default_opportunity_id': active_id}"
+                                context="{'partner_id': partner_id, 'search_default_opportunity_id': id}"
                                 attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <div class="o_stat_info">
                                     <field name="meeting_count" class="o_stat_value"/>

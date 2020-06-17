@@ -110,8 +110,6 @@ def initialize_sys_path():
     ``import odoo.addons.crm``) works even if the addons are not in the
     PYTHONPATH.
     """
-    initialize_sys_path.called = True
-
     # hook odoo.addons on data dir
     dd = os.path.normcase(tools.config.addons_data_dir)
     if os.access(dd, os.R_OK) and dd not in odoo.addons.__path__:
@@ -143,9 +141,10 @@ def initialize_sys_path():
     sys.modules["odoo.addons.base.maintenance"] = maintenance_pkg
     sys.modules["odoo.addons.base.maintenance.migrations"] = upgrade
 
-    if getattr(initialize_sys_path, 'called', False): # only initialize once
+    if not getattr(initialize_sys_path, 'called', False): # only initialize once
         sys.meta_path.insert(0, OdooHook())
         sys.meta_path.insert(0, AddonsHook())
+        initialize_sys_path.called = True
 
 
 def get_module_path(module, downloaded=False, display_warning=True):
