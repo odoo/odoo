@@ -218,3 +218,16 @@ class AccountInvoice(models.Model):
             return self.l10n_ch_isr_number
         else:
             return super()._get_computed_reference()
+
+    @api.model
+    def space_qrr_reference(self, qrr_ref):
+        """ Makes the provided QRR reference human-friendly, spacing its elements
+        by blocks of 5 from right to left.
+        """
+        spaced_qrr_ref = ''
+        i = len(qrr_ref) # i is the index after the last index to consider in substrings
+        while i > 0:
+            spaced_qrr_ref = qrr_ref[max(i-5, 0) : i] + ' ' + spaced_qrr_ref
+            i -= 5
+
+        return spaced_qrr_ref
