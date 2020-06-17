@@ -462,24 +462,20 @@ class IrActionsServer(models.Model):
         self.filtered('binding_model_id').write({'binding_model_id': False})
         return True
 
-    def _run_action_code_multi(self, eval_context=None):
+    def _run_action_code_multi(self, eval_context):
         safe_eval(self.sudo().code.strip(), eval_context, mode="exec", nocopy=True)  # nocopy allows to return 'action'
-        if 'action' in eval_context:
-            return eval_context['action']
+        return eval_context.get('action')
 
     def _run_action_multi(self, eval_context=None):
         res = False
         for act in self.child_ids.sorted():
-            result = act.run()
-            if result:
-                res = result
+            res = act.run() or res
         return res
 
     def _run_action_object_write(self, eval_context=None):
         """Apply specified write changes to active_id."""
-        res = {}
-        for exp in self.fields_lines:
-            res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
+        vals = self.fields_lines.eval_value(eval_context=eval_context)
+        res = {line.col1.name: vals[line.id] for line in self.fields_lines}
 
         if self._context.get('onchange_self'):
             record_cached = self._context['onchange_self']
@@ -493,9 +489,8 @@ class IrActionsServer(models.Model):
 
         If applicable, link active_id.<self.link_field_id> to the new record.
         """
-        res = {}
-        for exp in self.fields_lines:
-            res[exp.col1.name] = exp.eval_value(eval_context=eval_context)[exp.id]
+        vals = self.fields_lines.eval_value(eval_context=eval_context)
+        res = {line.col1.name: vals[line.id] for line in self.fields_lines}
 
         res = self.env[self.crud_model_id.model].create(res)
 
@@ -659,7 +654,7 @@ class IrServerObjectLines(models.Model):
                 line.value = str(line.resource_ref.id)
 
     def eval_value(self, eval_context=None):
-        result = dict.fromkeys(self.ids, False)
+        result = {}
         for line in self:
             expr = line.value
             if line.evaluation_type == 'equation':
