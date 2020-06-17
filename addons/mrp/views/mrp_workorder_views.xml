@@ -87,8 +87,6 @@
                 <field name="duration_expected" widget="float_time"/>
                 <field name="duration" widget="mrp_time_counter"
                   attrs="{'invisible': ['|', ('production_state','=', 'draft'), ('time_ids', '=', [])]}"/>
-                <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
-                    context="{'default_workcenter_id': workcenter_id}"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
                   attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
@@ -100,6 +98,8 @@
                   attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done')), ('working_state', '=', 'blocked')]}"/>
                 <button name="button_unblock" type="object" string="Unblock" context="{'default_workcenter_id': workcenter_id}" class="btn-danger"
                   attrs="{'invisible': ['|', ('production_state', 'in', ('draft', 'done')), ('working_state', '!=', 'blocked')]}"/>
+                <button name="action_open_wizard" type="object" icon="fa-external-link" class="oe_edit_only"
+                    context="{'default_workcenter_id': workcenter_id}"/>
                 <field name="show_json_popover" invisible="1"/>
                 <field name="json_popover" widget="mrp_workorder_popover" string=" " attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
             </tree>
@@ -146,15 +146,18 @@
                 <field name="product_id" invisible="1"/>
                 <field name="finished_lot_id" invisible="1"/>
                 <field name="qty_producing" invisible="1"/>
-                <group attrs="{'invisible': [('date_planned_start', '=', False)]}">
-                    <label for="date_planned_start" string="Planned Date"/>
-                    <div class="oe_inline">
-                        <field name="date_planned_start" class="mr8 oe_inline" required="True"/>
-                        <strong class="mr8 oe_inline">to</strong>
-                        <field name="date_planned_finished" class="oe_inline" required="True"/>
-                        <field name="show_json_popover" invisible="1"/>
-                        <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
-                    </div>
+                <group>
+                    <group attrs="{'invisible': [('date_planned_start', '=', False)]}">
+                        <label for="date_planned_start" string="Planned Date"/>
+                        <div class="oe_inline">
+                            <field name="date_planned_start" class="mr8 oe_inline" required="True"/>
+                            <strong class="mr8 oe_inline">to</strong>
+                            <field name="date_planned_finished" class="oe_inline" required="True"/>
+                            <field name="show_json_popover" invisible="1"/>
+                            <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
+                        </div>
+                        <field name="duration_expected" widget="float_time"/>
+                    </group>
                 </group>
                 <notebook>
                 <page string="Time Tracking" name="time_tracking" groups="mrp.group_mrp_manager">
@@ -196,22 +199,7 @@
                 </page>
                 </notebook>
             </sheet>
-            <div class="oe_chatter" groups="mrp.group_mrp_manager">
-                <field name="message_follower_ids"/>
-                <field name="activity_ids"/>
-                <field name="message_ids"/>
-            </div>
             </form>
-        </field>
-    </record>
-
-    <record model="ir.ui.view" id="mrp_production_workorder_form_view_inherit_gantt">
-        <field name="name">mrp.production.work.order.form.gantt</field>
-        <field name="model">mrp.workorder</field>
-        <field name="inherit_id" ref="mrp.mrp_production_workorder_form_view_inherit"/>
-        <field name="mode">primary</field>
-        <field name="arch" type="xml">
-            <field name="time_ids" position="replace"/>
         </field>
     </record>
 
@@ -295,7 +283,7 @@
                 decoration-warning="state == 'cancel' or 'text-warning' in json_popover"
                 color="workcenter_id"
                 display_unavailability="1"
-                form_view_id="%(mrp_production_workorder_form_view_inherit_gantt)d">
+                form_view_id="%(mrp_production_workorder_form_view_inherit)d">
 
                 <field name="date_planned_start"/>
                 <field name="state"/>
