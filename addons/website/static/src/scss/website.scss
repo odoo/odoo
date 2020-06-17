@@ -806,6 +806,12 @@ header {
 
 @include o-header-layouts(o-website-value('header-template'), $-transition-duration);
 
+@if o-website-value('header-effect') == 'perspective' {
+    body {
+        @include o-header-perspective(o-website-value('hamburger-position'));
+    }
+}
+
 @if o-website-value('hamburger-type') == 'off-canvas' {
     #top_menu_collapse {
         &.collapsing, &.show {

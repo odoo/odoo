@@ -533,6 +533,20 @@
                      data-customize-website-views="website.option_header_hamburger_center_logo"
                      data-dependencies="header_hamburger_opt"/>
 
+        <we-select string="Effects" data-dependencies="header_hamburger" data-variable="header-effect">
+            <we-button string="None"
+                       data-name="header-hamburger-perspective-disable"
+                       data-select-class=""/>
+            <we-button string="Perspective"
+                       data-customize-website-views="website.option_header_hamburger_perspective"
+                       data-name="header-hamburger-perspective"
+                       data-customize-website-variable="perspective"
+                       data-select-class="o_header_hamburger_perspective"/>
+        </we-select>
+        <we-range string="Intensity"
+                  data-dependencies="header-hamburger-perspective"
+                  data-set-intensity=""/>
+
         <we-select id="header_visibilities_list" string="Header Visibility">
             <we-button id="option_header_visibility_standard"
                        data-name="header_visibility_standard_opt"

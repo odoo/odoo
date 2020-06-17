@@ -465,3 +465,66 @@ $o-theme-font-configs: () !default;
         @include o-header-layout-vertical($transition-duration, $edit-mode);
     }
 }
+
+@mixin o-header-perspective($type: 'all', $-edit-mode: false) {
+    &.o_perspective {
+        perspective: 100vmax;
+
+        #wrapwrap {
+            transition: transform 0.3s cubic-bezier(.694, .0482, .335, 1), shadow 0.3s cubic-bezier(.694, .0482, .335, 1);
+            --perspective-intensity: 50;
+        }
+
+        &.o_perspective_active {
+            #wrapwrap {
+                --tZ: calc(((-80) - (-11)) * var(--perspective-intensity) / 100  + (-11));
+                --tX: calc(((-70) - (-6)) * var(--perspective-intensity) / 100  + (-6));
+                --rY: calc((60 - 0) * var(--perspective-intensity) / 100  + 0);
+                --tY: 0;
+                --rX: 0;
+
+                transform: translateZ(calc(1vmax * var(--tZ)))
+                    translateX(calc(1% * var(--tX)))
+                    rotateX(calc(1deg * var(--rX)))
+                    rotateY(calc(1deg * var(--rY)))
+                    translateY(calc(1% * var(--tY)));
+
+                box-shadow: calc(0.1vw * var(--tX)) calc(0.1vh * var(--tY)) 30px;
+
+                transform-style: preserve-3d;
+                z-index: -1;
+            }
+
+            @if $type == 'left' or $-edit-mode == true {
+                &.o_hamburger_menu_left #wrapwrap {
+                    --tX: calc((70 - 6) * var(--perspective-intensity) / 100  + 6);
+                    --rY: calc(((-60) - 0) * var(--perspective-intensity) / 100  + 0);
+                }
+            }
+
+            @if $type == 'center' or $-edit-mode == true  {
+                &.o_hamburger_menu_full #wrapwrap {
+                    --tZ: calc(((-100) - (-6)) * var(--perspective-intensity) / 100  + (-6));
+                    --tX: 0;
+                    --rY: 0;
+                    --tY: calc((100 - 8) * var(--perspective-intensity) / 100  + 8);;
+                    --rX: calc((60 - 0) * var(--perspective-intensity) / 100  + 0);
+                }
+
+                &.o_hamburger_menu_full {
+                    .o_offcanvas_menu_backdrop {
+                        background: linear-gradient(180deg, currentColor 20%, transparent);
+                    }
+
+                    #top_menu {
+                        align-self: baseline;
+                    }
+
+                    .o_offcanvas_logo_container a {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+}
