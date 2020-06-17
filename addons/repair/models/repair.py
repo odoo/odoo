@@ -682,7 +682,10 @@ class RepairLine(models.Model):
         product = self.product_id
         self.name = product.display_name
         if product.description_sale:
-            self.name += '\n' + product.description_sale
+            if partner:
+                self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+            else:
+                self.name += '\n' + self.product_id.description_sale
         self.product_uom = product.uom_id.id
         if self.type != 'remove':
             if partner:
@@ -767,7 +770,10 @@ class RepairFee(models.Model):
             self.name = self.product_id.display_name
         self.product_uom = self.product_id.uom_id.id
         if self.product_id.description_sale:
-            self.name += '\n' + self.product_id.description_sale
+            if partner:
+                self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+            else:
+                self.name += '\n' + self.product_id.description_sale
 
         warning = False
         if not pricelist:
