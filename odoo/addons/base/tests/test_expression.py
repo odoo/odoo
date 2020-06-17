@@ -1014,6 +1014,37 @@ class TestQueries(TransactionCase):
         ''']):
             Model.search(domain)
 
+    def test_order(self):
+        Model = self.env['res.partner']
+        Model.search([('name', 'like', 'foo')])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name"::text LIKE %s))
+            ORDER BY "res_partner"."display_name"
+        ''']):
+            Model.search([('name', 'like', 'foo')])
+
+        with self.assertQueries(['''
+            SELECT "res_partner".id
+            FROM "res_partner"
+            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name"::text LIKE %s))
+            ORDER BY "res_partner"."id"
+        ''']):
+            Model.search([('name', 'like', 'foo')], order='id')
+
+    def test_count(self):
+        Model = self.env['res.partner']
+        Model.search([('name', 'like', 'foo')])
+
+        with self.assertQueries(['''
+            SELECT count(1)
+            FROM "res_partner"
+            WHERE (("res_partner"."active" = %s) AND ("res_partner"."name"::text LIKE %s))
+        ''']):
+            Model.search_count([('name', 'like', 'foo')])
+
     def test_translated_field(self):
         self.env['res.lang']._activate_lang('fr_FR')
         Model = self.env['res.partner.title'].with_context(lang='fr_FR')
@@ -1057,10 +1088,11 @@ class TestQueries(TransactionCase):
 
         with self.assertQueries(['''
             SELECT "res_users".id
-            FROM "res_users", "res_partner" AS "res_users__partner_id"
+            FROM "res_users"
+            LEFT JOIN "res_partner" AS "res_users__partner_id" ON
+                ("res_users"."partner_id" = "res_users__partner_id"."id")
             WHERE ("res_users"."active" = %s)
             AND ("res_users"."id" = %s)
-            AND ("res_users"."partner_id" = "res_users__partner_id"."id")
             AND ("res_users__partner_id"."id" = %s)
             ORDER BY "res_users__partner_id"."name", "res_users"."login"
         ''']):
