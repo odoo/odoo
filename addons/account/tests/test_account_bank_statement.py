@@ -206,7 +206,7 @@ class TestBankStatement(AccountTestCommon):
         bnk2 = self.create_bank_statement('2019-01-10', 50)
         bnk2.write({'balance_start': 100})
         self.assertTrue(bnk2.is_valid_balance_start)
-        bnk2.write({'balance_start': 100.01})
+        bnk2.write({'balance_start': 101})
         self.assertFalse(bnk2.is_valid_balance_start)
 
     def test_unlink_bank_statement(self):

@@ -466,8 +466,8 @@ class TestPoSBasicConfig(TestPoSCommon):
             'name': 'add_invoice_line',
             'rounding': 0.05,
             'strategy': 'add_invoice_line',
-            'profit_account_id': self.company['default_cash_difference_income_account_id'].copy().id,
-            'loss_account_id': self.company['default_cash_difference_expense_account_id'].copy().id,
+            'profit_account_id': self.company.default_cash_difference_income_account_id.copy().id,
+            'loss_account_id': self.company.default_cash_difference_expense_account_id.copy().id,
             'rounding_method': 'HALF-UP',
         })
 
