@@ -1970,12 +1970,6 @@ class IrModelData(models.Model):
 
         return result
 
-    def _generate_xmlids(self, xml_id, model):
-        """ Return all the XML ids to create for the given model. """
-        yield xml_id
-        for parent_model in model._inherits:
-            yield '%s_%s' % (xml_id, parent_model.replace('.', '_'))
-
     @api.model
     def _update_xmlids(self, data_list, update=False):
         """ Create or update the given XML ids.
@@ -1992,14 +1986,6 @@ class IrModelData(models.Model):
             prefix, suffix = data['xml_id'].split('.', 1)
             record = data['record']
             noupdate = bool(data.get('noupdate'))
-            # First create XML ids for parent records, then create XML id for
-            # record. The order reflects their actual creation order. This order
-            # is relevant for the uninstallation process: the record must be
-            # deleted before its parent records.
-            for parent_model, parent_field in record._inherits.items():
-                parent = record[parent_field]
-                puffix = suffix + '_' + parent_model.replace('.', '_')
-                rows.add((prefix, puffix, parent._name, parent.id, noupdate))
             rows.add((prefix, suffix, record._name, record.id, noupdate))
 
         for sub_rows in self.env.cr.split_for_in_conditions(rows):
@@ -2036,8 +2022,6 @@ class IrModelData(models.Model):
         record = self.xmlid_to_object(xml_id)
         if record:
             self.pool.loaded_xmlids.add(xml_id)
-            for parent_model, parent_field in record._inherits.items():
-                self.pool.loaded_xmlids.add(xml_id + '_' + parent_model.replace('.', '_'))
         return record
 
     @api.model
@@ -2176,32 +2160,63 @@ class IrModelData(models.Model):
                 """
         self._cr.execute(query, (tuple(modules), True))
         for (id, xmlid, model, res_id) in self._cr.fetchall():
-            if xmlid not in loaded_xmlids:
-                if model in self.env:
-                    if self.search_count([
-                        ("model", "=", model),
-                        ("res_id", "=", res_id),
-                        ("id", "!=", id),
-                        ("id", "not in", bad_imd_ids),
-                    ]):
-                        # another external id is still linked to the same record, only deleting the old imd
-                        bad_imd_ids.append(id)
-                        continue
+            if xmlid in loaded_xmlids:
+                continue
 
-                    _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
-                    record = self.env[model].browse(res_id)
-                    if record.exists():
-                        module = xmlid.split('.', 1)[0]
-                        record = record.with_context(module=module)
-                        if record._name == 'ir.model.fields' and not module.startswith('test_'):
-                            _logger.warning(
-                                "Deleting field %s.%s (hint: fields should be"
-                                " explicitly removed by an upgrade script)",
-                                record.model, record.name,
-                            )
-                        record.unlink()
-                    else:
-                        bad_imd_ids.append(id)
+            Model = self.env.get(model)
+            if Model is None:
+                continue
+
+            # when _inherits parents are implicitly created we give them an
+            # external id (if their descendant has one) in order to e.g.
+            # properly remove them when the module is deleted, however this
+            # generated id is *not* provided during update yet we don't want to
+            # try and remove either the xid or the record, so check if the
+            # record has a child we've just updated
+            keep = False
+            for inheriting in (self.env[m] for m in Model._inherits_children):
+                # ignore mixins
+                if inheriting._abstract:
+                    continue
+
+                parent_field = inheriting._inherits[model]
+                children = inheriting.with_context(active_test=False).search([(parent_field, '=', res_id)])
+                children_xids = {
+                    xid
+                    for xids in (children and children._get_external_ids().values())
+                    for xid in xids
+                }
+                if children_xids & loaded_xmlids:
+                    # at least one child was loaded
+                    keep = True
+                    break
+            if keep:
+                continue
+
+            # if the record has other associated xids, only remove the xid
+            if self.search_count([
+                ("model", "=", model),
+                ("res_id", "=", res_id),
+                ("id", "!=", id),
+                ("id", "not in", bad_imd_ids),
+            ]):
+                bad_imd_ids.append(id)
+                continue
+
+            _logger.info('Deleting %s@%s (%s)', res_id, model, xmlid)
+            record = Model.browse(res_id)
+            if record.exists():
+                module = xmlid.split('.', 1)[0]
+                record = record.with_context(module=module)
+                if record._name == 'ir.model.fields' and not module.startswith('test_'):
+                    _logger.warning(
+                        "Deleting field %s.%s (hint: fields should be"
+                        " explicitly removed by an upgrade script)",
+                        record.model, record.name,
+                    )
+                record.unlink()
+            else:
+                bad_imd_ids.append(id)
         if bad_imd_ids:
             self.browse(bad_imd_ids).unlink()
 

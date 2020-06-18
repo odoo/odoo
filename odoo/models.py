@@ -1047,7 +1047,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         for id, xid, record, info in converted:
             if xid:
                 xid = xid if '.' in xid else "%s.%s" % (current_module, xid)
-                batch_xml_ids.update(ModelData._generate_xmlids(xid, self))
+                batch_xml_ids.add(xid)
             elif id:
                 record['id'] = id
             batch.append((xid, record, info))
@@ -4063,6 +4063,7 @@ Fields:
         # determine which records to create and update
         to_create = []                  # list of data
         to_update = []                  # list of data
+        imd_data_list = []              # list of data for _update_xmlids()
 
         for data in data_list:
             xml_id = data.get('xml_id')
@@ -4080,11 +4081,11 @@ Fields:
                 continue
             d_id, d_module, d_name, d_model, d_res_id, d_noupdate, r_id = row
             record = self.browse(d_res_id)
-            if update and d_noupdate:
+            if r_id:
                 data['record'] = record
-            elif r_id:
-                data['record'] = record
-                to_update.append(data)
+                imd_data_list.append(data)
+                if not (update and d_noupdate):
+                    to_update.append(data)
             else:
                 imd.browse(d_id).unlink()
                 to_create.append(data)
@@ -4092,22 +4093,6 @@ Fields:
         # update existing records
         for data in to_update:
             data['record']._load_records_write(data['values'])
-
-        # determine existing parents for new records
-        for parent_model, parent_field in self._inherits.items():
-            suffix = '_' + parent_model.replace('.', '_')
-            xml_ids_vals = {
-                (data['xml_id'] + suffix): data['values']
-                for data in to_create
-                if data.get('xml_id')
-            }
-            for row in imd._lookup_xmlids(xml_ids_vals, self.env[parent_model]):
-                d_id, d_module, d_name, d_model, d_res_id, d_noupdate, r_id = row
-                if r_id:
-                    xml_id = '%s.%s' % (d_module, d_name)
-                    xml_ids_vals[xml_id][parent_field] = r_id
-                else:
-                    imd.browse(d_id).unlink()
 
         # check for records to create with an XMLID from another module
         module = self.env.context.get('install_module')
@@ -4121,9 +4106,18 @@ Fields:
         records = self._load_records_create([data['values'] for data in to_create])
         for data, record in zip(to_create, records):
             data['record'] = record
+            if data.get('xml_id'):
+                # add XML ids for parent records that have just been created
+                for parent_model, parent_field in self._inherits.items():
+                    if not data['values'].get(parent_field):
+                        imd_data_list.append({
+                            'xml_id': f"{data['xml_id']}_{parent_model.replace('.', '_')}",
+                            'record': record[parent_field],
+                            'noupdate': data.get('noupdate', False),
+                        })
+                imd_data_list.append(data)
 
         # create or update XMLIDs
-        imd_data_list = [data for data in data_list if data.get('xml_id')]
         imd._update_xmlids(imd_data_list, update)
 
         return original_self.concat(*(data['record'] for data in data_list))
