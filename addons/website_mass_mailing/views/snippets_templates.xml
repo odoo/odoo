@@ -95,18 +95,35 @@
     </xpath>
 </template>
 
-<template id="page_unsubscribe_website" name="Unsubscribe page website view" inherit_id="mass_mailing.page_unsubscribe">
-    <xpath expr="//t[@t-call='mass_mailing.layout']" position="replace">
+<template id="website_mass_mailing_layout" name="Mass Mailing website layout" inherit_id="mass_mailing.layout">
+    <xpath expr="//t[@t-call='web.layout']" position="replace">
         <t t-call="website.layout">
             <t t-set="head">
-                <t t-call-assets="mass_mailing.assets_backend"/>
+                <t t-call-assets="web.assets_common"/>
+                <t t-call-assets="mass_mailing.assets_frontend"/>
             </t>
-            <div id="wrap" class="oe_structure">
-                <div class="oe_structure"/>
-                    <t t-call="mass_mailing.unsubscribe"/>
-                <div class="oe_structure"/>
-            </div>
-        </t>
+            <body class="o_white_body">
+                <header>
+                    <div><title>Odoo</title></div>
+                </header>
+                <div id="wrap" class="oe_structure oe_empty"/>
+                <main>
+                    <t t-raw="0"/>
+                </main>
+            </body>
+            <xpath expr="//footer" position="replace">
+                <div class="container mt16 mb8">
+                    <div class="pull-right" t-ignore="true" t-if="not editable">
+                        Create a <a target="_blank" href="https://www.odoo.com/page/website-builder">free website</a> with
+                        <a target="_blank" class="label label-danger" href="https://www.odoo.com/page/website-builder">Odoo</a>
+                    </div>
+                    <div class="pull-left text-muted" itemscope="itemscope" itemtype="https://schema.org/Organization">
+                        <t t-call="web.debug_icon"/>
+                        Copyright &amp;copy; <span t-field="res_company.name" itemprop="name">Company name</span>
+                    </div>
+                </div>
+            </xpath>
+         </t>
     </xpath>
 </template>
 
