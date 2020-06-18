@@ -8,6 +8,7 @@ import time
 import traceback
 
 from odoo import api, fields, models, tools, _
+from odoo.tools.misc import get_lang
 
 _logger = logging.getLogger(__name__)
 
@@ -110,7 +111,7 @@ class Currency(models.Model):
         integer_value = int(parts[0])
         fractional_value = int(parts[2] or 0)
 
-        lang_code = self.env.context.get('lang') or self.env.user.lang
+        lang_code = self.env.context.get('lang') or self.env.user.lang or get_lang(self.env).code
         lang = self.env['res.lang'].with_context(active_test=False).search([('code', '=', lang_code)])
         amount_words = tools.ustr('{amt_value} {amt_word}').format(
                         amt_value=_num2words(integer_value, lang=lang.iso_code),
