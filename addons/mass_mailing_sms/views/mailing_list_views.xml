@@ -1,5 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
+    <record id="mailing_list_view_kanban" model="ir.ui.view">
+        <field name="name">mailing.list.view.kanban.inherit.mass.mailing.sms</field>
+        <field name="model">mailing.list</field>
+        <field name="inherit_id" ref="mass_mailing.mailing_list_view_kanban"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='contact_count_email']" position="after">
+                <field name="contact_count_sms"/>
+            </xpath>
+            <xpath expr="//div[hasclass('o_mass_mailing_kanban_contact_links')]" position="inside">
+              <a name="action_view_contacts_sms" type="object">
+                  <span >Valid SMS Recipients</span>
+                  <span t-esc="record.contact_count_sms.value" class="ml-3"/>
+              </a>
+            </xpath>
+        </field>
+    </record>
+
     <record id="mailing_list_action_sms" model="ir.actions.act_window">
         <field name="name">Contact Lists</field>
         <field name="res_model">mailing.list</field>
