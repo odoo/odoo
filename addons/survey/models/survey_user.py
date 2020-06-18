@@ -148,7 +148,7 @@ class SurveyUserInput(models.Model):
                 LEFT OUTER JOIN survey_user_input previous_user_input
                 ON user_input.survey_id = previous_user_input.survey_id
                 AND previous_user_input.state = 'done'
-                AND previous_user_input.test_entry = False
+                AND previous_user_input.test_entry IS NOT TRUE
                 AND previous_user_input.id < user_input.id
                 AND (user_input.invite_token IS NULL OR user_input.invite_token = previous_user_input.invite_token)
                 AND (user_input.partner_id = previous_user_input.partner_id OR user_input.email = previous_user_input.email)
