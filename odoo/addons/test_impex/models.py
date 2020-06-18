@@ -164,3 +164,15 @@ class OnlyOne(models.Model):
         ('value_unique', 'unique (value)', "The value must be unique"),
         ('pair_unique', 'unique (value2, value3)', "The values must be unique"),
     ]
+
+class InheritsParent(models.Model):
+    _name = _description = 'export.inherits.parent'
+
+    value_parent = fields.Integer()
+
+class InheritsChild(models.Model):
+    _name = _description = 'export.inherits.child'
+    _inherits = {'export.inherits.parent': 'parent_id'}
+
+    parent_id = fields.Many2one('export.inherits.parent', required=True, ondelete='cascade')
+    value = fields.Integer()

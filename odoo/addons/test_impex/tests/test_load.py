@@ -1255,3 +1255,159 @@ class test_unique(ImporterCase):
             m.group(2).split(', '),
             ['Value2', 'Value3']
         )
+
+class test_inherits(ImporterCase):
+    """ The import process should only assign a new xid (derived from the
+    childs') if the child is being created and triggers the creation of the
+    parent
+    """
+    model_name = 'export.inherits.child'
+    def test_create_no_parent(self):
+        r = self.import_(['id', 'value_parent', 'value'], [
+            ['xxx.child', '0', '1'],
+        ])
+        rec = self.env[self.model_name].browse(r['ids'])
+
+        self.assertEqual(rec.value_parent, 0)
+        self.assertEqual(rec.value, 1)
+        self.assertEqual(rec.parent_id.value_parent, 0)
+        self.assertEqual(
+            rec._get_external_ids()[rec.id],
+            ['xxx.child'],
+        )
+        self.assertEqual(
+            rec.parent_id._get_external_ids()[rec.parent_id.id],
+            ['xxx.child_export_inherits_parent'],
+        )
+
+    def test_create_parent_no_xid(self):
+        parent = self.env['export.inherits.parent'].create({'value_parent': 0})
+        r = self.import_(['id', 'parent_id/.id', 'value'], [
+            ['xxx.child', str(parent.id), '1'],
+        ])
+        rec = self.env[self.model_name].browse(r['ids'])
+        self.assertEqual(rec.value_parent, 0)
+        self.assertEqual(rec.parent_id, parent)
+
+        self.assertEqual(
+            rec._get_external_ids()[rec.id],
+            ['xxx.child'],
+        )
+        self.assertEqual(
+            rec.parent_id._get_external_ids()[rec.parent_id.id],
+            [],
+            "no xid should be created for the parent"
+        )
+
+    def test_create_parent_with_xid(self):
+        parent = self.env['export.inherits.parent'].create({'value_parent': 0})
+        pid = self.env['ir.model.data'].create({
+            'model': 'export.inherits.parent',
+            'res_id': parent.id,
+            'module': 'xxx',
+            'name': 'parent',
+        })
+        r = self.import_(['id', 'parent_id/.id', 'value'], [
+            ['xxx.child', str(parent.id), '1'],
+        ])
+        rec = self.env[self.model_name].browse(r['ids'])
+        self.assertEqual(rec.value_parent, 0)
+        self.assertEqual(rec.parent_id, parent)
+        self.assertTrue(pid.exists().res_id, parent.id)
+
+        self.assertEqual(
+            rec._get_external_ids()[rec.id],
+            ['xxx.child'],
+        )
+        self.assertEqual(
+            rec.parent_id._get_external_ids()[rec.parent_id.id],
+            ['xxx.parent'],
+        )
+
+    def test_create_parent_by_xid(self):
+        parent = self.env['export.inherits.parent'].create({'value_parent': 0})
+        pid = self.env['ir.model.data'].create({
+            'model': 'export.inherits.parent',
+            'res_id': parent.id,
+            'module': 'xxx',
+            'name': 'parent',
+        })
+        r = self.import_(['id', 'parent_id/id', 'value'], [
+            ['xxx.child', 'xxx.parent', '1'],
+        ])
+        rec = self.env[self.model_name].browse(r['ids'])
+        self.assertEqual(rec.value_parent, 0)
+        self.assertEqual(rec.parent_id, parent)
+        self.assertTrue(pid.exists().res_id, parent.id)
+
+        self.assertEqual(
+            rec._get_external_ids()[rec.id],
+            ['xxx.child'],
+        )
+        self.assertEqual(
+            rec.parent_id._get_external_ids()[rec.parent_id.id],
+            ['xxx.parent'],
+        )
+
+    def test_update_parent_no_xid(self):
+        parent = self.env['export.inherits.parent'].create({'value_parent': 0})
+        child = self.env[self.model_name].create({
+            'parent_id': parent.id,
+            'value': 1,
+        })
+        self.env['ir.model.data'].create({
+            'model': self.model_name,
+            'res_id': child.id,
+            'module': 'xxx',
+            'name': 'child'
+        })
+
+        self.import_(['id', 'value'], [
+            ['xxx.child', '42']
+        ])
+        self.assertEqual(child.value, 42)
+        self.assertEqual(child.parent_id, parent)
+
+        self.assertEqual(
+            child._get_external_ids()[child.id],
+            ['xxx.child'],
+        )
+        self.assertEqual(
+            parent._get_external_ids()[parent.id],
+            [],
+        )
+
+    def test_update_parent_with_xid(self):
+        parent = self.env['export.inherits.parent'].create({'value_parent': 0})
+        child = self.env[self.model_name].create({
+            'parent_id': parent.id,
+            'value': 1,
+        })
+        pid, cid = self.env['ir.model.data'].create([{
+            'model': 'export.inherits.parent',
+            'res_id': parent.id,
+            'module': 'xxx',
+            'name': 'parent',
+        }, {
+            'model': self.model_name,
+            'res_id': child.id,
+            'module': 'xxx',
+            'name': 'child'
+        }])
+
+        self.import_(['id', 'value'], [
+            ['xxx.child', '42']
+        ])
+        self.assertEqual(child.value, 42)
+        self.assertEqual(child.parent_id, parent)
+        self.assertEqual(pid.exists().res_id, parent.id)
+        self.assertEqual(cid.exists().res_id, child.id)
+
+        self.assertEqual(
+            child._get_external_ids()[child.id],
+            ['xxx.child'],
+        )
+        self.assertEqual(
+            parent._get_external_ids()[parent.id],
+            ['xxx.parent'],
+        )
