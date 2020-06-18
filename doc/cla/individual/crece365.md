@@ -1,4 +1,4 @@
-Lima, 2020-06-16
+PERU, 2020-06-18
 
 I hereby agree to the terms of the Odoo Individual Contributor License Agreement v1.0.
 
