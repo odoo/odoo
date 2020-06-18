@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.tools import float_round
+from odoo.exceptions import ValidationError
 
 
 class AccountCashRounding(models.Model):
@@ -24,6 +25,12 @@ class AccountCashRounding(models.Model):
     rounding_method = fields.Selection(string='Rounding Method', required=True,
         selection=[('UP', 'UP'), ('DOWN', 'DOWN'), ('HALF-UP', 'HALF-UP')],
         default='HALF-UP', help='The tie-breaking rule used for float rounding operations')
+
+    @api.constrains('rounding')
+    def validate_rounding(self):
+        for record in self:
+            if record.rounding < 0:
+                raise ValidationError(_("Please set a positive rounding value."))
 
     @api.multi
     def round(self, amount):
