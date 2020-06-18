@@ -2,6 +2,7 @@
 
 from odoo import models, fields, api, _
 from odoo.tools import float_round
+from odoo.exceptions import ValidationError
 
 
 class AccountCashRounding(models.Model):
@@ -26,6 +27,12 @@ class AccountCashRounding(models.Model):
         selection=[('UP', 'UP'), ('DOWN', 'DOWN'), ('HALF-UP', 'HALF-UP')],
         default='HALF-UP', help='The tie-breaking rule used for float rounding operations')
     company_id = fields.Many2one('res.company', related='profit_account_id.company_id')
+
+    @api.constrains('rounding')
+    def validate_rounding(self):
+        for record in self:
+            if record.rounding < 0:
+                raise ValidationError(_("Please set a positive rounding value."))
 
     def round(self, amount):
         """Compute the rounding on the amount passed as parameter.
