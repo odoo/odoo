@@ -99,6 +99,7 @@ class ResPartnerBank(models.Model):
         return None
 
     def find_number(self, s):
+        # DEPRECATED FUNCTION: not used anymore. QR-bills don't use structured addresses
         # this regex match numbers like 1bis 1a
         lmo = re.findall('([0-9]+[^ ]*)',s)
         # no number found
