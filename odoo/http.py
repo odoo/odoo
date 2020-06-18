@@ -1071,7 +1071,7 @@ class OpenERPSession(sessions.Session):
         if lang in babel.core.LOCALE_ALIASES:
             lang = babel.core.LOCALE_ALIASES[lang]
 
-        context['lang'] = lang
+        context['lang'] = lang or 'en_US'
 
     def save_action(self, action):
         """
