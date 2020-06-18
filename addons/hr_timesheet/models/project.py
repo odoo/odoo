@@ -26,7 +26,7 @@ class Project(models.Model):
     timesheet_ids = fields.One2many('account.analytic.line', 'project_id', 'Associated Timesheets')
 
     _sql_constraints = [
-        ('timer_only_when_timesheet', "CHECK((allow_timesheets = 'f' AND allow_timesheet_timer = 'f') OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheets.'),
+        ('timer_only_when_timesheet', "CHECK((allow_timesheets IS NOT TRUE AND allow_timesheet_timer IS NOT TRUE) OR (allow_timesheets = 't'))", 'The timesheet timer can only be activated on project allowing timesheets.'),
     ]
 
     @api.onchange('analytic_account_id')

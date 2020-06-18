@@ -590,7 +590,7 @@ class AccountReconcileModel(models.Model):
                     (
                     -- black lines appearance conditions
                     account.reconcile IS TRUE
-                    AND aml.reconciled IS FALSE
+                    AND aml.reconciled IS NOT TRUE
                     )
                 )
             '''

@@ -47,7 +47,7 @@ class Project(models.Model):
         default=_default_timesheet_product_id)
 
     _sql_constraints = [
-        ('timesheet_product_required_if_billable_and_timesheets', "CHECK((allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL) OR (allow_billable = 'f') OR (allow_timesheets = 'f'))", 'The timesheet product is required when the task can be billed and timesheets are allowed.'),
+        ('timesheet_product_required_if_billable_and_timesheets', "CHECK((allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL) OR (allow_billable IS NOT TRUE) OR (allow_timesheets IS NOT TRUE))", 'The timesheet product is required when the task can be billed and timesheets are allowed.'),
     ]
 
     @api.depends('billable_type', 'allow_billable', 'sale_order_id', 'partner_id')
