@@ -1843,7 +1843,10 @@ class AccountPartialReconcile(models.Model):
                         percentage_before = percentage_before_rec[move.id]
                         percentage_after = line._get_matched_percentage()[move.id]
                         #amount is the current cash_basis amount minus the one before the reconciliation
-                        amount = line.balance * percentage_after - line.balance * percentage_before
+                        if percentage_after == 1.0 and line.amount_residual:
+                            amount = line.amount_residual
+                        else:
+                            amount = line.balance * percentage_after - line.balance * percentage_before
                         rounded_amt = self._get_amount_tax_cash_basis(amount, line)
                         if float_is_zero(rounded_amt, precision_rounding=line.company_id.currency_id.rounding):
                             continue
