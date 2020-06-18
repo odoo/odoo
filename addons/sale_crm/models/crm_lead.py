@@ -81,7 +81,11 @@ class CrmLead(models.Model):
             'default_origin': self.name,
             'default_source_id': self.source_id.id,
             'default_company_id': self.company_id.id or self.env.company.id,
+<<<<<<< HEAD
             'default_tag_ids': [(6, 0, self.tag_ids.ids)]
+=======
+            'default_tag_ids': self.tag_ids.ids,
+>>>>>>> 8efa8be45b6... temp
         }
         return action
 
