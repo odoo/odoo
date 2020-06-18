@@ -75,7 +75,7 @@ class AccountBankStmtCashWizard(models.Model):
     def name_get(self):
         result = []
         for cashbox in self:
-            result.append((cashbox.id, _("%s")%(cashbox.total)))
+            result.append((cashbox.id, str(cashbox.total)))
         return result
 
     @api.model_create_multi
@@ -294,29 +294,34 @@ class AccountBankStatement(models.Model):
         for stmt in self:
             if not stmt.currency_id.is_zero(stmt.difference):
                 if stmt.journal_type == 'cash':
-                    if stmt.difference < 0.0:
-                        account = stmt.journal_id.loss_account_id
-                        name = _('Loss')
-                    else:
-                        # statement.difference > 0.0
-                        account = stmt.journal_id.profit_account_id
-                        name = _('Profit')
-                    if not account:
-                        raise UserError(_('Please go on the %s journal and define a %s Account. This account will be used to record cash difference.') % (stmt.journal_id.name, name))
-
                     st_line_vals = {
                         'statement_id': stmt.id,
                         'journal_id': stmt.journal_id.id,
                         'amount': stmt.difference,
-                        'payment_ref': _("Cash difference observed during the counting (%s)") % name,
                         'date': stmt.date,
                     }
-                    self.env['account.bank.statement.line'].with_context(counterpart_account_id=account.id).create(st_line_vals)
+
+                    if stmt.difference < 0.0:
+                        if not stmt.journal_id.loss_account_id:
+                            raise UserError(_('Please go on the %s journal and define a Loss Account. This account will be used to record cash difference.', stmt.journal_id.name))
+
+                        st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)")
+                        self.env['account.bank.statement.line'].with_context(counterpart_account_id=stmt.journal_id.loss_account_id).create(st_line_vals)
+                    else:
+                        # statement.difference > 0.0
+                        if not stmt.journal_id.profit_account_id:
+                            raise UserError(_('Please go on the %s journal and define a Profit Account. This account will be used to record cash difference.', stmt.journal_id.name))
+
+                        st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
+                        self.env['account.bank.statement.line'].with_context(counterpart_account_id=stmt.journal_id.profit_account_id).create(st_line_vals)
                 else:
                     balance_end_real = formatLang(self.env, stmt.balance_end_real, currency_obj=stmt.currency_id)
                     balance_end = formatLang(self.env, stmt.balance_end, currency_obj=stmt.currency_id)
-                    raise UserError(_('The ending balance is incorrect !\nThe expected balance (%s) is different from the computed one. (%s)')
-                        % (balance_end_real, balance_end))
+                    raise UserError(_(
+                        'The ending balance is incorrect !\nThe expected balance (%(real_balance)s) is different from the computed one (%(computed_balance)s).',
+                        real_balance=balance_end_real,
+                        computed_balance=balance_end
+                    ))
         return True
 
     def unlink(self):
@@ -392,13 +397,13 @@ class AccountBankStatement(models.Model):
         for statement in self:
 
             # Chatter.
-            statement.message_post(body=_('Statement %s confirmed.') % statement.name)
+            statement.message_post(body=_('Statement %s confirmed.', statement.name))
 
             # Bank statement report.
             if statement.journal_id.type == 'bank':
                 content, content_type = self.env.ref('account.action_report_account_statement')._render(statement.id)
                 self.env['ir.attachment'].create({
-                    'name': statement.name and _("Bank Statement %s.pdf") % statement.name or _("Bank Statement.pdf"),
+                    'name': statement.name and _("Bank Statement %s.pdf", statement.name) or _("Bank Statement.pdf"),
                     'type': 'binary',
                     'datas': base64.encodebytes(content),
                     'res_model': statement._name,
@@ -873,7 +878,7 @@ class AccountBankStatementLine(models.Model):
             if st_line.currency_id.is_zero(st_line.amount):
                 raise ValidationError(_("The amount of a statement line can't be equal to zero."))
             if st_line.foreign_currency_id == st_line.currency_id:
-                raise ValidationError(_("The foreign currency must be different than the journal one: %s") % st_line.currency_id.name)
+                raise ValidationError(_("The foreign currency must be different than the journal one: %s", st_line.currency_id.name))
             if st_line.foreign_currency_id and st_line.foreign_currency_id.is_zero(st_line.amount_currency):
                 raise ValidationError(_("The amount in foreign currency must be set if the amount is not equal to zero."))
             if not st_line.foreign_currency_id and st_line.amount_currency:

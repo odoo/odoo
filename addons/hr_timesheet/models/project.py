@@ -186,7 +186,12 @@ class Task(models.Model):
             for task in self:
                 if task.allow_timesheets and task.planned_hours > 0:
                     hours, mins = (str(int(duration)).rjust(2, '0') for duration in divmod(abs(task.remaining_hours) * 60, 60))
-                    hours_left = _("(%s%s:%s remaining)") % ('-' if task.remaining_hours < 0 else '', hours, mins)
+                    hours_left = _(
+                        "(%(sign)s%(hours)s:%(minutes)s remaining)",
+                        sign='-' if task.remaining_hours < 0 else '',
+                        hours=hours,
+                        minutes=mins,
+                    )
                     name_mapping[task.id] = name_mapping.get(task.id, '') + " ‒ " + hours_left
             return list(name_mapping.items())
         return super().name_get()

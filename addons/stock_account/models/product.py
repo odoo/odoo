@@ -253,13 +253,25 @@ class ProductProduct(models.Model):
                 'stock_valuation_layer_ids': [(6, None, [stock_valuation_layer.id])],
                 'move_type': 'entry',
                 'line_ids': [(0, 0, {
-                    'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
+                    'name': _(
+                        '%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s',
+                        user=self.env.user.name,
+                        previous=product.standard_price,
+                        new_price=new_price,
+                        product=product.display_name
+                    ),
                     'account_id': debit_account_id,
                     'debit': abs(value),
                     'credit': 0,
                     'product_id': product.id,
                 }), (0, 0, {
-                    'name': _('%s changed cost from %s to %s - %s') % (self.env.user.name, product.standard_price, new_price, product.display_name),
+                    'name': _(
+                        '%(user)s changed cost from %(previous)s to %(new_price)s - %(product)s',
+                        user=self.env.user.name,
+                        previous=product.standard_price,
+                        new_price=new_price,
+                        product=product.display_name
+                    ),
                     'account_id': credit_account_id,
                     'debit': 0,
                     'credit': abs(value),

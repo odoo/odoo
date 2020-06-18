@@ -284,7 +284,7 @@ class Website(models.Model):
                 copy_menu(submenu, new_menu)
         for website in self:
             new_top_menu = top_menu.copy({
-                'name': _('Top Menu for Website %s') % website.id,
+                'name': _('Top Menu for Website %s', website.id),
                 'website_id': website.id,
             })
             for submenu in top_menu.child_id:
@@ -408,7 +408,7 @@ class Website(models.Model):
         for page in pages:
             dependencies.setdefault(page_key, [])
             dependencies[page_key].append({
-                'text': _('Page <b>%s</b> contains a link to this page') % page.url,
+                'text': _('Page <b>%s</b> contains a link to this page', page.url),
                 'item': page.name,
                 'link': page.url,
             })
@@ -436,7 +436,7 @@ class Website(models.Model):
             menu_key = _('Menus')
         for menu in menus:
             dependencies.setdefault(menu_key, []).append({
-                'text': _('This page is in the menu <b>%s</b>') % menu.name,
+                'text': _('This page is in the menu <b>%s</b>', menu.name),
                 'link': '/web#id=%s&view_type=form&model=website.menu' % menu.id,
                 'item': menu.name,
             })
@@ -472,7 +472,7 @@ class Website(models.Model):
         for p in pages:
             dependencies.setdefault(page_key, [])
             dependencies[page_key].append({
-                'text': _('Page <b>%s</b> is calling this file') % p.url,
+                'text': _('Page <b>%s</b> is calling this file', p.url),
                 'item': p.name,
                 'link': p.url,
             })

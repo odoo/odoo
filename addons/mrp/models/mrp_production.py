@@ -718,7 +718,7 @@ class MrpProduction(models.Model):
         not_cancel = self.filtered(lambda m: m.state != 'cancel')
         if not_cancel:
             productions_name = ', '.join([prod.display_name for prod in not_cancel])
-            raise UserError(_('%s cannot be deleted. Try to cancel them before.') % productions_name)
+            raise UserError(_('%s cannot be deleted. Try to cancel them before.', productions_name))
 
         workorders_to_delete = self.workorder_ids.filtered(lambda wo: wo.state != 'done')
         if workorders_to_delete:
@@ -794,7 +794,7 @@ class MrpProduction(models.Model):
         moves = []
         for production in self:
             if production.product_id in production.bom_id.byproduct_ids.mapped('product_id'):
-                raise UserError(_("You cannot have %s  as the finished product and in the Byproducts") % self.product_id.name)
+                raise UserError(_("You cannot have %s  as the finished product and in the Byproducts", self.product_id.name))
             moves = [production._get_move_finished_values(production.product_id.id, production.product_qty, production.product_uom_id.id)]
             for byproduct in production.bom_id.byproduct_ids:
                 product_uom_factor = production.product_uom_id._compute_quantity(production.product_qty, production.bom_id.product_uom_id)
@@ -1554,7 +1554,7 @@ class MrpProduction(models.Model):
     def button_unbuild(self):
         self.ensure_one()
         return {
-            'name': _('Unbuild: %s') % self.product_id.display_name,
+            'name': _('Unbuild: %s', self.product_id.display_name),
             'view_mode': 'form',
             'res_model': 'mrp.unbuild',
             'view_id': self.env.ref('mrp.mrp_unbuild_form_view_simplified').id,
@@ -1585,7 +1585,7 @@ class MrpProduction(models.Model):
                 ('state', '=', 'done')
             ])
             if sml:
-                raise UserError(_('This serial number for product %s has already been produced') % self.product_id.name)
+                raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))
 
         for move in self.move_finished_ids:
             if move.has_tracking != 'serial' or move.product_id == self.product_id:
@@ -1596,7 +1596,9 @@ class MrpProduction(models.Model):
                     ('qty_done', '=', 1),
                     ('state', '=', 'done')
                 ]
-                message = _('The serial number %s used for byproduct %s has already been produced') % (move_line.lot_id.name, move_line.product_id.name)
+                message = _('The serial number %(number)s used for byproduct %(product_name)s has already been produced',
+                    number=move_line.lot_id.name,
+                    product_name=move_line.product_id.name)
                 co_prod_move_lines = self.move_finished_ids.move_line_ids.filtered(lambda ml: ml.product_id != self.product_id)
                 domain_unbuild = domain + [
                     ('production_id', '=', False),
@@ -1628,7 +1630,9 @@ class MrpProduction(models.Model):
                     ('qty_done', '=', 1),
                     ('state', '=', 'done')
                 ]
-                message = _('The serial number %s used for component %s has already been consumed') % (move_line.lot_id.name, move_line.product_id.name)
+                message = _('The serial number %(number)s used for component %(component)s has already been consumed',
+                    number=move_line.lot_id.name,
+                    component=move_line.product_id.name)
                 co_prod_move_lines = self.move_raw_ids.move_line_ids
                 domain_unbuild = domain + [
                     ('production_id', '=', False),

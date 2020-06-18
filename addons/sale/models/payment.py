@@ -83,7 +83,7 @@ class PaymentTransaction(models.Model):
                     order.amount_total, self.amount,
                 )
                 order.message_post(
-                    subject=_("Amount Mismatch (%s)") % self.acquirer_id.provider,
+                    subject=_("Amount Mismatch (%s)", self.acquirer_id.provider),
                     body=_("The order was not confirmed despite response from the acquirer (%s): order total is %r but acquirer replied with %r.") % (
                         self.acquirer_id.provider,
                         order.amount_total,

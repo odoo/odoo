@@ -103,10 +103,10 @@ class ResPartner(models.Model):
             try:
                 module.validate(rec.vat)
             except module.InvalidChecksum:
-                raise ValidationError(_('The validation digit is not valid for "%s"') % rec.l10n_latam_identification_type_id.name)
+                raise ValidationError(_('The validation digit is not valid for "%s"', rec.l10n_latam_identification_type_id.name))
             except module.InvalidLength:
-                raise ValidationError(_('Invalid length for "%s"') % rec.l10n_latam_identification_type_id.name)
+                raise ValidationError(_('Invalid length for "%s"', rec.l10n_latam_identification_type_id.name))
             except module.InvalidFormat:
-                raise ValidationError(_('Only numbers allowed for "%s"') % rec.l10n_latam_identification_type_id.name)
+                raise ValidationError(_('Only numbers allowed for "%s"', rec.l10n_latam_identification_type_id.name))
             except Exception as error:
                 raise ValidationError(repr(error))

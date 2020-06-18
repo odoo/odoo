@@ -101,7 +101,7 @@ class SaleOrder(models.Model):
         }
         if carrier.invoice_policy == 'real':
             values['price_unit'] = 0
-            values['name'] += _(' (Estimated Cost: %s )') % self._format_currency_amount(price_unit)
+            values['name'] += _(' (Estimated Cost: %s )', self._format_currency_amount(price_unit))
         else:
             values['price_unit'] = price_unit
         if carrier.free_over and self.currency_id.is_zero(price_unit) :

@@ -86,7 +86,7 @@ class ImageProcess():
 
             w, h = self.image.size
             if verify_resolution and w * h > IMAGE_MAX_RESOLUTION:
-                raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.") % str(IMAGE_MAX_RESOLUTION / 10e6))
+                raise ValueError(_("Image size excessive, uploaded images must be smaller than %s million pixels.", str(IMAGE_MAX_RESOLUTION / 10e6)))
 
     def image_base64(self, quality=0, output_format=''):
         """Return the base64 encoded image resulting of all the image processing

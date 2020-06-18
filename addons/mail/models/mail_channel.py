@@ -427,7 +427,7 @@ class Channel(models.Model):
                 'email_from': company.catchall_formatted or company.email_formatted,
                 'author_id': self.env.user.partner_id.id,
                 'body_html': view._render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
-                'subject': _("Guidelines of channel %s") % self.name,
+                'subject': _("Guidelines of channel %s", self.name),
                 'recipient_ids': [(4, partner.id)]
             }
             mail = self.env['mail.mail'].sudo().create(create_values)
@@ -976,7 +976,7 @@ class Channel(models.Model):
     def _execute_command_help(self, **kwargs):
         partner = self.env.user.partner_id
         if self.channel_type == 'channel':
-            msg = _("You are in channel <b>#%s</b>.") % self.name
+            msg = _("You are in channel <b>#%s</b>.", self.name)
             if self.public == 'private':
                 msg += _(" This channel is private. People must be invited to join it.")
         else:
@@ -1016,6 +1016,6 @@ class Channel(models.Model):
             msg = _("You are alone in this channel.")
         else:
             dots = "..." if len(members) != len(self.channel_partner_ids) - 1 else ""
-            msg = _("Users in this channel: %s %s and you.") % (", ".join(members), dots)
+            msg = _("Users in this channel: %(members)s %(dots)s and you.", members=", ".join(members), dots=dots)
 
         self._send_transient_message(partner, msg)

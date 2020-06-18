@@ -121,7 +121,7 @@ class IrModule(models.Model):
         with zipfile.ZipFile(module_file, "r") as z:
             for zf in z.filelist:
                 if zf.file_size > MAX_FILE_SIZE:
-                    raise UserError(_("File '%s' exceed maximum allowed file size") % zf.filename)
+                    raise UserError(_("File '%s' exceed maximum allowed file size", zf.filename))
 
             with tempfile.TemporaryDirectory() as module_dir:
                 import odoo.modules.module as module

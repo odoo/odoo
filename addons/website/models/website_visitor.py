@@ -67,7 +67,7 @@ class WebsiteVisitor(models.Model):
     def name_get(self):
         return [(
             record.id,
-            (record.name or _('Website Visitor #%s') % record.id)
+            (record.name or _('Website Visitor #%s', record.id))
         ) for record in self]
 
     @api.depends('partner_id.email_normalized', 'partner_id.mobile', 'partner_id.phone')

@@ -795,7 +795,7 @@ class Slide(models.Model):
         if error == 'keyInvalid':
             return _('Your Google API key is invalid, please update it into your settings.\nSettings > Website > Features > API Key')
 
-        return _('Could not fetch data from url. Document or access right not available:\n%s') % error
+        return _('Could not fetch data from url. Document or access right not available:\n%s', error)
 
     @api.model
     def _parse_google_document(self, document_id, only_preview_fields):

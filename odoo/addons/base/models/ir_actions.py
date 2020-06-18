@@ -147,9 +147,9 @@ class IrActionsActWindow(models.Model):
     def _check_model(self):
         for action in self:
             if action.res_model not in self.env:
-                raise ValidationError(_('Invalid model name %r in action definition.') % action.res_model)
+                raise ValidationError(_('Invalid model name %r in action definition.', action.res_model))
             if action.binding_model_id and action.binding_model_id.model not in self.env:
-                raise ValidationError(_('Invalid model name %r in action definition.') % action.binding_model_id.model)
+                raise ValidationError(_('Invalid model name %r in action definition.', action.binding_model_id.model))
 
     @api.depends('view_ids.view_mode', 'view_mode', 'view_id.type')
     def _compute_views(self):
@@ -178,9 +178,9 @@ class IrActionsActWindow(models.Model):
         for rec in self:
             modes = rec.view_mode.split(',')
             if len(modes) != len(set(modes)):
-                raise ValidationError(_('The modes in view_mode must not be duplicated: %s') % modes)
+                raise ValidationError(_('The modes in view_mode must not be duplicated: %s', modes))
             if ' ' in modes:
-                raise ValidationError(_('No spaces allowed in view_mode: %r') % modes)
+                raise ValidationError(_('No spaces allowed in view_mode: %r', modes))
 
     @api.depends('res_model', 'search_view_id')
     def _compute_search_view(self):

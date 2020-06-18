@@ -135,25 +135,27 @@ class Meeting(models.Model):
         time_str = to_text(date.strftime(format_time))
 
         if zallday:
-            display_time = _("AllDay , %s") % (date_str)
+            display_time = _("AllDay , %(day)s", day=date_str)
         elif zduration < 24:
             duration = date + timedelta(minutes=round(zduration*60))
             duration_time = to_text(duration.strftime(format_time))
-            display_time = _(u"%s at (%s To %s) (%s)") % (
-                date_str,
-                time_str,
-                duration_time,
-                timezone,
+            display_time = _(
+                u"%(day)s at (%(start)s To %(end)s) (%(timezone)s)",
+                day=date_str,
+                start=time_str,
+                end=duration_time,
+                timezone=timezone,
             )
         else:
             dd_date = to_text(date_deadline.strftime(format_date))
             dd_time = to_text(date_deadline.strftime(format_time))
-            display_time = _(u"%s at %s To\n %s at %s (%s)") % (
-                date_str,
-                time_str,
-                dd_date,
-                dd_time,
-                timezone,
+            display_time = _(
+                u"%(date_start)s at %(time_start)s To\n %(date_end)s at %(time_end)s (%(timezone)s)",
+                date_start=date_str,
+                time_start=time_str,
+                date_end=dd_date,
+                time_end=dd_time,
+                timezone=timezone,
             )
         return display_time
 
@@ -356,12 +358,20 @@ class Meeting(models.Model):
             if meeting.start and meeting.stop and meeting.stop < meeting.start:
                 raise ValidationError(
                     _('The ending date and time cannot be earlier than the starting date and time.') + '\n' +
-                    _("Meeting '%s' starts '%s' and ends '%s'") % (meeting.name, meeting.start, meeting.stop)
+                    _("Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'",
+                      name=meeting.name,
+                      start_datetime=meeting.start,
+                      end_datetime=meeting.stop
+                    )
                 )
             if meeting.start_date and meeting.stop_date and meeting.stop_date < meeting.start_date:
                 raise ValidationError(
                     _('The ending date cannot be earlier than the starting date.') + '\n' +
-                    _("Meeting '%s' starts '%s' and ends '%s'") % (meeting.name, meeting.start_date, meeting.stop_date)
+                    _("Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'",
+                      name=meeting.name,
+                      start_datetime=meeting.start,
+                      end_datetime=meeting.stop
+                    )
                 )
 
     ####################################################

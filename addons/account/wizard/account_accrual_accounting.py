@@ -202,7 +202,7 @@ class AccrualAccountingWizard(models.TransientModel):
             record.preview_data = json.dumps({
                 'groups_vals': preview_vals,
                 'options': {
-                    'discarded_number': (_("%d moves") % preview_discarded) if preview_discarded else False,
+                    'discarded_number': _("%d moves", preview_discarded) if preview_discarded else False,
                     'columns': preview_columns,
                 },
             })

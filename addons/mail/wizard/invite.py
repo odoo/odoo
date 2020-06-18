@@ -64,7 +64,7 @@ class Invite(models.TransientModel):
             # send an email if option checked and if a message exists (do not send void emails)
             if wizard.send_mail and wizard.message and not wizard.message == '<br>':  # when deleting the message, cleditor keeps a <br>
                 message = self.env['mail.message'].create({
-                    'subject': _('Invitation to follow %s: %s') % (model_name, document.display_name),
+                    'subject': _('Invitation to follow %(document_model)s: %(document_name)s', document_model=model_name, document_name=document.display_name),
                     'body': wizard.message,
                     'record_name': document.display_name,
                     'email_from': email_from,

@@ -205,9 +205,9 @@ class AccountPayment(models.Model):
 
         if self.is_internal_transfer:
             if self.payment_type == 'inbound':
-                liquidity_line_name = _('Transfer to %s') % self.journal_id.name
+                liquidity_line_name = _('Transfer to %s', self.journal_id.name)
             else: # payment.payment_type == 'outbound':
-                liquidity_line_name = _('Transfer from %s') % self.journal_id.name
+                liquidity_line_name = _('Transfer from %s', self.journal_id.name)
         else:
             liquidity_line_name = self.payment_reference
 

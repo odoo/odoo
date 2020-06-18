@@ -88,7 +88,7 @@ class AccountFrFec(models.TransientModel):
         is_dom_tom = company.country_id.code in dom_tom_group.country_ids.mapped('code')
         if not is_dom_tom and not company.vat:
             raise Warning(
-                _("Missing VAT number for company %s") % company.name)
+                _("Missing VAT number for company %s", company.name))
         if not is_dom_tom and company.vat[0:2] != 'FR':
             raise Warning(
                 _("FEC is for French companies only !"))

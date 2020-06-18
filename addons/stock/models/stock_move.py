@@ -499,7 +499,7 @@ class StockMove(models.Model):
             return
 
         msg = _("The scheduled date has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
-        msg_subject = _("Scheduled date update due to delay on %s") % doc_orig[0].name
+        msg_subject = _("Scheduled date update due to delay on %s", doc_orig[0].name)
         # write the message on each document
         for doc in documents:
             last_message = doc.message_ids[:1]

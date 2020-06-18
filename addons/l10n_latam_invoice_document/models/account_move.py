@@ -156,7 +156,7 @@ class AccountMove(models.Model):
             invoice_type = rec.move_type
             if internal_type in ['debit_note', 'invoice'] and invoice_type in ['out_refund', 'in_refund'] and \
                rec.l10n_latam_document_type_id.code != '99':
-                raise ValidationError(_('You can not use a %s document type with a refund invoice') % internal_type)
+                raise ValidationError(_('You can not use a %s document type with a refund invoice', internal_type))
             elif internal_type == 'credit_note' and invoice_type in ['out_invoice', 'in_invoice']:
                 raise ValidationError(_('You can not use a %s document type with a invoice') % (internal_type))
 

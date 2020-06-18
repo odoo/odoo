@@ -218,7 +218,7 @@ class PurchaseOrder(models.Model):
                 'partner_id': self.partner_id.id
             })
         if not self.partner_id.property_stock_supplier.id:
-            raise UserError(_("You must set a Vendor Location for this partner %s") % self.partner_id.name)
+            raise UserError(_("You must set a Vendor Location for this partner %s", self.partner_id.name))
         return {
             'picking_type_id': self.picking_type_id.id,
             'partner_id': self.partner_id.id,
@@ -258,9 +258,9 @@ class PurchaseOrder(models.Model):
 
         validated_picking = self.picking_ids.filtered(lambda p: p.state == 'done')
         if validated_picking:
-            note += _("<p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>") % validated_picking.name
+            note += _("<p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>", validated_picking.name)
         else:
-            note += _("<p>Those dates have been updated accordingly on the receipt %s.</p>") % self.picking_ids[0].name
+            note += _("<p>Those dates have been updated accordingly on the receipt %s.</p>", self.picking_ids[0].name)
             for line, date in updated_dates:
                 date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
                 line._update_date_planned(date)

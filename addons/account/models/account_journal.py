@@ -213,11 +213,11 @@ class AccountJournal(models.Model):
         for journal in self:
             if journal.type == 'bank' and journal.bank_account_id:
                 if journal.bank_account_id.company_id and journal.bank_account_id.company_id != journal.company_id:
-                    raise ValidationError(_('The bank account of a bank journal must belong to the same company (%s).') % journal.company_id.name)
+                    raise ValidationError(_('The bank account of a bank journal must belong to the same company (%s).', journal.company_id.name))
                 # A bank account can belong to a customer/supplier, in which case their partner_id is the customer/supplier.
                 # Or they are part of a bank journal and their partner_id must be the company's partner_id.
                 if journal.bank_account_id.partner_id != journal.company_id.partner_id:
-                    raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).') % journal.company_id.name)
+                    raise ValidationError(_('The holder of a journal\'s bank account must be the company (%s).', journal.company_id.name))
 
     @api.constrains('company_id')
     def _check_company_consistency(self):
@@ -270,7 +270,11 @@ class AccountJournal(models.Model):
         ''', [tuple(accounts.ids)])
         res = self._cr.fetchone()
         if res:
-            raise ValidationError(_("The account %s can't be shared between multiple journals: %s") % (res[0], ', '.join(res[1])))
+            raise ValidationError(_(
+                "The account %(account_name)s can't be shared between multiple journals: %(journals)s",
+                account_name=res[0],
+                journals=', '.join(res[1])
+            ))
 
     @api.constrains('type', 'default_credit_account_id', 'default_debit_account_id')
     def _check_type_default_credit_account_id_type(self):
@@ -365,7 +369,7 @@ class AccountJournal(models.Model):
                 journal_entry = self.env['account.move'].search([('journal_id', '=', self.id), ('state', '=', 'posted'), ('secure_sequence_number', '!=', 0)], limit=1)
                 if len(journal_entry) > 0:
                     field_string = self._fields['restrict_mode_hash_table'].get_description(self.env)['string']
-                    raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.") % field_string)
+                    raise UserError(_("You cannot modify the field %s of a journal that already has accounting entries.", field_string))
         result = super(AccountJournal, self).write(vals)
 
         for journal in self:
