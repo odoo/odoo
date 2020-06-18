@@ -68,6 +68,10 @@
                     domain="[('opt_out', '=', False), ('is_blacklisted', '=', False), ('email_normalized', '!=', False)]"
                     invisible="not context.get('default_list_ids')"/>
                 <separator/>
+                <filter name="filter_bounce" string="Bounced" domain="[('message_bounce', '>', 0)]"/>
+                <filter name="filter_blacklisted" string="Blacklisted" domain="[('is_blacklisted','=',True)]" invisible="1"/>
+                <filter name="filter_opt_out" string="Opted-out" domain="[('opt_out', '=', True)]" invisible="1"/>
+                <separator/>
                 <filter string="Exclude Blacklisted Emails"
                     name="filter_not_email_bl"
                     domain="[('is_blacklisted', '=', False)]"/>
