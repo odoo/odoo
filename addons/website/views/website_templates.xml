@@ -34,6 +34,11 @@
     </li>
 </template>
 
+<template id="top_menu_notifications" name="Website Notifications Menu">
+    <!-- Notifications nav-items (shop's basket, chat...) -->
+    <ul id="top_menu_notifications" t-attf-class="nav navbar-nav flex-row {{classes}}"/>
+</template>
+
 <template id="layout" name="Main layout" inherit_id="portal.frontend_layout">
     <xpath expr="//html" position="before">
         <t t-set="html_data" t-value="{
@@ -64,6 +69,7 @@
             </t>
         </t>
         <t t-set="x_icon" t-value="website.image_url(website, 'favicon')"/>
+        <t t-set="header_notifications" t-value="false"/>
     </xpath>
     <xpath expr="//head/meta[last()]" position="after">
         <meta name="generator" content="Odoo"/>
@@ -134,6 +140,11 @@
     <xpath expr="//header//div[@id='top_menu_collapse']" position="attributes">
         <attribute name="class" separator=" " add="flex-grow-0"/>
     </xpath>
+    <xpath expr="//header//div[@id='top_menu_collapse']" position="before">
+        <t t-call="website.top_menu_notifications" t-if="header_notifications">
+            <t t-set="classes">o_hide_labels d-md-none</t>
+        </t>
+    </xpath>
     <xpath expr="//header//div[@id='top_menu_wrapper']" position="attributes">
         <attribute name="class" separator=" " add="position-relative"/>
     </xpath>
@@ -157,6 +168,11 @@
                 <span class="fa-2x">&#215;</span>
             </a>
         </nav>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']" position="after">
+        <t t-call="website.top_menu_notifications" t-if="header_notifications">
+            <t t-set="classes">mb-3 mb-md-0</t>
+        </t>
     </xpath>
     <xpath expr="//header//ul[@id='top_menu_user']" position="after">
         <nav class="o_offcanvas_logo_container nav navbar-nav mt-auto text-center navbar-toggler border-0">
@@ -382,6 +398,15 @@
     </xpath>
     <xpath expr="//header//ul[@id='top_menu']" position="attributes">
         <attribute name="class" separator=" " remove="text-right"/>
+    </xpath>
+    <xpath expr="//header//t[@t-call='website.top_menu_notifications']/t" position="replace">
+        <t t-set="classes">o_hide_labels order-1</t>
+    </xpath>
+    <xpath expr="//header//div[@id='top_menu_container']/a" position="attributes">
+        <attribute name="class" separator=" " add="order-2"/>
+    </xpath>
+    <xpath expr="//header//div[@id='top_menu_wrapper']//t[@t-call='website.top_menu_notifications']/t" position="replace">
+        <t t-set="classes">mb-3 flex-column</t>
     </xpath>
 </template>
 

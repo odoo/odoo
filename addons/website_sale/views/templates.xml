@@ -72,14 +72,20 @@
         </xpath>
     </template>
 
-    <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
-        <xpath expr="//header//ul[@id='top_menu']//li[hasclass('o_offcanvas_logo_container')]" position="before">
+    <template id="notification_menu" inherit_id="portal.frontend_layout" name="Activate notification menu">
+        <xpath expr="//t[@t-set='header_notifications']" position="attributes">
+            <attribute name="t-value">true</attribute>
+        </xpath>
+    </template>
+
+    <template id="header" inherit_id="website.top_menu_notifications" name="Header Shop My Cart Link">
+        <xpath expr="//ul" position="inside">
             <t t-set="website_sale_order" t-value="website.sale_get_order()" />
-            <li class="nav-item divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
             <li t-attf-class="nav-item o_wsale_my_cart #{'' if website_sale_order and website_sale_order.cart_quantity else 'd-none'}">
-                <a href="/shop/cart" class="nav-link">
-                    <i class="fa fa-shopping-cart"></i>
-                    My Cart <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" t-att-data-order-id="website_sale_order and website_sale_order.id or ''"/>
+                <a href="/shop/cart" class="nav-link" title="My Cart">
+                    <i class="fa fa-shopping-basket"></i>
+                    <span class="o_label">My Cart</span>
+                    <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" t-att-data-order-id="website_sale_order and website_sale_order.id or ''"/>
                 </a>
             </li>
         </xpath>

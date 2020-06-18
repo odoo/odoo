@@ -32,14 +32,15 @@
         </xpath>
     </template>
 
-    <template id="header" inherit_id="website.layout" name="Header Shop Wishlist Link">
-        <xpath expr="//header//ul[@id='top_menu']/li[contains(@t-attf-class, 'o_wsale_my_cart')]" position="after">
+    <template id="header" inherit_id="website.top_menu_notifications" name="Header Shop Wishlist Link">
+        <xpath expr="//li[contains(@t-attf-class, 'o_wsale_my_cart')]" position="after">
             <t t-if="request.website.viewref('website_sale_wishlist.add_to_wishlist').active">
                 <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
-                <li class="nav-item o_wsale_my_wish" t-att-style="not wishcount and 'display:none;'">
+                <li class="nav-item o_wsale_my_wish ml-2" t-att-style="not wishcount and 'display:none;'">
                     <a href="/shop/wishlist" class="nav-link">
                         <i class="fa fa-heart"/>
-                        Wishlist <sup t-attf-class="my_wish_quantity o_animate_blink badge badge-primary"><t t-esc='wishcount'/></sup>
+                        <span class="o_label">Wishlist</span>
+                        <sup t-attf-class="my_wish_quantity o_animate_blink badge badge-primary"><t t-esc='wishcount'/></sup>
                     </a>
                 </li>
             </t>
