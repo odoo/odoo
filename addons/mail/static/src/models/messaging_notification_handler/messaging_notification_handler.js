@@ -362,15 +362,13 @@ function factory(dependencies) {
             );
             const inboxMailbox = this.env.messaging.inbox;
             inboxMailbox.update({ counter: inboxMailbox.counter + 1 });
-            for (const thread of message.allThreads) {
+            for (const thread of message.threads) {
                 if (
                     thread.channel_type === 'channel' &&
-                    message.allThreads.includes(inboxMailbox)
+                    message.isNeedaction
                 ) {
                     thread.update({ message_needaction_counter: thread.message_needaction_counter + 1 });
                 }
-                const mainThreadCache = thread.mainCache;
-                mainThreadCache.update({ messages: [['link', message]] });
             }
             // manually force recompute of counter
             this.messaging.messagingMenu.update();
@@ -532,19 +530,16 @@ function factory(dependencies) {
          */
         _handleNotificationPartnerMarkAsRead({ channel_ids, message_ids = [] }) {
             const inboxMailbox = this.env.messaging.inbox;
-            const historyMailbox = this.env.messaging.history;
-            const mainHistoryThreadCache = historyMailbox.mainCache;
 
             // 1. move messages from inbox to history
-            for (const cache of inboxMailbox.caches) {
-                const messages = message_ids
-                    .map(id => this.env.models['mail.message'].find(message => message.id === id))
-                    .filter(message => !!message);
-                cache.update({ messages: [['unlink', messages]] });
-                // TODO FIXME cannot update other caches of history since the
-                // messages in them depend on the search domain
-                mainHistoryThreadCache.update({ messages: [['link', messages]] });
-            }
+            // AKU TODO: flag other caches to invalidate
+            // task-2171873
+            inboxMailbox.messages.map(message => {
+                message.update({
+                    isNeedaction: false,
+                    isHistory: true,
+                });
+            });
 
             // 2. remove "needaction" from channels
             let channels;
@@ -602,15 +597,16 @@ function factory(dependencies) {
                 if (!message) {
                     continue;
                 }
-                if (starred) {
-                    message.update({ threadCaches: [['link', starredMailbox.mainCache]] });
-                    starredMailbox.update({ counter: starredMailbox.counter + 1 });
-                } else {
-                    for (const cache of starredMailbox.caches) {
-                        cache.update({ messages: [['unlink', message]] });
-                    }
-                    starredMailbox.update({ counter: starredMailbox.counter - 1 });
+                message.update({ isStarred: starred });
+                if (!starred) {
+                    // AKU TODO: flag starred other caches for invalidation
+                    // task-2171873
                 }
+                starredMailbox.update({
+                    counter: starred
+                        ? starredMailbox.counter + 1
+                        : starredMailbox.counter -1,
+                });
             }
         }
 

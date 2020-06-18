@@ -3820,10 +3820,7 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
     );
 });
 
-QUnit.skip('load recent messages from thread (already loaded some old messages)', async function (assert) {
-    // TODO FIXME should be restored as part of task-2171881 (robust "load more" with "holes")
-    // Load old message that has been needaction, when opening this thread for
-    // the first time, it should load messages that are more recent.
+QUnit.test('load recent messages from thread (already loaded some old messages)', async function (assert) {
     assert.expect(17);
 
     Object.assign(this.data.initMessaging, {
