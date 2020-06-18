@@ -43,12 +43,9 @@
                             <span class="swissqr_text content" t-field="o.company_id.zip"/>
                             <span class="swissqr_text content" t-field="o.company_id.city"/><br/>
 
-                            <span class="swissqr_text title">Reference</span><br/>
-                            <t t-if="o.invoice_partner_bank_id.currency_id.name == 'EUR'">
-                                <span class="swissqr_text content" t-field="o.invoice_partner_bank_id.l10n_ch_isr_subscription_eur"/><br/>
-                            </t>
-                            <t t-if="o.invoice_partner_bank_id.currency_id.name == 'CHF'">
-                                <span class="swissqr_text content" t-field="o.invoice_partner_bank_id.l10n_ch_isr_subscription_chf"/><br/>
+                            <t t-if="o.invoice_partner_bank_id._is_qr_iban()">
+                                <span class="swissqr_text title">Reference</span><br/>
+                                <span class="swissqr_text content" t-esc="o.space_qrr_reference(o.invoice_payment_ref)"/><br/>
                             </t>
 
                             <span class="swissqr_text title">Payable by</span><br/>
@@ -89,16 +86,15 @@
                             <span class="swissqr_text content" t-field="o.company_id.zip"/>
                             <span class="swissqr_text content" t-field="o.company_id.city"/><br/>
 
-                            <span class="swissqr_text title">Reference</span><br/>
-                            <t t-if="o.invoice_partner_bank_id.currency_id.name == 'EUR'">
-                                <span class="swissqr_text content" t-field="o.invoice_partner_bank_id.l10n_ch_isr_subscription_eur"/><br/>
-                            </t>
-                            <t t-if="o.invoice_partner_bank_id.currency_id.name == 'CHF'">
-                                <span class="swissqr_text content" t-field="o.invoice_partner_bank_id.l10n_ch_isr_subscription_chf"/><br/>
+                            <t t-if="o.invoice_partner_bank_id._is_qr_iban()">
+                                <span class="swissqr_text title">Reference</span><br/>
+                                <span class="swissqr_text content" t-esc="o.space_qrr_reference(o.invoice_payment_ref)"/><br/>
                             </t>
 
                             <span class="swissqr_text title">Additional information</span><br/>
-                            <span class="swissqr_text content" t-field="o.ref"/><br/>
+                            <span class="swissqr_text content" t-esc="o.invoice_payment_ref or o.ref or o.name" t-if="not o.invoice_partner_bank_id._is_qr_iban()"/>
+                            <span class="swissqr_text content" t-esc="o.ref or o.name" t-if="o.invoice_partner_bank_id._is_qr_iban()"/>
+                            <br/>
 
                             <span class="swissqr_text title">Payable by</span><br/>
                             <span class="swissqr_text content" t-field="o.partner_id.name"/><br/>
