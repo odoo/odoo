@@ -20,11 +20,10 @@ class ThreadPreview extends Component {
         super(...args);
         useStore(props => {
             const thread = this.env.models['mail.thread'].get(props.threadLocalId);
-            const mainThreadCache = thread ? thread.mainCache : undefined;
             let lastMessageAuthor;
             let lastMessage;
             if (thread) {
-                const orderedMessages = mainThreadCache.orderedMessages;
+                const orderedMessages = thread.orderedMessages;
                 lastMessage = orderedMessages[orderedMessages.length - 1];
             }
             if (lastMessage) {

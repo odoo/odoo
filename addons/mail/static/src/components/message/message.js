@@ -231,15 +231,6 @@ class Message extends Component {
     }
 
     /**
-     * Determine whether the message is starred.
-     *
-     * @returns {boolean}
-     */
-    get isStarred() {
-        return this.message.allThreads.includes(this.env.messaging.starred);
-    }
-
-    /**
      * @returns {mail.message}
      */
     get message() {

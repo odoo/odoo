@@ -836,7 +836,7 @@ function factory(dependencies) {
          * @returns {mail.message}
          */
         _computeLastCurrentPartnerMessageSeenByEveryone() {
-            if (!this.partnerSeenInfos || !this.mainCacheOrderedMessages) {
+            if (!this.partnerSeenInfos || !this.orderedMessages) {
                 return [['unlink-all']];
             }
             const otherPartnerSeenInfos =
@@ -850,14 +850,14 @@ function factory(dependencies) {
                 otherPartnerSeenInfos.map(partnerSeenInfo =>
                     partnerSeenInfo.lastSeenMessage ? partnerSeenInfo.lastSeenMessage.id : 0
                 );
-            if(otherPartnersLastSeenMessageIds.length === 0) {
+            if (otherPartnersLastSeenMessageIds.length === 0) {
                 return [['unlink-all']];
             }
             const lastMessageSeenByAllId = Math.min(
                 ...otherPartnersLastSeenMessageIds
             );
             const currentPartnerOrderedSeenMessages =
-                this.mainCacheOrderedMessages.filter(message =>
+                this.orderedMessages.filter(message =>
                     message.author === this.messagingCurrentPartner &&
                     message.id <= lastMessageSeenByAllId);
 
@@ -868,6 +868,18 @@ function factory(dependencies) {
                 return [['unlink-all']];
             }
             return [['replace', currentPartnerOrderedSeenMessages.slice().pop()]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message|undefined}
+         */
+        _computeLastMessage() {
+            const {
+                length: l,
+                [l - 1]: lastMessage,
+            } = this.orderedMessages;
+            return [['replace', lastMessage]];
         }
 
         /**
@@ -890,16 +902,7 @@ function factory(dependencies) {
          * @returns {mail.thread_cache}
          */
         _computeMainCache() {
-            return [['replace', this.cache('[]')]];
-        }
-
-        /**
-         * @private
-         * @returns {mail.message[]}
-         */
-        _computeMessages() {
-            const allMessages = this.mainCacheMessages.concat(this.originThreadMessages);
-            return [['replace', allMessages]];
+            return [['link', this.cache()]];
         }
 
         /**
@@ -916,6 +919,14 @@ function factory(dependencies) {
          */
         _computeNeedactionMessages() {
             return [['replace', this.messages.filter(message => message.isNeedaction)]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeOrderedMessages() {
+            return [['replace', this.messages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
         }
 
         /**
@@ -1131,6 +1142,7 @@ function factory(dependencies) {
             }
             this.unregisterOtherMemberTypingMember(partner);
         }
+
     }
 
     Thread.fields = {
@@ -1235,12 +1247,13 @@ function factory(dependencies) {
             compute: '_computeLastCurrentPartnerMessageSeenByEveryone',
             dependencies: [
                 'partnerSeenInfos',
-                'mainCacheOrderedMessages',
+                'orderedMessages',
                 'messagingCurrentPartner',
             ],
         }),
         lastMessage: many2one('mail.message', {
-            related: 'mainCache.lastMessage',
+            compute: '_computeLastMessage',
+            dependencies: ['orderedMessages'],
         }),
         lastNeedactionMessage: many2one('mail.message', {
             compute: '_computeLastNeedactionMessage',
@@ -1248,13 +1261,6 @@ function factory(dependencies) {
         }),
         mainCache: one2one('mail.thread_cache', {
             compute: '_computeMainCache',
-            dependencies: ['caches'],
-        }),
-        mainCacheMessages: many2many('mail.message', {
-            related: 'mainCache.messages',
-        }),
-        mainCacheOrderedMessages: many2many('mail.message', {
-            related: 'mainCache.orderedMessages',
         }),
         mass_mailing: attr({
             default: false,
@@ -1268,12 +1274,13 @@ function factory(dependencies) {
         message_unread_counter: attr({
             default: 0,
         }),
+        /**
+         * All messages that this thread is linked to.
+         * Note that this field is automatically computed by inverse
+         * computed field. This field is readonly.
+         */
         messages: many2many('mail.message', {
-            compute: '_computeMessages',
-            dependencies: [
-                'mainCacheMessages',
-                'originThreadMessages',
-            ],
+            inverse: 'threads',
         }),
         messageSeenIndicators: one2many('mail.message_seen_indicator', {
             inverse: 'thread',
@@ -1294,6 +1301,10 @@ function factory(dependencies) {
         name: attr(),
         needactionMessages: many2many('mail.message', {
             compute: '_computeNeedactionMessages',
+            dependencies: ['messages'],
+        }),
+        orderedMessages: many2many('mail.message', {
+            compute: '_computeOrderedMessages',
             dependencies: ['messages'],
         }),
         /**
@@ -1322,9 +1333,6 @@ function factory(dependencies) {
             default: [],
         }),
         originThreadAttachments: one2many('mail.attachment', {
-            inverse: 'originThread',
-        }),
-        originThreadMessages: one2many('mail.message', {
             inverse: 'originThread',
         }),
         partnerSeenInfos: one2many('mail.thread_partner_seen_info', {
