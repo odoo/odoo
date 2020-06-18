@@ -158,7 +158,6 @@ QUnit.test('moderation: moderated channel with pending moderation message (autho
         id: 100,
         moderation_status: 'pending_moderation',
         originThread: [['link', thread]],
-        threadCaches: [['link', thread.mainCache]],
     });
     await this.createMessageComponent(message);
 
@@ -186,7 +185,6 @@ QUnit.test('moderation: moderated channel with pending moderation message (moder
         id: 100,
         moderation_status: 'pending_moderation',
         originThread: [['link', thread]],
-        threadCaches: [['link', thread.mainCache]],
     });
     await this.createMessageComponent(message);
     const messageEl = document.querySelector('.o_Message');
@@ -366,7 +364,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
 
     await this.createMessageComponent(message, { threadViewerLocalId: threadViewer.localId });
@@ -422,7 +420,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
     await this.createMessageComponent(message, { threadViewerLocalId: threadViewer.localId });
 
@@ -477,7 +475,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
     await this.createMessageComponent(message, { threadViewerLocalId: threadViewer.localId });
 
@@ -555,7 +553,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         author: [['link', author]],
         body: "<p>Test</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
     await this.createMessageComponent(message, { threadViewerLocalId: threadViewer.localId });
 
@@ -592,13 +590,13 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         author: [['link', currentPartner]],
         body: "<p>You already saw me</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
     const message = this.env.models['mail.message'].create({
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 99,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
     thread.update({
        partnerSeenInfos: [['create', [
@@ -663,7 +661,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
     await this.createMessageComponent(message, { threadViewerLocalId: threadViewer.localId });
 
