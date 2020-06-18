@@ -639,7 +639,7 @@ class Task(models.Model):
             portal_users = task.allowed_user_ids.filtered('share')
             if portal_users:
                 user_names = ', '.join(portal_users[:10].mapped('name'))
-                raise ValidationError(_("The project visibility setting doesn't allow portal users to see the project's tasks. (%s)") % user_names)
+                raise ValidationError(_("The project visibility setting doesn't allow portal users to see the project's tasks. (%s)", user_names))
 
     def _compute_attachment_ids(self):
         for task in self:
@@ -752,7 +752,7 @@ class Task(models.Model):
         if default is None:
             default = {}
         if not default.get('name'):
-            default['name'] = _("%s (copy)") % self.name
+            default['name'] = _("%s (copy)", self.name)
         return super(Task, self).copy(default)
 
     @api.constrains('parent_id')

@@ -360,7 +360,7 @@ class Repair(models.Model):
 
                 account = operation.product_id.product_tmpl_id._get_product_accounts()['income']
                 if not account:
-                    raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
+                    raise UserError(_('No account defined for product "%s".', operation.product_id.name))
 
                 invoice_line_vals = {
                     'name': name,
@@ -402,7 +402,7 @@ class Repair(models.Model):
 
                 account = fee.product_id.product_tmpl_id._get_product_accounts()['income']
                 if not account:
-                    raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
+                    raise UserError(_('No account defined for product "%s".', fee.product_id.name))
 
                 invoice_line_vals = {
                     'name': name,

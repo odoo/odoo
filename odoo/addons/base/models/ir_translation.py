@@ -547,7 +547,7 @@ class IrTranslation(models.Model):
                         continue
                     value2 = field.translate({val: src}.get, value1)
                     if value2 != value0:
-                        raise ValidationError(_("Translation is not valid:\n%s") % val)
+                        raise ValidationError(_("Translation is not valid:\n%s", val))
 
     @api.model_create_multi
     def create(self, vals_list):

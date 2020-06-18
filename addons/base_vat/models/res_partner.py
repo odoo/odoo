@@ -162,8 +162,18 @@ class ResPartner(models.Model):
         else:
             company = self.env.company
         if company.vat_check_vies:
-            return '\n' + _('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or did not respect the expected format %s.') % (self.vat, self.name, vat_no)
-        return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (self.vat, self.name, vat_no)
+            return '\n' + _(
+                'The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT validation check or did not respect the expected format %(format)s.',
+                vat=self.vat,
+                name=self.name,
+                format=vat_no
+            )
+        return '\n' + _(
+            'The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \nNote: the expected format is %(format)s',
+            vat=self.vat,
+            name=self.name,
+            format=vat_no
+        )
 
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
     __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')

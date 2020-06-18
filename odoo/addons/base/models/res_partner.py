@@ -318,7 +318,7 @@ class Partner(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         chosen_name = default.get('name') if default else ''
-        new_name = chosen_name or _('%s (copy)') % self.name
+        new_name = chosen_name or _('%s (copy)', self.name)
         default = dict(default or {}, name=new_name)
         return super(Partner, self).copy(default)
 

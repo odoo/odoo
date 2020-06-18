@@ -17,12 +17,12 @@ try:
         try:
             phone_nbr = phonenumbers.parse(number, region=country_code, keep_raw_input=True)
         except phonenumbers.phonenumberutil.NumberParseException as e:
-            raise UserError(_('Unable to parse %s.: %s') % (number, str(e)))
+            raise UserError(_('Unable to parse %(phone)s: %(error)s', phone=number, error=str(e)))
 
         if not phonenumbers.is_possible_number(phone_nbr):
-            raise UserError(_('Impossible number %s: probably invalid number of digits.') % number)
+            raise UserError(_('Impossible number %s: probably invalid number of digits.', number))
         if not phonenumbers.is_valid_number(phone_nbr):
-            raise UserError(_('Invalid number %s: probably incorrect prefix.') % number)
+            raise UserError(_('Invalid number %s: probably incorrect prefix.', number))
 
         return phone_nbr
 

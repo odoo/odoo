@@ -33,7 +33,7 @@ class PosPayment(models.Model):
         res = []
         for payment in self:
             if payment.name:
-                res.append((payment.id, _('%s %s') % (payment.name, formatLang(self.env, payment.amount, currency_obj=payment.currency_id))))
+                res.append((payment.id, '%s %s' % (payment.name, formatLang(self.env, payment.amount, currency_obj=payment.currency_id))))
             else:
                 res.append((payment.id, formatLang(self.env, payment.amount, currency_obj=payment.currency_id)))
         return res

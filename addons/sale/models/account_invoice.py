@@ -96,7 +96,7 @@ class AccountMove(models.Model):
                 for sale_line in line.sale_line_ids:
                     todo.add((sale_line.order_id, invoice.name))
         for (order, name) in todo:
-            order.message_post(body=_("Invoice %s paid") % name)
+            order.message_post(body=_("Invoice %s paid", name))
         return res
 
     def _get_invoice_delivery_partner_id(self):

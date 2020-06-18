@@ -20,7 +20,11 @@ class WebsiteSaleStock(WebsiteSale):
                 cart_qty = sum(order.order_line.filtered(lambda p: p.product_id.id == line.product_id.id).mapped('product_uom_qty'))
                 avl_qty = line.product_id.with_context(warehouse=order.warehouse_id.id).virtual_available
                 if cart_qty > avl_qty:
-                    values.append(_('You ask for %s products but only %s is available') % (cart_qty, avl_qty if avl_qty > 0 else 0))
+                    values.append(_(
+                        'You ask for %(quantity)s products but only %(available_qty)s is available',
+                        quantity=cart_qty,
+                        available_qty=avl_qty if avl_qty > 0 else 0
+                    ))
         if values:
             raise ValidationError('. '.join(values) + '.')
         return super(WebsiteSaleStock, self).payment_transaction(**kwargs)

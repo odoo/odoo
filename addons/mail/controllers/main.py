@@ -37,7 +37,7 @@ class MailController(http.Controller):
     def _check_token_and_record_or_redirect(cls, model, res_id, token):
         comparison = cls._check_token(token)
         if not comparison:
-            _logger.warning(_('Invalid token in route %s') % request.httprequest.url)
+            _logger.warning(_('Invalid token in route %s', request.httprequest.url))
             return comparison, None, cls._redirect_to_messaging()
         try:
             record = request.env[model].browse(res_id).exists()

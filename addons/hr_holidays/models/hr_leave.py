@@ -621,11 +621,11 @@ class HolidaysRequest(models.Model):
                 if leave.leave_type_request_unit == 'hour':
                     res.append((
                         leave.id,
-                        _("%s on %s: %.2f hours on %s") % (
-                            target,
-                            leave.holiday_status_id.name,
-                            leave.number_of_hours_display,
-                            fields.Date.to_string(leave.date_from),
+                        _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
+                            person=target,
+                            leave_type=leave.holiday_status_id.name,
+                            duration=leave.number_of_hours_display,
+                            date=fields.Date.to_string(leave.date_from),
                         )
                     ))
                 else:
@@ -634,11 +634,11 @@ class HolidaysRequest(models.Model):
                         display_date += ' ⇨ %s' % fields.Date.to_string(leave.date_to)
                     res.append((
                         leave.id,
-                        _("%s on %s: %.2f days (%s)") % (
-                            target,
-                            leave.holiday_status_id.name,
-                            leave.number_of_days,
-                            display_date,
+                        _("%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)",
+                            person=target,
+                            leave_type=leave.holiday_status_id.name,
+                            duration=leave.number_of_days,
+                            start=display_date,
                         )
                     ))
         return res
@@ -657,19 +657,26 @@ class HolidaysRequest(models.Model):
             dto = leave.date_to
             if leave.holiday_status_id.validity_start and leave.holiday_status_id.validity_stop:
                 if dfrom and dto and (dfrom.date() < vstart or dto.date() > vstop):
-                    raise ValidationError(
-                        _('%s are only valid between %s and %s') % (
-                            leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start, leave.holiday_status_id.validity_stop))
+                    raise ValidationError(_(
+                        '%(leave_type)s are only valid between %(start)s and %(end)s',
+                        leave_type=leave.holiday_status_id.display_name,
+                        start=leave.holiday_status_id.validity_start,
+                        end=leave.holiday_status_id.validity_stop
+                    ))
             elif leave.holiday_status_id.validity_start:
                 if dfrom and (dfrom.date() < vstart):
-                    raise ValidationError(
-                        _('%s are only valid starting from %s') % (
-                            leave.holiday_status_id.display_name, leave.holiday_status_id.validity_start))
+                    raise ValidationError(_(
+                        '%(leave_type)s are only valid starting from %(date)s',
+                        leave_type=leave.holiday_status_id.display_name,
+                        date=leave.holiday_status_id.validity_start
+                    ))
             elif leave.holiday_status_id.validity_stop:
                 if dto and (dto.date() > vstop):
-                    raise ValidationError(
-                        _('%s are only valid until %s') % (
-                            leave.holiday_status_id.display_name, leave.holiday_status_id.validity_stop))
+                    raise ValidationError(_(
+                        '%(leave_type)s are only valid until %(date)s',
+                        leave_type=leave.holiday_status_id.display_name,
+                        date=leave.holiday_status_id.validity_stop
+                    ))
 
     def _check_double_validation_rules(self, employees, state):
         if self.user_has_groups('hr_holidays.group_hr_holidays_manager'):
@@ -1032,7 +1039,7 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             if holiday.employee_id.user_id:
                 holiday.message_post(
-                    body=_('Your %s planned on %s has been refused') % (holiday.holiday_status_id.display_name, holiday.date_from),
+                    body=_('Your %(leave_type)s planned on %(date)s has been refused', leave_type=holiday.holiday_status_id.display_name, date=holiday.date_from),
                     partner_ids=holiday.employee_id.user_id.partner_id.ids)
 
         self._remove_resource_leave()
@@ -1101,7 +1108,13 @@ class HolidaysRequest(models.Model):
         for holiday in self:
             start = UTC.localize(holiday.date_from).astimezone(timezone(holiday.employee_id.tz or 'UTC'))
             end = UTC.localize(holiday.date_to).astimezone(timezone(holiday.employee_id.tz or 'UTC'))
-            note = _('New %s Request created by %s from %s to %s') % (holiday.holiday_status_id.name, holiday.create_uid.name, start, end)
+            note = _(
+                'New %(leave_type)s Request created by %(user)s from %(start)s to %(end)s',
+                leave_type=holiday.holiday_status_id.name,
+                user=holiday.create_uid.name,
+                start=start,
+                end=end
+            )
             if holiday.state == 'draft':
                 to_clean |= holiday
             elif holiday.state == 'confirm':

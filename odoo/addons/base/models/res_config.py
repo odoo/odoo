@@ -425,7 +425,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
             return {
                 'warning': {
                     'title': _('Warning!'),
-                    'message': _('Disabling this option will also uninstall the following modules \n%s') % message,
+                    'message': _('Disabling this option will also uninstall the following modules \n%s', message),
                 }
             }
         return {}
@@ -549,7 +549,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         # The other methods that start with `get_default_` are deprecated
         for method in dir(self):
             if method.startswith('get_default_'):
-                _logger.warning(_('Methods that start with `get_default_` are deprecated. Override `get_values` instead(Method %s)') % method)
+                _logger.warning(_('Methods that start with `get_default_` are deprecated. Override `get_values` instead(Method %s)', method))
         res.update(self.get_values())
 
         return res
@@ -607,7 +607,7 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
         # Methods that start with `set_` are now deprecated
         for method in dir(self):
             if method.startswith('set_') and method != 'set_values':
-                _logger.warning(_('Methods that start with `set_` are deprecated. Override `set_values` instead (Method %s)') % method)
+                _logger.warning(_('Methods that start with `set_` are deprecated. Override `set_values` instead (Method %s)', method))
 
     def execute(self):
         self.ensure_one()

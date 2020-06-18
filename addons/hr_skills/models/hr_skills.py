@@ -33,13 +33,13 @@ class EmployeeSkill(models.Model):
     def _check_skill_type(self):
         for record in self:
             if record.skill_id not in record.skill_type_id.skill_ids:
-                raise ValidationError(_("The skill %s and skill type %s doesn't match") % (record.skill_id.name, record.skill_type_id.name))
+                raise ValidationError(_("The skill %(name)s and skill type %(type)s doesn't match", name=record.skill_id.name, type=record.skill_type_id.name))
 
     @api.constrains('skill_type_id', 'skill_level_id')
     def _check_skill_level(self):
         for record in self:
             if record.skill_level_id not in record.skill_type_id.skill_level_ids:
-                raise ValidationError(_("The skill level %s is not valid for skill type: %s ") % (record.skill_level_id.name, record.skill_type_id.name))
+                raise ValidationError(_("The skill level %(level)s is not valid for skill type: %(type)s", level=record.skill_level_id.name, type=record.skill_type_id.name))
 
 
 class SkillLevel(models.Model):

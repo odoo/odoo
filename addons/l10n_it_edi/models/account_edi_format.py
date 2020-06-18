@@ -83,13 +83,13 @@ class AccountEdiFormat(models.Model):
             else:
                 company = self.env.company
                 if elements:
-                    _logger.info(_('Company not found with codice fiscale: %s. The company\'s user is set by default.') % elements[0].text)
+                    _logger.info(_('Company not found with codice fiscale: %s. The company\'s user is set by default.', elements[0].text))
                 else:
                     _logger.info(_('Company not found. The company\'s user is set by default.'))
 
             if not self.env.is_superuser():
                 if self.env.company != company:
-                    raise UserError(_("You can only import invoice concern your current company: %s") % self.env.company.display_name)
+                    raise UserError(_("You can only import invoice concern your current company: %s", self.env.company.display_name))
 
             # Refund type.
             # TD01 == invoice

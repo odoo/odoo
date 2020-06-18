@@ -443,8 +443,18 @@ class GettextAlias(object):
                     lang = env['res.users'].context_get()['lang']
         return lang
 
-    def __call__(self, source):
-        return self._get_translation(source)
+    def __call__(self, source, *args, **kwargs):
+        translation = self._get_translation(source)
+        assert not (args and kwargs)
+        if args or kwargs:
+            try:
+                return translation % (args or kwargs)
+            except (TypeError, ValueError, KeyError):
+                bad = translation
+                # fallback: apply to source before logging exception (in case source fails)
+                translation = source % (args or kwargs)
+                _logger.exception('Bad translation %r for string %r', bad, source)
+        return translation
 
     def _get_translation(self, source):
         res = source
@@ -545,7 +555,7 @@ def TranslationFileReader(source, fileformat='po'):
     if fileformat == 'po':
         return PoFileReader(source)
     _logger.info('Bad file format: %s', fileformat)
-    raise Exception(_('Bad file format: %s') % fileformat)
+    raise Exception(_('Bad file format: %s', fileformat))
 
 class CSVFileReader:
     def __init__(self, source):

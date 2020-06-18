@@ -215,7 +215,7 @@ class BlogPost(models.Model):
     @api.returns('self', lambda value: value.id)
     def copy_data(self, default=None):
         self.ensure_one()
-        name = _("%s (copy)") % self.name
+        name = _("%s (copy)", self.name)
         default = dict(default or {}, name=name)
         return super(BlogPost, self).copy_data(default)
 

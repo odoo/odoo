@@ -64,14 +64,14 @@ class ResCompany(models.Model):
                                     ('l10n_fr_secure_sequence_number', '!=', 0)], order="l10n_fr_secure_sequence_number ASC")
 
             if not orders:
-                msg_alert = (_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS') % self.env.company.name)
+                msg_alert = (_('There isn\'t any order flagged for data inalterability yet for the company %s. This mechanism only runs for point of sale orders generated after the installation of the module France - Certification CGI 286 I-3 bis. - POS', self.env.company.name))
                 hash_verified = False
 
             previous_hash = u''
             start_order_info = []
             for order in orders:
                 if order.l10n_fr_hash != order._compute_hash(previous_hash=previous_hash):
-                    msg_alert = (_('Corrupted data on point of sale order with id %s.') % order.id)
+                    msg_alert = (_('Corrupted data on point of sale order with id %s.', order.id))
                     hash_verified = False
                     break
                 previous_hash = order.l10n_fr_hash

@@ -175,9 +175,9 @@ class MrpWorkorder(models.Model):
                 if wo.state == 'pending' and prev_start and not (prev_start > wo.date_planned_start):
                     infos.append({
                         'color': 'text-primary',
-                        'msg': _("Waiting the previous work order, planned from %s to %s") % (
-                            format_datetime(self.env, prev_start, dt_format=False),
-                            format_datetime(self.env, prev_finished, dt_format=False))
+                        'msg': _("Waiting the previous work order, planned from %(start)s to %(end)s",
+                            start=format_datetime(self.env, prev_start, dt_format=False),
+                            end=format_datetime(self.env, prev_finished, dt_format=False))
                     })
                 if wo.date_planned_finished < fields.Datetime.now():
                     infos.append({
@@ -187,14 +187,14 @@ class MrpWorkorder(models.Model):
                 if prev_start and prev_start > wo.date_planned_start:
                     infos.append({
                         'color': 'text-danger',
-                        'msg': _("Scheduled before the previous work order, planned from %s to %s") % (
-                            format_datetime(self.env, prev_start, dt_format=False),
-                            format_datetime(self.env, prev_finished, dt_format=False))
+                        'msg': _("Scheduled before the previous work order, planned from %(start)s to %(end)s",
+                            start=format_datetime(self.env, prev_start, dt_format=False),
+                            end=format_datetime(self.env, prev_finished, dt_format=False))
                     })
                 if conflicted_dict.get(wo.id):
                     infos.append({
                         'color': 'text-danger',
-                        'msg': _("Planned at the same time than other workorder(s) at %s" % wo.workcenter_id.display_name)
+                        'msg': _("Planned at the same time than other workorder(s) at %s", wo.workcenter_id.display_name)
                     })
             color_icon = infos and infos[-1]['color'] or False
             wo.show_json_popover = bool(color_icon)
@@ -751,7 +751,7 @@ class MrpWorkorder(models.Model):
                     qty_done += line.product_uom_id._compute_quantity(line.qty_done, move.product_uom)
                 rounding = move.product_uom_id.rounding
                 if float_compare(qty_done, move.product_uom_qty, precision_rounding=rounding) != 0:
-                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.') % move.product_id.name)
+                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.', move.product_id.name))
 
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been produced """
@@ -763,4 +763,4 @@ class MrpWorkorder(models.Model):
                 ('state', '=', 'done')
             ])
             if sml:
-                raise UserError(_('This serial number for product %s has already been produced') % self.product_id.name)
+                raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))

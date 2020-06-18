@@ -740,7 +740,7 @@ class Warehouse(models.Model):
 
     def _get_inter_warehouse_route_values(self, supplier_warehouse):
         return {
-            'name': _('%s: Supply Product from %s') % (self.name, supplier_warehouse.name),
+            'name': _('%(warehouse)s: Supply Product from %(supplier)s', warehouse=self.name, supplier=supplier_warehouse.name),
             'warehouse_selectable': True,
             'product_selectable': True,
             'product_categ_selectable': True,
