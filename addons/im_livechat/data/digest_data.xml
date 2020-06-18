@@ -1,8 +1,23 @@
 <?xml version='1.0' encoding='utf-8'?>
-<odoo noupdate="1">
-    <record id="digest.digest_digest_default" model="digest.digest">
-        <field name="kpi_livechat_rating">True</field>
-        <field name="kpi_livechat_conversations">True</field>
-        <field name="kpi_livechat_response">True</field>
-    </record>
+<odoo>
+    <data noupdate="1">
+        <record id="digest.digest_digest_default" model="digest.digest">
+            <field name="kpi_livechat_rating">True</field>
+            <field name="kpi_livechat_conversations">True</field>
+            <field name="kpi_livechat_response">True</field>
+        </record>
+
+        <record id="digest_tip_sale1_management_0" model="digest.tip">
+            <field name="name">Tip: Use canned responses to chat faster</field>
+            <field name="sequence">2900</field>
+            <field name="group_id" ref="im_livechat.im_livechat_group_manager" />
+            <field name="tip_description" type="html">
+                <div>
+                    <b class="font-16" style="font-size: 20px;line-height: 30px">Use canned responses to chat faster</b>
+                    <p class="font-12" style="color:#888888;font-size: 15px; line-height: 25px; margin-top: 0">Use canned responses to define templates of messages in the livechat app. To load a canned response, start your sentence with ':' and select the template.</p>
+                    <img src="/im_livechat/static/src/img/canned-responses" style="max-width: 580px" width="100%"/>
+                </div>
+            </field>
+        </record>
+    </data>
 </odoo>
