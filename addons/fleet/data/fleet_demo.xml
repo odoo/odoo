@@ -463,7 +463,7 @@
           <field name="color">Black</field>
           <field name="location">Grand-Rosiere</field>
           <field name="doors">5</field>
-          <field name="driver_id" ref="base.user_demo_res_partner" />
+          <field name="driver_id" ref="base.partner_demo" />
           <field name="acquisition_date" eval="(DateTime.now() - timedelta(days=336)).strftime('%Y-%m-%d')" />
           <field name="state_id" ref="fleet_vehicle_state_registered"/>
           <field name="odometer_unit">kilometers</field>
