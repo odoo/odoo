@@ -136,6 +136,7 @@
     </xpath>
     <xpath expr="//header//nav[hasclass('navbar')]//div" position="attributes">
         <attribute name="id" add="top_menu_container"/>
+        <attribute name="class" add="position-relative" separator=" "/>
     </xpath>
     <xpath expr="//header//div[@id='top_menu_collapse']" position="attributes">
         <attribute name="class" separator=" " add="flex-grow-0"/>
@@ -247,11 +248,20 @@
 <template id="top_menu_search" name="Website Search">
     <ul t-attf-class="nav navbar-nav {{classes}}" id="top_menu_search">
         <li class="nav-item">
-            <a href="#" class="o_top_menu_search nav-link">
+            <a data-toggle="collapse" href="#o_top_menu_search_collapse" class="o_top_menu_search nav-link">
                 <i class="fa fa-search"/>
             </a>
         </li>
     </ul>
+    <div id="o_top_menu_search_collapse" class="collapse position-absolute w-100" style="z-index: 1; left: 0;">
+        <div class="d-flex">
+            <t t-call="website.website_search_box">
+                <a class="btn btn-secondary" data-toggle="collapse" href="#o_top_menu_search_collapse">
+                    &#215;
+                </a>
+            </t>
+        </div>
+    </div>
 </template>
 
 <template id="custom_code_layout" name="Custom Code Layout" inherit_id="website.layout" priority="55">
@@ -1230,6 +1240,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
         <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search"/>
         <div class="input-group-append">
             <button type="submit" class="btn btn-primary oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"/></button>
+            <t t-raw="0"/>
         </div>
     </div>
 </template>
