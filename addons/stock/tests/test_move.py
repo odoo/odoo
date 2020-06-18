@@ -4483,3 +4483,27 @@ class StockMove(SavepointCase):
         line1_result_package = picking.move_line_ids[0].result_package_id
         line2_result_package = picking.move_line_ids[1].result_package_id
         self.assertNotEqual(line1_result_package, line2_result_package, "Product and Product1 should be in a different package.")
+
+    def test_put_in_pack_4(self):
+        """Check put_in_pack with immediate trasfter
+        """
+        self.picking_type_out = self.env.ref('stock.picking_type_out').id
+        picking_type = self.env['stock.picking.type'].browse(self.picking_type_out)
+        picking_type.show_reserved = False
+
+        picking_form = Form(self.env['stock.picking'].with_context(
+            force_detailed_view=True
+        ), view='stock.view_picking_form')
+        picking_form.immediate_transfer = True
+        picking_form.picking_type_id = picking_type
+        picking_form.location_id = self.supplier_location
+        picking_form.location_dest_id = self.customer_location
+        picking = picking_form.save()
+        with picking_form.move_line_nosuggest_ids.new() as move_line:
+            move_line.product_id = self.product
+
+        picking = picking_form.save()
+        picking._autoconfirm_picking()
+        picking.move_line_ids.qty_done = 2.0
+        picking.put_in_pack()
+        self.assertTrue(picking.move_lines.move_line_ids.result_package_id)
