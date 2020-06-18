@@ -235,12 +235,12 @@
                         <label for="weight" string="Weight"/>
                         <div>
                             <field name="weight" class="oe_inline"/>
-                            <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline" style="margin-left:5px"/>
                         </div>
                         <label for="shipping_weight" string="Weight for shipping"/>
                         <div>
                             <field name="shipping_weight" class="oe_inline"/>
-                            <field name="weight_uom_name" nolabel="1" class="oe_inline" style="margin-left:5px"/>
+                            <field name="weight_uom_id" nolabel="1" class="oe_inline" style="margin-left:5px"/>
                         </div>
                     </group>
                 </xpath>
@@ -282,8 +282,8 @@
                     <label for="shipping_weight"/>
                     <div class="o_row" name="Shipping Weight">
                         <field name="shipping_weight"/>
-                        <span><field name="weight_uom_name"/></span>
-                        <span class="text-muted">(computed: <field name="weight" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_name" nolabel="1"/>)</span>
+                        <span><field name="weight_uom_id"/></span>
+                        <span class="text-muted">(computed: <field name="weight" nolabel="1"/></span><span class="text-muted"><field name="weight_uom_id" nolabel="1"/>)</span>
                     </div>
                 </field>
             </field>
