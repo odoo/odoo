@@ -47,7 +47,7 @@ function factory(dependencies) {
             }
             this.update({ isLoadingMore: true });
             const minMessageId = Math.min(
-                ...this.messages.map(message => message.id)
+                ...this.fetchedMessages.map(message => message.id)
             );
             domain = [['id', '<', minMessageId]].concat(domain);
             const messagesData = await this.async(() => this.env.services.rpc({
@@ -70,7 +70,7 @@ function factory(dependencies) {
                 await this.async(() => this.loadMessages());
                 return;
             }
-            const messageIds = this.messages.map(message => message.id);
+            const messageIds = this.fetchedMessages.map(message => message.id);
             const searchDomain = JSON.parse(this.stringifiedDomain);
             let domain = searchDomain.length ? searchDomain : [];
             domain = this._extendMessageDomain(domain);
@@ -96,14 +96,84 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {mail.message[]}
+         */
+        _computeFetchedMessages() {
+            if (!this.thread) {
+                return [['unlink-all']];
+            }
+            const toUnlinkMessages = [];
+            for (const message of this.fetchedMessages) {
+                if (!this.thread.messages.includes(message)) {
+                    toUnlinkMessages.push(message);
+                }
+            }
+            return [['unlink', toUnlinkMessages]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message|undefined}
+         */
+        _computeLastFetchedMessage() {
+            const {
+                length: l,
+                [l - 1]: lastFetchedMessage,
+            } = this.orderedFetchedMessages;
+            if (!lastFetchedMessage) {
+                return [['unlink-all']];
+            }
+            return [['replace', lastFetchedMessage]];
+        }
+
+        /**
+         * @private
          * @returns {mail.message|undefined}
          */
         _computeLastMessage() {
-            const { length: l, [l - 1]: lastMessage } = this.orderedMessages;
+            const {
+                length: l,
+                [l - 1]: lastMessage,
+            } = this.orderedMessages;
             if (!lastMessage) {
                 return [['unlink-all']];
             }
             return [['replace', lastMessage]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeMessages() {
+            if (!this.thread) {
+                return [['unlink-all']];
+            }
+            let messages = this.fetchedMessages;
+            if (this.stringifiedDomain !== '[]') {
+                // AKU TODO: flag for invalidation if there are newer messages
+                // in thread. task-2171873
+                return [['replace', messages]];
+            }
+            // main cache: adjust with newer messages
+            let newerMessages;
+            if (!this.lastFetchedMessage) {
+                newerMessages = this.thread.messages;
+            } else {
+                newerMessages = this.thread.messages.filter(message =>
+                    message.id > this.lastFetchedMessage.id
+                );
+            }
+            messages = messages.concat(newerMessages);
+            return [['replace', messages]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.message[]}
+         */
+        _computeOrderedFetchedMessages() {
+            return [['replace', this.fetchedMessages.sort((m1, m2) => m1.id < m2.id ? -1 : 1)]];
         }
 
         /**
@@ -180,25 +250,32 @@ function factory(dependencies) {
          * @param {Object[]} messageData
          */
         _handleMessagesLoaded(messagesData) {
-            this.update({
-                isAllHistoryLoaded: messagesData.length < MESSAGE_FETCH_LIMIT,
-                isLoaded: true,
-                isLoading: false,
-                isLoadingMore: false,
-                messages: [['insert', messagesData.map(data =>
-                    this.env.models['mail.message'].convertData(data))
-                ]],
-            });
+            const messages = messagesData.map(data =>
+                this.env.models['mail.message'].insert(
+                    this.env.models['mail.message'].convertData(data)
+                )
+            );
+
             if (!this.thread) {
                 return;
             }
             this.thread.update({
-                messageSeenIndicators: [['insert', messagesData.map(messageData => {
-                    return {
-                        id: this.env.models['mail.message_seen_indicator'].computeId(messageData.id, this.thread.id),
-                        message: [['insert', { id: messageData.id }]],
-                    };
-                })]],
+                messageSeenIndicators: [[
+                    'insert',
+                    messagesData.map(messageData => {
+                        return {
+                            id: this.env.models['mail.message_seen_indicator'].computeId(messageData.id, this.thread.id),
+                            message: [['insert', { id: messageData.id }]],
+                        };
+                    })
+                ]],
+            });
+            this.update({
+                fetchedMessages: [['link', messages]],
+                isAllHistoryLoaded: messagesData.length < MESSAGE_FETCH_LIMIT,
+                isLoaded: true,
+                isLoading: false,
+                isLoadingMore: false,
             });
             for (const viewer of this.thread.viewers) {
                 viewer.handleThreadCacheLoaded(this);
@@ -210,6 +287,27 @@ function factory(dependencies) {
     ThreadCache.fields = {
         checkedMessages: many2many('mail.message', {
             inverse: 'checkedThreadCaches',
+        }),
+        /**
+         * List of messages that have been fetched by this cache.
+         *
+         * This DOES NOT necessarily includes all messages linked to this thread
+         * cache (@see messages field for that): it just contains list
+         * of successive messages that have been explicitly fetched by this
+         * cache. For all non-main caches, this corresponds to all messages.
+         * For the main cache, however, messages received from longpolling
+         * should be displayed on main cache but they have not been explicitly
+         * fetched by cache, so they ARE NOT in this list (at least, not until a
+         * fetch on this thread cache contains this message).
+         *
+         * The distinction between messages and fetched messages is important
+         * to manage "holes" in message list, while still allowing to display
+         * new messages on main cache of thread in real-time.
+         */
+        fetchedMessages: many2many('mail.message', {
+            // adjust with messages unlinked from thread
+            compute: '_computeFetchedMessages',
+            dependencies: ['threadMessages'],
         }),
         isAllHistoryLoaded: attr({
             default: false,
@@ -223,6 +321,17 @@ function factory(dependencies) {
         isLoadingMore: attr({
             default: false,
         }),
+        /**
+         * Last message that has been fetched by this thread cache.
+         *
+         * This DOES NOT necessarily mean the last message linked to this thread
+         * cache (@see lastMessage field for that). @see fetchedMessages field
+         * for a deeper explanation about "fetched" messages.
+         */
+        lastFetchedMessage: many2one('mail.message', {
+            compute: '_computeLastFetchedMessage',
+            dependencies: ['orderedFetchedMessages'],
+        }),
         lastMessage: many2one('mail.message', {
             compute: '_computeLastMessage',
             dependencies: ['orderedMessages'],
@@ -230,9 +339,30 @@ function factory(dependencies) {
         messagesCheckboxes: attr({
             related: 'messages.hasCheckbox',
         }),
+        /**
+         * List of messages linked to this cache.
+         */
         messages: many2many('mail.message', {
-            inverse: 'threadCaches',
+            compute: '_computeMessages',
+            dependencies: [
+                'fetchedMessages',
+                'threadMessages',
+            ],
         }),
+        /**
+         * Ordered list of messages that have been fetched by this cache.
+         *
+         * This DOES NOT necessarily includes all messages linked to this thread
+         * cache (@see orderedMessages field for that). @see fetchedMessages
+         * field for deeper explanation about "fetched" messages.
+         */
+        orderedFetchedMessages: many2many('mail.message', {
+            compute: '_computeOrderedFetchedMessages',
+            dependencies: ['fetchedMessages'],
+        }),
+        /**
+         * Ordered list of messages linked to this cache.
+         */
         orderedMessages: many2many('mail.message', {
             compute: '_computeOrderedMessages',
             dependencies: ['messages'],
@@ -242,6 +372,9 @@ function factory(dependencies) {
         }),
         thread: many2one('mail.thread', {
             inverse: 'caches',
+        }),
+        threadMessages: many2many('mail.message', {
+            related: 'thread.messages',
         }),
         uncheckedMessages: many2many('mail.message', {
             compute: '_computeUncheckedMessages',

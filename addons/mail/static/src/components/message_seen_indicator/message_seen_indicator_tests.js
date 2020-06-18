@@ -76,9 +76,9 @@ QUnit.test('rendering when just one has received the message', async function (a
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
-    await this.createMessageSeenIndicatorComponent({message, thread});
+    await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -122,9 +122,9 @@ QUnit.test('rendering when everyone have received the message', async function (
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
-    await this.createMessageSeenIndicatorComponent({message, thread});
+    await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -169,9 +169,9 @@ QUnit.test('rendering when just one has seen the message', async function (asser
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread.main]],
     });
-    await this.createMessageSeenIndicatorComponent({message, thread});
+    await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -216,9 +216,9 @@ QUnit.test('rendering when just one has seen & received the message', async func
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
-    await this.createMessageSeenIndicatorComponent({message, thread});
+    await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
@@ -265,9 +265,9 @@ QUnit.test('rendering when just everyone has seen the message', async function (
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
-        threadCaches: [['link', thread.mainCache]],
+        originThread: [['link', thread]],
     });
-    await this.createMessageSeenIndicatorComponent({message, thread});
+    await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(
         document.body,
         '.o_MessageSeenIndicator',
