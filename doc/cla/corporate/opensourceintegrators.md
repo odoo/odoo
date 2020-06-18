@@ -14,7 +14,7 @@ List of contributors:
 
 Greg Mader gmader@opensourceintegrators.com https://github.com/gmader
 Antonio Yamuta ayamuta@opensourceintegrators.com https://github.com/agyamuta
-Balaji Kannan bkannan@opensourceintegrators.com https://github.com/b-kannan
+Balaji Kannan bkannan@opensourceintegrators.com/bkannan@ursainfosystems.com https://github.com/b-kannan
 Bhavesh Odedra bodedra@opensourceintegrators.com https://github.com/bodedra
 Mayank Gosai mgosai@opensourceintegrators.com https://github.com/mgosai
 Maxime Chambreuil mchambreuil@opensourceintegrators.com https://github.com/max3903
