@@ -61,6 +61,11 @@ class ISRTest(AccountTestCommon):
         self.assertTrue(self.print_isr(invoice), 'An ISR should have been generated')
 
     def test_l10n_ch_postals(self):
+        partner_swiss_company = self.env['res.partner'].create({
+            'name': 'Swiss Company',
+            'is_company': True,
+        })
+
         #An account whose number is set to a valid postal number becomes a 'postal'
         #account and sets its postal reference field.
         account_test_postal_ok = self.create_account('010391391')

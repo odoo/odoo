@@ -376,11 +376,9 @@ class TestSaleOrder(TestCommonSaleNoChart):
         product_1 = products[0]
         product_2 = products[1]
 
-        # Make sure the company is in USD
         main_company = self.env.ref('base.main_company')
         main_curr = main_company.currency_id
-        other_curr = (self.env.ref('base.USD') + self.env.ref('base.EUR')) - main_curr
-        # main_company.currency_id = other_curr # product.currency_id when no company_id set
+        other_curr = self.env.ref('base.EUR') if main_curr == self.env.ref('base.USD') else self.env.ref('base.USD')
         other_company = self.env["res.company"].create({
             "name": "Test",
             "currency_id": other_curr.id
