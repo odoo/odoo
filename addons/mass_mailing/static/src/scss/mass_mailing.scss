@@ -13,6 +13,14 @@
             margin-bottom: 8px;
         }
     }
+    &.o_kanban_mailing_list {
+        .o_kanban_group:not(.o_column_folded) {
+            width: 350px + $o-kanban-group-padding;
+        }
+        .o_kanban_record {
+            width: 350px;
+        }
+    }
 }
 .o_form_view {
     // This will display the emoji widget in the right position after a text field with sms option.
