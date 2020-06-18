@@ -252,7 +252,7 @@ function factory(dependencies) {
             related: 'composer.hasFocus',
         }),
         lastMessage: many2one('mail.message', {
-            related: 'threadCache.lastMessage',
+            related: 'thread.lastMessage',
         }),
         /**
          * Most recent message in the current thread viewer that has been shown
