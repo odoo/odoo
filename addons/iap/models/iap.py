@@ -186,8 +186,10 @@ class IapAccount(models.Model):
                     account = IapAccount.create({'service_name': service_name})
                 # fetch 'account_token' into cache with this cursor,
                 # as self's cursor cannot see this account
-                account.account_token
-            return self.browse(account.id)
+                account_token = account.account_token
+            account = self.browse(account.id)
+            self.env.cache.set(account, IapAccount._fields['account_token'], account_token)
+            return account
         accounts_with_company = accounts.filtered(lambda acc: acc.company_ids)
         if accounts_with_company:
             return accounts_with_company[0]
