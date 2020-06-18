@@ -1544,14 +1544,16 @@ class AccountInvoice(models.Model):
         values['state'] = 'draft'
         values['number'] = False
         values['origin'] = invoice.number
-        values['payment_term_id'] = False
         values['refund_invoice_id'] = invoice.id
         values['reference'] = False
 
         if values['type'] == 'in_refund':
+            values['payment_term_id'] = invoice.partner_id.property_supplier_payment_term_id.id
             partner_bank_result = self._get_partner_bank_id(values['company_id'])
             if partner_bank_result:
                 values['partner_bank_id'] = partner_bank_result.id
+        else:
+            values['payment_term_id'] = invoice.partner_id.property_payment_term_id.id
 
         if date:
             values['date'] = date
