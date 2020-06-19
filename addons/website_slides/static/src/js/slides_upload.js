@@ -387,4 +387,6 @@ if ($.deparam.querystring().enable_slide_upload !== undefined) {
     $('.oe_slide_js_upload').click();
 }
 
+return {"SlideDialog": SlideDialog}
+
 });
