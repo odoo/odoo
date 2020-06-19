@@ -938,7 +938,7 @@ class HrExpenseSheet(models.Model):
 
         self.write({'state': 'cancel'})
         for sheet in self:
-            sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': self.name})
+            sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': sheet.name})
         self.activity_update()
 
     def reset_expense_sheets(self):

@@ -530,7 +530,7 @@ class Slide(models.Model):
         mail_ids = []
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            template = self.channel_id.share_template_id.with_context(
+            template = record.channel_id.share_template_id.with_context(
                 user=self.env.user,
                 email=email,
                 base_url=base_url,
