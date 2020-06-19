@@ -158,7 +158,7 @@
             <field name="name">project.task.type.tree</field>
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
-                <tree string="Task Stage" delete="0">
+                <tree string="Task Stage" delete="0" sample="1">
                     <field name="sequence" widget="handle" optional="show"/>
                     <field name="name"/>
                     <field name="fold" optional="show"/>
@@ -175,7 +175,7 @@
             <field name="name">project.task.type.kanban</field>
             <field name="model">project.task.type</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" sample="1">
                     <field name="name"/>
                     <field name="fold"/>
                     <field name="description"/>
@@ -390,7 +390,7 @@
             <field name="name">project.project.tree</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <tree decoration-muted="active == False" string="Projects" delete="0" multi_edit="1">
+                <tree decoration-muted="active == False" string="Projects" delete="0" multi_edit="1" sample="1">
                     <field name="sequence" optional="show" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
@@ -487,7 +487,7 @@
             <field name="name">project.project.kanban</field>
             <field name="model">project.project</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors" on_create="project.open_create_project">
+                <kanban class="oe_background_grey o_kanban_dashboard o_project_kanban o_emphasize_colors" on_create="project.open_create_project" sample="1">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="color"/>
@@ -833,7 +833,7 @@
             <field name="model">project.task</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Tasks" multi_edit="1">
+                <tree string="Tasks" multi_edit="1" sample="1">
                     <field name="message_needaction" invisible="1" readonly="1"/>
                     <field name="is_closed" invisible="1" />
                     <field name="sequence" invisible="not context.get('seq_visible', False)" readonly="1"/>
@@ -1040,7 +1040,7 @@
             <field name="name">Tags</field>
             <field name="model">project.tags</field>
             <field name="arch" type="xml">
-                <tree string="Tags" editable="bottom">
+                <tree string="Tags" editable="bottom" sample="1">
                     <field name="name"/>
                     <field name="color" widget="color_picker"/>
                 </tree>

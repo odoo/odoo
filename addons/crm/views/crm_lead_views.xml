@@ -309,7 +309,7 @@
             <field name="model">crm.lead</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Leads">
+                <tree string="Leads" sample="1">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Lead"/>
@@ -342,7 +342,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" archivable="false">
+                <kanban class="o_kanban_mobile" archivable="false" sample="1">
                     <field name="name"/>
                     <field name="contact_name"/>
                     <field name="priority"/>
@@ -455,7 +455,7 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
-                    archivable="false">
+                    archivable="false" sample="1">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -599,7 +599,7 @@
             <field name="model">crm.lead</field>
             <field name="priority">1</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" >
+                <tree string="Opportunities" sample="1">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity"/>
