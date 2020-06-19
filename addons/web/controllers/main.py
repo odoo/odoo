@@ -324,12 +324,18 @@ def set_cookie_and_redirect(redirect_url):
     redirect.autocorrect_location_header = False
     return redirect
 
-def clean_action(action):
+def clean_action(action, env):
     action.setdefault('flags', {})
     action_type = action.setdefault('type', 'ir.actions.act_window_close')
     if action_type == 'ir.actions.act_window':
-        return fix_view_modes(action)
-    return action
+        action = fix_view_modes(action)
+
+    # When returning an action, only few information are really usefull
+    return {
+        field: value
+        for field, value in action.items()
+        if field in env[action['type']]._get_readable_fields()
+    }
 
 # I think generate_views,fix_view_modes should go into js ActionManager
 def generate_views(action):
@@ -1357,7 +1363,7 @@ class DataSet(http.Controller):
     def call_button(self, model, method, args, kwargs):
         action = self._call_kw(model, method, args, kwargs)
         if isinstance(action, dict) and action.get('type') != '':
-            return clean_action(action)
+            return clean_action(action, env=request.env)
         return False
 
     @http.route('/web/dataset/resequence', type='json', auth="user")
@@ -1687,7 +1693,7 @@ class Action(http.Controller):
             except Exception:
                 action_id = 0   # force failed read
 
-        base_action = Actions.browse([action_id]).read(['type'])
+        base_action = Actions.browse([action_id]).sudo().read(['type'])
         if base_action:
             ctx = dict(request.context)
             action_type = base_action[0]['type']
@@ -1696,15 +1702,16 @@ class Action(http.Controller):
             if additional_context:
                 ctx.update(additional_context)
             request.context = ctx
-            action = request.env[action_type].browse([action_id]).read()
+            action = request.env[action_type].sudo().browse([action_id]).read()
             if action:
-                value = clean_action(action[0])
+                value = clean_action(action[0], env=request.env)
         return value
 
     @http.route('/web/action/run', type='json', auth="user")
     def run(self, action_id):
-        result = request.env['ir.actions.server'].browse([action_id]).run()
-        return clean_action(result) if result else False
+        action = request.env['ir.actions.server'].browse([action_id])
+        result = action.run()
+        return clean_action(result, env=action.env) if result else False
 
 class Export(http.Controller):
 

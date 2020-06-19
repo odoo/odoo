@@ -570,7 +570,7 @@ class IrAttachment(models.Model):
 
     @api.model
     def action_get(self):
-        return self.env['ir.actions.act_window'].for_xml_id('base', 'action_attachment')
+        return self.env['ir.actions.act_window']._for_xml_id('base.action_attachment')
 
     @api.model
     def get_serve_attachment(self, url, extra_domain=None, extra_fields=None, order=None):

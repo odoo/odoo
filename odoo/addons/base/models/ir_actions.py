@@ -135,6 +135,38 @@ class IrActions(models.Model):
             result['action'] = sorted(result['action'], key=lambda vals: vals.get('sequence', 0))
         return result
 
+    @api.model
+    def _for_xml_id(self, full_xml_id):
+        """ Returns the action content for the provided xml_id
+
+        :param module: the module the act_window originates in
+        :param xml_id: the namespace-less id of the action (the @id
+                       attribute from the XML file)
+        :return: A read() view of the ir.actions.action safe for web use
+        """
+        record = self.env.ref(full_xml_id)
+        assert isinstance(self.env[record._name], type(self))
+        # TO CHECK MAT: check groups_id/res_model access?
+        action = record.sudo().read()[0]
+        return {
+            field: value
+            for field, value in action.items()
+            if field in record._get_readable_fields()
+        }
+
+    def _get_readable_fields(self):
+        """ return the list of fields that are safe to read
+
+        Fetched via /web/action/load or _for_xml_id method
+        Only fields used by the web client should included
+        Accessing content useful for the server-side must
+        be done manually with superuser
+        """
+        return {
+            "binding_model_id", "binding_type", "binding_view_types",
+            "display_name", "help", "id", "name", "type", "xml_id",
+        }
+
 
 class IrActionsActWindow(models.Model):
     _name = 'ir.actions.act_window'
@@ -232,18 +264,6 @@ class IrActionsActWindow(models.Model):
                     values['help'] = self.with_context(**ctx).env[model].get_empty_list_help(values.get('help', ''))
         return result
 
-    @api.model
-    def for_xml_id(self, module, xml_id):
-        """ Returns the act_window object created for the provided xml_id
-
-        :param module: the module the act_window originates in
-        :param xml_id: the namespace-less id of the action (the @id
-                       attribute from the XML file)
-        :return: A read() view of the ir.actions.act_window
-        """
-        record = self.env.ref("%s.%s" % (module, xml_id))
-        return record.read()[0]
-
     @api.model_create_multi
     def create(self, vals_list):
         self.clear_caches()
@@ -266,6 +286,14 @@ class IrActionsActWindow(models.Model):
     def _existing(self):
         self._cr.execute("SELECT id FROM %s" % self._table)
         return set(row[0] for row in self._cr.fetchall())
+
+
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            "context", "domain", "filter", "groups_id", "limit", "res_id",
+            "res_model", "search_view", "search_view_id", "target", "view_id",
+            "view_mode", "views",
+        }
 
 
 VIEW_TYPES = [
@@ -320,6 +348,11 @@ class IrActionsActUrl(models.Model):
     url = fields.Text(string='Action URL', required=True)
     target = fields.Selection([('new', 'New Window'), ('self', 'This Window')],
                               string='Action Target', default='new', required=True)
+
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            "target", "url",
+        }
 
 
 class IrActionsServer(models.Model):
@@ -420,6 +453,11 @@ class IrActionsServer(models.Model):
     def _check_recursion(self):
         if not self._check_m2m_recursion('child_ids'):
             raise ValidationError(_('Recursion found in child server actions'))
+
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            "groups_id", "model_name",
+        }
 
     def _get_runner(self):
         multi = True
@@ -799,3 +837,9 @@ class IrActionsActClient(models.Model):
         params_store = doc.find(".//field[@name='params_store']")
         params_store.getparent().remove(params_store)
         return doc
+
+
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            "context", "params", "res_model", "tag", "target",
+        }
