@@ -205,11 +205,14 @@ function formatFloatFactor(value, field, options) {
  * @param {Object} [options]
  * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30
  *        otherwise, format like 01:30
+ * @param {boolean} [options.noZeroMinute] if true, format like 1
+ *        otherwise, format like 1:00
  * @returns {string}
  */
 function formatFloatTime(value, field, options) {
     options = options || {};
     var pattern = options.noLeadingZeroHour ? '%1d:%02d' : '%02d:%02d';
+    pattern = options.noZeroMinute ? (Number.isInteger(value) ? '%1d' : '%1d:%02d') : pattern;
     if (value < 0) {
         value = Math.abs(value);
         pattern = '-' + pattern;

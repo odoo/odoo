@@ -167,7 +167,7 @@ QUnit.test('format percentage', function (assert) {
 });
 
 QUnit.test('format float time', function (assert) {
-    assert.expect(7);
+    assert.expect(10);
 
     assert.strictEqual(fieldUtils.format.float_time(2), '02:00');
     assert.strictEqual(fieldUtils.format.float_time(3.5), '03:30');
@@ -175,12 +175,19 @@ QUnit.test('format float time', function (assert) {
 
     assert.strictEqual(fieldUtils.format.float_time(-0.5), '-00:30');
 
-    const options = {
+    let options = {
         noLeadingZeroHour: true,
     };
     assert.strictEqual(fieldUtils.format.float_time(2, null, options), '2:00');
     assert.strictEqual(fieldUtils.format.float_time(3.5, null, options), '3:30');
     assert.strictEqual(fieldUtils.format.float_time(-0.5, null, options), '-0:30');
+
+    options = {
+        noZeroMinute: true,
+    };
+    assert.strictEqual(fieldUtils.format.float_time(2, null, options), '2');
+    assert.strictEqual(fieldUtils.format.float_time(0.5, null, options), '0:30');
+    assert.strictEqual(fieldUtils.format.float_time(-1.5, null, options), '-1:30');
 });
 
 QUnit.test('parse float', function(assert) {
