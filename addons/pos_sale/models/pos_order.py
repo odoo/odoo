@@ -23,6 +23,14 @@ class PosOrder(models.Model):
             order.currency_rate = self.env['res.currency']._get_conversion_rate(order.company_id.currency_id, order.pricelist_id.currency_id, order.company_id, date_order)
 
     def _prepare_invoice(self):
+<<<<<<< HEAD
         invoice_vals = super(PosOrder, self)._prepare_invoice()
         invoice_vals['team_id'] = self.crm_team_id
         return invoice_vals
+=======
+        invoice_values = super(PosOrder, self)._prepare_invoice()
+        if self.session_id.config_id.crm_team_id:
+            invoice_values['team_id'] = self.session_id.config_id.crm_team_id.id
+
+        return invoice_values
+>>>>>>> 40bc7f93952... temp
