@@ -2138,6 +2138,8 @@ class TestReconciliationExec(TestReconciliation):
             self.assertEqual(aml.amount_residual, 0.0)
 
     def test_reconciliation_process_move_lines_with_mixed_currencies(self):
+        
+        company = self.env.ref('base.main_company')
         # Delete any old rate - to make sure that we use the ones we need.
         old_rates = self.env['res.currency.rate'].search(
             [('currency_id', '=', self.currency_usd_id)])
@@ -2156,7 +2158,7 @@ class TestReconciliationExec(TestReconciliation):
             {
                 'name': 'line product',
                 'move_id': move_product.id,
-                'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
+                'account_id': self.env['account.account'].search([('company_id', '=', company.id),('user_type_id', '=', self.env.ref('account.data_account_type_revenue').id)], limit=1).id,
                 'debit': 20,
                 'credit': 0,
             },
@@ -2173,7 +2175,7 @@ class TestReconciliationExec(TestReconciliation):
         move_payment = self.env['account.move'].create({
             'ref': 'move payment',
         })
-        liquidity_account = self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_liquidity').id)], limit=1)
+        liquidity_account = self.env['account.account'].search([('company_id', '=', company.id),('user_type_id', '=', self.env.ref('account.data_account_type_liquidity').id)], limit=1)
         move_payment_lines = self.env['account.move.line'].create([
             {
                 'name': 'line product',
