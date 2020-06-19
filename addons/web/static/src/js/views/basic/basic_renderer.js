@@ -455,7 +455,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * @returns {boolean}
      */
     _hasContent: function () {
-        return this.state.count !== 0;
+        return this.state.count !== 0 && (!('isSample' in this.state) || !this.state.isSample);
     },
     /**
      * Force the resequencing of the records after moving one of them to a given

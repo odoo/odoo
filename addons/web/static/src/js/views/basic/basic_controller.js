@@ -43,7 +43,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.hasButtons = params.hasButtons;
         FieldManagerMixin.init.call(this, this.model);
         this.mode = params.mode || 'readonly';
-        this.handle = this.initialState.id;
         // savingDef is used to ensure that we always wait for pending save
         // operations to complete before checking if there are changes to
         // discard when discardChanges is called

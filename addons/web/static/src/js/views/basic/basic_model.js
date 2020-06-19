@@ -164,6 +164,13 @@ var BasicModel = AbstractModel.extend({
         this.batchedRPCsRequests = [];
 
         this.localData = Object.create(null);
+        // used to generate dataPoint ids. Note that the counter is set to 0 for
+        // each instance, and this is mandatory for the sample data feature to
+        // work: we need both the main model and the sample model to generate the
+        // same datapoint ids for their common data (groups, when there are real
+        // groups in database), so that we can easily do the mapping between
+        // real and sample data.
+        this.__id = 0;
         this._super.apply(this, arguments);
     },
 
@@ -549,7 +556,7 @@ var BasicModel = AbstractModel.extend({
         this.localData[listID].orderedResIDs = list.res_ids;
     },
     /**
-     * The get method first argument is the handle returned by the load method.
+     * The __get method first argument is the handle returned by the load method.
      * It is optional (the handle can be undefined).  In some case, it makes
      * sense to use the handle as a key, for example the BasicModel holds the
      * data for various records, each with its local ID.
@@ -563,7 +570,7 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.raw=false] if true, will not follow relations
      * @returns {Object}
      */
-    get: function (id, options) {
+    __get: function (id, options) {
         var self = this;
         options = options || {};
 
@@ -601,7 +608,7 @@ var BasicModel = AbstractModel.extend({
                         relDataPoint = this.localData[data[fieldName]];
                         data[fieldName] = relDataPoint ? relDataPoint.res_id : false;
                     } else {
-                        data[fieldName] = this.get(data[fieldName]) || false;
+                        data[fieldName] = this.__get(data[fieldName]) || false;
                     }
                 } else if (field.type === 'reference') {
                     if (options.raw) {
@@ -610,7 +617,7 @@ var BasicModel = AbstractModel.extend({
                             relDataPoint.model + ',' + relDataPoint.res_id :
                             false;
                     } else {
-                        data[fieldName] = this.get(data[fieldName]) || false;
+                        data[fieldName] = this.__get(data[fieldName]) || false;
                     }
                 } else if (field.type === 'one2many' || field.type === 'many2many') {
                     if (options.raw) {
@@ -625,7 +632,7 @@ var BasicModel = AbstractModel.extend({
                             data[fieldName] = data[fieldName] || [];
                         }
                     } else {
-                        data[fieldName] = this.get(data[fieldName]) || [];
+                        data[fieldName] = this.__get(data[fieldName]) || [];
                     }
                 }
             }
@@ -687,7 +694,7 @@ var BasicModel = AbstractModel.extend({
             context: _.extend({}, element.context),
             count: element.count,
             data: _.map(element.data, function (elemID) {
-                return self.get(elemID, options);
+                return self.__get(elemID, options);
             }),
             domain: element.domain.slice(0),
             fields: element.fields,
@@ -701,6 +708,7 @@ var BasicModel = AbstractModel.extend({
             id: element.id,
             isDirty: element.isDirty,
             isOpen: element.isOpen,
+            isSample: this.isSampleModel,
             limit: element.limit,
             model: element.model,
             offset: element.offset,
@@ -751,6 +759,27 @@ var BasicModel = AbstractModel.extend({
         return isDirty;
     },
     /**
+     * Returns true iff the datapoint is of type list and either:
+     *   - is not grouped, and contains no records
+     *   - is grouped, and contains columns, but all columns are empty
+     * In these cases, we will generate sample data to display, instead of an
+     * empty state.
+     *
+     * @override
+     */
+    _isEmpty(dataPointID) {
+        const dataPoint = this.localData[dataPointID];
+        if (dataPoint.type === 'list') {
+            const hasRecords = dataPoint.count === 0;
+            if (dataPoint.groupedBy.length) {
+                return dataPoint.data.length > 0 && hasRecords;
+            } else {
+                return hasRecords;
+            }
+        }
+        return false;
+    },
+    /**
      * Check if a localData is new, meaning if it is in the process of being
      * created and no actual record exists in db. Note: if the localData is not
      * of the "record" type, then it is always considered as not new.
@@ -782,6 +811,7 @@ var BasicModel = AbstractModel.extend({
      *
      * @todo document all params
      *
+     * @private
      * @param {any} params
      * @param {Object} [params.fieldsInfo={}] contains the fieldInfo of each field
      * @param {Object} params.fields contains the description of each field
@@ -789,7 +819,8 @@ var BasicModel = AbstractModel.extend({
      * @param {string} [params.recordID] an ID for an existing resource.
      * @returns {Promise<string>} resolves to a local id, or handle
      */
-    load: function (params) {
+    __load: async function (params) {
+        await this._super(...arguments);
         params.type = params.type || (params.res_id !== undefined ? 'record' : 'list');
         // FIXME: the following seems only to be used by the basic_model_tests
         // so it should probably be removed and the tests should be adapted
@@ -954,13 +985,15 @@ var BasicModel = AbstractModel.extend({
      * Reload all data for a given resource. At any time there is at most one
      * reload operation active.
      *
+     * @private
      * @param {string} id local id for a resource
      * @param {Object} [options]
      * @param {boolean} [options.keepChanges=false] if true, doesn't discard the
      *   changes on the record before reloading it
      * @returns {Promise<string>} resolves to the id of the resource
      */
-    reload: function (id, options) {
+    __reload: async function (id, options) {
+        await this._super(...arguments);
         return this.mutex.exec(this._reload.bind(this, id, options));
     },
     /**
@@ -2194,6 +2227,20 @@ var BasicModel = AbstractModel.extend({
             });
         }
         return hasOnchange ? specs : false;
+    },
+    /**
+     * Ensures that dataPoint ids are always synchronized between the main and
+     * sample models when being in sample mode. Here, we now that __id in the
+     * sample model is always greater than __id in the main model (as it
+     * contains strictly more datapoints).
+     *
+     * @override
+     */
+    async _callSampleModel() {
+        await this._super(...arguments);
+        if (this._isInSampleMode) {
+            this.__id = this.sampleModel.__id;
+        }
     },
     /**
      * Compute the default value that the handle field should take.
@@ -3968,7 +4015,7 @@ var BasicModel = AbstractModel.extend({
             groupsCount: 0,
             groupsLimit: type === 'list' && params.groupsLimit || null,
             groupsOffset: 0,
-            id: _.uniqueId(params.modelName + '_'),
+            id: `${params.modelName}_${++this.__id}`,
             isOpen: params.isOpen,
             limit: type === 'record' ? 1 : (params.limit || Number.MAX_SAFE_INTEGER),
             loadMoreOffset: 0,
@@ -4846,6 +4893,23 @@ var BasicModel = AbstractModel.extend({
         return this._load(element, loadOptions).then(function (result) {
             return result.id;
         });
+    },
+    /**
+     * Override to handle the case where we want sample data, and we are in a
+     * grouped kanban or list view with real groups, but all groups are empty.
+     * In this case, we use the result of the web_read_group rpc to tweak the
+     * data in the SampleServer instance of the sampleModel (so that calls to
+     * that server will return the same groups).
+     *
+     * @override
+     */
+    async _rpc(params) {
+        const result = await this._super(...arguments);
+        if (this.sampleModel && params.method === 'web_read_group' && result.length) {
+            const sampleServer = this.sampleModel.sampleServer;
+            sampleServer.setExistingGroups(result.groups);
+        }
+        return result;
     },
     /**
      * Allows to save a value in the specialData cache associated to a given

@@ -197,7 +197,8 @@ var BasicView = AbstractView.extend({
                 }
             }
             return Promise.resolve(def).then(function () {
-                return model.get(record.id);
+                const handle = record.id;
+                return { state: model.get(handle), handle };
             });
         }
         return this._super.apply(this, arguments);

@@ -173,7 +173,7 @@ return AbstractModel.extend({
      * @override
      * @returns {Object}
      */
-    get: function () {
+    __get: function () {
         return _.extend({}, this.data, {
             fields: this.fields
         });
@@ -183,7 +183,7 @@ return AbstractModel.extend({
      * @param {any} params
      * @returns {Promise}
      */
-    load: function (params) {
+    __load: function (params) {
         var self = this;
         this.modelName = params.modelName;
         this.fields = params.fields;
@@ -256,7 +256,7 @@ return AbstractModel.extend({
      * @param {Array} [params.domain]
      * @returns {Promise}
      */
-    reload: function (handle, params) {
+    __reload: function (handle, params) {
         if (params.domain) {
             this.data.domain = params.domain;
         }
