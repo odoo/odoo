@@ -293,7 +293,7 @@ def html_keep_url(text):
     return final
 
 
-def html2plaintext(html, body_id=None, encoding='utf-8'):
+def html2plaintext(html, body_id=None, encoding='utf-8', link_summary=True):
     """ From an HTML text, convert the HTML to plain text.
     If @param body_id is provided then this is the tag where the
     body (not necessarily <body>) starts.
@@ -317,14 +317,15 @@ def html2plaintext(html, body_id=None, encoding='utf-8'):
         tree = source[0]
 
     url_index = []
-    i = 0
-    for link in tree.findall('.//a'):
-        url = link.get('href')
-        if url:
-            i += 1
-            link.tag = 'span'
-            link.text = '%s [%s]' % (link.text, i)
-            url_index.append(url)
+    if link_summary:
+        i = 0
+        for link in tree.findall('.//a'):
+            url = link.get('href')
+            if url:
+                i += 1
+                link.tag = 'span'
+                link.text = '%s [%s]' % (link.text, i)
+                url_index.append(url)
 
     html = ustr(etree.tostring(tree, encoding=encoding))
     # \r char is converted into &#13;, must remove it
