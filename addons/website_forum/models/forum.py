@@ -976,16 +976,16 @@ class Vote(models.Model):
             values.pop('user_id', None)
 
         for vote in self:
-            self._check_general_rights(values)
+            vote._check_general_rights(values)
             if 'vote' in values:
                 if (values['vote'] == '1' or vote.vote == '-1' and values['vote'] == '0'):
                     upvote = True
                 elif (values['vote'] == '-1' or vote.vote == '1' and values['vote'] == '0'):
                     upvote = False
-                self._check_karma_rights(upvote)
+                vote._check_karma_rights(upvote)
 
                 # karma update
-                self._vote_update_karma(vote.vote, values['vote'])
+                vote._vote_update_karma(vote.vote, values['vote'])
 
         res = super(Vote, self).write(values)
         return res

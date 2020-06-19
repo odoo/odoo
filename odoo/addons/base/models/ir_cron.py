@@ -80,7 +80,7 @@ class ir_cron(models.Model):
     def method_direct_trigger(self):
         self.check_access_rights('write')
         for cron in self:
-            self.with_user(cron.user_id).ir_actions_server_id.run()
+            cron.with_user(cron.user_id).ir_actions_server_id.run()
         return True
 
     @api.model

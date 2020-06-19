@@ -138,7 +138,7 @@ class ResConfigSettings(models.TransientModel):
     @api.depends('language_ids')
     def _compute_website_language_count(self):
         for config in self:
-            config.website_language_count = len(self.language_ids)
+            config.website_language_count = len(config.language_ids)
 
     def set_values(self):
         super(ResConfigSettings, self).set_values()
