@@ -57,14 +57,14 @@ class AccountMove(models.Model):
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         """ If Vendor Bill and Vendor OCR is set, add it. """
-        if self.partner_id and self.type == 'in_invoice' and self.partner_id.l10n_se_default_vendor_payment_ref:
+        if self.partner_id and self.move_type == 'in_invoice' and self.partner_id.l10n_se_default_vendor_payment_ref:
             self.invoice_payment_ref = self.partner_id.l10n_se_default_vendor_payment_ref
         return super(AccountMove, self)._onchange_partner_id()
 
     @api.onchange('invoice_payment_ref')
     def _onchange_invoice_payment_ref(self):
         """ If Vendor Bill and Payment Reference is changed check validation. """
-        if self.partner_id and self.type == 'in_invoice' and self.partner_id.l10n_se_check_vendor_ocr:
+        if self.partner_id and self.move_type == 'in_invoice' and self.partner_id.l10n_se_check_vendor_ocr:
             reference = self.invoice_payment_ref
             try:
                 luhn.validate(reference)
