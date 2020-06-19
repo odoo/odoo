@@ -171,3 +171,13 @@ body.editor_enable.editor_has_snippets {
         top: var(--o-we-toolbar-height) !important;
     }
 }
+
+.editor_enable {
+    @if o-website-value('hamburger-type') == 'off-canvas' {
+        #top_menu_collapse {
+            &.collapsing, &.show {
+                left: $o-we-sidebar-width;
+            }
+        }
+    }
+}
