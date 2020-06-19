@@ -4,7 +4,7 @@
         <record id="res_partner_ocr_form" model="ir.ui.view">
             <field name="name">res.partner.ocr.form</field>
             <field name="model">res.partner</field>
-            <field name="inherit_id" ref="base.view_partner_form"/>
+            <field name="inherit_id" ref="account.view_partner_property_form"/>
             <field name="arch" type="xml">
                 <group name="accounting_entries" position="after">
                     <group string="Payment Options Sweden" name="payment_options">

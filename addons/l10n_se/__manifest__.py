@@ -6,6 +6,13 @@
     "version": "1.0",
     "author": "XCLUDE",
     "category": "Accounting/Localizations/Account Charts",
+    'description': """
+Swedish Accounting
+------------------
+
+This is the base module to manage the accounting chart for Sweden in Odoo.
+It also includes the invoice OCR payment reference handling.
+    """,
     "depends": ["account", "base_vat"],
     "data": [
         "data/account_chart_template_before_accounts.xml",
@@ -18,6 +25,8 @@
         "data/account_fiscal_position_account_template.xml",
         "data/account_fiscal_position_tax_template.xml",
         "data/account_chart_template_configuration.xml",
+        "views/partner_view.xml",
+        "views/account_journal_view.xml",
     ],
     'demo': [
         'demo/demo_company.xml',
