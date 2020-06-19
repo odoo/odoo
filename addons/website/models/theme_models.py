@@ -180,8 +180,10 @@ class Theme(models.AbstractModel):
 
         # Reinitialize header templates
         self.disable_view('website.template_header_hamburger')
-        self.disable_view('website.template_header_hamburger_left')
-        self.disable_view('website.template_header_navbar_text_center')
+        self.disable_view('website.template_header_vertical')
+        self.disable_view('website.option_header_hamburger_left')
+        self.disable_view('website.option_header_hamburger_full')
+        self.disable_view('website.option_header_hamburger_center_logo')
 
         # Reinitialize footer templates
         self.disable_view('website.template_footer_logo_about_us_below')

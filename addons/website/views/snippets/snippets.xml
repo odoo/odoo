@@ -409,7 +409,7 @@
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
 
-    <div data-js="background"
+    <div data-js="Header"
          id="so_header_theme"
          data-selector="#wrapwrap > header"
          data-no-check="true"
@@ -489,33 +489,50 @@
             <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
         </we-row>
 
-        <we-select id="header_templates_select" data-variable="header-template" string="Header Template" data-reload="/">
-            <we-button id="option_template_header_logo_menu"
+        <we-select string="Header Template" data-variable="header-template" data-reload="/">
+            <we-button string="Default"
                        data-name="header_logo_menu_opt"
                        data-customize-website-views=""
-                       data-customize-website-variable="logo_menu"
-                       string="Logo - Menu"/>
-            <we-button id="option_template_header_hamburger_logo_centered"
-                       data-name="header_hamburger_logo_centered_opt"
-                       data-customize-website-views="website.template_header_hamburger, website.template_header_hamburger_left"
-                       data-customize-website-variable="hamburger_logo"
-                       string="Hamburger - Logo"/>
-            <we-button id="option_template_header_logo_menu_below"
-                       data-name="header_logo_menu_below_opt"
-                       data-customize-website-views=""
-                       data-customize-website-variable="logo_menu_below"
-                       string="Logo (Top) - Menu"/>
-            <we-button id="option_template_header_menu_logo_below"
-                       data-name="header_menu_logo_below_opt"
-                       data-customize-website-views=""
-                       data-customize-website-variable="menu_logo_below"
-                       string="Menu - Logo (Bottom)"/>
-            <we-button id="option_template_header_logo_hamburger"
-                       data-name="header_logo_hamburger_opt"
-                       data-customize-website-views="website.template_header_hamburger, website.template_header_navbar_text_center"
-                       data-customize-website-variable="logo_hamburger"
-                       string="Logo - Hamburger (cover)"/>
+                       data-customize-website-variable="default"/>
+            <we-button string="Hamburger menu"
+                       data-name="header_hamburger_opt"
+                       data-customize-website-views="website.template_header_hamburger"
+                       data-customize-website-variable="hamburger"/>
+            <we-button string="Vertical"
+                       data-name="header_vertical_opt"
+                       data-customize-website-views="website.template_header_vertical"
+                       data-customize-website-variable="vertical"/>
         </we-select>
+
+        <we-title id="hamburger_opt_label">Hamburger (Mobile)</we-title>
+        <we-select string="⌙ Type" data-variable="hamburger-type" data-reload="/">
+            <we-button string="Default"
+                       data-customize-website-variable="default"
+                       data-customize-website-views=""/>
+            <we-button string="Off-Canvas"
+                       data-name="off_canvas_menu_opt"
+                       data-customize-website-variable="off-canvas"
+                       data-customize-website-views="website.option_header_off_canvas"/>
+        </we-select>
+        <we-select string="⌙ Position" data-variable="hamburger-position" data-reload="/">
+            <we-button string="Right"
+                       data-customize-website-variable="right"
+                       data-customize-website-views=""/>
+            <we-button string="Left"
+                       data-customize-website-variable="left"
+                       data-customize-website-views="website.option_header_hamburger_left"/>
+            <we-button string="Center (Fullwidth)"
+                       data-customize-website-variable="center"
+                       data-customize-website-views="website.option_header_hamburger_full"/>
+        </we-select>
+        <we-select string="⌙ Logo" data-dependencies="off_canvas_menu_opt" data-reload="/">
+            <we-button string="Text" data-customize-website-views=""/>
+            <we-button string="Image" data-customize-website-views="website.option_header_off_canvas_logo_show"/>
+        </we-select>
+        <we-checkbox string="Center Main Logo"
+                     data-customize-website-views="website.option_header_hamburger_center_logo"
+                     data-dependencies="header_hamburger_opt"/>
+
         <we-select id="header_visibilities_list" string="Header Visibility">
             <we-button id="option_header_visibility_standard"
                        data-name="header_visibility_standard_opt"
@@ -547,6 +564,7 @@
         <we-checkbox string="Hoverable Dropdown"
                      data-customize-website-views="website.header_hoverable_dropdown"
                      data-select-class="o_hoverable_dropdown"
+                     data-dependencies="!header_hamburger_opt"
                      data-no-preview="true"/>
     </div>
 

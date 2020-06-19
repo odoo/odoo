@@ -126,10 +126,13 @@
     </xpath>
     <xpath expr="//header/nav" position="attributes">
         <!-- Background now controlled by css configuration, using color combinations -->
-        <attribute name="class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
+        <attribute name="class" add="o_colored_level o_cc flex-row" remove="bg-light" separator=" "/>
+    </xpath>
+    <xpath expr="//header//div[@id='top_menu_collapse']" position="attributes">
+        <attribute name="class" separator=" " add="flex-grow-0"/>
     </xpath>
     <xpath expr="//header//ul[@id='top_menu']" position="attributes">
-        <attribute name="class" separator=" " add="o_menu_loading"/>
+        <attribute name="class" separator=" " add="o_menu_loading" remove="text-right ml-auto"/>
     </xpath>
     <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="attributes">
         <attribute name="t-if">website.user_id != user_id</attribute>
@@ -337,38 +340,75 @@
 </template>
 
 <!-- Navbar templates -->
-<template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Logo Hamburger" active="False">
+<template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Hamburger" active="False">
     <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
-        <attribute name="class" remove="navbar-expand-md" separator=" "/>
+        <attribute name="class" remove="navbar-expand-md" add="o_hamburger_menu" separator=" "/>
     </xpath>
     <xpath expr="//header//button[hasclass('navbar-toggler')]" position="replace">
         <div class="o_navbar_toggler_container">$0</div>
     </xpath>
-</template>
-
-<template id="template_header_navbar_text_center" inherit_id="website.layout" name="Template Header Navbar Text Center" active="False">
-    <xpath expr="//header//ul[hasclass('nav')]" position="attributes">
-        <attribute name="class" remove="text-right" add="text-center" separator=" "/>
+    <xpath expr="//header//ul[@id='top_menu']" position="attributes">
+        <attribute name="class" separator=" " remove="text-right"/>
     </xpath>
 </template>
 
-<template id="template_header_hamburger_left" inherit_id="website.layout" name="Template Header Hamburger" active="False">
-    <xpath expr="//header//a[hasclass('navbar-brand')]" position="before">
-        <div class="o_navbar_toggler_container o_not_editable"></div>
+<template id="template_header_vertical" inherit_id="website.layout" name="Template Header Vertical" active="False">
+    <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
+        <attribute name="class" add="o_vertical_menu flex-md-column justify-content-center" separator=" "/>
     </xpath>
-    <xpath expr="//div[hasclass('o_navbar_toggler_container')]" position="inside">
-        <xpath expr="//header//button[hasclass('navbar-toggler')]" position="move"/>
+</template>
+
+<!-- Navbar Hamburger Options -->
+<template id="option_header_off_canvas" inherit_id="website.layout" name="Off-Canvas Header" active="False">
+    <xpath expr="//header//ul[@id='top_menu']" position="attributes">
+        <attribute name="class" separator=" " add="position-relative"/>
     </xpath>
-    <xpath expr="//header//ul[hasclass('nav')]" position="attributes">
-        <attribute name="class" remove="text-right" add="text-left" separator=" "/>
+    <xpath expr="//header//ul[@id='top_menu']" position="before">
+        <div class="o_offcanvas_menu_backdrop" data-toggle="collapse" data-target="#top_menu_collapse" aria-label="Toggle navigation"/>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/t[@t-foreach='website.menu_id.child_id']" position="before">
+        <li class="o_offcanvas_menu_toggler order-first navbar-toggler text-right border-0">
+            <a href="#top_menu_collapse" class="nav-link px-3" data-toggle="collapse">
+                <span class="fa-2x">&#215;</span>
+            </a>
+        </li>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']/t[@t-foreach='website.menu_id.child_id']" position="after">
+        <li class="o_offcanvas_logo_container order-last navbar-toggler py-4 order-1 mt-auto text-center border-0">
+            <a href="/" class="o_offcanvas_logo text-center">My Website</a>
+        </li>
+    </xpath>
+</template>
+<template id="option_header_hamburger_left" inherit_id="website.layout" name="Template Header Hamburger Left" active="False">
+    <xpath expr="//header//nav[hasclass('navbar')]/div" position="attributes">
+        <attribute name="class" separator=" " add="o_hamburger_menu_left text-right"/>
+    </xpath>
+</template>
+<template id="option_header_hamburger_full" inherit_id="website.layout" name="Template Header Hamburger Center" active="False">
+    <xpath expr="//header//nav[hasclass('navbar')]/div" position="attributes">
+        <attribute name="class" separator=" " add="o_hamburger_menu_full text-center"/>
     </xpath>
 </template>
 
 <!-- Navbar options -->
+<template id="option_header_hamburger_center_logo" inherit_id="website.layout" name="Template Header Hamburger Center Logo" active="False">
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="attributes">
+        <attribute name="class" separator=" " add="mx-auto"/>
+    </xpath>
+</template>
+
 <template id="layout_logo_show" inherit_id="website.layout" name="Show Logo">
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
             <span t-field="website.logo" t-options="{'widget': 'image'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name" />
+        </a>
+    </xpath>
+</template>
+
+<template id="option_header_off_canvas_logo_show" inherit_id="website.option_header_off_canvas" name="Show Logo (Off-Canvas)">
+    <xpath expr="//header//a[hasclass('o_offcanvas_logo')]" position="replace">
+        <a href="/" class="o_offcanvas_logo logo">
+            <span t-field="website.logo" t-options="{'widget': 'image', 'style': 'max-width: 200px'}" role="img" t-att-aria-label="'Logo of %s' % website.name" t-att-title="website.name" />
         </a>
     </xpath>
 </template>

@@ -259,7 +259,9 @@ $o-base-website-values-palette: (
     'btn-ripple': false,
     'preheader-template': null, // null, 'magazine', 'icons' or 'image'
     'preheader-height': 1vw, // Only used in 'image' preheader-template
-    'header-template': 'logo_menu',
+    'header-template': 'default', // 'default' / 'hamburger' / 'vertical'
+    'hamburger-type': 'default', // 'default' / 'off-canvas'
+    'hamburger-position': 'right', // 'right' / 'left' / 'center'
     'footer-template': 'products_contacts_about_us',
     'footer-scrolltop': false,
 );
@@ -323,3 +325,143 @@ $o-theme-font-names: (
 // instead a unique map: 'name' -> 'config', with config containing the font
 // properties configuration + basic info (url, font-family).
 $o-theme-font-configs: () !default;
+
+//------------------------------------------------------------------------------
+// Header layouts
+//------------------------------------------------------------------------------
+
+// Offcanvas Transitions Definition
+@mixin o-offcanvas-transition-default($edit-mode: false) {
+    #top_menu_collapse {
+        &.collapsing #top_menu {
+            transform: translateX(100%);
+        }
+        &.show #top_menu {
+            transform: translateX(0);
+        }
+    }
+}
+@mixin o-offcanvas-transition-left($edit-mode: false) {
+    .o_hamburger_menu_left {
+        #top_menu_collapse {
+            &.collapsing #top_menu {
+                transform: translateX(-100%);
+            }
+            &.show #top_menu {
+                transform: if($edit-mode, translateX($o-we-sidebar-width), translateX(0));
+            }
+        }
+    }
+}
+@mixin o-offcanvas-transition-full($edit-mode: false) {
+    .o_hamburger_menu_full {
+        #top_menu_collapse {
+            &.collapsing #top_menu {
+                transform: translateY(-100%);
+            }
+            &.show #top_menu {
+                transform: translateY(0);
+            }
+        }
+    }
+}
+
+@mixin o-offcanvas-transitions($type, $edit-mode: false) {
+    @if $type == 'center' {
+        @include o-offcanvas-transition-full($edit-mode);
+    } @else if $type == 'left' {
+        @include o-offcanvas-transition-left($edit-mode);
+    } @else if $type == 'right' {
+        @include o-offcanvas-transition-default($edit-mode);
+    }
+}
+
+// Offcanvas Layouts Definition
+@mixin o-offcanvas-layout-default($edit-mode: false) {
+    #top_menu_container {
+        flex-direction: inherit;
+    }
+    #top_menu_collapse {
+        flex-direction: row-reverse;
+    }
+    .o_offcanvas_menu_backdrop {
+        background-image: linear-gradient(-90deg, currentColor 20%, transparent);
+    }
+}
+@mixin o-offcanvas-layout-full($edit-mode: false) {
+    #top_menu_container.o_hamburger_menu_full #top_menu {
+        width: if($edit-mode, calc(100% - #{$o-we-sidebar-width}), 100%);
+        max-width: none;
+
+        .o_offcanvas_menu_backdrop {
+            display: none;
+        }
+        .o_offcanvas_menu_toggler {
+            max-width: 90%;
+        }
+    }
+}
+@mixin o-offcanvas-layout-left($edit-mode: false) {
+    #top_menu_container.o_hamburger_menu_left {
+        flex-direction: row-reverse;
+
+        #top_menu_collapse {
+            flex-direction: row;
+        }
+        .o_offcanvas_menu_backdrop {
+            background-image: linear-gradient(90deg, currentColor 20%, transparent);
+        }
+        .navbar-brand.logo {
+            margin-left: auto;
+            margin-right: auto;
+        }
+    }
+}
+
+@mixin o-offcanvas-layouts($type, $edit-mode: false) {
+    @if $type == 'full' {
+        @include o-offcanvas-layout-default($edit-mode);
+        @include o-offcanvas-layout-full($edit-mode);
+    } @else if $type == 'left' {
+        @include o-offcanvas-layout-left($edit-mode);
+    } @else if $type == 'right' {
+        @include o-offcanvas-layout-default($edit-mode);
+    }
+}
+
+// Header Layouts Definition
+@mixin o-header-layout-hamburger($transition-duration, $edit-mode: false) {
+    .o_hamburger_menu #top_menu_container {
+        transition: padding $transition-duration;
+    }
+    header:not(.o_header_is_scrolled) .o_hamburger_menu {
+        #top_menu_container {
+            padding-top: $spacer * 0.5;
+            padding-bottom: $spacer * 0.5;
+        }
+    }
+}
+@mixin o-header-layout-vertical($transition-duration, $edit-mode: false) {
+    .o_vertical_menu {
+        .navbar-brand, .navbar-brand img, #top_menu_container {
+            transition: all $transition-duration;
+        }
+    }
+    header:not(.o_header_is_scrolled) .o_vertical_menu {
+        #top_menu_container {
+            padding-top: $spacer * 0.5;
+            padding-bottom: $spacer * 0.5;
+        }
+        .navbar-brand {
+            margin-bottom: $spacer;
+        }
+    }
+}
+
+@mixin o-header-layouts($type, $transition-duration, $edit-mode: false) {
+    @if $type == 'hamburger' {
+        @include o-header-layout-hamburger($transition-duration, $edit-mode);
+    } @else if $type == 'vertical' {
+        @include o-header-layout-vertical($transition-duration, $edit-mode);
+    }
+}

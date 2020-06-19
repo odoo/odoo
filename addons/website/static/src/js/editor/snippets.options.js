@@ -1518,6 +1518,22 @@ options.registry.collapse = options.Class.extend({
     },
 });
 
+options.registry.Header = options.registry.background.extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUI() {
+        await this._super(...arguments);
+        const isHamburger = !!this.$('.o_hamburger_menu').length;
+        this.$el.find('#hamburger_opt_label').toggleClass('d-none', isHamburger);
+    },
+});
+
 options.registry.topMenuTransparency = options.Class.extend({
 
     //--------------------------------------------------------------------------

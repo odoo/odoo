@@ -166,3 +166,16 @@ body.editor_enable.editor_has_snippets {
         top: var(--o-we-toolbar-height) !important;
     }
 }
+
+.editor_enable {
+    @include o-offcanvas-transition-default(true);
+    @include o-offcanvas-transition-full(true);
+    @include o-offcanvas-transition-left(true);
+
+    @include o-offcanvas-layout-default(true);
+    @include o-offcanvas-layout-full(true);
+    @include o-offcanvas-layout-left(true);
+
+    @include o-header-layout-hamburger(.2s, true);
+    @include o-header-layout-vertical(.2s, true);
+}
