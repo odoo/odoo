@@ -73,37 +73,25 @@
     }
 }
 
-// Sample data
-@mixin web_view_sample_data {
-    opacity: 0.33;
-    pointer-events: none;
-    user-select: none;
-}
 .o_view_sample_data {
-    .o_list_view {
-        .o_data_row, .o_group_header, .o_list_table > tfoot {
-            @include web_view_sample_data;
-        }
-        .o_list_table {
-            cursor: default !important;
-            > thead .o_list_record_selector {
-                pointer-events: none;
-            }
+
+    .o_list_table {
+        cursor: default !important;
+
+        & > thead .o_list_record_selector {
+            pointer-events: none;
         }
     }
-    .o_kanban_view {
-        .o_kanban_counter,
-        .o_kanban_record,
-        .o_kanban_toggle_fold,
-        .o_column_folded,
-        .o_column_archive_records,
-        .o_column_unarchive_records {
-            @include web_view_sample_data;
-        }
-    }
+
     .o_nocontent_help {
         border-radius: 100%;
         background-color: #f9f9f9;
         box-shadow: 0 0 120px 100px #f9f9f9;
+    }
+
+    .o_sample_data_disabled {
+        opacity: 0.33;
+        pointer-events: none;
+        user-select: none;
     }
 }
