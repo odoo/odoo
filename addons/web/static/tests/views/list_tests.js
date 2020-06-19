@@ -3843,6 +3843,108 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test("empty list with sample data: toggle optional field", async function (assert) {
+        assert.expect(9);
+
+        const RamStorageService = AbstractStorageService.extend({
+            storage: new RamStorage(),
+        });
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree sample="1">
+                    <field name="foo"/>
+                    <field name="m2o" optional="hide"/>
+                </tree>`,
+            domain: Domain.FALSE_DOMAIN,
+            services: {
+                local_storage: RamStorageService,
+            },
+        });
+
+        assert.hasClass(list.$el, 'o_view_sample_data');
+        assert.ok(list.$('.o_data_row').length > 0);
+        assert.hasClass(list.el.querySelector('.o_data_row'), 'o_sample_data_disabled');
+        assert.containsN(list, 'th', 2, "should have 2 th, 1 for selector and 1 for foo");
+        assert.containsOnce(list.$('table'), '.o_optional_columns_dropdown_toggle');
+
+        await testUtils.dom.click(list.$('table .o_optional_columns_dropdown_toggle'));
+        await testUtils.dom.click(list.$('div.o_optional_columns div.dropdown-item:first input'));
+
+        assert.hasClass(list.$el, 'o_view_sample_data');
+        assert.ok(list.$('.o_data_row').length > 0);
+        assert.hasClass(list.el.querySelector('.o_data_row'), 'o_sample_data_disabled');
+        assert.containsN(list, 'th', 3);
+
+        list.destroy();
+    });
+
+    QUnit.test("empty list with sample data: keyboard navigation", async function (assert) {
+        assert.expect(11);
+
+        const list = await createView({
+            arch: `
+                <tree sample="1">
+                    <field name="foo"/>
+                    <field name="bar"/>
+                    <field name="int_field"/>
+                </tree>`,
+            data: this.data,
+            domain: Domain.FALSE_DOMAIN,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // Check keynav is disabled
+        assert.hasClass(
+            list.el.querySelector('.o_data_row'),
+            'o_sample_data_disabled'
+        );
+        assert.hasClass(
+            list.el.querySelector('.o_list_table > tfoot'),
+            'o_sample_data_disabled'
+        );
+        assert.hasClass(
+            list.el.querySelector('.o_list_table > thead .o_list_record_selector'),
+            'o_sample_data_disabled'
+        );
+        assert.containsNone(list.renderer, 'input:not([tabindex="-1"])');
+
+        // From search bar
+        assert.hasClass(document.activeElement, 'o_searchview_input');
+
+        await testUtils.fields.triggerKeydown(document.activeElement, 'down');
+
+        assert.hasClass(document.activeElement, 'o_searchview_input');
+
+        // From 'Create' button
+        document.querySelector('.btn.o_list_button_add').focus();
+
+        assert.hasClass(document.activeElement, 'o_list_button_add');
+
+        await testUtils.fields.triggerKeydown(document.activeElement, 'down');
+
+        assert.hasClass(document.activeElement, 'o_list_button_add');
+
+        await testUtils.fields.triggerKeydown(document.activeElement, 'tab');
+
+        assert.containsNone(document.body, '.oe_tooltip_string');
+
+        // From column header
+        list.el.querySelector(':scope th[data-name="foo"]').focus();
+
+        assert.ok(document.activeElement.dataset.name === 'foo');
+
+        await testUtils.fields.triggerKeydown(document.activeElement, 'down');
+
+        assert.ok(document.activeElement.dataset.name === 'foo');
+
+        list.destroy();
+    });
+
     QUnit.test("non empty list with sample data", async function (assert) {
         assert.expect(6);
 

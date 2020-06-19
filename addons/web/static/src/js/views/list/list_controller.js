@@ -246,10 +246,14 @@ var ListController = BasicController.extend({
                     break;
                 case $.ui.keyCode.DOWN:
                     e.preventDefault();
-                    self.renderer.giveFocus();
+                    self._giveFocus();
                     break;
                 case $.ui.keyCode.TAB:
-                    if (!e.shiftKey && e.target.classList.contains("btn-primary")) {
+                    if (
+                        !e.shiftKey &&
+                        e.target.classList.contains("btn-primary") &&
+                        !self.model.isInSampleMode()
+                    ) {
                         e.preventDefault();
                         $createButton.tooltip('show');
                     }
@@ -268,7 +272,7 @@ var ListController = BasicController.extend({
      */
     _confirmSave: function (id) {
         var state = this.model.get(this.handle);
-        return this.renderer.updateState(state, {noRender: true})
+        return this._updateRendererState(state, { noRender: true })
             .then(this._setMode.bind(this, 'readonly', id));
     },
     /**
@@ -445,7 +449,7 @@ var ListController = BasicController.extend({
                         // and the list was multi-editable, we do not want to select
                         // the next row.
                         this.selectedRecords = [];
-                        await this.renderer.updateState(state, {
+                        await this._updateRendererState(state, {
                             keepWidths: true,
                             selectedRecords: [],
                         });
