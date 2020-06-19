@@ -9,21 +9,26 @@ odoo.define('web.UserMenu', function (require) {
  * editing its preferences, accessing the documentation, logging out...
  */
 
+var config = require('web.config');
+var core = require('web.core');
 var framework = require('web.framework');
+var Dialog = require('web.Dialog');
 var Widget = require('web.Widget');
 
+var _t = core._t;
+var QWeb = core.qweb;
 
 var UserMenu = Widget.extend({
     template: 'UserMenu',
 
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         var self = this;
         var session = this.getSession();
-        this.$el.on('click', 'li a[data-menu]', function (ev) {
+        this.$el.on('click', '[data-menu]', function (ev) {
             ev.preventDefault();
             var menu = $(this).data('menu');
             self['_onMenu' + menu.charAt(0).toUpperCase() + menu.slice(1)]();
@@ -32,16 +37,16 @@ var UserMenu = Widget.extend({
             var $avatar = self.$('.oe_topbar_avatar');
             if (!session.uid) {
                 $avatar.attr('src', $avatar.data('default-src'));
-                return $.when();
+                return Promise.resolve();
             }
             var topbar_name = session.name;
-            if (session.debug) {
+            if (config.isDebug()) {
                 topbar_name = _.str.sprintf("%s (%s)", topbar_name, session.db);
             }
             self.$('.oe_topbar_name').text(topbar_name);
             var avatar_src = session.url('/web/image', {
                 model:'res.users',
-                field: 'image_small',
+                field: 'image_128',
                 id: session.uid,
             });
             $avatar.attr('src', avatar_src);
@@ -63,7 +68,7 @@ var UserMenu = Widget.extend({
                     .then(function (url) {
                         framework.redirect(url);
                     })
-                    .fail(function (result, ev){
+                    .guardedCatch(function (result, ev){
                         ev.preventDefault();
                         framework.redirect('https://accounts.odoo.com/account');
                     });
@@ -93,12 +98,10 @@ var UserMenu = Widget.extend({
         this.trigger_up('clear_uncommitted_changes', {
             callback: function () {
                 self._rpc({
-                        route: "/web/action/load",
-                        params: {
-                            action_id: "base.action_res_users_my",
-                        },
+                        model: "res.users",
+                        method: "action_get"
                     })
-                    .done(function (result) {
+                    .then(function (result) {
                         result.res_id = session.uid;
                         self.do_action(result);
                     });
@@ -110,6 +113,17 @@ var UserMenu = Widget.extend({
      */
     _onMenuSupport: function () {
         window.open('https://www.odoo.com/buy', '_blank');
+    },
+    /**
+     * @private
+     */
+    _onMenuShortcuts: function() {
+        new Dialog(this, {
+            size: 'large',
+            dialogClass: 'o_act_window',
+            title: _t("Keyboard Shortcuts"),
+            $content: $(QWeb.render("UserMenu.shortcuts"))
+        }).open();
     },
 });
 

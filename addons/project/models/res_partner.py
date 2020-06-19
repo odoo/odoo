@@ -15,4 +15,4 @@ class ResPartner(models.Model):
         fetch_data = self.env['project.task'].read_group([('partner_id', 'in', self.ids)], ['partner_id'], ['partner_id'])
         result = dict((data['partner_id'][0], data['partner_id_count']) for data in fetch_data)
         for partner in self:
-            partner.task_count = result.get(partner.id, 0)
+            partner.task_count = result.get(partner.id, 0) + sum(c.task_count for c in partner.child_ids)

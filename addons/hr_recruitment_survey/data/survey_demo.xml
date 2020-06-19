@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data noupdate="1">
+    <record id="survey_recruitment_form" model="survey.survey">
+        <field name="title">Recruitment Form</field>
+        <field name="state">open</field>
+        <field name="access_mode">token</field>
+        <field name="users_can_go_back" eval="True"/>
+        <field name="description" type="html">
+<p>
+    Please answer those questions to help recruitment officers to preprocess your application.
+</p></field>
+        <field name="description_done" type="html">
+<p>
+    Thank you for answering this survey. We will come back to you soon.
+</p></field>
+    </record>
+
+    <record id="survey_recruitment_form_p1" model="survey.question">
+        <field name="title">About you</field>
+        <field name="survey_id" ref="survey_recruitment_form"/>
+        <field name="is_page" eval="True" />
+        <field name="sequence">1</field>
+        <field name="description" type="html">
+<p>Please fill information about you: who you are, what are your education, experience, and activities.
+    It will help us managing your application.</p></field>
+    </record>
+    <record id="survey_recruitment_form_p1_q1" model="survey.question">
+        <field name="survey_id" ref="survey_recruitment_form"/>
+        <field name="sequence">2</field>
+        <field name="title">Which country are you from ?</field>
+        <field name="question_type">char_box</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q2" model="survey.question">
+        <field name="survey_id" ref="survey_recruitment_form"/>
+        <field name="sequence">3</field>
+        <field name="title">From which university did or will you graduate ?</field>
+        <field name="question_type">char_box</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q3" model="survey.question">
+        <field name="survey_id" ref="survey_recruitment_form"/>
+        <field name="sequence">4</field>
+        <field name="title">Were you referred by an employee?</field>
+        <field name="question_type">char_box</field>
+    </record>
+
+    <record id="survey_recruitment_form_p1_q4" model="survey.question">
+        <field name="survey_id" ref="survey_recruitment_form"/>
+        <field name="sequence">4</field>
+        <field name="title">Education</field>
+        <field name="description" type="html">
+<p>Please summarize your education history: schools, location, diplomas, ...</p></field>
+        <field name="question_type">text_box</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q5" model="survey.question">
+        <field name="survey_id" ref="survey_recruitment_form"/>
+        <field name="sequence">5</field>
+        <field name="title">Past work experiences</field>
+        <field name="description" type="html">
+<p>Please summarize your education history: schools, location, diplomas, ...</p></field>
+        <field name="question_type">text_box</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q6" model="survey.question">
+        <field name="survey_id" ref="survey_recruitment_form"/>
+        <field name="sequence">6</field>
+        <field name="title">Knowledge</field>
+        <field name="description" type="html">
+<p>What are your main knowledge regarding the job you are applying to ?</p></field>
+        <field name="question_type">text_box</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q7" model="survey.question">
+        <field name="survey_id" ref="survey_recruitment_form"/>
+        <field name="sequence">7</field>
+        <field name="title">Activities</field>
+        <field name="description" type="html">
+<p>Please tell us a bit more about yourself: what are your main activities, ...</p></field>
+        <field name="question_type">text_box</field>
+    </record>
+
+    <record id="survey_recruitment_form_p1_q8" model="survey.question">
+        <field name="survey_id" ref="survey_recruitment_form"/>
+        <field name="sequence">8</field>
+        <field name="title">What is important for you ?</field>
+        <field name="question_type">matrix</field>
+        <field name="matrix_subtype">simple</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_col1" model="survey.question.answer">
+        <field name="question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">1</field>
+        <field name="value">Not important</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_col2" model="survey.question.answer">
+        <field name="question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">3</field>
+        <field name="value">Important</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_col3" model="survey.question.answer">
+        <field name="question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">4</field>
+        <field name="value">Very important</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_row1" model="survey.question.answer">
+        <field name="matrix_question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">1</field>
+        <field name="value">Having a good pay</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_row2" model="survey.question.answer">
+        <field name="matrix_question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">2</field>
+        <field name="value">Getting on with colleagues</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_row3" model="survey.question.answer">
+        <field name="matrix_question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">3</field>
+        <field name="value">Having a nice office environment</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_row4" model="survey.question.answer">
+        <field name="matrix_question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">5</field>
+        <field name="value">Working with state of the art technology</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_row5" model="survey.question.answer">
+        <field name="matrix_question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">6</field>
+        <field name="value">Office location</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_row6" model="survey.question.answer">
+        <field name="matrix_question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">7</field>
+        <field name="value">Management quality</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_row7" model="survey.question.answer">
+        <field name="matrix_question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">8</field>
+        <field name="value">Having freebies such as tea, coffee and stationery</field>
+    </record>
+    <record id="survey_recruitment_form_p1_q8_row8" model="survey.question.answer">
+        <field name="matrix_question_id" ref="survey_recruitment_form_p1_q8"/>
+        <field name="sequence">9</field>
+        <field name="value">Getting perks such as free parking, gym passes</field>
+    </record>
+</data></odoo>

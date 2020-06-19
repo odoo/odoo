@@ -5,32 +5,66 @@
         <field name="name">stock.inventory.line.tree</field>
         <field name="model">stock.inventory.line</field>
         <field name="arch" type="xml">
-            <tree string="Stock Inventory Lines">
-                <field name="product_id"/>
-                <field name="product_qty"/>
-                <field name="product_uom_id" groups="product.group_uom"/>
-                <field name="location_id" groups="stock.group_stock_multi_locations"/>
+            <tree default_order="location_id,product_id" editable="top" string="Inventory Details" js_class="inventory_validate_button"
+                  decoration-danger="product_qty != theoretical_qty"
+                  decoration-muted="product_qty == theoretical_qty"
+                  decoration-bf="is_editable">
+                <field name="company_id" invisible="1"/>
+                <field name="product_tracking" invisible="1"/>
+                <field name="is_editable" invisible="1"/>
+                <field name="outdated" invisible="1"/>
+                <field name="product_id" width="1.6"
+                       context="{'default_type': 'product'}"
+                       readonly="context.get('default_product_id', False)"
+                       attrs="{'readonly': ['|',
+                            ('is_editable', '=', False),
+                            ('state', '!=', 'confirm')]}"/>
+                <field name="location_id" groups="stock.group_stock_multi_locations"
+                       options="{'no_create': True}"
+                       invisible="context.get('readonly_location_id', False)"
+                       readonly="context.get('readonly_location_id', False)"
+                       attrs="{'readonly': ['|',
+                            ('is_editable', '=', False),
+                            ('state', '!=', 'confirm')]}"/>
+                <field name="inventory_date" optional="hide" width="0.8"/>
+                <field name="prod_lot_id" groups="stock.group_production_lot" width="0.8"
+                       attrs="{'readonly': ['|', '|',
+                            ('product_tracking', '=', 'none'),
+                            ('is_editable', '=', False),
+                            ('state', '!=', 'confirm')]}"
+                       context="{'default_product_id': product_id, 'default_company_id': company_id}" optional="show"/>
+                <field name="package_id" groups="stock.group_tracking_lot" width="0.8"
+                       attrs="{'readonly': ['|',
+                            ('is_editable', '=', False),
+                            ('state', '!=', 'confirm')]}"
+                       string="Package" optional="show"/>
+                <field name="partner_id" groups="stock.group_tracking_owner"
+                       attrs="{'readonly': ['|',
+                            ('is_editable', '=', False),
+                            ('state', '!=', 'confirm')]}"/>
+                <field name="theoretical_qty" string="On Hand" width="0.5"
+                       force_save="1" readonly="1" optional="show"/>
+                <button name="action_refresh_quantity" title="Refresh quantity"
+                        icon="fa-refresh" type="object"
+                        attrs="{'invisible': [('outdated', '=', False)]}"/>
+                <field name="product_qty" width="0.5" string="Counted"/>
+                <field name="difference_qty" optional="show" width="0.5"/>
+                <field name="product_uom_id" string="UoM" groups="uom.group_uom"
+                       width="0.3" force_save="1"/>
+                <field name="inventory_id" invisible="1"/>
+                <field name="state" invisible="1"/>
             </tree>
         </field>
     </record>
 
-    <record id="stock_inventory_line_tree2" model="ir.ui.view">
+    <record id="stock_inventory_line_tree_no_product_create" model="ir.ui.view">
         <field name="name">stock.inventory.line.tree2</field>
         <field name="model">stock.inventory.line</field>
+        <field name="inherit_id" ref="stock.stock_inventory_line_tree"/>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
         <field name="arch" type="xml">
-            <tree editable="top" string="Inventory Details" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
-                <field name="product_id"  domain="[('type','=','product')]"/>
-                <field name="product_uom_id" string="UoM" groups="product.group_uom"/>
-                <field name="location_id" domain="[('id', 'child_of', inventory_location_id)]" groups="stock.group_stock_multi_locations"/>
-                <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
-                <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" groups="stock.group_tracking_lot"/>
-                <field name="partner_id" groups="stock.group_tracking_owner"/>
-                <field name="theoretical_qty" readonly="1"/>
-                <field name="product_qty" string="Real Quantity"/>
-                <field name="state" invisible="1"/>
-                <field name="inventory_id" invisible="1"/>
-                <field name="inventory_location_id" invisible="1"/>
-            </tree>
+            <field name="product_id" position="attributes"><attribute name="options">{'no_create': True}</attribute></field>
         </field>
     </record>
 
@@ -44,6 +78,16 @@
                 <field name="prod_lot_id" groups="stock.group_production_lot"/>
                 <field name="package_id" groups="stock.group_tracking_lot"/>
                 <field name="partner_id" groups="stock.group_tracking_owner"/>
+                <filter string="Outdated Theoretical Quantities"
+                        name="outdated" domain="[('outdated', '=', True)]"/>
+                <filter string="Difference different than zero"
+                        name="difference" domain="[('difference_qty', '!=', '0')]"/>
+                <group  expand='0' string='Group by...'>
+                   <filter string='Location' name="location" domain="[]" context="{'group_by' : 'location_id'}"/>
+                   <filter string='Packaging' name="packaging" domain="[]" context="{'group_by' : 'package_id'}"/>
+                   <filter string='Product' name="product" domain="[]" context="{'group_by' : 'product_id'}"/>
+                   <filter string='Product Category' name="product_category" domain="[]" context="{'group_by' : 'categ_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -53,16 +97,18 @@
         <field name="model">stock.inventory</field>
         <field name="arch" type="xml">
             <search string="Search Inventory">
-                <field name="name" string="Inventory Reference"/>
-                <field name="date"/>
-                <field name="company_id" groups="base.group_multi_company"/>
-                <field name="product_id" string="Inventory Product" filter_domain="['|', ('product_id', 'ilike', self), ('line_ids.product_id','ilike',self)]"/>
+                <field name="name" string="Reference"/>
+                <field name="product_ids" string="Product" filter_domain="['|', ('product_ids', 'ilike', self), ('line_ids.product_id','ilike',self)]"/>
+                <filter string="Draft" name="draft" domain="[('state', '=', 'draft')]"/>
+                <filter string="In Progress" name="confirm" domain="[('state', '=', 'confirm')]"/>
+                <filter string="Validated" name="done" domain="[('state', '=', 'done')]"/>
+                <separator/>
+                <filter string="Inventory Date" name="inventory_date" date="date"/>
                 <group expand="0" string="Group By">
-                    <filter string="Status" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Inventories Month" domain="[]" context="{'group_by':'date'}" help="Physical Inventories by Month"/>
+                    <filter string="Status" name="status" domain="[]" context="{'group_by': 'state'}"/>
+                    <filter string="Inventory Date" name="inventories_month" domain="[]" context="{'group_by': 'date'}" help="Physical Inventories by Date"/>
                 </group>
             </search>
-
         </field>
     </record>
 
@@ -70,10 +116,13 @@
         <field name="name">stock.inventory.tree</field>
         <field name="model">stock.inventory</field>
         <field name="arch" type="xml">
-            <tree string="Lot/Serial Number Inventory" decoration-muted="state == 'cancel'">
-                <field name="name"/>
+            <tree string="Lot/Serial Number Inventory">
                 <field name="date"/>
-                <field name="state"/>
+                <field name="name"/>
+                <field name="location_ids" widget="many2many_tags" optional="hide" groups="stock.group_stock_multi_locations"/>
+                <field name="product_ids" widget="many2many_tags" optional="hide"/>
+                <field name="company_id" groups="base.group_multi_company" optional="show"/>
+                <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state in ('draft', 'confirm')"/>
             </tree>
         </field>
     </record>
@@ -93,11 +142,13 @@
                                 <div class="o_kanban_record_headings">
                                     <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
                                 </div>
-                                <field name="state" widget="kanban_label_selection" options="{'classes': {'draft': 'info', 'cancel': 'default', 'confirm': 'success', 'done': 'success'}}"/>
+                                <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'default', 'confirm': 'success', 'done': 'success'}}"/>
                             </div>
                             <div class="o_kanban_record_bottom">
                                 <div class="oe_kanban_bottom_left">
-                                    <i class="fa fa-clock-o"/> <t t-esc="record.date.value"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <field name="date" widget="date"/>
                                 </div>
                             </div>
                         </div>
@@ -114,114 +165,44 @@
             <form string="Inventory Adjustment">
             <header>
                 <button name="action_start" states="draft" string="Start Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
-                <button name="action_done" states="confirm" string="Validate Inventory" type="object" class="oe_highlight" groups="stock.group_stock_manager"/>
+                <button name="action_open_inventory_lines" states="confirm" string="Continue Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
+                <button name="action_validate" string="Validate Inventory" type="object" attrs="{'invisible': ['|', ('state', '!=', 'confirm'), ('line_ids', '!=', [])]}" groups="stock.group_stock_manager"/>
+                <button name="action_validate" string="Validate Inventory" type="object" attrs="{'invisible': ['|', ('state', '!=', 'confirm'), ('line_ids', '=', [])]}" class="oe_highlight" groups="stock.group_stock_manager"/>
                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
-                <button name="action_cancel_draft" states="confirm" string="Cancel Inventory" type="object"/>
+                <button name="action_cancel_draft" states="confirm" string="Cancel Inventory" type="object"
+                    confirm="If you cancel this inventory adjustment, all its inventory adjustment lines will be lost. Are you sure you want to discard it ?"/>
                 <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
             </header>
             <sheet>
+                <field name="line_ids" invisible="1"/>
+                <div class="oe_button_box" name="button_box">
+                    <button string="Product Moves" type="object"
+                            name="action_view_related_move_lines"
+                            class="oe_stat_button" icon="fa-exchange"
+                            attrs="{'invisible': [('state', '!=', 'done')]}"
+                            context="{'no_reference': True}"/>
+                </div>
                 <div class="oe_title">
                     <label for="name" class="oe_edit_only"/>
                     <h1><field name="name" placeholder="e.g. Annual inventory"/></h1>
                 </div>
                 <group>
                     <group>
-                        <field name="location_id" domain="[('usage','not in', ['supplier','production'])]" groups="stock.group_stock_multi_locations"/>
-                        <field name="filter" string="Inventory of" widget='radio' attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                        <field name="location_ids" options="{'no_create': True}"
+                               widget="many2many_tags"
+                               force_save="1"
+                               groups="stock.group_stock_multi_locations"/>
+                        <field name="product_ids"
+                               context="{'default_type': 'product'}"
+                               widget="many2many_tags"/>
+                        <field name="exhausted"/>
                     </group>
                     <group>
-                        <field name="date"/>
                         <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
-                        <field name="product_id" domain="[('type','=','product')]" attrs="{'invisible': [('filter', 'not in', ('product', 'product_owner'))], 'required': [('filter', 'in', ('product', 'product_owner'))]}"/>
-                        <field name="category_id" attrs="{'invisible': [('filter', 'not in','category')], 'required': [('filter', 'in', 'category')]}" options="{'no_create': True}"/>
-                        <field name="lot_id" attrs="{'invisible': [('filter', '!=', 'lot')], 'required': [('filter', '=', 'lot')]}" groups="stock.group_production_lot" />
-                        <field name="partner_id" attrs="{'invisible': [('filter', 'not in', ('owner', 'product_owner'))], 'required': [('filter', 'in', ('owner', 'product_owner'))]}" groups="stock.group_tracking_owner"/>
-                        <field name="package_id" attrs="{'invisible': [('filter', '!=', 'pack')], 'required': [('filter', '=', 'pack')]}" groups="stock.group_tracking_lot"/>
-                        <field name="exhausted" attrs="{'invisible': [('filter', 'in', ('owner', 'product_owner','lot','pack','partial', 'product'))]}"/>
+                        <field name="prefill_counted_quantity" widget="radio"
+                               attrs="{'invisible': [('state', '!=', 'draft')]}"/>
                     </group>
                 </group>
-                <notebook attrs="{'invisible':[('state','=','draft')]}">
-                    <page string="Inventory Details" >
-                        <button name="action_reset_product_qty" states="confirm" string="⇒ Set quantities to 0" type="object" class="oe_link oe_right" groups="stock.group_stock_user"/>
-                        <field name="line_ids" string="Inventory Details" context="{'default_location_id': location_id,  'default_product_id': product_id, 'default_prod_lot_id': lot_id, 'default_package_id': package_id, 'default_partner_id': partner_id}" mode="tree,kanban">
-                            <tree string="Inventory Details" editable="bottom" decoration-info="product_qty != theoretical_qty" decoration-danger="theoretical_qty &lt; 0">
-                                <field name="product_id"  domain="[('type','=','product')]"/>
-                                <field name="product_uom_id" string="UoM" groups="product.group_uom"/>
-                                <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
-                                <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
-                                <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]" groups="stock.group_tracking_lot"/>
-                                <field name="partner_id" groups="stock.group_tracking_owner"/>
-                                <field name="theoretical_qty" readonly="1"/>
-                                <field name="product_qty" string="Real Quantity"/>
-                                <field name="state" invisible="True"/>
-                            </tree>
-                            <kanban class="o_kanban_mobile">
-                                <field name="product_id"  domain="[('type','=','product')]"/>
-                                <field name="product_uom_id" groups="product.group_uom" string="UoM"/>
-                                <field name="location_id" domain="[('id', 'child_of', parent.location_id)]" groups="stock.group_stock_multi_locations"/>
-                                <field name="prod_lot_id" domain="[('product_id', '=', product_id)]" context="{'default_product_id': product_id}"  groups="stock.group_production_lot"/>
-                                <field name="package_id" domain="['|', ('location_id','=', False), ('location_id', '=', location_id)]"/>
-                                <field name="partner_id"/>
-                                <field name="theoretical_qty" readonly="1"/>
-                                <field name="product_qty" string="Real Quantity"/>
-                                <field name="state" invisible="True"/>
-
-                                <templates>
-                                    <t t-name="kanban-box">
-                                        <div t-attf-class="oe_kanban_global_click_edit
-                                                           #{record.product_qty.raw_value!=record.theoretical_qty.raw_value ? 'oe_kanban_color_6' : ''}
-                                                           #{record.theoretical_qty.raw_value&lt;0 ? 'oe_kanban_color_2' : ''}">
-                                            <div class="row">
-                                                <div class="col-xs-12">
-                                                    <strong>
-                                                        <field name='product_id'/>
-                                                    </strong>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-12 text-muted">
-                                                    <span><t t-esc='record.location_id.string'/>: <t t-esc='record.location_id.value'/></span>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-12 text-muted">
-                                                    <span><t t-esc='record.theoretical_qty.string'/>: <t t-esc='record.theoretical_qty.value'/></span>
-                                                </div>
-                                            </div>
-                                            <div class="row">
-                                                <div class="col-xs-12 text-muted">
-                                                    <span><t t-esc='record.product_qty.string'/>: <t t-esc='record.product_qty.value'/></span>
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </t>
-                                </templates>
-                            </kanban>
-                        </field>
-                        <p></p>
-                        <h3 class="oe_grey">Notes</h3>
-                        <ul class="oe_grey"><li>Inventory adjustments will be made by comparing the theoretical and the checked quantities.</li>
-                        <li>You can delete lines to ignore some products.</li>
-                        <li>If a product is not at the right place, set the checked quantity to 0 and create a new line with correct location.</li>
-                        </ul>
-                    </page>
-                    <page string="Inventory Adjustments" attrs="{'invisible': [('state', '!=', 'done')]}">
-                        <field name="move_ids">
-                            <tree decoration-muted="scrapped == True" string="Stock Moves">
-                                <field name="product_id"/>
-                                <field name="product_uom_qty"/>
-                                <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="product.group_uom"/>
-                                <field name="picking_id" invisible="1" />
-                                <field name="create_date" invisible="1" />
-                                <field name="date_expected" invisible="1" />
-                                <field name="scrapped" invisible="1"/>
-                                <field name="location_id"/>
-                                <field name="location_dest_id"/>
-                                <field name="state"/>
-                            </tree>
-                        </field>
-                    </page>
-                </notebook>
             </sheet>
             </form>
         </field>
@@ -231,19 +212,37 @@
         <field name="name">Inventory Adjustments</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">stock.inventory</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,kanban,form</field>
         <field name="view_id" ref="view_inventory_tree"/>
         <field name="search_view_id" ref="view_inventory_filter"/>
         <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to start an inventory.
+          <p class="o_view_nocontent_smiling_face">
+            Create a new inventory adjustment
           </p><p>
-            Periodical Inventories are used to count the number of products
-            available per location. You can use it once a year when you do
-            the general inventory or whenever you need it, to adapt the
-            current inventory level of a product.
+            This is used to correct the product quantities you have in stock.
           </p>
+        </field>
+    </record>
+
+    <record id="model_stock_inventory_line_action_reset_product_qty" model="ir.actions.server">
+        <field name="name">Set counted quantities to 0</field>
+        <field name="model_id" ref="model_stock_inventory_line"/>
+        <field name="binding_model_id" ref="model_stock_inventory_line"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.action_reset_product_qty()
+        </field>
+    </record>
+
+    <record id="model_stock_inventory_line_action_recompute_quantity" model="ir.actions.server">
+        <field name="name">Recompute On Hand Quantity</field>
+        <field name="model_id" ref="model_stock_inventory_line"/>
+        <field name="binding_model_id" ref="model_stock_inventory_line"/>
+        <field name="state">code</field>
+        <field name="code">
+if records:
+    action = records.action_refresh_quantity()
         </field>
     </record>
 

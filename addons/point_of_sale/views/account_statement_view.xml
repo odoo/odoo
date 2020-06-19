@@ -1,34 +1,48 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-        <record id="view_account_journal_pos_user_form" model="ir.ui.view">
-            <field name="name">account.journal.pos.user.form.inherit</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="account.view_account_journal_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='type']" position="after">
-                    <field name="journal_user" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
-                </xpath>
-                <xpath expr="//notebook[last()]" position="inside">
-                    <page string="Point of Sale" attrs="{'invisible': [('journal_user', '=', False)]}">
-                        <group>
-                            <group name="amount_authorized" attrs="{'invisible': [('type', '!=', 'cash')]}">
-                                <field name="amount_authorized_diff"/>
-                            </group>
-                        </group>
-                    </page>
-                </xpath>
-            </field>
-        </record>
-        <record id="view_account_bank_journal_form_inherited_pos" model="ir.ui.view">
-            <field name="name">account.bank.journal.form.inherit.pos</field>
-            <field name="model">account.journal</field>
-            <field name="inherit_id" ref="account.view_account_bank_journal_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[@name='advanced_info']" position="inside">
-                    <group string="Point of Sale">
-                        <field name="journal_user"/>
-                    </group>
-                </xpath>
-            </field>
-        </record>
+    <record id="view_bank_statement_pos_session" model="ir.ui.view">
+        <field name="name">view.bank.statement.pos.session</field>
+        <field name="model">account.bank.statement</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="inherit_id" ref="account.view_bank_statement_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//button[@name='button_validate_or_action']" position="replace"/>
+        </field>
+    </record>
+
+    <record id="view_account_bnk_stmt_cashbox" model="ir.ui.view">
+        <field name="name">account.bnk_stmt_cashbox.form</field>
+        <field name="model">account.bank.statement.cashbox</field>
+        <field name="inherit_id" ref="account.view_account_bnk_stmt_cashbox"/>
+        <field name="arch" type="xml">
+          <xpath expr="//sheet" position="inside">
+              <field name="is_a_template" invisible="1"/>
+          </xpath>
+        </field>
+    </record>
+
+    <record id="view_account_bnk_stmt_cashbox_footer" model="ir.ui.view">
+      <field name="name">account.bnk_stmt_cashbox.form.close.modal</field>
+      <field name="model">account.bank.statement.cashbox</field>
+      <field name="inherit_id" ref="account.view_account_bnk_stmt_cashbox_footer"/>
+      <field name="mode">primary</field>
+      <field name="priority">1000</field>
+      <field name="arch" type="xml">
+          <xpath expr="//field[@name='cashbox_lines_ids']" position="before">
+              <button name="set_default_cashbox" type="object" string="Set Default Cash Opening" />
+          </xpath>
+      </field>
+    </record>
+
+    <record id="view_account_journal_pos_user_form" model="ir.ui.view">
+        <field name="name">account.journal.pos.user.form.inherit</field>
+        <field name="model">account.journal</field>
+        <field name="inherit_id" ref="account.view_account_journal_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//notebook[last()]" position="inside">
+                <page string="Point of Sale" name="point_of_sale" invisible="1"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

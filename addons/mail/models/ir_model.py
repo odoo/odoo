@@ -3,7 +3,17 @@
 
 from odoo import _, api, fields, models
 from odoo.exceptions import UserError
-from odoo.tools import pycompat
+
+
+class Base(models.AbstractModel):
+    _inherit = 'base'
+
+    def _valid_field_parameter(self, field, name):
+        # allow tracking on abstract models; see also 'mail.thread'
+        return (
+            name == 'tracking' and self._abstract
+            or super()._valid_field_parameter(field, name)
+        )
 
 
 class IrModel(models.Model):
@@ -11,18 +21,61 @@ class IrModel(models.Model):
     _order = 'is_mail_thread DESC, name ASC'
 
     is_mail_thread = fields.Boolean(
-        string="Mail Thread", oldname='mail_thread', default=False,
+        string="Mail Thread", default=False,
         help="Whether this model supports messages and notifications.",
     )
+    is_mail_activity = fields.Boolean(
+        string="Mail Activity", default=False,
+        help="Whether this model supports activities.",
+    )
+    is_mail_blacklist = fields.Boolean(
+        string="Mail Blacklist", default=False,
+        help="Whether this model supports blacklist.",
+    )
 
-    @api.multi
+    def unlink(self):
+        # Delete followers, messages and attachments for models that will be unlinked.
+        models = tuple(self.mapped('model'))
+
+        query = "DELETE FROM mail_followers WHERE res_model IN %s"
+        self.env.cr.execute(query, [models])
+
+        query = "DELETE FROM mail_message WHERE model in %s"
+        self.env.cr.execute(query, [models])
+
+        # Get files attached solely by the models
+        query = """
+            SELECT DISTINCT store_fname
+            FROM ir_attachment
+            WHERE res_model IN %s
+            EXCEPT
+            SELECT store_fname
+            FROM ir_attachment
+            WHERE res_model not IN %s;
+        """
+        self.env.cr.execute(query, [models, models])
+        fnames = self.env.cr.fetchall()
+
+        query = """DELETE FROM ir_attachment WHERE res_model in %s"""
+        self.env.cr.execute(query, [models])
+
+        for (fname,) in fnames:
+            self.env['ir.attachment']._file_delete(fname)
+
+        return super(IrModel, self).unlink()
+
     def write(self, vals):
-        if self and 'is_mail_thread' in vals:
+        if self and ('is_mail_thread' in vals or 'is_mail_activity' in vals or 'is_mail_blacklist' in vals):
             if not all(rec.state == 'manual' for rec in self):
                 raise UserError(_('Only custom models can be modified.'))
-            if not all(rec.is_mail_thread <= vals['is_mail_thread'] for rec in self):
+            if 'is_mail_thread' in vals and not all(rec.is_mail_thread <= vals['is_mail_thread'] for rec in self):
                 raise UserError(_('Field "Mail Thread" cannot be changed to "False".'))
+            if 'is_mail_activity' in vals and not all(rec.is_mail_activity <= vals['is_mail_activity'] for rec in self):
+                raise UserError(_('Field "Mail Activity" cannot be changed to "False".'))
+            if 'is_mail_blacklist' in vals and not all(rec.is_mail_blacklist <= vals['is_mail_blacklist'] for rec in self):
+                raise UserError(_('Field "Mail Blacklist" cannot be changed to "False".'))
             res = super(IrModel, self).write(vals)
+            self.flush()
             # setup models; this reloads custom models in registry
             self.pool.setup_models(self._cr)
             # update database schema of models
@@ -35,6 +88,8 @@ class IrModel(models.Model):
     def _reflect_model_params(self, model):
         vals = super(IrModel, self)._reflect_model_params(model)
         vals['is_mail_thread'] = issubclass(type(model), self.pool['mail.thread'])
+        vals['is_mail_activity'] = issubclass(type(model), self.pool['mail.activity.mixin'])
+        vals['is_mail_blacklist'] = issubclass(type(model), self.pool['mail.thread.blacklist'])
         return vals
 
     @api.model
@@ -42,32 +97,14 @@ class IrModel(models.Model):
         model_class = super(IrModel, self)._instanciate(model_data)
         if model_data.get('is_mail_thread') and model_class._name != 'mail.thread':
             parents = model_class._inherit or []
-            parents = [parents] if isinstance(parents, pycompat.string_types) else parents
+            parents = [parents] if isinstance(parents, str) else parents
             model_class._inherit = parents + ['mail.thread']
+        if model_data.get('is_mail_activity') and model_class._name != 'mail.activity.mixin':
+            parents = model_class._inherit or []
+            parents = [parents] if isinstance(parents, str) else parents
+            model_class._inherit = parents + ['mail.activity.mixin']
+        if model_data.get('is_mail_blacklist') and model_class._name != 'mail.thread.blacklist':
+            parents = model_class._inherit or []
+            parents = [parents] if isinstance(parents, str) else parents
+            model_class._inherit = parents + ['mail.thread.blacklist']
         return model_class
-
-    def unlink(self):
-        # Delete followers for models that will be unlinked.
-        query = "DELETE FROM mail_followers WHERE res_model IN %s"
-        self.env.cr.execute(query, [tuple(self.mapped('model'))])
-        return super(IrModel, self).unlink()
-
-
-class IrModelField(models.Model):
-    _inherit = 'ir.model.fields'
-
-    track_visibility = fields.Selection(
-        [('onchange', "On Change"), ('always', "Always")], string="Tracking",
-        help="When set, every modification to this field will be tracked in the chatter.",
-    )
-
-    def _reflect_field_params(self, field):
-        vals = super(IrModelField, self)._reflect_field_params(field)
-        vals['track_visibility'] = getattr(field, 'track_visibility', None)
-        return vals
-
-    def _instanciate_attrs(self, field_data):
-        attrs = super(IrModelField, self)._instanciate_attrs(field_data)
-        if field_data.get('track_visibility'):
-            attrs['track_visibility'] = field_data['track_visibility']
-        return attrs

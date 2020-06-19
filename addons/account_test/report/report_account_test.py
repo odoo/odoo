@@ -11,6 +11,7 @@ from odoo.tools.safe_eval import safe_eval
 
 class ReportAssertAccount(models.AbstractModel):
     _name = 'report.account_test.report_accounttest'
+    _description = 'Account Test Report'
 
     @api.model
     def execute_code(self, code_exec):
@@ -18,7 +19,7 @@ class ReportAssertAccount(models.AbstractModel):
             """
             returns the list of invoices that are set as reconciled = True
             """
-            return self.env['account.invoice'].search([('reconciled', '=', True)]).ids
+            return self.env['account.move'].search([('reconciled', '=', True)]).ids
 
         def order_columns(item, cols=None):
             """
@@ -61,7 +62,7 @@ class ReportAssertAccount(models.AbstractModel):
         return result
 
     @api.model
-    def get_report_values(self, docids, data=None):
+    def _get_report_values(self, docids, data=None):
         report = self.env['ir.actions.report']._get_report_from_name('account_test.report_accounttest')
         records = self.env['accounting.assert.test'].browse(self.ids)
         return {

@@ -1,21 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
-<t t-name="stripe.error">
-    <div class="modal fade">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&amp;times;</button>
-                    <h4 class="modal-title">Error</h4>
-                </div>
-                <div class="modal-body">
-                    <t t-esc="msg"></t>
-                </div>
-                <div class="modal-footer">
-                    <a href="#" class="btn btn-link btn-xs" data-dismiss="modal">Close</a>
+    <t t-name="stripe.error">
+        <div role="dialog" class="modal fade">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <header class="modal-header">
+                        <h4 class="modal-title">Error</h4>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">&amp;times;</button>
+                    </header>
+                    <main class="modal-body">
+                        <t t-esc="msg"></t>
+                    </main>
+                    <footer class="modal-footer">
+                        <a role="button" href="#" class="btn btn-link btn-sm" data-dismiss="modal">Close</a>
+                    </footer>
                 </div>
             </div>
         </div>
-    </div>
-</t>
+    </t>
 </templates>

@@ -11,7 +11,7 @@ _logger = logging.getLogger(__name__)
 
 class DeliveryCarrier(models.Model):
     _name = 'delivery.carrier'
-    _description = "Carrier"
+    _description = "Shipping Methods"
     _order = 'sequence, id'
 
     ''' A Shipping Provider
@@ -26,6 +26,7 @@ class DeliveryCarrier(models.Model):
        <my_provider>_send_shipping
        <my_provider>_get_tracking_link
        <my_provider>_cancel_shipment
+       _<my_provider>_get_default_custom_package_code
        (they are documented hereunder)
     '''
 
@@ -33,7 +34,7 @@ class DeliveryCarrier(models.Model):
     # Internals for shipping providers #
     # -------------------------------- #
 
-    name = fields.Char(required=True)
+    name = fields.Char('Delivery Method', required=True, translate=True)
     active = fields.Boolean(default=True)
     sequence = fields.Integer(help="Determine the display order", default=10)
     # This field will be overwritten by internal shipping providers by adding their own type (ex: 'fedex')
@@ -41,21 +42,36 @@ class DeliveryCarrier(models.Model):
     integration_level = fields.Selection([('rate', 'Get Rate'), ('rate_and_ship', 'Get Rate and Create Shipment')], string="Integration Level", default='rate_and_ship', help="Action while validating Delivery Orders")
     prod_environment = fields.Boolean("Environment", help="Set to True if your credentials are certified for production.")
     debug_logging = fields.Boolean('Debug logging', help="Log requests in order to ease debugging")
-    company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True)
+    company_id = fields.Many2one('res.company', string='Company', related='product_id.company_id', store=True, readonly=False)
     product_id = fields.Many2one('product.product', string='Delivery Product', required=True, ondelete='restrict')
+
+    invoice_policy = fields.Selection([
+        ('estimated', 'Estimated cost'),
+        ('real', 'Real cost')
+    ], string='Invoicing Policy', default='estimated', required=True,
+    help="Estimated Cost: the customer will be invoiced the estimated cost of the shipping.\nReal Cost: the customer will be invoiced the real cost of the shipping, the cost of the shipping will be updated on the SO after the delivery.")
 
     country_ids = fields.Many2many('res.country', 'delivery_carrier_country_rel', 'carrier_id', 'country_id', 'Countries')
     state_ids = fields.Many2many('res.country.state', 'delivery_carrier_state_rel', 'carrier_id', 'state_id', 'States')
     zip_from = fields.Char('Zip From')
     zip_to = fields.Char('Zip To')
 
-    margin = fields.Integer(help='This percentage will be added to the shipping price.')
-    free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False, oldname='free_if_more_than')
+    margin = fields.Float(help='This percentage will be added to the shipping price.')
+    free_over = fields.Boolean('Free if order amount is above', help="If the order total amount (shipping excluded) is above or equal to this value, the customer benefits from a free shipping", default=False)
     amount = fields.Float(string='Amount', help="Amount of the order to benefit from a free shipping, expressed in the company currency")
+
+    can_generate_return = fields.Boolean(compute="_compute_can_generate_return")
+    return_label_on_delivery = fields.Boolean(string="Generate Return Label", help="The return label is automatically generated at the delivery.")
+    get_return_label_from_portal = fields.Boolean(string="Return Label Accessible from Customer Portal", help="The return label can be downloaded by the customer from the customer portal.")
 
     _sql_constraints = [
         ('margin_not_under_100_percent', 'CHECK (margin >= -100)', 'Margin cannot be lower than -100%'),
     ]
+
+    @api.depends('delivery_type')
+    def _compute_can_generate_return(self):
+        for carrier in self:
+            carrier.can_generate_return = False
 
     def toggle_prod_environment(self):
         for c in self:
@@ -65,15 +81,14 @@ class DeliveryCarrier(models.Model):
         for c in self:
             c.debug_logging = not c.debug_logging
 
-    @api.multi
     def install_more_provider(self):
         return {
             'name': 'New Providers',
-            'view_mode': 'kanban',
+            'view_mode': 'kanban,form',
             'res_model': 'ir.module.module',
-            'domain': [['name', 'ilike', 'delivery_']],
+            'domain': [['name', '=like', 'delivery_%'], ['name', '!=', 'delivery_barcode']],
             'type': 'ir.actions.act_window',
-            'help': _('''<p class="oe_view_nocontent">
+            'help': _('''<p class="o_view_nocontent">
                     Buy Odoo Enterprise now to get more providers.
                 </p>'''),
         }
@@ -92,6 +107,21 @@ class DeliveryCarrier(models.Model):
         if self.zip_to and (partner.zip or '').upper() > self.zip_to.upper():
             return False
         return True
+
+    @api.onchange('integration_level')
+    def _onchange_integration_level(self):
+        if self.integration_level == 'rate':
+            self.invoice_policy = 'estimated'
+
+    @api.onchange('can_generate_return')
+    def _onchange_can_generate_return(self):
+        if not self.can_generate_return:
+            self.return_label_on_delivery = False
+
+    @api.onchange('return_label_on_delivery')
+    def _onchange_return_label_on_delivery(self):
+        if not self.return_label_on_delivery:
+            self.get_return_label_from_portal = False
 
     @api.onchange('state_ids')
     def onchange_states(self):
@@ -119,10 +149,12 @@ class DeliveryCarrier(models.Model):
         if hasattr(self, '%s_rate_shipment' % self.delivery_type):
             res = getattr(self, '%s_rate_shipment' % self.delivery_type)(order)
             # apply margin on computed price
-            res['price'] = res['price'] * (1.0 + (float(self.margin) / 100.0))
+            res['price'] = float(res['price']) * (1.0 + (self.margin / 100.0))
+            # save the real price in case a free_over rule overide it to 0
+            res['carrier_price'] = res['price']
             # free when order is large enough
             if res['success'] and self.free_over and order._compute_amount_total_without_delivery() >= self.amount:
-                res['warning_message'] = _('Info:\nTotal amount of this order is above %.2f, free shipping!\n(actual cost: %.2f)') % (self.amount, res['price'])
+                res['warning_message'] = _('The shipping is free since the order amount exceeds %.2f.') % (self.amount)
                 res['price'] = 0.0
             return res
 
@@ -140,6 +172,14 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
         if hasattr(self, '%s_send_shipping' % self.delivery_type):
             return getattr(self, '%s_send_shipping' % self.delivery_type)(pickings)
+
+    def get_return_label(self,pickings, tracking_number=None, origin_date=None):
+        self.ensure_one()
+        if self.can_generate_return:
+            return getattr(self, '%s_get_return_label' % self.delivery_type)(pickings, tracking_number, origin_date)
+
+    def get_return_label_prefix(self):
+        return 'ReturnLabel-%s' % self.delivery_type
 
     def get_tracking_link(self, picking):
         ''' Ask the tracking link to the service provider
@@ -164,6 +204,7 @@ class DeliveryCarrier(models.Model):
         self.ensure_one()
 
         if self.debug_logging:
+            self.flush()
             db_name = self._cr.dbname
 
             # Use a new cursor to avoid rollback that could be caused by an upper method
@@ -183,6 +224,16 @@ class DeliveryCarrier(models.Model):
             except psycopg2.Error:
                 pass
 
+    def _get_default_custom_package_code(self):
+        """ Some delivery carriers require a prefix to be sent in order to use custom
+        packages (ie not official ones). This optional method will return it as a string.
+        """
+        self.ensure_one()
+        if hasattr(self, '_%s_get_default_custom_package_code' % self.delivery_type):
+            return getattr(self, '_%s_get_default_custom_package_code' % self.delivery_type)()
+        else:
+            return False
+
     # ------------------------------------------------ #
     # Fixed price shipping, aka a very simple provider #
     # ------------------------------------------------ #
@@ -199,8 +250,18 @@ class DeliveryCarrier(models.Model):
             carrier.product_id.list_price = carrier.fixed_price
 
     def fixed_rate_shipment(self, order):
+        carrier = self._match_address(order.partner_shipping_id)
+        if not carrier:
+            return {'success': False,
+                    'price': 0.0,
+                    'error_message': _('Error: this delivery method is not available for this address.'),
+                    'warning_message': False}
+        price = self.fixed_price
+        company = self.company_id or order.company_id or self.env.company
+        if company.currency_id and company.currency_id != order.currency_id:
+            price = company.currency_id._convert(price, order.currency_id, company, fields.Date.today())
         return {'success': True,
-                'price': self.fixed_price,
+                'price': price,
                 'error_message': False,
                 'warning_message': False}
 

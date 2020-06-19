@@ -1,18 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * base_address_city
+# 	* base_address_city
 # 
 # Translators:
-# krnkris <krnkris@freemail.hu>, 2017
-# Oregional <geza.nagy@oregional.hu>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
+# Martin Trigaux, 2019
+# krnkris, 2019
+# gezza <geza.nagy@oregional.hu>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~14\n"
+"Project-Id-Version: Odoo Server saas~12.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-15 09:49+0000\n"
-"PO-Revision-Date: 2017-02-15 09:49+0000\n"
-"Last-Translator: Martin Trigaux <mat@odoo.com>, 2017\n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2019\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,8 +23,9 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: base_address_city
-#: model:ir.model.fields,help:base_address_city.field_res_country_enforce_cities
-#: model:ir.model.fields,help:base_address_city.field_res_partner_country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_users__country_enforce_cities
 msgid ""
 "Check this box to ensure every address created in that country has a 'City' "
 "chosen in the list of the country's cities."
@@ -32,45 +35,53 @@ msgstr ""
 
 #. module: base_address_city
 #: model:ir.actions.act_window,name:base_address_city.action_res_city_tree
-#: model:ir.ui.view,arch_db:base_address_city.view_res_country_city_extended_form
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_res_country_city_extended_form
 msgid "Cities"
 msgstr "Városok"
 
 #. module: base_address_city
+#: code:addons/base_address_city/models/res_partner.py:55
 #: model:ir.model,name:base_address_city.model_res_city
-#: model:ir.ui.view,arch_db:base_address_city.view_city_filter
-#: model:ir.ui.view,arch_db:base_address_city.view_city_tree
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_city_tree
+#, python-format
 msgid "City"
 msgstr "Város"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_partner_city_id
-msgid "Company"
-msgstr "Vállalat"
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__city_id
+msgid "City of Address"
+msgstr ""
+
+#. module: base_address_city
+#: model:ir.model,name:base_address_city.model_res_partner
+msgid "Contact"
+msgstr "Kapcsolat"
 
 #. module: base_address_city
 #: model:ir.model,name:base_address_city.model_res_country
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_country_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__country_id
 msgid "Country"
 msgstr "Ország"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_create_uid
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_uid
 msgid "Created by"
 msgstr "Létrehozta"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_create_date
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_date
 msgid "Created on"
 msgstr "Létrehozva"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_display_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__display_name
 msgid "Display Name"
 msgstr "Megjelenített név"
 
 #. module: base_address_city
-#: model:ir.actions.act_window,help:base_address_city.action_res_city_tree
+#: model_terms:ir.actions.act_window,help:base_address_city.action_res_city_tree
 msgid ""
 "Display and manage the list of all cities that can be assigned to\n"
 "                your partner records. Note that an option can be set on each country separately\n"
@@ -81,52 +92,48 @@ msgstr ""
 "                ezzel kikényszerítve, hogy bármely címhez legyen egy város a listában."
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_country_enforce_cities
-#: model:ir.model.fields,field_description:base_address_city.field_res_partner_country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
 msgid "Enforce Cities"
 msgstr "Város kényszerítés"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__id
 msgid "ID"
 msgstr "Azonosító"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city___last_update
+#: model:ir.model.fields,field_description:base_address_city.field_res_city____last_update
 msgid "Last Modified on"
-msgstr "Utoljára módosítva"
+msgstr "Legutóbb frissítve"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_write_uid
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_uid
 msgid "Last Updated by"
-msgstr "Utoljára frissítette"
+msgstr "Frissítette"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_write_date
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_date
 msgid "Last Updated on"
-msgstr "Utoljára frissítve "
+msgstr "Frissítve "
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_name
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__name
 msgid "Name"
 msgstr "Név"
 
 #. module: base_address_city
-#: model:ir.model,name:base_address_city.model_res_partner
-msgid "Partner"
-msgstr "Partner"
-
-#. module: base_address_city
-#: model:ir.ui.view,arch_db:base_address_city.view_city_filter
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
 msgid "Search City"
 msgstr "Város keresése"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_state_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
 msgid "State"
 msgstr "Állapot"
 
 #. module: base_address_city
-#: model:ir.model.fields,field_description:base_address_city.field_res_city_zipcode
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__zipcode
 msgid "Zip"
 msgstr "Irsz."

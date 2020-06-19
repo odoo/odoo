@@ -10,19 +10,22 @@
                   class="js_follow_email form-control"
                   placeholder="your email..."
                   groups="base.group_public"/>
-            <span class="input-group-btn">
-                <button href="#" t-attf-class="btn btn-default js_unfollow_btn">Unsubscribe</button>
+            <div t-if="icons_design and not request.env.user.has_group('base.group_public')" class="js_follow_icons_container">
+                <button class="btn text-reset js_unfollow_btn">
+                    <div class="d-flex align-items-center">
+                        <small>Unfollow</small><i class="fa fa-fw ml-1"/>
+                    </div>
+                </button>
+                <button class="btn text-reset js_follow_btn">
+                    <div class="d-flex align-items-center">
+                        <small>Follow</small><i class="fa fa-fw ml-1"/>
+                    </div>
+                </button>
+            </div>
+            <div t-else="" t-attf-class="#{request.env.user.has_group('base.group_public') and 'input-group-append'} #{div_class}">
+                <button href="#" t-attf-class="btn btn-secondary js_unfollow_btn">Unsubscribe</button>
                 <button href="#" t-attf-class="btn btn-primary js_follow_btn">Subscribe</button>
-            </span>
+            </div>
         </div>
     </template>
-
-    <template id="head" inherit_id="website.assets_frontend" name="Mail customization">
-        <xpath expr="." position="inside">
-            <script type="text/javascript" src="/website_mail/static/src/js/follow.js"></script>
-            <script type="text/javascript" src="/website_mail/static/src/js/website_mail.js"></script>
-            <link rel='stylesheet' href='/website_mail/static/src/css/website_mail.less'/>
-        </xpath>
-    </template>
-
 </odoo>

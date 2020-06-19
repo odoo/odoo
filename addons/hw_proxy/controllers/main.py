@@ -18,9 +18,11 @@ _logger = logging.getLogger(__name__)
 # Those are the builtin raspberry pi USB modules, they should
 # not appear in the list of connected devices.
 BANNED_DEVICES = {
-	"0424:9514",	# Standard Microsystem Corp. Builtin Ethernet module
-	"1d6b:0002",	# Linux Foundation 2.0 root hub
-	"0424:ec00",	# Standard Microsystem Corp. Other Builtin Ethernet module
+    "0424:9514",    # Standard Microsystem Corp. Builtin Ethernet module
+    "1d6b:0002",    # Linux Foundation 2.0 root hub
+    "0424:ec00",    # Standard Microsystem Corp. Other Builtin Ethernet module
+    "0424:2514",    # Standard Microsystems Corp. USB 2.0 Hub (rpi3b+)
+    "0424:7800",    # Standard Microsystems Corp. (rpi3b+)
 }
 
 
@@ -55,7 +57,7 @@ class Proxy(http.Controller):
 <!DOCTYPE HTML>
 <html>
     <head>
-        <title>Odoo's PosBox</title>
+        <title>Odoo's IoTBox</title>
         <style>
         body {
             width: 480px;
@@ -96,19 +98,20 @@ class Proxy(http.Controller):
             resp += "</ul>\n"
         resp += """
             <h2>Connected Devices</h2>
-            <p>The list of connected USB devices as seen by the posbox</p>
+            <p>The list of connected USB devices as seen by the IoTBox</p>
         """
         if debug is None:
-            resp += """(<a href="/hw_proxy/status?debug">debug version</a>)"""
-        devices = subprocess.check_output("lsusb").split('\n')
+            resp += """(<a href="/hw_proxy/status?debug=1">debug version</a>)"""
+        devices = subprocess.check_output("lsusb").decode('utf-8').split('\n')
         count   = 0
         resp += "<div class='devices'>\n"
         for device in devices:
             device_name = device[device.find('ID')+2:]
-            device_id   = device_name.split()[0]
-            if not (device_id in BANNED_DEVICES):
-                resp += "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
-                count += 1
+            if device_name: # to avoid last empty line
+                device_id   = device_name.split()[0]
+                if not (device_id in BANNED_DEVICES):
+                    resp += "<div class='device' data-device='"+device+"'>"+device_name+"</div>\n"
+                    count += 1
 
         if count == 0:
             resp += "<div class='device'>No USB Device Found</div>"
@@ -124,7 +127,7 @@ class Proxy(http.Controller):
                 %s
                 </pre>
 
-            """ % subprocess.check_output('lsusb -v', shell=True)
+            """ % subprocess.check_output(['lsusb', '-v']).decode('utf-8')
 
         return request.make_response(resp,{
             'Cache-Control': 'no-cache',
@@ -205,17 +208,6 @@ class Proxy(http.Controller):
     @http.route('/hw_proxy/print_receipt', type='json', auth='none', cors='*')
     def print_receipt(self, receipt):
         print('print_receipt %s', receipt)
-
-    @http.route('/hw_proxy/is_scanner_connected', type='json', auth='none', cors='*')
-    def is_scanner_connected(self, receipt):
-        print('is_scanner_connected?')
-        return False
-
-    @http.route('/hw_proxy/scanner', type='json', auth='none', cors='*')
-    def scanner(self, receipt):
-        print('scanner')
-        time.sleep(10)
-        return ''
 
     @http.route('/hw_proxy/log', type='json', auth='none', cors='*')
     def log(self, arguments):

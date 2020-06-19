@@ -9,8 +9,7 @@ import odoo.tests
 _logger = logging.getLogger(__name__)
 
 
-@odoo.tests.common.at_install(False)
-@odoo.tests.common.post_install(True)
+@odoo.tests.tagged('post_install', '-at_install')
 class TestReports(odoo.tests.TransactionCase):
     def test_reports(self):
         domain = [('report_type', 'like', 'qweb')]
@@ -29,6 +28,6 @@ class TestReports(odoo.tests.TransactionCase):
                     report_records = report_records[:1]
 
                 # Test report generation
-                report.render_qweb_html(report_records.ids)
+                report._render_qweb_html(report_records.ids)
             else:
                 continue

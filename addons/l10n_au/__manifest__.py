@@ -6,7 +6,7 @@
 {
     'name': 'Australian - Accounting',
     'version': '1.1',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 Australian Accounting Module
 ============================
@@ -24,11 +24,15 @@ Also:
              'data/l10n_au_chart_data.xml',
              'data/account.account.template.csv',
              'data/account_chart_template_data.xml',
-             'data/account.account.tag.csv',
+             'data/account_tax_report_data.xml',
              'data/account.tax.group.csv',
-             'data/account.tax.template.csv',
+             'data/account_tax_template_data.xml',
              'data/account_fiscal_position_tax_template_data.xml',
-             'data/account_chart_template_data.yml',
+             'data/account_chart_template_configure_data.xml',
              'data/res_currency_data.xml',
-             ],
+             'views/menuitems.xml',
+     ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
 }

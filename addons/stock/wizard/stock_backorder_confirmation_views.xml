@@ -9,15 +9,24 @@
                     <p>
                         You have processed less products than the initial demand.
                     </p><p class="text-muted">
-                        Create a backorder, if you expect to process the remaining
-                        products later.  Do not create a backorder if you will not
-                        supply the remaining products.
+                        Create a backorder if you expect to process the remaining
+                        products later. Do not create a backorder if you will not
+                        process the remaining products.
                     </p>
                 </group>
+
+                <field name="show_transfers" invisible="1"/>
+                <field name="backorder_confirmation_line_ids" nolabel="1" attrs="{'invisible': [('show_transfers', '=', False)]}">>
+                    <tree create="0" delete="0" editable="top">
+                        <field name="picking_id"/>
+                        <field name="to_backorder" widget="boolean_toggle"/>
+                    </tree>
+                </field>
+
                 <footer>
                     <button name="process" string="Create Backorder" type="object" class="oe_highlight"/>
-                    <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-primary"/>
-                    <button string="_Cancel" class="btn-default" special="cancel" />
+                    <button name="process_cancel_backorder" string="No Backorder" type="object" class="btn-primary" attrs="{'invisible': [('show_transfers', '=', True)]}"/>
+                    <button string="_Cancel" class="btn-secondary" special="cancel" />
                 </footer>
             </form>
         </field>

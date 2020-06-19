@@ -11,10 +11,12 @@
                     <field name="user_id"/>
                     <field name="grade_id"/>
                     <field name="activation"/>
+                    <filter name="filter_date_partnership" date="date_partnership"/>
+                    <filter name="filter_date_review" date="date_review"/>
                     <group  expand="1" string="Group By">
                         <filter string="Salesperson" name="user"
                             context="{'group_by':'user_id'}" />
-                        <filter string="Sales Channel" name="sales_team"
+                        <filter string="Sales Team" name="sales_team"
                             context="{'group_by':'team_id'}"/>
                         <filter string="Partner" name="partner"
                             context="{'group_by':'partner_id'}" />
@@ -51,6 +53,6 @@
         </record>
 
        <menuitem name="Partnerships" id="menu_report_crm_partner_assign_tree"
-           parent="crm.crm_menu_report" action="action_report_crm_partner_assign" sequence="4"/>
+           parent="crm.crm_menu_report" action="action_report_crm_partner_assign" sequence="5"/>
 
 </odoo>

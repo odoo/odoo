@@ -14,6 +14,7 @@ var ReportWidget = Widget.extend({
         'click span.o_stock_reports_unfoldable': 'unfold',
         'click .o_stock_reports_web_action': 'boundLink',
         'click .o_stock_reports_stream': 'updownStream',
+        'click .o_stock_report_lot_action': 'actionOpenLot'
     },
     init: function(parent) {
         this._super.apply(this, arguments);
@@ -23,6 +24,7 @@ var ReportWidget = Widget.extend({
         return this._super.apply(this, arguments);
     },
     boundLink: function(e) {
+        e.preventDefault();
         return this.do_action({
             type: 'ir.actions.act_window',
             res_model: $(e.target).data('res-model'),
@@ -31,21 +33,31 @@ var ReportWidget = Widget.extend({
             target: 'current'
         });
     },
-    updownStream: function(e) {
-        var stream = $(e.target).parent().data('stream');
+    actionOpenLot: function(e) {
+        e.preventDefault();
         var $el = $(e.target).parents('tr');
-        var string = "Upstream Traceability"
-        if (stream == 'downstream') {
-            string = "Downstream Traceability"
-        }
+        this.do_action({
+            type: 'ir.actions.client',
+            tag: 'stock_report_generic',
+            name: $el.data('lot_name') !== undefined && $el.data('lot_name').toString(),
+            context: {
+                active_id : $el.data('lot_id'),
+                active_model : 'stock.production.lot',
+                url: '/stock/output_format/stock/active_id'
+            },
+        });
+    },
+    updownStream: function(e) {
+        var $el = $(e.target).parents('tr');
         this.do_action({
             type: "ir.actions.client",
             tag: 'stock_report_generic',
-            name: _t(string),
+            name: _t("Traceability Report"),
             context: {
                 active_id : $el.data('model_id'),
                 active_model : $el.data('model'),
-                ttype: stream || false,
+                auto_unfold: true,
+                lot_name: $el.data('lot_name') !== undefined && $el.data('lot_name').toString(),
                 url: '/stock/output_format/stock/active_id'
             },
         });
@@ -76,16 +88,15 @@ var ReportWidget = Widget.extend({
         $(e.target).parents('tr').find('span.o_stock_reports_foldable').replaceWith(QWeb.render("unfoldable", {lineId: active_id}));
         $(e.target).parents('tr').toggleClass('o_stock_reports_unfolded');
     },
-    unfold: function(e) {
+    autounfold: function(target, lot_name) {
+        var self = this;
         var $CurretElement;
-        $CurretElement = $(e.target).parents('tr').find('td.o_stock_reports_unfoldable');
+        $CurretElement = $(target).parents('tr').find('td.o_stock_reports_unfoldable');
         var active_id = $CurretElement.data('id');
         var active_model_name = $CurretElement.data('model');
         var active_model_id = $CurretElement.data('model_id');
         var row_level = $CurretElement.data('level');
-        var stream = $CurretElement.data('stream');
-        var parent_quant = $CurretElement.data('parent_quant');
-        var $cursor = $(e.target).parents('tr');
+        var $cursor = $(target).parents('tr');
         this._rpc({
                 model: 'stock.traceability.report',
                 method: 'get_lines',
@@ -93,21 +104,24 @@ var ReportWidget = Widget.extend({
                 kwargs: {
                     'model_id': active_model_id,
                     'model_name': active_model_name,
-                    'stream': stream || 'upstream',
-                    'parent_quant': parseInt(parent_quant) || false,
                     'level': parseInt(row_level) + 30 || 1
                 },
             })
             .then(function (lines) {// After loading the line
-                var line;
-                for (line in lines) { // Render each line
-                    $cursor.after(QWeb.render("report_mrp_line", {l: lines[line]}));
+                _.each(lines, function (line) { // Render each line
+                    $cursor.after(QWeb.render("report_mrp_line", {l: line}));
                     $cursor = $cursor.next();
-                }
+                    if ($cursor && line.unfoldable && line.lot_name == lot_name) {
+                        self.autounfold($cursor.find(".fa-caret-right"), lot_name);
+                    }
+                });
             });
         $CurretElement.attr('class', 'o_stock_reports_foldable ' + active_id); // Change the class, and rendering of the unfolded line
-        $(e.target).parents('tr').find('span.o_stock_reports_unfoldable').replaceWith(QWeb.render("foldable", {lineId: active_id}));
-        $(e.target).parents('tr').toggleClass('o_stock_reports_unfolded');
+        $(target).parents('tr').find('span.o_stock_reports_unfoldable').replaceWith(QWeb.render("foldable", {lineId: active_id}));
+        $(target).parents('tr').toggleClass('o_stock_reports_unfolded');
+    },
+    unfold: function(e) {
+        this.autounfold($(e.target));
     },
 
 });

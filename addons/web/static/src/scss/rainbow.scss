@@ -1,0 +1,255 @@
+/**************  rainbow  *****************/
+
+.o_reward {
+    $reward-size: 400px;
+    $reward-size-mobile: 300px;
+    $reward-text-color: #727880;
+    $reward-base-time: 1.4s;
+
+    will-change: transform;
+    z-index: $zindex-modal;
+    padding: 50px;
+    margin: -5% auto 0 (-$reward-size / 2);
+    @include media-breakpoint-down(sm) {
+        margin: -5% auto 0 (-$reward-size-mobile / 2);
+    }
+    background-image: -webkit-radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
+    background-image: -o-radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
+    background-image: radial-gradient(#EDEFF4 30%, transparent 70%, transparent);
+
+    animation: reward-fading ($reward-base-time * 0.5) ease-in-out 0s 1 normal forwards;
+    @include o-position-absolute(20%, auto, auto, 50%);
+    @include size($reward-size, $reward-size);
+    @include media-breakpoint-down(sm) {
+        @include size($reward-size-mobile, $reward-size-mobile);
+    }
+
+    &.o_reward_fading {
+        display: block;
+        animation: reward-fading-reverse ($reward-base-time * 0.4) ease-in-out 0s 1 normal forwards;
+
+        .o_reward_face_group {
+            animation: reward-jump-reverse ($reward-base-time * 0.4) ease-in-out 0s 1 normal forwards;
+        }
+
+        .o_reward_rainbow {
+            path {
+                animation: reward-rainbow-reverse ($reward-base-time * 0.5) ease-out 0s 1 normal forwards;
+            }
+        }
+
+    }
+
+    .o_reward_face, .o_reward_stars, .o_reward_shadow, .o_reward_thumbup {
+        margin: 0 auto;
+    }
+
+    .o_reward_rainbow {
+        path {
+            stroke-dasharray: 600;
+            stroke-dashoffset: 0;
+            fill: none;
+            stroke-linecap: round;
+            stroke-width: 21px;
+            animation: reward-rainbow $reward-base-time ease-out 0s 1 normal forwards;
+        }
+    }
+
+    .o_reward_face_group {
+        transform-origin: center;
+        animation: reward-jump $reward-base-time * 0.8 ease-in-out 0s 1 normal none running;
+        @include o-position-absolute(6%, 0, 0, 0);
+        @include size(100%, 60%);
+    }
+
+    .o_reward_face {
+        display: block;
+        top: 42%;
+        position: relative;
+        border-radius: 100%;
+        background: center center / contain no-repeat;
+        animation: reward-float $reward-base-time ease-in-out $reward-base-time infinite alternate;
+        @include size(34%, 56.67%);
+    }
+
+    .o_reward_stars {
+        display: block;
+        @include size($reward-size * 0.75, $reward-size / 2);
+        @include media-breakpoint-down(sm) {
+            @include size($reward-size-mobile * 0.75, $reward-size-mobile / 2);
+        }
+        @include o-position-absolute(18%, 7%);
+
+        svg {
+            transform-origin: center center;
+            @include o-position-absolute(28%, $left:3%);
+            animation: reward-stars $reward-base-time ease-in-out 0s infinite alternate-reverse;
+
+            &.star2, &.star4 {
+                animation: reward-stars ($reward-base-time*1.2) ease-in-out 0s infinite alternate;
+            }
+
+            &.star2 {
+                left: 20%;
+                top: 2%;
+            }
+
+            &.star3 {
+                left: 49%;
+                top: 6%;
+            }
+
+            &.star4 {
+                left: 70%;
+                top: 27%;
+            }
+
+        }
+    }
+
+    .o_reward_thumbup {
+        width: 40px;
+        display: block;
+        animation: reward-scale ($reward-base-time * 0.5) ease-in-out 0s infinite alternate;
+        @include o-position-absolute(63%, auto, auto, 65%);
+    }
+
+    .o_reward_msg_container {
+        will-change: transform;
+        padding-top: 11%;
+        width: 70%;
+        margin-left: 15%;
+
+        // Translate before animate
+        transform: translateY(5px);
+
+        animation: reward-float $reward-base-time ease-in-out $reward-base-time infinite alternate-reverse;
+        @include o-position-absolute(85%, auto, auto, 0%);
+
+        .o_reward_thumb_right {
+            height: 40px;
+            z-index: 1;
+            @include o-position-absolute(0, auto, auto, 16%);
+        }
+
+        .o_reward_msg {
+            margin-left: 7%;
+            margin-top: -9.5%;
+            padding: 25px 15px 20px;
+            background: white;
+            border: 1px solid #ecf1ff;
+            border-top-width: 0;
+            display: inline-block;
+
+            // Reset margins for first and penultimate childs (the last one is shadow)
+            *:first-child {
+                margin-top: 0;
+            }
+        }
+
+        .o_reward_msg_content {
+            position: relative;
+            font-family: sans-serif;
+            text-align: left;
+            color: $reward-text-color;
+        }
+
+        .o_reward_shadow_container {
+            transform: translateY(0px) rotateZ(0);
+            animation: reward-float $reward-base-time ease-in-out $reward-base-time infinite alternate;
+        }
+
+        .o_reward_shadow {
+            @include size(100%, 12px);
+            background-color: #e7eaf0;
+            border-radius: 100%;
+            transform: scale(0.8) rotateZ(0);
+            animation: reward-scale $reward-base-time ease-in-out $reward-base-time infinite alternate;
+            @include o-position-absolute(auto, auto, -40px, 0);
+        }
+    }
+}
+
+@keyframes reward-fading {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes reward-fading-reverse {
+    100% {
+        opacity: 0;
+    }
+}
+
+@keyframes reward-jump {
+    0% {
+        transform: scale(0.5);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    to {
+        transform: scale(1);
+    }
+}
+
+@keyframes reward-jump-reverse {
+    0% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
+    to {
+        transform: scale(0.5);
+    }
+}
+
+@keyframes reward-rainbow {
+    0% {
+        stroke-dashoffset: -500;
+    }
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+@keyframes reward-rainbow-reverse {
+    to {
+        stroke-dashoffset: -500;
+    }
+}
+
+@keyframes reward-float {
+    from {
+        transform: translateY(0px);
+    }
+    to {
+        transform: translateY(5px);
+    }
+}
+
+@keyframes reward-stars {
+    from {
+        transform: scale(0.3) rotate(0deg);
+    }
+    50% {
+        transform: scale(1.0) rotate(20deg);
+    }
+    to {
+        transform: scale(0.3) rotate(80deg);
+    }
+}
+
+@keyframes reward-scale {
+    from {
+        transform: scale(0.8);
+    }
+    to {
+        transform: scale(1.0);
+    }
+}

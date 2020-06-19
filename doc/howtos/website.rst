@@ -58,7 +58,7 @@ Although it does absolutely nothing we can install it:
 To the browser
 ==============
 
-:ref:`Controllers <reference/http/controllers>` interpret browser requests and
+:ref:`Controllers <reference/controllers>` interpret browser requests and
 send data back.
 
 Add a simple controller and ensure it is imported by ``__init__.py`` (so
@@ -210,7 +210,7 @@ elements (top-level menu, footer, …)
 
 .. image:: website/layout.png
 
-The website layout also provides support for edition tools: click
+The website layout also provides support for editing tools: click
 :guilabel:`Sign In` (in the top-right), fill the credentials in (``admin`` /
 ``admin`` by default) then click :guilabel:`Log In`.
 
@@ -218,12 +218,12 @@ You're now in Odoo "proper": the administrative interface. For now click on
 the :guilabel:`Website` menu item (top-left corner.
 
 We're back in the website but as an administrator, with access to advanced
-edition features provided by the *website* support:
+editing features provided by the *website* support:
 
 * a template code editor (:menuselection:`Customize --> HTML Editor`) where
   you can see and edit all templates used for the current page
-* the :guilabel:`Edit` button in the top-left switches to "edition mode" where
-  blocks (snippets) and rich text edition are available
+* the :guilabel:`Edit` button in the top-left switches to "edit mode" where
+  blocks (snippets) and rich text editing are available
 * a number of other features such as mobile preview or :abbr:`SEO (Search
   Engine Optimization)`
 
@@ -273,7 +273,7 @@ biography is shared between all teachers, because blocks are added to the
 *template*, and the *biography* template is shared between all teachers, when
 one page is edited they're all edited at the same time.
 
-Field edition
+Field editing
 =============
 
 Data which is specific to a record should be saved on that record, so let us
@@ -367,9 +367,9 @@ Relations between models
 ------------------------
 
 We have seen a pair of "basic" fields stored directly in the record. There are
-:ref:`a number of basic fields <reference/orm/fields/basic>`. The second
+:ref:`a number of basic fields <reference/fields/basic>`. The second
 broad categories of fields are :ref:`relational
-<reference/orm/fields/relational>` and used to link records to one another
+<reference/fields/relational>` and used to link records to one another
 (within a model or across models).
 
 For demonstration, let's create a *courses* model. Each course should have a

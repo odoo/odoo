@@ -1,31 +1,31 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
     <t t-name="website.prompt">
-        <div class="modal o_technical_modal" tabindex="-1" role="dialog" aria-hidden="true">
+        <div role="dialog" class="modal o_technical_modal" tabindex="-1">
                 <div class="modal-dialog">
                 <div class="modal-content">
-                    <div class="modal-header" t-if="window_title">
-                        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+                    <header class="modal-header" t-if="window_title">
                         <h3 class="modal-title"><t t-esc="window_title"/></h3>
-                    </div>
-                    <div class="modal-body">
-                        <form class="form-horizontal" role="form" t-att-id="id">
-                            <div class="form-group mb0">
-                                <label for="page-name" class="col-sm-3 control-label">
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">×</button>
+                    </header>
+                    <main class="modal-body">
+                        <form role="form" t-att-id="id">
+                            <div class="form-group row mb0">
+                                <label for="page-name" class="col-md-3 col-form-label">
                                     <t t-esc="field_name"/>:
                                 </label>
-                                <div class="col-sm-8">
+                                <div class="col-md-9">
                                     <input t-if="field_type == 'input'" type="text" class="form-control" required="required"/>
                                     <textarea t-if="field_type == 'textarea'" class="form-control" required="required" rows="5"></textarea>
                                     <select t-if="field_type == 'select'" class="form-control"></select>
                                 </div>
                             </div>
                         </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-sm btn-primary btn-continue">Continue</button>
-                        <button type="button" class="btn btn-sm btn-default" data-dismiss="modal" aria-hidden="true">Cancel</button>
-                    </div>
+                    </main>
+                    <footer class="modal-footer">
+                        <button type="button" class="btn btn-primary btn-continue">Continue</button>
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal" aria-label="Cancel">Cancel</button>
+                    </footer>
                 </div>
             </div>
         </div>
@@ -62,16 +62,40 @@
     </div>
 
     <div t-name="website.rename_page">
-        <div class="well">
-            <form class="form-horizontal">
-                <div class="form-group mb0">
-                    <label for="new_name" class="control-label col-sm-4">Rename Page To:</label>
-                    <div class="col-sm-8">
-                        <input type="text" class="form-control" id="new_name" placeholder="e.g. About Us"/>
+        <div class="card">
+            <div class="card-body">
+                <form>
+                    <div class="form-group row mb0">
+                        <label for="new_name" class="col-form-label col-md-4">Rename Page To:</label>
+                        <div class="col-md-8">
+                            <input type="text" class="form-control" id="new_name" placeholder="e.g. About Us"/>
+                        </div>
                     </div>
-                </div>
-            </form>
+                </form>
+            </div>
         </div>
         <t t-call="website.dependencies"/>
     </div>
+
+    <div t-name="website.duplicate_page_action_dialog">
+        <div class="form-group row">
+            <label class="col-form-label col-md-3" for="page_name">Page Name</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control" id="page_name"/>
+            </div>
+        </div>
+    </div>
+
+    <t t-name="website.oe_applications_menu">
+        <t t-as="menu" t-foreach="menu_data.children">
+            <a role="menuitem" class="dropdown-item"
+               t-att-data-action-id="menu.action ? menu.action.split(',')[1] : undefined"
+               t-att-data-action-model="menu.action ? menu.action.split(',')[0] : undefined"
+               t-att-data-menu="menu.id"
+               t-att-data-menu-xmlid="menu.xmlid"
+               t-att-href="_.str.sprintf('/web#menu_id=%s&amp;action=%s', menu.id, menu.action ? menu.action.split(',')[1] : '')">
+                <span class="oe_menu_text" t-esc="menu.name"/>
+            </a>
+        </t>
+    </t>
 </templates>

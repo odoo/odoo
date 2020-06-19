@@ -1,89 +1,97 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import datetime
+from datetime import datetime, timedelta
 from dateutil.relativedelta import relativedelta
+from collections import defaultdict
+import json
 
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, SUPERUSER_ID
 from odoo.exceptions import UserError
-from odoo.tools import float_compare, float_round
-from odoo.addons import decimal_precision as dp
+from odoo.tools import float_compare, float_round, format_datetime
 
 
 class MrpWorkorder(models.Model):
     _name = 'mrp.workorder'
     _description = 'Work Order'
-    _inherit = ['mail.thread']
+    _inherit = ['mail.thread', 'mail.activity.mixin']
+
+    def _read_group_workcenter_id(self, workcenters, domain, order):
+        workcenter_ids = self.env.context.get('default_workcenter_id')
+        if not workcenter_ids:
+            workcenter_ids = workcenters._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return workcenters.browse(workcenter_ids)
 
     name = fields.Char(
         'Work Order', required=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-
     workcenter_id = fields.Many2one(
         'mrp.workcenter', 'Work Center', required=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)], 'progress': [('readonly', True)]},
+        group_expand='_read_group_workcenter_id', check_company=True)
     working_state = fields.Selection(
-        'Workcenter Status', related='workcenter_id.working_state',
+        string='Workcenter Status', related='workcenter_id.working_state', readonly=False,
         help='Technical: used in views only')
-
-    production_id = fields.Many2one(
-        'mrp.production', 'Manufacturing Order',
-        index=True, ondelete='cascade', required=True, track_visibility='onchange',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    product_id = fields.Many2one(
-        'product.product', 'Product',
-        related='production_id.product_id', readonly=True,
-        help='Technical: used in views only.', store=True)
-    product_uom_id = fields.Many2one(
-        'product.uom', 'Unit of Measure',
-        related='production_id.product_uom_id', readonly=True,
-        help='Technical: used in views only.')
+    product_id = fields.Many2one(related='production_id.product_id', readonly=True, store=True, check_company=True)
+    product_tracking = fields.Selection(related="product_id.tracking")
+    product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
+    use_create_components_lots = fields.Boolean(related="production_id.picking_type_id.use_create_components_lots")
+    production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True)
     production_availability = fields.Selection(
-        'Stock Availability', readonly=True,
-        related='production_id.availability', store=True,
+        string='Stock Availability', readonly=True,
+        related='production_id.reservation_state', store=True,
         help='Technical: used in views and domains only.')
     production_state = fields.Selection(
-        'Production State', readonly=True,
+        string='Production State', readonly=True,
         related='production_id.state',
         help='Technical: used in views only.')
-    product_tracking = fields.Selection(
-        'Product Tracking', related='production_id.product_id.tracking',
-        help='Technical: used in views only.')
+    production_bom_id = fields.Many2one('mrp.bom', related='production_id.bom_id')
     qty_production = fields.Float('Original Production Quantity', readonly=True, related='production_id.product_qty')
-    qty_remaining = fields.Float('Quantity To Be Produced', compute='_compute_qty_remaining', digits=dp.get_precision('Product Unit of Measure'))
+    company_id = fields.Many2one(related='production_id.company_id')
+    qty_producing = fields.Float(
+        compute='_compute_qty_producing', inverse='_set_qty_producing',
+        string='Currently Produced Quantity', digits='Product Unit of Measure')
+    qty_remaining = fields.Float('Quantity To Be Produced', compute='_compute_qty_remaining', digits='Product Unit of Measure')
     qty_produced = fields.Float(
         'Quantity', default=0.0,
         readonly=True,
-        digits=dp.get_precision('Product Unit of Measure'),
+        digits='Product Unit of Measure',
+        copy=False,
         help="The number of products already handled by this work order")
-    qty_producing = fields.Float(
-        'Currently Produced Quantity', default=1.0,
-        digits=dp.get_precision('Product Unit of Measure'),
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    is_produced = fields.Boolean(compute='_compute_is_produced')
-
+    is_produced = fields.Boolean(string="Has Been Produced",
+        compute='_compute_is_produced')
     state = fields.Selection([
-        ('pending', 'Pending'),
+        ('pending', 'Waiting for another WO'),
         ('ready', 'Ready'),
         ('progress', 'In Progress'),
         ('done', 'Finished'),
         ('cancel', 'Cancelled')], string='Status',
-        default='pending')
+        default='pending', copy=False, readonly=True)
+    leave_id = fields.Many2one(
+        'resource.calendar.leaves',
+        help='Slot into workcenter calendar once planned',
+        check_company=True, copy=False)
     date_planned_start = fields.Datetime(
-        'Scheduled Date Start',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        'Scheduled Start Date',
+        compute='_compute_dates_planned',
+        inverse='_set_dates_planned',
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        store=True, tracking=True, copy=False)
     date_planned_finished = fields.Datetime(
-        'Scheduled Date Finished',
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
+        'Scheduled End Date',
+        compute='_compute_dates_planned',
+        inverse='_set_dates_planned',
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        store=True, tracking=True, copy=False)
     date_start = fields.Datetime(
-        'Effective Start Date',
+        'Start Date', copy=False,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     date_finished = fields.Datetime(
-        'Effective End Date',
+        'End Date', copy=False,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
 
     duration_expected = fields.Float(
-        'Expected Duration', digits=(16, 2),
+        'Expected Duration', digits=(16, 2), default=60.0,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Expected duration (in minutes)")
     duration = fields.Float(
@@ -95,290 +103,389 @@ class MrpWorkorder(models.Model):
     duration_percent = fields.Integer(
         'Duration Deviation (%)', compute='_compute_duration',
         group_operator="avg", readonly=True, store=True)
+    progress = fields.Float('Progress Done (%)', digits=(16, 2), compute='_compute_progress')
 
     operation_id = fields.Many2one(
-        'mrp.routing.workcenter', 'Operation')  # Should be used differently as BoM can change in the meantime
+        'mrp.routing.workcenter', 'Operation', check_company=True)
+        # Should be used differently as BoM can change in the meantime
     worksheet = fields.Binary(
         'Worksheet', related='operation_id.worksheet', readonly=True)
+    worksheet_type = fields.Selection(
+        string='Worksheet Type', related='operation_id.worksheet_type', readonly=True)
+    worksheet_google_slide = fields.Char(
+        'Worksheet URL', related='operation_id.worksheet_google_slide', readonly=True)
+    operation_note = fields.Text("Description", related='operation_id.note', readonly=True)
     move_raw_ids = fields.One2many(
-        'stock.move', 'workorder_id', 'Moves')
+        'stock.move', 'workorder_id', 'Raw Moves',
+        domain=[('raw_material_production_id', '!=', False), ('production_id', '=', False)])
+    move_finished_ids = fields.One2many(
+        'stock.move', 'workorder_id', 'Finished Moves',
+        domain=[('raw_material_production_id', '=', False), ('production_id', '!=', False)])
     move_line_ids = fields.One2many(
         'stock.move.line', 'workorder_id', 'Moves to Track',
-        domain=[('done_wo', '=', True)],
         help="Inventory moves for which you must scan a lot number at this work order")
-    active_move_line_ids = fields.One2many(
-        'stock.move.line', 'workorder_id',
-        domain=[('done_wo', '=', False)])
-    final_lot_id = fields.Many2one(
-        'stock.production.lot', 'Lot/Serial Number', domain="[('product_id', '=', product_id)]",
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
-    tracking = fields.Selection(related='production_id.product_id.tracking')
+    finished_lot_id = fields.Many2one(
+        'stock.production.lot', string='Lot/Serial Number', compute='_compute_finished_lot_id',
+        inverse='_set_finished_lot_id', domain="[('product_id', '=', product_id), ('company_id', '=', company_id)]",
+        check_company=True)
     time_ids = fields.One2many(
-        'mrp.workcenter.productivity', 'workorder_id')
+        'mrp.workcenter.productivity', 'workorder_id', copy=False)
     is_user_working = fields.Boolean(
-        'Is Current User Working', compute='_compute_is_user_working',
+        'Is the Current User Working', compute='_compute_working_users',
         help="Technical field indicating whether the current user is working. ")
-    production_messages = fields.Html('Workorder Message', compute='_compute_production_messages')
+    working_user_ids = fields.One2many('res.users', string='Working user on this work order.', compute='_compute_working_users')
+    last_working_user_id = fields.One2many('res.users', string='Last user that worked on this work order.', compute='_compute_working_users')
 
-    next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order")
+    next_work_order_id = fields.Many2one('mrp.workorder', "Next Work Order", check_company=True)
     scrap_ids = fields.One2many('stock.scrap', 'workorder_id')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
-    production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True)
-    color = fields.Integer('Color', compute='_compute_color')
-    capacity = fields.Float(
-        'Capacity', default=1.0,
-        help="Number of pieces that can be produced in parallel.")
+    production_date = fields.Datetime('Production Date', related='production_id.date_planned_start', store=True, readonly=False)
+    json_popover = fields.Char('Popover Data JSON', compute='_compute_json_popover')
+    show_json_popover = fields.Boolean('Show Popover?', compute='_compute_json_popover')
+    consumption = fields.Selection([
+        ('strict', 'Strict'),
+        ('warning', 'Warning'),
+        ('flexible', 'Flexible')],
+        required=True,
+    )
 
-    @api.multi
+    @api.depends('production_state', 'date_planned_start', 'date_planned_finished')
+    def _compute_json_popover(self):
+        previous_wo_data = self.env['mrp.workorder'].read_group(
+            [('next_work_order_id', 'in', self.ids)],
+            ['ids:array_agg(id)', 'date_planned_start:max', 'date_planned_finished:max'],
+            ['next_work_order_id'])
+        previous_wo_dict = dict([(x['next_work_order_id'][0], {
+            'id': x['ids'][0],
+            'date_planned_start': x['date_planned_start'],
+            'date_planned_finished': x['date_planned_finished']})
+            for x in previous_wo_data])
+        if self.ids:
+            conflicted_dict = self._get_conflicted_workorder_ids()
+        for wo in self:
+            infos = []
+            if not wo.date_planned_start or not wo.date_planned_finished or not wo.ids:
+                wo.show_json_popover = False
+                wo.json_popover = False
+                continue
+            if wo.state in ['pending', 'ready']:
+                previous_wo = previous_wo_dict.get(wo.id)
+                prev_start = previous_wo and previous_wo['date_planned_start'] or False
+                prev_finished = previous_wo and previous_wo['date_planned_finished'] or False
+                if wo.state == 'pending' and prev_start and not (prev_start > wo.date_planned_start):
+                    infos.append({
+                        'color': 'text-primary',
+                        'msg': _("Waiting the previous work order, planned from %(start)s to %(end)s",
+                            start=format_datetime(self.env, prev_start, dt_format=False),
+                            end=format_datetime(self.env, prev_finished, dt_format=False))
+                    })
+                if wo.date_planned_finished < fields.Datetime.now():
+                    infos.append({
+                        'color': 'text-warning',
+                        'msg': _("The work order should have already been processed.")
+                    })
+                if prev_start and prev_start > wo.date_planned_start:
+                    infos.append({
+                        'color': 'text-danger',
+                        'msg': _("Scheduled before the previous work order, planned from %(start)s to %(end)s",
+                            start=format_datetime(self.env, prev_start, dt_format=False),
+                            end=format_datetime(self.env, prev_finished, dt_format=False))
+                    })
+                if conflicted_dict.get(wo.id):
+                    infos.append({
+                        'color': 'text-danger',
+                        'msg': _("Planned at the same time than other workorder(s) at %s", wo.workcenter_id.display_name)
+                    })
+            color_icon = infos and infos[-1]['color'] or False
+            wo.show_json_popover = bool(color_icon)
+            wo.json_popover = json.dumps({
+                'infos': infos,
+                'color': color_icon,
+                'icon': 'fa-exclamation-triangle' if color_icon in ['text-warning', 'text-danger'] else 'fa-info-circle',
+                'replan': color_icon not in [False, 'text-primary']
+            })
+
+    @api.depends('production_id.lot_producing_id')
+    def _compute_finished_lot_id(self):
+        for workorder in self:
+            workorder.finished_lot_id = workorder.production_id.lot_producing_id
+
+    def _set_finished_lot_id(self):
+        for workorder in self:
+            workorder.production_id.lot_producing_id = workorder.finished_lot_id
+
+    @api.depends('production_id.qty_producing')
+    def _compute_qty_producing(self):
+        for workorder in self:
+            workorder.qty_producing = workorder.production_id.qty_producing
+
+    def _set_qty_producing(self):
+        for workorder in self:
+            workorder.production_id.qty_producing = workorder.qty_producing
+            workorder.production_id._set_qty_producing()
+
+    # Both `date_planned_start` and `date_planned_finished` are related fields on `leave_id`. Let's say
+    # we slide a workorder on a gantt view, a single call to write is made with both
+    # fields Changes. As the ORM doesn't batch the write on related fields and instead
+    # makes multiple call, the constraint check_dates() is raised.
+    # That's why the compute and set methods are needed. to ensure the dates are updated
+    # in the same time.
+    @api.depends('leave_id')
+    def _compute_dates_planned(self):
+        for workorder in self:
+            workorder.date_planned_start = workorder.leave_id.date_from
+            workorder.date_planned_finished = workorder.leave_id.date_to
+
+    def _set_dates_planned(self):
+        date_from = self[0].date_planned_start
+        date_to = self[0].date_planned_finished
+        self.mapped('leave_id').write({
+            'date_from': date_from,
+            'date_to': date_to,
+        })
+
     def name_get(self):
-        return [(wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)) for wo in self]
+        res = []
+        for wo in self:
+            if len(wo.production_id.workorder_ids) == 1:
+                res.append((wo.id, "%s - %s - %s" % (wo.production_id.name, wo.product_id.name, wo.name)))
+            else:
+                res.append((wo.id, "%s - %s - %s - %s" % (wo.production_id.workorder_ids.ids.index(wo.id) + 1, wo.production_id.name, wo.product_id.name, wo.name)))
+        return res
 
-    @api.one
-    @api.depends('production_id.product_qty', 'qty_produced')
+    def unlink(self):
+        # Removes references to workorder to avoid Validation Error
+        (self.mapped('move_raw_ids') | self.mapped('move_finished_ids')).write({'workorder_id': False})
+        self.mapped('leave_id').unlink()
+        mo_dirty = self.production_id.filtered(lambda mo: mo.state in ("confirmed", "progress", "to_close"))
+        res = super().unlink()
+        # We need to go through `_action_confirm` for all workorders of the current productions to
+        # make sure the links between them are correct (`next_work_order_id` could be obsolete now).
+        mo_dirty.workorder_ids._action_confirm()
+        return res
+
+    @api.depends('production_id.product_qty', 'qty_produced', 'production_id.product_uom_id')
     def _compute_is_produced(self):
-        self.is_produced = self.qty_produced >= self.production_id.product_qty
+        self.is_produced = False
+        for order in self.filtered(lambda p: p.production_id and p.production_id.product_uom_id):
+            rounding = order.production_id.product_uom_id.rounding
+            order.is_produced = float_compare(order.qty_produced, order.production_id.product_qty, precision_rounding=rounding) >= 0
 
-    @api.one
     @api.depends('time_ids.duration', 'qty_produced')
     def _compute_duration(self):
-        self.duration = sum(self.time_ids.mapped('duration'))
-        self.duration_unit = round(self.duration / max(self.qty_produced, 1), 2)  # rounding 2 because it is a time
-        if self.duration_expected:
-            self.duration_percent = 100 * (self.duration_expected - self.duration) / self.duration_expected
-        else:
-            self.duration_percent = 0
-
-    def _compute_is_user_working(self):
-        """ Checks whether the current user is working """
         for order in self:
+            order.duration = sum(order.time_ids.mapped('duration'))
+            order.duration_unit = round(order.duration / max(order.qty_produced, 1), 2)  # rounding 2 because it is a time
+            if order.duration_expected:
+                order.duration_percent = 100 * (order.duration_expected - order.duration) / order.duration_expected
+            else:
+                order.duration_percent = 0
+
+    @api.depends('duration', 'duration_expected', 'state')
+    def _compute_progress(self):
+        for order in self:
+            if order.state == 'done':
+                order.progress = 100
+            elif order.duration_expected:
+                order.progress = order.duration * 100 / order.duration_expected
+            else:
+                order.progress = 0
+
+    def _compute_working_users(self):
+        """ Checks whether the current user is working, all the users currently working and the last user that worked. """
+        for order in self:
+            order.working_user_ids = [(4, order.id) for order in order.time_ids.filtered(lambda time: not time.date_end).sorted('date_start').mapped('user_id')]
+            if order.working_user_ids:
+                order.last_working_user_id = order.working_user_ids[-1]
+            elif order.time_ids:
+                order.last_working_user_id = order.time_ids.sorted('date_end')[-1].user_id
+            else:
+                order.last_working_user_id = False
             if order.time_ids.filtered(lambda x: (x.user_id.id == self.env.user.id) and (not x.date_end) and (x.loss_type in ('productive', 'performance'))):
                 order.is_user_working = True
             else:
                 order.is_user_working = False
 
-    @api.depends('production_id', 'workcenter_id', 'production_id.bom_id')
-    def _compute_production_messages(self):
-        ProductionMessage = self.env['mrp.message']
-        for workorder in self:
-            domain = [
-                ('valid_until', '>=', fields.Date.today()),
-                '|', ('workcenter_id', '=', False), ('workcenter_id', '=', workorder.workcenter_id.id),
-                '|', '|', '|',
-                ('product_id', '=', workorder.product_id.id),
-                '&', ('product_id', '=', False), ('product_tmpl_id', '=', workorder.product_id.product_tmpl_id.id),
-                ('bom_id', '=', workorder.production_id.bom_id.id),
-                ('routing_id', '=', workorder.operation_id.routing_id.id)]
-            messages = ProductionMessage.search(domain).mapped('message')
-            workorder.production_messages = "<br/>".join(messages) or False
-
-    @api.multi
     def _compute_scrap_move_count(self):
         data = self.env['stock.scrap'].read_group([('workorder_id', 'in', self.ids)], ['workorder_id'], ['workorder_id'])
         count_data = dict((item['workorder_id'][0], item['workorder_id_count']) for item in data)
         for workorder in self:
             workorder.scrap_count = count_data.get(workorder.id, 0)
 
-    @api.multi
-    @api.depends('date_planned_finished', 'production_id.date_planned_finished')
-    def _compute_color(self):
-        late_orders = self.filtered(lambda x: x.production_id.date_planned_finished and x.date_planned_finished > x.production_id.date_planned_finished)
-        for order in late_orders:
-            order.color = 4
-        for order in (self - late_orders):
-            order.color = 2
+    @api.onchange('date_planned_finished')
+    def _onchange_date_planned_finished(self):
+        if self.date_planned_start and self.date_planned_finished:
+            diff = self.date_planned_finished - self.date_planned_start
+            self.duration_expected = diff.total_seconds() / 60
 
-    @api.onchange('qty_producing')
-    def _onchange_qty_producing(self):
-        """ Update stock.move.lot records, according to the new qty currently
-        produced. """
-        moves = self.move_raw_ids.filtered(lambda move: move.state not in ('done', 'cancel') and move.product_id.tracking != 'none' and move.product_id.id != self.production_id.product_id.id)
-        for move in moves:
-            move_lots = self.active_move_line_ids.filtered(lambda move_lot: move_lot.move_id == move)
-            if not move_lots:
-                continue
-            new_qty = move.unit_factor * self.qty_producing
-            if move.product_id.tracking == 'lot':
-                move_lots[0].product_qty = new_qty
-                move_lots[0].qty_done = new_qty
-            elif move.product_id.tracking == 'serial':
-                # Create extra pseudo record
-                qty_todo = new_qty - sum(move_lots.mapped('qty_done'))
-                if float_compare(qty_todo, 0.0, precision_rounding=move.product_uom.rounding) > 0:
-                    while float_compare(qty_todo, 0.0, precision_rounding=move.product_uom.rounding) > 0:
-                        self.active_move_line_ids += self.env['stock.move.line'].new({
-                            'move_id': move.id,
-                            'product_id': move.product_id.id,
-                            'lot_id': False,
-                            'product_uom_qty': 0.0,
-                            'product_uom_id': move.product_uom.id,
-                            'qty_done': min(1.0, qty_todo),
-                            'workorder_id': self.id,
-                            'done_wo': False,
-                            'location_id': move.location_id.id,
-                            'location_dest_id': move.location_dest_id.id,
-                        })
-                        qty_todo -= 1
-                elif float_compare(qty_todo, 0.0, precision_rounding=move.product_uom.rounding) < 0:
-                    qty_todo = abs(qty_todo)
-                    for move_lot in move_lots:
-                        if qty_todo <= 0:
-                            break
-                        if not move_lot.lot_id and qty_todo >= move_lot.qty_done:
-                            qty_todo = qty_todo - move_lot.qty_done
-                            self.active_move_line_ids -= move_lot  # Difference operator
-                        else:
-                            #move_lot.product_qty = move_lot.product_qty - qty_todo
-                            if move_lot.qty_done - qty_todo > 0:
-                                move_lot.qty_done = move_lot.qty_done - qty_todo
-                            else:
-                                move_lot.qty_done = 0
-                            qty_todo = 0
+    @api.onchange('operation_id')
+    def _onchange_operation_id(self):
+        if self.operation_id:
+            self.name = self.operation_id.name
+            self.workcenter_id = self.operation_id.workcenter_id.id
 
-    @api.multi
+    @api.onchange('date_planned_start', 'duration_expected')
+    def _onchange_date_planned_start(self):
+        if self.date_planned_start and self.duration_expected:
+            self.date_planned_finished = self.date_planned_start + relativedelta(minutes=self.duration_expected)
+
+    @api.onchange('operation_id', 'workcenter_id', 'qty_production')
+    def _onchange_expected_duration(self):
+        self.duration_expected = self._get_duration_expected()
+
     def write(self, values):
-        if ('date_planned_start' in values or 'date_planned_finished' in values) and any(workorder.state == 'done' for workorder in self):
+        if 'production_id' in values:
+            raise UserError(_('You cannot link this work order to another manufacturing order.'))
+        if 'workcenter_id' in values:
+            for workorder in self:
+                if workorder.workcenter_id.id != values['workcenter_id']:
+                    if workorder.state in ('progress', 'done', 'cancel'):
+                        raise UserError(_('You cannot change the workcenter of a work order that is in progress or done.'))
+                    workorder.leave_id.resource_id = self.env['mrp.workcenter'].browse(values['workcenter_id']).resource_id
+        if any(k not in ['time_ids', 'duration_expected', 'next_work_order_id'] for k in values.keys()) and any(workorder.state == 'done' for workorder in self):
             raise UserError(_('You can not change the finished work order.'))
+        if 'date_planned_start' in values or 'date_planned_finished' in values:
+            for workorder in self:
+                start_date = fields.Datetime.to_datetime(values.get('date_planned_start')) or workorder.date_planned_start
+                end_date = fields.Datetime.to_datetime(values.get('date_planned_finished')) or workorder.date_planned_finished
+                if start_date and end_date and start_date > end_date:
+                    raise UserError(_('The planned end date of the work order cannot be prior to the planned start date, please correct this to save the work order.'))
+                # Update MO dates if the start date of the first WO or the
+                # finished date of the last WO is update.
+                if workorder == workorder.production_id.workorder_ids[0] and 'date_planned_start' in values:
+                    if values['date_planned_start']:
+                        workorder.production_id.with_context(force_date=True).write({
+                            'date_planned_start': fields.Datetime.to_datetime(values['date_planned_start'])
+                        })
+                if workorder == workorder.production_id.workorder_ids[-1] and 'date_planned_finished' in values:
+                    if values['date_planned_finished']:
+                        workorder.production_id.with_context(force_date=True).write({
+                            'date_planned_finished': fields.Datetime.to_datetime(values['date_planned_finished'])
+                        })
         return super(MrpWorkorder, self).write(values)
 
-    def _generate_lot_ids(self):
-        """ Generate stock move lines """
-        self.ensure_one()
-        MoveLine = self.env['stock.move.line']
-        tracked_moves = self.move_raw_ids.filtered(
-            lambda move: move.state not in ('done', 'cancel') and move.product_id.tracking != 'none' and move.product_id != self.production_id.product_id and move.bom_line_id)
-        for move in tracked_moves:
-            qty = move.unit_factor * self.qty_producing
-            if move.product_id.tracking == 'serial':
-                while float_compare(qty, 0.0, precision_rounding=move.product_uom.rounding) > 0:
-                    MoveLine.create({
-                        'move_id': move.id,
-                        'product_uom_qty': 0,
-                        'product_uom_id': move.product_uom.id,
-                        'qty_done': min(1, qty),
-                        'production_id': self.production_id.id,
-                        'workorder_id': self.id,
-                        'product_id': move.product_id.id,
-                        'done_wo': False,
-                        'location_id': move.location_id.id,
-                        'location_dest_id': move.location_dest_id.id,
+    @api.model_create_multi
+    def create(self, values):
+        res = super().create(values)
+        # Auto-confirm manually added workorders.
+        # We need to go through `_action_confirm` for all workorders of the current productions to
+        # make sure the links between them are correct.
+        to_confirm = res.filtered(lambda wo: wo.production_id.state in ("confirmed", "progress", "to_close"))
+        to_confirm = to_confirm.production_id.workorder_ids
+        to_confirm._action_confirm()
+        return res
+
+    def _action_confirm(self):
+        workorders_by_production = defaultdict(lambda: self.env['mrp.workorder'])
+        for workorder in self:
+            workorders_by_production[workorder.production_id] |= workorder
+
+        for production, workorders in workorders_by_production.items():
+            workorders_by_bom = defaultdict(lambda: self.env['mrp.workorder'])
+            bom = self.env['mrp.bom']
+            moves = production.move_raw_ids | production.move_finished_ids
+
+            for workorder in self:
+                if workorder.operation_id.bom_id:
+                    bom = workorder.operation_id.bom_id
+                if not bom:
+                    bom = workorder.production_id.bom_id
+                previous_workorder = workorders_by_bom[bom][-1:]
+                previous_workorder.next_work_order_id = workorder.id
+                workorders_by_bom[bom] |= workorder
+
+                moves.filtered(lambda m: m.operation_id == workorder.operation_id).write({
+                    'workorder_id': workorder.id
+                })
+
+            exploded_boms, dummy = production.bom_id.explode(production.product_id, 1, picking_type=production.bom_id.picking_type_id)
+            exploded_boms = {b[0]: b[1] for b in exploded_boms}
+            for move in moves:
+                if move.workorder_id:
+                    continue
+                bom = move.bom_line_id.bom_id
+                while bom and bom not in workorders_by_bom:
+                    bom_data = exploded_boms.get(bom, {})
+                    bom = bom_data.get('parent_line') and bom_data['parent_line'].bom_id or False
+                if bom in workorders_by_bom:
+                    move.write({
+                        'workorder_id': workorders_by_bom[bom][-1:].id
                     })
-                    qty -= 1
-            else:
-                MoveLine.create({
-                    'move_id': move.id,
-                    'product_uom_qty': 0,
-                    'product_uom_id': move.product_uom.id,
-                    'qty_done': qty,
-                    'product_id': move.product_id.id,
-                    'production_id': self.production_id.id,
-                    'workorder_id': self.id,
-                    'done_wo': False,
-                    'location_id': move.location_id.id,
-                    'location_dest_id': move.location_dest_id.id,
+                else:
+                    move.write({
+                        'workorder_id': workorders_by_bom[production.bom_id][-1:].id
                     })
 
-    def _assign_default_final_lot_id(self):
-        self.final_lot_id = self.env['stock.production.lot'].search([('use_next_on_work_order_id', '=', self.id)],
-                                                                    order='create_date', limit=1)
+            for workorders in workorders_by_bom.values():
+                if workorders[0].state == 'pending':
+                    workorders[0].state = 'ready'
+                for workorder in workorders:
+                    workorder._start_nextworkorder()
 
-    @api.multi
-    def record_production(self):
-        self.ensure_one()
-        if self.qty_producing <= 0:
-            raise UserError(_('Please set the quantity you are currently producing. It should be different from zero.'))
+    def _get_byproduct_move_to_update(self):
+        return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
 
-        if (self.production_id.product_id.tracking != 'none') and not self.final_lot_id:
-            raise UserError(_('You should provide a lot/serial number for the final product'))
-
-        # Update quantities done on each raw material line
-        # For each untracked component without any 'temporary' move lines,
-        # (the new workorder tablet view allows registering consumed quantities for untracked components)
-        # we assume that only the theoretical quantity was used
-        raw_moves = self.move_raw_ids.filtered(lambda x: (x.has_tracking == 'none') and (x.state not in ('done', 'cancel')) and x.bom_line_id)
-        for move in raw_moves:
-            if move.unit_factor and not move.move_line_ids.filtered(lambda m: not m.done_wo):
-                rounding = move.product_uom.rounding
-                move.quantity_done += float_round(self.qty_producing * move.unit_factor, precision_rounding=rounding)
-
-        # Transfer quantities from temporary to final move lots or make them final
-        for move_line in self.active_move_line_ids:
-            # Check if move_line already exists
-            if move_line.qty_done <= 0:  # rounding...
-                move_line.sudo().unlink()
-                continue
-            if move_line.product_id.tracking != 'none' and not move_line.lot_id:
-                raise UserError(_('You should provide a lot/serial number for a component'))
-            # Search other move_line where it could be added:
-            lots = self.move_line_ids.filtered(lambda x: (x.lot_id.id == move_line.lot_id.id) and (not x.lot_produced_id) and (not x.done_move) and (x.product_id == move_line.product_id))
-            if lots:
-                lots[0].qty_done += move_line.qty_done
-                lots[0].lot_produced_id = self.final_lot_id.id
-                move_line.sudo().unlink()
-            else:
-                move_line.lot_produced_id = self.final_lot_id.id
-                move_line.done_wo = True
-
-        # One a piece is produced, you can launch the next work order
-        if self.next_work_order_id.state == 'pending':
+    def _start_nextworkorder(self):
+        rounding = self.product_id.uom_id.rounding
+        if self.next_work_order_id.state == 'pending' and (
+                (self.operation_id.batch == 'no' and
+                 float_compare(self.qty_production, self.qty_produced, precision_rounding=rounding) <= 0) or
+                (self.operation_id.batch == 'yes' and
+                 float_compare(self.operation_id.batch_size, self.qty_produced, precision_rounding=rounding) <= 0)):
+            self.next_work_order_id.state = 'ready'
+        if self.state == 'done' and self.next_work_order_id.state == 'pending':
             self.next_work_order_id.state = 'ready'
 
-        self.move_line_ids.filtered(
-            lambda move_line: not move_line.done_move and not move_line.lot_produced_id and move_line.qty_done > 0
-        ).write({
-            'lot_produced_id': self.final_lot_id.id,
-            'lot_produced_qty': self.qty_producing
-        })
+    @api.model
+    def gantt_unavailability(self, start_date, end_date, scale, group_bys=None, rows=None):
+        """Get unavailabilities data to display in the Gantt view."""
+        workcenter_ids = set()
 
-        # If last work order, then post lots used
-        # TODO: should be same as checking if for every workorder something has been done?
-        if not self.next_work_order_id:
-            production_move = self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id == self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
-            if production_move.has_tracking != 'none':
-                move_line = production_move.move_line_ids.filtered(lambda x: x.lot_id.id == self.final_lot_id.id)
-                if move_line:
-                    move_line.product_uom_qty += self.qty_producing
-                else:
-                    move_line.create({'move_id': production_move.id,
-                                 'product_id': production_move.product_id.id,
-                                 'lot_id': self.final_lot_id.id,
-                                 'product_uom_qty': self.qty_producing,
-                                 'product_uom_id': production_move.product_uom.id,
-                                 'qty_done': self.qty_producing,
-                                 'workorder_id': self.id,
-                                 'location_id': production_move.location_id.id, 
-                                 'location_dest_id': production_move.location_dest_id.id,
-                                 })
-            else:
-                production_move.quantity_done += self.qty_producing
-        # Update workorder quantity produced
-        self.qty_produced += self.qty_producing
+        def traverse_inplace(func, row, **kargs):
+            res = func(row, **kargs)
+            if res:
+                kargs.update(res)
+            for row in row.get('rows'):
+                traverse_inplace(func, row, **kargs)
 
-        if self.final_lot_id:
-            self.final_lot_id.use_next_on_work_order_id = self.next_work_order_id
-            self.final_lot_id = False
+        def search_workcenter_ids(row):
+            if row.get('groupedBy') and row.get('groupedBy')[0] == 'workcenter_id' and row.get('resId'):
+                workcenter_ids.add(row.get('resId'))
 
-        # Set a qty producing
-        if self.qty_produced >= self.production_id.product_qty:
-            self.qty_producing = 0
-        elif self.production_id.product_id.tracking == 'serial':
-            self._assign_default_final_lot_id()
-            self.qty_producing = 1.0
-            self._generate_lot_ids()
-        else:
-            self.qty_producing = self.production_id.product_qty - self.qty_produced
-            self._generate_lot_ids()
+        for row in rows:
+            traverse_inplace(search_workcenter_ids, row)
+        start_datetime = fields.Datetime.to_datetime(start_date)
+        end_datetime = fields.Datetime.to_datetime(end_date)
+        workcenters = self.env['mrp.workcenter'].browse(workcenter_ids)
+        unavailability_mapping = workcenters._get_unavailability_intervals(start_datetime, end_datetime)
 
-        if self.qty_produced >= self.production_id.product_qty:
-            if self.next_work_order_id and self.production_id.product_id.tracking != 'none':
-                self.next_work_order_id._assign_default_final_lot_id()
-            self.button_finish()
-        return True
+        # Only notable interval (more than one case) is send to the front-end (avoid sending useless information)
+        cell_dt = (scale in ['day', 'week'] and timedelta(hours=1)) or (scale == 'month' and timedelta(days=1)) or timedelta(days=28)
 
-    @api.multi
+        def add_unavailability(row, workcenter_id=None):
+            if row.get('groupedBy') and row.get('groupedBy')[0] == 'workcenter_id' and row.get('resId'):
+                workcenter_id = row.get('resId')
+            if workcenter_id:
+                notable_intervals = filter(lambda interval: interval[1] - interval[0] >= cell_dt, unavailability_mapping[workcenter_id])
+                row['unavailabilities'] = [{'start': interval[0], 'stop': interval[1]} for interval in notable_intervals]
+                return {'workcenter_id': workcenter_id}
+
+        for row in rows:
+            traverse_inplace(add_unavailability, row)
+        return rows
+
     def button_start(self):
-        # TDE CLEANME
+        self.ensure_one()
+        # As button_start is automatically called in the new view
+        if self.state in ('done', 'cancel'):
+            return True
+
+        if self.product_tracking == 'serial':
+            self.qty_producing = 1.0
+
+        # Need a loss in case of the real time exceeding the expected
         timeline = self.env['mrp.workcenter.productivity']
-        if self.duration < self.duration_expected:
+        if not self.duration_expected or self.duration < self.duration_expected:
             loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','productive')], limit=1)
             if not len(loss_id):
                 raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
@@ -386,31 +493,63 @@ class MrpWorkorder(models.Model):
             loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','performance')], limit=1)
             if not len(loss_id):
                 raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
-        for workorder in self:
-            if workorder.production_id.state != 'progress':
-                workorder.production_id.write({
-                    'state': 'progress',
-                    'date_start': datetime.now(),
-                })
-            timeline.create({
-                'workorder_id': workorder.id,
-                'workcenter_id': workorder.workcenter_id.id,
-                'description': _('Time Tracking: ')+self.env.user.name,
-                'loss_id': loss_id[0].id,
+        if self.production_id.state != 'progress':
+            self.production_id.write({
                 'date_start': datetime.now(),
-                'user_id': self.env.user.id
             })
-        return self.write({'state': 'progress',
-                    'date_start': datetime.now(),
+        timeline.create({
+            'workorder_id': self.id,
+            'workcenter_id': self.workcenter_id.id,
+            'description': _('Time Tracking: ') + self.env.user.name,
+            'loss_id': loss_id[0].id,
+            'date_start': datetime.now(),
+            'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id
+            'company_id': self.company_id.id,
         })
+        if self.state == 'progress':
+            return True
+        start_date = datetime.now()
+        vals = {
+            'state': 'progress',
+            'date_start': start_date,
+        }
+        if not self.leave_id:
+            leave = self.env['resource.calendar.leaves'].create({
+                'name': self.display_name,
+                'calendar_id': self.workcenter_id.resource_calendar_id.id,
+                'date_from': start_date,
+                'date_to': start_date + relativedelta(minutes=self.duration_expected),
+                'resource_id': self.workcenter_id.resource_id.id,
+                'time_type': 'other'
+            })
+            vals['leave_id'] = leave.id
+            return self.write(vals)
+        else:
+            vals['date_planned_start'] = start_date
+            if self.date_planned_finished < start_date:
+                vals['date_planned_finished'] = start_date
+            return self.write(vals)
 
-    @api.multi
     def button_finish(self):
-        self.ensure_one()
-        self.end_all()
-        return self.write({'state': 'done', 'date_finished': fields.Datetime.now()})
+        end_date = datetime.now()
+        for workorder in self:
+            if workorder.state in ('done', 'cancel'):
+                continue
+            workorder.end_all()
+            vals = {
+                'state': 'done',
+                'date_finished': end_date,
+                'date_planned_finished': end_date
+            }
+            if not workorder.date_start:
+                vals['date_start'] = end_date
+            if not workorder.date_planned_start or end_date < workorder.date_planned_start:
+                vals['date_planned_start'] = end_date
+            workorder.write(vals)
 
-    @api.multi
+            workorder._start_nextworkorder()
+        return True
+
     def end_previous(self, doall=False):
         """
         @param: doall:  This will close all open time lines on the open work orders when doall = True, otherwise
@@ -443,57 +582,185 @@ class MrpWorkorder(models.Model):
             not_productive_timelines.write({'loss_id': loss_id.id})
         return True
 
-    @api.multi
     def end_all(self):
         return self.end_previous(doall=True)
 
-    @api.multi
     def button_pending(self):
         self.end_previous()
         return True
 
-    @api.multi
     def button_unblock(self):
         for order in self:
             order.workcenter_id.unblock()
         return True
 
-    @api.multi
     def action_cancel(self):
+        self.leave_id.unlink()
         return self.write({'state': 'cancel'})
 
-    @api.multi
+    def action_replan(self):
+        """Replan a work order.
+
+        It actually replans every  "ready" or "pending"
+        work orders of the linked manufacturing orders.
+        """
+        for production in self.production_id:
+            production._plan_workorders(replan=True)
+        return True
+
     def button_done(self):
         if any([x.state in ('done', 'cancel') for x in self]):
-            raise UserError(_('A Manufacturing Order is already done or cancelled!'))
+            raise UserError(_('A Manufacturing Order is already done or cancelled.'))
         self.end_all()
-        return self.write({'state': 'done',
-                    'date_finished': datetime.now()})
+        end_date = datetime.now()
+        return self.write({
+            'state': 'done',
+            'date_finished': end_date,
+            'date_planned_finished': end_date,
+        })
 
-    @api.multi
     def button_scrap(self):
         self.ensure_one()
         return {
             'name': _('Scrap'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'stock.scrap',
             'view_id': self.env.ref('stock.stock_scrap_form_view2').id,
             'type': 'ir.actions.act_window',
-            'context': {'default_workorder_id': self.id, 'default_production_id': self.production_id.id, 'product_ids': (self.production_id.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.production_id.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids},
-            # 'context': {'product_ids': self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')).mapped('product_id').ids + [self.production_id.product_id.id]},
+            'context': {'default_company_id': self.production_id.company_id.id,
+                        'default_workorder_id': self.id,
+                        'default_production_id': self.production_id.id,
+                        'product_ids': (self.production_id.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel')) | self.production_id.move_finished_ids.filtered(lambda x: x.state == 'done')).mapped('product_id').ids},
             'target': 'new',
         }
 
-    @api.multi
     def action_see_move_scrap(self):
         self.ensure_one()
         action = self.env.ref('stock.action_stock_scrap').read()[0]
         action['domain'] = [('workorder_id', '=', self.id)]
         return action
 
-    @api.multi
+    def action_open_wizard(self):
+        self.ensure_one()
+        action = self.env.ref('mrp.mrp_workorder_mrp_production_form').read()[0]
+        action['res_id'] = self.id
+        return action
+
     @api.depends('qty_production', 'qty_produced')
     def _compute_qty_remaining(self):
         for wo in self:
-            wo.qty_remaining = wo.qty_production - wo.qty_produced
+            wo.qty_remaining = float_round(wo.qty_production - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding)
+
+    def _get_duration_expected(self, alternative_workcenter=False):
+        self.ensure_one()
+        if not self.workcenter_id:
+            return False
+        qty_production = self.production_id.product_uom_id._compute_quantity(self.qty_production, self.production_id.product_id.uom_id)
+        cycle_number = float_round(qty_production / self.workcenter_id.capacity, precision_digits=0, rounding_method='UP')
+        if alternative_workcenter:
+            # TODO : find a better alternative : the settings of workcenter can change
+            duration_expected_working = (self.duration_expected - self.workcenter_id.time_start - self.workcenter_id.time_stop) * self.workcenter_id.time_efficiency / (100.0 * cycle_number)
+            if duration_expected_working < 0:
+                duration_expected_working = 0
+            return alternative_workcenter.time_start + alternative_workcenter.time_stop + cycle_number * duration_expected_working * 100.0 / alternative_workcenter.time_efficiency
+        time_cycle = self.operation_id and self.operation_id.time_cycle or 60.0
+        return self.workcenter_id.time_start + self.workcenter_id.time_stop + cycle_number * time_cycle * 100.0 / self.workcenter_id.time_efficiency
+
+    def _get_conflicted_workorder_ids(self):
+        """Get conlicted workorder(s) with self.
+
+        Conflict means having two workorders in the same time in the same workcenter.
+
+        :return: defaultdict with key as workorder id of self and value as related conflicted workorder
+        """
+        self.flush(['state', 'date_planned_start', 'date_planned_finished', 'workcenter_id'])
+        sql = """
+            SELECT wo1.id, wo2.id
+            FROM mrp_workorder wo1, mrp_workorder wo2
+            WHERE
+                wo1.id IN %s
+                AND wo1.state IN ('pending','ready')
+                AND wo2.state IN ('pending','ready')
+                AND wo1.id != wo2.id
+                AND wo1.workcenter_id = wo2.workcenter_id
+                AND (DATE_TRUNC('second', wo2.date_planned_start), DATE_TRUNC('second', wo2.date_planned_finished))
+                    OVERLAPS (DATE_TRUNC('second', wo1.date_planned_start), DATE_TRUNC('second', wo1.date_planned_finished))
+        """
+        self.env.cr.execute(sql, [tuple(self.ids)])
+        res = defaultdict(list)
+        for wo1, wo2 in self.env.cr.fetchall():
+            res[wo1].append(wo2)
+        return res
+
+    @api.model
+    def _prepare_component_quantity(self, move, qty_producing):
+        """ helper that computes quantity to consume (or to create in case of byproduct)
+        depending on the quantity producing and the move's unit factor"""
+        if move.product_id.tracking == 'serial':
+            uom = move.product_id.uom_id
+        else:
+            uom = move.product_uom
+        return move.product_uom._compute_quantity(
+            qty_producing * move.unit_factor,
+            uom,
+            round=False
+        )
+
+    def _update_finished_move(self):
+        """ Update the finished move & move lines in order to set the finished
+        product lot on it as well as the produced quantity. This method get the
+        information either from the last workorder or from the Produce wizard."""
+        production_move = self.production_id.move_finished_ids.filtered(
+            lambda move: move.product_id == self.product_id and
+            move.state not in ('done', 'cancel')
+        )
+        if production_move and production_move.product_id.tracking != 'none':
+            if not self.finished_lot_id:
+                raise UserError(_('You need to provide a lot for the finished product.'))
+            move_line = production_move.move_line_ids.filtered(
+                lambda line: line.lot_id.id == self.finished_lot_id.id
+            )
+            if move_line:
+                if self.product_id.tracking == 'serial':
+                    raise UserError(_('You cannot produce the same serial number twice.'))
+                move_line.product_uom_qty += self.qty_producing
+                move_line.qty_done += self.qty_producing
+            else:
+                location_dest_id = production_move.location_dest_id._get_putaway_strategy(self.product_id).id or production_move.location_dest_id.id
+                move_line.create({
+                    'move_id': production_move.id,
+                    'product_id': production_move.product_id.id,
+                    'lot_id': self.finished_lot_id.id,
+                    'product_uom_qty': self.qty_producing,
+                    'product_uom_id': self.product_uom_id.id,
+                    'qty_done': self.qty_producing,
+                    'location_id': production_move.location_id.id,
+                    'location_dest_id': location_dest_id,
+                })
+        else:
+            rounding = production_move.product_uom.rounding
+            production_move._set_quantity_done(
+                float_round(self.qty_producing, precision_rounding=rounding)
+            )
+
+    def _strict_consumption_check(self):
+        if self.consumption == 'strict':
+            for move in self.move_raw_ids:
+                qty_done = 0.0
+                for line in move.move_line_ids:
+                    qty_done += line.product_uom_id._compute_quantity(line.qty_done, move.product_uom)
+                rounding = move.product_uom_id.rounding
+                if float_compare(qty_done, move.product_uom_qty, precision_rounding=rounding) != 0:
+                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.', move.product_id.name))
+
+    def _check_sn_uniqueness(self):
+        """ Alert the user if the serial number as already been produced """
+        if self.product_tracking == 'serial' and self.finished_lot_id:
+            sml = self.env['stock.move.line'].search_count([
+                ('lot_id', '=', self.finished_lot_id.id),
+                ('location_id.usage', '=', 'production'),
+                ('qty_done', '=', 1),
+                ('state', '=', 'done')
+            ])
+            if sml:
+                raise UserError(_('This serial number for product %s has already been produced', self.product_id.name))

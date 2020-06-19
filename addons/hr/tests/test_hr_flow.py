@@ -6,6 +6,22 @@ from odoo.addons.hr.tests.common import TestHrCommon
 
 class TestHrFlow(TestHrCommon):
 
+    def setUp(self):
+        super(TestHrFlow, self).setUp()
+        self.dep_rd = self.env['hr.department'].create({
+            'name': 'Research & Development',
+        })
+        self.job_developer = self.env['hr.job'].create({
+            'name': 'Experienced Developer',
+            'department_id': self.dep_rd.id,
+            'no_of_recruitment': 5,
+        })
+        self.employee_niv = self.env['hr.employee'].create({
+            'name': 'Sharlene Rhodes',
+        })
+        self.job_developer = self.job_developer.with_user(self.res_users_hr_officer.id)
+        self.employee_niv = self.employee_niv.with_user(self.res_users_hr_officer.id)
+
     def test_open2recruit2close_job(self):
 
         """ Opening the job position for "Developer" and checking the job status and recruitment count. """

@@ -6,10 +6,9 @@
         <field name="view_mode">tree,form,kanban</field>
         <field name="context">{'search_default_group_by_user': True, 'search_default_group_by_definition': True}</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a goal.
-            </p>
-            <p>
+            <p class="o_view_nocontent_smiling_face">
+                Create a new goal
+            </p><p>
                 A goal is defined by a user and a goal definition.
                 Goals can be created automatically by using challenges.
             </p>
@@ -118,8 +117,8 @@
                 <group expand="0" string="Group By">
                     <filter name="group_by_user" string="User" domain="[]" context="{'group_by':'user_id'}"/>
                     <filter name="group_by_definition" string="Goal Definition" domain="[]" context="{'group_by':'definition_id'}"/>
-                    <filter string="State" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="End Date" domain="[]" context="{'group_by':'end_date'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="End Date" name="enddate" domain="[]" context="{'group_by':'end_date'}"/>
                 </group>
             </search>
         </field>
@@ -129,13 +128,14 @@
         <field name="name">Goal Kanban View</field>
         <field name="model">gamification.goal</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey">
+            <kanban class="oe_background_grey" create="false">
                 <field name="definition_id"/>
                 <field name="user_id"/>
                 <field name="current"/>
                 <field name="completeness"/>
                 <field name="state"/>
                 <field name="target_goal"/>
+                <field name="definition_description"/>
                 <field name="definition_condition"/>
                 <field name="definition_suffix"/>
                 <field name="definition_display"/>
@@ -144,22 +144,24 @@
                 <field name="last_update"/>
                 <templates>
                     <t t-name="kanban-tooltip">
-                       <field name="definition_description"/>
+                        <ul class="oe_kanban_tooltip">
+                            <li><t t-esc="record.definition_description.value" /></li>
+                        </ul>
                     </t>
                     <t t-name="kanban-box">
-                        <div t-attf-class="oe_kanban_card o_kanban_gamification #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click o_kanban_gamification #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'failed' ? 'oe_kanban_color_2' : ''} #{record.end_date.raw_value &lt; record.last_update.raw_value &amp; record.state.raw_value == 'reached' ? 'oe_kanban_color_5' : ''}">
                             <div class="o_kanban_content">
                                 <p><strong><h4 class="oe_goal_name text-center" tooltip="kanban-tooltip"><field name="definition_id" /></h4></strong></p>
-                                <div class="pull-left">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" />
+                                <div class="float-left">
+                                    <img class="o_image_24_cover" t-att-src="kanban_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
                                 </div>
                                 <field name="user_id" />
                                 <div class="o_goal_state_block">
                                     <t t-if="record.definition_display.raw_value == 'boolean'">
                                         <div class="o_goal_state text-center">
-                                            <t t-if="record.state.raw_value=='reached'"><i class="o_green fa fa-check fa-3x" title="Goal Reached"/></t>
-                                            <t t-if="record.state.raw_value=='inprogress'"><i class="fa fa-clock-o fa-3x" title="Goal in Progress"/></t>
-                                            <t t-if="record.state.raw_value=='failed'"><i class="o_red fa fa-times fa-3x" title="Goal Failed"/></t>
+                                            <t t-if="record.state.raw_value=='reached'"><i role="img" class="o_green fa fa-check fa-3x" title="Goal Reached" aria-label="Goal Reached"/></t>
+                                            <t t-if="record.state.raw_value=='inprogress'"><i role="img" class="fa fa-clock-o fa-3x" title="Goal in Progress" aria-label="Goal in Progress"/></t>
+                                            <t t-if="record.state.raw_value=='failed'"><i role="img" class="o_red fa fa-times fa-3x" title="Goal Failed" aria-label="Goal Failed"/></t>
                                         </div>
                                     </t>
                                     <t t-if="record.definition_display.raw_value == 'progress'">
@@ -199,10 +201,9 @@
         <field name="res_model">gamification.goal.definition</field>
         <field name="view_mode">tree,form</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a goal definition.
-            </p>
-            <p>
+            <p class="o_view_nocontent_smiling_face">
+                Create a new goal definition
+            </p><p>
                 A goal definition is a technical model of goal defining a condition to reach.
                 The dates, values to reach or users are defined in goal instance.
             </p>
@@ -236,34 +237,35 @@
                             <field name="description" class="oe_inline"/>
                         </div>
 
-                        <group string="How to compute the goal?">
+                        <group string="How to compute the goal?" name="compute_details">
 
                             <field widget="radio" name="computation_mode"/>
 
                             <!-- Hide the fields below if manually -->
                             <field name="model_id" class="oe_inline"
                                 attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}"/>
+                            <field name="model_inherited_ids" invisible="1"/>
                             <field name="field_id" class="oe_inline"
                                 attrs="{'invisible':[('computation_mode','!=','sum')], 'required':[('computation_mode','=','sum')]}"/>
                             <field name="field_date_id" class="oe_inline" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))]}"/>
                             <field name="domain" attrs="{'invisible':[('computation_mode','not in',('sum', 'count'))], 'required':[('computation_mode','in',('sum', 'count'))]}" class="oe_inline"/>
-                            <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}" placeholder="e.g. result = env['mail.followers'].search_count([('res_model', '=', 'mail.channel'), ('partner_id', '=', object.user_id.partner_id.id)])"/>
+                            <field name="compute_code" attrs="{'invisible':[('computation_mode','!=','python')], 'required':[('computation_mode','=','python')]}"/>
                             <field name="condition" widget="radio"/>
                         </group>
-                        <group string="Optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">
+                        <group string="Optimisation" name="optimisation" attrs="{'invisible': [('computation_mode', '!=', 'count')]}">
                             <field name="batch_mode" />
-                            <div colspan="4">In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain.</div>
+                            <div colspan="2">In batch mode, the domain is evaluated globally. If enabled, do not use keyword 'user' in above filter domain.</div>
                             <field name="batch_distinctive_field" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}"
                                 domain="[('model_id', '=', model_id)]" class="oe_inline" />
                             <field name="batch_user_expression" attrs="{'invisible': [('batch_mode', '=', False)], 'required':  [('batch_mode', '=', True)]}" class="oe_inline"
                                 placeholder="e.g. user.partner_id.id"/>
                         </group>
-                        <group string="Formating Options">
+                        <group string="Formating Options" name="format_options">
                             <field name="display_mode" widget="radio" />
                             <field name="suffix" placeholder="e.g. days" class="oe_inline"/>
                             <field name="monetary"/>
                         </group>
-                        <group string="Clickable Goals" attrs="{'invisible': [('computation_mode', '=', 'manually')]}">
+                        <group string="Clickable Goals" name="clickable_goals" attrs="{'invisible': [('computation_mode', '=', 'manually')]}">
                             <field name="action_id"  class="oe_inline"/>
                             <field name="res_id_field"  attrs="{'invisible': [('action_id', '=', False)]}" class="oe_inline"/>
                         </group>
@@ -282,8 +284,8 @@
                 <field name="model_id"/>
                 <field name="field_id"/>
                 <group expand="0" string="Group By">
-                    <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
-                    <filter string="Computation Mode" domain="[]" context="{'group_by':'computation_mode'}"/>
+                    <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
+                    <filter string="Computation Mode" name="computationmode" domain="[]" context="{'group_by':'computation_mode'}"/>
                 </group>
             </search>
         </field>

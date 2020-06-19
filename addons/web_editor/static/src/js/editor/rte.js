@@ -1,12 +1,13 @@
 odoo.define('web_editor.rte', function (require) {
 'use strict';
 
+var fonts = require('wysiwyg.fonts');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var Widget = require('web.Widget');
 var weContext = require('web_editor.context');
 var summernote = require('web_editor.summernote');
-var weWidgets = require('web_editor.widget');
+var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 
 var _t = core._t;
 
@@ -42,7 +43,19 @@ var History = function History($editable) {
             $editable.removeAttr('contentEditable').removeProp('contentEditable');
         }
 
-        $editable.html(oSnap.contents).scrollTop(oSnap.scrollTop);
+        $editable.trigger('content_will_be_destroyed');
+        var $tempDiv = $('<div/>', {html: oSnap.contents});
+        _.each($tempDiv.find('.o_temp_auto_element'), function (el) {
+            var $el = $(el);
+            var originalContent = $el.attr('data-temp-auto-element-original-content');
+            if (originalContent) {
+                $el.after(originalContent);
+            }
+            $el.remove();
+        });
+        $editable.html($tempDiv.html()).scrollTop(oSnap.scrollTop);
+        $editable.trigger('content_was_recreated');
+
         $('.oe_overlay').remove();
         $('.note-control-selection').hide();
 
@@ -157,7 +170,7 @@ var History = function History($editable) {
 
         if (aUndo[pos]) {
             pos = Math.min(pos, aUndo.length);
-            aUndo.splice(Math.max(pos,1), aUndo.length);
+            aUndo.splice(pos, aUndo.length);
         }
 
         // => make a snap when the user change editable zone (because: don't make snap for each keydown)
@@ -242,7 +255,7 @@ var RTEWidget = Widget.extend({
     /**
      * @constructor
      */
-    init: function (parent, getConfig) {
+    init: function (parent, params) {
         var self = this;
         this._super.apply(this, arguments);
 
@@ -255,9 +268,10 @@ var RTEWidget = Widget.extend({
             return res;
         };
 
-        this._getConfig = getConfig || this._getDefaultConfig;
+        this._getConfig = params && params.getConfig || this._getDefaultConfig;
+        this._saveElement = params && params.saveElement || this._saveElement;
 
-        weWidgets.computeFonts();
+        fonts.computeFonts();
     },
     /**
      * @override
@@ -269,6 +283,20 @@ var RTEWidget = Widget.extend({
 
         $.fn.carousel = this.edit_bootstrap_carousel;
 
+        $(document).on('click.rte keyup.rte', function () {
+            var current_range = {};
+            try {
+                current_range = range.create() || {};
+            } catch (e) {
+                // if range is on Restricted element ignore error
+            }
+            var $popover = $(current_range.sc).closest('[contenteditable]');
+            var popover_history = ($popover.data()||{}).NoteHistory;
+            if (!popover_history || popover_history === history) return;
+            var editor = $popover.parent('.note-editor');
+            $('button[data-event="undo"]', editor).attr('disabled', !popover_history.hasUndo());
+            $('button[data-event="redo"]', editor).attr('disabled', !popover_history.hasRedo());
+        });
         $(document).on('mousedown.rte activate.rte', this, this._onMousedown.bind(this));
         $(document).on('mouseup.rte', this, this._onMouseup.bind(this));
 
@@ -276,28 +304,56 @@ var RTEWidget = Widget.extend({
 
         var $editable = this.editable();
 
+        // When a undo/redo is performed, the whole DOM is changed so we have
+        // to prepare for it (website will restart animations for example)
+        // TODO should be better handled
+        $editable.on('content_will_be_destroyed', function (ev) {
+            self.trigger_up('content_will_be_destroyed', {
+                $target: $(ev.currentTarget),
+            });
+        });
+        $editable.on('content_was_recreated', function (ev) {
+            self.trigger_up('content_was_recreated', {
+                $target: $(ev.currentTarget),
+            });
+        });
+
         $editable.addClass('o_editable')
         .data('rte', this)
         .each(function () {
             var $node = $(this);
 
+            // fallback for firefox iframe display:none see https://github.com/odoo/odoo/pull/22610
+            var computedStyles = window.getComputedStyle(this) || window.parent.getComputedStyle(this);
             // add class to display inline-block for empty t-field
-            if (window.getComputedStyle(this).display === 'inline' && $node.data('oe-type') !== 'image') {
+            if (computedStyles.display === 'inline' && $node.data('oe-type') !== 'image') {
                 $node.addClass('o_is_inline_editable');
             }
         });
 
         // start element observation
-        $(document).on('content_changed', '.o_editable', function (event) {
-            self.trigger_up('rte_change', {target: event.target});
-            $(this).addClass('o_dirty');
+        $(document).on('content_changed', function (ev) {
+            self.trigger_up('rte_change', {target: ev.target});
+
+            // Add the dirty flag to the element that changed by either adding
+            // it on the highest editable ancestor or, if there is no editable
+            // ancestor, on the element itself (that element may not be editable
+            // but if it received a content_changed event, it should be marked
+            // as dirty to allow for custom savings).
+            if (!ev.__isDirtyHandled) {
+                ev.__isDirtyHandled = true;
+
+                var el = ev.target;
+                var dirty = el.closest('.o_editable') || el;
+                dirty.classList.add('o_dirty');
+            }
         });
 
         $('#wrapwrap, .o_editable').on('click.rte', '*', this, this._onClick.bind(this));
 
         $('body').addClass('editor_enable');
 
-        $(document)
+        $(document.body)
             .tooltip({
                 selector: '[data-oe-readonly]',
                 container: 'body',
@@ -342,8 +398,10 @@ var RTEWidget = Widget.extend({
         $('#wrapwrap, .o_editable').off('.rte');
 
         $('.o_not_editable').removeAttr('contentEditable');
+
+        $(document).off('click.rte keyup.rte mousedown.rte activate.rte mouseup.rte');
         $(document).off('content_changed').removeClass('o_is_inline_editable').removeData('rte');
-        $(document).tooltip('destroy');
+        $(document).tooltip('dispose');
         $('body').removeClass('editor_enable');
         this.trigger('rte:stop');
     },
@@ -374,16 +432,45 @@ var RTEWidget = Widget.extend({
      * @param {boolean} internal_history
      */
     historyRecordUndo: function ($target, event, internal_history) {
+        const initialActiveElement = document.activeElement;
+        const initialSelectionStart = initialActiveElement && initialActiveElement.selectionStart;
+        const initialSelectionEnd = initialActiveElement && initialActiveElement.selectionEnd;
+
+        $target = $($target);
         var rng = range.create();
         var $editable = $(rng && rng.sc).closest('.o_editable');
         if (!rng || !$editable.length) {
-            $editable = $($target).closest('.o_editable');
+            $editable = $target.closest('.o_editable');
             rng = range.create($target.closest('*')[0],0);
         } else {
             rng = $editable.data('range') || rng;
         }
-        rng.select();
+        try {
+            // TODO this line might break for unknown reasons. I suppose that
+            // the created range is an invalid one. As it might be tricky to
+            // adapt that line and that it is not a critical one, temporary fix
+            // is to ignore the errors that this generates.
+            rng.select();
+        } catch (e) {
+            console.log('error', e);
+        }
         history.recordUndo($editable, event, internal_history);
+
+        if (initialActiveElement && initialActiveElement !== document.activeElement) {
+            initialActiveElement.focus();
+            // Range inputs don't support selection
+            if (initialActiveElement.matches('input[type=range]')) {
+                return;
+            }
+            try {
+                initialActiveElement.selectionStart = initialSelectionStart;
+                initialActiveElement.selectionEnd = initialSelectionEnd;
+            } catch (e) {
+                // The active element might be of a type that
+                // does not support selection.
+                console.log('error', e);
+            }
+        }
     },
     /**
      * Searches all the dirty element on the page and saves them one by one. If
@@ -392,10 +479,14 @@ var RTEWidget = Widget.extend({
      *
      * @param {Object} [context] - the context to use for saving rpc, default to
      *                           the editor context found on the page
-     * @return {Deferred} rejected if the save cannot be done
+     * @return {Promise} rejected if the save cannot be done
      */
     save: function (context) {
         var self = this;
+
+        $('.o_editable')
+            .destroy()
+            .removeClass('o_editable o_is_inline_editable o_editable_date_field_linked o_editable_date_field_format_changed');
 
         var $dirty = $('.o_dirty');
         $dirty
@@ -405,7 +496,7 @@ var RTEWidget = Widget.extend({
             var $el = $(el);
 
             $el.find('[class]').filter(function () {
-                if (!this.className.match(/\S/)) {
+                if (!this.getAttribute('class').match(/\S/)) {
                     this.removeAttribute('class');
                 }
             });
@@ -416,25 +507,18 @@ var RTEWidget = Widget.extend({
                 return self._saveElement($el, context || weContext.get())
                 .then(function () {
                     $el.removeClass('o_dirty');
-                }, function (response) {
+                }).guardedCatch(function (response) {
                     // because ckeditor regenerates all the dom, we can't just
                     // setup the popover here as everything will be destroyed by
                     // the DOM regeneration. Add markings instead, and returns a
                     // new rejection with all relevant info
                     var id = _.uniqueId('carlos_danger_');
                     $el.addClass('o_dirty oe_carlos_danger ' + id);
-                    var html = (response.data.exception_type === 'except_osv');
-                    if (html) {
-                        var msg = $('<div/>', {text: response.data.message}).html();
-                        var data = msg.substring(3, msg.length  -2).split(/', u'/);
-                        response.data.message = '<b>' + data[0] + '</b>' + data[1];
-                    }
                     $('.o_editable.' + id)
                         .removeClass(id)
                         .popover({
-                            html: html,
                             trigger: 'hover',
-                            content: response.data.message,
+                            content: response.message.data.message || '',
                             placement: 'auto top',
                         })
                         .popover('show');
@@ -442,9 +526,9 @@ var RTEWidget = Widget.extend({
             });
         });
 
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             window.onbeforeunload = null;
-        }, function (failed) {
+        }).guardedCatch(function (failed) {
             // If there were errors, re-enable edition
             self.cancel();
             self.start();
@@ -463,6 +547,17 @@ var RTEWidget = Widget.extend({
      * @param {jQuery} $editable
      */
     _enableEditableArea: function ($editable) {
+        if ($editable.data('oe-type') === "datetime" || $editable.data('oe-type') === "date") {
+            var selector = '[data-oe-id="' + $editable.data('oe-id') + '"]';
+            selector += '[data-oe-field="' + $editable.data('oe-field') + '"]';
+            selector += '[data-oe-model="' + $editable.data('oe-model') + '"]';
+            var $linkedFieldNodes = this.editable().find(selector).addBack(selector);
+            $linkedFieldNodes.not($editable).addClass('o_editable_date_field_linked');
+            if (!$editable.hasClass('o_editable_date_field_format_changed')) {
+                $linkedFieldNodes.html($editable.data('oe-original-with-format'));
+                $linkedFieldNodes.addClass('o_editable_date_field_format_changed');
+            }
+        }
         if ($editable.data('oe-type') === "monetary") {
             $editable.attr('contenteditable', false);
             $editable.find('.oe_currency_value').attr('contenteditable', true);
@@ -499,7 +594,8 @@ var RTEWidget = Widget.extend({
             'lang': 'odoo',
             'onChange': function (html, $editable) {
                 $editable.trigger('content_changed');
-            }
+            },
+            'colors': summernoteCustomColors,
         };
     },
     /**
@@ -532,15 +628,22 @@ var RTEWidget = Widget.extend({
      *        page element)
      */
     _saveElement: function ($el, context, withLang) {
+        var viewID = $el.data('oe-id');
+        if (!viewID) {
+            return Promise.resolve();
+        }
+
         return this._rpc({
             model: 'ir.ui.view',
             method: 'save',
             args: [
-                $el.data('oe-id'),
+                viewID,
                 this._getEscapedElement($el).prop('outerHTML'),
                 $el.data('oe-xpath') || null,
-                withLang ? context : _.omit(context, 'lang')
             ],
+            context: context,
+        }, withLang ? undefined : {
+            noContextKeys: 'lang',
         });
     },
 
@@ -569,15 +672,27 @@ var RTEWidget = Widget.extend({
         var $target = $(ev.target);
         var $editable = $target.closest('.o_editable');
 
+        if (this && this.$last && this.$last.length && this.$last[0] !== $target[0]) {
+            $('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
+        }
         if (!$editable.length || $.summernote.core.dom.isContentEditableFalse($target)) {
             return;
         }
+
+        // Removes strange _moz_abspos attribute when it appears. Cannot
+        // find another solution which works in all cases. A grabber still
+        // appears at the same time which I did not manage to remove.
+        // TODO find a complete and better solution
+        _.defer(function () {
+            $editable.find('[_moz_abspos]').removeAttr('_moz_abspos');
+        });
 
         if ($target.is('a')) {
             /**
              * Remove content editable everywhere and add it on the link only so that characters can be added
              * and removed at the start and at the end of it.
              */
+            let hasContentEditable = $target.attr('contenteditable');
             $target.attr('contenteditable', true);
             _.defer(function () {
                 $editable.not($target).attr('contenteditable', false);
@@ -587,7 +702,9 @@ var RTEWidget = Widget.extend({
             // Once clicked outside, remove contenteditable on link and reactive all
             $(document).on('mousedown.reactivate_contenteditable', function (e) {
                 if ($target.is(e.target)) return;
-                $target.removeAttr('contenteditable');
+                if (!hasContentEditable) {
+                    $target.removeAttr('contenteditable');
+                }
                 $editable.attr('contenteditable', true);
                 $(document).off('mousedown.reactivate_contenteditable');
             });
@@ -596,14 +713,21 @@ var RTEWidget = Widget.extend({
         if (this && this.$last && (!$editable.length || this.$last[0] !== $editable[0])) {
             var $destroy = this.$last;
             history.splitNext();
-
-            _.delay(function () {
+            // In some special cases, we need to clear the timeout.
+            var lastTimerId = _.delay(function () {
                 var id = $destroy.data('note-id');
                 $destroy.destroy().removeData('note-id').removeAttr('data-note-id');
                 $('#note-popover-'+id+', #note-handle-'+id+', #note-dialog-'+id+'').remove();
             }, 150); // setTimeout to remove flickering when change to editable zone (re-create an editor)
             this.$last = null;
+            // for modal dialogs (eg newsletter popup), when we close the dialog, the modal is
+            // destroyed immediately and so after the delayed execution due to timeout, dialog will
+            // not be available, leading to trace-back, so we need to clearTimeout for the dialogs.
+            if ($destroy.hasClass('modal-body')) {
+                clearTimeout(lastTimerId);
+            }
         }
+
         if ($editable.length && (!this.$last || this.$last[0] !== $editable[0])) {
             $editable.summernote(this._getConfig($editable));
 
@@ -650,15 +774,16 @@ var RTEWidget = Widget.extend({
             self.historyRecordUndo($target, 'activate',  true);
         });
 
-        // To Fix Google Chrome Tripleclick Issue, which selects the ending
-        // whitespace characters (so Tripleclicking then typing text will remove
-        // the whole paragraph instead of its content).
-        // http://stackoverflow.com/questions/38467334/why-does-google-chrome-always-add-space-after-selected-text
-        if ($.browser.chrome === true && ev.originalEvent.detail === 3) {
-            var currentSelection = range.create();
-            if (currentSelection.sc.parentNode === currentSelection.ec) {
-                range.create(currentSelection.sc, currentSelection.so, currentSelection.sc, currentSelection.sc.length).select();
-            }
+        // Browsers select different content from one to another after a
+        // triple click (especially: if triple-clicking on a paragraph on
+        // Chrome, blank characters of the element following the paragraph are
+        // selected too)
+        //
+        // The triple click behavior is reimplemented for all browsers here
+        if (ev.originalEvent && ev.originalEvent.detail === 3) {
+            // Select the whole content inside the deepest DOM element that was
+            // triple-clicked
+            range.create(ev.target, 0, ev.target, ev.target.childNodes.length).select();
         }
     },
 });
@@ -667,4 +792,20 @@ return {
     Class: RTEWidget,
     history: history,
 };
+});
+
+odoo.define('web_editor.rte.summernote_custom_colors', function (require) {
+'use strict';
+
+// These colors are already normalized as per normalizeCSSColor in web.Colorpicker
+return [
+    ['#000000', '#424242', '#636363', '#9C9C94', '#CEC6CE', '#EFEFEF', '#F7F7F7', '#FFFFFF'],
+    ['#FF0000', '#FF9C00', '#FFFF00', '#00FF00', '#00FFFF', '#0000FF', '#9C00FF', '#FF00FF'],
+    ['#F7C6CE', '#FFE7CE', '#FFEFC6', '#D6EFD6', '#CEDEE7', '#CEE7F7', '#D6D6E7', '#E7D6DE'],
+    ['#E79C9C', '#FFC69C', '#FFE79C', '#B5D6A5', '#A5C6CE', '#9CC6EF', '#B5A5D6', '#D6A5BD'],
+    ['#E76363', '#F7AD6B', '#FFD663', '#94BD7B', '#73A5AD', '#6BADDE', '#8C7BC6', '#C67BA5'],
+    ['#CE0000', '#E79439', '#EFC631', '#6BA54A', '#4A7B8C', '#3984C6', '#634AA5', '#A54A7B'],
+    ['#9C0000', '#B56308', '#BD9400', '#397B21', '#104A5A', '#085294', '#311873', '#731842'],
+    ['#630000', '#7B3900', '#846300', '#295218', '#083139', '#003163', '#21104A', '#4A1031']
+];
 });

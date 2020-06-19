@@ -1,0 +1,146 @@
+
+//------------------------------------------------------------------------------
+// Website customizations
+//------------------------------------------------------------------------------
+
+@function o-add-font-config($values) {
+    $types: ('base': 'font-number', 'headings': 'headings-font-number', 'navbar': 'navbar-font-number', 'buttons': 'buttons-font-number');
+    @each $type, $number-label in $types {
+        $number: map-get($values, $number-label) or map-get($o-base-website-values-palette, $number-label);
+        @if $number <= length($o-theme-font-names) { // At least useful because of google fonts
+            $font-name: nth($o-theme-font-names, $number);
+            $font-config: map-get($o-theme-font-configs, $font-name);
+            @if $font-config {
+                $type-font-config: map-get($font-config, $type);
+                @if $type-font-config {
+                    $values: map-merge($values, $type-font-config);
+                }
+            }
+        }
+    }
+    @return $values;
+}
+
+// By default, most website palette values are null. Each null value is
+// automatically replaced with corresponsing values in chosen default values
+// palette.
+$-website-values-default: if($o-website-values-palette-number <= length($o-website-values-palettes), nth($o-website-values-palettes, $o-website-values-palette-number), ());
+$-actual-user-website-values-palette: map-merge($-website-values-default, o-map-omit($o-user-website-values));
+// Default font selection + User font selection have been merged, now need to
+// add the right associated font config while still forcing any user override
+$-actual-user-website-values-palette: map-merge(o-add-font-config($-actual-user-website-values-palette), o-map-omit($o-user-website-values));
+$o-website-values-palettes: append($o-website-values-palettes, $-actual-user-website-values-palette);
+
+// Enable last website values palette, which is now the user customized one
+$o-website-values-palette-number: length($o-website-values-palettes);
+
+$o-website-values: nth($o-website-values-palettes, $o-website-values-palette-number) !default;
+$o-website-values: map-merge($o-base-website-values-palette, o-map-omit($o-website-values));
+@function o-website-value($key) {
+    @return map-get($o-website-values, $key);
+}
+
+//------------------------------------------------------------------------------
+// Colors
+//------------------------------------------------------------------------------
+
+// First change the palette number to the actual user choice if any.
+$-color-palettes-number: o-website-value('color-palettes-number');
+@if $-color-palettes-number {
+    $o-color-palette-number: $-color-palettes-number;
+    $o-theme-color-palette-number: $-color-palettes-number;
+    $o-gray-color-palette-number: $-color-palettes-number;
+}
+
+$o-has-customized-13-0-color-system:
+    not not (map-get($o-user-theme-color-palette, 'primary')
+    or map-get($o-user-theme-color-palette, 'secondary')
+    or map-get($o-user-theme-color-palette, 'alpha')
+    or map-get($o-user-theme-color-palette, 'beta')
+    or map-get($o-user-theme-color-palette, 'gamma')
+    or map-get($o-user-theme-color-palette, 'delta')
+    or map-get($o-user-theme-color-palette, 'epsilon'));
+
+$o-has-customized-colors:
+    not not (length(map-keys(o-map-omit($o-user-color-palette))) > 0
+    or map-get($o-user-theme-color-palette, 'success')
+    or map-get($o-user-theme-color-palette, 'info')
+    or map-get($o-user-theme-color-palette, 'warning')
+    or map-get($o-user-theme-color-palette, 'danger'));
+
+// Color palette
+// -------------
+
+// Add generic color palettes
+$o-color-palettes: join($o-color-palettes, $o-theme-generic-color-palettes);
+
+// By default, most user color palette values are null. Each null value is
+// automatically replaced with corresponsing colors in chosen default color
+// palette.
+$-palette-default: if($o-color-palette-number <= length($o-color-palettes), nth($o-color-palettes, $o-color-palette-number), ());
+$-actual-user-color-palette: map-merge($-palette-default, o-map-omit($o-user-color-palette));
+$o-color-palettes: append($o-color-palettes, $-actual-user-color-palette);
+
+// Theme color palette
+// -------------------
+
+// alpha -> epsilon colors are from the old color system, this is kept for
+// compatibility: Generate default theme color scheme if alpha is set
+$-alpha: map-get($o-user-theme-color-palette, 'alpha');
+@if ($-alpha) {
+    $o-user-theme-color-palette: map-merge((
+        beta: lighten(desaturate($-alpha, 60%), 30%),
+        gamma: desaturate(adjust-hue($-alpha, -45deg), 10%),
+        delta: desaturate(adjust-hue($-alpha, 45deg), 10%),
+        epsilon: desaturate(adjust-hue($-alpha, 180deg), 10%),
+    ), o-map-omit($o-user-theme-color-palette));
+}
+
+// By default, all user theme color palette values are null. Each null value is
+// automatically replaced with corresponsing colors in chosen default theme
+// color palette.
+$-palette-default: if($o-theme-color-palette-number <= length($o-theme-color-palettes), nth($o-theme-color-palettes, $o-theme-color-palette-number), ());
+$-actual-user-theme-color-palette: map-merge($-palette-default, o-map-omit($o-user-theme-color-palette));
+// Always remove the primary/secondary which were customizable in some theme
+// in Odoo <= 13.3. The customer can always rechoose the right color in the
+// Odoo color system as the first two ones are mapped to primary/secondary.
+$-actual-user-theme-color-palette: map-remove($-actual-user-theme-color-palette,
+    'primary',
+    'secondary'
+);
+$o-theme-color-palettes: append($o-theme-color-palettes, $-actual-user-theme-color-palette);
+
+// ---
+
+// Enable last color and theme color palettes, which are now the user customized
+// color palettes.
+$o-original-color-palette-number: $o-color-palette-number;
+$o-color-palette-number: length($o-color-palettes);
+$o-theme-color-palette-number: length($o-theme-color-palettes);
+
+//------------------------------------------------------------------------------
+// Fonts
+//------------------------------------------------------------------------------
+
+@if o-website-value('google-fonts') {
+    $o-theme-font-names: join($o-theme-font-names, o-website-value('google-fonts'));
+    @each $font in o-website-value('google-fonts') {
+        $o-theme-fonts: append($o-theme-fonts, (quote($font), sans-serif));
+        $o-theme-font-urls: append($o-theme-font-urls, quote($font) + ':300,300i,400,400i,700,700i');
+    }
+}
+
+// Add odoo unicode support for all fonts
+$-with-support-theme-fonts: ();
+@each $font in $o-theme-fonts {
+    $-with-support-theme-fonts: append($-with-support-theme-fonts, o-add-unicode-support-font($font));
+}
+$o-theme-fonts: $-with-support-theme-fonts;
+
+$o-theme-navbar-logo-height: o-website-value('logo-height') !default;
+$o-theme-navbar-fixed-logo-height: o-website-value('fixed-logo-height') !default;
+
+$o-theme-font: nth($o-theme-fonts, o-website-value('font-number')) !default;
+$o-theme-headings-font: nth($o-theme-fonts, o-website-value('headings-font-number')) !default;
+$o-theme-navbar-font: nth($o-theme-fonts, o-website-value('navbar-font-number')) !default;
+$o-theme-buttons-font: nth($o-theme-fonts, o-website-value('buttons-font-number')) !default;

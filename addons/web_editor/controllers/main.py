@@ -1,72 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
 import io
-import json
 import logging
-import os
 import re
 import time
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
-from lxml import etree, html
+from lxml import etree
 
 from odoo.http import request
-from odoo import http, tools
-from odoo.tools import pycompat
-from odoo.modules.module import get_resource_path, get_module_path
+from odoo import http, tools, _
+from odoo.exceptions import UserError
 
 logger = logging.getLogger(__name__)
 
+
 class Web_Editor(http.Controller):
-    #------------------------------------------------------
-    # Backend snippet
-    #------------------------------------------------------
-    @http.route('/web_editor/snippets', type='json', auth="user")
-    def snippets(self, **kwargs):
-        return request.env.ref('web_editor.snippets').render(None)
-
-    #------------------------------------------------------
-    # Backend html field
-    #------------------------------------------------------
-    @http.route('/web_editor/field/html', type='http', auth="user")
-    def FieldTextHtml(self, model=None, res_id=None, field=None, callback=None, **kwargs):
-        kwargs.update(
-            model=model,
-            res_id=res_id,
-            field=field,
-            datarecord=json.loads(kwargs['datarecord']),
-            debug=request.debug)
-
-        for k in kwargs:
-            if isinstance(kwargs[k], pycompat.string_types) and kwargs[k].isdigit():
-                kwargs[k] = int(kwargs[k])
-
-        trans = dict(
-            lang=kwargs.get('lang', request.env.context.get('lang')),
-            translatable=kwargs.get('translatable'),
-            edit_translations=kwargs.get('edit_translations'),
-            editable=kwargs.get('enable_editor'))
-
-        kwargs.update(trans)
-
-        record = None
-        if model and kwargs.get('res_id'):
-            record = request.env[model].with_context(trans).browse(kwargs.get('res_id'))
-
-        kwargs.update(content=record and getattr(record, field) or "")
-
-        return request.render(kwargs.get("template") or "web_editor.FieldTextHtml", kwargs, uid=request.uid)
-
-    #------------------------------------------------------
-    # Backend html field in inline mode
-    #------------------------------------------------------
-    @http.route('/web_editor/field/html/inline', type='http', auth="user")
-    def FieldTextHtmlInline(self, model=None, res_id=None, field=None, callback=None, **kwargs):
-        kwargs['inline_mode'] = True
-        kwargs['dont_load_assets'] = not kwargs.get('enable_editor') and not kwargs.get('edit_translations')
-        return self.FieldTextHtml(model, res_id, field, callback, **kwargs)
-
     #------------------------------------------------------
     # convert font into picture
     #------------------------------------------------------
@@ -95,7 +44,7 @@ class Web_Editor(http.Controller):
         font_obj = ImageFont.truetype(addons_path + font, size)
 
         # if received character is not a number, keep old behaviour (icon is character)
-        icon = pycompat.unichr(int(icon)) if icon.isdigit() else icon
+        icon = chr(int(icon)) if icon.isdigit() else icon
 
         # Determine the dimensions of the icon
         image = Image.new("RGBA", (size, size), color=(0, 0, 0, 0))
@@ -137,65 +86,89 @@ class Web_Editor(http.Controller):
         return response
 
     #------------------------------------------------------
-    # add attachment (images or link)
+    # Update a checklist in the editor on check/uncheck
     #------------------------------------------------------
-    @http.route('/web_editor/attachment/add', type='http', auth='user', methods=['POST'])
-    def attach(self, func, upload=None, url=None, disable_optimization=None, **kwargs):
-        # the upload argument doesn't allow us to access the files if more than
-        # one file is uploaded, as upload references the first file
-        # therefore we have to recover the files from the request object
-        Attachments = request.env['ir.attachment']  # registry for the attachment table
+    @http.route('/web_editor/checklist', type='json', auth='user')
+    def update_checklist(self, res_model, res_id, filename, checklistId, checked, **kwargs):
+        record = request.env[res_model].browse(res_id)
+        value = getattr(record, filename, False)
+        htmlelem = etree.fromstring("<div>%s</div>" % value, etree.HTMLParser())
+        checked = bool(checked)
 
-        uploads = []
-        message = None
-        if not upload: # no image provided, storing the link and the image name
-            name = url.split("/").pop()                       # recover filename
-            attachment = Attachments.create({
-                'name': name,
-                'type': 'url',
-                'url': url,
-                'public': True,
-                'res_model': 'ir.ui.view',
-            })
-            uploads += attachment.read(['name', 'mimetype', 'checksum', 'url'])
-        else:                                                  # images provided
-            try:
-                attachments = request.env['ir.attachment']
-                for c_file in request.httprequest.files.getlist('upload'):
-                    data = c_file.read()
-                    try:
-                        image = Image.open(io.BytesIO(data))
-                        w, h = image.size
-                        if w*h > 42e6: # Nokia Lumia 1020 photo resolution
-                            raise ValueError(
-                                u"Image size excessive, uploaded images must be smaller "
-                                u"than 42 million pixel")
-                        if not disable_optimization and image.format in ('PNG', 'JPEG'):
-                            data = tools.image_save_for_web(image)
-                    except IOError as e:
-                        pass
+        li = htmlelem.find(".//li[@id='checklist-id-" + str(checklistId) + "']")
 
-                    attachment = Attachments.create({
-                        'name': c_file.filename,
-                        'datas': base64.b64encode(data),
-                        'datas_fname': c_file.filename,
-                        'public': True,
-                        'res_model': 'ir.ui.view',
-                    })
-                    attachments += attachment
-                uploads += attachments.read(['name', 'mimetype', 'checksum', 'url'])
-            except Exception as e:
-                logger.exception("Failed to upload image to attachment")
-                message = pycompat.text_type(e)
+        if not li or not self._update_checklist_recursive(li, checked, children=True, ancestors=True):
+            return value
 
-        return """<script type='text/javascript'>
-            window.parent['%s'](%s, %s);
-        </script>""" % (func, json.dumps(uploads), json.dumps(message))
+        value = etree.tostring(htmlelem[0][0], encoding='utf-8', method='html')[5:-6]
+        record.write({filename: value})
 
-    #------------------------------------------------------
-    # remove attachment (images or link)
-    #------------------------------------------------------
-    @http.route('/web_editor/attachment/remove', type='json', auth='user')
+        return value
+
+    def _update_checklist_recursive (self, li, checked, children=False, ancestors=False):
+        if 'checklist-id-' not in li.get('id', ''):
+            return False
+
+        classname = li.get('class', '')
+        if ('o_checked' in classname) == checked:
+            return False
+
+        # check / uncheck
+        if checked:
+            classname = '%s o_checked' % classname
+        else:
+            classname = re.sub(r"\s?o_checked\s?", '', classname)
+        li.set('class', classname)
+
+        # propagate to children
+        if children:
+            node = li.getnext()
+            ul = None
+            if node is not None:
+                if node.tag == 'ul':
+                    ul = node
+                if node.tag == 'li' and len(node.getchildren()) == 1 and node.getchildren()[0].tag == 'ul':
+                    ul = node.getchildren()[0]
+
+            if ul is not None:
+                for child in ul.getchildren():
+                    if child.tag == 'li':
+                        self._update_checklist_recursive(child, checked, children=True)
+
+        # propagate to ancestors
+        if ancestors:
+            allSelected = True
+            ul = li.getparent()
+            if ul.tag == 'li':
+                ul = ul.getparent()
+
+            for child in ul.getchildren():
+                if child.tag == 'li' and 'checklist-id' in child.get('id', '') and 'o_checked' not in child.get('class', ''):
+                    allSelected = False
+
+            node = ul.getprevious()
+            if node is None:
+                node = ul.getparent().getprevious()
+            if node is not None and node.tag == 'li':
+                self._update_checklist_recursive(node, allSelected, ancestors=True)
+
+        return True
+
+    @http.route('/web_editor/attachment/add_data', type='json', auth='user', methods=['POST'], website=True)
+    def add_data(self, name, data, quality=0, width=0, height=0, res_id=False, res_model='ir.ui.view', **kwargs):
+        try:
+            data = tools.image_process(data, size=(width, height), quality=quality, verify_resolution=True)
+        except UserError:
+            pass  # not an image
+        attachment = self._attachment_create(name=name, data=data, res_id=res_id, res_model=res_model)
+        return attachment._get_media_info()
+
+    @http.route('/web_editor/attachment/add_url', type='json', auth='user', methods=['POST'], website=True)
+    def add_url(self, url, res_id=False, res_model='ir.ui.view', **kwargs):
+        attachment = self._attachment_create(url=url, res_id=res_id, res_model=res_model)
+        return attachment._get_media_info()
+
+    @http.route('/web_editor/attachment/remove', type='json', auth='user', website=True)
     def remove(self, ids, **kwargs):
         """ Removes a web-based image attachment if it is used by no view (template)
 
@@ -226,196 +199,295 @@ class Web_Editor(http.Controller):
             attachments_to_remove.unlink()
         return removal_blocked_by
 
-    ## The get_assets_editor_resources route is in charge of transmitting the resources the assets
-    ## editor needs to work.
-    ## @param key - the xml_id or id of the view the resources are related to
-    ## @param get_views - True if the views must be fetched (default to True)
-    ## @param get_less - True if the style must be fetched (default to True)
-    ## @param bundles - True if the bundles views must be fetched (default to False)
-    ## @param bundles_restriction - Names of the bundle in which to look for less files (if empty, search in all of them)
-    ## @returns a dictionary with views info in the views key and style info in the less key
-    @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user")
-    def get_assets_editor_resources(self, key, get_views=True, get_less=True, bundles=False, bundles_restriction=[]):
+    @http.route('/web_editor/get_image_info', type='json', auth='user', website=True)
+    def get_image_info(self, src=''):
+        """This route is used to determine the original of an attachment so that
+        it can be used as a base to modify it again (crop/optimization/filters).
+        """
+        id_match = re.search('^/web/image/([^/?]+)', src)
+        if id_match:
+            url_segment = id_match.group(1)
+            number_match = re.match('^(\d+)', url_segment)
+            if '.' in url_segment: # xml-id
+                attachment = request.env['ir.http']._xmlid_to_obj(request.env, url_segment)
+            elif number_match: # numeric id
+                attachment = request.env['ir.attachment'].browse(int(number_match.group(1)))
+        else:
+            # Find attachment by url. There can be multiple matches because of default
+            # snippet images referencing the same image in /static/, so we limit to 1
+            attachment = request.env['ir.attachment'].search([('url', '=like', src)], limit=1)
+        if not attachment:
+            return {
+                'attachment': False,
+                'original': False,
+            }
+        return {
+            'attachment': attachment.read(['id'])[0],
+            'original': (attachment.original_id or attachment).read(['id', 'image_src', 'mimetype'])[0],
+        }
+
+    def _attachment_create(self, name='', data=False, url=False, res_id=False, res_model='ir.ui.view'):
+        """Create and return a new attachment."""
+        if not name and url:
+            name = url.split("/").pop()
+
+        if res_model != 'ir.ui.view' and res_id:
+            res_id = int(res_id)
+        else:
+            res_id = False
+
+        attachment_data = {
+            'name': name,
+            'public': res_model == 'ir.ui.view',
+            'res_id': res_id,
+            'res_model': res_model,
+        }
+
+        if data:
+            attachment_data['datas'] = data
+        elif url:
+            attachment_data.update({
+                'type': 'url',
+                'url': url,
+            })
+        else:
+            raise UserError(_("You need to specify either data or url to create an attachment."))
+
+        attachment = request.env['ir.attachment'].create(attachment_data)
+        return attachment
+
+    @http.route("/web_editor/get_assets_editor_resources", type="json", auth="user", website=True)
+    def get_assets_editor_resources(self, key, get_views=True, get_scss=True, get_js=True, bundles=False, bundles_restriction=[], only_user_custom_files=True):
+        """
+        Transmit the resources the assets editor needs to work.
+
+        Params:
+            key (str): the key of the view the resources are related to
+
+            get_views (bool, default=True):
+                True if the views must be fetched
+
+            get_scss (bool, default=True):
+                True if the style must be fetched
+
+            get_js (bool, default=True):
+                True if the javascript must be fetched
+
+            bundles (bool, default=False):
+                True if the bundles views must be fetched
+
+            bundles_restriction (list, default=[]):
+                Names of the bundles in which to look for scss files
+                (if empty, search in all of them)
+
+            only_user_custom_files (bool, default=True):
+                True if only user custom files must be fetched
+
+        Returns:
+            dict: views, scss, js
+        """
         # Related views must be fetched if the user wants the views and/or the style
         views = request.env["ir.ui.view"].get_related_views(key, bundles=bundles)
         views = views.read(['name', 'id', 'key', 'xml_id', 'arch', 'active', 'inherit_id'])
 
-        less_files_data_by_bundle = []
+        scss_files_data_by_bundle = []
+        js_files_data_by_bundle = []
 
-        # Load less only if asked by the user
-        if get_less:
-            # Compile regex outside of the loop
-            # This will used to exclude library less files from the result
-            excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.less)$")
+        if get_scss:
+            scss_files_data_by_bundle = self._load_resources('scss', views, bundles_restriction, only_user_custom_files)
+        if get_js:
+            js_files_data_by_bundle = self._load_resources('js', views, bundles_restriction, only_user_custom_files)
 
-            # Load already customized less files attachments
-            custom_attachments = request.env["ir.attachment"].search([("url", "=like", self._make_custom_less_file_url("%%.%%", "%%"))])
+        return {
+            'views': get_views and views or [],
+            'scss': get_scss and scss_files_data_by_bundle or [],
+            'js': get_js and js_files_data_by_bundle or [],
+        }
 
-            # First check the t-call-assets used in the related views
-            url_infos = dict()
-            for v in views:
-                for asset_call_node in etree.fromstring(v["arch"]).xpath("//t[@t-call-assets]"):
-                    if asset_call_node.get("t-css") == "false":
+    def _load_resources(self, file_type, views, bundles_restriction, only_user_custom_files):
+        AssetsUtils = request.env['web_editor.assets']
+
+        files_data_by_bundle = []
+        resources_type_info = {'t_call_assets_attribute': 't-js', 'mimetype': 'text/javascript'}
+        if file_type == 'scss':
+            resources_type_info = {'t_call_assets_attribute': 't-css', 'mimetype': 'text/scss'}
+
+        # Compile regex outside of the loop
+        # This will used to exclude library scss files from the result
+        excluded_url_matcher = re.compile("^(.+/lib/.+)|(.+import_bootstrap.+\.scss)$")
+
+        # First check the t-call-assets used in the related views
+        url_infos = dict()
+        for v in views:
+            for asset_call_node in etree.fromstring(v["arch"]).xpath("//t[@t-call-assets]"):
+                if asset_call_node.get(resources_type_info['t_call_assets_attribute']) == "false":
+                    continue
+                asset_name = asset_call_node.get("t-call-assets")
+
+                # Loop through bundle files to search for file info
+                files_data = []
+                for file_info in request.env["ir.qweb"]._get_asset_content(asset_name, {})[0]:
+                    if file_info["atype"] != resources_type_info['mimetype']:
                         continue
-                    asset_name = asset_call_node.get("t-call-assets")
+                    url = file_info["url"]
 
-                    # Loop through bundle files to search for LESS file info
-                    less_files_data = []
-                    for file_info in request.env["ir.qweb"]._get_asset_content(asset_name, {})[0]:
-                        if file_info["atype"] != "text/less":
-                            continue
-                        url = file_info["url"]
+                    # Exclude library files (see regex above)
+                    if excluded_url_matcher.match(url):
+                        continue
 
-                        # Exclude library files (see regex above)
-                        if excluded_url_matcher.match(url):
-                            continue
+                    # Check if the file is customized and get bundle/path info
+                    file_data = AssetsUtils.get_asset_info(url)
+                    if not file_data:
+                        continue
 
-                        # Check if the file is customized and get bundle/path info
-                        less_file_data = self._match_less_file_url(url)
-                        if not less_file_data:
-                            continue
+                    # Save info according to the filter (arch will be fetched later)
+                    url_infos[url] = file_data
 
-                        # Save info (arch will be fetched later)
-                        url_infos[url] = less_file_data
-                        less_files_data.append(url)
+                    if '/user_custom_' in url \
+                            or file_data['customized'] \
+                            or file_type == 'scss' and not only_user_custom_files:
+                        files_data.append(url)
 
-                    # Less data is returned sorted by bundle, with the bundles names and xmlids
-                    if len(less_files_data):
-                        less_files_data_by_bundle.append([dict(xmlid=asset_name, name=request.env.ref(asset_name).name), less_files_data])
+                # scss data is returned sorted by bundle, with the bundles
+                # names and xmlids
+                if len(files_data):
+                    files_data_by_bundle.append([
+                        {'xmlid': asset_name, 'name': request.env.ref(asset_name).name},
+                        files_data
+                    ])
 
-            # Filter bundles/files:
-            # - A file which appears in multiple bundles only appears in the first one (the first in the DOM)
-            # - Only keep bundles with files which appears in the asked bundles and only keep those files
-            for i in range(0, len(less_files_data_by_bundle)):
-                bundle_1 = less_files_data_by_bundle[i]
-                for j in range(0, len(less_files_data_by_bundle)):
-                    bundle_2 = less_files_data_by_bundle[j]
-                    # In unwanted bundles, keep only the files which are in wanted bundles too (less_helpers)
-                    if bundle_1[0]["xmlid"] not in bundles_restriction and bundle_2[0]["xmlid"] in bundles_restriction:
-                        bundle_1[1] = [item_1 for item_1 in bundle_1[1] if item_1 in bundle_2[1]]
-            for i in range(0, len(less_files_data_by_bundle)):
-                bundle_1 = less_files_data_by_bundle[i]
-                for j in range(i+1, len(less_files_data_by_bundle)):
-                    bundle_2 = less_files_data_by_bundle[j]
-                    # In every bundle, keep only the files which were not found in previous bundles
-                    bundle_2[1] = [item_2 for item_2 in bundle_2[1] if item_2 not in bundle_1[1]]
+        # Filter bundles/files:
+        # - A file which appears in multiple bundles only appears in the
+        #   first one (the first in the DOM)
+        # - Only keep bundles with files which appears in the asked bundles
+        #   and only keep those files
+        for i in range(0, len(files_data_by_bundle)):
+            bundle_1 = files_data_by_bundle[i]
+            for j in range(0, len(files_data_by_bundle)):
+                bundle_2 = files_data_by_bundle[j]
+                # In unwanted bundles, keep only the files which are in wanted bundles too (_assets_helpers)
+                if bundle_1[0]["xmlid"] not in bundles_restriction and bundle_2[0]["xmlid"] in bundles_restriction:
+                    bundle_1[1] = [item_1 for item_1 in bundle_1[1] if item_1 in bundle_2[1]]
+        for i in range(0, len(files_data_by_bundle)):
+            bundle_1 = files_data_by_bundle[i]
+            for j in range(i + 1, len(files_data_by_bundle)):
+                bundle_2 = files_data_by_bundle[j]
+                # In every bundle, keep only the files which were not found
+                # in previous bundles
+                bundle_2[1] = [item_2 for item_2 in bundle_2[1] if item_2 not in bundle_1[1]]
 
-            # Only keep bundles which still have files and that were requested
-            less_files_data_by_bundle = [
-                data for data in less_files_data_by_bundle
-                if (len(data[1]) > 0 and (not bundles_restriction or data[0]["xmlid"] in bundles_restriction))
-            ]
+        # Only keep bundles which still have files and that were requested
+        files_data_by_bundle = [
+            data for data in files_data_by_bundle
+            if (len(data[1]) > 0 and (not bundles_restriction or data[0]["xmlid"] in bundles_restriction))
+        ]
 
-            # Fetch the arch of each kept file, in each bundle
-            for bundle_data in less_files_data_by_bundle:
-                for i in range(0, len(bundle_data[1])):
-                    url = bundle_data[1][i]
-                    url_info = url_infos[url]
+        # Fetch the arch of each kept file, in each bundle
+        urls = []
+        for bundle_data in files_data_by_bundle:
+            urls += bundle_data[1]
+        custom_attachments = AssetsUtils.get_all_custom_attachments(urls)
 
-                    content = None
-                    if url_info["customized"]:
-                        # If the file is already customized, the content is found in the corresponding attachment
-                        content = base64.b64decode(custom_attachments.filtered(lambda a: a.url == url).datas)
-                    else:
-                        # If the file is not yet customized, the content is found by reading the local less file
-                        module = url_info["module"]
-                        module_path = get_module_path(module)
-                        module_resource_path = get_resource_path(module, url_info["resource_path"])
-                        if module_path and module_resource_path:
-                            module_path = os.path.join(os.path.normpath(module_path), '') # join ensures the path ends with '/'
-                            module_resource_path = os.path.normpath(module_resource_path)
-                            if module_resource_path.startswith(module_path):
-                                with open(module_resource_path, "rb") as f:
-                                    content = f.read()
+        for bundle_data in files_data_by_bundle:
+            for i in range(0, len(bundle_data[1])):
+                url = bundle_data[1][i]
+                url_info = url_infos[url]
 
-                    bundle_data[1][i] = dict(
-                        url = "/%s/%s" % (url_info["module"], url_info["resource_path"]),
-                        arch = content,
-                        customized = url_info["customized"],
-                    )
+                content = AssetsUtils.get_asset_content(url, url_info, custom_attachments)
 
-        return dict(
-            views = get_views and views or [],
-            less = get_less and less_files_data_by_bundle or [],
-        )
+                bundle_data[1][i] = {
+                    'url': "/%s/%s" % (url_info["module"], url_info["resource_path"]),
+                    'arch': content,
+                    'customized': url_info["customized"],
+                }
 
-    ## The save_less route is in charge of saving a given modification of a LESS file.
-    ## @param url - the original url of the LESS file which has to be modified
-    ## @param bundle_xmlid - the xmlid of the bundle in which the LESS file addition can be found
-    ## @param content - the new content of the LESS file
-    @http.route("/web_editor/save_less", type="json", auth="user")
-    def save_less(self, url, bundle_xmlid, content):
-        IrAttachment = request.env["ir.attachment"]
+        return files_data_by_bundle
 
-        custom_url = self._make_custom_less_file_url(url, bundle_xmlid)
+    @http.route("/web_editor/save_asset", type="json", auth="user", website=True)
+    def save_asset(self, url, bundle_xmlid, content, file_type):
+        """
+        Save a given modification of a scss/js file.
 
-        # Check if the file to save had already been modified
-        custom_attachment = IrAttachment.search([("url", "=", custom_url)])
-        if custom_attachment:
-            # If it was already modified, simply override the corresponding attachment content
-            custom_attachment.write({"datas": base64.b64encode(content.encode("utf-8"))})
-        else:
-            # If not, create a new attachment to copy the original LESS file content, with its modifications
-            IrAttachment.create(dict(
-                name = custom_url,
-                type = "binary",
-                mimetype = "text/less",
-                datas = base64.b64encode(content.encode("utf-8")),
-                datas_fname = url.split("/")[-1],
-                url = custom_url, # Having an attachment of "binary" type with an non empty "url" field
-                                  # is quite of an hack. This allows to fetch the "datas" field by adding
-                                  # a <link/> with the "url" content in the bundle template (see qweb)
-            ))
+        Params:
+            url (str):
+                the original url of the scss/js file which has to be modified
 
-            # Create a view to extend the template which adds the original file to link the new modified version instead
-            IrUiView = request.env["ir.ui.view"]
-            view_to_xpath = IrUiView.get_related_views(bundle_xmlid, bundles=True).filtered(lambda v: v.arch.find(url) >= 0)
-            IrUiView.create(dict(
-                name = custom_url,
-                mode = "extension",
-                inherit_id = view_to_xpath.id,
-                arch = """
-                    <data inherit_id="%(inherit_xml_id)s" name="%(name)s">
-                        <xpath expr="//link[@href='%(url_to_replace)s']" position="attributes">
-                            <attribute name="href">%(new_url)s</attribute>
-                        </xpath>
-                    </data>
-                """ % dict(
-                    inherit_xml_id = view_to_xpath.xml_id,
-                    name = custom_url,
-                    url_to_replace = url,
-                    new_url = custom_url,
-                )
-            ))
+            bundle_xmlid (str):
+                the xmlid of the bundle in which the scss/js file addition can
+                be found
 
-        request.env["ir.qweb"].clear_caches()
+            content (str): the new content of the scss/js file
 
-    ## The reset_less route is in charge of reverting all the changes that were done to a less file.
-    ## @param url - the original URL of the LESS file to reset
-    ## @param bundle_xmlid - the xmlid of the bundle in which the LESS file addition can be found
-    @http.route("/web_editor/reset_less", type="json", auth="user")
-    def reset_less(self, url, bundle_xmlid):
-        IrAttachment = request.env["ir.attachment"]
-        IrUiView = request.env["ir.ui.view"]
+            file_type (str): 'scss' or 'js'
+        """
+        request.env['web_editor.assets'].save_asset(url, bundle_xmlid, content, file_type)
 
-        custom_url = self._make_custom_less_file_url(url, bundle_xmlid)
+    @http.route("/web_editor/reset_asset", type="json", auth="user", website=True)
+    def reset_asset(self, url, bundle_xmlid):
+        """
+        The reset_asset route is in charge of reverting all the changes that
+        were done to a scss/js file.
 
-        # Simply delete the attachement which contains the modified less file and the xpath view which links it
-        IrAttachment.search([("url", "=", custom_url)]).unlink()
-        IrUiView.search([("name", "=", custom_url)]).unlink()
+        Params:
+            url (str):
+                the original URL of the scss/js file to reset
 
-    def _make_custom_less_file_url(self, url, bundle):
-        parts = url.rsplit(".", 1)
-        return "%s.custom.%s.%s" % (parts[0], bundle, parts[1])
+            bundle_xmlid (str):
+                the xmlid of the bundle in which the scss/js file addition can
+                be found
+        """
+        request.env['web_editor.assets'].reset_asset(url, bundle_xmlid)
 
-    _match_less_file_url_regex = re.compile("^/(\w+)/(.+?)(\.custom\.(.+))?\.(\w+)$")
-    def _match_less_file_url(self, url):
-        m = self._match_less_file_url_regex.match(url)
-        if not m:
-            return False
-        return dict(
-            module = m.group(1),
-            resource_path = "%s.%s" % (m.group(2), m.group(5)),
-            customized = bool(m.group(3)),
-            bundle = m.group(4) or False
-        )
+    @http.route("/web_editor/public_render_template", type="json", auth="public", website=True)
+    def public_render_template(self, args):
+        # args[0]: xml id of the template to render
+        # args[1]: optional dict of rendering values, only trusted keys are supported
+        len_args = len(args)
+        assert len_args >= 1 and len_args <= 2, 'Need a xmlID and potential rendering values to render a template'
+
+        trusted_value_keys = ('debug',)
+
+        xmlid = args[0]
+        values = len_args > 1 and args[1] or {}
+
+        View = request.env['ir.ui.view']
+        if request.env.user._is_public() \
+                and xmlid in request.env['web_editor.assets']._get_public_asset_xmlids():
+            View = View.sudo()
+        return View._render_template(xmlid, {k: values[k] for k in values if k in trusted_value_keys})
+
+    @http.route('/web_editor/modify_image/<model("ir.attachment"):attachment>', type="json", auth="user", website=True)
+    def modify_image(self, attachment, res_model=None, res_id=None, name=None, data=None, original_id=None):
+        """
+        Creates a modified copy of an attachment and returns its image_src to be
+        inserted into the DOM.
+        """
+        fields = {
+            'original_id': attachment.id,
+            'datas': data,
+            'type': 'binary',
+            'res_model': res_model or 'ir.ui.view',
+        }
+        if fields['res_model'] == 'ir.ui.view':
+            fields['res_id'] = 0
+        elif res_id:
+            fields['res_id'] = res_id
+        if name:
+            fields['name'] = name
+        attachment = attachment.copy(fields)
+        if attachment.url:
+            # Don't keep url if modifying static attachment because static images
+            # are only served from disk and don't fallback to attachments.
+            if re.match(r'^/\w+/static/', attachment.url):
+                attachment.url = None
+            # Uniquify url by adding a path segment with the id before the name.
+            # This allows us to keep the unsplash url format so it still reacts
+            # to the unsplash beacon.
+            else:
+                url_fragments = attachment.url.split('/')
+                url_fragments.insert(-1, str(attachment.id))
+                attachment.url = '/'.join(url_fragments)
+        if attachment.public:
+            return attachment.image_src
+        attachment.generate_access_token()
+        return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)

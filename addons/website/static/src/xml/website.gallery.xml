@@ -11,24 +11,28 @@
     -->
     <t t-name="website.gallery.slideshow">
         <div t-attf-id="#{id}" class="carousel slide" data-ride="carousel" t-attf-data-interval="#{interval}" style="margin: 0 12px;">
-            <div class="carousel-inner container" style="padding: 0;">
-                 <t t-foreach="srcs" t-as="src">
-                    <div t-attf-class="item #{src_index == index and 'active' or ''}">
-                        <img t-attf-class="img img-responsive #{userStyle}" t-att-src="src"/>
+            <div class="carousel-inner" style="padding: 0;">
+                 <t t-foreach="images" t-as="image">
+                    <div t-attf-class="carousel-item #{image_index == index and 'active' or ''}">
+                        <img t-attf-class="img img-fluid d-block #{userStyle}" t-att-src="image.src" t-att-alt="image.alt"/>
                     </div>
                  </t>
             </div>
 
             <ul class="carousel-indicators">
-                <li class="fa fa-chevron-left o_indicators_left" style="overflow: hidden; padding: 12px; border: 0;"></li>
-                <t t-foreach="srcs" t-as="src">
-                    <li t-attf-data-target="##{id}" t-att-data-slide-to="src_index" t-att-class="src_index == index and 'active'" t-attf-style="background-image: url(#{src})"></li>
+                <li class="o_indicators_left text-center" aria-label="Previous" title="Previous">
+                    <i class="fa fa-chevron-left"/>
+                </li>
+                <t t-foreach="images" t-as="image">
+                    <li t-attf-data-target="##{id}" t-att-data-slide-to="image_index" t-att-class="image_index == index and 'active'" t-attf-style="background-image: url(#{image.src})"></li>
                 </t>
-                <li class="fa fa-chevron-right o_indicators_right" style="overflow: hidden; padding: 12px; border: 0;"></li>
+                <li class="o_indicators_right text-center" aria-label="Next" title="Next">
+                    <i class="fa fa-chevron-right"/>
+                </li>
             </ul>
 
-            <a class="carousel-control left" t-attf-href="##{id}" data-slide="prev"><span class="fa fa-chevron-left" /></a>
-            <a class="carousel-control right" t-attf-href="##{id}" data-slide="next"><span class="fa fa-chevron-right" /></a>
+            <a class="carousel-control-prev text-black" t-attf-href="##{id}" data-slide="prev" aria-label="Previous" title="Previous"><span class="fa fa-chevron-left"/></a>
+            <a class="carousel-control-next text-black" t-attf-href="##{id}" data-slide="next" aria-label="Next" title="Next"><span class="fa fa-chevron-right"/></a>
         </div>
     </t>
 
@@ -43,14 +47,14 @@
         ========================================================================
     -->
     <t t-name="website.gallery.slideshow.lightbox">
-        <div class="modal o_technical_modal fade" aria-labbelledby="Image Gallery Dialog" aria-hidden="true">
+        <div role="dialog" class="modal o_technical_modal fade" aria-labbelledby="Image Gallery Dialog">
             <div class="modal-dialog modal-lg" role="Picture Gallery"
                 t-attf-style="min-width: #{dim.min_width}px ; min-height: #{dim.min_height}px ; max-width: #{dim.max_width}px ; max-height: #{dim.max_height}px ; height: #{dim.height}px ;">
                 <div class="modal-content">
-                    <div class="modal-body o_slideshow">
-                        <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 12px; top: 10px;"><span aria-hidden="true">&amp;times;</span><span class="sr-only">Close</span></button>
+                    <main class="modal-body o_slideshow">
+                        <button type="button" class="close" data-dismiss="modal" style="position: absolute; right: 12px; top: 10px;"><span role="img" aria-label="Close">&amp;times;</span><span class="sr-only">Close</span></button>
                         <t t-call="website.gallery.slideshow"></t>
-                    </div>
+                    </main>
 
                 </div>
             </div>

@@ -1,441 +1,222 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-    <data noupdate="1">
-        <!-- User Feedback Form -->
-        <record model="survey.survey" id="feedback_form">
-            <field name="title">User Feedback Form</field>
-            <field name="stage_id" ref="survey.stage_in_progress" />
-            <field name="auth_required" eval="False" />
-            <field name="users_can_go_back" eval="True" />
-            <field name="description">&lt;p&gt;This survey should take less than five minutes.&lt;/p&gt;</field>
-            <field name="thank_you_message">&lt;p&gt;&lt;/p&gt;</field>
-        </record>
-        <!-- Page 1 -->
-        <record model="survey.page" id="feedback_1">
-            <field name="title">About your Odoo usage</field>
-            <field name="survey_id" ref="feedback_form" />
-            <field name="sequence">1</field>
-            <field name="description">&lt;p&gt;&lt;/p&gt;</field>
-        </record>
-        <record model="survey.question" id="feedback_1_1">
-            <field name="page_id" ref="feedback_1" />
-            <field name="sequence">1</field>
-            <field name="question">Are you using Odoo on a daily basis?</field>
-            <field name="type">simple_choice</field>
-            <field name="display_mode">dropdown</field>
-            <field name="constr_mandatory" eval="True" />
-        </record>
-                <record model="survey.label" id="choice_1_1_1">
-                    <field name="question_id" ref="feedback_1_1"/>
-                    <field name="sequence">1</field>
-                    <field name="value">Yes, I use a version &lt; 7.0</field>
-                </record>
-                <record model="survey.label" id="choice_1_1_2">
-                    <field name="question_id" ref="feedback_1_1"/>
-                    <field name="sequence">2</field>
-                    <field name="value">Yes, I use the 7.0 version, installed locally</field>
-                </record>
-                <record model="survey.label" id="choice_1_1_3">
-                    <field name="question_id" ref="feedback_1_1"/>
-                    <field name="sequence">3</field>
-                    <field name="value">Yes, I use the online version of Odoo</field>
-                </record>
-                <record model="survey.label" id="choice_1_1_4">
-                    <field name="question_id" ref="feedback_1_1"/>
-                    <field name="sequence">4</field>
-                    <field name="value">No, I just tested it</field>
-                </record>
-        <record model="survey.question" id="feedback_1_2">
-            <field name="page_id" ref="feedback_1" />
-            <field name="sequence">2</field>
-            <field name="question">Which modules are you using/testing?</field>
-            <field name="type">multiple_choice</field>
-            <field name="column_nb">4</field>
-            <field name="constr_mandatory" eval="True" />
-        </record>
-                <record model="survey.label" id="choice_1_2_1">
-                    <field name="question_id" ref="feedback_1_2"/>
-                    <field name="sequence">1</field>
-                    <field name="value">Sales Management</field>
-                </record>
-                <record model="survey.label" id="choice_1_2_2">
-                    <field name="question_id" ref="feedback_1_2"/>
-                    <field name="sequence">2</field>
-                    <field name="value">Purchases Management</field>
-                </record>
-                <record model="survey.label" id="choice_1_2_3">
-                    <field name="question_id" ref="feedback_1_2"/>
-                    <field name="sequence">3</field>
-                    <field name="value">Financial Management</field>
-                </record>
-                <record model="survey.label" id="choice_1_2_4">
-                    <field name="question_id" ref="feedback_1_2"/>
-                    <field name="sequence">4</field>
-                    <field name="value">CRM</field>
-                </record>
-                <record model="survey.label" id="choice_1_2_5">
-                    <field name="question_id" ref="feedback_1_2"/>
-                    <field name="sequence">5</field>
-                    <field name="value">Project Management</field>
-                </record>
-                <record model="survey.label" id="choice_1_2_6">
-                    <field name="question_id" ref="feedback_1_2"/>
-                    <field name="sequence">6</field>
-                    <field name="value">Human Resources</field>
-                </record>
-        <!-- Page 2 -->
-        <record model="survey.page" id="feedback_2">
-            <field name="title">Ergonomy and ease of use</field>
-            <field name="survey_id" ref="feedback_form" />
-            <field name="sequence">2</field>
-            <field name="description">&lt;p&gt;These questions relate to the ergonomy and ease of use of Odoo. Try to remind your firsts days on Odoo and
-what have been your difficulties.&lt;/p&gt;</field>
-        </record>
-        <record model="survey.question" id="feedback_2_1">
-            <field name="page_id" ref="feedback_2" />
-            <field name="sequence">1</field>
-            <field name="question">What do you think about the documentation available on doc.odoo.com?</field>
-            <field name="type">matrix</field>
-            <field name="matrix_subtype">simple</field>
-            <field name="constr_mandatory" eval="True" />
-        </record>
-                <record model="survey.label" id="fcol_2_1_1">
-                    <field name="question_id" ref="feedback_2_1"/>
-                    <field name="sequence">1</field>
-                    <field name="value">Totally disagree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_1_2">
-                    <field name="question_id" ref="feedback_2_1"/>
-                    <field name="sequence">2</field>
-                    <field name="value">Disagree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_1_3">
-                    <field name="question_id" ref="feedback_2_1"/>
-                    <field name="sequence">3</field>
-                    <field name="value">Agree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_1_4">
-                    <field name="question_id" ref="feedback_2_1"/>
-                    <field name="sequence">4</field>
-                    <field name="value">Totally agree</field>
-                </record>
-                <record model="survey.label" id="frow_2_1_1">
-                    <field name="question_id_2" ref="feedback_2_1"/>
-                    <field name="sequence">1</field>
-                    <field name="value">It is up-to-date</field>
-                </record>
-                <record model="survey.label" id="frow_2_1_2">
-                    <field name="question_id_2" ref="feedback_2_1"/>
-                    <field name="sequence">2</field>
-                    <field name="value">It helps in the beginning</field>
-                </record>
-                <record model="survey.label" id="frow_2_1_3">
-                    <field name="question_id_2" ref="feedback_2_1"/>
-                    <field name="sequence">3</field>
-                    <field name="value">I use the contextual help in Odoo</field>
-                </record>
-                <record model="survey.label" id="frow_2_1_4">
-                    <field name="question_id_2" ref="feedback_2_1"/>
-                    <field name="sequence">4</field>
-                    <field name="value">It is complete</field>
-                </record>
-                <record model="survey.label" id="frow_2_1_5">
-                    <field name="question_id_2" ref="feedback_2_1"/>
-                    <field name="sequence">5</field>
-                    <field name="value">It is clear</field>
-                </record>
-        <record model="survey.question" id="feedback_2_2">
-            <field name="page_id" ref="feedback_2" />
-            <field name="sequence">2</field>
-            <field name="question">What do you think about the process views of Odoo, available in the web client ?</field>
-            <field name="type">matrix</field>
-            <field name="matrix_subtype">simple</field>
-            <field name="constr_mandatory" eval="True" />
-        </record>
-                <record model="survey.label" id="fcol_2_2_1">
-                    <field name="question_id" ref="feedback_2_2"/>
-                    <field name="sequence">1</field>
-                    <field name="value">Totally disagree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_2_2">
-                    <field name="question_id" ref="feedback_2_2"/>
-                    <field name="sequence">2</field>
-                    <field name="value">Disagree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_2_3">
-                    <field name="question_id" ref="feedback_2_2"/>
-                    <field name="sequence">3</field>
-                    <field name="value">Agree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_2_4">
-                    <field name="question_id" ref="feedback_2_2"/>
-                    <field name="sequence">4</field>
-                    <field name="value">Totally agree</field>
-                </record>
-                <record model="survey.label" id="frow_2_2_1">
-                    <field name="question_id_2" ref="feedback_2_2"/>
-                    <field name="sequence">1</field>
-                    <field name="value">They help new users to understand Odoo</field>
-                </record>
-                <record model="survey.label" id="frow_2_2_2">
-                    <field name="question_id_2" ref="feedback_2_2"/>
-                    <field name="sequence">2</field>
-                    <field name="value">They are clean and correct</field>
-                </record>
-                <record model="survey.label" id="frow_2_2_3">
-                    <field name="question_id_2" ref="feedback_2_2"/>
-                    <field name="sequence">3</field>
-                    <field name="value">They are useful on a daily usage</field>
-                </record>
-                <record model="survey.label" id="frow_2_2_4">
-                    <field name="question_id_2" ref="feedback_2_2"/>
-                    <field name="sequence">4</field>
-                    <field name="value">A process is defined for all enterprise flows</field>
-                </record>
-                <record model="survey.label" id="frow_2_2_5">
-                    <field name="question_id_2" ref="feedback_2_2"/>
-                    <field name="sequence">5</field>
-                    <field name="value">It's easy to find the process you need</field>
-                </record>
-        <record model="survey.question" id="feedback_2_3">
-            <field name="page_id" ref="feedback_2" />
-            <field name="sequence">3</field>
-            <field name="question">Do you have suggestions on how to improve the process view ?</field>
-            <field name="type">free_text</field>
-        </record>
-        <record model="survey.question" id="feedback_2_4">
-            <field name="page_id" ref="feedback_2" />
-            <field name="sequence">4</field>
-            <field name="question">What do you think about the structure of the menus?</field>
-            <field name="type">multiple_choice</field>
-            <field name="column_nb">4</field>
-            <field name="constr_mandatory" eval="True" />
-        </record>
-                <record model="survey.label" id="choice_2_4_1">
-                    <field name="question_id" ref="feedback_2_4"/>
-                    <field name="sequence">1</field>
-                    <field name="value">The current menu structure is good</field>
-                </record>
-                <record model="survey.label" id="choice_2_4_2">
-                    <field name="question_id" ref="feedback_2_4"/>
-                    <field name="sequence">2</field>
-                    <field name="value">It can be improved</field>
-                </record>
-                <record model="survey.label" id="choice_2_4_3">
-                    <field name="question_id" ref="feedback_2_4"/>
-                    <field name="sequence">3</field>
-                    <field name="value">There are too much menus, it's complex to understand</field>
-                </record>
-        <record model="survey.question" id="feedback_2_5">
-            <field name="page_id" ref="feedback_2" />
-            <field name="sequence">5</field>
-            <field name="question">What do you think about the groups of users?</field>
-            <field name="type">matrix</field>
-            <field name="matrix_subtype">simple</field>
-            <field name="constr_mandatory" eval="True" />
-        </record>
-                <record model="survey.label" id="fcol_2_5_1">
-                    <field name="question_id" ref="feedback_2_5"/>
-                    <field name="sequence">1</field>
-                    <field name="value">Totally disagree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_5_2">
-                    <field name="question_id" ref="feedback_2_5"/>
-                    <field name="sequence">2</field>
-                    <field name="value">Disagree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_5_3">
-                    <field name="question_id" ref="feedback_2_5"/>
-                    <field name="sequence">3</field>
-                    <field name="value">Agree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_5_4">
-                    <field name="question_id" ref="feedback_2_5"/>
-                    <field name="sequence">4</field>
-                    <field name="value">Totally agree</field>
-                </record>
-                <record model="survey.label" id="frow_2_5_1">
-                    <field name="question_id_2" ref="feedback_2_5"/>
-                    <field name="sequence">1</field>
-                    <field name="value">The security rules defined on groups are useful</field>
-                </record>
-                <record model="survey.label" id="frow_2_5_2">
-                    <field name="question_id_2" ref="feedback_2_5"/>
-                    <field name="sequence">2</field>
-                    <field name="value">Those security rules are standard and can be used out-of-the-box in most cases</field>
-                </record>
-                <record model="survey.label" id="frow_2_5_3">
-                    <field name="question_id_2" ref="feedback_2_5"/>
-                    <field name="sequence">3</field>
-                    <field name="value">The 'Usability/Extended View' group helps in daily work</field>
-                </record>
-                <record model="survey.label" id="frow_2_5_4">
-                    <field name="question_id_2" ref="feedback_2_5"/>
-                    <field name="sequence">4</field>
-                    <field name="value">The 'Usability/Extended View' group hides only optional fields</field>
-                </record>
-                <record model="survey.label" id="frow_2_5_5">
-                    <field name="question_id_2" ref="feedback_2_5"/>
-                    <field name="sequence">5</field>
-                    <field name="value">The groups set on menu items are relevant</field>
-                </record>
-        <record model="survey.question" id="feedback_2_6">
-            <field name="page_id" ref="feedback_2" />
-            <field name="sequence">6</field>
-            <field name="question">What do you think about the structure of the menus?</field>
-            <field name="type">simple_choice</field>
-            <field name="display_mode">columns</field>
-            <field name="column_nb">4</field>
-            <field name="constr_mandatory" eval="True" />
-        </record>
-                <record model="survey.label" id="choice_2_6_1">
-                    <field name="question_id" ref="feedback_2_6"/>
-                    <field name="sequence">1</field>
-                    <field name="value">There are too many groups defined, security is too complex to set</field>
-                </record>
-                <record model="survey.label" id="choice_2_6_2">
-                    <field name="question_id" ref="feedback_2_6"/>
-                    <field name="sequence">2</field>
-                    <field name="value">There are too few groups defined, security isn't accurate enough</field>
-                </record>
-                <record model="survey.label" id="choice_2_6_3">
-                    <field name="question_id" ref="feedback_2_6"/>
-                    <field name="sequence">3</field>
-                    <field name="value">The number of groups is good</field>
-                </record>
-        <record model="survey.question" id="feedback_2_7">
-            <field name="page_id" ref="feedback_2" />
-            <field name="sequence">7</field>
-            <field name="question">What do you think about configuration wizards?</field>
-            <field name="type">matrix</field>
-            <field name="matrix_subtype">simple</field>
-            <field name="constr_mandatory" eval="True" />
-        </record>
-                <record model="survey.label" id="fcol_2_7_1">
-                    <field name="question_id" ref="feedback_2_7"/>
-                    <field name="sequence">1</field>
-                    <field name="value">Totally disagree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_7_2">
-                    <field name="question_id" ref="feedback_2_7"/>
-                    <field name="sequence">2</field>
-                    <field name="value">Disagree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_7_3">
-                    <field name="question_id" ref="feedback_2_7"/>
-                    <field name="sequence">3</field>
-                    <field name="value">Agree</field>
-                </record>
-                <record model="survey.label" id="fcol_2_7_4">
-                    <field name="question_id" ref="feedback_2_7"/>
-                    <field name="sequence">4</field>
-                    <field name="value">Totally agree</field>
-                </record>
-                <record model="survey.label" id="frow_2_7_1">
-                    <field name="question_id_2" ref="feedback_2_7"/>
-                    <field name="sequence">1</field>
-                    <field name="value">Descriptions and help tooltips are clear enough</field>
-                </record>
-                <record model="survey.label" id="frow_2_7_2">
-                    <field name="question_id_2" ref="feedback_2_7"/>
-                    <field name="sequence">2</field>
-                    <field name="value">Configuration wizard exists for each important setting</field>
-                </record>
-                <record model="survey.label" id="frow_2_7_3">
-                    <field name="question_id_2" ref="feedback_2_7"/>
-                    <field name="sequence">3</field>
-                    <field name="value">Extra modules proposed are relevant</field>
-                </record>
-                <record model="survey.label" id="frow_2_7_4">
-                    <field name="question_id_2" ref="feedback_2_7"/>
-                    <field name="sequence">4</field>
-                    <field name="value">Running the configuration wizards is a good way to spare time</field>
-                </record>
-        <!-- Page 3 -->
-        <record model="survey.page" id="feedback_3">
-            <field name="title">Community and contributors</field>
-            <field name="survey_id" ref="feedback_form" />
-            <field name="sequence">3</field>
-            <field name="description">&lt;p&gt;&lt;/p&gt;</field>
-        </record>
-        <record model="survey.question" id="feedback_3_1">
-            <field name="page_id" ref="feedback_3" />
-            <field name="sequence">1</field>
-            <field name="question">How do you contribute or plan to contribute to Odoo?</field>
-            <field name="type">multiple_choice</field>
-            <field name="column_nb">6</field>
-            <field name="constr_mandatory" eval="True" />
-        </record>
-                <record model="survey.label" id="choice_3_1_1">
-                    <field name="question_id" ref="feedback_3_1"/>
-                    <field name="sequence">1</field>
-                    <field name="value">I participate to discussion and forums</field>
-                </record>
-                <record model="survey.label" id="choice_3_1_2">
-                    <field name="question_id" ref="feedback_3_1"/>
-                    <field name="sequence">2</field>
-                    <field name="value">I'd like to contribute but I don't know how?</field>
-                </record>
-                <record model="survey.label" id="choice_3_1_3">
-                    <field name="question_id" ref="feedback_3_1"/>
-                    <field name="sequence">3</field>
-                    <field name="value">I develop new features</field>
-                </record>
-                <record model="survey.label" id="choice_3_1_4">
-                    <field name="question_id" ref="feedback_3_1"/>
-                    <field name="sequence">4</field>
-                    <field name="value">I help to translate</field>
-                </record>
-                <record model="survey.label" id="choice_3_1_5">
-                    <field name="question_id" ref="feedback_3_1"/>
-                    <field name="sequence">5</field>
-                    <field name="value">I write documentations</field>
-                </record>
-        <record model="survey.question" id="feedback_3_2">
-            <field name="page_id" ref="feedback_3" />
-            <field name="sequence">2</field>
-            <field name="question">Do you have a proposition to help people to contribute?</field>
-            <field name="type">free_text</field>
-        </record>
-        <record model="survey.question" id="feedback_3_3">
-            <field name="page_id" ref="feedback_3" />
-            <field name="sequence">3</field>
-            <field name="question">Do you have a proposition to attract new contributors?</field>
-            <field name="type">free_text</field>
-        </record>
-        <!-- Page 4 -->
-        <record model="survey.page" id="feedback_4">
-            <field name="title">Questions for developers</field>
-            <field name="survey_id" ref="feedback_form" />
-            <field name="sequence">4</field>
-            <field name="description">&lt;p&gt;If you do not contribute or develop in Odoo, skip this page.&lt;/p&gt;</field>
-        </record>
-        <record model="survey.question" id="feedback_4_1">
-            <field name="page_id" ref="feedback_4" />
-            <field name="sequence">1</field>
-            <field name="question">Where do you develop your new features?</field>
-            <field name="type">multiple_choice</field>
-            <field name="column_nb">6</field>
-        </record>
-                <record model="survey.label" id="choice_4_1_1">
-                    <field name="question_id" ref="feedback_4_1"/>
-                    <field name="sequence">1</field>
-                    <field name="value">I use Github, like all official Odoo projects</field>
-                </record>
-                <record model="survey.label" id="choice_4_1_2">
-                    <field name="question_id" ref="feedback_4_1"/>
-                    <field name="sequence">2</field>
-                    <field name="value">I use another repository system (SourceForge...)</field>
-                </record>
-                <record model="survey.label" id="choice_4_1_3">
-                    <field name="question_id" ref="feedback_4_1"/>
-                    <field name="sequence">3</field>
-                    <field name="value">I host them on my own website</field>
-                </record>
-                <record model="survey.label" id="choice_4_1_4">
-                    <field name="question_id" ref="feedback_4_1"/>
-                    <field name="sequence">4</field>
-                    <field name="value">I do not publish my developments</field>
-                </record>
-    </data>
-</odoo>
+<odoo><data noupdate="0">
+
+    <record model="survey.survey" id="survey_feedback">
+        <field name="title">Feedback Form</field>
+        <field name="access_token">b135640d-14d4-4748-9ef6-344ca256531e</field>
+        <field name="state">open</field>
+        <field name="access_mode">public</field>
+        <field name="users_can_go_back" eval="True" />
+        <field name="questions_layout">page_per_section</field>
+        <field name="description" type="html">
+<p>This survey allows you to give a feedback about your experience with our products.
+    Filling it helps us improving your experience.</p></field>
+    </record>
+
+    <!-- Page1: general information -->
+    <record model="survey.question" id="survey_feedback_p1">
+        <field name="title">About you</field>
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">1</field>
+        <field name="question_type" eval="False" />
+        <field name="is_page" eval="True" />
+        <field name="description" type="html">
+<p>This section is about general informations about you. Answering them helps qualifying your answers.</p></field>
+    </record>
+    <record model="survey.question" id="survey_feedback_p1_q1">
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">2</field>
+        <field name="title">Where do you live ?</field>
+        <field name="question_type">char_box</field>
+        <field name="constr_mandatory" eval="False"/>
+    </record>
+    <record model="survey.question" id="survey_feedback_p1_q2">
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">3</field>
+        <field name="title">When is your date of birth ?</field>
+        <field name="question_type">date</field>
+        <field name="constr_mandatory" eval="False"/>
+    </record>
+    <record model="survey.question" id="survey_feedback_p1_q3">
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">4</field>
+        <field name="title">How frequently do you buy products online ?</field>
+        <field name="question_type">simple_choice</field>
+        <field name="comments_allowed" eval="True"/>
+        <field name="comment_count_as_answer" eval="True"/>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p1_q3_sug1">
+        <field name="question_id" ref="survey_feedback_p1_q3"/>
+        <field name="sequence">1</field>
+        <field name="value">Once a day</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p1_q3_sug2">
+        <field name="question_id" ref="survey_feedback_p1_q3"/>
+        <field name="sequence">2</field>
+        <field name="value">Once a week</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p1_q3_sug3">
+        <field name="question_id" ref="survey_feedback_p1_q3"/>
+        <field name="sequence">3</field>
+        <field name="value">Once a month</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p1_q3_sug4">
+        <field name="question_id" ref="survey_feedback_p1_q3"/>
+        <field name="sequence">4</field>
+        <field name="value">Once a year</field>
+    </record>
+    <record model="survey.question" id="survey_feedback_p1_q4">
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">5</field>
+        <field name="title">How many times did you order products on our website ?</field>
+        <field name="question_type">numerical_box</field>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+
+    <!-- Page 2 -->
+    <record model="survey.question" id="survey_feedback_p2">
+        <field name="title">About our ecommerce</field>
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">6</field>
+        <field name="is_page" eval="True" />
+        <field name="question_type" eval="False" />
+        <field name="description" type="html">
+<p>This section is about our eCommerce experience itself.</p></field>
+    </record>
+    <record model="survey.question" id="survey_feedback_p2_q1">
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">7</field>
+        <field name="title">Which of the following words would you use to describe our products ?</field>
+        <field name="question_type">multiple_choice</field>
+        <field name="constr_mandatory" eval="True"/>
+        <field name="comments_allowed" eval="True"/>
+        <field name="comment_count_as_answer" eval="False"/>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q1_sug1">
+        <field name="question_id" ref="survey_feedback_p2_q1"/>
+        <field name="sequence">1</field>
+        <field name="value">High quality</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q1_sug2">
+        <field name="question_id" ref="survey_feedback_p2_q1"/>
+        <field name="sequence">2</field>
+        <field name="value">Useful</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q1_sug3">
+        <field name="question_id" ref="survey_feedback_p2_q1"/>
+        <field name="sequence">3</field>
+        <field name="value">Unique</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q1_sug4">
+        <field name="question_id" ref="survey_feedback_p2_q1"/>
+        <field name="sequence">4</field>
+        <field name="value">Good value for money</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q1_sug5">
+        <field name="question_id" ref="survey_feedback_p2_q1"/>
+        <field name="sequence">5</field>
+        <field name="value">Overpriced</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q1_sug6">
+        <field name="question_id" ref="survey_feedback_p2_q1"/>
+        <field name="sequence">6</field>
+        <field name="value">Impractical</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q1_sug7">
+        <field name="question_id" ref="survey_feedback_p2_q1"/>
+        <field name="sequence">7</field>
+        <field name="value">Ineffective</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q1_sug8">
+        <field name="question_id" ref="survey_feedback_p2_q1"/>
+        <field name="sequence">8</field>
+        <field name="value">Poor quality</field>
+    </record>
+    <record model="survey.question" id="survey_feedback_p2_q2">
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">8</field>
+        <field name="title">What do your think about our new eCommerce ?</field>
+        <field name="question_type">matrix</field>
+        <field name="matrix_subtype">multiple</field>
+        <field name="constr_mandatory" eval="True"/>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q2_col1">
+        <field name="question_id" ref="survey_feedback_p2_q2"/>
+        <field name="sequence">1</field>
+        <field name="value">Totally disagree</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q2_col2">
+        <field name="question_id" ref="survey_feedback_p2_q2"/>
+        <field name="sequence">2</field>
+        <field name="value">Disagree</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q2_col3">
+        <field name="question_id" ref="survey_feedback_p2_q2"/>
+        <field name="sequence">3</field>
+        <field name="value">Agree</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q2_col4">
+        <field name="question_id" ref="survey_feedback_p2_q2"/>
+        <field name="sequence">4</field>
+        <field name="value">Totally agree</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q2_row1">
+        <field name="matrix_question_id" ref="survey_feedback_p2_q2"/>
+        <field name="sequence">1</field>
+        <field name="value">The new layout and design is fresh and up-to-date</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q2_row2">
+        <field name="matrix_question_id" ref="survey_feedback_p2_q2"/>
+        <field name="sequence">2</field>
+        <field name="value">It is easy to find the product that I want</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q2_row3">
+        <field name="matrix_question_id" ref="survey_feedback_p2_q2"/>
+        <field name="sequence">3</field>
+        <field name="value">The tool to compare the products is useful to make a choice</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q2_row4">
+        <field name="matrix_question_id" ref="survey_feedback_p2_q2"/>
+        <field name="sequence">4</field>
+        <field name="value">The checkout process is clear and secure</field>
+    </record>
+    <record model="survey.question.answer" id="survey_feedback_p2_q2_row5">
+        <field name="matrix_question_id" ref="survey_feedback_p2_q2"/>
+        <field name="sequence">5</field>
+        <field name="value">I have added products to my wishlist</field>
+    </record>
+    <record model="survey.question" id="survey_feedback_p2_q3">
+        <field name="survey_id" ref="survey_feedback" />
+        <field name="sequence">9</field>
+        <field name="title">Do you have any other comments, questions, or concerns ?</field>
+        <field name="question_type">text_box</field>
+        <field name="constr_mandatory" eval="False"/>
+    </record>
+
+    <record model="survey.user_input" id="survey_answer_1">
+        <field name="survey_id" ref="survey.survey_feedback" />
+        <field name="partner_id" ref="base.partner_demo"/>
+        <field name="email">mark.brown23@example.com</field>
+        <field name="state">done</field>
+    </record>
+    <record model="survey.user_input" id="survey_answer_2">
+        <field name="survey_id" ref="survey.survey_feedback" />
+        <field name="partner_id" ref="base.res_partner_address_7"/>
+        <field name="email">billy.fox45@example.com</field>
+        <field name="state">done</field>
+    </record>
+    <record model="survey.user_input" id="survey_answer_3">
+        <field name="survey_id" ref="survey.survey_feedback" />
+        <field name="partner_id" eval="False"/>
+        <field name="email">Evelyne Gargouillis &lt;evelyne@example.com&gt;</field>
+        <field name="state">done</field>
+    </record>
+    <record model="survey.user_input" id="survey_answer_4">
+        <field name="survey_id" ref="survey.survey_feedback" />
+        <field name="partner_id" eval="False"/>
+        <field name="email">Martin Tamarre &lt;martin@example.com&gt;</field>
+        <field name="state">in_progress</field>
+    </record>
+
+</data></odoo>

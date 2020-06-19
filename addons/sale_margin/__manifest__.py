@@ -4,7 +4,7 @@
 {
     'name': 'Margins in Sales Orders',
     'version':'1.0',
-    'category': 'Sales',
+    'category': 'Sales/Sales',
     'description': """
 This module adds the 'Margin' on sales order.
 =============================================
@@ -15,5 +15,4 @@ Price and Cost Price.
     'depends':['sale_management'],
     'demo':['data/sale_margin_demo.xml'],
     'data':['security/ir.model.access.csv','views/sale_margin_view.xml'],
-    'uninstall_hook': "uninstall_hook",
 }

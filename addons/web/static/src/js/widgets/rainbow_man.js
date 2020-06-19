@@ -1,64 +1,58 @@
-odoo.define('web.rainbow_man', function (require) {
+odoo.define('web.RainbowMan', function (require) {
 "use strict";
 
-var ajax = require("web.ajax");
+/**
+ * The RainbowMan widget is the widget displayed by default as a 'fun/rewarding'
+ * effect in some cases.  For example, when the user marked a large deal as won,
+ * or when he cleared its inbox.
+ *
+ * This widget is mostly a picture and a message with a rainbow animation around
+ * If you want to display a RainbowMan, you probably do not want to do it by
+ * importing this file.  The usual way to do that would be to use the effect
+ * service (by triggering the 'show_effect' event)
+ */
+
 var Widget = require('web.Widget');
 var core = require('web.core');
-var qweb = core.qweb;
+
 var _t = core._t;
 
 var RainbowMan = Widget.extend({
     template: 'rainbow_man.notification',
+    xmlDependencies: ['/web/static/src/xml/rainbow_man.xml'],
     /**
      * @override
      * @constructor
-     * @param {Object} [options] - key-value options to decide rainbowman behavior / appearance
-     * @param {string} [options.message] - Message to be displayed on rainbowman card
-     * @param {string} [options.fadeout]
-     *        Delay for rainbowman to disappear - [options.fadeout='fast'] will make rainbowman
-     *        dissapear quickly, [options.fadeout='medium'] and [options.fadeout='slow'] will
-     *        wait little longer before disappearing (can be used when [options.message]
-     *        is longer), [options.fadeout='no'] will keep rainbowman on screen until
-     *        user clicks anywhere outside rainbowman
-     * @param {string} [options.img_url] - URL of the image to be displayed
-     * @param {Boolean} [options.click_close] - If true, destroys rainbowman on click outside
+     * @param {Object} [options]
+     * @param {string} [options.message] Message to be displayed on rainbowman card
+     * @param {string} [options.fadeout='medium'] Delay for rainbowman to disappear. 'fast' will make rainbowman dissapear quickly, 'medium' and 'slow' will wait little longer before disappearing (can be used when options.message is longer), 'no' will keep rainbowman on screen until user clicks anywhere outside rainbowman
+     * @param {string} [options.img_url] URL of the image to be displayed
      */
     init: function (options) {
         this._super.apply(this, arguments);
-        var rainbowDelay = {slow: 4500, medium: 3500, fast:2000, no: false };
+        var rainbowDelay = {slow: 4500, medium: 3500, fast: 2000, no: false};
         this.options = _.defaults(options || {}, {
             fadeout: 'medium',
             img_url: '/web/static/src/img/smile.svg',
             message: _t('Well Done!'),
-            click_close: true,
         });
         this.delay = rainbowDelay[this.options.fadeout];
-        core.bus.on('clear_uncommitted_changes', this, this.destroy);
-    },
-    /**
-     * @override
-     */
-    willStart: function () {
-        var def;
-        if (!qweb.has_template(this.template)) {
-            // we need to manually load the templates when the rainbon_man is used in
-            // the frontend, for example, it may be displayed at the end of a tour.
-            def = ajax.loadXML("/web/static/src/xml/rainbow_man.xml", qweb);
-        }
-        return $.when(this._super.apply(this, arguments), def);
     },
     /**
      * @override
      */
     start: function () {
         var self = this;
-        if (this.options.click_close) {
-            core.bus.on('click', this, function (ev) {
+        // destroy rainbow man when the user clicks outside
+        // this is done in a setTimeout to prevent the click that triggered the
+        // rainbow man to close it directly
+        setTimeout(function () {
+            core.bus.on('click', self, function (ev) {
                 if (ev.originalEvent && ev.target.className.indexOf('o_reward') === -1) {
                     this.destroy();
                 }
             });
-        }
+        });
         if (this.delay) {
             setTimeout(function () {
                 self.$el.addClass('o_reward_fading');

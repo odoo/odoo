@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_frontend" inherit_id="website.assets_frontend">
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/test_website/static/src/js/test_error.js"></script>
+        </xpath>
+    </template>
+
+    <template id="assets_tests" name="Test Website Assets Tests" inherit_id="web.assets_tests">
+        <xpath expr="." position="inside">
+            <script type="text/javascript" src="/test_website/static/tests/tours/reset_views.js"></script>
+            <script type="text/javascript" src="/test_website/static/tests/tours/error_views.js"></script>
+            <script type="text/javascript" src="/test_website/static/tests/tours/json_auth.js"></script>
+        </xpath>
+    </template>
+
+    <record id="multi_url" model="website.page">
+        <field name="name">Multi URL test</field>
+        <field name="url">/multi_url</field>
+        <field name="website_published">False</field>
+        <field name="type">qweb</field>
+        <field name="key">test_website.multi_url</field>
+        <field name="website_published">True</field>
+        <field name="arch" type="xml">
+            <t t-name='multi_url'>
+                <div>
+                    <a id='get' href="/get">get</a>
+                    <form id='post' action="/post">post</form>>
+                    <a id='get_post' href="/get_post">get_post</a>
+                    <a id='get_post_nomultilang' href="/get_post_nomultilang">get_post_nomultilang</a>
+                </div>
+            </t>
+        </field>
+    </record>
+</odoo>

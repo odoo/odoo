@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="hr_employee_view_search" model="ir.ui.view">
+        <field name="name">hr.employee.view.search</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_filter"/>
+        <field name="groups_id" eval="[(4, ref('hr.group_hr_manager'))]"/>
+        <field name="arch" type="xml">
+            <filter name="group_manager" position="after">
+                <filter name="group_hr_presence_state" string="Presence" domain="[]" context="{'group_by':'hr_presence_state_display'}"/>
+            </filter>
+        </field>
+    </record>
+
+    <record id="hr_employee_view_kanban" model="ir.ui.view">
+        <field name="name">hr.employee.view.kanban</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.hr_kanban_view_employees"/>
+        <field name="groups_id" eval="[(4, ref('hr.group_hr_manager'))]"/>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('oe_kanban_details')]" position="inside">
+                <div class="o_kanban_record_bottom">
+                    <div class="oe_kanban_bottom_left">
+                        <field name="hr_presence_state" invisible="1"/>
+                        <button name="action_set_present" type="object" class="btn btn-primary btn-sm mt8 fa fa-check" title="Set as present" attrs="{'invisible': [('hr_presence_state', '=', 'present')]}"> </button>
+                        <button name="action_open_leave_request" type="object" class="btn btn-primary btn-sm mt8">Time Off</button>
+                        <button name="action_send_sms" type="object" class="btn btn-primary btn-sm mt8">SMS</button>
+                        <button name="action_send_mail" type="object" class="btn btn-primary btn-sm mt8">Mail</button>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

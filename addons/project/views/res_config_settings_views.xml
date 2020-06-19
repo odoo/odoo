@@ -3,14 +3,14 @@
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.project</field>
             <field name="model">res.config.settings</field>
-            <field name="priority" eval="10"/>
+            <field name="priority" eval="50"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form" />
             <field name="arch" type="xml">
             <xpath expr="//div[hasclass('settings')]" position="inside">
-                <div class="app_settings_block" data-string="Project" data-key="project" groups="project.group_project_manager">
-                        <h2>Task Management</h2>
-                        <div class="row mt16 o_settings_container" title="This replaces task's description text field by a collaborative rich text pad. This is advised if tasks involve several people.">
-                            <div id="use_collaborative_pad" class="col-xs-12 col-md-6 o_setting_box" title="Lets the company customize which Pad installation should be used to link to new pads (for example: http://etherpad.com/).">
+                <div class="app_settings_block" data-string="Project" string="Project" data-key="project" groups="project.group_project_manager">
+                        <h2>Tasks Management</h2>
+                        <div class="row mt16 o_settings_container" id="tasks_management">
+                            <div id="use_collaborative_pad" class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="module_pad"/>
                                 </div>
@@ -21,7 +21,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box">
                                 <div class="o_setting_left_pane">
                                     <field name="group_subtask_project"/>
                                 </div>
@@ -32,22 +32,38 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" id="track_customer_satisfaction_setting">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_rating_project"/>
+                                    <field name="group_project_rating"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="module_rating_project"/>
+                                    <label for="group_project_rating"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/project/advanced/feedback.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Track customer satisfaction on tasks
                                     </div>
-                                    <div class="content-group" id="msg_module_rating_project"/>
+                                    <div class="content-group" attrs="{'invisible': [('group_project_rating', '=', False)]}">
+                                        <div class="mt8">
+                                            <button name="%(project.open_task_type_form)d" icon="fa-arrow-right" type="action" string="Set a Rating Email Template on Stages" class="btn-link"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
                         <h2>Time Management</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="row mt16 o_settings_container" name="project_time">
+                            <div class="col-12 col-lg-6 o_setting_box" name="project_time_management">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_project_forecast" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane">
+                                    <label for="module_project_forecast"/>
+                                    <div class="text-muted" name="project_forecast_msg">
+                                        Plan resource allocation accross projets and tasks, and estimate deadlines more accurately
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-12 col-lg-6 o_setting_box" id="log_time_tasks_setting">
                                 <div class="o_setting_left_pane">
                                     <field name="module_hr_timesheet"/>
                                 </div>
@@ -58,17 +74,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_project_forecast" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="module_project_forecast"/>
-                                    <div class="text-muted">
-                                        Manage your resources with Gantt charts
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                     </div>
                 </xpath>
@@ -76,7 +81,7 @@
         </record>
 
         <record id="project_config_settings_action" model="ir.actions.act_window">
-            <field name="name">Configure Project</field>
+            <field name="name">Settings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>

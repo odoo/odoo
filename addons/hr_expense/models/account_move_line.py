@@ -2,7 +2,23 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models
-from odoo.tools import float_compare
+
+
+class AccountMove(models.Model):
+    _inherit = 'account.move'
+
+    def action_invoice_paid(self):
+        # OVERRIDE to mark as paid the expense sheets.
+        res = super().action_invoice_paid()
+
+        if self:
+            expense_sheets = self.env['hr.expense.sheet'].search([
+                ('account_move_id', 'in', self.ids),
+                ('state', '!=', 'done'),
+            ])
+            expense_sheets.set_to_paid()
+
+        return res
 
 
 class AccountMoveLine(models.Model):
@@ -10,11 +26,8 @@ class AccountMoveLine(models.Model):
 
     expense_id = fields.Many2one('hr.expense', string='Expense', copy=False, help="Expense where the move line come from")
 
-    @api.multi
-    def reconcile(self, writeoff_acc_id=False, writeoff_journal_id=False):
-        res = super(AccountMoveLine, self).reconcile(writeoff_acc_id=writeoff_acc_id, writeoff_journal_id=writeoff_journal_id)
-        account_move_ids = [l.move_id.id for l in self if float_compare(l.move_id.matched_percentage, 1, precision_digits=5) == 0]
-        if account_move_ids:
-            expense_sheets = self.env['hr.expense.sheet'].search([('account_move_id', 'in', account_move_ids)])
-            expense_sheets.set_to_paid()
-        return res
+    def _get_attachment_domains(self):
+        attachment_domains = super(AccountMoveLine, self)._get_attachment_domains()
+        if self.expense_id:
+            attachment_domains.append([('res_model', '=', 'hr.expense'), ('res_id', '=', self.expense_id.id)])
+        return attachment_domains

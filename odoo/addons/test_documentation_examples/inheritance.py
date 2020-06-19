@@ -5,6 +5,7 @@ from odoo import models, fields
 
 class Inheritance0(models.Model):
     _name = 'inheritance.0'
+    _description = 'Inheritance Zero'
 
     name = fields.Char()
 
@@ -17,6 +18,7 @@ class Inheritance0(models.Model):
 class Inheritance1(models.Model):
     _name = 'inheritance.1'
     _inherit = 'inheritance.0'
+    _description = 'Inheritance One'
 
     def call(self):
         return self.check("model 1")

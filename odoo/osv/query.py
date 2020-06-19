@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import warnings
 
 
 def _quote(to_quote):
@@ -25,7 +26,7 @@ class Query(object):
 
         # holds the list of tables joined using default JOIN.
         # the table names are stored double-quoted (backwards compatibility)
-        self.tables = tables or []
+        self._tables = tables or []
 
         # holds the list of WHERE clause elements, to be joined with
         # 'AND' when generating the final query
@@ -64,14 +65,25 @@ class Query(object):
         #   ...
         self.extras = extras or {}
 
+    def add_table(self, table):
+        table = _quote(table)
+        assert table not in self._tables, '%s already in %s' % (table, self)
+        self._tables.append(table)
+
+    @property
+    def tables(self):
+        warnings.warn("deprecated Query.tables, use Query.get_sql() instead",
+                      DeprecationWarning)
+        return self._tables
+
     def _get_table_aliases(self):
         from odoo.osv.expression import get_alias_from_query
-        return [get_alias_from_query(from_statement)[1] for from_statement in self.tables]
+        return [get_alias_from_query(from_statement)[1] for from_statement in self._tables]
 
     def _get_alias_mapping(self):
         from odoo.osv.expression import get_alias_from_query
         mapping = {}
-        for table in self.tables:
+        for table in self._tables:
             alias, statement = get_alias_from_query(table)
             mapping[statement] = table
         return mapping
@@ -113,8 +125,8 @@ class Query(object):
         alias, alias_statement = generate_table_alias(lhs, [(table, link)])
 
         if implicit:
-            if alias_statement not in self.tables:
-                self.tables.append(alias_statement)
+            if alias_statement not in self._tables:
+                self._tables.append(alias_statement)
                 condition = '("%s"."%s" = "%s"."%s")' % (lhs, lhs_col, alias, col)
                 self.where_clause.append(condition)
             else:
@@ -123,13 +135,13 @@ class Query(object):
             return alias, alias_statement
         else:
             aliases = self._get_table_aliases()
-            assert lhs in aliases, "Left-hand-side table %s must already be part of the query tables %s!" % (lhs, str(self.tables))
-            if alias_statement in self.tables:
+            assert lhs in aliases, "Left-hand-side table %s must already be part of the query tables %s!" % (lhs, str(self._tables))
+            if alias_statement in self._tables:
                 # already joined, must ignore (promotion to outer and multiple joins not supported yet)
                 pass
             else:
                 # add JOIN
-                self.tables.append(alias_statement)
+                self._tables.append(alias_statement)
                 join_tuple = (alias, lhs_col, col, outer and 'LEFT JOIN' or 'JOIN')
                 self.joins.setdefault(lhs, []).append(join_tuple)
                 if extra or extra_params:
@@ -140,7 +152,7 @@ class Query(object):
     def get_sql(self):
         """ Returns (query_from, query_where, query_params). """
         from odoo.osv.expression import get_alias_from_query
-        tables_to_process = list(self.tables)
+        tables_to_process = list(self._tables)
         alias_mapping = self._get_alias_mapping()
         from_clause = []
         from_params = []

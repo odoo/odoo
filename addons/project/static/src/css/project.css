@@ -28,7 +28,7 @@
 .openerp .oe_margin_top_8 {
   margin-top: 8px;
 }
-.openerp .oe_kanban_project .oe_kanban_project_list .col-md-6 a{
+.openerp .oe_kanban_project .oe_kanban_project_list .col-lg-6 a{
   margin-left: 5px;
 }
 
@@ -37,4 +37,36 @@
   min-width: inherit !important;
   margin-top: 6px;
   margin-right: 8px;
+}
+
+.o_form_project_tasks.o_form_editable .oe_title {
+  max-width: initial;
+}
+
+.o_form_project_tasks.o_form_editable .oe_title .o_task_name {
+  /*
+   * should be (coming from addons/web/static/src/scss/form_view.scss):
+   * max-width: map-get($container-max-widths, md) - (2 * $o-horizontal-padding);
+   */
+  max-width: 688px;
+  margin-right: auto;
+}
+
+.o_kanban_project_tasks .badge {
+  background: inherit;
+  color: inherit;
+  border: 1px solid var(--success);
+}
+
+.o_kanban_project_tasks .badge-warning {
+  border-color: var(--warning);
+}
+
+.o_kanban_project_tasks .badge-danger {
+  border-color: var(--danger);
+}
+
+.o_form_project_tasks .ribbon:not(.o_invisible_modifier) + div > h1 > div[name="kanban_state"] {
+  margin-right: 150px;
+  padding-left: 1rem;
 }

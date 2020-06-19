@@ -1,41 +1,48 @@
-Babel==2.3.4
-decorator==4.0.10
-docutils==0.12
-ebaysdk==2.1.4
+Babel==2.6.0
+chardet==3.0.4
+decorator==4.3.0
+docutils==0.14
+ebaysdk==2.1.5
 feedparser==5.2.1
-gevent==1.1.2
-greenlet==0.4.10
-html2text==2016.9.19
-Jinja2==2.8
-lxml==3.5.0
-Mako==1.0.4
-MarkupSafe==0.23
-mock==2.0.0
-num2words==0.5.4
-ofxparse==0.16
-passlib==1.6.5
-Pillow==3.4.1
-psutil==4.3.1
-psycogreen==1.0
-psycopg2==2.7.1
-pydot==1.2.3
-pyldap==2.4.28
-pyparsing==2.1.10
+gevent==1.1.2 ; sys_platform != 'win32' and python_version < '3.7'
+gevent==1.3.7 ; sys_platform != 'win32' and python_version >= '3.7'
+gevent==1.4.0 ; sys_platform == 'win32'
+greenlet==0.4.10 ; python_version < '3.7'
+greenlet==0.4.15 ; python_version >= '3.7'
+html2text==2018.1.9
+idna==2.6
+Jinja2==2.10.1
+libsass==0.17.0
+lxml==3.7.1 ; sys_platform != 'win32' and python_version < '3.7'
+lxml==4.3.2 ; sys_platform != 'win32' and python_version >= '3.7'
+lxml ; sys_platform == 'win32'
+Mako==1.0.7
+MarkupSafe==1.1.0
+num2words==0.5.6
+ofxparse==0.19
+passlib==1.7.1
+Pillow==5.4.1 ; python_version < '3.7' or sys_platform != 'win32'
+Pillow==6.1.0 ; sys_platform == 'win32' and python_version >= '3.7'
+polib==1.1.0
+psutil==5.6.6
+psycopg2==2.7.7; sys_platform != 'win32' and python_version < '3.8'
+psycopg2==2.8.3; sys_platform == 'win32' or python_version >= '3.8'
+pydot==1.4.1
+python-ldap==3.1.0; sys_platform != 'win32'
+pyparsing==2.2.0
 PyPDF2==1.26.0
-pyserial==3.1.1
-python-dateutil==2.5.3
-python-openid==2.2.5
-pytz==2016.7
-pyusb==1.0.0
-PyYAML==3.12
-qrcode==5.3
-reportlab==3.3.0
-requests==2.11.1
-six==1.10.0
-suds-jurko==0.6
-vatnumber==1.2
-vobject==0.9.3
-Werkzeug==0.11.11
-XlsxWriter==0.9.3
+pyserial==3.4
+python-dateutil==2.7.3
+pytz==2019.1
+pyusb==1.0.2
+qrcode==6.1
+reportlab==3.5.13
+requests==2.21.0
+zeep==3.2.0
+python-stdnum==1.8
+vobject==0.9.6.1
+Werkzeug==0.16.1
+XlsxWriter==1.1.2
 xlwt==1.3.*
-xlrd==1.0.0
+xlrd==1.1.0
+pypiwin32 ; sys_platform == 'win32'

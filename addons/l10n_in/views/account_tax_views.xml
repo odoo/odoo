@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_tax_form_inherit_l10n_in" model="ir.ui.view">
+        <field name="name">account.tax.form.inherit.l10n.in</field>
+        <field name="model">account.tax</field>
+        <field name="inherit_id" ref="account.view_tax_form"/>
+        <field name="arch" type="xml">
+            <field name="include_base_amount" position="after">
+                <field name="l10n_in_reverse_charge" attrs="{'invisible':[('amount_type','=', 'group')]}"/>
+            </field>
+        </field>
+    </record>
+</odoo>

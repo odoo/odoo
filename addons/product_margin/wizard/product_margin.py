@@ -18,10 +18,9 @@ class ProductMargin(models.TransientModel):
         ('draft_open_paid', 'Draft, Open and Paid'),
     ], 'Invoice State', index=True, required=True, default="open_paid")
 
-    @api.multi
     def action_open_window(self):
         self.ensure_one()
-        context = dict(self.env.context or {})
+        context = dict(self.env.context, create=False, edit=False)
 
         def ref(module, xml_id):
             proxy = self.env['ir.model.data']
@@ -48,7 +47,6 @@ class ProductMargin(models.TransientModel):
         return {
             'name': _('Product Margins'),
             'context': context,
-            'view_type': 'form',
             "view_mode": 'tree,form,graph',
             'res_model': 'product.product',
             'type': 'ir.actions.act_window',

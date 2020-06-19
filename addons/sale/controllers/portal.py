@@ -1,14 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-import base64
+import binascii
 
-from odoo import http, _
-from odoo.exceptions import AccessError
+from odoo import fields, http, _
+from odoo.exceptions import AccessError, MissingError
 from odoo.http import request
-from odoo.tools import consteq
+from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.portal.controllers.mail import _message_post_helper
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager, get_records_pager
+from odoo.osv import expression
 
 
 class CustomerPortal(CustomerPortal):
@@ -36,40 +37,6 @@ class CustomerPortal(CustomerPortal):
     #
     # Quotations and Sales Orders
     #
-
-    def _order_check_access(self, order_id, access_token=None):
-        order = request.env['sale.order'].browse([order_id])
-        order_sudo = order.sudo()
-        try:
-            order.check_access_rights('read')
-            order.check_access_rule('read')
-        except AccessError:
-            if not access_token or not consteq(order_sudo.access_token, access_token):
-                raise
-        return order_sudo
-
-    def _order_get_page_view_values(self, order, access_token, **kwargs):
-        order_invoice_lines = {il.product_id.id: il.invoice_id for il in order.invoice_ids.mapped('invoice_line_ids')}
-        values = {
-            'order': order,
-            'order_invoice_lines': order_invoice_lines,
-        }
-        if access_token:
-            values['no_breadcrumbs'] = True
-            values['access_token'] = access_token
-        values['portal_confirmation'] = request.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none')
-
-        if kwargs.get('error'):
-            values['error'] = kwargs['error']
-        if kwargs.get('warning'):
-            values['warning'] = kwargs['warning']
-        if kwargs.get('success'):
-            values['success'] = kwargs['success']
-
-        history = request.session.get('my_orders_history', [])
-        values.update(get_records_pager(history, order))
-
-        return values
 
     @http.route(['/my/quotes', '/my/quotes/page/<int:page>'], type='http', auth="user", website=True)
     def portal_my_quotes(self, page=1, date_begin=None, date_end=None, sortby=None, **kw):
@@ -109,7 +76,7 @@ class CustomerPortal(CustomerPortal):
         )
         # search the count to display, according to the pager data
         quotations = SaleOrder.search(domain, order=sort_order, limit=self._items_per_page, offset=pager['offset'])
-        request.session['my_quotes_history'] = quotations.ids[:100]
+        request.session['my_quotations_history'] = quotations.ids[:100]
 
         values.update({
             'date': date_begin,
@@ -174,58 +141,193 @@ class CustomerPortal(CustomerPortal):
         })
         return request.render("sale.portal_my_orders", values)
 
-    @http.route(['/my/orders/<int:order>'], type='http', auth="public", website=True)
-    def portal_order_page(self, order=None, access_token=None, **kw):
+    @http.route(['/my/orders/<int:order_id>'], type='http', auth="public", website=True)
+    def portal_order_page(self, order_id, report_type=None, access_token=None, message=False, download=False, **kw):
         try:
-            order_sudo = self._order_check_access(order, access_token=access_token)
-        except AccessError:
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+        except (AccessError, MissingError):
             return request.redirect('/my')
 
-        values = self._order_get_page_view_values(order_sudo, access_token, **kw)
-        return request.render("sale.portal_order_page", values)
+        if report_type in ('html', 'pdf', 'text'):
+            return self._show_report(model=order_sudo, report_type=report_type, report_ref='sale.action_report_saleorder', download=download)
 
-    @http.route(['/my/orders/pdf/<int:order_id>'], type='http', auth="public", website=True)
-    def portal_order_report(self, order_id, access_token=None, **kw):
+        # use sudo to allow accessing/viewing orders for public user
+        # only if he knows the private token
+        # Log only once a day
+        if order_sudo:
+            # store the date as a string in the session to allow serialization
+            now = fields.Date.today().isoformat()
+            session_obj_date = request.session.get('view_quote_%s' % order_sudo.id)
+            if session_obj_date != now and request.env.user.share and access_token:
+                request.session['view_quote_%s' % order_sudo.id] = now
+                body = _('Quotation viewed by customer %s', order_sudo.partner_id.name)
+                _message_post_helper(
+                    "sale.order",
+                    order_sudo.id,
+                    body,
+                    token=order_sudo.access_token,
+                    message_type="notification",
+                    subtype_xmlid="mail.mt_note",
+                    partner_ids=order_sudo.user_id.sudo().partner_id.ids,
+                )
+
+        values = {
+            'sale_order': order_sudo,
+            'message': message,
+            'token': access_token,
+            'return_url': '/shop/payment/validate',
+            'bootstrap_formatting': True,
+            'partner_id': order_sudo.partner_id.id,
+            'report_type': 'html',
+            'action': order_sudo._get_portal_return_action(),
+        }
+        if order_sudo.company_id:
+            values['res_company'] = order_sudo.company_id
+
+        if order_sudo.has_to_be_paid():
+            domain = expression.AND([
+                ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', order_sudo.company_id.id)],
+                ['|', ('country_ids', '=', False), ('country_ids', 'in', [order_sudo.partner_id.country_id.id])]
+            ])
+            acquirers = request.env['payment.acquirer'].sudo().search(domain)
+
+            values['acquirers'] = acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
+                                                     (acq.payment_flow == 's2s' and acq.registration_view_template_id))
+            values['pms'] = request.env['payment.token'].search([('partner_id', '=', order_sudo.partner_id.id)])
+            values['acq_extra_fees'] = acquirers.get_acquirer_extra_fees(order_sudo.amount_total, order_sudo.currency_id, order_sudo.partner_id.country_id.id)
+
+        if order_sudo.state in ('draft', 'sent', 'cancel'):
+            history = request.session.get('my_quotations_history', [])
+        else:
+            history = request.session.get('my_orders_history', [])
+        values.update(get_records_pager(history, order_sudo))
+
+        return request.render('sale.sale_order_portal_template', values)
+
+    @http.route(['/my/orders/<int:order_id>/accept'], type='json', auth="public", website=True)
+    def portal_quote_accept(self, order_id, access_token=None, name=None, signature=None):
+        # get from query string if not on json param
+        access_token = access_token or request.httprequest.args.get('access_token')
         try:
-            order_sudo = self._order_check_access(order_id, access_token)
-        except AccessError:
-            return request.redirect('/my')
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+        except (AccessError, MissingError):
+            return {'error': _('Invalid order.')}
 
-        # print report as sudo, since it require access to taxes, payment term, ... and portal
-        # does not have those access rights.
-        pdf = request.env.ref('sale.action_report_saleorder').sudo().render_qweb_pdf([order_sudo.id])[0]
-        pdfhttpheaders = [
-            ('Content-Type', 'application/pdf'),
-            ('Content-Length', len(pdf)),
-        ]
-        return request.make_response(pdf, headers=pdfhttpheaders)
-
-    def _portal_quote_user_can_accept(self, order_id):
-        return request.env['ir.config_parameter'].sudo().get_param('sale.sale_portal_confirmation_options', default='none') in ('pay', 'sign')
-
-    @http.route(['/my/quotes/accept'], type='json', auth="public", website=True)
-    def portal_quote_accept(self, res_id, access_token=None, partner_name=None, signature=None):
-        if not self._portal_quote_user_can_accept(res_id):
-            return {'error': _('Operation not allowed')}
+        if not order_sudo.has_to_be_signed():
+            return {'error': _('The order is not in a state requiring customer signature.')}
         if not signature:
             return {'error': _('Signature is missing.')}
 
         try:
-            order_sudo = self._order_check_access(res_id, access_token=access_token)
-        except AccessError:
-            return {'error': _('Invalid order')}
-        if order_sudo.state != 'sent':
-            return {'error': _('Order is not in a state requiring customer validation.')}
+            order_sudo.write({
+                'signed_by': name,
+                'signed_on': fields.Datetime.now(),
+                'signature': signature,
+            })
+        except (TypeError, binascii.Error) as e:
+            return {'error': _('Invalid signature data.')}
 
-        order_sudo.action_confirm()
+        if not order_sudo.has_to_be_paid():
+            order_sudo.action_confirm()
+            order_sudo._send_order_confirmation_mail()
+
+        pdf = request.env.ref('sale.action_report_saleorder').sudo()._render_qweb_pdf([order_sudo.id])[0]
 
         _message_post_helper(
-            res_model='sale.order',
-            res_id=order_sudo.id,
-            message=_('Order signed by %s') % (partner_name,),
-            attachments=[('signature.png', base64.b64decode(signature))] if signature else [],
+            'sale.order', order_sudo.id, _('Order signed by %s') % (name,),
+            attachments=[('%s.pdf' % order_sudo.name, pdf)],
             **({'token': access_token} if access_token else {}))
+
+        query_string = '&message=sign_ok'
+        if order_sudo.has_to_be_paid(True):
+            query_string += '#allow_payment=yes'
         return {
-            'success': _('Your Order has been confirmed.'),
-            'redirect_url': '/my/orders/%s?%s' % (order_sudo.id, access_token and 'access_token=%s' % order_sudo.access_token or ''),
+            'force_refresh': True,
+            'redirect_url': order_sudo.get_portal_url(query_string=query_string),
         }
+
+    @http.route(['/my/orders/<int:order_id>/decline'], type='http', auth="public", methods=['POST'], website=True)
+    def decline(self, order_id, access_token=None, **post):
+        try:
+            order_sudo = self._document_check_access('sale.order', order_id, access_token=access_token)
+        except (AccessError, MissingError):
+            return request.redirect('/my')
+
+        message = post.get('decline_message')
+
+        query_string = False
+        if order_sudo.has_to_be_signed() and message:
+            order_sudo.action_cancel()
+            _message_post_helper('sale.order', order_id, message, **{'token': access_token} if access_token else {})
+        else:
+            query_string = "&message=cant_reject"
+
+        return request.redirect(order_sudo.get_portal_url(query_string=query_string))
+
+    # note dbo: website_sale code
+    @http.route(['/my/orders/<int:order_id>/transaction/'], type='json', auth="public", website=True)
+    def payment_transaction_token(self, acquirer_id, order_id, save_token=False, access_token=None, **kwargs):
+        """ Json method that creates a payment.transaction, used to create a
+        transaction when the user clicks on 'pay now' button. After having
+        created the transaction, the event continues and the user is redirected
+        to the acquirer website.
+
+        :param int acquirer_id: id of a payment.acquirer record. If not set the
+                                user is redirected to the checkout page
+        """
+        # Ensure a payment acquirer is selected
+        if not acquirer_id:
+            return False
+
+        try:
+            acquirer_id = int(acquirer_id)
+        except:
+            return False
+
+        order = request.env['sale.order'].sudo().browse(order_id)
+        if not order or not order.order_line or not order.has_to_be_paid():
+            return False
+
+        # Create transaction
+        vals = {
+            'acquirer_id': acquirer_id,
+            'type': order._get_payment_type(),
+            'return_url': order.get_portal_url(),
+        }
+
+        transaction = order._create_payment_transaction(vals)
+        PaymentProcessing.add_payment_transaction(transaction)
+        return transaction.render_sale_button(
+            order,
+            submit_txt=_('Pay & Confirm'),
+            render_values={
+                'type': order._get_payment_type(),
+                'alias_usage': _('If we store your payment information on our server, subscription payments will be made automatically.'),
+            }
+        )
+
+    @http.route('/my/orders/<int:order_id>/transaction/token', type='http', auth='public', website=True)
+    def payment_token(self, order_id, pm_id=None, **kwargs):
+
+        order = request.env['sale.order'].sudo().browse(order_id)
+        if not order:
+            return request.redirect("/my/orders")
+        if not order.order_line or pm_id is None or not order.has_to_be_paid():
+            return request.redirect(order.get_portal_url())
+
+        # try to convert pm_id into an integer, if it doesn't work redirect the user to the quote
+        try:
+            pm_id = int(pm_id)
+        except ValueError:
+            return request.redirect(order.get_portal_url())
+
+        # Create transaction
+        vals = {
+            'payment_token_id': pm_id,
+            'type': 'server2server',
+            'return_url': order.get_portal_url(),
+        }
+
+        tx = order._create_payment_transaction(vals)
+        PaymentProcessing.add_payment_transaction(tx)
+        return request.redirect('/payment/process')

@@ -1,6 +1,7 @@
 odoo.define('web.SystrayMenu', function (require) {
 "use strict";
 
+var dom = require('web.dom');
 var Widget = require('web.Widget');
 
 /**
@@ -16,38 +17,42 @@ var SystrayMenu = Widget.extend({
         this._super(parent);
         this.items = [];
         this.widgets = [];
-        this.load = $.Deferred();
     },
     /**
+     * Instanciate the items and add them into a temporary fragmenet
      * @override
-     * @returns {Deferred}
      */
-    start: function () {
+    willStart: function () {
         var self = this;
-        self._super.apply(this, arguments);
-        self._loadItems();
-        $.when.apply($, self.items).always(function () {
-            self.load.resolve();
-        });
-        return self.load;
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Instantiate items, using the classes located in SystrayMenu.items.
-     */
-    _loadItems: function () {
-        var self = this;
+        var proms = [];
         SystrayMenu.Items = _.sortBy(SystrayMenu.Items, function (item) {
             return !_.isUndefined(item.prototype.sequence) ? item.prototype.sequence : 50;
         });
-        _.each(SystrayMenu.Items, function (WidgetClass) {
+
+        SystrayMenu.Items.forEach(function (WidgetClass) {
             var cur_systray_item = new WidgetClass(self);
             self.widgets.push(cur_systray_item);
-            self.items.push(cur_systray_item.prependTo(self.$el));
+            proms.push(cur_systray_item.appendTo($('<div>')));
+        });
+
+        return this._super.apply(this, arguments).then(function () {
+            return Promise.all(proms);
+        });
+    },
+    on_attach_callback() {
+        this.widgets
+            .filter(widget => widget.on_attach_callback)
+            .forEach(widget => widget.on_attach_callback());
+    },
+    /**
+     * Add the instanciated items, using the object located in this.wisgets
+     */
+    start: function () {
+        var self = this;
+        return this._super.apply(this, arguments).then(function () {
+            self.widgets.forEach(function (widget) {
+                dom.prepend(self.$el, widget.$el);
+            });
         });
     },
 });

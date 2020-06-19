@@ -3,7 +3,7 @@ odoo.define('web.rpc', function (require) {
 
 var ajax = require('web.ajax');
 
-return {
+const rpc = {
     /**
      * Perform a RPC.  Please note that this is not the preferred way to do a
      * rpc if you are in the context of a widget.  In that case, you should use
@@ -11,10 +11,10 @@ return {
      *
      * @param {Object} params @see buildQuery for a description
      * @param {Object} options
-     * @returns {Deferred<any>}
+     * @returns {Promise<any>}
      */
     query: function (params, options) {
-        var query = this.buildQuery(params);
+        var query = rpc.buildQuery(params);
         return ajax.rpc(query.route, query.params, options);
     },
     /**
@@ -37,6 +37,7 @@ return {
     buildQuery: function (options) {
         var route;
         var params = options.params || {};
+        var orderBy;
         if (options.route) {
             route = options.route;
         } else if (options.model && options.method) {
@@ -50,29 +51,42 @@ return {
             params.kwargs.context = options.context || params.context || params.kwargs.context;
         }
 
-        if (options.method === 'read_group') {
-            params.kwargs.domain = options.domain || params.domain || params.kwargs.domain || [];
-            params.kwargs.fields = options.fields || params.fields || params.kwargs.fields || [];
-            params.kwargs.groupby = options.groupBy || params.groupBy || params.kwargs.groupby || [];
-            params.kwargs.offset = options.offset || params.offset || params.kwargs.offset;
-            params.kwargs.limit = options.limit || params.limit || params.kwargs.limit;
+        if (options.method === 'read_group' || options.method === 'web_read_group') {
+            if (!(params.args && params.args[0] !== undefined)) {
+                params.kwargs.domain = options.domain || params.domain || params.kwargs.domain || [];
+            }
+            if (!(params.args && params.args[1] !== undefined)) {
+                params.kwargs.fields = options.fields || params.fields || params.kwargs.fields || [];
+            }
+            if (!(params.args && params.args[2] !== undefined)) {
+                params.kwargs.groupby = options.groupBy || params.groupBy || params.kwargs.groupby || [];
+            }
+            params.kwargs.offset = options.offset || params.offset || params.kwargs.offset;
+            params.kwargs.limit = options.limit || params.limit || params.kwargs.limit;
             // In kwargs, we look for "orderby" rather than "orderBy" (note the absence of capital B),
             // since the Python argument to the actual function is "orderby".
-            var orderBy = options.orderBy || params.orderBy || params.kwargs.orderby;
-            params.kwargs.orderby = orderBy ? this._serializeSort(orderBy) : orderBy;
+            orderBy = options.orderBy || params.orderBy || params.kwargs.orderby;
+            params.kwargs.orderby = orderBy ? rpc._serializeSort(orderBy) : orderBy;
             params.kwargs.lazy = 'lazy' in options ? options.lazy : params.lazy;
+
+            if (options.method === 'web_read_group') {
+                params.kwargs.expand = options.expand || params.expand || params.kwargs.expand;
+                params.kwargs.expand_limit = options.expand_limit || params.expand_limit || params.kwargs.expand_limit;
+                var expandOrderBy = options.expand_orderby || params.expand_orderby || params.kwargs.expand_orderby;
+                params.kwargs.expand_orderby = expandOrderBy ? rpc._serializeSort(expandOrderBy) : expandOrderBy;
+            }
         }
 
         if (options.method === 'search_read') {
             // call the model method
             params.kwargs.domain = options.domain || params.domain || params.kwargs.domain;
-            params.kwargs.fields = options.fields || params.fields || params.kwargs.fields;
+            params.kwargs.fields = options.fields || params.fields || params.kwargs.fields;
             params.kwargs.offset = options.offset || params.offset || params.kwargs.offset;
             params.kwargs.limit = options.limit || params.limit || params.kwargs.limit;
             // In kwargs, we look for "order" rather than "orderBy" since the Python
             // argument to the actual function is "order".
-            var orderBy = options.orderBy || params.orderBy || params.kwargs.order;
-            params.kwargs.order = orderBy ? this._serializeSort(orderBy) : orderBy;
+            orderBy = options.orderBy || params.orderBy || params.kwargs.order;
+            params.kwargs.order = orderBy ? rpc._serializeSort(orderBy) : orderBy;
         }
 
         if (options.route === '/web/dataset/search_read') {
@@ -82,8 +96,8 @@ return {
             params.fields = options.fields || params.fields;
             params.limit = options.limit || params.limit;
             params.offset = options.offset || params.offset;
-            var orderBy = options.orderBy || params.orderBy;
-            params.sort = orderBy ? this._serializeSort(orderBy) : orderBy;
+            orderBy = options.orderBy || params.orderBy;
+            params.sort = orderBy ? rpc._serializeSort(orderBy) : orderBy;
             params.context = options.context || params.context || {};
         }
 
@@ -108,5 +122,7 @@ return {
         }).join(', ');
     },
 };
+
+return rpc;
 
 });

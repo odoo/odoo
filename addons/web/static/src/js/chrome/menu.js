@@ -1,212 +1,240 @@
 odoo.define('web.Menu', function (require) {
 "use strict";
 
+var AppsMenu = require('web.AppsMenu');
+var config = require('web.config');
 var core = require('web.core');
-var session = require('web.session');
+var dom = require('web.dom');
+var SystrayMenu = require('web.SystrayMenu');
+var UserMenu = require('web.UserMenu');
 var Widget = require('web.Widget');
 
+UserMenu.prototype.sequence = 0; // force UserMenu to be the right-most item in the systray
+SystrayMenu.Items.push(UserMenu);
+
+var QWeb = core.qweb;
+
 var Menu = Widget.extend({
-    init: function() {
-        this._super.apply(this, arguments);
-        this.is_bound = $.Deferred();
-        this.data = {data:{children:[]}};
-        core.bus.on('change_menu_section', this, this.on_change_top_menu);
+    template: 'Menu',
+    menusTemplate: 'Menu.sections',
+    events: {
+        'mouseover .o_menu_sections > li:not(.show)': '_onMouseOverMenu',
+        'click .o_menu_brand': '_onAppNameClicked',
     },
-    start: function() {
-        this._super.apply(this, arguments);
-        return this.bind_menu();
-    },
-    do_reload: function() {
+
+    init: function (parent, menu_data) {
         var self = this;
-        self.bind_menu();
-    },
-    bind_menu: function() {
-        var self = this;
-        this.$secondary_menus = this.$el.parents().find('.o_sub_menu');
-        this.$secondary_menus.on('click', 'a[data-menu]', this.on_menu_click);
-        this.$el.on('click', 'a[data-menu]', function (event) {
-            event.preventDefault();
-            var menu_id = $(event.currentTarget).data('menu');
-            core.bus.trigger('change_menu_section', menu_id);
+        this._super.apply(this, arguments);
+
+        this.$menu_sections = {};
+        this.menu_data = menu_data;
+
+        // Prepare navbar's menus
+        var $menu_sections = $(QWeb.render(this.menusTemplate, {
+            menu_data: this.menu_data,
+        }));
+        $menu_sections.filter('section').each(function () {
+            self.$menu_sections[parseInt(this.className, 10)] = $(this).children('li');
         });
 
-        // Hide second level submenus
-        this.$secondary_menus.find('.oe_menu_toggler').siblings('.oe_secondary_submenu').addClass('o_hidden');
-        if (self.current_menu) {
-            self.open_menu(self.current_menu);
+        // Bus event
+        core.bus.on('change_menu_section', this, this.change_menu_section);
+    },
+    start: function () {
+        var self = this;
+
+        this.$menu_apps = this.$('.o_menu_apps');
+        this.$menu_brand_placeholder = this.$('.o_menu_brand');
+        this.$section_placeholder = this.$('.o_menu_sections');
+
+        // Navbar's menus event handlers
+        var on_secondary_menu_click = function (ev) {
+            ev.preventDefault();
+            var menu_id = $(ev.currentTarget).data('menu');
+            var action_id = $(ev.currentTarget).data('action-id');
+            self._on_secondary_menu_click(menu_id, action_id);
+        };
+        var menu_ids = _.keys(this.$menu_sections);
+        var primary_menu_id, $section;
+        for (var i = 0; i < menu_ids.length; i++) {
+            primary_menu_id = menu_ids[i];
+            $section = this.$menu_sections[primary_menu_id];
+            $section.on('click', 'a[data-menu]', self, on_secondary_menu_click.bind(this));
         }
-        this.trigger('menu_bound');
 
-        var lazyreflow = _.debounce(this.reflow.bind(this), 200);
-        core.bus.on('resize', this, function() {
-            if ($(window).width() < 768 ) {
-                lazyreflow('all_outside');
-            } else {
-                lazyreflow();
-            }
+        // Apps Menu
+        this._appsMenu = new AppsMenu(self, this.menu_data);
+        var appsMenuProm = this._appsMenu.appendTo(this.$menu_apps);
+
+        // Systray Menu
+        this.systray_menu = new SystrayMenu(this);
+        var systrayMenuProm = this.systray_menu.attachTo(this.$('.o_menu_systray')).then(function() {
+            self.systray_menu.on_attach_callback();  // At this point, we know we are in the DOM
+            dom.initAutoMoreMenu(self.$section_placeholder, {
+            maxWidth: function () {
+                return self.$el.width() - (self.$menu_apps.outerWidth(true) + self.$menu_brand_placeholder.outerWidth(true) + self.systray_menu.$el.outerWidth(true));
+            },
+            sizeClass: 'SM',
+            });
         });
-        core.bus.trigger('resize');
 
-        this.is_bound.resolve();
+
+
+        return Promise.all([this._super.apply(this, arguments), appsMenuProm, systrayMenuProm]);
     },
+    change_menu_section: function (primary_menu_id) {
+        if (!this.$menu_sections[primary_menu_id]) {
+            this._updateMenuBrand();
+            return; // unknown menu_id
+        }
+
+        if (this.current_primary_menu === primary_menu_id) {
+            return; // already in that menu
+        }
+
+        if (this.current_primary_menu) {
+            this.$menu_sections[this.current_primary_menu].detach();
+        }
+
+        // Get back the application name
+        for (var i = 0; i < this.menu_data.children.length; i++) {
+            if (this.menu_data.children[i].id === primary_menu_id) {
+                this._updateMenuBrand(this.menu_data.children[i].name);
+                break;
+            }
+        }
+
+        this.$menu_sections[primary_menu_id].appendTo(this.$section_placeholder);
+        this.current_primary_menu = primary_menu_id;
+
+        core.bus.trigger('resize');
+    },
+    _trigger_menu_clicked: function (menu_id, action_id) {
+        this.trigger_up('menu_clicked', {
+            id: menu_id,
+            action_id: action_id,
+            previous_menu_id: this.current_secondary_menu || this.current_primary_menu,
+        });
+    },
+    /**
+     * Updates the name of the app in the menu to the value of brandName.
+     * If brandName is falsy, hides the menu and its sections.
+     *
+     * @private
+     * @param {brandName} string
+     */
+    _updateMenuBrand: function (brandName) {
+        if (brandName) {
+            this.$menu_brand_placeholder.text(brandName).show();
+            this.$section_placeholder.show();
+        } else {
+            this.$menu_brand_placeholder.hide()
+            this.$section_placeholder.hide();
+        }
+    },
+    _on_secondary_menu_click: function (menu_id, action_id) {
+        var self = this;
+
+        // It is still possible that we don't have an action_id (for example, menu toggler)
+        if (action_id) {
+            self._trigger_menu_clicked(menu_id, action_id);
+            this.current_secondary_menu = menu_id;
+        }
+    },
+    /**
+     * Helpers used by web_client in order to restore the state from
+     * an url (by restore, read re-synchronize menu and action manager)
+     */
+    action_id_to_primary_menu_id: function (action_id) {
+        var primary_menu_id, found;
+        for (var i = 0; i < this.menu_data.children.length && !primary_menu_id; i++) {
+            found = this._action_id_in_subtree(this.menu_data.children[i], action_id);
+            if (found) {
+                primary_menu_id = this.menu_data.children[i].id;
+            }
+        }
+        return primary_menu_id;
+    },
+    _action_id_in_subtree: function (root, action_id) {
+        // action_id can be a string or an integer
+        if (root.action && root.action.split(',')[1] === String(action_id)) {
+            return true;
+        }
+        var found;
+        for (var i = 0; i < root.children.length && !found; i++) {
+            found = this._action_id_in_subtree(root.children[i], action_id);
+        }
+        return found;
+    },
+    menu_id_to_action_id: function (menu_id, root) {
+        if (!root) {
+            root = $.extend(true, {}, this.menu_data);
+        }
+
+        if (root.id === menu_id) {
+            return root.action.split(',')[1] ;
+        }
+        for (var i = 0; i < root.children.length; i++) {
+            var action_id = this.menu_id_to_action_id(menu_id, root.children[i]);
+            if (action_id !== undefined) {
+                return action_id;
+            }
+        }
+        return undefined;
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
 
     /**
-     * Reflow the menu items and dock overflowing items into a "More" menu item.
-     * Automatically called when 'menu_bound' event is triggered and on window resizing.
+     * Returns the id of the current primary (first level) menu.
      *
-     * @param {string} behavior If set to 'all_outside', all the items are displayed.
-     * If not set, only the overflowing items are hidden.
+     * @returns {integer}
      */
-    reflow: function(behavior) {
-        var self = this;
-        var $more_container = this.$('#menu_more_container').hide();
-        var $more = this.$('#menu_more');
-        var $systray = this.$el.parents().find('.oe_systray');
+    getCurrentPrimaryMenu: function () {
+        return this.current_primary_menu;
+    },
+    /**
+     * Open the first app
+     */
+    openFirstApp: function () {
+        this._appsMenu.openFirstApp();
+    },
 
-        $more.children('li').insertBefore($more_container);  // Pull all the items out of the more menu
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
-        // 'all_outside' beahavior should display all the items, so hide the more menu and exit
-        if (behavior === 'all_outside') {
-            // Show list of menu items
-            self.$el.show();
-            this.$el.find('li').show();
-            $more_container.hide();
+    /**
+     * When clicking on app name, opens the first action of the app
+     *
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onAppNameClicked: function (ev) {
+        var actionID = parseInt(this.menu_id_to_action_id(this.current_primary_menu));
+        this._trigger_menu_clicked(this.current_primary_menu, actionID);
+    },
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onMouseOverMenu: function (ev) {
+        if (config.device.isMobile) {
             return;
         }
-
-        // Hide all menu items
-        var $toplevel_items = this.$el.find('li').not($more_container).not($systray.find('li')).hide();
-        // Show list of menu items (which is empty for now since all menu items are hidden)
-        self.$el.show();
-        $toplevel_items.each(function() {
-            var remaining_space = self.$el.parent().width() - $more_container.outerWidth();
-            self.$el.parent().children(':visible').each(function() {
-                remaining_space -= $(this).outerWidth();
-            });
-
-            if ($(this).width() >= remaining_space) {
-                return false; // the current item will be appended in more_container
-            }
-            $(this).show(); // show the current item in menu bar
-        });
-        $more.append($toplevel_items.filter(':hidden').show());
-        $more_container.toggle(!!$more.children().length);
-        // Hide toplevel item if there is only one
-        var $toplevel = self.$el.children("li:visible");
-        if ($toplevel.length === 1) {
-            $toplevel.hide();
+        var $target = $(ev.currentTarget);
+        var $opened = $target.siblings('.show');
+        if ($opened.length) {
+            $opened.find('[data-toggle="dropdown"]:first').dropdown('toggle');
+            $opened.removeClass('show');
+            $target.find('[data-toggle="dropdown"]:first').dropdown('toggle');
+            $target.addClass('show');
         }
-    },
-    /**
-     * Opens a given menu by id, as if a user had browsed to that menu by hand
-     * except does not trigger any event on the way
-     *
-     * @param {Number} id database id of the terminal menu to select
-     */
-    open_menu: function (id) {
-        this.current_menu = id;
-        session.active_id = id;
-        var $clicked_menu, $sub_menu, $main_menu;
-        $clicked_menu = this.$el.add(this.$secondary_menus).find('a[data-menu=' + id + ']');
-        this.trigger('open_menu', id, $clicked_menu);
-
-        if (this.$secondary_menus.has($clicked_menu).length) {
-            $sub_menu = $clicked_menu.parents('.oe_secondary_menu');
-            $main_menu = this.$el.find('a[data-menu=' + $sub_menu.data('menu-parent') + ']');
-        } else {
-            $sub_menu = this.$secondary_menus.find('.oe_secondary_menu[data-menu-parent=' + $clicked_menu.attr('data-menu') + ']');
-            $main_menu = $clicked_menu;
-        }
-
-        // Activate current main menu
-        this.$el.find('.active').removeClass('active');
-        $main_menu.parent().addClass('active');
-
-        // Show current sub menu
-        this.$secondary_menus.find('.oe_secondary_menu').hide();
-        $sub_menu.show();
-
-        // Hide/Show the leftbar menu depending of the presence of sub-items
-        this.$secondary_menus.toggleClass('o_hidden', !$sub_menu.children().length);
-
-        // Activate current menu item and show parents
-        this.$secondary_menus.find('.active').removeClass('active');
-        if ($main_menu !== $clicked_menu) {
-            $clicked_menu.parents().removeClass('o_hidden');
-            if ($clicked_menu.is('.oe_menu_toggler')) {
-                $clicked_menu.toggleClass('oe_menu_opened').siblings('.oe_secondary_submenu:first').toggleClass('o_hidden');
-            } else {
-                $clicked_menu.parent().addClass('active');
-            }
-        }
-        // add a tooltip to cropped menu items
-        this.$secondary_menus.find('.oe_secondary_submenu li a span').each(function() {
-            $(this).tooltip(this.scrollWidth > this.clientWidth ? {title: $(this).text().trim(), placement: 'right'} :'destroy');
-       });
-    },
-    /**
-     * Call open_menu with the first menu_item matching an action_id
-     *
-     * @param {Number} id the action_id to match
-     */
-    open_action: function (id) {
-        var $menu = this.$el.add(this.$secondary_menus).find('a[data-action-id="' + id + '"]');
-        var menu_id = $menu.data('menu');
-        if (menu_id) {
-            this.open_menu(menu_id);
-        }
-    },
-    /**
-     * Process a click on a menu item
-     *
-     * @param {Number} id the menu_id
-     */
-    menu_click: function(id) {
-        if (!id) { return; }
-
-        // find back the menuitem in dom to get the action
-        var $item = this.$el.find('a[data-menu=' + id + ']');
-        if (!$item.length) {
-            $item = this.$secondary_menus.find('a[data-menu=' + id + ']');
-        }
-        var action_id = $item.data('action-id');
-        // If first level menu doesnt have action trigger first leaf
-        if (!action_id) {
-            if(this.$el.has($item).length) {
-                var $sub_menu = this.$secondary_menus.find('.oe_secondary_menu[data-menu-parent=' + id + ']');
-                var $items = $sub_menu.find('a[data-action-id]').filter('[data-action-id!=""]');
-                if($items.length) {
-                    action_id = $items.data('action-id');
-                    id = $items.data('menu');
-                }
-            }
-        }
-        if (action_id) {
-            this.trigger('menu_click', {
-                action_id: action_id,
-                id: id,
-                previous_menu_id: this.current_menu // Here we don't know if action will fail (in which case we have to revert menu)
-            }, $item);
-        } else {
-            console.log('Menu no action found web test 04 will fail');
-        }
-        this.open_menu(id);
-    },
-
-    /**
-     * Change the current top menu
-     *
-     * @param {int} [menu_id] the top menu id
-     */
-    on_change_top_menu: function(menu_id) {
-        var self = this;
-        this.menu_click(menu_id);
-    },
-    on_menu_click: function(ev) {
-        ev.preventDefault();
-        this.menu_click($(ev.currentTarget).data('menu'));
     },
 });
 
 return Menu;
+
 });

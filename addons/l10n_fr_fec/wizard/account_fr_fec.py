@@ -8,7 +8,7 @@ import io
 
 from odoo import api, fields, models, _
 from odoo.exceptions import Warning
-from odoo.tools import pycompat
+from odoo.tools import float_is_zero, pycompat
 
 
 class AccountFrFec(models.TransientModel):
@@ -17,7 +17,7 @@ class AccountFrFec(models.TransientModel):
 
     date_from = fields.Date(string='Start Date', required=True)
     date_to = fields.Date(string='End Date', required=True)
-    fec_data = fields.Binary('FEC File', readonly=True)
+    fec_data = fields.Binary('FEC File', readonly=True, attachment=False)
     filename = fields.Char(string='Filename', size=256, readonly=True)
     export_type = fields.Selection([
         ('official', 'Official FEC report (posted entries only)'),
@@ -33,7 +33,7 @@ class AccountFrFec(models.TransientModel):
         SELECT
             'OUV' AS JournalCode,
             'Balance initiale' AS JournalLib,
-            'Balance initiale PL' AS EcritureNum,
+            'OUVERTURE/' || %s AS EcritureNum,
             %s AS EcritureDate,
             '120/129' AS CompteNum,
             'Benefice (perte) reporte(e)' AS CompteLib,
@@ -42,8 +42,8 @@ class AccountFrFec(models.TransientModel):
             '-' AS PieceRef,
             %s AS PieceDate,
             '/' AS EcritureLib,
-            replace(CASE WHEN COALESCE(sum(aml.balance), 0) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '999999999999999D99') END, '.', ',') AS Debit,
-            replace(CASE WHEN COALESCE(sum(aml.balance), 0) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '999999999999999D99') END, '.', ',') AS Credit,
+            replace(CASE WHEN COALESCE(sum(aml.balance), 0) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
+            replace(CASE WHEN COALESCE(sum(aml.balance), 0) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
             '' AS EcritureLet,
             '' AS DateLet,
             %s AS ValidDate,
@@ -65,16 +65,38 @@ class AccountFrFec(models.TransientModel):
             sql_query += '''
             AND am.state = 'posted'
             '''
-        company = self.env.user.company_id
-        formatted_date_from = self.date_from.replace('-', '')
+        company = self.env.company
+        formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
+        date_from = self.date_from
+        formatted_date_year = date_from.year
         self._cr.execute(
-            sql_query, (formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
         listrow = []
         row = self._cr.fetchone()
         listrow = list(row)
         return listrow
 
-    @api.multi
+    def _get_company_legal_data(self, company):
+        """
+        Dom-Tom are excluded from the EU's fiscal territory
+        Those regions do not have SIREN
+        sources:
+            https://www.service-public.fr/professionnels-entreprises/vosdroits/F23570
+            http://www.douane.gouv.fr/articles/a11024-tva-dans-les-dom
+        """
+        dom_tom_group = self.env.ref('l10n_fr.dom-tom')
+        is_dom_tom = company.country_id.code in dom_tom_group.country_ids.mapped('code')
+        if not is_dom_tom and not company.vat:
+            raise Warning(
+                _("Missing VAT number for company %s", company.name))
+        if not is_dom_tom and company.vat[0:2] != 'FR':
+            raise Warning(
+                _("FEC is for French companies only !"))
+
+        return {
+            'siren': company.vat[4:13] if not is_dom_tom else '',
+        }
+
     def generate_fec(self):
         self.ensure_one()
         # We choose to implement the flat file instead of the XML
@@ -85,6 +107,9 @@ class AccountFrFec(models.TransientModel):
         # 2) CSV files are easier to read/use for a regular accountant.
         # So it will be easier for the accountant to check the file before
         # sending it to the fiscal administration
+        company = self.env.company
+        company_legal_data = self._get_company_legal_data(company)
+
         header = [
             u'JournalCode',    # 0
             u'JournalLib',     # 1
@@ -106,18 +131,7 @@ class AccountFrFec(models.TransientModel):
             u'Idevise',        # 17
             ]
 
-        company = self.env.user.company_id
-        if not company.vat:
-            raise Warning(
-                _("Missing VAT number for company %s") % company.name)
-        if company.vat[0:2] != 'FR':
-            raise Warning(
-                _("FEC is for French companies only !"))
-
-        fecfile = io.BytesIO()
-        w = pycompat.csv_writer(fecfile, delimiter='|')
-        w.writerow(header)
-
+        rows_to_write = [header]
         # INITIAL BALANCE
         unaffected_earnings_xml_ref = self.env.ref('account.data_unaffected_earnings')
         unaffected_earnings_line = True  # used to make sure that we add the unaffected earning initial balance only once
@@ -130,7 +144,7 @@ class AccountFrFec(models.TransientModel):
         SELECT
             'OUV' AS JournalCode,
             'Balance initiale' AS JournalLib,
-            'Balance initiale ' || MIN(aa.name) AS EcritureNum,
+            'OUVERTURE/' || %s AS EcritureNum,
             %s AS EcritureDate,
             MIN(aa.code) AS CompteNum,
             replace(replace(MIN(aa.name), '|', '/'), '\t', '') AS CompteLib,
@@ -139,8 +153,8 @@ class AccountFrFec(models.TransientModel):
             '-' AS PieceRef,
             %s AS PieceDate,
             '/' AS EcritureLib,
-            replace(CASE WHEN sum(aml.balance) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '999999999999999D99') END, '.', ',') AS Debit,
-            replace(CASE WHEN sum(aml.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '999999999999999D99') END, '.', ',') AS Credit,
+            replace(CASE WHEN sum(aml.balance) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
+            replace(CASE WHEN sum(aml.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
             '' AS EcritureLet,
             '' AS DateLet,
             %s AS ValidDate,
@@ -166,12 +180,17 @@ class AccountFrFec(models.TransientModel):
             '''
 
         sql_query += '''
-        GROUP BY aml.account_id
-        HAVING sum(aml.balance) != 0
+        GROUP BY aml.account_id, aat.type
+        HAVING round(sum(aml.balance), %s) != 0
+        AND aat.type not in ('receivable', 'payable')
         '''
-        formatted_date_from = self.date_from.replace('-', '')
+        formatted_date_from = fields.Date.to_string(self.date_from).replace('-', '')
+        date_from = self.date_from
+        formatted_date_year = date_from.year
+        currency_digits = 2
+
         self._cr.execute(
-            sql_query, (formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id))
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id, currency_digits))
 
         for row in self._cr.fetchall():
             listrow = list(row)
@@ -184,13 +203,16 @@ class AccountFrFec(models.TransientModel):
                     current_amount = float(listrow[11].replace(',', '.')) - float(listrow[12].replace(',', '.'))
                     unaffected_earnings_amount = float(unaffected_earnings_results[11].replace(',', '.')) - float(unaffected_earnings_results[12].replace(',', '.'))
                     listrow_amount = current_amount + unaffected_earnings_amount
+                    if float_is_zero(listrow_amount, precision_digits=currency_digits):
+                        continue
                     if listrow_amount > 0:
                         listrow[11] = str(listrow_amount).replace('.', ',')
                         listrow[12] = '0,00'
                     else:
                         listrow[11] = '0,00'
                         listrow[12] = str(-listrow_amount).replace('.', ',')
-            w.writerow(listrow)
+            rows_to_write.append(listrow)
+
         #if the unaffected earnings account wasn't in the selection yet: add it manually
         if (not unaffected_earnings_line
             and unaffected_earnings_results
@@ -201,7 +223,69 @@ class AccountFrFec(models.TransientModel):
             if unaffected_earnings_account:
                 unaffected_earnings_results[4] = unaffected_earnings_account.code
                 unaffected_earnings_results[5] = unaffected_earnings_account.name
-            w.writerow(unaffected_earnings_results)
+            rows_to_write.append(unaffected_earnings_results)
+
+        # INITIAL BALANCE - receivable/payable
+        sql_query = '''
+        SELECT
+            'OUV' AS JournalCode,
+            'Balance initiale' AS JournalLib,
+            'OUVERTURE/' || %s AS EcritureNum,
+            %s AS EcritureDate,
+            MIN(aa.code) AS CompteNum,
+            replace(MIN(aa.name), '|', '/') AS CompteLib,
+            CASE WHEN MIN(aat.type) IN ('receivable', 'payable')
+            THEN
+                CASE WHEN rp.ref IS null OR rp.ref = ''
+                THEN rp.id::text
+                ELSE replace(rp.ref, '|', '/')
+                END
+            ELSE ''
+            END
+            AS CompAuxNum,
+            COALESCE(replace(rp.name, '|', '/'), '') AS CompAuxLib,
+            '-' AS PieceRef,
+            %s AS PieceDate,
+            '/' AS EcritureLib,
+            replace(CASE WHEN sum(aml.balance) <= 0 THEN '0,00' ELSE to_char(SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Debit,
+            replace(CASE WHEN sum(aml.balance) >= 0 THEN '0,00' ELSE to_char(-SUM(aml.balance), '000000000000000D99') END, '.', ',') AS Credit,
+            '' AS EcritureLet,
+            '' AS DateLet,
+            %s AS ValidDate,
+            '' AS Montantdevise,
+            '' AS Idevise,
+            MIN(aa.id) AS CompteID
+        FROM
+            account_move_line aml
+            LEFT JOIN account_move am ON am.id=aml.move_id
+            LEFT JOIN res_partner rp ON rp.id=aml.partner_id
+            JOIN account_account aa ON aa.id = aml.account_id
+            LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
+        WHERE
+            am.date < %s
+            AND am.company_id = %s
+            AND aat.include_initial_balance = 't'
+            AND (aml.debit != 0 OR aml.credit != 0)
+        '''
+
+        # For official report: only use posted entries
+        if self.export_type == "official":
+            sql_query += '''
+            AND am.state = 'posted'
+            '''
+
+        sql_query += '''
+        GROUP BY aml.account_id, aat.type, rp.ref, rp.id
+        HAVING round(sum(aml.balance), %s) != 0
+        AND aat.type in ('receivable', 'payable')
+        '''
+        self._cr.execute(
+            sql_query, (formatted_date_year, formatted_date_from, formatted_date_from, formatted_date_from, self.date_from, company.id, currency_digits))
+
+        for row in self._cr.fetchall():
+            listrow = list(row)
+            account_id = listrow.pop()
+            rows_to_write.append(listrow)
 
         # LINES
         sql_query = '''
@@ -212,9 +296,13 @@ class AccountFrFec(models.TransientModel):
             TO_CHAR(am.date, 'YYYYMMDD') AS EcritureDate,
             aa.code AS CompteNum,
             replace(replace(aa.name, '|', '/'), '\t', '') AS CompteLib,
-            CASE WHEN rp.ref IS null OR rp.ref = ''
-            THEN COALESCE('ID ' || rp.id, '')
-            ELSE rp.ref
+            CASE WHEN aat.type IN ('receivable', 'payable')
+            THEN
+                CASE WHEN rp.ref IS null OR rp.ref = ''
+                THEN rp.id::text
+                ELSE replace(rp.ref, '|', '/')
+                END
+            ELSE ''
             END
             AS CompAuxNum,
             COALESCE(replace(replace(rp.name, '|', '/'), '\t', ''), '') AS CompAuxLib,
@@ -224,15 +312,17 @@ class AccountFrFec(models.TransientModel):
             END
             AS PieceRef,
             TO_CHAR(am.date, 'YYYYMMDD') AS PieceDate,
-            CASE WHEN aml.name IS NULL THEN '/' ELSE replace(replace(aml.name, '|', '/'), '\t', '') END AS EcritureLib,
-            replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '999999999999999D99') END, '.', ',') AS Debit,
-            replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '999999999999999D99') END, '.', ',') AS Credit,
+            CASE WHEN aml.name IS NULL OR aml.name = '' THEN '/'
+                WHEN aml.name SIMILAR TO '[\t|\s|\n]*' THEN '/'
+                ELSE replace(replace(replace(replace(aml.name, '|', '/'), '\t', ''), '\n', ''), '\r', '') END AS EcritureLib,
+            replace(CASE WHEN aml.debit = 0 THEN '0,00' ELSE to_char(aml.debit, '000000000000000D99') END, '.', ',') AS Debit,
+            replace(CASE WHEN aml.credit = 0 THEN '0,00' ELSE to_char(aml.credit, '000000000000000D99') END, '.', ',') AS Credit,
             CASE WHEN rec.name IS NULL THEN '' ELSE rec.name END AS EcritureLet,
             CASE WHEN aml.full_reconcile_id IS NULL THEN '' ELSE TO_CHAR(rec.create_date, 'YYYYMMDD') END AS DateLet,
             TO_CHAR(am.date, 'YYYYMMDD') AS ValidDate,
             CASE
                 WHEN aml.amount_currency IS NULL OR aml.amount_currency = 0 THEN ''
-                ELSE replace(to_char(aml.amount_currency, '999999999999999D99'), '.', ',')
+                ELSE replace(to_char(aml.amount_currency, '000000000000000D99'), '.', ',')
             END AS Montantdevise,
             CASE WHEN aml.currency_id IS NULL THEN '' ELSE rc.name END AS Idevise
         FROM
@@ -241,6 +331,7 @@ class AccountFrFec(models.TransientModel):
             LEFT JOIN res_partner rp ON rp.id=aml.partner_id
             JOIN account_journal aj ON aj.id = am.journal_id
             JOIN account_account aa ON aa.id = aml.account_id
+            LEFT JOIN account_account_type aat ON aa.user_type_id = aat.id
             LEFT JOIN res_currency rc ON rc.id = aml.currency_id
             LEFT JOIN account_full_reconcile rec ON rec.id = aml.full_reconcile_id
         WHERE
@@ -266,20 +357,19 @@ class AccountFrFec(models.TransientModel):
             sql_query, (self.date_from, self.date_to, company.id))
 
         for row in self._cr.fetchall():
-            w.writerow(list(row))
+            rows_to_write.append(list(row))
 
-        siren = company.vat[4:13]
-        end_date = self.date_to.replace('-', '')
+        fecvalue = self._csv_write_rows(rows_to_write)
+        end_date = fields.Date.to_string(self.date_to).replace('-', '')
         suffix = ''
         if self.export_type == "nonofficial":
             suffix = '-NONOFFICIAL'
-        fecvalue = fecfile.getvalue()
+
         self.write({
-            'fec_data': base64.encodestring(fecvalue),
+            'fec_data': base64.encodebytes(fecvalue),
             # Filename = <siren>FECYYYYMMDD where YYYMMDD is the closing date
-            'filename': '%sFEC%s%s.csv' % (siren, end_date, suffix),
+            'filename': '%sFEC%s%s.csv' % (company_legal_data['siren'], end_date, suffix),
             })
-        fecfile.close()
 
         action = {
             'name': 'FEC',
@@ -288,3 +378,29 @@ class AccountFrFec(models.TransientModel):
             'target': 'self',
             }
         return action
+
+    def _csv_write_rows(self, rows, lineterminator=u'\r\n'):
+        """
+        Write FEC rows into a file
+        It seems that Bercy's bureaucracy is not too happy about the
+        empty new line at the End Of File.
+
+        @param {list(list)} rows: the list of rows. Each row is a list of strings
+        @param {unicode string} [optional] lineterminator: effective line terminator
+            Has nothing to do with the csv writer parameter
+            The last line written won't be terminated with it
+
+        @return the value of the file
+        """
+        fecfile = io.BytesIO()
+        writer = pycompat.csv_writer(fecfile, delimiter='|', lineterminator='')
+
+        rows_length = len(rows)
+        for i, row in enumerate(rows):
+            if not i == rows_length - 1:
+                row[-1] += lineterminator
+            writer.writerow(row)
+
+        fecvalue = fecfile.getvalue()
+        fecfile.close()
+        return fecvalue

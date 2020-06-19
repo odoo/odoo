@@ -6,14 +6,17 @@
         <field name="model">delivery.carrier</field>
         <field name="inherit_id" ref="delivery.view_delivery_carrier_form"/>
         <field name="arch" type="xml">
+            <field name="company_id" position='after'>
+                <field name="website_id" groups="website.group_multi_website" options="{'no_open': True, 'no_create_edit': True}"/>
+            </field>
             <xpath expr="//page[@name='destination']" position='after'>
-                <page string="Description">
+                <page string="Description" name="description">
                     <field name="website_description"  placeholder="Description displayed on the eCommerce and on online quotations."/>
                 </page>
             </xpath>
-            <xpath expr="//button[@name='toggle_active']" position='before'>
-                <button class="oe_stat_button" name="website_publish_button" type="object" icon="fa-globe">
-                    <field name="website_published" widget="website_button"/>
+            <xpath expr="//button[@name='toggle_prod_environment']" position='before'>
+                <button name="website_publish_button" type="object" class="oe_stat_button" icon="fa-globe">
+                    <field name="is_published" widget="website_publish_button"/>
                 </button>
             </xpath>
         </field>
@@ -25,7 +28,8 @@
         <field name="inherit_id" ref="delivery.view_delivery_carrier_tree"/>
         <field name="arch" type="xml">
             <field name="delivery_type" position="after">
-                <field name="website_published"/>
+                <field name="is_published"/>
+                <field name="website_id" groups="website.group_multi_website"/>
             </field>
         </field>
     </record>
@@ -36,7 +40,7 @@
         <field name="inherit_id" ref="delivery.view_delivery_carrier_search"/>
         <field name="arch" type="xml">
             <filter name="inactive" position="after">
-                <filter string="Published" name="website_published" domain="[('website_published','=',True)]"/>
+                <filter string="Published" name="is_published" domain="[('is_published','=',True)]"/>
             </filter>
         </field>
     </record>
@@ -44,7 +48,7 @@
     <menuitem
         id="menu_ecommerce_delivery"
         parent="website_sale.menu_ecommerce_settings"
-        name="Delivery Methods"
+        name="Shipping Methods"
         action="delivery.action_delivery_carrier_form"/>
 
 </odoo>

@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.tests import common
 
 class test_inherits(common.TransactionCase):
@@ -66,12 +67,22 @@ class test_inherits(common.TransactionCase):
 
         # the extra values are added, both in the field and the column
         self.assertEqual(mother._fields['state'].selection,
-                         [('a', 'A'), ('b', 'B'), ('c', 'C'), ('d', 'D')])
+                         [('a', 'A'), ('d', 'D'), ('b', 'B'), ('c', 'C')])
+
+    def test_41_selection_extension(self):
+        """ check that attribute selection_add=... extends selection on fields. """
+        model = self.env['test_new_api.selection']
+        field = model._fields['other']
+        self.assertIsInstance(field.selection, str)
+        self.assertEqual(field._description_selection(self.env), [('baz', 'Baz')])
+
+
+class test_inherits_demo(TransactionCaseWithUserDemo):
 
     def test_50_search_one2many(self):
         """ check search on one2many field based on inherited many2one field. """
         # create a daughter record attached to partner Demo
-        partner_demo = self.env.ref('base.partner_demo')
+        partner_demo = self.partner_demo
         daughter = self.env['test.inherit.daughter'].create({'partner_id': partner_demo.id})
         self.assertEqual(daughter.partner_id, partner_demo)
         self.assertIn(daughter, partner_demo.daughter_ids)
@@ -130,3 +141,31 @@ class TestInherit(common.TransactionCase):
         # check properties memoized on model
         self.assertEqual(len(parent._constraint_methods), 1)
         self.assertEqual(len(child._constraint_methods), 1)
+
+
+class TestXMLIDS(common.TransactionCase):
+    def test_xml_ids(self):
+        """ check XML ids of selection fields. """
+        field = self.env['test_new_api.selection']._fields['state']
+        self.assertEqual(field.selection, [('foo', 'Foo'), ('bar', 'Bar'), ('baz', 'Baz')])
+
+        ir_field = self.env['ir.model.fields']._get('test_new_api.selection', 'state')
+        xml_ids = ir_field._get_external_ids()
+        self.assertCountEqual(xml_ids.get(ir_field.id), [
+            'test_new_api.field_test_new_api_selection__state',
+            'test_inherit.field_test_new_api_selection__state',
+        ])
+
+        foo, bar, baz = ir_field.selection_ids
+        xml_ids = (foo + bar + baz)._get_external_ids()
+        self.assertCountEqual(xml_ids.get(foo.id), [
+            'test_new_api.selection__test_new_api_selection__state__foo',
+        ])
+        self.assertCountEqual(xml_ids.get(bar.id), [
+            'test_new_api.selection__test_new_api_selection__state__bar',
+            'test_inherit.selection__test_new_api_selection__state__bar',
+        ])
+        self.assertCountEqual(xml_ids.get(baz.id), [
+            'test_inherit.selection__test_new_api_selection__state__baz',
+        ])
+

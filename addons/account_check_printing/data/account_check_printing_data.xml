@@ -15,6 +15,8 @@
             <field name="name">Print Checks</field>
             <field name="model_id" ref="account.model_account_payment"/>
             <field name="binding_model_id" ref="account.model_account_payment" />
+            <field name="binding_view_types">list</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_user'))]"/>
             <field name="state">code</field>
             <field name="code">
 if records:

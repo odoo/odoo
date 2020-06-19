@@ -13,15 +13,15 @@
             <input type="hidden" name="sessionValidity" t-att-value="sessionValidity"/>
             <input type="hidden" name="merchantSig" t-att-value="merchantSig"/>
             <!-- URLs -->
-            <input type='hidden' name='resURL'
+            <input type="hidden" name='resURL'
                 t-att-value="resURL"/>
             <!-- custom -->
-            <input t-if="merchantReturnData" type='hidden' name='merchantReturnData'
+            <input t-if="merchantReturnData" type="hidden" name='merchantReturnData'
                 t-att-value="merchantReturnData"/>
             <!-- shopperEmail is not included for SHA-1. To avoid breaking compatibility,
                     include only if filled in -->
             <input t-if="shopperEmail"
-                type='hidden' name='shopperEmail' t-att-value="shopperEmail"/>
+                type="hidden" name='shopperEmail' t-att-value="shopperEmail"/>
         </template>
     </data>
 </odoo>

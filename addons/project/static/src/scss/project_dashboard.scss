@@ -1,0 +1,39 @@
+.o_kanban_view.o_kanban_dashboard.o_project_kanban {
+    .o_project_kanban_boxes {
+        display: flex;
+        flex-flow: row wrap;
+        justify-content: space-between;
+
+        .o_project_kanban_box {
+            position: relative;
+            text-align: center;
+            padding: 0 0 0 0;
+            margin: 0 5px;
+
+            .o_value {
+                font-weight: 800;
+            }
+
+            > div {
+                font-weight: 500;
+
+                button.o_needaction {
+                    font-size: small;
+                    font-weight: 400;
+                    margin-left: 4px;
+                    @include o-hover-opacity(0.5, 1);
+
+                    &:before {
+                        content: "/ ";
+                    }
+
+                    &:after {
+                        content: "\f086";
+                        font: normal normal normal 14px/1 FontAwesome;
+                    }
+                }
+            }
+        }
+    }
+}
+

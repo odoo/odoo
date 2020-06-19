@@ -94,7 +94,7 @@ class Graph(dict):
 
         for package in later:
             unmet_deps = [p for p in dependencies[package] if p not in self]
-            _logger.error('module %s: Unmet dependencies: %s', package, ', '.join(unmet_deps))
+            _logger.info('module %s: Unmet dependencies: %s', package, ', '.join(unmet_deps))
 
         return len(self) - len_graph
 
@@ -176,3 +176,17 @@ class Node(object):
         for c in self.children:
             s += '%s`-> %s' % ('   ' * depth, c._pprint(depth+1))
         return s
+
+    def should_have_demo(self):
+        return (hasattr(self, 'demo') or (self.dbdemo and self.state != 'installed')) and all(p.dbdemo for p in self.parents)
+
+    @property
+    def parents(self):
+        if self.depth == 0:
+            return []
+
+        return (
+            node for node in self.graph.values()
+            if node.depth < self.depth
+            if self in node.children
+        )

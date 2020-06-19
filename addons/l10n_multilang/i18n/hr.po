@@ -1,23 +1,28 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * l10n_multilang
-#
+# 
 # Translators:
-# Davor Bojkić <bole@dajmi5.com>, 2015
+# Martin Trigaux, 2019
+# Bole <bole@dajmi5.com>, 2019
+# Davor Bojkić <davor.bojkic@storm.hr>, 2019
+# Vladimir Olujić <olujic.vladimir@storm.hr>, 2019
+# Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
+# Tina Milas, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server 12.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2015-09-18 08:20+0000\n"
-"PO-Revision-Date: 2015-09-29 20:39+0000\n"
-"Last-Translator: Davor Bojkić <bole@dajmi5.com>\n"
-"Language-Team: Croatian (http://www.transifex.com/odoo/odoo-9/language/hr/)\n"
-"Language: hr\n"
+"POT-Creation-Date: 2018-10-08 14:33+0000\n"
+"PO-Revision-Date: 2019-08-26 09:11+0000\n"
+"Last-Translator: Tina Milas, 2019\n"
+"Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
-"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n"
-"%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
+"Language: hr\n"
+"Plural-Forms: nplurals=3; plural=n%10==1 && n%100!=11 ? 0 : n%10>=2 && n%10<=4 && (n%100<10 || n%100>=20) ? 1 : 2;\n"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account
@@ -25,14 +30,52 @@ msgid "Account"
 msgstr "Konto"
 
 #. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_chart_template
+msgid "Account Chart Template"
+msgstr "Predložak kontnog plana"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_account_account_tag
+msgid "Account Tag"
+msgstr "Oznaka konta"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_res_country_state__name
+msgid ""
+"Administrative divisions of a country. E.g. Fed. State, Departement, Canton"
+msgstr "Administrativna podjela države. ( Županije, fed. jedinice, kantoni)"
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_analytic_account
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_analytic_account__name
 msgid "Analytic Account"
-msgstr "Analitički konto"
+msgstr "Konto analitike"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_res_country_state
+msgid "Country state"
+msgstr "Županija/fed.država"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__description
+msgid "Display on Invoices"
+msgstr "Prikaži na računima"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__name
 msgid "Fiscal Position"
 msgstr "Fiskalna pozicija"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__name
+msgid "Fiscal Position Template"
+msgstr "Predložak fiskalne pozicije"
+
+#. module: l10n_multilang
+#: model:ir.model,name:l10n_multilang.model_base_language_install
+msgid "Install Language"
+msgstr "Instalacija jezika"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_journal
@@ -40,16 +83,50 @@ msgid "Journal"
 msgstr "Dnevnik"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template_spoken_languages
-msgid "Spoken Languages"
-msgstr ""
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_journal__name
+msgid "Journal Name"
+msgstr "Naziv dnevnika"
 
 #. module: l10n_multilang
-#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template_spoken_languages
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__description
+msgid "Label on Invoices"
+msgstr "Natpis na računu"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_fiscal_position__note
+msgid "Legal mentions that have to be printed on the invoices."
+msgstr "Zakonske napomene koje se trebaju ispisati na računima."
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_tag__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_account_template__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__name
+msgid "Name"
+msgstr "Naziv"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position__note
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_fiscal_position_template__note
+msgid "Notes"
+msgstr "Bilješke"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_chart_template__spoken_languages
+msgid "Spoken Languages"
+msgstr "Govoreni jezici"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_res_country_state__name
+msgid "State Name"
+msgstr "Naziv države"
+
+#. module: l10n_multilang
+#: model:ir.model.fields,help:l10n_multilang.field_account_chart_template__spoken_languages
 msgid ""
 "State here the languages for which the translations of templates could be "
-"loaded at the time of installation of this localization module and copied in "
-"the final object when generating them from templates. You must provide the "
+"loaded at the time of installation of this localization module and copied in"
+" the final object when generating them from templates. You must provide the "
 "language codes separated by ';'"
 msgstr ""
 
@@ -59,14 +136,15 @@ msgid "Tax"
 msgstr "Porez"
 
 #. module: l10n_multilang
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax__name
+#: model:ir.model.fields,field_description:l10n_multilang.field_account_tax_template__name
+msgid "Tax Name"
+msgstr "Naziv poreza"
+
+#. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_fiscal_position_template
 msgid "Template for Fiscal Position"
 msgstr "Predložak fiskalne pozicije"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_account_chart_template
-msgid "Templates for Account Chart"
-msgstr "Predložak kontnog plana"
 
 #. module: l10n_multilang
 #: model:ir.model,name:l10n_multilang.model_account_account_template
@@ -77,8 +155,3 @@ msgstr "Predlošci za konta"
 #: model:ir.model,name:l10n_multilang.model_account_tax_template
 msgid "Templates for Taxes"
 msgstr "Predlošci poreza"
-
-#. module: l10n_multilang
-#: model:ir.model,name:l10n_multilang.model_wizard_multi_charts_accounts
-msgid "wizard.multi.charts.accounts"
-msgstr "carobnjak.vise.kontnih.naloga"

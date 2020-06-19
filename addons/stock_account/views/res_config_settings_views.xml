@@ -7,16 +7,19 @@
             <field name="inherit_id" ref="stock.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <div id="production_lot_info" position="after">
-                    <h2>Costing</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="Affect landed costs on receipt operations and split them among products to update their cost price.">
+                    <h2>Valuation</h2>
+                    <div class="row mt16 o_settings_container" name="valuation_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box"
+                            id="additional_cost_setting"
+                            title="Affect landed costs on reception operations and split them among products to update their cost price.">
                             <div class="o_setting_left_pane">
                                 <field name="module_stock_landed_costs"/>
                             </div>
                             <div class="o_setting_right_pane">
                                 <label for="module_stock_landed_costs"/>
+                                <a href="https://www.odoo.com/documentation/user/13.0/inventory/management/reporting/integrating_landed_costs.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                 <div class="text-muted">
-                                    Include landed costs in product cost
+                                    Add additional cost (transport, customs, ...) in the value of the product.
                                 </div>
                                 <div class="content-group">
                                     <div name="landed_cost_info"/>

@@ -2,7 +2,7 @@
 
 {
     'name': 'Payment - Account',
-    'category': 'Accounting',
+    'category': 'Accounting/Accounting',
     'summary': 'Account and Payment Link and Portal',
     'version': '1.0',
     'description': """Link Account and Payment and add Portal Payment
@@ -12,10 +12,8 @@ enable payment.
 
  * UPDATE ME
 """,
-    'depends': ['payment', 'account'],
+    'depends': ['payment'],
     'data': [
-        'views/account_invoice_views.xml',
-        'views/payment_views.xml',
         'views/account_portal_templates.xml',
     ],
     'installable': True,

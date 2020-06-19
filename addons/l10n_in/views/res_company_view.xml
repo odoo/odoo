@@ -8,7 +8,7 @@
         <field name="inherit_id" ref="base.view_company_form"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='vat']" position="attributes">
-                <attribute name="string">GSTIN</attribute>
+                <attribute name="string" attrs="{'invisible': [('country_code', '!=', 'IN')]}">GSTIN</attribute>
             </xpath>
         </field>
     </record>

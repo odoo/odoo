@@ -7,7 +7,6 @@ from odoo import api, models
 class MailComposeMessage(models.TransientModel):
     _inherit = 'mail.compose.message'
 
-    @api.multi
     def send_mail(self, auto_commit=False):
         context = self._context
         # TODO TDE: clean that brole one day

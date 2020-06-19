@@ -6,6 +6,7 @@ var Widget = require('web.Widget');
 var core = require('web.core');
 var rte = require('web_editor.rte');
 var snippetsEditor = require('web_editor.snippet.editor');
+var summernoteCustomColors = require('web_editor.rte.summernote_custom_colors');
 
 var _t = core._t;
 
@@ -17,6 +18,7 @@ var EditorMenuBar = Widget.extend({
         'click button[data-action=cancel]': '_onCancelClick',
     },
     custom_events: {
+        request_editable: '_onRequestEditable',
         request_history_undo_record: '_onHistoryUndoRecordRequest',
         request_save: '_onSaveRequest',
     },
@@ -26,17 +28,34 @@ var EditorMenuBar = Widget.extend({
      *
      * @constructor
      */
-    init: function (parent) {
+    init: function (parent, options) {
         var self = this;
         var res = this._super.apply(this, arguments);
-        this.rte = new rte.Class(this);
+        var Editor = options.Editor || rte.Class;
+        this.rte = new Editor(this, {
+            getConfig: function ($editable) {
+                var param = self._getDefaultConfig($editable);
+                if (options.generateOptions) {
+                    param = options.generateOptions(param);
+                }
+                return param;
+            },
+            saveElement: options.saveElement,
+        });
         this.rte.on('rte:start', this, function () {
             self.trigger('rte:start');
         });
 
         // Snippets edition
         var $editable = this.rte.editable();
-        this.snippetsMenu = new snippetsEditor.Class(this, $editable);
+        window.__EditorMenuBar_$editable = $editable; // TODO remove this hack asap
+
+        if (options.snippets) {
+            this.snippetsMenu = new snippetsEditor.Class(this, Object.assign({
+                $el: $editable,
+                selectorEditableArea: '.o_editable',
+            }, options));
+        }
 
         return res;
     },
@@ -47,8 +66,8 @@ var EditorMenuBar = Widget.extend({
         var self = this;
         var defs = [this._super.apply(this, arguments)];
 
-        core.bus.on('editor_save_request', this, this._onSaveRequest);
-        core.bus.on('editor_discard_request', this, this._onDiscardRequest);
+        core.bus.on('editor_save_request', this, this.save);
+        core.bus.on('editor_discard_request', this, this.cancel);
 
         $('.dropdown-toggle').dropdown();
 
@@ -87,10 +106,12 @@ var EditorMenuBar = Widget.extend({
         };
 
         // Snippets menu
-        defs.push(this.snippetsMenu.insertAfter(this.$el));
+        if (self.snippetsMenu) {
+            defs.push(this.snippetsMenu.insertAfter(this.$el));
+        }
         this.rte.editable().find('*').off('mousedown mouseup click');
 
-        return $.when.apply($, defs).then(function () {
+        return Promise.all(defs).then(function () {
             self.trigger_up('edit_mode');
         });
     },
@@ -114,20 +135,20 @@ var EditorMenuBar = Widget.extend({
      * @param {boolean} [reload=true]
      *        true if the page has to be reloaded when the user answers yes
      *        (do nothing otherwise but add this to allow class extension)
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     cancel: function (reload) {
         var self = this;
-        var def = $.Deferred();
-        if (!rte.history.getEditableHasUndo().length) {
-            def.resolve();
-        } else {
-            var confirm = Dialog.confirm(this, _t("If you discard the current edition, all unsaved changes will be lost. You can cancel to return to the edition mode."), {
-                confirm_callback: def.resolve.bind(def),
-            });
-            confirm.on('closed', def, def.reject);
-        }
-        return def.then(function () {
+        return new Promise(function(resolve, reject) {
+            if (!rte.history.getEditableHasUndo().length) {
+                resolve();
+            } else {
+                var confirm = Dialog.confirm(this, _t("If you discard the current edits, all unsaved changes will be lost. You can cancel to return to edit mode."), {
+                    confirm_callback: resolve,
+                });
+                confirm.on('closed', self, reject);
+            }
+        }).then(function () {
             if (reload !== false) {
                 window.onbeforeunload = null;
                 return self._reload();
@@ -140,16 +161,22 @@ var EditorMenuBar = Widget.extend({
      *
      * @param {boolean} [reload=true]
      *        true if the page has to be reloaded after the save
-     * @returns {Deferred}
+     * @returns {Promise}
      */
-    save: function (reload) {
-        var self = this;
-        this.snippetsMenu.cleanForSave();
-        return this.rte.save().then(function () {
-            if (reload !== false) {
-                return self._reload();
-            }
-        });
+    save: async function (reload) {
+        var defs = [];
+        this.trigger_up('ready_to_save', {defs: defs});
+        await Promise.all(defs);
+
+        if (this.snippetsMenu) {
+            await this.snippetsMenu.cleanForSave();
+        }
+        await this.getParent().saveModifiedImages(this.rte.editable());
+        await this.rte.save();
+
+        if (reload !== false) {
+            return this._reload();
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -157,10 +184,36 @@ var EditorMenuBar = Widget.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @private
+     */
+    _getDefaultConfig: function ($editable) {
+        return {
+            'airMode' : true,
+            'focus': false,
+            'airPopover': [
+                ['style', ['style']],
+                ['font', ['bold', 'italic', 'underline', 'clear']],
+                ['fontsize', ['fontsize']],
+                ['color', ['color']],
+                ['para', ['ul', 'ol', 'paragraph']],
+                ['table', ['table']],
+                ['insert', ['link', 'picture']],
+                ['history', ['undo', 'redo']],
+            ],
+            'styleWithSpan': false,
+            'inlinemedia' : ['p'],
+            'lang': 'odoo',
+            'onChange': function (html, $editable) {
+                $editable.trigger('content_changed');
+            },
+            'colors': summernoteCustomColors,
+        };
+    },
+    /**
      * Reloads the page in non-editable mode, with the right scrolling.
      *
      * @private
-     * @returns {Deferred} (never resolved, the page is reloading anyway)
+     * @returns {Promise} (never resolved, the page is reloading anyway)
      */
     _reload: function () {
         window.location.hash = 'scrollTop=' + window.document.body.scrollTop;
@@ -169,7 +222,7 @@ var EditorMenuBar = Widget.extend({
         } else {
             window.location.reload(true);
         }
-        return $.Deferred();
+        return new Promise(function(){});
     },
 
     //--------------------------------------------------------------------------
@@ -220,6 +273,13 @@ var EditorMenuBar = Widget.extend({
     _onSaveRequest: function (ev) {
         ev.stopPropagation();
         this.save(ev.data.reload).then(ev.data.onSuccess, ev.data.onFailure);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onRequestEditable: function (ev) {
+        ev.data.callback(this.rte.editable());
     },
 });
 

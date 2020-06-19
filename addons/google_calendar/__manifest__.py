@@ -4,15 +4,15 @@
 {
     'name': 'Google Calendar',
     'version': '1.0',
-    'category': 'Extra Tools',
+    'category': 'Productivity',
     'description': "",
-    'website': 'https://www.odoo.com/page/crm',
     'depends': ['google_account', 'calendar'],
     'qweb': ['static/src/xml/*.xml'],
     'data': [
         'data/google_calendar_data.xml',
-        'data/google_calendar_data.xml',
         'security/ir.model.access.csv',
+        'views/calendar_event_views.xml',
+        'wizard/reset_account_views.xml',
         'views/res_config_settings_views.xml',
         'views/res_users_views.xml',
         'views/google_calendar_templates.xml',

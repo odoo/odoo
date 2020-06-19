@@ -2,7 +2,7 @@
 
 {
     'name': 'Transfer Payment Acquirer',
-    'category': 'Accounting',
+    'category': 'Accounting/Payment Acquirers',
     'summary': 'Payment Acquirer: Transfer Implementation',
     'version': '1.0',
     'description': """Transfer Payment Acquirer""",
@@ -14,4 +14,6 @@
     ],
     'installable': True,
     'auto_install': True,
+    'post_init_hook': 'create_missing_journal_for_acquirers',
+    'uninstall_hook': 'uninstall_hook',
 }

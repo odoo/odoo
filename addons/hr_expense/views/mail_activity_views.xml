@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+    <!-- Activity types config -->
+    <record id="mail_activity_type_action_config_hr_expense" model="ir.actions.act_window">
+        <field name="name">Activity Types</field>
+        <field name="res_model">mail.activity.type</field>
+        <field name="view_mode">tree,form</field>
+        <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', '=', 'hr.expense.sheet')]</field>
+        <field name="context">{'default_res_model': 'hr.expense.sheet'}</field>
+    </record>
+    <menuitem id="hr_expense_menu_config_activity_type"
+        action="mail_activity_type_action_config_hr_expense"
+        parent="menu_hr_expense_configuration"
+        groups="base.group_no_one"/>
+</odoo>

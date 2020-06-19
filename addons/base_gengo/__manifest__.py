@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Automated Translations through Gengo API',
-    'category': 'Tools',
+    'category': 'Hidden/Tools',
     'description': """
 Automated Translations through Gengo API
 ========================================
@@ -16,6 +16,7 @@ This wizard will activate the CRON job and the Scheduler and will start the auto
     """,
     'depends': ['base_setup'],
     'data': [
+        'security/ir.model.access.csv',
         'data/ir_cron_data.xml',
         'views/ir_translation_views.xml',
         'views/res_config_settings_views.xml',

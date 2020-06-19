@@ -2,13 +2,13 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from contextlib import contextmanager
-import unittest
 
 import psycopg2
 import psycopg2.errorcodes
 
 import odoo
 from odoo.tests import common
+from odoo.tests.common import BaseCase
 
 ADMIN_USER_ID = common.ADMIN_USER_ID
 
@@ -20,7 +20,6 @@ def environment():
     registry = odoo.registry(common.get_db_name())
     with registry.cursor() as cr:
         yield odoo.api.Environment(cr, ADMIN_USER_ID, {})
-        cr.commit()
 
 
 def drop_sequence(code):
@@ -29,7 +28,7 @@ def drop_sequence(code):
         seq.unlink()
 
 
-class TestIrSequenceStandard(unittest.TestCase):
+class TestIrSequenceStandard(BaseCase):
     """ A few tests for a 'Standard' (i.e. PostgreSQL) sequence. """
 
     def test_ir_sequence_create(self):
@@ -67,7 +66,7 @@ class TestIrSequenceStandard(unittest.TestCase):
         drop_sequence('test_sequence_type')
 
 
-class TestIrSequenceNoGap(unittest.TestCase):
+class TestIrSequenceNoGap(BaseCase):
     """ Copy of the previous tests for a 'No gap' sequence. """
 
     def test_ir_sequence_create_no_gap(self):
@@ -104,7 +103,7 @@ class TestIrSequenceNoGap(unittest.TestCase):
         drop_sequence('test_sequence_type_2')
 
 
-class TestIrSequenceChangeImplementation(unittest.TestCase):
+class TestIrSequenceChangeImplementation(BaseCase):
     """ Create sequence objects and change their ``implementation`` field. """
 
     def test_ir_sequence_1_create(self):
@@ -141,7 +140,7 @@ class TestIrSequenceChangeImplementation(unittest.TestCase):
         drop_sequence('test_sequence_type_4')
 
 
-class TestIrSequenceGenerate(unittest.TestCase):
+class TestIrSequenceGenerate(BaseCase):
     """ Create sequence objects and generate some values. """
 
     def test_ir_sequence_create(self):

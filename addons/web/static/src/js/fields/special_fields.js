@@ -20,7 +20,8 @@ var FieldTimezoneMismatch = FieldSelection.extend({
      * @override
      */
     start: function () {
-        this._datetime = setInterval(this._renderDateTimeTimezone.bind(this), 1000);
+        var interval = navigator.platform.toUpperCase().indexOf('MAC') >= 0 ? 60000 : 1000;
+        this._datetime = setInterval(this._renderDateTimeTimezone.bind(this), interval);
         return this._super.apply(this, arguments);
     },
     /**
@@ -49,7 +50,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
      * @private
      */
     _renderDateTimeTimezone: function () {
-        if (!this.mismatch) {
+        if (!this.mismatch || !this.$option.html()) {
             return;
         }
         var offset = this.recordData.tz_offset.match(/([+-])([0-9]{2})([0-9]{2})/);
@@ -72,8 +73,9 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         this.$el.last().filter('.o_tz_warning').remove();
         this.$el = this.$el.first();
         var value = this.$el.val();
+        var $span = $('<span class="fa fa-exclamation-triangle o_tz_warning"/>');
 
-        if (this.$option) {
+        if (this.$option && this.$option.html()) {
             this.$option.html(this.$option.html().split(' ')[0]);
         }
 
@@ -88,21 +90,111 @@ var FieldTimezoneMismatch = FieldSelection.extend({
         }
 
         if (this.mismatch){
-            var $span = $('<span class="fa fa-exclamation-triangle o_tz_warning"/>');
             $span.insertAfter(this.$el);
-            $span.attr('title', _t("Timezone Mismatch : The timezone of your browser doesn't match the selected one. The time in Odoo is displayed according to your field timezone."));
+            $span.attr('title', _t("Timezone Mismatch : This timezone is different from that of your browser.\nPlease, set the same timezone as your browser's to avoid time discrepancies in your system."));
             this.$el = this.$el.add($span);
 
             this.$option = this.$('option').filter(function () {
                 return $(this).attr('value') === value;
             });
             this._renderDateTimeTimezone();
+        } else if (value == "false") {
+            $span.insertAfter(this.$el);
+            $span.attr('title', _t("Set a timezone on your user"));
+            this.$el = this.$el.add($span);
         }
+    },
+    /**
+     * @override
+     * @private
+     * this.$el can have other elements than select
+     * that should not be touched
+     */
+    _renderEdit: function () {
+        // FIXME: hack to handle multiple root elements
+        // in this.$el , which is a bad idea
+        // In master we should make this.$el a wrapper
+        // around multiple subelements
+        var $otherEl = this.$el.not('select');
+        this.$el = this.$el.first();
+
+        this._super.apply(this, arguments);
+
+        $otherEl.insertAfter(this.$el);
+        this.$el = this.$el.add($otherEl);
     },
 });
 
+var FieldReportLayout = relational_fields.FieldMany2One.extend({
+    // this widget is not generic, so we disable its studio use
+    // supportedFieldTypes: ['many2one', 'selection'],
+    events: _.extend({}, relational_fields.FieldMany2One.prototype.events, {
+        'click img': '_onImgClicked',
+    }),
+
+    willStart: function () {
+        var self = this;
+        this.previews = {};
+        return this._super()
+            .then(function () {
+                return self._rpc({
+                    model: 'report.layout',
+                    method: "search_read"
+                }).then(function (values) {
+                    self.previews = values;
+                });
+            });
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     */
+    _render: function () {
+        var self = this;
+        this.$el.empty();
+        var value = _.isObject(this.value) ? this.value.data.id : this.value;
+        _.each(this.previews, function (val) {
+            var $container = $('<div>').addClass('col-3 text-center');
+            var $img = $('<img>')
+                .addClass('img img-fluid img-thumbnail ml16')
+                .toggleClass('btn-info', val.view_id[0] === value)
+                .attr('src', val.image)
+                .data('key', val.view_id[0]);
+            $container.append($img);
+            if (val.pdf) {
+                var $previewLink = $('<a>')
+                    .text('Example')
+                    .attr('href', val.pdf)
+                    .attr('target', '_blank');
+                $container.append($previewLink);
+            }
+            self.$el.append($container);
+        });
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     * @private
+     * @param {MouseEvent} event
+     */
+    _onImgClicked: function (event) {
+        this._setValue($(event.currentTarget).data('key'));
+    },
+});
+
+
 return {
     FieldTimezoneMismatch: FieldTimezoneMismatch,
+    FieldReportLayout: FieldReportLayout,
 };
 
 });

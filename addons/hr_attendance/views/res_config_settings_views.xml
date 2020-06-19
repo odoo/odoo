@@ -3,19 +3,19 @@
     <record id="res_config_settings_view_form" model="ir.ui.view">
         <field name="name">res.config.settings.view.form.inherit.hr.attendance</field>
         <field name="model">res.config.settings</field>
-        <field name="priority" eval="16"/>
+        <field name="priority" eval="80"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Attendances" data-key="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
+                    <div class="app_settings_block" data-string="Attendances" string="Attendances" data-key="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
                     <h2>Check-In/Out</h2>
-                    <div class="row mt16 o_settings_container">
-                        <div class="col-xs-12 col-md-6 o_setting_box" title="Set PIN codes in the employee detail form (in HR Settings tab).">
+                    <div class="row mt16 o_settings_container" name="pincode_setting_container">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Set PIN codes in the employee detail form (in HR Settings tab).">
                             <div class="o_setting_left_pane">
                                 <field name="group_attendance_use_pin"/>
                             </div>
                             <div class="o_setting_right_pane">
-                                <label string="Employee PIN"/>
+                                <span class="o_form_label">Employee PIN</span>
                                 <div class="text-muted">
                                     Use PIN codes to check in in Kiosk Mode
                                 </div>
@@ -28,7 +28,7 @@
     </record>
 
     <record id="action_hr_attendance_settings" model="ir.actions.act_window">
-        <field name="name">Attendance Settings</field>
+        <field name="name">Settings</field>
         <field name="type">ir.actions.act_window</field>
         <field name="res_model">res.config.settings</field>
         <field name="view_mode">form</field>

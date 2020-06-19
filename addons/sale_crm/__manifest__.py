@@ -16,13 +16,15 @@ The case is then closed and linked to the generated sales order.
 We suggest you to install this module, if you installed both the sale and the crm
 modules.
     """,
-    'website': 'https://www.odoo.com/page/crm',
     'depends': ['sale_management', 'crm'],
     'data': [
         'security/ir.model.access.csv',
         'views/partner_views.xml',
         'views/sale_order_views.xml',
         'views/crm_lead_views.xml',
+        'views/crm_team_views.xml',
+        'wizard/crm_opportunity_to_quotation_views.xml'
     ],
     'auto_install': True,
+    'uninstall_hook': 'uninstall_hook'
 }

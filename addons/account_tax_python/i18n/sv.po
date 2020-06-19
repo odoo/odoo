@@ -1,30 +1,34 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
 # * account_tax_python
-#
+# 
 # Translators:
+# Kristoffer Grundström <kristoffer.grundstrom1983@gmail.com>, 2018
+# Martin Trigaux, 2018
+# lasch a <bmail440@gmail.com>, 2018
+# Egils Verkstad <egils@riseup.net>, 2018
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo 9.0\n"
+"Project-Id-Version: Odoo Server saas~11.4\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2016-08-18 14:07+0000\n"
-"PO-Revision-Date: 2015-10-08 22:54+0000\n"
-"Last-Translator: Martin Trigaux\n"
-"Language-Team: Swedish (http://www.transifex.com/odoo/odoo-9/language/sv/)\n"
-"Language: sv\n"
+"POT-Creation-Date: 2018-08-02 09:12+0000\n"
+"PO-Revision-Date: 2018-08-02 09:12+0000\n"
+"Last-Translator: Egils Verkstad <egils@riseup.net>, 2018\n"
+"Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
+"Language: sv\n"
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_applicable
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_applicable
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_applicable
 msgid "Applicable Code"
 msgstr "Tillämplig kod"
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_compute
 msgid ""
 "Compute the amount of the tax by setting the variable 'result'.\n"
 "\n"
@@ -37,7 +41,7 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_compute
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_compute
 msgid ""
 "Compute the amount of the tax by setting the variable 'result'.\n"
 "\n"
@@ -49,10 +53,9 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax__python_applicable
 msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to "
-"True or False.\n"
+"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
@@ -62,10 +65,9 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
-#: model:ir.model.fields,help:account_tax_python.field_account_tax_template_python_applicable
+#: model:ir.model.fields,help:account_tax_python.field_account_tax_template__python_applicable
 msgid ""
-"Determine if the tax will be applied by setting the variable 'result' to "
-"True or False.\n"
+"Determine if the tax will be applied by setting the variable 'result' to True or False.\n"
 "\n"
 ":param price_unit: float\n"
 ":param quantity: float\n"
@@ -74,8 +76,34 @@ msgid ""
 msgstr ""
 
 #. module: account_tax_python
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_python_compute
-#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template_python_compute
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Fixed"
+msgstr "Fast"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Group of Taxes"
+msgstr "Skatter"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Percentage of Price"
+msgstr "Procent av priset"
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+msgid "Percentage of Price Tax Included"
+msgstr ""
+
+#. module: account_tax_python
+#: selection:account.tax,amount_type:0
+#: selection:account.tax.template,amount_type:0
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__python_compute
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__python_compute
 msgid "Python Code"
 msgstr "Pythonkod"
 
@@ -83,6 +111,12 @@ msgstr "Pythonkod"
 #: model:ir.model,name:account_tax_python.model_account_tax
 msgid "Tax"
 msgstr "Skatt"
+
+#. module: account_tax_python
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax__amount_type
+#: model:ir.model.fields,field_description:account_tax_python.field_account_tax_template__amount_type
+msgid "Tax Computation"
+msgstr "Skatteberäkning"
 
 #. module: account_tax_python
 #: model:ir.model,name:account_tax_python.model_account_tax_template

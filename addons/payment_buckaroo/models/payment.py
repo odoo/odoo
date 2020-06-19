@@ -26,7 +26,9 @@ def normalize_keys_upper(data):
 class AcquirerBuckaroo(models.Model):
     _inherit = 'payment.acquirer'
 
-    provider = fields.Selection(selection_add=[('buckaroo', 'Buckaroo')])
+    provider = fields.Selection(selection_add=[
+        ('buckaroo', 'Buckaroo')
+    ], ondelete={'buckaroo': 'set default'})
     brq_websitekey = fields.Char('WebsiteKey', required_if_provider='buckaroo', groups='base.group_user')
     brq_secretkey = fields.Char('SecretKey', required_if_provider='buckaroo', groups='base.group_user')
 
@@ -81,16 +83,15 @@ class AcquirerBuckaroo(models.Model):
         shasign = sha1(sign.encode('utf-8')).hexdigest()
         return shasign
 
-    @api.multi
     def buckaroo_form_generate_values(self, values):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+        base_url = self.get_base_url()
         buckaroo_tx_values = dict(values)
         buckaroo_tx_values.update({
             'Brq_websitekey': self.brq_websitekey,
             'Brq_amount': values['amount'],
             'Brq_currency': values['currency'] and values['currency'].name or '',
             'Brq_invoicenumber': values['reference'],
-            'brq_test': False if self.environment == 'prod' else True,
+            'brq_test': True if self.state == 'test' else False,
             'Brq_return': urls.url_join(base_url, BuckarooController._return_url),
             'Brq_returncancel': urls.url_join(base_url, BuckarooController._cancel_url),
             'Brq_returnerror': urls.url_join(base_url, BuckarooController._exception_url),
@@ -101,9 +102,10 @@ class AcquirerBuckaroo(models.Model):
         buckaroo_tx_values['Brq_signature'] = self._buckaroo_generate_digital_sign('in', buckaroo_tx_values)
         return buckaroo_tx_values
 
-    @api.multi
     def buckaroo_get_form_action_url(self):
-        return self._get_buckaroo_urls(self.environment)['buckaroo_form_url']
+        self.ensure_one()
+        environment = 'prod' if self.state == 'enabled' else 'test'
+        return self._get_buckaroo_urls(environment)['buckaroo_form_url']
 
 
 class TxBuckaroo(models.Model):
@@ -168,29 +170,23 @@ class TxBuckaroo(models.Model):
         data = normalize_keys_upper(data)
         status_code = int(data.get('BRQ_STATUSCODE', '0'))
         if status_code in self._buckaroo_valid_tx_status:
-            self.write({
-                'state': 'done',
-                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
-            })
+            self.write({'acquirer_reference': data.get('BRQ_TRANSACTIONS')})
+            self._set_transaction_done()
             return True
         elif status_code in self._buckaroo_pending_tx_status:
-            self.write({
-                'state': 'pending',
-                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
-            })
+            self.write({'acquirer_reference': data.get('BRQ_TRANSACTIONS')})
+            self._set_transaction_pending()
             return True
         elif status_code in self._buckaroo_cancel_tx_status:
-            self.write({
-                'state': 'cancel',
-                'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
-            })
+            self.write({'acquirer_reference': data.get('BRQ_TRANSACTIONS')})
+            self._set_transaction_cancel()
             return True
         else:
             error = 'Buckaroo: feedback error'
             _logger.info(error)
             self.write({
-                'state': 'error',
                 'state_message': error,
                 'acquirer_reference': data.get('BRQ_TRANSACTIONS'),
             })
+            self._set_transaction_cancel()
             return False

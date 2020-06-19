@@ -29,6 +29,9 @@ def tokenize(typespec):
         elif toktype == token.OP:
             if string in '|<>[].,':
                 yield (OP, string)
+            elif string == '>>':
+                yield (OP, '>')
+                yield (OP, '>')
             elif string == '*': # maybe?
                 yield (NAME, 'any')
             elif string in '()':
@@ -41,6 +44,8 @@ def tokenize(typespec):
             yield (LITERAL, ast.literal_eval(string))
         elif toktype == token.ENDMARKER:
             return
+        elif toktype == token.NEWLINE:
+            pass
         else:
             raise ValueError("Unknown typespec token %s" % token.tok_name[toktype])
 

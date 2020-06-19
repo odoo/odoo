@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="assets_frontend" inherit_id="web.assets_frontend">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/google_recaptcha/static/src/scss/recaptcha.scss"/>
+    </xpath>
+    <xpath expr="//script[last()]" position="after">
+        <t t-set="recaptcha_public_key" t-value="request.env['ir.config_parameter'].sudo().get_param('recaptcha_public_key')"/>
+        <script t-if="recaptcha_public_key" type="text/javascript">
+            odoo.reCaptchaPublicKey = '<t t-raw="recaptcha_public_key"/>';
+        </script>
+        <script type="text/javascript" src="/google_recaptcha/static/src/js/recaptcha.js"/>
+    </xpath>
+</template>
+
+</odoo>

@@ -12,9 +12,9 @@ odoo.define('web.Loading', function (require) {
  * After a delay of 3s, if a rpc is still not completed, we also block the UI.
  */
 
+var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
-var session = require('web.session');
 var Widget = require('web.Widget');
 
 var _t = core._t;
@@ -26,9 +26,11 @@ var Loading = Widget.extend({
         this._super(parent);
         this.count = 0;
         this.blocked_ui = false;
-        session.on("request", this, this.request_call);
-        session.on("response", this, this.response_call);
-        session.on("response_failed", this, this.response_call);
+    },
+    start: function() {
+        core.bus.on('rpc_request', this, this.request_call);
+        core.bus.on("rpc_response", this, this.response_call);
+        core.bus.on("rpc_response_failed", this, this.response_call);
     },
     destroy: function() {
         this.on_rpc_event(-this.count);
@@ -52,7 +54,7 @@ var Loading = Widget.extend({
 
         this.count += increment;
         if (this.count > 0) {
-            if (session.debug) {
+            if (config.isDebug()) {
                 this.$el.text(_.str.sprintf( _t("Loading (%d)"), this.count));
             } else {
                 this.$el.text(_t("Loading"));

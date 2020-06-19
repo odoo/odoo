@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+<t t-name="Colorpicker">
+    <div class="o_colorpicker_widget">
+        <div class="o_color_pick_area d-inline-block border" t-att-style="widget.options.noTransparency ? 'width: 89%;' : None">
+            <div class="o_picker_pointer rounded-circle" tabindex="-1"/>
+        </div>
+        <div class="o_color_slider d-inline-block border">
+            <div class="o_slider_pointer" tabindex="-1"/>
+        </div>
+        <div class="o_opacity_slider d-inline-block border" t-if="!widget.options.noTransparency">
+            <div class="o_opacity_pointer" tabindex="-1"/>
+        </div>
+        <div class="o_color_picker_inputs">
+            <div t-if="widget.options.colorPreview" class="o_color_preview_parent">
+                <span class="rounded-0 o_color_preview"/>
+            </div>
+            <div class="o_hex_div"><input type="text" class="o_hex_input" data-color-method="hex" size="1"/>hex</div>
+            <div class="o_rgba_div">
+                <input type="text" class="o_red_input" data-color-method="rgb" size="1"/>
+                <input type="text" class="o_green_input" data-color-method="rgb" size="1"/>
+                <input type="text" class="o_blue_input" data-color-method="rgb" size="1"/>
+                <t t-if="!widget.options.noTransparency">
+                    <input type="text" class="o_opacity_input" data-color-method="opacity" size="1"/>
+                    RGBA
+                </t>
+                <t t-else="">RGB</t>
+            </div>
+        </div>
+    </div>
+</t>
+</templates>

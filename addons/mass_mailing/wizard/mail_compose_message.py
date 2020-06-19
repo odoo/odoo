@@ -1,22 +1,21 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from odoo import api, fields, models, tools
+from odoo.tools import email_re
 
 
 class MailComposeMessage(models.TransientModel):
-    """Add concept of mass mailing campaign to the mail.compose.message wizard
-    """
     _inherit = 'mail.compose.message'
 
-    mass_mailing_campaign_id = fields.Many2one('mail.mass_mailing.campaign', string='Mass Mailing Campaign')
-    mass_mailing_id = fields.Many2one('mail.mass_mailing', string='Mass Mailing', ondelete='cascade')
-    mass_mailing_name = fields.Char(string='Mass Mailing')
-    mailing_list_ids = fields.Many2many('mail.mass_mailing.list', string='Mailing List')
+    mass_mailing_id = fields.Many2one('mailing.mailing', string='Mass Mailing', ondelete='cascade')
+    campaign_id = fields.Many2one('utm.campaign', string='Mass Mailing Campaign')
+    mass_mailing_name = fields.Char(string='Mass Mailing Name')
+    mailing_list_ids = fields.Many2many('mailing.list', string='Mailing List')
 
-    @api.multi
     def get_mail_values(self, res_ids):
         """ Override method that generated the mail content by creating the
-        mail.mail.statistics values in the o2m of mail_mail, when doing pure
+        mailing.trace values in the o2m of mail_mail, when doing pure
         email mass mailing. """
         self.ensure_one()
         res = super(MailComposeMessage, self).get_mail_values(res_ids)
@@ -28,10 +27,10 @@ class MailComposeMessage(models.TransientModel):
             if not mass_mailing:
                 reply_to_mode = 'email' if self.no_auto_thread else 'thread'
                 reply_to = self.reply_to if self.no_auto_thread else False
-                mass_mailing = self.env['mail.mass_mailing'].create({
-                        'mass_mailing_campaign_id': self.mass_mailing_campaign_id.id,
+                mass_mailing = self.env['mailing.mailing'].create({
+                        'campaign_id': self.campaign_id.id,
                         'name': self.mass_mailing_name,
-                        'template_id': self.template_id.id,
+                        'subject': self.subject,
                         'state': 'done',
                         'reply_to_mode': reply_to_mode,
                         'reply_to': reply_to,
@@ -55,31 +54,36 @@ class MailComposeMessage(models.TransientModel):
 
             partners_email = {p.id: p.email for p in read_partners}
 
-            blacklist = self._context.get('mass_mailing_blacklist')
+            opt_out_list = self._context.get('mass_mailing_opt_out_list')
             seen_list = self._context.get('mass_mailing_seen_list')
+            mass_mail_layout = self.env.ref('mass_mailing.mass_mailing_mail_layout', raise_if_not_found=False)
             for res_id in res_ids:
                 mail_values = res[res_id]
                 if mail_values.get('email_to'):
-                    recips = tools.email_split(mail_values['email_to'])
+                    mail_to = tools.email_normalize(mail_values['email_to'])
                 else:
-                    recips = tools.email_split(partners_email.get(res_id))
-                mail_to = recips[0].lower() if recips else False
-                if (blacklist and mail_to in blacklist) or (seen_list and mail_to in seen_list):
+                    partner_id = (mail_values.get('recipient_ids') or [(False, '')])[0][1]
+                    mail_to = tools.email_normalize(partners_email.get(partner_id))
+                if (opt_out_list and mail_to in opt_out_list) or (seen_list and mail_to in seen_list) \
+                        or (not mail_to or not email_re.findall(mail_to)):
                     # prevent sending to blocked addresses that were included by mistake
                     mail_values['state'] = 'cancel'
                 elif seen_list is not None:
                     seen_list.add(mail_to)
-                stat_vals = {
+                trace_vals = {
                     'model': self.model,
                     'res_id': res_id,
-                    'mass_mailing_id': mass_mailing.id
+                    'mass_mailing_id': mass_mailing.id,
+                    'email': mail_to,
                 }
-                # propagate exception state to stat when still-born
+                if mail_values.get('body_html') and mass_mail_layout:
+                    mail_values['body_html'] = mass_mail_layout._render({'body': mail_values['body_html']}, engine='ir.qweb', minimal_qcontext=True)
+                # propagate ignored state to trace when still-born
                 if mail_values.get('state') == 'cancel':
-                    stat_vals['exception'] = fields.Datetime.now()
+                    trace_vals['ignored'] = fields.Datetime.now()
                 mail_values.update({
                     'mailing_id': mass_mailing.id,
-                    'statistics_ids': [(0, 0, stat_vals)],
+                    'mailing_trace_ids': [(0, 0, trace_vals)],
                     # email-mode: keep original message for routing
                     'notification': mass_mailing.reply_to_mode == 'thread',
                     'auto_delete': not mass_mailing.keep_archives,

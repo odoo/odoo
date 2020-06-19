@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="courses_home_inherit_survey" inherit_id="website_slides.courses_home">
+            <xpath expr="//a[hasclass('o_wslides_home_all_slides')]" position="after">
+                <a class="nav-link nav-link d-flex" href="/slides/all?slide_type=certification">
+                    <t t-call="website_slides_survey.o_wss_certification_icon"/>
+                    <span class="ml-1">Certifications</span>
+                </a>
+            </xpath>
+        </template>
+
+        <template id="course_card_inherit_survey" inherit_id="website_slides.course_card">
+            <xpath expr="//div/div" position="after">
+                <div t-if="channel.nbr_certification > 0" class="position-absolute py-1 px-2 h5" style="right:0; top:0">
+                    <t t-call="website_slides_survey.o_wss_certification_icon"/>
+                </div>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,0 +1,139 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* base_address_city
+# 
+# Translators:
+# Martin Trigaux, 2019
+# Jan Horzinka <jan.horzinka@centrum.cz>, 2019
+# Michal Veselý <michal@veselyberanek.net>, 2019
+# trendspotter <j.podhorecky@volny.cz>, 2019
+# 
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~12.4\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-08-12 11:31+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: trendspotter <j.podhorecky@volny.cz>, 2019\n"
+"Language-Team: Czech (https://www.transifex.com/odoo/teams/41243/cs/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: cs\n"
+"Plural-Forms: nplurals=4; plural=(n == 1 && n % 1 == 0) ? 0 : (n >= 2 && n <= 4 && n % 1 == 0) ? 1: (n % 1 != 0 ) ? 2 : 3;\n"
+
+#. module: base_address_city
+#: model:ir.model.fields,help:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,help:base_address_city.field_res_users__country_enforce_cities
+msgid ""
+"Check this box to ensure every address created in that country has a 'City' "
+"chosen in the list of the country's cities."
+msgstr ""
+"Zaškrtnutím zajistíte že každá založená adresa bude mít 'Město' vybrané ze "
+"seznamu měst této země."
+
+#. module: base_address_city
+#: model:ir.actions.act_window,name:base_address_city.action_res_city_tree
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_res_country_city_extended_form
+msgid "Cities"
+msgstr "Města"
+
+#. module: base_address_city
+#: code:addons/base_address_city/models/res_partner.py:55
+#: model:ir.model,name:base_address_city.model_res_city
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_city_tree
+#, python-format
+msgid "City"
+msgstr "Město"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__city_id
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__city_id
+msgid "City of Address"
+msgstr "Město adresy"
+
+#. module: base_address_city
+#: model:ir.model,name:base_address_city.model_res_partner
+msgid "Contact"
+msgstr "Kontakt"
+
+#. module: base_address_city
+#: model:ir.model,name:base_address_city.model_res_country
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__country_id
+msgid "Country"
+msgstr "Stát"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_uid
+msgid "Created by"
+msgstr "Vytvořeno od"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__create_date
+msgid "Created on"
+msgstr "Vytvořeno"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__display_name
+msgid "Display Name"
+msgstr "Zobrazované jméno"
+
+#. module: base_address_city
+#: model_terms:ir.actions.act_window,help:base_address_city.action_res_city_tree
+msgid ""
+"Display and manage the list of all cities that can be assigned to\n"
+"                your partner records. Note that an option can be set on each country separately\n"
+"                to enforce any address of it to have a city in this list."
+msgstr ""
+"Zobrazení a správa seznamu všech měst která mohou být přiřazena \n"
+"k záznamům vašich partnerů. Pro každou zemi můžete samostatně \n"
+"vynutit použití měst výhradně z tohoto seznamu."
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_country__enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_partner__country_enforce_cities
+#: model:ir.model.fields,field_description:base_address_city.field_res_users__country_enforce_cities
+msgid "Enforce Cities"
+msgstr "Vynutit města"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__id
+msgid "ID"
+msgstr "ID"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city____last_update
+msgid "Last Modified on"
+msgstr "Naposled změněno"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_uid
+msgid "Last Updated by"
+msgstr "Naposledy upraveno od"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__write_date
+msgid "Last Updated on"
+msgstr "Naposled upraveno"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__name
+msgid "Name"
+msgstr "Název"
+
+#. module: base_address_city
+#: model_terms:ir.ui.view,arch_db:base_address_city.view_city_filter
+msgid "Search City"
+msgstr "Hledat město"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__state_id
+msgid "State"
+msgstr "Stav"
+
+#. module: base_address_city
+#: model:ir.model.fields,field_description:base_address_city.field_res_city__zipcode
+msgid "Zip"
+msgstr "PSČ"

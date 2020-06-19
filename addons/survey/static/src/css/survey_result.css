@@ -20,6 +20,10 @@
     cursor: pointer;
 }
 
+.o_active_filter {
+    cursor:default;
+}
+
 .nvtooltip h5 {
     margin: 0;
     line-height: 18px;
@@ -32,14 +36,13 @@
     border-radius: 5px 5px 0 0;
 }
 
-
 .survey_answer i {
     padding:3px;
     cursor:pointer;
+    visibility:hidden;
 }
-
-.survey_answer i.invisible {
-    visibility: hidden!important;
+.survey_answer:hover i {
+    visibility: visible;
 }
 
 @media print {

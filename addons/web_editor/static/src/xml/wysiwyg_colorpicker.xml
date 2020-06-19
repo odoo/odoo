@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates>
+    <div t-name="wysiwyg.plugin.font.paletteButton" t-attf-class="note-btn-group btn-group {{className}}">
+        <button type="button" class="note-btn btn btn-light btn-sm dropdown-toggle" tabindex="-1" data-toggle="dropdown"><i
+                t-att-class="icon"></i></button>
+        <div class="dropdown-menu" />
+    </div>
+
+    <div t-name="wysiwyg.plugin.font.colorPalette" class="note-palette">
+        <button type="button" class="note-color-reset btn btn-light note-color-btn bg-undefined">
+            <t t-esc="lang.color.resetToDefault" /></button>
+        <div class="note-holder">
+            <div class="note-color-palette">
+                <h6 class="mt-2">Theme colors</h6>
+                <div class="o_theme_color_placeholder" />
+                <h6 class="mt-2">Transparent colors</h6>
+                <div class="o_transparent_color_placeholder" />
+                <h6 class="mt-2">Common colors</h6>
+                <div class="o_common_color_placeholder">
+                    <div class="note-color-row" t-foreach="colors" t-as="rowColors">
+                        <button t-foreach="rowColors" t-as="color" type="button" class="note-color-btn" data-toggle="button"
+                            tabindex="-1" t-attf-style="background-color:{{color}}" t-att-data-value="color"
+                            t-att-title="color" />
+                    </div>
+                </div>
+            </div>
+            <h6 class="note-custom-color mt8">
+                <t t-esc="lang.color.customColor" />
+            </h6>
+            <button class="note-custom-color-btn note-color-btn" style="display: none;"></button>
+        </div>
+    </div>
+</templates>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="assets_backend" name="sms_assets" inherit_id="web.assets_backend">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/sms/static/src/js/fields_phone_widget.js"></script>
+                <script type="text/javascript" src="/sms/static/src/js/fields_sms_widget.js"></script>
+
+                <script type="text/javascript" src="/sms/static/src/bugfix/bugfix.js"/>
+                <script type="text/javascript" src="/sms/static/src/components/notification_group/notification_group.js"/>
+                <script type="text/javascript" src="/sms/static/src/models/message/message.js"/>
+                <script type="text/javascript" src="/sms/static/src/models/notification_group/notification_group.js"/>
+
+                <link rel="stylesheet" type="text/scss" href="/sms/static/src/bugfix/bugfix.scss"/>
+            </xpath>
+        </template>
+
+        <template id="qunit_suite" name="sms_widget_tests" inherit_id="web.qunit_suite_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/sms/static/tests/sms_widget_test.js"></script>
+
+                <script type="text/javascript" src="/sms/static/src/bugfix/bugfix_tests.js"/>
+                <script type="text/javascript" src="/sms/static/src/components/message/message_tests.js"/>
+                <script type="text/javascript" src="/sms/static/src/components/notification_list/notification_list_notification_group_tests.js"/>
+            </xpath>
+        </template>
+    </data>
+</odoo>

@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from ..exceptions import except_orm
-from .orm import Model, TransientModel, AbstractModel
+from ..exceptions import UserError
+from ..models import Model, TransientModel, AbstractModel
 
 # Deprecated, kept for backward compatibility.
-# openerp.exceptions.Warning should be used instead.
-except_osv = except_orm
+except_osv = UserError
 
 # Deprecated, kept for backward compatibility.
 osv = Model

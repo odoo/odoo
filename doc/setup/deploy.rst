@@ -44,7 +44,7 @@ correctly.
 Configuration samples
 ---------------------
 
-* show only databases with names beginning with 'mycompany'
+* Show only databases with names beginning with 'mycompany'
 
 in ``/etc/odoo.conf`` set:
 
@@ -71,7 +71,8 @@ in ``/etc/odoo.conf`` set:
   Once it is correctly working and only matching a single database per hostname, it
   is strongly recommended to block access to the database manager screens,
   and to use the ``--no-database-list`` startup paramater to prevent listing
-  your databases. See also security_.
+  your databases, and to block access to the database management screens.
+  See also security_.
 
 
 PostgreSQL
@@ -86,18 +87,18 @@ machine, and is the default when no host is provided, but if you want Odoo and
 PostgreSQL to execute on different machines [#different-machines]_ it will
 need to `listen to network interfaces`_ [#remote-socket]_, either:
 
-* only accept loopback connections and `use an SSH tunnel`_ between the
+* Only accept loopback connections and `use an SSH tunnel`_ between the
   machine on which Odoo runs and the one on which PostgreSQL runs, then
   configure Odoo to connect to its end of the tunnel
-* accept connections to the machine on which Odoo is installed, possibly
+* Accept connections to the machine on which Odoo is installed, possibly
   over ssl (see `PostgreSQL connection settings`_ for details), then configure
   Odoo to connect over the network
 
 Configuration sample
 --------------------
 
-* allow tcp connection on localhost
-* allow tcp connection from 192.168.1.x network
+* Allow tcp connection on localhost
+* Allow tcp connection from 192.168.1.x network
 
 in ``/etc/postgresql/9.5/main/pg_hba.conf`` set:
 
@@ -108,9 +109,9 @@ in ``/etc/postgresql/9.5/main/pg_hba.conf`` set:
   host    all             all             192.168.1.0/24          md5
 
 in ``/etc/postgresql/9.5/main/postgresql.conf`` set:
-  
+
 .. code-block:: text
-  
+
   listen_addresses = 'localhost,192.168.1.2'
   port = 5432
   max_connections = 80
@@ -133,11 +134,11 @@ create a new user (``odoo``) and set it as the database user.
   simply checked before performing database alterations. It should be set to
   a randomly generated value to ensure third parties can not use this
   interface.
-* all database operations use the :ref:`database options
+* All database operations use the :ref:`database options
   <reference/cmdline/server/database>`, including the database management
   screen. For the database management screen to work requires that the PostgreSQL user
   have ``createdb`` right.
-* users can always drop databases they own. For the database management screen
+* Users can always drop databases they own. For the database management screen
   to be completely non-functional, the PostgreSQL user needs to be created with
   ``no-createdb`` and the database must be owned by a different PostgreSQL user.
 
@@ -163,6 +164,18 @@ in ``/etc/odoo.conf`` set:
   db_user = odoo
   db_password = pwd
   dbfilter = ^mycompany.*$
+
+.. _postgresql_ssl_connect:
+
+SSL Between Odoo and PostgreSQL
+-------------------------------
+
+Since Odoo 11.0, you can enforce ssl connection between Odoo and PostgreSQL.
+in Odoo the db_sslmode control the ssl security of the connection
+with value choosed out of 'disable', 'allow', 'prefer', 'require', 'verify-ca'
+or 'verify-full'
+
+`PostgreSQL Doc <https://www.postgresql.org/docs/current/static/libpq-ssl.html>`_
 
 .. _builtin_server:
 
@@ -197,7 +210,7 @@ memory size calculation
 -----------------------
 
 * We consider 20% of the requests are heavy requests, while 80% are simpler ones
-* A heavy worker, when all computed field are well designed, SQL requests are well designed, ... is estimated to consume around 1Go of RAM
+* A heavy worker, when all computed field are well designed, SQL requests are well designed, ... is estimated to consume around 1GB of RAM
 * A lighter worker, in the same scenario, is estimated to consume around 150MB of RAM
 
 Needed RAM = #worker * ( (light_worker_ratio * light_worker_ram_estimation) + (heavy_worker_ratio * heavy_worker_ram_estimation) )
@@ -211,11 +224,14 @@ the client will not connect to it.
 
 Instead you must have a proxy redirecting requests whose URL starts with
 ``/longpolling/`` to the longpolling port. Other request should be proxied to
-the :option:`normal HTTP port <odoo-bin --xmlrpc-port>`
+the :option:`normal HTTP port <odoo-bin --http-port>`
 
-.. warning:: The livechat worker requires the ``psycogreen`` Python module,
-             which is not always included with all installation packages.
-             It can be manually installed with ``pip install psycogreen``.
+To achieve such a thing, you'll need to deploy a reverse proxy in front of Odoo,
+like nginx or apache. When doing so, you'll need to forward some more http Headers
+to Odoo, and activate the proxy_mode in Odoo configuration to have Odoo read those
+headers.
+
+
 
 Configuration sample
 --------------------
@@ -251,23 +267,17 @@ authentication information in cleartext. This means a secure deployment of
 Odoo must use HTTPS\ [#switching]_. SSL termination can be implemented via
 just about any SSL termination proxy, but requires the following setup:
 
-* enable Odoo's :option:`proxy mode <odoo-bin --proxy-mode>`. This should only be enabled when Odoo is behind a reverse proxy
-* set up the SSL termination proxy (`Nginx termination example`_)
-* set up the proxying itself (`Nginx proxying example`_)
-* your SSL termination proxy should also automatically redirect non-secure
+* Enable Odoo's :option:`proxy mode <odoo-bin --proxy-mode>`. This should only be enabled when Odoo is behind a reverse proxy
+* Set up the SSL termination proxy (`Nginx termination example`_)
+* Set up the proxying itself (`Nginx proxying example`_)
+* Your SSL termination proxy should also automatically redirect non-secure
   connections to the secure port
-
-.. warning::
-
-  In case you are using the Point of Sale module in combination with a `POSBox`_,
-  you must disable the HTTPS configuration for the route ``/pos/web`` to avoid
-  mixed-content errors.
 
 Configuration sample
 --------------------
 
-* redirect http requests to https
-* proxy requests to odoo
+* Redirect http requests to https
+* Proxy requests to odoo
 
 in ``/etc/odoo.conf`` set:
 
@@ -286,27 +296,27 @@ in ``/etc/nginx/sites-enabled/odoo.conf`` set:
   upstream odoochat {
    server 127.0.0.1:8072;
   }
-  
+
   # http -> https
   server {
      listen 80;
      server_name odoo.mycompany.com;
      rewrite ^(.*) https://$host$1 permanent;
   }
-  
+
   server {
    listen 443;
    server_name odoo.mycompany.com;
    proxy_read_timeout 720s;
    proxy_connect_timeout 720s;
    proxy_send_timeout 720s;
-   
+
    # Add Headers for odoo proxy mode
    proxy_set_header X-Forwarded-Host $host;
    proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
    proxy_set_header X-Forwarded-Proto $scheme;
    proxy_set_header X-Real-IP $remote_addr;
-   
+
    # SSL parameters
    ssl on;
    ssl_certificate /etc/ssl/nginx/server.crt;
@@ -315,25 +325,27 @@ in ``/etc/nginx/sites-enabled/odoo.conf`` set:
    ssl_protocols TLSv1 TLSv1.1 TLSv1.2;
    ssl_ciphers 'ECDHE-RSA-AES128-GCM-SHA256:ECDHE-ECDSA-AES128-GCM-SHA256:ECDHE-RSA-AES256-GCM-SHA384:ECDHE-ECDSA-AES256-GCM-SHA384:DHE-RSA-AES128-GCM-SHA256:DHE-DSS-AES128-GCM-SHA256:kEDH+AESGCM:ECDHE-RSA-AES128-SHA256:ECDHE-ECDSA-AES128-SHA256:ECDHE-RSA-AES128-SHA:ECDHE-ECDSA-AES128-SHA:ECDHE-RSA-AES256-SHA384:ECDHE-ECDSA-AES256-SHA384:ECDHE-RSA-AES256-SHA:ECDHE-ECDSA-AES256-SHA:DHE-RSA-AES128-SHA256:DHE-RSA-AES128-SHA:DHE-DSS-AES128-SHA256:DHE-RSA-AES256-SHA256:DHE-DSS-AES256-SHA:DHE-RSA-AES256-SHA:AES128-GCM-SHA256:AES256-GCM-SHA384:AES128-SHA256:AES256-SHA256:AES128-SHA:AES256-SHA:AES:CAMELLIA:DES-CBC3-SHA:!aNULL:!eNULL:!EXPORT:!DES:!RC4:!MD5:!PSK:!aECDH:!EDH-DSS-DES-CBC3-SHA:!EDH-RSA-DES-CBC3-SHA:!KRB5-DES-CBC3-SHA';
    ssl_prefer_server_ciphers on;
-   
+
    # log
    access_log /var/log/nginx/odoo.access.log;
    error_log /var/log/nginx/odoo.error.log;
-   
+
+   # Redirect longpoll requests to odoo longpolling port
+   location /longpolling {
+   proxy_pass http://odoochat;
+   }
+
    # Redirect requests to odoo backend server
    location / {
      proxy_redirect off;
      proxy_pass http://odoo;
    }
-   location /longpolling {
-       proxy_pass http://odoochat;
-   }
- 
+
    # common gzip
-   gzip_types text/css text/less text/plain text/xml application/xml application/json application/javascript;
+   gzip_types text/css text/scss text/plain text/xml application/xml application/json application/javascript;
    gzip on;
   }
- 
+
 Odoo as a WSGI Application
 ==========================
 
@@ -352,12 +364,12 @@ Cron Workers
 
 To run cron jobs for an Odoo deployment as a WSGI application requires
 
-* a classical Odoo (run via ``odoo-bin``)
-* connected to the database in which cron jobs have to be run (via
+* A classical Odoo (run via ``odoo-bin``)
+* Connected to the database in which cron jobs have to be run (via
   :option:`odoo-bin -d`)
-* which should not be exposed to the network. To ensure cron runners are not
+* Which should not be exposed to the network. To ensure cron runners are not
   network-accessible, it is possible to disable the built-in HTTP server
-  entirely with :option:`odoo-bin --no-xmlrpc` or setting ``xmlrpc = False``
+  entirely with :option:`odoo-bin --no-http` or setting ``http_enable = False``
   in the configuration file
 
 LiveChat
@@ -375,11 +387,11 @@ notifications.
 
 The solutions to support livechat/motifications in a WSGI application are:
 
-* deploy a threaded version of Odoo (instread of a process-based preforking
+* Deploy a threaded version of Odoo (instread of a process-based preforking
   one) and redirect only requests to URLs starting with ``/longpolling/`` to
   that Odoo, this is the simplest and the longpolling URL can double up as
   the cron instance.
-* deploy an evented Odoo via ``odoo-gevent`` and proxy requests starting
+* Deploy an evented Odoo via ``odoo-gevent`` and proxy requests starting
   with ``/longpolling/`` to
   :option:`the longpolling port <odoo-bin --longpolling-port>`.
 
@@ -424,13 +436,21 @@ security-related topics:
   only for controlling/managing the installation.
   *Never* use any default passwords like admin/admin, even for test/staging databases.
 
+- Do **not** install demo data on internet-facing servers. Databases with demo data contain
+  default logins and passwords that can be used to get into your systems and cause significant
+  trouble, even on staging/dev systems.
+
 - Use appropriate database filters ( :option:`--db-filter <odoo-bin --db-filter>`)
   to restrict the visibility of your databases according to the hostname.
   See :ref:`db_filter`.
+  You may also use :option:`-d <odoo-bin -d>` to provide your own (comma-separated)
+  list of available databases to filter from, instead of letting the system fetch
+  them all from the database backend.
 
-- Once your ``db_filter`` is configured and only matches a single database per hostname,
-  you should set ``list_db`` configuration option to ``False``, to prevent listing databases
-  entirely (this is also exposed as the :option:`--no-database-list <odoo-bin --no-database-list>`
+- Once your ``db_name`` and ``db_filter`` are configured and only match a single database
+  per hostname, you should set ``list_db`` configuration option to ``False``, to prevent
+  listing databases entirely, and to block access to the database management screens
+  (this is also exposed as the :option:`--no-database-list <odoo-bin --no-database-list>`
   command-line option)
 
 - Make sure the PostgreSQL user (:option:`--db_user <odoo-bin --db_user>`) is *not* a super-user,
@@ -452,15 +472,95 @@ security-related topics:
   and then enable the :option:`proxy mode <odoo-bin --proxy-mode>` option.
   See also :ref:`https_proxy`.
 
+- If you need to allow remote SSH access to your servers, make sure to set a strong password
+  for **all** accounts, not just `root`. It is strongly recommended to entirely disable
+  password-based authentication, and only allow public key authentication. Also consider
+  restricting access via a VPN, allowing only trusted IPs in the firewall, and/or
+  running a brute-force detection system such as `fail2ban` or equivalent.
+
+- Consider installing appropriate rate-limiting on your proxy or firewall, to prevent
+  brute-force attacks and denial of service attacks. See also :ref:`login_brute_force`
+  for specific measures.
+
+  Many network providers provide automatic mitigation for Distributed Denial of
+  Service attacks (DDOS), but this is often an optional service, so you should consult
+  with them.
+
 - Whenever possible, host your public-facing demo/test/staging instances on different
   machines than the production ones. And apply the same security precautions as for
   production.
+
+- If your public-facing Odoo server has access to sensitive internal network resources
+  or services (e.g. via a private VLAN), implement appropriate firewall rules to
+  protect those internal resources. This will ensure that the Odoo server cannot
+  be used accidentally (or as a result of malicious user actions) to access or disrupt
+  those internal resources.
+  Typically this can be done by applying an outbound default DENY rule on the firewall,
+  then only explicitly authorizing access to internal resources that the Odoo server
+  needs to access.
+  `Systemd IP traffic access control <http://0pointer.net/blog/ip-accounting-and-access-lists-with-systemd.html>`_
+  may also be useful to implement per-process network access control.
+
+- If your public-facing Odoo server is behind a Web Application Firewall, a load-balancer,
+  a transparent DDoS protection service (like CloudFlare) or a similar network-level
+  device, you may wish to avoid direct access to the Odoo system. It is generally
+  difficult to keep the endpoint IP addresses of your Odoo servers secret. For example
+  they can appear in web server logs when querying public systems, or in the headers
+  of emails posted from Odoo.
+  In such a situation you may want to configure your firewall so that the endpoints
+  are not accessible publicly except from the specific IP addresses of your WAF,
+  load-balancer or proxy service. Service providers like CloudFlare usually maintain
+  a public list of their IP address ranges for this purpose.
 
 - If you are hosting multiple customers, isolate customer data and files from each other
   using containers or appropriate "jail" techniques.
 
 - Setup daily backups of your databases and filestore data, and copy them to a remote
   archiving server that is not accessible from the server itself.
+
+
+.. _login_brute_force:
+
+Blocking Brute Force Attacks
+----------------------------
+For internet-facing deployments, brute force attacks on user passwords are very common, and this
+threat should not be neglected for Odoo servers. Odoo emits a log entry whenever a login attempt
+is performed, and reports the result: success or failure, along with the target login and source IP.
+
+The log entries will have the following form.
+
+Failed login::
+
+      2018-07-05 14:56:31,506 24849 INFO db_name odoo.addons.base.res.res_users: Login failed for db:db_name login:admin from 127.0.0.1
+
+Successful login::
+
+      2018-07-05 14:56:31,506 24849 INFO db_name odoo.addons.base.res.res_users: Login successful for db:db_name login:admin from 127.0.0.1
+
+
+These logs can be easily analyzed by an intrusion prevention system such as `fail2ban`.
+
+For example, the following fail2ban filter definition should match a
+failed login::
+
+    [Definition]
+    failregex = ^ \d+ INFO \S+ \S+ Login failed for db:\S+ login:\S+ from <HOST>
+    ignoreregex =
+
+This could be used with a jail definition to block the attacking IP on HTTP(S).
+
+Here is what it could look like for blocking the IP for 15 minutes when
+10 failed login attempts are detected from the same IP within 1 minute::
+
+    [odoo-login]
+    enabled = true
+    port = http,https
+    bantime = 900  ; 15 min ban
+    maxretry = 10  ; if 10 attempts
+    findtime = 60  ; within 1 min  /!\ Should be adjusted with the TZ offset
+    logpath = /var/log/odoo.log  ;  set the actual odoo log path here
+
+
 
 
 .. _db_manager_security:
@@ -473,10 +573,29 @@ Database Manager Security
 This setting is used on all database management screens (to create, delete,
 dump or restore databases).
 
-If the management screens must not be accessible, or must only be accessible
-from a selected set of machines, use the proxy server's features to block
-access to all routes starting with ``/web/database`` except (maybe)
-``/web/database/selector`` which displays the database-selection screen.
+If the management screens must not be accessible at all, you should set ``list_db``
+configuration option to ``False``, to block access to all the database selection and
+management screens.
+
+.. warning::
+
+  It is strongly recommended to disable the Database Manager for any internet-facing
+  system! It is meant as a development/demo tool, to make it easy to quickly create
+  and manage databases. It is not designed for use in production, and may even expose
+  dangerous features to attackers. It is also not designed to handle large databases,
+  and may trigger memory limits.
+
+  On production systems, database management operations should always be performed by
+  the system administrator, including provisioning of new databases and automated backups.
+
+Be sure to setup an appropriate ``db_name`` parameter
+(and optionally, ``db_filter`` too) so that the system can determine the target database
+for each request, otherwise users will be blocked as they won't be allowed to choose the
+database themselves.
+
+If the management screens must only be accessible from a selected set of machines,
+use the proxy server's features to block access to all routes starting with ``/web/database``
+except (maybe) ``/web/database/selector`` which displays the database-selection screen.
 
 If the database-management screen should be left accessible, the
 ``admin_passwd`` setting must be changed from its ``admin`` default: this
@@ -486,21 +605,27 @@ It should be stored securely, and should be generated randomly e.g.
 
 .. code-block:: console
 
-    $ python -c 'import base64, os; print(base64.b64encode(os.urandom(24)))'
+    $ python3 -c 'import base64, os; print(base64.b64encode(os.urandom(24)))'
 
 which will generate a 32 characters pseudorandom printable string.
 
 Supported Browsers
 ==================
 
-Odoo is supported by multiple browsers for each of its versions. No 
+Odoo is supported by multiple browsers for each of its versions. No
 distinction is made according to the browser version in order to be
-up-to-date. Odoo is supported on the current browser version. The list 
-of the supported browsers by Odoo version is the following:
+up-to-date. Odoo is supported on the current browser version. We support
+the following browsers:
 
-- **Odoo 8:** IE9, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
-- **Odoo 9:** IE11, Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
-- **Odoo 10:** Mozilla Firefox, Google Chrome, Safari, Microsoft Edge
+- Mozilla Firefox
+- Google Chrome
+- Safari
+- Microsoft Edge
+
+.. note::
+
+    Since Odoo 13.0, ES6 is supported.  Therefore, IE support is dropped.
+
 
 .. [#different-machines]
     to have multiple Odoo installations use the same PostgreSQL database,
@@ -517,17 +642,17 @@ of the supported browsers by Odoo version is the following:
     "self-signed" certificates are easier to deploy on a controlled
     environment than over the internet.
 
-.. _regular expression: https://docs.python.org/2/library/re.html
-.. _ARP spoofing: http://en.wikipedia.org/wiki/ARP_spoofing
+.. _regular expression: https://docs.python.org/3/library/re.html
+.. _ARP spoofing: https://en.wikipedia.org/wiki/ARP_spoofing
 .. _Nginx termination example:
-    http://nginx.com/resources/admin-guide/nginx-ssl-termination/
+    https://nginx.com/resources/admin-guide/nginx-ssl-termination/
 .. _Nginx proxying example:
-    http://nginx.com/resources/admin-guide/reverse-proxy/
+    https://nginx.com/resources/admin-guide/reverse-proxy/
 .. _socat: http://www.dest-unreach.org/socat/
 .. _PostgreSQL connection settings:
 .. _listen to network interfaces:
-    http://www.postgresql.org/docs/9.3/static/runtime-config-connection.html
+    https://www.postgresql.org/docs/9.6/static/runtime-config-connection.html
 .. _use an SSH tunnel:
-    http://www.postgresql.org/docs/9.3/static/ssh-tunnels.html
-.. _WSGI: http://wsgi.readthedocs.org/
+    https://www.postgresql.org/docs/9.6/static/ssh-tunnels.html
+.. _WSGI: https://wsgi.readthedocs.org/
 .. _POSBox: https://www.odoo.com/page/point-of-sale-hardware#part_2

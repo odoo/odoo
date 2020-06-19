@@ -2,9 +2,15 @@ id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_hr_employee_category_user,hr.employee.category.user,model_hr_employee_category,group_hr_user,1,1,1,1
 access_hr_employee_category_emp,hr.employee.category.emp,model_hr_employee_category,base.group_user,1,0,0,0
 access_hr_employee_user,hr.employee user,model_hr_employee,group_hr_user,1,1,1,1
-access_hr_employee_system_user,hr.employee system user,model_hr_employee,base.group_user,1,0,0,0
+access_hr_employee_system_user,hr.employee system user,model_hr_employee,base.group_user,0,0,0,0
+access_hr_employee_public_user,hr.employee_public,model_hr_employee_public,base.group_user,1,0,0,0
 access_hr_employee_resource_user,resource.resource.user,resource.model_resource_resource,group_hr_user,1,1,1,1
 access_hr_department_user,hr.department.user,model_hr_department,group_hr_user,1,1,1,1
 access_hr_department_employee,hr.department.employee,model_hr_department,base.group_user,1,0,0,0
 access_hr_job_user,hr.job user,model_hr_job,group_hr_user,1,1,1,1
-access_ir_property_hr_user,ir_property hr_user,base.model_ir_property,group_hr_user,1,1,1,0
+access_hr_plan_activity_type_employee,access_hr_plan_activity_type,model_hr_plan_activity_type,base.group_user,1,0,0,0
+access_hr_plan_employee,access_hr_plan_employee,model_hr_plan,base.group_user,1,0,0,0
+access_hr_plan_activity_type_hr_user,access_hr_plan_activity_type,model_hr_plan_activity_type,group_hr_user,1,1,1,1
+access_hr_plan_hr_user,access_hr_plan_hr_user,model_hr_plan,group_hr_user,1,1,1,1
+access_hr_plan_wizard,access.hr.plan.wizard,model_hr_plan_wizard,hr.group_hr_manager,1,1,1,0
+access_hr_departure_wizard,access.hr.departure.wizard,model_hr_departure_wizard,hr.group_hr_user,1,1,1,0

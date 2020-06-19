@@ -6,54 +6,59 @@
                 <t t-set="show_project" t-value="len(docs.mapped('project_id')) > 1"/>
                 <div class="page">
                     <div class="oe_structure"/>
-                    <div class="row">
-                        <div class="col-md-12">
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-lg-12">
                             <h2>
-                                <span>Timesheet Entries</span>
+                                <span>Timesheet Entries
+                                    <t t-if="len(docs.mapped('project_id')) == 1">
+                                        for the <t t-esc="docs.mapped('project_id')[0].name"/> Project
+                                    </t>
+                                </span>
                             </h2>
                         </div>
                     </div>
 
-                    <div class="row">
-                        <div class="col-md-12">
-                            <table class="table table-condensed">
+                    <div class="row" style="margin-top:10px;">
+                        <div class="col-lg-12">
+                            <table class="table table-sm">
                                 <thead>
                                     <tr>
-                                        <th>Date</th>
-                                        <th>Responsible</th>
-                                        <th>Description</th>
-                                        <th t-if="show_task"><t t-if="show_project">Project - </t>Task</th>
-                                        <th class="text-right">Time</th>
+                                        <th><span>Date</span></th>
+                                        <th><span>Responsible</span></th>
+                                        <th><span>Description</span></th>
+                                        <th t-if="show_project"><span>Project</span></th>
+                                        <th t-if="show_task"><span>Task</span></th>
+                                        <th class="text-right"><span>Time</span></th>
                                     </tr>
                                </thead>
                                <tbody>
-                                    <t t-foreach="docs" t-as="l">
-                                        <tr>
-                                            <td>
-                                               <span t-field="l.date"/>
-                                            </td>
-                                            <td>
-                                               <span t-field="l.user_id.partner_id.name"/>
-                                            </td>
-                                            <td >
-                                                <span t-field="l.name"/>
-                                            </td>
-                                            <td t-if="show_task or show_project">
-                                                <t t-if="show_project"><span t-field="l.project_id.name"/></t>
-                                                <t t-if="show_project and l.task_id"> - </t>
-                                                <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
-                                            </td>
-                                            <td class="text-right">
-                                                <span t-esc="'%s:%02.0f' % tuple(int(round(x)) for x in divmod(l.unit_amount*60,60))"/>
-                                            </td>
-                                        </tr>
-                                    </t>
+                                    <tr t-foreach="docs" t-as="l">
+                                        <td>
+                                           <span t-field="l.date"/>
+                                        </td>
+                                        <td>
+                                           <span t-field="l.user_id.partner_id.name"/>
+                                        </td>
+                                        <td >
+                                            <span t-field="l.name" t-options="{'widget': 'text'}"/>
+                                        </td>
+                                        <td t-if="show_project">
+                                            <span t-field="l.project_id.name"/>
+                                        </td>
+                                        <td t-if="show_task">
+                                            <t t-if="l.task_id"><span t-field="l.task_id.name"/></t>
+                                        </td>
+                                        <td class="text-right">
+                                            <span t-field="l.unit_amount" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/>
+                                        </td>
+                                    </tr>
                                     <tr>
                                         <td />
                                         <td />
+                                        <td t-if="show_project"/>
                                         <td t-if="show_task"/>
                                         <td class="text-right"><strong>Total</strong></td>
-                                        <td class="text-right"><strong t-esc="'%s:%02.0f' % tuple(int(round(x)) for x in divmod(sum(docs.mapped('unit_amount'))*60,60))"/></td>
+                                        <td class="text-right"><strong t-esc="sum(docs.mapped('unit_amount'))" t-options="{'widget': 'duration', 'digital': True, 'unit': 'hour', 'round': 'minute'}"/></td>
                                     </tr>
                                 </tbody>
                             </table>

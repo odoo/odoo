@@ -1,9 +1,9 @@
 Index: addons/openacademy/models.py
 ===================================================================
---- addons.orig/openacademy/models.py	2014-08-26 17:26:04.727783302 +0200
-+++ addons/openacademy/models.py	2014-08-26 17:26:04.719783302 +0200
-@@ -18,9 +18,10 @@
-     _name = 'openacademy.session'
+--- addons.orig/openacademy/models.py
++++ addons/openacademy/models.py
+@@ -20,9 +20,10 @@
+     _description = "OpenAcademy Sessions"
  
      name = fields.Char(required=True)
 -    start_date = fields.Date()
@@ -16,9 +16,9 @@ Index: addons/openacademy/models.py
          domain=['|', ('instructor', '=', True),
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-26 17:26:04.727783302 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-26 17:26:04.719783302 +0200
-@@ -95,6 +95,7 @@
+--- addons.orig/openacademy/views/openacademy.xml
++++ addons/openacademy/views/openacademy.xml
+@@ -94,6 +94,7 @@
                                  <field name="course_id"/>
                                  <field name="name"/>
                                  <field name="instructor_id"/>

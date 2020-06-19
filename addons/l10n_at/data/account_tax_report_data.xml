@@ -1,0 +1,599 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.at"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_sale_report_title" model="account.tax.report.line">
+        <field name="name">4. Berechnung der Umsatzsteuer (U1/U30)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="10"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_1" model="account.tax.report.line">
+        <field name="name">4.1 Gesamtbetrag der Bemessungsgrundlage für Lieferungen und sonstige Leistungen [000]</field>
+        <field name="tag_name">KZ 000</field>
+        <field name="code">AT_000</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="20"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_2" model="account.tax.report.line">
+        <field name="name">4.2 zuzüglich Eigenverbrauch (§ 1 Abs. 1 Z 2, § 3 Abs. 2 und § 3a Abs. 1a) [001]</field>
+        <field name="tag_name">KZ 001</field>
+        <field name="code">AT_001</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="30"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_3" model="account.tax.report.line">
+        <field name="name">4.3 abzüglich Umsätze, für die die Steuerschuld gemäß § 19 Abs. 1 (Leistungsempfänger) [021]</field>
+        <field name="tag_name">KZ 021</field>
+        <field name="code">AT_021</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="40"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_4" model="account.tax.report.line">
+        <field name="name">4.4 Summe</field>
+        <field name="formula">AT_000 + AT_001 - AT_021</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="50"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_sale_01_report_title" model="account.tax.report.line">
+        <field name="name">Davon steuerfrei MIT Vorsteuerabzug gemäß</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="60"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+    <record id="tax_report_line_l10n_at_tva_line_4_5" model="account.tax.report.line">
+        <field name="name">4.5 § 6 Abs. 1 Z 1 iVm § 7 (Ausfuhrlieferungen) [011]</field>
+        <field name="tag_name">KZ 011</field>
+        <field name="code">AT_011</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="70"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_01_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_6" model="account.tax.report.line">
+        <field name="name">4.6 § 6 Abs. 1 Z 1 iVm § 8 (Lohnveredelungen) [012]</field>
+        <field name="tag_name">KZ 012</field>
+        <field name="code">AT_012</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="80"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_01_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_7" model="account.tax.report.line">
+        <field name="name">4.7 § 6 Abs. 1 Z 2 bis 6 sowie § 23 Abs. 5 (Seeschifffahrt, Luftfahrt, ...) [015]</field>
+    <field name="tag_name">KZ 015</field>
+        <field name="code">AT_015</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="90"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_01_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_8" model="account.tax.report.line">
+        <field name="name">4.8 Art. 6 Abs. 1 (innergemeinschaftliche Lieferungen ohne die nachstehend gesondert anzuführenden Fahrzeuglieferungen) [017]</field>
+        <field name="tag_name">KZ 017</field>
+        <field name="code">AT_017</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="100"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_01_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_9" model="account.tax.report.line">
+        <field name="name">4.9 Art. 6 Abs. 1, sofern Lieferungen neuer Fahrzeuge an Abnehmer ohne UID-Nummer bzw. durch Fahrzeuglieferer gemäß
+Art. 2 erfolgten. [018]</field>
+    <field name="tag_name">KZ 018</field>
+        <field name="code">AT_018</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="110"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_01_report_title"/>
+    </record>
+    <record id="tax_report_line_l10n_at_tva_sale_02_report_title" model="account.tax.report.line">
+        <field name="name">Davon steuerfrei OHNE Vorsteuerabzug gemäß</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="120"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+    <record id="tax_report_line_l10n_at_tva_line_4_10" model="account.tax.report.line">
+        <field name="name">4.10 § 6 Abs. 1 Z 9 lit. a (Grundstücksumsätze) [019]</field>
+        <field name="tag_name">KZ 019</field>
+        <field name="code">AT_019</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="130"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_02_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_11" model="account.tax.report.line">
+        <field name="name">4.11 § 6 Abs. 1 Z 27 (Kleinunternehmer) [016]</field>
+        <field name="tag_name">KZ 016</field>
+        <field name="code">AT_016</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="140"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_02_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_12" model="account.tax.report.line">
+        <field name="name">4.12 § 6 Abs. 1 Z .. (übrige steuerfreie Umsätze ohne Vorsteuerabzug) [020]</field>
+        <field name="tag_name">KZ 020</field>
+        <field name="code">AT_020</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="150"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_02_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_13" model="account.tax.report.line">
+        <field name="name">4.13 Gesamtbetrag der steuerpflichtigen Lieferungen, sonstigen Leistungen und Eigenverbrauch (einschließlich steuerpflichtiger Anzahlungen)</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="160"/>
+        <field name="formula">(AT_000 + AT_001 - AT_021) - AT_011 - AT_012 - AT_015 - AT_017 - AT_018 - AT_019 - AT_016 - AT_020</field>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_at_base_title_umsatz_base_4_14_19" model="account.tax.report.line">
+        <field name="name">Bemessungsgrundlage</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="170"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_14_base" model="account.tax.report.line">
+        <field name="name">4.14 20% Normalsteuersatz [022]</field>
+        <field name="tag_name">KZ 022 Bemessungsgrundlage</field>
+        <field name="code">AT_022_base</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="180"/>
+        <field name="parent_id" ref="tax_report_line_at_base_title_umsatz_base_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_15_base" model="account.tax.report.line">
+        <field name="name">4.15 10% ermäßigter Steuersatz [029]</field>
+        <field name="tag_name">KZ 029 Bemessungsgrundlage</field>
+        <field name="code">AT_029_base</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="190"/>
+        <field name="parent_id" ref="tax_report_line_at_base_title_umsatz_base_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_16_base" model="account.tax.report.line">
+        <field name="name">4.16 13% ermäßigter Steuersatz [006]</field>
+        <field name="tag_name">KZ 006 Bemessungsgrundlage</field>
+        <field name="code">AT_006_base</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="200"/>
+        <field name="parent_id" ref="tax_report_line_at_base_title_umsatz_base_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_17_base" model="account.tax.report.line">
+        <field name="name">4.17 19% für Jungholz und Mittelberg [037]</field>
+        <field name="tag_name">KZ 037 Bemessungsgrundlage</field>
+        <field name="code">AT_037_base</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="210"/>
+        <field name="parent_id" ref="tax_report_line_at_base_title_umsatz_base_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_18_base" model="account.tax.report.line">
+        <field name="name">4.18 10% Zusatzsteuer für pauschalierte land- und forstwirtschaftliche Betriebe [052]</field>
+        <field name="tag_name">KZ 052 Bemessungsgrundlage</field>
+        <field name="code">AT_052_base</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="220"/>
+        <field name="parent_id" ref="tax_report_line_at_base_title_umsatz_base_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_19_base" model="account.tax.report.line">
+        <field name="name">4.19 7% Zusatzsteuer für pauschalierte land- und forstwirtschaftliche Betriebe [007]</field>
+        <field name="tag_name">KZ 007 Bemessungsgrundlage</field>
+        <field name="code">AT_007_base</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="230"/>
+        <field name="parent_id" ref="tax_report_line_at_base_title_umsatz_base_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_at_tax_title_4_14_19" model="account.tax.report.line">
+        <field name="name">Umsatzsteuer</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="240"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_14_tax" model="account.tax.report.line">
+        <field name="name">4.14 20% Normalsteuersatz</field>
+        <field name="tag_name">KZ 022 Umsatzsteuer</field>
+        <field name="code">AT_022_tax</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="250"/>
+        <field name="parent_id" ref="tax_report_line_at_tax_title_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_15_tax" model="account.tax.report.line">
+        <field name="name">4.15 10% ermäßigter Steuersatz</field>
+        <field name="tag_name">KZ 029 Umsatzsteuer</field>
+        <field name="code">AT_029_tax</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="260"/>
+        <field name="parent_id" ref="tax_report_line_at_tax_title_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_16_tax" model="account.tax.report.line">
+        <field name="name">4.16 13% ermäßigter Steuersatz</field>
+        <field name="tag_name">KZ 006 Umsatzsteuer</field>
+        <field name="code">AT_006_tax</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="270"/>
+        <field name="parent_id" ref="tax_report_line_at_tax_title_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_17_tax" model="account.tax.report.line">
+        <field name="name">4.17 19% für Jungholz und Mittelberg</field>
+        <field name="tag_name">KZ 037 Umsatzsteuer</field>
+        <field name="code">AT_037_tax</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="280"/>
+        <field name="parent_id" ref="tax_report_line_at_tax_title_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_18_tax" model="account.tax.report.line">
+        <field name="name">4.18 10% Zusatzsteuer für pauschalierte land- und forstwirtschaftliche Betriebe</field>
+        <field name="tag_name">KZ 052 Umsatzsteuer</field>
+        <field name="code">AT_052_tax</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="290"/>
+        <field name="parent_id" ref="tax_report_line_at_tax_title_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_19_tax" model="account.tax.report.line">
+        <field name="name">4.19 7% Zusatzsteuer für pauschalierte land- und forstwirtschaftliche Betriebe</field>
+        <field name="tag_name">KZ 007 Umsatzsteuer</field>
+        <field name="code">AT_007_tax</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="300"/>
+        <field name="parent_id" ref="tax_report_line_at_tax_title_4_14_19"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_20" model="account.tax.report.line">
+        <field name="name">4.20 Steuerschuld gemäß § 11 Abs. 12 und 14, § 16 Abs. 2 sowie gemäß Art. 7 Abs. 4 [056]</field>
+        <field name="tag_name">KZ 056</field>
+        <field name="code">AT_056</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="310"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_21" model="account.tax.report.line">
+        <field name="name">4.21 Steuerschuld gemäß § 19 Abs. 1 zweiter Satz, § 19 Abs. 1c, 1e sowie gemäß Art. 25 Abs. 5 [057]</field>
+        <field name="tag_name">KZ 057</field>
+        <field name="code">AT_057</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="330"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_22" model="account.tax.report.line">
+        <field name="name">4.22 Steuerschuld gemäß § 19 Abs. 1a (Bauleistungen) [048]</field>
+        <field name="tag_name">KZ 048</field>
+        <field name="code">AT_048</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="340"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_23" model="account.tax.report.line">
+        <field name="name">4.23 Steuerschuld gemäß § 19 Abs. 1b (Sicherungseigentum, ...) [044]</field>
+        <field name="tag_name">KZ 044</field>
+        <field name="code">AT_044</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="350"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_24" model="account.tax.report.line">
+        <field name="name">4.24 Steuerschuld gemäß § 19 Abs. 1d (Schrott und Abfallstoffe) [032]</field>
+        <field name="tag_name">KZ 032</field>
+        <field name="code">AT_032</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="360"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_sale_03_report_title" model="account.tax.report.line">
+        <field name="name">Innergemeinschaftliche Erwerb</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="365"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+    <record id="tax_report_line_l10n_at_tva_line_4_25" model="account.tax.report.line">
+        <field name="name">4.25 Gesamtbetrag der Bemessungsgrundlagen für innergemeinschaftliche Erwerbe [070]</field>
+        <field name="tag_name">KZ 070</field>
+        <field name="code">AT_070</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="370"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_03_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_26" model="account.tax.report.line">
+        <field name="name">4.26 Davon steuerfrei gemäß Art. 6 Abs. 2 [071]</field>
+        <field name="tag_name">KZ 071</field>
+        <field name="code">AT_071</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="380"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_03_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_27" model="account.tax.report.line">
+        <field name="name">4.27 Gesamtbetrag der steuerpflichtigen innergemeinschaftlichen Erwerbe</field>
+        <field name="formula">AT_070 - AT_071</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="390"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_03_report_title"/>
+    </record>
+    <record id="tax_report_line_l10n_at_tva_sale_04_report_title" model="account.tax.report.line">
+        <field name="name">Davon sind zu versteuern mit</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="395"/>
+        <field name="formula">AT_072_base + AT_073_base + AT_008_base + AT_088_base</field>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+    <record id="tax_report_line_at_base_title_umsatz_base_4_28_31" model="account.tax.report.line">
+        <field name="name">Bemessungsgrundlage</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="400"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_04_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_28_base" model="account.tax.report.line">
+        <field name="name">4.28 20% Normalsteuersatz [072]</field>
+        <field name="tag_name">KZ 072 Bemessungsgrundlage</field>
+        <field name="code">AT_072_base</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="400"/>
+        <field name="parent_id" ref="tax_report_line_at_base_title_umsatz_base_4_28_31"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_29_base" model="account.tax.report.line">
+        <field name="name">4.29 10% ermäßigter Steuersatz [073]</field>
+        <field name="tag_name">KZ 073 Bemessungsgrundlage</field>
+        <field name="code">AT_073_base</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="420"/>
+        <field name="parent_id" ref="tax_report_line_at_base_title_umsatz_base_4_28_31"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_30_base" model="account.tax.report.line">
+        <field name="name">4.30 13% ermäßigter Steuersatz [008]</field>
+        <field name="tag_name">KZ 008 Bemessungsgrundlage</field>
+        <field name="code">AT_008_base</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="450"/>
+        <field name="parent_id" ref="tax_report_line_at_base_title_umsatz_base_4_28_31"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_31_base" model="account.tax.report.line">
+        <field name="name">4.31 19% für Jungholz und Mittelberg [088]</field>
+        <field name="tag_name">KZ 088 Bemessungsgrundlage</field>
+        <field name="code">AT_088_base</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="550"/>
+        <field name="parent_id" ref="tax_report_line_at_base_title_umsatz_base_4_28_31"/>
+    </record>
+
+    <record id="tax_report_line_at_tax_title_4_28_31" model="account.tax.report.line">
+        <field name="name">Umsatzsteuer</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="410"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_04_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_28_tax" model="account.tax.report.line">
+        <field name="name">4.28 20% Normalsteuersatz</field>
+        <field name="tag_name">KZ 072 Umsatzsteuer</field>
+        <field name="code">AT_072_tax</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="410"/>
+        <field name="parent_id" ref="tax_report_line_at_tax_title_4_28_31"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_29_tax" model="account.tax.report.line">
+        <field name="name">4.29 10% ermäßigter Steuersatz</field>
+        <field name="tag_name">KZ 073 Umsatzsteuer</field>
+        <field name="code">AT_073_tax</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="430"/>
+        <field name="parent_id" ref="tax_report_line_at_tax_title_4_28_31"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_30_tax" model="account.tax.report.line">
+        <field name="name">4.30 13% ermäßigter Steuersatz</field>
+        <field name="tag_name">KZ 008 Umsatzsteuer</field>
+        <field name="code">AT_008_tax</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="500"/>
+        <field name="parent_id" ref="tax_report_line_at_tax_title_4_28_31"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_31_tax" model="account.tax.report.line">
+        <field name="name">4.31 19% für Jungholz und Mittelberg</field>
+        <field name="tag_name">KZ 088 Umsatzsteuer</field>
+        <field name="code">AT_088_tax</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="600"/>
+        <field name="parent_id" ref="tax_report_line_at_tax_title_4_28_31"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_sale_05_report_title" model="account.tax.report.line">
+        <field name="name">Nicht zu versteuernde Erwerbe</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="610"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_report_title"/>
+    </record>
+    <record id="tax_report_line_l10n_at_tva_line_4_32" model="account.tax.report.line">
+        <field name="name">4.32 Erwerbe gemäß Art. 3 Abs. 8 zweiter Satz, die im Mitgliedstaat des Bestimmungslandes besteuert worden sind [076]</field>
+        <field name="tag_name">KZ 076</field>
+        <field name="code">AT_076</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="650"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_05_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_4_33" model="account.tax.report.line">
+        <field name="name">4.33 Erwerbe gemäß Art. 3 Abs. 8 zweiter Satz, die gemäß Art. 25 Abs. 2 im Inland als besteuert gelten [077]</field>
+        <field name="tag_name">KZ 077</field>
+        <field name="code">AT_077</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="700"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_sale_05_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_purchase_report_title" model="account.tax.report.line">
+    <field name="name">5. Berechnung der abziehbaren Vorsteuer</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="710"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_1" model="account.tax.report.line">
+        <field name="name">5.1 Gesamtbetrag der Vorsteuern (ohne die nachstehend gesondert anzuführenden Beträge) [060]</field>
+        <field name="tag_name">KZ 060</field>
+        <field name="code">AT_060</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="750"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_2" model="account.tax.report.line">
+        <field name="name">5.2 Vorsteuern betreffend die entrichtete Einfuhrumsatzsteuer (§ 12 Abs. 1 Z 2 lit. a) [061]</field>
+        <field name="tag_name">KZ 061</field>
+        <field name="code">AT_061</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="800"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_3" model="account.tax.report.line">
+        <field name="name">5.3 Vorsteuern betreffend die geschuldete, auf dem Abgabenkonto verbuchte Einfuhrumsatzsteuer (§ 12 Abs. 1 Z 2 lit. b) [083]</field>
+        <field name="tag_name">KZ 083</field>
+        <field name="code">AT_083</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="850"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_4" model="account.tax.report.line">
+        <field name="name">5.4 Vorsteuern aus dem innergemeinschaftlichen Erwerb [065]</field>
+        <field name="tag_name">KZ 065</field>
+        <field name="code">AT_065</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="900"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_5" model="account.tax.report.line">
+        <field name="name">5.5 Vorsteuern betreffend die Steuerschuld gemäß § 19 Abs. 1 zweiter Satz, § 19 Abs. 1c, 1e sowie gemäß Art. 25 Abs. 5 [066]</field>
+        <field name="tag_name">KZ 066</field>
+        <field name="code">AT_066</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="950"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_6" model="account.tax.report.line">
+        <field name="name">5.6 Vorsteuern betreffend die Steuerschuld gemäß § 19 Abs. 1a (Bauleistungen) [082]</field>
+        <field name="tag_name">KZ 082</field>
+        <field name="code">AT_082</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="960"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_7" model="account.tax.report.line">
+        <field name="name">5.7 Vorsteuern betreffend die Steuerschuld gemäß § 19 Abs. 1b (Sicherungseigentum, ...) [087]</field>
+        <field name="tag_name">KZ 087</field>
+        <field name="code">AT_087</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="970"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_8" model="account.tax.report.line">
+        <field name="name">5.8 Vorsteuern betreffend die Steuerschuld gemäß § 19 Abs. 1d (Schrott und Abfallstoffe) [089]</field>
+        <field name="tag_name">KZ 089</field>
+        <field name="code">AT_089</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="980"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_9" model="account.tax.report.line">
+        <field name="name">5.9 Vorsteuern für innergemeinschaftliche Lieferungen neuer Fahrzeuge von Fahrzeuglieferern gemäß Art. 2 [064]</field>
+        <field name="tag_name">KZ 064</field>
+        <field name="code">AT_064</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="990"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_10" model="account.tax.report.line">
+        <field name="name">5.10 Davon nicht abzugsfähig gemäß § 12 Abs. 3 iVm Abs. 4 und 5 [062]</field>
+        <field name="tag_name">KZ 062</field>
+        <field name="code">AT_062</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1000"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_11" model="account.tax.report.line">
+        <field name="name">5.11 Berichtigung gemäß § 12 Abs. 10 und 11 [063]</field>
+        <field name="tag_name">KZ 063</field>
+        <field name="code">AT_063</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1010"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_12" model="account.tax.report.line">
+        <field name="name">5.12 Berichtigung gemäß § 16 [067]</field>
+        <field name="tag_name">KZ 067</field>
+        <field name="code">AT_067</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1020"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_5_13" model="account.tax.report.line">
+        <field name="name">5.13 Gesamtbetrag der abziehbaren Vorsteuer</field>
+        <field name="formula">AT_060 + AT_061 + AT_083 + AT_065 + AT_066 + AT_082 + AT_087 + AT_089 + AT_064 + AT_062 + AT_063 + AT_067</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1030"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_purchase_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_final_report_title" model="account.tax.report.line">
+        <field name="name">6. Sonstige Berichtigungen</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1040"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_6" model="account.tax.report.line">
+        <field name="name">Sonstige Berichtigungen [090]</field>
+        <field name="tag_name">KZ 090</field>
+        <field name="code">AT_090</field>
+    <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1050"/>
+        <field name="parent_id" ref="tax_report_line_l10n_at_tva_final_report_title"/>
+    </record>
+
+    <record id="tax_report_line_l10n_at_tva_line_7" model="account.tax.report.line">
+        <field name="name">7. Zahllast (-) bzw. Gutschrift/Überschuss (+) [095]</field>
+        <field name="formula">(AT_022_tax + AT_029_tax + AT_006_tax + AT_037_tax + AT_052_tax + AT_007_tax + AT_056 + AT_057 + AT_048 + AT_044 + AT_032 + AT_072_tax + AT_073_tax + AT_008_tax + AT_088_tax + AT_060 + AT_061 + AT_083 + AT_065 + AT_066 + AT_082 + AT_087 + AT_089 + AT_064 + AT_062 + AT_063 + AT_067) + AT_090</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence" eval="1060"/>
+    </record>
+</odoo>

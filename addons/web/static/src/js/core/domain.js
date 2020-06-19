@@ -2,7 +2,17 @@ odoo.define("web.Domain", function (require) {
 "use strict";
 
 var collections = require("web.collections");
-var pyeval = require("web.pyeval");
+var pyUtils = require("web.py_utils");
+var py = window.py; // look py.js
+
+const TRUE_LEAF = [1, '=', 1];
+const FALSE_LEAF = [0, '=', 1];
+const TRUE_DOMAIN = [TRUE_LEAF];
+const FALSE_DOMAIN = [FALSE_LEAF];
+
+function compare(a, b) {
+    return JSON.stringify(a) === JSON.stringify(b);
+}
 
 /**
  * The Domain Class allows to work with a domain as a tree and provides tools
@@ -51,13 +61,31 @@ var Domain = collections.Tree.extend({
         } else if (_.isArray(this._data)) {
             // The domain is a [name, operator, value] entity
             // First check if we have the field value in the field values set
-            if (!(this._data[0] in values)) {
-                throw new Error(_.str.sprintf(
-                    "Unknown field %s in domain",
-                    this._data[0]
-                ));
+            // and if the first part of the domain contains 'parent.field'
+            // get the value from the parent record.
+            var isParentField = false;
+            var fieldName = this._data[0];
+            // We split the domain first part and check if it's a match
+            // for the syntax 'parent.field'.
+
+            let fieldValue;
+            if (compare(this._data, FALSE_LEAF) || compare(this._data, TRUE_LEAF)) {
+                fieldValue = this._data[0];
+            } else {
+                var parentField = this._data[0].split('.');
+                if ('parent' in values && parentField.length === 2) {
+                    fieldName = parentField[1];
+                    isParentField = parentField[0] === 'parent' &&
+                        fieldName in values.parent;
+                }
+                if (!(this._data[0] in values) && !(isParentField)) {
+                    throw new Error(_.str.sprintf(
+                        "Unknown field %s in domain",
+                        this._data[0]
+                    ));
+                }
+                fieldValue = isParentField ? values.parent[fieldName] : values[fieldName];
             }
-            var fieldValue = values[this._data[0]];
 
             switch (this._data[1]) {
                 case "=":
@@ -75,19 +103,24 @@ var Domain = collections.Tree.extend({
                 case ">=":
                     return (fieldValue >= this._data[2]);
                 case "in":
-                    return _.contains(
+                    return _.intersection(
                         _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
-                        fieldValue
-                    );
+                        _.isArray(fieldValue) ? fieldValue : [fieldValue],
+                    ).length !== 0;;
                 case "not in":
-                    return !_.contains(
+                    return _.intersection(
                         _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
-                        fieldValue
-                    );
+                        _.isArray(fieldValue) ? fieldValue : [fieldValue],
+                    ).length === 0;
                 case "like":
                     return (fieldValue.toLowerCase().indexOf(this._data[2].toLowerCase()) >= 0);
+                case "=like":
+                    var regExp = new RegExp(this._data[2].toLowerCase().replace(/([.\[\]\{\}\+\*])/g, '\\\$1').replace(/%/g, '.*'));
+                    return regExp.test(fieldValue.toLowerCase());
                 case "ilike":
                     return (fieldValue.indexOf(this._data[2]) >= 0);
+                case "=ilike":
+                    return new RegExp(this._data[2].replace(/%/g, '.*'), 'i').test(fieldValue);
                 default:
                     throw new Error(_.str.sprintf(
                         "Domain %s uses an unsupported operator",
@@ -223,7 +256,7 @@ var Domain = collections.Tree.extend({
      */
     stringToArray: function (domain, evalContext) {
         if (!_.isString(domain)) return _.clone(domain);
-        return pyeval.eval("domain", domain || "[]", evalContext);
+        return pyUtils.eval("domain", domain ? domain.replace(/%%/g, '%') : "[]", evalContext);
     },
     /**
      * Makes implicit "&" operators explicit in the given JS prefix-array
@@ -234,8 +267,10 @@ var Domain = collections.Tree.extend({
      *                       to normalize (! will be normalized in-place)
      * @returns {Array} the normalized JS prefix-array representation of the
      *                  given domain
+     * @throws {Error} if the domain is invalid and can't be normalised
      */
     normalizeArray: function (domain) {
+        if (domain.length === 0) { return domain; }
         var expected = 1;
         _.each(domain, function (item) {
             if (item === "&" || item === "|") {
@@ -246,10 +281,131 @@ var Domain = collections.Tree.extend({
         });
         if (expected < 0) {
             domain.unshift.apply(domain, _.times(Math.abs(expected), _.constant("&")));
+        } else if (expected > 0) {
+            throw new Error(_.str.sprintf(
+                "invalid domain %s (missing %d segment(s))",
+                JSON.stringify(domain), expected
+            ));
         }
         return domain;
     },
+    /**
+     * Converts JS prefix-array representation of a domain to a python condition
+     *
+     * @static
+     * @param {Array} domain
+     * @returns {string}
+     */
+    domainToCondition: function (domain) {
+        if (!domain.length) {
+            return 'True';
+        }
+        var self = this;
+        function consume(stack) {
+            var len = stack.length;
+            if (len <= 1) {
+                return stack;
+            } else if (stack[len-1] === '|' || stack[len-1] === '&' || stack[len-2] === '|' || stack[len-2] === '&') {
+                return stack;
+            } else if (len == 2) {
+                stack.splice(-2, 2, stack[len-2] + ' and ' + stack[len-1]);
+            } else if (stack[len-3] == '|') {
+                if (len === 3) {
+                    stack.splice(-3, 3, stack[len-2] + ' or ' + stack[len-1]);
+                } else {
+                    stack.splice(-3, 3, '(' + stack[len-2] + ' or ' + stack[len-1] + ')');
+                }
+            } else {
+                stack.splice(-3, 3, stack[len-2] + ' and ' + stack[len-1]);
+            }
+            consume(stack);
+        }
+
+        var stack = [];
+        _.each(domain, function (dom) {
+            if (dom === '|' || dom === '&') {
+                stack.push(dom);
+            } else {
+                var operator = dom[1] === '=' ? '==' : dom[1];
+                if (!operator) {
+                    throw new Error('Wrong operator for this domain');
+                }
+                if (operator === '!=' && dom[2] === false) { // the field is set
+                    stack.push(dom[0]);
+                } else if (dom[2] === null || dom[2] === true || dom[2] === false) {
+                    stack.push(dom[0] + ' ' + (operator === '!=' ? 'is not ' : 'is ') + (dom[2] === null ? 'None' : (dom[2] ? 'True' : 'False')));
+                } else {
+                    stack.push(dom[0] + ' ' + operator + ' ' + JSON.stringify(dom[2]));
+                }
+                consume(stack);
+            }
+        });
+
+        if (stack.length !== 1) {
+            throw new Error('Wrong domain');
+        }
+
+        return stack[0];
+    },
+    /**
+     * Converts python condition to a JS prefix-array representation of a domain
+     *
+     * @static
+     * @param {string} condition
+     * @returns {Array}
+     */
+    conditionToDomain: function (condition) {
+        if (!condition || condition.match(/^\s*(True)?\s*$/)) {
+            return [];
+        }
+
+        var ast = py.parse(py.tokenize(condition));
+
+
+        function astToStackValue (node) {
+            switch (node.id) {
+                case '(name)': return node.value;
+                case '.': return astToStackValue(node.first) + '.' + astToStackValue(node.second);
+                case '(string)': return node.value;
+                case '(number)': return node.value;
+                case '(constant)': return node.value === 'None' ? null : node.value === 'True' ? true : false;
+                case '[': return _.map(node.first, function (node) {return astToStackValue(node);});
+            }
+        }
+        function astToStack (node) {
+            switch (node.id) {
+                case '(name)': return [[astToStackValue(node), '!=', false]];
+                case '.': return [[astToStackValue(node.first) + '.' + astToStackValue(node.second), '!=', false]];
+                case 'not': return [[astToStackValue(node.first), '=', false]];
+
+                case 'or': return ['|'].concat(astToStack(node.first)).concat(astToStack(node.second));
+                case 'and': return ['&'].concat(astToStack(node.first)).concat(astToStack(node.second));
+                case '(comparator)':
+                    if (node.operators.length !== 1) {
+                        throw new Error('Wrong condition to convert in domain');
+                    }
+                    var right = astToStackValue(node.expressions[0]);
+                    var left = astToStackValue(node.expressions[1]);
+                    var operator = node.operators[0];
+                    switch (operator) {
+                        case 'is': operator = '='; break;
+                        case 'is not': operator = '!='; break;
+                        case '==': operator = '='; break;
+                    }
+                    return [[right, operator, left]];
+                default:
+                    throw "Condition cannot be transformed into domain";
+            }
+        }
+
+        return astToStack(ast);
+    },
 });
+
+Domain.TRUE_LEAF = TRUE_LEAF;
+Domain.FALSE_LEAF = FALSE_LEAF;
+Domain.TRUE_DOMAIN = TRUE_DOMAIN;
+Domain.FALSE_DOMAIN = FALSE_DOMAIN;
 
 return Domain;
 });

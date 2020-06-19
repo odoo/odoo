@@ -22,7 +22,6 @@ class AccountChartTemplate(models.Model):
         company.write({'tax_cash_basis_journal_id': journal_basis.id})
         return res
 
-    @api.multi
     def _prepare_all_journals(self, acc_template_ref, company, journals_dict=None):
         """Create the tax_cash_basis_journal_id"""
         res = super(AccountChartTemplate, self)._prepare_all_journals(
@@ -39,4 +38,13 @@ class AccountChartTemplate(models.Model):
             'default_debit_account_id': account,
             'show_on_dashboard': True,
         })
+        return res
+
+    @api.model
+    def _prepare_transfer_account_for_direct_creation(self, name, company):
+        res = super(AccountChartTemplate, self)._prepare_transfer_account_for_direct_creation(name, company)
+        if company.country_id.code == 'MX':
+            xml_id = self.env.ref('l10n_mx.account_tag_102_01').id
+            res.setdefault('tag_ids', [])
+            res['tag_ids'].append((4, xml_id))
         return res

@@ -13,11 +13,16 @@ SYSCOHADA_LIST = ['BJ', 'BF', 'CM', 'CF', 'KM', 'CG', 'CI', 'GA', 'GN', 'GW', 'G
 def _auto_install_l10n(cr, registry):
     #check the country of the main company (only) and eventually load some module needed in that country
     env = api.Environment(cr, SUPERUSER_ID, {})
-    country_code = env.user.company_id.country_id.code
+    country_code = env.company.country_id.code
     if country_code:
         #auto install localization module(s) if available
+        to_install_l10n = env['ir.module.module'].search_count([('name', 'like', 'l10n_'), ('state', '=', 'to install')])
         module_list = []
-        if country_code in SYSCOHADA_LIST:
+        if to_install_l10n:
+            # We don't install a CoA if one was passed in the command line
+            # or has been selected to install
+            pass
+        elif country_code in SYSCOHADA_LIST:
             #countries using OHADA Chart of Accounts
             module_list.append('l10n_syscohada')
         elif country_code == 'GB':
@@ -32,20 +37,26 @@ def _auto_install_l10n(cr, registry):
                 module_list.append('l10n_generic_coa')
         if country_code == 'US':
             module_list.append('account_plaid')
+        if country_code in ['US', 'CA']:
             module_list.append('account_check_printing')
-        if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'UK']:
+        if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'GB']:
             module_list.append('account_yodlee')
         if country_code in SYSCOHADA_LIST + [
-            'AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX', 'NL', 'NO', 
-            'PL', 'PT', 'RO', 'SI', 'TR', 'UK', 'VE', 'VN'
+            'AT', 'BE', 'CA', 'CO', 'DE', 'EC', 'ES', 'ET', 'FR', 'GR', 'IT', 'LU', 'MX', 'NL', 'NO',
+            'PL', 'PT', 'RO', 'SI', 'TR', 'GB', 'VE', 'VN'
             ]:
             module_list.append('base_vat')
+        if country_code == 'MX':
+            module_list.append('l10n_mx_edi')
+        if country_code == 'AU':
+            module_list.append('account_reports_cash_basis')
 
-        #european countries will be using SEPA
-        europe = env.ref('base.europe', raise_if_not_found=False)
-        if europe:
-            europe_country_codes = [x.code for x in europe.country_ids]
-            if country_code in europe_country_codes:
+        # SEPA zone countries will be using SEPA
+        sepa_zone = env.ref('base.sepa_zone', raise_if_not_found=False)
+        if sepa_zone:
+            sepa_zone_country_codes = sepa_zone.mapped('country_ids.code')
+            if country_code in sepa_zone_country_codes:
                 module_list.append('account_sepa')
+                module_list.append('account_bank_statement_import_camt')
         module_ids = env['ir.module.module'].search([('name', 'in', module_list), ('state', '=', 'uninstalled')])
         module_ids.sudo().button_install()

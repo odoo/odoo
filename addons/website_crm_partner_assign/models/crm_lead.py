@@ -3,44 +3,45 @@
 
 import random
 
-from odoo.addons.base_geolocalize.models.res_partner import geo_find, geo_query_address
 from odoo import api, fields, models, _
+from odoo.exceptions import AccessDenied, AccessError
+from odoo.tools import html_escape
+
 
 
 class CrmLead(models.Model):
     _inherit = "crm.lead"
+
     partner_latitude = fields.Float('Geo Latitude', digits=(16, 5))
     partner_longitude = fields.Float('Geo Longitude', digits=(16, 5))
-    partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', track_visibility='onchange', help="Partner this case has been forwarded/assigned to.", index=True)
+    partner_assigned_id = fields.Many2one('res.partner', 'Assigned Partner', tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]", help="Partner this case has been forwarded/assigned to.", index=True)
     partner_declined_ids = fields.Many2many(
         'res.partner',
         'crm_lead_declined_partner',
         'lead_id',
         'partner_id',
         string='Partner not interested')
-    date_assign = fields.Date('Assignation Date', help="Last date this case was forwarded/assigned to a partner")
+    date_partner_assign = fields.Date(
+        'Partner Assignment Date', compute='_compute_date_partner_assign',
+        copy=True, readonly=False, store=True,
+        help="Last date this case was forwarded/assigned to a partner")
 
-    @api.multi
     def _merge_data(self, fields):
-        fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_assign']
+        fields += ['partner_latitude', 'partner_longitude', 'partner_assigned_id', 'date_partner_assign']
         return super(CrmLead, self)._merge_data(fields)
 
     @api.onchange("partner_assigned_id")
-    def onchange_assign_id(self):
-        """This function updates the "assignation date" automatically, when manually assign a partner in the geo assign tab
-        """
-        partner_assigned = self.partner_assigned_id
-        if not partner_assigned:
-            self.date_assign = False
-        else:
-            self.date_assign = fields.Date.context_today(self)
-            self.user_id = partner_assigned.user_id
+    def _compute_date_partner_assign(self):
+        for lead in self:
+            if not lead.partner_assigned_id:
+                lead.date_partner_assign = False
+            else:
+                lead.date_partner_assign = fields.Date.context_today(lead)
 
-    @api.multi
     def assign_salesman_of_assigned_partner(self):
         salesmans_leads = {}
         for lead in self:
-            if (lead.stage_id.probability > 0 and lead.stage_id.probability < 100) or lead.stage_id.sequence == 1:
+            if (lead.probability > 0 and lead.probability < 100) or lead.stage_id.sequence == 1:
                 if lead.partner_assigned_id and lead.partner_assigned_id.user_id != lead.user_id:
                     salesmans_leads.setdefault(lead.partner_assigned_id.user_id.id, []).append(lead.id)
 
@@ -48,11 +49,9 @@ class CrmLead(models.Model):
             leads = self.browse(leads_ids)
             leads.write({'user_id': salesman_id})
 
-    @api.multi
     def action_assign_partner(self):
         return self.assign_partner(partner_id=False)
 
-    @api.multi
     def assign_partner(self, partner_id=False):
         partner_dict = {}
         res = False
@@ -65,15 +64,13 @@ class CrmLead(models.Model):
                 tag_to_add = self.env.ref('website_crm_partner_assign.tag_portal_lead_partner_unavailable', False)
                 lead.write({'tag_ids': [(4, tag_to_add.id, False)]})
                 continue
-            lead.assign_geo_localize(lead.partner_latitude, lead.partner_longitude,)
+            lead.assign_geo_localize(lead.partner_latitude, lead.partner_longitude)
             partner = self.env['res.partner'].browse(partner_id)
             if partner.user_id:
-                lead.allocate_salesman(partner.user_id.ids, team_id=partner.team_id.id)
-            values = {'date_assign': fields.Date.context_today(lead), 'partner_assigned_id': partner_id}
-            lead.write(values)
+                lead.handle_salesmen_assignment(partner.user_id.ids, team_id=partner.team_id.id)
+            lead.write({'partner_assigned_id': partner_id})
         return res
 
-    @api.multi
     def assign_geo_localize(self, latitude=False, longitude=False):
         if latitude and longitude:
             self.write({
@@ -86,19 +83,10 @@ class CrmLead(models.Model):
             if lead.partner_latitude and lead.partner_longitude:
                 continue
             if lead.country_id:
-                result = geo_find(geo_query_address(street=lead.street,
-                                                    zip=lead.zip,
-                                                    city=lead.city,
-                                                    state=lead.state_id.name,
-                                                    country=lead.country_id.name))
-
-                if result is None:
-                    result = geo_find(geo_query_address(
-                        city=lead.city,
-                        state=lead.state_id.name,
-                        country=lead.country_id.name
-                    ))
-
+                result = self.env['res.partner']._geo_localize(
+                    lead.street, lead.zip, lead.city,
+                    lead.state_id.name, lead.country_id.name
+                )
                 if result:
                     lead.write({
                         'partner_latitude': result[0],
@@ -106,7 +94,6 @@ class CrmLead(models.Model):
                     })
         return True
 
-    @api.multi
     def search_geo_partner(self):
         Partner = self.env['res.partner']
         res_partner_ids = {}
@@ -186,16 +173,14 @@ class CrmLead(models.Model):
                         break
         return res_partner_ids
 
-    @api.multi
     def partner_interested(self, comment=False):
         message = _('<p>I am interested by this lead.</p>')
         if comment:
-            message += '<p>%s</p>' % comment
+            message += '<p>%s</p>' % html_escape(comment)
         for lead in self:
-            lead.message_post(body=message, subtype="mail.mt_note")
+            lead.message_post(body=message)
             lead.sudo().convert_opportunity(lead.partner_id.id)  # sudo required to convert partner data
 
-    @api.multi
     def partner_desinterested(self, comment=False, contacted=False, spam=False):
         if contacted:
             message = '<p>%s</p>' % _('I am not interested by this lead. I contacted the lead.')
@@ -205,8 +190,8 @@ class CrmLead(models.Model):
             [('id', 'child_of', self.env.user.partner_id.commercial_partner_id.id)])
         self.message_unsubscribe(partner_ids=partner_ids.ids)
         if comment:
-            message += '<p>%s</p>' % comment
-        self.message_post(body=message, subtype="mail.mt_note")
+            message += '<p>%s</p>' % html_escape(comment)
+        self.message_post(body=message)
         values = {
             'partner_assigned_id': False,
         }
@@ -219,7 +204,6 @@ class CrmLead(models.Model):
             values['partner_declined_ids'] = [(4, p, 0) for p in partner_ids.ids]
         self.sudo().write(values)
 
-    @api.multi
     def update_lead_portal(self, values):
         self.check_access_rights('write')
         for lead in self:
@@ -233,7 +217,7 @@ class CrmLead(models.Model):
             # will be modified by the portal form. If no activity exist we create a new one instead
             # that we assign to the portal user.
 
-            user_activity = lead.activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
+            user_activity = lead.sudo().activity_ids.filtered(lambda activity: activity.user_id == self.env.user)[:1]
             if values['activity_date_deadline']:
                 if user_activity:
                     user_activity.sudo().write({
@@ -254,9 +238,10 @@ class CrmLead(models.Model):
 
     @api.model
     def create_opp_portal(self, values):
-        if self.env.user.partner_id.grade_id or self.env.user.commercial_partner_id.grade_id:
-            user = self.env.user
-            self = self.sudo()
+        if not (self.env.user.partner_id.grade_id or self.env.user.commercial_partner_id.grade_id):
+            raise AccessDenied()
+        user = self.env.user
+        self = self.sudo()
         if not (values['contact_name'] and values['description'] and values['title']):
             return {
                 'errors': _('All fields are required !')
@@ -267,7 +252,7 @@ class CrmLead(models.Model):
             'name': values['title'],
             'description': values['description'],
             'priority': '2',
-            'partner_assigned_id': user.partner_id.id,
+            'partner_assigned_id': user.commercial_partner_id.id,
         }
         if tag_own:
             values['tag_ids'] = [(4, tag_own.id, False)]
@@ -278,3 +263,34 @@ class CrmLead(models.Model):
         return {
             'id': lead.id
         }
+
+    #
+    #   DO NOT FORWARD PORT IN MASTER
+    #   instead, crm.lead should implement portal.mixin
+    #
+    def get_access_action(self, access_uid=None):
+        """ Instead of the classic form view, redirect to the online document for
+        portal users or if force_website=True in the context. """
+        self.ensure_one()
+
+        user, record = self.env.user, self
+        if access_uid:
+            try:
+                record.check_access_rights('read')
+                record.check_access_rule("read")
+            except AccessError:
+                return super(CrmLead, self).get_access_action(access_uid)
+            user = self.env['res.users'].sudo().browse(access_uid)
+            record = self.with_user(user)
+        if user.share or self.env.context.get('force_website'):
+            try:
+                record.check_access_rights('read')
+                record.check_access_rule('read')
+            except AccessError:
+                pass
+            else:
+                return {
+                    'type': 'ir.actions.act_url',
+                    'url': '/my/opportunity/%s' % record.id,
+                }
+        return super(CrmLead, self).get_access_action(access_uid)

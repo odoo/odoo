@@ -1,0 +1,98 @@
+
+.o_main_navbar {
+    .o_app {
+        @include media-breakpoint-down(sm) {
+            float: none;
+            margin: 0;
+            border-bottom: 1px solid $o-navbar-inverse-link-hover-bg;
+            color: transparent !important;
+        }
+    }
+
+    > .o_menu_brand {
+        @include media-breakpoint-down(sm) {
+            float: none;
+            margin: 0;
+            border-bottom: 1px solid $o-navbar-inverse-link-hover-bg;
+            color: transparent !important;
+        }
+    }
+
+    @include media-breakpoint-down(sm) {
+        transition: height 200ms linear 0s;
+
+        position: relative;
+        height: $o-navbar-height;
+
+        > ul {
+            > li {
+                float: none;
+                .dropdown-backdrop {
+                    display: none;
+                }
+
+                .dropdown-menu.show {
+                    max-height: none;
+                }
+            }
+
+            &.o_menu_sections {
+                width: 100%;
+                display: none;
+
+                .dropdown-menu.show {
+                    position: static;
+                    float: none;
+                    background-color: transparent;
+                    box-shadow: none;
+                    border: none;
+                    overflow: visible;
+
+                    > .dropdown-item {
+                        background-color: transparent;
+                        color: inherit;
+                    }
+                }
+            }
+
+            &.o_menu_systray {
+                @include o-position-absolute(0px, $o-navbar-height, auto, $o-navbar-height);
+                height: $o-navbar-height;
+                text-align: right;
+
+                > li {
+                    display: inline-block;
+
+                    .dropdown-menu.show {
+                        @include o-position-absolute($o-navbar-height, 0, 0, 0);
+                        position: fixed;
+                        width: auto;
+                    }
+                }
+
+                .o_user_menu .oe_topbar_name {
+                    display: none;
+                }
+            }
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    body.o_mobile_menu_opened > .o_main_navbar {
+        height: 100%;
+        overflow: auto;
+        .o_menu_sections {
+            display: block;
+        }
+    }
+}
+
+@include media-breakpoint-down(sm) {
+    .o_switch_company_menu > .dropdown-menu {
+        padding-top: 0px;
+        .bg-info {
+            padding: 10px;
+        }
+    }
+}

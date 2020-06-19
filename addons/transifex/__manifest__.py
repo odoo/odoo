@@ -5,7 +5,7 @@
     'name': 'Transifex integration',
     'version': '1.0',
     'summary': 'Add a link to edit a translation in Transifex',
-    'category': 'Extra Tools',
+    'category': 'Hidden/Tools',
     'description':
     """
 Transifex integration

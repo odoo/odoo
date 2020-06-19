@@ -1,12 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
-<data noupdate="1">
+<odoo noupdate="1">
 
     <record model="ir.rule" id="resource_calendar_leaves_rule_group_user_create">
         <field name="name">resource.calendar.leaves: employee reads own or global</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        <field name="domain_force">['|', ('resource_id', '=', False), ('resource_id.user_id', '=', user.id)]</field>
+        <field name="domain_force">['|', ('resource_id', '=', False), ('resource_id.user_id', 'in', [False, user.id])]</field>
 		<field name="perm_write" eval="False"/>
 		<field name="perm_create" eval="False"/>
 		<field name="perm_unlink" eval="False"/>
@@ -16,8 +15,16 @@
         <field name="name">resource.calendar.leaves: employee modifies own</field>
         <field name="model_id" ref="model_resource_calendar_leaves"/>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
-        <field name="domain_force">[('resource_id.user_id', '=', user.id)]</field>
+        <field name="domain_force">[('resource_id', '!=', False), ('resource_id.user_id', 'in', [False, user.id])]</field>
 		<field name="perm_read" eval="False"/>
     </record>
-</data>
+
+    <record model="ir.rule" id="resource_calendar_leaves_rule_group_admin_modify">
+        <field name="name">resource.calendar.leaves: admin modifies global</field>
+        <field name="model_id" ref="model_resource_calendar_leaves"/>
+        <field name="groups" eval="[(4, ref('base.group_erp_manager'))]"/>
+        <field name="domain_force">[('resource_id', '=', False)]</field>
+        <field name="perm_read" eval="False"/>
+    </record>
+
 </odoo>

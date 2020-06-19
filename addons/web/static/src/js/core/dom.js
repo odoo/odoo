@@ -1,11 +1,10 @@
 odoo.define('web.dom_ready', function (require) {
 'use strict';
 
-var def = $.Deferred();
-$(def.resolve.bind(def));
-return def;
+    return new Promise(function (resolve, reject) {
+        $(resolve);
+    });
 });
-
 //==============================================================================
 
 odoo.define('web.dom', function (require) {
@@ -20,7 +19,10 @@ odoo.define('web.dom', function (require) {
  * something happens in the DOM.
  */
 
+var concurrency = require('web.concurrency');
+var config = require('web.config');
 var core = require('web.core');
+var _t = core._t;
 
 /**
  * Private function to notify that something has been attached in the DOM
@@ -30,7 +32,7 @@ var core = require('web.core');
  * that on_attach_callback() will be called on each w with arguments args
  */
 function _notify(content, callbacks) {
-    _.each(callbacks, function (c) {
+    callbacks.forEach(function (c) {
         if (c.widget && c.widget.on_attach_callback) {
             c.widget.on_attach_callback(c.callback_args);
         }
@@ -38,7 +40,9 @@ function _notify(content, callbacks) {
     core.bus.trigger('DOM_updated', content);
 }
 
-return {
+var dom = {
+    DEBOUNCE: 400,
+
     /**
      * Appends content in a jQuery object and optionnally triggers an event
      *
@@ -72,12 +76,12 @@ return {
 
         function resize() {
             $fixedTextarea.insertAfter($textarea);
-            var heightOffset;
+            var heightOffset = 0;
             var style = window.getComputedStyle($textarea[0], null);
-            if (style.boxSizing === 'content-box') {
-                heightOffset = -(parseFloat(style.paddingTop) + parseFloat(style.paddingBottom));
-            } else {
-                heightOffset = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+            if (style.boxSizing === 'border-box') {
+                var paddingHeight = parseFloat(style.paddingTop) + parseFloat(style.paddingBottom);
+                var borderHeight = parseFloat(style.borderTopWidth) + parseFloat(style.borderBottomWidth);
+                heightOffset = borderHeight + paddingHeight;
             }
             $fixedTextarea.width($textarea.width());
             $fixedTextarea.val($textarea.val());
@@ -85,33 +89,56 @@ return {
             $textarea.css({height: Math.max(height + heightOffset, minHeight)});
         }
 
+        function removeVerticalResize() {
+            // We already compute the correct height:
+            // we don't want the user to resize it vertically.
+            // On Chrome this needs to be called after the DOM is ready.
+            var style = window.getComputedStyle($textarea[0], null);
+            if (style.resize === 'vertical') {
+                $textarea[0].style.resize = 'none';
+            } else if (style.resize === 'both') {
+                $textarea[0].style.resize = 'horizontal';
+            }
+        }
+
         options = options || {};
-        minHeight = (options && options.min_height) || 50;
+        minHeight = 'min_height' in options ? options.min_height : 50;
 
         $fixedTextarea = $('<textarea disabled>', {
             class: $textarea[0].className,
-        }).css({
+        });
+
+        var direction = _t.database.parameters.direction === 'rtl' ? 'right' : 'left';
+        $fixedTextarea.css({
             position: 'absolute',
             opacity: 0,
             height: 10,
+            borderTopWidth: 0,
+            borderBottomWidth: 0,
+            padding: 0,
+            overflow: 'hidden',
             top: -10000,
-            left: -10000,
-        });
+        }).css(direction, -10000);
         $fixedTextarea.data("auto_resize", true);
 
-        var style = window.getComputedStyle($textarea[0], null);
-        if (style.resize === 'vertical') {
-            $textarea[0].style.resize = 'none';
-        } else if (style.resize === 'both') {
-            $textarea[0].style.resize = 'horizontal';
-        }
+        // The following line is necessary to prevent the scrollbar to appear
+        // on the textarea on Firefox when adding a new line if the current line
+        // has just enough characters to completely fill the line.
+        // This fix should be fine since we compute the height depending on the
+        // content, there should never be an overflow.
+        // TODO ideally understand why and fix this another way if possible.
+        $textarea.css({'overflow-y': 'hidden'});
+
         resize();
+        removeVerticalResize();
         $textarea.data("auto_resize", true);
 
-        $textarea.on('input focus', resize);
+        $textarea.on('input focus change', resize);
         if (options.parent) {
-            core.bus.on('DOM_updated', options.parent, resize);
-            core.bus.on('view_shown', options.parent, resize);
+            core.bus.on('DOM_updated', options.parent, function () {
+                resize();
+                removeVerticalResize();
+            });
         }
     },
     /**
@@ -127,10 +154,27 @@ return {
      *
      * @param {jQuery} $from - the jQuery element(s) from which to search
      * @param {string} selector - the CSS selector to match
+     * @param {boolean} [addBack=false] - whether or not the $from element
+     *                                  should be considered in the results
      * @returns {jQuery}
      */
-    cssFind: function ($from, selector) {
-        return $from.find('*').filter(selector);
+    cssFind: function ($from, selector, addBack) {
+        var $results;
+
+        // No way to correctly parse a complex jQuery selector but having no
+        // spaces should be a good-enough condition to use a simple find
+        var multiParts = selector.indexOf(' ') >= 0;
+        if (multiParts) {
+            $results = $from.find('*').filter(selector);
+        } else {
+            $results = $from.find(selector);
+        }
+
+        if (addBack && $from.is(selector)) {
+            $results = $results.add($from);
+        }
+
+        return $results;
     },
     /**
      * Detaches widgets from the DOM and performs their on_detach_callback()
@@ -143,46 +187,36 @@ return {
      * @return {jQuery} the detached elements
      */
     detach: function (to_detach, options) {
-        _.each(to_detach, function (d) {
+        to_detach.forEach( function (d) {
             if (d.widget.on_detach_callback) {
                 d.widget.on_detach_callback(d.callback_args);
             }
         });
         var $to_detach = options && options.$to_detach;
         if (!$to_detach) {
-            $to_detach = $(_.map(to_detach, function (d) {
+            $to_detach = $(to_detach.map(function (d) {
                 return d.widget.el;
             }));
         }
         return $to_detach.detach();
     },
     /**
-     * Returns the input or textarea cursor offset
+     * Returns the selection range of an input or textarea
      *
-     * @param {Object} DOM item input or texteara
-     * @returns {Object}
+     * @param {Object} node DOM item input or texteara
+     * @returns {Object} range
      */
-    getCursor: function (node) {
-        node = $(node)[0];
-        var offset = 0;
-        var length = 0;
-        if ('selectionStart' in node) {
-            offset = node.selectionStart;
-            length = node.selectionEnd - offset;
-        } else if ('selection' in document) {
-            node.focus();
-            var sel = document.selection.createRange();
-            length = document.selection.createRange().text.length;
-            sel.moveStart('character', -node.value.length);
-            offset = sel.text.length - length;
-        }
-        return { offset: offset, length: length };
+    getSelectionRange: function (node) {
+        return {
+            start: node.selectionStart,
+            end: node.selectionEnd,
+        };
     },
     /**
      * Returns the distance between a DOM element and the top-left corner of the
      * window
      *
-     * @param {Object} node DOM element (input or texteara)
+     * @param {Object} e DOM element (input or texteara)
      * @return {Object} the left and top distances in pixels
      */
     getPosition: function (e) {
@@ -193,6 +227,101 @@ return {
             e = e.offsetParent;
         }
         return position;
+    },
+    /**
+     * Protects a function which is to be used as a handler by preventing its
+     * execution for the duration of a previous call to it (including async
+     * parts of that call).
+     *
+     * Limitation: as the handler is ignored during async actions,
+     * the 'preventDefault' or 'stopPropagation' calls it may want to do
+     * will be ignored too. Using the 'preventDefault' and 'stopPropagation'
+     * arguments solves that problem.
+     *
+     * @param {function} fct
+     *      The function which is to be used as a handler. If a promise
+     *      is returned, it is used to determine when the handler's action is
+     *      finished. Otherwise, the return is used as jQuery uses it.
+     * @param {function|boolean} preventDefault
+     * @param {function|boolean} stopPropagation
+     */
+    makeAsyncHandler: function (fct, preventDefault, stopPropagation) {
+        var pending = false;
+        function _isLocked() {
+            return pending;
+        }
+        function _lock() {
+            pending = true;
+        }
+        function _unlock() {
+            pending = false;
+        }
+        return function (ev) {
+            if (preventDefault === true || preventDefault && preventDefault()) {
+                ev.preventDefault();
+            }
+            if (stopPropagation === true || stopPropagation && stopPropagation()) {
+                ev.stopPropagation();
+            }
+
+            if (_isLocked()) {
+                // If a previous call to this handler is still pending, ignore
+                // the new call.
+                return;
+            }
+
+            _lock();
+            var result = fct.apply(this, arguments);
+            Promise.resolve(result).then(_unlock).guardedCatch(_unlock);
+            return result;
+        };
+    },
+    /**
+     * Creates a debounced version of a function to be used as a button click
+     * handler. Also improves the handler to disable the button for the time of
+     * the debounce and/or the time of the async actions it performs.
+     *
+     * Limitation: if two handlers are put on the same button, the button will
+     * become enabled again once any handler's action finishes (multiple click
+     * handlers should however not be binded to the same button).
+     *
+     * @param {function} fct
+     *      The function which is to be used as a button click handler. If a
+     *      promise is returned, it is used to determine when the button can be
+     *      re-enabled. Otherwise, the return is used as jQuery uses it.
+     */
+    makeButtonHandler: function (fct) {
+        // Fallback: if the final handler is not binded to a button, at least
+        // make it an async handler (also handles the case where some events
+        // might ignore the disabled state of the button).
+        fct = dom.makeAsyncHandler(fct);
+
+        return function (ev) {
+            var result = fct.apply(this, arguments);
+
+            var $button = $(ev.target).closest('.btn');
+            if (!$button.length) {
+                return result;
+            }
+
+            // Disable the button for the duration of the handler's action
+            // or at least for the duration of the click debounce. This makes
+            // a 'real' debounce creation useless. Also, during the debouncing
+            // part, the button is disabled without any visual effect.
+            $button.addClass('o_debounce_disabled');
+            Promise.resolve(dom.DEBOUNCE && concurrency.delay(dom.DEBOUNCE)).then(function () {
+                $button.addClass('disabled').prop('disabled', true);
+                $button.removeClass('o_debounce_disabled');
+
+                return Promise.resolve(result).then(function () {
+                    $button.removeClass('disabled').prop('disabled', false);
+                }).guardedCatch(function () {
+                    $button.removeClass('disabled').prop('disabled', false);
+                });
+            });
+
+            return result;
+        };
     },
     /**
      * Prepends content in a jQuery object and optionnally triggers an event
@@ -217,11 +346,11 @@ return {
      *
      * @param {Object} options
      * @param {Object} [options.attrs] - Attributes to put on the button element
-     * @param {string} [options.attrs.type="button"]
-     * @param {string} [options.attrs.class="btn-default"]
-     *        Note: automatically completed with "btn btn-X" (@see options.size
-     *        for the value of X)
-     * @param {string} [options.size=sm] - @see options.attrs.class
+     * @param {string} [options.attrs.type='button']
+     * @param {string} [options.attrs.class='btn-secondary']
+     *        Note: automatically completed with "btn btn-X"
+     *        (@see options.size for the value of X)
+     * @param {string} [options.size] - @see options.attrs.class
      * @param {string} [options.icon]
      *        The specific fa icon class (for example "fa-home") or an URL for
      *        an image to use as icon.
@@ -229,10 +358,28 @@ return {
      * @returns {jQuery}
      */
     renderButton: function (options) {
-        var params = options.attrs || {};
-        params.type = params.type || 'button';
-        params.class = 'btn btn-' + (options.size || 'sm') + ' ' + (params.class || 'btn-default');
-        var $button = $('<button/>', params);
+        var jQueryParams = _.extend({
+            type: 'button',
+        }, options.attrs || {});
+
+        var extraClasses = jQueryParams.class;
+        if (extraClasses) {
+            // If we got extra classes, check if old oe_highlight/oe_link
+            // classes are given and switch them to the right classes (those
+            // classes have no style associated to them anymore).
+            // TODO ideally this should be dropped at some point.
+            extraClasses = extraClasses.replace(/\boe_highlight\b/g, 'btn-primary')
+                                       .replace(/\boe_link\b/g, 'btn-link');
+        }
+
+        jQueryParams.class = 'btn';
+        if (options.size) {
+            jQueryParams.class += (' btn-' + options.size);
+        }
+        jQueryParams.class += (' ' + (extraClasses || 'btn-secondary'));
+
+        var $button = $('<button/>', jQueryParams);
+
         if (options.icon) {
             if (options.icon.substr(0, 3) === 'fa-') {
                 $button.append($('<i/>', {
@@ -249,54 +396,184 @@ return {
                 text: options.text,
             }));
         }
+
         return $button;
     },
     /**
-     * Renders a checkbox with standard odoo template. This does not use any xml
-     * template to avoid forcing the frontend part to lazy load a xml file for
-     * each widget which might want to create a simple checkbox.
+     * Renders a checkbox with standard odoo/BS template. This does not use any
+     * xml template to avoid forcing the frontend part to lazy load a xml file
+     * for each widget which might want to create a simple checkbox.
      *
      * @param {Object} [options]
      * @param {Object} [options.prop]
      *        Allows to set the input properties (disabled and checked states).
      * @param {string} [options.text]
      *        The checkbox's associated text. If none is given then a simple
-     *        checkbox without label structure is rendered.
+     *        checkbox is rendered.
      * @returns {jQuery}
      */
     renderCheckbox: function (options) {
-        var $container = $('<div class="checkbox o_checkbox"><label><input type="checkbox"/><span/></label></div>');
+        var id = _.uniqueId('checkbox-');
+        var $container = $('<div/>', {
+            class: 'custom-control custom-checkbox',
+        });
+        var $input = $('<input/>', {
+            type: 'checkbox',
+            id: id,
+            class: 'custom-control-input',
+        });
+        var $label = $('<label/>', {
+            for: id,
+            class: 'custom-control-label',
+            text: options && options.text || '',
+        });
+        if (!options || !options.text) {
+            $label.html('&#8203;'); // BS checkboxes need some label content (so
+                                // add a zero-width space when there is no text)
+        }
         if (options && options.prop) {
-            $container.find('input').prop(options.prop);
+            $input.prop(options.prop);
         }
-        if (options && options.text) {
-            $container.find('label').append(
-                $('<span/>', {
-                    text: options.text,
-                    class: 'o_checkbox_label',
-                })
-            );
-        }
-
-        return $container;
+        return $container.append($input, $label);
     },
     /**
-     * Moves the cursor position in a DOM element (input or texteara)
+     * Sets the selection range of a given input or textarea
      *
      * @param {Object} node DOM element (input or textarea)
-     * @param {Int} pos cursor position
+     * @param {integer} range.start
+     * @param {integer} range.end
      */
-    setCursor: function (node, pos) {
-        node = $(node).first().focus()[0];
-        if ('createTextRange' in node) {
-            var textRange = node.createTextRange();
-            textRange.collapse(true);
-            textRange.moveEnd(pos);
-            textRange.moveStart(pos);
-            textRange.select();
-        } else if ('setSelectionRange' in node) {
-            node.setSelectionRange(pos, pos);
+    setSelectionRange: function (node, range) {
+        if (node.setSelectionRange){
+            node.setSelectionRange(range.start, range.end);
+        } else if (node.createTextRange){
+            node.createTextRange()
+                .collapse(true)
+                .moveEnd('character', range.start)
+                .moveStart('character', range.end)
+                .select();
+        }
+    },
+    /**
+     * Creates an automatic 'more' dropdown-menu for a set of navbar items.
+     *
+     * @param {jQuery} $el
+     * @param {Object} [options]
+     * @param {string} [options.unfoldable='none']
+     * @param {function} [options.maxWidth]
+     * @param {string} [options.sizeClass='SM']
+     */
+    initAutoMoreMenu: function ($el, options) {
+        options = _.extend({
+            unfoldable: 'none',
+            maxWidth: false,
+            sizeClass: 'SM',
+        }, options || {});
+
+        var $extraItemsToggle = null;
+
+        var debouncedAdapt = _.debounce(_adapt, 250);
+        core.bus.on('resize', null, debouncedAdapt);
+        _adapt();
+
+        $el.data('dom:autoMoreMenu:destroy', function () {
+            _restore();
+            core.bus.off('resize', null, debouncedAdapt);
+            $el.removeData('dom:autoMoreMenu:destroy');
+        });
+
+        function _restore() {
+            if ($extraItemsToggle === null) {
+                return;
+            }
+            var $items = $extraItemsToggle.children('.dropdown-menu').children();
+            $items.addClass('nav-item');
+            $items.children('.dropdown-item, a').removeClass('dropdown-item').addClass('nav-link');
+            $items.insertBefore($extraItemsToggle);
+            $extraItemsToggle.remove();
+            $extraItemsToggle = null;
+        }
+
+        function _adapt() {
+            if (!$el.is(':visible')) {
+                return;
+            }
+
+            _restore();
+            if (config.device.size_class <= config.device.SIZES[options.sizeClass]) {
+                return;
+            }
+
+            var $allItems = $el.children();
+            var $unfoldableItems = $allItems.filter(options.unfoldable);
+            var $items = $allItems.not($unfoldableItems);
+
+            var maxWidth = 0;
+            if (options.maxWidth) {
+                maxWidth = options.maxWidth();
+            } else {
+                var mLeft = $el.is('.ml-auto, .mx-auto, .m-auto');
+                var mRight = $el.is('.mr-auto, .mx-auto, .m-auto');
+                maxWidth = computeFloatOuterWidthWithMargins($el[0], mLeft, mRight);
+                var style = window.getComputedStyle($el[0]);
+                maxWidth -= (parseFloat(style.paddingLeft) + parseFloat(style.paddingRight) + parseFloat(style.borderLeftWidth) + parseFloat(style.borderRightWidth));
+                maxWidth -= _.reduce($unfoldableItems, function (sum, el) {
+                    return sum + computeFloatOuterWidthWithMargins(el);
+                }, 0);
+            }
+
+            var nbItems = $items.length;
+            var menuItemsWidth = _.reduce($items, function (sum, el) {
+                return sum + computeFloatOuterWidthWithMargins(el);
+            }, 0);
+
+            if (maxWidth - menuItemsWidth >= -0.001) {
+                return;
+            }
+
+            var $dropdownMenu = $('<ul/>', {class: 'dropdown-menu'});
+            $extraItemsToggle = $('<li/>', {class: 'nav-item dropdown o_extra_menu_items'})
+                .append($('<a/>', {role: 'button', href: '#', class: 'nav-link dropdown-toggle o-no-caret', 'data-toggle': 'dropdown', 'aria-expanded': false})
+                    .append($('<i/>', {class: 'fa fa-plus'})))
+                .append($dropdownMenu);
+            $extraItemsToggle.insertAfter($items.last());
+
+            menuItemsWidth += computeFloatOuterWidthWithMargins($extraItemsToggle[0]);
+            do {
+                menuItemsWidth -= computeFloatOuterWidthWithMargins($items.eq(--nbItems)[0]);
+            } while (!(maxWidth - menuItemsWidth >= -0.001) && (nbItems > 0));
+
+            var $extraItems = $items.slice(nbItems).detach();
+            $extraItems.removeClass('nav-item');
+            $extraItems.children('.nav-link, a').removeClass('nav-link').addClass('dropdown-item');
+            $dropdownMenu.append($extraItems);
+            $extraItemsToggle.find('.nav-link').toggleClass('active', $extraItems.children().hasClass('active'));
+        }
+
+        function computeFloatOuterWidthWithMargins(el, mLeft, mRight) {
+            var rect = el.getBoundingClientRect();
+            var style = window.getComputedStyle(el);
+            var outerWidth = rect.right - rect.left;
+            if (mLeft !== false) {
+                outerWidth += parseFloat(style.marginLeft);
+            }
+            if (mRight !== false) {
+                outerWidth += parseFloat(style.marginRight);
+            }
+            return outerWidth;
+        }
+    },
+    /**
+     * Cleans what has been done by ``initAutoMoreMenu``.
+     *
+     * @param {jQuery} $el
+     */
+    destroyAutoMoreMenu: function ($el) {
+        var destroyFunc = $el.data('dom:autoMoreMenu:destroy');
+        if (destroyFunc) {
+            destroyFunc.call(null);
         }
     },
 };
+return dom;
 });

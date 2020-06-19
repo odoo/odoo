@@ -4,7 +4,7 @@
 {
     'name': 'Memos pad',
     'version': '0.1',
-    'category': 'Productivity',
+    'category': 'Productivity/Notes',
     'description': """
 This module update memos inside Odoo for using an external pad
 =================================================================
@@ -12,7 +12,6 @@ This module update memos inside Odoo for using an external pad
 Use for update your text memo in real time with the following user that you invite.
 
 """,
-    'website': 'https://www.odoo.com/page/notes',
     'summary': 'Sticky memos, Collaborative',
     'depends': [
         'mail',

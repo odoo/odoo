@@ -3,22 +3,22 @@
 <template id="partner_page" name="Partner Page">
     <t t-call="website.layout">
         <div id="wrap">
-            <div class="oe_structure"/>
+            <div class="oe_structure" id="oe_structure_website_partner_partner_1"/>
             <div class="container">
                 <div class="row">
                     <t t-call="website_partner.partner_detail"></t>
                 </div>
             </div>
-            <div class="oe_structure"/>
+            <div class="oe_structure" id="oe_structure_website_partner_partner_2"/>
         </div>
     </t>
 </template>
 
 <template id="partner_detail" name="Partner Details">
-    <h1 class="col-md-12 text-center" id="partner_name" t-field="partner.display_name"/>
-    <div class="col-md-4">
-        <div t-field="partner.image" t-options='{"widget": "image", "class": "center-block mb16"}'/>
-        <address class="well">
+    <h1 class="col-lg-12 text-center" id="partner_name" t-field="partner.display_name"/>
+    <div class="col-lg-4">
+        <div t-field="partner.image_1920" t-options='{"widget": "image", "preview_image": "image_512", "class": "d-block mx-auto mb16"}'/>
+        <address>
              <div t-field="partner.self" t-options='{
                  "widget": "contact",
                  "fields": ["address", "website", "phone", "email"]
@@ -26,7 +26,7 @@
         </address>
         <t t-raw="left_column or ''"/>
     </div>
-    <div class="col-md-8 mt32">
+    <div class="col-lg-8 mt32">
         <t t-if="partner">
             <div t-field="partner.website_description"/>
             <t groups="website.group_website_publisher">

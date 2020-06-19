@@ -2,7 +2,7 @@
 
 {
     'name': 'Stripe Payment Acquirer',
-    'category': 'Hidden',
+    'category': 'Accounting/Payment Acquirers',
     'summary': 'Payment Acquirer: Stripe Implementation',
     'version': '1.0',
     'description': """Stripe Payment Acquirer""",
@@ -14,4 +14,7 @@
     ],
     'images': ['static/description/icon.png'],
     'installable': True,
+    'application': True,
+    'post_init_hook': 'create_missing_journal_for_acquirers',
+    'uninstall_hook': 'uninstall_hook',
 }

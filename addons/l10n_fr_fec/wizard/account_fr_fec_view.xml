@@ -6,14 +6,14 @@
     <field name="arch" type="xml">
         <form string="FEC File Generation">
             <notebook>
-                <page string="Options">
+                <page string="Options" name="options">
                     <group>
                         <field name="date_from"/>
                         <field name="date_to"/>
                         <field name="export_type" groups="base.group_no_one"/>
                     </group>
                 </page>
-                <page string="Technical Info">
+                <page string="Technical Info" name="technical_info">
                     <group>
                         <div>
                         The encoding of this text file is UTF-8. The structure of file is CSV separated by pipe '|'.
@@ -108,7 +108,7 @@
             <footer>
                 <button string="Generate" name="generate_fec" type="object"
                     class="oe_highlight"/>
-                <button string="Cancel" class="btn btn-default" special="cancel"/>
+                <button string="Cancel" class="btn btn-secondary" special="cancel"/>
             </footer>
         </form>
     </field>

@@ -1,0 +1,126 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# * payment_payumoney
+# 
+# Translators:
+# Martin Trigaux, 2018
+# Kostas Goutoudis <goutoudis@gmail.com>, 2018
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server saas~11.5\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-09-18 09:49+0000\n"
+"PO-Revision-Date: 2018-09-18 09:49+0000\n"
+"Last-Translator: Kostas Goutoudis <goutoudis@gmail.com>, 2018\n"
+"Language-Team: Greek (https://www.transifex.com/odoo/teams/41243/el/)\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Language: el\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Adyen"
+msgstr "Adyen"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Authorize.Net"
+msgstr "Authorize.Net"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Manual Configuration"
+msgstr "Μη αυτόματη διαμόρφωση"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_key
+msgid "Merchant Key"
+msgstr "Κλειδί Εμπόρου"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__payumoney_merchant_salt
+msgid "Merchant Salt"
+msgstr "Salt Εμπόρου"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Ogone"
+msgstr "Ogone"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "PayUmoney"
+msgstr "PayUmoney"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:108
+#, python-format
+msgid "PayUmoney: invalid shasign, received %s, computed %s, for data %s"
+msgstr ""
+"PayUmoney: μη έγκυρη υπογραφή sha, λήφθηκε %s, υπολογισμένο %s, για τα "
+"δεδομένα %s"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:102
+#, python-format
+msgid "PayUmoney: received data for reference %s; multiple orders found"
+msgstr ""
+"PayUmoney: λήφθηκαν δεδομένα αναφοράς %s, βρέθηκαν πολλαπλές παραγγελίες "
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:99
+#, python-format
+msgid "PayUmoney: received data for reference %s; no order found"
+msgstr "PayUmoney: λήφθηκαν δεδομένα αναφοράς %s, δεν βρέθηκε παραγγελία"
+
+#. module: payment_payumoney
+#: code:addons/payment_payumoney/models/payment.py:94
+#, python-format
+msgid ""
+"PayUmoney: received data with missing reference (%s) or pay_id (%s) or "
+"shashign (%s)"
+msgstr ""
+"PayUmoney: λήφθηκαν δεδομένα αλλά λείπει η αναφορά (%s) ή pay_id (%s) ή "
+"υπογραφή sha (%s)"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_acquirer
+msgid "Payment Acquirer"
+msgstr "Αποδέκτης Πληρωμής"
+
+#. module: payment_payumoney
+#: model:ir.model,name:payment_payumoney.model_payment_transaction
+msgid "Payment Transaction"
+msgstr "Συναλλαγή Πληρωμής"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Paypal"
+msgstr "Paypal"
+
+#. module: payment_payumoney
+#: model:ir.model.fields,field_description:payment_payumoney.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Πάροχος"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Sips"
+msgstr "Sips"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Stripe"
+msgstr "Stripe"
+
+#. module: payment_payumoney
+#: selection:payment.acquirer,provider:0
+msgid "Wire Transfer"
+msgstr "Έμβασμα"

@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+
+    <!-- Add action entry in the Action Menu for Events -->
+    <act_window id="calendar_event_act_window_sms_composer_single"
+        name="Send SMS to attendees"
+        binding_model="calendar.event"
+        res_model="sms.composer"
+        view_mode="form"
+        target="new"
+        context="{
+            'default_composition_mode': 'comment',
+            'default_res_id': active_id,
+        }"/>
+
+</odoo>

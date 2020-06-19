@@ -5,8 +5,7 @@
     'name': 'Uruguay - Chart of Accounts',
     'version': '0.1',
     'author': 'Uruguay l10n Team, Guillem Barba',
-    'category': 'Localization',
-    'website': 'https://launchpad.net/openerp-uruguay',
+    'category': 'Accounting/Localizations',
     'description': """
 General Chart of Accounts.
 ==========================
@@ -17,8 +16,14 @@ Provide Templates for Chart of Accounts, Taxes for Uruguay.
     'depends': ['account'],
     'data': [
         'data/l10n_uy_chart_data.xml',
+        'data/account.account.template.csv',
+        'data/l10n_uy_chart_post_data.xml',
         'data/account_data.xml',
+        'data/account_tax_report_data.xml',
         'data/account_tax_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account_chart_template_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

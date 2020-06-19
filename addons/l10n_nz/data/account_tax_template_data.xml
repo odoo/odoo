@@ -1,0 +1,304 @@
+<?xml version='1.0' encoding='UTF-8'?>
+<odoo>
+    <record id="nz_tax_sale_15" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_nz_chart_template"/>
+        <field name="name">Sale (15%)</field>
+        <field name="sequence">1</field>
+        <field name="description">GST Sales</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">15</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="tax_group_15"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_box5')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('nz_21310'),
+                'plus_report_line_ids': [ref('tax_report_box5')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_box5')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('nz_21310'),
+                'minus_report_line_ids': [ref('tax_report_box5')],
+            }),
+        ]"/>
+    </record>
+    <record id="nz_tax_sale_inc_15" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_nz_chart_template"/>
+        <field name="name">GST Inc Sale (15%)</field>
+        <field name="sequence">2</field>
+        <field name="description">GST Inclusive Sales</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">15</field>
+        <field name="price_include">TRUE</field>
+        <field name="tax_group_id" ref="tax_group_gst_15"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_box5')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('nz_21310'),
+                'plus_report_line_ids': [ref('tax_report_box5')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_box5')]
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('nz_21310'),
+                'minus_report_line_ids': [ref('tax_report_box5')],
+            }),
+        ]"/>
+    </record>
+    <record id="nz_tax_sale_0" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_nz_chart_template"/>
+        <field name="name">Zero/Export (0%) Sale</field>
+        <field name="sequence">3</field>
+        <field name="description">Zero Rated (Export) Sales</field>
+        <field name="type_tax_use">sale</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_box5'), ref('tax_report_box6')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_box5'), ref('tax_report_box6')]
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="nz_tax_purchase_15" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_nz_chart_template"/>
+        <field name="name">Purch (15%)</field>
+        <field name="sequence">1</field>
+        <field name="description">GST Purchases</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">15</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="tax_group_15"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_box11')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('nz_21330'),
+                'plus_report_line_ids': [ref('tax_report_box11')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_box11')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('nz_21330'),
+                'minus_report_line_ids': [ref('tax_report_box11')],
+            }),
+        ]"/>
+    </record>
+    <record id="nz_tax_purchase_inc_15" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_nz_chart_template"/>
+        <field name="name">GST Inc Purch (15%)</field>
+        <field name="sequence">2</field>
+        <field name="description">GST Inclusive Purchases</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">15</field>
+        <field name="price_include">TRUE</field>
+        <field name="tax_group_id" ref="tax_group_gst_15"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'plus_report_line_ids': [ref('tax_report_box11')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('nz_21330'),
+                'plus_report_line_ids': [ref('tax_report_box11')],
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+                'minus_report_line_ids': [ref('tax_report_box11')],
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('nz_21330'),
+                'minus_report_line_ids': [ref('tax_report_box11')],
+            }),
+        ]"/>
+    </record>
+    <record id="nz_tax_purchase_0" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_nz_chart_template"/>
+        <field name="name">Zero/Import (0%) Purch</field>
+        <field name="sequence">3</field>
+        <field name="description">Zero Rated Purchases</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="nz_tax_purchase_taxable_import" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_nz_chart_template"/>
+        <field name="name">Purch (Imports Taxable)</field>
+        <field name="sequence">4</field>
+        <field name="description">Purchase (Taxable Imports) - Tax Paid Separately</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">0</field>
+        <field name="price_include">FALSE</field>
+        <field name="tax_group_id" ref="tax_group_0"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+            }),
+        ]"/>
+    </record>
+    <record id="nz_tax_purchase_gst_only" model="account.tax.template">
+        <field name="chart_template_id" ref="l10n_nz_chart_template"/>
+        <field name="name">GST Only – Imports</field>
+        <field name="sequence">5</field>
+        <field name="description">GST Only on Imports</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="amount_type">percent</field>
+        <field name="amount">100000000000</field>
+        <!--
+          The tax percentage is so high because on imported goods we
+          needed to link the tax line acknowledgment (not to be paid)
+          on the customer invoice and what need to actually be
+          paid from another invoice given by a clearance house
+          (i.e. customs)
+          For more info see the complete discussion below
+          https://github.com/odoo/odoo/pull/48700#issuecomment-607586417
+        -->
+        <field name="price_include">TRUE</field>
+        <field name="tax_group_id" ref="tax_group_100000000"/>
+        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('nz_21330'),
+            }),
+        ]"/>
+        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'base',
+            }),
+
+            (0,0, {
+                'factor_percent': 100,
+                'repartition_type': 'tax',
+                'account_id': ref('nz_21330'),
+            }),
+        ]"/>
+    </record>
+</odoo>

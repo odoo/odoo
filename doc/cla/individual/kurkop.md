@@ -9,3 +9,4 @@ declaration.
 Signed,
 
 Juan Pablo Arias jpa@devco.co https://github.com/kurkop
+Juan Pablo Arias j@kurlabs.com https://github.com/kurkop

@@ -1,9 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from werkzeug import url_encode
+from werkzeug.urls import url_encode
 
 from odoo import http, _
+from odoo.addons.portal.controllers.portal import _build_url_w_params
+from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.http import request, route
 
 
@@ -17,36 +19,34 @@ class PaymentPortal(http.Controller):
 
         :return html: form containing all values related to the acquirer to
                       redirect customers to the acquirer website """
-        success_url = kwargs.get('success_url', '/my')
-        callback_method = kwargs.get('callback_method', '')
-
-        invoice_sudo = request.env['account.invoice'].sudo().browse(invoice_id)
+        invoice_sudo = request.env['account.move'].sudo().browse(invoice_id)
         if not invoice_sudo:
             return False
 
         try:
-            acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
+            acquirer_id = int(acquirer_id)
         except:
             return False
 
-        token = request.env['payment.token'].sudo()  # currently no support of payment tokens
-        tx = request.env['payment.transaction'].sudo()._check_or_create_invoice_tx(
-            invoice_sudo,
-            acquirer,
-            payment_token=token,
-            tx_type='form_save' if save_token else 'form',
-            add_tx_values={
-                'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', invoice_sudo._name)], limit=1).id,
-                'callback_res_id': invoice_sudo.id,
-                'callback_method': callback_method,
-            })
+        if request.env.user._is_public():
+            save_token = False # we avoid to create a token for the public user
 
-        # set the transaction id into the session
-        request.session['portal_invoice_%s_transaction_id' % invoice_sudo.id] = tx.id
+        success_url = kwargs.get(
+            'success_url', "%s?%s" % (invoice_sudo.access_url, url_encode({'access_token': access_token}) if access_token else '')
+        )
+        vals = {
+            'acquirer_id': acquirer_id,
+            'return_url': success_url,
+        }
 
-        return tx.render_invoice_button(
+        if save_token:
+            vals['type'] = 'form_save'
+
+        transaction = invoice_sudo._create_payment_transaction(vals)
+        PaymentProcessing.add_payment_transaction(transaction)
+
+        return transaction.render_invoice_button(
             invoice_sudo,
-            success_url,
             submit_txt=_('Pay & Confirm'),
             render_values={
                 'type': 'form_save' if save_token else 'form',
@@ -58,46 +58,36 @@ class PaymentPortal(http.Controller):
     def invoice_pay_token(self, invoice_id, pm_id=None, **kwargs):
         """ Use a token to perform a s2s transaction """
         error_url = kwargs.get('error_url', '/my')
-        success_url = kwargs.get('success_url', '/my')
-        callback_method = kwargs.get('callback_method', '')
         access_token = kwargs.get('access_token')
         params = {}
         if access_token:
             params['access_token'] = access_token
 
-        invoice_sudo = request.env['account.invoice'].sudo().browse(invoice_id)
+        invoice_sudo = request.env['account.move'].sudo().browse(invoice_id).exists()
         if not invoice_sudo:
             params['error'] = 'pay_invoice_invalid_doc'
-            return request.redirect('%s?%s' % (error_url, url_encode(params)))
+            return request.redirect(_build_url_w_params(error_url, params))
 
+        success_url = kwargs.get(
+            'success_url', "%s?%s" % (invoice_sudo.access_url, url_encode({'access_token': access_token}) if access_token else '')
+        )
         try:
             token = request.env['payment.token'].sudo().browse(int(pm_id))
         except (ValueError, TypeError):
             token = False
-        if not token:
+        token_owner = invoice_sudo.partner_id if request.env.user._is_public() else request.env.user.partner_id
+        if not token or token.partner_id != token_owner:
             params['error'] = 'pay_invoice_invalid_token'
-            return request.redirect('%s?%s' % (error_url, url_encode(params)))
+            return request.redirect(_build_url_w_params(error_url, params))
 
-        # find an existing tx or create a new one
-        tx = request.env['payment.transaction'].sudo()._check_or_create_invoice_tx(
-            invoice_sudo,
-            token.acquirer_id,
-            payment_token=token,
-            tx_type='server2server',
-            add_tx_values={
-                'callback_model_id': request.env['ir.model'].sudo().search([('model', '=', invoice_sudo._name)], limit=1).id,
-                'callback_res_id': invoice_sudo.id,
-                'callback_method': callback_method,
-            })
+        vals = {
+            'payment_token_id': token.id,
+            'type': 'server2server',
+            'return_url': _build_url_w_params(success_url, params),
+        }
 
-        # set the transaction id into the session
-        request.session['portal_invoice_%s_transaction_id' % invoice_sudo.id] = tx.id
-
-        # proceed to the payment
-        res = tx.confirm_invoice_token()
-        if res is not True:
-            params['error'] = res
-            return request.redirect('%s?%s' % (error_url, url_encode(params)))
+        tx = invoice_sudo._create_payment_transaction(vals)
+        PaymentProcessing.add_payment_transaction(tx)
 
         params['success'] = 'pay_invoice'
-        return request.redirect('%s?%s' % (success_url, url_encode(params)))
+        return request.redirect('/payment/process')

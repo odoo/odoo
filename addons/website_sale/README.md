@@ -77,7 +77,7 @@ efficiently in Google.
 Leverage Social Media
 ---------------------
 
-Create new landing pages easily with the Odoo inline edition feature. Send
+Create new landing pages easily with the Odoo inline editing feature. Send
 visitors of your different marketing campaigns to specific landing pages to
 optimize conversions.
 

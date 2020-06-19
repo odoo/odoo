@@ -10,12 +10,13 @@ from werkzeug import urls
 import odoo
 import re
 
-from odoo.tools import pycompat
+from odoo.addons.base.tests.common import HttpCaseWithUserDemo
 
 _logger = logging.getLogger(__name__)
 
 
-class Crawler(odoo.tests.HttpCase):
+@odoo.tests.common.tagged('post_install', '-at_install', 'crawl')
+class Crawler(HttpCaseWithUserDemo):
     """ Test suite crawling an Odoo CMS instance and checking that all
     internal links lead to a 200 response.
 
@@ -23,8 +24,22 @@ class Crawler(odoo.tests.HttpCase):
     starting the crawl
     """
 
-    at_install = False
-    post_install = True
+    def setUp(self):
+        super(Crawler, self).setUp()
+
+        if hasattr(self.env['res.partner'], 'grade_id'):
+            # Create at least one published parter, so that /partners doesn't
+            # return a 404
+            grade = self.env['res.partner.grade'].create({
+                'name': 'A test grade',
+                'website_published': True,
+            })
+            self.env['res.partner'].create({
+                'name': 'A Company for /partners',
+                'is_company': True,
+                'grade_id': grade.id,
+                'website_published': True,
+            })
 
     def crawl(self, url, seen=None, msg=''):
         if seen is None:
@@ -38,7 +53,15 @@ class Crawler(odoo.tests.HttpCase):
             seen.add(url_slug)
 
         _logger.info("%s %s", msg, url)
-        r = self.url_open(url)
+        r = self.url_open(url, allow_redirects=False)
+        if r.status_code in (301, 302):
+            # check local redirect to avoid fetch externals pages
+            new_url = r.headers.get('Location')
+            current_url = r.url
+            if urls.url_parse(new_url).netloc != urls.url_parse(current_url).netloc:
+                return seen
+            r = self.url_open(new_url)
+
         code = r.status_code
         self.assertIn(code, range(200, 300), "%s Fetching %s returned error response (%d)" % (msg, url, code))
 
@@ -70,7 +93,7 @@ class Crawler(odoo.tests.HttpCase):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
+        _logger.runbot("public crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request, ", count, duration, sql, duration / count, float(sql) / count)
 
     def test_20_crawl_demo(self):
         t0 = time.time()
@@ -80,7 +103,7 @@ class Crawler(odoo.tests.HttpCase):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
+        _logger.runbot("demo crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
 
     def test_30_crawl_admin(self):
         t0 = time.time()
@@ -90,4 +113,4 @@ class Crawler(odoo.tests.HttpCase):
         count = len(seen)
         duration = time.time() - t0
         sql = self.registry.test_cr.sql_log_count - t0_sql
-        _logger.log(25, "admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)
+        _logger.runbot("admin crawled %s urls in %.2fs %s queries, %.3fs %.2fq per request", count, duration, sql, duration / count, float(sql) / count)

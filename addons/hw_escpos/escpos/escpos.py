@@ -7,12 +7,12 @@ import io
 import math
 import re
 import traceback
+import codecs
 from hashlib import md5
 
 from PIL import Image
 from xml.etree import ElementTree as ET
 
-from odoo.tools import pycompat
 
 try:
     import jcconv
@@ -29,7 +29,7 @@ from .exceptions import *
 
 def utfstr(stuff):
     """ converts stuff to string and does without failing if stuff is a utf8 string """
-    if isinstance(stuff,pycompat.string_types):
+    if isinstance(stuff, str):
         return stuff
     else:
         return str(stuff)
@@ -318,9 +318,9 @@ class Escpos:
         else:
             image_border = 32 - (size % 32)
             if (image_border % 2) == 0:
-                return (image_border / 2, image_border / 2)
+                return (int(image_border / 2), int(image_border / 2))
             else:
-                return (image_border / 2, (image_border / 2) + 1)
+                return (int(image_border / 2), int((image_border / 2) + 1))
 
     def _print_image(self, line, size):
         """ Print formatted image """
@@ -330,8 +330,8 @@ class Escpos:
 
        
         self._raw(S_RASTER_N)
-        buffer = "%02X%02X%02X%02X" % (((size[0]/size[1])/8), 0, size[1], 0)
-        self._raw(buffer.decode('hex'))
+        buffer = b"%02X%02X%02X%02X" % (int((size[0]/size[1])/8), 0, size[1], 0)
+        self._raw(codecs.decode(buffer, 'hex'))
         buffer = ""
 
         while i < len(line):
@@ -340,7 +340,7 @@ class Escpos:
             i += 8
             cont += 1
             if cont % 4 == 0:
-                self._raw(buffer.decode("hex"))
+                self._raw(codecs.decode(buffer, "hex"))
                 buffer = ""
                 cont = 0
 
@@ -349,7 +349,7 @@ class Escpos:
         i = 0
         cont = 0
         buffer = ""
-        raw = ""
+        raw = b""
 
         def __raw(string):
             if output:
@@ -357,9 +357,9 @@ class Escpos:
             else:
                 self._raw(string)
        
-        raw += S_RASTER_N
-        buffer = "%02X%02X%02X%02X" % (((size[0]/size[1])/8), 0, size[1], 0)
-        raw += buffer.decode('hex')
+        raw += S_RASTER_N.encode('utf-8')
+        buffer = "%02X%02X%02X%02X" % (int((size[0]/size[1])/8), 0, size[1], 0)
+        raw += codecs.decode(buffer, 'hex')
         buffer = ""
 
         while i < len(line):
@@ -368,7 +368,7 @@ class Escpos:
             i += 8
             cont += 1
             if cont % 4 == 0:
-                raw += buffer.decode("hex")
+                raw += codecs.decode(buffer, 'hex')
                 buffer = ""
                 cont = 0
 
@@ -433,14 +433,14 @@ class Escpos:
 
         print('print_b64_img')
 
-        id = md5(img.encode('utf-8')).digest()
+        id = md5(img).digest()
 
         if id not in self.img_cache:
             print('not in cache')
 
-            img = img[img.find(',')+1:]
-            f = io.BytesIO('img')
-            f.write(base64.decodestring(img))
+            img = img[img.find(b',')+1:]
+            f = io.BytesIO(b'img')
+            f.write(base64.decodebytes(img))
             f.seek(0)
             img_rgba = Image.open(f)
             img = Image.new('RGB', img_rgba.size, (255,255,255))
@@ -522,8 +522,12 @@ class Escpos:
         # Print Code
         if code:
             self._raw(code)
+            # We are using type A commands
+            # So we need to add the 'NULL' character
+            # https://github.com/python-escpos/python-escpos/pull/98/files#diff-a0b1df12c7c67e38915adbe469051e2dR444
+            self._raw('\x00')
         else:
-            raise exception.BarcodeCodeError()
+            raise BarcodeCodeError()
 
     def receipt(self,xml):
         """
@@ -673,7 +677,7 @@ class Escpos:
 
             elif elem.tag == 'img':
                 if 'src' in elem.attrib and 'data:' in elem.attrib['src']:
-                    self.print_base64_image(elem.attrib['src'])
+                    self.print_base64_image(bytes(elem.attrib['src'], 'utf-8'))
 
             elif elem.tag == 'barcode' and 'encoding' in elem.attrib:
                 serializer.start_block(stylestack)
@@ -745,6 +749,7 @@ class Escpos:
                     'cp860': TXT_ENC_PC860,
                     'cp863': TXT_ENC_PC863,
                     'cp865': TXT_ENC_PC865,
+                    'cp1251': TXT_ENC_WPC1251,    # win-1251 covers more cyrillic symbols than cp866
                     'cp866': TXT_ENC_PC866,
                     'cp862': TXT_ENC_PC862,
                     'cp720': TXT_ENC_PC720,
@@ -783,29 +788,34 @@ class Escpos:
                         else: 
                             raise ValueError()
                     else:
+                        # First 127 symbols are covered by cp437.
+                        # Extended range is covered by different encodings.
                         encoded = char.encode(encoding)
+                        if ord(encoded) <= 127:
+                            encoding = 'cp437'
                         break
 
-                except ValueError: #the encoding failed, select another one and retry
+                except (UnicodeEncodeError, UnicodeWarning, TypeError, ValueError):
+                    #the encoding failed, select another one and retry
                     if encoding in remaining:
                         del remaining[encoding]
                     if len(remaining) >= 1:
                         (encoding, _) = remaining.popitem()
                     else:
                         encoding = 'cp437'
-                        encoded  = '\xb1'    # could not encode, output error character
+                        encoded  = b'\xb1'    # could not encode, output error character
                         break;
 
             if encoding != self.encoding:
                 # if the encoding changed, remember it and prefix the character with
                 # the esc-pos encoding change sequence
                 self.encoding = encoding
-                encoded = encodings[encoding] + encoded
+                encoded = bytes(encodings[encoding], 'utf-8') + encoded
 
             return encoded
         
         def encode_str(txt):
-            buffer = ''
+            buffer = b''
             for c in txt:
                 buffer += encode_char(c)
             return buffer
@@ -884,7 +894,12 @@ class Escpos:
 
 
     def cashdraw(self, pin):
-        """ Send pulse to kick the cash drawer """
+        """ Send pulse to kick the cash drawer
+
+        For some reason, with some printers (ex: Epson TM-m30), the cash drawer
+        only opens 50% of the time if you just send the pulse. But if you read
+        the status afterwards, it opens all the time.
+        """
         if pin == 2:
             self._raw(CD_KICK_2)
         elif pin == 5:
@@ -892,6 +907,7 @@ class Escpos:
         else:
             raise CashDrawerError()
 
+        self.get_printer_status()
 
     def hw(self, hw):
         """ Hardware operations """

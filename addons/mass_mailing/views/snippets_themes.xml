@@ -1,14 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <!-- Snippets & Themes Menu -->
-<template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True">
-    <xpath expr="//h2[@id='snippets_menu']" position="replace">
-        <h2 id="snippets_menu">Select a template</h2>
+<template id="email_designer_snippets" inherit_id="web_editor.snippets" primary="True" groups="base.group_user">
+    <xpath expr="//div[@id='snippets_menu']" position="inside">
+        <button type="button" disabled="disabled">Select a template</button>
     </xpath>
-    <xpath expr="//div[@id='o_scroll']" position="replace">
-        <div id="o_scroll">
+    <xpath expr="//t[@id='default_snippets']" position="replace">
+        <t id="default_snippets">
+            <t t-set="company_id" t-value="res_company"/>
             <div id="email_designer_themes">
                 <div data-name="basic"
+                     data-nowrap="1"
                      data-img="/mass_mailing/static/src/img/theme_imgs/basic_thumb"
                      data-images-info='{"logo": {"format": "png"}}'>
                     <t t-call="mass_mailing.theme_basic_template"/>
@@ -23,7 +25,7 @@
                 <div class="o_panel_header">
                     <i class="fa fa-angle-double-up"/> Headers
                 </div>
-                <div class="o_panel_body">
+                <div class="o_panel_body" id="email_designer_header_elements">
                     <t t-snippet="mass_mailing.s_mail_block_header_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_social.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_header_text_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_text_social.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_header_logo" t-thumbnail="/mass_mailing/static/src/img/blocks/block_header_logo.png"/>
@@ -34,7 +36,7 @@
                 <div class="o_panel_header">
                     <i class="fa fa-clone"/> Body
                 </div>
-                <div class="o_panel_body">
+                <div class="o_panel_body" id="email_designer_body_elements">
                     <t t-snippet="mass_mailing.s_mail_block_title_text" t-thumbnail="/mass_mailing/static/src/img/blocks/block_title_text.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_title_sub" t-thumbnail="/mass_mailing/static/src/img/blocks/block_title_sub.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_paragraph" t-thumbnail="/mass_mailing/static/src/img/blocks/block_paragraph.png"/>
@@ -52,7 +54,7 @@
                 <div class="o_panel_header">
                     <i class="fa fa-plus"/> Marketing Content
                 </div>
-                <div class="o_panel_body">
+                <div class="o_panel_body" id="email_designer_marketing_elements">
                     <t t-snippet="mass_mailing.s_mail_block_discount2" t-thumbnail="/mass_mailing/static/src/img/blocks/block_discount2.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_discount1" t-thumbnail="/mass_mailing/static/src/img/blocks/block_discount1.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_event" t-thumbnail="/mass_mailing/static/src/img/blocks/block_event.png"/>
@@ -63,16 +65,15 @@
                 <div class="o_panel_header">
                     <i class="fa fa-angle-double-down"/> Footers
                 </div>
-                <div class="o_panel_body">
+                <div class="o_panel_body" id="email_designer_footer_elements">
                     <t t-snippet="mass_mailing.s_mail_block_footer_social" t-thumbnail="/mass_mailing/static/src/img/blocks/block_footer_social.png"/>
                     <t t-snippet="mass_mailing.s_mail_block_footer_social_left" t-thumbnail="/mass_mailing/static/src/img/blocks/block_footer_social_left.png"/>
                 </div>
             </div>
-        </div>
+        </t>
     </xpath>
-
-    <xpath expr="//div[@id='snippet_options']" position="inside">
-        <t t-call="mass_mailing.snippet_options"/>
+    <xpath expr="//div[@id='snippet_options']/t" position="attributes">
+        <attribute name="t-call">mass_mailing.snippet_options</attribute>
     </xpath>
 </template>
 
@@ -85,9 +86,14 @@
                     <td width="70%"  class="o_mail_logo_container o_mail_h_padding o_mail_v_padding">
                         &amp;nbsp;
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;float:none;">
-                             <img border="0" src="/web/image/mass_mailing.s_default_image_logo" style="height:auto;max-width:400px;" alt="Your Logo" />
+                             <img border="0" src="/mass_mailing/static/src/img/theme_basic/s_default_image_logo.png" style="height:auto;max-width:400px;" alt="Your Logo" />
                         </a>
                         &amp;nbsp;
+                    </td>
+                    <td width="30%" class="text-right o_mail_no_resize">
+                        <div class="o_mail_header_social">
+                            <t t-call="mass_mailing.social_links"/>
+                        </div>
                     </td>
                 </tr>
             </table>
@@ -109,6 +115,11 @@
                         </h3>
                         &amp;nbsp;
                     </td>
+                    <td width="30%" class="text-right o_mail_no_resize">
+                        <div class="o_mail_header_social">
+                            <t t-call="mass_mailing.social_links"/>
+                        </div>
+                    </td>
                 </tr>
             </table>
         </div>
@@ -120,13 +131,13 @@
         <div class="o_mail_snippet_general">
             <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles o_mail_h_padding">
                 <tr>
-                    <td width="20%"/>
-                    <td valign="center" width="60%" class="text-center o_mail_v_padding">
+                    <td width="35%"/>
+                    <td valign="center" width="30%" class="text-center o_mail_v_padding">
                         <a t-att-href="(company_id.website) or '#'" style="text-decoration:none;">
-                            <img border="0" src="/web/image/mass_mailing.s_default_image_logo" style="height:auto;max-width:400px;width:auto" alt="Your Logo" />
+                            <img border="0" src="/mass_mailing/static/src/img/theme_basic/s_default_image_logo.png" style="height:auto;max-width:400px;width:auto" alt="Your Logo" />
                         </a>
                     </td>
-                    <td width="20%" style="text-align:right"/>
+                    <td width="35%" style="text-align:right"/>
                 </tr>
             </table>
         </div>
@@ -139,9 +150,9 @@
             <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles">
                 <tbody>
                     <tr>
-                        <td width="100%" valign="top" class="o_mail_full_width_padding">
+                        <td width="100%" valign="top" class="o_mail_full_width_padding o_mail_no_colorpicker">
                             <a href="#">
-                                <img src="/web/image/mass_mailing.s_default_image_block_banner" class="center-block" alt="Your Banner Image" />
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_banner.jpg" class="d-block mx-auto" alt="Your Banner Image" />
                             </a>
                         </td>
                     </tr>
@@ -157,7 +168,7 @@
             <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles">
                 <tbody>
                     <tr>
-                        <td width="100%" class="o_mail_h_padding o_mail_v_padding">
+                        <td width="100%" class="o_mail_h_padding o_mail_v_padding o_mail_no_colorpicker">
                             <h2 class="mt0">Thank you for joining us!</h2>
                             <p>We want to take this opportunity to welcome you to our ever-growing community!<br/></p>
                             <p>Your platform is ready for work. It will help you reduce the costs of digital signage, attract new customers and increase sales.</p>
@@ -170,7 +181,7 @@
                                 </small>
                             </p>
                             <div class="o_mail_v_padding text-center">
-                                <a href="#" class="btn btn-primary">LOGIN</a>
+                                <a role="button" href="#" class="btn btn-primary">LOGIN</a>
                             </div>
 
                         </td>
@@ -187,7 +198,7 @@
             <table align="center" cellspacing="0" cellpadding="0" border="0" class="o_mail_table_styles">
                 <tbody>
                     <tr>
-                        <td width="100%" class="o_mail_h_padding o_mail_v_padding">
+                        <td width="100%" class="o_mail_h_padding o_mail_v_padding o_mail_no_colorpicker">
                             <p> The open source model of Odoo has allowed us to leverage thousands of developers and
                                 business experts to build hundreds of apps in just a few years.</p>
                             <p> With strong technical foundations, Odoo's framework is unique.
@@ -210,7 +221,7 @@
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles">
                 <tbody>
                     <tr>
-                        <td class="o_mail_h_padding o_mail_v_padding">
+                        <td class="o_mail_h_padding o_mail_v_padding o_mail_no_colorpicker">
                             <h2 class="o_mail_no_margin">Check this out!</h2>
                             <p class="o_mail_no_margin">Apps That Help You Grow Your Business!</p>
                         </td>
@@ -231,53 +242,53 @@
                             <table cellspacing="0" cellpadding="0" class="o_mail_table_styles">
                                 <thead>
                                     <tr>
-                                        <th class="bg-beta o_mail_v_padding o_mail_col_mv">
+                                        <th class="bg-o-color-2 o_mail_v_padding o_mail_col_mv">
                                             <h2 class="text-center o_mail_no_margin">DEFAULT</h2>
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-gray-lighter">
+                                <tbody>
                                     <tr>
-                                        <td class="text-center o_mail_col_mv">
+                                        <td class="text-center o_mail_col_mv bg-gray-lighter">
                                             <p class="o_mail_display_coupon text-center" style="margin-top:10px;">$8</p>
                                             <small>user / month (billed annually)</small>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv">
+                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv bg-gray-lighter">
                                             <div class="separator"></div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="o_mail_col_mv">
+                                        <td class="o_mail_col_mv bg-gray-lighter">
                                             <p>Basic features</p>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="o_mail_col_mv">
+                                        <td class="o_mail_col_mv bg-gray-lighter">
                                             <p>Basic management</p>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="o_mail_col_mv">
+                                        <td class="o_mail_col_mv bg-gray-lighter">
                                             <p>No customization</p>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="o_mail_col_mv">
+                                        <td class="o_mail_col_mv bg-gray-lighter">
                                             <p>No support</p>
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot class="bg-gray-lighter">
+                                <tfoot>
                                     <tr>
-                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv">
+                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv bg-gray-lighter">
                                             <div class="separator"></div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td valign="top" class="text-center o_mail_h_padding o_mail_col_mv" style="padding-bottom: 20px;">
-                                            <a href="#" class="btn btn-block btn-primary">More</a>
+                                        <td valign="top" class="text-center o_mail_h_padding o_mail_col_mv bg-gray-lighter" style="padding-bottom: 20px;">
+                                            <a role="button" href="#" class="btn btn-block btn-primary">More</a>
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -287,53 +298,53 @@
                             <table cellspacing="0" cellpadding="0" class="o_mail_table_styles">
                                 <thead>
                                     <tr>
-                                        <th class="bg-beta o_mail_v_padding o_mail_col_mv">
+                                        <th class="bg-o-color-2 o_mail_v_padding o_mail_col_mv">
                                             <h2 class="text-center o_mail_no_margin">PRO</h2>
                                         </th>
                                     </tr>
                                 </thead>
-                                <tbody class="bg-gray-lighter">
+                                <tbody>
                                     <tr>
-                                        <td class="text-center o_mail_col_mv">
+                                        <td class="text-center o_mail_col_mv bg-gray-lighter">
                                             <p class="o_mail_display_coupon text-center" style="margin-top:10px;">$18</p>
                                             <small>user / month (billed annually)</small>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv">
+                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv bg-gray-lighter">
                                             <div class="separator"></div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="o_mail_col_mv">
+                                        <td class="o_mail_col_mv bg-gray-lighter">
                                             <p><strong>Advanced</strong> features</p>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="o_mail_col_mv">
+                                        <td class="o_mail_col_mv bg-gray-lighter">
                                             <p><strong>Total</strong> management</p>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="o_mail_col_mv">
+                                        <td class="o_mail_col_mv bg-gray-lighter">
                                             <p><strong>Fully customizable</strong></p>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td class="o_mail_col_mv">
+                                        <td class="o_mail_col_mv bg-gray-lighter">
                                             <p><strong>24/7 Support</strong></p>
                                         </td>
                                     </tr>
                                 </tbody>
-                                <tfoot class="bg-gray-lighter">
+                                <tfoot>
                                     <tr>
-                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv">
+                                        <td valign="top" class="o_mail_v_padding o_mail_col_mv bg-gray-lighter">
                                             <div class="separator"></div>
                                         </td>
                                     </tr>
                                     <tr>
-                                        <td valign="top" class="text-center o_mail_h_padding o_mail_col_mv" style="padding-bottom: 20px;">
-                                            <a href="#" class="btn btn-block btn-primary">More</a>
+                                        <td valign="top" class="text-center o_mail_h_padding o_mail_col_mv bg-gray-lighter" style="padding-bottom: 20px;">
+                                            <a role="button" href="#" class="btn btn-block btn-primary">More</a>
                                         </td>
                                     </tr>
                                 </tfoot>
@@ -352,9 +363,9 @@
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_v_padding o_mail_col_table">
                 <tbody>
                     <tr>
-                        <td style="vertical-align:top;width:270px;" class="o_mail_col_mv">
-                            <div class="o_mail_col_container">
-                                <img src="/web/image/mass_mailing.s_default_image_block_two_cols_1" class="center-block" alt="Your Picture" />
+                        <td style="vertical-align:top;width:270px;" class="o_mail_col_mv o_mail_col_container">
+                            <div>
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_two_cols_1.jpg" class="d-block mx-auto" alt="Your Picture" />
                                 <h4 class="text-center">Column title</h4>
                                 <p class="text-center o_mail_no_margin">
                                     Write one paragraph describing your product,
@@ -362,14 +373,14 @@
                                     your content needs to be useful to your readers.
                                 </p>
                                 <div class="text-center" style="margin-top:15px;">
-                                    <a href="#" class="btn btn-link">Read More...</a>
+                                    <a role="button" href="#" class="btn btn-link">Read More...</a>
                                 </div>
                             </div>
                         </td>
 
-                        <td style="vertical-align:top;width:270px;" class="o_mail_col_mv">
-                            <div class="o_mail_col_container">
-                                <img src="/web/image/mass_mailing.s_default_image_block_two_cols_2" class="center-block" alt="Your Picture" />
+                        <td style="vertical-align:top;width:270px;" class="o_mail_col_mv o_mail_col_container">
+                            <div>
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_two_cols_2.jpg" class="d-block mx-auto" alt="Your Picture" />
                                 <h4 class="text-center">Column title</h4>
                                 <p class="text-center o_mail_no_margin">
                                     Write one paragraph describing your product,
@@ -377,7 +388,7 @@
                                     your content needs to be useful to your readers.
                                 </p>
                                 <div class="text-center" style="margin-top:15px;">
-                                    <a href="#" class="btn btn-link">Read More...</a>
+                                    <a role="button" href="#" class="btn btn-link">Read More...</a>
                                 </div>
                             </div>
                         </td>
@@ -394,41 +405,41 @@
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_v_padding o_mail_col_table">
                 <tbody>
                     <tr>
-                        <td style="vertical-align:top;width:180px;" class="o_mail_col_mv">
-                            <div class="o_mail_col_container">
-                                <img src="/web/image/mass_mailing.s_default_image_block_three_cols_1" class="center-block" alt="Your Picture" />
+                        <td style="vertical-align:top;width:180px;" class="o_mail_col_mv o_mail_col_container">
+                            <div>
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_three_cols_1.jpg" class="d-block mx-auto" alt="Your Picture" />
                                 <h4 class="text-center">Column Title</h4>
                                 <p class="text-center o_mail_no_margin">
                                     A short description
                                 </p>
                                 <div class="text-center" style="margin-top:15px;">
-                                    <a href="#" class="btn btn-link">Read More...</a>
+                                    <a role="button" href="#" class="btn btn-link">Read More...</a>
                                 </div>
                             </div>
                         </td>
 
-                        <td style="vertical-align:top;width:180px;" class="o_mail_col_mv">
-                            <div class="o_mail_col_container">
-                                <img src="/web/image/mass_mailing.s_default_image_block_three_cols_2" class="center-block" alt="Your Picture" />
+                        <td style="vertical-align:top;width:180px;" class="o_mail_col_mv o_mail_col_container">
+                            <div>
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_three_cols_2.jpg" class="d-block mx-auto" alt="Your Picture" />
                                 <h4 class="text-center">Column Title</h4>
                                 <p class="text-center o_mail_no_margin">
                                     A short description
                                 </p>
                                 <div class="text-center" style="margin-top:15px;">
-                                    <a href="#" class="btn btn-link">Read More...</a>
+                                    <a role="button" href="#" class="btn btn-link">Read More...</a>
                                 </div>
                             </div>
                         </td>
 
-                        <td style="vertical-align:top;width:180px;" class="o_mail_col_mv">
-                            <div class="o_mail_col_container">
-                                <img src="/web/image/mass_mailing.s_default_image_block_three_cols_3" class="center-block" alt="Your Picture" />
+                        <td style="vertical-align:top;width:180px;" class="o_mail_col_mv o_mail_col_container">
+                            <div>
+                                <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_three_cols_3.jpg" class="d-block mx-auto" alt="Your Picture" />
                                 <h4 class="text-center">Column Title</h4>
                                 <p class="text-center o_mail_no_margin">
                                     A short description
                                 </p>
                                 <div class="text-center" style="margin-top:15px;">
-                                    <a href="#" class="btn btn-link">Read More...</a>
+                                    <a role="button" href="#" class="btn btn-link">Read More...</a>
                                 </div>
                             </div>
                         </td>
@@ -446,13 +457,13 @@
                 <tbody>
                     <tr>
                         <td style="width:270px;text-align:center;vertical-align:middle" class="o_mail_col_mv o_mail_img_container o_mail_h_padding o_mail_v_padding">
-                            <img src="/web/image/mass_mailing.s_default_image_block_image_text" class="center-block" alt="Your Picture" />
+                            <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_image_text.jpg" class="d-block mx-auto" alt="Your Picture" />
                         </td>
                         <td style="width:270px;vertical-align:middle;text-align:center;" class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
                             <h3>Omnichannel sales</h3>
                             <p class="o_mail_no_margin" style="text-align:justify;">Get your inside sales (CRM) fully integrated with online sales (eCommerce), in-store sales (Point of Sale) and marketplaces like eBay and Amazon.</p>
                             <div class="text-center" style="margin-top:15px;">
-                                <a href="#" class="btn btn-link">Read More...</a>
+                                <a role="button" href="#" class="btn btn-link">Read More...</a>
                             </div>
                         </td>
                     </tr>
@@ -468,15 +479,15 @@
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles">
                 <tbody>
                     <tr>
-                        <td style="width:270px;vertical-align:middle;text-align:center;" class="o_mail_col_mvo_mail_col_mv o_mail_h_padding o_mail_v_padding">
+                        <td style="width:270px;vertical-align:middle;text-align:center;" class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
                             <h3>A unique value</h3>
                             <p class="o_mail_no_margin" style="text-align:justify;">The open source model of Odoo has allowed us to leverage thousands of developers and business experts to build hundreds of apps in just a few years.</p>
                             <div class="text-center" style="margin-top:15px;">
-                                <a href="#" class="btn btn-link">Read More...</a>
+                                <a role="button" href="#" class="btn btn-link">Read More...</a>
                             </div>
                         </td>
-                        <td style="width:270px;text-align:center;vertical-align:middle" class="o_mail_img_container o_mail_h_padding o_mail_v_padding">
-                            <img src="/web/image/mass_mailing.s_default_image_block_text_image" class="center-block" alt="Your Picture" />
+                        <td style="width:270px;text-align:center;vertical-align:middle" class="o_mail_col_mv o_mail_img_container o_mail_h_padding o_mail_v_padding">
+                            <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_text_image.jpg" class="d-block mx-auto" alt="Your Picture" />
                         </td>
                     </tr>
                 </tbody>
@@ -488,16 +499,20 @@
 <template id="s_mail_block_image" name="Image">
     <div class="o_mail_block_image">
         <div class="o_mail_snippet_general">
-            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_h_padding">
+            <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles">
                 <tbody>
                     <tr>
-                        <td width="100%" align="center" style="text-align:center" class="">
-                            <img src="/web/image/mass_mailing.s_default_image_block_image" class="center-block" alt="Your Picture" />
+                        <td width="100%" align="center" style="text-align:center" class="o_mail_h_padding">
+                            <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_image.jpg" class="d-block mx-auto" alt="Your Picture" />
                         </td>
                     </tr>
                     <tr>
-                        <td width="100%" class="o_mail_col_mv o_mail_v_padding bg-beta">
-                            <p class="text-center">With strong technical foundations, Odoo's framework is unique. It provides <strong>top notch usability that scales across all apps</strong>.</p>
+                        <td width="100%" align="center" style="text-align:center" class="o_mail_h_padding">
+                            <table>
+                                <td class="bg-o-color-2 o_mail_v_padding">
+                                    <p class="text-center">With strong technical foundations, Odoo's framework is unique. It provides <strong>top notch usability that scales across all apps</strong>.</p>
+                                </td>
+                            </table>
                         </td>
                     </tr>
                 </tbody>
@@ -512,7 +527,7 @@
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding">
                 <tbody>
                     <tr>
-                        <td valign="top" style="width:100%;" class="o_mail_v_padding">
+                        <td valign="top" style="width:100%;" class="o_mail_v_padding o_mail_no_colorpicker">
                             <div style="width:100%;" class="separator"></div>
                         </td>
                     </tr>
@@ -528,20 +543,20 @@
             <table class="o_mail_table_styles o_mail_full_width_padding" align="center" cellpadding="0" cellspacing="0">
                 <tbody>
                     <tr>
-                        <td class="text-center o_mail_h_padding o_mail_v_padding bg-beta">
+                        <td class="text-center o_mail_h_padding o_mail_v_padding bg-o-color-2">
                             <h3 style="margin:10px 0;">Apps That Help You Grow Your Business</h3>
                         </td>
                     </tr>
                     <tr>
-                        <td class="o_mail_h_padding o_mail_v_padding bg-beta" style="padding:10px;">
+                        <td class="text-center o_mail_h_padding o_mail_v_padding bg-o-color-2" style="padding:10px;">
                             &amp;nbsp;
-                            <a href="#" class="btn btn-primary">My Account</a>
+                            <a role="button" href="#" class="btn btn-primary">My Account</a>
                             &amp;nbsp;
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <div class="bg-beta">
+                            <div class="bg-o-color-2">
                                 &amp;nbsp;
                             </div>
                         </td>
@@ -559,8 +574,8 @@
                 <tbody>
                     <tr>
                         <td class="o_mail_v_padding">
-                            <div class="text-center center-block">
-                                <p class="o_mail_display_coupon o_mail_no_margin text-center text-beta" style="font-weight:800;">
+                            <div class="text-center d-block mx-auto">
+                                <p class="o_mail_display_coupon o_mail_no_margin text-center text-o-color-2" style="font-weight:800;">
                                     $20
                                 </p>
                                 <h3 class="o_mail_no_margin">OFF YOUR NEXT ORDER!</h3>
@@ -573,7 +588,7 @@
                                 Use This Promo Code BEFORE 1st of August
                             </p>
                             <p class="o_mail_h_padding text-center">
-                                <small>CODE</small>:   <strong class="o_code h3">45A9E77DGW8455</strong>
+                                <span style="line-height: 30px;"><small>CODE: </small></span><strong class="o_code h3">45A9E77DGW8455</strong>
                             </p>
                             <p class="text-center">
                                 and save $20 on your next order!
@@ -582,7 +597,7 @@
                     </tr>
                     <tr>
                         <td class="mb16 mt16 text-center">
-                            <a class="btn btn-primary">Use now</a>
+                            <a role="button" href="#" class="btn btn-primary">Use now</a>
                         </td>
                     </tr>
                 </tbody>
@@ -598,11 +613,11 @@
                 <tbody>
                     <tr>
                         <td class="o_mail_h_padding o_mail_v_padding text-center o_mail_col_mv" width="250">
-                            <table>
+                            <table class="o_mail_table_styles">
                                 <tr>
                                     <td>
-                                        <p class="o_mail_display_coupon text-beta text-center o_mail_no_margin" style="font-weight:800;">20%</p>
-                                        <h4 class="text-beta text-center mt0 mb16" style="font-weight:800;">OFF</h4>
+                                        <p class="o_mail_display_coupon text-o-color-2 text-center o_mail_no_margin" style="font-weight:800;">20%</p>
+                                        <h4 class="text-o-color-2 text-center mt0 mb16" style="font-weight:800;">OFF</h4>
                                     </td>
                                 </tr>
                                 <tr>
@@ -612,7 +627,7 @@
                                 </tr>
                                 <tr>
                                     <td class="text-center">
-                                        <a href="#" class="btn btn-primary">Redeem Discount!</a>
+                                        <a role="button" href="#" class="btn btn-primary">Redeem Discount!</a>
                                         &amp;nbsp;
                                     </td>
                                 </tr>
@@ -633,12 +648,14 @@
         <div class="o_mail_snippet_general">
             <table align="center" cellpadding="0" cellspacing="0" class="o_mail_table_styles">
                 <tr>
-                    <td style="width:25%;min-height: 150px;vertical-align:middle;" class="o_mail_h_padding o_mail_v_padding bg-beta text-center o_mail_col_mv">
-                        <h3 class="o_mail_no_margin">21 Jul</h3>
-                        <p class="o_mail_no_margin">ALL DAY</p>
+                    <td style="width:25%;min-height: 150px;vertical-align:middle;" class="bg-o-color-2 text-center o_mail_col_mv">
+                        <div class="o_mail_h_padding o_mail_v_padding">
+                            <h3 class="o_mail_no_margin">21 Jul</h3>
+                            <p class="o_mail_no_margin">ALL DAY</p>
+                        </div>
                     </td>
-                    <td style="width:25%;min-height: 150px;" class="text-center bg-delta o_mail_col_mv">
-                        <img src="/web/image/mass_mailing.s_default_image_block_event" class="center-block" alt="Your Picture" />
+                    <td style="width:25%;min-height: 150px;" class="text-center bg-o-color-4 o_mail_col_mv">
+                        <img src="/mass_mailing/static/src/img/theme_basic/s_default_image_block_event.jpg" class="d-block mx-auto" alt="Your Picture" />
                     </td>
                     <td class="o_mail_h_padding o_mail_v_padding o_mail_col_mv" style="min-height: 150px;">
                         <div style="min-height: 111px">
@@ -649,8 +666,8 @@
                             </p>
                         </div>
                         <div class="small mt16">
-                            <a href="#" class="btn btn-sm btn-primary">Registration</a>
-                            <a href="#" class="btn btn-sm btn-link" style="margin-left:10px">More Info</a>
+                            <a role="button" href="#" class="btn btn-primary">Registration</a>
+                            <a role="button" href="#" class="btn btn-link" style="margin-left:10px">More Info</a>
                         </div>
                     </td>
                 </tr>
@@ -666,11 +683,11 @@
                 <tbody>
                     <tr>
                         <td class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
-                            <table class="o_mail_table_styles">
+                            <table align="center">
                                 <tr>
                                     <td rowspan="2" class="text-right">
                                         &amp;nbsp;
-                                        <span class="fa fa-compass fa-2x text-delta"></span>
+                                        <span class="fa fa-compass fa-2x text-o-color-4" role="img" aria-label="Choose" title="Choose"></span>
                                         &amp;nbsp;
                                     </td>
                                     <td style="padding-left:10px;">
@@ -681,11 +698,11 @@
                             </table>
                         </td>
                         <td class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
-                            <table class="o_mail_table_styles">
+                            <table align="center">
                                 <tr>
                                     <td rowspan="2" class="text-right">
                                         &amp;nbsp;
-                                        <span class="fa fa-credit-card fa-2x text-delta"></span>
+                                        <span class="fa fa-credit-card fa-2x text-o-color-4" role="img" aria-label="Order" title="Order"></span>
                                         &amp;nbsp;
                                     </td>
                                     <td style="padding-left:10px;">
@@ -696,11 +713,11 @@
                             </table>
                         </td>
                         <td class="o_mail_col_mv o_mail_h_padding o_mail_v_padding">
-                            <table class="o_mail_table_styles">
+                            <table align="center">
                                 <tr>
                                     <td rowspan="2" class="text-right">
                                         &amp;nbsp;
-                                        <span class="fa fa-smile-o fa-2x text-delta"></span>
+                                        <span class="fa fa-smile-o fa-2x text-o-color-4" role="img" aria-label="Enjoy" title="Enjoy"></span>
                                         &amp;nbsp;
                                     </td>
                                     <td style="padding-left:10px;">
@@ -723,13 +740,18 @@
             <table align="center" cellspacing="0" cellpadding="0" class="o_mail_table_styles o_mail_full_width_padding">
                 <tbody>
                     <tr>
+                        <td class="o_mail_footer_social">
+                            <t t-call="mass_mailing.social_links"/>
+                        </td>
+                    </tr>
+                    <tr>
                         <td class="o_mail_footer_links">
-                            <a href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                            <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                         </td>
                     </tr>
                     <tr>
                         <td>
-                            <p class="o_mail_footer_copy"><span class="fa fa-copyright"/> 2016 All Rights Reserved</p>
+                            <p class="o_mail_footer_copy"><span class="fa fa-copyright" role="img" aria-label="Copyright" title="Copyright"/> 2016 All Rights Reserved</p>
                         </td>
                     </tr>
                 </tbody>
@@ -749,16 +771,93 @@
                                 <strong><t t-esc="res_company.partner_id.name"/></strong>
                             </p>
                             <div class="o_mail_footer_links">
-                                <a href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
+                                <a role="button" href="/unsubscribe_from_list" class="btn btn-link">Unsubscribe</a>
                             </div>
                             <div>
-                                <p class="o_mail_footer_copy"><span class="fa fa-copyright"/> 2016 All Rights Reserved</p>
+                                <p class="o_mail_footer_copy"><span class="fa fa-copyright" role="img" aria-label="Copyright" title="Copyright"/> 2016 All Rights Reserved</p>
                             </div>
+                        </td>
+                        <td class="o_mail_footer_social">
+                            <t t-call="mass_mailing.social_links"/>
                         </td>
                     </tr>
                 </tbody>
             </table>
         </div>
+    </div>
+</template>
+
+<template id="social_links">
+
+    <t t-set="social_links" t-value="company_id._get_social_media_links()"/>
+
+    <a t-if="social_links.get('social_facebook')" t-att-href="social_links.get('social_facebook')" aria-label="Facebook" title="Facebook">
+        <span class="fa fa-facebook"></span>
+    </a>
+    <a t-if="social_links.get('social_linkedin')" t-att-href="social_links.get('social_linkedin')" style="margin-left:10px" aria-label="LinkedIn" title="LinkedIn">
+        <span class="fa fa-linkedin"></span>
+    </a>
+    <a t-if="social_links.get('social_twitter')" t-att-href="social_links.get('social_twitter')" style="margin-left:10px" aria-label="Twitter" title="Twitter">
+        <span class="fa fa-twitter"></span>
+    </a>
+    <a t-if="social_links.get('social_instagram')" t-att-href="social_links.get('social_instagram')" style="margin-left:10px" aria-label="Instagram" title="Instagram">
+        <span class="fa fa-instagram"></span>
+    </a>
+</template>
+
+<!-- Snippet themes Options -->
+<template id="snippet_options">
+    <t t-call="web_editor.snippet_options"/>
+    <t t-raw="0"/>
+
+    <div data-js="mass_mailing_sizing_x"
+        data-selector="img, .mv, .col_mv, td, th"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-js="mass_mailing_table_item"
+        data-selector="td, th"
+        data-exclude=".o_mail_no_options"/>
+
+    <div data-js="table_row"
+        data-selector="tr:has(> .row), tr:has(> .col_mv)"
+        data-exclude=".o_mail_no_options"
+        data-drop-near="tr:has(> .row), tr:has(> .col_mv)"/>
+
+    <div data-js="table_column"
+        data-selector=".col>td, .col>th"
+        data-exclude=".o_mail_no_options"
+        data-drop-near=".col>td, .col>th"/>
+
+    <div data-js="table_column_mv"
+        data-selector=".col_mv, td, th"
+        data-exclude=".o_mail_no_options"
+        data-drop-near=".col_mv, td, th"/>
+
+    <t t-set="mailing_content_selector" t-translation="off">.note-editable > div:not(.o_layout), .note-editable .oe_structure > div, .oe_snippet_body</t>
+    <div data-js="content"
+        t-att-data-selector="mailing_content_selector"
+        data-exclude=".o_mail_no_options"
+        data-drop-near="[data-oe-field='body_html']:not(:has(.o_layout)) > *, .oe_structure > *"
+        data-drop-in="[data-oe-field='body_html']:not(:has(.o_layout)), .oe_structure"/>
+
+    <div data-js="SnippetSave"
+        t-att-data-selector="mailing_content_selector">
+        <we-button class="fa fa-fw fa-save"
+                   title="Save the block to use it elsewhere"
+                   data-save-snippet=""
+                   data-no-preview="true"/>
+    </div>
+
+    <div data-js="sizing_y"
+        data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
+        data-exclude=".o_mail_no_resize, .o_mail_no_options"/>
+
+    <div data-selector=".note-editable > div:not(.o_layout), .note-editable .oe_structure > div, td, th"
+         data-exclude=".o_mail_no_colorpicker, .o_mail_no_options">
+        <we-colorpicker string="Background Color"
+            data-select-style="true"
+            data-css-property="background-color"
+            data-color-prefix="bg-"/>
     </div>
 </template>
 </odoo>

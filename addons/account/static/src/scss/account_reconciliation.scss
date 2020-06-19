@@ -1,0 +1,367 @@
+.progress-reconciliation {
+    .progress-bar {
+        font-size: 1.08333333rem;
+        height: 14px;
+        background-color: $o-enterprise-color;
+        span {
+            display: contents;
+        }
+    }
+}
+
+.o_reconciliation {
+
+    .o_filter_input_wrapper {
+        position: relative;
+        width: 150px;
+        margin: 0.5rem !important;
+        .searchIcon {
+            position: absolute;
+            right: 10px;
+        }
+        .o_filter_input {
+            border: none;
+            border-bottom: 1px black solid;
+        }
+    }
+
+    .import_to_suspense {
+        margin: 0.5rem !important;
+    }
+
+    .notification_area {
+        clear: both;
+    }
+
+    .o_view_noreconciliation {
+        max-width: none;
+        padding: 0 10%;
+        color: $o-main-color-muted;
+        font-size: 125%;
+    }
+
+    .accounting_view {
+        width: 100%;
+
+        .cell_left {
+            border-right: 1px solid #333;
+            padding-right: 5px;
+        }
+        .edit_amount {
+            margin-left: 20px;
+            color: #bbb;
+        }
+        .cell:hover .edit_amount {
+            color: #00A09D;
+        }
+        .strike_amount {
+            text-decoration: line-through;
+        }
+        tbody tr:hover .cell_account_code::before {
+            content: "\f068";
+            font-family: FontAwesome;
+            position: relative;
+            margin-left: -17px;
+            left: -4px;
+            line-height: 0;
+            padding: 3px 2px 5px 5px;
+        }
+
+    }
+
+    .o_multi_currency {
+        margin-right: 5px;
+        &.o_multi_currency_color_0 {
+            color: #dd6666;
+        }
+        &.o_multi_currency_color_1 {
+            color: #aaaaaa;
+        }
+        &.o_multi_currency_color_2 {
+            color: #66dd66;
+        }
+        &.o_multi_currency_color_3 {
+            color: #6666dd;
+        }
+        &.o_multi_currency_color_4 {
+            color: #dddd66;
+        }
+        &.o_multi_currency_color_5 {
+            color: #dd66dd;
+        }
+        &.o_multi_currency_color_6 {
+            color: #66dddd;
+        }
+        &.o_multi_currency_color_7 {
+            color: #aaa333;
+        }
+    }
+
+    .o_reconciliation_line {
+        margin-bottom: 30px;
+        table {
+            width: 100%;
+            vertical-align: top;
+        }
+        tbody tr {
+            cursor: pointer;
+        }
+        tr.already_reconciled {
+            color: $o-account-info-color;
+        }
+        tr.invalid {
+            text-decoration: line-through;
+        }
+        td {
+            padding: 1px 2px;
+        }
+        thead td {
+            border-top: $o-account-light-border;
+            padding-top: 4px;
+            padding-bottom: 5px;
+            background-color: $o-account-initial-line-background;
+        }
+        tfoot td {
+            color: #bbb;
+        }
+
+        /* columns */
+
+        .cell_action {
+            width: 15px;
+            color: gray('700');
+            background: #fff;
+            border: 0;
+            text-align: center;
+            .fa-add-remove:before {
+                content: "";
+            }
+        }
+        tr:hover .cell_action .fa-add-remove:before {
+            content: "\f068";
+        }
+        .is_tax .cell_action .fa-add-remove:before {
+            position: relative;
+            top: -18px;
+        }
+        .cell_account_code {
+            width: 80px;
+            padding-left: 5px;
+        }
+        .cell_due_date {
+            width: 100px;
+        }
+        .cell_label {
+            width: auto;
+        }
+        .cell_left {
+            padding-right: 5px;
+        }
+        .cell_right, .cell_left {
+            text-align: right;
+            width: 120px;
+        }
+        .cell_info_popover {
+            text-align: right;
+            width: 15px;
+            color: #ccc;
+
+            &:empty {
+                padding: 0;
+                width: 0;
+            }
+        }
+
+        table.accounting_view {
+            .cell_right, .cell_left, .cell_label, .cell_due_date, .cell_account_code,.cell_info_popover {
+                box-shadow: 0 1px 0 #EAEAEA;
+            }
+        }
+        /* info popover */
+        .popover {
+            max-width: none;
+        }
+
+        table.details {
+            vertical-align: top;
+            td:first-child {
+                vertical-align: top;
+                padding-right: 10px;
+                font-weight: bold;
+            }
+        }
+
+        tr.one_line_info {
+            td {
+                padding-top: 10px;
+                text-align: center;
+                color: $o-account-info-color;
+            }
+        }
+
+        /* Icons */
+
+        .toggle_match, .toggle_create {
+            transform: rotate(0deg);
+            transition: transform 300ms ease 0s;
+        }
+        .visible_toggle, &[data-mode="match"] .toggle_match, &[data-mode="create"] .toggle_create {
+            visibility: visible !important;
+            transform: rotate(90deg);
+        }
+        .toggle_create {
+            font-size: 10px;
+        }
+
+        /* Match view & Create view */
+        > .o_notebook {
+            display: none;
+
+            > .o_notebook_headers {
+                margin-right: 0;
+                margin-left: 0;
+            }
+        }
+
+        > .o_notebook > .tab-content > div {
+            border: 1px solid #ddd;
+            border-top: 0;
+        }
+
+        > .o_notebook .match table tr:hover {
+            background-color: #eee;
+        }
+
+        &:not([data-mode="inactive"]) > .o_notebook {
+            display: block;
+        }
+
+        &:not(:focus-within) .o_web_accesskey_overlay {
+            display: none;
+        }
+        &:focus caption .o_buttons button {
+            outline: none;
+            box-shadow: 4px 4px 4px 0px $o-enterprise-color;
+        }
+        &:focus{
+            outline: none;
+            box-shadow: 0 0 0 0;
+        }
+    }
+
+    .o_reconcile_models .btn-primary {
+        margin: 0 2px 3px 0;
+    }
+
+    /* Match view */
+
+    .match {
+        .cell_action .fa-add-remove:before {
+            content: "";
+        }
+        tr:hover .cell_action .fa-add-remove:before {
+            content: "\f067";
+        }
+        .match_controls {
+            padding: 5px 0 5px ($o-account-action-col-width+$o-account-main-table-borders-padding);
+
+            .filter {
+                width: 240px;
+                display: inline-block;
+            }
+
+            .fa-chevron-left, .fa-chevron-right {
+                display: inline-block;
+                cursor: pointer;
+            }
+
+            .fa-chevron-left {
+                margin-right: 10px;
+            }
+
+            .fa-chevron-left.disabled, .fa-chevron-right.disabled {
+                color: #ddd;
+                cursor: default;
+            }
+        }
+        .show_more {
+            display: inline-block;
+            margin-left: ($o-account-action-col-width+$o-account-main-table-borders-padding);
+            margin-top: 5px;
+        }
+    }
+
+    /* Create view */
+    .create {
+        > div > div.quick_add > .o_reconcile_models {
+            max-width: 100%;
+            max-height: 70px;
+            flex-wrap: wrap;
+            overflow: auto;
+
+            & > * {
+                flex-grow: 0;
+            }
+        }
+        .quick_add {
+            margin-bottom: 7px;
+            padding: 0 8px;
+        }
+        .o_group table.o_group_col_6 {
+            width: 49%;
+            margin: 0;
+            vertical-align: top;
+        }
+        .o_group table.o_group_col_6:first-child {
+            margin-left: 8px;
+        }
+        .btn {
+            padding-top: 0;
+            padding-bottom: 0;
+        }
+        .add_line_container {
+            text-align: center;
+            clear: both;
+            color: $o-enterprise-primary-color;
+            cursor: pointer;
+        }
+    }
+
+    .o_notebook .tab-content > .tab-pane {
+        padding: 5px 0;
+    }
+}
+
+/*Manual Reconciliation*/
+.o_manual_statement {
+    .accounting_view {
+        td[colspan="3"] span:first-child {
+            width: 100%;
+            display: inline-block;
+        }
+        td[colspan="2"] {
+            border-bottom: 1px solid #333;
+            text-align: center;
+            width: 240px;
+        }
+        .do_partial_reconcile_true {
+            display: none;
+        }
+    }
+}
+
+// This is rtl language specific fix
+// It will flip the fa-fa play icon in left direction
+.o_rtl {
+    .o_reconciliation {
+        .o_reconciliation_line {
+            .toggle_match, .toggle_create {
+                transform: rotate(180deg);
+                transition: transform 300ms;
+            }
+            .visible_toggle, &[data-mode="match"] .toggle_match, &[data-mode="create"] .toggle_create {
+                transform: rotate(270deg);
+            }
+        }
+    }
+}

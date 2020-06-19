@@ -23,14 +23,19 @@ odoo.define('web.AbstractView', function (require) {
  * in most case discarded.
  */
 
-var ajax = require('web.ajax');
-var Class = require('web.Class');
-var Context = require('web.Context');
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
+const ControlPanelModel = require('web.ControlPanelModel');
+var mvc = require('web.mvc');
+var SearchPanel = require('web.SearchPanel');
+var viewUtils = require('web.viewUtils');
 
-var AbstractView = Class.extend({
+const { Component } = owl;
+
+var Factory = mvc.Factory;
+
+var AbstractView = Factory.extend({
     // name displayed in view switchers
     display_name: '',
     // indicates whether or not the view is mobile-friendly
@@ -40,17 +45,23 @@ var AbstractView = Class.extend({
     // multi_record is used to distinguish views displaying a single record
     // (e.g. FormView) from those that display several records (e.g. ListView)
     multi_record: true,
-
-    // determine if a search view should be displayed in the control panel and
-    // allowed to interact with the view.  Currently, the only not searchable
-    // views are the form view and the diagram view.
-    searchable: true,
-
-    config: {
+    // viewType is the type of the view, like 'form', 'kanban', 'list'...
+    viewType: undefined,
+    // determines if a search bar is available
+    withSearchBar: true,
+    // determines the search menus available and their orders
+    searchMenuTypes: ['filter', 'groupBy', 'favorite'],
+    // determines if a control panel should be instantiated
+    withControlPanel: true,
+    // determines if a search panel could be instantiated
+    withSearchPanel: true,
+    // determines the MVC components to use
+    config: _.extend({}, Factory.prototype.config, {
         Model: AbstractModel,
         Renderer: AbstractRenderer,
         Controller: AbstractController,
-    },
+        SearchPanel: SearchPanel,
+    }),
 
     /**
      * The constructor function is supposed to set 3 variables: rendererParams,
@@ -60,61 +71,152 @@ var AbstractView = Class.extend({
      * @constructs AbstractView
      *
      * @param {Object} viewInfo
-     * @param {Object} viewInfo.arch
+     * @param {Object|string} viewInfo.arch
      * @param {Object} viewInfo.fields
      * @param {Object} viewInfo.fieldsInfo
      * @param {Object} params
-     * @param {string} params.modelName The actual model name
-     * @param {Object} params.context
+     * @param {string} [params.modelName]
+     * @param {Object} [params.action={}]
+     * @param {Object} [params.context={}]
+     * @param {string} [params.controllerID]
      * @param {number} [params.count]
-     * @param {string[]} params.domain
-     * @param {string[]} params.groupBy
      * @param {number} [params.currentId]
+     * @param {Object} [params.controllerState]
+     * @param {string} [params.displayName]
+     * @param {Array[]} [params.domain=[]]
+     * @param {Object[]} [params.dynamicFilters] transmitted to the
+     *   ControlPanel
      * @param {number[]} [params.ids]
-     * @param {string} [params.action.help]
+     * @param {boolean} [params.isEmbedded=false]
+     * @param {Object} [params.searchQuery={}]
+     * @param {Object} [params.searchQuery.context={}]
+     * @param {Array[]} [params.searchQuery.domain=[]]
+     * @param {string[]} [params.searchQuery.groupBy=[]]
+     * @param {Object} [params.userContext={}]
+     * @param {boolean} [params.withControlPanel=AbstractView.prototype.withControlPanel]
+     * @param {boolean} [params.withSearchPanel=AbstractView.prototype.withSearchPanel]
      */
     init: function (viewInfo, params) {
+        this._super.apply(this, arguments);
+
+        var action = params.action || {};
+        params = _.defaults(params, this._extractParamsFromAction(action));
+
+        // in general, the fieldsView has to be processed by the View (e.g. the
+        // arch is a string that needs to be parsed) ; the only exception is for
+        // inline form views inside form views, as they are processed alongside
+        // the main view, but they are opened in a FormViewDialog which
+        // instantiates another FormView (unlike kanban or list subviews for
+        // which only a Renderer is instantiated)
+        if (typeof viewInfo.arch === 'string') {
+            this.fieldsView = this._processFieldsView(viewInfo);
+        } else {
+            this.fieldsView = viewInfo;
+        }
+        this.arch = this.fieldsView.arch;
+        this.fields = this.fieldsView.viewFields;
+        this.userContext = params.userContext || {};
+        this.withControlPanel = this.withControlPanel && params.withControlPanel;
+        const searchPanelDisabled = 'search_panel' in params.context && !params.search_panel;
+        this.withSearchPanel = this.withSearchPanel && this.multi_record &&
+                               params.withSearchPanel && !searchPanelDisabled;
+
+        // the boolean parameter 'isEmbedded' determines if the view should be
+        // considered as a subview. For now this is only used by the graph
+        // controller that appends a 'Group By' button beside the 'Measures'
+        // button when the graph view is embedded.
+        var isEmbedded = params.isEmbedded || false;
+
         this.rendererParams = {
-            arch: viewInfo.arch,
-            noContentHelp: params.action && params.action.help,
+            arch: this.arch,
+            isEmbedded: isEmbedded,
+            noContentHelp: params.noContentHelp,
         };
 
         this.controllerParams = {
-            modelName: params.modelName,
+            actionViews: params.actionViews,
             activeActions: {
-                edit: viewInfo.arch.attrs.edit ? JSON.parse(viewInfo.arch.attrs.edit) : true,
-                create: viewInfo.arch.attrs.create ? JSON.parse(viewInfo.arch.attrs.create) : true,
-                delete: viewInfo.arch.attrs.delete ? JSON.parse(viewInfo.arch.attrs.delete) : true,
-                duplicate: viewInfo.arch.attrs.duplicate ? JSON.parse(viewInfo.arch.attrs.duplicate) : true,
+                edit: this.arch.attrs.edit ? !!JSON.parse(this.arch.attrs.edit) : true,
+                create: this.arch.attrs.create ? !!JSON.parse(this.arch.attrs.create) : true,
+                delete: this.arch.attrs.delete ? !!JSON.parse(this.arch.attrs.delete) : true,
+                duplicate: this.arch.attrs.duplicate ? !!JSON.parse(this.arch.attrs.duplicate) : true,
             },
+            bannerRoute: this.arch.attrs.banner_route,
+            controllerID: params.controllerID,
+            displayName: params.displayName,
+            isEmbedded: isEmbedded,
+            modelName: params.modelName,
+            viewType: this.viewType,
+            withControlPanel: this.withControlPanel,
+            withSearchPanel: this.withSearchPanel,
         };
 
+        var controllerState = params.controllerState || {};
+        var currentId = controllerState.currentId || params.currentId;
         this.loadParams = {
             context: params.context,
             count: params.count || ((this.controllerParams.ids !== undefined) &&
                    this.controllerParams.ids.length) || 0,
             domain: params.domain,
-            groupedBy: params.groupBy,
             modelName: params.modelName,
-            res_id: params.currentId,
-            res_ids: params.ids,
+            res_id: currentId,
+            res_ids: controllerState.resIds || params.ids || (currentId ? [currentId] : undefined),
         };
-        if (params.modelName) {
-            this.loadParams.modelName = params.modelName;
-        }
-        // default_order is like:
-        //   'name,id desc'
-        // but we need it like:
-        //   [{name: 'id', asc: false}, {name: 'name', asc: true}]
-        var defaultOrder = viewInfo.arch.attrs.default_order;
+        var defaultOrder = this.arch.attrs.default_order;
         if (defaultOrder) {
             this.loadParams.orderedBy = _.map(defaultOrder.split(','), function (order) {
                 order = order.trim().split(' ');
                 return {name: order[0], asc: order[1] !== 'desc'};
             });
         }
+        if (params.searchQuery) {
+            this._updateMVCParams(params.searchQuery);
+        }
 
-        this.userContext = params.userContext;
+        if (this.withControlPanel) {
+            this.controlPanelModelConfig = {
+                env: Component.env,
+                actionId: action.id,
+                actionContext: Object.assign({}, this.loadParams.context || {}),
+                actionDomain: this.loadParams.domain || [],
+                modelName: params.modelName,
+                // control initialization
+                activateDefaultFavorite: params.activateDefaultFavorite,
+                dynamicFilters: params.dynamicFilters,
+                viewInfo: params.controlPanelFieldsView,
+                withSearchBar: params.withSearchBar,
+                // used to avoid timeRanges in query
+                searchMenuTypes: params.searchMenuTypes,
+                // avoid work to initialize
+                importedState: controllerState.cpState,
+            };
+
+            const controlPanelModel = new ControlPanelModel(this.controlPanelModelConfig);
+
+            const controlPanelProps = {
+                action,
+                breadcrumbs: params.breadcrumbs,
+                controlPanelModel,
+                fields: this.fields,
+                searchMenuTypes: params.searchMenuTypes,
+                view: this.fieldsView,
+                views: action.views && action.views.filter(v => v.multiRecord === this.multi_record),
+                withBreadcrumbs: params.withBreadcrumbs,
+                withSearchBar: params.withSearchBar,
+            };
+            this.controllerParams.controlPanelModel = controlPanelModel;
+            this.controllerParams.controlPanelProps = controlPanelProps;
+        }
+
+        if (this.withSearchPanel) {
+            this.searchPanelParams = {
+                arch: (params.controlPanelFieldsView || {}).arch,
+                defaultNoFilter: params.searchPanelDefaultNoFilter,
+                fields: this.fields,
+                model: this.loadParams.modelName,
+                state: controllerState.spState,
+            };
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -122,67 +224,52 @@ var AbstractView = Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Main method of the view class. Create a controller, and make sure that
-     * data and libraries are loaded.
-     *
-     * There is a unusual thing going in this method with parents: we create
-     * renderer/model with parent as parent, then we have to reassign them at
-     * the end to make sure that we have the proper relationships.  This is
-     * necessary to solve the problem that the controller need the model and the
-     * renderer to be instantiated, but the model need a parent to be able to
-     * load itself, and the renderer needs the data in its constructor.
-     *
-     * @param {Widget} parent The parent of the resulting Controller (most
-     *      likely a view manager)
-     * @returns {Deferred} The deferred resolves to a controller
+     * @override
      */
-    getController: function (parent) {
-        var self = this;
-        return $.when(this._loadData(parent), ajax.loadLibs(this)).then(function () {
-            var model = self.getModel();
-            var state = model.get(arguments[0]);
-            var renderer = self.getRenderer(parent, state);
-            var Controller = self.Controller || self.config.Controller;
-            var controllerParams = _.extend({
-                initialState: state,
-            }, self.controllerParams);
-            var controller = new Controller(parent, model, renderer, controllerParams);
-            renderer.setParent(controller);
-
-            if (!self.model) {
-                // if we have a model, it already has a parent. Otherwise, we
-                // set the controller, so the rpcs from the model actually work
-                model.setParent(controller);
+    getController: async function (parent) {
+        const _super = this._super.bind(this);
+        if (this.withControlPanel) {
+            await this.controllerParams.controlPanelModel.isReady;
+            const query = this.controllerParams.controlPanelModel.getQuery();
+            this._updateMVCParams(query);
+        }
+        let searchPanel = false;
+        if (this.withSearchPanel) {
+            const spProto = this.config.SearchPanel.prototype;
+            const { arch, fields } = this.searchPanelParams;
+            const searchPanelParams = spProto.computeSearchPanelParams(arch, fields, this.viewType);
+            if (searchPanelParams.sections) {
+                this.searchPanelParams.sections = searchPanelParams.sections;
+                this.rendererParams.withSearchPanel = true;
+                searchPanel = await this._createSearchPanel(parent, searchPanelParams);
             }
-            return controller;
-        });
+        }
+        // get the parent of the model if it already exists, as _super will
+        // set the new controller as parent, which we don't want
+        const modelParent = this.model && this.model.getParent();
+        const controller = await _super(...arguments);
+        if (searchPanel) {
+            searchPanel.setParent(controller);
+        }
+        if (modelParent) {
+            // if we already add a model, restore its parent
+            this.model.setParent(modelParent);
+        }
+        return controller;
     },
     /**
-     * Returns the view model or create an instance of it if none
+     * Ensures that only one instance of AbstractModel is created
      *
-     * @param {Widget} parent the parent of the model, if it has to be created
-     * @return {Object} instance of the view model
+     * @override
      */
-    getModel: function (parent) {
+    getModel: function () {
         if (!this.model) {
-            var Model = this.config.Model;
-            this.model = new Model(parent);
+            this.model = this._super.apply(this, arguments);
         }
         return this.model;
     },
     /**
-     * Returns the a new view renderer instance
-     *
-     * @param {Widget} parent the parent of the model, if it has to be created
-     * @param {Object} state the information related to the rendered view
-     * @return {Object} instance of the view renderer
-     */
-    getRenderer: function (parent, state) {
-        var Renderer = this.config.Renderer;
-        return new Renderer(parent, state, this.rendererParams);
-    },
-    /**
-     * this is useful to customize the actual class to use before calling
+     * This is useful to customize the actual class to use before calling
      * createView.
      *
      * @param {Controller} Controller
@@ -196,59 +283,126 @@ var AbstractView = Class.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Load initial data from the model
-     *
      * @private
-     * @param {Widget} parent the parent of the model
-     * @returns {Deferred<*>} a deferred that resolves to whatever the model
-     *   decide to return
+     * @param {Widget} parent
+     * @returns {Promise<SearchPanel>} resolved when the searchPanel is ready
      */
-    _loadData: function (parent) {
-        var model = this.getModel(parent);
-        return model.load(this.loadParams);
+    _createSearchPanel: async function (parent, params) {
+        var defaultValues = {};
+        Object.keys(this.loadParams.context).forEach((key) => {
+            let match = /^searchpanel_default_(.*)$/.exec(key);
+            if (match) {
+                defaultValues[match[1]] = this.loadParams.context[key];
+            }
+        });
+        var controlPanelDomain = this.loadParams.domain;
+        const viewDomain = await this._getViewDomain(parent);
+        var spParams = _.extend({}, this.searchPanelParams, {
+            defaultValues: defaultValues,
+            searchDomain: controlPanelDomain,
+            viewDomain,
+            classes: params.classes || [],
+        });
+        var searchPanel = new this.config.SearchPanel(parent, spParams);
+        this.controllerParams.searchPanel = searchPanel;
+        this.controllerParams.controlPanelDomain = controlPanelDomain;
+        await searchPanel.appendTo(document.createDocumentFragment());
+
+        var searchPanelDomain = searchPanel.getDomain();
+        this.loadParams.domain = controlPanelDomain.concat(searchPanelDomain);
+        return searchPanel;
     },
     /**
-     * Loads the subviews for x2many fields when they are not inline
+     * @private
+     * @param {Object} [action]
+     * @param {Object} [action.context || {}]
+     * @param {boolean} [action.context.no_breadcrumbs=false]
+     * @param {integer} [action.context.active_id]
+     * @param {integer[]} [action.context.active_ids]
+     * @param {Object} [action.controlPanelFieldsView]
+     * @param {string} [action.display_name]
+     * @param {Array[]} [action.domain=[]]
+     * @param {string} [action.help]
+     * @param {integer} [action.id]
+     * @param {integer} [action.limit]
+     * @param {string} [action.name]
+     * @param {string} [action.res_model]
+     * @param {string} [action.target]
+     * @returns {Object}
+     */
+    _extractParamsFromAction: function (action) {
+        action = action || {};
+        var context = action.context || {};
+        var inline = action.target === 'inline';
+        return {
+            actionId: action.id || false,
+            actionViews: action.views || [],
+            activateDefaultFavorite: !context.active_id && !context.active_ids,
+            context: action.context || {},
+            controlPanelFieldsView: action.controlPanelFieldsView,
+            currentId: action.res_id ? action.res_id : undefined,  // load returns 0
+            displayName: action.display_name || action.name,
+            domain: action.domain || [],
+            limit: action.limit,
+            modelName: action.res_model,
+            noContentHelp: action.help,
+            searchMenuTypes: inline ? [] : this.searchMenuTypes,
+            withBreadcrumbs: 'no_breadcrumbs' in context ? !context.no_breadcrumbs : true,
+            withControlPanel: this.withControlPanel,
+            withSearchBar: inline ? false : this.withSearchBar,
+            withSearchPanel: this.withSearchPanel,
+        };
+    },
+    /**
+     * Get the domain defined by the view. It is meant to be overridden. The parent
+     * is provided in case some subcomponents need to be retrieved.
      *
      * @private
-     * @param {Widget} parent the parent of the model, if it has to be created
-     * @returns {Deferred}
+     * @param {Object} parent
+     * @returns {Promise<Array[]>}
      */
-    _loadSubviews: function (parent) {
-        var self = this;
-        var defs = [];
-        if (this.loadParams && this.loadParams.fieldsInfo) {
-            var fields = this.loadParams.fields;
-
-            _.each(this.loadParams.fieldsInfo.form, function (attrs, fieldName) {
-                var field = fields[fieldName];
-                if (field.type !== 'one2many' && field.type !== 'many2many') {
-                    return;
-                }
-
-                attrs.limit = attrs.mode === "tree" ? 80 : 40;
-
-                if (attrs.Widget.prototype.useSubview && !attrs.__no_fetch && !attrs.views[attrs.mode]) {
-                    var context = {};
-                    var regex = /'([a-z]*_view_ref)' *: *'(.*?)'/g;
-                    var matches;
-                    while (matches = regex.exec(attrs.context)) {
-                        context[matches[1]] = matches[2];
-                    }
-                    defs.push(parent.loadViews(
-                            field.relation,
-                            new Context(context, self.userContext, self.loadParams.context),
-                            [[null, attrs.mode === 'tree' ? 'list' : attrs.mode]])
-                        .then(function (views) {
-                            for (var viewName in views) {
-                                attrs.views[viewName] = views[viewName];
-                            }
-                        }));
-                }
-            });
+    _getViewDomain: async function (parent) {
+        return [];
+    },
+    /**
+     * Processes a fieldsView. In particular, parses its arch.
+     *
+     * @private
+     * @param {Object} fieldsView
+     * @param {string} fieldsView.arch
+     * @returns {Object} the processed fieldsView
+     */
+    _processFieldsView: function (fieldsView) {
+        var fv = _.extend({}, fieldsView);
+        fv.arch = viewUtils.parseArch(fv.arch);
+        fv.viewFields = _.defaults({}, fv.viewFields, fv.fields);
+        return fv;
+    },
+    /**
+     * Hook to update the renderer, controller and load params with the result
+     * of a search (i.e. a context, a domain and a groupBy).
+     *
+     * @private
+     * @param {Object} searchQuery
+     * @param {Object} searchQuery.context
+     * @param {Object} [searchQuery.timeRanges]
+     * @param {Array[]} searchQuery.domain
+     * @param {string[]} searchQuery.groupBy
+     */
+    _updateMVCParams: function (searchQuery) {
+        this.loadParams = _.extend(this.loadParams, {
+            context: searchQuery.context,
+            domain: searchQuery.domain,
+            groupedBy: searchQuery.groupBy,
+        });
+        this.loadParams.orderedBy = Array.isArray(searchQuery.orderedBy) && searchQuery.orderedBy.length ?
+                                        searchQuery.orderedBy :
+                                        this.loadParams.orderedBy;
+        if (searchQuery.timeRanges) {
+            this.loadParams.timeRanges = searchQuery.timeRanges;
+            this.rendererParams.timeRanges = searchQuery.timeRanges;
         }
-        return $.when.apply($, defs);
-    }
+    },
 });
 
 return AbstractView;

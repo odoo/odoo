@@ -22,7 +22,7 @@
             <field name="arch" type="xml">
                 <field name="related" position="before">
                     <field name="serialization_field_id"
-                        domain="[('ttype','=','serialized'), ('model_id','=',model_id)]"
+                        context="{'default_model_id': model_id, 'default_ttype': 'serialized'}"
                         attrs="{'readonly': [('state','=','base')]}"/>
                 </field>
             </field>

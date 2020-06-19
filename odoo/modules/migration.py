@@ -5,48 +5,26 @@
 
 from collections import defaultdict
 import glob
+import importlib.util
 import logging
 import os
 from os.path import join as opj
 
 from odoo.modules.module import get_resource_path
 import odoo.release as release
-import odoo.tools as tools
+import odoo.upgrade
 from odoo.tools.parse_version import parse_version
-from odoo.tools import pycompat
-
-if pycompat.PY2:
-    import imp
-    def load_script(path, module_name):
-        fp, fname = tools.file_open(path, pathinfo=True)
-        fp2 = None
-
-        if not isinstance(fp, file):    # pylint: disable=file-builtin
-            # imp.load_source need a real file object, so we create
-            # one from the file-like object we get from file_open
-            fp2 = os.tmpfile()
-            fp2.write(fp.read())
-            fp2.seek(0)
-
-        try:
-            return imp.load_source(module_name, fname, fp2 or fp)
-        finally:
-            if fp:
-                fp.close()
-            if fp2:
-                fp2.close()
-
-else:
-    import importlib.util
-    def load_script(path, module_name):
-        full_path = get_resource_path(*path.split(os.path.sep))
-        spec = importlib.util.spec_from_file_location(module_name, full_path)
-        module = importlib.util.module_from_spec(spec)
-        spec.loader.exec_module(module)
-        return module
-
 
 _logger = logging.getLogger(__name__)
+
+
+def load_script(path, module_name):
+    full_path = get_resource_path(*path.split(os.path.sep)) if not os.path.isabs(path) else path
+    spec = importlib.util.spec_from_file_location(module_name, full_path)
+    module = importlib.util.module_from_spec(spec)
+    spec.loader.exec_module(module)
+    return module
+
 
 class MigrationManager(object):
     """
@@ -55,9 +33,11 @@ class MigrationManager(object):
         function. Theses files must respect a directory tree structure: A 'migrations' folder
         which containt a folder by version. Version can be 'module' version or 'server.module'
         version (in this case, the files will only be processed by this version of the server).
-        Python file names must start by `pre` or `post` and will be executed, respectively,
-        before and after the module initialisation. `end` scripts are run after all modules have
+        Python file names must start by `pre-` or `post-` and will be executed, respectively,
+        before and after the module initialisation. `end-` scripts are run after all modules have
         been updated.
+        A special folder named `0.0.0` can contain scripts that will be run on any version change.
+        In `pre` stage, `0.0.0` scripts are run first, while in `post` and `end`, they are run last.
         Example:
             <moduledir>
             `-- migrations
@@ -70,6 +50,8 @@ class MigrationManager(object):
                 |-- 9.0.1.1                             # processed only on a 9.0 server
                 |   |-- pre-delete_table_z.py
                 |   `-- post-clean-data.py
+                |-- 0.0.0
+                |   `-- end-invariants.py               # processed on all version update
                 `-- foo.py                              # not processed
     """
 
@@ -80,6 +62,13 @@ class MigrationManager(object):
         self._get_files()
 
     def _get_files(self):
+        def _get_upgrade_path(pkg):
+            for path in odoo.upgrade.__path__:
+                upgrade_path = opj(path, pkg)
+                if os.path.exists(upgrade_path):
+                    return upgrade_path
+            return None
+
         def get_scripts(path):
             if not path:
                 return {}
@@ -96,7 +85,8 @@ class MigrationManager(object):
 
             self.migrations[pkg.name] = {
                 'module': get_scripts(get_resource_path(pkg.name, 'migrations')),
-                'maintenance': get_scripts(get_resource_path('base', 'maintenance', 'migrations', pkg.name)),
+                'module_upgrades': get_scripts(get_resource_path(pkg.name, 'upgrades')),
+                'upgrade': get_scripts(_get_upgrade_path(pkg.name)),
             }
 
     def migrate_module(self, pkg, stage):
@@ -116,13 +106,20 @@ class MigrationManager(object):
                 return version  # the version number already containt the server version
             return "%s.%s" % (release.major_version, version)
 
-        def _get_migration_versions(pkg):
+        def _get_migration_versions(pkg, stage):
             versions = sorted({
                 ver
                 for lv in self.migrations[pkg.name].values()
                 for ver, lf in lv.items()
                 if lf
             }, key=lambda k: parse_version(convert_version(k)))
+            if "0.0.0" in versions:
+                # reorder versions
+                versions.remove("0.0.0")
+                if stage == "pre":
+                    versions.insert(0, "0.0.0")
+                else:
+                    versions.append("0.0.0")
             return versions
 
         def _get_migration_files(pkg, version, stage):
@@ -133,8 +130,13 @@ class MigrationManager(object):
 
             mapping = {
                 'module': opj(pkg.name, 'migrations'),
-                'maintenance': opj('base', 'maintenance', 'migrations', pkg.name),
+                'module_upgrades': opj(pkg.name, 'upgrades'),
             }
+
+            for path in odoo.upgrade.__path__:
+                if os.path.exists(opj(path, pkg.name)):
+                    mapping['upgrade'] = opj(path, pkg.name)
+                    break
 
             for x in mapping:
                 if version in m.get(x):
@@ -145,13 +147,15 @@ class MigrationManager(object):
             lst.sort()
             return lst
 
-        parsed_installed_version = parse_version(getattr(pkg, 'load_version', pkg.installed_version) or '')
+        installed_version = getattr(pkg, 'load_version', pkg.installed_version) or ''
+        parsed_installed_version = parse_version(installed_version)
         current_version = parse_version(convert_version(pkg.data['version']))
 
-        versions = _get_migration_versions(pkg)
+        versions = _get_migration_versions(pkg, stage)
 
         for version in versions:
-            if parsed_installed_version < parse_version(convert_version(version)) <= current_version:
+            if ((version == "0.0.0" and parsed_installed_version < current_version)
+               or parsed_installed_version < parse_version(convert_version(version)) <= current_version):
 
                 strfmt = {'addon': pkg.name,
                           'stage': stage,
@@ -173,7 +177,7 @@ class MigrationManager(object):
                     except AttributeError:
                         _logger.error('module %(addon)s: Each %(stage)s-migration file must have a "migrate(cr, installed_version)" function' % strfmt)
                     else:
-                        migrate(self.cr, pkg.installed_version)
+                        migrate(self.cr, installed_version)
                     finally:
                         if mod:
                             del mod

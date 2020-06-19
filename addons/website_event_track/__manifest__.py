@@ -5,7 +5,6 @@
     'name': 'Advanced Events',
     'category': 'Marketing',
     'summary': 'Sponsors, Tracks, Agenda, Event News',
-    'website': 'https://www.odoo.com/page/events',
     'version': '1.0',
     'description': "",
     'depends': ['website_event'],
@@ -16,6 +15,7 @@
         'data/event_track_data.xml',
         'views/event_track_templates.xml',
         'views/event_track_views.xml',
+        'views/event_sponsor_views.xml',
         'views/event_views.xml',
     ],
     'demo': [

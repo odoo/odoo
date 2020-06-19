@@ -4,6 +4,7 @@
 from odoo import http, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.http import request
+from werkzeug.exceptions import NotFound
 
 
 class WebsiteHrRecruitment(http.Controller):
@@ -28,7 +29,8 @@ class WebsiteHrRecruitment(http.Controller):
         Jobs = env['hr.job']
 
         # List jobs available to current UID
-        job_ids = Jobs.search([], order="website_published desc,no_of_recruitment desc").ids
+        domain = request.website.website_domain()
+        job_ids = Jobs.search(domain, order="is_published desc, no_of_recruitment desc").ids
         # Browse jobs as superuser, because address is restricted
         jobs = Jobs.sudo().browse(job_ids)
 
@@ -72,20 +74,27 @@ class WebsiteHrRecruitment(http.Controller):
 
     @http.route('/jobs/add', type='http', auth="user", website=True)
     def jobs_add(self, **kwargs):
-        job = request.env['hr.job'].create({
+        # avoid branding of website_description by setting rendering_bundle in context
+        job = request.env['hr.job'].with_context(rendering_bundle=True).create({
             'name': _('Job Title'),
         })
         return request.redirect("/jobs/detail/%s?enable_editor=1" % slug(job))
 
-    @http.route('/jobs/detail/<model("hr.job"):job>', type='http', auth="public", website=True)
+    @http.route('''/jobs/detail/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def jobs_detail(self, job, **kwargs):
+        if not job.can_access_from_current_website():
+            raise NotFound()
+
         return request.render("website_hr_recruitment.detail", {
             'job': job,
             'main_object': job,
         })
 
-    @http.route('/jobs/apply/<model("hr.job"):job>', type='http', auth="public", website=True)
+    @http.route('''/jobs/apply/<model("hr.job"):job>''', type='http', auth="public", website=True, sitemap=True)
     def jobs_apply(self, job, **kwargs):
+        if not job.can_access_from_current_website():
+            raise NotFound()
+
         error = {}
         default = {}
         if 'website_hr_recruitment_error' in request.session:

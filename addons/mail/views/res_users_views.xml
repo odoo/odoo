@@ -26,13 +26,8 @@
                     <field name="signature" position="before">
                         <field name="notification_type" widget="radio"/>
                     </field>
-                    <field name="signature" position="before">
-                        <field name="alias_id"/>
-                        <field name="alias_contact" attrs="{'invisible': [('alias_id', '=', False)]}"/>
-                    </field>
                 </data>
             </field>
         </record>
-
     </data>
 </odoo>

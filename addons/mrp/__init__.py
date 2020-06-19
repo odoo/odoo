@@ -4,3 +4,28 @@
 from . import models
 from . import wizard
 from . import report
+from . import controller
+
+from odoo import api, SUPERUSER_ID
+
+def _create_warehouse_data(cr, registry):
+    """ This hook is used to add a default manufacture_pull_id, manufacture
+    picking_type on every warehouse. It is necessary if the mrp module is
+    installed after some warehouses were already created.
+    """
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    warehouse_ids = env['stock.warehouse'].search([('manufacture_pull_id', '=', False)])
+    warehouse_ids.write({'manufacture_to_resupply': True})
+
+def uninstall_hook(cr, registry):
+    env = api.Environment(cr, SUPERUSER_ID, {})
+    warehouses = env["stock.warehouse"].search([])
+    subcontracting_routes = warehouses.mapped("pbm_route_id")
+    warehouses.write({"pbm_route_id": False})
+    # Fail unlink means that the route is used somewhere (e.g. route_id on stock.rule). In this case
+    # we don't try to do anything.
+    try:
+        subcontracting_routes.unlink()
+    except:
+        pass
+

@@ -26,5 +26,30 @@
             <field name="warehouse_id" ref="stock.warehouse0"/>
         </record>
 
+        <record id="stock_inventory_customizable_desk_update" model="stock.inventory">
+            <field name="name">Inventory for new Customizable Desks</field>
+        </record>
+
+        <record id="stock_inventory_line_7e" model="stock.inventory.line">
+            <field name="product_id" ref="sale.product_product_4e"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_customizable_desk_update"/>
+            <field name="product_qty">65.0</field>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <record id="stock_inventory_line_7f" model="stock.inventory.line">
+            <field name="product_id" ref="sale.product_product_4f"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_customizable_desk_update"/>
+            <field name="product_qty">70.0</field>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+
+        <function model="stock.inventory" name="action_start">
+            <function eval="[[('state','=','draft'),('id', '=', ref('stock_inventory_customizable_desk_update'))]]" model="stock.inventory" name="search"/>
+        </function>
+        <function model="stock.inventory" name="action_validate">
+            <function eval="[[('state','=','confirm'),('id', '=', ref('stock_inventory_customizable_desk_update'))]]" model="stock.inventory" name="search"/>
+        </function>
     </data>
 </odoo>

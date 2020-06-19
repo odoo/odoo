@@ -5,8 +5,8 @@
             <field name="model">base.gengo.translations</field>
             <field name="arch" type="xml">
                 <form string="Gengo Request Form">
-                    <div class="alert alert-warning text-center" attrs="{'invisible': [('authorized_credentials', '=', True)]}">
-                        <label string="Gengo Public or Private keys are wrong or missing."/>
+                    <div class="alert alert-warning text-center" attrs="{'invisible': [('authorized_credentials', '=', True)]}" role="alert">
+                        <span class="o_form_label">Gengo Public or Private keys are wrong or missing.</span>
                         <button type="object" name="open_company" string="Click here to Configure Gengo Parameters" icon="fa-cogs" class="oe_inline oe_link"/>
                         <field name="authorized_credentials" invisible="1"/>
                     </div>
@@ -23,7 +23,7 @@
                     </group>
                     <footer>
                         <button name="act_update" string="Send" type="object" class="btn-primary"/>
-                        <button name="act_cancel" special="cancel" string="Cancel" type="object" class="btn-default"/>
+                        <button name="act_cancel" special="cancel" string="Cancel" type="object" class="btn-secondary"/>
                     </footer>
                 </form>
             </field>
@@ -33,7 +33,6 @@
             <field name="name">Gengo: Manual Request of Translation</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">base.gengo.translations</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
         </record>

@@ -24,7 +24,7 @@ class WebsiteCustomer(http.Controller):
             if not qs or qs.lower() in loc:
                 yield {'loc': loc}
 
-        dom = [('website_published', '=', True), ('assigned_partner_id', '!=', False)]
+        dom = [('website_published', '=', True), ('assigned_partner_id', '!=', False), ('country_id', '!=', False)]
         dom += sitemap_qs2dom(qs, '/customers/country')
         countries = env['res.partner'].sudo().read_group(dom, ['id', 'country_id'], groupby='country_id')
         for country in countries:
@@ -78,7 +78,7 @@ class WebsiteCustomer(http.Controller):
 
         industries.insert(0, {
             'industry_id_count': partners_count,
-            'industry_id': (0, _("All Sectors of Activity"))
+            'industry_id': (0, _("All Industries"))
         })
 
         # group by country, based on customers found with the search(domain)
@@ -116,7 +116,7 @@ class WebsiteCustomer(http.Controller):
 
         partners = Partner.sudo().search(domain, offset=pager['offset'], limit=self._references_per_page)
         google_map_partner_ids = ','.join(str(it) for it in partners.ids)
-        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
+        google_maps_api_key = request.website.google_maps_api_key
 
         tags = Tag.search([('website_published', '=', True), ('partner_ids', 'in', partners.ids)], order='classname, name ASC')
         tag = tag_id and Tag.browse(tag_id) or False
@@ -132,7 +132,7 @@ class WebsiteCustomer(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
-            'search_path': "?%s" % werkzeug.url_encode(post),
+            'search_path': "?%s" % werkzeug.urls.url_encode(post),
             'tag': tag,
             'tags': tags,
             'google_maps_api_key': google_maps_api_key,

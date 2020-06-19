@@ -3,13 +3,11 @@ odoo.define("website.tour.banner", function (require) {
 
 var core = require("web.core");
 var tour = require("web_tour.tour");
-var base = require("web_editor.base");
 
 var _t = core._t;
 
 tour.register("banner", {
     url: "/",
-    wait_for: base.ready(),
 }, [{
     trigger: "a[data-action=edit]",
     content: _t("<b>Click Edit</b> to start designing your homepage."),
@@ -17,33 +15,37 @@ tour.register("banner", {
     position: "bottom",
 }, {
     trigger: "#snippet_structure .oe_snippet:eq(1) .oe_snippet_thumbnail",
+    extra_trigger: "body.editor_enable.editor_has_snippets",
     content: _t("Drag the <i>Cover</i> block and drop it in your page."),
     position: "bottom",
-    run: "drag_and_drop",
+    run: "drag_and_drop #wrap",
 }, {
-    trigger: "#wrapwrap .s_text_block_image_fw h2",
+    trigger: "#wrapwrap .s_cover h1",
     content: _t("<b>Click on a text</b> to start editing it. <i>It's that easy to edit your content!</i>"),
-    position: "left",
-    width: 150,
+    position: "bottom",
+    consumeEvent: 'input',
     run: "text",
 }, {
-    trigger: ".oe_overlay_options .oe_options",
-    extra_trigger: "#wrapwrap .s_text_block_image_fw h2:not(:containsExact(\"Headline\"))",
-    content: _t("Customize any block through this menu. Try to change the background of the banner."),
-    position: "bottom",
+    trigger: ".o_we_customize_panel",
+    extra_trigger: "#wrapwrap .s_cover h1:not(:containsExact(\"Catchy Headline\"))",
+    content: _t("Customize any block through this menu. Try to change the background color of this block."),
+    position: "right",
+}, {
+    trigger: '.o_we_add_snippet_btn',
+    content: _t("Go back to the blocks menu."),
+    position: 'bottom',
 }, {
     trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
     content: _t("Drag another block in your page, below the cover."),
     position: "bottom",
-    run: "drag_and_drop",
+    run: "drag_and_drop #wrap",
 }, {
     trigger: "button[data-action=save]",
-    extra_trigger: ".oe_overlay_options .oe_options",
-    content: _t("Publish your page by clicking on the <b>Save</b> button."),
+    content: _t("Click the <b>Save</b> button."),
     position: "bottom",
 }, {
     trigger: "a[data-action=show-mobile-preview]",
-    content: _t("Good Job! You created your first page. Let's check how this page looks like on <b>mobile devices</b>."),
+    content: _t("Good Job! You have designed your homepage. Let's check how this page looks like on <b>mobile devices</b>."),
     position: "bottom",
 }, {
     trigger: ".modal-dialog:has(#mobile-viewport) button[data-dismiss=modal]",
@@ -51,7 +53,32 @@ tour.register("banner", {
     position: "right",
 }, {
     trigger: "#new-content-menu > a",
-    content: _t("<p><b>That's it.</b> Your homepage is live.</p><p>Continue adding more pages to your site or edit this page to make it even more awesome.</p>"),
+    content: _t("<p><b>Your homepage is live.</b></p><p>Let's add a new page for your site.</p>"),
+    position: "bottom",
+},  {
+    trigger: "a[data-action=new_page]",
+    content: _t("<p><b>Click here</b> to create a new page.</p>"),
+    position: "bottom",
+}, {
+    trigger: ".modal-dialog #editor_new_page input[type=text]",
+    content: _t("<p>Enter a title for the page.</p>"),
+    position: "bottom",
+}, {
+    trigger: ".modal-footer button.btn-primary.btn-continue",
+    content: _t("Click on <b>Continue</b> to create the page."),
+    position: "bottom",
+}, {
+    trigger: "#snippet_structure .oe_snippet:eq(3) .oe_snippet_thumbnail",
+    content: _t("Drag the block and drop it in your new page."),
+    position: "bottom",
+    run: "drag_and_drop #wrap",
+}, {
+    trigger: "button[data-action=save]",
+    content: _t("Click the <b>Save</b> button."),
+    position: "bottom",
+}, {
+    trigger: ".js_publish_management .js_publish_btn",
+    content: _t("<b>That's it!</b><p>Your page is all set to go live. Click the <b>Publish</b> button to publish it on the website.</p>"),
     position: "bottom",
 }]);
 });
@@ -63,12 +90,10 @@ odoo.define("website.tour.contact", function (require) {
 
 var core = require("web.core");
 var tour = require("web_tour.tour");
-var base = require("web_editor.base");
 var _t = core._t;
 
 tour.register("contact", {
     url: "/page/contactus",
-    wait_for: base.ready(),
 }, [{
     trigger: "li#customize-menu",
     content: _t("<b>Install a contact form</b> to improve this page."),

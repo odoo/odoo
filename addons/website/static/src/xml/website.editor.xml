@@ -2,12 +2,115 @@
 <templates id="template" xml:space="preserve">
     <div t-name="website.homepage_editor_welcome_message" class="container text-center o_homepage_editor_welcome_message">
         <h2 class="mt0">Welcome to your <b>Homepage</b>!</h2>
-        <p class="lead hidden-xs">Let's start designing.</p>
-        <div class="o_tooltip_container hidden-xs">Follow all the <div class="o_tooltip bottom"/> signs to get your website ready in no time.</div>
+        <p class="lead d-none d-md-block">Let's start designing.</p>
+        <div class="o_tooltip_container d-none d-md-inline-flex fade">Follow all the <div class="o_tooltip bottom"/> signs to get your website ready in no time.</div>
     </div>
-
     <div t-name="website.leaving_current_page_edition">
         <p>What do you want to do?</p>
         <p class="text-muted">Your current changes will be saved automatically.</p>
+    </div>
+
+    <!-- Editor top bar which contains the summernote tools and save/discard buttons -->
+    <t t-name="website.editorbar">
+        <div id="web_editor-top-edit">
+            <form class="navbar-form text-muted">
+                <button type="button" class="btn btn-secondary" data-action="cancel" accesskey="j"><i class="fa fa-times"/> Discard</button>
+                <button type="button" class="btn btn-primary" data-action="save" accesskey="s"><i class="fa fa-floppy-o"/> Save</button>
+            </form>
+        </div>
+    </t>
+    <!-- Custom checkbox (material-design-like toggle) -->
+    <t t-name="website.components.switch">
+        <label class="o_switch" t-att-for="id">
+            <input type="checkbox" t-att-id="id" t-att-checked="checked ? 'checked' : undefined"/>
+            <span/>
+            <div t-if="label"><t t-esc="label"/></div>
+        </label>
+    </t>
+
+    <t t-extend="wysiwyg.widgets.link">
+        <t t-jquery="#o_link_dialog_url_input" t-operation="after">
+            <small class="form-text text-muted">Hint: Type '/' to search an existing page and '#' to link to an anchor.</small>
+        </t>
+        <t t-jquery="div.o_url_input" t-operation="after">
+            <div class="form-group row o_link_dialog_page_anchor d-none">
+                <label class="col-form-label col-md-3" for="o_link_dialog_anchor_input">Page Anchor</label>
+                <div class="col-md-9">
+                    <select name="link_anchor" class="form-control link-style"></select>
+                    <small class="form-text font-weight-bold o_anchors_loading">Loading...</small>
+                </div>
+            </div>
+        </t>
+    </t>
+    <!-- Anchor Name option dialog -->
+    <div t-name="website.dialog.anchorName">
+        <div class="form-group row">
+            <label class="col-form-label col-md-3" for="anchorName">Choose an anchor name</label>
+            <div class="col-md-9">
+                <input type="text" class="form-control o_input_anchor_name" id="anchorName" t-attf-value="#{currentAnchor}" placeholder="Anchor name"/>
+                <div class="invalid-feedback">
+                    <p class="d-none o_anchor_already_exists">The chosen name already exists</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Add a Google Font option dialog -->
+    <div t-name="website.dialog.addGoogleFont">
+        <div class="form-group row">
+            <label class="col-form-label col-md-3" for="google_font_html">Google Font HTML</label>
+            <div class="col-md-9">
+                <textarea id="google_font_html" class="form-control o_input_google_font"
+                    placeholder="&lt;link href='https://fonts.googleapis.com/css?family=Bonbon&amp;display=swap' rel='stylesheet'&gt;" style="height: 100px;"/>
+                <span class="float-right text-muted">
+                    Select one font on <a target="_blank" href="https://fonts.google.com">fonts.google.com</a> and copy paste the embed code here.
+                </span>
+            </div>
+        </div>
+        <p>Adding a font requires a reload of the page. This will save all your changes.</p>
+    </div>
+    <t t-name="website.delete_google_font_btn">
+        <t t-set="delete_font_title">Delete this font</t>
+        <i role="button"
+           class="text-danger ml-2 fa fa-trash-o o_we_delete_google_font_btn"
+           t-att-aria-label="delete_font_title"
+           t-att-title="delete_font_title"
+           t-att-data-font-index="index"/>
+    </t>
+    <t t-name="website.add_google_font_btn">
+        <we-button href="#" class="o_we_add_google_font_btn"
+                   t-att-data-variable="variable">
+            Add a Google Font
+        </we-button>
+    </t>
+
+    <t t-name="website.color_combination_edition">
+        <div>
+            <we-colorpicker string="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-bg"/>
+            <we-colorpicker string="Text" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-text"/>
+            <we-colorpicker string="Headings" class="o_cc_subheadings_toggler" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-headings"/>
+            <we-row string="Sub-Headings" class="o_cc_subheadings_collapse">
+                <we-colorpicker title="Headings 2" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h2"/>
+                <we-colorpicker title="Headings 3" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h3"/>
+                <we-colorpicker title="Headings 4" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h4"/>
+                <we-colorpicker title="Headings 5" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h5"/>
+                <we-colorpicker title="Headings 6" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-h6"/>
+            </we-row>
+            <we-colorpicker string="Links" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-link"/>
+            <we-row string="Main Buttons">
+                <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary"/>
+                <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-primary-border"/>
+            </we-row>
+            <we-row string="Buttons">
+                <we-colorpicker title="Background" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary"/>
+                <we-colorpicker title="Border" data-customize-website-color="null" t-attf-data-color="o-cc#{number}-btn-secondary-border"/>
+            </we-row>
+        </div>
+    </t>
+
+    <!-- Theme - custom code -->
+    <div t-name="website.custom_code_dialog_content">
+        <div class="mb-2" t-esc="contentText"/>
+        <div class="o_ace_editor_container"/>
     </div>
 </templates>

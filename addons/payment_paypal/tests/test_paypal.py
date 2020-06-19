@@ -1,11 +1,13 @@
 # -*- coding: utf-8 -*-
 
+from odoo import fields
 from odoo.addons.payment.models.payment_acquirer import ValidationError
 from odoo.addons.payment.tests.common import PaymentAcquirerCommon
 from odoo.addons.payment_paypal.controllers.main import PaypalController
 from werkzeug import urls
 
 from odoo.tools import mute_logger
+from odoo.tests import tagged
 
 from lxml import objectify
 
@@ -16,6 +18,10 @@ class PaypalCommon(PaymentAcquirerCommon):
         super(PaypalCommon, self).setUp()
 
         self.paypal = self.env.ref('payment.payment_acquirer_paypal')
+        self.paypal.write({
+            'paypal_email_account': 'dummy',
+            'state': 'test',
+        })
 
         # some CC
         self.amex = (('378282246310005', '123'), ('371449635398431', '123'))
@@ -30,13 +36,14 @@ class PaypalCommon(PaymentAcquirerCommon):
         self.switch_polo = (('6331101999990016', '123'))
 
 
+@tagged('post_install', '-at_install', 'external', '-standard')
 class PaypalForm(PaypalCommon):
 
     def test_10_paypal_form_render(self):
         base_url = self.env['ir.config_parameter'].get_param('web.base.url')
         # be sure not to do stupid things
         self.paypal.write({'paypal_email_account': 'tde+paypal-facilitator@odoo.com', 'fees_active': False})
-        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
+        self.assertEqual(self.paypal.state, 'test', 'test without test environment')
 
         # ----------------------------------------
         # Test: button direct rendering
@@ -50,20 +57,23 @@ class PaypalForm(PaypalCommon):
         form_values = {
             'cmd': '_xclick',
             'business': 'tde+paypal-facilitator@odoo.com',
-            'item_name': 'YourCompany: test_ref0',
+            'item_name': '%s: test_ref0' % (self.paypal.company_id.name),
             'item_number': 'test_ref0',
             'first_name': 'Norbert',
             'last_name': 'Buyer',
             'amount': '0.01',
+            'bn': 'OdooInc_SP',
             'currency_code': 'EUR',
             'address1': 'Huge Street 2/543',
             'city': 'Sin City',
             'zip': '1000',
+            'rm': '2',
             'country': 'BE',
             'email': 'norbert.buyer@example.com',
             'return': urls.url_join(base_url, PaypalController._return_url),
             'notify_url': urls.url_join(base_url, PaypalController._notify_url),
             'cancel_return': urls.url_join(base_url, PaypalController._cancel_url),
+            'custom': '{"return_url": "/payment/process"}',
         }
 
         # check form result
@@ -83,7 +93,7 @@ class PaypalForm(PaypalCommon):
 
     def test_11_paypal_form_with_fees(self):
         # be sure not to do stupid things
-        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
+        self.assertEqual(self.paypal.state, 'test', 'test without test environment')
 
         # update acquirer: compute fees
         self.paypal.write({
@@ -115,14 +125,14 @@ class PaypalForm(PaypalCommon):
     @mute_logger('odoo.addons.payment_paypal.models.payment', 'ValidationError')
     def test_20_paypal_form_management(self):
         # be sure not to do stupid things
-        self.assertEqual(self.paypal.environment, 'test', 'test without test environment')
+        self.assertEqual(self.paypal.state, 'test', 'test without test environment')
 
         # typical data posted by paypal after client has successfully paid
         paypal_post_data = {
             'protection_eligibility': u'Ineligible',
             'last_name': u'Poilu',
             'txn_id': u'08D73520KX778924N',
-            'receiver_email': u'dummy',
+            'receiver_email': 'dummy',
             'payment_status': u'Pending',
             'payment_gross': u'',
             'tax': u'0.00',
@@ -137,7 +147,7 @@ class PaypalForm(PaypalCommon):
             'item_name': u'test_ref_2',
             'address_country': u'France',
             'charset': u'windows-1252',
-            'custom': u'',
+            'custom': u'{"return_url": "/payment/process"}',
             'notify_version': u'3.7',
             'address_name': u'Norbert Poilu',
             'pending_reason': u'multi_currency',
@@ -180,7 +190,6 @@ class PaypalForm(PaypalCommon):
         self.assertEqual(tx.state, 'pending', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.state_message, 'multi_currency', 'paypal: wrong state message after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertFalse(tx.date_validate, 'paypal: validation date should not be updated whenr receiving pending notification')
 
         # update tx
         tx.write({
@@ -194,4 +203,4 @@ class PaypalForm(PaypalCommon):
         # check
         self.assertEqual(tx.state, 'done', 'paypal: wrong state after receiving a valid pending notification')
         self.assertEqual(tx.acquirer_reference, '08D73520KX778924N', 'paypal: wrong txn_id after receiving a valid pending notification')
-        self.assertEqual(tx.date_validate, '2013-11-18 11:21:19', 'paypal: wrong validation date')
+        self.assertEqual(fields.Datetime.to_string(tx.date), '2013-11-18 11:21:19', 'paypal: wrong validation date')

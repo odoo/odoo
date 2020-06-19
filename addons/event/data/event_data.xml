@@ -1,13 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-        <!-- notify all employees of module installation -->
-        <function model="mail.channel" name="message_post">
-            <value eval="[ref('mail.channel_all_employees')]"/>
-            <value>From the top menu Events, you can organize events, manage registrations, automate communication around your event and sell events through your quotations.</value>
-            <value>Module Events has been installed</value>
-        </function>
-
         <!-- Event Mail Scheduler-->
         <record model="ir.cron" forcecreate="True" id="event_mail_scheduler">
             <field name="name">Event: Mail Scheduler</field>
@@ -21,18 +14,46 @@
             <field name="doall" eval="False" />
         </record>
 
-        <record id="event_type_data_online" model="event.type">
-            <field name="name">Online</field>
-            <field name="is_online" eval="True"/>
+        <!-- Event Categories -->
+        <record id="event_type_data_ticket" model="event.type">
+            <field name="name">Ticketing</field>
+            <field name="auto_confirm" eval="False"/>
+            <field name="use_ticket" eval="True"/>
+        </record>
+        <record id="event_type_data_conference" model="event.type">
+            <field name="name">Conference</field>
             <field name="auto_confirm" eval="True"/>
-            <field name="use_mail_schedule" eval="False"/>
         </record>
 
-        <record id="event_type_data_physical" model="event.type">
-            <field name="name">Physical Event</field>
-            <field name="is_online" eval="False"/>
-            <field name="auto_confirm" eval="True"/>
-            <field name="use_mail_schedule" eval="False"/>
+        <!-- Event stages -->
+        <record id="event_stage_new" model="event.stage">
+            <field name="name">New</field>
+            <field name="description">Freshly created</field>
+            <field name="sequence">1</field>
+        </record>
+        <record id="event_stage_booked" model="event.stage">
+            <field name="name">Booked</field>
+            <field name="description">The place has been reserved</field>
+            <field name="sequence">2</field>
+        </record>
+        <record id="event_stage_announced" model="event.stage">
+            <field name="name">Announced</field>
+            <field name="description">The event has been publicly announced</field>
+            <field name="sequence">3</field>
+        </record>
+        <record id="event_stage_done" model="event.stage">
+            <field name="name">Ended</field>
+            <field name="description">Fully ended</field>
+            <field name="sequence">5</field>
+            <field name="pipe_end" eval="True"/>
+            <field name="fold" eval="True"/>
+        </record>
+        <record id="event_stage_cancelled" model="event.stage">
+            <field name="name">Cancelled</field>
+            <field name="description">The event has been cancelled</field>
+            <field name="sequence">6</field>
+            <field name="pipe_end" eval="True"/>
+            <field name="fold" eval="True"/>
         </record>
     </data>
 </odoo>

@@ -7,11 +7,12 @@
             <script type="text/javascript" src="/hr_attendance/static/src/js/kiosk_mode.js"></script>
             <script type="text/javascript" src="/hr_attendance/static/src/js/kiosk_confirm.js"></script>
             <script type="text/javascript" src="/hr_attendance/static/src/js/my_attendances.js"></script>
-            <link rel="stylesheet" href="/hr_attendance/static/src/less/hr_attendance.less"/>
+            <script type="text/javascript" src="/hr_attendance/static/src/js/time_widget.js"></script>
+            <link rel="stylesheet" type="text/scss" href="/hr_attendance/static/src/scss/hr_attendance.scss"/>
         </xpath>
     </template>
 
-    <template id="qunit_suite" name="hr attendance tests" inherit_id="web.qunit_suite">
+    <template id="qunit_suite" name="hr attendance tests" inherit_id="web.qunit_suite_tests">
         <xpath expr="//script[contains(@src, '/web/static/tests/views/kanban_tests.js')]" position="after">
             <script type="text/javascript" src="/hr_attendance/static/tests/hr_attendance_tests.js"></script>
         </xpath>

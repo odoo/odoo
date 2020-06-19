@@ -133,10 +133,10 @@ var py = {};
         return this;
     };
     infix('if', 20, function (left) {
-        this.first = left;
-        this.second = expression();
+        this.ifTrue = left;
+        this.condition = expression();
         advance('else');
-        this.third = expression();
+        this.ifFalse = expression();
         return this;
     });
 
@@ -273,8 +273,7 @@ var py = {};
         var Special = '[:;.,`@]';
         var Funny = group(Operator, Bracket, Special);
 
-        var ContStr = group("([uU])?'([^']*)'", '([uU])?"([^"]*)"');
-
+        var ContStr = group("([uU])?'([^\n'\\\\]*(?:\\\\.[^\n'\\\\]*)*)'", '([uU])?"([^\n"\\\\]*(?:\\\\.[^\n"\\\\]*)*)"');
         var PseudoToken = Whitespace + group(Number, Funny, ContStr, Name);
 
         var number_pattern = new RegExp('^' + Number + '$');
@@ -282,7 +281,7 @@ var py = {};
         var name_pattern = new RegExp('^' + Name + '$');
         var strip = new RegExp('^' + Whitespace);
         return function tokenize(s) {
-            var max=s.length, tokens = [], start, end = undefined;
+            var max=s.length, tokens = [], start, end;
             // /g flag makes repeated exec() have memory
             var pseudoprog = new RegExp(PseudoToken, 'g');
 
@@ -302,7 +301,6 @@ var py = {};
                 end = pseudoprog.lastIndex;
                 // strip leading space caught by Whitespace
                 var token = s.slice(start, end).replace(strip, '');
-                var initial = token[0];
 
                 if (number_pattern.test(token)) {
                     tokens.push(create(symbols['(number)'], {
@@ -311,8 +309,10 @@ var py = {};
                 } else if (string_pattern.test(token)) {
                     var m = string_pattern.exec(token);
                     tokens.push(create(symbols['(string)'], {
-                        unicode: !!(m[2] || m[4]),
-                        value: (m[3] !== undefined ? m[3] : m[5])
+                        value: PY_decode_string_literal(
+                            m[3] !== undefined ? m[3] : m[5],
+                            !!(m[2] || m[4])
+                        )
                     }));
                 } else if (token in symbols) {
                     var symbol;
@@ -862,6 +862,12 @@ var py = {};
             }
             return py.float.fromJSON(this._value + other._value);
         },
+        __mod__: function (other) {
+            if (!py.PY_isInstance(other, py.float)) {
+                return py.NotImplemented;
+            }
+            return py.float.fromJSON(this._value % other._value);
+        },
         __neg__: function () {
             return py.float.fromJSON(-this._value);
         },
@@ -876,6 +882,12 @@ var py = {};
                 return py.NotImplemented;
             }
             return py.float.fromJSON(this._value * other._value);
+        },
+        __pow__: function (other) {
+            if (!py.PY_isInstance(other, py.float)) {
+                return py.NotImplemented;
+            }
+            return py.float.fromJSON(this._value ** other._value);
         },
         __div__: function (other) {
             if (!py.PY_isInstance(other, py.float)) {
@@ -1339,8 +1351,7 @@ var py = {};
             }
             return PY_ensurepy(val, expr.value);
         case '(string)':
-            return py.str.fromJSON(PY_decode_string_literal(
-                expr.value, expr.unicode));
+            return py.str.fromJSON(expr.value);
         case '(number)':
             return py.float.fromJSON(expr.value);
         case '(constant)':
@@ -1374,6 +1385,13 @@ var py = {};
                 return or_first
             }
             return py.evaluate(expr.second, context);
+        case 'if':
+            var cond = py.evaluate(expr.condition, context);
+            if (py.PY_isTrue(cond)) {
+                return py.evaluate(expr.ifTrue, context);
+            } else {
+                return py.evaluate(expr.ifFalse, context);
+            }
         case '(':
             if (expr.second) {
                 var callable = py.evaluate(expr.first, context);

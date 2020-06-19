@@ -1,20 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <odoo>
-
         <!-- External page : thanks message -->
         <template id="rating_external_page_view" name="Rating Page Done">
-            <t t-call="web.layout">
-                <t t-set="head">
-                    <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
-                    <link rel='stylesheet' href='/web/static/lib/fontawesome/css/font-awesome.css'/>
-                </t>
-                <div class="container">
-                    <div class="text-center" style="margin-top:128px">
-                        <i class="fa fa-check-circle fa-5x text-success" />
+            <t t-call="web.frontend_layout">
+                <div class="container pt-5">
+                    <div class="text-center mt-5 pt-5">
+                        <h3 class="d-inline">Thank you, we appreciate your feedback!</h3>
                     </div>
-                    <h2 class="text-center">We appreciate your feedback!</h2>
                     <div class="text-center">
-                        <a t-att-href="web_base_url" class="btn btn-primary">Go to our website</a>
+                        <a role="button" t-att-href="web_base_url" class="btn btn-primary my-5">Go back to the Homepage</a>
                     </div>
                 </div>
             </t>
@@ -22,34 +16,33 @@
 
         <!-- External page: rate and submit feedback -->
         <template id="rating_external_page_submit" name="Rating Page Submit">
-            <t t-call="web.layout">
-                <t t-set="head">
-                    <link rel='stylesheet' href='/web/static/lib/bootstrap/css/bootstrap.css'/>
-                </t>
-                <div class="container">
-                    <div clas="row">
-                        <h1 class="text-center">Thanks! We appreciate your feedback.</h1>
-                        <h4 class="text-center text-muted" style="margin-bottom: 32px;">Your rating has been submitted.</h4>
-                        <div class="pull-left">
-                            <img t-attf-src='/rating/static/src/img/rating_#{rate}.png'/>
+            <t t-call="web.frontend_layout">
+                <div class="container card mb-5 mt-4 o_rating_page_submit">
+                    <div class="card-body">
+                        <div clas="row">
+                            <h1 class="mt-5">Thank you for rating our services!</h1>
+                            <form t-attf-action="/rate/#{token}/submit_feedback" method="post">
+                                <div class="btn-group btn-group-toggle row" data-toggle="buttons">
+                                    <t t-foreach="rate_names" t-as="rate_name">
+                                        <label t-attf-class="col-xs-12 btn o_rating_label shadow-none {{rate == rate_name and 'active' or ''}}">
+                                            <input type="radio" name="rate" t-attf-id="rate_{{rate_name}}" t-att-value="rate_name" t-att-checked="rate == rate_name"/>
+                                            <a class="o_rating" href="#">
+                                                <img t-attf-src='/rating/static/src/img/rating_#{rate_name}.png' t-att-alt="rate_name_value" t-att-title="rate_name_value"/>
+                                            </a>
+                                        </label>
+                                    </t>
+                                </div>
+                                <div class="clearfix"></div>
+                                <p class="mt-5">
+                                    Feel free to write a feedback on your experience:
+                                </p>
+                                <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
+                                <textarea class="form-control" name="feedback" rows="8" t-att-value="rating.feedback"></textarea>
+                                <button type="submit" class="btn btn-primary" style="margin-top:8px;">Send Feedback</button>
+                            </form>
                         </div>
-                        <div style="margin-left: 80px;">
-                            you are <b t-esc="rate_name"></b><br/>
-                            on our services on "<b t-esc="rating.res_name"></b>"<br/>
-                            <t t-if="rating.rated_partner_id">by <b t-esc="rating.rated_partner_id.name"></b>.</t>
-                        </div>
-                        <div class="clearfix"></div>
-                        <p style="margin-top:32px;">
-                            Would be great if you can provide more information:
-                        </p>
-                        <form class="form-horizontal" t-attf-action="/rating/#{token}/#{rate}/submit_feedback" method="post">
-                            <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
-                            <textarea class="form-control" name="feedback" rows="8" t-att-value="rating.feedback"></textarea>
-                            <button type="submit" class="btn btn-primary" style="margin-top:8px;">Send Feedback</button>
-                        </form>
                     </div>
                 </div>
             </t>
         </template>
-
 </odoo>

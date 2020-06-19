@@ -29,7 +29,7 @@ class WebsiteMembership(http.Controller):
         '/members/association/<membership_id>/country/<int:country_id>',
         '/members/association/<membership_id>/country/<country_name>-<int:country_id>/page/<int:page>',
         '/members/association/<membership_id>/country/<int:country_id>/page/<int:page>',
-    ], type='http', auth="public", website=True)
+    ], type='http', auth="public", website=True, sitemap=True)
     def members(self, membership_id=None, country_name=None, country_id=0, page=1, **post):
         Product = request.env['product.product']
         Country = request.env['res.country']
@@ -103,7 +103,7 @@ class WebsiteMembership(http.Controller):
 
         # get google maps localization of partners
         google_map_partner_ids = []
-        if request.env.ref('website_membership.opt_index_google_map').customize_show:
+        if request.website.viewref('website_membership.opt_index_google_map').active:
             google_map_partner_ids = MembershipLine.search(line_domain).get_published_companies(limit=2000)
 
         search_domain = [('membership_state', '=', 'free'), ('website_published', '=', True)]
@@ -134,7 +134,7 @@ class WebsiteMembership(http.Controller):
                 count_members += len(free_partner_ids)
 
         google_map_partner_ids = ",".join(str(it) for it in google_map_partner_ids)
-        google_maps_api_key = request.env['ir.config_parameter'].sudo().get_param('google_maps_api_key')
+        google_maps_api_key = request.website.google_maps_api_key
 
         partners = {p.id: p for p in Partner.sudo().browse(list(page_partner_ids))}
 
@@ -155,7 +155,7 @@ class WebsiteMembership(http.Controller):
             'google_map_partner_ids': google_map_partner_ids,
             'pager': pager,
             'post': post,
-            'search': "?%s" % werkzeug.url_encode(post),
+            'search': "?%s" % werkzeug.urls.url_encode(post),
             'search_count': count_members,
             'google_maps_api_key': google_maps_api_key,
         }

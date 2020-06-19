@@ -3,9 +3,9 @@
 
 Index: addons/openacademy/models.py
 ===================================================================
---- addons.orig/openacademy/models.py	2014-08-28 14:21:58.627015606 +0200
-+++ addons/openacademy/models.py	2014-08-28 14:21:58.623015606 +0200
-@@ -47,6 +47,7 @@
+--- addons.orig/openacademy/models.py
++++ addons/openacademy/models.py
+@@ -49,6 +49,7 @@
      duration = fields.Float(digits=(6, 2), help="Duration in days")
      seats = fields.Integer(string="Number of seats")
      active = fields.Boolean(default=True)
@@ -15,14 +15,14 @@ Index: addons/openacademy/models.py
          domain=['|', ('instructor', '=', True),
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-28 14:21:58.627015606 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-28 14:21:58.623015606 +0200
-@@ -168,11 +168,57 @@
+--- addons.orig/openacademy/views/openacademy.xml
++++ addons/openacademy/views/openacademy.xml
+@@ -165,10 +165,56 @@
              </field>
          </record>
  
 +        <record model="ir.ui.view" id="view_openacad_session_kanban">
-+            <field name="name">openacad.session.kanban</field>
++            <field name="name">openacademy.session.kanban</field>
 +            <field name="model">openacademy.session</field>
 +            <field name="arch" type="xml">
 +                <kanban default_group_by="course_id">
@@ -36,7 +36,7 @@ Index: addons/openacademy/views/openacademy.xml
 +                                <div class="oe_dropdown_kanban">
 +                                    <!-- dropdown menu -->
 +                                    <div class="oe_dropdown_toggle">
-+                                        <i class="fa fa-bars fa-lg"/>
++                                        <i class="fa fa-bars fa-lg" title="Manage" aria-label="Manage"/>
 +                                        <ul class="oe_dropdown_menu">
 +                                            <li>
 +                                                <a type="delete">Delete</a>
@@ -70,7 +70,6 @@ Index: addons/openacademy/views/openacademy.xml
          <record model="ir.actions.act_window" id="session_list_action">
              <field name="name">Sessions</field>
              <field name="res_model">openacademy.session</field>
-             <field name="view_type">form</field>
 -            <field name="view_mode">tree,form,calendar,gantt,graph</field>
 +            <field name="view_mode">tree,form,calendar,gantt,graph,kanban</field>
          </record>

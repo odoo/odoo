@@ -6,16 +6,16 @@
             <field name="arch" type="xml">
                 <form string="Lost Reason">
                     <group class="oe_title">
-                        <field name="lost_reason_id"/>
+                        <field name="lost_reason_id" options="{'no_create_edit': True}" />
                     </group>
                     <footer>
-                        <button name="action_lost_reason_apply" string="Submit" type="object" class="btn btn-sm btn-primary"/>
-                        <button string="Cancel" class="btn btn-sm btn-default" special="cancel"/>
+                        <button name="action_lost_reason_apply" string="Submit" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
                     </footer>
                 </form>
             </field>
         </record>
- 
+
         <record id="crm_lead_lost_action" model="ir.actions.act_window">
             <field name="name">Lost Reason</field>
             <field name="type">ir.actions.act_window</field>

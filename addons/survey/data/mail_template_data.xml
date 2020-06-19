@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="mail_template_user_input_invite" model="mail.template">
+            <field name="name">Survey: Invite</field>
+            <field name="model_id" ref="model_survey_user_input" />
+            <field name="subject">Participate to ${object.survey_id.title} survey</field>
+            <field name="email_to">${(object.partner_id.email_formatted or object.email) |safe}</field>
+            <field name="body_html" type="html">
+<div style="margin: 0px; padding: 0px; font-size: 13px;">
+    <p style="margin: 0px; padding: 0px; font-size: 13px;">
+        Dear ${object.partner_id.name or 'participant'}<br/><br/>
+        % if object.survey_id.certification:
+            You have been invited to take a new certification.
+        % else:
+            We are conducting a survey and your response would be appreciated.
+        % endif
+        <div style="margin: 16px 0px 16px 0px;">
+            <a href="${(object.get_start_url()) | safe}"
+                style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                % if object.survey_id.certification:
+                    Start Certification
+                % else:
+                    Start Survey
+                % endif
+            </a>
+        </div>
+        % if object.deadline:
+            Please answer the survey for ${format_date(object.deadline)}.<br/><br/>
+        % endif
+        Thank you for your participation.
+    </p>
+</div>
+            </field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+
+        <!-- Certification Email template -->
+        <record id="mail_template_certification" model="mail.template">
+            <field name="name">Survey: Send certification by email</field>
+            <field name="model_id" ref="survey.model_survey_user_input"/>
+            <field name="subject">Certification: ${object.survey_id.display_name}</field>
+            <field name="email_from">${(object.survey_id.create_uid.email_formatted or user.email_formatted or user.company_id.catchall_formatted) |safe}</field>
+            <field name="email_to">${(object.partner_id.email_formatted or object.email) |safe}</field>
+            <field name="body_html" type="xml">
+                <div style="background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;">
+                    <table style="width:600px;margin:5px auto;">
+                        <tbody>
+                            <tr><td>
+                                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->
+                                <a href="/"><img src="/logo.png?company=${object.survey_id.create_uid.company_id.id}" style="vertical-align:baseline;max-width:100px;" /></a>
+                            </td><td style="text-align:right;vertical-align:middle;">
+                                    Certification: ${object.survey_id.display_name}
+                            </td></tr>
+                        </tbody>
+                    </table>
+                    <table style="width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;">
+                        <tbody>
+                            <tr><td style="padding:15px 20px 10px 20px;">
+                                <p>Dear <span>${object.partner_id.name or 'participant'}</span></p>
+                                <p>
+                                    Here is, in attachment, your certification document for
+                                        <strong>${object.survey_id.display_name}</strong>
+                                </p>
+                                <p>Congratulations for succeeding the test!</p>
+                            </td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </field>
+            <field name="report_template" ref="certification_report"/>
+            <field name="report_name">Certification Document</field>
+            <field name="lang">${object.partner_id.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

@@ -1,8 +1,13 @@
 :banner: banners/build_interface_ext.jpg
 
 =============================
-Building Interface Extensions
+Customizing the web client
 =============================
+
+Note: this section is really really out of date. It will be updated someday,
+but meanwhile, this tutorial will probably be frustrating to follow, since it
+was written a long time ago.
+
 
 .. highlight:: javascript
 
@@ -1539,10 +1544,10 @@ Exercises
                 local.HomePage = instance.Widget.extend({
                     template: "HomePage",
                     start: function () {
-                        return $.when(
+                        return Promise.all([
                             new local.PetToysList(this).appendTo(this.$('.oe_petstore_homepage_left')),
                             new local.MessageOfTheDay(this).appendTo(this.$('.oe_petstore_homepage_right'))
-                        );
+                        ]);
                     }
                 });
                 instance.web.client_actions.add('petstore.homepage', 'instance.oepetstore.HomePage');
@@ -1859,12 +1864,12 @@ simply use the ``widget`` attribute in the view's XML description:
 
 .. note::
 
-    * the same widget is used in both "view" (read-only) and "edition" modes
+    * the same widget is used in both "view" (read-only) and "edit" modes
       of a form view, it's not possible to use a widget in one and an other
       widget in the other
     * and a given field (name) can not be used multiple times in the same form
     * a widget may ignore the current mode of the form view and remain the
-      same in both view and edition
+      same in both view and edit modes
 
 .. todo:: most of this should probably move to an advanced form view guide
 

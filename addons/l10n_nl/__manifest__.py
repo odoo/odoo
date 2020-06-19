@@ -6,7 +6,7 @@
 {
     'name': 'Netherlands - Accounting',
     'version': '3.0',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'author': 'Onestein',
     'website': 'http://www.onestein.eu',
     'depends': [
@@ -18,16 +18,20 @@
     'data': [
         'data/account_account_tag.xml',
         'data/account_chart_template.xml',
-        'data/account.account.template.xml',
+        'data/account.account.template.csv',
+        'data/account_chart_template_post_data.xml',
         'data/account_data.xml',
+        'data/account_tax_report_data.xml',
         'data/account_tax_template.xml',
         'data/account_fiscal_position_template.xml',
         'data/account_fiscal_position_tax_template.xml',
         'data/account_fiscal_position_account_template.xml',
-        'data/account_chart_template.yml',
+        'data/account_chart_template_data.xml',
         'data/menuitem.xml',
     ],
-    'demo': [],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
     'auto_install': False,
     'installable': True,
 }

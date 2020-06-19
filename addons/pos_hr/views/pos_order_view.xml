@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_order_form_inherit" model="ir.ui.view">
+        <field name="name">pos.order.form.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_pos_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position='replace'>
+                <field string='Cashier' name="employee_id" readonly="1" attrs="{'invisible': [('employee_id','=',False)]}"/>
+                <field string='Cashier' name="user_id" readonly="1" attrs="{'invisible': [('employee_id','!=',False)]}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="pos_order_list_select_inherit" model="ir.ui.view">
+        <field name="name">pos.order.list.select.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_filter"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="replace">
+                <field name="cashier"/>
+            </xpath>
+            <xpath expr="//filter[@name='user_id']" position="replace">
+                <filter string="Cashier" name="by_cashier" domain="[]" context="{'group_by': 'cashier'}"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_pos_order_tree_inherit" model="ir.ui.view">
+        <field name="name">pos.order.tree.inherit</field>
+        <field name="model">pos.order</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_order_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='user_id']" position="replace">
+                <field name="cashier"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

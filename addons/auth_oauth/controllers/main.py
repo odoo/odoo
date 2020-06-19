@@ -6,6 +6,7 @@ import logging
 
 import json
 
+import werkzeug.urls
 import werkzeug.utils
 from werkzeug.exceptions import BadRequest
 
@@ -65,7 +66,7 @@ class OAuthLogin(Home):
                 scope=provider['scope'],
                 state=json.dumps(state),
             )
-            provider['auth_link'] = "%s?%s" % (provider['auth_endpoint'], werkzeug.url_encode(params))
+            provider['auth_link'] = "%s?%s" % (provider['auth_endpoint'], werkzeug.urls.url_encode(params))
         return providers
 
     def get_state(self, provider):
@@ -75,7 +76,7 @@ class OAuthLogin(Home):
         state = dict(
             d=request.session.db,
             p=provider['id'],
-            r=werkzeug.url_quote_plus(redirect),
+            r=werkzeug.urls.url_quote_plus(redirect),
         )
         token = request.params.get('token')
         if token:
@@ -108,19 +109,10 @@ class OAuthLogin(Home):
 
         return response
 
-    @http.route()
-    def web_auth_signup(self, *args, **kw):
-        providers = self.list_providers()
-        response = super(OAuthLogin, self).web_auth_signup(*args, **kw)
-        response.qcontext.update(providers=providers)
-        return response
-
-    @http.route()
-    def web_auth_reset_password(self, *args, **kw):
-        providers = self.list_providers()
-        response = super(OAuthLogin, self).web_auth_reset_password(*args, **kw)
-        response.qcontext.update(providers=providers)
-        return response
+    def get_auth_signup_qcontext(self):
+        result = super(OAuthLogin, self).get_auth_signup_qcontext()
+        result["providers"] = self.list_providers()
+        return result
 
 
 class OAuthController(http.Controller):
@@ -130,6 +122,8 @@ class OAuthController(http.Controller):
     def signin(self, **kw):
         state = json.loads(kw['state'])
         dbname = state['d']
+        if not http.db_filter([dbname]):
+            return BadRequest()
         provider = state['p']
         context = state.get('c', {})
         registry = registry_get(dbname)
@@ -140,7 +134,7 @@ class OAuthController(http.Controller):
                 cr.commit()
                 action = state.get('a')
                 menu = state.get('m')
-                redirect = werkzeug.url_unquote_plus(state['r']) if state.get('r') else False
+                redirect = werkzeug.urls.url_unquote_plus(state['r']) if state.get('r') else False
                 url = '/web'
                 if redirect:
                     url = redirect
@@ -148,7 +142,11 @@ class OAuthController(http.Controller):
                     url = '/web#action=%s' % action
                 elif menu:
                     url = '/web#menu_id=%s' % menu
-                return login_and_redirect(*credentials, redirect_url=url)
+                resp = login_and_redirect(*credentials, redirect_url=url)
+                # Since /web is hardcoded, verify user has right to land on it
+                if werkzeug.urls.url_parse(resp.location).path == '/web' and not request.env.user.has_group('base.group_user'):
+                    resp.location = '/'
+                return resp
             except AttributeError:
                 # auth_signup is not installed
                 _logger.error("auth_signup not installed on database %s: oauth sign up cancelled." % (dbname,))
@@ -174,6 +172,8 @@ class OAuthController(http.Controller):
         if not dbname:
             dbname = db_monodb()
         if not dbname:
+            return BadRequest()
+        if not http.db_filter([dbname]):
             return BadRequest()
 
         registry = registry_get(dbname)

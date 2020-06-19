@@ -16,8 +16,9 @@ UPC_EAN_CONVERSIONS = [
 
 class BarcodeNomenclature(models.Model):
     _name = 'barcode.nomenclature'
+    _description = 'Barcode Nomenclature'
 
-    name = fields.Char(string='Nomenclature Name', size=32, required=True, help='An internal identification of the barcode nomenclature')
+    name = fields.Char(string='Barcode Nomenclature', size=32, required=True, help='An internal identification of the barcode nomenclature')
     rule_ids = fields.One2many('barcode.rule', 'barcode_nomenclature_id', string='Rules', help='The list of barcode rules')
     upc_ean_conv = fields.Selection(UPC_EAN_CONVERSIONS, string='UPC/EAN Conversion', required=True, default='always',
         help="UPC Codes can be converted to EAN by prefixing them with a zero. This setting determines if a UPC/EAN barcode should be automatically converted in one way or another when trying to match a rule with the other encoding.")
@@ -167,6 +168,7 @@ class BarcodeNomenclature(models.Model):
 
 class BarcodeRule(models.Model):
     _name = 'barcode.rule'
+    _description = 'Barcode Rule'
     _order = 'sequence asc'
 
 
@@ -174,29 +176,29 @@ class BarcodeRule(models.Model):
     barcode_nomenclature_id = fields.Many2one('barcode.nomenclature', string='Barcode Nomenclature')
     sequence = fields.Integer(string='Sequence', help='Used to order rules such that rules with a smaller sequence match first')
     encoding = fields.Selection([
-                ('any', _('Any')),
+                ('any', 'Any'),
                 ('ean13', 'EAN-13'),
                 ('ean8', 'EAN-8'),
                 ('upca', 'UPC-A'),
         ], string='Encoding', required=True, default='any', help='This rule will apply only if the barcode is encoded with the specified encoding')
     type = fields.Selection([
-            ('alias', _('Alias')),
-            ('product', _('Unit Product'))
+            ('alias', 'Alias'),
+            ('product', 'Unit Product')
         ], string='Type', required=True, default='product')
     pattern = fields.Char(string='Barcode Pattern', size=32, help="The barcode matching pattern", required=True, default='.*')
     alias = fields.Char(string='Alias', size=32, default='0', help='The matched pattern will alias to this barcode', required=True)
 
-    @api.one
     @api.constrains('pattern')
     def _check_pattern(self):
-        p = self.pattern.replace("\\\\", "X").replace("\{", "X").replace("\}", "X")
-        findall = re.findall("[{]|[}]", p) # p does not contain escaped { or }
-        if len(findall) == 2: 
-            if not re.search("[{][N]*[D]*[}]", p):
-                raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": braces can only contain N's followed by D's."))
-            elif re.search("[{][}]", p):
-                raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": empty braces."))
-        elif len(findall) != 0:
-            raise ValidationError(_("There is a syntax error in the barcode pattern ") + self.pattern + _(": a rule can only contain one pair of braces."))
-        elif p == '*':
-            raise ValidationError(_(" '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"))
+        for rule in self:
+            p = rule.pattern.replace("\\\\", "X").replace("\{", "X").replace("\}", "X")
+            findall = re.findall("[{]|[}]", p) # p does not contain escaped { or }
+            if len(findall) == 2:
+                if not re.search("[{][N]*[D]*[}]", p):
+                    raise ValidationError(_("There is a syntax error in the barcode pattern ") + rule.pattern + _(": braces can only contain N's followed by D's."))
+                elif re.search("[{][}]", p):
+                    raise ValidationError(_("There is a syntax error in the barcode pattern ") + rule.pattern + _(": empty braces."))
+            elif len(findall) != 0:
+                raise ValidationError(_("There is a syntax error in the barcode pattern ") + rule.pattern + _(": a rule can only contain one pair of braces."))
+            elif p == '*':
+                raise ValidationError(_(" '*' is not a valid Regex Barcode Pattern. Did you mean '.*' ?"))

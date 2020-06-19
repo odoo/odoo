@@ -6,11 +6,12 @@ import json
 import os.path
 import re
 
-from lxml import etree
+from lxml import etree, html
+from lxml.builder import E
 
 from odoo.modules import get_module_resource
 from odoo.tests.common import TransactionCase
-from odoo.addons.base.ir.ir_qweb import QWebException
+from odoo.addons.base.models.qweb import QWebException
 from odoo.tools import misc, ustr
 
 
@@ -24,7 +25,7 @@ class TestQWebTField(TransactionCase):
         field = etree.Element('span', {'t-field': u'company.name'})
         company = self.env['res.company'].create({'name': "My Test Company"})
 
-        result = self.engine.render(field, {'company': company})
+        result = self.engine._render(field, {'company': company})
         self.assertEqual(
             etree.fromstring(result),
             etree.fromstring(u'<span data-oe-model="res.company" data-oe-id="%d" '
@@ -40,7 +41,7 @@ class TestQWebTField(TransactionCase):
         s = u"Testing «ταБЬℓσ»: 1<2 & 4+1>3, now 20% off!"
         company = self.env['res.company'].create({'name': s})
 
-        result = self.engine.render(field, {'company': company})
+        result = self.engine._render(field, {'company': company})
         self.assertEqual(
             etree.fromstring(result),
             etree.fromstring(u'<span data-oe-model="res.company" data-oe-id="%d" '
@@ -54,15 +55,43 @@ class TestQWebTField(TransactionCase):
     def test_reject_crummy_tags(self):
         field = etree.Element('td', {'t-field': u'company.name'})
 
-        with self.assertRaisesRegexp(QWebException, r'^RTE widgets do not work correctly'):
-            self.engine.render(field, {'company': None})
+        with self.assertRaisesRegex(QWebException, r'^RTE widgets do not work correctly'):
+            self.engine._render(field, {'company': None})
 
     def test_reject_t_tag(self):
         field = etree.Element('t', {'t-field': u'company.name'})
 
-        with self.assertRaisesRegexp(QWebException, r'^t-field can not be used on a t element'):
-            self.engine.render(field, {'company': None})
+        with self.assertRaisesRegex(QWebException, r'^t-field can not be used on a t element'):
+            self.engine._render(field, {'company': None})
 
+    def test_render_t_options(self):
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy"><root><span t-esc="5" t-options="{'widget': 'char'}" t-options-widget="'float'" t-options-precision="4"/></root></t>
+            """
+        })
+        text = etree.fromstring(view1._render()).find('span').text
+        self.assertEqual(text, u'5.0000')
+
+    def test_xss_breakout(self):
+        view = self.env['ir.ui.view'].create({
+            'name': 'dummy', 'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy">
+                    <root>
+                        <script type="application/javascript">
+                            var s = <t t-raw="json.dumps({'key': malicious})"/>;
+                        </script>
+                    </root>
+                </t>
+            """
+        })
+        rendered = view._render({'malicious': '1</script><script>alert("pwned")</script><script>'}).decode()
+        self.assertIn('alert', rendered, "%r doesn't seem to be rendered" % rendered)
+        doc = etree.fromstring(rendered)
+        self.assertEqual(len(doc.xpath('//script')), 1)
 
 class TestQWebNS(TransactionCase):
     def test_render_static_xml_with_namespace(self):
@@ -90,7 +119,7 @@ class TestQWebNS(TransactionCase):
             """ % expected_result
         })
 
-        self.assertEqual(etree.fromstring(view1.render()), etree.fromstring(expected_result))
+        self.assertEqual(etree.fromstring(view1._render()), etree.fromstring(expected_result))
 
     def test_render_static_xml_with_namespace_2(self):
         """ Test the rendering on a namespaced view with no static content. The resulting string should be untouched.
@@ -128,7 +157,7 @@ class TestQWebNS(TransactionCase):
             """ % expected_result
         })
 
-        self.assertEqual(etree.fromstring(view1.render()), etree.fromstring(expected_result))
+        self.assertEqual(etree.fromstring(view1._render()), etree.fromstring(expected_result))
 
     def test_render_static_xml_with_useless_distributed_namespace(self):
         """ Test that redundant namespaces are stripped upon rendering.
@@ -161,7 +190,7 @@ class TestQWebNS(TransactionCase):
             </root>
         """)
 
-        self.assertEqual(etree.fromstring(view1.render()), expected_result)
+        self.assertEqual(etree.fromstring(view1._render()), expected_result)
 
     def test_render_static_xml_with_namespace_3(self):
         expected_result = u"""
@@ -176,7 +205,7 @@ class TestQWebNS(TransactionCase):
             """ % expected_result
         })
 
-        self.assertEqual(etree.fromstring(view1.render()), etree.fromstring(expected_result))
+        self.assertEqual(etree.fromstring(view1._render()), etree.fromstring(expected_result))
 
     def test_render_dynamic_xml_with_namespace_t_esc(self):
         """ Test that rendering a template containing a node having both an ns declaration and a t-esc attribute correctly
@@ -194,7 +223,7 @@ class TestQWebNS(TransactionCase):
 
         expected_result = etree.fromstring(u"""<Invoice xmlns:cac="urn:oasis:names:specification:ubl:schema:xsd:CommonAggregateComponents-2">test</Invoice>""")
 
-        self.assertEqual(etree.fromstring(view1.render()), expected_result)
+        self.assertEqual(etree.fromstring(view1._render()), expected_result)
 
     def test_render_dynamic_xml_with_namespace_t_esc_with_useless_distributed_namespace(self):
         """ Test that rendering a template containing a node having both an ns declaration and a t-esc attribute correctly
@@ -218,7 +247,7 @@ class TestQWebNS(TransactionCase):
             </Invoice>
         """)
 
-        self.assertEqual(etree.fromstring(view1.render()), expected_result)
+        self.assertEqual(etree.fromstring(view1._render()), expected_result)
 
     def test_render_dynamic_xml_with_namespace_t_attf(self):
         """ Test that rendering a template containing a node having both an ns declaration and a t-attf attribute correctly
@@ -258,7 +287,7 @@ class TestQWebNS(TransactionCase):
             </root>
         """)
 
-        self.assertEqual(etree.fromstring(view1.render()), expected_result)
+        self.assertEqual(etree.fromstring(view1._render()), expected_result)
 
     def test_render_dynamic_xml_with_namespace_t_attf_with_useless_distributed_namespace(self):
         """ Test that rendering a template containing a node having both an ns declaration and a t-attf attribute correctly
@@ -300,7 +329,7 @@ class TestQWebNS(TransactionCase):
 
         """)
 
-        self.assertEqual(etree.fromstring(view1.render()), expected_result)
+        self.assertEqual(etree.fromstring(view1._render()), expected_result)
 
     def test_render_dynamic_xml_with_namespace_2(self):
         view1 = self.env['ir.ui.view'].create({
@@ -333,7 +362,7 @@ class TestQWebNS(TransactionCase):
             </Invoice>
         """)
 
-        self.assertEqual(etree.fromstring(view1.render({'version_id': 1.0})), expected_result)
+        self.assertEqual(etree.fromstring(view1._render({'version_id': 1.0})), expected_result)
 
     def test_render_static_xml_with_namespaced_attributes(self):
         view1 = self.env['ir.ui.view'].create({
@@ -348,7 +377,7 @@ class TestQWebNS(TransactionCase):
 
         expected_result = etree.fromstring(u"""<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd">abc</cfdi:Comprobante>""")
 
-        self.assertEqual(etree.fromstring(view1.render()), expected_result)
+        self.assertEqual(etree.fromstring(view1._render()), expected_result)
 
     def test_render_dynamic_xml_with_namespaced_attributes(self):
         view1 = self.env['ir.ui.view'].create({
@@ -363,7 +392,7 @@ class TestQWebNS(TransactionCase):
 
         expected_result = etree.fromstring("""<cfdi:Comprobante xmlns:cfdi="http://www.sat.gob.mx/cfd/3" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://www.sat.gob.mx/cfd/3 http://www.sat.gob.mx/sitio_internet/cfd/3/cfdv32.xsd">abc</cfdi:Comprobante>""")
 
-        self.assertEqual(etree.fromstring(view1.render()), expected_result)
+        self.assertEqual(etree.fromstring(view1._render()), expected_result)
 
     def test_render_static_xml_with_t_call(self):
         view1 = self.env['ir.ui.view'].create({
@@ -397,7 +426,7 @@ class TestQWebNS(TransactionCase):
             """
         })
 
-        result = view2.render()
+        result = view2._render()
         result_etree = etree.fromstring(result)
 
         # check that the root tag has all its xmlns
@@ -461,9 +490,72 @@ class TestQWebNS(TransactionCase):
         """)
 
         self.assertEqual(
-            etree.fromstring(view1.with_context(check_view_ids=[view1.id, view2.id]).render()),
+            etree.fromstring(view1.with_context(check_view_ids=[view1.id, view2.id])._render()),
             expected_result
         )
+
+    def test_render_dynamic_xml_with_code_error(self):
+        """ Test that, when rendering a template containing a namespaced node
+            that evaluates code with errors, the proper exception is raised
+        """
+        view1 = self.env['ir.ui.view'].create({
+            'name': "dummy",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.dummy">
+                    <Invoice xmlns:od="http://odoo.com/od">
+                        <od:name t-att-test="'a' + 1"/>
+                    </Invoice>
+                </t>
+            """
+        })
+
+        try:
+            "" + 0
+        except TypeError as e:
+            error_msg = e.args[0]
+
+        with self.assertRaises(QWebException, msg=error_msg):
+            view1._render()
+
+    def test_render_t_call_propagates_t_lang(self):
+        current_lang = 'en_US'
+        other_lang = 'fr_FR'
+
+        lang = self.env['res.lang']._activate_lang(other_lang)
+        lang.write({
+            'decimal_point': '*',
+            'thousands_sep': '/'
+        })
+
+        view1 = self.env['ir.ui.view'].create({
+            'name': "callee",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.callee">
+                    <t t-esc="9000000.00" t-options="{'widget': 'float', 'precision': 2}" />
+                </t>
+            """
+        })
+        self.env['ir.model.data'].create({
+            'name': 'callee',
+            'model': 'ir.ui.view',
+            'module': 'base',
+            'res_id': view1.id,
+        })
+
+        view2 = self.env['ir.ui.view'].create({
+            'name': "calling",
+            'type': 'qweb',
+            'arch': u"""
+                <t t-name="base.calling">
+                    <t t-call="base.callee" t-lang="'%s'" />
+                </t>
+            """ % other_lang
+        })
+
+        rendered = view2.with_context(lang=current_lang)._render().strip()
+        self.assertEqual(rendered, b'9/000/000*00')
 
 
 from copy import deepcopy
@@ -516,6 +608,7 @@ class TestQWeb(TransactionCase):
         return lambda: self.run_test_file(os.path.join(path, f))
 
     def run_test_file(self, path):
+        self.env.user.tz = 'Europe/Brussels'
         doc = etree.parse(path).getroot()
         loader = FileSystemLoader(path)
         qweb = self.env['ir.qweb']
@@ -529,10 +622,83 @@ class TestQWeb(TransactionCase):
 
             result = doc.find('result[@id="{}"]'.format(template)).text
             self.assertEqual(
-                qweb.render(template, values=params, load=loader).strip(),
+                qweb._render(template, values=params, load=loader).strip(),
                 (result or u'').strip().encode('utf-8'),
                 template
             )
+
+class TestPageSplit(TransactionCase):
+    # need to explicitly assertTreesEqual because I guess it's registered for
+    # equality between _Element *or* HtmlElement but we're comparing a parsed
+    # HtmlElement and a convenience _Element
+    def test_split_before(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr data-pagebreak="before"></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb']._render(t.id))
+        ref = E.div(
+            E.table(E.tr()),
+            E.div({'style': 'page-break-after: always'}),
+            E.table(E.tr({'data-pagebreak': 'before'}), E.tr())
+        )
+        self.assertTreesEqual(rendered, ref)
+
+    def test_split_after(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr data-pagebreak="after"></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb']._render(t.id))
+        self.assertTreesEqual(
+            rendered,
+            E.div(
+                E.table(E.tr(), E.tr({'data-pagebreak': 'after'})),
+                E.div({'style': 'page-break-after: always'}),
+                E.table(E.tr())
+            )
+        )
+
+    def test_dontsplit(self):
+        t = self.env['ir.ui.view'].create({
+            'name': 'test',
+            'type': 'qweb',
+            'arch_db': '''<t t-name='test'>
+            <div>
+                <table>
+                    <tr></tr>
+                    <tr></tr>
+                    <tr></tr>
+                </table>
+            </div>
+            </t>
+            '''
+        })
+        rendered = html.fromstring(self.env['ir.qweb']._render(t.id))
+        self.assertTreesEqual(
+            rendered,
+            E.div(E.table(E.tr(), E.tr(), E.tr()))
+        )
 
 def load_tests(loader, suite, _):
     # can't override TestQWeb.__dir__ because dir() called on *class* not

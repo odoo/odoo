@@ -2,68 +2,68 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import api, fields, models, _
+from odoo.tools import float_is_zero
 
 
 class PosMakePayment(models.TransientModel):
     _name = 'pos.make.payment'
-    _description = 'Point of Sale Payment'
+    _description = 'Point of Sale Make Payment Wizard'
 
-    def _default_session(self):
+    def _default_config(self):
         active_id = self.env.context.get('active_id')
         if active_id:
-            return self.env['pos.order'].browse(active_id).session_id
-        return False
-
-    def _default_journal(self):
-        active_id = self.env.context.get('active_id')
-        if active_id:
-            session = self.env['pos.order'].browse(active_id).session_id
-            return session.config_id.journal_ids and session.config_id.journal_ids.ids[0] or False
+            return self.env['pos.order'].browse(active_id).session_id.config_id
         return False
 
     def _default_amount(self):
         active_id = self.env.context.get('active_id')
         if active_id:
             order = self.env['pos.order'].browse(active_id)
-            return (order.amount_total - order.amount_paid)
+            return order.amount_total - order.amount_paid
         return False
 
-    session_id = fields.Many2one('pos.session', required=True, default=_default_session)
-    journal_id = fields.Many2one('account.journal', string='Payment Mode', required=True, default=_default_journal)
-    amount = fields.Float(digits=(16, 2), required=True, default=_default_amount)
+    def _default_payment_method(self):
+        active_id = self.env.context.get('active_id')
+        if active_id:
+            order_id = self.env['pos.order'].browse(active_id)
+            return order_id.session_id.payment_method_ids.sorted(lambda pm: pm.is_cash_count, reverse=True)[:1]
+        return False
+
+    config_id = fields.Many2one('pos.config', string='Point of Sale Configuration', required=True, default=_default_config)
+    amount = fields.Float(digits=0, required=True, default=_default_amount)
+    payment_method_id = fields.Many2one('pos.payment.method', string='Payment Method', required=True, default=_default_payment_method)
     payment_name = fields.Char(string='Payment Reference')
-    payment_date = fields.Date(string='Payment Date', required=True, default=lambda *a: fields.Datetime.now())
+    payment_date = fields.Datetime(string='Payment Date', required=True, default=lambda self: fields.Datetime.now())
 
-    @api.onchange('session_id')
-    def _on_change_session(self):
-        if self.session_id:
-            return {
-                'domain': {'journal_id': [('id', 'in', self.session_id.config_id.journal_ids.ids)]}
-            }
-
-    @api.multi
     def check(self):
         """Check the order:
         if the order is not paid: continue payment,
         if the order is paid print ticket.
         """
         self.ensure_one()
+
         order = self.env['pos.order'].browse(self.env.context.get('active_id', False))
-        amount = order.amount_total - order.amount_paid
-        data = self.read()[0]
-        # add_payment expect a journal key
-        data['journal'] = data['journal_id'][0]
-        if amount != 0.0:
-            order.add_payment(data)
-        if order.test_paid():
+        currency = order.currency_id
+
+        init_data = self.read()[0]
+        if not float_is_zero(init_data['amount'], precision_rounding=currency.rounding):
+            order.add_payment({
+                'pos_order_id': order.id,
+                'amount': currency.round(init_data['amount']) if currency else init_data['amount'],
+                'name': init_data['payment_name'],
+                'payment_method_id': init_data['payment_method_id'][0],
+            })
+
+        if float_is_zero(order.amount_total - order.amount_paid, precision_rounding=currency.rounding):
             order.action_pos_order_paid()
+            order._create_order_picking()
             return {'type': 'ir.actions.act_window_close'}
+
         return self.launch_payment()
 
     def launch_payment(self):
         return {
             'name': _('Payment'),
-            'view_type': 'form',
             'view_mode': 'form',
             'res_model': 'pos.make.payment',
             'view_id': False,
@@ -72,4 +72,3 @@ class PosMakePayment(models.TransientModel):
             'type': 'ir.actions.act_window',
             'context': self.env.context,
         }
-

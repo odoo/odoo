@@ -71,8 +71,6 @@ This means the first *group rule* restricts access, but any further
 .. warning:: record rules do not apply to the Administrator user
     :class: aphorism
 
-    although access rules do
-
 .. _reference/security/fields:
 
 Field Access

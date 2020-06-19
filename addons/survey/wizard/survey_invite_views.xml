@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="survey_invite_view_form">
+            <field name="name">survey.invite.view.form</field>
+            <field name="model">survey.invite</field>
+            <field name="arch" type="xml">
+                <form string="Compose Email">
+                    <group col="1">
+                        <group col="2">
+                            <field name="survey_access_mode" invisible="1"/>
+                            <field name="survey_users_login_required" invisible="1"/>
+                            <field name="survey_users_can_signup" invisible="1"/>
+                            <field name="survey_id" readonly="context.get('default_survey_id')"/>
+                            <field name="existing_mode" widget="radio" invisible="1" />
+                            <field name="survey_start_url" label="Public share URL" readonly="1" widget="CopyClipboardChar"
+                                 attrs="{'invisible':[('survey_access_mode', '!=', 'public')]}"
+                                 class="mb16"/>
+                            <field name="partner_ids"
+                                widget="many2many_tags_email"
+                                placeholder="Add existing contacts..."
+                                context="{'force_email':True, 'show_email':True, 'no_create_edit': True}"/>
+                            <field name="emails"
+                                attrs="{
+                                    'invisible': [('survey_users_login_required', '=', True)],
+                                }"
+                                placeholder="Add a list of email of recipients (will not be converted into contacts). Separated by commas, semicolons or newline..."/>
+                        </group>
+                        <div col="2" class="alert alert-warning" role="alert"
+                            attrs="{'invisible': ['|', ('survey_access_mode', '=', 'public'), ('existing_text', '=', False)]}">
+                            <field name="existing_text"/>
+                            <group col="2">
+                                <label for="existing_mode" string="Handle existing"/>
+                                <div>
+                                    <field name="existing_mode" nolabel="1"/>
+                                    <p attrs="{'invisible': [('existing_mode', '!=', 'resend')]}">Customers will receive the same token.</p>
+                                    <p attrs="{'invisible': [('existing_mode', '!=', 'new')]}">Customers will receive a new token and be able to completely retake the survey.</p>
+                                </div>
+                            </group>
+                            <field name="existing_partner_ids" invisible="1"/>
+                            <field name="existing_emails" invisible="1"/>
+                        </div>
+                        <group col="2">
+                            <field name="subject" placeholder="Subject..."/>
+                        </group>
+                        <field name="body" options="{'style-inline': true}"/>
+                        <group>
+                            <group>
+                                <field name="attachment_ids" widget="many2many_binary"/>
+                            </group>
+                            <group>
+                                <field name="deadline"/>
+                                <field name="template_id" label="Use template"/>
+                            </group>
+                        </group>
+                    </group>
+                    <footer>
+                        <button string="Send" name="action_invite" type="object" class="btn-primary"/>
+                        <button string="Cancel" class="btn-secondary" special="cancel"/>
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -8,7 +8,8 @@
         <field name="property_account_income_id" ref="47910_general_product_sales"/>
         <field name="property_account_expense_categ_id" ref="52900_general_product_cost"/>
         <field name="property_account_income_categ_id" ref="47910_general_product_sales"/>
-        <field name="income_currency_exchange_account_id" ref="47910_general_product_sales"/>
-        <field name="expense_currency_exchange_account_id" ref="52900_general_product_cost"/>
+        <field name="income_currency_exchange_account_id" ref="base_miscincome"/>
+        <field name="expense_currency_exchange_account_id" ref="base_miscexpense"/>
+        <field name="default_pos_receivable_account_id" ref="account_receivable_pos" />
     </record>
 </odoo>

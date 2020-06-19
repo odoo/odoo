@@ -2,118 +2,86 @@
 <odoo>
     <data>
 
-        <!-- Payment menu in settings -->
-        <menuitem
-            name='Payments'
-            id='root_payment_menu'
-            parent='account.menu_finance_configuration'/>
-
         <record id="acquirer_form" model="ir.ui.view">
             <field name="name">payment.acquirer.form</field>
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <form string="Payment Acquirer">
-                    <field name="environment" invisible='1'/>
                     <field name="fees_implemented" invisible='1'/>
                     <field name="token_implemented" invisible='1'/>
                     <field name="authorize_implemented" invisible="1"/>
                     <sheet>
                         <field name="module_id" invisible="1"/>
                         <field name="module_state" invisible="1"/>
-                        <div class="oe_button_box" name="button_box" attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
-                            <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
-                            <button name="toggle_environment_value"
-                                    attrs="{'invisible': ['|', ('environment', '=', 'test'), ('provider', '=', 'transfer')]}"
-                                    class="oe_stat_button"
-                                    type="object" icon="fa-play">
-                                <div class="o_stat_info o_field_widget">
-                                    <span class="text-success">Production</span>
-                                    <span class="o_stat_text">Environment</span>
-                                </div>
-                            </button>
-                            <!-- transfer referenced here due to view inheritance issue in current master (post-saas-16) -->
-                            <button name="toggle_environment_value"
-                                    attrs="{'invisible': ['|', ('environment', '=', 'prod'), ('provider', '=', 'transfer')]}"
-                                    class="oe_stat_button"
-                                    type="object" icon="fa-stop">
-                                <div class="o_stat_info o_field_widget">
-                                    <span class="o_warning_text">Test</span>
-                                    <span class="o_stat_text">Environment</span>
-                                </div>
-                            </button>
-                            <button name="toggle_website_published"
-                                    class="oe_stat_button"
-                                    type="object" icon="fa-globe">
-                                <field name="website_published" widget="boolean_button"
-                                    options='{"terminology": {"string_true": "Published", "hover_false": "Publish"}}'/>
-                            </button>
-                        </div>
-                        <field name="image" widget='image' class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                        <field name="module_to_buy" invisible="1"/>
+                        <field name="inbound_payment_method_ids" invisible="1"/>
+                        <field name="image_128" widget="image" class="oe_avatar"/>
+                        <widget name="web_ribbon" title="Disabled" bg_color="bg-danger" attrs="{'invisible': [('state', '!=', 'disabled')]}"/>
+                        <widget name="web_ribbon" title="Test Mode" bg_color="bg-warning" attrs="{'invisible': [('state', '!=', 'test')]}"/>
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Name"/></h1>
+                            <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
+                                <a attrs="{'invisible': [('module_to_buy', '=', False)]}" href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-info" role="button">Upgrade</a>
+                                <button attrs="{'invisible': [('module_to_buy', '=', True)]}" type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
+                            </div>
                         </div>
                         <div attrs="{'invisible': ['|', ('module_state', '=', 'installed'), ('module_id', '=', False)]}">
-                            <button type="object" class="btn btn-primary" name="button_immediate_install" string="Install"/>
                             <div class="o_payment_acquirer_desc">
                                 <field name="description"/>
                             </div>
                         </div>
-                        <group name="acquirer_base" col="2" attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
-                            <group name="acquirer_left">
-                                <field name="provider" groups="base.group_no_one"/>
+                        <group>
+                            <group name="payment_state">
+                                <field name="provider" groups="base.group_no_one" attrs="{'invisible': [('module_id', '!=', False), ('module_state', '!=', 'installed')]}"/>
+                                <field name="state" widget="radio" attrs="{'invisible': [('module_state', '=', 'uninstalled')]}"/>
                                 <field name="company_id" groups="base.group_multi_company" options='{"no_open":True}'/>
                             </group>
                         </group>
                         <notebook attrs="{'invisible': ['&amp;', ('module_id', '!=', False), ('module_state', '!=', 'installed')]}">
-                            <page string="Credentials" name="acquirer_credentials">
+                            <page string="Credentials" name="acquirer_credentials" attrs="{'invisible': [('provider', '=', 'manual')]}">
                                 <group name="acquirer">
                                 </group>
                             </page>
-                            <page string="Messages">
-                                <group>
-                                    <field name="pre_msg"/>
-                                    <field name="post_msg"/>
-                                    <field name="pending_msg"/>
-                                    <field name="done_msg"/>
-                                    <field name="cancel_msg"/>
-                                    <field name="error_msg"/>
+                            <page string="Configuration" name="configuration">
+                                <group name="acquirer_config">
+                                    <group string="Payment Form" name="payment_form">
+                                        <field name="display_as" placeholder="If not defined, the acquirer name will be used."/>
+                                        <field name="payment_icon_ids" widget="many2many_tags"/>
+                                        <field name="save_token" widget="radio" attrs="{'invisible': ['|', ('token_implemented', '=', False), ('payment_flow', '=', 's2s')]}"/>
+                                        <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
+                                        <field name="payment_flow" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
+                                        <field name="view_template_id" groups="base.group_no_one"/>
+                                        <field name="registration_view_template_id" groups="base.group_no_one" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}"/>
+                                        <field name="check_validity" attrs="{'invisible': [('payment_flow', '!=', 's2s')]}" groups="base.group_no_one"/>
+                                        <field name="qr_code" attrs="{'invisible': [('provider', '!=', 'transfer')]}"/>
+                                    </group>
+                                    <group string="Availability" name="availability">
+                                        <field name="country_ids" widget="many2many_tags" placeholder="Select countries. Leave empty to use everywhere."/>
+                                    </group>
+                                    <group string="Payment Followup" name="payment_followup">
+                                        <field name="journal_id" context="{'default_type': 'bank'}"
+                                          attrs="{'required': [('state', '!=', 'disabled'), ('provider', 'not in', ['manual', 'transfer'])]}"/>
+                                    </group>
                                 </group>
                             </page>
-                            <page string="Configuration">
-                                <group name="acquirer_config">
-                                    <field name="journal_id" context="{'default_type': 'bank'}"/>
-                                    <field name="capture_manually" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
-                                    <field name="save_token" widget="radio" attrs="{'invisible': [('token_implemented', '=', False)]}"/>
-                                    <field name="fees_active" attrs="{'invisible': [('fees_implemented', '=', False)]}"/>
+                            <page string="Fees" name="fees" attrs="{'invisible': [('fees_implemented', '=', False)]}">
+                                <group name="payment_fees">
+                                    <field name="fees_active"/>
                                     <field name="fees_dom_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <field name="fees_dom_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <field name="fees_int_fixed" attrs="{'invisible': [('fees_active', '=', False)]}"/>
                                     <field name="fees_int_var" attrs="{'invisible': [('fees_active', '=', False)]}"/>
-                                    <field name="specific_countries"/>
-                                    <field name="country_ids" widget="many2many_tags" attrs="{'invisible': [('specific_countries', '=', False)]}"/>
-                                    <label for="view_template_id" groups="base.group_no_one"/>
-                                    <div groups="base.group_no_one">
-                                        <field name="view_template_id" nolabel="1"/>
-                                        <div>
-                                            This template renders the acquirer button with all necessary values.
-                                            It is rendered with qWeb with the following evaluation context:
-                                            <ul>
-                                                <li>tx_url: transaction URL to post the form</li>
-                                                <li>acquirer: payment.acquirer browse record</li>
-                                                <li>user: current user browse record</li>
-                                                <li>reference: the transaction reference number</li>
-                                                <li>currency: the transaction currency browse record</li>
-                                                <li>amount: the transaction amount, a float</li>
-                                                <li>partner: the buyer partner browse record, not necessarily set</li>
-                                                <li>partner_values: specific values about the buyer, for example coming from a shipping form</li>
-                                                <li>tx_values: transaction values</li>
-                                                <li>context: the current context dictionary</li>
-                                            </ul>
-                                        </div>
-                                    </div>
-                                    <field name="registration_view_template_id" groups="base.group_no_one"/>
-                                    <field name="payment_icon_ids" widget="many2many_tags"/>
-                                    <field name="payment_flow" widget="radio"/>
+                                </group>
+                            </page>
+                            <page string="Messages"
+                                name="messages"
+                                attrs="{'invisible': [('module_id', '=', True), ('module_state', '!=', 'installed')]}">
+                                <group>
+                                    <field name="pre_msg"/>
+                                    <field name="auth_msg" attrs="{'invisible': [('authorize_implemented', '=', False)]}"/>
+                                    <field name="pending_msg"/>
+                                    <field name="done_msg"/>
+                                    <field name="cancel_msg"/>
                                 </group>
                             </page>
                         </notebook>
@@ -128,33 +96,38 @@
             <field name="name">payment.acquirer.kanban</field>
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
-                <kanban quick_create="false" create="true" class="o_kanban_payment_acquirer">
+                <kanban quick_create="false" create="true" class="o_kanban_payment_acquirer o_kanban_dashboard">
                     <field name="id"/>
                     <field name="name"/>
                     <field name="description"/>
-                    <field name="environment"/>
                     <field name="provider"/>
                     <field name="module_id"/>
                     <field name="module_state"/>
-                    <field name="website_published"/>
+                    <field name="module_to_buy"/>
+                    <field name="color"/>
                     <templates>
                         <t t-name="kanban-box">
                             <t t-set="installed" t-value="!record.module_id.value || (record.module_id.value &amp;&amp; record.module_state.raw_value === 'installed')"/>
-                            <div t-attf-class="oe_kanban_global_click #{installed and record.website_published.raw_value ? 'oe_kanban_color_5' : 'oe_kanban_color_white'}">
-                                <div class="o_kanban_image">
-                                    <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_small', record.id.raw_value)"/>
-                                </div>
+                            <t t-set="to_buy" t-value="record.module_to_buy.raw_value === true"/>
+                            <div t-attf-class="oe_kanban_global_click #{kanban_color(record.color.raw_value)}">
                                 <div class="o_payment_acquirer_desc">
+                                    <div class="o_kanban_image">
+                                        <img type="open" t-att-src="kanban_image('payment.acquirer', 'image_128', record.id.raw_value)" alt="Acquirer"/>
+                                    </div>
                                     <h3 class="mt4"><t t-esc="record.name.value"/></h3>
                                     <t t-if="record.description.raw_value" t-raw="record.description.raw_value"/>
                                 </div>
                                 <div class="o_payment_acquirer_bottom">
                                     <t t-if="installed">
-                                        <field name="environment" widget="label_selection" options="{'classes': {'test': 'warning', 'production': 'success'}}"/>
+                                        <field name="state" widget="label_selection" options="{'classes': {'enabled': 'success', 'test': 'warning', 'disabled' : 'danger'}}"/>
                                     </t>
-                                    <button t-if="!installed" type="object" class="btn btn-default pull-right btn-sm" name="button_immediate_install">Install</button>
-                                    <button t-if="installed and !record.website_published.raw_value" type="edit" class="btn btn-primary pull-right btn-sm">Activate</button>
-                                    <button t-if="installed and record.website_published.raw_value" type="edit" class="btn btn-primary pull-right btn-sm">Configure</button>
+                                    <button t-if="!installed and !selection_mode and !to_buy" type="object" class="btn btn-secondary float-right" name="button_immediate_install">Install</button>
+                                    <t t-if="!installed and to_buy">
+                                        <button href="https://odoo.com/pricing?utm_source=db&amp;utm_medium=module" class="btn btn-info btn-sm float_right">Upgrade</button>
+                                        <span class="badge badge-primary oe_inline o_enterprise_label">Enterprise</span>
+                                    </t>
+                                    <button t-if="installed and record.state.raw_value == 'disabled' and !selection_mode" type="edit" class="btn btn-primary float-right">Activate</button>
+                                    <button t-if="installed and record.state.raw_value in ['enabled', 'test'] and !selection_mode" type="edit" class="btn btn-primary float-right">Configure</button>
                                 </div>
                             </div>
                         </t>
@@ -171,8 +144,9 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="provider"/>
-                    <field name="website_published"/>
-                    <field name="environment"/>
+                    <field name="state"/>
+                    <field name="country_ids" widget="many2many_tags" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company"/>
                 </tree>
             </field>
         </record>
@@ -182,11 +156,12 @@
             <field name="model">payment.acquirer</field>
             <field name="arch" type="xml">
                 <search>
-                    <field name="name"/>
+                    <field name="name" string="Acquirer" filter_domain="['|', ('name','ilike',self), ('description','ilike',self)]"/>
                     <field name="provider"/>
+                    <filter name="acquirer_installed" string="Installed" domain="[('provider', '!=', 'manual')]"/>
                     <group expand="0" string="Group By">
                         <filter string="Provider" name="provider" domain="[]" context="{'group_by': 'provider'}"/>
-                        <filter string="Environment" name="environment" domain="[]" context="{'group_by': 'environment'}"/>
+                        <filter string="State" name="state" domain="[]" context="{'group_by': 'state'}"/>
                     </group>
                 </search>
             </field>
@@ -195,11 +170,10 @@
         <record id="action_payment_acquirer" model="ir.actions.act_window">
             <field name="name">Payment Acquirers</field>
             <field name="res_model">payment.acquirer</field>
-            <field name='view_type'>form</field>
             <field name='view_mode'>kanban,tree,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to create a payment acquirer.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new payment acquirer
                 </p>
             </field>
         </record>
@@ -207,7 +181,7 @@
         <menuitem
             action='action_payment_acquirer'
             id='payment_acquirer_menu'
-            parent='root_payment_menu'
+            parent='account.root_payment_menu'
             sequence='10' />
 
         <!-- Payment transactions -->
@@ -215,16 +189,25 @@
             <field name="name">payment.transaction.form</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
-                <form string="Payment Transactions">
+                <form string="Payment Transactions" create="false" edit="false">
                     <header>
                         <button type="object" name="action_capture" states="authorized" string="Capture Transaction" class="oe_highlight"/>
-                        <button type="object" name="action_void" states="authorized" string="Void Transaction"/>
-                        <field name="state" widget="statusbar" clickable="True"/>
+                        <button type="object" name="action_void" states="authorized" string="Void Transaction"
+                                confirm="Are you sure you want to void the authorized transaction? This action can't be undone."/>
+                        <field name="state" widget="statusbar"/>
                     </header>
                     <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="action_view_invoices" type="object"
+                                    class="oe_stat_button" icon="fa-money"
+                                    attrs="{'invisible': [('invoice_ids_nbr', '=', 0)]}">
+                                <field name="invoice_ids_nbr" widget="statinfo" string="Invoice(s)"/>
+                            </button>
+                        </div>
                         <group>
                             <group>
                                 <field name="reference"/>
+                                <field name="payment_id"/>
                                 <label for="amount"/>
                                 <div class="o_row">
                                     <field name="amount"/>
@@ -250,8 +233,7 @@
                                 <field name="provider" invisible="1"/>
                                 <field name="payment_token_id" options="{'no_create': True}"/>
                                 <field name="acquirer_reference" readonly="1"/>
-                                <field name="create_date"/>
-                                <field name="date_validate"/>
+                                <field name="date"/>
                             </group>
                         </group>
                         <group string="Message">
@@ -266,7 +248,7 @@
             <field name="name">payment.transaction.list</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
-                <tree string="Payment Transactions">
+                <tree string="Payment Transactions" create="false">
                     <field name="reference"/>
                     <field name="create_date"/>
                     <field name="acquirer_id"/>
@@ -283,22 +265,19 @@
             <field name="name">payment.transaction.kanban</field>
             <field name="model">payment.transaction</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" create="false">
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_content oe_kanban_global_click">
                                 <div class="row">
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <strong><field name="reference"/></strong>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <span class="pull-right"><field name="create_date"/></span>
-                                    </div>
-                                    <div class="col-xs-6">
+                                    <div class="col-6">
                                         <span><field name="partner_name"/></span>
                                     </div>
-                                    <div class="col-xs-6">
-                                        <span class="pull-right">
+                                    <div class="col-6">
+                                        <span class="float-right">
                                             <field name="amount" widget="monetary"/>
                                         </span>
                                     </div>
@@ -326,14 +305,18 @@
         <record id="action_payment_transaction" model="ir.actions.act_window">
             <field name="name">Payment Transactions</field>
             <field name="res_model">payment.transaction</field>
-            <field name='view_type'>form</field>
             <field name='view_mode'>tree,kanban,form</field>
+            <field name="help" type="html">
+              <p class="o_view_nocontent_smiling_face">
+                Create a new payment transaction
+              </p>
+            </field>
         </record>
 
         <menuitem
             action='action_payment_transaction'
             id='payment_transaction_menu'
-            parent='root_payment_menu'
+            parent='account.root_payment_menu'
             groups="base.group_no_one"
             sequence='20' />
 
@@ -358,6 +341,8 @@
             <field name='arch' type='xml'>
                 <search string='Payment Tokens'>
                     <field name='partner_id'/>
+                    <separator/>
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
@@ -365,7 +350,6 @@
         <record id="action_payment_tx_ids" model="ir.actions.act_window">
             <field name="name">Payment Transactions</field>
             <field name="res_model">payment.transaction</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="domain">[('payment_token_id','=', active_id)]</field>
             <field name="context">{'create': False}</field>
@@ -387,7 +371,7 @@
                             <field name='partner_id' />
                         </group>
                         <group>
-                            <field name="active"/>
+                            <field name="active" widget='boolean_toggle'/>
                             <field name='acquirer_id'/>
                             <field name='acquirer_ref'/>
                         </group>
@@ -399,14 +383,18 @@
         <record model='ir.actions.act_window' id='payment_token_action'>
             <field name='name'>Saved Payment Data</field>
             <field name='res_model'>payment.token</field>
-            <field name='view_type'>form</field>
             <field name='view_mode'>tree,form</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a saved payment data
+                </p>
+            </field>
         </record>
 
         <menuitem
             action='payment_token_action'
             id='payment_token_menu'
-            parent='root_payment_menu'
+            parent='account.root_payment_menu'
             groups='base.group_no_one'/>
 
         <!-- Payment icons -->
@@ -416,17 +404,15 @@
             <field name="arch" type="xml">
                 <form string="Payment Icon">
                     <sheet>
-                        <field name="image" widget="image" class="oe_avatar" options='{"preview_image": "image_medium"}'/>
+                        <field name="image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <h1><field name="name" placeholder="Name"/></h1>
                         </div>
-                        <group group="base.group_no_one">
-                            <notebook>
-                                <page string="Acquirers list">
-                                    <field nolabel="1" name="acquirer_ids"/>
-                                </page>
-                            </notebook>
-                        </group>
+                        <notebook>
+                            <page string="Acquirers list" name="acquirers">
+                                <field nolabel="1" name="acquirer_ids"/>
+                            </page>
+                        </notebook>
                     </sheet>
                 </form>
             </field>
@@ -435,11 +421,10 @@
         <record id="action_payment_icon" model="ir.actions.act_window">
             <field name="name">Payment Icons</field>
             <field name="res_model">payment.icon</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                    Click to create a payment icon.
+                <p class="o_view_nocontent_smiling_face">
+                    Create a payment icon
                 </p>
             </field>
         </record>
@@ -447,7 +432,7 @@
         <menuitem
             action="action_payment_icon"
             id="payment_icon_menu"
-            parent="root_payment_menu"
+            parent="account.root_payment_menu"
             groups="base.group_no_one"/>
     </data>
 </odoo>

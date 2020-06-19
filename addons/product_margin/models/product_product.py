@@ -17,9 +17,9 @@ class ProductProduct(models.Model):
             ('open_paid', 'Open and Paid'),
             ('draft_open_paid', 'Draft, Open and Paid')
         ], string='Invoice State', readonly=True)
-    sale_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Unit Price',
+    sale_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Sale Unit Price',
         help="Avg. Price in Customer Invoices.")
-    purchase_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Unit Price',
+    purchase_avg_price = fields.Float(compute='_compute_product_margin_fields_values', string='Avg. Purchase Unit Price',
         help="Avg. Price in Vendor Bills ")
     sale_num_invoiced = fields.Float(compute='_compute_product_margin_fields_values', string='# Invoiced in Sale',
         help="Sum of Quantity in Customer Invoices")
@@ -89,44 +89,58 @@ class ProductProduct(models.Model):
             res[val.id]['date_from'] = date_from
             res[val.id]['date_to'] = date_to
             res[val.id]['invoice_state'] = invoice_state
-            invoice_types = ()
             states = ()
+            payment_states = ()
             if invoice_state == 'paid':
-                states = ('paid',)
+                states = ('posted',)
+                payment_states = ('paid',)
             elif invoice_state == 'open_paid':
-                states = ('open', 'paid')
+                states = ('posted',)
+                payment_states = ('not_paid', 'paid')
             elif invoice_state == 'draft_open_paid':
-                states = ('draft', 'open', 'paid')
-            if "force_company" in self.env.context:
-                company_id = self.env.context['force_company']
-            else:
-                company_id = self.env.user.company_id.id
+                states = ('posted', 'draft')
+                payment_states = ('not_paid', 'paid')
+            company_id = self.env.company.id
 
             #Cost price is calculated afterwards as it is a property
+            self.env['account.move.line'].flush(['price_unit', 'quantity', 'balance', 'product_id', 'display_type'])
+            self.env['account.move'].flush(['state', 'payment_state', 'move_type', 'invoice_date', 'company_id'])
+            self.env['product.template'].flush(['list_price'])
             sqlstr = """
-                select
-                    sum(l.price_unit * l.quantity)/nullif(sum(l.quantity),0) as avg_unit_price,
-                    sum(l.quantity) as num_qty,
-                    sum(l.quantity * (l.price_subtotal/(nullif(l.quantity,0)))) as total,
-                    sum(l.quantity * pt.list_price) as sale_expected
-                from account_invoice_line l
-                left join account_invoice i on (l.invoice_id = i.id)
-                left join product_product product on (product.id=l.product_id)
-                left join product_template pt on (pt.id = product.product_tmpl_id)
-                where l.product_id = %s and i.state in %s and i.type IN %s and (i.date_invoice IS NULL or (i.date_invoice>=%s and i.date_invoice<=%s and i.company_id=%s))
-                """
-            invoice_types = ('out_invoice', 'in_refund')
-            self.env.cr.execute(sqlstr, (val.id, states, invoice_types, date_from, date_to, company_id))
+                WITH currency_rate AS ({})
+                SELECT
+                    SUM(l.price_unit / (CASE COALESCE(cr.rate, 0) WHEN 0 THEN 1.0 ELSE cr.rate END) * l.quantity) / NULLIF(SUM(l.quantity),0) AS avg_unit_price,
+                    SUM(l.quantity * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS num_qty,
+                    SUM(ABS(l.balance) * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS total,
+                    SUM(l.quantity * pt.list_price * (CASE WHEN i.move_type IN ('out_invoice', 'in_invoice') THEN 1 ELSE -1 END)) AS sale_expected
+                FROM account_move_line l
+                LEFT JOIN account_move i ON (l.move_id = i.id)
+                LEFT JOIN product_product product ON (product.id=l.product_id)
+                LEFT JOIN product_template pt ON (pt.id = product.product_tmpl_id)
+                left join currency_rate cr on
+                (cr.currency_id = i.currency_id and
+                 cr.company_id = i.company_id and
+                 cr.date_start <= COALESCE(i.invoice_date, NOW()) and
+                 (cr.date_end IS NULL OR cr.date_end > COALESCE(i.invoice_date, NOW())))
+                WHERE l.product_id = %s
+                AND i.state IN %s
+                AND i.payment_state IN %s
+                AND i.move_type IN %s
+                AND i.invoice_date BETWEEN %s AND  %s
+                AND i.company_id = %s
+                AND l.display_type IS NULL
+                AND l.exclude_from_invoice_tab = false
+                """.format(self.env['res.currency']._select_companies_rates())
+            invoice_types = ('out_invoice', 'out_refund')
+            self.env.cr.execute(sqlstr, (val.id, states, payment_states, invoice_types, date_from, date_to, company_id))
             result = self.env.cr.fetchall()[0]
             res[val.id]['sale_avg_price'] = result[0] and result[0] or 0.0
             res[val.id]['sale_num_invoiced'] = result[1] and result[1] or 0.0
             res[val.id]['turnover'] = result[2] and result[2] or 0.0
             res[val.id]['sale_expected'] = result[3] and result[3] or 0.0
             res[val.id]['sales_gap'] = res[val.id]['sale_expected'] - res[val.id]['turnover']
-            ctx = self.env.context.copy()
-            ctx['force_company'] = company_id
-            invoice_types = ('in_invoice', 'out_refund')
-            self.env.cr.execute(sqlstr, (val.id, states, invoice_types, date_from, date_to, company_id))
+            invoice_types = ('in_invoice', 'in_refund')
+            self.env.cr.execute(sqlstr, (val.id, states, payment_states, invoice_types, date_from, date_to, company_id))
             result = self.env.cr.fetchall()[0]
             res[val.id]['purchase_avg_price'] = result[0] and result[0] or 0.0
             res[val.id]['purchase_num_invoiced'] = result[1] and result[1] or 0.0

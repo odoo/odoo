@@ -11,4 +11,4 @@ class ResUsers(models.Model):
         'resource.resource', 'user_id', 'Resources')
     resource_calendar_id = fields.Many2one(
         'resource.calendar', 'Default Working Hours',
-        related='resource_ids.calendar_id')
+        related='resource_ids.calendar_id', readonly=False)

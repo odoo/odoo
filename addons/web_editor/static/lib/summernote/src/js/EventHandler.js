@@ -206,12 +206,19 @@ define([
       setTimeout(function () {
         var layoutInfo = dom.makeLayoutInfo(target);
         /* ODOO: (start_modification */
+        if (!layoutInfo) {
+            return;
+        }
         var $editable = layoutInfo.editable();
-        if (!event.isDefaultPrevented()) {
-          modules.editor.saveRange($editable);
+        if (event.setStyleInfoFromEditable) {
+            var styleInfo = modules.editor.styleFromNode($editable);
+        } else {
+            if (!event.isDefaultPrevented()) {
+              modules.editor.saveRange($editable);
+            }
+            var styleInfo = modules.editor.currentStyle(target);
         }
         /* ODOO: end_modification) */
-        var styleInfo = modules.editor.currentStyle(target);
         self.updateStyleInfo(styleInfo, layoutInfo);
       }, 0);
     };
@@ -361,7 +368,7 @@ define([
             (keycode > 185 && keycode < 193) || // ;=,-./` (in order)
             (keycode > 218 && keycode < 223))) {   // [\]' (in order))
           eventName = 'visible';
-        } else if (!keycode) {
+        } else if (!keycode && event.key !== 'Dead') {
           self.invoke('restoreRange', $editable);
         }
         // ODOO: end_modification)
@@ -472,7 +479,8 @@ define([
         onImageUpload: options.onImageUpload,
         onImageUploadError: options.onImageUploadError,
         onMediaDelete: options.onMediaDelete,
-        onToolbarClick: options.onToolbarClick
+        onToolbarClick: options.onToolbarClick,
+        onUpload: options.onUpload,
       });
 
       var styleInfo = modules.editor.styleFromNode(layoutInfo.editable());

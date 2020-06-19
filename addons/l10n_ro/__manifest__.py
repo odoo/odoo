@@ -11,7 +11,7 @@
     "name" : "Romania - Accounting",
     "author" : "Fekete Mihai (Forest and Biomass Services Romania)",
     "website": "http://www.forbiom.eu",
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     "depends" : [
         'account',
         'base_vat',
@@ -25,11 +25,16 @@ Romanian accounting chart and localization.
     """,
     "data": ['views/res_partner_view.xml',
              'data/l10n_ro_chart_data.xml',
+             'data/account.account.template.csv',
+             'data/l10n_ro_chart_post_data.xml',
              'data/account_data.xml',
+             'data/account_tax_report_data.xml',
              'data/account_tax_data.xml',
              'data/account_fiscal_position_data.xml',
-             'data/account_chart_template_data.yml',
-             'data/res.country.state.csv',
+             'data/account_chart_template_data.xml',
              'data/res.bank.csv',
              ],
+    'demo': [
+        'demo/demo_company.xml',
+    ],
 }

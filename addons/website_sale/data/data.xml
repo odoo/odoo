@@ -18,19 +18,23 @@
             <field name="state">open</field>
         </record>
 
-        <record id="website_sale.image_promo" model="product.style">
-            <field name="name">Sale Ribbon</field>
-            <field name="html_class">oe_ribbon_promo</field>
-        </record>
-        <record id="website_sale.image_full" model="product.style">
-            <field name="name">Image Full</field>
-            <field name="html_class">oe_image_full</field>
+        <record id="website_sale.sale_ribbon" model="product.ribbon">
+            <field name="html">Sale</field>
+            <field name="html_class">bg-success o_ribbon_left</field>
         </record>
 
-        <record model="crm.team" id="sales_team.salesteam_website_sales">
+        <record id="website_sale.sold_out_ribbon" model="product.ribbon">
+            <field name="html">Sold out</field>
+            <field name="html_class">bg-danger o_ribbon_left</field>
+        </record>
+
+        <record id="website_sale.new_ribbon" model="product.ribbon">
+            <field name="html">New!</field>
+            <field name="html_class">bg-primary o_ribbon_left</field>
+        </record>
+
+        <record id="sales_team.salesteam_website_sales" model="crm.team">
             <field name="active" eval="True"/>
-            <field name="dashboard_graph_model">sale.report</field>
-            <field name="dashboard_graph_period">week</field>
         </record>
 
         <record model="website" id="website.default_website">
@@ -38,15 +42,11 @@
         </record>
 
         <record model="product.pricelist" id="product.list0">
-            <field name="selectable" eval="False" />
-            <field name="website_id" ref="website.default_website" />
+            <field name="selectable" eval="True" />
+            <field name="website_id" eval="False"/>
         </record>
     </data>
     <data>
-        <record id="sale.model_sale_order" model="ir.model">
-            <field name="website_form_access" eval="True"/>
-            <field name="website_form_label">Sales Order</field>
-        </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>sale.order</value>
             <value eval="[
@@ -55,8 +55,9 @@
         </function>
 
         <record id="base.model_res_partner" model="ir.model">
+            <field name="website_form_key">create_customer</field>
             <field name="website_form_access">True</field>
-            <field name="website_form_label">Customer</field>
+            <field name="website_form_label">Create a Customer</field>
         </record>
         <function model="ir.model.fields" name="formbuilder_whitelist">
             <value>res.partner</value>

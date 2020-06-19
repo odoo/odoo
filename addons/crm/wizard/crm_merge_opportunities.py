@@ -15,7 +15,7 @@ class MergeOpportunity(models.TransientModel):
     """
 
     _name = 'crm.merge.opportunity'
-    _description = 'Merge opportunities'
+    _description = 'Merge Opportunities'
 
     @api.model
     def default_get(self, fields):
@@ -34,28 +34,23 @@ class MergeOpportunity(models.TransientModel):
 
     opportunity_ids = fields.Many2many('crm.lead', 'merge_opportunity_rel', 'merge_id', 'opportunity_id', string='Leads/Opportunities')
     user_id = fields.Many2one('res.users', 'Salesperson', index=True)
-    team_id = fields.Many2one('crm.team', 'Sales Channel', oldname='section_id', index=True)
+    team_id = fields.Many2one(
+        'crm.team', 'Sales Team', index=True,
+        compute='_compute_team_id', readonly=False, store=True)
 
-    @api.multi
     def action_merge(self):
         self.ensure_one()
         merge_opportunity = self.opportunity_ids.merge_opportunity(self.user_id.id, self.team_id.id)
+        return merge_opportunity.redirect_lead_opportunity_view()
 
-        # The newly created lead might be a lead or an opp: redirect toward the right view
-        if merge_opportunity.type == 'opportunity':
-            return merge_opportunity.redirect_opportunity_view()
-        else:
-            return merge_opportunity.redirect_lead_view()
-
-    @api.onchange('user_id')
-    def _onchange_user(self):
+    @api.depends('user_id')
+    def _compute_team_id(self):
         """ When changing the user, also set a team_id or restrict team id
             to the ones user_id is member of. """
-        team_id = False
-        if self.user_id:
-            user_in_team = False
-            if self.team_id:
-                user_in_team = self.env['crm.team'].search_count([('id', '=', self.team_id.id), '|', ('user_id', '=', self.user_id.id), ('member_ids', '=', self.user_id.id)])
-            if not user_in_team:
-                team_id = self.env['crm.team'].search(['|', ('user_id', '=', self.user_id.id), ('member_ids', '=', self.user_id.id)], limit=1)
-        self.team_id = team_id
+        for wizard in self:
+            if wizard.user_id:
+                user_in_team = False
+                if wizard.team_id:
+                    user_in_team = wizard.env['crm.team'].search_count([('id', '=', wizard.team_id.id), '|', ('user_id', '=', wizard.user_id.id), ('member_ids', '=', wizard.user_id.id)])
+                if not user_in_team:
+                    wizard.team_id = wizard.env['crm.team'].search(['|', ('user_id', '=', wizard.user_id.id), ('member_ids', '=', wizard.user_id.id)], limit=1)                    

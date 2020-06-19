@@ -4,7 +4,7 @@
 {
     'name': 'Collaborative Pads',
     'version': '2.0',
-    'category': 'Extra Tools',
+    'category': 'Hidden/Tools',
     'description': """
 Adds enhanced support for (Ether)Pad attachments in the web client.
 ===================================================================
@@ -12,7 +12,6 @@ Adds enhanced support for (Ether)Pad attachments in the web client.
 Lets the company customize which Pad installation should be used to link to new
 pads (by default, http://etherpad.com/).
     """,
-    'website': 'https://www.odoo.com/page/notes',
     'depends': ['web', 'base_setup'],
     'data': [
         'views/pad.xml',

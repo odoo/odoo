@@ -12,17 +12,11 @@ import sys
 import threading
 import traceback
 
-
-try:
-    from xmlrpc import client as xmlrpclib
-except ImportError:
-    # pylint: disable=bad-python3-import
-    import xmlrpclib
+from xmlrpc import client as xmlrpclib
 
 import werkzeug.exceptions
 import werkzeug.wrappers
 import werkzeug.serving
-import werkzeug.contrib.fixers
 
 import odoo
 from odoo.tools import config
@@ -40,22 +34,14 @@ RPC_FAULT_CODE_ACCESS_DENIED = 3
 RPC_FAULT_CODE_ACCESS_ERROR = 4
 
 def xmlrpc_handle_exception_int(e):
-    if isinstance(e, odoo.exceptions.UserError):
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, odoo.tools.ustr(e.value))
-    elif isinstance(e, odoo.exceptions.RedirectWarning):
+    if isinstance(e, odoo.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
-    elif isinstance(e, odoo.exceptions.MissingError):
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
-    elif isinstance (e, odoo.exceptions.AccessError):
+    elif isinstance(e, odoo.exceptions.AccessError):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_ERROR, str(e))
     elif isinstance(e, odoo.exceptions.AccessDenied):
         fault = xmlrpclib.Fault(RPC_FAULT_CODE_ACCESS_DENIED, str(e))
-    elif isinstance(e, odoo.exceptions.DeferredException):
-        info = e.traceback
-        # Which one is the best ?
-        formatted_info = "".join(traceback.format_exception(*info))
-        #formatted_info = odoo.tools.exception_to_unicode(e) + '\n' + info
-        fault = xmlrpclib.Fault(RPC_FAULT_CODE_APPLICATION_ERROR, formatted_info)
+    elif isinstance(e, odoo.exceptions.UserError):
+        fault = xmlrpclib.Fault(RPC_FAULT_CODE_WARNING, str(e))
     else:
         info = sys.exc_info()
         # Which one is the best ?
@@ -66,9 +52,7 @@ def xmlrpc_handle_exception_int(e):
     return xmlrpclib.dumps(fault, allow_none=None)
 
 def xmlrpc_handle_exception_string(e):
-    if isinstance(e, odoo.exceptions.UserError):
-        fault = xmlrpclib.Fault('warning -- %s\n\n%s' % (e.name, e.value), '')
-    elif isinstance(e, odoo.exceptions.RedirectWarning):
+    if isinstance(e, odoo.exceptions.RedirectWarning):
         fault = xmlrpclib.Fault('warning -- Warning\n\n' + str(e), '')
     elif isinstance(e, odoo.exceptions.MissingError):
         fault = xmlrpclib.Fault('warning -- MissingError\n\n' + str(e), '')
@@ -76,10 +60,8 @@ def xmlrpc_handle_exception_string(e):
         fault = xmlrpclib.Fault('warning -- AccessError\n\n' + str(e), '')
     elif isinstance(e, odoo.exceptions.AccessDenied):
         fault = xmlrpclib.Fault('AccessDenied', str(e))
-    elif isinstance(e, odoo.exceptions.DeferredException):
-        info = e.traceback
-        formatted_info = "".join(traceback.format_exception(*info))
-        fault = xmlrpclib.Fault(odoo.tools.ustr(e), formatted_info)
+    elif isinstance(e, odoo.exceptions.UserError):
+        fault = xmlrpclib.Fault('warning -- UserError\n\n' + str(e), '')
     #InternalError
     else:
         info = sys.exc_info()
@@ -88,40 +70,16 @@ def xmlrpc_handle_exception_string(e):
 
     return xmlrpclib.dumps(fault, allow_none=None, encoding=None)
 
-def wsgi_xmlrpc(environ, start_response):
-    """ Two routes are available for XML-RPC
+def _patch_xmlrpc_marshaller():
+    # By default, in xmlrpc, bytes are converted to xmlrpclib.Binary object.
+    # Historically, odoo is sending binary as base64 string.
+    # In python 3, base64.b64{de,en}code() methods now works on bytes.
+    # Convert them to str to have a consistent behavior between python 2 and python 3.
+    # TODO? Create a `/xmlrpc/3` route prefix that respect the standard and uses xmlrpclib.Binary.
+    def dump_bytes(marshaller, value, write):
+        marshaller.dump_unicode(odoo.tools.ustr(value), write)
 
-    /xmlrpc/<service> route returns faultCode as strings. This is a historic
-    violation of the protocol kept for compatibility.
-
-    /xmlrpc/2/<service> is a new route that returns faultCode as int and is
-    therefore fully compliant.
-    """
-    if environ['REQUEST_METHOD'] == 'POST' and environ['PATH_INFO'].startswith('/xmlrpc/'):
-        length = int(environ['CONTENT_LENGTH'])
-        data = environ['wsgi.input'].read(length)
-
-        # Distinguish betweed the 2 faultCode modes
-        string_faultcode = True
-        service = environ['PATH_INFO'][len('/xmlrpc/'):]
-        if environ['PATH_INFO'].startswith('/xmlrpc/2/'):
-            service = service[len('2/'):]
-            string_faultcode = False
-
-        params, method = xmlrpclib.loads(data)
-        try:
-            result = odoo.http.dispatch_rpc(service, method, params)
-            response = xmlrpclib.dumps((result,), methodresponse=1, allow_none=False)
-        except Exception as e:
-            if string_faultcode:
-                response = xmlrpc_handle_exception_string(e)
-            else:
-                response = xmlrpc_handle_exception_int(e)
-
-        return werkzeug.wrappers.Response(
-            response=response,
-            mimetype='text/xml',
-        )(environ, start_response)
+    xmlrpclib.Marshaller.dispatch[bytes] = dump_bytes
 
 def application_unproxied(environ, start_response):
     """ WSGI entry point."""
@@ -129,7 +87,7 @@ def application_unproxied(environ, start_response):
     # web.session.OpenERPSession.send() and at RPC dispatch in
     # odoo.service.web_services.objects_proxy.dispatch().
     # /!\ The cleanup cannot be done at the end of this `application`
-    # method because werkzeug still produces relevant logging afterwards 
+    # method because werkzeug still produces relevant logging afterwards
     if hasattr(threading.current_thread(), 'uid'):
         del threading.current_thread().uid
     if hasattr(threading.current_thread(), 'dbname'):
@@ -138,18 +96,29 @@ def application_unproxied(environ, start_response):
         del threading.current_thread().url
 
     with odoo.api.Environment.manage():
-        # Try all handlers until one returns some result (i.e. not None).
-        for handler in [wsgi_xmlrpc, odoo.http.root]:
-            result = handler(environ, start_response)
-            if result is None:
-                continue
+        result = odoo.http.root(environ, start_response)
+        if result is not None:
             return result
 
     # We never returned from the loop.
     return werkzeug.exceptions.NotFound("No handler found.\n")(environ, start_response)
 
+try:
+    # werkzeug >= 0.15
+    from werkzeug.middleware.proxy_fix import ProxyFix as ProxyFix_
+    # 0.15 also supports port and prefix, but 0.14 only forwarded for, proto
+    # and host so replicate that
+    ProxyFix = lambda app: ProxyFix_(app, x_for=1, x_proto=1, x_host=1)
+except ImportError:
+    # werkzeug < 0.15
+    from werkzeug.contrib.fixers import ProxyFix
+
 def application(environ, start_response):
+    # FIXME: is checking for the presence of HTTP_X_FORWARDED_HOST really useful?
+    #        we're ignoring the user configuration, and that means we won't
+    #        support the standardised Forwarded header once werkzeug supports
+    #        it
     if config['proxy_mode'] and 'HTTP_X_FORWARDED_HOST' in environ:
-        return werkzeug.contrib.fixers.ProxyFix(application_unproxied)(environ, start_response)
+        return ProxyFix(application_unproxied)(environ, start_response)
     else:
         return application_unproxied(environ, start_response)

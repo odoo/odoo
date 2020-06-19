@@ -4,7 +4,7 @@
 {
     'name': 'Employee Contracts',
     'version': '1.0',
-    'category': 'Human Resources',
+    'category': 'Human Resources/Contracts',
     'description': """
 Add all information on the employee form to manage contracts.
 =============================================================
@@ -19,11 +19,15 @@ You can assign several contracts per employee.
     'website': 'https://www.odoo.com/page/employees',
     'depends': ['hr'],
     'data': [
+        'security/security.xml',
         'security/ir.model.access.csv',
         'data/hr_contract_data.xml',
         'views/hr_contract_views.xml',
+        'views/assets.xml',
+        'wizard/hr_departure_wizard_views.xml',
     ],
-    'demo': [],
+    'demo': ['data/hr_contract_demo.xml'],
     'installable': True,
     'auto_install': False,
+    'application': True,
 }

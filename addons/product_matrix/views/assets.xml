@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template id="assets_backend_inherit_sale" inherit_id="web.assets_backend" name="Sale Grid assets">
+        <xpath expr="script[last()]" position="after">
+            <script type="text/javascript" src="/product_matrix/static/src/js/section_and_note_widget.js"/>
+            <link rel="stylesheet" type="text/scss" href="/product_matrix/static/src/scss/product_matrix.scss"/>
+        </xpath>
+    </template>
+</odoo>

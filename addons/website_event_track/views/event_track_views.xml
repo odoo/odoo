@@ -14,19 +14,20 @@
                         <field name="website_url"/>
                         <field name="activity_ids"/>
                         <field name="activity_state"/>
+                        <progressbar field="kanban_state" colors='{"done": "success", "blocked": "danger"}'/>
                         <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click">
+                            <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click">
                                 <div class="o_dropdown_kanban dropdown" groups="base.group_user">
 
-                                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                         <span class="fa fa-ellipsis-v"/>
                                     </a>
-                                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                                        <li><a t-att-href="record.website_url.value">View Track</a></li>
-                                        <t t-if="widget.editable"><li><a type="edit">Edit Track</a></li></t>
-                                        <t t-if="widget.deletable"><li><a type="delete">Delete</a></li></t>
-                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                                    </ul>
+                                    <div class="dropdown-menu" role="menu">
+                                        <a role="menuitem" t-att-href="record.website_url.value" class="dropdown-item">View Track</a>
+                                        <t t-if="widget.editable"><a role="menuitem" type="edit" class="dropdown-item">Edit Track</a></t>
+                                        <t t-if="widget.deletable"><a role="menuitem" type="delete" class="dropdown-item">Delete</a></t>
+                                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                                    </div>
                                 </div>
                                 <div class="oe_kanban_content">
                                     <div class="o_kanban_record_top">
@@ -43,8 +44,8 @@
                                         </div>
                                         <div class="oe_kanban_bottom_right">
                                             <field name="kanban_state" widget="state_selection" groups="base.group_user"/>
-                                            <img t-att-src="kanban_image('res.partner', 'image_small', record.partner_id.raw_value)"
-                                                t-att-title="record.partner_id.value" width="24" height="24"
+                                            <img t-att-src="kanban_image('res.partner', 'image_128', record.partner_id.raw_value)"
+                                                t-att-title="record.partner_id.value" t-att-alt="record.partner_id.value"
                                                 class="oe_kanban_avatar"/>
                                         </div>
                                     </div>
@@ -61,9 +62,11 @@
             <field name="model">event.track</field>
             <field eval="2" name="priority"/>
             <field name="arch" type="xml">
-                <calendar date_start="date" date_delay="duration" string="Event Tracks" color="location_id">
-                    <field name="name"/>
+                <calendar date_start="date" date_delay="duration" string="Event Tracks" color="location_id" event_limit="5">
+                    <field name="location_id" filters="1"/>
                     <field name="event_id"/>
+                    <field name="partner_id" avatar_field="image_128"/>
+                    <field name="user_id" avatar_field="image_128"/>
                 </calendar>
             </field>
         </record>
@@ -78,26 +81,27 @@
                     <field name="location_id"/>
                     <field name="stage_id"/>
                     <field name="partner_id"/>
-                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction','=',True)]"/>
+                    <filter string="My Tracks" name="my_tracks" domain="[('user_id', '=', uid)]"/>
                     <separator/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+                    <filter string="Unread Messages" name="message_needaction" domain="[('message_needaction', '=', True)]"/>
                     <separator/>
-                    <filter string="My Activities" name="activities_my"
-                        domain="[('activity_ids.user_id', '=', uid)]"/>
+                    <filter name="filter_date" date="date"/>
                     <separator/>
-                    <filter string="Late Activities" name="activities_overdue"
+                    <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+                    <separator/>
+                    <filter invisible="1" string="Late Activities" name="activities_overdue"
                         domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                         help="Show all records which has next action date is before today"/>
-                    <filter string="Today Activities" name="activities_today"
+                    <filter invisible="1" string="Today Activities" name="activities_today"
                         domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-                    <filter string="Future Activities" name="activities_upcoming_all"
-                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
-                        ]"/>
+                    <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                     <group expand="0" string="Group By">
-                        <filter string="Responsible"  context="{'group_by': 'user_id'}"/>
-                        <filter string="Stage" context="{'group_by':'stage_id'}"/>
-                        <filter string="Date" context="{'group_by':'date'}"/>
-                        <filter string="Event" context="{'group_by':'event_id'}"/>
+                        <filter string="Responsible" name="responsible" context="{'group_by': 'user_id'}"/>
+                        <filter string="Stage" name="stage" context="{'group_by': 'stage_id'}"/>
+                        <filter string="Date" name="date" context="{'group_by': 'date'}"/>
+                        <filter string="Event" name="event" context="{'group_by': 'event_id'}"/>
+                        <filter string="Location" name="location" context="{'group_by': 'location_id'}"/>
                     </group>
                 </search>
             </field>
@@ -109,53 +113,59 @@
             <field name="arch" type="xml">
                 <form string="Event Track">
                     <header>
-                        <field name="stage_id" widget="statusbar" clickable="True"/>
+                        <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
                     </header>
                     <sheet string="Track">
                         <div class="oe_button_box" name="button_box">
                             <field name="website_url" invisible="1"/>
-                            <button class="oe_stat_button" name="website_publish_button"
-                                type="object" icon="fa-globe">
-                                <field name="website_published" widget="website_button"/>
-                            </button>
-                            <button name="toggle_active" type="object" class="oe_stat_button" icon="fa-archive">
-                                <field name="active" widget="boolean_button" options='{"terminology": "archive"}'/>
-                            </button>
+                            <field name="is_published" widget="website_redirect_button"/>
                         </div>
-                        <field name="kanban_state" widget="state_selection"/>
+                        <widget name="web_ribbon" text="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                        <field name="kanban_state" widget="state_selection" class="ml-3 float-right"/>
+                        <field name="image" widget="image" class="oe_avatar"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1>
                                 <field name="name" placeholder="e.g. Inspiring Business Talk"/>
                             </h1>
-                            <label for="event_id" class="oe_edit_only"/>
-                            <h3>
-                                <field name="event_id"/>
-                            </h3>
                         </div>
                         <group>
                             <group>
-                                <field name="user_id"/>
-                                <field name="partner_id"/>
-                                <field name="partner_name"/>
-                                <field name="partner_email"/>
-                                <field name="partner_phone"/>
+                                <field name="date"/>
+                                <field name="location_id"/>
+                                <label for="duration"/>
+                                <div class="o_row">
+                                    <field name="duration" widget="float_time"/>
+                                    <span>hours</span>
+                                </div>
+                                <field name="active" invisible="1"/>
                             </group>
                             <group>
-                                <field name="date"/>
-                                <label for="duration"/>
-                                <div>
-                                    <field name="duration" class="oe_inline" widget="float_time"/> hours
-                                </div>
-                                <field name="location_id"/>
+                                <field name="company_id" invisible="1"/>
+                                <field name="user_id" domain="[('share', '=', False)]"/>
+                                <field name="event_id"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                             </group>
                         </group>
+                        <notebook>
+                            <page string="Speakers" name="speakers">
+                                <group>
+                                    <field name="partner_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                                    <field name="partner_name"/>
+                                    <field name="partner_email"/>
+                                    <field name="partner_phone" class="o_force_ltr"/>
+                                    <field name="partner_biography"/>
+                                </group>
+                            </page>
+                            <page string="Description" name="description">
+                                <field name="description"/>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
                     </div>
                 </form>
             </field>
@@ -169,6 +179,7 @@
                     <field name="name"/>
                     <field name="active" invisible="1"/>
                     <field name="event_id"/>
+                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>
@@ -187,12 +198,12 @@
         <record model="ir.actions.act_window" id="action_event_track">
             <field name="name">Event Tracks</field>
             <field name="res_model">event.track</field>
-            <field name="view_mode">kanban,tree,form,calendar,graph</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to add a track.
+                <p class="o_view_nocontent_smiling_face">
+                  Add a new track
                 </p><p>
-                    Tracks define the schedule of your event. These can bea talk, a round table, a meeting, etc.
+                  Tracks define the schedule of your event.<br/>These can be a talk, a round table, a meeting, etc.
                 </p>
             </field>
         </record>
@@ -200,21 +211,21 @@
         <record model="ir.actions.act_window" id="action_event_track_from_event">
             <field name="res_model">event.track</field>
             <field name="name">Event Tracks</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form,calendar,graph</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id, 'group_by': 'stage_id'}</field>
+            <field name="view_mode">kanban,tree,form,calendar,graph,activity</field>
+            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
             <field name="help" type="html">
-                <p class="oe_view_nocontent_create">
-                Click to add a track.
-                </p><p>
-                Tracks define the schedule of your event. These can be a talk, a round table, a meeting, etc.
-                </p>
+              <p class="o_view_nocontent_smiling_face">
+                Add a new track
+              </p><p>
+                Tracks define the schedule of your event.<br/>These can be a talk, a round table, a meeting, etc.
+              </p>
             </field>
         </record>
 
         <menuitem
             id="menu_event_track"
-            name="Event Tracks"
+            name="Tracks"
+            sequence="40"
             action="action_event_track"
             parent="event.event_main_menu"
             groups="base.group_no_one"/>
@@ -224,7 +235,7 @@
             <field name="name">Event Locations</field>
             <field name="model">event.track.location</field>
             <field name="arch" type="xml">
-                <form string="Event Location">
+                <form string="Event Locations">
                     <sheet>
                         <group>
                             <field name="name"/>
@@ -238,7 +249,7 @@
             <field name="name">Event Location</field>
             <field name="model">event.track.location</field>
             <field name="arch" type="xml">
-                <tree string="Event Location">
+                <tree string="Event Location" editable="bottom">
                     <field name="name"/>
                 </tree>
             </field>
@@ -254,75 +265,6 @@
             name="Locations"
             action="action_event_track_location"
             parent="event.menu_event_configuration"/>
-
-        <!-- EVENTS/CONFIGURATION/EVENT Sponsor Types -->
-        <record model="ir.ui.view" id="view_event_sponsor_type_form">
-            <field name="name">Sponsor Types</field>
-            <field name="model">event.sponsor.type</field>
-            <field name="arch" type="xml">
-                <form string="Event Sponsor Types">
-                    <sheet>
-                        <group>
-                            <field name="sequence"/>
-                            <field name="name"/>
-                        </group>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_event_sponsor_type_tree">
-            <field name="name">Sponsor Types</field>
-            <field name="model">event.sponsor.type</field>
-            <field name="arch" type="xml">
-                <tree string="Event Sponsor Type">
-                    <field name="sequence"/>
-                    <field name="name"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_event_sponsor_type">
-            <field name="name">Sponsor Types</field>
-            <field name="res_model">event.sponsor.type</field>
-        </record>
-
-        <menuitem
-            id="menu_event_sponsor_type"
-            action="action_event_sponsor_type"
-            parent="event.menu_event_configuration"
-            groups="base.group_no_one"/>
-
-        <!-- EVENT.SPONSOR VIEWS -->
-        <record model="ir.ui.view" id="view_event_sponsor_tree">
-            <field name="name">event.sponsor.tree</field>
-            <field name="model">event.sponsor</field>
-            <field name="arch" type="xml">
-                <tree editable="bottom">
-                    <field name="partner_id"/>
-                    <field name="url"/>
-                    <field name="sponsor_type_id"/>
-                </tree>
-            </field>
-        </record>
-
-        <record model="ir.ui.view" id="view_event_sponsor_search">
-            <field name="name">event.sponsor.search</field>
-            <field name="model">event.sponsor</field>
-            <field name="arch" type="xml">
-                <search string="Event Sponsors">
-                    <field name="partner_id"/>
-                    <field name="event_id"/>
-                </search>
-            </field>
-        </record>
-
-        <record model="ir.actions.act_window" id="action_event_sponsor_from_event">
-            <field name="name">Event Tracks</field>
-            <field name="res_model">event.sponsor</field>
-            <field name="view_mode">tree,form</field>
-            <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
-        </record>
 
         <!-- EVENTS/CONFIGURATION/EVENT Tags -->
         <record model="ir.ui.view" id="view_event_track_tag_form">
@@ -343,7 +285,7 @@
             <field name="name">Tracks Tag</field>
             <field name="model">event.track.tag</field>
             <field name="arch" type="xml">
-                <tree string="Event Track Tag">
+                <tree string="Event Track Tag" editable="bottom">
                     <field name="name"/>
                 </tree>
             </field>
@@ -387,6 +329,7 @@
                                 <field name="fold"/>
                                 <field name="is_done"/>
                                 <field name="is_cancel"/>
+                                <field name="color" widget="color_picker"/>
                             </group>
                         </group>
                     </sheet>
@@ -429,18 +372,18 @@
         <record id="event_track_stage_action" model="ir.actions.act_window">
             <field name="name">Track Stages</field>
             <field name="res_model">event.track.stage</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_id" ref="event_track_stage_view_tree"/>
             <field name="help" type="html">
-<p class="oe_view_nocontent_create">
-    Click to add a stage in the task pipeline.
-</p><p>
-    Define the steps that will be used in the event from the
-    creation of the track, up to the closing of the track.
-    You will use these stages in order to track the progress in
-    solving an event track.
-</p></field>
+              <p class="o_view_nocontent_smiling_face">
+                Add a new stage in the task pipeline
+              </p><p>
+                Define the steps that will be used in the event from the
+                creation of the track, up to the closing of the track.
+                You will use these stages in order to track the progress in
+                solving an event track.
+              </p>
+            </field>
         </record>
 
         <menuitem name="Track Stages"

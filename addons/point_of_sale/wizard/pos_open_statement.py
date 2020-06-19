@@ -7,9 +7,8 @@ from odoo.exceptions import UserError
 
 class PosOpenStatement(models.TransientModel):
     _name = 'pos.open.statement'
-    _description = 'Open Statements'
+    _description = 'Point of Sale Open Statement'
 
-    @api.multi
     def open_statement(self):
         self.ensure_one()
         BankStatement = self.env['account.bank.statement']
@@ -31,7 +30,6 @@ class PosOpenStatement(models.TransientModel):
         return {
             'type': 'ir.actions.act_window',
             'name': _('List of Cash Registers'),
-            'view_type': 'form',
             'view_mode': 'tree,form',
             'res_model': 'account.bank.statement',
             'domain': str([('id', 'in', BankStatement.ids)]),

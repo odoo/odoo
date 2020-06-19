@@ -6,9 +6,6 @@
     <record id="sale.menu_report_product_all" model="ir.ui.menu">
         <field name="active" eval="True"/>
     </record>
-    <record id="sale.Report_configuration" model="ir.ui.menu">
-        <field name="active" eval="True"/>
-    </record>
     <record id="sale.menu_sales_config" model="ir.ui.menu">
         <field name="active" eval="True"/>
     </record>
@@ -22,12 +19,6 @@
         <field name="active" eval="True"/>
     </record>
     <record id="sale.prod_config_main" model="ir.ui.menu">
-        <field name="active" eval="True"/>
-    </record>
-    <record id="sale.menu_attribute_action" model="ir.ui.menu">
-        <field name="active" eval="True"/>
-    </record>
-    <record id="sale.menu_variants_action" model="ir.ui.menu">
         <field name="active" eval="True"/>
     </record>
     <record id="sale.menu_products" model="ir.ui.menu">
@@ -61,33 +52,13 @@
         <field name="active" eval="True"/>
     </record>
 
-    <record id="sale_order_view_tree" model="ir.ui.view">
-        <field name="name">sale.order.tree</field>
-        <field name="model">sale.order</field>
-        <field name="priority">2</field>
-        <field name="inherit_id" ref="sale.view_order_tree"/>
+    <record id="res_config_settings_view_form_inherit_sale_management" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.sale.management</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="sale.res_config_settings_view_form"/>
         <field name="arch" type="xml">
-            <field name="invoice_status" position="attributes">
-                <attribute name="invisible" eval="False"/>
-            </field>
-        </field>
-    </record>
-
-    <record id="sale_order_view_form" model="ir.ui.view">
-        <field name="name">sale.order.form</field>
-        <field name="model">sale.order</field>
-        <field name="inherit_id" ref="sale.view_order_form"/>
-        <field name="arch" type="xml">
-            <xpath expr="//group[@name='sale_pay']/field[@name='invoice_status']" position="attributes">
-                <attribute name="invisible" eval="False"/>
-            </xpath>
-            <xpath expr="//button[@name='action_quotation_send']" position="before">
-                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                    type="action" class="btn-primary"
-                    attrs="{'invisible': [('invoice_status', '!=', 'to invoice')]}"/>
-                <button name="%(sale.action_view_sale_advance_payment_inv)d" string="Create Invoice"
-                    type="action" context="{'default_advance_payment_method': 'percentage'}"
-                    attrs="{'invisible': ['|',('invoice_status', '!=', 'no'), ('state', '!=', 'sale')]}"/>
+            <xpath expr="//div[@data-key='sale_management']" position="attributes">
+                <attribute name="class">app_settings_block</attribute>
             </xpath>
         </field>
     </record>

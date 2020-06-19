@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+
+        <!-- Email template for email validation (for karma purpose) -->
+        <record id="validation_email" model="mail.template">
+            <field name="name">Profile: Email Verification</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="subject">${object.company_id.name} Profile validation</field>
+            <field name="email_from">${user.email_formatted | safe}</field>
+            <field name="email_to">${object.email_formatted | safe}</field>
+            <field name="body_html" type="html">
+<table border="0" cellpadding="0" cellspacing="0" style="padding-top: 16px; background-color: #F1F1F1; color: #454748; width: 100%; border-collapse:separate;"><tr><td align="center">
+<table border="0" cellpadding="0" cellspacing="0" width="590" style="padding: 16px; background-color: white; color: #454748; border-collapse:separate;">
+<tbody>
+    <!-- HEADER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr>
+                    <td valign="middle">
+                        <span style="font-size: 20px; font-weight: bold;">
+                            ${object.company_id.name} Profile validation
+                        </span>
+                    </td>
+                    <td valign="middle" align="right">
+                        <img src="/logo.png?company=${user.company_id.id}" style="padding: 0px; margin: 0px; height: auto; width: 80px;" alt="${user.company_id.name}"/>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="text-align:center;">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin:16px 0px 16px 0px;"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <!-- CONTENT -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr>
+                    <td valign="top" style="font-size: 13px;">
+                        <p style="margin: 0px; padding: 0px; font-size: 13px;">
+                            Hello ${object.name},<br /><br />
+                            You have been invited to validate your email in order to get access to "${object.company_id.name}" website.
+                            To validate your email, please click on the following link:
+                            <div style="margin: 16px 0px 16px 0px;">
+                                <a href="${ctx.get('token_url')}"
+                                    style="background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;">
+                                    Validate my account
+                                </a>
+                            </div>
+                            Thanks for your participation!
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td style="text-align:center;">
+                        <hr width="100%" style="background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;"/>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+    <!-- FOOTER -->
+    <tr>
+        <td align="center" style="min-width: 590px;">
+            <table border="0" cellpadding="0" cellspacing="0" width="590" style=" font-family: 'Verdana Regular'; color: #454748; min-width: 590px; background-color: white; font-size: 11px; padding: 0px 8px 0px 8px; border-collapse:separate;">
+                <tr>
+                    <td valign="middle" align="left">
+                         ${user.company_id.name}
+                    </td>
+                    <td valign="middle" align="right" style="opacity: 0.7;">
+                        ${user.company_id.phone}
+                        % if user.company_id.email:
+                            | <a href="'mailto:%s' % ${user.company_id.email}" style="text-decoration:none; color: #454748;">
+                                ${user.company_id.email}
+                            </a>
+                        % endif
+                        % if user.company_id.website:
+                            | <a href="${user.company_id.website}" style="text-decoration:none; color: #454748;">
+                                ${user.company_id.website}
+                            </a>
+                        % endif
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</tbody>
+</table>
+</td></tr>
+<!-- POWERED BY -->
+<tr><td align="center" style="min-width: 590px;">
+    <table border="0" cellpadding="0" cellspacing="0" width="590" style="min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;">
+        <tr><td style="text-align: center; font-size: 13px;">
+            Powered by <a target="_blank" href="https://www.odoo.com?utm_source=db&amp;utm_medium=forum" style="color: #875A7B;">Odoo</a>
+        </td></tr>
+    </table>
+</td></tr>
+</table>
+            </field>
+            <field name="lang">${object.lang}</field>
+            <field name="auto_delete" eval="True"/>
+        </record>
+    </data>
+</odoo>

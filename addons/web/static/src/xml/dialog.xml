@@ -3,17 +3,25 @@
 
 <!-- These templates are accessible in backend and frontend -->
 
-<div t-name="Dialog" t-attf-class="modal#{technical ? ' o_technical_modal' : ''}" tabindex="-1" data-backdrop="static" role="dialog" aria-hidden="true" t-att-id="_.uniqueId('modal_')">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
-                <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted small"><t t-esc="subtitle"/></span></h4>
+<t t-name="Dialog">
+    <div role="dialog"
+        t-attf-class="modal o_legacy_dialog #{ technical ? ' o_technical_modal' : '' } #{ fullscreen ? ' o_modal_full': '' }"
+        tabindex="-1"
+        data-backdrop="static"
+        t-att-id="_.uniqueId('modal_')"
+        aria-hidden="true"
+        >
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <header t-if="renderHeader" class="modal-header">
+                    <h4 class="modal-title"><t t-raw="title"/><span class="o_subtitle text-muted small" t-esc="subtitle"/></h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close" tabindex="-1">×</button>
+                </header>
+                <main class="modal-body"/>
+                <footer t-if="renderFooter" class="modal-footer"/>
             </div>
-            <div class="modal-body"/>
-            <div class="modal-footer"/>
         </div>
     </div>
-</div>
+</t>
 
 </templates>

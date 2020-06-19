@@ -1,21 +1,24 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data noupdate="1">
-
-        <!-- Contract Types -->
-        <record id="hr_contract_type_emp" model="hr.contract.type">
+        <!-- Structure Type -->
+        <record id="structure_type_employee" model="hr.payroll.structure.type">
             <field name="name">Employee</field>
-            <field name="sequence">5</field>
+            <field name="country_id" eval="False"/>
         </record>
-
-        <record id="hr_contract_type_wrkr" model="hr.contract.type">
+        <record id="structure_type_worker" model="hr.payroll.structure.type">
             <field name="name">Worker</field>
-            <field name="sequence">10</field>
+            <field name="country_id" eval="False"/>
         </record>
-
-        <record id="hr_contract_type_sub" model="hr.contract.type">
-            <field name="name">Subcontractor</field>
-            <field name="sequence">15</field>
+        <record id="structure_type_employee_cp200_pfi" model="hr.payroll.structure.type">
+            <field name="name">CP200 PFI: Belgian Employee</field>
+            <field name="default_resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="country_id" ref="base.be"/>
+        </record>
+        <record id="structure_type_employee_cp200" model="hr.payroll.structure.type">
+            <field name="name">CP200: Belgian Employee</field>
+            <field name="default_resource_calendar_id" ref="resource.resource_calendar_std_38h"/>
+            <field name="country_id" ref="base.be"/>
         </record>
 
         <!-- Contract-related subtypes for messaging / Chatter -->
@@ -36,7 +39,7 @@
             <field name="name">Contract to Renew</field>
             <field name="res_model">hr.department</field>
             <field name="default" eval="False"/>
-            <field name="parent_id" eval="ref('mt_contract_pending')"/>
+            <field name="parent_id" ref="mt_contract_pending"/>
             <field name="relation_field">department_id</field>
             <field name="description">Contract about to expire</field>
         </record>

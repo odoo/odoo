@@ -64,11 +64,10 @@
     <record id="note_tag_action" model="ir.actions.act_window">
       <field name="name">Tags</field>
       <field name="res_model">note.tag</field>
-      <field name="view_type">form</field>
       <field name="view_mode">tree,form</field>
       <field name="help" type="html">
-        <p class="oe_view_nocontent_create">
-          Click to add a new tag.
+        <p class="o_view_nocontent_smiling_face">
+          Add a new tag
         </p>
       </field>
     </record>
@@ -89,40 +88,39 @@
           <field name="message_partner_ids"/>
           <field name="activity_ids" />
           <field name="activity_state" />
+          <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
           <templates>
             <t t-name="kanban-box">
 
-              <div t-attf-class="#{kanban_color(record.color.raw_value)} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
+              <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click_edit oe_semantic_html_override oe_kanban_card">
 
                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
 
                 <div class="o_dropdown_kanban dropdown">
-                    <a class="dropdown-toggle btn" data-toggle="dropdown" href="#" >
+                    <a role="button" class="dropdown-toggle o-no-caret btn" data-toggle="dropdown" data-display="static" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                         <span class="fa fa-ellipsis-v"/>
                     </a>
-                    <ul class="dropdown-menu" role="menu" aria-labelledby="dLabel">
-                        <li><a type="delete">Delete</a></li>
-                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
-                    </ul>
+                    <div class="dropdown-menu" role="menu">
+                        <a role="menuitem" type="delete" class="dropdown-item">Delete</a>
+                        <ul class="oe_kanban_colorpicker" data-field="color"/>
+                    </div>
                 </div>
                   <span>
-                    <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check"/></a>
-                    <a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo"/></a>
+                    <a name="action_close" type="object" t-if="record.open.raw_value"><i class="fa fa-check" role="img" aria-label="Opened" title="Opened"/></a>
+                    <a name="action_open" type="object" t-if="!record.open.raw_value"><i class="fa fa-undo" role="img" aria-label="Closed" title="Closed"/></a>
                   </span>
                 <!-- kanban note -->
                 <span t-attf-class="oe_kanban_content #{record.open.raw_value ? '' : 'note_text_line_through'}">
                   <!-- title -->
                   <field name="name"/>
-                  <div class="oe_kanban_bottom_right">
-                    <div class="o_kanban_inline_block mt16 mr4">
-                        <field name="activity_ids" widget="kanban_activity" />
-                    </div>
+                  <div class="o_kanban_inline_block float-right mr4">
+                    <field name="activity_ids" widget="kanban_activity" />
                   </div>
                 </span>
                 <t t-if="record.message_partner_ids.raw_value.length &gt; 1">
                     <div class="clearfix"></div>
                       <t t-foreach="record.message_partner_ids.raw_value" t-as="follower">
-                        <img t-att-src="kanban_image('res.partner', 'image_small', follower)" width="24" height="24" class="oe_kanban_avatar pull-right" t-att-data-member_id="follower"/>
+                        <img t-att-src="kanban_image('res.partner', 'image_128', follower)" class="oe_kanban_avatar o_image_24_cover float-right mt-2" t-att-data-member_id="follower" alt="Follower"/>
                       </t>
                     <div class="clearfix"></div>
                 </t>
@@ -143,6 +141,7 @@
           <field name="open"/>
           <field name="stage_id"/>
           <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+          <field name="activity_ids" widget="list_activity" optional="show"/>
         </tree>
       </field>
     </record>
@@ -154,16 +153,16 @@
         <field name="arch" type="xml">
             <form string="Note" class="oe_form_nomargin o_note_form_view">
                 <header>
-                    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" clickable="1"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
+                    <field name="stage_id" domain="[('user_id','=',uid)]" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
-                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}" placeholder="Tags"/>
-                    <field name="memo" widget="html" class="oe_memo" editor_height="450px" />
+                  <field name="memo" type="html" class="oe_memo"/>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -179,20 +178,16 @@
           <field name="tag_ids"/>
           <filter name="open_true" string="Active" domain="[('open', '=', True)]"/>
           <filter name="open_false" string="Archive" domain="[('open', '=', False)]"/>
-          <separator/>
-          <filter string="My Activities" name="activities_my"
-                  domain="[('activity_ids.user_id', '=', uid)]"/>
-          <separator/>
-          <filter string="Late Activities" name="activities_overdue"
+          <filter invisible="1" string="Late Activities" name="activities_overdue"
                   domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
                   help="Show all records which has next action date is before today"/>
-          <filter string="Today Activities" name="activities_today"
+          <filter invisible="1" string="Today Activities" name="activities_today"
                   domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
-          <filter string="Future Activities" name="activities_upcoming_all"
+          <filter invisible="1" string="Future Activities" name="activities_upcoming_all"
                         domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))
                         ]"/>
           <group expand="0" string="Group By">
-            <filter string="Stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
+            <filter string="Stage" name="stage" help="By sticky note Category" context="{'group_by':'stage_id'}"/>
           </group>
         </search>
       </field>
@@ -202,22 +197,15 @@
     <record id="action_note_note" model="ir.actions.act_window">
       <field name="name">Notes</field>
       <field name="res_model">note.note</field>
-      <field name="view_type">form</field>
-      <field name="view_mode">kanban,tree,form</field>
+      <field name="view_mode">kanban,tree,form,activity</field>
       <field name="search_view_id" ref="view_note_note_filter"/>
       <field name="context">{}</field>
       <field name="help" type="html">
-          <p class="oe_view_nocontent_create">
-            Click to add a personal note.
+          <p class="o_view_nocontent_smiling_face">
+            Add a new personal note
           </p><p>
-            Use notes to organize personal tasks or notes. All
-            notes are private; no one else will be able to see them. However
-            you can share some notes with other people by inviting followers
-            on the note. (Useful for meeting minutes, especially if
-            you activate the pad feature for collaborative writings).
-          </p><p>
-            You can customize how you process your notes/tasks by adding,
-            removing or modifying columns.
+            Notes are private, unless you share them by inviting follower on a note.
+            (Useful for meeting minutes).
           </p>
         </field>
     </record>

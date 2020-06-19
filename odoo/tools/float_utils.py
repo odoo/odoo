@@ -2,34 +2,32 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from __future__ import print_function
+import builtins
 import math
 
-from odoo.tools import pycompat
 
-if not pycompat.PY2:
-    import builtins
-    def round(f):
-        # P3's builtin round differs from P2 in the following manner:
-        # * it rounds half to even rather than up (away from 0)
-        # * round(-0.) loses the sign (it returns -0 rather than 0)
-        # * round(x) returns an int rather than a float
-        #
-        # this compatibility shim implements Python 2's round in terms of
-        # Python 3's so that important rounding error under P3 can be
-        # trivially fixed, assuming the P2 behaviour to be debugged and
-        # correct.
-        roundf = builtins.round(f)
-        if builtins.round(f + 1) - roundf != 1:
-            return f + math.copysign(0.5, f)
-        # copysign ensures round(-0.) -> -0 *and* result is a float
-        return math.copysign(roundf, f)
-else:
-    round = round
+def round(f):
+    # P3's builtin round differs from P2 in the following manner:
+    # * it rounds half to even rather than up (away from 0)
+    # * round(-0.) loses the sign (it returns -0 rather than 0)
+    # * round(x) returns an int rather than a float
+    #
+    # this compatibility shim implements Python 2's round in terms of
+    # Python 3's so that important rounding error under P3 can be
+    # trivially fixed, assuming the P2 behaviour to be debugged and
+    # correct.
+    roundf = builtins.round(f)
+    if builtins.round(f + 1) - roundf != 1:
+        return f + math.copysign(0.5, f)
+    # copysign ensures round(-0.) -> -0 *and* result is a float
+    return math.copysign(roundf, f)
 
 def _float_check_precision(precision_digits=None, precision_rounding=None):
     assert (precision_digits is not None or precision_rounding is not None) and \
         not (precision_digits and precision_rounding),\
          "exactly one of precision_digits and precision_rounding must be specified"
+    assert precision_rounding is None or precision_rounding > 0,\
+         "precision_rounding must be positive, got %s" % precision_rounding
     if precision_digits is not None:
         return 10 ** -precision_digits
     return precision_rounding
@@ -55,15 +53,13 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     """
     rounding_factor = _float_check_precision(precision_digits=precision_digits,
                                              precision_rounding=precision_rounding)
-    if rounding_factor == 0 or value == 0: return 0.0
+    if rounding_factor == 0 or value == 0:
+        return 0.0
 
     # NORMALIZE - ROUND - DENORMALIZE
     # In order to easily support rounding to arbitrary 'steps' (e.g. coin values),
     # we normalize the value before rounding it as an integer, and de-normalize
     # after rounding: e.g. float_round(1.3, precision_rounding=.5) == 1.5
-
-    # TIE-BREAKING: HALF-UP (for normal rounding)
-    # We want to apply HALF-UP tie-breaking rules, i.e. 0.5 rounds away from 0.
     # Due to IEE754 float/double representation limits, the approximation of the
     # real value may be slightly below the tie limit, resulting in an error of
     # 1 unit in the last place (ulp) after rounding.
@@ -74,25 +70,31 @@ def float_round(value, precision_digits=None, precision_rounding=None, rounding_
     # Credit: discussion with OpenERP community members on bug 882036
 
     normalized_value = value / rounding_factor # normalize
+    sign = math.copysign(1.0, normalized_value)
     epsilon_magnitude = math.log(abs(normalized_value), 2)
-    epsilon = 2**(epsilon_magnitude-53)
-    if rounding_method == 'HALF-UP':
-        normalized_value += math.copysign(epsilon, normalized_value)
-        rounded_value = round(normalized_value)     # round to integer
+    epsilon = 2**(epsilon_magnitude-52)
 
-    # TIE-BREAKING: UP (for ceiling[resp. flooring] operations)
-    # When rounding the value up[resp. down], we instead subtract the epsilon value
+    # TIE-BREAKING: UP/DOWN (for ceiling[resp. flooring] operations)
+    # When rounding the value up[resp. down], we instead subtract[resp. add] the epsilon value
     # as the the approximation of the real value may be slightly *above* the
     # tie limit, this would result in incorrectly rounding up[resp. down] to the next number
     # The math.ceil[resp. math.floor] operation is applied on the absolute value in order to
     # round "away from zero" and not "towards infinity", then the sign is
     # restored.
 
-    else:
-        func = math.floor if rounding_method == 'DOWN' else math.ceil
-        sign = math.copysign(1.0, normalized_value)
+    if rounding_method == 'UP':
         normalized_value -= sign*epsilon
-        rounded_value = func(abs(normalized_value)) * sign
+        rounded_value = math.ceil(abs(normalized_value)) * sign
+
+    elif rounding_method == 'DOWN':
+        normalized_value += sign*epsilon
+        rounded_value = math.floor(abs(normalized_value)) * sign
+
+    # TIE-BREAKING: HALF-UP (for normal rounding)
+    # We want to apply HALF-UP tie-breaking rules, i.e. 0.5 rounds away from 0.
+    else:
+        normalized_value += math.copysign(epsilon, normalized_value)
+        rounded_value = round(normalized_value)     # round to integer
 
     result = rounded_value * rounding_factor # de-normalize
     return result
@@ -168,7 +170,7 @@ def float_repr(value, precision_digits):
         :param int precision_digits: number of fractional digits to
                                      include in the output
     """
-    # Can't use str() here because it seems to have an intrisic
+    # Can't use str() here because it seems to have an intrinsic
     # rounding to 12 significant digits, which causes a loss of
     # precision. e.g. str(123456789.1234) == str(123456789.123)!!
     return ("%%.%sf" % precision_digits) % value
@@ -221,7 +223,7 @@ if __name__ == "__main__":
     expecteds = ['.00', '.02', '.01', '.68', '.67', '.46', '.456', '.4556']
     precisions = [2, 2, 2, 2, 2, 2, 3, 4]
     for magnitude in range(7):
-        for frac, exp, prec in pycompat.izip(fractions, expecteds, precisions):
+        for frac, exp, prec in zip(fractions, expecteds, precisions):
             for sign in [-1,1]:
                 for x in range(0, 10000, 97):
                     n = x * 10**magnitude

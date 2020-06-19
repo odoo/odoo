@@ -9,7 +9,9 @@
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <field name="ref_ir_act_window" invisible="1"/>
-                            <button class="oe_stat_button" name="create_action" type="object"
+                            <button class="oe_stat_button"
+                                    groups="base.group_system"
+                                    name="create_action" type="object"
                                     attrs="{'invisible':[('ref_ir_act_window','!=',False)]}" icon="fa-plus"
                                     help="Display an option on related documents to open a composition wizard with this template">
                                 <div class="o_field_widget o_stat_info">
@@ -17,7 +19,8 @@
                                     <span class="o_stat_text">Context Action</span>
                                 </div>
                             </button>
-                            <button name="unlink_action" type="object" 
+                            <button name="unlink_action" type="object"
+                                    groups="base.group_system"
                                     class="oe_stat_button" icon="fa-minus"
                                     attrs="{'invisible':[('ref_ir_act_window','=',False)]}"
                                     help="Remove the contextual action to use this template on related documents" widget="statinfo">
@@ -26,9 +29,8 @@
                                     <span class="o_stat_text">Context Action</span>
                                 </div>
                             </button>
-                            <button class="oe_stat_button" name="%(wizard_email_template_preview)d" icon="fa-search-plus" string="Preview"
-                                    type="action" target="new"
-                                    context="{'template_id':active_id}"/>
+                            <button class="oe_stat_button" name="%(mail_template_preview_action)d" icon="fa-search-plus" string="Preview"
+                                    type="action" target="new"/>
                         </div>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
@@ -39,13 +41,13 @@
                             </group>
                         </div>
                         <notebook>
-                            <page string="Content">
+                            <page string="Content" name="content">
                                 <label for="subject"/>
                                 <h2 style="display: inline-block;"><field name="subject" placeholder="Subject (placeholders may be used here)"/></h2>
                                 <field name="body_html" widget="html" options="{'style-inline': true}"/>
                                 <field name="attachment_ids" widget="many2many_binary"/>
                             </page>
-                            <page string="Email Configuration">
+                            <page string="Email Configuration" name="email_configuration">
                                 <group>
                                     <field name="email_from"
                                             placeholder="Override author's email"/>
@@ -58,20 +60,19 @@
                                             placeholder="Comma-separated carbon copy recipients addresses"/>
                                     <field name="reply_to"
                                             placeholder="Preferred reply address"/>
-                                    <field name="user_signature" string="Author Signature (mass mail only)"/>
                                     <field name="scheduled_date" string="Scheduled Send Date"/>
                                 </group>
                             </page>
-                            <page string="Advanced Settings">
+                            <page string="Advanced Settings" name="advanced_settings">
                                 <group>
-                                    <field name="lang"/>
+                                    <field name="lang" placeholder="${object.partner_id.lang}"/>
                                     <field name="mail_server_id"/>
                                     <field name="auto_delete"/>
                                     <field name="report_template" domain="[('model','=',model)]"/>
                                     <field name="report_name" attrs="{'invisible':[('report_template','=',False)]}"/>
                                 </group>
                             </page>
-                            <page string="Dynamic Placeholder Generator">
+                            <page string="Dynamic Placeholder Generator" name="dynamic_placeholder_generator">
                                 <group>
                                     <field name="model_object_field"
                                             domain="[('model_id','=',model_id),('ttype','!=','one2many'),('ttype','!=','many2many')]"/>
@@ -115,8 +116,8 @@
                     <field name="lang"/>
                     <field name="model_id"/>
                     <group expand="0" string="Group by...">
-                        <filter string="SMTP Server" domain="[]" context="{'group_by':'mail_server_id'}"/>
-                        <filter string="Model" domain="[]" context="{'group_by':'model_id'}"/>
+                        <filter string="SMTP Server" name="smtpserver" domain="[]" context="{'group_by':'mail_server_id'}"/>
+                        <filter string="Model" name="model" domain="[]" context="{'group_by':'model_id'}"/>
                     </group>
                </search>
            </field>
@@ -125,14 +126,13 @@
         <record model="ir.actions.act_window" id="action_email_template_tree_all">
             <field name="name">Templates</field>
             <field name="res_model">mail.template</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form,tree</field>
             <field name="view_id" ref="email_template_tree" />
             <field name="search_view_id" ref="view_email_template_search"/>
         </record>
 
         <menuitem id="menu_email_templates" parent="base.menu_email" action="action_email_template_tree_all"
-                  sequence="20"/>
+                  sequence="10"/>
 
     </data>
 </odoo>

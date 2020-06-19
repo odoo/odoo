@@ -2,16 +2,16 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import textwrap
-import unittest
 
 from lxml import etree, html
 from lxml.builder import E
 
 from odoo.tests import common
+from odoo.tests.common import BaseCase
 from odoo.addons.web_editor.models.ir_qweb import html_to_text
 
 
-class TestHTMLToText(unittest.TestCase):
+class TestHTMLToText(BaseCase):
     def test_rawstring(self):
         self.assertEqual(
             "foobar",
@@ -129,7 +129,7 @@ class TestConvertBack(common.TransactionCase):
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
-        rendered = self.env['ir.qweb'].render(t, {'record': record})
+        rendered = self.env['ir.qweb']._render(t, {'record': record})
 
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
         model = 'ir.qweb.field.' + element.get('data-oe-type', '')
@@ -156,9 +156,6 @@ class TestConvertBack(common.TransactionCase):
     def test_char(self):
         self.field_roundtrip('char', "foo bar")
         self.field_roundtrip('char', "ⒸⓄⓇⒼⒺ")
-
-    def test_selection(self):
-        self.field_roundtrip('selection', 3)
 
     def test_selection_str(self):
         self.field_roundtrip('selection_str', 'B')
@@ -200,7 +197,7 @@ class TestConvertBack(common.TransactionCase):
         field_value = 'record.%s' % field
         e.set('t-field', field_value)
 
-        rendered = self.env['ir.qweb'].render(t, {'record': record})
+        rendered = self.env['ir.qweb']._render(t, {'record': record})
         element = html.fromstring(rendered, parser=html.HTMLParser(encoding='utf-8'))
 
         # emulate edition

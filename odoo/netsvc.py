@@ -6,13 +6,12 @@ import logging.handlers
 import os
 import platform
 import pprint
-from . import release
 import sys
 import threading
+import time
+import warnings
 
-import psycopg2
-
-import odoo
+from . import release
 from . import sql_db
 from . import tools
 
@@ -25,10 +24,8 @@ def log(logger, level, prefix, msg, depth=None):
         logger.log(level, indent+line)
         indent=indent_after
 
-path_prefix = os.path.realpath(os.path.dirname(os.path.dirname(__file__)))
-
 class PostgreSQLHandler(logging.Handler):
-    """ PostgreSQL Loggin Handler will store logs in the database, by default
+    """ PostgreSQL Logging Handler will store logs in the database, by default
     the current database, can be set using --log-db=DBNAME
     """
     def emit(self, record):
@@ -38,7 +35,8 @@ class PostgreSQLHandler(logging.Handler):
         if not dbname:
             return
         with tools.ignore(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
-            cr.autocommit(True)
+            # preclude risks of deadlocks
+            cr.execute("SET LOCAL statement_timeout = 1000")
             msg = tools.ustr(record.msg)
             if record.args:
                 msg = msg % record.args
@@ -48,7 +46,7 @@ class PostgreSQLHandler(logging.Handler):
             # we do not use record.levelname because it may have been changed by ColoredFormatter.
             levelname = logging.getLevelName(record.levelno)
 
-            val = ('server', ct_db, record.name, levelname, msg, record.pathname[len(path_prefix)+1:], record.lineno, record.funcName)
+            val = ('server', ct_db, record.name, levelname, msg, record.pathname, record.lineno, record.funcName)
             cr.execute("""
                 INSERT INTO ir_logging(create_date, type, dbname, name, level, message, path, line, func)
                 VALUES (NOW() at time zone 'UTC', %s, %s, %s, %s, %s, %s, %s, %s)
@@ -69,10 +67,40 @@ LEVEL_COLOR_MAPPING = {
     logging.CRITICAL: (WHITE, RED),
 }
 
+class PerfFilter(logging.Filter):
+    def format_perf(self, query_count, query_time, remaining_time):
+        return ("%d" % query_count, "%.3f" % query_time, "%.3f" % remaining_time)
+
+    def filter(self, record):
+        if hasattr(threading.current_thread(), "query_count"):
+            query_count = threading.current_thread().query_count
+            query_time = threading.current_thread().query_time
+            perf_t0 = threading.current_thread().perf_t0
+            remaining_time = time.time() - perf_t0 - query_time
+            record.perf_info = '%s %s %s' % self.format_perf(query_count, query_time, remaining_time)
+            delattr(threading.current_thread(), "query_count")
+        else:
+            record.perf_info = "- - -"
+        return True
+
+class ColoredPerfFilter(PerfFilter):
+    def format_perf(self, query_count, query_time, remaining_time):
+        def colorize_time(time, format, low=1, high=5):
+            if time > high:
+                return COLOR_PATTERN % (30 + RED, 40 + DEFAULT, format % time)
+            if time > low:
+                return COLOR_PATTERN % (30 + YELLOW, 40 + DEFAULT, format % time)
+            return format % time
+        return (
+            colorize_time(query_count, "%d", 100, 1000),
+            colorize_time(query_time, "%.3f", 0.1, 3),
+            colorize_time(remaining_time, "%.3f", 1, 5)
+            )
+
 class DBFormatter(logging.Formatter):
     def format(self, record):
         record.pid = os.getpid()
-        record.dbname = getattr(threading.currentThread(), 'dbname', '?')
+        record.dbname = getattr(threading.current_thread(), 'dbname', '?')
         return logging.Formatter.format(self, record)
 
 class ColoredFormatter(DBFormatter):
@@ -88,14 +116,32 @@ def init_logger():
         return
     _logger_init = True
 
-    logging.addLevelName(25, "INFO")
-    logging.captureWarnings(True)
+    old_factory = logging.getLogRecordFactory()
+    def record_factory(*args, **kwargs):
+        record = old_factory(*args, **kwargs)
+        record.perf_info = ""
+        return record
+    logging.setLogRecordFactory(record_factory)
+
+    # enable deprecation warnings (disabled by default)
+    warnings.filterwarnings('default', category=DeprecationWarning)
+    # ignore deprecation warnings from invalid escape (there's a ton and it's
+    # pretty likely a super low-value signal)
+    warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
+    # ignore a bunch of warnings we can't really fix ourselves
+    for module in [
+        'setuptools.depends',# older setuptools version using imp
+        'zeep.loader',# zeep using defusedxml.lxml
+        'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
+        'xlrd/xlsx',# xlrd mischecks iter() on trees or something so calls deprecated getiterator() instead of iter()
+    ]:
+        warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 
     from .tools.translate import resetlocale
     resetlocale()
 
     # create a format for log messages and dates
-    format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s'
+    format = '%(asctime)s %(pid)s %(levelname)s %(dbname)s %(name)s: %(message)s %(perf_info)s'
     # Normal Handler on stderr
     handler = logging.StreamHandler()
 
@@ -118,9 +164,7 @@ def init_logger():
             dirname = os.path.dirname(logf)
             if dirname and not os.path.isdir(dirname):
                 os.makedirs(dirname)
-            if tools.config['logrotate'] is not False:
-                handler = logging.handlers.TimedRotatingFileHandler(filename=logf, when='D', interval=1, backupCount=30)
-            elif os.name == 'posix':
+            if os.name == 'posix':
                 handler = logging.handlers.WatchedFileHandler(logf)
             else:
                 handler = logging.FileHandler(logf)
@@ -136,11 +180,13 @@ def init_logger():
 
     if os.name == 'posix' and isinstance(handler, logging.StreamHandler) and is_a_tty(handler.stream):
         formatter = ColoredFormatter(format)
+        perf_filter = ColoredPerfFilter()
     else:
         formatter = DBFormatter(format)
+        perf_filter = PerfFilter()
     handler.setFormatter(formatter)
-
     logging.getLogger().addHandler(handler)
+    logging.getLogger('werkzeug').addFilter(perf_filter)
 
     if tools.config['log_db']:
         db_levels = {
@@ -161,7 +207,7 @@ def init_logger():
 
     logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
     for logconfig_item in logging_configurations:
-        loggername, level = logconfig_item.split(':')
+        loggername, level = logconfig_item.strip().split(':')
         level = getattr(logging, level, logging.INFO)
         logger = logging.getLogger(loggername)
         logger.setLevel(level)
@@ -181,7 +227,16 @@ PSEUDOCONFIG_MAPPER = {
     'debug': ['odoo:DEBUG', 'odoo.sql_db:INFO'],
     'debug_sql': ['odoo.sql_db:DEBUG'],
     'info': [],
+    'runbot': ['odoo:RUNBOT', 'werkzeug:WARNING'],
     'warn': ['odoo:WARNING', 'werkzeug:WARNING'],
     'error': ['odoo:ERROR', 'werkzeug:ERROR'],
     'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],
 }
+
+logging.RUNBOT = 25
+logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log
+logging.captureWarnings(True)
+
+def runbot(self, message, *args, **kws):
+    self.log(logging.RUNBOT, message, *args, **kws)
+logging.Logger.runbot = runbot

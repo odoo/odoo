@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from odoo.tests import common
+from odoo.addons.account.tests.common import AccountTestCommon
 
 
-class PaymentAcquirerCommon(common.TransactionCase):
+class PaymentAcquirerCommon(AccountTestCommon):
 
     def setUp(self):
         super(PaymentAcquirerCommon, self).setUp()
@@ -25,6 +25,7 @@ class PaymentAcquirerCommon(common.TransactionCase):
             'partner_country_id': self.country_belgium.id,
             'partner_country_name': 'Belgium',
             'billing_partner_name': 'Norbert Buyer',
+            'billing_partner_commercial_company_name': 'Big Company',
             'billing_partner_lang': 'en_US',
             'billing_partner_email': 'norbert.buyer@example.com',
             'billing_partner_address': 'Huge Street 2/543',

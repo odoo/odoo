@@ -11,4 +11,4 @@ class NotePad(models.Model):
 
     _pad_fields = ['note_pad']
 
-    note_pad_url = fields.Char('Pad Url', pad_content_field='memo')
+    note_pad_url = fields.Char('Pad Url', pad_content_field='memo', copy=False)

@@ -2,33 +2,34 @@
 
 <t t-name="KanbanView.buttons">
     <div>
-        <button type="button" class="btn btn-primary btn-sm o-kanban-button-new" accesskey="c">
+        <button t-if="!noCreate" type="button" t-attf-class="btn #{btnClass} o-kanban-button-new" accesskey="c">
             <t t-esc="create_text || _t('Create')"/>
         </button>
     </div>
 </t>
 
 <t t-name="KanbanView.Group">
-    <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id">
+    <div t-attf-class="o_kanban_group#{widget.data_records.length == 0 ? ' o_kanban_no_records' : ''}" t-att-data-id="widget.id or widget.db_id"
+        role="feed" t-attf-aria-labelledby="kanban_header_#{widget.id or widget.db_id}">
         <div class="o_kanban_header">
-            <div class="o_kanban_header_title" t-att-title="widget.data_records.length + ' records'" data-delay="500">
-                <span class="o_column_title"><t t-esc="widget.title"/></span>
-                <span class="o_column_unfold"><i class="fa fa-arrows-h"/></span>
+            <div class="o_kanban_header_title">
+                <span t-attf-id="#kanban_header_#{widget.id or widget.db_id}" class="o_column_title"><t t-esc="widget.title"/></span>
+                <span class="o_column_unfold"><i class="fa fa-arrows-h" role="img" aria-label="Unfold" title="Unfold"/></span>
                 <span class="o_kanban_config dropdown">
-                    <a class="dropdown-toggle" data-toggle="dropdown" href="#"><i class="fa fa-gear"/></a>
-                    <ul class="dropdown-menu" role="menu">
-                        <li><a class="o_kanban_toggle_fold" href="#">Fold</a></li>
+                    <a class="dropdown-toggle o-no-caret" data-toggle="dropdown" href="#"><i class="fa fa-gear" role="img" aria-label="Settings" title="Settings"/></a>
+                    <div class="dropdown-menu" role="menu">
+                        <a role="menuitem" class="dropdown-item o_kanban_toggle_fold" href="#">Fold</a>
                         <t t-if="widget.grouped_by_m2o">
-                            <li t-if="widget.editable and widget.id"><a class="o_column_edit" href="#">Edit Stage</a></li>
-                            <li t-if="widget.deletable and widget.id"><a class="o_column_delete" href="#">Delete</a></li>
+                            <a t-if="widget.editable and widget.id" role="menuitem" class="dropdown-item o_column_edit" href="#">Edit Stage</a>
+                            <a t-if="widget.deletable and widget.id" role="menuitem" class="dropdown-item o_column_delete" href="#">Delete</a>
                         </t>
-                        <t t-if="widget.has_active_field">
-                            <li><a class="o_column_archive" href="#">Archive Records</a></li>
-                            <li><a class="o_column_unarchive" href="#">Restore Records</a></li>
+                        <t t-if="widget.has_active_field and widget.archivable">
+                            <a role="menuitem" href="#" class="dropdown-item o_column_archive_records">Archive All</a>
+                            <a role="menuitem" href="#" class="dropdown-item o_column_unarchive_records">Unarchive All</a>
                         </t>
-                    </ul>
+                    </div>
                 </span>
-                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus"/></span>
+                <span t-if="widget.quick_create" class="o_kanban_quick_add"><i class="fa fa-plus" role="img" aria-label="Quick add" title="Quick add"/></span>
             </div>
         </div>
         <div t-if="widget.remaining > 0" class="o_kanban_load_more">
@@ -43,39 +44,49 @@
 
 <t t-name="KanbanView.ColumnQuickCreate">
     <div class="o_column_quick_create">
-        <div class="o_column_header">
-            <span class="o_kanban_add_column"><i class="fa fa-plus"/></span>
-            <span class="o_kanban_title">Add new Column</span>
+        <div class="o_quick_create_folded">
+            <span class="o_kanban_add_column"><i class="fa fa-plus" role="img" aria-label="Add column" title="Add column"/></span>
+            <span class="o_kanban_title">Add a Column</span>
         </div>
-        <div class="o_kanban_quick_create">
-            <div class="input-group">
-              <input type="text" class="form-control o_input" placeholder="Column title"/>
-              <span class="input-group-btn">
-                <button class="btn btn-primary o_kanban_add" type="button">Add</button>
-              </span>
+        <div class="o_quick_create_unfolded">
+            <div class="o_kanban_header">
+                <div class="input-group">
+                    <input type="text" class="form-control o_input" placeholder="Column title"/>
+                    <span class="input-group-append">
+                        <button class="btn btn-primary o_kanban_add" type="button">Add</button>
+                    </span>
+                </div>
+                <span t-if="!widget.isMobile" class="o_discard_msg text-muted float-right">Esc to discard</span>
+                <t t-if="widget.examples &amp;&amp; !widget.isMobile">
+                    <button type="button" class="btn btn-link o_kanban_examples">See examples</button>
+                </t>
             </div>
+            <div class="o_kanban_muted_record"/>
+            <div class="o_kanban_muted_record"/>
+            <div class="o_kanban_muted_record"/>
         </div>
     </div>
 </t>
 
-<t t-name="KanbanView.QuickCreate">
-    <div class="o_kanban_quick_create">
-        <input type="text" class="o_input" placeholder="Title"/>
-        <button class="btn btn-sm btn-primary o_kanban_add">Add</button>
-        <button class="btn btn-sm btn-primary o_kanban_edit">Edit</button>
-        <button class="btn btn-sm btn-default o_kanban_cancel ml8">Discard</button>
+<t t-name="KanbanView.RecordQuickCreate.buttons">
+    <div>
+        <button class="btn btn-primary o_kanban_add">Add</button>
+        <button class="btn btn-primary o_kanban_edit">Edit</button>
+        <button class="btn btn-secondary o_kanban_cancel ml8">Discard</button>
     </div>
 </t>
 
 <t t-name="KanbanColorPicker">
-    <li t-foreach="12" t-as="color">
-        <a href="#" t-att-data-color="color_index" t-attf-class="oe_kanban_color_#{color}"/>
-    </li>
-</t>
-<t t-name="KanbanView.nocontent">
-    <div class="oe_view_nocontent">
-        <t t-raw="content"/>
-    </div>
+    <t t-foreach="colors" t-as="color">
+        <li>
+            <a role="menuitem"
+               href="#"
+               t-att-data-color="color_index"
+               t-attf-class="oe_kanban_color_#{color_index}"
+               t-att-title="color"
+               t-att-aria-label="color"/>
+        </li>
+    </t>
 </t>
 
 <t t-name="GraphCustomTooltip">
@@ -97,9 +108,10 @@
         <div class="o_kanban_counter_progress progress">
             <t t-foreach="widget.colors" t-as="color">
                 <t t-set="count" t-value="widget.subgroupCounts and widget.subgroupCounts[color] or 0"/>
-                <div t-attf-class="progress-bar transition-off bg-#{color_value}-full#{count ? ' o_bar_has_records' : ''}#{widget.activeFilter ? ' active progress-bar-striped' : ''}"
+                <div t-attf-class="progress-bar transition-off bg-#{color_value}-full#{count ? ' o_bar_has_records' : ''}#{widget.activeFilter ? ' progress-bar-animated progress-bar-striped' : ''}"
                     t-att-data-filter="color"
                     t-attf-data-original-title="#{count} #{color}"
+                    aria-valuemin="0" aria-valuemax="100" t-att-aria-valuenow="count*100" role="progressbar"
                     t-attf-style="width: #{count ? (count * 100 / widget.groupCount) : 0}%;"/>
             </t>
         </div>
@@ -107,16 +119,235 @@
     </div>
 </t>
 
-<!-- Mobile templates -->
-
-<t t-name="KanbanView.MobileTabs">
-    <div class="o_kanban_mobile_tabs">
-        <t t-foreach="data" t-as="group">
-            <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id">
-                <span class="o_column_title"><t t-esc="group.value"/></span>
+<t t-name="KanbanView.SetCoverModal">
+    <div t-if="attachmentIds.length" class="ml32 mr0 o_kanban_cover_container">
+        <t t-foreach="attachmentIds" t-as="attachment">
+            <div t-attf-class="o_kanban_cover_image#{coverId === attachment.id ? ' o_selected' : ''}">
+                <img t-attf-src="/web/image/#{attachment.id}?unique=1" t-att-data-id="attachment.id" t-att-data-name="attachment.name" alt="Attachment"/>
             </div>
         </t>
     </div>
+    <div t-else="">There is no available image to be set as cover.</div>
+    <span class="d-none">
+        <t t-call="HiddenInputFile">
+            <t t-set="fileupload_id" t-value="widget.imageUploadID" />
+            <t t-set="fileupload_action" t-translation="off">/web/binary/upload_attachment</t>
+            <input type="hidden" name="model" t-att-value="widget.modelName" />
+            <input type="hidden" name="id" t-att-value="widget.id" />
+        </t>
+    </span>
 </t>
 
+<!-- Note: this dialog isn't responsive, but it is not accessible on mobile -->
+<div t-name="KanbanView.ExamplesDialog" class="o_kanban_examples_dialog">
+    <div class="o_kanban_examples_dialog_nav">
+        <ul class="nav nav-pills flex-column">
+            <t t-foreach="examples" t-as="example">
+                <li class="nav-item">
+                    <a t-attf-aria-controls="example_#{example_index}" data-toggle="tab" role="tab" t-att-data-example-index="example_index" t-attf-href="#example_#{example_index}" t-attf-class="nav-link#{example_index == 0 and ' active' or ''}"> <t t-esc="example.name"/> </a>
+                </li>
+            </t>
+        </ul>
+    </div>
+    <div class="o_kanban_examples_dialog_content">
+        <div class="tab-content">
+            <t t-foreach="examples" t-as="example">
+                <div role="tabpanel" t-attf-id="example_#{example_index}" t-attf-class="tab-pane #{example_index == 0 and 'active in' or ''}">
+                    <div t-if="example.description" class="o_kanban_examples_description">
+                        <t t-raw="example.description"/> <!-- description is supposed to be properly escaped -->
+                    </div>
+                    <div class="o_kanban_examples">
+                        <t t-foreach="example.columns" t-as="column">
+                            <div class="o_kanban_examples_group">
+                                <h6><b><t t-esc="column"/></b></h6>
+                                <t t-foreach="_.random(1,4)">
+                                    <t t-call="KanbanView.ExamplesDialog.RecordGhost"/>
+                                </t>
+                            </div>
+                        </t>
+                    </div>
+                </div>
+            </t>
+        </div>
+    </div>
+</div>
+<t t-name="KanbanView.ExamplesDialog.RecordGhost">
+    <div class="o_kanban_examples_ghost">
+        <div class="o_ghost_content"/>
+        <div class="o_ghost_content o_ghost_tag"/>
+            <t t-if="example.bullets">
+                <t t-if="_.random(0,5) > 3">
+                    <t t-raw="example.bullets[_.random(0, example.bullets.length-1)]"/>
+                </t>
+            </t>
+        <img class="float-right o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+    </div>
+</t>
+
+<!-- Kanban Example Background -->
+<t t-name="KanbanView.ExamplesBackground">
+    <div class="o_kanban_example_background_container">
+        <div class="o_kanban_example_background">
+            <div class="o_kanban_examples">
+                <t t-foreach="ghostColumns" t-as="column">
+                    <div class="o_kanban_examples_group">
+                        <h6><b><t t-esc="column"/></b></h6>
+                        <t t-foreach="_.random(2,6)">
+                            <t t-call="KanbanView.ExamplesBackground.RecordGhost"/>
+                        </t>
+                    </div>
+                </t>
+            </div>
+        </div>
+    </div>
+</t>
+<t t-name="KanbanView.ExamplesBackground.RecordGhost">
+    <div class="o_kanban_examples_ghost">
+        <div class="o_ghost_content"/>
+        <div class="o_ghost_content o_ghost_tag"/>
+        <img class="float-right o_ghost_avatar" src="/base/static/img/avatar.png" alt="Avatar"/>
+    </div>
+</t>
+
+<!-- Kanban SearchPanel -->
+<t t-name="SearchPanel.SectionHeader">
+    <header class="o_search_panel_section_header text-uppercase">
+        <i t-attf-class="mr-1 fa #{section.icon} o_search_panel_section_icon" t-attf-style="#{section.color ? ('color: ' + section.color) : ''}"/>
+        <b><t t-esc="section.description"/></b>
+    </header>
+</t>
+
+<t t-name="SearchPanel.Category">
+    <section class="o_search_panel_section o_search_panel_category">
+        <t t-call="SearchPanel.SectionHeader">
+            <t t-set="section" t-value="category"/>
+        </t>
+        <div t-if="category.errorMsg" class="alert alert-warning">
+            <span><t t-esc="category.errorMsg"/></span>
+        </div>
+        <ul t-else="" class="list-group d-block o_search_panel_field" t-att-data-field-name="category.fieldName">
+            <li class="o_search_panel_category_value border-0 list-group-item" t-att-data-category-id="category.id">
+                <header t-att-class="'list-group-item-action' + (!category.activeValueId ? ' active' : '')">
+                    <label class="o_search_panel_label mb0">
+                        <div class="o_toggle_fold"/>
+                        <span class="o_search_panel_label_title"><b>All</b></span>
+                    </label>
+                </header>
+            </li>
+            <t t-call="SearchPanel.CategoryValues">
+                <t t-set="values" t-value="category.rootIds"/>
+            </t>
+        </ul>
+    </section>
+</t>
+<t t-name="SearchPanel.CategoryValues">
+    <t t-foreach="values" t-as="valueId">
+        <t t-set="value" t-value="category.values[valueId]"/>
+        <li class="o_search_panel_category_value border-0 list-group-item" t-att-data-id="value.id" t-att-data-category-id="category.id">
+            <header t-att-class="'list-group-item-action' + (value.id === category.activeValueId ? ' active' : '')">
+                <label t-attf-class="o_search_panel_label mb0{{ category.enableCounters ? ' o_with_counters' : '' }}">
+                    <div class="o_toggle_fold">
+                        <i t-if="value.childrenIds.length" t-attf-class="fa fa-caret-{{ value.folded ? 'right' : 'down' }}"/>
+                    </div>
+                    <span class="o_search_panel_label_title"><t t-esc="value.display_name"/></span>
+                </label>
+                <span t-if="category.enableCounters and value.__count > 0"
+                    class="o_search_panel_counter text-muted ml-2 small"
+                    t-esc="value.__count"
+                />
+            </header>
+            <ul t-if="!value.folded and value.childrenIds.length" class="list-group d-block">
+                <t t-call="SearchPanel.CategoryValues">
+                    <t t-set="values" t-value="value.childrenIds"/>
+                </t>
+            </ul>
+        </li>
+    </t>
+</t>
+
+<t t-name="SearchPanel.Filter">
+    <section class="o_search_panel_section o_search_panel_filter">
+        <t t-call="SearchPanel.SectionHeader">
+            <t t-set="section" t-value="filter"/>
+        </t>
+        <div t-if="filter.errorMsg" class="alert alert-warning">
+            <span><t t-esc="filter.errorMsg"/></span>
+        </div>
+        <ul t-else="" class="list-group d-block o_search_panel_field" t-att-data-field-name="filter.fieldName">
+            <t t-if="filter.groups" t-call="SearchPanel.FilterGroups">
+                <t t-set="groups" t-value="filter.groups"/>
+            </t>
+            <t t-else="" t-call="SearchPanel.FilterValues">
+                <t t-set="sortedValueIds" t-value="filter.sortedValueIds"/>
+                <t t-set="values" t-value="filter.values"/>
+            </t>
+        </ul>
+    </section>
+</t>
+<t t-name="SearchPanel.FilterGroups">
+    <li t-foreach="filter.sortedGroupIds" t-as="groupId" t-att-data-group-id="groupId" t-att-data-filter-id="filter.id"
+        class="o_search_panel_filter_group list-group-item border-0">
+        <t t-set="group" t-value="groups[groupId]"/>
+        <t t-set="inputId" t-value="_.uniqueId('input_')"/>
+        <header class="o_search_panel_group_header">
+            <div class="custom-control custom-checkbox">
+                <input type="checkbox" t-att-id="inputId" t-att-checked="group.state === 'checked' ? 'checked' : undefined" class="custom-control-input"/>
+                <label t-att-for="inputId" t-attf-class="o_search_panel_label custom-control-label{{ group.enableCounters ? ' o_with_counters' : '' }}" t-att-title="group.tooltip">
+                    <span class="o_search_panel_label_title">
+                        <span t-if="group.hex_color" t-attf-style="color: {{ group.hex_color }};">●</span>
+                        <t t-esc="group.name"/>
+                    </span>
+                </label>
+            </div>
+        </header>
+        <ul t-if="!group.folded" class="list-group d-block">
+            <t t-call="SearchPanel.FilterValues">
+                <t t-set="sortedValueIds" t-value="group.sortedValueIds"/>
+                <t t-set="values" t-value="group.values"/>
+            </t>
+        </ul>
+    </li>
+     <ul t-if="groups['false']" class="list-group d-block">
+        <t t-call="SearchPanel.FilterValues">
+            <t t-set="group" t-value="groups['false']"/>
+            <t t-set="sortedValueIds" t-value="group.sortedValueIds"/>
+            <t t-set="values" t-value="group.values"/>
+        </t>
+    </ul>
+</t>
+<t t-name="SearchPanel.FilterValues">
+    <li t-foreach="sortedValueIds" t-as="valueId" t-att-data-value-id="valueId" t-att-data-filter-id="filter.id"
+        class="o_search_panel_filter_value list-group-item border-0">
+        <t t-set="value" t-value="values[valueId]"/>
+        <t t-set="inputId" t-value="_.uniqueId('input_')"/>
+        <header class="o_search_panel_group_header">
+            <div class="custom-control custom-checkbox w-100">
+                <input type="checkbox" t-att-id="inputId" t-att-checked="value.checked ? 'checked' : undefined" class="custom-control-input"/>
+                <label t-att-for="inputId" class="o_search_panel_label custom-control-label" t-att-title="group &amp;&amp; group.tooltip">
+                    <span class="o_search_panel_label_title" t-esc="value.display_name"/>
+                    <span t-if="filter.enableCounters and value.__count > 0"
+                        class="o_search_panel_counter text-muted ml-2 small"
+                        t-esc="value.__count"
+                    />
+                </label>
+            </div>
+        </header>
+    </li>
+</t>
+
+<!-- Mobile templates -->
+<t t-name="KanbanView.MobileTabs">
+    <div class="o_kanban_mobile_tabs_container">
+        <div class="o_kanban_mobile_tabs">
+            <t t-foreach="data" t-as="group">
+                <div class="o_kanban_mobile_tab" t-att-data-id="group.res_id or group.id">
+                    <span class="o_column_title"><t t-esc="group.value"/></span>
+                </div>
+            </t>
+            <div class="o_kanban_mobile_add_column" t-if="quickCreateEnabled">
+                <i class="fa fa-plus " role="img" aria-label="Add column" title="Add column"/>
+            </div>
+        </div>
+    </div>
+</t>
 </template>

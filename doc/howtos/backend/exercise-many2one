@@ -3,9 +3,9 @@
 
 Index: addons/openacademy/models.py
 ===================================================================
---- addons.orig/openacademy/models.py	2014-08-27 10:37:10.135932250 +0200
-+++ addons/openacademy/models.py	2014-08-27 10:37:10.131932250 +0200
-@@ -8,6 +8,9 @@
+--- addons.orig/openacademy/models.py
++++ addons/openacademy/models.py
+@@ -9,6 +9,9 @@
      name = fields.Char(string="Title", required=True)
      description = fields.Text()
  
@@ -15,7 +15,7 @@ Index: addons/openacademy/models.py
  
  class Session(models.Model):
      _name = 'openacademy.session'
-@@ -16,3 +19,7 @@
+@@ -18,3 +21,7 @@
      start_date = fields.Date()
      duration = fields.Float(digits=(6, 2), help="Duration in days")
      seats = fields.Integer(string="Number of seats")
@@ -25,8 +25,8 @@ Index: addons/openacademy/models.py
 +        ondelete='cascade', string="Course", required=True)
 Index: addons/openacademy/views/openacademy.xml
 ===================================================================
---- addons.orig/openacademy/views/openacademy.xml	2014-08-27 10:37:10.135932250 +0200
-+++ addons/openacademy/views/openacademy.xml	2014-08-27 10:37:10.131932250 +0200
+--- addons.orig/openacademy/views/openacademy.xml
++++ addons/openacademy/views/openacademy.xml
 @@ -9,6 +9,7 @@
                      <sheet>
                          <group>
@@ -54,7 +54,7 @@ Index: addons/openacademy/views/openacademy.xml
          <!-- window action -->
          <!--
              The following tag is an action definition for a "window action",
-@@ -73,16 +86,34 @@
+@@ -72,16 +85,34 @@
                  <form string="Session Form">
                      <sheet>
                          <group>

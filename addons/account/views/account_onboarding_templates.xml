@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <!-- ONBOARDING STEPS -->
+    <template id="onboarding_invoice_layout_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Invoice Layout</t>
+            <t t-set="description">Customize the look of your invoices.</t>
+            <t t-set="done_icon" t-value="'fa-star'" />
+            <t t-set="btn_text">Customize</t>
+            <t t-set="done_text">Looks great!</t>
+            <t t-set="method" t-value="'action_open_base_document_layout'" />
+            <t t-set="model" t-value="'base.document.layout'" />
+            <t t-set="state" t-value="state.get('account_onboarding_invoice_layout_state')" />
+        </t>
+    </template>
+    <template id="onboarding_sample_invoice_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Sample Invoice</t>
+            <t t-set="description">
+                Send an invoice to test the customer portal.
+            </t>
+            <t t-set="btn_text">Send sample</t>
+            <t t-set="done_text">Sample invoice sent!</t>
+            <t t-set="method" t-value="'action_open_account_onboarding_sample_invoice'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('account_onboarding_sample_invoice_state')" />
+        </t>
+    </template>
+    <template id="onboarding_bank_account_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Bank Account</t>
+            <t t-set="description">Setup your bank account to sync bank feeds.</t>
+            <t t-set="btn_text">Add a bank</t>
+            <t t-set="done_text">Step Completed!</t>
+            <t t-set="method" t-value="'setting_init_bank_account_action'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('account_setup_bank_data_state')" />
+        </t>
+    </template>
+    <template id="onboarding_fiscal_year_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Accounting Periods</t>
+            <t t-set="description">Define your fiscal years &amp; tax returns periodicity.</t>
+            <t t-set="btn_text">Configure</t>
+            <t t-set="done_text">Step Completed!</t>
+            <t t-set="method" t-value="'setting_init_fiscal_year_action'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('account_setup_fy_data_state')" />
+        </t>
+    </template>
+    <template id="onboarding_chart_of_account_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Chart of Accounts</t>
+            <t t-set="description">Setup your chart of accounts and record initial balances.</t>
+            <t t-set="btn_text">Review</t>
+            <t t-set="done_text">Chart of account set.</t>
+            <t t-set="method" t-value="'setting_chart_of_accounts_action'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('account_setup_coa_state')" />
+        </t>
+    </template>
+    <template id="dashboard_onboarding_company_step" primary="True"
+              inherit_id="base.onboarding_company_step">
+        <xpath expr="//t[@t-set='description']" position="replace">
+            <t t-set="description">
+                Setup your company's data for reports headers.
+            </t>
+        </xpath>
+    </template>
+    <!-- ONBOARDING PANELS -->
+    <template id="account_invoice_onboarding_panel" name="account.invoice.onboarding.panel">
+        <t t-call="base.onboarding_container">
+            <t t-set="classes" t-value="'o_onboarding_blue'"/>
+            <t t-set="bg_image" t-value="'/account/static/src/img/account_invoice_onboarding_bg.jpg'"/>
+            <t t-set="close_method" t-value="'action_close_account_invoice_onboarding'"/>
+            <t t-set="close_model" t-value="'res.company'"/>
+            <t t-set="text_completed">Congratulations! You are all set.</t>
+
+            <t t-call="base.onboarding_company_step" name="company_step" />
+            <t t-call="account.onboarding_invoice_layout_step" name="invoice_layout_step" />
+            <t t-call="account.onboarding_sample_invoice_step" name="sample_invoice_step" />
+        </t>
+    </template>
+    <template id="account_dashboard_onboarding_panel" name="account.dashboard.onboarding.panel">
+        <t t-call="base.onboarding_container">
+            <t t-set="classes" t-value="'o_onboarding_orange'"/>
+            <t t-set="bg_image" t-value="'/account/static/src/img/account_dashboard_onboarding_bg.jpg'"/>
+            <t t-set="close_method" t-value="'action_close_account_dashboard_onboarding'"/>
+            <t t-set="close_model" t-value="'res.company'"/>
+
+            <t t-call="account.dashboard_onboarding_company_step" name="company_step" />
+            <t t-call="account.onboarding_bank_account_step" name="bank_account_step" />
+            <t t-call="account.onboarding_fiscal_year_step" name="fiscal_year_step" />
+            <t t-call="account.onboarding_chart_of_account_step" name="chart_of_account_step" />
+        </t>
+    </template>
+    <!-- SAMPLE INVOICE EMAIL -->
+    <record model="ir.ui.view" id="email_compose_onboarding_sample_invoice">
+        <field name="name">mail.compose.message.form.account_invoice_onboarding_sample_invoice
+        </field>
+        <field name="model">mail.compose.message</field>
+        <field name="inherit_id" ref="mail.email_compose_message_wizard_form" />
+        <field name="priority">1000</field>
+        <field name="mode">primary</field>
+        <field name="arch" type="xml">
+            <xpath expr="//span[@name='document_followers_text']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//button[@name='save_as_template']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//field[@name='template_id']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+    <record id="action_open_account_onboarding_sample_invoice" model="ir.actions.act_window">
+        <field name="name">Send a sample invoice</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">mail.compose.message</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="email_compose_onboarding_sample_invoice" />
+        <field name="target">new</field>
+    </record>
+    <!-- SALE TAX -->
+    <template id="onboarding_sale_tax_step">
+        <t t-call="base.onboarding_step">
+            <t t-set="title">Taxes</t>
+            <t t-set="description">Choose a default sales tax for your products.</t>
+            <t t-set="btn_text">Set taxes</t>
+            <t t-set="done_text">Step Completed!</t>
+            <t t-set="method" t-value="'action_open_account_onboarding_sale_tax'" />
+            <t t-set="model" t-value="'res.company'" />
+            <t t-set="state" t-value="state.get('account_onboarding_sale_tax_state')" />
+        </t>
+    </template>
+    <record id="account_invoice_onboarding_sale_tax_form" model="ir.ui.view">
+        <field name="name">account.invoice.layout.onboarding.form</field>
+        <field name="model">res.company</field>
+        <field name="mode">primary</field>
+        <field name="priority">1000</field>
+        <field name="arch" type="xml">
+            <form>
+                <div class="mb16">Choose a default sales tax for your products.</div>
+                <label for="account_sale_tax_id" string="Sales Tax"/>
+                <field name="account_sale_tax_id" />
+                <footer>
+                    <button string="Apply" class="btn btn-primary" type="object" name="action_save_onboarding_sale_tax" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="action_open_account_onboarding_sale_tax" model="ir.actions.act_window">
+        <field name="name">Sales tax</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.company</field>
+        <field name="view_mode">form</field>
+        <field name="view_id" ref="account_invoice_onboarding_sale_tax_form" />
+        <field name="target">new</field>
+    </record>
+</odoo>

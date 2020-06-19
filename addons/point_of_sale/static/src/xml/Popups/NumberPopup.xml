@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="NumberPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <Draggable>
+                <div class="popup popup-number" t-att-class="{ 'popup-password': props.isPassword }">
+                    <header class="title drag-handle">
+                        <t t-esc="props.title" />
+                    </header>
+                    <div class="popup-input value active">
+                        <t t-esc="inputBuffer" />
+                    </div>
+                    <div class="popup-numpad">
+                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('1')">1</button>
+                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('2')">2</button>
+                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('3')">3</button>
+                        <t t-if="props.cheap">
+                            <button class="mode-button add" t-on-mousedown.prevent="sendInput('+1')">+1</button>
+                        </t>
+                        <t t-if="!props.cheap">
+                            <button class="mode-button add" t-on-mousedown.prevent="sendInput('+10')">+10</button>
+                        </t>
+                        <br />
+                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('4')">4</button>
+                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('5')">5</button>
+                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('6')">6</button>
+                        <t t-if="props.cheap">
+                            <button class="mode-button add" t-on-mousedown.prevent="sendInput('+2')">+2</button>
+                        </t>
+                        <t t-if="!props.cheap">
+                            <button class="mode-button add" t-on-mousedown.prevent="sendInput('+20')">+20</button>
+                        </t>
+                        <br />
+                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('7')">7</button>
+                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('8')">8</button>
+                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('9')">9</button>
+                        <t t-if="props.cheap">
+                            <button class="mode-button add" t-on-mousedown.prevent="sendInput('+5')">+5</button>
+                        </t>
+                        <t t-if="!props.cheap">
+                            <button class="mode-button add" t-on-mousedown.prevent="sendInput('+50')">+50</button>
+                        </t>
+                        <br />
+                        <button class="input-button numpad-char" t-on-mousedown.prevent="sendInput('Delete')">C</button>
+                        <button class="input-button number-char" t-on-mousedown.prevent="sendInput('0')">0</button>
+                        <button class="input-button number-char dot" t-on-mousedown.prevent="sendInput(decimalSeparator)">
+                            <t t-esc="decimalSeparator" /></button>
+                        <button class="input-button numpad-backspace" t-on-mousedown.prevent="sendInput('Backspace')">
+                            <img style="pointer-events: none;"
+                                 src="/point_of_sale/static/src/img/backspace.png" width="24"
+                                 height="21" alt="Backspace" />
+                        </button>
+                        <br />
+                    </div>
+                    <footer class="footer centered">
+                        <div class="button cancel" t-on-mousedown.prevent="cancel">
+                            <t t-esc="props.cancelText" />
+                        </div>
+                        <div class="button confirm" t-on-mousedown.prevent="confirm">
+                            <t t-esc="props.confirmText" />
+                        </div>
+                    </footer>
+                </div>
+            </Draggable>
+
+        </div>
+    </t>
+
+</templates>

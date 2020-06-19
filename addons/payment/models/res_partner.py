@@ -8,8 +8,7 @@ class res_partner(models.Model):
     _inherit = 'res.partner'
 
     payment_token_ids = fields.One2many('payment.token', 'partner_id', 'Payment Tokens')
-    payment_token_count = fields.Integer(
-        'Count Payment Token', compute='_compute_payment_token_count')
+    payment_token_count = fields.Integer('Count Payment Token', compute='_compute_payment_token_count')
 
     @api.depends('payment_token_ids')
     def _compute_payment_token_count(self):

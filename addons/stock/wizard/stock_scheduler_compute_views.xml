@@ -6,12 +6,11 @@
         <field name="arch" type="xml">
             <form string="Parameters">
                 <p>
-                When you run the schedulers, Odoo tries to reserve the available stock to fulfill the existing pickings
-                and verify if some reordering rules should be triggered.
+                The stock will be reserved for operations waiting for availability and the reordering rules will be triggered.
                 </p>
                 <footer>
-                    <button name="procure_calculation" string="Run Schedulers" type="object" class="btn-primary"/>
-                    <button string="Cancel" class="btn-default" special="cancel" />
+                    <button name="procure_calculation" string="Run Scheduler" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>
             </form>
         </field>
@@ -20,7 +19,6 @@
     <record id="action_procurement_compute" model="ir.actions.act_window">
         <field name="name">Run Scheduler</field>
         <field name="res_model">stock.scheduler.compute</field>
-        <field name="view_type">form</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
     </record>

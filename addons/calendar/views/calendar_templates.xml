@@ -2,15 +2,21 @@
 <odoo>
     <template id="assets_backend" name="calendar assets" inherit_id="web.assets_backend">
         <xpath expr="." position="inside">
-            <link rel="stylesheet" href="/calendar/static/src/less/calendar.less"/>
+            <link rel="stylesheet" type="text/scss" href="/calendar/static/src/scss/calendar.scss"/>
             <script type="text/javascript" src="/calendar/static/src/js/base_calendar.js"></script>
+            <script type="text/javascript" src="/calendar/static/src/js/calendar_renderer.js"></script>
+            <script type="text/javascript" src="/calendar/static/src/js/calendar_controller.js"></script>
+            <script type="text/javascript" src="/calendar/static/src/js/calendar_model.js"></script>
+            <script type="text/javascript" src="/calendar/static/src/js/calendar_view.js"></script>
             <script type="text/javascript" src="/calendar/static/src/js/mail_activity.js"></script>
+            <script type="text/javascript" src="/calendar/static/src/js/systray_activity_menu.js"></script>
         </xpath>
     </template>
 
-    <template id="qunit_suite" inherit_id="web.qunit_suite">
+    <template id="qunit_suite" inherit_id="web.qunit_suite_tests">
         <xpath expr="//script[last()]" position="after">
             <script type="text/javascript" src="/calendar/static/tests/calendar_tests.js"/>
+            <script type="text/javascript" src="/calendar/static/tests/systray_activity_menu_tests.js"/>
         </xpath>
     </template>
 
@@ -24,16 +30,16 @@
 
             <div class="container">
                 <div class="o_logo">
-                    <img class="img img-responsive center-block" src="/web/binary/company_logo"/>
+                    <img class="img img-fluid d-block mx-auto" src="/web/binary/company_logo" alt="Logo"/>
                 </div>
 
-                <div class="panel panel-default">
-                    <div class="panel-heading">
+                <div class="card">
+                    <div class="card-header">
                         <h2>Calendar Invitation <small><t t-esc="event.name"/></small></h2>
                     </div>
-                    <div class="panel-body">
+                    <div class="card-body">
                         <div class="clearfix mb16" t-if="attendee.state != 'needsAction'">
-                            <span class="pull-right label label-info">
+                            <span class="float-right badge badge-info">
                                 <t t-if="attendee.state == 'accepted'">Yes I'm going.</t>
                                 <t t-if="attendee.state == 'declined'">No I'm not going.</t>
                             </span>

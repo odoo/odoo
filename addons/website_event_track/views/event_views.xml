@@ -8,10 +8,10 @@
         <field name="arch" type="xml">
             <xpath expr="//div[@name='event_type_visibility_website']/div[hasclass('o_setting_right_pane')]" position='inside'>
                 <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
-                    <label class="col-md-4" for="website_track"/> <field name="website_track"/>
+                    <label class="col-lg-4" for="website_track"/> <field name="website_track"/>
                 </div>
                 <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
-                    <label class="col-md-4" for="website_track_proposal"/> <field name="website_track_proposal"/>
+                    <label class="col-lg-4" for="website_track_proposal"/> <field name="website_track_proposal"/>
                 </div>
             </xpath>
         </field>
@@ -20,29 +20,37 @@
         <!-- Events Organisation/CONFIGURATION/EVENTS -->
         <record id="view_event_form" model="ir.ui.view">
             <field name="name">Event Tracks</field>
-            <field name="inherit_id" ref="website_event.event_event_view_form_inherit_website"/>
+            <field name="inherit_id" ref="event.view_event_form"/>
             <field name="model">event.event</field>
+            <field name="priority" eval="3"/>
             <field name="arch" type="xml">
-                <button name="website_publish_button" position="before">
+                <div name="button_box" position="inside">
                     <button name="%(action_event_track_from_event)d"
                             type="action"
                             class="oe_stat_button"
-                            icon="fa-inbox">
-                        <field name="track_count" widget="statinfo"/>
+                            icon="fa-microphone"
+                            context="{'default_date': date_begin}">
+                        <field name="track_count" string="Tracks" widget="statinfo"/>
                     </button>
-                    <button name="%(action_event_sponsor_from_event)d"
+                    <button name="%(event_sponsor_action_from_event)d"
                             type="action"
                             class="oe_stat_button"
-                            icon="fa-users">
-                        <field name="sponsor_count" widget="statinfo"/>
+                            icon="fa-black-tie">
+                        <field name="sponsor_count" string="Sponsors" widget="statinfo"/>
                     </button>
-                </button>
-                <label for="website_menu" position="after">
-                    <field name="website_track" attrs="{'invisible': [('website_menu', '=', False)]}"/>
-                    <label for="website_track" string="Tracks on Website" attrs="{'invisible': [('website_menu', '=', False)]}"/>
-                    <field name="website_track_proposal" attrs="{'invisible': [('website_menu', '=', False)]}"/>
-                    <label for="website_track_proposal" string="Track Proposals on Website" attrs="{'invisible': [('website_menu', '=', False)]}"/>
-                </label>
+                </div>
             </field>
         </record>
+
+    <record id="event_event_view_list_inherit_website_event_track" model="ir.ui.view">
+        <field name="name">event.event.view.list.inherit.website.event.track</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_tree"/>
+        <field name="arch" type="xml">
+            <field name="stage_id" position="after">
+                <field name="track_count" readonly="1" optional="hide"/>
+                <field name="sponsor_count" readonly="1" optional="hide"/>
+            </field>
+        </field>
+    </record>
 </odoo>

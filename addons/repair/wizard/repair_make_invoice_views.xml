@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        
+        <!--  Make Invoice -->
+        
+        <record id="view_make_invoice" model="ir.ui.view">
+            <field name="name">Make Invoice</field>
+            <field name="model">repair.order.make_invoice</field>
+            <field name="arch" type="xml">
+            <form string="Create invoices">
+                <group string="Do you really want to create the invoice(s)?">
+                    <field name="group"/>
+                </group>
+                <footer>
+                    <button name="make_invoices" string="Create Invoice" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+            </field>
+        </record>
+
+        <act_window name="Create invoices"
+            res_model="repair.order.make_invoice"
+            binding_model="repair.order"
+            binding_views="list"
+            view_mode="form"
+            target="new"
+            id="act_repair_invoice"/>
+
+    </data>
+</odoo>

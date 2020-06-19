@@ -1,8 +1,8 @@
 :banner: banners/module.jpg
 
-=======
-Modules
-=======
+================
+Module Manifests
+================
 
 
 
@@ -51,7 +51,20 @@ Available manifest fields are:
 ``website`` (``str``)
     website URL for the module author
 ``license`` (``str``, defaults: ``LGPL-3``)
-    distribution license for the module
+    distribution license for the module.
+    Possible values:
+
+    * `GPL-2`
+    * `GPL-2 or any later version`
+    * `GPL-3`
+    * `GPL-3 or any later version`
+    * `AGPL-3`
+    * `LGPL-3`
+    * `Other OSI approved licence`
+    * `OEEL-1` (Odoo Enterprise Edition License v1.0)
+    * `OPL-1` (Odoo Proprietary License v1.0)
+    * `Other proprietary`
+
 ``category`` (``str``, default: ``Uncategorized``)
     classification category within Odoo, rough business domain for the module.
 
@@ -84,7 +97,53 @@ Available manifest fields are:
     to ``auto_install``. When both ``sale`` and ``crm`` are installed, it
     automatically adds CRM campaigns tracking to sale orders without either
     ``sale`` or ``crm`` being aware of one another
+``external_dependencies`` (``dict(key=list(str))``)
+    A dictionary containing python and/or binary dependencies.
 
-.. _semantic versioning: http://semver.org
+    For python dependencies, the ``python`` key must be defined for this
+    dictionary and a list of python modules to be imported should be assigned
+    to it.
+
+    For binary dependencies, the ``bin`` key must be defined for this
+    dictionary and a list of binary executable names should be assigned to it.
+
+    The module won't be installed if either the python module is not installed
+    in the host machine or the binary executable is not found within the
+    host machine's PATH environment variable.
+``application`` (``bool``, default: ``False``)
+    Whether the module should be considered as a fully-fledged application
+    (``True``) or is just a technical module (``False``) that provides some
+    extra functionality to an existing application module.
+``css`` (``list(str)``)
+    Specify css files with custom rules to be imported, these files should be
+    located in ``static/src/css`` inside the module.
+``images`` (``list(str)``)
+    Specify image files to be used by the module.
+``installable`` (``bool`` default: ``True``)
+    Whether a user should be able to install the module from the Web UI or not.
+``maintainer`` (``str``)
+    Person or entity in charge of the maintenance of this module, by default
+    it is assumed that the author is the maintainer.
+``{pre_init, post_init, uninstall}_hook`` (``str``)
+    Hooks for module installation/uninstallation, their value should be a
+    string representing the name of a function defined inside the module's
+    ``__init__.py``.
+
+    ``pre_init_hook`` takes a cursor as its only argument, this function is
+    executed prior to the module's installation.
+
+    ``post_init_hook`` takes a cursor and a registry as its arguments, this
+    function is executed right after the module's installation.
+
+    ``uninstall_hook`` takes a cursor and a registry as its arguments, this
+    function is executed after the module's uninstallation.
+
+    These hooks should only be used when setup/cleanup required for this module
+    is either extremely difficult or impossible through the api.
+``active`` (``bool``)
+    This indicates whether this module is to be used or not.
+    It is generally used to archive obsolete modules.
+
+.. _semantic versioning: https://semver.org
 .. _existing categories:
-     https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
+     https://github.com/odoo/odoo/blob/13.0/odoo/addons/base/data/ir_module_category_data.xml

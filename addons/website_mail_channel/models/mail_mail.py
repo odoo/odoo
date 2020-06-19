@@ -8,8 +8,7 @@ from odoo.addons.http_routing.models.ir_http import slug
 class MailMail(models.Model):
     _inherit = 'mail.mail'
 
-    @api.multi
-    def send_get_mail_body(self, partner=None):
+    def _send_prepare_body(self):
         """ Short-circuit parent method for mail groups, replace the default
             footer with one appropriate for mailing-lists."""
         if self.model == 'mail.channel' and self.res_id:
@@ -32,4 +31,4 @@ class MailMail(models.Model):
             body = tools.append_content_to_html(self.body, footer, container_tag='div')
             return body
         else:
-            return super(MailMail, self).send_get_mail_body(partner=partner)
+            return super(MailMail, self)._send_prepare_body()

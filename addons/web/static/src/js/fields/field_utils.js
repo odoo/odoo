@@ -28,6 +28,23 @@ var _t = core._t;
 //------------------------------------------------------------------------------
 
 /**
+ * Convert binary to bin_size
+ *
+ * @param {string} [value] base64 representation of the binary (might be already a bin_size!)
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options] additional options (note: this parameter is ignored)
+ *
+ * @returns {string} bin_size (which is human-readable)
+ */
+function formatBinary(value, field, options) {
+    if (!value) {
+        return '';
+    }
+    return utils.binaryToBinsize(value);
+}
+
+/**
  * @todo Really? it returns a jQuery element...  We should try to avoid this and
  * let DOM utility functions handle this directly. And replace this with a
  * function that returns a string so we can get rid of the forceString.
@@ -89,7 +106,7 @@ function formatChar(value, field, options) {
  * @returns {string}
  */
 function formatDate(value, field, options) {
-    if (value === false) {
+    if (value === false || isNaN(value)) {
         return "";
     }
     if (field && field.type === 'datetime') {
@@ -97,8 +114,7 @@ function formatDate(value, field, options) {
             value = value.clone().add(session.getTZOffset(value), 'minutes');
         }
     }
-    var l10n = core._t.database.parameters;
-    var date_format = time.strftime_to_moment_format(l10n.date_format);
+    var date_format = time.getLangDateFormat();
     return value.format(date_format);
 }
 
@@ -122,11 +138,7 @@ function formatDateTime(value, field, options) {
     if (!options || !('timezone' in options) || options.timezone) {
         value = value.clone().add(session.getTZOffset(value), 'minutes');
     }
-    var l10n = core._t.database.parameters;
-    var date_format = time.strftime_to_moment_format(l10n.date_format);
-    var time_format = time.strftime_to_moment_format(l10n.time_format);
-    var datetime_format = date_format + ' ' + time_format;
-    return value.format(datetime_format);
+    return value.format(time.getLangDatetimeFormat());
 }
 
 /**
@@ -141,15 +153,21 @@ function formatDateTime(value, field, options) {
  *   python description of the field.
  * @param {integer[]} [options.digits] the number of digits that should be used,
  *   instead of the default digits precision in the field.
+ * @param {function} [options.humanReadable] if returns true,
+ *   formatFloat acts like utils.human_number
  * @returns {string}
  */
 function formatFloat(value, field, options) {
+    options = options || {};
     if (value === false) {
         return "";
     }
+    if (options.humanReadable && options.humanReadable(value)) {
+        return utils.human_number(value, options.decimals, options.minDigits, options.formatterCallback);
+    }
     var l10n = core._t.database.parameters;
     var precision;
-    if (options && options.digits) {
+    if (options.digits) {
         precision = options.digits[1];
     } else if (field && field.digits) {
         precision = field.digits[1];
@@ -161,16 +179,37 @@ function formatFloat(value, field, options) {
     return formatted.join(l10n.decimal_point);
 }
 
+
+/**
+ * Returns a string representing a float value, from a float converted with a
+ * factor.
+ *
+ * @param {number} value
+ * @param {number} [options.factor]
+ *          Conversion factor, default value is 1.0
+ * @returns {string}
+ */
+function formatFloatFactor(value, field, options) {
+    var factor = options.factor || 1;
+    return formatFloat(value * factor, field, options);
+}
+
 /**
  * Returns a string representing a time value, from a float.  The idea is that
  * we sometimes want to display something like 1:45 instead of 1.75, or 0:15
  * instead of 0.25.
  *
  * @param {float} value
+ * @param {Object} [field]
+ *        a description of the field (note: this parameter is ignored)
+ * @param {Object} [options]
+ * @param {boolean} [options.noLeadingZeroHour] if true, format like 1:30
+ *        otherwise, format like 01:30
  * @returns {string}
  */
-function formatFloatTime(value) {
-    var pattern = '%02d:%02d';
+function formatFloatTime(value, field, options) {
+    options = options || {};
+    var pattern = options.noLeadingZeroHour ? '%1d:%02d' : '%02d:%02d';
     if (value < 0) {
         value = Math.abs(value);
         pattern = '-' + pattern;
@@ -193,10 +232,13 @@ function formatFloatTime(value) {
  *        a description of the field (note: this parameter is ignored)
  * @param {Object} [options] additional options
  * @param {boolean} [options.isPassword=false] if true, returns '********'
+ * @param {function} [options.humanReadable] if returns true,
+ *   formatFloat acts like utils.human_number
  * @returns {string}
  */
 function formatInteger(value, field, options) {
-    if (options && options.isPassword) {
+    options = options || {};
+    if (options.isPassword) {
         return _.str.repeat('*', String(value).length);
     }
     if (!value && value !== 0) {
@@ -204,6 +246,9 @@ function formatInteger(value, field, options) {
         // view, I want to display the concept of 'no value' with an empty
         // string.
         return "";
+    }
+    if (options.humanReadable && options.humanReadable(value)) {
+        return utils.human_number(value, options.decimals, options.minDigits, options.formatterCallback);
     }
     return utils.insert_thousand_seps(_.str.sprintf('%d', value));
 }
@@ -213,7 +258,7 @@ function formatInteger(value, field, options) {
  * return an empty string.  Note that it accepts two types of input parameters:
  * an array, in that case we assume that the many2one value is of the form
  * [id, nameget], and we return the nameget, or it can be an object, and in that
- * case, we assume that it is a record from a BasicModel.
+ * case, we assume that it is a record datapoint from a BasicModel.
  *
  * @param {Array|Object|false} value
  * @param {Object} [field]
@@ -223,7 +268,18 @@ function formatInteger(value, field, options) {
  * @returns {string}
  */
 function formatMany2one(value, field, options) {
-    value = value && (_.isArray(value) ? value[1] : value.data.display_name) || '';
+    if (!value) {
+        value = '';
+    } else if (_.isArray(value)) {
+        // value is a pair [id, nameget]
+        value = value[1];
+    } else {
+        // value is a datapoint, so we read its display_name field, which
+        // may in turn be a datapoint (if the name field is a many2one)
+        while (value.data) {
+            value = value.data.display_name || '';
+        }
+    }
     if (options && options.escape) {
         value = _.escape(value);
     }
@@ -291,11 +347,15 @@ function formatMonetary(value, field, options) {
         currency = session.get_currency(currency_id);
     }
 
-    var formatted_value = formatFloat(value, field, {
-        digits:  (currency && currency.digits) || options.digits,
-    });
+    var digits = (currency && currency.digits) || options.digits;
+    if (options.field_digits === true) {
+        digits = field.digits || digits;
+    }
+    var formatted_value = formatFloat(value, field,
+        _.extend({}, options , {digits: digits})
+    );
 
-    if (!currency) {
+    if (!currency || options.noSymbol) {
         return formatted_value;
     }
     if (currency.position === "after") {
@@ -304,7 +364,24 @@ function formatMonetary(value, field, options) {
         return currency.symbol + '&nbsp;' + formatted_value;
     }
 }
-
+/**
+ * Returns a string representing the given value (multiplied by 100)
+ * concatenated with '%'.
+ *
+ * @param {number | false} value
+ * @param {Object} [field]
+ * @param {Object} [options]
+ * @param {function} [options.humanReadable] if returns true, parsing is avoided
+ * @returns {string}
+ */
+function formatPercentage(value, field, options) {
+    options = options || {};
+    let result = formatFloat(value * 100, field, options) || '0';
+    if (!options.humanReadable || !options.humanReadable(value * 100)) {
+        result = parseFloat(result).toString().replace('.', _t.database.parameters.decimal_point);
+    }
+    return result + (options.noSymbol ? '' : '%');
+}
 /**
  * Returns a string representing the value of the selection.
  *
@@ -349,13 +426,13 @@ function parseDate(value, field, options) {
     if (!value) {
         return false;
     }
-    var datePattern = time.strftime_to_moment_format(core._t.database.parameters.date_format);
+    var datePattern = time.getLangDateFormat();
     var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D');
     var date;
     if (options && options.isUTC) {
         date = moment.utc(value);
     } else {
-        date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601], true);
+        date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601]);
     }
     if (date.isValid()) {
         if (date.year() === 0) {
@@ -388,8 +465,8 @@ function parseDateTime(value, field, options) {
     if (!value) {
         return false;
     }
-    var datePattern = time.strftime_to_moment_format(core._t.database.parameters.date_format),
-        timePattern = time.strftime_to_moment_format(core._t.database.parameters.time_format);
+    var datePattern = time.getLangDateFormat(),
+        timePattern = time.getLangTimeFormat();
     var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D'),
         timePatternWoZero = timePattern.replace('HH','H').replace('mm','m').replace('ss','s');
     var pattern1 = datePattern + ' ' + timePattern;
@@ -399,7 +476,7 @@ function parseDateTime(value, field, options) {
         // phatomjs crash if we don't use this format
         datetime = moment.utc(value.replace(' ', 'T') + 'Z');
     } else {
-        datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601], true);
+        datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601]);
         if (options && options.timezone) {
             datetime.add(-session.getTZOffset(datetime), 'minutes');
         }
@@ -418,13 +495,36 @@ function parseDateTime(value, field, options) {
     throw new Error(_.str.sprintf(core._t("'%s' is not a correct datetime"), value));
 }
 
-function parseFloat(value) {
+/**
+ * Parse a String containing number in language formating
+ *
+ * @param {string} value
+ *                The string to be parsed with the setting of thousands and
+ *                decimal separator
+ * @returns {float|NaN} the number value contained in the string representation
+ */
+function parseNumber(value) {
     if (core._t.database.parameters.thousands_sep) {
         var escapedSep = _.str.escapeRegExp(core._t.database.parameters.thousands_sep);
         value = value.replace(new RegExp(escapedSep, 'g'), '');
     }
-    value = value.replace(core._t.database.parameters.decimal_point, '.');
-    var parsed = Number(value);
+    if (core._t.database.parameters.decimal_point) {
+        value = value.replace(core._t.database.parameters.decimal_point, '.');
+    }
+    return Number(value);
+}
+
+/**
+ * Parse a String containing float in language formating
+ *
+ * @param {string} value
+ *                The string to be parsed with the setting of thousands and
+ *                decimal separator
+ * @returns {float}
+ * @throws {Error} if no float is found respecting the language configuration
+ */
+function parseFloat(value) {
+    var parsed = parseNumber(value);
     if (isNaN(parsed)) {
         throw new Error(_.str.sprintf(core._t("'%s' is not a correct float"), value));
     }
@@ -477,6 +577,18 @@ function parseMonetary(value, field, options) {
     return parseFloat(values[0] === currency.symbol ? values[1] : values[0]);
 }
 
+/**
+ * Parse a String containing float and unconvert it with a conversion factor
+ *
+ * @param {number} [options.factor]
+ *          Conversion factor, default value is 1.0
+ */
+function parseFloatFactor(value, field, options) {
+    var parsed = parseFloat(value);
+    var factor = options.factor || 1.0;
+    return parsed / factor;
+}
+
 function parseFloatTime(value) {
     var factor = 1;
     if (value[0] === '-') {
@@ -491,9 +603,30 @@ function parseFloatTime(value) {
     return factor * (hours + (minutes / 60));
 }
 
+/**
+ * Parse a String containing float and unconvert it with a conversion factor
+ * of 100. The percentage can be a regular xx.xx float or a xx%.
+ *
+ * @param {string} value
+ *                The string to be parsed
+ * @returns {float}
+ * @throws {Error} if the value couldn't be converted to float
+ */
+function parsePercentage(value) {
+    return parseFloat(value) / 100;
+}
+
+/**
+ * Parse a String containing integer with language formating
+ *
+ * @param {string} value
+ *                The string to be parsed with the setting of thousands and
+ *                decimal separator
+ * @returns {integer}
+ * @throws {Error} if no integer is found respecting the language configuration
+ */
 function parseInteger(value) {
-    value = value.replace(new RegExp(core._t.database.parameters.thousands_sep, "g"), '');
-    var parsed = Number(value);
+    var parsed = parseNumber(value);
     // do not accept not numbers or float values
     if (isNaN(parsed) || parsed % 1 || parsed < -2147483648 || parsed > 2147483647) {
         throw new Error(_.str.sprintf(core._t("'%s' is not a correct integer"), value));
@@ -531,19 +664,22 @@ function parseMany2one(value) {
 
 return {
     format: {
-        binary: _.identity, // todo
+        binary: formatBinary,
         boolean: formatBoolean,
         char: formatChar,
         date: formatDate,
         datetime: formatDateTime,
         float: formatFloat,
+        float_factor: formatFloatFactor,
         float_time: formatFloatTime,
         html: _.identity, // todo
         integer: formatInteger,
         many2many: formatX2Many,
         many2one: formatMany2one,
+        many2one_reference: formatInteger,
         monetary: formatMonetary,
         one2many: formatX2Many,
+        percentage: formatPercentage,
         reference: formatMany2one,
         selection: formatSelection,
         text: formatChar,
@@ -555,13 +691,16 @@ return {
         date: parseDate, // todo
         datetime: parseDateTime, // todo
         float: parseFloat,
+        float_factor: parseFloatFactor,
         float_time: parseFloatTime,
         html: _.identity, // todo
         integer: parseInteger,
         many2many: _.identity, // todo
         many2one: parseMany2one,
+        many2one_reference: parseInteger,
         monetary: parseMonetary,
         one2many: _.identity,
+        percentage: parsePercentage,
         reference: parseMany2one,
         selection: _.identity, // todo
         text: _.identity, // todo

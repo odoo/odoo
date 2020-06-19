@@ -4,7 +4,7 @@
 {
     'name': 'Point of Sale Receipt Reprinting',
     'version': '1.0',
-    'category': 'Point of Sale',
+    'category': 'Sales/Point of Sale',
     'sequence': 6,
     'summary': 'Allow cashier to reprint receipts',
     'description': """
@@ -18,8 +18,9 @@ Allow cashier to reprint receipts
         'views/pos_config_views.xml'
     ],
     'qweb': [
-        'static/src/xml/reprint.xml',
+        'static/src/xml/OrderReceipt.xml',
+        'static/src/xml/ReprintButton.xml',
+        'static/src/xml/ReprintScreen.xml',
     ],
     'installable': True,
-    'website': 'https://www.odoo.com/page/point-of-sale',
 }

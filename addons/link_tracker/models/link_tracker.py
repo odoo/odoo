@@ -1,110 +1,94 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import base64
-import datetime
+
 import random
-import re
+import requests
 import string
 
-import requests
 from lxml import html
-from werkzeug import urls, utils
+from werkzeug import urls
+
+from odoo import tools, models, fields, api, _
 
 
-from odoo import models, fields, api, _
-from odoo.tools import ustr
+class LinkTracker(models.Model):
+    """ Link trackers allow users to wrap any URL into a short URL that can be
+    tracked by Odoo. Clicks are counter on each link. A tracker is linked to
+    UTMs allowing to analyze marketing actions.
 
-URL_REGEX = r'(\bhref=[\'"](?!mailto:|tel:|sms:)([^\'"]+)[\'"])'
-
-def VALIDATE_URL(url):
-    if urls.url_parse(url).scheme not in ('http', 'https', 'ftp', 'ftps'):
-        return 'http://' + url
-
-    return url
-
-
-class link_tracker(models.Model):
-    """link_tracker allow users to wrap any URL into a short and trackable URL.
-    link_tracker counts clicks on each tracked link.
-    This module is also used by mass_mailing, where each link in mail_mail html_body are converted into
-    a trackable link to get the click-through rate of each mass_mailing."""
-
+    This model is also used in mass_mailing where each link in html body is
+    automatically converted into a short link that is tracked and integrates
+    UTMs. """
     _name = "link.tracker"
     _rec_name = "short_url"
+    _description = "Link Tracker"
+    _order="count DESC"
+    _inherit = ["utm.mixin"]
 
-    _inherit = ['utm.mixin']
-
+    # URL info
     url = fields.Char(string='Target URL', required=True)
-    count = fields.Integer(string='Number of Clicks', compute='_compute_count', store=True)
+    absolute_url = fields.Char("Absolute URL", compute="_compute_absolute_url")
     short_url = fields.Char(string='Tracked URL', compute='_compute_short_url')
-    link_click_ids = fields.One2many('link.tracker.click', 'link_id', string='Clicks')
-    title = fields.Char(string='Page Title', store=True)
-    favicon = fields.Char(string='Favicon', compute='_compute_favicon', store=True)
-    link_code_ids = fields.One2many('link.tracker.code', 'link_id', string='Codes')
-    code = fields.Char(string='Short URL code', compute='_compute_code')
     redirected_url = fields.Char(string='Redirected URL', compute='_compute_redirected_url')
     short_url_host = fields.Char(string='Host of the short URL', compute='_compute_short_url_host')
-    icon_src = fields.Char(string='Favicon Source', compute='_compute_icon_src')
+    title = fields.Char(string='Page Title', store=True)
+    label = fields.Char(string='Button label')
+    # Tracking
+    link_code_ids = fields.One2many('link.tracker.code', 'link_id', string='Codes')
+    code = fields.Char(string='Short URL code', compute='_compute_code')
+    link_click_ids = fields.One2many('link.tracker.click', 'link_id', string='Clicks')
+    count = fields.Integer(string='Number of Clicks', compute='_compute_count', store=True)
 
-    @api.model
-    def convert_links(self, html, vals, blacklist=None):
-        for match in re.findall(URL_REGEX, html):
+    @api.depends("url")
+    def _compute_absolute_url(self):
+        web_base_url = urls.url_parse(self.env['ir.config_parameter'].sudo().get_param('web.base.url'))
+        for tracker in self:
+            url = urls.url_parse(tracker.url)
+            if url.scheme:
+                tracker.absolute_url = tracker.url
+            else:
+                tracker.absolute_url = web_base_url.join(url).to_url()
 
-            short_schema = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
-
-            href = match[0]
-            long_url = match[1]
-
-            vals['url'] = utils.unescape(long_url)
-
-            if not blacklist or not [s for s in blacklist if s in long_url] and not long_url.startswith(short_schema):
-                link = self.create(vals)
-                shorten_url = self.browse(link.id)[0].short_url
-
-                if shorten_url:
-                    new_href = href.replace(long_url, shorten_url)
-                    html = html.replace(href, new_href)
-
-        return html
-
-    @api.one
     @api.depends('link_click_ids.link_id')
     def _compute_count(self):
-        self.count = len(self.link_click_ids)
+        if self.ids:
+            clicks_data = self.env['link.tracker.click'].read_group(
+                [('link_id', 'in', self.ids)],
+                ['link_id'],
+                ['link_id']
+            )
+            mapped_data = {m['link_id'][0]: m['link_id_count'] for m in clicks_data}
+        else:
+            mapped_data = dict()
+        for tracker in self:
+            tracker.count = mapped_data.get(tracker.id, 0)
 
-    @api.one
     @api.depends('code')
     def _compute_short_url(self):
-        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
-        self.short_url = urls.url_join(base_url, '/r/%(code)s' % {'code': self.code})
+        for tracker in self:
+            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
+            tracker.short_url = urls.url_join(base_url, '/r/%(code)s' % {'code': tracker.code})
 
-    @api.one
     def _compute_short_url_host(self):
-        self.short_url_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
+        for tracker in self:
+            tracker.short_url_host = self.env['ir.config_parameter'].sudo().get_param('web.base.url') + '/r/'
 
-    @api.one
     def _compute_code(self):
-        record = self.env['link.tracker.code'].search([('link_id', '=', self.id)], limit=1, order='id DESC')
-        self.code = record.code
+        for tracker in self:
+            record = self.env['link.tracker.code'].search([('link_id', '=', tracker.id)], limit=1, order='id DESC')
+            tracker.code = record.code
 
-    @api.one
-    @api.depends('favicon')
-    def _compute_icon_src(self):
-        self.icon_src = b'data:image/png;base64,' + self.favicon
-
-    @api.one
     @api.depends('url')
     def _compute_redirected_url(self):
-        parsed = urls.url_parse(self.url)
-
-        utms = {}
-        for key, field, cook in self.env['utm.mixin'].tracking_fields():
-            attr = getattr(self, field).name
-            if attr:
-                utms[key] = attr
-        utms.update(parsed.decode_query())
-
-        self.redirected_url = parsed.replace(query=urls.url_encode(utms)).to_url()
+        for tracker in self:
+            parsed = urls.url_parse(tracker.url)
+            utms = {}
+            for key, field, cook in self.env['utm.mixin'].tracking_fields():
+                attr = getattr(tracker, field).name
+                if attr:
+                    utms[key] = attr
+            utms.update(parsed.decode_query())
+            tracker.redirected_url = parsed.replace(query=urls.url_encode(utms)).to_url()
 
     @api.model
     @api.depends('url')
@@ -118,43 +102,6 @@ class link_tracker(models.Model):
 
         return title
 
-    @api.one
-    @api.depends('url')
-    def _compute_favicon(self):
-        try:
-            icon = requests.get('http://www.google.com/s2/favicons', params={'domain': self.url}, timeout=5).content
-            icon_base64 = base64.b64encode(icon).replace(b"\n", b"").decode('ascii')
-        except:
-            icon_base64 = 'iVBORw0KGgoAAAANSUhEUgAAABAAAAAQCAYAAAAf8/9hAAAACXBIWXMAAAsSAAALEgHS3X78AAACiElEQVQ4EaVTzU8TURCf2tJuS7tQtlRb6UKBIkQwkRRSEzkQgyEc6lkOKgcOph78Y+CgjXjDs2i44FXY9AMTlQRUELZapVlouy3d7kKtb0Zr0MSLTvL2zb75eL838xtTvV6H/xELBptMJojeXLCXyobnyog4YhzXYvmCFi6qVSfaeRdXdrfaU1areV5KykmX06rcvzumjY/1ggkR3Jh+bNf1mr8v1D5bLuvR3qDgFbvbBJYIrE1mCIoCrKxsHuzK+Rzvsi29+6DEbTZz9unijEYI8ObBgXOzlcrx9OAlXyDYKUCzwwrDQx1wVDGg089Dt+gR3mxmhcUnaWeoxwMbm/vzDFzmDEKMMNhquRqduT1KwXiGt0vre6iSeAUHNDE0d26NBtAXY9BACQyjFusKuL2Ry+IPb/Y9ZglwuVscdHaknUChqLF/O4jn3V5dP4mhgRJgwSYm+gV0Oi3XrvYB30yvhGa7BS70eGFHPoTJyQHhMK+F0ZesRVVznvXw5Ixv7/C10moEo6OZXbWvlFAF9FVZDOqEABUMRIkMd8GnLwVWg9/RkJF9sA4oDfYQAuzzjqzwvnaRUFxn/X2ZlmGLXAE7AL52B4xHgqAUqrC1nSNuoJkQtLkdqReszz/9aRvq90NOKdOS1nch8TpL555WDp49f3uAMXhACRjD5j4ykuCtf5PP7Fm1b0DIsl/VHGezzP1KwOiZQobFF9YyjSRYQETRENSlVzI8iK9mWlzckpSSCQHVALmN9Az1euDho9Xo8vKGd2rqooA8yBcrwHgCqYR0kMkWci08t/R+W4ljDCanWTg9TJGwGNaNk3vYZ7VUdeKsYJGFNkfSzjXNrSX20s4/h6kB81/271ghG17l+rPTAAAAAElFTkSuQmCC'
-
-        self.favicon = icon_base64
-
-    @api.multi
-    def action_view_statistics(self):
-        action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'action_view_click_statistics')
-        action['domain'] = [('link_id', '=', self.id)]
-        return action
-
-    @api.multi
-    def action_visit_page(self):
-        return {
-            'name': _("Visit Webpage"),
-            'type': 'ir.actions.act_url',
-            'url': self.url,
-            'target': 'new',
-        }
-
-    @api.model
-    def recent_links(self, filter, limit):
-        if filter == 'newest':
-            return self.search_read([], order='create_date DESC', limit=limit)
-        elif filter == 'most-clicked':
-            return self.search_read([('count', '!=', 0)], order='count DESC', limit=limit)
-        elif filter == 'recently-used':
-            return self.search_read([('count', '!=', 0)], order='write_date DESC', limit=limit)
-        else:
-            return {'Error': "This filter doesn't exist."}
-
     @api.model
     def create(self, vals):
         create_vals = vals.copy()
@@ -162,11 +109,13 @@ class link_tracker(models.Model):
         if 'url' not in create_vals:
             raise ValueError('URL field required')
         else:
-            create_vals['url'] = VALIDATE_URL(vals['url'])
+            create_vals['url'] = tools.validate_url(vals['url'])
 
-        search_domain = []
-        for fname, value in create_vals.items():
-            search_domain.append((fname, '=', value))
+        search_domain = [
+            (fname, '=', value)
+            for fname, value in create_vals.items()
+            if fname in ['url', 'campaign_id', 'medium_id', 'source_id']
+        ]
 
         result = self.search(search_domain, limit=1)
 
@@ -181,15 +130,47 @@ class link_tracker(models.Model):
             if fname not in create_vals:
                 create_vals[fname] = False
 
-        link = super(link_tracker, self).create(create_vals)
+        link = super(LinkTracker, self).create(create_vals)
 
         code = self.env['link.tracker.code'].get_random_code_string()
-        self.env['link.tracker.code'].create({'code': code, 'link_id': link.id})
+        self.env['link.tracker.code'].sudo().create({'code': code, 'link_id': link.id})
 
         return link
 
     @api.model
-    def get_url_from_code(self, code, context=None):
+    def convert_links(self, html, vals, blacklist=None):
+        raise NotImplementedError('Moved on mail.render.mixin')
+
+    def _convert_links_text(self, body, vals, blacklist=None):
+        raise NotImplementedError('Moved on mail.render.mixin')
+
+    def action_view_statistics(self):
+        action = self.env['ir.actions.act_window'].for_xml_id('link_tracker', 'link_tracker_click_action_statistics')
+        action['domain'] = [('link_id', '=', self.id)]
+        action['context'] = dict(self._context, create=False)
+        return action
+
+    def action_visit_page(self):
+        return {
+            'name': _("Visit Webpage"),
+            'type': 'ir.actions.act_url',
+            'url': self.url,
+            'target': 'new',
+        }
+
+    @api.model
+    def recent_links(self, filter, limit):
+        if filter == 'newest':
+            return self.search_read([], order='create_date DESC, id DESC', limit=limit)
+        elif filter == 'most-clicked':
+            return self.search_read([('count', '!=', 0)], order='count DESC', limit=limit)
+        elif filter == 'recently-used':
+            return self.search_read([('count', '!=', 0)], order='write_date DESC, id DESC', limit=limit)
+        else:
+            return {'Error': "This filter doesn't exist."}
+
+    @api.model
+    def get_url_from_code(self, code):
         code_rec = self.env['link.tracker.code'].sudo().search([('code', '=', code)])
 
         if not code_rec:
@@ -197,16 +178,21 @@ class link_tracker(models.Model):
 
         return code_rec.link_id.redirected_url
 
-    sql_constraints = [
+    _sql_constraints = [
         ('url_utms_uniq', 'unique (url, campaign_id, medium_id, source_id)', 'The URL and the UTM combination must be unique')
     ]
 
 
-class link_tracker_code(models.Model):
+class LinkTrackerCode(models.Model):
     _name = "link.tracker.code"
+    _description = "Link Tracker Code"
 
-    code = fields.Char(string='Short URL Code', store=True)
+    code = fields.Char(string='Short URL Code', required=True, store=True)
     link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
+
+    _sql_constraints = [
+        ('code', 'unique( code )', 'Code must be unique.')
+    ]
 
     @api.model
     def get_random_code_string(self):
@@ -219,46 +205,40 @@ class link_tracker_code(models.Model):
             else:
                 return code_proposition
 
-    _sql_constraints = [
-        ('code', 'unique( code )', 'Code must be unique.')
-    ]
 
-
-class link_tracker_click(models.Model):
+class LinkTrackerClick(models.Model):
     _name = "link.tracker.click"
     _rec_name = "link_id"
+    _description = "Link Tracker Click"
 
-    click_date = fields.Date(string='Create Date')
-    link_id = fields.Many2one('link.tracker', 'Link', required=True, ondelete='cascade')
+    campaign_id = fields.Many2one(
+        'utm.campaign', 'UTM Campaign',
+        related="link_id.campaign_id", store=True)
+    link_id = fields.Many2one(
+        'link.tracker', 'Link',
+        index=True, required=True, ondelete='cascade')
     ip = fields.Char(string='Internet Protocol')
     country_id = fields.Many2one('res.country', 'Country')
 
-    @api.model
-    def add_click(self, code, ip, country_code, stat_id=False):
-        self = self.sudo()
-        code_rec = self.env['link.tracker.code'].search([('code', '=', code)])
+    def _prepare_click_values_from_route(self, **route_values):
+        click_values = dict((fname, route_values[fname]) for fname in self._fields if fname in route_values)
+        if not click_values.get('country_id') and route_values.get('country_code'):
+            click_values['country_id'] = self.env['res.country'].search([('code', '=', route_values['country_code'])], limit=1).id
+        return click_values
 
-        if not code_rec:
+    @api.model
+    def add_click(self, code, **route_values):
+        """ Main API to add a click on a link. """
+        tracker_code = self.env['link.tracker.code'].search([('code', '=', code)])
+        if not tracker_code:
             return None
 
-        again = self.search_count([('link_id', '=', code_rec.link_id.id), ('ip', '=', ip)])
+        ip = route_values.get('ip', False)
+        existing = self.search_count(['&', ('link_id', '=', tracker_code.link_id.id), ('ip', '=', ip)])
+        if existing:
+            return None
 
-        if not again:
-            self.create(
-                self._get_click_values_from_route(dict(
-                    code=code,
-                    ip=ip,
-                    country_code=country_code,
-                    stat_id=stat_id,
-                )))
+        route_values['link_id'] = tracker_code.link_id.id
+        click_values = self._prepare_click_values_from_route(**route_values)
 
-    def _get_click_values_from_route(self, route_values):
-        code = self.env['link.tracker.code'].search([('code', '=', route_values['code'])], limit=1)
-        country = self.env['res.country'].search([('code', '=', route_values['country_code'])], limit=1)
-
-        return {
-            'link_id': code.link_id.id,
-            'create_date': datetime.date.today(),
-            'ip': route_values['ip'],
-            'country_id': country.id,
-        }
+        return self.create(click_values)

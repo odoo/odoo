@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="gamification_karma_tracking_view_search" model="ir.ui.view">
+        <field name="name">gamification.karma.tracking.view.search</field>
+        <field name="model">gamification.karma.tracking</field>
+        <field name="arch" type="xml">
+            <search string="Search Trackings">
+                <field name="user_id"/>
+                <field name="tracking_date"/>
+                <filter string="Consolidated" name="filter_consolidated"
+                    domain="[('consolidated', '=', True)]"/>
+                <group string="Group By" expand="1">
+                    <filter string="User" name="group_by_user_id"
+                        context="{'group_by': 'user_id'}"/>
+                </group>
+            </search>
+        </field>
+    </record>
+
+    <record id="gamification_karma_tracking_view_tree" model="ir.ui.view">
+        <field name="name">gamification.karma.tracking.view.tree</field>
+        <field name="model">gamification.karma.tracking</field>
+        <field name="arch" type="xml">
+            <tree string="Trackings">
+                <field name="user_id"/>
+                <field name="tracking_date"/>
+                <field name="old_value"/>
+                <field name="new_value"/>
+                <field name="consolidated"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="gamification_karma_tracking_view_form" model="ir.ui.view">
+        <field name="name">gamification.karma.tracking.view.form</field>
+        <field name="model">gamification.karma.tracking</field>
+        <field name="arch" type="xml">
+            <form string="Tracking">
+                <sheet>
+                    <group>
+                        <field name="user_id"/>
+                        <field name="tracking_date"/>
+                        <field name="old_value"/>
+                        <field name="new_value"/>
+                        <field name="consolidated"/>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="gamification_karma_tracking_action" model="ir.actions.act_window">
+        <field name="name">Trackings</field>
+        <field name="res_model">gamification.karma.tracking</field>
+        <field name="view_mode">tree,form</field>
+    </record>
+
+    <menuitem id="gamification_karma_tracking_menu"
+        parent="gamification_menu"
+        action="gamification_karma_tracking_action"
+        sequence="50"/>
+    </data>
+</odoo>

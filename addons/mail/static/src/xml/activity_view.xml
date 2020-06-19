@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+<t t-name="mail.ActivityViewHeader" owl="1">
+    <thead>
+        <tr>
+            <th></th>
+            <th t-foreach="props.activity_types" t-as="type" t-key="type[0]"
+                class="o_activity_type_cell" t-attf-class="{{ activeFilter.activityTypeId === type[0] ? 'o_activity_filter_' + activeFilter.state : '' }}"
+                t-att-data-activity-type-id="type[0]" t-attf-width="{{100/props.activity_types.length}}%">
+                <div>
+                    <span t-esc="type[1]"/>
+                    <span t-if="type[2].length > 0" class="dropdown pull-right">
+                        <i class="fa fa-ellipsis-v fa-fw" data-toggle="dropdown"/>
+                        <div class="dropdown-menu">
+                            <t t-foreach="type[2]" t-as="template" t-key="template.id">
+                                <div title="This action will send an email."
+                                     class="o_template_element o_send_mail_template"
+                                     t-att-data-activity-type-id="type[0]"
+                                     t-att-data-template-id="template.id"
+                                     t-on-click="_onSendMailTemplateClicked">
+                                    <i class="fa fa-envelope fa-fw"/> <t t-esc="template.name"/>
+                                </div>
+                            </t>
+                        </div>
+                    </span>
+                </div>
+                <KanbanColumnProgressBarAdapter Component="widgetComponents.KanbanColumnProgressBar"
+                    widgetArgs="[getProgressBarOptions(type[0]), getProgressBarColumnState(type[0])]"
+                    t-if="activityTypeIds.includes(type[0])"
+                    t-on-set-progress-bar-state="_onSetProgressBarState"/>
+                <div t-else="" class="mt24"/>
+            </th>
+        </tr>
+    </thead>
+</t>
+
+<t t-name="mail.ActivityViewBody" owl="1">
+    <tbody>
+        <t t-foreach="activityResIds" t-as="resId" t-key="resId">
+            <t t-call="mail.ActivityViewRow"/>
+        </t>
+    </tbody>
+</t>
+
+<t t-name="mail.ActivityViewRow" owl="1">
+    <tr class="o_data_row" t-att-data-res-id="resId">
+        <t t-set="record" t-value="props.data.find(data => data.res_id === resId)"/>
+        <td t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state : '' }}">
+            <ActivityRecordAdapter Component="widgetComponents.ActivityRecord"
+                widgetArgs="[record, { qweb: qweb }]"/>
+        </td>
+        <t t-foreach="props.activity_types" t-as="type" t-key="type[0]">
+            <t t-call="mail.ActivityViewCell"/>
+        </t>
+    </tr>
+</t>
+
+<t t-name="mail.ActivityViewCell" owl="1">
+    <t t-set="activityGroup" t-value="props.grouped_activities[resId] and props.grouped_activities[resId][type[0]] or {count: 0, ids: [], state: false}"/>
+    <td t-if="activityGroup.state" t-att-data-res-id="resId" t-att-data-activity-type-id="type[0]"
+        t-attf-class="o_activity_summary_cell {{activityGroup.state}} {{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state : '' }}">
+        <ActivityCellAdapter Component="widgetComponents.ActivityCell"
+            widgetArgs="['activity_ids', props.getKanbanActivityData(activityGroup, resId)]"/>
+    </td>
+    <td t-else="" t-att-data-res-id="resId" t-att-data-activity-type-id="type[0]"
+        class="o_activity_summary_cell o_activity_empty_cell"
+        t-attf-class="{{ activeFilter.resIds.includes(resId) ? 'o_activity_filter_' + activeFilter.state : '' }}"
+        t-on-click.prevent.stop="_onEmptyCellClicked">
+        <i title="Create" class="text-center fa fa-plus"/>
+    </td>
+</t>
+
+<t t-name="mail.ActivityViewFooter" owl="1">
+    <tfoot>
+        <tr class="o_data_row">
+            <td class="o_record_selector p-3" t-on-click.prevent.stop="trigger('schedule_activity')">
+                <span class="fa fa-plus pr-2"/><span>Schedule activity</span>
+            </td>
+        </tr>
+    </tfoot>
+</t>
+
+<div t-name="mail.ActivityRenderer" class="o_activity_view" owl="1">
+    <t t-if="!props.activity_types.length" t-call="web.NoContentHelper"/>
+    <table t-else="" class="table-bordered mb-5">
+        <t t-call="mail.ActivityViewHeader"/>
+        <t t-call="mail.ActivityViewBody"/>
+        <t t-call="mail.ActivityViewFooter"/>
+    </table>
+</div>
+
+</templates>

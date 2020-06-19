@@ -4,7 +4,7 @@
 """ Helper functions for reports testing.
 
     Please /do not/ import this file by default, but only explicitly call it
-    through the code of yaml tests.
+    through the code of python tests.
 """
 
 import logging
@@ -13,7 +13,7 @@ import tempfile
 from subprocess import Popen, PIPE
 
 from .. import api
-from . import pycompat, ustr, config
+from . import ustr, config
 from .safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
@@ -35,13 +35,10 @@ def try_report(cr, uid, rname, ids, data=None, context=None, our_module=None, re
     if not report_id:
         raise Exception("Required report does not exist: %s" % rname)
 
-    res_data, res_format = report_id.render(ids, data=data)
+    res_data, res_format = report_id._render(ids, data=data)
 
     if not res_data:
         raise ValueError("Report %s produced an empty result!" % rname)
-
-    if config['test_report_directory']:
-        open(os.path.join(config['test_report_directory'], rname+ '.'+res_format), 'wb+').write(res_data)
 
     _logger.debug("Have a %s report for %s, will examine it", res_format, rname)
     if res_format == 'pdf':
@@ -91,7 +88,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
                 Eg. 'OK' or 'fa-print'
         :param our_module: the name of the calling module (string), like 'account'
     """
-    if not our_module and isinstance(action_id, pycompat.string_types):
+    if not our_module and isinstance(action_id, str):
         if '.' in action_id:
             our_module = action_id.split('.', 1)[0]
 
@@ -112,7 +109,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
     if not wiz_buttons:
         wiz_buttons = []
 
-    if isinstance(action_id, pycompat.string_types):
+    if isinstance(action_id, str):
         if '.' in action_id:
             _, act_xmlid = action_id.split('.', 1)
         else:
@@ -123,7 +120,7 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         action = env.ref(action_id)
         act_model, act_id = action._name, action.id
     else:
-        assert isinstance(action_id, pycompat.integer_types)
+        assert isinstance(action_id, int)
         act_model = 'ir.action.act_window'     # assume that
         act_id = action_id
         act_xmlid = '<%s>' % act_id
@@ -137,32 +134,39 @@ def try_report_action(cr, uid, action_id, active_model=None, active_ids=None,
         if datas.get('id',False):
             context.update( {'active_id': datas.get('id',False), 'active_ids': datas.get('ids',[]), 'active_model': datas.get('model',False)})
         context1 = action.get('context', {})
-        if isinstance(context1, pycompat.string_types):
+        if isinstance(context1, str):
             context1 = safe_eval(context1, dict(context))
         context.update(context1)
         env = env(context=context)
         if action['type'] in ['ir.actions.act_window', 'ir.actions.submenu']:
-            for key in ('res_id', 'res_model', 'view_type', 'view_mode',
-                        'limit', 'search_view', 'auto_search', 'search_view_id'):
+            for key in ('res_id', 'res_model', 'view_mode',
+                        'limit', 'search_view', 'search_view_id'):
                 datas[key] = action.get(key, datas.get(key, None))
 
             view_id = False
+            view_type = None
             if action.get('views', []):
                 if isinstance(action['views'],list):
-                    view_id = action['views'][0][0]
-                    datas['view_mode']= action['views'][0][1]
+                    view_id, view_type = action['views'][0]
+                    datas['view_mode']= view_type
                 else:
                     if action.get('view_id', False):
                         view_id = action['view_id'][0]
             elif action.get('view_id', False):
                 view_id = action['view_id'][0]
 
+            if view_type is None:
+                if view_id:
+                    view_type = env['ir.ui.view'].browse(view_id).type
+                else:
+                    view_type = action['view_mode'].split(',')[0]
+
             assert datas['res_model'], "Cannot use the view without a model"
             # Here, we have a view that we need to emulate
             log_test("will emulate a %s view: %s#%s",
-                        action['view_type'], datas['res_model'], view_id or '?')
+                        view_type, datas['res_model'], view_id or '?')
 
-            view_res = env[datas['res_model']].fields_view_get(view_id, action['view_type'])
+            view_res = env[datas['res_model']].fields_view_get(view_id, view_type=view_type)
             assert view_res and view_res.get('arch'), "Did not return any arch for the view"
             view_data = {}
             if view_res.get('fields'):

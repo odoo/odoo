@@ -4,39 +4,51 @@
 import base64
 
 from odoo import api, models
-from odoo.tools import pycompat
 
 
 class MailTemplate(models.Model):
     _inherit = 'mail.template'
 
-    @api.multi
-    def generate_email(self, res_ids, fields=None):
+    def generate_email(self, res_ids, fields):
         """ Method overridden in order to add an attachment containing the ISR
         to the draft message when opening the 'send by mail' wizard on an invoice.
         This attachment generation will only occur if all the required data are
         present on the invoice. Otherwise, no ISR attachment will be created, and
         the mail will only contain the invoice (as defined in the mother method).
         """
-        rslt = super(MailTemplate, self).generate_email(res_ids, fields)
+        result = super(MailTemplate, self).generate_email(res_ids, fields)
+        if self.model != 'account.move':
+            return result
 
         multi_mode = True
-        if isinstance(res_ids, pycompat.integer_types):
+        if isinstance(res_ids, int):
             res_ids = [res_ids]
             multi_mode = False
 
-        res_ids_to_templates = self.get_email_template(res_ids)
-        for res_id in res_ids:
-            related_model = self.env[self.model_id.model].browse(res_id)
+        if self.model == 'account.move':
+            for record in self.env[self.model].browse(res_ids):
+                inv_print_name = self._render_field('report_name', record.ids, compute_lang=True)[record.id]
+                new_attachments = []
 
-            if related_model._name == 'account.invoice' and related_model.l10n_ch_isr_valid:
-                #We add an attachment containing the ISR
-                template = res_ids_to_templates[res_id]
-                report_name = 'ISR-' + self.render_template(template.report_name, template.model, res_id) + '.pdf'
+                if record.l10n_ch_isr_valid:
+                    # We add an attachment containing the ISR
+                    isr_report_name = 'ISR-' + inv_print_name + '.pdf'
+                    isr_pdf = self.env.ref('l10n_ch.l10n_ch_isr_report')._render_qweb_pdf(record.ids)[0]
+                    isr_pdf = base64.b64encode(isr_pdf)
+                    new_attachments.append((isr_report_name, isr_pdf))
 
-                pdf = self.env.ref('l10n_ch.l10n_ch_isr_report').render_qweb_pdf([res_id])[0]
-                pdf = base64.b64encode(pdf)
+                if record.can_generate_qr_bill():
+                    # We add an attachment containing the QR-bill
+                    qr_report_name = 'QR-bill-' + inv_print_name + '.pdf'
+                    qr_pdf = self.env.ref('l10n_ch.l10n_ch_qr_report')._render_qweb_pdf(record.ids)[0]
+                    qr_pdf = base64.b64encode(qr_pdf)
+                    new_attachments.append((qr_report_name, qr_pdf))
 
-                attachments_list = multi_mode and rslt[res_id]['attachments'] or rslt['attachments']
-                attachments_list.append((report_name, pdf))
-        return rslt
+                record_dict = multi_mode and result[record.id] or result
+                attachments_list = record_dict.get('attachments', False)
+                if attachments_list:
+                    attachments_list.extend(new_attachments)
+                else:
+                    record_dict['attachments'] =  new_attachments
+
+        return result

@@ -7,19 +7,19 @@
 {
     'name' : 'OHADA - Accounting',
     'author' : 'Baamtu Senegal',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 This module implements the accounting chart for OHADA area.
 ===========================================================
-    
+
 It allows any company or association to manage its financial accounting.
 
 Countries that use OHADA are the following:
 -------------------------------------------
     Benin, Burkina Faso, Cameroon, Central African Republic, Comoros, Congo,
-    
+
     Ivory Coast, Gabon, Guinea, Guinea Bissau, Equatorial Guinea, Mali, Niger,
-    
+
     Replica of Democratic Congo, Senegal, Chad, Togo.
     """,
     'website': 'http://www.baamtu.com',
@@ -29,6 +29,12 @@ Countries that use OHADA are the following:
     'data': [
         'data/account_data.xml',
         'data/l10n_syscohada_chart_data.xml',
-        'data/account_chart_template_data.yml',
+        'data/account.account.template.csv',
+        'data/l10n_syscohada_chart_post_data.xml',
+        'data/account_tax_template_data.xml',
+        'data/account_chart_template_data.xml',
+    ],
+    'demo': [
+        'demo/demo_company.xml',
     ],
 }

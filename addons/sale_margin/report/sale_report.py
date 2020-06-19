@@ -9,5 +9,6 @@ class SaleReport(models.Model):
 
     margin = fields.Float('Margin')
 
-    def _select(self):
-        return super(SaleReport, self)._select() + ", SUM(l.margin / COALESCE(cr.rate, 1.0)) AS margin"
+    def _query(self, with_clause='', fields={}, groupby='', from_clause=''):
+        fields['margin'] = ", SUM(l.margin / CASE COALESCE(s.currency_rate, 0) WHEN 0 THEN 1.0 ELSE s.currency_rate END) AS margin"
+        return super(SaleReport, self)._query(with_clause, fields, groupby, from_clause)

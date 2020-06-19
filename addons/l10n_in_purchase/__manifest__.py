@@ -5,13 +5,14 @@
     'name': 'Indian - Purchase Report(GST)',
     'version': '1.0',
     'description': """GST Purchase Report""",
-    'category': 'Localization',
+    'category': 'Accounting/Accounting',
     'depends': [
         'l10n_in',
         'purchase',
     ],
     'data': [
         'views/report_purchase_order.xml',
+        'views/purchase_order_views.xml',
     ],
     'installable': True,
     'application': False,

@@ -2,16 +2,12 @@ odoo.define('website.translateMenu', function (require) {
 'use strict';
 
 var utils = require('web.utils');
-var weContext = require('web_editor.context');
-var translate = require('web_editor.translate');
+var TranslatorMenu = require('website.editor.menu.translate');
 var websiteNavbarData = require('website.navbar');
 
-var ctx = weContext.getExtra();
-if (!ctx.translatable) {
-    return;
-}
-
 var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
+    assetLibs: ['web_editor.compiled_assets_wysiwyg', 'website.compiled_assets_wysiwyg'],
+
     actions: _.extend({}, websiteNavbarData.WebsiteNavbar.prototype.actions || {}, {
         edit_master: '_goToMasterPage',
         translate: '_startTranslateMode',
@@ -21,11 +17,21 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * @override
      */
     start: function () {
-        var defs = [this._super.apply(this, arguments)];
-        if (ctx.edit_translations) {
-            defs.push(this._startTranslateMode());
+        var context;
+        this.trigger_up('context_get', {
+            extra: true,
+            callback: function (ctx) {
+                context = ctx;
+            },
+        });
+        this._mustEditTranslations = context.edit_translations;
+        if (this._mustEditTranslations) {
+            var url = window.location.href.replace(/([?&])&*edit_translations[^&#]*&?/, '\$1');
+            window.history.replaceState({}, null, url);
+
+            this._startTranslateMode();
         }
-        return $.when.apply($, defs);
+        return this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -37,41 +43,46 @@ var TranslatePageMenu = websiteNavbarData.WebsiteNavbarActionWidget.extend({
      * edit mode.
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _goToMasterPage: function () {
-        var lang = '/' + utils.get_cookie('frontend_lang');
-
         var current = document.createElement('a');
         current.href = window.location.toString();
         current.search += (current.search ? '&' : '?') + 'enable_editor=1';
-        if (current.pathname.indexOf(lang) === 0) {
-            current.pathname = current.pathname.replace(lang, '');
-        }
+        // we are in translate mode, the pathname starts with '/<url_code/'
+        current.pathname = current.pathname.substr(current.pathname.indexOf('/', 1));
 
         var link = document.createElement('a');
         link.href = '/website/lang/default';
         link.search += (link.search ? '&' : '?') + 'r=' + encodeURIComponent(current.pathname + current.search + current.hash);
 
         window.location = link.href;
-        return $.Deferred();
+        return new Promise(function () {});
     },
     /**
      * Redirects the user to the same page in translation mode (or start the
      * translator is translation mode is already enabled).
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _startTranslateMode: function () {
-        if (!ctx.edit_translations) {
+        if (!this._mustEditTranslations) {
             window.location.search += '&edit_translations';
-            return $.Deferred();
+            return new Promise(function () {});
         }
-        var translator = new (translate.Class)(this, $('#wrapwrap'));
+
+        var translator = new TranslatorMenu(this);
+
+        // We don't want the BS dropdown to close
+        // when clicking in a element to translate
+        $('.dropdown-menu').on('click', '.o_editable', function (ev) {
+            ev.stopPropagation();
+        });
+
         return translator.prependTo(document.body);
     },
 });
 
-websiteNavbarData.websiteNavbarRegistry.add(TranslatePageMenu, '.o_menu_systray');
+websiteNavbarData.websiteNavbarRegistry.add(TranslatePageMenu, '.o_menu_systray:has([data-action="translate"])');
 });

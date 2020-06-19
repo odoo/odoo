@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <!-- Chart of Accounts Template -->
+    <record id="account_chart_template_lithuania" model="account.chart.template">
+        <field name="name">Lithuania - Accounting</field>
+        <field name="code_digits">1</field>
+        <field name="currency_id" ref="base.EUR"/>
+        <!-- Anglo-Saxon Accounting is used for reporting cost of good sold
+            when products are sold/delivered.-->
+        <field name="use_anglo_saxon" eval="True"/>
+        <!-- Languages for which the translations of templates could be
+        copied in the final object when generating them from templates -->
+        <field name="spoken_languages" eval="'lt_LT'"/>
+        <field name="bank_account_code_prefix">271</field>
+        <field name="cash_account_code_prefix">272</field>
+        <field name="transfer_account_code_prefix">273</field>
+    </record>
+</odoo>

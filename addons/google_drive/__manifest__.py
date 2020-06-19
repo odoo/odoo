@@ -4,7 +4,7 @@
 {
     'name': 'Google Drive™ integration',
     'version': '0.2',
-    'category': 'Extra Tools',
+    'category': 'Productivity',
     'installable': True,
     'auto_install': False,
     'data': [
@@ -14,6 +14,7 @@
         'views/google_drive_templates.xml',
         'views/res_config_settings_views.xml',
     ],
+    'qweb': ['static/src/xml/*.xml'],
     'demo': [
         'data/google_drive_demo.xml'
     ],

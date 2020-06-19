@@ -1,6 +1,68 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-<template id="summernote" name="Summernote">
+
+<template id="wysiwyg_iframe_editor_assets" name="Editor assets for wysiwyg iframe content" groups="base.group_user">
+    <t t-call-assets="web.assets_common"/>
+    <t t-call-assets="web.assets_frontend" t-js="false"/>
+    <t t-call-assets="web_editor.assets_wysiwyg"/>
+</template>
+
+<template id="compiled_assets_wysiwyg" name="Wysiwyg Editor" groups="base.group_user,base.group_portal">
+    <t t-call-assets="web_editor.assets_wysiwyg"/>
+</template>
+
+<template id="assets_wysiwyg" name="Wysiwyg Editor Assets">
+    <!-- lib -->
+
+    <t t-call-assets="web_editor.assets_summernote"/>
+
+    <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/cropperjs/cropper.css"/>
+    <script type="text/javascript" src="/web_editor/static/lib/cropperjs/cropper.js"/>
+    <script type="text/javascript" src="/web_editor/static/lib/jquery-cropper/jquery-cropper.js"/>
+    <script type="text/javascript" src="/web_editor/static/lib/jQuery.transfo.js"/>
+    <script type="text/javascript" src="/web/static/lib/nearest/jquery.nearest.js"/>
+
+    <!-- odoo utils -->
+
+    <t t-call="web._assets_helpers">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+    </t>
+
+    <!-- integration -->
+
+    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_iframe.scss"/>
+    <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/wysiwyg_snippets.scss"/>
+
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/fonts.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/base.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.summernote.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/image_processing.js"/>
+
+    <!-- widgets & plugins -->
+
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/media.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/alt_dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/color_palette.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/image_crop_widget.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/link_dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/media_dialog.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/widgets/widgets.js"/>
+
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.editor.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.options.js"/>
+
+    <!-- Launcher -->
+
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_snippets.js"/>
+    <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/wysiwyg_iframe.js"/>
+</template>
+
+<template id="assets_summernote" name="Summernote">
     <script type="text/javascript">
         (function () {
             "use strict";
@@ -49,76 +111,91 @@
         delete odoo.__define__;
         delete odoo.website_next_define;
     </script>
-    <link rel="stylesheet" type="text/less" href="/web_editor/static/lib/summernote/src/less/summernote.less"/>
+    <link rel="stylesheet" type="text/css" href="/web_editor/static/lib/summernote/src/css/summernote.css"/>
 </template>
 
-<template id="less_helpers" inherit_id="web.less_helpers">
-    <xpath expr="." position="inside">
-        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.variables.less"/>
+<template id="_assets_primary_variables" inherit_id="web._assets_primary_variables">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.variables.scss"/>
+    </xpath>
+</template>
+
+<template id="_assets_13_0_color_system_support_primary_variables" inherit_id="web_editor._assets_primary_variables" active="False">
+    <xpath expr="//link[last()]" position="after">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/13_0_color_system_support_primary_variables.scss"/>
+    </xpath>
+</template>
+
+<template id="_assets_secondary_variables" inherit_id="web._assets_secondary_variables">
+    <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/secondary_variables.scss"/>
     </xpath>
 </template>
 
 <template id="assets_common" inherit_id="web.assets_common" name="Web Editor Common Assets (used in backend interface and website)">
     <xpath expr="script[last()]" position="after">
-        <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"></script>
-        <script type="text/javascript" src="/web_editor/static/src/js/base.js"/>
-        <script type="text/javascript" src="/web_editor/static/src/js/widgets/ace.js"/>
+        <script type="text/javascript" src="/web_editor/static/lib/vkbeautify/vkbeautify.0.99.00.beta.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/common/ace.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/common/utils.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/wysiwyg/root.js"/>
+    </xpath>
+</template>
+
+<template id="_assets_backend_helpers" inherit_id="web._assets_backend_helpers">
+    <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden_backend.scss"/>
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
     </xpath>
 </template>
 
 <template id="assets_backend" inherit_id="web.assets_backend" name="Web Editor Backend Assets (used in backend interface)">
     <xpath expr="link[last()]" position="after">
-        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled differently with context -->
-        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.backend.less"/>
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/> <!-- not in common because compiled differently with context -->
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.backend.scss"/>
     </xpath>
     <xpath expr="script[last()]" position="after">
-        <script type="text/javascript" src="/web_editor/static/src/js/backend/fields.js" />
+        <script type="text/javascript" src="/web_editor/static/src/js/backend/field_html.js" />
+        <script type="text/javascript" src="/web_editor/static/src/js/backend/convert_inline.js" />
+    </xpath>
+</template>
+
+<template id="_assets_frontend_helpers" inherit_id="web._assets_frontend_helpers">
+    <xpath expr="//link" position="before">
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/bootstrap_overridden.scss"/>
+    </xpath>
+</template>
+
+<template id="_assets_frontend_minimal_js" inherit_id="web._assets_frontend_minimal_js">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript" src="/web_editor/static/src/js/frontend/loader_loading.js"/>
     </xpath>
 </template>
 
 <template id="assets_frontend" inherit_id="web.assets_frontend" name="Web Editor Frontend Assets (used in public odoo)" priority="15">
     <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.common.less"/> <!-- not in common because compiled differently with context -->
+        <link rel="stylesheet" type="text/scss" href="/web_editor/static/src/scss/web_editor.common.scss"/> <!-- not in common because compiled differently with context -->
+        <link rel="stylesheet" type ="text/scss" href="/web_editor/static/src/scss/web_editor.frontend.scss"/>
     </xpath>
     <xpath expr="//script[last()]" position="after">
-        <script type="text/javascript" src="/web_editor/static/src/js/content/body_manager.js"/>
-        <script type="text/javascript" src="/web_editor/static/src/js/root_widget.js"/>
+        <script type="text/javascript" src="/web_editor/static/src/js/frontend/loader.js"/>
     </xpath>
 </template>
 
-<template id="assets_editor" name="Web Editor Assets (used in private and public editor)">
-    <t t-call="web.less_helpers"/>
+<template id="qunit_suite" inherit_id="web.qunit_suite_tests">
+    <xpath expr="//script[last()]" position="after">
+        <script type="text/javascript">
+            odoo.define('web_editor.wysiwyg.root.test', function (require) {
+                'use strict';
+                var WysiwygRoot = require('web_editor.wysiwyg.root');
+                WysiwygRoot.include({
+                    assetLibs: null // We need to add the asset because tests performed overwrites (Dialog, Unbreakable...)
+                });
+            });
+        </script>
+        <t t-call="web_editor.compiled_assets_wysiwyg"/>
 
-    <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.less"/>
-    <link rel="stylesheet" type="text/less" href="/web_editor/static/src/less/web_editor.ui.components.less"/>
-
-    <script type="text/javascript" src="/web_editor/static/lib/nearest/jquery.nearest.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor/editor.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor/rte.summernote.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.editor.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor/snippets.options.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor/transcoder.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/editor/translator.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/tours/rte.js"/>
-    <script type="text/javascript" src="/web_editor/static/src/js/widgets/widgets.js"/>
-</template>
-
-<template id="webclient_bootstrap" inherit_id="web.webclient_bootstrap">
-    <xpath expr="//t[@t-call-assets='web.assets_backend'][@t-js='false']" position="after">
-        <t t-call-assets="web_editor.summernote" t-js="false"/>
-        <t t-call-assets="web_editor.assets_editor" t-js="false"/>
-    </xpath>
-    <xpath expr="//t[@t-call-assets='web.assets_backend'][@t-css='false']" position="after">
-        <t t-call-assets="web_editor.summernote" t-css="false"/>
-        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
-    </xpath>
-</template>
-<template id="qunit_suite" inherit_id="web.qunit_suite">
-    <xpath expr="//t[@t-call-assets='web.assets_backend'][@t-css='false']" position="after">
-        <t t-call-assets="web_editor.summernote" t-css="false"/>
-        <t t-call-assets="web_editor.assets_editor" t-css="false"/>
-        <script type="text/javascript" src="/web_editor/static/tests/web_editor_tests.js"></script>
+        <script type="text/javascript" src="/web_editor/static/tests/test_utils.js"/>
+        <script type="text/javascript" src="/web_editor/static/tests/field_html_tests.js"/>
     </xpath>
 </template>
 
@@ -134,40 +211,37 @@
 
     Sections should contain a set of button with a data-color attribute. When selecting such a button to
     edit style, the "bg-x" class or the "text-x" will be automatically added.
+
+    If a color is no longer used you need to add the d-none class to it and not remove it from this file !!
+    Else you will no longer be able to use them.
 -->
-<template id="web_editor.colorpicker" name="Color-Picker">
+<template id="web_editor.colorpicker" name="Color-Picker" groups="base.group_user">
     <colorpicker>
-        <div class="o_colorpicker_section" data-name="theme" data-icon-class="fa fa-flask">
-            <button data-color="alpha">Alpha</button>
-            <button data-color="beta">Beta</button>
-            <button data-color="gamma">Gamma</button>
-            <button data-color="delta">Delta</button>
-            <button data-color="epsilon">Epsilon</button>
+        <div class="o_colorpicker_section" data-name="theme">
+            <button t-foreach="5" t-as="i" t-attf-data-color="o-color-#{i + 1}"></button>
         </div>
-        <div class="o_colorpicker_section" data-name="grayscale" data-icon-class="fa fa-database">
-            <button data-color="white">White</button>
-            <button data-color="gray-lighter">Gray Lighter</button>
-            <button data-color="gray-light">Gray Light</button>
-            <button data-color="gray">Gray</button>
-            <button data-color="gray-dark">Gray Dark</button>
-            <button data-color="gray-darker">Gray Darker</button>
-            <button data-color="black">Black</button>
+        <div class="o_colorpicker_section" data-name="common">
+            <button data-color="black"></button>
+            <button data-color="900"></button>
+            <button data-color="800"></button>
+            <button data-color="700" class="d-none"></button>
+            <button data-color="600"></button>
+            <button data-color="500" class="d-none"></button>
+            <button data-color="400"></button>
+            <button data-color="300" class="d-none"></button>
+            <button data-color="200"></button>
+            <button data-color="100"></button>
+            <button data-color="white"></button>
         </div>
-        <div class="o_colorpicker_section" data-name="ui" data-icon-class="fa fa-paint-brush">
-            <button data-color="primary">Primary</button>
-            <button data-color="success">Success</button>
-            <button data-color="info">Info</button>
-            <button data-color="warning">Warning</button>
-            <button data-color="danger">Danger</button>
-        </div>
-        <div class="o_colorpicker_section" data-name="transparent_grayscale" data-icon-class="fa fa-eye-slash">
-            <button class="o_btn_transparent">Transparent</button>
-            <button data-color="black-25">25% Black</button>
-            <button data-color="black-50">50% Black</button>
-            <button data-color="black-75">75% Black</button>
-            <button data-color="white-25">25% White</button>
-            <button data-color="white-50">50% White</button>
-            <button data-color="white-75">75% White</button>
+        <div class="o_colorpicker_section" data-name="transparent_grayscale">
+            <button data-color="black-15"></button>
+            <button data-color="black-25"></button>
+            <button data-color="black-50"></button>
+            <button data-color="black-75"></button>
+            <button data-color="white-25"></button>
+            <button data-color="white-50"></button>
+            <button data-color="white-75"></button>
+            <button data-color="white-85"></button>
         </div>
     </colorpicker>
 </template>

@@ -11,17 +11,279 @@ odoo.define('web.PivotModel', function (require) {
  * structure.
  *
  * However, we need to be able to manipulate the data in a somewhat efficient
- * way, and to transform it into a list of lines to be displayed by the renderer
+ * way, and to transform it into a list of lines to be displayed by the renderer.
  *
- * @todo add a full description/specification of the data layout
+ * Basicaly the pivot table presents aggregated values for various groups of records
+ * in one domain. If a comparison is asked for, two domains are considered.
+ *
+ * Let us consider a simple example and let us fix the vocabulary:
+ * ___________________________________________________________________________________________________________________________________________
+ * |                    |   Total                                                                                                             |
+ * |                    |_____________________________________________________________________________________________________________________|
+ * |                    |   Sale Team 1                         |  Sale Team 2                         |                                      |
+ * |                    |_______________________________________|______________________________________|______________________________________|
+ * |                    |   Sales total                         |  Sales total                         |  Sales total                         |
+ * |                    |_______________________________________|______________________________________|______________________________________|
+ * |                    |   This Month | Last Month | Variation |  This Month | Last Month | Variation |  This Month | Last Month | Variation |
+ * |____________________|______________|____________|___________|_____________|____________|___________|_____________|____________|___________|
+ * | Total              |    110       |     85     |  29.4%    |     30      |    40      |   -25%    |    140      |    125     |     12%   |
+ * |    Europe          |     35       |     25     |    40%    |     30      |    40      |   -25%    |     65      |     65     |      0%   |
+ * |        Brussels    |     15       |      0     |   100%    |     30      |    30      |     0%    |     45      |     30     |     50%   |
+ * |        Paris       |     20       |     25     |   -20%    |      0      |    10      |  -100%    |     20      |     35     |  -42.8%   |
+ * |    North America   |     75       |     60     |    25%    |             |            |           |     75      |     60     |     25%   |
+ * |        Washington  |     75       |     60     |    25%    |             |            |           |     75      |     60     |     25%   |
+ * |____________________|______________|____________|___________|_____________|____________|___________|_____________|____________|___________|
+ *
+ *
+ * META DATA:
+ *
+ * In the above pivot table, the records have been grouped using the fields
+ *
+ *      continent_id, city_id
+ *
+ * for rows and
+ *
+ *      sale_team_id
+ *
+ * for columns.
+ *
+ * The measure is the field 'sales_total'.
+ *
+ * Two domains are considered: 'This Month' and 'Last Month'.
+ *
+ * In the model,
+ *
+ *      - rowGroupBys is the list [continent_id, city_id]
+ *      - colGroupBys is the list [sale_team_id]
+ *      - measures is the list [sales_total]
+ *      - domains is the list [d1, d2] with d1 and d2 domain expressions
+ *          for say sale_date in this month and last month, for instance
+ *          d1 = [['sale_date', >=, 2019-05-01], ['sale_date', '<', 2019-05-31]]
+ *      - origins is the list ['This Month', 'Last Month']
+ *
+ * DATA:
+ *
+ * Recall that a group is constituted by records (in a given domain)
+ * that have the same (raw) values for a list of fields.
+ * Thus the group itself is identified by this list and the domain.
+ * In comparison mode, the same group (forgetting the domain part or 'originIndex')
+ * can be eventually found in the two domains.
+ * This defines the way in which the groups are identified or not.
+ *
+ * In the above table, (forgetting the domain) the following groups are found:
+ *
+ *      the 'row groups'
+ *      - Total
+ *      - Europe
+ *      - America
+ *      - Europe, Brussels
+ *      - Europe, Paris
+ *      - America, Washington
+ *
+ *      the 'col groups'
+ *
+ *      - Total
+ *      - Sale Team 1
+ *      - Sale Team 2
+ *
+ *      and all non trivial combinations of row groups and col groups
+ *
+ *      - Europe, Sale Team 1
+ *      - Europe, Brussels, Sale Team 2
+ *      - America, Washington, Sale Team 1
+ *      - ...
+ *
+ * The list of fields is created from the concatenation of two lists of fields, the first in
+ *
+ * [], [f1], [f1, f2], ... [f1, f2, ..., fn]  for [f1, f2, ..., fn] the full list of groupbys
+ * (called rowGroupBys) used to create row groups
+ *
+ * In the example: [], [continent_id], [continent_id, city_id].
+ *
+ * and the second in
+ * [], [g1], [g1, g2], ... [g1, g2, ..., gm]  for [g1, g2, ..., gm] the full list of groupbys
+ * (called colGroupBys) used to create col groups.
+ *
+ * In the example: [], [sale_team_id].
+ *
+ * Thus there are (n+1)*(m+1) lists of fields possible.
+ *
+ * In the example: 6 lists possible, namely [],
+ *                                          [continent_id], [sale_team_id],
+ *                                          [continent_id, sale_team_id], [continent_id, city_id],
+ *                                          [continent_id, city_id, sale_team_id]
+ *
+ * A given list is thus of the form [f1,..., fi, g1,..., gj] or better [[f1,...,fi], [g1,...,gj]]
+ *
+ * For each list of fields possible and each domain considered, one read_group is done
+ * and gives results of the form (an exceptions for list [])
+ *
+ * g = {
+ *  f1: v1, ..., fi: vi,
+ *  g1: w1, ..., gj: wj,
+ *  m1: x1, ..., mk: xk,
+ *  __count: c,
+ *  __domain: d
+ * }
+ *
+ * where v1,...,vi,w1,...,Wj are 'values' for the corresponding fields and
+ * m1,...,mk are the fields selected as measures.
+ *
+ * For example, g = {
+ *      continent_id: [1, 'Europe']
+ *      sale_team_id: [1, 'Sale Team 1']
+ *      sales_count: 35,
+ *      __count: 4
+ *      __domain: [
+ *                  ['sale_date', >=, 2019-05-01], ['sale_date', '<', 2019-05-31],
+ *                  ['continent_id', '=', 1],
+ *                  ['sale_team_id', '=', 1]
+ *                ]
+ * }
+ *
+ * Thus the above group g is fully determined by [[v1,...,vi], [w1,...,wj]] and the base domain
+ * or the corresponding 'originIndex'.
+ *
+ * When j=0, g corresponds to a row group (or also row header) and is of the form [[v1,...,vi], []] or more simply [v1,...vi]
+ * (not forgetting the list [v1,...vi] comes from left).
+ * When i=0, g corresponds to a col group (or col header) and is of the form [[], [w1,...,wj]] or more simply [w1,...,wj].
+ *
+ * A generic group g as above [[v1,...,vi], [w1,...,wj]] corresponds to the two headers [[v1,...,vi], []]
+ * and [[], [w1,...,wj]].
+ *
+ * Here is a description of the data structure manipulated by the pivot model.
+ *
+ * Five objects contain all the data from the read_groups
+ *
+ *      - rowGroupTree: contains information on row headers
+ *             the nodes correspond to the groups of the form [[v1,...,vi], []]
+ *             The root is [[], []].
+ *             A node [[v1,...,vl], []] has as direct children the nodes of the form [[v1,...,vl,v], []],
+ *             this means that a direct child is obtained by grouping records using the single field fi+1
+ *
+ *             The structure at each level is of the form
+ *
+ *             {
+ *                  root: {
+ *                      values: [v1,...,vl],
+ *                      labels: [la1,...,lal]
+ *                  },
+ *                  directSubTrees: {
+ *                      v => {
+ *                              root: {
+ *                                  values: [v1,...,vl,v]
+ *                                  labels: [label1,...,labell,label]
+ *                              },
+ *                              directSubTrees: {...}
+ *                          },
+ *                      v' => {...},
+ *                      ...
+ *                  }
+ *             }
+ *
+ *             (directSubTrees is a Map instance)
+ *
+ *             In the example, the rowGroupTree is:
+ *
+ *             {
+ *                  root: {
+ *                      values: [],
+ *                      labels: []
+ *                  },
+ *                  directSubTrees: {
+ *                      1 => {
+ *                              root: {
+ *                                  values: [1],
+ *                                  labels: ['Europe'],
+ *                              },
+ *                              directSubTrees: {
+ *                                  1 => {
+ *                                          root: {
+ *                                              values: [1, 1],
+ *                                              labels: ['Europe', 'Brussels'],
+ *                                          },
+ *                                          directSubTrees: new Map(),
+ *                                  },
+ *                                  2 => {
+ *                                          root: {
+ *                                              values: [1, 2],
+ *                                              labels: ['Europe', 'Paris'],
+ *                                          },
+ *                                          directSubTrees: new Map(),
+ *                                  },
+ *                              },
+ *                          },
+ *                      2 => {
+ *                              root: {
+ *                                  values: [2],
+ *                                  labels: ['America'],
+ *                              },
+ *                              directSubTrees: {
+ *                                  3 => {
+ *                                          root: {
+ *                                              values: [2, 3],
+ *                                              labels: ['America', 'Washington'],
+ *                                          }
+ *                                          directSubTrees: new Map(),
+ *                                  },
+ *                              },
+ *                      },
+ *                  },
+ *             }
+ *
+ *      - colGroupTree: contains information on col headers
+ *              The same as above with right instead of left
+ *
+ *      - measurements: contains information on measure values for all the groups
+ *
+ *              the object keys are of the form JSON.stringify([[v1,...,vi], [w1,...,wj]])
+ *              and values are arrays of length equal to number of origins containing objects of the form
+ *                  {m1: x1,...,mk: xk}
+ *              The structure looks like
+ *
+ *              {
+ *                  JSON.stringify([[], []]): [{m1: x1,...,mk: xk}, {m1: x1',...,mk: xk'},...]
+ *                  ....
+ *                  JSON.stringify([[v1,...,vi], [w1,...,wj]]): [{m1: y1',...,mk: yk'}, {m1: y1',...,mk: yk'},...],
+ *                  ....
+ *                  JSON.stringify([[v1,...,vn], [w1,...,wm]]): [{m1: z1',...,mk: zk'}, {m1: z1',...,mk: zk'},...],
+ *              }
+ *              Thus the structure contains all information for all groups and all origins on measure values.
+ *
+ *
+ *              this.measurments["[[], []]"][0]['foo'] gives the value of the measure 'foo' for the group 'Total' and the
+ *              first domain (origin).
+ *
+ *              In the example:
+ *                  {
+ *                      "[[], []]": [{'sales_total': 110}, {'sales_total': 85}]                      (total/total)
+ *                      ...
+ *                      "[[1, 2], [2]]": [{'sales_total': 0}, {'sales_total': 10}]                   (Europe/Paris/Sale Team 2)
+ *                      ...
+ *                  }
+ *
+ *      - counts: contains information on the number of records in each groups
+ *              The structure is similar to the above but the arrays contains numbers (counts)
+ *      - groupDomains:
+ *              The structure is similar to the above but the arrays contains domains
+ *
+ *      With this light data structures, all manipulation done by the model are eased and redundancies are limited.
+ *      Each time a rendering or an export of the data has to be done, the pivot table is generated by the _getTable function.
  */
 
 var AbstractModel = require('web.AbstractModel');
+var concurrency = require('web.concurrency');
 var core = require('web.core');
+var dataComparisonUtils = require('web.dataComparisonUtils');
+const Domain = require('web.Domain');
+var mathUtils = require('web.mathUtils');
 var session = require('web.session');
-var utils = require('web.utils');
+
 
 var _t = core._t;
+var cartesian = mathUtils.cartesian;
+var computeVariation = dataComparisonUtils.computeVariation;
+var sections = mathUtils.sections;
 
 var PivotModel = AbstractModel.extend({
     /**
@@ -32,6 +294,7 @@ var PivotModel = AbstractModel.extend({
         this._super.apply(this, arguments);
         this.numbering = {};
         this.data = null;
+        this._loadDataDropPrevious = new concurrency.DropPrevious();
     },
 
     //--------------------------------------------------------------------------
@@ -39,295 +302,388 @@ var PivotModel = AbstractModel.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Close a header. This method is actually synchronous, but returns a
-     * deferred.
+     * Add a groupBy to rowGroupBys or colGroupBys according to provided type.
      *
-     * @param {any} headerID
-     * @returns {Deferred}
+     * @param {string} groupBy
+     * @param {'row'|'col'} type
      */
-    closeHeader: function (headerID) {
-        var header = this.data.headers[headerID];
-        header.expanded = false;
-        header.children = [];
-        var newGroupbyLength = this._getHeaderDepth(header.root) - 1;
-        header.root.groupbys.splice(newGroupbyLength);
+    addGroupBy: function (groupBy, type) {
+        if (type === 'row') {
+            this.data.expandedRowGroupBys.push(groupBy);
+        } else {
+            this.data.expandedColGroupBys.push(groupBy);
+        }
     },
     /**
-     * @returns {Deferred}
+     * Close the group with id given by groupId. A type must be specified
+     * in case groupId is [[], []] (the id of the group 'Total') because this
+     * group is present in both colGroupTree and rowGroupTree.
+     *
+     * @param {Array[]} groupId
+     * @param {'row'|'col'} type
+     */
+    closeGroup: function (groupId, type) {
+        var groupBys;
+        var expandedGroupBys;
+        var group;
+        var tree;
+        if (type === 'row') {
+            groupBys = this.data.rowGroupBys;
+            expandedGroupBys = this.data.expandedRowGroupBys;
+            tree = this.rowGroupTree;
+            group = this._findGroup(this.rowGroupTree, groupId[0]);
+        } else {
+            groupBys = this.data.colGroupBys;
+            expandedGroupBys = this.data.expandedColGroupBys;
+            tree = this.colGroupTree;
+            group = this._findGroup(this.colGroupTree, groupId[1]);
+        }
+        group.directSubTrees.clear();
+        delete group.sortedKeys;
+        var newGroupBysLength = this._getTreeHeight(tree) - 1;
+        if (newGroupBysLength <= groupBys.length) {
+            expandedGroupBys.splice(0);
+            groupBys.splice(newGroupBysLength);
+        } else {
+            expandedGroupBys.splice(newGroupBysLength - groupBys.length);
+        }
+    },
+    /**
+     * Reload the view with the current rowGroupBys and colGroupBys
+     * This is the easiest way to expand all the groups that are not expanded
+     *
+     * @returns {Promise}
      */
     expandAll: function () {
         return this._loadData();
     },
     /**
-     * Expand (open up) a given header, be it a row or a column.
+     * Expand a group by using groupBy to split it.
      *
-     * @todo: add discussion on the number of read_group that it will generate,
-     * which is (r+1) or (c+1) I think
-     *
-     * @param {any} header
-     * @param {any} field
-     * @returns
+     * @param {Object} group
+     * @param {string} groupBy
+     * @returns {Promise}
      */
-    expandHeader: function (header, field) {
-        var self = this;
+    expandGroup: async function (group, groupBy) {
+        var leftDivisors;
+        var rightDivisors;
 
-        var other_root = header.root.other_root;
-        var other_groupbys = header.root.other_root.groupbys;
-        var fields = [].concat(field, other_groupbys, this.data.measures);
-        var groupbys = [];
-
-        for (var i = 0; i <= other_groupbys.length; i++) {
-            groupbys.push([field].concat(other_groupbys.slice(0,i)));
+        if (group.type === 'row') {
+            leftDivisors = [[groupBy]];
+            rightDivisors = sections(this._getGroupBys().colGroupBys);
+        } else {
+            leftDivisors = sections(this._getGroupBys().rowGroupBys);
+            rightDivisors = [[groupBy]];
         }
+        var divisors = cartesian(leftDivisors, rightDivisors);
 
-        return $.when.apply(null, groupbys.map(function (groupBy) {
-            return self._rpc({
-                    model: self.modelName,
-                    method: 'read_group',
-                    context: self.data.context,
-                    domain: header.domain.length ? header.domain : self.data.domain,
-                    fields: _.map(fields, function (field) { return field.split(':')[0]; }),
-                    groupBy: groupBy,
-                    lazy: false,
-                });
-        })).then(function () {
-            var data = Array.prototype.slice.call(arguments);
-            var datapt, attrs, j, l, row, col, cell_value, groupBys;
-            for (i = 0; i < data.length; i++) {
-                for (j = 0; j < data[i].length; j++){
-                    datapt = data[i][j];
-                    groupBys = [field].concat(other_groupbys.slice(0,i));
-                    attrs = {
-                        value: self._getValue(datapt, groupBys),
-                        domain: datapt.__domain || [],
-                        length: datapt.__count,
-                    };
-
-                    if (i === 0) {
-                        row = self._makeHeader(attrs.value, attrs.domain, header.root, 0, 1, header);
-                    } else {
-                        row = self._getHeader(attrs.value, header.root, 0, 1, header);
-                    }
-                    col = self._getHeader(attrs.value, other_root, 1, i + 1);
-                    if (!col) {
-                        continue;
-                    }
-                    for (cell_value = {}, l=0; l < self.data.measures.length; l++) {
-                        cell_value[self.data.measures[l]] = datapt[self.data.measures[l]];
-                    }
-                    // cell_value.__count = attrs.length;
-                    if (!self.data.cells[row.id]) {
-                        self.data.cells[row.id] = [];
-                    }
-                    self.data.cells[row.id][col.id] = cell_value;
-                }
-            }
-            if (!_.contains(header.root.groupbys, field)) {
-                header.root.groupbys.push(field);
-            }
-        });
+        delete group.type;
+        return this._subdivideGroup(group, divisors);
     },
     /**
-     * Export the current pivot view in a simple JS object.
+     * Export model data in a form suitable for an easy encoding of the pivot
+     * table in excell.
      *
      * @returns {Object}
      */
     exportData: function () {
-        var measureNbr = this.data.measures.length;
-        var headers = this._computeHeaders();
-        var measureRow = measureNbr > 1 ? _.last(headers) : [];
-        var rows = this._computeRows();
-        var i, j, value;
-        headers[0].splice(0,1);
+        var measureCount = this.data.measures.length;
+        var originCount = this.data.origins.length;
 
-        // process measureRow
-        for (i = 0; i < measureRow.length; i++) {
-            measureRow[i].measure = this.fields[measureRow[i].measure].string;
+        var table = this._getTable();
+
+        // process headers
+        var headers = table.headers;
+        var colGroupHeaderRows;
+        var measureRow = [];
+        var originRow = [];
+
+        function processHeader(header) {
+            var inTotalColumn = header.groupId[1].length === 0;
+            return {
+                title: header.title,
+                width: header.width,
+                height: header.height,
+                is_bold: !!header.measure && inTotalColumn
+            };
         }
-        // process all rows
-        for (i =0, j, value; i < rows.length; i++) {
-            for (j = 0; j < rows[i].values.length; j++) {
-                value = rows[i].values[j];
-                rows[i].values[j] = {
-                    is_bold: (i === 0) ||
-                        ((this.data.main_col.width > 1) &&
-                         (j >= rows[i].values.length - measureNbr)),
-                    value:  (value === undefined) ? "" : value,
-                };
-            }
+
+        if (originCount > 1) {
+            colGroupHeaderRows = headers.slice(0, headers.length - 2);
+            measureRow = headers[headers.length - 2].map(processHeader);
+            originRow = headers[headers.length - 1].map(processHeader);
+        } else {
+            colGroupHeaderRows = headers.slice(0, headers.length - 1);
+            measureRow = headers[headers.length - 1].map(processHeader);
         }
+
+        // remove the empty headers on left side
+        colGroupHeaderRows[0].splice(0, 1);
+
+        colGroupHeaderRows = colGroupHeaderRows.map(function (headerRow) {
+            return headerRow.map(processHeader);
+        });
+
+        // process rows
+        var tableRows = table.rows.map(function (row) {
+            return {
+                title: row.title,
+                indent: row.indent,
+                values: row.subGroupMeasurements.map(function (measurement) {
+                    var value = measurement.value;
+                    if (value === undefined) {
+                        value = "";
+                    } else if (measurement.originIndexes.length > 1) {
+                        // in that case the value is a variation and a
+                        // number between 0 and 1
+                        value = value * 100;
+                    }
+                    return {
+                        is_bold: measurement.isBold,
+                        value: value,
+                    };
+                }),
+            };
+        });
+
         return {
-            headers: _.initial(headers),
-            measure_row: measureRow,
-            rows: rows,
-            nbr_measures: measureNbr,
+            col_group_headers: colGroupHeaderRows,
+            measure_headers: measureRow,
+            origin_headers: originRow,
+            rows: tableRows,
+            measure_count: measureCount,
+            origin_count: originCount,
         };
     },
     /**
-     * Swap the columns and the rows.  It is a synchronous operation.
+     * Swap the pivot columns and the rows. It is a synchronous operation.
      */
     flip: function () {
         // swap the data: the main column and the main row
-        var temp = this.data.main_col;
-        this.data.main_col = this.data.main_row;
-        this.data.main_row = temp;
+        var temp = this.rowGroupTree;
+        this.rowGroupTree = this.colGroupTree;
+        this.colGroupTree = temp;
 
-        // we need to update the record metadata: row and col groupBys
-        temp = this.data.groupedBy;
+        // we need to update the record metadata: (expanded) row and col groupBys
+        temp = this.data.rowGroupBys;
         this.data.groupedBy = this.data.colGroupBys;
+        this.data.rowGroupBys = this.data.colGroupBys;
         this.data.colGroupBys = temp;
+        temp = this.data.expandedColGroupBys;
+        this.data.expandedColGroupBys = this.data.expandedRowGroupBys;
+        this.data.expandedRowGroupBys = temp;
+
+        function twistKey(key) {
+            return JSON.stringify(JSON.parse(key).reverse());
+        }
+
+        function twist(object) {
+            var newObject = {};
+            Object.keys(object).forEach(function (key) {
+                var value = object[key];
+                newObject[twistKey(key)] = value;
+            });
+            return newObject;
+        }
+
+        this.measurements = twist(this.measurements);
+        this.counts = twist(this.counts);
+        this.groupDomains = twist(this.groupDomains);
     },
     /**
      * @override
+     *
      * @param {Object} [options]
      * @param {boolean} [options.raw=false]
      * @returns {Object}
      */
     get: function (options) {
-        var isRaw = options && options.raw;
-        if (!this.data.has_data) {
-            return {has_data: false};
-        }
-        return {
-            colGroupBys: this.data.main_col.groupbys,
+        options = options || {};
+        var raw = options.raw || false;
+        var groupBys = this._getGroupBys();
+        var state = {
+            colGroupBys: groupBys.colGroupBys,
             context: this.data.context,
             domain: this.data.domain,
             fields: this.fields,
-            headers: !isRaw && this._computeHeaders(),
-            has_data: true,
-            mainColWidth: this.data.main_col.width,
+            hasData: this._hasData(),
             measures: this.data.measures,
-            rows: !isRaw && this._computeRows(),
-            rowGroupBys: this.data.main_row.groupbys,
-            sortedColumn: this.data.sorted_column,
+            origins: this.data.origins,
+            rowGroupBys: groupBys.rowGroupBys,
+            selectionGroupBys: this._getSelectionGroupBy(groupBys),
+            modelName: this.modelName
         };
+        if (!raw && state.hasData) {
+            state.table = this._getTable();
+            state.tree = this.rowGroupTree;
+        }
+        return state;
     },
     /**
-     * @param {string} id
-     * @returns {object}
+     * Returns the total number of columns of the pivot table.
+     *
+     * @returns {integer}
      */
-    getHeader: function (id) {
-        return this.data.headers[id];
+    getTableWidth: function () {
+        var leafCounts = this._getLeafCounts(this.colGroupTree);
+        return leafCounts[JSON.stringify(this.colGroupTree.root.values)] + 2;
     },
     /**
      * @override
+     *
      * @param {Object} params
-     * @param {string[]} [params.groupedBy]
-     * @param {string[]} [params.colGroupBys]
-     * @param {string[]} params.domain
-     * @param {string[]} params.rowGroupBys
-     * @param {string[]} params.colGroupBys
-     * @param {string[]} params.measures
+     * @param {boolean} [params.compare=false]
+     * @param {Object} params.context
      * @param {Object} params.fields
-     * @returns {Deferred}
+     * @param {string[]} [params.groupedBy]
+     * @param {string[]} params.colGroupBys
+     * @param {Array[]} params.domain
+     * @param {string[]} params.measures
+     * @param {string[]} params.rowGroupBys
+     * @param {string} [params.default_order]
+     * @param {string} params.modelName
+     * @param {Object[]} params.groupableFields
+     * @param {Object} params.timeRanges
+     * @returns {Promise}
      */
     load: function (params) {
         this.initialDomain = params.domain;
         this.initialRowGroupBys = params.context.pivot_row_groupby || params.rowGroupBys;
+        this.defaultGroupedBy = params.groupedBy;
+
         this.fields = params.fields;
         this.modelName = params.modelName;
+        this.groupableFields = params.groupableFields;
         this.data = {
-            domain: params.domain,
+            expandedRowGroupBys: [],
+            expandedColGroupBys: [],
+            domain: this.initialDomain,
             context: _.extend({}, session.user_context, params.context),
-            groupedBy: params.groupedBy,
+            groupedBy: params.context.pivot_row_groupby || params.groupedBy,
             colGroupBys: params.context.pivot_column_groupby || params.colGroupBys,
             measures: this._processMeasures(params.context.pivot_measures) || params.measures,
-            sorted_column: {},
+            timeRanges: params.timeRanges,
         };
-        this.defaultGroupedBy = params.groupedBy;
+        this._computeDerivedParams();
+
+        this.data.rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
+
+        var defaultOrder = params.default_order && params.default_order.split(' ');
+        if (defaultOrder) {
+            this.data.sortedColumn = {
+                groupId: [[], []],
+                measure: defaultOrder[0],
+                order: defaultOrder[1] ? defaultOrder [1] : 'asc',
+            };
+        }
         return this._loadData();
     },
     /**
      * @override
+     *
      * @param {any} handle this parameter is ignored
      * @param {Object} params
-     * @returns {Deferred}
+     * @param {boolean} [params.compare=false]
+     * @param {Object} params.context
+     * @param {string[]} [params.groupedBy]
+     * @param {Array[]} params.domain
+     * @param {string[]} params.groupBy
+     * @param {string[]} params.measures
+     * @param {Object} [params.timeRanges]
+     * @returns {Promise}
      */
     reload: function (handle, params) {
         var self = this;
+        var oldColGroupBys = this.data.colGroupBys;
+        var oldRowGroupBys = this.data.rowGroupBys;
         if ('context' in params) {
             this.data.context = params.context;
             this.data.colGroupBys = params.context.pivot_column_groupby || this.data.colGroupBys;
             this.data.groupedBy = params.context.pivot_row_groupby || this.data.groupedBy;
             this.data.measures = this._processMeasures(params.context.pivot_measures) || this.data.measures;
+            this.defaultGroupedBy = this.data.groupedBy.length ? this.data.groupedBy : this.defaultGroupedBy;
         }
         if ('domain' in params) {
             this.data.domain = params.domain;
+            this.initialDomain = params.domain;
         } else {
             this.data.domain = this.initialDomain;
         }
         if ('groupBy' in params) {
             this.data.groupedBy = params.groupBy.length ? params.groupBy : this.defaultGroupedBy;
         }
-        if (!this.data.has_data) {
+        if ('timeRanges' in params) {
+            this.data.timeRanges = params.timeRanges;
+        }
+        this._computeDerivedParams();
+
+        this.data.rowGroupBys = !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
+
+        if (!_.isEqual(oldRowGroupBys, self.data.rowGroupBys)) {
+            this.data.expandedRowGroupBys = [];
+        }
+        if (!_.isEqual(oldColGroupBys, self.data.colGroupBys)) {
+            this.data.expandedColGroupBys = [];
+        }
+        if (!this._hasData()) {
             return this._loadData();
         }
 
-        var old_row_root = this.data.main_row.root;
-        var old_col_root = this.data.main_col.root;
+        var oldRowGroupTree = this.rowGroupTree;
+        var oldColGroupTree = this.colGroupTree;
         return this._loadData().then(function () {
-            var new_groupby_length;
-            if (!('groupBy' in params) && !('pivot_row_groupby' in (params.context || {}))) {
-                // we only update the row groupbys according to the old groupbys
-                // if we don't have the key 'groupBy' in params.  In that case,
-                // we want to have the full open state for the groupbys.
-                self._updateTree(old_row_root, self.data.main_row.root);
-                new_groupby_length = self._getHeaderDepth(self.data.main_row.root) - 1;
-                self.data.main_row.groupbys = old_row_root.groupbys.slice(0, new_groupby_length);
+            if (_.isEqual(oldRowGroupBys, self.data.rowGroupBys)) {
+                self._pruneTree(self.rowGroupTree, oldRowGroupTree);
             }
-
-            self._updateTree(old_col_root, self.data.main_col.root);
-            new_groupby_length = self._getHeaderDepth(self.data.main_col.root) - 1;
-            self.data.main_row.groupbys = old_col_root.groupbys.slice(0, new_groupby_length);
+            if (_.isEqual(oldColGroupBys, self.data.colGroupBys)) {
+                self._pruneTree(self.colGroupTree, oldColGroupTree);
+            }
         });
     },
     /**
      * Sort the rows, depending on the values of a given column.  This is an
      * in-memory sort.
      *
-     * @param {any} col_id
-     * @param {any} measure
-     * @param {any} descending
+     * @param {Object} sortedColumn
+     * @param {number[]} sortedColumn.groupId
      */
-    sortRows: function (col_id, measure, descending) {
-        var cells = this.data.cells;
-        this._traverseTree(this.data.main_row.root, function (header) {
-            header.children.sort(compare);
-        });
-        this.data.sorted_column = {
-            id: col_id,
-            measure: measure,
-            order: descending ? 'desc' : 'asc',
-        };
-        function _getValue (id1, id2) {
-            if ((id1 in cells) && (id2 in cells[id1])) {
-                return cells[id1][id2];
-            }
-            if (id2 in cells) return cells[id2][id1];
-        }
+    sortRows: function (sortedColumn) {
+        var self = this;
+        var colGroupValues = sortedColumn.groupId[1];
+        sortedColumn.originIndexes = sortedColumn.originIndexes || [0];
+        this.data.sortedColumn = sortedColumn;
 
-        function compare (row1, row2) {
-            var values1 = _getValue(row1.id, col_id),
-                values2 = _getValue(row2.id, col_id),
-                value1 = values1 ? values1[measure] : 0,
-                value2 = values2 ? values2[measure] : 0;
-            return descending ? value1 - value2 : value2 - value1;
-        }
+        var sortFunction = function (tree) {
+            return function (subTreeKey) {
+                var subTree = tree.directSubTrees.get(subTreeKey);
+                var groupIntersectionId = [subTree.root.values, colGroupValues];
+                var value = self._getCellValue(
+                    groupIntersectionId,
+                    sortedColumn.measure,
+                    sortedColumn.originIndexes
+                ) || 0;
+                return sortedColumn.order === 'asc' ? value : -value;
+            };
+        };
+
+        this._sortTree(sortFunction, this.rowGroupTree);
     },
     /**
-     * Toggle the active state for a given measure, then reload the data.
+     * Toggle the active state for a given measure, then reload the data
+     * if this turns out to be necessary.
      *
-     * @param {string} field
-     * @returns {Deferred}
+     * @param {string} fieldName
+     * @returns {Promise}
      */
-    toggleMeasure: function (field) {
-        if (_.contains(this.data.measures, field)) {
-            this.data.measures = _.without(this.data.measures, field);
+    toggleMeasure: function (fieldName) {
+        var index = this.data.measures.indexOf(fieldName);
+        if (index !== -1) {
+            this.data.measures.splice(index, 1);
             // in this case, we already have all data in memory, no need to
             // actually reload a lesser amount of information
-            return $.when();
+            return Promise.resolve();
         } else {
-            this.data.measures.push(field);
+            this.data.measures.push(fieldName);
         }
         return this._loadData();
     },
@@ -336,323 +692,678 @@ var PivotModel = AbstractModel.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    _computeHeaders: function () {
-        var self = this;
-        var main_col_dims = this._getHeaderDim(this.data.main_col.root);
-        var depth = main_col_dims.depth;
-        var width = main_col_dims.width;
-        var nbr_measures = this.data.measures.length;
-        var result = [[{width:1, height: depth + 1}]];
-        var col_ids = [];
-        this.data.main_col.width = width;
-        this._traverseTree(this.data.main_col.root, function (header) {
-            var index = header.path.length - 1;
-            var cell = {
-                    width: self._getHeaderWidth(header) * nbr_measures,
-                    height: header.expanded ? 1 : depth - index,
-                    title: header.path[header.path.length-1],
-                    id: header.id,
-                    expanded: header.expanded,
-                };
-            if (!header.expanded) col_ids.push(header.id);
-            if (result[index]) result[index].push(cell);
-            else result[index] = [cell];
-        });
-        col_ids.push(this.data.main_col.root.id);
-        this.data.main_col.width = width;
-        if (width > 1) {
-            var total_cell = {width:nbr_measures, height: depth, title:""};
-            if (nbr_measures === 1) {
-                total_cell.total = true;
-            }
-            result[0].push(total_cell);
-        }
-        var nbr_cols = width === 1 ? nbr_measures : (width + 1)*nbr_measures;
-        for (var i = 0, measure_row = [], measure; i < nbr_cols; i++) {
-            measure = this.data.measures[i % nbr_measures];
-            measure_row.push({
-                measure: measure,
-                is_bold: (width > 1) && (i >= nbr_measures*width),
-                id: col_ids[Math.floor(i / nbr_measures)],
-            });
-        }
-        result.push(measure_row);
-        return result;
-    },
-    _computeRows: function () {
-        var self = this;
-        var aggregates, i;
-        var result = [];
-        this._traverseTree(this.data.main_row.root, function (header) {
-            var values = [],
-                col_ids = [];
-            result.push({
-                id: header.id,
-                col_ids: col_ids,
-                indent: header.path.length - 1,
-                title: header.path[header.path.length-1],
-                expanded: header.expanded,
-                values: values,
-            });
-            self._traverseTree(self.data.main_col.root, add_cells, header.id, values, col_ids);
-            if (self.data.main_col.width > 1) {
-                aggregates = self._getCellValue(header.id, self.data.main_col.root.id);
-                for (i = 0; i < self.data.measures.length; i++) {
-                    values.push(aggregates && aggregates[self.data.measures[i]]);
-                }
-                col_ids.push( self.data.main_col.root.id);
-            }
-        });
-        return result;
-        function add_cells (col_hdr, row_id, values, col_ids) {
-            if (col_hdr.expanded) return;
-            col_ids.push(col_hdr.id);
-            aggregates = self._getCellValue(row_id, col_hdr.id);
-            for (i = 0; i < self.data.measures.length; i++) {
-                values.push(aggregates && aggregates[self.data.measures[i]]);
-            }
-        }
-    },
     /**
-     * Static helper method
+     * Add labels/values in the provided groupTree. A new leaf is created in
+     * the groupTree with a root object corresponding to the group with given
+     * labels/values.
      *
-     * @private @static
-     * @param {any} root
-     * @param {any} path
-     * @returns
+     * @private
+     * @param {Object} groupTree, either this.rowGroupTree or this.colGroupTree
+     * @param {string[]} labels
+     * @param {Array} values
      */
-    _findPathInTree: function (root, path) {
-        var i,
-            l = root.path.length;
-        if (l === path.length) {
-            return (root.path[l-1] === path[l - 1]) ? root : null;
-        }
-        for (i = 0; i < root.children.length; i++) {
-            if (root.children[i].path[l] === path[l]) {
-                return this._findPathInTree(root.children[i], path);
-            }
-        }
-        return null;
-    },
-    _getCellValue: function (id1, id2) {
-        if ((id1 in this.data.cells) && (id2 in this.data.cells[id1])) {
-            return this.data.cells[id1][id2];
-        }
-        if (id2 in this.data.cells) return this.data.cells[id2][id1];
+    _addGroup: function (groupTree, labels, values) {
+        var tree = groupTree;
+        // we assume here that the group with value value.slice(value.length - 2) has already been added.
+        values.slice(0, values.length - 1).forEach(function (value) {
+            tree = tree.directSubTrees.get(value);
+        });
+        tree.directSubTrees.set(values[values.length - 1], {
+            root: {
+                labels: labels,
+                values: values,
+            },
+            directSubTrees: new Map(),
+        });
     },
     /**
-     * @param {any} value
-     * @param {any} root
-     * @param {any} i
-     * @param {any} j
-     * @param {any} parent
+     * Compute what should be used as rowGroupBys by the pivot view
+     *
+     * @private
+     * @returns {string[]}
+     */
+    _computeRowGroupBys: function () {
+        return !_.isEmpty(this.data.groupedBy) ? this.data.groupedBy : this.initialRowGroupBys;
+    },
+    /**
+     * Find a group with given values in the provided groupTree, either
+     * this.rowGrouptree or this.colGroupTree.
+     *
+     * @private
+     * @param  {Object} groupTree
+     * @param  {Array} values
      * @returns {Object}
      */
-    _getHeader: function (value, root, i, j, parent) {
-        var path;
-        var total = _t("Total");
-        if (parent) {
-            path = parent.path.concat(value.slice(i,j));
-        } else {
-            path = [total].concat(value.slice(i,j));
-        }
-        return this._findPathInTree(root, path);
+    _findGroup: function (groupTree, values) {
+        var tree = groupTree;
+        values.slice(0, values.length).forEach(function (value) {
+            tree = tree.directSubTrees.get(value);
+        });
+        return tree;
     },
     /**
-     * @private @static
-     * @param {any} header
-     * @returns {integer}
+     * In case originIndex is an array of length 1, thus a single origin
+     * index, returns the given measure for a group determined by the id
+     * groupId and the origin index.
+     * If originIndexes is an array of length 2, we compute the variation
+     * ot the measure values for the groups determined by groupId and the
+     * different origin indexes.
+     *
+     * @private
+     * @param  {Array[]} groupId
+     * @param  {string} measure
+     * @param  {number[]} originIndexes
+     * @returns {number}
      */
-    _getHeaderDepth: function (header) {
-        var depth = 1;
-        this._traverseTree(header, function (hdr) {
-            depth = Math.max(depth, hdr.path.length);
-        });
-        return depth;
-    },
-    _getHeaderDim: function (header) {
-        var depth = 1;
-        var width = 0;
-        this._traverseTree(header, function (hdr) {
-            depth = Math.max(depth, hdr.path.length);
-            if (!hdr.expanded) width++;
-        });
-        return {width: width, depth: depth};
-    },
-    _getHeaderWidth: function (header) {
+    _getCellValue: function (groupId, measure, originIndexes) {
         var self = this;
-        if (!header.children.length) return 1;
-        if (!header.expanded) return 1;
-        return header.children.reduce(function (s, c) {
-            return s + self._getHeaderWidth(c);
-        }, 0);
+        var key = JSON.stringify(groupId);
+        if (!self.measurements[key]) {
+            return;
+        }
+        var values = originIndexes.map(function (originIndex) {
+            return self.measurements[key][originIndex][measure];
+        });
+        if (originIndexes.length > 1) {
+            return computeVariation(values[0], values[1]);
+        } else {
+            return values[0];
+        }
     },
     /**
-     * @param {any} value
-     * @param {any} field
+     * Returns the rowGroupBys and colGroupBys arrays that
+     * are actually used by the pivot view internally
+     * (for read_group or other purpose)
+     *
+     * @private
+     * @returns {Object} with keys colGroupBys and rowGroupBys
+     */
+    _getGroupBys: function () {
+        return {
+            colGroupBys: this.data.colGroupBys.concat(this.data.expandedColGroupBys),
+            rowGroupBys: this.data.rowGroupBys.concat(this.data.expandedRowGroupBys),
+        };
+    },
+    /**
+     * Returns a domain representation of a group
+     *
+     * @private
+     * @param  {Object} group
+     * @param  {Array} group.colValues
+     * @param  {Array} group.rowValues
+     * @param  {number} group.originIndex
+     * @returns {Array[]}
+     */
+    _getGroupDomain: function (group) {
+        var key = JSON.stringify([group.rowValues, group.colValues]);
+        return this.groupDomains[key][group.originIndex];
+    },
+    /**
+     * Returns the group sanitized labels.
+     *
+     * @private
+     * @param  {Object} group
+     * @param  {string[]} groupBys
+     * @returns {string[]}
+     */
+    _getGroupLabels: function (group, groupBys) {
+        var self = this;
+        return groupBys.map(function (groupBy) {
+            return self._sanitizeLabel(group[groupBy], groupBy);
+        });
+    },
+    /**
+     * Returns a promise that returns the annotated read_group results
+     * corresponding to a partition of the given group obtained using the given
+     * rowGroupBy and colGroupBy.
+     *
+     * @private
+     * @param  {Object} group
+     * @param  {string[]} rowGroupBy
+     * @param  {string[]} colGroupBy
+     * @returns {Promise}
+     */
+    _getGroupSubdivision: function (group, rowGroupBy, colGroupBy) {
+        var groupDomain = this._getGroupDomain(group);
+        var measureSpecs = this._getMeasureSpecs();
+        var groupBy = rowGroupBy.concat(colGroupBy);
+        return this._rpc({
+            model: this.modelName,
+            method: 'read_group',
+            context: this.data.context,
+            domain: groupDomain,
+            fields: measureSpecs,
+            groupBy: groupBy,
+            lazy: false,
+        }).then(function (subGroups) {
+            return {
+                group: group,
+                subGroups: subGroups,
+                rowGroupBy: rowGroupBy,
+                colGroupBy: colGroupBy
+            };
+        });
+    },
+    /**
+     * Returns the group sanitized values.
+     *
+     * @private
+     * @param  {Object} group
+     * @param  {string[]} groupBys
+     * @returns {Array}
+     */
+    _getGroupValues: function (group, groupBys) {
+        var self = this;
+        return groupBys.map(function (groupBy) {
+            return self._sanitizeValue(group[groupBy]);
+        });
+    },
+    /**
+     * Returns the leaf counts of each group inside the given tree.
+     *
+     * @private
+     * @param {Object} tree
+     * @returns {Object} keys are group ids
+     */
+    _getLeafCounts: function (tree) {
+        var self = this;
+        var leafCounts = {};
+        var leafCount;
+        if (!tree.directSubTrees.size) {
+            leafCount = 1;
+        } else {
+            leafCount = [...tree.directSubTrees.values()].reduce(
+                function (acc, subTree) {
+                    var subLeafCounts = self._getLeafCounts(subTree);
+                    _.extend(leafCounts, subLeafCounts);
+                    return acc + leafCounts[JSON.stringify(subTree.root.values)];
+                },
+                0
+            );
+        }
+
+        leafCounts[JSON.stringify(tree.root.values)] = leafCount;
+        return leafCounts;
+    },
+    /**
+     * Returns the group sanitized measure values for the measures in
+     * this.data.measures (that migth contain '__count', not really a fieldName).
+     *
+     * @private
+     * @param  {Object} group
+     * @returns {Array}
+     */
+    _getMeasurements: function (group) {
+        var self = this;
+        return this.data.measures.reduce(
+            function (measurements, fieldName) {
+                var measurement = group[fieldName];
+                if (measurement instanceof Array) {
+                    // case field is many2one and used as measure and groupBy simultaneously
+                    measurement = 1;
+                }
+                if (self.fields[fieldName].type === 'boolean' && measurement instanceof Boolean) {
+                    measurement = measurement ? 1 : 0;
+                }
+                if (self.data.origins.length > 1 && !measurement) {
+                    measurement = 0;
+                }
+                measurements[fieldName] = measurement;
+                return measurements;
+            },
+            {}
+        );
+    },
+    /**
+     * Returns a description of the measures row of the pivot table
+     *
+     * @private
+     * @param {Object[]} columns for which measure cells must be generated
+     * @returns {Object[]}
+     */
+    _getMeasuresRow: function (columns) {
+        var self = this;
+        var sortedColumn = this.data.sortedColumn || {};
+        var measureRow = [];
+
+        columns.forEach(function (column) {
+            self.data.measures.forEach(function (measure) {
+                var measureCell = {
+                    groupId: column.groupId,
+                    height: 1,
+                    measure: measure,
+                    title: self.fields[measure].string,
+                    width: 2 * self.data.origins.length - 1,
+                };
+                if (sortedColumn.measure === measure &&
+                    _.isEqual(sortedColumn.groupId, column.groupId)) {
+                    measureCell.order = sortedColumn.order;
+                }
+                measureRow.push(measureCell);
+            });
+        });
+
+        return measureRow;
+    },
+    /**
+     * Returns the list of measure specs associated with data.measures, i.e.
+     * a measure 'fieldName' becomes 'fieldName:groupOperator' where
+     * groupOperator is the value specified on the field 'fieldName' for
+     * the key group_operator.
+     *
+     * @private
+     * @return {string[]}
+     */
+    _getMeasureSpecs: function () {
+        var self = this;
+        return this.data.measures.reduce(
+            function (acc, measure) {
+                if (measure === '__count') {
+                    acc.push(measure);
+                    return acc;
+                }
+                var type = self.fields[measure].type;
+                var groupOperator = self.fields[measure].group_operator;
+                if (type === 'many2one') {
+                    groupOperator = 'count_distinct';
+                }
+                if (groupOperator === undefined) {
+                    throw new Error("No aggregate function has been provided for the measure '" + measure + "'");
+                }
+                acc.push(measure + ':' + groupOperator);
+                return acc;
+            },
+            []
+        );
+    },
+    /**
+     * Make sure that the labels of different many2one values are distinguished
+     * by numbering them if necessary.
+     *
+     * @private
+     * @param {Array} label
+     * @param {string} fieldName
      * @returns {string}
      */
-    _getNumberedValue: function (value, field) {
-        var id= value[0];
-        var name= value[1];
-        this.numbering[field] = this.numbering[field] || {};
-        this.numbering[field][name] = this.numbering[field][name] || {};
-        var numbers = this.numbering[field][name];
+    _getNumberedLabel: function (label, fieldName) {
+        var id = label[0];
+        var name = label[1];
+        this.numbering[fieldName] = this.numbering[fieldName] || {};
+        this.numbering[fieldName][name] = this.numbering[fieldName][name] || {};
+        var numbers = this.numbering[fieldName][name];
         numbers[id] = numbers[id] || _.size(numbers) + 1;
         return name + (numbers[id] > 1 ? "  (" + numbers[id] + ")" : "");
     },
     /**
-     * @param {any} datapt
-     * @param {any} fields
-     * @returns {string[]}
+     * Returns a description of the origins row of the pivot table
+     *
+     * @private
+     * @param {Object[]} columns for which origin cells must be generated
+     * @returns {Object[]}
      */
-    _getValue: function (datapt, fields) {
-        var result = [];
-        var value;
-        for (var i = 0; i < fields.length; i++) {
-            value = this._sanitizeValue(datapt[fields[i]],fields[i]);
-            result.push(value);
-        }
-        return result;
+    _getOriginsRow: function (columns) {
+        var self = this;
+        var sortedColumn = this.data.sortedColumn || {};
+        var originRow = [];
+
+        columns.forEach(function (column) {
+            var groupId = column.groupId;
+            var measure = column.measure;
+            var isSorted = sortedColumn.measure === measure &&
+                _.isEqual(sortedColumn.groupId, groupId);
+            var isSortedByOrigin = isSorted && !sortedColumn.originIndexes[1];
+            var isSortedByVariation = isSorted && sortedColumn.originIndexes[1];
+
+            self.data.origins.forEach(function (origin, originIndex) {
+                var originCell = {
+                    groupId: groupId,
+                    height: 1,
+                    measure: measure,
+                    originIndexes: [originIndex],
+                    title: origin,
+                    width: 1,
+                };
+                if (isSortedByOrigin && sortedColumn.originIndexes[0] === originIndex) {
+                    originCell.order = sortedColumn.order;
+                }
+                originRow.push(originCell);
+
+                if (originIndex > 0) {
+                    var variationCell = {
+                        groupId: groupId,
+                        height: 1,
+                        measure: measure,
+                        originIndexes: [originIndex - 1, originIndex],
+                        title: _t('Variation'),
+                        width: 1,
+                    };
+                    if (isSortedByVariation && sortedColumn.originIndexes[1] === originIndex) {
+                        variationCell.order = sortedColumn.order;
+                    }
+                    originRow.push(variationCell);
+                }
+
+            });
+        });
+
+        return originRow;
+    },
+
+    /**
+     * Get the selection needed to display the group by dropdown
+     * @returns {Object[]}
+     * @private
+     */
+    _getSelectionGroupBy: function (groupBys) {
+        let groupedFieldNames = groupBys.rowGroupBys
+            .concat(groupBys.colGroupBys)
+            .map(function (g) {
+                return g.split(':')[0];
+            });
+
+        var fields = Object.keys(this.groupableFields)
+            .map((fieldName, index) => {
+                return {
+                    name: fieldName,
+                    field: this.groupableFields[fieldName],
+                    active: groupedFieldNames.includes(fieldName)
+                }
+            })
+            .sort((left, right) => left.field.string < right.field.string ? -1 : 1);
+        return fields;
+    },
+
+    /**
+     * Returns a description of the pivot table.
+     *
+     * @private
+     * @returns {Object}
+     */
+    _getTable: function () {
+        var headers = this._getTableHeaders();
+        return {
+            headers: headers,
+            rows: this._getTableRows(this.rowGroupTree, headers[headers.length - 1]),
+        };
     },
     /**
-     * @returns {Deferred}
+     * Returns the list of header rows of the pivot table: the col group rows
+     * (depending on the col groupbys), the measures row and optionnaly the
+     * origins row (if there are more than one origins).
+     *
+     * @private
+     * @returns {Object[]}
+     */
+    _getTableHeaders: function () {
+        var colGroupBys = this._getGroupBys().colGroupBys;
+        var height = colGroupBys.length + 1;
+        var measureCount = this.data.measures.length;
+        var originCount = this.data.origins.length;
+        var leafCounts = this._getLeafCounts(this.colGroupTree);
+        var headers = [];
+        var measureColumns = []; // used to generate the measure cells
+
+        // 1) generate col group rows (total row + one row for each col groupby)
+        var colGroupRows = (new Array(height)).fill(0).map(function () {
+            return [];
+        });
+        // blank top left cell
+        colGroupRows[0].push({
+            height: height + 1 + (originCount > 1 ? 1 : 0), // + measures rows [+ origins row]
+            title: "",
+            width: 1,
+        });
+
+        // col groupby cells with group values
+        /**
+         * Recursive function that generates the header cells corresponding to
+         * the groups of a given tree.
+         *
+         * @param {Object} tree
+         */
+        function generateTreeHeaders(tree, fields) {
+            var group = tree.root;
+            var rowIndex = group.values.length;
+            var row = colGroupRows[rowIndex];
+            var groupId = [[], group.values];
+            var isLeaf = !tree.directSubTrees.size;
+            var leafCount = leafCounts[JSON.stringify(tree.root.values)];
+            var cell = {
+                groupId: groupId,
+                height: isLeaf ? (colGroupBys.length + 1 - rowIndex) : 1,
+                isLeaf: isLeaf,
+                label: rowIndex === 0 ? undefined : fields[colGroupBys[rowIndex - 1].split(':')[0]].string,
+                title: group.labels[group.labels.length - 1] || _t('Total'),
+                width: leafCount * measureCount * (2 * originCount - 1),
+            };
+            row.push(cell);
+            if (isLeaf) {
+                measureColumns.push(cell);
+            }
+
+            [...tree.directSubTrees.values()].forEach(function (subTree) {
+                generateTreeHeaders(subTree, fields);
+            });
+        }
+
+        generateTreeHeaders(this.colGroupTree, this.fields);
+        // blank top right cell for 'Total' group (if there is more that one leaf)
+        if (leafCounts[JSON.stringify(this.colGroupTree.root.values)] > 1) {
+            var groupId = [[], []];
+            var totalTopRightCell = {
+                groupId: groupId,
+                height: height,
+                title: "",
+                width: measureCount * (2 * originCount - 1),
+            };
+            colGroupRows[0].push(totalTopRightCell);
+            measureColumns.push(totalTopRightCell);
+        }
+        headers = headers.concat(colGroupRows);
+
+        // 2) generate measures row
+        var measuresRow = this._getMeasuresRow(measureColumns);
+        headers.push(measuresRow);
+
+        // 3) generate origins row if more than one origin
+        if (originCount > 1) {
+            headers.push(this._getOriginsRow(measuresRow));
+        }
+
+        return headers;
+    },
+    /**
+     * Returns the list of body rows of the pivot table for a given tree.
+     *
+     * @private
+     * @param {Object} tree
+     * @param {Object[]} columns
+     * @returns {Object[]}
+     */
+    _getTableRows: function (tree, columns) {
+        var self = this;
+
+        var rows = [];
+        var group = tree.root;
+        var rowGroupId = [group.values, []];
+        var title = group.labels[group.labels.length - 1] || _t('Total');
+        var indent = group.labels.length;
+        var isLeaf = !tree.directSubTrees.size;
+        var rowGroupBys = this._getGroupBys().rowGroupBys;
+
+        var subGroupMeasurements = columns.map(function (column) {
+            var colGroupId = column.groupId;
+            var groupIntersectionId = [rowGroupId[0], colGroupId[1]];
+            var measure = column.measure;
+            var originIndexes = column.originIndexes || [0];
+
+            var value = self._getCellValue(groupIntersectionId, measure, originIndexes);
+
+            var measurement = {
+                groupId: groupIntersectionId,
+                originIndexes: originIndexes,
+                measure: measure,
+                value: value,
+                isBold: !groupIntersectionId[0].length || !groupIntersectionId[1].length,
+            };
+            return measurement;
+        });
+
+        rows.push({
+            title: title,
+            label: indent === 0 ? undefined : this.fields[rowGroupBys[indent - 1].split(':')[0]].string,
+            groupId: rowGroupId,
+            indent: indent,
+            isLeaf: isLeaf,
+            subGroupMeasurements: subGroupMeasurements
+        });
+
+        var subTreeKeys = tree.sortedKeys || [...tree.directSubTrees.keys()];
+        subTreeKeys.forEach(function (subTreeKey) {
+            var subTree = tree.directSubTrees.get(subTreeKey);
+            rows = rows.concat(self._getTableRows(subTree, columns));
+        });
+
+        return rows;
+    },
+    /**
+     * returns the height of a given groupTree
+     *
+     * @private
+     * @param  {Object} tree, a groupTree
+     * @returns {number}
+     */
+    _getTreeHeight: function (tree) {
+        var subTreeHeights = [...tree.directSubTrees.values()].map(this._getTreeHeight.bind(this));
+        return Math.max(0, Math.max.apply(null, subTreeHeights)) + 1;
+    },
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    _hasData: function () {
+        return (this.counts[JSON.stringify([[], []])] || []).some(function (count) {
+            return count > 0;
+        });
+    },
+    /**
+     * Initilize/Reinitialize this.rowGroupTree, colGroupTree, measurements,
+     * counts and subdivide the group 'Total' as many times it is necessary.
+     * A first subdivision with no groupBy (divisors.slice(0, 1)) is made in
+     * order to see if there is data in the intersection of the group 'Total'
+     * and the various origins. In case there is none, nonsupplementary rpc
+     * will be done (see the code of subdivideGroup).
+     * Once the promise resolves, this.rowGroupTree, colGroupTree,
+     * measurements, counts are correctly set.
+     *
+     * @private
+     * @return {Promise}
      */
     _loadData: function () {
         var self = this;
-        var groupBys = [];
-        var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
-        var colGroupBys = this.data.colGroupBys;
-        var fields = [].concat(rowGroupBys, colGroupBys, this.data.measures);
 
-        for (var i = 0; i < rowGroupBys.length + 1; i++) {
-            for (var j = 0; j < colGroupBys.length + 1; j++) {
-                groupBys.push(rowGroupBys.slice(0,i).concat(colGroupBys.slice(0,j)));
-            }
-        }
+        this.rowGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
+        this.colGroupTree = { root: { labels: [], values: [] }, directSubTrees: new Map() };
+        this.measurements = {};
+        this.counts = {};
 
-        return $.when.apply(null, groupBys.map(function (groupBy) {
-            return self._rpc({
-                    model: self.modelName,
-                    method: 'read_group',
-                    context: self.data.context,
-                    domain: self.data.domain,
-                    fields: _.map(fields, function (field) { return field.split(':')[0]; }),
-                    groupBy: groupBy,
-                    lazy: false,
-                });
-        })).then(function () {
-            var data = Array.prototype.slice.call(arguments);
-            if (data[0][0].__count === 0) {
-                self.data.has_data = false;
-                return;
-            }
-            self._prepareData(data);
+        var key = JSON.stringify([[], []]);
+        this.groupDomains = {};
+        this.groupDomains[key] = this.data.domains.slice(0);
+
+
+        var group = { rowValues: [], colValues: [] };
+        var groupBys = this._getGroupBys();
+        var leftDivisors = sections(groupBys.rowGroupBys);
+        var rightDivisors = sections(groupBys.colGroupBys);
+        var divisors = cartesian(leftDivisors, rightDivisors);
+
+        return this._subdivideGroup(group, divisors.slice(0, 1)).then(function () {
+            return self._subdivideGroup(group, divisors.slice(1));
         });
     },
     /**
-     * @param {any} value
-     * @param {any} domain
-     * @param {any} root
-     * @param {any} i
-     * @param {any} j
-     * @param {any} parent_header
-     * @returns {Object}
+     * Extract the information in the read_group results (groupSubdivisions)
+     * and develop this.rowGroupTree, colGroupTree, measurements, counts, and
+     * groupDomains.
+     * If a column needs to be sorted, the rowGroupTree corresponding to the
+     * group is sorted.
+     *
+     * @private
+     * @param  {Object} group
+     * @param  {Object[]} groupSubdivisions
      */
-    _makeHeader: function (value, domain, root, i, j, parent_header) {
-        var total = _t("Total");
-        var title = value.length ? value[value.length - 1] : total;
-        var path, parent;
-        if (parent_header) {
-            path = parent_header.path.concat(title);
-            parent = parent_header;
-        } else {
-            path = [total].concat(value.slice(i,j-1));
-            parent = value.length ? this._findPathInTree(root, path) : null;
-        }
-        var header = {
-            id: utils.generateID(),
-            expanded: false,
-            domain: domain || [],
-            children: [],
-            path: value.length ? parent.path.concat(title) : [title]
-        };
-        this.data.headers[header.id] = header;
-        header.root = root || header;
-        if (parent) {
-            parent.children.push(header);
-            parent.expanded = true;
-        }
-        return header;
-    },
-    /**
-     * @param {Object} data
-     */
-    _prepareData: function (data) {
+    _prepareData: function (group, groupSubdivisions) {
         var self = this;
-        _.extend(self.data, {
-            main_row: {},
-            main_col: {},
-            headers: {},
-            cells: [],
-        });
 
-        var index = 0;
-        var rowGroupBys = this.data.groupedBy.length ? this.data.groupedBy : this.initialRowGroupBys;
-        var colGroupBys = this.data.colGroupBys;
-        var datapt, row, col, attrs, cell_value;
-        var main_row_header, main_col_header;
-        var groupBys;
-        var m;
-
-
-        for (var i = 0; i < rowGroupBys.length + 1; i++) {
-            for (var j = 0; j < colGroupBys.length + 1; j++) {
-                for (var k = 0; k < data[index].length; k++) {
-                    datapt = data[index][k];
-                    groupBys = rowGroupBys.slice(0,i).concat(colGroupBys.slice(0,j));
-                    attrs = {
-                        value: self._getValue(datapt, groupBys),
-                        domain: datapt.__domain || [],
-                        length: datapt.__count,
-                    };
-
-                    if (j === 0) {
-                        row = this._makeHeader(attrs.value, attrs.domain, main_row_header, 0, i);
-                    } else {
-                        row = this._getHeader(attrs.value, main_row_header, 0, i);
-                    }
-                    if (i === 0) {
-                        col = this._makeHeader(attrs.value, attrs.domain, main_col_header, i, i+j);
-                    } else {
-                        col = this._getHeader(attrs.value, main_col_header, i, i+j);
-                    }
-                    if (i + j === 0) {
-                        this.data.has_data = attrs.length > 0;
-                        main_row_header = row;
-                        main_col_header = col;
-                    }
-                    if (!this.data.cells[row.id]) this.data.cells[row.id] = [];
-                    for (cell_value = {}, m=0; m < this.data.measures.length; m++) {
-                        cell_value[this.data.measures[m]] = datapt[this.data.measures[m]];
-                    }
-                    this.data.cells[row.id][col.id] = cell_value;
-                }
-                index++;
-            }
+        var groupRowValues = group.rowValues;
+        var groupRowLabels = [];
+        var rowSubTree = this.rowGroupTree;
+        var root;
+        if (groupRowValues.length) {
+            // we should have labels information on hand! regretful!
+            rowSubTree = this._findGroup(this.rowGroupTree, groupRowValues);
+            root = rowSubTree.root;
+            groupRowLabels = root.labels;
         }
 
-        this.data.main_row.groupbys = rowGroupBys;
-        this.data.main_col.groupbys = colGroupBys;
+        var groupColValues = group.colValues;
+        var groupColLabels = [];
+        if (groupColValues.length) {
+            root = this._findGroup(this.colGroupTree, groupColValues).root;
+            groupColLabels = root.labels;
+        }
 
-        main_row_header.other_root = main_col_header;
-        main_col_header.other_root = main_row_header;
+        groupSubdivisions.forEach(function (groupSubdivision) {
+            groupSubdivision.subGroups.forEach(function (subGroup) {
 
-        main_row_header.groupbys = rowGroupBys;
-        main_col_header.groupbys = colGroupBys;
+                var rowValues = groupRowValues.concat(self._getGroupValues(subGroup, groupSubdivision.rowGroupBy));
+                var rowLabels = groupRowLabels.concat(self._getGroupLabels(subGroup, groupSubdivision.rowGroupBy));
 
-        this.data.main_row.root = main_row_header;
-        this.data.main_col.root = main_col_header;
+                var colValues = groupColValues.concat(self._getGroupValues(subGroup, groupSubdivision.colGroupBy));
+                var colLabels = groupColLabels.concat(self._getGroupLabels(subGroup, groupSubdivision.colGroupBy));
+
+                if (!colValues.length && rowValues.length) {
+                    self._addGroup(self.rowGroupTree, rowLabels, rowValues);
+                }
+                if (colValues.length && !rowValues.length) {
+                    self._addGroup(self.colGroupTree, colLabels, colValues);
+                }
+
+                var key = JSON.stringify([rowValues, colValues]);
+                var originIndex = groupSubdivision.group.originIndex;
+
+                if (!(key in self.measurements)) {
+                    self.measurements[key] = self.data.origins.map(function () {
+                        return self._getMeasurements({});
+                    });
+                }
+                self.measurements[key][originIndex] = self._getMeasurements(subGroup);
+
+                if (!(key in self.counts)) {
+                    self.counts[key] = self.data.origins.map(function () {
+                        return 0;
+                    });
+                }
+                self.counts[key][originIndex] = subGroup.__count;
+
+                if (!(key in self.groupDomains)) {
+                    self.groupDomains[key] = self.data.origins.map(function () {
+                        return Domain.FALSE_DOMAIN;
+                    });
+                }
+                // if __domain is not defined this means that we are in the
+                // case where
+                // groupSubdivision.rowGroupBy = groupSubdivision.rowGroupBy = []
+                if (subGroup.__domain) {
+                    self.groupDomains[key][originIndex] = subGroup.__domain;
+                }
+            });
+        });
+
+        if (this.data.sortedColumn) {
+            this.sortRows(this.data.sortedColumn, rowSubTree);
+        }
     },
     /**
      * In the preview implementation of the pivot view (a.k.a. version 2),
@@ -667,8 +1378,9 @@ var PivotModel = AbstractModel.extend({
      * This function replaces in the given array of measures occurences of
      * '__count__' by '__count'.
      *
+     * @private
      * @param {Array[string] || undefined} measures
-     * @return {Array[string] || undefined}
+     * @returns {Array[string] || undefined}
      */
     _processMeasures: function (measures) {
         if (measures) {
@@ -678,69 +1390,141 @@ var PivotModel = AbstractModel.extend({
         }
     },
     /**
-     * Format a value to a usable string, for the renderer to display.
+     * Determine this.data.domains and this.data.origins from
+     * this.data.domain and this.data.timeRanges;
      *
-     * @param {any} value
-     * @param {any} field
+     * @private
+     */
+    _computeDerivedParams: function () {
+        const { range, rangeDescription, comparisonRange, comparisonRangeDescription } = this.data.timeRanges;
+        if (range) {
+            this.data.domains = [this.data.domain.concat(range)];
+            this.data.origins = [rangeDescription];
+            if (comparisonRange) {
+                this.data.domains.push(this.data.domain.concat(comparisonRange));
+                this.data.origins.push(comparisonRangeDescription);
+            }
+        } else {
+            this.data.domains = [this.data.domain];
+            this.data.origins = [""];
+        }
+    },
+    /**
+     * Make any group in tree a leaf if it was a leaf in oldTree.
+     *
+     * @private
+     * @param {Object} tree
+     * @param {Object} oldTree
+     */
+    _pruneTree: function (tree, oldTree) {
+        if (!oldTree.directSubTrees.size) {
+            tree.directSubTrees.clear();
+            delete tree.sortedKeys;
+            return;
+        }
+        var self = this;
+        [...tree.directSubTrees.keys()].forEach(function (subTreeKey) {
+            var subTree = tree.directSubTrees.get(subTreeKey);
+            if (!oldTree.directSubTrees.has(subTreeKey)) {
+                subTree.directSubTrees.clear();
+                delete subTreeKey.sortedKeys;
+            } else {
+                var oldSubTree = oldTree.directSubTrees.get(subTreeKey);
+                self._pruneTree(subTree, oldSubTree);
+            }
+        });
+    },
+    /**
+     * Extract from a groupBy value a label.
+     *
+     * @private
+     * @param  {any} value
+     * @param  {string} groupBy
      * @returns {string}
      */
-    _sanitizeValue: function (value, field) {
+    _sanitizeLabel: function (value, groupBy) {
+        var fieldName = groupBy.split(':')[0];
         if (value === false) {
             return _t("Undefined");
         }
         if (value instanceof Array) {
-            return this._getNumberedValue(value, field);
+            return this._getNumberedLabel(value, fieldName);
         }
-        if (field && this.fields[field] && (this.fields[field].type === 'selection')) {
-            var selected = _.where(this.fields[field].selection, {0: value})[0];
+        if (fieldName && this.fields[fieldName] && (this.fields[fieldName].type === 'selection')) {
+            var selected = _.where(this.fields[fieldName].selection, { 0: value })[0];
             return selected ? selected[1] : value;
         }
         return value;
     },
     /**
-     * @private @static
-     * @param {any} root
-     * @param {any} f
-     * @param {any} arg1
-     * @param {any} arg2
-     * @param {any} arg3
-     * @returns
+     * Extract from a groupBy value the raw value of that groupBy (discarding
+     * a label if any)
+     *
+     * @private
+     * @param {any} value
+     * @returns {any}
      */
-    _traverseTree: function (root, f, arg1, arg2, arg3) {
-        f(root, arg1, arg2, arg3);
-        if (!root.expanded) return;
-        for (var i = 0; i < root.children.length; i++) {
-            this._traverseTree(root.children[i], f, arg1, arg2, arg3);
+    _sanitizeValue: function (value) {
+        if (value instanceof Array) {
+            return value[0];
         }
+        return value;
     },
     /**
-     * @param {Object} old_tree
-     * @param {Object} new_tree
+     * Get all partitions of a given group using the provided list of divisors
+     * and enrich the objects of this.rowGroupTree, colGroupTree,
+     * measurements, counts.
+     *
+     * @private
+     * @param {Object} group
+     * @param {Array[]} divisors
+     * @returns
      */
-    _updateTree: function (old_tree, new_tree) {
-        if (!old_tree.expanded) {
-            new_tree.expanded = false;
-            new_tree.children = [];
-            return;
-        }
-        var tree, j, old_title, new_title;
-        for (var i = 0; i < new_tree.children.length; i++) {
-            tree = undefined;
-            new_title = new_tree.children[i].path[new_tree.children[i].path.length - 1];
-            for (j = 0; j < old_tree.children.length; j++) {
-                old_title = old_tree.children[j].path[old_tree.children[j].path.length - 1];
-                if (old_title === new_title) {
-                    tree = old_tree.children[j];
-                    break;
+    _subdivideGroup: function (group, divisors) {
+        var self = this;
+
+        var key = JSON.stringify([group.rowValues, group.colValues]);
+
+        var proms = this.data.origins.reduce(
+            function (acc, origin, originIndex) {
+                // if no information on group content is available, we fetch data.
+                // if group is known to be empty for the given origin,
+                // we don't need to fetch data fot that origin.
+                if (!self.counts[key] || self.counts[key][originIndex] > 0) {
+                    var subGroup = {
+                        rowValues: group.rowValues,
+                        colValues: group.colValues,
+                        originIndex: originIndex
+                    };
+                    divisors.forEach(function (divisor) {
+                        acc.push(self._getGroupSubdivision(subGroup, divisor[0], divisor[1]));
+                    });
                 }
+                return acc;
+            },
+            []
+        );
+        return this._loadDataDropPrevious.add(Promise.all(proms)).then(function (groupSubdivisions) {
+            if (groupSubdivisions.length) {
+                self._prepareData(group, groupSubdivisions);
             }
-            if (tree) {
-                this._updateTree(tree, new_tree.children[i]);
-            } else {
-                new_tree.children[i].expanded = false;
-                new_tree.children[i].children = [];
-            }
-        }
+        });
+    },
+    /**
+     * Sort recursively the subTrees of tree using sortFunction.
+     * In the end each node of the tree has its direct children sorted
+     * according to the criterion reprensented by sortFunction.
+     *
+     * @private
+     * @param  {Function} sortFunction
+     * @param  {Object} tree
+     */
+    _sortTree: function (sortFunction, tree) {
+        var self = this;
+        tree.sortedKeys = _.sortBy([...tree.directSubTrees.keys()], sortFunction(tree));
+        [...tree.directSubTrees.values()].forEach(function (subTree) {
+            self._sortTree(sortFunction, subTree);
+        });
     },
 });
 

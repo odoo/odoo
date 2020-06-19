@@ -1,6 +1,17 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <rng:grammar xmlns:rng="http://relaxng.org/ns/structure/1.0"
         datatypeLibrary="http://www.w3.org/2001/XMLSchema-datatypes">
+    <rng:define name="env">
+        <rng:optional><rng:attribute name="uid" /></rng:optional>
+        <rng:optional><rng:attribute name="context" /></rng:optional>
+    </rng:define>
+
+    <rng:define name="views">
+        <rng:data type="string">
+            <rng:param name="pattern">([a-z]+(,[a-z]+)*)?</rng:param>
+        </rng:data>
+    </rng:define>
+
     <rng:define name="any">
         <rng:element>
             <rng:anyName/>
@@ -18,6 +29,7 @@
 
     <rng:define name="value">
         <rng:element name="value">
+            <rng:optional><rng:attribute name="name" /></rng:optional>
             <rng:optional><rng:attribute name="model" /></rng:optional>
             <rng:choice>
                 <rng:attribute name="search" />
@@ -30,6 +42,7 @@
                     </rng:choice>
                 </rng:group>
             </rng:choice>
+            <rng:optional><rng:attribute name="use" /></rng:optional>
         </rng:element>
     </rng:define>
 
@@ -37,9 +50,7 @@
         <rng:element name="function">
             <rng:attribute name="model" />
             <rng:attribute name="name" />
-            <!-- doesn't look like it has any use? -->
-            <rng:optional><rng:attribute name="id" /></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:ref name="env"/>
             <rng:optional>
                 <rng:choice>
                     <rng:attribute name="eval" />
@@ -163,7 +174,7 @@
                 </rng:optional>
             </rng:optional>
             <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="context"/></rng:optional>
+            <rng:ref name="env"/>
             <rng:zeroOrMore>
                 <rng:ref name="field" />
             </rng:zeroOrMore>
@@ -180,6 +191,7 @@
             <rng:optional><rng:attribute name="priority"/></rng:optional>
             <rng:optional><rng:attribute name="key"/></rng:optional>
             <rng:optional><rng:attribute name="website_id"/></rng:optional>
+            <rng:optional><rng:attribute name="track"/></rng:optional>
             <rng:group>
                 <rng:optional>
                     <rng:attribute name="inherit_id"/>
@@ -232,65 +244,35 @@
         </rng:element>
     </rng:define>
 
-    <!-- TODO: remove these, useless -->
-
-    <rng:define name="assert">
-        <rng:element name="assert">
-            <rng:attribute name="model" />
-            <rng:optional><rng:attribute name="search" /></rng:optional>
-            <rng:optional><rng:attribute name="count" /></rng:optional>
-            <rng:optional><rng:attribute name="string" /></rng:optional>
-            <rng:optional><rng:attribute name="id" /></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
-            <rng:optional><rng:attribute name="severity" /></rng:optional>
-            <rng:zeroOrMore>
-                <rng:element name="test">
-                    <rng:attribute name="expr"/>
-                    <rng:choice>
-                        <rng:text />
-                        <rng:empty />
-                    </rng:choice>
-                </rng:element>
-            </rng:zeroOrMore>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="ir_set">
-        <rng:element name="ir_set">
-            <rng:oneOrMore>
-                <rng:ref name="field" />
-            </rng:oneOrMore>
-        </rng:element>
-    </rng:define>
-
-    <rng:define name="url">
-        <rng:element name="url">
-            <rng:attribute name="id" />
-            <rng:attribute name="name" />
-            <rng:attribute name="url" />
-            <rng:optional><rng:attribute name="target" /></rng:optional>
-            <rng:empty />
-        </rng:element>
-    </rng:define>
-
     <rng:define name="act_window">
         <rng:element name="act_window">
             <rng:attribute name="id" />
             <rng:attribute name="name" />
             <rng:attribute name="res_model" />
             <rng:optional><rng:attribute name="domain" /> </rng:optional>
-            <rng:optional><rng:attribute name="src_model" /></rng:optional>
             <rng:optional><rng:attribute name="context" /></rng:optional>
             <rng:optional> <rng:attribute name="view_id"/> </rng:optional>
-            <rng:optional> <rng:attribute name="view_type"/> </rng:optional>
             <rng:optional> <rng:attribute name="view_mode"/> </rng:optional>
-            <rng:optional> <rng:attribute name="multi"/> </rng:optional>
             <rng:optional> <rng:attribute name="target"/> </rng:optional>
-            <rng:optional> <rng:attribute name="key2"/> </rng:optional>
             <rng:optional> <rng:attribute name="groups"/> </rng:optional>
             <rng:optional> <rng:attribute name="limit"/> </rng:optional>
             <rng:optional> <rng:attribute name="usage"/> </rng:optional>
-            <rng:optional> <rng:attribute name="auto_refresh"/> </rng:optional>
+            <rng:optional>
+                <rng:attribute name="binding_model"/>
+                <rng:optional>
+                    <rng:attribute name="binding_type">
+                        <rng:choice>
+                            <rng:value>action</rng:value>
+                            <rng:value>report</rng:value>
+                        </rng:choice>
+                    </rng:attribute>
+                </rng:optional>
+                <rng:optional>
+                    <rng:attribute name="binding_views">
+                        <rng:ref name="views"/>
+                    </rng:attribute>
+                </rng:optional>
+            </rng:optional>
             <rng:empty />
         </rng:element>
     </rng:define>
@@ -303,7 +285,7 @@
                 <rng:name>data</rng:name>
             </rng:choice>
             <rng:optional><rng:attribute name="noupdate" /></rng:optional>
-            <rng:optional><rng:attribute name="context" /></rng:optional>
+            <rng:ref name="env"/>
             <rng:zeroOrMore>
                 <rng:choice>
                     <rng:text/>
@@ -313,11 +295,8 @@
                     <rng:ref name="template" />
                     <rng:ref name="delete" />
                     <rng:ref name="act_window" />
-                    <rng:ref name="url" />
-                    <rng:ref name="assert" />
                     <rng:ref name="report" />
                     <rng:ref name="function" />
-                    <rng:ref name="ir_set" />
                 </rng:choice>
             </rng:zeroOrMore>
         </rng:element>

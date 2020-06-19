@@ -7,7 +7,7 @@
     'name': 'Worldline SIPS',
     'version': '1.0',
     'author': 'Eezee-It',
-    'category': 'Accounting',
+    'category': 'Accounting/Payment Acquirers',
     'description': """
 Worldline SIPS Payment Acquirer for online payments
 
@@ -20,4 +20,7 @@ payments acquirer using Worldline SIPS.""",
         'data/payment_acquirer_data.xml',
     ],
     'installable': True,
+    'application': True,
+    'post_init_hook': 'create_missing_journal_for_acquirers',
+    'uninstall_hook': 'uninstall_hook',
 }

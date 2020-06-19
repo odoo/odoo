@@ -19,7 +19,7 @@
                         <div style="vertical-align: top;">
                             by <field name="author_id" class="oe_inline" string="User"/> on <field name="date" readonly="1" class="oe_inline"/>
                             <button name="%(action_email_compose_message_wizard)d" string="Reply" type="action" icon="fa-reply text-warning"
-                                context="{'default_composition_mode':'reply', 'default_parent_id': mail_message_id}" states='received,sent,exception,cancel'/>
+                                context="{'default_composition_mode':'comment', 'default_parent_id': mail_message_id}" states='received,sent,exception,cancel'/>
                         </div>
                         <group>
                             <field name="email_from"/>
@@ -30,10 +30,10 @@
                             <field name="scheduled_date"/>
                         </group>
                         <notebook>
-                            <page string="Body">
+                            <page string="Body" name="body">
                                 <field name="body_html" widget="html" options="{'style-inline': true}"/>
                             </page>
-                            <page string="Advanced" groups="base.group_no_one">
+                            <page string="Advanced" name="advanced" groups="base.group_no_one">
                                 <group>
                                     <group string="Status">
                                         <field name="auto_delete"/>
@@ -50,10 +50,10 @@
                                     </group>
                                 </group>
                             </page>
-                            <page string="Attachments">
+                            <page string="Attachments" name="attachments">
                                 <field name="attachment_ids"/>
                             </page>
-                            <page string="Failure Reason" attrs="{'invisible': [('state', '!=', 'exception')]}">
+                            <page string="Failure Reason" name="failure_reason" attrs="{'invisible': [('state', '!=', 'exception')]}">
                                 <field name="failure_reason"/>
                             </page>
                         </notebook>
@@ -77,9 +77,9 @@
                     <field name="email_from" invisible="1"/>
                     <field name="state" invisible="1"/>
                     <field name="message_type" invisible="1"/>
-                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane text-success" states='outgoing'/>
-                    <button name="mark_outgoing" string="Retry" type="object" icon="fa-repeat text-success" states='exception,cancel'/>
-                    <button name="cancel" string="Cancel Email" type="object" icon="fa-times-circle text-danger" states='outgoing'/>
+                    <button name="send" string="Send Now" type="object" icon="fa-paper-plane" states='outgoing'/>
+                    <button name="mark_outgoing" string="Retry" type="object" icon="fa-repeat" states='exception,cancel'/>
+                    <button name="cancel" string="Cancel Email" type="object" icon="fa-times-circle" states='outgoing'/>
                 </tree>
             </field>
         </record>
@@ -109,7 +109,7 @@
                         <filter string="Status" name="status" domain="[]" context="{'group_by':'state'}"/>
                         <filter string="Author" name="author" context="{'group_by':'author_id'}"/>
                         <filter string="Thread" name="thread" domain="[]" context="{'group_by':'message_id'}"/>
-                        <filter string="Month" name="month" help="Creation Month" domain="[]" context="{'group_by':'date'}"/>
+                        <filter string="Date" name="month" help="Creation Date" domain="[]" context="{'group_by':'date'}"/>
                     </group>
                 </search>
             </field>
@@ -118,13 +118,16 @@
         <record id="action_view_mail_mail" model="ir.actions.act_window">
             <field name="name">Emails</field>
             <field name="res_model">mail.mail</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
             <field name="search_view_id" ref="view_mail_search"/>
         </record>
 
         <!-- Add menu entry in Settings/Email -->
-        <menuitem name="Emails" id="menu_mail_mail" parent="base.menu_email" action="action_view_mail_mail" />
+        <menuitem name="Emails"
+            id="menu_mail_mail"
+            parent="base.menu_email"
+            action="action_view_mail_mail"
+            sequence="1"/>
     </data>
 </odoo>

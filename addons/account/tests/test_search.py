@@ -1,11 +1,13 @@
-from odoo.addons.account.tests.account_test_users import AccountTestUsers
+from odoo.addons.account.tests.common import AccountTestUsersCommon
+from odoo.tests import tagged
 
 
-class TestSearch(AccountTestUsers):
+@tagged('post_install', '-at_install')
+class TestSearch(AccountTestUsersCommon):
 
     """Tests for search on name_search (account.account)
 
-    The name search on account.account is quite complexe, make sure
+    The name search on account.account is quite complex, make sure
     we have all the correct results
     """
 

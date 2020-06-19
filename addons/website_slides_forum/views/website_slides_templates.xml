@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<odoo><data>
+    <template id='course_main' inherit_id="website_slides.course_main">
+    <!-- Channel (training) main template: add link to forum -->
+    <xpath expr="//li[hasclass('o_wslides_course_header_nav_review_training')]" position="after">
+        <li class="nav-item" t-if="channel.forum_id">
+            <a t-att-href="'/forum/%s' % (slug(channel.forum_id))"
+                t-att-class="'nav-link'" target="new">Forum</a>
+        </li>
+    </xpath>
+    <!-- Channel (documentation) main template: add link to forum -->
+    <xpath expr="//li[hasclass('o_wslides_course_header_nav_review_documentation')]" position="after">
+            <li class="nav-item" t-if="channel.forum_id">
+                <a t-att-href="'/forum/%s' % (slug(channel.forum_id))"
+                    t-att-class="'nav-link'" target="new">Forum</a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="slide_fullscreen" inherit_id="website_slides.slide_fullscreen">
+        <xpath expr="//a[hasclass('o_wslides_fs_review')]" position="after">
+            <a t-if="slide.channel_id.forum_id" id="fullscreen_forum_button" class="d-flex align-items-center px-3" t-attf-href="/forum/#{slug(slide.channel_id.forum_id)}" target="new">
+                <i class="fa fa-comments"/><span class="ml-1 d-none d-md-inline-block">New Post</span>
+            </a>
+        </xpath>
+    </template>
+
+</data></odoo>

@@ -10,19 +10,30 @@ odoo.define('web.ListController', function (require) {
 var core = require('web.core');
 var BasicController = require('web.BasicController');
 var DataExport = require('web.DataExport');
-var pyeval = require('web.pyeval');
-var Sidebar = require('web.Sidebar');
+var Dialog = require('web.Dialog');
+var ListConfirmDialog = require('web.ListConfirmDialog');
+var session = require('web.session');
 
 var _t = core._t;
 var qweb = core.qweb;
 
 var ListController = BasicController.extend({
+    /**
+     * This key contains the name of the buttons template to render on top of
+     * the list view. It can be overridden to add buttons in specific child views.
+     */
+    buttons_template: 'ListView.buttons',
+    events: _.extend({}, BasicController.prototype.events, {
+        'click .o_list_export_xlsx': '_onDirectExportData',
+        'click .o_list_select_domain': '_onSelectDomain',
+    }),
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
+        activate_next_widget: '_onActivateNextWidget',
         add_record: '_onAddRecord',
         button_clicked: '_onButtonClicked',
+        group_edit_button_clicked: '_onEditGroupClicked',
         edit_line: '_onEditLine',
         save_line: '_onSaveLine',
-        resequence: '_onResequence',
         selection_changed: '_onSelectionChanged',
         toggle_column_order: '_onToggleColumnOrder',
         toggle_group: '_onToggleGroup',
@@ -32,51 +43,41 @@ var ListController = BasicController.extend({
      * @override
      * @param {Object} params
      * @param {boolean} params.editable
-     * @param {boolean} params.hasSidebar
+     * @param {boolean} params.hasActionMenus
      * @param {Object} params.toolbarActions
      * @param {boolean} params.noLeaf
      */
     init: function (parent, model, renderer, params) {
         this._super.apply(this, arguments);
-        this.hasSidebar = params.hasSidebar;
+        this.hasActionMenus = params.hasActionMenus;
         this.toolbarActions = params.toolbarActions || {};
         this.editable = params.editable;
         this.noLeaf = params.noLeaf;
-        this.selectedRecords = []; // there is no selected record by default
+        this.selectedRecords = params.selectedRecords || [];
+        this.multipleRecordsSavingPromise = null;
+        this.fieldChangedPrevented = false;
+        this.isPageSelected = false; // true iff all records of the page are selected
+        this.isDomainSelected = false; // true iff the user selected all records matching the domain
+        session.user_has_group('base.group_allow_export').then(has_group => {
+            this.isExportEnable = has_group;
+        });
+        Object.defineProperty(this, 'mode', {
+            get: () => this.renderer.isEditable() ? 'edit' : 'readonly',
+            set: () => {},
+        });
     },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * Calculate the active domain of the list view. This should be done only
-     * if the header checkbox has been checked. This is done by evaluating the
-     * search results, and then adding the dataset domain (i.e. action domain).
-     *
-     * @todo This is done only for the data export.  The full mechanism is wrong,
-     * this method should be private, most of the code in the sidebar should be
-     * moved to the controller, and we should not use the getParent method...
-     *
-     * @returns {Deferred<array[]>} a deferred that resolve to the active domain
+    /*
+     * @override
      */
-    getActiveDomain: function () {
-        // TODO: this method should be synchronous...
-        var self = this;
-        if (this.$('thead .o_list_record_selector input').prop('checked')) {
-            var searchView = this.getParent().searchview; // fixme
-            var searchData = searchView.build_search_data();
-            var userContext = this.getSession().user_context;
-            var results = pyeval.eval_domains_and_contexts({
-                domains: searchData.domains,
-                contexts: [userContext].concat(searchData.contexts),
-                group_by_seq: searchData.groupbys || []
-            });
-            var record = self.model.get(self.handle, {raw: true});
-            return $.when(record.getDomain().concat(results.domain || []));
-        } else {
-            return $.Deferred().resolve();
-        }
+    getOwnedQueryParams: function () {
+        var state = this._super.apply(this, arguments);
+        var orderedBy = this.model.get(this.handle, {raw: true}).orderedBy || [];
+        return _.extend({}, state, {orderedBy: orderedBy});
     },
     /**
      * Returns the list of currently selected res_ids (with the check boxes on
@@ -111,57 +112,72 @@ var ListController = BasicController.extend({
      * induce the leaving of the current row.
      *
      * @override
-     * @param {jQuery} $node
      */
     renderButtons: function ($node) {
-        if (!this.noLeaf && this.hasButtons) {
-            this.$buttons = $(qweb.render('ListView.buttons', {widget: this}));
+        if (this.noLeaf || !this.hasButtons) {
+            this.hasButtons = false;
+            this.$buttons = $('<div>');
+        } else {
+            this.$buttons = $(qweb.render(this.buttons_template, {widget: this}));
             this.$buttons.on('click', '.o_list_button_add', this._onCreateRecord.bind(this));
+            this._assignCreateKeyboardBehavior(this.$buttons.find('.o_list_button_add'));
+            this.$buttons.find('.o_list_button_add').tooltip({
+                delay: {show: 200, hide: 0},
+                title: function () {
+                    return qweb.render('CreateButton.tooltip');
+                },
+                trigger: 'manual',
+            });
+            this.$buttons.on('mousedown', '.o_list_button_discard', this._onDiscardMousedown.bind(this));
             this.$buttons.on('click', '.o_list_button_discard', this._onDiscard.bind(this));
+        }
+        if ($node) {
             this.$buttons.appendTo($node);
         }
     },
     /**
-     * Render the sidebar (the 'action' menu in the control panel, right of the
-     * main buttons)
+     * Overrides to update the list of selected records
      *
-     * @param {jQuery Node} $node
+     * @override
      */
-    renderSidebar: function ($node) {
-        if (this.hasSidebar && !this.sidebar) {
-            var other = [{
-                label: _t("Export"),
-                callback: this._onExportData.bind(this)
-            }];
-            if (this.archiveEnabled) {
-                other.push({
-                    label: _t("Archive"),
-                    callback: this._onToggleArchiveState.bind(this, true)
-                });
-                other.push({
-                    label: _t("Unarchive"),
-                    callback: this._onToggleArchiveState.bind(this, false)
-                });
-            }
-            if (this.is_action_enabled('delete')) {
-                other.push({
-                    label: _t('Delete'),
-                    callback: this._onDeleteSelectedRecords.bind(this)
-                });
-            this.sidebar = new Sidebar(this, {
-                editable: this.is_action_enabled('edit'),
-                env: {
-                    context: this.model.get(this.handle, {raw: true}).getContext(),
-                    activeIds: this.getSelectedIds(),
-                    model: this.modelName,
-                },
-                actions: _.extend(this.toolbarActions, {other: other}),
+    update: function (params, options) {
+        var self = this;
+        let res_ids;
+        if (options && options.keepSelection) {
+            // filter out removed records from selection
+            res_ids = this.model.get(this.handle).res_ids;
+            this.selectedRecords = _.filter(this.selectedRecords, function (id) {
+                return _.contains(res_ids, self.model.get(id).res_id);
             });
-            }
-            this.sidebar.appendTo($node);
-
-            this._toggleSidebar();
+        } else {
+            this.selectedRecords = [];
         }
+        if (this.selectedRecords.length === 0 || this.selectedRecords.length < res_ids.length) {
+            this.isDomainSelected = false;
+            this.isPageSelected = false;
+        }
+
+        params.selectedRecords = this.selectedRecords;
+        return this._super.apply(this, arguments);
+    },
+    /**
+     * This helper simply makes sure that the control panel buttons matches the
+     * current mode.
+     *
+     * @override
+     * @param {string} mode either 'readonly' or 'edit'
+     */
+    updateButtons: function (mode) {
+        if (this.hasButtons) {
+            this.$buttons.toggleClass('o-editing', mode === 'edit');
+            const state = this.model.get(this.handle, {raw: true});
+            if (state.count) {
+                this.$('.o_list_export_xlsx').show();
+            } else {
+                this.$('.o_list_export_xlsx').hide();
+            }
+        }
+        this._updateSelectionBox();
     },
 
     //--------------------------------------------------------------------------
@@ -182,45 +198,62 @@ var ListController = BasicController.extend({
         if ((recordID || this.handle) !== this.handle) {
             var state = this.model.get(this.handle);
             this.renderer.removeLine(state, recordID);
-            this._updatePager();
+            this._updatePaging(state);
         }
     },
     /**
-     * Adds a record to the list.
+     * Adds a new record to the a dataPoint of type 'list'.
      * Disables the buttons to prevent concurrent record creation or edition.
      *
      * @todo make record creation a basic controller feature
      * @private
+     * @param {string} dataPointId a dataPoint of type 'list' (may be grouped)
+     * @return {Promise}
      */
-    _addRecord: function () {
+    _addRecord: function (dataPointId) {
         var self = this;
         this._disableButtons();
         return this.renderer.unselectRow().then(function () {
-            return self.model.addDefaultRecord(self.handle, {
+            return self.model.addDefaultRecord(dataPointId, {
                 position: self.editable,
             });
         }).then(function (recordID) {
             var state = self.model.get(self.handle);
-            self.renderer.updateState(state, {});
-            self.renderer.editRecord(recordID);
-            self._updatePager();
-        }).always(this._enableButtons.bind(this));
+            self.renderer.updateState(state, {keepWidths: true})
+                .then(function () {
+                    self.renderer.editRecord(recordID);
+                })
+                .then(() => {
+                    self._updatePaging(state);
+                });
+        }).then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
     },
     /**
-     * Archive the current selection
+     * Assign on the buttons create additionnal behavior to facilitate the work of the users doing input only using the keyboard
      *
-     * @private
-     * @param {string[]} ids
-     * @param {boolean} archive
-     * @returns {Deferred}
+     * @param {jQueryElement} $createButton  The create button itself
      */
-    _archive: function (ids, archive) {
-        if (ids.length === 0) {
-            return $.when();
-        }
-        return this.model
-            .toggleActive(ids, !archive, this.handle)
-            .then(this.update.bind(this, {}, {reload: false}));
+    _assignCreateKeyboardBehavior: function($createButton) {
+        var self = this;
+        $createButton.on('keydown', function(e) {
+            $createButton.tooltip('hide');
+            switch(e.which) {
+                case $.ui.keyCode.ENTER:
+                    e.preventDefault();
+                    self._onCreateRecord.apply(self);
+                    break;
+                case $.ui.keyCode.DOWN:
+                    e.preventDefault();
+                    self.renderer.giveFocus();
+                    break;
+                case $.ui.keyCode.TAB:
+                    if (!e.shiftKey && e.target.classList.contains("btn-primary")) {
+                        e.preventDefault();
+                        $createButton.tooltip('show');
+                    }
+                    break;
+            }
+        });
     },
     /**
      * This function is the hook called by the field manager mixin to confirm
@@ -229,12 +262,45 @@ var ListController = BasicController.extend({
      * @override
      * @param {string} id a basicmodel valid resource handle.  It is supposed to
      *   be a record from the list view.
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmSave: function (id) {
         var state = this.model.get(this.handle);
         return this.renderer.updateState(state, {noRender: true})
             .then(this._setMode.bind(this, 'readonly', id));
+    },
+    /**
+     * Deletes records matching the current domain. We limit the number of
+     * deleted records to the 'active_ids_limit' config parameter.
+     *
+     * @private
+     */
+    _deleteRecordsInCurrentDomain: function () {
+        const doIt = async () => {
+            const state = this.model.get(this.handle, {raw: true});
+            const resIds = await this._domainToResIds(state.getDomain(), session.active_ids_limit);
+            await this._rpc({
+                model: this.modelName,
+                method: 'unlink',
+                args: [resIds],
+                context: state.getContext(),
+            });
+            if (resIds.length === session.active_ids_limit) {
+                const msg = _.str.sprintf(
+                    _t("Only the first %d records have been deleted (out of %d selected)"),
+                    resIds.length, state.count
+                );
+                this.do_notify(false, msg);
+            }
+            this.reload();
+        };
+        if (this.confirmOnDelete) {
+            Dialog.confirm(this, _t("Are you sure you want to delete these records ?"), {
+                confirm_callback: doIt,
+            });
+        } else {
+            doIt();
+        }
     },
     /**
      * To improve performance, list view must not be rerendered if it is asked
@@ -244,28 +310,197 @@ var ListController = BasicController.extend({
      * @override
      * @private
      * @param {string} [recordID] - default to main recordID
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _discardChanges: function (recordID) {
         if ((recordID || this.handle) === this.handle) {
             recordID = this.renderer.getEditableRecordID();
             if (recordID === null) {
-                return $.when();
+                return Promise.resolve();
             }
         }
         var self = this;
         return this._super(recordID).then(function () {
-            self._updateButtons('readonly');
+            self.updateButtons('readonly');
         });
+    },
+    /**
+     * Returns the ids of records matching the given domain.
+     *
+     * @private
+     * @param {Array[]} domain
+     * @param {integer} [limit]
+     * @returns {integer[]}
+     */
+    _domainToResIds: function (domain, limit) {
+        return this._rpc({
+            model: this.modelName,
+            method: 'search',
+            args: [domain],
+            kwargs: {
+                limit: limit,
+            },
+        });
+    },
+    /**
+     * @returns {DataExport} the export dialog widget
+     * @private
+     */
+    _getExportDialogWidget() {
+        let state = this.model.get(this.handle);
+        let defaultExportFields = this.renderer.columns.filter(field => field.tag === 'field').map(field => field.attrs.name);
+        let groupedBy = this.renderer.state.groupedBy;
+        const domain = this.isDomainSelected && state.getDomain();
+        return new DataExport(this, state, defaultExportFields, groupedBy,
+            domain, this.getSelectedIds());
+    },
+    /**
+     * Only display the pager when there are data to display.
+     *
+     * @override
+     * @private
+     */
+    _getPagingInfo: function (state) {
+        if (!state.count) {
+            return null;
+        }
+        return this._super(...arguments);
     },
     /**
      * @override
      * @private
      */
-    _getSidebarEnv: function () {
-        var env = this._super.apply(this, arguments);
-        var record = this.model.get(this.handle);
-        return _.extend(env, {domain: record.getDomain()});
+    _getActionMenuItems: function (state) {
+        if (!this.hasActionMenus || !this.selectedRecords.length) {
+            return null;
+        }
+        const props = this._super(...arguments);
+        const otherActionItems = [];
+        if (this.isExportEnable) {
+            otherActionItems.push({
+                description: _t("Export"),
+                callback: () => this._onExportData()
+            });
+        }
+        if (this.archiveEnabled) {
+            otherActionItems.push({
+                description: _t("Archive"),
+                callback: () => {
+                    Dialog.confirm(this, _t("Are you sure that you want to archive all the selected records?"), {
+                        confirm_callback: () => this._toggleArchiveState(true),
+                    });
+                }
+            }, {
+                description: _t("Unarchive"),
+                callback: () => this._toggleArchiveState(false)
+            });
+        }
+        if (this.activeActions.delete) {
+            otherActionItems.push({
+                description: _t("Delete"),
+                callback: () => this._onDeleteSelectedRecords()
+            });
+        }
+        return Object.assign(props, {
+            items: Object.assign({}, this.toolbarActions, { other: otherActionItems }),
+            context: state.getContext(),
+            domain: state.getDomain(),
+            isDomainSelected: this.isDomainSelected,
+        });
+    },
+    /**
+     * Saves multiple records at once. This method is called by the _onFieldChanged method
+     * since the record must be confirmed as soon as the focus leaves a dirty cell.
+     * Pseudo-validation is performed with registered modifiers.
+     * Returns a promise that is resolved when confirming and rejected in any other case.
+     *
+     * @private
+     * @param {string} recordId
+     * @param {Object} node
+     * @param {Object} changes
+     * @returns {Promise}
+     */
+    _saveMultipleRecords: function (recordId, node, changes) {
+        var fieldName = Object.keys(changes)[0];
+        var value = Object.values(changes)[0];
+        var recordIds = _.union([recordId], this.selectedRecords);
+        var validRecordIds = recordIds.reduce((result, nextRecordId) => {
+            var record = this.model.get(nextRecordId);
+            var modifiers = this.renderer._registerModifiers(node, record);
+            if (!modifiers.readonly && (!modifiers.required || value)) {
+                result.push(nextRecordId);
+            }
+            return result;
+        }, []);
+        return new Promise((resolve, reject) => {
+            const saveRecords = () => {
+                this.model.saveRecords(this.handle, recordId, validRecordIds, fieldName)
+                    .then(async () => {
+                        this.updateButtons('readonly');
+                        const state = this.model.get(this.handle);
+                        // We need to check the current multi-editable state here
+                        // in case the selection is changed. If there are changes
+                        // and the list was multi-editable, we do not want to select
+                        // the next row.
+                        this.selectedRecords = [];
+                        await this.renderer.updateState(state, {
+                            keepWidths: true,
+                            selectedRecords: [],
+                        });
+                        this._updateSelectionBox();
+                        this.renderer.focusCell(recordId, node);
+                        resolve(!Object.keys(changes).length);
+                    })
+                    .guardedCatch(discardAndReject);
+            };
+            const discardAndReject = () => {
+                this.model.discardChanges(recordId);
+                this._confirmSave(recordId).then(() => {
+                    this.renderer.focusCell(recordId, node);
+                    reject();
+                });
+            };
+            if (validRecordIds.length > 0) {
+                if (recordIds.length === 1) {
+                    // Save without prompt
+                    return saveRecords();
+                }
+                const dialogOptions = {
+                    confirm_callback: saveRecords,
+                    cancel_callback: discardAndReject,
+                };
+                const record = this.model.get(recordId);
+                const dialogChanges = {
+                    isDomainSelected: this.isDomainSelected,
+                    fieldLabel: node.attrs.string || record.fields[fieldName].string,
+                    fieldName: node.attrs.name,
+                    nbRecords: recordIds.length,
+                    nbValidRecords: validRecordIds.length,
+                };
+                new ListConfirmDialog(this, record, dialogChanges, dialogOptions)
+                    .open({ shouldFocusButtons: true });
+            } else {
+                Dialog.alert(this, _t("No valid record to save"), {
+                    confirm_callback: discardAndReject,
+                });
+            }
+        });
+    },
+    /**
+     * Overridden to deal with edition of multiple line.
+     *
+     * @override
+     * @param {string} recordId
+     */
+    _saveRecord: function (recordId) {
+        var record = this.model.get(recordId, { raw: true });
+        if (record.isDirty() && this.renderer.isInMultipleRecordEdition(recordId)) {
+            // do not save the record (see _saveMultipleRecords)
+            const prom = this.multipleRecordsSavingPromise || Promise.reject();
+            this.multipleRecordsSavingPromise = null;
+            return prom;
+        }
+        return this._super.apply(this, arguments);
     },
     /**
      * Allows to change the mode of a single row.
@@ -274,43 +509,94 @@ var ListController = BasicController.extend({
      * @private
      * @param {string} mode
      * @param {string} [recordID] - default to main recordID
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) !== this.handle) {
-            this._updateButtons(mode);
+            this.updateButtons(mode);
             return this.renderer.setRowMode(recordID, mode);
         } else {
             return this._super.apply(this, arguments);
         }
     },
     /**
-     * Display the sidebar (the 'action' menu in the control panel) if we have
-     * some selected records.
+     * @override
      */
-    _toggleSidebar: function () {
-        if (this.sidebar) {
-            this.sidebar.do_toggle(this.selectedRecords.length > 0);
+    _shouldBounceOnClick() {
+        const state = this.model.get(this.handle, {raw: true});
+        return !state.count;
+    },
+    /**
+     * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
+     *
+     * @private
+     * @param {boolean} archive
+     * @returns {Promise}
+     */
+    _toggleArchiveState: async function (archive) {
+        let resIds;
+        let displayNotif = false;
+        const state = this.model.get(this.handle, {raw: true});
+        if (this.isDomainSelected) {
+            resIds = await this._domainToResIds(state.getDomain(), session.active_ids_limit);
+            displayNotif = (resIds.length === session.active_ids_limit);
+        } else {
+            resIds = this.model.localIdsToResIds(this.selectedRecords);
+        }
+        await this._archive(resIds, archive);
+        if (displayNotif) {
+            const msg = _.str.sprintf(
+                _t("Of the %d records selected, only the first %d have been archived/unarchived."),
+                state.count, resIds.length
+            );
+            this.do_notify(_t('Warning'), msg);
+        }
+    },
+    /**
+     * Hide the create button in non-empty grouped editable list views, as an
+     * 'Add an item' link is available in each group.
+     *
+     * @private
+     */
+    _toggleCreateButton: function () {
+        if (this.hasButtons) {
+            var state = this.model.get(this.handle);
+            var createHidden = this.renderer.isEditable() && state.groupedBy.length && state.data.length;
+            this.$buttons.find('.o_list_button_add').toggleClass('o_hidden', !!createHidden);
         }
     },
     /**
      * @override
-     * @returns {Deferred}
+     * @returns {Promise}
      */
-    _update: function () {
-        this.selectedRecords = [];
-        this._toggleSidebar();
-        return this._super.apply(this, arguments);
+    _update: async function () {
+        await this._super(...arguments);
+        this._toggleCreateButton();
+        this.updateButtons('readonly');
     },
     /**
-     * This helper simply makes sure that the control panel buttons matches the
-     * current mode.
+     * When records are selected, a box is displayed in the control panel (next
+     * to the buttons). It indicates the number of selected records, and allows
+     * the user to select the whole domain instead of the current page (when the
+     * page is selected). This function renders and displays this box when at
+     * least one record is selected.
      *
-     * @param {string} mode either 'readonly' or 'edit'
+     * @private
      */
-    _updateButtons: function (mode) {
-        if (this.$buttons) {
-            this.$buttons.toggleClass('o-editing', mode === 'edit');
+    _updateSelectionBox() {
+        if (this.$selectionBox) {
+            this.$selectionBox.remove();
+            this.$selectionBox = null;
+        }
+        if (this.selectedRecords.length) {
+            const state = this.model.get(this.handle, {raw: true});
+            this.$selectionBox = $(qweb.render('ListView.selection', {
+                isDomainSelected: this.isDomainSelected,
+                isPageSelected: this.isPageSelected,
+                nbSelected: this.selectedRecords.length,
+                nbTotal: state.count,
+            }));
+            this.$selectionBox.appendTo(this.$buttons);
         }
     },
 
@@ -319,28 +605,42 @@ var ListController = BasicController.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Triggered when navigating with TAB, when the end of the list has been
+     * reached. Go back to the first row in that case.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onActivateNextWidget: function (ev) {
+        ev.stopPropagation();
+        this.renderer.editFirstRecord(ev);
+    },
+    /**
      * Add a record to the list
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
+     * @param {string} [ev.data.groupId=this.handle] the id of a dataPoint of
+     *   type list to which the record must be added (default: main list)
      */
-    _onAddRecord: function (event) {
-        event.stopPropagation();
+    _onAddRecord: function (ev) {
+        ev.stopPropagation();
+        var dataPointId = ev.data.groupId || this.handle;
         if (this.activeActions.create) {
-            this._addRecord();
-        } else if (event.data.onFail) {
-            event.data.onFail();
+            this._addRecord(dataPointId);
+        } else if (ev.data.onFail) {
+            ev.data.onFail();
         }
     },
     /**
      * Handles a click on a button by performing its action.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onButtonClicked: function (event) {
-        event.stopPropagation();
-        this._callButtonAction(event.data.attrs, event.data.record);
+    _onButtonClicked: function (ev) {
+        ev.stopPropagation();
+        this._callButtonAction(ev.data.attrs, ev.data.record);
     },
     /**
      * When the user clicks on the 'create' button, two things can happen. We
@@ -348,16 +648,18 @@ var ListController = BasicController.extend({
      * mode, or we can edit inline.
      *
      * @private
-     * @param {MouseEvent} event
+     * @param {MouseEvent} ev
      */
-    _onCreateRecord: function (event) {
+    _onCreateRecord: function (ev) {
         // we prevent the event propagation because we don't want this event to
         // trigger a click on the main bus, which would be then caught by the
         // list editable renderer and would unselect the newly created row
-        event.stopPropagation();
-
-        if (this.editable) {
-            this._addRecord();
+        if (ev) {
+            ev.stopPropagation();
+        }
+        var state = this.model.get(this.handle, {raw: true});
+        if (this.editable && !state.groupedBy.length) {
+            this._addRecord(this.handle);
         } else {
             this.trigger_up('switch_view', {view_type: 'form', res_id: undefined});
         }
@@ -367,8 +669,12 @@ var ListController = BasicController.extend({
      *
      * @private
      */
-    _onDeleteSelectedRecords: function () {
-        this._deleteRecords(this.selectedRecords);
+    _onDeleteSelectedRecords: async function () {
+        if (this.isDomainSelected) {
+            this._deleteRecordsInCurrentDomain();
+        } else {
+            this._deleteRecords(this.selectedRecords);
+        }
     },
     /**
      * Handler called when the user clicked on the 'Discard' button.
@@ -380,6 +686,28 @@ var ListController = BasicController.extend({
         this._discardChanges();
     },
     /**
+     * Used to detect if the discard button is about to be clicked.
+     * Some focusout events might occur and trigger a save which
+     * is not always wanted when clicking "Discard".
+     *
+     * @param {MouseEvent} ev
+     * @private
+     */
+    _onDiscardMousedown: function (ev) {
+        var self = this;
+        this.fieldChangedPrevented = true;
+        window.addEventListener('mouseup', function (mouseupEvent) {
+            var preventedEvent = self.fieldChangedPrevented;
+            self.fieldChangedPrevented = false;
+            // If the user starts clicking (mousedown) on the button and stops clicking
+            // (mouseup) outside of the button, we want to trigger the original onFieldChanged
+            // Event that was prevented in the meantime.
+            if (ev.target !== mouseupEvent.target && preventedEvent.constructor.name === 'OdooEvent') {
+                self._onFieldChanged(preventedEvent);
+            }
+        }, { capture: true, once: true });
+    },
+    /**
      * Called when the user asks to edit a row -> Updates the controller buttons
      *
      * @param {OdooEvent} ev
@@ -389,10 +717,8 @@ var ListController = BasicController.extend({
         ev.stopPropagation();
         this.trigger_up('mutexify', {
             action: function () {
-                var record = self.model.get(self.handle);
-                var editedRecord = record.data[ev.data.index];
-                self._setMode('edit', editedRecord.id)
-                    .done(ev.data.onSuccess);
+                self._setMode('edit', ev.data.recordId)
+                    .then(ev.data.onSuccess);
             },
         });
     },
@@ -402,8 +728,70 @@ var ListController = BasicController.extend({
      * @private
      */
     _onExportData: function () {
-        var record = this.model.get(this.handle);
-        new DataExport(this, record).open();
+        this._getExportDialogWidget().open();
+    },
+    /**
+     * Export Records in a xls file
+     *
+     * @private
+     */
+    _onDirectExportData() {
+        // access rights check before exporting data
+        return this._rpc({
+            model: 'ir.exports',
+            method: 'search_read',
+            args: [[], ['id']],
+            limit: 1,
+        }).then(() => this._getExportDialogWidget().export())
+    },
+    /**
+     * Opens the related form view.
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onEditGroupClicked: function (ev) {
+        ev.stopPropagation();
+        this.do_action({
+            context: {create: false},
+            type: 'ir.actions.act_window',
+            views: [[false, 'form']],
+            res_model: ev.data.record.model,
+            res_id: ev.data.record.res_id,
+            flags: {mode: 'edit'},
+        });
+    },
+    /**
+     * Overridden to deal with the edition of multiple records.
+     *
+     * Note that we don't manage saving multiple records on saveLine
+     * because we don't want the onchanges to be applied.
+     *
+     * @private
+     * @override
+     */
+    _onFieldChanged: function (ev) {
+        ev.stopPropagation();
+        const recordId = ev.data.dataPointID;
+
+        if (this.fieldChangedPrevented) {
+            this.fieldChangedPrevented = ev;
+        } else if (this.renderer.isInMultipleRecordEdition(recordId)) {
+            const saveMulti = () => {
+                // if ev.data.__originalComponent is set, it is the field Component
+                // that triggered the event, otherwise ev.target is the legacy field
+                // Widget that triggered the event
+                const target = ev.data.__originalComponent || ev.target;
+                this.multipleRecordsSavingPromise =
+                    this._saveMultipleRecords(ev.data.dataPointID, target.__node, ev.data.changes);
+            };
+            // deal with edition of multiple lines
+            ev.data.onSuccess = saveMulti; // will ask confirmation, and save
+            ev.data.onFailure = saveMulti; // will show the appropriate dialog
+            // disable onchanges as we'll save directly
+            ev.data.notifyChange = false;
+        }
+        this._super.apply(this, arguments);
     },
     /**
      * Called when the renderer displays an editable row and the user tries to
@@ -412,64 +800,56 @@ var ListController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onSaveLine: function (ev) {
-        var recordID = ev.data.recordID;
-        this.saveRecord(recordID)
-            .done(ev.data.onSuccess)
-            .fail(ev.data.onFailure);
+        this.saveRecord(ev.data.recordID)
+            .then(ev.data.onSuccess)
+            .guardedCatch(ev.data.onFailure);
     },
     /**
-     * Force a resequence of the records curently on this page.
-     *
      * @private
-     * @param {OdooEvent} event
      */
-    _onResequence: function (event) {
-        var self = this;
-
-        this.trigger_up('mutexify', {
-            action: function () {
-                var state = self.model.get(self.handle);
-                var resIDs = _.map(event.data.rowIDs, function(rowID) {
-                    return _.findWhere(state.data, {id: rowID}).res_id;
-                });
-                var options = {
-                    offset: event.data.offset,
-                    field: event.data.handleField,
-                };
-                return self.model.resequence(self.modelName, resIDs, self.handle, options).then(function () {
-                    self._updateEnv();
-                    state = self.model.get(self.handle);
-                    return self.renderer.updateState(state, {noRender: true});
-                });
-            },
-        });
+    _onSelectDomain: function (ev) {
+        ev.preventDefault();
+        this.isDomainSelected = true;
+        this._updateSelectionBox();
+        this._updateControlPanel();
     },
     /**
      * When the current selection changes (by clicking on the checkboxes on the
      * left), we need to display (or hide) the 'sidebar'.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onSelectionChanged: function (event) {
-        this.selectedRecords = event.data.selection;
-        this._toggleSidebar();
+    _onSelectionChanged: function (ev) {
+        this.selectedRecords = ev.data.selection;
+        this.isPageSelected = ev.data.allChecked;
+        this.isDomainSelected = false;
+        this.$('.o_list_export_xlsx').toggle(!this.selectedRecords.length);
+        this._updateSelectionBox();
+        this._updateControlPanel();
     },
     /**
-     * @override
-     */
-    _onSidebarDataAsked: function (event) {
-        var env = this._getSidebarEnv();
-        event.data.callback(env);
-    },
-    /**
-     * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.
+     * If the record is set as dirty while in multiple record edition,
+     * we want to immediatly discard the change.
      *
      * @private
-     * @param {boolean} archive
+     * @override
+     * @param {OdooEvent} ev
      */
-    _onToggleArchiveState: function (archive) {
-        this._archive(this.selectedRecords, archive);
+    _onSetDirty: function (ev) {
+        var recordId = ev.data.dataPointID;
+        if (this.renderer.isInMultipleRecordEdition(recordId)) {
+            ev.stopPropagation();
+            Dialog.alert(this, _t("No valid record to save"), {
+                confirm_callback: async () => {
+                    this.model.discardChanges(recordId);
+                    await this._confirmSave(recordId);
+                    this.renderer.focusCell(recordId, ev.target.__node);
+                },
+            });
+        } else {
+            this._super.apply(this, arguments);
+        }
     },
     /**
      * When the user clicks on one of the sortable column headers, we need to
@@ -477,16 +857,18 @@ var ListController = BasicController.extend({
      * rerender the view.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onToggleColumnOrder: function (event) {
-        event.stopPropagation();
-        var data = this.model.get(this.handle);
-        if (!data.groupedBy) {
-            this.pager.updateState({current_min: 1});
+    _onToggleColumnOrder: function (ev) {
+        ev.stopPropagation();
+        var state = this.model.get(this.handle);
+        if (!state.groupedBy) {
+            this._updatePaging(state, { currentMinimum: 1 });
         }
-        this.model.setSort(data.id, event.data.name);
-        this.update({});
+        var self = this;
+        this.model.setSort(state.id, ev.data.name).then(function () {
+            self.update({});
+        });
     },
     /**
      * In a grouped list view, each group can be clicked on to open/close them.
@@ -494,12 +876,20 @@ var ListController = BasicController.extend({
      * renderer.
      *
      * @private
-     * @param {OdooEvent} event
+     * @param {OdooEvent} ev
      */
-    _onToggleGroup: function (event) {
+    _onToggleGroup: function (ev) {
+        ev.stopPropagation();
+        var self = this;
         this.model
-            .toggleGroup(event.data.group.id)
-            .then(this.update.bind(this, {}, {reload: false}));
+            .toggleGroup(ev.data.group.id)
+            .then(function () {
+                self.update({}, {keepSelection: true, reload: false}).then(function () {
+                    if (ev.data.onSuccess) {
+                        ev.data.onSuccess();
+                    }
+                });
+            });
     },
 });
 

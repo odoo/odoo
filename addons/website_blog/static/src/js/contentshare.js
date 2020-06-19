@@ -16,25 +16,29 @@
                 });
             },
             getContent : function() {
-                var popover_content = '';
-                if($('.blog_title, .blog_content').hasClass('js_comment')){
+                var $popover_content = $('<div class="h4 m-0"/>');
+                if($('.o_wblog_title, .o_wblog_post_content_field').hasClass('js_comment')){
                     selected_text = this.getSelection('string');
-                    popover_content += '<a class="o_share_comment mr12"><i class="fa fa-comment fa-lg mr4 ml4"/></a>';
+                    var $btn_c = $('<a class="o_share_comment btn btn-link px-2" href="#"/>').append($('<i class="fa fa-lg fa-comment"/>'));
+                    $popover_content.append($btn_c);
                 }
-                if($('.blog_title, .blog_content').hasClass('js_tweet')){
+                if($('.o_wblog_title, .o_wblog_post_content_field').hasClass('js_tweet')){
                     var tweet = '"%s" - %s';
                     var baseLength = tweet.replace(/%s/g, '').length;
                     // Shorten the selected text to match the tweet max length
                     // Note: all (non-localhost) urls in a tweet have 23 characters https://support.twitter.com/articles/78124
                     var selectedText = this.getSelection('string').substring(0, option.maxLength - baseLength - 23);
-                    var text = encodeURIComponent(_.str.sprintf(tweet, selectedText, window.location.href));
-                    popover_content += '<a onclick="window.open(\''+option.shareLink+text+'\',\'_'+option.target+'\',\'location=yes,height=570,width=520,scrollbars=yes,status=yes\')"><i class="ml4 mr4 fa fa-twitter fa-lg"/></a>';
+
+                    var text = btoa(encodeURIComponent(_.str.sprintf(tweet, selectedText, window.location.href)));
+                    $popover_content.append(_.str.sprintf(
+                        "<a onclick=\"window.open('%s' + atob('%s'), '_%s','location=yes,height=570,width=520,scrollbars=yes,status=yes')\"><i class=\"ml4 mr4 fa fa-twitter fa-lg\"/></a>",
+                        option.shareLink, text, option.target));
                 }
-                return popover_content;
+                return $popover_content;
             },
             commentEdition : function(){
-                var positionComment = ($('#comments').position()).top-50;
-                $(".o_website_chatter_form textarea").val('"' + selected_text + '" ').focus();
+                var positionComment = ($('#o_wblog_post_comments').position()).top-50;
+                $(".o_portal_chatter_composer_form textarea").val('"' + selected_text + '" ').focus();
                 $('html, body').stop().animate({
                     'scrollTop': positionComment
                 }, 500, 'swing', function () {
@@ -43,10 +47,14 @@
             },
             getSelection : function(share) {
                 if(window.getSelection){
+                    var selection = window.getSelection();
+                    if (!selection || selection.rangeCount === 0) {
+                        return "";
+                    }
                     if (share === 'string') {
-                        return String(window.getSelection().getRangeAt(0)).replace(/\s{2,}/g, ' ');
+                        return String(selection.getRangeAt(0)).replace(/\s{2,}/g, ' ');
                     } else {
-                        return window.getSelection().getRangeAt(0);
+                        return selection.getRangeAt(0);
                     }
                 }
                 else if(document.selection){
@@ -86,7 +94,7 @@
         });
         $.fn.share.init(this);
     };
-    
+
     $.fn.share.defaults = {
         shareLink : "http://twitter.com/intent/tweet?text=",
         minLength  : 5,

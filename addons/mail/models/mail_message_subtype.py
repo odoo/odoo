@@ -54,23 +54,48 @@ class MailMessageSubtype(models.Model):
         self.clear_caches()
         return super(MailMessageSubtype, self).unlink()
 
-    def auto_subscribe_subtypes(self, model_name):
-        """ Retrieve the header subtypes and relations for the given model. """
-        subtype_ids, relations = self._auto_subscribe_subtypes(model_name)
-        return self.browse(subtype_ids), relations
+    @tools.ormcache('model_name')
+    def _get_auto_subscription_subtypes(self, model_name):
+        """ Return data related to auto subscription based on subtype matching.
+        Example with tasks and project :
 
-    @tools.ormcache('self.env.uid', 'model_name')
-    def _auto_subscribe_subtypes(self, model_name):
-        domain = ['|', ('res_model', '=', False), ('parent_id.res_model', '=', model_name)]
-        subtypes = self.search(domain)
-        return subtypes.ids, set(subtype.relation_field for subtype in subtypes if subtype.relation_field)
+         * generic: discussion, res_model = False
+         * task: new, res_model = project.task
+         * project: task_new, parent_id = new, res_model = project.project, field = project_id
 
+        Returned data
+
+          * all_ids: all subtypes that are generic or related to task and project
+          * def_ids: for task, default subtypes ids
+          * int_ids: for task, internal-only default subtypes ids
+          * parent: dict(parent subtype id, child subtype id), i.e. {task_new.id: new.id}
+          * relation: dict(parent_model, relation_fields), i.e. {'project.project': ['project_id']}
+        """
+        all_ids, def_ids, int_ids, parent, relation = list(), list(), list(), dict(), dict()
+        subtypes = self.sudo().search([
+            '|', '|', ('res_model', '=', False),
+            ('res_model', '=', model_name),
+            ('parent_id.res_model', '=', model_name)
+        ])
+        for subtype in subtypes:
+            if not subtype.res_model or subtype.res_model == model_name:
+                all_ids += subtype.ids
+                if subtype.default:
+                    def_ids += subtype.ids
+            elif subtype.relation_field:
+                parent[subtype.id] = subtype.parent_id.id
+                relation.setdefault(subtype.res_model, set()).add(subtype.relation_field)
+            if subtype.internal:
+                int_ids += subtype.ids
+        return all_ids, def_ids, int_ids, parent, relation
+
+    @api.model
     def default_subtypes(self, model_name):
         """ Retrieve the default subtypes (all, internal, external) for the given model. """
         subtype_ids, internal_ids, external_ids = self._default_subtypes(model_name)
         return self.browse(subtype_ids), self.browse(internal_ids), self.browse(external_ids)
 
-    @tools.ormcache('self.env.uid', 'model_name')
+    @tools.ormcache('self.env.uid', 'self.env.su', 'model_name')
     def _default_subtypes(self, model_name):
         domain = [('default', '=', True),
                   '|', ('res_model', '=', model_name), ('res_model', '=', False)]

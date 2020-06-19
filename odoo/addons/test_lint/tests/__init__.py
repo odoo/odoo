@@ -1,0 +1,4 @@
+from . import test_pylint
+from . import test_ecmascript
+from . import test_markers
+from . import test_onchange_domains

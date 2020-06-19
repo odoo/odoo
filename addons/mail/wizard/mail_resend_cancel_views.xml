@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+    <record id="mail_resend_cancel_view_form" model="ir.ui.view">
+        <field name="name">mail.resend.cancel.view.form</field>
+        <field name="model">mail.resend.cancel</field>
+        <field name="groups_id" eval="[(4,ref('base.group_user'))]"/>
+        <field name="arch" type="xml">
+            <form string="Cancel notification in failure">
+                <field name="model" invisible='1'/>
+                <field name="help_message"/>
+                <p>If you want to re-send them, click Cancel now, then click on the notification and review them one by one by clicking on the red envelope next to each message.</p>
+                <img src="/mail/static/img/red_envelope.png" alt="Envelope Example"/>
+                <footer>  
+                    <button string="Discard delivery failures" name="cancel_resend_action" type="object" class="btn-primary" />
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+    <record id="mail_resend_cancel_action" model="ir.actions.act_window">
+        <field name="name">Discard mail delivery failures</field>
+        <field name="res_model">mail.resend.cancel</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+</data></odoo>

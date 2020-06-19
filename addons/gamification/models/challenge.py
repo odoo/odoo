@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import ast
 import itertools
 import logging
 from datetime import date, timedelta
@@ -8,7 +9,6 @@ from dateutil.relativedelta import relativedelta, MO
 
 from odoo import api, models, fields, _, exceptions
 from odoo.tools import ustr
-from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
@@ -56,7 +56,7 @@ class Challenge(models.Model):
     """
 
     _name = 'gamification.challenge'
-    _description = 'Gamification challenge'
+    _description = 'Gamification Challenge'
     _inherit = 'mail.thread'
     _order = 'end_date, start_date, name, id'
 
@@ -67,7 +67,7 @@ class Challenge(models.Model):
             ('inprogress', "In Progress"),
             ('done', "Done"),
         ], default='draft', copy=False,
-        string="State", required=True, track_visibility='onchange')
+        string="State", required=True, tracking=True)
     manager_id = fields.Many2one(
         'res.users', default=lambda self: self.env.uid,
         string="Responsible", help="The user responsible for the challenge.",)
@@ -123,7 +123,7 @@ class Challenge(models.Model):
     last_report_date = fields.Date("Last Report Date", default=fields.Date.today)
     next_report_date = fields.Date("Next Report Date", compute='_get_next_report_date', store=True)
 
-    category = fields.Selection([
+    challenge_category = fields.Selection([
         ('hr', 'Human Resources / Engagement'),
         ('other', 'Settings / Gamification Tools'),
     ], string="Appears in", required=True, default='hr',
@@ -141,11 +141,11 @@ class Challenge(models.Model):
         report period.
         """
         for challenge in self:
-            last = fields.Datetime.from_string(challenge.last_report_date).date()
+            last = challenge.last_report_date
             offset = self.REPORT_OFFSETS.get(challenge.report_message_frequency)
 
             if offset:
-                challenge.next_report_date = fields.Date.to_string(last + offset)
+                challenge.next_report_date = last + offset
             else:
                 challenge.next_report_date = False
 
@@ -167,7 +167,6 @@ class Challenge(models.Model):
 
         return super(Challenge, self).create(vals)
 
-    @api.multi
     def write(self, vals):
         if vals.get('user_domain'):
             users = self._get_challenger_users(ustr(vals.get('user_domain')))
@@ -201,7 +200,7 @@ class Challenge(models.Model):
     ##### Update #####
 
     @api.model # FIXME: check how cron functions are called to see if decorator necessary
-    def _cron_update(self, ids=False):
+    def _cron_update(self, ids=False, commit=True):
         """Daily cron check.
 
         - Start planned challenges (in draft and with start_date = today)
@@ -228,7 +227,7 @@ class Challenge(models.Model):
 
         # in cron mode, will do intermediate commits
         # FIXME: replace by parameter
-        return records.with_context(commit_gamification=True)._update_all()
+        return records.with_context(commit_gamification=commit)._update_all()
 
     def _update_all(self):
         """Update the challenges and related goals
@@ -284,8 +283,7 @@ class Challenge(models.Model):
         return True
 
     def _get_challenger_users(self, domain):
-        # FIXME: literal_eval?
-        user_domain = safe_eval(domain)
+        user_domain = ast.literal_eval(domain)
         return self.env['res.users'].search(user_domain)
 
     def _recompute_challenge_users(self):
@@ -299,12 +297,10 @@ class Challenge(models.Model):
 
         return True
 
-    @api.multi
     def action_start(self):
         """Start a challenge"""
         return self.write({'state': 'inprogress'})
 
-    @api.multi
     def action_check(self):
         """Check a challenge
 
@@ -317,7 +313,6 @@ class Challenge(models.Model):
 
         return self._update_all()
 
-    @api.multi
     def action_report_progress(self):
         """Manual report of a goal, does not influence automatic report frequency"""
         for challenge in self:
@@ -344,12 +339,12 @@ class Challenge(models.Model):
                 date_clause = ""
                 query_params = [line.id]
                 if start_date:
-                    date_clause += "AND g.start_date = %s"
+                    date_clause += " AND g.start_date = %s"
                     query_params.append(start_date)
                 if end_date:
-                    date_clause += "AND g.end_date = %s"
+                    date_clause += " AND g.end_date = %s"
                     query_params.append(end_date)
-            
+
                 query = """SELECT u.id AS user_id
                              FROM res_users u
                         LEFT JOIN gamification_goal g
@@ -381,11 +376,11 @@ class Challenge(models.Model):
                 if end_date:
                     values['end_date'] = end_date
 
-                    # the goal is initialised over the limit to make sure we will compute it at least once
-                    if line.condition == 'higher':
-                        values['current'] = line.target_goal - 1
-                    else:
-                        values['current'] = line.target_goal + 1
+                # the goal is initialised over the limit to make sure we will compute it at least once
+                if line.condition == 'higher':
+                    values['current'] = min(line.target_goal - 1, 0)
+                else:
+                    values['current'] = max(line.target_goal + 1, 0)
 
                 if challenge.remind_update_delay:
                     values['remind_update_delay'] = challenge.remind_update_delay
@@ -507,6 +502,9 @@ class Challenge(models.Model):
                 goals = Goals.search(domain, order="completeness desc, current desc")
             else:
                 goals = Goals.search(domain, order="completeness desc, current asc")
+            if not goals:
+                continue
+
             for ranking, goal in enumerate(goals):
                 if user and goal.user_id == user:
                     line_data['own_goal_id'] = goal.id
@@ -523,8 +521,20 @@ class Challenge(models.Model):
                     'completeness': goal.completeness,
                     'state': goal.state,
                 })
-            if goals:
-                res_lines.append(line_data)
+            if len(goals) < 3:
+                # display at least the top 3 in the results
+                missing = 3 - len(goals)
+                for ranking, mock_goal in enumerate([{'id': False,
+                                                      'user_id': False,
+                                                      'name': '',
+                                                      'current': 0,
+                                                      'completeness': 0,
+                                                      'state': False}] * missing,
+                                                    start=len(goals)):
+                    mock_goal['rank'] = ranking
+                    line_data['goals'].append(mock_goal)
+
+            res_lines.append(line_data)
         return res_lines
 
     ##### Reporting #####
@@ -541,21 +551,22 @@ class Challenge(models.Model):
 
         challenge = self
 
-        MailTemplates = self.env['mail.template']
         if challenge.visibility_mode == 'ranking':
             lines_boards = challenge._get_serialized_challenge_lines(restrict_goals=subset_goals)
 
-            body_html = MailTemplates.with_context(challenge_lines=lines_boards).render_template(challenge.report_template_id.body_html, 'gamification.challenge', challenge.id)
+            body_html = challenge.report_template_id.with_context(challenge_lines=lines_boards)._render_field('body_html', challenge.ids)[challenge.id]
 
             # send to every follower and participant of the challenge
             challenge.message_post(
                 body=body_html,
                 partner_ids=challenge.mapped('user_ids.partner_id.id'),
-                subtype='mail.mt_comment')
+                subtype_xmlid='mail.mt_comment',
+                email_layout_xmlid='mail.mail_notification_light',
+                )
             if challenge.report_message_group_id:
                 challenge.report_message_group_id.message_post(
                     body=body_html,
-                    subtype='mail.mt_comment')
+                    subtype_xmlid='mail.mt_comment')
 
         else:
             # generate individual reports
@@ -564,38 +575,36 @@ class Challenge(models.Model):
                 if not lines:
                     continue
 
-                body_html = MailTemplates.sudo(user).with_context(challenge_lines=lines).render_template(
-                    challenge.report_template_id.body_html,
-                    'gamification.challenge',
-                    challenge.id)
+                body_html = challenge.report_template_id.with_user(user).with_context(challenge_lines=lines)._render_field('body_html', challenge.ids)[challenge.id]
 
-                # send message only to users, not on the challenge
-                self.env['gamification.challenge'].message_post(
+                # notify message only to users, do not post on the challenge
+                challenge.message_notify(
                     body=body_html,
-                    partner_ids=[(4, user.partner_id.id)],
-                    subtype='mail.mt_comment'
+                    partner_ids=[user.partner_id.id],
+                    subtype_xmlid='mail.mt_comment',
+                    email_layout_xmlid='mail.mail_notification_light',
                 )
                 if challenge.report_message_group_id:
                     challenge.report_message_group_id.message_post(
-                         body=body_html,
-                         subtype='mail.mt_comment')
+                        body=body_html,
+                        subtype_xmlid='mail.mt_comment',
+                        email_layout_xmlid='mail.mail_notification_light',
+                    )
         return challenge.write({'last_report_date': fields.Date.today()})
 
     ##### Challenges #####
-    @api.multi
     def accept_challenge(self):
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has joined the challenge") % user.name)
+        sudoed.message_post(body=_("%s has joined the challenge", user.name))
         sudoed.write({'invited_user_ids': [(3, user.id)], 'user_ids': [(4, user.id)]})
         return sudoed._generate_goals_from_challenge()
 
-    @api.multi
     def discard_challenge(self):
         """The user discard the suggested challenge"""
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has refused the challenge") % user.name)
+        sudoed.message_post(body=_("%s has refused the challenge", user.name))
         return sudoed.write({'invited_user_ids': (3, user.id)})
 
     def _check_challenge_reward(self, force=False):
@@ -643,11 +652,15 @@ class Challenge(models.Model):
 
             if challenge_ended:
                 # open chatter message
-                message_body = _("The challenge %s is finished.") % challenge.name
+                message_body = _("The challenge %s is finished.", challenge.name)
 
                 if rewarded_users:
                     user_names = rewarded_users.name_get()
-                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s.") % (challenge.reward_id.name, ", ".join(name for (user_id, name) in user_names))
+                    message_body += _(
+                        "<br/>Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s.",
+                        badge_name=challenge.reward_id.name,
+                        users=", ".join(name for (user_id, name) in user_names)
+                    )
                 else:
                     message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
 
@@ -723,7 +736,7 @@ class Challenge(models.Model):
                     all_reached = False
                 if goal.definition_condition == 'higher':
                     # can be over 100
-                    total_completeness += 100.0 * goal.current / goal.target_goal
+                    total_completeness += (100.0 * goal.current / goal.target_goal) if goal.target_goal else 0
                 elif goal.state == 'reached':
                     # for lower goals, can not get percentage so 0 or 100
                     total_completeness += 100
@@ -776,8 +789,8 @@ class ChallengeLine(models.Model):
     sequence = fields.Integer('Sequence', help='Sequence number for ordering', default=1)
     target_goal = fields.Float('Target Value to Reach', required=True)
 
-    name = fields.Char("Name", related='definition_id.name')
-    condition = fields.Selection("Condition", related='definition_id.condition', readonly=True)
+    name = fields.Char("Name", related='definition_id.name', readonly=False)
+    condition = fields.Selection(string="Condition", related='definition_id.condition', readonly=True)
     definition_suffix = fields.Char("Unit", related='definition_id.suffix', readonly=True)
     definition_monetary = fields.Boolean("Monetary", related='definition_id.monetary', readonly=True)
     definition_full_suffix = fields.Char("Suffix", related='definition_id.full_suffix', readonly=True)

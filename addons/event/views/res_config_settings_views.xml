@@ -4,14 +4,16 @@
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.event</field>
             <field name="model">res.config.settings</field>
-            <field name="priority" eval="13"/>
+            <field name="priority" eval="65"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Events" data-key="event" groups="event.group_event_manager">
+                    <div class="app_settings_block" data-string="Events" string="Events" data-key="event" groups="event.group_event_manager">
                         <h2>Events</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-xs-12 col-md-6 o_setting_box" title="Add a navigation menu to your event web pages with schedule, tracks, a track proposal form, etc.">
+                        <div class="row mt16 o_settings_container" name="events_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box"
+                                id="manage_tracks"
+                                title="Add a navigation menu to your event web pages with schedule, tracks, a track proposal form, etc.">
                                 <div class="o_setting_left_pane">
                                     <field name="module_website_event_track"/>
                                 </div>
@@ -24,8 +26,8 @@
                             </div>
                         </div>
                         <h2>Registration</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="row mt16 o_settings_container" name="registration_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="sell_tickets">
                                 <div class="o_setting_left_pane">
                                     <field name="module_event_sale"/>
                                 </div>
@@ -36,7 +38,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-xs-12 col-md-6 o_setting_box" name="event_settings_website">
+                            <div class="col-12 col-lg-6 o_setting_box" name="event_settings_website">
                                 <div class="o_setting_left_pane">
                                     <field name="module_website_event_sale"/>
                                 </div>
@@ -49,14 +51,15 @@
                             </div>
                         </div>
                         <h2>Attendance</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-xs-12 col-md-6 o_setting_box">
+                        <div class="row mt16 o_settings_container" name="attendance_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="event_barcode">
                                 <div class="o_setting_left_pane">
                                     <field name="module_event_barcode" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_event_barcode"/>
-                                    <div class="text-muted">
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted" name="event_barcode">
                                         Scan badges to confirm attendances
                                     </div>
                                 </div>
@@ -68,7 +71,7 @@
         </record>
 
         <record id="action_event_configuration" model="ir.actions.act_window">
-            <field name="name">Configure Event</field>
+            <field name="name">Settings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>
@@ -76,7 +79,7 @@
             <field name="context">{'module' : 'event'}</field>
         </record>
 
-        <menuitem id="menu_event_global_settings" name="Settings" 
+        <menuitem id="menu_event_global_settings" name="Settings"
             parent="menu_event_configuration" sequence="0" action="action_event_configuration" groups="base.group_system"/>
     </data>
 </odoo>

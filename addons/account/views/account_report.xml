@@ -2,91 +2,48 @@
 <odoo>
     <data>
         <!-- QWeb Reports -->
-        <report 
+        <report
             id="account_invoices"
-            model="account.invoice"
+            model="account.move"
             string="Invoices"
             report_type="qweb-pdf"
             name="account.report_invoice_with_payments"
             file="account.report_invoice_with_payments"
-            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
-            print_report_name="(object._get_printed_report_name())"
+            attachment="(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
+            groups="account.group_account_invoice,account.group_account_readonly"
         />
+
+        <record id="action_account_original_vendor_bill" model="ir.actions.report">
+            <field name="name">Original Bills</field>
+            <field name="model">account.move</field>
+            <field name="binding_model_id" ref="model_account_move"/>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">account.report_original_vendor_bill</field>
+            <field name="report_file">account.report_original_vendor_bill</field>
+            <field name="attachment">'original_vendor_bill.pdf'</field>
+            <field name="attachment_use">True</field>
+            <field name="binding_view_types">list</field>
+        </record>
 
         <report
             id="account_invoices_without_payment"
-            model="account.invoice"
+            model="account.move"
             string="Invoices without Payment"
             report_type="qweb-pdf"
             name="account.report_invoice"
             file="account.report_invoice"
-            attachment="(object.state in ('open','paid')) and ('INV'+(object.number or '').replace('/','')+'.pdf')"
-            print_report_name="(object._get_printed_report_name())"
+            attachment="(object.state == 'posted') and ((object.name or 'INV').replace('/','_')+'.pdf')"
+            print_report_name="(object._get_report_base_filename())"
         />
-
-        <report 
-            id="action_report_print_overdue"
-            model="res.partner"
-            report_type="qweb-pdf"
-            string="Due Payments"
-            name="account.report_overdue"
-            file="account.report_overdue"
-            print_report_name="'Due Payments - %s' % (object.name)"
-        />
-
-        <report 
-            id="action_report_general_ledger"
-            model="account.report.general.ledger"
-            string="General Ledger"
-            report_type="qweb-pdf"
-            name="account.report_generalledger"
-            file="account.report_generalledger"
-            />
-
-        <report 
-            id="action_report_trial_balance"
-            model="account.balance.report"
-            string="Trial Balance"
-            report_type="qweb-pdf"
-            name="account.report_trialbalance"
-            file="account.report_trialbalance"
-            />
-
-        <report 
-            id="action_report_financial"
-            model="account.financial.report"
-            string="Financial report"
-            report_type="qweb-pdf"
-            name="account.report_financial"
-            file="account.report_financial"
-            />
 
         <report
-            id="action_report_aged_partner_balance"
-            model="res.partner"
-            string="Aged Partner Balance"
-            menu="False"
-            report_type="qweb-pdf"
-            name="account.report_agedpartnerbalance"
-            file="account.report_agedpartnerbalance"
-        />
-
-        <report 
             id="action_report_journal"
             model="account.common.journal.report"
-            string="Sale/Purchase Journal"
+            string="Journals Audit"
             report_type="qweb-pdf"
             name="account.report_journal"
             file="account.report_journal"
-            />
-
-        <report 
-            id="action_report_partnerledger"
-            model="account.report.partner.ledger"
-            string="Partner Ledger"
-            report_type="qweb-pdf"
-            name="account.report_partnerledger"
-            file="account.report_partnerledger"
             />
 
         <report
@@ -100,13 +57,23 @@
         />
 
         <report
-            id="action_report_account_tax"
-            model="account.tax.report"
-            string="Tax Report"
+            id="action_report_account_statement"
+            model="account.bank.statement"
+            string="Statement"
+            name="account.report_statement"
+            file="account.report_statement"
             report_type="qweb-pdf"
-            name="account.report_tax"
-            file="account.report_tax"
-            />
+        />
+
+        <report
+            id="action_report_account_hash_integrity"
+            model="res.company"
+            string="Hash integrity result PDF"
+            report_type="qweb-pdf"
+            name="account.report_hash_integrity"
+            file="account.report_hash_integrity"
+            menu="False"
+        />
 
     </data>
 </odoo>

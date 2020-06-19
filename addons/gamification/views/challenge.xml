@@ -15,11 +15,13 @@
     <record id="goals_from_challenge_act" model="ir.actions.act_window">
         <field name="res_model">gamification.goal</field>
         <field name="name">Related Goals</field>
-        <field name="view_mode">kanban,tree</field>
+        <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_group_by_definition': True, 'search_default_inprogress': True, 'search_default_challenge_id': active_id, 'default_challenge_id': active_id}</field>
         <field name="help" type="html">
-          <p>
-            There is no goals associated to this challenge matching your search.
+          <p class="o_view_nocontent_empty_folder">
+                No goal found
+          </p><p>
+            There is no goal associated to this challenge matching your search.
             Make sure that your challenge is active and assigned to at least one user.
           </p>
         </field>
@@ -34,7 +36,7 @@
                     <button string="Start Challenge" type="object" name="action_start" states="draft" class="oe_highlight"/>
                     <button string="Refresh Challenge" type="object" name="action_check" states="inprogress"/>
                     <button string="Send Report" type="object" name="action_report_progress" states="inprogress,done" groups="base.group_no_one"/>
-                    <field name="state" widget="statusbar" clickable="True"/>
+                    <field name="state" widget="statusbar" options="{'clickable': '1'}"/>
                 </header>
                 <sheet>
                     <!-- action buttons -->
@@ -59,7 +61,7 @@
                         <label for="user_domain" class="oe_edit_only" string="Assign Challenge To"/>
                         <div>
                             <field name="user_domain" widget="domain" options="{'model': 'res.users'}" />
-                            <field name="user_ids" groups="base.group_no_one" widget="many2many_tags" readonly="True" />
+                            <field name="user_ids" widget="many2many_tags" />
                         </div>
                     </div>
 
@@ -75,19 +77,19 @@
                         </group>
                     </group>
                     <notebook>
-                        <page string="Goals">
+                        <page string="Goals" name="goals">
                             <field name="line_ids" nolabel="1" colspan="4">
                                 <tree string="Line List" editable="bottom" >
                                     <field name="sequence" widget="handle"/>
                                     <field name="definition_id" />
                                     <field name="condition"/>
-                                    <field name="target_goal"/>
+                                    <field name="target_goal" string="Target"/>
                                     <field name="definition_full_suffix"/>
                                 </tree>
                             </field>
                             <field name="description" placeholder="Describe the challenge: what is does, who it targets, why it matters..."/>
                         </page>
-                        <page string="Reward">
+                        <page string="Reward" name="reward">
                             <group>
                                 <field name="reward_id" attrs="{'required': [('reward_realtime','=', True)]}" />
                                 <field name="reward_first_id" />
@@ -100,7 +102,7 @@
                                 <p>Badges are granted when a challenge is finished. This is either at the end of a running period (eg: end of the month for a monthly challenge), at the end date of a challenge (if no periodicity is set) or when the challenge is manually closed.</p>
                             </div>
                         </page>
-                        <page string="Advanced Options">
+                        <page string="Advanced Options" name="advanced_options">
                             <group string="Subscriptions">
                                 <field name="invited_user_ids" widget="many2many_tags" />
                             </group>
@@ -121,15 +123,15 @@
                                 </div>
                             </group>
                             <group string="Category" groups="base.group_no_one">
-                                <field name="category" widget="radio" />
+                                <field name="challenge_category" widget="radio" />
                             </group>
                         </page>
                     </notebook>
 
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="message_ids"/>
                 </div>
             </form>
         </field>
@@ -149,14 +151,14 @@
                                <strong>
                                    <h4 class="o_kanban_record_title"><field name="name"/></h4>
                                    <div class="oe_kanban_project_list o_kanban_record_subtitle">
-                                       <a type="action" name="%(goals_from_challenge_act)d" style="margin-right: 10px">
+                                       <a type="action" name="%(goals_from_challenge_act)d" style="margin-right: 10px" tabindex="-1">
                                            <span t-if="record.line_ids.raw_value.length gt 1"><t t-esc="record.line_ids.raw_value.length"/> Goals</span>
                                            <span t-if="record.line_ids.raw_value.length lt 2"><t t-esc="record.line_ids.raw_value.length"/> Goal</span>
                                        </a>
                                    </div>
                                </strong>
                                 <t t-foreach="record.user_ids.raw_value.slice(0,11)" t-as="member">
-                                    <img class="o_kanban_badge_avatars" t-att-src="kanban_image('res.users', 'image_small', member)" t-att-data-member_id="member"/>
+                                    <img class="o_kanban_badge_avatars" t-att-src="kanban_image('res.users', 'image_128', member)" t-att-data-member_id="member" alt="Member"/>
                                 </t>
                             </div>
                         </div>
@@ -169,13 +171,12 @@
     <record id="challenge_list_action" model="ir.actions.act_window">
         <field name="name">Challenges</field>
         <field name="res_model">gamification.challenge</field>
-        <field name="view_mode">kanban,tree,form</field>
+        <field name="view_mode">kanban,tree</field>
         <field name="context">{'search_default_inprogress':True, 'default_inprogress':True}</field>
         <field name="help" type="html">
-            <p class="oe_view_nocontent_create">
-                Click to create a challenge.
-            </p>
-            <p>
+            <p class="o_view_nocontent_smiling_face">
+                Create a new challenge
+            </p><p>
                 Assign a list of goals to chosen users to evaluate them.
                 The challenge can use a period (weekly, monthly...) for automatic creation of goals.
                 The goals are created for the specified users or member of the group.
@@ -203,7 +204,7 @@
         <field name="arch" type="xml">
             <tree string="Challenge Lines" >
                 <field name="definition_id"/>
-                <field name="target_goal"/>
+                <field name="target_goal" string="Target"/>
             </tree>
         </field>
     </record>
@@ -217,11 +218,11 @@
                 <filter name="inprogress" string="Running Challenges"
                     domain="[('state', '=', 'inprogress')]"/>
                 <filter name="hr_challenges" string="HR Challenges"
-                    domain="[('category', '=', 'hr')]"/>
+                    domain="[('challenge_category', '=', 'hr')]"/>
                 <field name="name"/>
                 <group expand="0" string="Group By">
-                    <filter string="State" domain="[]" context="{'group_by':'state'}"/>
-                    <filter string="Period" domain="[]" context="{'group_by':'period'}"/>
+                    <filter string="State" name="state" domain="[]" context="{'group_by':'state'}"/>
+                    <filter string="Period" name="period" domain="[]" context="{'group_by':'period'}"/>
                 </group>
             </search>
         </field>

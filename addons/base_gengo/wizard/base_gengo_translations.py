@@ -8,12 +8,14 @@ import uuid
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.tools.misc import get_lang
 
 _logger = logging.getLogger(__name__)
 
 try:
     from gengo import Gengo
 except ImportError:
+    Gengo = None
     _logger.warning('Gengo library not found, Gengo features disabled. If you plan to use it, please install the gengo library from http://pypi.python.org/pypi/gengo')
 
 GENGO_DEFAULT_LIMIT = 20
@@ -24,15 +26,14 @@ class BaseGengoTranslations(models.TransientModel):
     GROUPS = ['base.group_system']
 
     _name = 'base.gengo.translations'
+    _description = 'Base Gengo Translations'
 
     @api.model
     def default_get(self, fields):
         res = super(BaseGengoTranslations, self).default_get(fields)
         res['authorized_credentials'], gengo = self.gengo_authentication()
         if 'lang_id' in fields:
-            res['lang_id'] = self.env['res.lang'].search([
-                ('code', '=', self.env.context.get('lang') or 'en_US')
-            ], limit=1).id
+            res['lang_id'] = get_lang(self.env).id
         return res
 
     sync_type = fields.Selection([
@@ -44,27 +45,23 @@ class BaseGengoTranslations(models.TransientModel):
     sync_limit = fields.Integer("No. of terms to sync", default=20)
     authorized_credentials = fields.Boolean('The private and public keys are valid')
 
-    @api.model_cr
     def init(self):
         icp = self.env['ir.config_parameter'].sudo()
         if not icp.get_param(self.GENGO_KEY):
             icp.set_param(self.GENGO_KEY, str(uuid.uuid4()))
 
-    @api.model_cr
-    def get_gengo_key(self):
+    def _get_gengo_key(self):
         icp = self.env['ir.config_parameter'].sudo()
         return icp.get_param(self.GENGO_KEY, default="Undefined")
 
-    @api.multi
     def open_company(self):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_window',
-            'view_type': 'form',
             'view_mode': 'form',
-            'res_model': 'res.company',
-            'res_id': self.env.user.company_id.id,
-            'target': 'current',
+            'res_model': 'res.config.settings',
+            'target': 'inline',
+            'context': {'module' : 'general_settings'},
             }
 
     @api.model
@@ -82,6 +79,8 @@ class BaseGengoTranslations(models.TransientModel):
         user = self.env.user
         if not user.company_id.gengo_public_key or not user.company_id.gengo_private_key:
             return (False, _("Gengo `Public Key` or `Private Key` are missing. Enter your Gengo authentication parameters under `Settings > Companies > Gengo Parameters`."))
+        if not Gengo:
+            return (False, _("Gengo library not installed. Contact your system administrator to use it."))
         try:
             gengo = Gengo(
                 public_key=user.company_id.gengo_public_key.encode('ascii'),
@@ -92,9 +91,8 @@ class BaseGengoTranslations(models.TransientModel):
             return (True, gengo)
         except Exception as e:
             _logger.exception('Gengo connection failed')
-            return (False, _("Gengo connection failed with this message:\n``%s``") % e)
+            return (False, _("Gengo connection failed with this message:\n``%s``", e))
 
-    @api.multi
     def act_update(self):
         '''
         Function called by the wizard.
@@ -226,7 +224,7 @@ class BaseGengoTranslations(models.TransientModel):
                     'lc_tgt': IrTranslation._get_gengo_corresponding_language(term.lang),
                     'auto_approve': auto_approve,
                     'comment': comment,
-                    'callback_url': "%s/website/gengo_callback?pgk=%s&db=%s" % (base_url, self.get_gengo_key(), self.env.cr.dbname)
+                    'callback_url': "%s/website/gengo_callback?pgk=%s&db=%s" % (base_url, self._get_gengo_key(), self.env.cr.dbname)
                 }
         return {'jobs': jobs, 'as_group': 0}
 

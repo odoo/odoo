@@ -1,15 +1,16 @@
 odoo.define('web.GraphModel', function (require) {
 "use strict";
 
-/**
- * The graph model is responsible for fetching and processing data from the
- * server.  It basically just do a read_group and format/normalize data.
- */
-
 var core = require('web.core');
-var AbstractModel = require('web.AbstractModel');
+const { DEFAULT_INTERVAL, rankInterval } = require('web.searchUtils');
 
 var _t = core._t;
+
+/**
+ * The graph model is responsible for fetching and processing data from the
+ * server.  It basically just do a(some) read_group(s) and format/normalize data.
+ */
+var AbstractModel = require('web.AbstractModel');
 
 return AbstractModel.extend({
     /**
@@ -26,18 +27,15 @@ return AbstractModel.extend({
     //--------------------------------------------------------------------------
 
     /**
+     *
      * We defend against outside modifications by extending the chart data. It
      * may be overkill.
      *
-     * @todo Adding the fields parameter looks wrong.  If the renderer or the
-     * controller need the fields, they should get it via their init method.
-     *
+     * @override
      * @returns {Object}
      */
     get: function () {
-        return _.extend({}, this.chart, {
-            fields: this.fields
-        });
+        return _.extend({}, this.chart);
     },
     /**
      * Initial loading.
@@ -46,12 +44,17 @@ return AbstractModel.extend({
      * should be done by the graphView I think.
      *
      * @param {Object} params
-     * @param {string} params.mode one of 'pie', 'bar', 'line
-     * @param {string} params.measure a valid field name
-     * @param {string[]} params.groupBys a list of valid field names
      * @param {Object} params.context
+     * @param {Object} params.fields
      * @param {string[]} params.domain
-     * @returns {Deferred} The deferred does not return a handle, we don't need
+     * @param {string[]} params.groupBys a list of valid field names
+     * @param {string[]} params.groupedBy a list of valid field names
+     * @param {boolean} params.stacked
+     * @param {string} params.measure a valid field name
+     * @param {'pie'|'bar'|'line'} params.mode
+     * @param {string} params.modelName
+     * @param {Object} params.timeRanges
+     * @returns {Promise} The promise does not return a handle, we don't need
      *   to keep track of various entities.
      */
     load: function (params) {
@@ -59,15 +62,21 @@ return AbstractModel.extend({
         this.initialGroupBys = groupBys;
         this.fields = params.fields;
         this.modelName = params.modelName;
-        this.chart = {
-            data: [],
-            groupedBy: params.groupedBy.length ? params.groupedBy : groupBys,
+        this.chart = Object.assign({
+            context: params.context,
+            dataPoints: [],
+            domain: params.domain,
+            groupBy: params.groupedBy.length ? params.groupedBy : groupBys,
             measure: params.context.graph_measure || params.measure,
             mode: params.context.graph_mode || params.mode,
-            domain: params.domain,
-            context: params.context,
-        };
-        this.defaultGroupedBy = params.groupedBy;
+            origins: [],
+            stacked: params.stacked,
+            timeRanges: params.timeRanges,
+            orderBy: params.orderBy
+        });
+
+        this._computeDerivedParams();
+
         return this._loadGraph();
     },
     /**
@@ -79,16 +88,19 @@ return AbstractModel.extend({
      *
      * @param {any} handle ignored!
      * @param {Object} params
+     * @param {boolean} [params.stacked]
+     * @param {Object} [params.context]
      * @param {string[]} [params.domain]
      * @param {string[]} [params.groupBy]
-     * @param {string} [params.mode] one of 'bar', 'pie', 'line'
      * @param {string} [params.measure] a valid field name
-     * @returns {Deferred}
+     * @param {string} [params.mode] one of 'bar', 'pie', 'line'
+     * @param {Object} [params.timeRanges]
+     * @returns {Promise}
      */
     reload: function (handle, params) {
         if ('context' in params) {
             this.chart.context = params.context;
-            this.chart.groupedBy = params.context.graph_groupbys || this.chart.groupedBy;
+            this.chart.groupBy = params.context.graph_groupbys || this.chart.groupBy;
             this.chart.measure = params.context.graph_measure || this.chart.measure;
             this.chart.mode = params.context.graph_mode || this.chart.mode;
         }
@@ -96,14 +108,28 @@ return AbstractModel.extend({
             this.chart.domain = params.domain;
         }
         if ('groupBy' in params) {
-            this.chart.groupedBy = params.groupBy.length ? params.groupBy : this.defaultGroupedBy;
+            this.chart.groupBy = params.groupBy.length ? params.groupBy : this.initialGroupBys;
         }
         if ('measure' in params) {
             this.chart.measure = params.measure;
         }
+        if ('timeRanges' in params) {
+            this.chart.timeRanges = params.timeRanges;
+        }
+
+        this._computeDerivedParams();
+
         if ('mode' in params) {
             this.chart.mode = params.mode;
-            return $.when();
+            return Promise.resolve();
+        }
+        if ('stacked' in params) {
+            this.chart.stacked = params.stacked;
+            return Promise.resolve();
+        }
+        if ('orderBy' in params) {
+            this.chart.orderBy = params.orderBy;
+            return Promise.resolve();
         }
         return this._loadGraph();
     },
@@ -113,73 +139,175 @@ return AbstractModel.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Fetch and process graph data.  It is basically a read_group with correct
-     * fields.  We have to do some light processing to separate date groups
-     * in the field list, because they can be defined with an aggregation
-     * function, such as my_date:week
+     * Compute this.chart.processedGroupBy, this.chart.domains, this.chart.origins,
+     * and this.chart.comparisonFieldIndex.
+     * Those parameters are determined by this.chart.timeRanges, this.chart.groupBy, and this.chart.domain.
      *
-     * @returns {Deferred}
+     * @private
+     */
+    _computeDerivedParams: function () {
+        this.chart.processedGroupBy = this._processGroupBy(this.chart.groupBy);
+
+        const { range, rangeDescription, comparisonRange, comparisonRangeDescription, fieldName } = this.chart.timeRanges;
+        if (range) {
+            this.chart.domains = [
+                this.chart.domain.concat(range),
+                this.chart.domain.concat(comparisonRange),
+            ];
+            this.chart.origins = [rangeDescription, comparisonRangeDescription];
+            const groupBys = this.chart.processedGroupBy.map(function (gb) {
+                return gb.split(":")[0];
+            });
+            this.chart.comparisonFieldIndex = groupBys.indexOf(fieldName);
+        } else {
+            this.chart.domains = [this.chart.domain];
+            this.chart.origins = [""];
+            this.chart.comparisonFieldIndex = -1;
+        }
+    },
+
+    /**
+     * Fetch and process graph data.  It is basically a(some) read_group(s)
+     * with correct fields for each domain.  We have to do some light processing
+     * to separate date groups in the field list, because they can be defined
+     * with an aggregation function, such as my_date:week.
+     *
+     * @private
+     * @returns {Promise}
      */
     _loadGraph: function () {
-        var groupedBy = this.chart.groupedBy.length ? this.chart.groupedBy : this.initialGroupBys;
-        var fields = _.map(groupedBy, function (groupBy) {
+        var self = this;
+        this.chart.dataPoints = [];
+        var groupBy = this.chart.processedGroupBy;
+        var fields = _.map(groupBy, function (groupBy) {
             return groupBy.split(':')[0];
         });
+
         if (this.chart.measure !== '__count__') {
-            fields = fields.concat(this.chart.measure);
+            if (this.fields[this.chart.measure].type === 'many2one') {
+                fields = fields.concat(this.chart.measure + ":count_distinct");
+            }
+            else {
+                fields = fields.concat(this.chart.measure);
+            }
         }
-        return this._rpc({
-                model: this.modelName,
+
+        var context = _.extend({fill_temporal: true}, this.chart.context);
+
+        var proms = [];
+        this.chart.domains.forEach(function (domain, originIndex) {
+            proms.push(self._rpc({
+                model: self.modelName,
                 method: 'read_group',
-                context: this.chart.context,
-                domain: this.chart.domain,
+                context: context,
+                domain: domain,
                 fields: fields,
-                groupBy: groupedBy,
+                groupBy: groupBy,
                 lazy: false,
-            })
-            .then(this._processData.bind(this));
+            }).then(self._processData.bind(self, originIndex)));
+        });
+        return Promise.all(proms);
     },
     /**
      * Since read_group is insane and returns its result on different keys
      * depending of some input, we have to normalize the result.
-     * The final chart data is added to this.chart object.
+     * Each group coming from the read_group produces a dataPoint
      *
      * @todo This is not good for race conditions.  The processing should get
      *  the object this.chart in argument, or an array or something. We want to
      *  avoid writing on a this.chart object modified by a subsequent read_group
      *
-     * @param {any} raw_data result from the read_group
+     * @private
+     * @param {number} originIndex
+     * @param {any} rawData result from the read_group
      */
-    _processData: function (raw_data) {
+    _processData: function (originIndex, rawData) {
         var self = this;
-        var is_count = this.chart.measure === '__count__';
-        var data_pt, labels;
+        var isCount = this.chart.measure === '__count__';
+        var labels;
 
-        this.chart.data = [];
-        for (var i = 0; i < raw_data.length; i++) {
-            data_pt = raw_data[i];
-            labels = _.map(this.chart.groupedBy, function (field) {
-                return self._sanitizeValue(data_pt[field], field);
-            });
-            this.chart.data.push({
-                value: is_count ? data_pt.__count || data_pt[this.chart.groupedBy[0]+'_count'] : data_pt[this.chart.measure],
-                labels: labels
+        function getLabels (dataPt) {
+            return self.chart.processedGroupBy.map(function (field) {
+                return self._sanitizeValue(dataPt[field], field.split(":")[0]);
             });
         }
+        rawData.forEach(function (dataPt){
+            labels = getLabels(dataPt);
+            var count = dataPt.__count || dataPt[self.chart.processedGroupBy[0]+'_count'] || 0;
+            var value = isCount ? count : dataPt[self.chart.measure];
+            if (value instanceof Array) {
+                // when a many2one field is used as a measure AND as a grouped
+                // field, bad things happen.  The server will only return the
+                // grouped value and will not aggregate it.  Since there is a
+                // name clash, we are then in the situation where this value is
+                // an array.  Fortunately, if we group by a field, then we can
+                // say for certain that the group contains exactly one distinct
+                // value for that field.
+                value = 1;
+            }
+            self.chart.dataPoints.push({
+                resId: dataPt[self.chart.groupBy[0]] instanceof Array ? dataPt[self.chart.groupBy[0]][0] : -1,
+                count: count,
+                domain: dataPt.__domain,
+                value: value,
+                labels: labels,
+                originIndex: originIndex,
+            });
+        });
+    },
+    /**
+     * Process the groupBy parameter in order to keep only the finer interval option for
+     * elements based on date/datetime field (e.g. 'date:year'). This means that
+     * 'week' is prefered to 'month'. The field stays at the place of its first occurence.
+     * For instance,
+     * ['foo', 'date:month', 'bar', 'date:week'] becomes ['foo', 'date:week', 'bar'].
+     *
+     * @private
+     * @param {string[]} groupBy
+     * @returns {string[]}
+     */
+    _processGroupBy: function(groupBy) {
+        const groupBysMap = new Map();
+        for (const gb of groupBy) {
+            let [fieldName, interval] = gb.split(':');
+            const field = this.fields[fieldName];
+            if (['date', 'datetime'].includes(field.type)) {
+                interval = interval || DEFAULT_INTERVAL;
+            }
+            if (groupBysMap.has(fieldName)) {
+                const registeredInterval = groupBysMap.get(fieldName);
+                if (rankInterval(registeredInterval) < rankInterval(interval)) {
+                    groupBysMap.set(fieldName, interval);
+                }
+            } else {
+                groupBysMap.set(fieldName, interval);
+            }
+        }
+        return [...groupBysMap].map(([fieldName, interval]) => {
+            if (interval) {
+                return `${fieldName}:${interval}`;
+            }
+            return fieldName;
+        });
     },
     /**
      * Helper function (for _processData), turns various values in a usable
      * string form, that we can display in the interface.
      *
-     * @param {any} value some value received by the read_group rpc
-     * @param {string} field the name of the corresponding field
+     * @private
+     * @param {any} value value for the field fieldName received by the read_group rpc
+     * @param {string} fieldName
      * @returns {string}
      */
-    _sanitizeValue: function (value, field) {
-        if (value === false) return _t("Undefined");
-        if (value instanceof Array) return value[1];
-        if (field && this.fields[field] && (this.fields[field].type === 'selection')) {
-            var selected = _.where(this.fields[field].selection, {0: value})[0];
+    _sanitizeValue: function (value, fieldName) {
+        if (value === false && this.fields[fieldName].type !== 'boolean') {
+            return _t("Undefined");
+        }
+        if (value instanceof Array) {
+            return value[1];
+        }
+        if (fieldName && (this.fields[fieldName].type === 'selection')) {
+            var selected = _.where(this.fields[fieldName].selection, {0: value})[0];
             return selected ? selected[1] : value;
         }
         return value;

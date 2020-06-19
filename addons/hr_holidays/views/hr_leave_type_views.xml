@@ -1,0 +1,130 @@
+<?xml version='1.0' encoding='UTF-8' ?>
+<odoo>
+
+    <record id="view_holidays_status_filter" model="ir.ui.view">
+        <field name="name">hr.leave.type.filter</field>
+        <field name="model">hr.leave.type</field>
+        <field name="arch" type="xml">
+            <search string="Search Time Off Type">
+                <field name="name" string="Time Off Types"/>
+                <field name="code"/>
+                <field name="create_calendar_meeting"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="edit_holiday_status_form" model="ir.ui.view">
+        <field name="name">hr.leave.type.form</field>
+        <field name="model">hr.leave.type</field>
+        <field name="arch" type="xml">
+            <form string="Time Off Type">
+                <sheet>
+                    <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" type="object" name="action_see_days_allocated" icon="fa-archive" attrs="{'invisible': [('allocation_type', '=', 'no')]}">
+                            <div class="o_stat_info">
+                                <field name="group_days_allocation"/>
+                                <span class="o_stat_text">Group Days Allocated</span>
+                            </div>
+                        </button>
+                        <button class="oe_stat_button" type="object" name="action_see_group_leaves" icon="fa-archive">
+                            <div class="o_stat_info">
+                                <field name="group_days_leave"/>
+                                <span class="o_stat_text">Group Time Off</span>
+                            </div>
+                        </button>
+                    </div>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <h1><field name="name"/></h1>
+                    </div>
+                    <group>
+                        <group name="description" string="Options">
+                            <field name="active" invisible="1"/>
+                            <field name="code" string="Payroll Code"/>
+                            <field name="request_unit" widget="radio"/>
+                        </group>
+                        <group name="validity" string="Validity">
+                            <field name="validity_start"/>
+                            <field name="validity_stop"/>
+                        </group>
+                        <group name="allocation_validation" string="Allocation Requests">
+                            <field name="allocation_type" widget="radio" force_save="1"/>
+                            <field name="allocation_validation_type" string="Approval" widget="radio" attrs="{'invisible': [('allocation_type', '!=', 'fixed_allocation')]}"/>
+                            <field name="responsible_id" domain="[('share', '=', False)]"
+                                attrs="{
+                                'invisible': [('leave_validation_type', 'in', ['no_validation', 'manager']), '|', ('allocation_type', '=', 'no'), ('allocation_validation_type', '=', 'manager')],
+                                'required': ['|', ('leave_validation_type', 'in', ['hr', 'both']), '&amp;', ('allocation_type', 'in', ['fixed_allocation', 'fixed']), ('allocation_validation_type', 'in', ['hr', 'both'])]}"/>
+                        </group>
+                        <group name="leave_validation" string="Time Off Requests">
+                            <field name="leave_validation_type" string="Approval" widget="radio"/>
+                        </group>
+                        <group name="notification" string="Notification" colspan="2" groups="base.group_no_one">
+                            <group>
+                                <field name="leave_notif_subtype_id"
+                                       domain="[('res_model','=','hr.leave')]"
+                                       context="{'default_name': name, 'default_res_model': 'hr.leave'}"/>
+                                <field name="allocation_notif_subtype_id"
+                                       domain="[('res_model','=','hr.leave.allocation')]"
+                                       context="{'default_name': name, 'default_res_model': 'hr.leave.allocation'}"/>
+                            </group>
+                         </group>
+                        <group name="calendar" string="Calendar" groups="base.group_no_one">
+                            <field name="create_calendar_meeting"/>
+                            <field name="color_name"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                        </group>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_holiday_status_view_kanban" model="ir.ui.view">
+        <field name="name">hr.leave.type.kanban</field>
+        <field name="model">hr.leave.type</field>
+        <field name="arch" type="xml">
+            <kanban class="o_kanban_mobile">
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_global_click">
+                            <div>
+                                <strong><field name="name"/></strong>
+                            </div>
+                            <div>
+                                <span>Max Time Off: <field name="max_leaves"/></span>
+                                <span class="float-right">Time Off Taken: <field name="leaves_taken"/></span>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="view_holiday_status_normal_tree" model="ir.ui.view">
+        <field name="name">hr.leave.type.normal.tree</field>
+        <field name="model">hr.leave.type</field>
+        <field name="arch" type="xml">
+            <tree string="Time Off Type">
+                <field name="display_name"/>
+                <field name="code"/>
+                <field name="allocation_type"/>
+                <field name="leave_validation_type"/>
+                <field name="allocation_validation_type"/>
+                <field name="validity_start"/>
+                <field name="validity_stop"/>
+                <field name="company_id" groups="base.group_multi_company"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="open_view_holiday_status" model="ir.actions.act_window">
+        <field name="name">Time Off Types</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">hr.leave.type</field>
+        <field name="view_mode">tree,kanban,form</field>
+    </record>
+
+</odoo>

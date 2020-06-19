@@ -19,3 +19,8 @@ class IrHttp(models.AbstractModel):
             context['translatable'] = True
         request.context = context
         return super(IrHttp, cls)._dispatch()
+
+    @classmethod
+    def _get_translation_frontend_modules_name(cls):
+        mods = super(IrHttp, cls)._get_translation_frontend_modules_name()
+        return mods + ['web_editor']

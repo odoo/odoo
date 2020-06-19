@@ -4,27 +4,29 @@
         <!-- Email templates -->
         <record id="mail_template_data_track_confirmation" model="mail.template">
             <field name="name">Track: Confirmation</field>
-            <field name="subject">Confirmation of ${object.name}</field>
             <field name="model_id" ref="website_event_track.model_event_track"/>
+            <field name="subject">Confirmation of ${object.name}</field>
             <field name="use_default_to" eval="True"/>
             <field name="body_html" type="xml">
 <div>
-    <p>
-        Dear <t t-esc="object.partner_name"/>
-    </p><p>
-        We are pleased to inform you that your proposal ${object.name} has been accepted and confirmed for the event ${object.event_id.name}.
-    </p><p>
-        You will find more details here:
-        <div style="margin-top: 16px;">
-            <a href="/event/${object.event_id.id}/"
-                    style="padding: 8px 12px; font-size: 12px; color: #FFFFFF; text-decoration: none !important; font-weight: 400; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
-                View Event
-            </a>
-        </div>
-    </p>
-    <p>Sincerely,</p>
-</div>
-            </field>
+    Dear ${object.partner_name or ''}<br/>
+    We are pleased to inform you that your proposal ${object.name} has been accepted and confirmed for the event ${object.event_id.name}.
+    <br/>
+    You will find more details here:
+    <div style="margin: 16px 0px 16px 0px;">
+        <a href="/event/${object.event_id.id}/track/${object.id}"
+                style="padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px">
+            View Talk
+        </a>
+    </div>
+    <br/><br/>
+    Thank you,
+    % if user.signature
+        <br />
+        ${user.signature | safe}
+    % endif
+</div></field>
+            <field name="lang">${object.partner_id.lang}</field>
             <field name="auto_delete" eval="True"/>
         </record>
 
@@ -44,15 +46,18 @@
         <record id="event_track_stage0" model="event.track.stage">
             <field name="name">Proposal</field>
             <field name="sequence">1</field>
+            <field name="color">1</field>
         </record>
         <record id="event_track_stage1" model="event.track.stage">
             <field name="name">Confirmed</field>
             <field name="sequence">2</field>
             <field name="mail_template_id" ref="mail_template_data_track_confirmation"/>
+            <field name="color">2</field>
         </record>
         <record id="event_track_stage2" model="event.track.stage">
             <field name="name">Announced</field>
             <field name="sequence">3</field>
+            <field name="color">3</field>
         </record>
         <record id="event_track_stage3" model="event.track.stage">
             <field name="name">Published</field>

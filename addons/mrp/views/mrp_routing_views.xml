@@ -10,11 +10,11 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="workcenter_id"/>
-                    <field name="time_cycle" widget="float_time"/>
-                    <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                    <field name="time_cycle" widget="float_time" string="Duration (minutes)" sum="Total Duration" width="1.5"/>
                 </tree>
             </field>
         </record>
+
         <record id="mrp_routing_workcenter_form_view" model="ir.ui.view">
             <field name="name">mrp.routing.workcenter.form</field>
             <field name="model">mrp.routing.workcenter</field>
@@ -24,9 +24,9 @@
                         <group>
                             <group name="description">
                                 <field name="name"/>
-                                <field name="workcenter_id"/>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                <field name="workcenter_id" context="{'default_company_id': company_id}"/>
                                 <field name="sequence" groups="base.group_no_one"/>
+                                <field name="company_id" groups="base.group_multi_company" />
                             </group><group name="workorder">
                                 <field name="workorder_count" invisible="1"/>
                                 <field name="time_mode" widget="radio"/>
@@ -42,139 +42,47 @@
                                 </div>
                                 <field name="time_cycle" invisible="1"/>
                             </group>
-                        </group>
-                        <notebook>
-                            <page string="Description">
-                                <field name="note"/>
-                            </page>
-                            <page string="Work Sheet">
-                                <field name="worksheet" widget="pdf_viewer"/>
-                            </page>
-                        </notebook>
-                    </sheet>
-                </form>
-            </field>
-        </record>
-
-
-        <!-- Routings -->
-        <record id="mrp_routing_form_view" model="ir.ui.view">
-            <field name="name">mrp.routing.form</field>
-            <field name="model">mrp.routing</field>
-            <field name="arch" type="xml">
-                <form string="Routing">
-                    <sheet>
-                        <div class="oe_button_box" name="button_box">
-                            <button name="%(action_mrp_routing_time)d" type="action" class="oe_stat_button" icon="fa-clock-o">
-                                <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_text">Time<br/> Analysis</span>
-                                </div>
-                            </button>
-                            <button class="oe_stat_button" name="toggle_active" type="object" icon="fa-archive">
-                                <field name="active" widget="boolean_button"
-                                    options='{"terminology": "archive"}'/>
-                            </button>
-                        </div>
-                        <div class="oe_title">
-                            <h1>
-                                <field name="code"/>
-                            </h1>
-                        </div>
-                        <group>
                             <group>
-                                <field name="name"/>
+                                <field name="batch" widget="radio"/>
+                                <field name="batch_size" attrs="{'invisible': [('batch', '=', 'no')]}"/>
                             </group>
-                            <group>
-                                <field name="location_id" groups="stock.group_adv_location"/>
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                           </group>
                         </group>
                         <notebook>
-                            <page string="Work Center Operations">
-                                <field name="operation_ids"/>
-                            </page>
-                            <page string="Notes">
-                                <field name="note"/>
+                            <page string="Work Sheet" name="worksheet">
+                                <group>
+                                    <field name="worksheet_type" widget="radio"/>
+                                    <field name="worksheet" help="Upload your PDF file." widget="pdf_viewer" attrs="{'invisible':  [('worksheet_type', '!=', 'pdf')]}"/>
+                                    <field name="worksheet_google_slide" placeholder="Google Slide Link" widget="embed_viewer" attrs="{'invisible':  [('worksheet_type', '!=', 'google_slide')]}"/>
+                                    <field name="note" attrs="{'invisible':  [('worksheet_type', '!=', 'text')]}"/>
+                                </group>
                             </page>
                         </notebook>
                     </sheet>
                 </form>
             </field>
         </record>
-        <record id="mrp_routing_tree_view" model="ir.ui.view">
-            <field name="name">mrp.routing.tree</field>
-            <field name="model">mrp.routing</field>
-            <field name="arch" type="xml">
-                <tree string="Routing">
-                    <field name="code"/>
-                    <field name="name"/>
-                    <field name="active" invisible="1"/>
-                    <field name="location_id" groups="stock.group_adv_location"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                </tree>
-            </field>
-        </record>
 
-        <record id="mrp_routing_kanban_view" model="ir.ui.view">
-            <field name="name">mrp.routing.kanban</field>
-            <field name="model">mrp.routing</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
-                    <field name="code"/>
-                    <field name="name"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_card oe_kanban_global_click">
-                                <div class="o_kanban_record_top">
-                                    <div class="o_kanban_record_headings mt4">
-                                        <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
-                                    </div>
-                                    <span class="badge"><field name="code"/></span>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
-        <record id="mrp_routing_search_view" model="ir.ui.view">
-            <field name="name">mrp.routing.search</field>
-            <field name="model">mrp.routing</field>
-            <field name="arch" type="xml">
-                <search string="Routing">
-                    <field name="name" string="Routing" filter_domain="['|',('name','ilike',self),('code','ilike',self)]"/>
-                    <filter string="Archived" name="inactive" domain="[('active','=',False)]"/>
-                    <field name="location_id"/>
-                    <field name="company_id" groups="base.group_multi_company"/>
-                    <group expand="0" string="Group By...">
-                        <filter string="Production Location" domain="[]" context="{'group_by':'location_id'}"/>
-                    </group>
-                </search>
-            </field>
-        </record>
         <record id="mrp_routing_action" model="ir.actions.act_window">
-            <field name="name">Routings</field>
+            <field name="name">Operations</field>
             <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.routing</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,kanban,form</field>
-            <field name="view_id" ref="mrp_routing_tree_view"/>
-            <field name="search_view_id" ref="mrp_routing_search_view"/>
+            <field name="res_model">mrp.routing.workcenter</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="mrp_routing_workcenter_tree_view"/>
             <field name="help" type="html">
-              <p class="oe_view_nocontent_create">
-                Click here to create a new Routing. 
+              <p class="o_view_nocontent_smiling_face">
+                Create a new operation
               </p><p>
-                Routings define the successive operations that need to be
-                done to realize a Manufacturing Order. Each operation from
-                a Routing is done at a specific Work Center and has a specific duration.
+                Operation define that need to be done to realize a Work Order.
+                Each operation is done at a specific Work Center and has a specific duration.
               </p>
             </field>
         </record>
+
         <menuitem id="menu_mrp_routing_action"
           action="mrp_routing_action"
-          parent="menu_mrp_bom"
+          parent="menu_mrp_configuration"
           groups="group_mrp_routings"
-          sequence="50"/>
+          sequence="100"/>
+
     </data>
 </odoo>

@@ -1,4 +1,7 @@
 #!/usr/bin/make -f
+export DH_VERBOSE=1
+export PYBUILD_NAME=odoo-bin
+export PYBUILD_DISABLE=test
 
 %:
-	dh ${@} -Spython_distutils
+	dh ${@} --with=python3,systemd --buildsystem=pybuild

@@ -34,7 +34,7 @@ var AbstractFieldUpgrade = {
      * Redirects the user to the odoo-enterprise/uprade page
      *
      * @private
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _confirmUpgrade: function () {
         return this._rpc({
@@ -47,7 +47,7 @@ var AbstractFieldUpgrade = {
             });
     },
     /**
-     * This function is meant to be overriden to insert the 'Enterprise' label
+     * This function is meant to be overridden to insert the 'Enterprise' label
      * JQuery node at the right place.
      *
      * @abstract
@@ -94,11 +94,11 @@ var AbstractFieldUpgrade = {
         this._super.apply(this, arguments);
         this._insertEnterpriseLabel($("<span>", {
             text: "Enterprise",
-            'class': "label label-primary oe_inline o_enterprise_label"
+            'class': "badge badge-primary oe_inline o_enterprise_label"
         }));
     },
     /**
-     * This function is meant to be overriden to reset the $el to its initial
+     * This function is meant to be overridden to reset the $el to its initial
      * state.
      *
      * @abstract

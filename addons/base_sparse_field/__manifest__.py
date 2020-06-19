@@ -8,10 +8,11 @@
         limitation on the number of columns in a table. The values of all sparse
         fields are stored in a "serialized" field in the form of a JSON mapping.
     """,
-    'category': 'Technical Settings',
+    'category': 'Hidden',
     'version': '1.0',
     'depends': ['base'],
     'data': [
+        'security/ir.model.access.csv',
         'views/views.xml',
     ],
 }

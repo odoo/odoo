@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.Chatter" owl="1">
+        <div class="o_Chatter">
+            <t t-if="chatter">
+                <ChatterTopbar
+                    class="o_Chatter_topbar"
+                    chatterLocalId="chatter.localId"
+                />
+                <t t-if="chatter.hasThread and chatter.thread and chatter.isComposerVisible">
+                    <Composer
+                        class="o_Chatter_composer"
+                        t-att-class="{ 'o-bordered': chatter.hasExternalBorder }"
+                        composerLocalId="chatter.thread.composer.localId"
+                        hasMentionSuggestionsBelowPosition="true"
+                        hasTextInputSendOnEnterEnabled="false"
+                        isCompact="false"
+                        isExpandable="true"
+                        isLog="chatter.isComposerLog"
+                        t-on-o-message-posted="_onComposerMessagePosted"
+                        t-ref="composer"
+                    />
+                </t>
+                <t t-if="chatter.isAttachmentBoxVisible">
+                    <AttachmentBox
+                        class="o_Chatter_attachmentBox"
+                        threadLocalId="chatter.thread.localId"
+                    />
+                </t>
+                <t t-if="chatter.thread">
+                    <t t-if="chatter.hasActivities and chatter.activities.length > 0">
+                        <ActivityBox
+                            class="o_Chatter_activityBox"
+                            chatterLocalId="chatter.localId"
+                        />
+                    </t>
+                    <t t-if="chatter.hasThread">
+                        <ThreadViewer
+                            class="o_Chatter_thread"
+                            hasComposer="false"
+                            haveMessagesAuthorRedirect="true"
+                            order="'desc'"
+                            threadViewerLocalId="chatter.threadViewer.localId"
+                            t-ref="thread"
+                        />
+                    </t>
+                </t>
+            </t>
+        </div>
+    </t>
+
+</templates>

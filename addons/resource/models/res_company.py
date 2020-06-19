@@ -14,14 +14,20 @@ class ResCompany(models.Model):
 
     @api.model
     def _init_data_resource_calendar(self):
-        for company in self.search([('resource_calendar_id', '=', False)]):
-            company.resource_calendar_id = self.env['resource.calendar'].create({'name': _('Standard 40 hours/week')}).id
+        self.search([('resource_calendar_id', '=', False)])._create_resource_calendar()
+
+    def _create_resource_calendar(self):
+        for company in self:
+            company.resource_calendar_id = self.env['resource.calendar'].create({
+                'name': _('Standard 40 hours/week'),
+                'company_id': company.id
+            }).id
 
     @api.model
     def create(self, values):
-        if not values.get('resource_calendar_id'):
-            values['resource_calendar_id'] = self.env['resource.calendar'].create({'name': _('Standard 40 hours/week')}).id
         company = super(ResCompany, self).create(values)
+        if not company.resource_calendar_id:
+            company.sudo()._create_resource_calendar()
         # calendar created from form view: no company_id set because record was still not created
         if not company.resource_calendar_id.company_id:
             company.resource_calendar_id.company_id = company.id

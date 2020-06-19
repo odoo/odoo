@@ -1,0 +1,53 @@
+
+// This file is importing bootstrap. While a simple "import "bootstrap";"
+// should be enough, this does not allow overridding mixins/functions.
+// Overridding those is necessary for some of our need and allow to generate
+// more efficient CSS than adding more rules. This file instead copies the
+// content of the "bootstrap.scss" files but do not import functions, variables
+// and mixins which will be handled "by hand" in _assets_helpers.
+
+// @import "functions";
+// @import "variables";
+// @import "mixins";
+@import "root";
+@import "reboot";
+@import "type";
+@import "images";
+@import "code";
+@import "grid";
+@import "tables";
+@import "forms";
+
+// Small hack in bootstrap (see bootstrap_review.scss): prevent it to generate
+// primary, secondary, and other color/outline classes by itself to be able to
+// do it ourself properly.
+$-tmp: $theme-colors;
+$theme-colors: ();
+@import "buttons";
+$theme-colors: $-tmp;
+
+@import "transitions";
+@import "dropdown";
+@import "button-group";
+@import "input-group";
+@import "custom-forms";
+@import "nav";
+@import "navbar";
+@import "card";
+@import "breadcrumb";
+@import "pagination";
+@import "badge";
+@import "jumbotron";
+@import "alert";
+@import "progress";
+@import "media";
+@import "list-group";
+@import "close";
+@import "toasts";
+@import "modal";
+@import "tooltip";
+@import "popover";
+@import "carousel";
+@import "spinners";
+@import "utilities";
+@import "print";

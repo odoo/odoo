@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="0">
+        <record id="reconcile_from_label" model="account.reconcile.model">
+            <field name="name">Line with Bank Fees</field>
+            <field name="rule_type">writeoff_suggestion</field>
+            <field name="match_label">contains</field>
+            <field name="match_label_param">BRT</field>
+            <field name="decimal_separator">,</field>
+        </record>
+
+        <record id="reconcile_from_label_line1" model="account.reconcile.model.line">
+            <field name="model_id" ref="l10n_generic_coa.reconcile_from_label"/>
+            <field name="sequence">1</field>
+            <field name="label">Due amount</field>
+            <field name="account_id" model="account.account"
+                search="[('user_type_id', '=', ref('account.data_account_type_revenue')),
+                         ('company_id', '=', obj().env.company.id)]"/>
+            <field name="amount_type">regex</field>
+            <field name="amount_string">BRT: ([\d,]+)</field>
+        </record>
+
+        <record id="reconcile_from_label_line2" model="account.reconcile.model.line">
+            <field name="model_id" ref="l10n_generic_coa.reconcile_from_label"/>
+            <field name="sequence">2</field>
+            <field name="label">Bank Fees</field>
+            <field name="account_id" model="account.account"
+                search="[('user_type_id', '=', ref('account.data_account_type_direct_costs')),
+                         ('company_id', '=', obj().env.company.id)]"/>
+            <field name="amount_type">percentage</field>
+            <field name="amount_string">100</field>
+        </record>
+    </data>
+</odoo>

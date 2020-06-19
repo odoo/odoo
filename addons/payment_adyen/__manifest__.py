@@ -2,7 +2,7 @@
 
 {
     'name': 'Adyen Payment Acquirer',
-    'category': 'Accounting',
+    'category': 'Accounting/Payment Acquirers',
     'summary': 'Payment Acquirer: Adyen Implementation',
     'version': '1.0',
     'description': """Adyen Payment Acquirer""",
@@ -13,4 +13,7 @@
         'data/payment_acquirer_data.xml',
     ],
     'installable': True,
+    'application': True,
+    'post_init_hook': 'create_missing_journal_for_acquirers',
+    'uninstall_hook': 'uninstall_hook',
 }

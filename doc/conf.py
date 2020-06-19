@@ -6,11 +6,11 @@ import sphinx
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 DIR = os.path.dirname(__file__)
-sys.path.append(
+sys.path.insert(0,
     os.path.abspath(
         os.path.join(DIR, '_extensions')))
-# autodoc
-sys.path.append(os.path.abspath(os.path.join(DIR, '..')))
+# put current odoo's source on PYTHONPATH for autodoc
+sys.path.insert(0, os.path.abspath(os.path.join(DIR, '..')))
 
 # -- General configuration -----------------------------------------------------
 
@@ -25,7 +25,7 @@ extensions = [
     'sphinx.ext.autodoc',
     'sphinx.ext.intersphinx',
     'sphinx.ext.linkcode',
-    'autojsdoc.ext',
+    # 'autojsdoc.ext',
     'github_link',
     'odoo_ext',
     'html_domain',
@@ -54,9 +54,9 @@ copyright = u'Odoo S.A.'
 # built documents.
 #
 # The short X.Y version.
-version = '10.0'
+version = '13.0'
 # The full version, including alpha/beta/rc tags.
-release = '10.0'
+release = '13.0'
 
 # There are two options for replacing |today|: either, you set today to some
 # non-false value, then it is used:
@@ -178,10 +178,8 @@ latex_elements = {
 todo_include_todos = False
 
 intersphinx_mapping = {
-    'python': ('https://docs.python.org/2/', None),
+    'python': ('https://docs.python.org/3/', None),
     'werkzeug': ('http://werkzeug.pocoo.org/docs/', None),
-    'sqlalchemy': ('http://docs.sqlalchemy.org/en/rel_0_9/', None),
-    'django': ('https://django.readthedocs.org/en/latest/', None),
 }
 
 github_user = 'odoo'

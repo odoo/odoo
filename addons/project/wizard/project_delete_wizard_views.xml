@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record id="project_delete_wizard_form" model="ir.ui.view">
+            <field name="name">Delete Project</field>
+            <field name="model">project.delete.wizard</field>
+            <field name="arch" type="xml">
+                <form string="Delete Project">
+                    <field name="task_count" invisible="1" />
+                    <field name="projects_archived" invisible="1" />
+                    <group attrs="{'invisible': [('task_count', '=', 0)]}">
+                        <span>You cannot delete a project containing tasks. You can either archive it or first delete all of its tasks.</span>
+                    </group>
+                    <group attrs="{'invisible': [('task_count', '>', 0)]}">
+                        <span>Are you sure you want to delete this project ?</span>
+                    </group>
+                    <footer attrs="{'invisible': [('task_count', '=', 0)]}">
+                        <button string="Archive project" type="object" name="action_archive" class="btn btn-primary" attrs="{'invisible': [('projects_archived', '=', True)]}" />
+                        <button string="Discard" special="cancel" />
+                    </footer>
+                    <footer attrs="{'invisible': [('task_count', '>', 0)]}">
+                        <button string="Ok" type="object" name="confirm_delete" class="btn btn-primary" />
+                        <button string="Cancel" special="cancel" />
+                    </footer>
+                </form>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,45 @@
+
+.s_share {
+    > * {
+        display: inline-block;
+        vertical-align: middle;
+    }
+    .s_share_title {
+        margin: 0 .4rem 0 0;
+    }
+    a {
+        margin: .2rem;
+    }
+    &:not(.no_icon_color) {
+        .s_share_facebook {
+            &, &:hover, &:focus {
+                @extend .text-facebook;
+            }
+        }
+        .s_share_twitter {
+            &, &:hover, &:focus {
+                @extend .text-twitter;
+            }
+        }
+        .s_share_linkedin {
+            &, &:hover, &:focus {
+                @extend .text-linkedin;
+            }
+        }
+        .s_share_google {
+            &, &:hover, &:focus {
+                @extend .text-google-plus;
+            }
+        }
+        .s_share_whatsapp {
+            &, &:hover, &:focus {
+                @extend .text-whatsapp;
+            }
+        }
+        .s_share_pinterest {
+            &, &:hover, &:focus {
+                @extend .text-pinterest;
+            }
+        }
+    }
+}

@@ -42,7 +42,7 @@ will result in::
 
 .. _reference/qweb/output:
 
-data output
+Data output
 ===========
 
 QWeb has a primary output directive which automatically HTML-escape its
@@ -63,7 +63,7 @@ sanitized user-provided markup.
 
 .. _reference/qweb/conditionals:
 
-conditionals
+Conditionals
 ============
 
 QWeb has a conditional directive ``if``, which evaluates an expression given
@@ -99,7 +99,7 @@ Extra conditional branching directives ``t-elif`` and ``t-else`` are also
 available::
 
     <div>
-        <p t-if="user.birthday == today()">Happy bithday!</p>
+        <p t-if="user.birthday == today()">Happy birthday!</p>
         <p t-elif="user.login == 'root'">Welcome master!</p>
         <p t-else="">Welcome!</p>
     </div>
@@ -107,7 +107,7 @@ available::
 
 .. _reference/qweb/loops:
 
-loops
+Loops
 =====
 
 QWeb has an iteration directive ``foreach`` which take an expression returning
@@ -136,17 +136,20 @@ attribute, and
 is equivalent to the previous example.
 
 ``foreach`` can iterate on an array (the current item will be the current
-value), a mapping (the current item will be the current key) or an integer
-(equivalent to iterating on an array between 0 inclusive and the provided
-integer exclusive).
+value) or a mapping (the current item will be the current key). Iterating on an
+integer (equivalent to iterating on an array between 0 inclusive and the
+provided integer exclusive) is still supported but deprecated.
 
 In addition to the name passed via ``t-as``, ``foreach`` provides a few other
 variables for various data points:
 
 .. warning:: ``$as`` will be replaced by the name passed to ``t-as``
 
-:samp:`{$as}_all`
+:samp:`{$as}_all` (deprecated)
     the object being iterated over
+
+    .. note:: This variable is only available on JavaScript QWeb, not Python.
+
 :samp:`{$as}_value`
     the current iteration value, identical to ``$as`` for lists and integers,
     but for mappings it provides the value (where ``$as`` provides the key)
@@ -161,15 +164,14 @@ variables for various data points:
     whether the current item is the last of the iteration (equivalent to
     :samp:`{$as}_index + 1 == {$as}_size`), requires the iteratee's size be
     available
-:samp:`{$as}_parity`
+:samp:`{$as}_parity` (deprecated)
     either ``"even"`` or ``"odd"``, the parity of the current iteration round
-:samp:`{$as}_even`
+:samp:`{$as}_even` (deprecated)
     a boolean flag indicating that the current iteration round is on an even
     index
-:samp:`{$as}_odd`
+:samp:`{$as}_odd` (deprecated)
     a boolean flag indicating that the current iteration round is on an odd
     index
-
 
 These extra variables provided and all new variables created into the
 ``foreach`` are only available in the scope of the``foreach``. If the
@@ -214,7 +216,9 @@ exists in 3 different forms:
     string (e.g. classes)::
 
         <t t-foreach="[1, 2, 3]" t-as="item">
-            <li t-attf-class="row {{ item_parity }}"><t t-esc="item"/></li>
+            <li t-attf-class="row {{ (item_index % 2 === 0) ? 'even' : 'odd' }}">
+                <t t-esc="item"/>
+            </li>
         </t>
 
     will be rendered as::
@@ -331,7 +335,7 @@ Python
 Exclusive directives
 --------------------
 
-asset bundles
+Asset bundles
 '''''''''''''
 
 .. todo:: have fme write these up because I've no idea how they work
@@ -342,20 +346,20 @@ asset bundles
 The ``t-field`` directive can only be used when performing field access
 (``a.b``) on a "smart" record (result of the ``browse`` method). It is able
 to automatically format based on field type, and is integrated in the
-website's rich text edition.
+website's rich text editing.
 
 ``t-options`` can be used to customize fields, the most common option
 is ``widget``, other options are field- or widget-dependent.
 
-debugging
+Debugging
 ---------
 
 ``t-debug``
     invokes a debugger using PDB's ``set_trace`` API. The parameter should
     be the name of a module, on which a ``set_trace`` method is called::
-    
+
         <t t-debug="pdb"/>
-    
+
     is equivalent to ``importlib.import_module("pdb").set_trace()``
 
 Helpers
@@ -455,12 +459,16 @@ template inheritance
 ''''''''''''''''''''
 
 Template inheritance is used to alter existing templates in-place, e.g. to
-add information to templates created by an other modules.
+add information to templates created by other modules.
 
 Template inheritance is performed via the ``t-extend`` directive which takes
 the name of the template to alter as parameter.
 
-The alteration is then performed with any number of ``t-jquery``
+When ``t-extend`` is combined with ``t-name`` a new template with the given name
+is created. In this case the extended template is not altered, instead the
+directives define how to create the new template.
+
+In both cases the alteration is then performed with any number of ``t-jquery``
 sub-directives::
 
     <t t-extend="base.template">
@@ -487,6 +495,11 @@ on the extended template to select *context nodes* to which the specified
     the node's body replaces the context node's children
 ``replace``
     the node's body is used to replace the context node itself
+``attributes``
+    the nodes's body should be any number of ``attribute`` elements,
+    each with a ``name`` attribute and some textual content, the named
+    attribute of the context node will be set to the specified value
+    (either replaced if it already existed or added if not)
 No operation
     if no ``t-operation`` is specified, the template body is interpreted as
     javascript code and executed with the context node as ``this``
@@ -503,14 +516,14 @@ The javascript QWeb implementation provides a few debugging hooks:
 ``t-log``
     takes an expression parameter, evaluates the expression during rendering
     and logs its result with ``console.log``::
-    
+
         <t t-set="foo" t-value="42"/>
         <t t-log="foo"/>
-        
+
     will print ``42`` to the console
 ``t-debug``
     triggers a debugger breakpoint during template rendering::
-    
+
         <t t-if="a_test">
             <t t-debug="">
         </t>
@@ -521,7 +534,7 @@ The javascript QWeb implementation provides a few debugging hooks:
     the node's body is javascript code executed during template rendering.
     Takes a ``context`` parameter, which is the name under which the rendering
     context will be available in the ``t-js``'s body::
-    
+
         <t t-set="foo" t-value="42"/>
         <t t-js="ctx">
             console.log("Foo is", ctx.foo);
@@ -539,6 +552,8 @@ Helpers
     :js:func:`core.qweb.render <QWeb2.Engine.render>` can be used to
     easily render basic module templates
 
+.. _reference/qweb/api:
+
 API
 ---
 
@@ -547,8 +562,8 @@ API
     The QWeb "renderer", handles most of QWeb's logic (loading,
     parsing, compiling and rendering templates).
 
-    OpenERP Web instantiates one for the user in the core module, and 
-    exports it to ``core.qweb``. It also loads all the template files 
+    Odoo Web instantiates one for the user in the core module, and
+    exports it to ``core.qweb``. It also loads all the template files
     of the various modules into that QWeb instance.
 
     A :js:class:`QWeb2.Engine` also serves as a "template namespace".
@@ -566,7 +581,7 @@ API
 
     The engine exposes an other method which may be useful in some
     cases (e.g. if you need a separate template namespace with, in
-    OpenERP Web, Kanban views get their own :js:class:`QWeb2.Engine`
+    Odoo Web, Kanban views get their own :js:class:`QWeb2.Engine`
     instance so their templates don't collide with more general
     "module" templates):
 
@@ -613,7 +628,7 @@ API
     .. js:attribute:: QWeb2.Engine.preprocess_node
 
         A ``Function``. If present, called before compiling each DOM
-        node to template code. In OpenERP Web, this is used to
+        node to template code. In Odoo Web, this is used to
         automatically translate text content and some attributes in
         templates. Defaults to ``null``.
 
@@ -625,13 +640,13 @@ API
                      use case. Odoo 9.0 still depends on Jinja_ and Mako_.
 
 .. _templating:
-    http://en.wikipedia.org/wiki/Template_processor
+    https://en.wikipedia.org/wiki/Template_processor
 
 .. _Jinja: http://jinja.pocoo.org
-.. _Mako: http://www.makotemplates.org
-.. _Genshi: http://genshi.edgewall.org
-.. _XML namespaces: http://en.wikipedia.org/wiki/XML_namespace
-.. _HTML: http://en.wikipedia.org/wiki/HTML
-.. _XSS: http://en.wikipedia.org/wiki/Cross-site_scripting
+.. _Mako: https://www.makotemplates.org
+.. _Genshi: https://genshi.edgewall.org
+.. _XML namespaces: https://en.wikipedia.org/wiki/XML_namespace
+.. _HTML: https://en.wikipedia.org/wiki/HTML
+.. _XSS: https://en.wikipedia.org/wiki/Cross-site_scripting
 .. _JSON: https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/JSON
-.. _CSS selector: http://api.jquery.com/category/selectors/
+.. _CSS selector: https://api.jquery.com/category/selectors/

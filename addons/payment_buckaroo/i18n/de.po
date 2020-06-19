@@ -1,18 +1,17 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * payment_buckaroo
+# 	* payment_buckaroo
 # 
 # Translators:
-# darenkster <inactive+darenkster@transifex.com>, 2017
-# Martin Trigaux <mat@odoo.com>, 2017
-# Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017
+# Martin Trigaux, 2019
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.saas~18\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-09-20 09:53+0000\n"
-"PO-Revision-Date: 2017-09-20 09:53+0000\n"
-"Last-Translator: Wolfgang Taferner <wolfgang.transifex@service.wt-io-it.at>, 2017\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:12+0000\n"
+"Last-Translator: Martin Trigaux, 2019\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -21,41 +20,43 @@ msgstr ""
 "Plural-Forms: nplurals=2; plural=(n != 1);\n"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:141
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "; multiple order found"
 msgstr "; mehrfache Bestellung gefunden"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:139
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "; no order found"
 msgstr "; keine Bestellung gefunden"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:148
+#: model:ir.model.fields.selection,name:payment_buckaroo.selection__payment_acquirer__provider__buckaroo
+msgid "Buckaroo"
+msgstr "Buckaroo"
+
+#. module: payment_buckaroo
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "Buckaroo: invalid shasign, received %s, computed %s, for data %s"
-msgstr ""
+msgstr "Buckaroo: ungültiges Shasign, %s erhalten, %s berechnet, %s für Daten"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:137
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid "Buckaroo: received data for reference %s"
-msgstr ""
+msgstr "Buckaroo: empfangene Daten für Referenz %s"
 
 #. module: payment_buckaroo
-#: code:addons/payment_buckaroo/models/payment.py:131
+#: code:addons/payment_buckaroo/models/payment.py:0
 #, python-format
 msgid ""
 "Buckaroo: received data with missing reference (%s) or pay_id (%s) or "
 "shasign (%s)"
 msgstr ""
-
-#. module: payment_buckaroo
-#: model:ir.ui.view,arch_db:payment_buckaroo.acquirer_form_buckaroo
-msgid "How to configure your Buckaroo account?"
-msgstr ""
+"Buckaroo: empfangene Daten mit fehlender Referenz (%s) oder pay_id (%s) oder"
+" Shasign (%s)"
 
 #. module: payment_buckaroo
 #: model:ir.model,name:payment_buckaroo.model_payment_acquirer
@@ -68,11 +69,16 @@ msgid "Payment Transaction"
 msgstr "Zahlungstransaktion"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_secretkey
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__provider
+msgid "Provider"
+msgstr "Anbieter"
+
+#. module: payment_buckaroo
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_secretkey
 msgid "SecretKey"
 msgstr "Geheimschlüssel(Secret)"
 
 #. module: payment_buckaroo
-#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer_brq_websitekey
+#: model:ir.model.fields,field_description:payment_buckaroo.field_payment_acquirer__brq_websitekey
 msgid "WebsiteKey"
 msgstr "WebsiteKey"

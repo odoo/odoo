@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <record id="base.nl" model="res.country">
+            <field eval="'%(street_name)s %(street_number)s/%(street_number2)s'" name="street_format" />
+        </record>
+        <record id="base.mx" model="res.country">
+            <field eval="'%(street_name)s %(street_number)s/%(street_number2)s'" name="street_format" />
+        </record>
+        <record id="base.hr" model="res.country">
+            <field eval="'%(street_name)s %(street_number)s %(street_number2)s'" name="street_format" />
+        </record>
+    </data>
+</odoo>

@@ -110,6 +110,7 @@ td {
 }
 
 .pos {
+    direction: ltr;
     padding: 0;
     margin: 0;
     background-color: #f0eeee;
@@ -208,7 +209,7 @@ td {
 }
 /* firefox seems to ignore the relative positionning of the subwindow-container
  * putting this inside subwindow-container fixes it.
- */ 
+ */
 .pos .subwindow .subwindow-container-fix{
     height: 100%;
     position: relative;
@@ -312,16 +313,14 @@ td {
     padding:0;
     color: gray;
     background: #393939;
+    display: flex;
 }
 
 /*  a) The left part of the top-bar */
 
 .pos .pos-branding{
-    position: absolute;
-    display: table-cell;
-    left:0;
-    top:0;
-    width:439px;
+    max-width: 459px;
+    flex-grow: 1;
     height:100%;
     margin:0;
     padding:0;
@@ -332,10 +331,10 @@ td {
 }
 .pos .pos-logo {
     height: 35px;
-    margin-left: 7px;
-    margin-top: 2px;
+    margin-left: 10px;
+    margin-top: 5px;
     vertical-align:middle;
-} 
+}
 .pos .pos-branding .username{
     float:right;
     color:#DDD;
@@ -349,13 +348,11 @@ td {
 /*  b) The right part of the top-bar */
 
 .pos .pos-rightheader {
-    position: absolute;
-    left:440px;
-    right:0;
-    top:0;
+    flex-grow: 1;
     height:100%;
-    display: -webkit-flex;
     display: flex;
+    overflow : hidden;
+    overflow-x: auto;
 }
 .pos .pos-rightheader > * {
     border-right: 1px solid #292929;
@@ -443,8 +440,6 @@ td {
     vertical-align: top;
     margin-left: 0px;
     overflow: hidden;
-    overflow-x: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 /*  c) The session buttons */
@@ -481,7 +476,7 @@ td {
 /*  c) The notifications indicator */
 
 .pos .oe_status{
-    float:right; 
+    float:right;
     color: rgba(255,255,255,0.4);
     padding: 14px;
     line-height: 20px;
@@ -503,7 +498,7 @@ td {
 .pos .oe_icon.oe_red {
     color: rgb(197, 52, 0);
 }
-.pos .oe_statu .oe_green,
+.pos .oe_status .oe_green,
 .pos .oe_icon.oe_green {
     color: rgb(94, 185, 55);
 }
@@ -526,23 +521,65 @@ td {
 
 /*  ********* The leftpane contains the order, numpad and paypad ********* */
 
+.pos .switchpane {
+    height: 100px;
+    flex-shrink: 0;
+    display: flex;
+}
+
+.pos .switchpane .order-info {
+    flex-grow: 1;
+    border-top: 1px solid #ebebeb;
+    padding: 8px 16px;
+    background-color: #FFFFFF;
+    color: #6ec89b;
+}
+.pos .switchpane .order-info h2 {
+    padding: 0px;
+    margin: 3px 0px;
+    font-weight: bold;
+}
+
+.pos .switchpane .btn-switchpane {
+    background-color: #6ec89b;
+    border-radius: 0px;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    flex-grow: 1;
+    flex-basis: 50%;
+    padding-bottom: 20px;
+}
+.pos .switchpane .btn-switchpane h1 {
+    margin-bottom: 0px;
+}
+
+.pos .switchpane .btn-switchpane.secondary {
+    background-color: #FFFFFF;
+    color: #6ec89b;
+}
+
+
+
 .pos .leftpane {
-    -webkit-box-sizing: border-box;
-       -moz-box-sizing: border-box;
-        -ms-box-sizing: border-box;
-            box-sizing: border-box;
-    position:absolute;
-    left:0;
-    width:440px;
-    top:0px;
-    bottom:0;
-    border-right: solid 1px #CECBCB;
     border-right: solid 3px #787878;
     background: #e2e2e2;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    max-width: 500px;
 }
 
 .pos .leftpane .pads {
     border-top: solid 3px rgb(110, 200, 155);
+    display: flex;
+    flex-direction: column;
+}
+
+.pos .leftpane .pads .subpads {
+    display: flex;
+    flex-direction: row;
 }
 
 /*  ********* The control buttons ********* */
@@ -602,7 +639,7 @@ td {
 .pos .control-button.highlight,
 .pos .button.highlight {
     background: #6EC89B !important;
-    border: solid 1px #64AF8A !important; 
+    border: solid 1px #64AF8A !important;
     color: white !important;
 }
 .pos .control-button.altlight,
@@ -623,15 +660,12 @@ td {
 /*  ********* The actionpad (payment, set customer) ********* */
 
 .pos .actionpad {
-    display: inline-block;
-    float: left;
     padding: 0;
     margin: 16px;
     margin-top: 8px;
     margin-right: 0;
     text-align: center;
     vertical-align: top;
-    width: 186px;
     border: none;
     border-radius: 0;
     border-top: 1px solid;
@@ -639,6 +673,7 @@ td {
     border-color: #bfbfbf;
     border-top-left-radius: 4px;
     border-bottom-left-radius: 4px;
+    flex-grow: 1;
 }
 .pos .actionpad .button {
     position: relative;
@@ -711,11 +746,20 @@ td {
     border-radius: 100%;
 }
 
+@media screen and (max-width: 768px) {
+    .pos .actionpad .button.set-customer{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+    .pos .actionpad .button.set-customer.decentered{
+        padding-left: 0px;
+        padding-right: 0px;
+    }
+}
+
 /*  ********* The Numpad ********* */
 
 .pos .numpad {
-    display: inline-block;
-    float: right;
     text-align: center;
     width: 216px;
     margin: 16px;
@@ -726,9 +770,10 @@ td {
     border-top: 1px solid;
     border-color: #bfbfbf;
     border-top-right-radius: 4px;
+    min-width: 216px;
 }
 .pos .numpad button {
-    float: left;
+    float: left/*rtl:ignore*/; /* rtlcss forced to keep ltr */
     height: 54px;
     width: 54px;
     font-weight: bold;
@@ -780,13 +825,24 @@ td {
 /*  ********* The right pane contains the screens and headers ********* */
 
 .pos .rightpane {
-    position: absolute;
-    top: 0;
-    bottom:0;
-    left: 440px;
-    right: 0;
-    vertical-align: top;
-    -webkit-transform: translate3d(0,0,0);
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    flex-basis: 25%;
+    flex-grow: 1;
+}
+
+.pos .products-widget {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    overflow: hidden;
+}
+
+.pos .product-list-container {
+    overflow: hidden;
+    overflow-y: scroll;
+    flex-grow: 1;
 }
 
 .pos .rightpane-header {
@@ -795,6 +851,7 @@ td {
     border-bottom: 1px solid #c7c7c7;
     background: #d3d3d3;
     text-align: center;
+    display: flex;
 }
 
 /*  ********* The product list  ********* */
@@ -803,6 +860,8 @@ td {
     padding: 10px;
     text-align: left;
     -webkit-transform: translate3d(0,0,0);
+    display: flex;
+    flex-wrap: wrap;
 }
 
 .pos .product-list-scroller{
@@ -817,13 +876,6 @@ td {
     -webkit-overflow-scrolling: touch;
     -webkit-transform: translate3d(0,0,0);
 
-}
-.pos .product-list-container {
-    position:absolute;
-    top:0px;
-    bottom:0px;
-    left:0px;
-    right:0px;
 }
 
 /*  a) the product list navigation bar */
@@ -868,19 +920,28 @@ td {
     margin: 12px 6px;
 }
 
+@media screen and (max-width: 768px) {
+    .pos .breadcrumb-button.breadcrumb-home {
+        width: auto;
+        font-size: 13px;
+        margin-left: 3px;
+    }
+}
+
 /*  b) the search box */
 
 .pos .searchbox {
     position: absolute;
     right: 2px;
+    flex-grow: 1;
 }
 .pos .searchbox input {
     width: 100px;
     border: 1px solid #cecbcb;
     padding: 10px 20px;
     padding-left: 38px;
+    padding-right: 33px;
     margin: 6px;
-    background: url("../img/search.png") no-repeat 15px;
     background-color: white;
     border-radius: 20px;
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
@@ -891,13 +952,46 @@ td {
     box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
     color: rgb(153, 153, 255);
 }
+
 .pos .search-clear {
     position: absolute;
+    top: 9px;
     width: 30px;
     height: 30px;
-    top: 11px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-clear.left {
     left: 11px;
+    color: #808080;
+}
+
+.search-clear.right {
+    left: 145px;
+    color: #808080;
     cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+  .search-clear.left {
+      position: relative;
+      top: -40px;
+      left: 5%;
+  }
+
+  .search-clear.right {
+      position: relative;
+      top: -70px;
+      left: 85%;
+  }
+  .pos .searchbox input {
+      width: 70%;
+  }
+  .pos .searchbox {
+      position: relative;
+  }
 }
 
 /*  c) the categories list */
@@ -1007,7 +1101,7 @@ td {
     line-height: 14px;
     width: 100%;
     /* for some reason the -90deg orientation doesn't match the -webkit-linear-gradient. It should be 180deg here.
-     * webkit also insists on rendering *both* gradients instead of only the native one. So it doesn't looks right. ugh. 
+     * webkit also insists on rendering *both* gradients instead of only the native one. So it doesn't looks right. ugh.
     background:         linear-gradient(-90deg,rgba(255,255,255,0),rgba(255,255,255,1), rgba(255,255,255,1)); */
     /*background:#FFF;*/
     padding: 3px;
@@ -1047,6 +1141,38 @@ td {
     max-width:  120px;
     vertical-align: middle;
 }
+
+@media screen and (max-width: 768px) {
+    .pos .product-list {
+        padding: 0px;
+    }
+    .pos .product {
+        width: 32%;
+        height: auto;
+        margin: 0px !important;
+    }
+    .pos .product:active {
+        border: solid 50px #6ec89b;
+        box-sizing: border-box;
+    }
+    .pos .product:after {
+        content: "";
+        display: block;
+        padding-bottom: 100%;
+    }
+    .pos .product .product-img {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+    }
+    .pos .product .product-img img {
+        max-height: none;
+        max-width: none;
+    }
+
+}
+
+
 
 .pos .product .price-tag {
     position: absolute;
@@ -1118,12 +1244,22 @@ td {
 /* a) Generic Screen Layout Constructs */
 
 .screen .screen-content{
+    position: relative;
     margin: 0px auto;
     max-width: 1024px;
     text-align: left;
     height: 100%;
     overflow: hidden;
-    position: relative;
+    display: flex;
+    flex-direction: column;
+}
+
+.screen .screen-full-width{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    flex-wrap: wrap;
+    flex-direction: row;
 }
 
 @media screen and (min-width: 1024px) {
@@ -1134,20 +1270,22 @@ td {
 }
 
 .screen .top-content{
-    position: absolute;
-    left: 0px; top: 0px; right: 0px;
     height: 64px;
     border-bottom: dashed 1px rgb(215,215,215);
     text-align: center;
+    display: flex;
+    padding-right: 10px;
+    padding-left: 10px;
 }
 .screen .top-content .button {
-    position: absolute;
-    top: 0px;
     line-height: 32px;
     padding: 3px 13px;
     font-size: 20px;
     background: rgb(230, 230, 230);
-    margin: 12px;
+    margin-top: 12px;
+    margin-bottom: 12px;
+    margin-left: 6px;
+    margin-right: 6px;
     border-radius: 3px;
     border: solid 1px rgb(209, 209, 209);
     cursor: pointer;
@@ -1169,43 +1307,50 @@ td {
 .screen .top-content .button.highlight:hover {
     background: rgb(120,210,165);
 }
-.screen .top-content .button.back {
-    left: 0px;
-    margin-left: 16px;
+
+.screen .top-content .top-content-center {
+    flex-grow: 1;
 }
-.screen .top-content .button.next{
-    right: 0px;
-    margin-right: 16px;
+
+.screen .main-content{
+    display: flex;
+    flex-grow: 1;
+    flex-wrap: wrap;
+    overflow-y: scroll;
 }
 .screen .left-content{
-    position: absolute;
-    left:0px; top: 64px; bottom: 0px;
-    right:50%;
     overflow-x: hidden;
     overflow-y: auto;
     border-right: dashed 1px rgb(215,215,215);
+    flex-grow: 1;
+    min-width: 200px;
 }
-.screen .left-content.pc40{
-    right: 66%;
-}
+
 .screen .right-content{
-    position: absolute;
-    right:0px; top: 64px; bottom: 0px;
-    left:50%;
     overflow-x: hidden;
     overflow-y: auto;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
 }
-.screen .right-content.pc60{
-    left:34%;
+
+.pos .btn-switch-payment {
+    background-color: #6ec89b;
+    border-radius: 0px;
+    color: #FFFFFF;
+    font-size: 15px;
+    font-weight: bold;
+    height: 100px;
+    width: 100%;
 }
 .screen .centered-content{
-    position: absolute;
-    right:25%; top: 64px; bottom: 0px;
-    left:25%;
     border-right: dashed 1px rgb(215,215,215);
     border-left: dashed 1px rgb(215,215,215);
     overflow-x: hidden;
     overflow-y: auto;
+    max-width: 512px;
+    margin-left: auto;
+    margin-right: auto;
 }
 .screen .full-content{
     position: absolute;
@@ -1218,7 +1363,8 @@ td {
 .pos .screen .layout-table {
     border:none;
     width:100%;
-    height:100%;
+    display: flex;
+    flex-grow: 1;
 }
 
 .pos .screen .header-row {
@@ -1247,23 +1393,26 @@ td {
 
 /* b) The payment screen */
 
+.pos .payment-buttons-container {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+}
+
 .pos .payment-numpad {
-    display: inline-block;
-    width: 50%;
     box-sizing: border-box;
-    padding: 16px;
+    margin: 16px;
     text-align: center;
-    float: left;
+    flex-grow: 1;
 }
 .pos .payment-numpad .numpad {
-    float: none;
     border-radius: 4px;
     border-top: 1px solid;
     border-left: 1px solid;
     border-color: #cacaca;
     width: 296px;
-    overflow: hidden;
-    margin: 0;
+    height: 100%;
+    margin: auto;
 }
 .pos .payment-numpad .numpad button {
     width: 74px;
@@ -1284,65 +1433,61 @@ td {
 }
 
 .pos .paymentlines {
-    width: 100%;
+    border-spacing: 0px 10px;
+    border-collapse: inherit;
+    margin: 16px;
 }
-.pos .paymentlines .controls {
-    width: 40px;
+
+.paymentlines .paymentline:first-child {
+    border-top-width: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
 }
-.pos .paymentlines .label > * {
+.paymentlines .paymentline:last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+
+.pos  .paymentline {
+    background: #e2e2e2;
+    line-height: 74px;
     font-size: 16px;
-    padding: 8px;
+    border: solid 1px rgb(202, 202, 202);
+    border-top-width: 0px;
+    cursor: pointer;
+    display: flex;
+    padding-left: 30px;
+    padding-right: 30px;
+    flex-grow: 1;
+    flex-basis: 100%;
 }
-.pos .paymentlines tbody{
-    background: white;
-    border-radius: 3px;
-}
-.pos .paymentline{
-    font-size: 22px;
-}
-.pos .paymentline.selected {
-    font-size: 22px;
-    background: #6EC89B;
+.paymentline:active {
+    background: black;
+    border-color: black;
     color: white;
 }
-.pos .paymentline.selected .edit {
-    background: white;
-    color: #6EC89B;
-    outline: 3px blue;
-    box-shadow: 0px 0px 0px 3px #6EC89B;
-    position: relative;
-    border-radius: 3px;
+.paymentline .payment-name {
+    flex-grow: 1;
+    margin-left: 10px;
+    margin-right: 10px;
 }
-.pos .paymentline > *{
-    padding: 8px 12px;
+.paymentline .payment-amount {
+    margin-left: 10px;
+    margin-right: 10px;
 }
-.pos .paymentline .col-due,
-.pos .paymentline .col-tendered,
-.pos .paymentline .col-change {
-    min-width: 90px;
+.paymentline .delete-button {
+  margin-left: 10px;
+  margin-right: 10px;
 }
-.pos .paymentline.extra .col-due {
-    border-radius: 0 0 6px 6px;
-    border-top: solid 1px rgb(230, 230, 230);
-    font-weight: bold;
+.paymentline.selected{
+  background: white;
 }
-.pos .paymentline .col-change.highlight {
-    background: rgb(184, 152, 204);
-}
-.pos .paymentline .col-name {
-    font-size: 16px;
-}
-.pos .paymentline .delete-button{
-    cursor: pointer;
-    text-align: center;
-}
+
 .pos .payment-buttons {
-    display: inline-block;
-    width: 50%;
     box-sizing: border-box;
-    padding: 16px;
+    margin: 16px;
     padding-left: 0;
-    float: right;
+    flex-grow: 5;
 }
 .payment-screen .payment-buttons .button {
     background: #e2e2e2;
@@ -1412,6 +1557,70 @@ td {
     text-align: center;
 }
 
+.paymentlines .button {
+    cursor: pointer;
+    border: 1px solid #cacaca;
+}
+.paymentlines .electronic_payment {
+    background: #e2e2e2;
+    border-collapse: unset;
+    text-align: center;
+    font-size: 16px;
+}
+
+.payment-status-container {
+    display: flex;
+    justify-content: space-between;
+    font-size: 25px;
+    padding-top: 15px;
+}
+
+.payment-status-total-due {
+    font-size: 17px;
+    padding-top: 12px;
+    padding-bottom: 12px;
+    color: #5c5c5cd1;
+}
+
+.payment-status-container .amount.highlight {
+    font-weight: bold;
+    color: #6EC89B;
+}
+
+.payment-status-container .label {
+    padding-right: 7px;
+}
+
+@media screen and (max-width: 768px) {
+      .pos .paymentlines-container {
+          min-height: 0px;
+          border-bottom: none;
+          padding-bottom: 3px;
+      }
+      .pos .paymentlines {
+        margin-top: 0px;
+        margin-bottom: 0px;
+      }
+      .payment-status-container {
+          font-size: 22px;
+      }
+      .payment-screen .payment-buttons {
+          display: flex;
+          flex-wrap: wrap;
+      }
+      .payment-screen .payment-buttons .button {
+          flex-basis: 30%;
+          flex-grow: 1;
+          border: 1px solid rgba(0,0,0,0.2);
+          border-radius: 0px;
+          line-height: normal;
+          padding-top: 28px;
+          padding-bottom: 28px;
+      }
+      .payment-screen .payment-buttons .button .fa {
+          display: none;
+      }
+}
 
 /* c) The receipt screen */
 
@@ -1431,37 +1640,21 @@ td {
 .pos .pos-receipt-container {
     font-size: 0.75em;
     text-align: center;
+    direction: ltr;
 }
 
-.pos .pos-sale-ticket {
+.pos .pos-receipt-container > div {
     text-align: left;
     width: 300px;
     background-color: white;
     margin: 20px;
     padding: 15px;
-    font-size: 14px;
+    font-size: 16px;
     padding-bottom:30px;
     display: inline-block;
-    font-family: "Inconsolata";
     border: solid 1px rgb(220,220,220);
     border-radius: 3px;
     overflow: hidden;
-}
-.pos .pos-sale-ticket pre{
-    font-family: "Inconsolata";
-}
-.pos .pos-sale-ticket .emph{
-    font-size: 20px;
-    margin:5px;
-}
-.pos .pos-sale-ticket table {
-    width: 100%;
-    border: 0;
-    table-layout: fixed;
-}
-.pos .pos-sale-ticket table td {
-    border: 0;
-    word-wrap: break-word;
 }
 
 @page {
@@ -1475,23 +1668,27 @@ td {
     body {
         margin: 0;
         color: white !important;
+        /* avoid black background if backgrounds are printed */
+        background: initial;
     }
+    .o_notification_manager,
     .oe_leftbar,
     .oe_loading,
-    .pos .pos-topheader, 
-    .pos .pos-leftpane, 
+    .pos .pos-topheader,
+    .pos .pos-leftpane,
     .pos .keyboard_frame,
     .pos .receipt-screen header,
     .pos .receipt-screen .top-content,
-    .pos .receipt-screen .centered-content .button {
+    .pos .receipt-screen .centered-content .button,
+    .pos .receipt-screen .centered-content .print_invoice {
         display: none !important;
     }
     .pos,
     .pos .pos-content,
     .pos .rightpane,
-    .pos .screen, 
-    .pos .window, 
-    .pos .window .subwindow, 
+    .pos .screen,
+    .pos .window,
+    .pos .window .subwindow,
     .pos .subwindow .subwindow-container{
         display: block;
         position: static;
@@ -1525,7 +1722,7 @@ td {
         box-shadow: none !important;
         background: transparent !important;
     }
-    .pos .pos-sale-ticket{
+    .pos .pos-receipt{
         margin: 0;
         margin-left: auto !important;
         margin-right: auto !important;
@@ -1537,6 +1734,9 @@ td {
         display: none !important;
     }
     .o_chat_window {
+        display: none !important;
+    }
+    .blockUI {
         display: none !important;
     }
 }
@@ -1593,14 +1793,17 @@ td {
 
 /* e) The Client List Screen */
 
+.pos .clientlist-screen .full-content{
+    overflow: auto;
+}
+
 .pos .clientlist-screen .client-list{
     font-size: 16px;
     width: 100%;
-    line-height: 40px;
 }
 .pos .clientlist-screen .client-list th,
 .pos .clientlist-screen .client-list td {
-    padding: 0px 8px;
+    padding: 12px 8px;
 }
 .pos .clientlist-screen .client-list tr{
     transition: all 150ms linear;
@@ -1723,37 +1926,115 @@ td {
 .pos .clientlist-screen .client-detail > .empty{
     opacity: 0.3;
 }
-.pos .clientlist-screen .searchbox{
-    right: auto;
-    margin-left: -90px;
-    margin-top:8px;
-    left: 50%;
-}
-.pos .clientlist-screen .searchbox input{
-    width: 120px;
-}
+
 .pos .clientlist-screen .button.new-customer {
-    left: 50%;
-    margin-left: 120px;
+    min-width: 30px;
 }
+
+.pos .searchbox-client {
+    padding: 3px 13px;
+    margin-top: 12px;
+    margin-bottom : 12px;
+}
+
+.pos .searchbox-client input {
+    width: 120px;
+    border: 1px solid #cecbcb;
+    padding: 10px 20px;
+    padding-left: 38px;
+    padding-right: 33px;
+    background-color: white;
+    border-radius: 20px;
+    font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
+    font-size: 13px;
+}
+.pos .searchbox-client input:focus {
+    outline: none;
+    box-shadow: 0px 0px 0px 2px rgb(153, 153, 255) inset;
+    color: rgb(153, 153, 255);
+}
+
+.pos .search-clear-client {
+    position: absolute;
+    top: 9px;
+    width: 30px;
+    height: 30px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.search-clear-client.left {
+    left: 11px;
+    color: #808080;
+}
+
+.search-clear-client.right {
+    left: 145px;
+    color: #808080;
+    cursor: pointer;
+}
+
+@media screen and (max-width: 768px) {
+    .searchbox-client.top-content-center {
+        display: flex
+    }
+    .pos .searchbox-client input {
+        width: auto;
+        flex-grow: 1;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+    .pos .clientlist-screen .client-details-box {
+        display: flex;
+        flex-wrap: wrap;
+    }
+    .pos .clientlist-screen .client-details-left{
+        width: auto;
+        float: none;
+        flex-grow: 1;
+    }
+    .pos .clientlist-screen .client-details-right{
+        width: auto;
+        float: none;
+        flex-grow: 1;
+    }
+    .pos .clientlist-screen .client-detail{
+        display: flex;
+        flex-direction: column;
+    }
+    .pos .clientlist-screen .client-details input,
+    .pos .clientlist-screen .client-details select
+    {
+        width: 100%;
+    }
+    .pos .clientlist-screen .client-details input.client-name {
+        width: 100%;
+    }
+    .pos .clientlist-screen .client-detail > .label{
+        width: auto;
+        text-align: left;
+    }
+    .pos .clientlist-screen .client-list td {
+        overflow: hidden;
+        white-space: nowrap;
+    }
+}
+
+
+
 
 
 /*  ********* The OrderWidget  ********* */
 
 .pos .order-container{
-    position: absolute;
     top: 0px;
     width:100%;
     height: 100%;
     background: white;
-}
-
-.pos .order-scroller{
-    width:100%;
-    height:100%;
+    flex-grow: 1;
     overflow: hidden;
     overflow-y: auto;
-    -webkit-overflow-scrolling: touch;
 }
 
 .pos .scrollable-y{
@@ -1938,6 +2219,8 @@ td {
 }
 .paymentmethods {
     margin: 16px;
+    display: flex;
+    flex-wrap: wrap;
 }
 .paymentmethods .button {
     background: #e2e2e2;
@@ -1946,7 +2229,6 @@ td {
     border: solid 1px rgb(202, 202, 202);
     border-top-width: 0px;
     cursor: pointer;
-    text-align: center;
 }
 .paymentmethods .button:first-child {
     border-top-width: 1px;
@@ -1967,8 +2249,43 @@ td {
     color: white;
     border-color: #6EC89B;
 }
+.paymentmethod {
+    display: flex;
+    padding-left: 30px;
+    padding-right: 30px;
+    flex-grow: 1;
+    flex-basis: 100%;
+}
+.paymentmethod .payment-name {
+    flex-grow: 1;
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.paymentmethod .payment-amount {
+    margin-left: 10px;
+    margin-right: 10px;
+}
+.paymentmethod .delete-button {
+  margin-left: 10px;
+  margin-right: 10px;
+}
+.paymentmethod.selected{
+  background: white;
+}
 
-
+@media screen and (max-width: 768px) {
+    .paymentmethods {
+        margin-top: 0px;
+        margin-bottom: 0px;
+    }
+    .paymentmethods .button {
+        border: solid 1px rgb(202, 202, 202);
+        border-radius: 3px;
+    }
+    .paymentmethod {
+        flex-basis: 30%;
+    }
+}
 
 /*  ********* The ActionBarWidget  ********* */
 
@@ -2048,7 +2365,7 @@ td {
     top: 10px;
     width: 200px;
     font-size: 10px;
-    
+
     background: rgba(0,0,0,0.82);
     color: white;
     padding-bottom: 10px;
@@ -2066,6 +2383,9 @@ td {
 }
 .pos .debug-widget .content{
     overflow: hidden;
+}
+.pos .debug-widget header {
+    position: relative;
 }
 .pos .debug-widget h1{
     background:black;
@@ -2129,11 +2449,14 @@ td {
     background-color: rgba(0,0,0,0.5);
     z-index:1000;
 }
+.pos .modal-dialog header{
+    position: relative;
+}
 .pos .modal-dialog .popup{
     position: absolute;
-    top: 0; left: 0; right: 0; bottom: 0;
     margin: auto;
-    width:500px;
+    max-width:500px;
+    width: 100%;
     height:400px;
     text-align:center;
     font-size:20px;
@@ -2144,6 +2467,10 @@ td {
     z-index:1200;
     font-family: 'Lato';
     font-family: Lato;
+    /* position the popup at center and and still making it draggable*/
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 .pos .modal-dialog .popup-confirm{
     height: 250px;
@@ -2203,6 +2530,11 @@ td {
 
     background: rgba(0,0,0,0.05);
 }
+
+.pos .popup .button.dont-show-again {
+    width: 130px;
+}
+
 .pos .popup .button.icon {
     width: 40px;
     font-size: 20px;
@@ -2252,12 +2584,12 @@ td {
     box-sizing: border-box;
     width: 80%;
 }
-.pos .popup .packlot-lines{
+.pos .popup .list-lines{
     overflow: auto;
     height: 250px;
     margin: 10px;
 }
-.pos .popup .packlot-line-input {
+.pos .popup .list-line-input {
     margin: 3px;
 }
 
@@ -2286,7 +2618,7 @@ td {
     line-height: 50px;
     margin-top: -1px;
     border-top: solid 3px rgba(60,60,60,0.1);
-    
+
 }
 .pos .popup.popup-selection .selection-item {
     width: auto;
@@ -2315,6 +2647,7 @@ td {
     margin-right: 3px;
 }
 .pos .popup-numpad {
+    direction: ltr/*rtl:ignore*/; /* rtlcss forced to keep ltr */
     margin: 12px auto;
     text-align: center;
     width: 254px;
@@ -2351,7 +2684,6 @@ td {
 }
 .pos .popup-password .popup-numpad {
     width: 190px;
-    text-align: left;
 }
 .pos .popup-password .popup-input {
     width: 70%;
@@ -2437,4 +2769,47 @@ td {
 }
 .pos .not-supported-browser img{
     border-collapse: separate;
+}
+
+.fade-enter-active, .fade-leave-active {
+    transition: opacity .2s;
+}
+
+.fade-enter, .fade-leave-to {
+    opacity: 0;
+}
+
+.swing-enter-active, .swing-leave-active {
+    transition: opacity 0.8s;
+}
+
+.swing-enter, .swing-leave-to {
+    opacity: 0;
+}
+
+/*
+    We block the top-header when a temp screen is displayed.
+    Similar to blocking the whole ui when a popup is displayed.
+*/
+.pos .block-top-header {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height:100%;
+    background-color: rgba(0,0,0,0.5);
+    z-index:1000;
+}
+
+.drag-handle {
+    cursor: move; /* fallback if grab cursor is unsupported */
+    cursor: grab;
+    cursor: -moz-grab;
+    cursor: -webkit-grab;
+}
+
+.drag-handle:active {
+    cursor: grabbing;
+    cursor: -moz-grabbing;
+    cursor: -webkit-grabbing;
 }

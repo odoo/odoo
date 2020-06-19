@@ -4,27 +4,26 @@
         <record id="res_config_settings_view_form" model="ir.ui.view">
             <field name="name">res.config.settings.view.form.inherit.mrp</field>
             <field name="model">res.config.settings</field>
-            <field name="priority" eval="7"/>
+            <field name="priority" eval="35"/>
             <field name="inherit_id" ref="base.res_config_settings_view_form" />
             <field name="arch" type="xml">
                 <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Manufacturing" data-key="mrp" groups="mrp.group_mrp_manager">
+                    <div class="app_settings_block" data-string="Manufacturing" string="Manufacturing" data-key="mrp" groups="mrp.group_mrp_manager">
                         <h2>Operations</h2>
-                        <div class="row mt16 o_settings_container">
-                            <div class="col-md-6 col-xs-12 o_setting_box" id="work_order" title="Work Order Operations allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required raw materials.">
+                        <div class="row mt16 o_settings_container" name="process_operations_setting_container">
+                            <div class="col-lg-6 col-12 o_setting_box" id="work_order" title="Work Order Operations allow you to create and manage the manufacturing operations that should be followed within your work centers in order to produce a product. They are attached to bills of materials that will define the required components.">
                                 <div class="o_setting_left_pane">
                                     <field name="group_mrp_routings"/>
+                                    <field name="module_mrp_workorder" invisible="1"/>
                                 </div>
-                                <div class="o_setting_right_pane">
-                                    <label for="group_mrp_routings"/>
+                                <div class="o_setting_right_pane" id="workorder_settings">
+                                    <label for="group_mrp_routings" string="Work Orders"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/manufacturing/management/manufacturing_order.html#manage-manufacturing-with-routings-and-work-centers" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
-                                        Process operations at specific work centers based on the routing defined on the bill of material of the final product
+                                        Process operations at specific work centers
                                     </div>
                                     <div class="content-group" attrs="{'invisible': [('group_mrp_routings','=',False)]}">
-                                        <div class="mt16">
-                                            <div>
-                                                <button name="%(mrp.mrp_routing_action)d" icon="fa-arrow-right" type="action" string="Routings" class="btn-link"/>
-                                            </div>
+                                        <div class="mt8">
                                             <div>
                                                 <button name="%(mrp.mrp_workcenter_action)d" icon="fa-arrow-right" type="action" string="Work Centers" class="btn-link"/>
                                             </div>
@@ -32,48 +31,49 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-xs-12 o_setting_box" id="mrp_quality">
+                            <div class="col-lg-6 col-12 o_setting_box">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_quality_mrp" widget="upgrade_boolean"/>
+                                    <field name="module_mrp_subcontracting"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="module_quality_mrp"/>
+                                    <label for="module_mrp_subcontracting"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/manufacturing/management/subcontracting.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
-                                        Manage quality control points, quality checks and quality alerts
+                                        Subcontract the production of some products
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-xs-12 o_setting_box" id="mrp_repair">
+                            <div class="col-lg-6 col-12 o_setting_box" id="quality_control">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_mrp_repair"/>
+                                    <field name="module_quality_control" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="module_mrp_repair"/>
+                                    <label for="module_quality_control"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/quality.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
-                                        Repair products and invoice the repair orders
+                                        Add quality checks to your work orders
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-xs-12 o_setting_box" id="mrp_maintenance">
+                            <div class="col-lg-6 col-12 o_setting_box" id="mrp_lock" title="Makes confirmed manufacturing orders locked rather than unlocked by default. This only applies to new manufacturing orders, not previously created ones.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_mrp_maintenance" widget="upgrade_boolean"/>
+                                    <field name="group_locked_by_default"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="module_mrp_maintenance"/>
+                                    <label for="group_locked_by_default"/>
                                     <div class="text-muted">
-                                        Schedule the maintenance of your equipment
+                                        Prevent manufacturing users to modify quantities to consume, unless a manager has unlocked the document
                                     </div>
                                 </div>
                             </div>
                         </div>
-                        <h2>Products</h2>
                         <div class="row mt16 o_settings_container">
-                            <div class="col-md-6 col-xs-12 o_setting_box" id="mrp_byproduct" title="Add by-products to bills of materials. This can be used to get several finished products as well. Without this option you only do: A + B = C. With the option: A + B = C + D.">
+                            <div class="col-lg-6 col-12 o_setting_box" id="mrp_byproduct" title="Add by-products to bills of materials. This can be used to get several finished products as well. Without this option you only do: A + B = C. With the option: A + B = C + D.">
                                 <div class="o_setting_left_pane">
-                                    <field name="module_mrp_byproduct"/>
+                                    <field name="group_mrp_byproducts"/>
                                 </div>
                                 <div class="o_setting_right_pane">
-                                    <label for="module_mrp_byproduct"/>
+                                    <label for="group_mrp_byproducts"/>
                                     <div class="text-muted">
                                         Produce residual products (A + B -> C + D)
                                     </div>
@@ -82,31 +82,32 @@
                         </div>
                         <h2>Planning</h2>
                         <div class="row mt16 o_settings_container">
-                            <div class="col-md-6 col-xs-12 o_setting_box" id="mrp_mps" title="Using a MPS report to schedule your reordering and manufacturing operations is useful if you have long lead time and if you produce based on sales forecasts.">
+                            <div class="col-lg-6 col-12 o_setting_box" id="mrp_mps" title="Using a MPS report to schedule your reordering and manufacturing operations is useful if you have long lead time and if you produce based on sales forecasts.">
                                 <div class="o_setting_left_pane">
                                     <field name="module_mrp_mps" widget="upgrade_boolean"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label for="module_mrp_mps"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/manufacturing/management/use_mps.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                     <div class="text-muted">
                                         Plan manufacturing or purchase orders based on forecasts
                                     </div>
                                     <div class="content-group" id="content_mrp_mps"/>
                                 </div>
                             </div>
-                            <div class="col-md-6 col-xs-12 o_setting_box" id="security_lead_time">
+                            <div class="col-lg-6 col-12 o_setting_box" id="security_lead_time">
                                 <div class="o_setting_left_pane">
                                     <field name="use_manufacturing_lead"/>
                                 </div>
                                 <div class="o_setting_right_pane">
                                     <label string="Security Lead Time" for="use_manufacturing_lead"/>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/inventory/management/planning/scheduled_date.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." role="img" aria-label="Values set here are company-specific." groups="base.group_multi_company"/>
                                     <div class="text-muted">
                                         Schedule manufacturing orders earlier to avoid delays
                                      </div>
                                      <div class="content-group" attrs="{'invisible': [('use_manufacturing_lead','=',False)]}">
                                         <div class="mt16" >
-                                            Move forward deadline start dates by
                                             <field name="manufacturing_lead" class="oe_inline"/> days
                                         </div>
                                     </div>
@@ -119,7 +120,7 @@
         </record>
 
         <record id="action_mrp_configuration" model="ir.actions.act_window">
-            <field name="name">Configure Manufacturing</field>
+            <field name="name">Settings</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">res.config.settings</field>
             <field name="view_mode">form</field>

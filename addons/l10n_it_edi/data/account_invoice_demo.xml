@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data noupdate="1">
+        <!-- add VAT, codice fiscal and tax system for main company -->
+        <record id="base.main_company" model="res.company">
+            <field name="vat">IT00410128888</field>
+            <field name="l10n_it_codice_fiscale">0123456789987654</field>
+            <field name="l10n_it_tax_system">RF01</field>
+            <field name="zip">12345</field>
+        </record>
+
+        <record id="base.res_partner_1" model="res.partner">
+            <field name="vat">IT12345670124</field>
+        </record>
+        <record id="base.res_partner_2" model="res.partner">
+            <field name="vat">IT12345670231</field>
+        </record>
+        <record id="base.res_partner_12" model="res.partner">
+            <field name="vat">IT12345670348</field>
+        </record>
+
+    </data>
+</odoo>

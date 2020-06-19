@@ -30,19 +30,25 @@ odoo.define('web.AbstractField', function (require) {
  * @module web.AbstractField
  */
 
-var ajax = require('web.ajax');
 var field_utils = require('web.field_utils');
 var Widget = require('web.Widget');
 
 var AbstractField = Widget.extend({
-    cssLibs: [],
-    jsLibs: [],
     events: {
         'keydown': '_onKeydown',
     },
     custom_events: {
         navigation_move: '_onNavigationMove',
     },
+
+    /**
+    * An object representing fields to be fetched by the model eventhough not present in the view
+    * This object contains "field name" as key and an object as value.
+    * That value object must contain the key "type"
+    * see FieldBinaryImage for an example.
+    */
+    fieldDependencies: {},
+
     /**
      * If this flag is set to true, the field widget will be reset on every
      * change which is made in the view (if the view supports it). This is
@@ -64,6 +70,22 @@ var AbstractField = Widget.extend({
      */
     supportedFieldTypes: [],
 
+    /**
+     * To override to give a user friendly name to the widget.
+     *
+     * @type <string>
+     */
+    description: "",
+    /**
+     * Currently only used in list view.
+     * If this flag is set to true, the list column name will be empty.
+     */
+    noLabel: false,
+    /**
+     * Currently only used in list view.
+     * If set, this value will be displayed as column name.
+     */
+    label: '',
     /**
      * Abstract field class
      *
@@ -97,6 +119,9 @@ var AbstractField = Widget.extend({
         // the inner views...
         var fieldsInfo = record.fieldsInfo[this.viewType];
         this.attrs = options.attrs || (fieldsInfo && fieldsInfo[name]) || {};
+
+        // the 'additionalContext' property contains the attributes to pass through the context.
+        this.additionalContext = options.additionalContext || {};
 
         // this property tracks the current (parsed if needed) value of the field.
         // Note that we don't use an event system anymore, using this.get('value')
@@ -155,7 +180,7 @@ var AbstractField = Widget.extend({
         // to send it to the server. These functions are chosen according to
         // the 'widget' attrs if is is given, and if it is a valid key, with a
         // fallback on the field type, ensuring that the value is formatted and
-        // displayed according to the choosen widget, if any.
+        // displayed according to the chosen widget, if any.
         this.formatType = this.attrs.widget in field_utils.format ?
                             this.attrs.widget :
                             this.field.type;
@@ -163,12 +188,18 @@ var AbstractField = Widget.extend({
         // calls to the format (resp. parse) function.
         this.formatOptions = {};
         this.parseOptions = {};
+
+        // if we add decorations, we need to reevaluate the field whenever any
+        // value from the record is changed
+        if (this.attrs.decorations) {
+            this.resetOnAnyFieldChange = true;
+        }
     },
     /**
      * When a field widget is appended to the DOM, its start method is called,
      * and will automatically call render. Most widgets should not override this.
      *
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     start: function () {
         var self = this;
@@ -177,14 +208,6 @@ var AbstractField = Widget.extend({
             self.$el.addClass('o_field_widget');
             return self._render();
         });
-    },
-    /**
-     * Loads the libraries listed in this.jsLibs and this.cssLibs
-     *
-     * @override
-     */
-    willStart: function () {
-        return $.when(ajax.loadLibs(this), this._super.apply(this, arguments));
     },
 
     //--------------------------------------------------------------------------
@@ -228,7 +251,7 @@ var AbstractField = Widget.extend({
      * if the value changed but was not notified.
      *
      * @abstract
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     commitChanges: function () {},
     /**
@@ -239,6 +262,16 @@ var AbstractField = Widget.extend({
      */
     getFocusableElement: function () {
         return $();
+    },
+    /**
+     * Returns whether or not the field is empty and can thus be hidden. This
+     * method is typically called when the widget is in readonly, to hide it
+     * (and its label) if it is empty.
+     *
+     * @returns {boolean}
+     */
+    isEmpty: function () {
+        return !this.isSet();
     },
     /**
      * Returns true iff the widget has a visible element that can take the focus
@@ -263,7 +296,7 @@ var AbstractField = Widget.extend({
      * value was changed by the user. This is checked before saving a record, by
      * the view.
      *
-     * Note: this is the responsability of the view to check that required
+     * Note: this is the responsibility of the view to check that required
      * fields have a set value.
      *
      * @returns {boolean} true/false if the widget is valid
@@ -282,28 +315,105 @@ var AbstractField = Widget.extend({
      *   is optional, and may be used by a widget to share information from the
      *   moment a field change event is triggered to the moment a reset
      *   operation is applied.
-     * @returns {Deferred} A Deferred, which resolves when the widget rendering
+     * @returns {Promise} A promise, which resolves when the widget rendering
      *   is complete
      */
     reset: function (record, event) {
         this._reset(record, event);
-        return this._render() || $.when();
+        return this._render() || Promise.resolve();
     },
+    /**
+     * Remove the invalid class on a field
+     */
+    removeInvalidClass: function () {
+        this.$el.removeClass('o_field_invalid');
+        this.$el.removeAttr('aria-invalid');
+    },
+    /**
+     * Sets the given id on the focusable element of the field and as 'for'
+     * attribute of potential internal labels.
+     *
+     * @param {string} id
+     */
+    setIDForLabel: function (id) {
+        this.getFocusableElement().attr('id', id);
+    },
+    /**
+     * add the invalid class on a field
+     */
+    setInvalidClass: function () {
+        this.$el.addClass('o_field_invalid');
+        this.$el.attr('aria-invalid', 'true');
+    },
+    /**
+     * Update the modifiers with the newest value.
+     * Now this.attrs.modifiersValue can be used consistantly even with
+     * conditional modifiers inside field widgets, and without needing new
+     * events or synchronization between the widgets, renderer and controller
+     *
+     * @param {Object | null} modifiers  the updated modifiers
+     * @override
+     */
+    updateModifiersValue: function(modifiers) {
+        this.attrs.modifiersValue = modifiers || {};
+    },
+
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
     /**
+     * Apply field decorations (only if field-specific decorations have been
+     * defined in an attribute).
+     *
+     * @private
+     */
+    _applyDecorations: function () {
+        var self = this;
+        this.attrs.decorations.forEach(function (dec) {
+            var isToggled = py.PY_isTrue(
+                py.evaluate(dec.expression, self.record.evalContext)
+            );
+            const className = self._getClassFromDecoration(dec.name);
+            self.$el.toggleClass(className, isToggled);
+        });
+    },
+    /**
      * Converts the value from the field to a string representation.
      *
      * @private
      * @param {any} value (from the field type)
+     * @param {string} [formatType=this.formatType] the formatter to use
      * @returns {string}
      */
-    _formatValue: function (value) {
+    _formatValue: function (value, formatType) {
         var options = _.extend({}, this.nodeOptions, { data: this.recordData }, this.formatOptions);
-        return field_utils.format[this.formatType](value, this.field, options);
+        return field_utils.format[formatType || this.formatType](value, this.field, options);
+    },
+    /**
+     * Returns the className corresponding to a given decoration. A
+     * decoration is of the form 'decoration-%s'. By default, replaces
+     * 'decoration' by 'text'.
+     *
+     * @private
+     * @param {string} decoration must be of the form 'decoration-%s'
+     * @returns {string}
+     */
+    _getClassFromDecoration: function (decoration) {
+        return `text-${decoration.split('-')[1]}`;
+    },
+    /**
+     * Compares the given value with the last value that has been set.
+     * Note that we compare unparsed values. Handles the special case where no
+     * value has been set yet, and the given value is the empty string.
+     *
+     * @private
+     * @param {any} value
+     * @returns {boolean} true iff values are the same
+     */
+    _isLastSetValue: function (value) {
+        return this.lastSetValue === value || (this.value === false && value === '');
     },
     /**
      * This method check if a value is the same as the current value of the
@@ -337,9 +447,12 @@ var AbstractField = Widget.extend({
      * synchronous.
      *
      * @private
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     _render: function () {
+        if (this.attrs.decorations) {
+            this._applyDecorations();
+        }
         if (this.mode === 'edit') {
             return this._renderEdit();
         } else if (this.mode === 'readonly') {
@@ -351,7 +464,7 @@ var AbstractField = Widget.extend({
      * concrete widget.
      *
      * @private
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     _renderEdit: function () {
     },
@@ -360,7 +473,7 @@ var AbstractField = Widget.extend({
      * the concrete widget.
      *
      * @private
-     * @returns {Deferred|undefined}
+     * @returns {Promise|undefined}
      */
     _renderReadonly: function () {
     },
@@ -391,15 +504,16 @@ var AbstractField = Widget.extend({
      *   Please do not use this flag unless you really need it.  Our only use
      *   case is currently the pad widget, which does a _setValue in the
      *   renderEdit method.
+     * @param {boolean} [options.notifyChange=true] if false, the basic model
+     *   will not notify and not trigger the onchange, even though it was changed.
      * @param {boolean} [options.forceChange=false] if true, the change event will be
      *   triggered even if the new value is the same as the old one
-     * @returns {Deferred}
+     * @returns {Promise}
      */
     _setValue: function (value, options) {
-        // we try to avoid doing useless work, if the value given has not
-        // changed.  Note that we compare the unparsed values.
-        if (this.lastSetValue === value || (this.value === false && value === '')) {
-            return $.when();
+        // we try to avoid doing useless work, if the value given has not changed.
+        if (this._isLastSetValue(value)) {
+            return Promise.resolve();
         }
         this.lastSetValue = value;
         try {
@@ -407,23 +521,27 @@ var AbstractField = Widget.extend({
             this._isValid = true;
         } catch (e) {
             this._isValid = false;
-            return $.Deferred().reject();
+            this.trigger_up('set_dirty', {dataPointID: this.dataPointID});
+            return Promise.reject({message: "Value set is not valid"});
         }
         if (!(options && options.forceChange) && this._isSameValue(value)) {
-            return $.when();
+            return Promise.resolve();
         }
-        var def = $.Deferred();
-        var changes = {};
-        changes[this.name] = value;
-        this.trigger_up('field_changed', {
-            dataPointID: this.dataPointID,
-            changes: changes,
-            viewType: this.viewType,
-            doNotSetDirty: options && options.doNotSetDirty,
-            onSuccess: def.resolve.bind(def),
-            onFailure: def.reject.bind(def),
+        var self = this;
+        return new Promise(function (resolve, reject) {
+            var changes = {};
+            changes[self.name] = value;
+            self.trigger_up('field_changed', {
+                dataPointID: self.dataPointID,
+                changes: changes,
+                viewType: self.viewType,
+                doNotSetDirty: options && options.doNotSetDirty,
+                notifyChange: !options || options.notifyChange !== false,
+                allowWarning: options && options.allowWarning,
+                onSuccess: resolve,
+                onFailure: reject,
+            });
         });
-        return def;
     },
 
     //--------------------------------------------------------------------------
@@ -446,13 +564,21 @@ var AbstractField = Widget.extend({
     _onKeydown: function (ev) {
         switch (ev.which) {
             case $.ui.keyCode.TAB:
-                ev.preventDefault();
-                ev.stopPropagation();
-                this.trigger_up('navigation_move', {
+                var event = this.trigger_up('navigation_move', {
                     direction: ev.shiftKey ? 'previous' : 'next',
                 });
+                if (event.is_stopped()) {
+                    ev.preventDefault();
+                    ev.stopPropagation();
+                }
                 break;
             case $.ui.keyCode.ENTER:
+                // We preventDefault the ENTER key because of two coexisting behaviours:
+                // - In HTML5, pressing ENTER on a <button> triggers two events: a 'keydown' AND a 'click'
+                // - When creating and opening a dialog, the focus is automatically given to the primary button
+                // The end result caused some issues where a modal opened by an ENTER keypress (e.g. saving
+                // changes in multiple edition) confirmed the modal without any intentionnal user input.
+                ev.preventDefault();
                 ev.stopPropagation();
                 this.trigger_up('navigation_move', {direction: 'next_line'});
                 break;

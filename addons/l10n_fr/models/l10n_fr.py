@@ -1,14 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo import fields, models, api, _
 
-from odoo import fields, models
-
-
-class ResCompany(models.Model):
-    _inherit = 'res.company'
-
-    siret = fields.Char(related='partner_id.siret', string='SIRET', size=14)
-    ape = fields.Char(string='APE')
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'

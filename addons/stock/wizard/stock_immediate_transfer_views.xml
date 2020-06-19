@@ -6,14 +6,20 @@
         <field name="arch" type="xml">
             <form string="Immediate transfer?">
                 <group>
-                    <p>
-                        You haven't entered <i>done</i> quantities, by clicking on <i>apply</i>
-                        Odoo will process all the <i>reserved</i> quantities.
-                    </p>
+                    <p>You have not recorded <i>done</i> quantities yet, by clicking on <i>apply</i> Odoo will process all the quantities.</p>
                 </group>
+
+                <field name="show_transfers" invisible="1"/>
+                <field name="immediate_transfer_line_ids" nolabel="1" attrs="{'invisible': [('show_transfers', '=', False)]}">>
+                    <tree create="0" delete="0" editable="top">
+                        <field name="picking_id"/>
+                        <field name="to_immediate" widget="boolean_toggle"/>
+                    </tree>
+                </field>
+
                 <footer>
-                    <button name="process" string="_Apply" type="object" class="btn-primary"/>
-                    <button string="Cancel" class="btn-default" special="cancel" />
+                    <button name="process" string="Apply" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
                 </footer>
             </form>
         </field>

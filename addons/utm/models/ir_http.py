@@ -11,17 +11,25 @@ class IrHttp(models.AbstractModel):
         return request.httprequest.host
 
     @classmethod
-    def _dispatch(cls):
-        cookies_to_set = []
-        for var, dummy, cook in request.env['utm.mixin'].tracking_fields():
-            if var in request.params and request.httprequest.cookies.get(var) != request.params[var]:
-                cookies_to_set.append((cook, request.params[var], cls.get_utm_domain_cookies()))
-
-        response = super(IrHttp, cls)._dispatch()
+    def _set_utm(cls, response):
         if isinstance(response, Exception):
             return response
+        # the parent dispatch might destroy the session
+        if not request.db:
+            return response
 
-        for cookie_to_set in cookies_to_set:
-            response.set_cookie(cookie_to_set[0], cookie_to_set[1], domain=cookie_to_set[2])
-
+        domain = cls.get_utm_domain_cookies()
+        for var, dummy, cook in request.env['utm.mixin'].tracking_fields():
+            if var in request.params and request.httprequest.cookies.get(var) != request.params[var]:
+                response.set_cookie(cook, request.params[var], domain=domain)
         return response
+
+    @classmethod
+    def _dispatch(cls):
+        response = super(IrHttp, cls)._dispatch()
+        return cls._set_utm(response)
+
+    @classmethod
+    def _handle_exception(cls, exc):
+        response = super(IrHttp, cls)._handle_exception(exc)
+        return cls._set_utm(response)

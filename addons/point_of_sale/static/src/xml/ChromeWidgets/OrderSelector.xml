@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderSelector" owl="1">
+        <div class="order-selector">
+            <span class="orders touch-scrollable">
+                <t t-foreach="orderList" t-as="order" t-key="order.cid">
+                    <t t-if="order === env.pos.get_order()">
+                        <span class="order-button select-order selected">
+                            <span class="order-sequence">
+                                <t t-esc="order.sequence_number" />
+                            </span>
+                            <t t-esc="creationTime(order)" />
+                        </span>
+                    </t>
+                    <t t-else="">
+                        <span class="order-button select-order" t-on-click="selectOrder(order)">
+                            <span class="order-sequence">
+                                <t t-esc="order.sequence_number" />
+                            </span>
+                        </span>
+                    </t>
+                </t>
+            </span>
+            <span class="order-button square neworder-button" t-on-click="addNewOrder">
+                <i class="fa fa-plus" role="img" aria-label="New order" title="New order" />
+            </span>
+            <span class="order-button square deleteorder-button" t-on-click="deleteCurrentOrder">
+                <i class="fa fa-minus" role="img" aria-label="Delete order" title="Delete order" />
+            </span>
+        </div>
+    </t>
+
+</templates>

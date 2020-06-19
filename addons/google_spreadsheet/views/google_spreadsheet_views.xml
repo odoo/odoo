@@ -6,10 +6,11 @@
         <record id="view_ir_attachment_google_spreadsheet_tree" model="ir.ui.view">
             <field name="name">ir.attachment.google.spreadsheet.tree</field>
             <field name="model">ir.attachment</field>
+            <field name="priority">100</field>
             <field name="arch" type="xml">
                 <tree string="Google Spreadsheets">
                     <field name="name" string="Name"/>
-                    <field name="url" />
+                    <field name="url" widget="url" />
                 </tree>
             </field>
         </record>
@@ -17,6 +18,7 @@
         <record id="view_ir_attachment_google_spreadsheet_form" model="ir.ui.view">
             <field name="name">ir.attachment.google.spreadsheet.form</field>
             <field name="model">ir.attachment</field>
+            <field name="priority">100</field>
             <field name="arch" type="xml">
                 <form string="Google Spreadsheets">
                     <sheet>
@@ -38,7 +40,6 @@
         <record id="action_ir_attachment_google_spreadsheet_tree" model="ir.actions.act_window">
             <field name="name">Google Spreadsheets</field>
             <field name="res_model">ir.attachment</field>
-            <field name="view_type">form</field>
             <field name="view_mode">tree,form</field>
             <field name="context">{}</field>
             <field name="domain">[('url', '=ilike', '%google%/spreadsheet%')]</field>

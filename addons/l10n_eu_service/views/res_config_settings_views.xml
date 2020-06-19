@@ -7,8 +7,9 @@
         <field name="inherit_id" ref="account.res_config_settings_view_form"/>
         <field name="arch" type="xml">
             <div name="l10n_eu_service_right_pane" position="inside">
+                <field name="l10n_eu_services_eu_country" invisible="1"/>
                 <div class="content-group" attrs="{'invisible': [('module_l10n_eu_service', '=', False)]}">
-                    <div>
+                    <div class="mt8" attrs="{'invisible': [('l10n_eu_services_eu_country', '=', False)]}">
                         <button name="%(l10n_eu_service.action_eu_service)d" icon="fa-arrow-right" type="action" string="Add new countries" class="btn-link"/>
                     </div>
                 </div>

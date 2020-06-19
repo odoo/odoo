@@ -24,22 +24,14 @@ class ImportModule(Controller):
         if not is_admin:
             raise AccessError(_("Only administrators can upload a module"))
 
-    @route('/base_import_module/login', type='http', auth='none', methods=['POST'], csrf=False)
+    @route(
+        '/base_import_module/login_upload',
+        type='http', auth='none', methods=['POST'], csrf=False, save_session=False)
     @webservice
-    def login(self, login, password, db=None):
+    def login_upload(self, login, password, db=None, force='', mod_file=None, **kw):
         if db and db != request.db:
-            raise Exception(_("Could not select database '%s'") % db)
+            raise Exception(_("Could not select database '%s'", db))
         uid = request.session.authenticate(request.db, login, password)
-        if not uid:
-            return Response(response="Wrong login/password", status=401)
         self.check_user(uid)
-        return Response(headers={
-            'X-CSRF-TOKEN': request.csrf_token(),
-        })
-
-    @route('/base_import_module/upload', type='http', auth='user', methods=['POST'])
-    @webservice
-    def upload(self, mod_file=None, force='', **kw):
-        self.check_user()
         force = True if force == '1' else False
         return request.env['ir.module.module'].import_zipfile(mod_file, force=force)[0]

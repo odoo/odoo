@@ -1,0 +1,538 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="tax_report" model="account.tax.report">
+        <field name="name">Tax Report</field>
+        <field name="country_id" ref="base.fr"/>
+    </record>
+
+    <record id="tax_report_montant_op_realisees" model="account.tax.report.line">
+        <field name="name">A. Montant des opérations réalisées</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">1</field>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_op_imposables_ht" model="account.tax.report.line">
+        <field name="name">Opérations imposables (H.T.)</field>
+        <field name="parent_id" ref="tax_report_montant_op_realisees"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">1</field>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_01" model="account.tax.report.line">
+        <field name="name">01 - Ventes, prestations de services</field>
+        <field name="tag_name">01</field>
+        <field name="code">box_01</field>
+        <field name="parent_id" ref="tax_report_op_imposables_ht"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="tax_report_02" model="account.tax.report.line">
+        <field name="name">02 - Autres opérations imposables</field>
+        <field name="tag_name">02</field>
+        <field name="code">box_02</field>
+        <field name="parent_id" ref="tax_report_op_imposables_ht"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="tax_report_2A" model="account.tax.report.line">
+        <field name="name">2A - Achats de prestations de services intracommunautaires</field>
+        <field name="tag_name">2A</field>
+        <field name="code">box_2A</field>
+        <field name="parent_id" ref="tax_report_op_imposables_ht"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="tax_report_2B" model="account.tax.report.line">
+        <field name="name">2B - Importations</field>
+        <field name="tag_name">2B</field>
+        <field name="code">box_2B</field>
+        <field name="parent_id" ref="tax_report_op_imposables_ht"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="tax_report_03" model="account.tax.report.line">
+        <field name="name">03 - Acquisitions intracommunautaires</field>
+        <field name="tag_name">03</field>
+        <field name="code">box_03</field>
+        <field name="parent_id" ref="tax_report_op_imposables_ht"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="tax_report_3A" model="account.tax.report.line">
+        <field name="name">3A - Livraisons d'électricité, de gaz naturel, de chaleur ou de froid imposables en France
+        </field>
+        <field name="tag_name">3A</field>
+        <field name="code">box_3A</field>
+        <field name="parent_id" ref="tax_report_op_imposables_ht"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="tax_report_3B" model="account.tax.report.line">
+        <field name="name">3B - Achats de bien ou de prestations de services réalisés auprès d'un assujetti non établi
+            en
+            France
+        </field>
+        <field name="tag_name">3B</field>
+        <field name="code">box_3B</field>
+        <field name="parent_id" ref="tax_report_op_imposables_ht"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">7</field>
+    </record>
+
+    <record id="tax_report_3C" model="account.tax.report.line">
+        <field name="name">3C - Régularisations</field>
+        <field name="tag_name">3C</field>
+        <field name="code">box_3C</field>
+        <field name="parent_id" ref="tax_report_op_imposables_ht"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">8</field>
+    </record>
+
+    <record id="tax_report_op_non_imposables" model="account.tax.report.line">
+        <field name="name">Opérations Non Imposables</field>
+        <field name="parent_id" ref="tax_report_montant_op_realisees"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">2</field>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_04" model="account.tax.report.line">
+        <field name="name">04 - Exportations hors UE</field>
+        <field name="tag_name">04</field>
+        <field name="code">box_04</field>
+        <field name="parent_id" ref="tax_report_op_non_imposables"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="tax_report_05" model="account.tax.report.line">
+        <field name="name">05 - Autres opérations non imposables</field>
+        <field name="tag_name">05</field>
+        <field name="code">box_05</field>
+        <field name="parent_id" ref="tax_report_op_non_imposables"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="tax_report_5A" model="account.tax.report.line">
+        <field name="name">5A - Ventes à distance taxables dans un autre État membre au profit des personnes non
+            assujetties - Ventes BtoC
+        </field>
+        <field name="tag_name">5A</field>
+        <field name="code">box_5A</field>
+        <field name="parent_id" ref="tax_report_op_non_imposables"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="tax_report_06" model="account.tax.report.line">
+        <field name="name">06 - Livraisons intracommunautaires à destination d'une personne assujettie - Ventes BtoB
+        </field>
+        <field name="tag_name">06</field>
+        <field name="code">box_06</field>
+        <field name="parent_id" ref="tax_report_op_non_imposables"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="tax_report_07" model="account.tax.report.line">
+        <field name="name">07 - Achats en franchise</field>
+        <field name="tag_name">07</field>
+        <field name="code">box_07</field>
+        <field name="parent_id" ref="tax_report_op_non_imposables"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="tax_report_7A" model="account.tax.report.line">
+        <field name="name">7A - Ventes de biens ou prestations de services réalisées par un assujetti non établi en
+            France
+        </field>
+        <field name="tag_name">7A</field>
+        <field name="code">box_7A</field>
+        <field name="parent_id" ref="tax_report_op_non_imposables"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="tax_report_7B" model="account.tax.report.line">
+        <field name="name">7B - Régularisations</field>
+        <field name="tag_name">7B</field>
+        <field name="code">box_7B</field>
+        <field name="parent_id" ref="tax_report_op_non_imposables"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">7</field>
+    </record>
+
+    <record id="tax_report_decompte_tva" model="account.tax.report.line">
+        <field name="name">B. Décompte de la TVA à payer</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">2</field>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_tva_brute" model="account.tax.report.line">
+        <field name="name">TVA Brute</field>
+        <field name="parent_id" ref="tax_report_decompte_tva"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">1</field>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_08_base" model="account.tax.report.line">
+        <field name="name">08 - Taux normal 20 % (base)</field>
+        <field name="tag_name">08_base</field>
+        <field name="code">box_08_base</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="tax_report_08_taxe" model="account.tax.report.line">
+        <field name="name">08 - Taux normal 20 % (taxe)</field>
+        <field name="tag_name">08_taxe</field>
+        <field name="code">box_08_taxe</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="tax_report_09_base" model="account.tax.report.line">
+        <field name="name">09 - Taux réduit 5,5 % (base)</field>
+        <field name="tag_name">09_base</field>
+        <field name="code">box_09_base</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="tax_report_09_taxe" model="account.tax.report.line">
+        <field name="name">09 - Taux réduit 5,5 % (taxe)</field>
+        <field name="tag_name">09_taxe</field>
+        <field name="code">box_09_taxe</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="tax_report_9B_base" model="account.tax.report.line">
+        <field name="name">9B - Taux réduit 10 % (base)</field>
+        <field name="tag_name">9B_base</field>
+        <field name="code">box_9B_base</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">5</field>
+    </record>
+    <record id="tax_report_9B_taxe" model="account.tax.report.line">
+        <field name="name">9B - Taux réduit 10 % (taxe)</field>
+        <field name="tag_name">9B_taxe</field>
+        <field name="code">box_9B_taxe</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="tax_report_10_base" model="account.tax.report.line">
+        <field name="name">10 - Taux normal 8,5 % (base)</field>
+        <field name="tag_name">10_base</field>
+        <field name="code">box_10_base</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">7</field>
+    </record>
+    <record id="tax_report_10_taxe" model="account.tax.report.line">
+        <field name="name">10 - Taux normal 8,5 % (taxe)</field>
+        <field name="tag_name">10_taxe</field>
+        <field name="code">box_10_taxe</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">8</field>
+    </record>
+
+    <record id="tax_report_11_base" model="account.tax.report.line">
+        <field name="name">11 - Taux normal 2,1 % (base)</field>
+        <field name="tag_name">11_base</field>
+        <field name="code">box_11_base</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">9</field>
+    </record>
+    <record id="tax_report_11_taxe" model="account.tax.report.line">
+        <field name="name">11 - Taux normal 2,1 % (taxe)</field>
+        <field name="tag_name">11_taxe</field>
+        <field name="code">box_11_taxe</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">10</field>
+    </record>
+
+    <record id="tax_report_13_base" model="account.tax.report.line">
+        <field name="name">13 - Anciens taux (base)</field>
+        <field name="tag_name">13_base</field>
+        <field name="code">box_13_base</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">11</field>
+    </record>
+    <record id="tax_report_13_taxe" model="account.tax.report.line">
+        <field name="name">13 - Anciens taux (taxe)</field>
+        <field name="tag_name">13_taxe</field>
+        <field name="code">box_13_taxe</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">12</field>
+    </record>
+
+    <record id="tax_report_14_base" model="account.tax.report.line">
+        <field name="name">14 - Opérations imposables à un taux particulier (base)</field>
+        <field name="tag_name">14_base</field>
+        <field name="code">box_14_base</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">13</field>
+    </record>
+    <record id="tax_report_14_taxe" model="account.tax.report.line">
+        <field name="name">14 - Opérations imposables à un taux particulier (taxe)</field>
+        <field name="tag_name">14_taxe</field>
+        <field name="code">box_14_taxe</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">14</field>
+    </record>
+
+    <record id="tax_report_15" model="account.tax.report.line">
+        <field name="name">15 - TVA antérieurement déduite à reverser</field>
+        <field name="tag_name">15</field>
+        <field name="code">box_15</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">15</field>
+    </record>
+
+    <record id="tax_report_5B" model="account.tax.report.line">
+        <field name="name">5B - Sommes à ajouter, y compris acompte congés</field>
+        <field name="tag_name">5B</field>
+        <field name="code">box_5B</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">16</field>
+    </record>
+
+    <record id="tax_report_16" model="account.tax.report.line">
+        <field name="name">16 - Total de la TVA brute due</field>
+        <field name="code">box_16</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">17</field>
+        <field name="formula">box_08_taxe + box_09_taxe + box_9B_taxe + box_10_taxe + box_11_taxe + box_13_taxe + box_14_taxe + box_15 + box_5B</field>
+    </record>
+
+    <record id="tax_report_7C" model="account.tax.report.line">
+        <field name="name">7C - Dont TVA sur importations bénéficiant du dispositif d'autoliquidation</field>
+        <field name="tag_name">7C</field>
+        <field name="code">box_7C</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">18</field>
+    </record>
+
+    <record id="tax_report_17" model="account.tax.report.line">
+        <field name="name">17 - Dont TVA sur acquisitions intracommunautaires</field>
+        <field name="tag_name">17</field>
+        <field name="code">box_17</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">19</field>
+    </record>
+
+    <record id="tax_report_18" model="account.tax.report.line">
+        <field name="name">18 - Dont TVA sur opérations à destination de Monaco</field>
+        <field name="tag_name">18</field>
+        <field name="code">box_18</field>
+        <field name="parent_id" ref="tax_report_tva_brute"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">20</field>
+    </record>
+
+    <record id="tax_report_tva_deductible" model="account.tax.report.line">
+        <field name="name">TVA Déductible</field>
+        <field name="parent_id" ref="tax_report_decompte_tva"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">2</field>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_19" model="account.tax.report.line">
+        <field name="name">19 - Biens constituant des immobilisations</field>
+        <field name="tag_name">19</field>
+        <field name="code">box_19</field>
+        <field name="parent_id" ref="tax_report_tva_deductible"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">1</field>
+    </record>
+
+    <record id="tax_report_20" model="account.tax.report.line">
+        <field name="name">20 - Autres bien et services</field>
+        <field name="tag_name">20</field>
+        <field name="code">box_20</field>
+        <field name="parent_id" ref="tax_report_tva_deductible"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="tax_report_21" model="account.tax.report.line">
+        <field name="name">21 - Autre TVA à déduire</field>
+        <field name="tag_name">21</field>
+        <field name="code">box_21</field>
+        <field name="parent_id" ref="tax_report_tva_deductible"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="tax_report_22" model="account.tax.report.line">
+        <field name="name">22 - Report du crédit apparaissant ligne 27 de la précédente déclaration</field>
+        <field name="tag_name">22</field>
+        <field name="code">box_22</field>
+        <field name="parent_id" ref="tax_report_tva_deductible"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">4</field>
+    </record>
+
+    <record id="tax_report_2C" model="account.tax.report.line">
+        <field name="name">2C - Sommes à imputer, y compris acompte congés</field>
+        <field name="tag_name">2C</field>
+        <field name="code">box_2C</field>
+        <field name="parent_id" ref="tax_report_tva_deductible"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">5</field>
+    </record>
+
+    <record id="tax_report_22A" model="account.tax.report.line">
+        <field name="name">22A - Indiquer le coefficient de taxation unique applicable pour la période s'il est
+            différent de 100 %
+        </field>
+        <field name="tag_name">22A</field>
+        <field name="code">box_22A</field>
+        <field name="parent_id" ref="tax_report_tva_deductible"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">6</field>
+    </record>
+
+    <record id="tax_report_23" model="account.tax.report.line">
+        <field name="name">23 - Total TVA déductible</field>
+        <field name="code">box_23</field>
+        <field name="parent_id" ref="tax_report_tva_deductible"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">7</field>
+        <field name="formula">box_19 + box_20 + box_21 + box_22 + box_2C</field>
+    </record>
+
+    <record id="tax_report_24" model="account.tax.report.line">
+        <field name="name">24 - Dont TVA déductible sur importations</field>
+        <field name="tag_name">24</field>
+        <field name="code">box_24</field>
+        <field name="parent_id" ref="tax_report_tva_deductible"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">8</field>
+    </record>
+
+    <record id="tax_report_credit" model="account.tax.report.line">
+        <field name="name">Crédit</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">3</field>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_25" model="account.tax.report.line">
+        <field name="name">25 - Crédit de TVA</field>
+        <field name="code">box_25</field>
+        <field name="parent_id" ref="tax_report_credit"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">1</field>
+        <field name="formula">box_23 - box_16 if box_23 - box_16 > 0 else 0</field>
+    </record>
+
+    <record id="tax_report_26" model="account.tax.report.line">
+        <field name="name">26 - Remboursement de crédit demandé sur formulaire n°3519 joint</field>
+        <field name="tag_name">26</field>
+        <field name="code">box_26</field>
+        <field name="parent_id" ref="tax_report_credit"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="tax_report_AA" model="account.tax.report.line">
+        <field name="name">AA - Crédit de TVA transféré à la société tête de groupe sur la déclaration récapitulative
+            3310-CA3G
+        </field>
+        <field name="tag_name">AA</field>
+        <field name="code">box_AA</field>
+        <field name="parent_id" ref="tax_report_credit"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">3</field>
+    </record>
+
+    <record id="tax_report_27" model="account.tax.report.line">
+        <field name="name">27 - Crédit à reporter</field>
+        <field name="code">box_27</field>
+        <field name="parent_id" ref="tax_report_credit"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">4</field>
+        <field name="formula">box_25 - box_26 - box_AA if box_25 - box_26 - box_AA > 0 else 0</field>
+    </record>
+
+    <record id="tax_report_taxes_a_payer" model="account.tax.report.line">
+        <field name="name">Taxe à Payer</field>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">4</field>
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_28" model="account.tax.report.line">
+        <field name="name">28 - TVA nette due</field>
+        <field name="code">box_28</field>
+        <field name="parent_id" ref="tax_report_taxes_a_payer"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">1</field>
+        <field name="formula">box_16 - box_23 if box_16 - box_23 > 0 else 0</field>
+    </record>
+
+    <record id="tax_report_29" model="account.tax.report.line">
+        <field name="name">29 - Taxes assimilées calculées sur annexe n°3310-A-SD</field>
+        <field name="tag_name">29</field>
+        <field name="code">box_29</field>
+        <field name="parent_id" ref="tax_report_taxes_a_payer"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">2</field>
+    </record>
+
+    <record id="tax_report_AB" model="account.tax.report.line">
+        <field name="name">AB - Total à payer acquitté par la société tête de groupe sur la déclaration récapitulative
+            3310-CA3G
+        </field>
+        <field name="code">box_AB</field>
+        <field name="parent_id" ref="tax_report_taxes_a_payer"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">3</field>
+        <!--According to the trustee, it's very rare that a company fill this box-->
+        <field name="formula">None</field>
+    </record>
+
+    <record id="tax_report_32" model="account.tax.report.line">
+        <field name="name">32 - Total à payer</field>
+        <field name="code">box_32</field>
+        <field name="parent_id" ref="tax_report_taxes_a_payer"/>
+        <field name="report_id" ref="tax_report"/>
+        <field name="sequence">4</field>
+        <!--The real formula is "box_28 + box_29 - box_AB" but box_AB not zero is a rare edge case -->
+        <field name="formula">box_28 + box_29</field>
+    </record>
+
+</odoo>

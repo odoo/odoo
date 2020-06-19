@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="account_invoice_send_inherit_account_wizard_form">
+            <field name="name">account.invoice.send.form.inherited.snailmail</field>
+            <field name="model">account.invoice.send</field>
+            <field name="inherit_id" ref="account.account_invoice_send_wizard_form"/>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@name='option_email']" position='before'>
+                    <div name="option_letter">
+                        <field name="invalid_addresses" invisible="1"/>
+                        <div name="option" class="text-left d-inline-block">
+                            <field name="snailmail_is_letter" />
+                            <b><label for="snailmail_is_letter"/></b>
+                        </div>
+                        <span attrs="{'invisible': [('snailmail_is_letter','=', False)]}">
+                            <span class="mr4" attrs="{'invisible': [('snailmail_cost', '=', 0)]}">
+                                <b>(
+                                    <span>
+                                        <field name="snailmail_cost" options="{'digits':[0,0]}" class="mr4"/>
+                                        <label for="snailmail_cost" class="mr4"/>
+                                    </span>
+                                    <i class="fa fa-info-circle" role="img" aria-label="Warning" title="Make sure you have enough Stamps on your account."/>
+                                )</b>
+                            </span>
+                            <span attrs="{'invisible': ['|', ('composition_mode', '=', 'mass_mail'), ('partner_id', '=', False)]}">
+                                <span attrs="{'invisible': [('invalid_addresses', '!=', 0)]}">
+                                    <div class="text-right text-muted d-inline-block" name="address">
+                                        <span> to: </span>
+                                        <field name="partner_id" readonly="1" force_save="1" context="{'show_address': 1, 'address_inline': 1}" options="{'always_reload': True, 'no_quick_create': True}"/>
+                                    </div>
+                                </span>
+                                <span attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
+                                    <div class="text-right d-inline-block" attrs="{'invisible': [('composition_mode', '=', 'mass_mail')]}">
+                                        <span class="text-danger">
+                                            The customer address is not complete.
+                                        </span>
+                                    </div>
+                                </span>
+                            </span>
+                            <span attrs="{'invisible': [('composition_mode', '!=', 'mass_mail')]}">
+                                <span attrs="{'invisible': [('invalid_addresses', '=', 0)]}">
+                                    <span class="text-danger">
+                                        Some customer addresses are not complete.
+                                    </span>
+                                    <button type="object" name="invalid_addresses_action" class="btn btn-link" role="button"><field name="invalid_addresses" readonly="1" options="{'digits':[0,0]}"/> invoices</button>
+                                </span>
+                            </span>
+                        </span>
+                    </div>
+                </xpath>
+                <xpath expr="//footer/button[hasclass('send_and_print')]" position='attributes'>
+                    <attribute name="attrs">{'invisible': ['|', ('is_print', '=', False), '&amp;', '&amp;', ('is_print', '=', True), ('snailmail_is_letter', '=', False), ('is_email', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//footer/button[hasclass('send')]" position='attributes'>
+                    <attribute name="attrs">{'invisible': ['|', ('is_print', '=', True), '&amp;', '&amp;', ('is_print', '=', False), ('snailmail_is_letter', '=', False), ('is_email', '=', False)]}</attribute>
+                </xpath>
+                <xpath expr="//footer/button[hasclass('print')]" position='attributes'>
+                    <attribute name="attrs">{'invisible': ['|', '|', ('is_print', '=', False), ('snailmail_is_letter', '=', True), ('is_email', '=', True)]}</attribute>
+                </xpath>
+            </field>
+        </record>
+
+    </data>
+</odoo>

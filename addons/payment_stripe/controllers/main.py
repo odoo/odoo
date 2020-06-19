@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 import logging
-import pprint
 import werkzeug
 
 from odoo import http
@@ -10,23 +9,19 @@ _logger = logging.getLogger(__name__)
 
 
 class StripeController(http.Controller):
+    _success_url = '/payment/stripe/success'
+    _cancel_url = '/payment/stripe/cancel'
 
-    @http.route(['/payment/stripe/s2s/create_json'], type='json', auth='public')
-    def stripe_s2s_create_json(self, **kwargs):
-        acquirer_id = int(kwargs.get('acquirer_id'))
-        acquirer = request.env['payment.acquirer'].browse(acquirer_id)
-        return acquirer.s2s_process(kwargs).id
-
-    @http.route(['/payment/stripe/s2s/create'], type='http', auth='public')
-    def stripe_s2s_create(self, **post):
-        acquirer_id = int(post.get('acquirer_id'))
-        acquirer = request.env['payment.acquirer'].browse(acquirer_id)
-        acquirer.s2s_process(post)
-        return werkzeug.utils.redirect(post.get('return_url', '/'))
+    @http.route(['/payment/stripe/success', '/payment/stripe/cancel'], type='http', auth='public')
+    def stripe_success(self, **kwargs):
+        request.env['payment.transaction'].sudo().form_feedback(kwargs, 'stripe')
+        return werkzeug.utils.redirect('/payment/process')
 
     @http.route(['/payment/stripe/s2s/create_json_3ds'], type='json', auth='public', csrf=False)
     def stripe_s2s_create_json_3ds(self, verify_validity=False, **kwargs):
-        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).s2s_process(kwargs)
+        if not kwargs.get('partner_id'):
+            kwargs = dict(kwargs, partner_id=request.env.user.partner_id.id)
+        token = request.env['payment.acquirer'].browse(int(kwargs.get('acquirer_id'))).with_context(stripe_manual_payment=True).s2s_process(kwargs)
 
         if not token:
             res = {
@@ -48,16 +43,12 @@ class StripeController(http.Controller):
 
         return res
 
-    @http.route(['/payment/stripe/create_charge'], type='json', auth='public')
-    def stripe_create_charge(self, **post):
-        """ Create a payment transaction
+    @http.route('/payment/stripe/s2s/create_setup_intent', type='json', auth='public', csrf=False)
+    def stripe_s2s_create_setup_intent(self, acquirer_id, **kwargs):
+        acquirer = request.env['payment.acquirer'].browse(int(acquirer_id))
+        res = acquirer.with_context(stripe_manual_payment=True)._create_setup_intent(kwargs)
+        return res.get('client_secret')
 
-        Expects the result from the user input from checkout.js popup"""
-        tx = request.env['payment.transaction'].sudo().browse(
-            int(request.session.get('sale_transaction_id') or request.session.get('website_payment_tx_id', False))
-        )
-        response = tx._create_stripe_charge(tokenid=post['tokenid'], email=post['email'])
-        _logger.info('Stripe: entering form_feedback with post data %s', pprint.pformat(response))
-        if response:
-            request.env['payment.transaction'].sudo().form_feedback(response, 'stripe')
-        return post.pop('return_url', '/')
+    @http.route('/payment/stripe/s2s/process_payment_intent', type='json', auth='public', csrf=False)
+    def stripe_s2s_process_payment_intent(self, **post):
+        return request.env['payment.transaction'].sudo().form_feedback(post, 'stripe')

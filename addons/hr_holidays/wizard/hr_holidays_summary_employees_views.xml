@@ -5,7 +5,7 @@
             <field name="name">hr.holidays.summary.employee.form</field>
             <field name="model">hr.holidays.summary.employee</field>
             <field name="arch" type="xml">
-                <form string="Leaves Summary">
+                <form string="Time Off Summary">
                     <group col="4" colspan="6">
                         <field name="date_from"/>
                         <newline/>
@@ -15,17 +15,16 @@
                     </group>
                     <footer>
                         <button name="print_report" string="Print" type="object" class="btn-primary"/>
-                        <button string="Cancel" class="btn-default" special="cancel" />
+                        <button string="Cancel" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
             </field>
         </record>
 
         <record id="action_hr_holidays_summary_employee" model="ir.actions.act_window">
-            <field name="name">Leaves Summary</field>
+            <field name="name">Time Off Summary</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">hr.holidays.summary.employee</field>
-            <field name="view_type">form</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
             <field name="binding_model_id" ref="hr.model_hr_employee" />

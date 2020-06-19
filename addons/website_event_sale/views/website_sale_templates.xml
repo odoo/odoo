@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <!-- If the sale order line concerns an event, we want the "product" link to point to the event itself and not to the product on the ecommerce -->
+    <template id="cart_line_product_link_inherit_website_event_sale" inherit_id="website_sale.cart_line_product_link" name="Event Shopping Cart Line Product Link">
+        <xpath expr="//a" position="attributes">
+            <attribute name="t-attf-href"/>
+            <attribute name="t-att-href">
+                line.event_id and ('/event/%s/register' % slug(line.event_id)) or line.product_id.website_url
+            </attribute>
+        </xpath>
+    </template>
+
+    <!-- If the sale order line concerns an event, we want to show an additional line with the event name even on small screens -->
+    <template id="cart_lines_inherit_website_event_sale" inherit_id="website_sale.cart_lines" name="Event Shopping Cart Lines">
+        <xpath expr="//t[@t-call='website_sale.cart_line_description_following_lines']/t[@t-set='div_class']" position="after">
+            <t t-if="line.event_id">
+                <t t-set="div_class" t-value="''"/>
+            </t>
+        </xpath>
+        <xpath expr="//del" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="#{line.event_id and 'd-none' or ''}"/>
+        </xpath>
+    </template>
+
+    <!-- If the sale order line concerns an event, we want to show an additional line with the event name -->
+    <template id="cart_popover_inherit_website_event_sale" inherit_id="website_sale.cart_popover" name="Event Cart Popover">
+        <xpath expr="//t[@t-call='website_sale.cart_line_product_link']" position="after">
+            <t t-if="line.event_id" t-call="website_sale.cart_line_description_following_lines"/>
+        </xpath>
+    </template>
+
+    <!-- If the sale order line concerns an event, we want to show an additional line with the event name -->
+    <template id="cart_summary_inherit_website_event_sale" inherit_id="website_sale.cart_summary" name="Event Cart right column">
+        <xpath expr="//td[hasclass('td-product_name')]/div/strong" position="after">
+            <t t-if="line.event_id" t-call="website_sale.cart_line_description_following_lines"/>
+        </xpath>
+    </template>
+
+</odoo>

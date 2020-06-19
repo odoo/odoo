@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<template>
+    <t t-name="website.slide.upload.modal.certification">
+        <div>
+            <form class="clearfix">
+                <div class="row">
+                    <div class="col" id="o_wslides_js_slide_upload_left_column">
+                        <div class="form-group">
+                            <label for="certification_id" class="col-form-label col-md-3">Certification</label>
+                            <input class="form-control" id="certification_id" required="required"/>
+                        </div>
+                        <div class="form-group">
+                            <label for="upload" class="col-form-label">Choose an Image</label>
+                            <input id="upload" class="form-control" data-prevent-onchange='true' name="file" accept="image/*" type="file" required="required"/>
+                        </div>
+                        <t t-call="website.slide.upload.modal.common"/>
+                        <canvas id="data_canvas" class="d-none"></canvas>
+                    </div>
+ 
+                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6 d-none">
+                        <div class="img-thumbnail">
+                            <div class="o_slide_preview">
+                                <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
+                            </div>
+                        </div>
+                    </div>        
+                </div>  
+            </form>
+        </div>
+    </t>
+</template>

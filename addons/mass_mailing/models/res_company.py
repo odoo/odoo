@@ -1,15 +1,17 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import models
 
-class Company(models.Model):
+
+class ResCompany(models.Model):
     _inherit = "res.company"
 
-    # NB: Also defined in website
-    social_twitter = fields.Char('Twitter Account')
-    social_facebook = fields.Char('Facebook Account')
-    social_github = fields.Char('GitHub Account')
-    social_linkedin = fields.Char('LinkedIn Account')
-    social_youtube = fields.Char('Youtube Account')
-    social_googleplus = fields.Char('Google+ Account')
+    def _get_social_media_links(self):
+        self.ensure_one()
+        return {
+            'social_facebook': self.social_facebook,
+            'social_linkedin': self.social_linkedin,
+            'social_twitter': self.social_twitter,
+            'social_instagram': self.social_instagram
+        }

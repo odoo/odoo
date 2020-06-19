@@ -2,14 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Website Gengo Translator',
-    'category': 'Website',
+    'name': 'Gengo Translator',
+    'category': 'Website/Website',
+    'summary': 'Translate website in one-click',
     'description': """
-Website Gengo Translator
-========================
-
-Translate you website in one click
-""",
+This module allows to send website content to Gengo translation service in a single click. Gengo then gives back the translated terms in the destination language.
+    """,
     'depends': [
         'website',
         'base_gengo'

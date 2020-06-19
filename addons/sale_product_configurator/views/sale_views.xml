@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="product_template_view_form" model="ir.ui.view">
+        <field name="name">product.template.form.inherit.sale.product.configurator</field>
+        <field name="model">product.template</field>
+        <field name="inherit_id" ref="product.product_template_form_view"/>
+        <field name="arch" type="xml">
+            <xpath expr="//group[@name='sale']" position="after">
+                <group name="options" groups="product.group_product_variant">
+                    <group string="Options">
+                        <field name="optional_product_ids" widget="many2many_tags" options="{'color_field': 'color'}" domain="[('id', '!=', active_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]" />
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="sale_order_view_form" model="ir.ui.view">
+        <field name="name">sale.order.form.inherit.sale.product.configurator</field>
+        <field name="model">sale.order</field>
+        <field name="inherit_id" ref="sale.view_order_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//tree/field[@name='product_template_id']" position="attributes">
+                <attribute name="invisible">0</attribute>
+            </xpath>
+            <xpath expr="//tree/field[@name='product_template_id']" position="after">
+                <field name="product_template_attribute_value_ids" invisible="1" />
+                <field name="product_custom_attribute_value_ids" invisible="1" >
+                    <tree>
+                        <field name="custom_product_template_attribute_value_id" />
+                        <field name="custom_value" />
+                    </tree>
+                </field>
+                <field name="product_no_variant_attribute_value_ids" invisible="1" />
+                <field name="is_configurable_product" invisible="1" />
+            </xpath>
+            <xpath expr="//tree/field[@name='product_id']" position="attributes">
+                <attribute name="optional">hide</attribute>
+                <attribute name="string">Product Variant</attribute>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <record id="res_users_form_view" model="ir.ui.view">
+        <record id="res_users_view_form" model="ir.ui.view">
             <field name="name">res.users.form.inherit</field>
             <field name="model">res.users</field>
             <field name="inherit_id" ref="base.view_users_form"/>
             <field name="arch" type="xml">
                 <!-- add state field in header -->
                 <xpath expr="//header" position="inside">
-                    <button string="Send Reset Password Instructions"
+                    <button string="Send Password Reset Instructions"
                                 type="object" name="action_reset_password"
                                 attrs="{'invisible': [('state', '!=', 'active')]}"/>
                     <button string="Send an Invitation Email"
@@ -17,9 +17,9 @@
                     <field name="state" widget="statusbar"/>
                 </xpath>
 
-                <xpath expr="//sheet/div[@name='button_box']" position="after">
-                    <div class="alert alert-success text-center o_form_header" attrs="{'invisible': [('signup_valid', '!=', True)]}">
-                        <a class="close" data-dismiss="alert" href="#" aria-hidden="true">x</a>
+                <xpath expr="//sheet" position="before">
+                    <div class="alert alert-success text-center o_form_header" attrs="{'invisible': [('signup_valid', '!=', True)]}" role="status">
+                        <a class="close" data-dismiss="alert" href="#" aria-label="Close">x</a>
                         <div attrs="{'invisible': [('state', '!=', 'active')]}">
                             <strong>A password reset has been requested for this user. An email containing the following link has been sent:</strong>
                         </div>
@@ -31,6 +31,29 @@
                      </div>
                  </xpath>
             </field>
+        </record>
+
+        <record id="view_users_state_tree" model="ir.ui.view">
+            <field name="name">res.users.tree.inherit</field>
+            <field name="model">res.users</field>
+            <field name="inherit_id" ref="base.view_users_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="decoration-info">state == 'new'</attribute>
+                </xpath>
+                <xpath expr="//field[@name='login_date']" position="after">
+                    <field name="state" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="action_send_password_reset_instructions" model="ir.actions.server">
+            <field name="name">Send Password Reset Instructions</field>
+            <field name="model_id" ref="base.model_res_users"/>
+            <field name="groups_id" eval="[(4, ref('base.user_admin'))]"/>
+            <field name="binding_model_id" ref="base.model_res_users" />
+            <field name="state">code</field>
+            <field name="code">records.action_reset_password()</field>
         </record>
 
 </odoo>

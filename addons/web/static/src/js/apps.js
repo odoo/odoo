@@ -1,17 +1,18 @@
 odoo.define('web.Apps', function (require) {
 "use strict";
 
+var AbstractAction = require('web.AbstractAction');
+var config = require('web.config');
 var core = require('web.core');
 var framework = require('web.framework');
 var session = require('web.session');
-var Widget = require('web.Widget');
 
 var _t = core._t;
 
 var apps_client = null;
 
-var Apps = Widget.extend({
-    template: 'EmptyComponent',
+var Apps = AbstractAction.extend({
+    contentTemplate: 'EmptyComponent',
     remote_action_tag: 'loempia.embed',
     failback_action_id: 'base.open_module_tree',
 
@@ -22,20 +23,21 @@ var Apps = Widget.extend({
     },
 
     get_client: function() {
-        // return the client via a deferred, resolved or rejected depending if
+        // return the client via a promise, resolved or rejected depending if
         // the remote host is available or not.
         var check_client_available = function(client) {
-            var d = $.Deferred();
             var i = new Image();
-            i.onerror = function() {
-                d.reject(client);
-            };
-            i.onload = function() {
-                d.resolve(client);
-            };
+            var def = new Promise(function (resolve, reject) {
+                i.onerror = function() {
+                    reject(client);
+                };
+                i.onload = function() {
+                    resolve(client);
+                };
+            });
             var ts = new Date().getTime();
             i.src = _.str.sprintf('%s/web/static/src/img/sep-a.gif?%s', client.origin, ts);
-            return d.promise();
+            return def;
         };
         if (apps_client) {
             return check_client_available(apps_client);
@@ -105,58 +107,56 @@ var Apps = Widget.extend({
 
     start: function() {
         var self = this;
-        var def = $.Deferred();
-        self.get_client().then(function(client) {
-            self.client = client;
+        return new Promise(function (resolve, reject) {
+            self.get_client().then(function (client) {
+                self.client = client;
 
-            var qs = {db: client.dbname};
-            if (session.debug) {
-                qs.debug = session.debug;
-            }
-            var u = $.param.querystring(client.origin + "/apps/embed/client", qs);
-            var css = {width: '100%', height: '750px'};
-            self.$ifr = $('<iframe>').attr('src', u);
+                var qs = {db: client.dbname};
+                if (config.isDebug()) {
+                    qs.debug = odoo.debug;
+                }
+                var u = $.param.querystring(client.origin + "/apps/embed/client", qs);
+                var css = {width: '100%', height: '750px'};
+                self.$ifr = $('<iframe>').attr('src', u);
 
-            self.uniq = _.uniqueId('apps');
-            $(window).on("message." + self.uniq, self.proxy('_on_message'));
+                self.uniq = _.uniqueId('apps');
+                $(window).on("message." + self.uniq, self.proxy('_on_message'));
 
-            self.on('message:ready', self, function(m) {
-                var w = this.$ifr[0].contentWindow;
-                var act = {
-                    type: 'ir.actions.client',
-                    tag: this.remote_action_tag,
-                    params: _.extend({}, this.params, {
-                        db: session.db,
-                        origin: session.origin,
-                    })
-                };
-                w.postMessage({type:'action', action: act}, client.origin);
-            });
+                self.on('message:ready', self, function(m) {
+                    var w = this.$ifr[0].contentWindow;
+                    var act = {
+                        type: 'ir.actions.client',
+                        tag: this.remote_action_tag,
+                        params: _.extend({}, this.params, {
+                            db: session.db,
+                            origin: session.origin,
+                        })
+                    };
+                    w.postMessage({type:'action', action: act}, client.origin);
+                });
 
-            self.on('message:set_height', self, function(m) {
-                this.$ifr.height(m.height);
-            });
+                self.on('message:set_height', self, function(m) {
+                    this.$ifr.height(m.height);
+                });
 
-            self.on('message:blockUI', self, function() { framework.blockUI(); });
-            self.on('message:unblockUI', self, function() { framework.unblockUI(); });
-            self.on('message:warn', self, function(m) {self.do_warn(m.title, m.message, m.sticky); });
+                self.on('message:blockUI', self, function() { framework.blockUI(); });
+                self.on('message:unblockUI', self, function() { framework.unblockUI(); });
+                self.on('message:warn', self, function(m) {self.do_warn(m.title, m.message, m.sticky); });
 
-            self.$ifr.appendTo(self.$el).css(css).addClass('apps-client');
+                self.$ifr.appendTo(self.$('.o_content')).css(css).addClass('apps-client');
 
-            def.resolve();
-        }, function() {
-            self.do_warn(_t('Odoo Apps will be available soon'), _t('Showing locally available modules'), true);
-            return self._rpc({
-                route: '/web/action/load',
-                params: {action_id: self.failback_action_id},
-            }).then(function(action) {
-                return self.do_action(action);
-            }).always(function () {
-                def.reject();
+                resolve();
+            }, function() {
+                self.do_warn(_t('Odoo Apps will be available soon'), _t('Showing locally available modules'), true);
+                return self._rpc({
+                    route: '/web/action/load',
+                    params: {action_id: self.failback_action_id},
+                }).then(function(action) {
+                    return self.do_action(action);
+                }).then(reject, reject);
             });
         });
-        return def;
-    },
+    }
 });
 
 var AppsUpdates = Apps.extend({

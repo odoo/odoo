@@ -3,14 +3,14 @@
 
 
 {
-    'name': 'Contacts Directory',
-    'category': 'Tools',
-    'summary': 'Customers, Vendors, Partners,...',
+    'name': 'Contacts',
+    'category': 'Sales/CRM',
+    'summary': 'Centralize your address book',
     'description': """
 This module gives you a quick view of your contacts directory, accessible from your home page.
 You can track your vendors, customers and other contacts.
 """,
-    'depends': ['base'],
+    'depends': ['base', 'mail'],
     'data': [
         'views/contact_views.xml',
     ],

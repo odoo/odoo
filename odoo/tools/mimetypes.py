@@ -102,6 +102,13 @@ def _check_olecf(data):
         return 'application/vnd.ms-powerpoint'
     return False
 
+
+def _check_svg(data):
+    """This simply checks the existence of the opening and ending SVG tags"""
+    if b'<svg' in data and b'/svg>' in data:
+        return 'image/svg+xml'
+
+
 # for "master" formats with many subformats, discriminants is a list of
 # functions, tried in order and the first non-falsy value returned is the
 # selected mime type. If all functions return falsy values, the master
@@ -115,6 +122,10 @@ _mime_mappings = (
     _Entry('image/png', [b'\x89PNG\r\n\x1A\n'], []),
     _Entry('image/gif', [b'GIF87a', b'GIF89a'], []),
     _Entry('image/bmp', [b'BM'], []),
+    _Entry('image/svg+xml', [b'<'], [
+        _check_svg,
+    ]),
+    _Entry('image/x-icon', [b'\x00\x00\x01\x00'], []),
     # OLECF files in general (Word, Excel, PPT, default to word because why not?)
     _Entry('application/msword', [b'\xD0\xCF\x11\xE0\xA1\xB1\x1A\xE1', b'\x0D\x44\x4F\x43'], [
         _check_olecf
@@ -166,3 +177,9 @@ else:
         ms = magic.open(magic.MAGIC_MIME_TYPE)
         ms.load()
         guess_mimetype = lambda bin_data, default=None: ms.buffer(bin_data)
+
+def neuter_mimetype(mimetype, user):
+    wrong_type = 'ht' in mimetype or 'xml' in mimetype or 'svg' in mimetype
+    if wrong_type and not user._is_system():
+        return 'text/plain'
+    return mimetype

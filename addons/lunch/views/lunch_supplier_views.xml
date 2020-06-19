@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="lunch_supplier_view_tree" model="ir.ui.view">
+        <field name="name">lunch.supplier.view.tree</field>
+        <field name="model">lunch.supplier</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+                <field name="phone" class="o_force_ltr"/>
+                <field name="email"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="lunch_supplier_view_form" model="ir.ui.view">
+        <field name="name">lunch.supplier.view.form</field>
+        <field name="model">lunch.supplier</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                    <div class="oe_title">
+                        <label for="name" class="oe_edit_only"/>
+                        <h1><field name="name" required="1"/></h1>
+                    </div>
+                    <group>
+                        <group>
+                            <field name="partner_id" context="{'default_is_company': True, 'default_city': city, 'default_name': name, 'default_street': street, 'default_street2': street2, 'default_state_id': state_id, 'default_zip': zip_code, 'default_country_id': country_id, 'default_phone': phone}"/>
+                            <label for="street" string="Address"/>
+                            <div class="o_address_format">
+                                <field name="street" placeholder="Street..." class="o_address_street"/>
+                                <field name="street2" placeholder="Street 2..." class="o_address_street"/>
+                                <field name="city" placeholder="City" class="o_address_city"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True}" context="{'country_id': country_id, 'zip': zip_code}"/>
+                                <field name="zip_code" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="country_id" placeholder="Country" class="o_address_country" options="{'no_open': True, 'no_create': True}"/>
+                            </div>
+                        </group>
+                        <group>
+                            <field name="active" invisible="1"/>
+                            <field name="email" attrs="{'required': [('send_by', '=', 'mail')]}"/>
+                            <field name="phone" class="o_force_ltr" attrs="{'required': [('send_by', '=', 'phone')]}"/>
+                            <field name="company_id" groups="base.group_multi_company"/>
+                            <field name="responsible_id" attrs="{'required': [('send_by', '=', 'mail')]}" groups="base.group_no_one" domain="[('share', '=', False)]"/>
+                        </group>
+                    </group>
+                    <group>
+                        <group string="Availability">
+                            <field name="tz" groups="base.group_no_one"/>
+                            <field name="recurrency_monday"/>
+                            <field name="recurrency_tuesday"/>
+                            <field name="recurrency_wednesday"/>
+                            <field name="recurrency_thursday"/>
+                            <field name="recurrency_friday"/>
+                            <field name="recurrency_saturday"/>
+                            <field name="recurrency_sunday"/>
+                            <field name="recurrency_end_date" groups="base.group_no_one"/>
+                        </group>
+                        <group string="Orders">
+                            <field name="delivery"/>
+                            <field name="available_location_ids" widget="many2many_tags"/>
+                            <field name="send_by" widget="radio"/>
+                            <label for="automatic_email_time" attrs="{'invisible': [('send_by', '!=', 'mail')]}"/>
+                            <div class="o_row" attrs="{'invisible': [('send_by', '!=', 'mail')]}"><field name="automatic_email_time" widget="float_time"/> <field name="moment"/></div>
+                        </group>
+                    </group>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" groups="base.group_user"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        </field>
+    </record>
+
+    <record id="lunch_supplier_view_kanban" model="ir.ui.view">
+        <field name="name">lunch.supplier.view.kanban</field>
+        <field name="model">lunch.supplier</field>
+        <field name="arch" type="xml">
+            <kanban>
+                <field name="partner_id"/>
+                <field name="city"/>
+                <field name="country_id"/>
+                <field name="email"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div class="oe_kanban_global_click o_kanban_record_has_image_fill o_res_partner_kanban">
+                            <div class="oe_kanban_details">
+                                <strong class="o_kanban_record_title oe_partner_heading"><field name="display_name"/></strong>
+                                <ul>
+                                    <li t-if="record.city.raw_value and !record.country_id.raw_value"><field name="city"/></li>
+                                    <li t-if="!record.city.raw_value and record.country_id.raw_value"><field name="country_id"/></li>
+                                    <li t-if="record.city.raw_value and record.country_id.raw_value"><field name="city"/>, <field name="country_id"/></li>
+                                    <li t-if="record.email.raw_value" class="o_text_overflow"><field name="email"/></li>
+                                </ul>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+
+    <record id="lunch_supplier_view_search" model="ir.ui.view">
+        <field name="name">lunch.supplier.view.search</field>
+        <field name="model">lunch.supplier</field>
+        <field name="arch" type="xml">
+            <search>
+                <field name="name"/>
+                <separator/>
+                <filter string="Archived" name="inactive" domain="[('active', '=', False)]"/>
+            </search>
+        </field>
+    </record>
+
+    <record id="lunch_vendors_action" model="ir.actions.act_window">
+        <field name="name">Vendors</field>
+        <field name="res_model">lunch.supplier</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="search_view_id" ref="lunch_supplier_view_search"/>
+    </record>
+</odoo>

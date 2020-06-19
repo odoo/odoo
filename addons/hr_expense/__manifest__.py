@@ -3,11 +3,11 @@
 
 
 {
-    'name': 'Expense Tracker',
+    'name': 'Expenses',
     'version': '2.0',
-    'category': 'Human Resources',
+    'category': 'Human Resources/Expenses',
     'sequence': 95,
-    'summary': 'Expenses Validation, Invoicing',
+    'summary': 'Submit, validate and reinvoice employee expenses',
     'description': """
 Manage expenses by Employees
 ============================
@@ -30,19 +30,24 @@ This module also uses analytic accounting and is compatible with the invoice on 
     'data': [
         'security/hr_expense_security.xml',
         'security/ir.model.access.csv',
-        'data/hr_expense_data.xml',
+        'data/mail_data.xml',
         'data/hr_expense_sequence.xml',
         'wizard/hr_expense_refuse_reason_views.xml',
         'wizard/hr_expense_sheet_register_payment.xml',
         'views/hr_expense_views.xml',
+        'views/mail_activity_views.xml',
         'security/ir_rule.xml',
-        'report/report_expense_sheet.xml',
-        'views/hr_dashboard.xml',
-        'views/hr_expense.xml',
+        'report/hr_expense_report.xml',
+        'views/hr_department_views.xml',
+        'views/assets.xml',
         'views/res_config_settings_views.xml',
-        'data/web_planner_data.xml',
+        'views/account_journal_dashboard.xml',
     ],
     'demo': ['data/hr_expense_demo.xml'],
+    'qweb': [
+        "static/src/xml/documents_upload_views.xml",
+        "static/src/xml/expense_dashboard.xml",
+    ],
     'installable': True,
     'application': True,
 }

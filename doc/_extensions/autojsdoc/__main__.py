@@ -1,4 +1,5 @@
 # -*- coding: utf-8 -*-
+from __future__ import print_function
 import cgitb
 import fnmatch
 import io
@@ -6,13 +7,12 @@ import logging
 
 import click
 
-import pyjsdoc
 import pyjsparser
 import sys
 
 from .parser.parser import ModuleMatcher
 from .parser.visitor import Visitor, SKIP
-from . import jsdoc
+from .parser import jsdoc
 
 class Printer(Visitor):
     def __init__(self, level=0):
@@ -20,7 +20,7 @@ class Printer(Visitor):
         self.level = level
 
     def _print(self, text):
-        print '    ' * self.level, text
+        print('    ' * self.level, text)
 
     def enter_generic(self, node):
         self._print(node['type'])
