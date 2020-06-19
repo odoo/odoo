@@ -7,6 +7,59 @@ QUnit.module('core', {}, function () {
 
     QUnit.module('utils');
 
+    QUnit.test('groupBy', function (assert) {
+        assert.expect(7);
+
+        const { groupBy } = utils;
+
+        // Invalid
+        assert.throws(
+            () => groupBy({}),
+            new TypeError(`list is not iterable`)
+        );
+        assert.throws(
+            () => groupBy([], true),
+            new Error(`Expected criterion of type 'string' or 'function' and got 'boolean'`)
+        );
+        assert.throws(
+            () => groupBy([], 3),
+            new Error(`Expected criterion of type 'string' or 'function' and got 'number'`)
+        );
+        assert.throws(
+            () => groupBy([], {}),
+            new Error(`Expected criterion of type 'string' or 'function' and got 'object'`)
+        );
+
+        // criterion = default
+        assert.deepEqual(
+            groupBy(["a", "b", 1, true]),
+            {
+                1: [1],
+                a: ["a"],
+                b: ["b"],
+                true: [true],
+            }
+        );
+        // criterion = string
+        assert.deepEqual(
+            groupBy([{ x: "a" }, { x: "a" }, { x: "b" }], "x"),
+            {
+                a: [{ x: "a" }, { x: "a" }],
+                b: [{ x: "b" }],
+            }
+        );
+        // criterion = function
+        assert.deepEqual(
+            groupBy(["a", "b", 1, true], (x) => `el${x}`),
+            {
+                ela: ["a"],
+                elb: ["b"],
+                el1: [1],
+                eltrue: [true],
+            }
+        );
+    });
+
     QUnit.test('intersperse', function (assert) {
         assert.expect(27);
 
