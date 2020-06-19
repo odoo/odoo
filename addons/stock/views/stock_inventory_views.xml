@@ -104,7 +104,7 @@
         <field name="name">stock.inventory.tree</field>
         <field name="model">stock.inventory</field>
         <field name="arch" type="xml">
-            <tree string="Lot/Serial Number Inventory">
+            <tree string="Lot/Serial Number Inventory" sample="1">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="location_ids" widget="many2many_tags" optional="hide" groups="stock.group_stock_multi_locations"/>
@@ -119,7 +119,7 @@
         <field name="name">stock.inventory.kanban</field>
         <field name="model">stock.inventory</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="name"/>
                 <field name="date"/>
                 <field name="state"/>
