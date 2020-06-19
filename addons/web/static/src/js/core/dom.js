@@ -495,11 +495,13 @@ var dom = {
         }
 
         function _adapt() {
-            if (!$el.is(':visible')) {
+            _restore();
+
+            if (!$el.is(':visible') || $el.closest('.show').length) {
+                // Never transform the menu when it is not visible yet or if
+                // it is a toggleable one.
                 return;
             }
-
-            _restore();
             if (config.device.size_class <= config.device.SIZES[options.sizeClass]) {
                 return;
             }
