@@ -50,6 +50,12 @@ var ListRenderer = BasicRenderer.extend({
         'keydown td': '_onKeyDown',
         'keydown th': '_onKeyDown',
     },
+    sampleDataTargets: [
+        '.o_data_row',
+        '.o_group_header',
+        '.o_list_table > tfoot',
+        '.o_list_table > thead .o_list_record_selector',
+    ],
     /**
      * @constructor
      * @param {Widget} parent
@@ -90,8 +96,8 @@ var ListRenderer = BasicRenderer.extend({
 
     /**
      * Order to focus to be given to the content of the current view
+     *
      * @override
-     * @public
      */
     giveFocus: function () {
         this.$('th:eq(0) input, th:eq(1)').first().focus();
@@ -100,7 +106,8 @@ var ListRenderer = BasicRenderer.extend({
      * @override
      */
     updateState: function (state, params) {
-        this.isGrouped = state.groupedBy.length > 0;
+        this._setState(state);
+        this.isGrouped = this.state.groupedBy.length > 0;
         this._processColumns(params.columnInvisibleFields || {});
         if (params.selectedRecords) {
             this.selection = params.selectedRecords;
@@ -1231,7 +1238,7 @@ var ListRenderer = BasicRenderer.extend({
             optionalColumnsEnabled: this.optionalColumnsEnabled,
         });
         this._processColumns(this.columnInvisibleFields || {});
-        this._renderView().then(function () {
+        this._render().then(function () {
             self._onToggleOptionalColumnDropdown(ev);
         });
     },
@@ -1263,6 +1270,9 @@ var ListRenderer = BasicRenderer.extend({
         var $tr;
         var $futureCell;
         var colIndex;
+        if (this.state.isSample) {
+            return; // we disable keyboard navigation inside the table in "sample" mode
+        }
         switch (ev.keyCode) {
             case $.ui.keyCode.LEFT:
                 ev.preventDefault();
@@ -1345,7 +1355,7 @@ var ListRenderer = BasicRenderer.extend({
             offset: currentMinimum - 1,
             on_success: reloadedGroup => {
                 Object.assign(group, reloadedGroup);
-                this._renderView();
+                this._render();
             },
         });
     },

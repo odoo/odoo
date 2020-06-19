@@ -134,12 +134,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         return [];
     },
     /**
-     * Gives the focus to the renderer
-     */
-    giveFocus:function() {
-        this.renderer.giveFocus();
-    },
-    /**
      * Returns true iff the given recordID (or the main recordID) is dirty.
      *
      * @param {string} [recordID] - default to main recordID
@@ -761,7 +755,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 await this.model.resequence(this.modelName, resIDs, this.handle, options);
                 this._updateControlPanel();
                 state = this.model.get(this.handle);
-                return this.renderer.updateState(state, { noRender: true });
+                return this._updateRendererState(state, { noRender: true });
             },
         });
     },

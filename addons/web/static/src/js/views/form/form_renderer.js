@@ -286,6 +286,7 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
      * @returns {Promise}
      */
     updateState: function (state, params) {
+        this._setState(state);
         this.mode = (params && 'mode' in params) ? params.mode : this.mode;
 
         // if fieldNames are given, we update the corresponding field widget.
@@ -293,7 +294,7 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         // confirmChange method
         if (params.fieldNames) {
             // only update the given fields
-            return this.confirmChange(state, state.id, params.fieldNames);
+            return this.confirmChange(this.state, this.state.id, params.fieldNames);
         }
         return this._super.apply(this, arguments);
     },
