@@ -522,6 +522,21 @@ class PurchaseOrder(models.Model):
 
         action = self.env.ref('account.action_move_in_invoice_type')
         result = action.read()[0]
+<<<<<<< HEAD
+=======
+        create_bill = self.env.context.get('create_bill', False)
+        # override the context to get rid of the default filtering
+        result['context'] = {
+            'default_type': 'in_invoice',
+            'default_company_id': self.company_id.id,
+            'default_purchase_id': self.id,
+            'default_partner_id': self.partner_id.id,
+        }
+        # Invoice_ids may be filtered depending on the user. To ensure we get all
+        # invoices related to the purchase order, we read them in sudo to fill the
+        # cache.
+        self.sudo()._read(['invoice_ids'])
+>>>>>>> 394e39079b1... temp
         # choose the view_mode accordingly
         if len(invoices) > 1:
             result['domain'] = [('id', 'in', invoices.ids)]
