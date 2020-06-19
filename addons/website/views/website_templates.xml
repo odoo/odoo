@@ -450,6 +450,58 @@
     </xpath>
 </template>
 
+<template id="template_header_split_menu" inherit_id="website.layout" name="Template Header Split Menu" active="False">
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="attributes">
+        <attribute name="class" separator=" " add="mx-md-4 mw-md-100"/>
+    </xpath>
+    <xpath expr="//header//div[@id='top_menu_wrapper']" position="attributes">
+        <attribute name="class" separator=" " add="d-md-none"/>
+    </xpath>
+    <xpath expr="//header//t[@t-call='website.top_menu_notifications']/t" position="replace">
+        <t t-set="classes">o_hide_labels</t>
+    </xpath>
+    <xpath expr="//header//nav//div[@id='top_menu_container']//div[hasclass('o_navbar_toggler_container')]" position="before">
+
+        <t t-set="menu_lenght" t-value="len(website.menu_id.child_id) + (1 and header_notifications)"></t>
+        <t t-set="left_lenght" t-value="floor(menu_lenght * 0.5)"/>
+
+        <div class="o_header_col_1 flex-grow-1 flex-shrink-1 w-0 d-none d-md-inline-block">
+            <ul class="nav navbar-nav justify-content-end mr-md-3 flex-nowrap">
+                <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                    <t t-if="submenu_index &lt; left_lenght" t-call="website.submenu">
+                        <t t-set="item_class" t-value="'nav-item'"/>
+                        <t t-set="link_class" t-value="'nav-link'"/>
+                    </t>
+                </t>
+            </ul>
+        </div>
+        <div class="o_header_col_2 flex-shrink-0 text-center d-flex">
+        </div>
+        <div class="o_header_col_3 flex-grow-1 flex-shrink-1 w-0 d-flex justify-content-center justify-content-md-start">
+            <ul class="nav navbar-nav mr-auto ml-md-3 d-none d-md-flex flex-nowrap">
+                <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                    <t t-if="submenu_index >= left_lenght" t-call="website.submenu">
+                        <t t-set="item_class" t-value="'nav-item'"/>
+                        <t t-set="link_class" t-value="'nav-link'"/>
+                    </t>
+                </t>
+            </ul>
+        </div>
+    </xpath>
+    <!-- <xpath expr="//header//nav//div[@id='top_menu_container']/div[hasclass('o_header_col_3')]//li" position="inside">
+        <xpath expr="//header//nav//div[@id='top_menu_container']/div[hasclass('o_navbar_toggler_container')]" position="move"/>
+    </xpath> -->
+    <xpath expr="//header//nav//div[@id='top_menu_container']/div[hasclass('o_header_col_2')]" position="inside">
+        <xpath expr="//header//nav//div[@id='top_menu_container']//a[hasclass('logo')]" position="move"/>
+    </xpath>
+    <xpath expr="//header//nav//div[@id='top_menu_container']/div[hasclass('o_header_col_3')]" position="inside">
+        <xpath expr="//header//t[@t-call='website.top_menu_notifications']" position="move"/>
+        <t t-call="website.top_menu_search">
+            <t t-set="classes" t-value="'ml-3'"/>
+        </t>
+    </xpath>
+</template>
+
 <!-- Navbar Hamburger Options -->
 <template id="option_header_hamburger_left" inherit_id="website.layout" name="Template Header Hamburger Left" active="False">
     <xpath expr="//header//nav[hasclass('navbar')]/div" position="attributes">
