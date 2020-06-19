@@ -10,6 +10,8 @@ from odoo import api, fields, models
 
 _logger = logging.getLogger(__name__)
 
+EDITING_ATTRIBUTES = ['data-oe-model', 'data-oe-id', 'data-oe-field', 'data-oe-xpath', 'data-note-id']
+
 
 class IrUiView(models.Model):
     _inherit = 'ir.ui.view'
@@ -66,7 +68,8 @@ class IrUiView(models.Model):
         arch = etree.Element('data')
         xpath = etree.Element('xpath', expr="//*[hasclass('oe_structure')][@id='{}']".format(el.get('id')), position="replace")
         arch.append(xpath)
-        structure = etree.Element(el.tag, attrib=el.attrib)
+        attributes = {k: v for k, v in el.attrib.items() if k not in EDITING_ATTRIBUTES}
+        structure = etree.Element(el.tag, attrib=attributes)
         structure.text = el.text
         xpath.append(structure)
         for child in el.iterchildren(tag=etree.Element):
