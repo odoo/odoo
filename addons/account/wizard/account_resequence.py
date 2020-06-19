@@ -38,7 +38,7 @@ class ReSequenceWizard(models.TransientModel):
     @api.depends('first_name')
     def _compute_sequence_number_reset(self):
         for record in self:
-            record.sequence_number_reset = self.move_ids[0]._deduce_sequence_number_reset(record.first_name)
+            record.sequence_number_reset = record.move_ids[0]._deduce_sequence_number_reset(record.first_name)
 
     @api.depends('move_ids')
     def _compute_first_name(self):
