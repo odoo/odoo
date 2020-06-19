@@ -25,17 +25,16 @@ class AccrualPlan(models.Model):
 class AccrualPlanLine(models.Model):
     _name = "hr.accrual.plan.line"
     _description = "Accrual Plan Line"
-    _order = 'sequence'
+    _order = 'start_delta'
 
+    name = fields.Char('Level name', required=True)
     plan_id = fields.Many2one('hr.accrual.plan', "Accrual Plan")
 
-    # Order
-    sequence = fields.Integer('Level', default=1)
-
     # Period of time after which the line start
-    start_count = fields.Float("Start after", required=True, default=0, help="This field determines the number for the interval of time before the accrual plan starts.")
+    start_count = fields.Float("Start after", default=0, help="This field determines the number for the interval of time before the accrual plan starts.")
     start_type = fields.Selection(
-        [('days', 'day(s)'), ('months', 'month(s)'), ('years', 'year(s)')], default='days', string=" ", help="This field determines the unit for the interval of time.")
+        [('days', 'day(s)'), ('months', 'month(s)'), ('years', 'year(s)')], default='days', string=" ", help="This field determines the unit for the interval of time.", required=True)
+    start_delta = fields.Datetime(compute="_compute_start_delta", store=True)
 
     # Hours incrementation
     added_hours = fields.Float("Hours", required=True, help="The number of hours that will be incremented for every period")
@@ -51,33 +50,37 @@ class AccrualPlanLine(models.Model):
         ('twice a year', 'twice a year'),
         ('quarterly', 'quarterly'),
         ('yearly', 'yearly'),
-        ('anniversary', 'anniversary'),
+        ('anniversary', "on the anniversary of the employee's hire date"),
         ('per hours worked', 'per hour worked')
-    ], default='per hours worked', 
+    ], default='per hours worked', required=True,
     help="Per hours worked: Time off are accrualed only if this is mentionned on Work Entry (see field 'Work entry type' on related Time Off type. If 'Keep Time Off Right' is selected; the wrok entry is considered.")
 
     # Optionnal fields depending on the frequency
     period_weekday = fields.Selection(string="Day of week",
                                       selection=[('mon', 'monday'), ('tue', 'tuesday'), (
                                           'wed', 'wednesday'), ('thu', 'thursday'), ('fri', 'friday'), ('sat', 'saturday'), ('sun', 'sunday')],
-                                      default='mon')
+                                      default='mon', required=True)
     period_weekday_number = fields.Integer(string="Day of week in number", compute="_compute_period_weekday_number")
     period_even_or_odd_week = fields.Selection(
-        '_even_or_odd_week', default='odd')
+        [('odd', 'odd'), ('even', 'even')], default='odd', required=True)
 
     # The line uses 4 days and months used to cover every use case of frequency
-    period_day_1 = fields.Selection('_dates', default='1')
-    period_day_2 = fields.Selection('_dates', default='1')
-    period_day_3 = fields.Selection('_dates', default='1')
-    period_day_4 = fields.Selection('_dates', default='1')
+    period_day_1 = fields.Selection('_dates', default='1', required=True)
+    period_day_2 = fields.Selection('_dates', default='16', required=True)
+    period_day_3 = fields.Selection('_dates', default='1', required=True)
+    period_day_4 = fields.Selection('_dates', default='1', required=True)
 
-    period_month_1 = fields.Selection('_months', default='1')
-    period_month_2 = fields.Selection('_months', default='1')
-    period_month_3 = fields.Selection('_months', default='1')
-    period_month_4 = fields.Selection('_months', default='1')
+    period_month_1 = fields.Selection([('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'), ('5', 'May'), ('6', 'June'),
+                ('7', 'July'), ('8', 'August'), ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], default='1', required=True)
+    period_month_2 = fields.Selection([('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'), ('5', 'May'), ('6', 'June'),
+                ('7', 'July'), ('8', 'August'), ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], default='1', required=True)
+    period_month_3 = fields.Selection([('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'), ('5', 'May'), ('6', 'June'),
+                ('7', 'July'), ('8', 'August'), ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], default='7', required=True)
+    period_month_4 = fields.Selection([('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'), ('5', 'May'), ('6', 'June'),
+                ('7', 'July'), ('8', 'August'), ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')], default='10', required=True)
 
     carryover_type = fields.Selection([('none', 'none'), ('until', 'until'), (
-        'unlimited', 'unlimited')], string='Carryover', default='none')
+        'unlimited', 'unlimited')], string='Carryover', default='none', required=True)
 
     # Optionnal field depending on the carryover type
     carryover_amount = fields.Float()
@@ -87,7 +90,7 @@ class AccrualPlanLine(models.Model):
         list = []
         for d in range(1, 32):
             day = str(d)
-            if d % 10 == 1:
+            if d % 10 == 1 and d !=11:
                 day += "st"
             elif d % 10 == 2:
                 day += "nd"
@@ -97,14 +100,6 @@ class AccrualPlanLine(models.Model):
                 day += "th"
             list.append((str(d), day))
         return list
-
-    def _months(self):
-        list = [('1', 'January'), ('2', 'February'), ('3', 'March'), ('4', 'April'), ('5', 'May'), ('6', 'June'),
-                ('7', 'July'), ('8', 'August'), ('9', 'September'), ('10', 'October'), ('11', 'November'), ('12', 'December')]
-        return list
-
-    def _even_or_odd_week(self):
-        return [('odd', 'odd'), ('even', 'even')]
 
     def _get_start_after_delta(self):
         delta = relativedelta(days=0)
@@ -134,5 +129,34 @@ class AccrualPlanLine(models.Model):
             if record.period_weekday =='sat':
                 record.period_weekday_number = 6
 
-            
+    @api.depends('start_delta', 'start_count', 'start_type')
+    def _compute_start_delta(self):
+        year_zero = datetime.datetime(1, 1, 1)
+        for record in self :
+            delta = relativedelta(days=0)
+            if record.start_type == 'days':
+                delta = relativedelta(days=record.start_count)
+            if record.start_type == 'months':
+                delta = relativedelta(months=record.start_count)
+            if record.start_type == 'years':
+                delta = relativedelta(years=record.start_count)
+            record.start_delta = year_zero + delta
+
+    @api.onchange('frequency')
+    def _on_change_frequency(self):
+        #Initiate the default values for the periods
+        self.period_day_1 = '1'
+        self.period_day_2 = '1'
+        self.period_day_3 = '1'
+        self.period_day_4 = '1'
+        self.period_month_3 = '7'
+        self.period_month_4 = '10'
+        if self.frequency == 'twice a month':
+            self.period_day_2 = '16'
+        if self.frequency == 'twice a year':
+            self.period_day_2 = '1'
+            self.period_month_2 = '7'
+        if self.frequency == 'quarterly':
+            self.period_day_2 = '1'
+            self.period_month_2 = '4'
 

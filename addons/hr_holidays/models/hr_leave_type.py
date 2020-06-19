@@ -106,6 +106,8 @@ class HolidaysType(models.Model):
     allocation_notif_subtype_id = fields.Many2one('mail.message.subtype', string='Allocation Notification Subtype', default=lambda self: self.env.ref('hr_holidays.mt_leave_allocation', raise_if_not_found=False))
     allow_negative = fields.Boolean("Allow negative")
     work_entry_type_id = fields.Many2one('hr.work.entry.type', string='Work Entry Type')
+    accrual_plan_id = fields.Many2one(
+        'hr.accrual.plan', string='Accrual Plan')
 
     @api.constrains('validity_start', 'validity_stop')
     def _check_validity_dates(self):

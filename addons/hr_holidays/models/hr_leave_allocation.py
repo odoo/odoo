@@ -69,8 +69,11 @@ class HolidaysAllocation(models.Model):
     notes = fields.Text('Reasons', readonly=True, states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     # duration
     number_of_days = fields.Float(
-        'Number of Days', compute='_compute_from_holiday_status_id', store=True, readonly=False, tracking=True, default=1,
+        'Duration', compute='_compute_from_holiday_status_id', store=True, readonly=False, tracking=True,
         help='Duration in days. Reference field to use when necessary.')
+    extra_days = fields.Float(
+        'Extra Days', store=True, readonly=False,
+        help='Number of days allocated in addition to the ones you will get via the accrual system.')
     number_of_days_display = fields.Float(
         'Duration (days)', compute='_compute_number_of_days_display',
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]},
@@ -195,7 +198,6 @@ class HolidaysAllocation(models.Model):
                     previous = False
 
                     # This part calculates the starts of the next and previous periods which depend on the frequency
-
                     if line.frequency == 'daily':
                         next = today + relativedelta(days=1)
                         previous = today
@@ -334,6 +336,14 @@ class HolidaysAllocation(models.Model):
             leave_type = allocation.holiday_status_id.with_context(employee_id=allocation.employee_id.id)
             allocation.max_leaves = leave_type.max_leaves
             allocation.leaves_taken = leave_type.leaves_taken
+
+    @api.onchange('extra_days', 'number_of_days')
+    def _onchange_extra_days(self):
+        for record in self:
+            if record.allocation_type == "accrual" and record.extra_days > 0:
+                record.number_of_days = record.extra_days
+            else:
+                record.extra_days = record.number_of_days
 
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
