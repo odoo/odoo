@@ -45,7 +45,7 @@
 
                             <t t-if="o.partner_bank_id._is_qr_iban()">
                                 <span class="swissqr_text title">Reference</span><br/>
-                                <span class="swissqr_text content" t-esc="o.reference"/><br/>
+                                <span class="swissqr_text content" t-esc="o.space_qrr_reference(o.reference)"/><br/>
                             </t>
 
                             <span class="swissqr_text title">Payable by</span><br/>
@@ -88,7 +88,7 @@
 
                             <t t-if="o.partner_bank_id._is_qr_iban()">
                                 <span class="swissqr_text title">Reference</span><br/>
-                                <span class="swissqr_text content" t-esc="o.reference"/><br/>
+                                <span class="swissqr_text content" t-esc="o.space_qrr_reference(o.reference)"/><br/>
                             </t>
 
                             <span class="swissqr_text title">Additional information</span><br/>
