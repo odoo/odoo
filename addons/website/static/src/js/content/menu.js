@@ -348,18 +348,17 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
  * Auto adapt the header layout so that elements are not wrapped on a new line.
  */
 publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
-    selector: 'header #top_menu',
+    selector: 'header#top',
 
     /**
      * @override
      */
-    start: function () {
-        var self = this;
-        var defs = [this._super.apply(this, arguments)];
-        this.noAutohide = this.$el.closest('.o_no_autohide_menu').length;
+    async start() {
+        await this._super(...arguments);
+        this.$topMenu = this.$('#top_menu');
+        this.noAutohide = this.$el.is('.o_no_autohide_menu');
         if (!this.noAutohide) {
-            var $navbar = this.$el.closest('.navbar');
-            defs.push(wUtils.onceAllImagesLoaded($navbar));
+            await wUtils.onceAllImagesLoaded(this.$('.navbar'));
 
             // The previous code will make sure we wait for images to be fully
             // loaded before initializing the auto more menu. But in some cases,
@@ -371,23 +370,20 @@ publicWidget.registry.autohideMenu = publicWidget.Widget.extend({
             $window.on('load.autohideMenu', function () {
                 $window.trigger('resize');
             });
+
+            dom.initAutoMoreMenu(this.$topMenu, {unfoldable: '.divider, .divider ~ li'});
         }
-        return Promise.all(defs).then(function () {
-            if (!self.noAutohide) {
-                dom.initAutoMoreMenu(self.$el, {unfoldable: '.divider, .divider ~ li'});
-            }
-            self.$el.removeClass('o_menu_loading');
-            self.$el.trigger('menu_loaded');
-        });
+        this.$topMenu.removeClass('o_menu_loading');
+        this.$topMenu.trigger('menu_loaded');
     },
     /**
      * @override
      */
-    destroy: function () {
-        this._super.apply(this, arguments);
+    destroy() {
+        this._super(...arguments);
         if (!this.noAutohide) {
             $(window).off('.autohideMenu');
-            dom.destroyAutoMoreMenu(this.$el);
+            dom.destroyAutoMoreMenu(this.$topMenu);
         }
     },
 });
