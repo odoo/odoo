@@ -259,23 +259,23 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * updating the renderer and wait for the rendering to complete.
      *
      * @param {Object} params will be given to the model and to the renderer
-     * @param {Object} [options]
+     * @param {Object} [options={}]
      * @param {boolean} [options.reload=true] if true, the model will reload data
      *
      * @returns {Promise}
      */
-    update: async function (params, options = {}) {
+    async update(params, options = {}) {
         const shouldReload = 'reload' in options ? options.reload : true;
         if (shouldReload) {
             this.handle = await this.dp.add(this.model.reload(this.handle, params));
         }
         const localState = this.renderer.getLocalState();
-        const state = this.model.get(this.handle);
+        const state = this.model.get(this.handle, { withSampleData: true });
         const promises = [
             this.updateRendererState(state, params).then(() => {
                 this.renderer.setLocalState(localState);
             }),
-            this._update(state, params),
+            this._update(this.model.get(this.handle), params)
         ];
         await this.dp.add(Promise.all(promises));
         this.updateButtons();
@@ -338,6 +338,20 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             controllerID: this.controllerID,
             state: this.getState(),
         });
+    },
+    /**
+     * @private
+     * @param {function} callback function to execute before removing classname
+     *   'o_view_sample_data' (may be async). This allows to reload and/or
+     *   rerender before removing the className, thus preventing the view from
+     *   flickering.
+     */
+    async _removeSampleData(callback) {
+        this.model.leaveSampleMode();
+        if (callback) {
+            await callback();
+        }
+        this.el.classList.remove('o_view_sample_data');
     },
     /**
      * Renders the html provided by the route specified by the
@@ -409,7 +423,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * @param {Object} [params.shouldUpdateControlPanel]
      * @returns {Promise}
      */
-    _update: function (state, params) {
+    async _update(state, params) {
         // AAB: update the control panel -> this will be moved elsewhere at some point
         if (!this.$buttons) {
             this.renderButtons();
@@ -423,7 +437,8 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             promises.push(this.updateControlPanel());
         }
         this._pushState();
-        return Promise.all(promises);
+        await Promise.all(promises);
+        this.el.classList.toggle('o_view_sample_data', this.model.isInSampleMode());
     },
     /**
      * Can be used to update the key 'cp_content'. This method is called in start and _update methods.

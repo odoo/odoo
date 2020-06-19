@@ -152,12 +152,20 @@ var KanbanRenderer = BasicRenderer.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Displays the quick create record in the first column.
+     * Displays the quick create record in the requested column (first one by
+     * default)
      *
+     * @params {string} [groupId] local id of the group in which the quick create
+     *   must be inserted
      * @returns {Promise}
      */
-    addQuickCreate: function () {
-        return this.widgets[0].addQuickCreate();
+    addQuickCreate: function (groupId) {
+        let kanbanColumn;
+        if (groupId) {
+            kanbanColumn = this.widgets.find(column => column.db_id === groupId);
+        }
+        kanbanColumn = kanbanColumn || this.widgets[0];
+        return kanbanColumn.addQuickCreate();
     },
     /**
      * Focuses the first kanban record

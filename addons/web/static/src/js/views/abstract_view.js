@@ -162,6 +162,16 @@ var AbstractView = Factory.extend({
             res_id: currentId,
             res_ids: controllerState.resIds || params.ids || (currentId ? [currentId] : undefined),
         };
+
+        this.modelParams = {
+            fields: this.fields,
+            modelName: params.modelName,
+            useSampleModel: !!(this.arch.attrs.sample && JSON.parse(this.arch.attrs.sample))
+        };
+        if (this.modelParams.useSampleModel) {
+            this.modelParams.SampleModel = this.config.Model;
+        }
+
         var defaultOrder = this.arch.attrs.default_order;
         if (defaultOrder) {
             this.loadParams.orderedBy = _.map(defaultOrder.split(','), function (order) {

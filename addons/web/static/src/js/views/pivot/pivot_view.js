@@ -114,9 +114,13 @@ odoo.define('web.PivotView', function (require) {
             this.loadParams.default_order = params.default_order || this.arch.attrs.default_order;
             this.loadParams.groupableFields = groupableFields;
 
-            this.rendererParams.widgets = widgets;
-            this.rendererParams.disableLinking = this.arch.attrs.disable_linking;
+            const disableLinking = !!(this.arch.attrs.disable_linking &&
+                                        JSON.stringify(this.arch.attrs.disable_linking));
 
+            this.rendererParams.widgets = widgets;
+            this.rendererParams.disableLinking = disableLinking;
+
+            this.controllerParams.disableLinking = disableLinking;
             this.controllerParams.title = params.title || this.arch.attrs.string || _t("Untitled");
             this.controllerParams.measures = measures;
 
