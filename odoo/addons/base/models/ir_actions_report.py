@@ -143,6 +143,11 @@ class IrActionsReport(models.Model):
         else:
             return FALSE_DOMAIN
 
+    def _get_readable_fields(self):
+        return super()._get_readable_fields() | {
+            "params", "report_name", "report_type", "target",
+        }
+
     def associated_view(self):
         """Used in the ir.actions.report form view in order to search naively after the view(s)
         used in the rendering.

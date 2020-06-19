@@ -26,7 +26,7 @@ class SaleOrder(models.Model):
             if any(line.event_id for line in so.order_line):
                 return self.env['ir.actions.act_window'] \
                     .with_context(default_sale_order_id=so.id) \
-                    .for_xml_id('event_sale', 'action_sale_order_event_registration')
+                    ._for_xml_id('event_sale.action_sale_order_event_registration')
         return res
 
     def action_view_attendee_list(self):

@@ -281,7 +281,8 @@ class FleetVehicle(models.Model):
         self.ensure_one()
         xml_id = self.env.context.get('xml_id')
         if xml_id:
-            res = self.env['ir.actions.act_window'].for_xml_id('fleet', xml_id)
+
+            res = self.env['ir.actions.act_window']._for_xml_id('fleet.%s' % xml_id)
             res.update(
                 context=dict(self.env.context, default_vehicle_id=self.id, group_by=False),
                 domain=[('vehicle_id', '=', self.id)]
@@ -296,7 +297,7 @@ class FleetVehicle(models.Model):
         self.ensure_one()
         copy_context = dict(self.env.context)
         copy_context.pop('group_by', None)
-        res = self.env['ir.actions.act_window'].for_xml_id('fleet', 'fleet_vehicle_costs_action')
+        res = self.env['ir.actions.act_window']._for_xml_id('fleet.fleet_vehicle_costs_action')
         res.update(
             context=dict(copy_context, default_vehicle_id=self.id, search_default_parent_false=True),
             domain=[('vehicle_id', '=', self.id)]
