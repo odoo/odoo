@@ -4283,7 +4283,8 @@ Record ids: %(records)s
         :raise ValueError in case order_spec is malformed
         """
         order_by_clause = ''
-        order_spec = order_spec or self._order
+        if order_spec != '':
+            order_spec = order_spec or self._order
         if order_spec:
             order_by_elements = self._generate_order_by_inner(self._table, order_spec, query)
             if order_by_elements:
