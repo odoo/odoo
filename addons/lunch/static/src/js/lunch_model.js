@@ -31,7 +31,7 @@ var LunchModel = BasicModel.extend({
             return self._buildLocationDomainLeaf() ? [self._buildLocationDomainLeaf()]: [];
         });
     },
-    load: function () {
+    __load: function () {
         var self = this;
         var args = arguments;
         var _super = this._super;
@@ -43,7 +43,7 @@ var LunchModel = BasicModel.extend({
             return _super.apply(self, args);
         });
     },
-    reload: function (id, options) {
+    __reload: function (id, options) {
         var domain = options && options.domain || this.localData[id].domain;
 
         this._addOrUpdate(domain, this._buildLocationDomainLeaf());

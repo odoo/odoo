@@ -83,7 +83,7 @@ var PurchaseListDashboardModel = ListModel.extend({
     /**
      * @override
      */
-    get: function (localID) {
+    __get: function (localID) {
         var result = this._super.apply(this, arguments);
         if (_.isObject(result)) {
             result.dashboardValues = this.dashboardValues[localID];
@@ -94,14 +94,14 @@ var PurchaseListDashboardModel = ListModel.extend({
      * @override
      * @returns {Promise}
      */
-    load: function () {
+    __load: function () {
         return this._loadDashboard(this._super.apply(this, arguments));
     },
     /**
      * @override
      * @returns {Promise}
      */
-    reload: function () {
+    __reload: function () {
         return this._loadDashboard(this._super.apply(this, arguments));
     },
 
@@ -198,7 +198,7 @@ var PurchaseKanbanDashboardModel = KanbanModel.extend({
     /**
      * @override
      */
-    get: function (localID) {
+    __get: function (localID) {
         var result = this._super.apply(this, arguments);
         if (_.isObject(result)) {
             result.dashboardValues = this.dashboardValues[localID];
@@ -209,14 +209,14 @@ var PurchaseKanbanDashboardModel = KanbanModel.extend({
      * @override
      * @returns {Promise}
      */
-    load: function () {
+    __load: function () {
         return this._loadDashboard(this._super.apply(this, arguments));
     },
     /**
      * @override
      * @returns {Promise}
      */
-    reload: function () {
+    __reload: function () {
         return this._loadDashboard(this._super.apply(this, arguments));
     },
 
