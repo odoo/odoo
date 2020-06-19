@@ -691,14 +691,6 @@ $-transition-duration: 200ms;
         transition: transform $-transition-duration;
     }
 
-    .navbar-collapse {
-        @if o-website-value('header-template') != 'logo_hamburger' {
-            max-height: 70vh;
-        }
-        &.show {
-            overflow-y: auto;
-        }
-    }
     &.o_header_is_scrolled {
         .navbar-brand {
             font-size: $o-theme-navbar-fixed-logo-height / $line-height-base;
@@ -707,11 +699,12 @@ $-transition-duration: 200ms;
                 height: $o-theme-navbar-fixed-logo-height;
             }
         }
-        @include media-breakpoint-up(md) {
-            @if (index(('menu_logo_below', 'logo_menu_below'), o-website-value('header-template'))) != null {
+        @if o-website-value('header-template') == 'vertical' {
+            @include media-breakpoint-up(md) {
                 .navbar-brand {
                     font-size: 0px;
                     opacity: 0;
+
                     img {
                         height: 0px;
                     }
@@ -761,18 +754,66 @@ $-transition-duration: 200ms;
     }
 }
 
-// Header templates
+$-off-canvas-hamburger: o-website-value('hamburger-type') == 'off-canvas';
+$-hamburger-left: o-website-value('hamburger-position') == 'left';
+$-hamburger-center: o-website-value('hamburger-position') == 'center';
+$-hamburger-right: o-website-value('hamburger-position') == 'right';
+
 header {
     &#top {
         // We need this z-index for the shadow option of the header
         z-index: $zindex-modal - 20;
     }
     &:not(.o_header_no_transition) {
+        #top_menu_container {
+            transition: all $-transition-duration;
+        }
         .navbar-brand {
-            transition: font-size $-transition-duration, opacity $-transition-duration ease-out;
+            transition: margin $-transition-duration, font-size $-transition-duration, opacity $-transition-duration ease-out;
 
             img {
                 transition: height $-transition-duration;
+            }
+        }
+    }
+
+    &:not(.o_header_is_scrolled) {
+        $-is-hamburger: o-website-value('header-template') == 'hamburger';
+        $-is-vertical: o-website-value('header-template') == 'vertical';
+        @include media-breakpoint-up(md) {
+            @if $-is-hamburger or $-is-vertical {
+                #top_menu_container {
+                    padding-top: $spacer * 0.5;
+                    padding-bottom: $spacer * 0.5;
+                }
+            }
+            @if $-is-vertical {
+                .navbar-brand {
+                    margin-bottom: $spacer;
+                }
+            }
+        }
+    }
+
+    .navbar {
+        flex-direction: if($-hamburger-left, row-reverse, row);
+    }
+    #top_menu_container {
+        flex-direction: inherit;
+    }
+    @if $-hamburger-right {
+        .navbar-brand {
+            margin-right: 0;
+            margin-left: $navbar-padding-x;
+        }
+    } @else if $-hamburger-center {
+        .collapsing, .show {
+            #top_menu {
+                @if not $-off-canvas-hamburger {
+                    padding-top: 15vh;
+                    padding-bottom: 15vh;
+                }
+                text-align: center;
             }
         }
     }
@@ -782,67 +823,103 @@ header {
         .o_navbar_toggler_container {
             flex: 0 0 0;
             min-width: 0;
+            direction: if($-hamburger-left, ltr, rtl);
         }
     }
-    @if index(('hamburger_logo', 'logo_hamburger'), o-website-value('header-template')) {
-        .navbar-brand {
-            text-align: center;
-        }
-        .navbar-brand, .logo img {
-            margin: auto;
-        }
-        .navbar-nav {
-            margin-top: $spacer / 2;
-        }
-        @if o-website-value('header-template') == 'logo_hamburger' {
-            .o_navbar_toggler_container {
-                direction: rtl;
-            }
-            &:not(.o_header_is_scrolled) .container {
-                padding-top: $spacer;
-                padding-bottom: $spacer;
-            }
-            .container {
-                transition: padding 200ms;
+}
 
-                #top_menu.navbar-nav {
-                    height: 90vh;
-                    padding-top : 10vh;
+@if $-off-canvas-hamburger {
+    #top_menu_collapse {
+        flex-direction: if($-hamburger-left, row, row-reverse);
+
+        &.collapsing, &.show {
+            @include o-position-absolute(0, 0, 0, 0);
+            position: fixed;
+            display: flex;
+            align-items: stretch;
+            z-index: $zindex-sticky;
+            transition: none;
+            transform: none;
+
+            .o_offcanvas_menu_backdrop {
+                @include o-position-absolute(0, 0, 0, 0);
+                opacity: .2;
+                cursor: pointer;
+            }
+
+            #top_menu {
+                overflow: auto;
+                flex-wrap: nowrap;
+                @if $-hamburger-center {
+                    width: 100%;
+                    max-width: none;
+                } @else {
+                    max-width: 560px;
+                }
+                background-color: o-color('menu');
+                transition: transform $-transition-duration cubic-bezier(.694, .0482, .335, 1);
+
+                @if $-hamburger-center {
+                    .o_offcanvas_menu_backdrop {
+                        display: none;
+                    }
+                    .o_offcanvas_menu_toggler {
+                        max-width: 90%;
+                    }
+                }
+
+                .nav-item, .o_offcanvas_logo {
+                    padding-left: $grid-gutter-width;
+                    padding-right: $grid-gutter-width;
+                }
+                .nav-item, .dropdown-menu {
+                    text-align: inherit;
+                }
+
+                // Open all dropdowns
+                .dropdown-toggle {
+                    padding-bottom: $nav-link-padding-y*0.5;
+
+                    &:after {
+                        content: none;
+                    }
                 }
                 .dropdown-menu {
-                    text-align: center;
+                    display: block;
+                    padding-top:0;
+                    border: 0;
+                    background: inherit;
+                    color: inherit;
+                }
+                .dropdown-item {
+                    padding-left: .5em;
+                    padding-right: .5em;
                 }
             }
-        }
-    } @else if index(('logo_menu_below', 'menu_logo_below'), o-website-value('header-template')) {
-        .navbar-brand {
-            text-align: center;
-        }
-        .navbar-expand-md {
-            > .container {
-                flex-wrap: wrap;
-            }
-            .navbar-collapse {
-                flex-basis: 100%;
+
+            .o_connected_user header:not(.o_header_is_scrolled) &,
+            .o_connected_user header.o_header_affixed & {
+                padding-top: $o-navbar-height;
             }
         }
-        .navbar-brand, #top_menu.navbar-nav, .logo img {
-            margin: auto;
-        }
-        .navbar-brand {
-            @include media-breakpoint-up(md) {
-                @if o-website-value('header-template') == 'menu_logo_below' {
-                    margin-top: $navbar-padding-y;
-                } @else {
-                    margin-bottom: $navbar-padding-y;
-                }
+        &.collapsing #top_menu {
+            @if o-website-value('hamburger-position') == 'center' {
+                transform: translateY(-100%);
+            } @else if o-website-value('hamburger-position') == 'left' {
+                transform: translateX(-100%);
+            } @else if o-website-value('hamburger-position') == 'right' {
+                transform: translateX(100%);
             }
         }
-        @if o-website-value('header-template') == 'menu_logo_below' {
-            .navbar-collapse {
-                @include media-breakpoint-up(md) {
-                    order: -1;
-                }
+        &.show #top_menu {
+            transform: translate(0);
+        }
+
+        .o_offcanvas_menu_backdrop {
+            @if $-hamburger-left {
+                background-image: linear-gradient(90deg, currentColor 20%, transparent);
+            } @else {
+                background-image: linear-gradient(-90deg, currentColor 20%, transparent);
             }
         }
     }

@@ -157,3 +157,17 @@ $o-btn-outline-defaults: () !default;
         }
     }
 }
+
+// Compensate navbar brand padding if no visible border
+@if alpha($navbar-dark-toggler-border-color) < 0.001 {
+    .navbar-dark .navbar-toggler {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
+@if alpha($navbar-light-toggler-border-color) < 0.001 {
+    .navbar-light .navbar-toggler {
+        padding-left: 0;
+        padding-right: 0;
+    }
+}
