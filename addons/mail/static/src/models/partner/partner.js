@@ -152,6 +152,18 @@ function factory(dependencies) {
             }
         }
 
+        /**
+         * Opens a user form view.
+         */
+        async openUserForm() {
+            const action = await this.env.services.rpc({
+                model: this.model,
+                method: 'get_partner_action',
+                args: [[this.id]],
+            });
+            this.env.bus.trigger('do-action', { action });
+        }
+
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------

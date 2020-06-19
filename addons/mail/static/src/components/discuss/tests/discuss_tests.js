@@ -4624,6 +4624,70 @@ QUnit.test('auto-focus composer on opening thread', async function (assert) {
     );
 });
 
+QUnit.test('redirect to author form when click on author name', async function (assert) {
+    assert.expect(5);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_direct_message: [{
+                channel_type: "chat",
+                direct_partner: [{
+                    id: 7,
+                    name: "Demo",
+                }],
+                id: 1,
+                is_pinned: true
+            }],
+        },
+    });
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.channel_1',
+            },
+        },
+        async mockRPC(route, args) {
+            if (args.method === 'message_fetch') {
+                return [{
+                    author_id: [7, "Demo"],
+                    body: `<p>message1</p>`,
+                    channel_ids: [1],
+                    date: "2019-04-20 10:00:00",
+                    id: 100,
+                    message_type: 'comment',
+                    model: 'mail.channel',
+                    record_name: "chat",
+                    res_id: 1,
+                }];
+            } else if (args.method === 'search' && args.model === 'res.users') {
+                return [1];
+            } else if (args.method === "get_partner_action") {
+                assert.step('rpc:get_partner_action');
+                assert.strictEqual(args.args[0][0], 7, 'should call "get_partner_action" with id=7');
+            }
+            return this._super(...arguments);
+        },
+    });
+    assert.ok(
+        document.querySelector(`
+            .o_DiscussSidebar_groupChat
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.models['mail.thread'].find(thread =>
+                    thread.id === 1 &&
+                    thread.model === 'mail.channel'
+                ).localId
+            }"]
+            .o_DiscussSidebarItem_activeIndicator
+        `).classList.contains('o-item-active'),
+        "channel 'General' should be active"
+    );
+    assert.strictEqual(document.querySelectorAll(`.o_Discuss_thread .o_Message`).length, 1,
+        "should have one message in inbox");
+    await afterNextRender(() =>
+        document.querySelector(`.o_Discuss_thread .o_ThreadViewer_messageList .o_Message_authorName`).click());
+    assert.verifySteps(['rpc:get_partner_action']);
+});
+
 });
 });
 });

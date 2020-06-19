@@ -149,3 +149,13 @@ class Partner(models.Model):
         else:
             return {}
 
+    def get_partner_action(self):
+        self.ensure_one()
+        return {
+            'name': self.user_ids and self.user_ids[0].name or self.name,
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'views': [[False, "form"]],
+            'res_model': self.user_ids and self.user_ids[0]._name or self._name,
+            'res_id': self.user_ids and self.user_ids[0].id or self.id,
+        }

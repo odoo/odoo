@@ -86,6 +86,18 @@ class ChatWindowHeader extends Component {
         this.chatWindow.shiftRight();
     }
 
+    /**
+     * @private
+     * @param {MouseEvent} ev
+     */
+    _onClickHeaderName(ev) {
+        if (ev.currentTarget.classList.contains('o_Clickable_ChatWindowHeaderName')) {
+            this.chatWindow.thread.correspondent.openUserForm();
+        } else {
+            this._onClick();
+        }
+    }
+
 }
 
 Object.assign(ChatWindowHeader, {

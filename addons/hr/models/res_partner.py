@@ -34,3 +34,17 @@ class Partner(models.Model):
             if len(self) == 1 and self in self.env.user.employee_ids.mapped('address_home_id'):
                 return super(Partner, self.sudo()).name_get()
             raise e
+
+    def get_partner_action(self):
+        self.ensure_one()
+        employee = self.env['hr.employee'].search([('user_partner_id', '=', self.id)])
+        if employee:
+            return {
+                'name': employee.name,
+                'type': 'ir.actions.act_window',
+                'view_mode': 'form',
+                'views': [[False, "form"]],
+                'res_model': employee._name,
+                'res_id': employee.id,
+            }
+        return super(Partner, self).get_partner_action()

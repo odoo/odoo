@@ -252,7 +252,7 @@ QUnit.test('chat window new message: fold', async function (assert) {
 });
 
 QUnit.test('chat window: basic rendering', async function (assert) {
-    assert.expect(11);
+    assert.expect(12);
 
     Object.assign(this.data.initMessaging, {
         channel_slots: {
@@ -324,6 +324,9 @@ QUnit.test('chat window: basic rendering', async function (assert) {
         "General",
         "should have correct thread name in header part"
     );
+    assert.ok(
+        chatWindowHeader.querySelector(`:scope .o_ChatWindowHeader_name:not(.o_Clickable_ChatWindowHeaderName)`),
+        "thread name should not be clickable");
     assert.strictEqual(
         chatWindowHeader.querySelectorAll(`:scope .o_ChatWindowHeader_command`).length,
         2,
@@ -1609,6 +1612,58 @@ QUnit.test('[technical] chat window with a thread: keep scroll position in messa
         142,
         "chat window scrollTop should still be the same after home menu is shown"
     );
+});
+
+QUnit.test('chat window: click on chat header for channel type "chat", redirect to user form', async function (assert) {
+    assert.expect(4);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_direct_message: [{
+                channel_type: "chat",
+                direct_partner: [{
+                    id: 7,
+                    name: "Demo",
+                }],
+                id: 10,
+                is_pinned: true
+            }],
+        },
+    });
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'channel_fetch_preview') {
+                return [{
+                    id: 10,
+                    last_message: {
+                        author_id: [7, "Demo"],
+                        body: "<p>test1</p>",
+                        channel_ids: [10],
+                        id: 101,
+                        message_type: 'comment',
+                        model: 'mail.channel',
+                        res_id: 10,
+                    },
+                }];
+            } else if (args.method === "get_partner_action") {
+                assert.step('rpc:get_partner_action');
+                assert.strictEqual(args.args[0][0], 7, 'should call "get_partner_action" with id=7');
+            }
+            return this._super(...arguments);
+        },
+    });
+
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click());
+
+    const chatWindowHeaderName = document.querySelector(`:scope .o_ChatWindow_header .o_ChatWindowHeader_name`);
+    assert.ok(
+        chatWindowHeaderName.classList.contains('o_Clickable_ChatWindowHeaderName'),
+        "thread name should be clickable"
+    );
+    // click on chat window header name
+    chatWindowHeaderName.click();
+    assert.verifySteps(['rpc:get_partner_action']);
 });
 
 });

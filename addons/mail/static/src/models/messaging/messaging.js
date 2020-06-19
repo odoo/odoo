@@ -80,6 +80,9 @@ function factory(dependencies) {
                     });
                     return;
                 }
+                if (this.discuss.thread.channel_type === 'chat') {
+                    return partner.openUserForm();
+                }
                 const chat = partner.correspondentThreads.find(thread =>
                     thread.channel_type === 'chat'
                 );
