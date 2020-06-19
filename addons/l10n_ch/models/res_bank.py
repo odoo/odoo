@@ -102,7 +102,7 @@ class ResPartnerBank(models.Model):
         if self._is_qr_iban():
             # _check_for_qr_code_errors ensures we can't have a QR-IBAN without a QR-reference here
             reference_type = 'QRR'
-            reference = structured_communication.replace(' ', '')
+            reference = structured_communication
 
         qr_code_vals =  [
             'SPC',                                                # QR Type
@@ -188,4 +188,4 @@ class ResPartnerBank(models.Model):
 
         return _partner_fields_set(self.partner_id) and \
                _partner_fields_set(debtor_partner) and \
-               (reference_to_check == '' or not self._is_qr_iban() or self._is_qr_reference(reference_to_check.replace(' ', '')))
+               (reference_to_check == '' or not self._is_qr_iban() or self._is_qr_reference(reference_to_check))
