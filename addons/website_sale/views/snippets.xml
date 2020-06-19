@@ -1,6 +1,18 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<!-- Add OCommerce Headers Templates  -->
+<template id="headers_templates_options" inherit_id="website.snippet_options" name="e-commerce headers">
+    <xpath expr="//we-select[@id='header_templates_select']//we-button[last()]" position="after">
+        <we-button id="option_template_header_shop_minimal"
+                   data-name="header_hamburger_shop_minimal"
+                   data-trigger="header-hamburger-left"
+                   data-customize-website-views="website.template_header_hamburger, website_sale.template_header_shop_minimal"
+                   data-customize-website-variable="shop_minimal"
+                   string="Shop Minimal"/>
+    </xpath>
+</template>
+
 <template id="s_products_recently_viewed" name="Products Recently Viewed">
     <section class="s_wsale_products_recently_viewed d-none pt24 pb24" style="min-height: 400px;">
         <div class="container">

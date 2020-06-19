@@ -11,6 +11,32 @@ $o-wsale-products-layout-grid-gutter-width: min($grid-gutter-width / 2, $o-wsale
     }
 }
 
+// Website Sale Headers Layouts
+@if o-website-value('header-template') == 'shop_minimal' {
+    #o_header_shop_minimal {
+        &_collapse {
+            z-index: 4;
+        }
+
+        &_collapse_toggle.o_js_hovered .fa-angle-right {
+            transform: rotate(90deg);
+        }
+
+        &_collapse_backdrop, &_collapse_content {
+            background-color: o-color('menu');
+        }
+
+        &_collapse_backdrop {
+            opacity: 0;
+            transition: opacity .8s ease-out;
+
+            .show & {
+                opacity: .4;
+            }
+        }
+    }
+}
+
 .oe_website_sale {
     ul ul {
         margin-left: 1.5rem;

@@ -795,4 +795,30 @@ publicWidget.registry.websiteSaleCart = publicWidget.Widget.extend({
         $(ev.currentTarget).closest('tr').find('.js_quantity').val(0).trigger('change');
     },
 });
+
+publicWidget.registry.websiteSaleHeaderMinimalCollapseToggle = publicWidget.Widget.extend({
+    selector: '.o_header_shop_minimal',
+    events: {
+        'mouseenter .o_js_hover_toggle': '_onMouseToggle',
+        'mouseleave .o_js_hover_toggle': '_onMouseToggle',
+    },
+
+    _onMouseToggle: function (ev) {
+        const $collapse = this.$('#o_header_shop_minimal_collapse');
+        const $toggle = this.$('#o_header_shop_minimal_collapse_toggle');
+        const isOpen = $collapse.is('.show');
+
+        if (ev.type === 'mouseenter' && !isOpen) {
+            $collapse.collapse('show');
+            $toggle.addClass('o_js_hovered');
+        } else if (ev.type === 'mouseleave') {
+            setTimeout(function () {
+                if (isOpen && this.$('.o_js_hover_toggle:hover').length === 0) {
+                    $collapse.collapse('hide');
+                    $toggle.removeClass('o_js_hovered');
+                }
+            }, 50);
+        }
+    }
+});
 });

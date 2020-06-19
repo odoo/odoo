@@ -91,6 +91,77 @@
         </xpath>
     </template>
 
+    <!-- Website Header Template(s) -->
+    <template id="template_header_shop_minimal" inherit_id="website.layout" name="Template Header Shop Minimal" active="False">
+        <xpath expr="//header" position="attributes">
+            <attribute name="t-attf-class" separator=" " add="o_header_shop_minimal"/>
+        </xpath>
+
+        <xpath expr="//header//nav//div[@id='top_menu_container']//div[hasclass('o_navbar_toggler_container')]" position="before">
+            <div class="o_header_col_1 flex-grow-1 w-0 d-flex justify-content-start flex-row-reverse">
+            </div>
+            <div class="o_header_col_2 flex-shrink-0 text-center d-none d-md-flex">
+            </div>
+            <div class="o_header_col_3 flex-grow-1 w-0">
+                <ul class="nav navbar-nav align-items-center flex-row">
+                    <li class="nav-item"/>
+                    <li class="nav-item d-none d-md-inline-block">
+                        <a id="o_header_shop_minimal_collapse_toggle" class="nav-link mx-4 o_js_hover_toggle collapsed" href="/shop">
+                            Shop <i class="fa fa-angle-right position-relative"/>
+                        </a>
+                    </li>
+                </ul>
+            </div>
+        </xpath>
+        <xpath expr="//header//nav//div[@id='top_menu_container']/div[hasclass('o_header_col_3')]//li" position="inside">
+            <xpath expr="//header//nav//div[@id='top_menu_container']/div[hasclass('o_navbar_toggler_container')]" position="move"/>
+        </xpath>
+        <xpath expr="//header//nav//div[@id='top_menu_container']/div[hasclass('o_header_col_2')]" position="inside">
+            <xpath expr="//header//nav//div[@id='top_menu_container']//a[hasclass('logo')]" position="move"/>
+        </xpath>
+        <xpath expr="//header//nav//div[@id='top_menu_container']/div[hasclass('o_header_col_1')]" position="inside">
+            <t t-call="website.top_menu_search">
+                <t t-set="classes" t-value="'ml-3'"/>
+            </t>
+            <xpath expr="//header//t[@t-call='website.top_menu_notifications']" position="move"/>
+        </xpath>
+        <xpath expr="//header//nav" position="after">
+            <div id="o_header_shop_minimal_collapse" class="collapse position-absolute w-100 ">
+                <div id="o_header_shop_minimal_collapse_backdrop" class="position-fixed h-100 w-100" />
+                <div id="o_header_shop_minimal_collapse_content" class="o_js_hover_toggle position-relative border-top border-bottom">
+                    <div class="container pt-4 pb-5">
+                        <h6 class="text-muted">Featured Products</h6>
+                        <div class="row">
+                            <div class="col-3">
+                                <img src="https://source.unsplash.com/a-QH9MAAVNI/300x300" class="img img-fluid shadow" alt="Product Image"/>
+                                <h5 class="mt-2">Product Name</h5>
+
+                            </div>
+                            <div class="col-3">
+                                <img src="https://source.unsplash.com/4kTbAMRAHtQ/300x300" class="img img-fluid shadow" alt="Product Image"/>
+                                <h5 class="mt-2">Product Name</h5>
+
+                            </div>
+                            <div class="col-3">
+                                <img src="https://source.unsplash.com/1DMNn6gBbwQ/300x300" class="img img-fluid shadow" alt="Product Image"/>
+                                <h5 class="mt-2">Product Name</h5>
+
+                            </div>
+                            <div class="col-3">
+                                <img src="https://source.unsplash.com/KsLPTsYaqIQ/300x300" class="img img-fluid shadow" alt="Product Image"/>
+                                <h5 class="mt-2">Product Name</h5>
+
+                            </div>
+                        </div>
+                    </div>
+                    <a href="/shop" class="d-block text-center btn btn-light border-top py-3 rounded-0 shadow">
+                        <span class="h6">Shop All</span> <i class="fa fa-angle-right"/>
+                    </a>
+                </div>
+            </div>
+        </xpath>
+    </template>
+
     <!-- Products Search Bar input-group template -->
     <template id="website_sale_products_search_box" inherit_id="website.website_search_box" primary="True">
         <xpath expr="//input[@name='search']" position="attributes">
