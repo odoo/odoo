@@ -80,13 +80,14 @@ class HrEmployeeBase(models.AbstractModel):
             employee.remaining_leaves = value
 
     def _compute_allocation_count(self):
+        data = self.env['hr.leave.allocation'].read_group([
+            ('employee_id', 'in', self.ids),
+            ('holiday_status_id.active', '=', True),
+            ('state', '=', 'validate'),
+        ], ['number_of_days:sum', 'employee_id'], ['employee_id'])
+        rg_results = dict((d['employee_id'][0], d['number_of_days']) for d in data)
         for employee in self:
-            allocations = self.env['hr.leave.allocation'].search([
-                ('employee_id', '=', employee.id),
-                ('holiday_status_id.active', '=', True),
-                ('state', '=', 'validate'),
-            ])
-            employee.allocation_count = sum(allocations.mapped('number_of_days'))
+            employee.allocation_count = rg_results.get(employee.id, 0.0)
             employee.allocation_display = "%g" % employee.allocation_count
 
     def _compute_total_allocation_used(self):
