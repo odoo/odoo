@@ -312,6 +312,7 @@ function factory(dependencies) {
             if (autoselect) {
                 thread.open({ chatWindowMode: autoselectChatWindowMode });
             }
+            return data;
         }
 
         /**

@@ -139,16 +139,18 @@ function factory(dependencies) {
         /**
          * Opens an existing or new chat.
          */
-        openChat() {
+        async openChat() {
             const chat = this.correspondentThreads.find(thread => thread.channel_type === 'chat');
             if (chat) {
                 chat.open();
+                return chat && chat.__state && chat.__state.id;
             } else {
-                this.env.models['mail.thread'].createChannel({
+                const channel = await this.env.models['mail.thread'].createChannel({
                     autoselect: true,
                     partnerId: this.id,
                     type: 'chat',
                 });
+                return channel.id;
             }
         }
 

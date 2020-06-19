@@ -110,7 +110,7 @@ QUnit.module('mail', {}, function () {
     });
 
     QUnit.test('many2one_avatar_user widget: click on self', async function (assert) {
-        assert.expect(4);
+        assert.expect(7);
 
         const { widget: form } = await start({
             hasView: true,
@@ -122,19 +122,30 @@ QUnit.module('mail', {}, function () {
                 if (args.method === 'read') {
                     assert.step(`read ${args.model} ${args.args[0]}`);
                 }
+                if (args.method === 'xmlid_to_res_id') {
+                    assert.step(`read odoobot_id ${args.kwargs.xmlid}`);
+                    return Promise.resolve(2);
+                }
+                if (args.method === 'channel_get') {
+                    assert.step(`read channel_id ${args.model} ${args.args[0]}`);
+                    return Promise.resolve([]);
+                }
+                if (args.method === 'message_fetch') {
+                    assert.step(`fetch messages ${args.model}`);
+                    return Promise.resolve([]);
+                }
+                if (args.method === 'message_comment') {
+                    assert.step(`create message ${args.model} for author ${args.kwargs.author_id}`);
+                    return Promise.resolve(false);
+                }
                 return this._super(...arguments);
             },
             session: {
                 uid: 23,
+                partner_id: 1,
             },
             res_id: 4,
         });
-
-        mock.intercept(form, 'call_service', (ev) => {
-            if (ev.data.service === 'notification') {
-                assert.step(`display notification "${ev.data.args[0].message}"`);
-            }
-        }, true);
 
         assert.strictEqual(form.$('.o_field_widget[name=user_id]').text().trim(), 'Yoshi');
 
@@ -142,7 +153,10 @@ QUnit.module('mail', {}, function () {
 
         assert.verifySteps([
             'read foo 4',
-            'display notification "You cannot chat with yourself"',
+            'read odoobot_id base.partner_root',
+            'read channel_id mail.channel 2',
+            'fetch messages mail.message',
+            'create message mail.channel for author 2',
         ]);
 
         form.destroy();
