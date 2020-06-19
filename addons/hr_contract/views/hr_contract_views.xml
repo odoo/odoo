@@ -226,7 +226,7 @@
             <field name="name">hr.contract.tree</field>
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
-                <tree string="Contracts" multi_edit="1">
+                <tree string="Contracts" multi_edit="1" sample="1">
                     <field name="name" readonly="1"/>
                     <field name="employee_id" readonly="1" widget="many2one_avatar_employee"/>
                     <field name="job_id"/>
@@ -246,7 +246,7 @@
             <field name="name">hr.contract.kanban</field>
             <field name="model">hr.contract</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_small_column" default_order="date_end">
+                <kanban class="o_kanban_small_column" default_order="date_end" sample="1">
                     <field name="employee_id"/>
                     <field name="activity_state"/>
                     <field name="state"/>

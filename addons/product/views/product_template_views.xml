@@ -4,7 +4,7 @@
         <field name="name">product.template.product.tree</field>
         <field name="model">product.template</field>
         <field name="arch" type="xml">
-            <tree string="Product" multi_edit="1">
+            <tree string="Product" multi_edit="1" sample="1">
                 <field name="product_variant_count" invisible="1"/>
 
                 <field name="sequence" widget="handle" readonly="1"/>
@@ -70,7 +70,7 @@
         <field name="name">Product.template.product.kanban</field>
         <field name="model">product.template</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban sample="1">
                 <field name="id"/>
                 <field name="product_variant_count"/>
                 <field name="currency_id"/>

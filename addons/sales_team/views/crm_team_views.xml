@@ -77,7 +77,7 @@
         <field name="model">crm.team</field>
         <field name="field_parent">child_ids</field>
         <field name="arch" type="xml">
-            <tree string="Sales Team">
+            <tree string="Sales Team" sample="1">
                 <field name="sequence" widget="handle"/>
                 <field name="name"/>
                 <field name="active" invisible="1"/>
@@ -91,7 +91,7 @@
         <field name="name">crm.team.kanban</field>
         <field name="model">crm.team</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" sample="1">
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="oe_kanban_content oe_kanban_global_click">
@@ -115,7 +115,7 @@
         <field name="name">crm.team.dashboard</field>
         <field name="model">crm.team</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey o_kanban_dashboard o_salesteam_kanban" create="0">
+            <kanban class="oe_background_grey o_kanban_dashboard o_salesteam_kanban" create="0" sample="1">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="member_ids"/>

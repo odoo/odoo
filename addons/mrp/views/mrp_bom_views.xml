@@ -145,7 +145,7 @@
             <field name="name">mrp.bom.tree</field>
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
-                <tree string="Bill of Materials">
+                <tree string="Bill of Materials" sample="1">
                     <field name="active" invisible="1"/>
                     <field name="sequence" widget="handle"/>
                     <field name="product_tmpl_id"/>
@@ -163,7 +163,7 @@
             <field name="name">mrp.bom.kanban</field>
             <field name="model">mrp.bom</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" sample="1">
                     <field name="product_tmpl_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom_id"/>

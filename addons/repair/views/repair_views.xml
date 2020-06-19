@@ -6,7 +6,7 @@
         <field name="name">repair.tree</field>
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
-            <tree string="Repairs order" multi_edit="1">
+            <tree string="Repairs order" multi_edit="1" sample="1">
                 <field name="name"/>
                 <field name="product_id" readonly="1" optional="show"/>
                 <field name="product_qty" optional="hide" string="Quantity"/>
@@ -208,7 +208,7 @@
         <field name="name">repair.kanban</field>
         <field name="model">repair.order</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="company_id" invisible="1"/>
                 <field name="name" />
                 <field name="product_id" />

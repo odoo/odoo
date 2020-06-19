@@ -92,7 +92,7 @@
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee.public</field>
             <field name="arch" type="xml">
-                <tree string="Employees">
+                <tree string="Employees" sample="1">
                     <field name="name"/>
                     <field name="work_phone" class="o_force_ltr"/>
                     <field name="work_email"/>
@@ -110,7 +110,7 @@
             <field name="model">hr.employee.public</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban class="o_hr_employee_kanban" js_class="hr_employee_kanban">
+                <kanban class="o_hr_employee_kanban" js_class="hr_employee_kanban" sample="1">
                     <field name="id"/>
                     <field name="hr_presence_state"/>
                     <field name="user_id"/>

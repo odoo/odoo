@@ -8,7 +8,7 @@
             <field name="name">account.payment.tree</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <tree edit="false">
+                <tree edit="false" sample="1">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="journal_id"/>
@@ -38,7 +38,7 @@
             <field name="name">account.payment.kanban</field>
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" create="0" group_create="0" >
+                <kanban class="o_kanban_mobile" create="0" group_create="0" sample="1">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="date"/>
