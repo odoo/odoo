@@ -41,6 +41,7 @@ odoo.define('web.PivotController', function (require) {
         init: function (parent, model, renderer, params) {
             this._super(...arguments);
 
+            this.disableLinking = params.disableLinking;
             this.measures = params.measures;
             this.title = params.title;
             // views to use in the action triggered when a data cell is clicked
@@ -273,7 +274,7 @@ odoo.define('web.PivotController', function (require) {
         _onOpenView: function (ev) {
             ev.stopPropagation();
             const cell = ev.data;
-            if (cell.value === undefined || this.initialState.disableLinking) {
+            if (cell.value === undefined || this.disableLinking) {
                 return;
             }
 
