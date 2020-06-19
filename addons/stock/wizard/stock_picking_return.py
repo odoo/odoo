@@ -146,8 +146,8 @@ class ReturnPicking(models.TransientModel):
                 move_orig_to_link |= return_line.move_id
                 # link to siblings of original move, if any
                 move_orig_to_link |= return_line.move_id\
-                    .move_dest_ids.filtered(lambda m: m.state not in ('cancel'))\
-                    .move_orig_ids.filtered(lambda m: m.state not in ('cancel'))
+                    .mapped('move_dest_ids').filtered(lambda m: m.state not in ('cancel'))\
+                    .mapped('move_orig_ids').filtered(lambda m: m.state not in ('cancel'))
                 move_dest_to_link = return_line.move_id.move_orig_ids.mapped('returned_move_ids')
                 vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link]
                 vals['move_dest_ids'] = [(4, m.id) for m in move_dest_to_link]
