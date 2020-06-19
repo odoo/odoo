@@ -10,6 +10,7 @@ class TestAccountJournalDashboard(AccountTestUsers):
         def patched_today(*args, **kwargs):
             return '2019-01-22'
 
+        company = self.env.ref('base.main_company')
         date_invoice = '2019-01-21'
 
         journal = self.env['account.journal'].create({
@@ -87,7 +88,7 @@ class TestAccountJournalDashboard(AccountTestUsers):
         })
         self.env['account.move.line'].with_context(check_move_validity=False).create({
             'move_id': payment_move.id,
-            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_liquidity').id)], limit=1).id,
+            'account_id': self.env['account.account'].search([('company_id', '=', company.id),('user_type_id', '=', self.env.ref('account.data_account_type_liquidity').id)], limit=1).id,
             'credit': 10.00,
         })
 
