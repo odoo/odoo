@@ -221,6 +221,21 @@ class TestViewSaving(common.TransactionCase):
             'text node characters wrongly unescaped when rendering'
         )
 
+    def test_save_oe_structure_with_attr(self):
+        """ Test saving oe_structure with attributes """
+        view = self.env['ir.ui.view'].create({
+            'arch': u'<t t-name="dummy"><div class="oe_structure" t-att-test="1" data-test="1" id="oe_structure_test"/></t>',
+            'type': 'qweb'
+        }).with_context(website_id=1, load_all_views=True)
+        replacement = u'<div class="oe_structure" data-test="1" id="oe_structure_test" data-oe-id="55" test="2">hello</div>'
+        view.save(replacement, xpath='/t/div')
+        # branding data-oe-* should be stripped
+        self.assertIn(
+            '<div class="oe_structure" data-test="1" id="oe_structure_test" test="2">hello</div>',
+            view.read_combined(['arch'])['arch'],
+            'saved element attributes are saved excluding branding ones'
+        )
+
     def test_save_only_embedded(self):
         Company = self.env['res.company']
         company_id = 1
