@@ -319,7 +319,7 @@ class Slide(models.Model):
                     # embed youtube video
                     query = urls.url_parse(record.url).query
                     query = query + '&theme=light' if query else 'theme=light'
-                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
+                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
                 else:
                     # embed google doc video
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
