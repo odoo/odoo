@@ -364,7 +364,7 @@ var KanbanController = BasicController.extend({
     _onButtonsKeyDown: function (ev) {
         switch(ev.keyCode) {
             case $.ui.keyCode.DOWN:
-                this.$('.o_kanban_record:first').focus();
+                this._giveFocus();
         }
     },
     /**

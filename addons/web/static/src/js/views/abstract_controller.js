@@ -96,7 +96,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         if (this.withControlPanel) {
             this._updateControlPanelProps(this.initialState);
             this._controlPanelWrapper = new ComponentWrapper(this, ControlPanel, this.controlPanelProps);
-            this._controlPanelWrapper.env.bus.on('focus-view', this, () => this.renderer.giveFocus());
+            this._controlPanelWrapper.env.bus.on('focus-view', this, () => this._giveFocus());
             promises.push(this._controlPanelWrapper.mount(this.el, { position: 'first-child' }));
         }
         await Promise.all(promises);
@@ -193,12 +193,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         return state;
     },
     /**
-     * Gives the focus to the renderer
-     */
-    giveFocus: function () {
-        this.renderer.giveFocus();
-    },
-    /**
      * The use of this method is discouraged.  It is still snakecased, because
      * it currently is used in many templates, but we will move to a simpler
      * mechanism as soon as we can.
@@ -246,7 +240,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         }
         await Promise.all([this.update(params, {}), searchPanelUpdateProm]);
         if (postponeRendering) {
-            return this.renderer._render();
+            return this._updateRendererState(false);
         }
     },
     /**
@@ -261,7 +255,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * @param {Object} params will be given to the model and to the renderer
      * @param {Object} [options={}]
      * @param {boolean} [options.reload=true] if true, the model will reload data
-     *
      * @returns {Promise}
      */
     async update(params, options = {}) {
@@ -272,26 +265,13 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         const localState = this.renderer.getLocalState();
         const state = this.model.get(this.handle, { withSampleData: true });
         const promises = [
-            this.updateRendererState(state, params).then(() => {
+            this._updateRendererState(state, params).then(() => {
                 this.renderer.setLocalState(localState);
             }),
             this._update(this.model.get(this.handle), params)
         ];
         await this.dp.add(Promise.all(promises));
         this.updateButtons();
-    },
-    /**
-     * Update the state of the renderer (handle both Widget and Component
-     * renderers).
-     *
-     * @param {Object} state the model state
-     * @param {Object} params will be given to the model and to the renderer
-     */
-    updateRendererState: function (state, params) {
-        if (this.renderer instanceof owl.Component) {
-            return this.renderer.update(state);
-        }
-        return this.renderer.updateState(state, params);
     },
 
     //--------------------------------------------------------------------------
@@ -325,6 +305,16 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     _getActionMenuItems: function (state) {
         return null;
+    },
+    /**
+     * Gives the focus to the renderer if not in sample mode.
+     *
+     * @private
+     */
+    _giveFocus() {
+        if (!this.model.isInSampleMode()) {
+            this.renderer.giveFocus();
+        }
     },
     /**
      * This method is the way a view can notifies the outside world that
@@ -472,6 +462,21 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             return this.updateControlPanel({ pager: pagingInfo });
         }
     },
+    /**
+     * Updates the state of the renderer (handle both Widget and Component
+     * renderers).
+     *
+     * @private
+     * @param {Object} state the model state
+     * @param {Object} [params={}] will be given to the model and to the renderer
+     * @return {Promise}
+     */
+    _updateRendererState(state, params = {}) {
+        if (this.renderer instanceof owl.Component) {
+            return this.renderer.update(state);
+        }
+        return this.renderer.updateState(state, params);
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -551,7 +556,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
                 break;
             case 'down':
                 ev.stopPropagation();
-                this.giveFocus();
+                this._giveFocus();
                 break;
         }
     },
