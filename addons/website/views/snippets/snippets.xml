@@ -516,7 +516,7 @@
 
     <div data-js="menu_data"
          data-selector="#top_menu li > a"
-         data-exclude=".dropdown-toggle, li.o_header_menu_button a"
+         data-exclude=".dropdown-toggle, li.o_header_menu_button a, [data-toggle], .o_offcanvas_logo"
          data-no-check="true"/>
 
     <div data-js="company_data"
@@ -558,36 +558,52 @@
             <we-fontfamilypicker data-variable="navbar-font"/>
             <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
         </we-row>
-        <we-select id="header_templates_select" data-variable="header-template" string="Template" data-reload="/">
-            <we-button id="option_template_header_logo_menu"
+
+        <we-select string="Template" data-variable="header-template" data-reload="/">
+            <we-button title="Default"
                        data-name="header_logo_menu_opt"
                        data-customize-website-views=""
-                       data-customize-website-variable="'logo_menu'"
-                       string="Logo - Menu"/>
-            <we-button id="option_template_header_hamburger_logo_centered"
-                       data-name="header_hamburger_logo_centered_opt"
-                       data-customize-website-views="website.template_header_hamburger, website.template_header_hamburger_left"
-                       data-customize-website-variable="'hamburger_logo'"
-                       string="Hamburger - Logo"/>
-            <we-button id="option_template_header_logo_menu_below"
-                       data-name="header_logo_menu_below_opt"
-                       data-customize-website-views=""
-                       data-customize-website-variable="'logo_menu_below'"
-                       string="Logo (Top) - Menu"/>
-            <we-button id="option_template_header_menu_logo_below"
-                       data-name="header_menu_logo_below_opt"
-                       data-customize-website-views=""
-                       data-customize-website-variable="'menu_logo_below'"
-                       string="Menu - Logo (Bottom)"/>
-            <we-button id="option_template_header_logo_hamburger"
-                       data-name="header_logo_hamburger_opt"
-                       data-customize-website-views="website.template_header_hamburger, website.template_header_navbar_text_center"
-                       data-customize-website-variable="'logo_hamburger'"
-                       string="Logo - Hamburger (cover)"/>
+                       data-customize-website-variable="'default'"
+                       data-img="/website/static/src/img/snippets_options/header_template_default.png"/>
+            <we-button title="Hamburger menu"
+                       data-name="header_hamburger_opt"
+                       data-customize-website-views="website.template_header_hamburger"
+                       data-customize-website-variable="'hamburger'"
+                       data-img="/website/static/src/img/snippets_options/header_template_hamburger.png"/>
+            <we-button title="Vertical"
+                       data-name="header_vertical_opt"
+                       data-customize-website-views="website.template_header_vertical"
+                       data-customize-website-variable="'vertical'"
+                       data-img="/website/static/src/img/snippets_options/header_template_vertical.png"/>
         </we-select>
-        <we-select id="header_effect_list" string="Effect">
-            <we-button id="option_header_effect_standard"
-                       data-name="header_effect_standard_opt"
+
+        <we-title id="hamburger_opt_label">Hamburger (Mobile)</we-title>
+        <we-select string="⌙ Type" data-variable="hamburger-type" data-reload="/">
+            <we-button data-customize-website-variable="'default'"
+                       data-customize-website-views="">Default</we-button>
+            <we-button data-name="off_canvas_menu_opt"
+                       data-customize-website-variable="'off-canvas'"
+                       data-customize-website-views="website.option_header_off_canvas">Off-Canvas</we-button>
+        </we-select>
+        <we-select string="⌙ Position" data-variable="hamburger-position" data-reload="/">
+            <we-button data-customize-website-variable="'right'">Right</we-button>
+            <we-button data-customize-website-variable="'left'">Left</we-button>
+            <we-button data-customize-website-variable="'center'">Center / Full</we-button>
+        </we-select>
+        <we-select string="⌙ Logo" data-dependencies="off_canvas_menu_opt" data-reload="/">
+            <we-button data-customize-website-views="">Text</we-button>
+            <we-button data-customize-website-views="website.option_header_off_canvas_logo_show">Image</we-button>
+        </we-select>
+        <we-checkbox string="Center Main Logo"
+                     data-dependencies="header_hamburger_opt"
+                     data-apply-to=".navbar-brand"
+                     data-customize-website-views="website.option_header_hamburger_center_logo"
+                     data-select-class="mx-md-auto"
+                     data-no-preview="true"/>
+
+        <we-select id="header_visibilities_list" string="Header Visibility">
+            <we-button id="option_header_visibility_standard"
+                       data-name="header_visibility_standard_opt"
                        data-select-class="o_header_standard"
                        data-customize-website-views="website.header_visibility_standard"
                        string="Standard"/>
@@ -612,7 +628,8 @@
                        data-customize-website-views="website.header_visibility_fade_out"
                        string="Fade Out"/>
         </we-select>
-        <we-select id="option_header_dropdown" string="Sub Menus" data-no-preview="true">
+
+        <we-select id="option_header_dropdown" string="Sub Menus" data-dependencies="!header_hamburger_opt" data-no-preview="true">
             <we-button data-select-class="o_hoverable_dropdown"
                        data-customize-website-views="website.header_hoverable_dropdown">On Hover</we-button>
             <we-button data-select-class="" data-name="header_dropdown_on_click_opt">On Click</we-button>
