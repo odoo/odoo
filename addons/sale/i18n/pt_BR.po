@@ -3795,6 +3795,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"A fatura é gerada automaticamente e fica disponível no portal do cliente quando a transação é confirmada pelo adquirente do pagamento.\n"
+"A fatura é marcada como paga e o pagamento é registrado no diário de pagamentos definido na configuração do adquirente do pagamento.\n"
+"Este modo é recomendado se você emitir a fatura final no pedido e não após a entrega."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3802,6 +3805,8 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"A margem é calculada a partir da soma dos preços de venda do produto menos o"
+" custo definido."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3816,6 +3821,8 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
+"O pedido não foi confirmado pela resposta do adquirinte  (%s): o valor total"
+" é %r mas o adquirinte respondeu com %r."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -3860,7 +3867,7 @@ msgstr ""
 msgid ""
 "The rate of the currency to the currency of rate 1 applicable at the date of"
 " the order"
-msgstr ""
+msgstr "A taxa da moeda para a moeda da taxa 1 aplicável na data do pedido"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
