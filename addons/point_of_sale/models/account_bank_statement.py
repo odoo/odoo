@@ -21,7 +21,7 @@ class AccountBankStatement(models.Model):
     def unlink(self):
         for bs in self:
             if bs.pos_session_id:
-                raise UserError(_("You cannot delete a bank statement used in an open Point of Sale session."))
+                raise UserError(_("You cannot delete a bank statement linked to Point of Sale session."))
         return super( AccountBankStatement, self).unlink()
 
 class AccountBankStatementLine(models.Model):
