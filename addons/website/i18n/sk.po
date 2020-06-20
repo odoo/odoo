@@ -2655,7 +2655,7 @@ msgstr "Farba hlavičky"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__header_overlay
 msgid "Header Overlay"
-msgstr ""
+msgstr "Prekrytie hlavičky"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -2737,6 +2737,8 @@ msgstr "Vysoká"
 msgid ""
 "Hint: Type '/' to search an existing page and '#' to link to an anchor."
 msgstr ""
+"Pomôcka: Ak chcete prehľadať existujúcu stránku, napíšte „/“ a „#“ pre odkaz"
+" na kotvu."
 
 #. module: website
 #. openerp-web
@@ -2755,7 +2757,7 @@ msgstr "Domov"
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "Home <span class=\"sr-only\">(current)</span>"
-msgstr ""
+msgstr "Domov <span class=\"sr-only\">(aktuálny)</span>"
 
 #. module: website
 #. openerp-web
@@ -2772,14 +2774,14 @@ msgstr "Domovská stránka"
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "How to get my Client ID"
-msgstr ""
+msgstr "Ako získať moje ID klienta"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "How to get my Tracking ID"
-msgstr ""
+msgstr "Ako získať moje ID sledovania"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2838,6 +2840,8 @@ msgid ""
 "If this error is caused by a change of yours in the templates, you have the "
 "possibility to reset the template to its <strong>factory settings</strong>."
 msgstr ""
+"Ak je táto chyba spôsobená zmenou vašich šablón, máte možnosť resetovať "
+"šablónu na <strong>výrobné nastavenia.</strong>."
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_page__groups_id
@@ -2856,6 +2860,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Ak je toto zobrazenie zdedené,\n"
+"* Ak je pravda, zobrazenie sa vždy rozširuje nadradené\n"
+"* Ak to nie je pravda, pohľad v súčasnosti nerozširuje pôvodné, ale môže byť povolený"
 
 #. module: website
 #. openerp-web
@@ -2996,6 +3003,9 @@ msgid ""
 "                                improves them. She is determined to drive success and delivers her professional\n"
 "                                acumen to bring Company at the next level."
 msgstr ""
+"Iris so svojimi medzinárodnými skúsenosťami nám pomáha ľahko pochopiť čísla a\n"
+"zlepšiť ich. Je odhodlaná svojou profesionálnou prácou\n"
+"pomôcť spoločnosti dosiahnuť výnimočné úspechy. "
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
@@ -3042,6 +3052,8 @@ msgid ""
 "It might be possible to edit the relevant items or fix the issue in <a "
 "href=\"%s\">the classic Odoo interface</a>"
 msgstr ""
+"Možno bude možné upraviť príslušné položky alebo problém vyriešiť v <a "
+"href=\"%s\">klasické rozhranie Odoo </a>"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -3258,7 +3270,7 @@ msgstr "Limitované prispôsobovanie"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Line-On-Sides"
-msgstr ""
+msgstr "Line-On-Sides"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -3271,7 +3283,7 @@ msgstr "Odkaz"
 #: code:addons/website/static/src/js/editor/snippets.options.js:0
 #, python-format
 msgid "Link Anchor"
-msgstr ""
+msgstr "Spojovacia kotva"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__module_website_links
@@ -3418,7 +3430,7 @@ msgstr "Menu"
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_menu_image_menu
 #: model_terms:ir.ui.view,arch_db:website.s_mega_menu_multi_menus
 msgid "Menu Item %s"
-msgstr ""
+msgstr "Položka ponuky %s"
 
 #. module: website
 #. openerp-web
@@ -3454,6 +3466,9 @@ msgid ""
 "                                Director in the software industry, Mich has helped Company to get where it\n"
 "                                is today. Mich is among the best minds."
 msgstr ""
+"Mich má rád prijímanie výziev. S viacročnými skúsenosťami z komerčnej činnosti\n"
+"                                Mich, riaditeľ v softvérovom priemysle, pomohol spoločnosti dostať sa tam, kde\n"
+"                                je dnes. Mich patrí medzi najlepšie mozgy."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3695,7 +3710,7 @@ msgstr "Žiadne"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "Not SEO optimized"
-msgstr ""
+msgstr "Nie je optimalizovaný SEO"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -3841,6 +3856,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Použije sa iba v prípade, že toto zobrazenie zdedí od iného (inherit_id nie je False / Null).\n"
+"\n"
+"* ak je rozšírenie (predvolené), ak sa požaduje toto zobrazenie, najbližšie primárne zobrazenie\n"
+"sa vyhľadá (prostredníctvom inherit_id), potom sa z toho dedia všetky zobrazenia\n"
+"použije sa model zobrazenia\n"
+"* ak je primárne, najbližšie primárne zobrazenie je úplne vyriešené (aj keď používa\n"
+"iný model ako tento), potom špecifikácie pôvodného\n"
+"(<xpath/>) sa použijú a výsledok sa použije, akoby išlo o toto zobrazenie\n"
+"aktuálny.\n"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
@@ -3937,7 +3961,7 @@ msgstr "Stránka <b>%s</b>volá tento súbor"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "Page Anchor"
-msgstr ""
+msgstr "Kotvenie stránky"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__website_indexed
@@ -4890,6 +4914,12 @@ msgid ""
 " and conditions of your use of this website and any of its products or "
 "services (collectively, \"Website\" or \"Services\")."
 msgstr ""
+"Tieto zmluvné podmienky (ďalej len „podmienky“, „zmluva“) sú dohodou medzi "
+"webovým serverom („prevádzkovateľ webových stránok“, „nás“, „my“ alebo "
+"„náš“) a vami („používateľ“, „vy“ alebo „váš“ \"). Táto dohoda stanovuje "
+"všeobecné podmienky používania tejto webovej stránky a všetkých jej "
+"produktov alebo služieb (ďalej spoločne len „webová stránka“ alebo "
+"„služby“)."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5817,6 +5847,8 @@ msgstr "Biela"
 #: model:ir.model.fields,help:website.field_website__domain
 msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
 msgstr ""
+"Ak nie je zadaná žiadna schéma, bude mať v kanonických adresách URL predponu"
+" http"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
