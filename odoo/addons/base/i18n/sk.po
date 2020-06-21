@@ -14,6 +14,7 @@
 # Stefan Stieranka <stieranka@itec.sk>, 2020
 # Adam Levrinc <adam.levrinc@26house.com>, 2020
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-01-03 15:05+0000\n"
 "PO-Revision-Date: 2017-09-20 10:13+0000\n"
-"Last-Translator: Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -7469,7 +7470,7 @@ msgstr "Automatizácia Marketingových Kampaní"
 #. module: base
 #: selection:ir.actions.server,usage:0
 msgid "Automated Action"
-msgstr ""
+msgstr "Automatizovaná akcia"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_base_automation
@@ -12755,6 +12756,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Ak je toto zobrazenie zdedené,\n"
+"* Ak je pravda, zobrazenie sa vždy rozširuje nadradené\n"
+"* Ak to nie je pravda, pohľad v súčasnosti nerozširuje pôvodné, ale môže byť povolený"
 
 #. module: base
 #: model:ir.actions.act_window,help:base.action_country_state
@@ -16611,6 +16615,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Použije sa iba v prípade, že toto zobrazenie zdedí od iného (inherit_id nie je False / Null).\n"
+"\n"
+"* ak je rozšírenie (predvolené), ak sa požaduje toto zobrazenie, najbližšie primárne zobrazenie\n"
+"sa vyhľadá (prostredníctvom inherit_id), potom sa z toho dedia všetky zobrazenia\n"
+"použije sa model zobrazenia\n"
+"* ak je primárne, najbližšie primárne zobrazenie je úplne vyriešené (aj keď používa\n"
+"iný model ako tento), potom špecifikácie pôvodného\n"
+"(<xpath/>) sa použijú a výsledok sa použije, akoby išlo o toto zobrazenie\n"
+"aktuálny.\n"
 
 #. module: base
 #: sql_constraint:res.currency.rate:0

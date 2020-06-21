@@ -3,17 +3,19 @@
 # * maintenance
 # 
 # Translators:
-# Dorin Hongu <dhongu@gmail.com>, 2017
+# Valentin Matei <pdevalentin@gmail.com>, 2017
 # Martin Trigaux, 2017
-# Valy28 <pdevalentin@gmail.com>, 2017
-# Cozmin Candea <office@terrabit.ro>, 2017
+# Cozmin Candea <office@terrabit.ro>, 2018
+# Dorin Hongu <dhongu@gmail.com>, 2018
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
+# 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 11.0\n"
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-30 13:41+0000\n"
-"PO-Revision-Date: 2018-01-30 13:41+0000\n"
-"Last-Translator: Cozmin Candea <office@terrabit.ro>, 2017\n"
+"PO-Revision-Date: 2017-09-20 10:19+0000\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -479,6 +481,8 @@ msgid ""
 "ID of the parent record holding the alias (example: project holding the task"
 " creation alias)"
 msgstr ""
+"ID al înregistrării părinte care deține alias (exemplu: proiect care deține "
+"alias de creare a sarcinilor)"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
@@ -791,6 +795,9 @@ msgid ""
 " necessarily the model given by alias_model_id (example: project "
 "(parent_model) and task (model))"
 msgstr ""
+"Modelul părinte care deține aliasul. Modelul care deține referința alias nu "
+"este neapărat modelul dat de alias_model_id (example: project (parent_model)"
+" and task (model))"
 
 #. module: maintenance
 #: model:maintenance.equipment.category,name:maintenance.equipment_phone
@@ -805,6 +812,10 @@ msgid ""
 "- partners: only authenticated partners\n"
 "- followers: only followers of the related document or members of following channels\n"
 msgstr ""
+"Politica de a posta un mesaj pe document folosind mailgateway.\n"
+"- toată lumea: toată lumea poate posta\n"
+"- parteneri: numai parteneri autentificați\n"
+"- adepți: numai adepți ai documentului aferent sau membri ai canalelor următoare\n"
 
 #. module: maintenance
 #: selection:maintenance.request,maintenance_type:0
@@ -1050,6 +1061,9 @@ msgid ""
 " email that does not reply to an existing record will cause the creation of "
 "a new record of this model (e.g. a Project Task)"
 msgstr ""
+"Modelul (tipul de document Odoo) căruia îi corespunde acest alias. Orice "
+"e-mail care nu răspunde la o înregistrare existentă va determina crearea "
+"unei noi înregistrări a acestui model (de exemplu, o sarcină de proiect)"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_name
@@ -1057,6 +1071,8 @@ msgid ""
 "The name of the email alias, e.g. 'jobs' if you want to catch emails for "
 "<jobs@example.odoo.com>"
 msgstr ""
+"Numele aliasului de e-mail, de ex. „locuri de muncă” dacă doriți să primiți "
+"e-mailuri pentru <jobs@example.odoo.com>"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_user_id
