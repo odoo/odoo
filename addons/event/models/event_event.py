@@ -6,7 +6,7 @@ import pytz
 
 from odoo import _, api, fields, models
 from odoo.addons.base.models.res_partner import _tz_get
-from odoo.tools import format_datetime
+from odoo.tools import format_datetime, format_date
 from odoo.exceptions import ValidationError
 from odoo.tools.translate import html_translate
 
@@ -460,9 +460,7 @@ class EventEvent(models.Model):
     def name_get(self):
         result = []
         for event in self:
-            date_begin = fields.Datetime.from_string(event.date_begin)
-            date_end = fields.Datetime.from_string(event.date_end)
-            dates = [fields.Date.to_string(fields.Datetime.context_timestamp(event, dt)) for dt in [date_begin, date_end] if dt]
+            dates = [format_date(self.env, dt) for dt in [event.date_begin, event.date_end] if dt]
             dates = sorted(set(dates))
             result.append((event.id, '%s (%s)' % (event.name, ' - '.join(dates))))
         return result
