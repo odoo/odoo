@@ -303,7 +303,6 @@ class HrExpense(models.Model):
             'name': todo[0].name if len(todo) == 1 else '',
             'expense_line_ids': [(6, 0, todo.ids)]
         })
-        sheet._onchange_employee_id()
         return sheet
 
     def action_submit_expenses(self):
@@ -539,16 +538,9 @@ class HrExpense(models.Model):
         self.sheet_id.message_post_with_view('hr_expense.hr_expense_template_refuse_reason',
                                              values={'reason': reason, 'is_sheet': False, 'name': self.name})
 
+    # YTI fix typo in master
     @api.model
     def get_expense_dashbord(self):
-        if not self.env.user.employee_ids:
-            return
-        expenses = self.read_group(
-            [
-                ('employee_id', 'in', self.env.user.employee_ids.ids),
-                ('payment_mode', '=', 'own_account'),
-                ('state', 'in', ['draft', 'reported', 'approved'])
-            ], ['total_amount', 'currency_id', 'state'], ['state', 'currency_id'], lazy=False)
         expense_state = {
             'draft': {
                 'description': _('to report'),
@@ -563,6 +555,14 @@ class HrExpense(models.Model):
                 'amount': list(),
             }
         }
+        if not self.env.user.employee_ids:
+            return expense_state
+        expenses = self.read_group(
+            [
+                ('employee_id', 'in', self.env.user.employee_ids.ids),
+                ('payment_mode', '=', 'own_account'),
+                ('state', 'in', ['draft', 'reported', 'approved'])
+            ], ['total_amount', 'currency_id', 'state'], ['state', 'currency_id'], lazy=False)
         for expense in expenses:
             state = expense['state']
             currency = expense['currency_id'][0]
@@ -938,7 +938,7 @@ class HrExpenseSheet(models.Model):
 
         self.write({'state': 'cancel'})
         for sheet in self:
-            sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': self.name})
+            sheet.message_post_with_view('hr_expense.hr_expense_template_refuse_reason', values={'reason': reason, 'is_sheet': True, 'name': sheet.name})
         self.activity_update()
 
     def reset_expense_sheets(self):

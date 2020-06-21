@@ -259,7 +259,7 @@ class MassMailing(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         default = dict(default or {},
-                       name=_('%s (copy)') % self.name,
+                       name=_('%s (copy)', self.name),
                        contact_list_ids=self.contact_list_ids.ids)
         return super(MassMailing, self).copy(default=default)
 
@@ -469,7 +469,7 @@ class MassMailing(models.Model):
         elif 'email' in target._fields:
             mail_field = 'email'
         else:
-            raise UserError(_("Unsupported mass mailing model %s") % self.mailing_model_id.name)
+            raise UserError(_("Unsupported mass mailing model %s", self.mailing_model_id.name))
 
         if self.unique_ab_testing:
             query +="""

@@ -207,7 +207,7 @@ class IrFieldsConverter(models.AbstractModel):
                 ValueError,
                 _(u"'%s' does not seem to be a valid date for field '%%(field)s'"),
                 value,
-                {'moreinfo': _(u"Use the format '%s'") % u"2012-12-31"}
+                {'moreinfo': _(u"Use the format '%s'", u"2012-12-31")}
             )
 
     @api.model
@@ -239,7 +239,7 @@ class IrFieldsConverter(models.AbstractModel):
                 ValueError,
                 _(u"'%s' does not seem to be a valid datetime for field '%%(field)s'"),
                 value,
-                {'moreinfo': _(u"Use the format '%s'") % u"2012-12-31 23:59:59"}
+                {'moreinfo': _(u"Use the format '%s'", u"2012-12-31 23:59:59")}
             )
 
         input_tz = self._input_tz()# Apply input tz to the parsed naive datetime
@@ -363,7 +363,7 @@ class IrFieldsConverter(models.AbstractModel):
                     try:
                         id, _name = RelatedModel.name_create(name=value)
                     except (Exception, psycopg2.IntegrityError):
-                        error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.") % RelatedModel._description
+                        error_msg = _(u"Cannot create new '%s' records from their name alone. Please create those records manually and try importing again.", RelatedModel._description)
         else:
             raise self._format_import_error(
                 Exception,

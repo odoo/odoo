@@ -407,21 +407,6 @@ class MailThread(models.AbstractModel):
 
         return help
 
-    @api.model
-    def fields_view_get(self, view_id=None, view_type='form', toolbar=False, submenu=False):
-        res = super(MailThread, self).fields_view_get(view_id=view_id, view_type=view_type, toolbar=toolbar, submenu=submenu)
-        if view_type == 'form':
-            doc = etree.XML(res['arch'])
-            for node in doc.xpath("//field[@name='message_ids']"):
-                # the 'Log a note' button is employee only
-                options = ast.literal_eval(node.get('options', '{}'))
-                is_employee = self.env.user.has_group('base.group_user')
-                options['display_log_button'] = is_employee
-                # save options on the node
-                node.set('options', repr(options))
-            res['arch'] = etree.tostring(doc, encoding='unicode')
-        return res
-
     # ------------------------------------------------------
     # Technical methods / wrappers / tools
     # ------------------------------------------------------
@@ -559,7 +544,7 @@ class MailThread(models.AbstractModel):
         """
         self.ensure_one()
         doc_name = self.env['ir.model']._get(self._name).name
-        return _('%s created') % doc_name
+        return _('%s created', doc_name)
 
     def _track_subtype(self, init_values):
         """ Give the subtypes triggered by the changes on the record according
@@ -686,7 +671,7 @@ class MailThread(models.AbstractModel):
 
     def _routing_warn(self, error_message, message_id, route, raise_exception=True):
         """ Tools method used in _routing_check_route: whether to log a warning or raise an error """
-        short_message = _("Mailbox unavailable - %s") % error_message
+        short_message = _("Mailbox unavailable - %s", error_message)
         full_message = ('Routing mail with Message-Id %s: route %s: %s' %
                         (message_id, route, error_message))
         _logger.info(full_message)
@@ -706,8 +691,10 @@ class MailThread(models.AbstractModel):
         bounce_from = self.env['ir.mail_server']._get_default_bounce_address()
         if bounce_from:
             bounce_mail_values['email_from'] = tools.formataddr(('MAILER-DAEMON', bounce_from))
-        else:
+        elif self.env['ir.config_parameter'].sudo().get_param("mail.catchall.alias") not in message['To']:
             bounce_mail_values['email_from'] = tools.decode_message_header(message, 'To')
+        else:
+            bounce_mail_values['email_from'] = tools.formataddr(('MAILER-DAEMON', self.env.user.email_normalized))
         bounce_mail_values.update(mail_values)
         self.env['mail.mail'].sudo().create(bounce_mail_values).send()
 
@@ -804,22 +791,27 @@ class MailThread(models.AbstractModel):
             self._routing_warn(_('target model unspecified'), message_id, route, raise_exception)
             return ()
         elif model not in self.env:
-            self._routing_warn(_('unknown target model %s') % model, message_id, route, raise_exception)
+            self._routing_warn(_('unknown target model %s', model), message_id, route, raise_exception)
             return ()
         record_set = self.env[model].browse(thread_id) if thread_id else self.env[model]
 
         # Existing Document: check if exists and model accepts the mailgateway; if not, fallback on create if allowed
         if thread_id:
             if not record_set.exists():
-                self._routing_warn(_('reply to missing document (%s,%s), fall back on document creation') % (model, thread_id), message_id, route, False)
+                self._routing_warn(
+                    _('reply to missing document (%(model)s,%(thread)s), fall back on document creation', model=model, thread=thread_id),
+                    message_id,
+                    route,
+                    False
+                )
                 thread_id = None
             elif not hasattr(record_set, 'message_update'):
-                self._routing_warn(_('reply to model %s that does not accept document update, fall back on document creation') % model, message_id, route, False)
+                self._routing_warn(_('reply to model %s that does not accept document update, fall back on document creation', model), message_id, route, False)
                 thread_id = None
 
         # New Document: check model accepts the mailgateway
         if not thread_id and model and not hasattr(record_set, 'message_new'):
-            self._routing_warn(_('model %s does not accept document creation') % model, message_id, route, raise_exception)
+            self._routing_warn(_('model %s does not accept document creation', model), message_id, route, raise_exception)
             return ()
 
         # Update message author. We do it now because we need it for aliases (contact settings)
@@ -847,7 +839,12 @@ class MailThread(models.AbstractModel):
             else:
                 error_code = self.env['mail.alias.mixin']._alias_check_contact_on_record(obj, message, message_dict, alias)
             if error_code is not True:
-                self._routing_warn(_('alias %s: %s') % (alias.alias_name, error_code or _('unknown error')), message_id, route, False)
+                self._routing_warn(
+                    _('alias %(name)s: %(error)s', name=alias.alias_name, error=error_code or _('unknown error')),
+                    message_id,
+                    route,
+                    False
+                )
                 body = alias._get_alias_bounced_body(message_dict)
                 self._routing_create_bounce_email(email_from, body, message, references=message_id)
                 return False
@@ -2608,7 +2605,7 @@ class MailThread(models.AbstractModel):
         access_link = self._notify_get_action_link('view')
 
         if model_name:
-            view_title = _('View %s') % model_name
+            view_title = _('View %s', model_name)
         else:
             view_title = _('View')
 
@@ -2872,7 +2869,7 @@ class MailThread(models.AbstractModel):
             assignation_msg = view._render(values, engine='ir.qweb', minimal_qcontext=True)
             assignation_msg = self.env['mail.render.mixin']._replace_local_links(assignation_msg)
             record.message_notify(
-                subject=_('You have been assigned to %s') % record.display_name,
+                subject=_('You have been assigned to %s', record.display_name),
                 body=assignation_msg,
                 partner_ids=partner_ids,
                 record_name=record.display_name,

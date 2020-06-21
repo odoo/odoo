@@ -23,7 +23,7 @@ class MassSMSTest(models.TransientModel):
         sanitized_numbers = [info['sanitized'] for info in sanitize_res.values() if info['sanitized']]
         invalid_numbers = [number for number, info in sanitize_res.items() if info['code']]
         if invalid_numbers:
-            raise exceptions.UserError(_('Following numbers are not correctly encoded: %s, example : "+32 495 85 85 77, +33 545 55 55 55"') % repr(invalid_numbers))
+            raise exceptions.UserError(_('Following numbers are not correctly encoded: %s, example : "+32 495 85 85 77, +33 545 55 55 55"', repr(invalid_numbers)))
         self.env['sms.api']._send_sms_batch([{
             'res_id': 0,
             'number': number,

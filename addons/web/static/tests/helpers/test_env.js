@@ -28,6 +28,15 @@ odoo.define('web.test_env', async function (require) {
         };
         const defaultEnv = {
             _t: env._t || Object.assign((s => s), { database }),
+            browser: Object.assign({
+                setTimeout: window.setTimeout.bind(window),
+                clearTimeout: window.clearTimeout.bind(window),
+                setInterval: window.setInterval.bind(window),
+                clearInterval: window.clearInterval.bind(window),
+                requestAnimationFrame: window.requestAnimationFrame.bind(window),
+                Date: window.Date,
+                fetch: (window.fetch || (() => { })).bind(window),
+            }, env.browser),
             bus: env.bus || new Bus(),
             device: Object.assign({ isMobile: false }, env.device),
             isDebug: env.isDebug || (() => false),

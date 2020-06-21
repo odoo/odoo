@@ -271,9 +271,9 @@
                         </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>
@@ -361,7 +361,7 @@
                                             <div class="o_kanban_record_title o_text_overflow" t-att-title="record.name.value">
                                                 <field name="name"/>
                                             </div>
-                                            <div><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
+                                            <div t-if="record.address_id.value"><i class="fa fa-map-marker" title="Location"/> <span class="o_text_overflow o_event_kanban_location" t-esc="record.address_id.value"/></div>
                                         </div>
                                         <h5 class="o_event_fontsize_11 p-0">
                                             <a name="%(act_event_registration_from_event)d" type="action" context="{'search_default_expected': True}">
@@ -562,9 +562,9 @@
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread" options="{'post_refresh': 'recipients'}"/>
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids" options="{'post_refresh': 'recipients'}"/>
                     </div>
                 </form>
             </field>

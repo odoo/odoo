@@ -87,7 +87,7 @@ class RecurrenceRule(models.Model):
         return synced_recurrences
 
     def _get_sync_domain(self):
-        return [('calendar_event_ids.partner_id.user_ids', 'in', self.env.user.id)]
+        return [('calendar_event_ids.user_id', '=', self.env.user.id)]
 
     @api.model
     def _odoo_values(self, google_recurrence, default_reminders=()):

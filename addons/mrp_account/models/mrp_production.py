@@ -71,9 +71,9 @@ class MrpProduction(models.Model):
                 AccountAnalyticLine.create(vals)
 
     def button_mark_done(self):
-        self.ensure_one()
         res = super(MrpProduction, self).button_mark_done()
-        self._costs_generate()
+        for order in self:
+            order._costs_generate()
         return res
 
     def action_view_stock_valuation_layers(self):
@@ -83,4 +83,5 @@ class MrpProduction(models.Model):
         context = literal_eval(action['context'])
         context.update(self.env.context)
         context['no_at_date'] = True
+        context['search_default_group_by_product_id'] = False
         return dict(action, domain=domain, context=context)

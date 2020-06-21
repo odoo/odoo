@@ -336,7 +336,9 @@ class Slide(models.Model):
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
-                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?theme=light" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
+                    query = urls.url_parse(record.url).query
+                    query = query + '&theme=light' if query else 'theme=light'
+                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
                 else:
                     # embed google doc video
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
@@ -530,7 +532,7 @@ class Slide(models.Model):
         mail_ids = []
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         for record in self:
-            template = self.channel_id.share_template_id.with_context(
+            template = record.channel_id.share_template_id.with_context(
                 user=self.env.user,
                 email=email,
                 base_url=base_url,
@@ -795,7 +797,7 @@ class Slide(models.Model):
         if error == 'keyInvalid':
             return _('Your Google API key is invalid, please update it into your settings.\nSettings > Website > Features > API Key')
 
-        return _('Could not fetch data from url. Document or access right not available:\n%s') % error
+        return _('Could not fetch data from url. Document or access right not available:\n%s', error)
 
     @api.model
     def _parse_google_document(self, document_id, only_preview_fields):

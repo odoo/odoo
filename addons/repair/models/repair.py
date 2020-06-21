@@ -39,7 +39,7 @@ class Repair(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
-        index=True, states={'confirmed': [('readonly', True)]}, check_company=True,
+        index=True, states={'confirmed': [('readonly', True)]}, check_company=True, change_default=True,
         help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
     address_id = fields.Many2one(
         'res.partner', 'Delivery Address',
@@ -360,7 +360,7 @@ class Repair(models.Model):
 
                 account = operation.product_id.product_tmpl_id._get_product_accounts()['income']
                 if not account:
-                    raise UserError(_('No account defined for product "%s".') % operation.product_id.name)
+                    raise UserError(_('No account defined for product "%s".', operation.product_id.name))
 
                 invoice_line_vals = {
                     'name': name,
@@ -402,7 +402,7 @@ class Repair(models.Model):
 
                 account = fee.product_id.product_tmpl_id._get_product_accounts()['income']
                 if not account:
-                    raise UserError(_('No account defined for product "%s".') % fee.product_id.name)
+                    raise UserError(_('No account defined for product "%s".', fee.product_id.name))
 
                 invoice_line_vals = {
                     'name': name,
@@ -683,7 +683,10 @@ class RepairLine(models.Model):
         product = self.product_id
         self.name = product.display_name
         if product.description_sale:
-            self.name += '\n' + product.description_sale
+            if partner:
+                self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+            else:
+                self.name += '\n' + self.product_id.description_sale
         self.product_uom = product.uom_id.id
         if self.type != 'remove':
             if partner:
@@ -768,7 +771,10 @@ class RepairFee(models.Model):
             self.name = self.product_id.display_name
         self.product_uom = self.product_id.uom_id.id
         if self.product_id.description_sale:
-            self.name += '\n' + self.product_id.description_sale
+            if partner:
+                self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+            else:
+                self.name += '\n' + self.product_id.description_sale
 
         warning = False
         if not pricelist:

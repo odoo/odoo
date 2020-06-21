@@ -110,7 +110,7 @@ class Project(models.Model):
             return self.action_view_timesheet_plan()
         return {
             'type': 'ir.actions.act_window',
-            'name': _('Timesheets of %s') % self.name,
+            'name': _('Timesheets of %s', self.name),
             'domain': [('project_id', '!=', False)],
             'res_model': 'account.analytic.line',
             'view_id': False,
@@ -176,14 +176,13 @@ class ProjectTask(models.Model):
     display_create_order = fields.Boolean(compute='_compute_display_create_order')
 
     @api.depends(
-        'allow_billable', 'allow_timesheets', 'sale_order_id', 'display_timesheet_timer',
-        'timer_start')
+        'allow_billable', 'allow_timesheets', 'sale_order_id')
     def _compute_display_create_order(self):
         for task in self:
             show = True
             if not task.allow_billable or not task.allow_timesheets or \
                 task.billable_type == 'employee_rate' or not task.partner_id or \
-                task.sale_order_id or (task.display_timesheet_timer and task.timer_start):
+                task.sale_order_id:
                 show = False
             task.display_create_order = show
 
@@ -247,7 +246,7 @@ class ProjectTask(models.Model):
     @api.depends('timesheet_ids')
     def _compute_has_multi_sol(self):
         for task in self:
-            task.has_multi_sol = task.timesheet_ids.so_line != task.sale_line_id
+            task.has_multi_sol = task.timesheet_ids and task.timesheet_ids.so_line != task.sale_line_id
 
     @api.onchange('project_id')
     def _onchange_project(self):

@@ -379,6 +379,11 @@ class ProductTemplate(models.Model):
         if self.uom_id:
             self.uom_po_id = self.uom_id.id
 
+    @api.onchange('uom_po_id')
+    def _onchange_uom(self):
+        if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
+            self.uom_po_id = self.uom_id
+
     @api.onchange('type')
     def _onchange_type(self):
         # Do nothing but needed for inheritance
@@ -413,6 +418,11 @@ class ProductTemplate(models.Model):
         return templates
 
     def write(self, vals):
+        if 'uom_id' in vals or 'uom_po_id' in vals:
+            uom_id = self.env['uom.uom'].browse(vals.get('uom_id')) or self.uom_id
+            uom_po_id = self.env['uom.uom'].browse(vals.get('uom_po_id')) or self.uom_po_id
+            if uom_id and uom_po_id and uom_id.category_id != uom_po_id.category_id:
+                vals['uom_po_id'] = uom_id.id
         res = super(ProductTemplate, self).write(vals)
         if 'attribute_line_ids' in vals or vals.get('active'):
             self._create_variant_ids()
@@ -436,7 +446,7 @@ class ProductTemplate(models.Model):
         if default is None:
             default = {}
         if 'name' not in default:
-            default['name'] = _("%s (copy)") % self.name
+            default['name'] = _("%s (copy)", self.name)
         return super(ProductTemplate, self).copy(default=default)
 
     def name_get(self):

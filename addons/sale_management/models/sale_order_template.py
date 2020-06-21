@@ -37,7 +37,11 @@ class SaleOrderTemplate(models.Model):
             if len(companies) > 1:
                 raise ValidationError(_("Your template cannot contain products from multiple companies."))
             elif companies and companies != template.company_id:
-                raise ValidationError((_("Your template contains products from company %s whereas your template belongs to company %s. \n Please change the company of your template or remove the products from other companies.") % (companies.mapped('display_name'), template.company_id.display_name)))
+                raise ValidationError(_(
+                    "Your template contains products from company %(product_company)s whereas your template belongs to company %(template_company)s. \n Please change the company of your template or remove the products from other companies.",
+                    product_company=', '.join(companies.mapped('display_name')),
+                    template_company=template.company_id.display_name,
+                ))
 
     @api.onchange('sale_order_template_line_ids', 'sale_order_template_option_ids')
     def _onchange_template_line_ids(self):

@@ -466,7 +466,7 @@ class Applicant(models.Model):
                 if applicant.job_id:
                     applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
                     applicant.job_id.message_post(
-                        body=_('New Employee %s Hired') % applicant.partner_name if applicant.partner_name else applicant.name,
+                        body=_('New Employee %s Hired', applicant.partner_name if applicant.partner_name else applicant.name),
                         subtype_xmlid="hr_recruitment.mt_job_applicant_hired")
                 applicant.message_post_with_view(
                     'hr_recruitment.applicant_hired_template',

@@ -21,22 +21,21 @@ odoo.define('hr_expense.expenses.tree', function (require) {
     });
 
     var ExpenseListRenderer = ListRenderer.extend({
-        _render: function () {
+        _render: async function () {
             var self = this;
-            return this._super.apply(this, arguments).then(function () {
-                return self._rpc({
-                    model: 'hr.expense',
-                    method: 'get_expense_dashbord',
-                    context: self.context,
-                });
-            }).then(function (result) {
-                self.$el.parent().find('.o_expense_container').remove();
-                var elem = QWeb.render('hr_expense.dashboard_list_header', {
-                    expenses: result,
-                    render_monetary_field: self.render_monetary_field,
-                });
-                self.$el.before(elem);
+            await this._super(...arguments);
+            const result = await this._rpc({
+                model: 'hr.expense',
+                method: 'get_expense_dashbord',
+                context: this.context,
             });
+
+            self.$el.parent().find('.o_expense_container').remove();
+            const elem = QWeb.render('hr_expense.dashboard_list_header', {
+                expenses: result,
+                render_monetary_field: self.render_monetary_field,
+            });
+            self.$el.before(elem);
         },
         render_monetary_field: function (value, currency_id) {
             value = value.toFixed(2);

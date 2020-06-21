@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tests.common import SavepointCase
 from odoo.exceptions import UserError
 
 
+@tagged('post_install', '-at_install')
 class TestAngloSaxonValuation(SavepointCase):
     @classmethod
     def setUpClass(cls):

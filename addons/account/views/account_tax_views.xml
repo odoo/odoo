@@ -10,6 +10,7 @@
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="type_tax_use"/>
+                    <field name="tax_scope"/>
                     <field name="description"/>
                     <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
                     <field name="active" widget="boolean_toggle"/>
@@ -52,6 +53,7 @@
                 <kanban class="o_kanban_mobile">
                     <field name="name"/>
                     <field name="type_tax_use"/>
+                    <field name="tax_scope"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -61,6 +63,7 @@
                                     </div>
                                     <div class="col-6 text-right">
                                         <span class="badge badge-pill"><t t-esc="record.type_tax_use.value"/></span>
+                                        <span class="badge badge-pill"><t t-esc="record.tax_scope.value"/></span>
                                     </div>
                                 </div>
                             </div>
@@ -80,11 +83,15 @@
                     <filter string="Sale" name="sale" domain="[('type_tax_use','=','sale')]" />
                     <filter string="Purchase" name="purchase" domain="[('type_tax_use','=','purchase')]" />
                     <separator/>
+                    <filter string="Services" name="service" domain="[('tax_scope','=','service')]" />
+                    <filter string="Goods" name="goods" domain="[('tax_scope','=','consu')]" />
+                    <separator/>
                     <filter name="active" string="Active" domain="[('active','=',True)]" help="Show active taxes"/>
                     <filter name="inactive" string="Inactive" domain="[('active','=',False)]" help="Show inactive taxes"/>
                     <group string="Group By">
                         <filter string="Company" name="company" domain="[]" context="{'group_by':'company_id'}" groups="base.group_multi_company"/>
-                        <filter string="Tax Application" name="taxapp" domain="[]" context="{'group_by':'type_tax_use'}"/>
+                        <filter string="Tax Type" name="taxapp" domain="[]" context="{'group_by':'type_tax_use'}"/>
+                        <filter string="Tax Scope" name="taxapp" domain="[]" context="{'group_by':'tax_scope'}"/>
                     </group>
                 </search>
             </field>
@@ -115,6 +122,7 @@
                         </group>
                         <group>
                             <field name="type_tax_use"/>
+                            <field name="tax_scope"/>
                             <label for="amount" attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}"/>
                             <div attrs="{'invisible':[('amount_type','not in', ('fixed', 'percent', 'division'))]}">
                                 <field name="amount" class="oe_inline"/>
@@ -155,7 +163,6 @@
                                     <field name="include_base_amount" attrs="{'invisible':[('amount_type','=', 'group')]}" />
                                     <field name="hide_tax_exigibility" invisible="1"/>
                                     <field name="tax_exigibility" widget="radio" attrs="{'invisible':['|', ('amount_type','=', 'group'), ('hide_tax_exigibility', '=', False)]}" groups="account.group_account_readonly"/>
-                                    <field name="cash_basis_base_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')]}" groups="account.group_account_readonly"/>
                                     <field name="cash_basis_transition_account_id" options="{'no_create': True}" attrs="{'invisible': [('tax_exigibility', '=', 'on_invoice')], 'required': [('tax_exigibility', '=', 'on_payment')]}" groups="account.group_account_readonly"/>
                                 </group>
                             </group>

@@ -773,11 +773,11 @@ class ExportXlsxWriter:
                 # fails note that you can't export
                 cell_value = pycompat.to_text(cell_value)
             except UnicodeDecodeError:
-                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.") % self.field_names[column])
+                raise UserError(_("Binary fields can not be exported to Excel unless their content is base64-encoded. That does not seem to be the case for %s.", self.field_names)[column])
 
         if isinstance(cell_value, str):
             if len(cell_value) > self.worksheet.xls_strmax:
-                cell_value = _("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.") % self.worksheet.xls_strmax
+                cell_value = _("The content of this cell is too long for an XLSX file (more than %s characters). Please use the CSV format for this export.", self.worksheet.xls_strmax)
             else:
                 cell_value = cell_value.replace("\r", " ")
         elif isinstance(cell_value, datetime.datetime):

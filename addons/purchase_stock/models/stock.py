@@ -142,6 +142,17 @@ class StockWarehouse(models.Model):
         routes |= self.filtered(lambda self: self.buy_to_resupply and self.buy_pull_id and self.buy_pull_id.route_id).mapped('buy_pull_id').mapped('route_id')
         return routes
 
+    def get_rules_dict(self):
+        result = super(StockWarehouse, self).get_rules_dict()
+        for warehouse in self:
+            result[warehouse.id].update(warehouse._get_receive_rules_dict())
+        return result
+
+    def _get_routes_values(self):
+        routes = super(StockWarehouse, self)._get_routes_values()
+        routes.update(self._get_receive_routes_values('buy_to_resupply'))
+        return routes
+
     def _update_name_and_code(self, name=False, code=False):
         res = super(StockWarehouse, self)._update_name_and_code(name, code)
         warehouse = self[0]

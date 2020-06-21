@@ -133,7 +133,7 @@ class CrmTeam(models.Model):
     def _graph_get_model(self):
         """ skeleton function defined here because it'll be called by crm and/or sale
         """
-        raise UserError(_('Undefined graph model for Sales Team: %s') % self.name)
+        raise UserError(_('Undefined graph model for Sales Team: %s', self.name))
 
     def _graph_get_dates(self, today):
         """ return a coherent start and end date for the dashboard graph covering a month period grouped by week.
@@ -151,7 +151,7 @@ class CrmTeam(models.Model):
         return 'EXTRACT(WEEK FROM %s)' % self._graph_date_column()
 
     def _graph_y_query(self):
-        raise UserError(_('Undefined graph model for Sales Team: %s') % self.name)
+        raise UserError(_('Undefined graph model for Sales Team: %s', self.name))
 
     def _extra_sql_conditions(self):
         return ''

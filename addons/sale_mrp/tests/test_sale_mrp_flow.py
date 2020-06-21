@@ -20,7 +20,6 @@ class TestSaleMrpFlow(AccountTestCommon):
         cls.MrpProduction = cls.env['mrp.production']
         cls.Inventory = cls.env['stock.inventory']
         cls.InventoryLine = cls.env['stock.inventory.line']
-        cls.ProductProduce = cls.env['mrp.product.produce']
         cls.ProductCategory = cls.env['product.category']
 
         cls.categ_unit = cls.env.ref('uom.product_uom_categ_unit')
@@ -432,15 +431,10 @@ class TestSaleMrpFlow(AccountTestCommon):
         # produce product D.
         # ------------------
 
-        produce_form = Form(self.ProductProduce.with_context({
-            'active_id': mnf_product_d.id,
-            'active_ids': [mnf_product_d.id],
-        }))
-        produce_form.qty_producing = 20
-        produce_d = produce_form.save()
-        # produce_d.on_change_qty()
-        produce_d.do_produce()
-        mnf_product_d.post_inventory()
+        mo_form = Form(mnf_product_d)
+        mo_form.qty_producing = 20
+        mnf_product_d = mo_form.save()
+        mnf_product_d._post_inventory()
 
         # Check state of manufacturing order.
         self.assertEqual(mnf_product_d.state, 'done', 'Manufacturing order should still be in progress state.')
@@ -487,13 +481,10 @@ class TestSaleMrpFlow(AccountTestCommon):
         # Produce product A.
         # ------------------
 
-        produce_form = Form(self.ProductProduce.with_context({
-            'active_id': mnf_product_a.id,
-            'active_ids': [mnf_product_a.id],
-        }))
-        produce_a = produce_form.save()
-        produce_a.do_produce()
-        mnf_product_a.post_inventory()
+        mo_form = Form(mnf_product_a)
+        mo_form.qty_producing = mo_form.product_qty
+        mnf_product_a = mo_form.save()
+        mnf_product_a._post_inventory()
         # Check state of manufacturing order product A.
         self.assertEqual(mnf_product_a.state, 'done', 'Manufacturing order should still be in the progress state.')
         # Check product A avaialble quantity should be 120.

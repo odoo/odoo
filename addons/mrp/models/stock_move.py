@@ -11,7 +11,6 @@ class StockMoveLine(models.Model):
 
     workorder_id = fields.Many2one('mrp.workorder', 'Work Order', check_company=True)
     production_id = fields.Many2one('mrp.production', 'Production Order', check_company=True)
-    lot_produced_ids = fields.Many2many('stock.production.lot', string='Finished Lot/Serial Number', check_company=True)
     done_move = fields.Boolean('Move Done', related='move_id.is_done', readonly=False, store=True)  # TDE FIXME: naming
 
     @api.model_create_multi
@@ -23,8 +22,10 @@ class StockMoveLine(models.Model):
             # traceability report
             if line.move_id.raw_material_production_id and line.state == 'done':
                 mo = line.move_id.raw_material_production_id
-                if line.lot_produced_ids:
-                    produced_move_lines = mo.move_finished_ids.move_line_ids.filtered(lambda sml: sml.lot_id in line.lot_produced_ids)
+                finished_lots = mo.lot_producing_id
+                finished_lots |= mo.move_finished_ids.filtered(lambda m: m.product_id != mo.product_id).move_line_ids.lot_id
+                if finished_lots:
+                    produced_move_lines = mo.move_finished_ids.move_line_ids.filtered(lambda sml: sml.lot_id in finished_lots)
                     line.produce_line_ids = [(6, 0, produced_move_lines.ids)]
                 else:
                     produced_move_lines = mo.move_finished_ids.move_line_ids
@@ -45,7 +46,7 @@ class StockMoveLine(models.Model):
 
     def _reservation_is_updatable(self, quantity, reserved_quant):
         self.ensure_one()
-        if self.lot_produced_ids:
+        if self.produce_line_ids.lot_id:
             ml_remaining_qty = self.qty_done - self.product_uom_qty
             ml_remaining_qty = self.product_uom_id._compute_quantity(ml_remaining_qty, self.product_id.uom_id, rounding_method="HALF-UP")
             if float_compare(ml_remaining_qty, quantity, precision_rounding=self.product_id.uom_id.rounding) < 0:
@@ -54,10 +55,6 @@ class StockMoveLine(models.Model):
 
     def write(self, vals):
         for move_line in self:
-            if move_line.move_id.production_id and 'lot_id' in vals:
-                move_line.production_id.move_raw_ids.mapped('move_line_ids')\
-                    .filtered(lambda r: not r.done_move and move_line.lot_id in r.lot_produced_ids)\
-                    .write({'lot_produced_ids': [(4, vals['lot_id'])]})
             production = move_line.move_id.production_id or move_line.move_id.raw_material_production_id
             if production and move_line.state == 'done' and any(field in vals for field in ('lot_id', 'location_id', 'qty_done')):
                 move_line._log_message(production, move_line, 'mrp.track_production_move_template', vals)
@@ -76,10 +73,10 @@ class StockMove(models.Model):
         'mrp.unbuild', 'Disassembly Order', check_company=True)
     consume_unbuild_id = fields.Many2one(
         'mrp.unbuild', 'Consumed Disassembly Order', check_company=True)
+    allowed_operation_ids = fields.Many2many('mrp.routing.workcenter', compute='_compute_allowed_operation_ids')
     operation_id = fields.Many2one(
         'mrp.routing.workcenter', 'Operation To Consume', check_company=True,
-        domain="[('routing_id', '=', routing_id), '|', ('company_id', '=', company_id), ('company_id', '=', False)]")
-    routing_id = fields.Many2one(related='raw_material_production_id.routing_id')
+        domain="[('id', 'in', allowed_operation_ids)]")
     workorder_id = fields.Many2one(
         'mrp.workorder', 'Work Order To Consume', check_company=True)
     # Quantities to process, in normalized UoMs
@@ -95,6 +92,7 @@ class StockMove(models.Model):
     needs_lots = fields.Boolean('Tracking', compute='_compute_needs_lots')
     order_finished_lot_ids = fields.Many2many('stock.production.lot', compute='_compute_order_finished_lot_ids')
     finished_lots_exist = fields.Boolean('Finished Lots Exist', compute='_compute_order_finished_lot_ids')
+    should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty')
 
     def _unreserve_initial_demand(self, new_move):
         # If you were already putting stock.move.lots on the next one in the work order, transfer those to the new move
@@ -118,39 +116,88 @@ class StockMove(models.Model):
                 move.order_finished_lot_ids = False
                 move.finished_lots_exist = False
 
+    @api.depends('raw_material_production_id.bom_id')
+    def _compute_allowed_operation_ids(self):
+        for move in self:
+            if (
+                not move.raw_material_production_id or
+                not move.raw_material_production_id.bom_id or not
+                move.raw_material_production_id.bom_id.operation_ids
+            ):
+                move.allowed_operation_ids = self.env['mrp.routing.workcenter']
+            else:
+                operation_domain = [
+                    ('id', 'in', move.raw_material_production_id.bom_id.operation_ids.ids),
+                    '|',
+                        ('company_id', '=', self.company_id.id),
+                        ('company_id', '=', False)
+                ]
+                move.allowed_operation_ids = self.env['mrp.routing.workcenter'].search(operation_domain)
+
     @api.depends('product_id.tracking')
     def _compute_needs_lots(self):
         for move in self:
             move.needs_lots = move.product_id.tracking != 'none'
 
-    @api.depends('raw_material_production_id.is_locked', 'picking_id.is_locked')
+    @api.depends('raw_material_production_id.is_locked', 'production_id.is_locked')
     def _compute_is_locked(self):
         super(StockMove, self)._compute_is_locked()
         for move in self:
             if move.raw_material_production_id:
                 move.is_locked = move.raw_material_production_id.is_locked
+            if move.production_id:
+                move.is_locked = move.production_id.is_locked
 
     @api.depends('state')
     def _compute_is_done(self):
         for move in self:
             move.is_done = (move.state in ('done', 'cancel'))
 
-    @api.depends('product_uom_qty')
+    @api.depends('product_uom_qty',
+        'raw_material_production_id', 'raw_material_production_id.product_qty', 'raw_material_production_id.qty_produced',
+        'production_id', 'production_id.product_qty', 'production_id.qty_produced')
     def _compute_unit_factor(self):
         for move in self:
             mo = move.raw_material_production_id or move.production_id
             if mo:
-                move.unit_factor = (move.product_uom_qty - move.quantity_done) / ((mo.product_qty - mo.qty_produced) or 1)
+                move.unit_factor = move.product_uom_qty / ((mo.product_qty - mo.qty_produced) or 1)
             else:
                 move.unit_factor = 1.0
+
+    @api.depends('raw_material_production_id', 'raw_material_production_id.name', 'production_id', 'production_id.name')
+    def _compute_reference(self):
+        moves_with_reference = self.env['stock.move']
+        for move in self:
+            if move.raw_material_production_id and move.raw_material_production_id.name:
+                move.reference = move.raw_material_production_id.name
+                moves_with_reference |= move
+            if move.production_id and move.production_id.name:
+                move.reference = move.production_id.name
+                moves_with_reference |= move
+        super(StockMove, self - moves_with_reference)._compute_reference()
+
+    @api.depends('raw_material_production_id.qty_producing', 'product_uom_qty')
+    def _compute_should_consume_qty(self):
+        for move in self:
+            mo = move.raw_material_production_id
+            if not mo:
+                move.qty_summary = 0
+                continue
+            move.should_consume_qty = mo.product_uom_id._compute_quantity((mo.qty_producing - mo.qty_produced) * move.unit_factor, mo.product_uom_id, rounding_method='HALF-UP')
+
+    @api.onchange('product_uom_qty')
+    def _onchange_product_uom_qty(self):
+        if self.raw_material_production_id and self.has_tracking == 'none':
+            mo = self.raw_material_production_id
+            vals = self._update_quantity_done(mo)
 
     @api.model
     def default_get(self, fields_list):
         defaults = super(StockMove, self).default_get(fields_list)
-        if self.env.context.get('default_raw_material_production_id'):
-            production_id = self.env['mrp.production'].browse(self.env.context['default_raw_material_production_id'])
-            if production_id.state in ('confirmed', 'done'):
-                if production_id.state == 'confirmed':
+        if self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'):
+            production_id = self.env['mrp.production'].browse(self.env.context.get('default_raw_material_production_id') or self.env.context.get('default_production_id'))
+            if production_id.state not in ('draft', 'cancel'):
+                if production_id.state != 'done':
                     defaults['state'] = 'draft'
                 else:
                     defaults['state'] = 'done'
@@ -207,6 +254,17 @@ class StockMove(models.Model):
             moves_to_return |= phantom_moves.action_explode()
         return moves_to_return
 
+    def action_show_details(self):
+        self.ensure_one()
+        action = super().action_show_details()
+        if self.raw_material_production_id:
+            action['views'] = [(self.env.ref('mrp.view_stock_move_operations_raw').id, 'form')]
+            action['context']['show_destination_location'] = False
+        elif self.production_id:
+            action['views'] = [(self.env.ref('mrp.view_stock_move_operations_finished').id, 'form')]
+            action['context']['show_source_location'] = False
+        return action
+
     def _action_cancel(self):
         res = super(StockMove, self)._action_cancel()
         for production in self.mapped('raw_material_production_id'):
@@ -214,6 +272,11 @@ class StockMove(models.Model):
                 continue
             production._action_cancel()
         return res
+
+    def _prepare_move_split_vals(self, qty):
+        defaults = super()._prepare_move_split_vals(qty)
+        defaults['workorder_id'] = False
+        return defaults
 
     def _prepare_phantom_move_values(self, bom_line, product_qty, quantity_done):
         return {
@@ -236,10 +299,10 @@ class StockMove(models.Model):
         return vals
 
     def _get_upstream_documents_and_responsibles(self, visited):
-            if self.production_id and self.production_id.state not in ('done', 'cancel'):
-                return [(self.production_id, self.production_id.user_id, visited)]
-            else:
-                return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
+        if self.production_id and self.production_id.state not in ('done', 'cancel'):
+            return [(self.production_id, self.production_id.user_id, visited)]
+        else:
+            return super(StockMove, self)._get_upstream_documents_and_responsibles(visited)
 
     def _delay_alert_get_documents(self):
         res = super(StockMove, self)._delay_alert_get_documents()
@@ -249,6 +312,16 @@ class StockMove(models.Model):
     def _should_be_assigned(self):
         res = super(StockMove, self)._should_be_assigned()
         return bool(res and not (self.production_id or self.raw_material_production_id))
+
+    def _should_bypass_set_qty_producing(self):
+        if self.state in ('done', 'cancel'):
+            return True
+        # Do not update extra product quantities
+        if float_is_zero(self.product_uom_qty, precision_rounding=self.product_uom.rounding):
+            return True
+        if self.has_tracking != 'none' or self.state == 'done':
+            return True
+        return False
 
     def _should_bypass_reservation(self):
         res = super(StockMove, self)._should_bypass_reservation()
@@ -310,3 +383,21 @@ class StockMove(models.Model):
             return min(qty_ratios) // 1
         else:
             return 0.0
+
+    def _show_details_in_draft(self):
+        self.ensure_one()
+        if self.raw_material_production_id and self.state == 'draft':
+            return True
+        else:
+            return super()._show_details_in_draft()
+
+    def _update_quantity_done(self, mo):
+        self.ensure_one()
+        ml_values = {}
+        new_qty = mo.product_uom_id._compute_quantity((mo.qty_producing - mo.qty_produced) * self.unit_factor, mo.product_uom_id, rounding_method='HALF-UP')
+        if not self.is_quantity_done_editable:
+            self.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
+            self.move_line_ids = self._set_quantity_done_prepare_vals(new_qty)
+        else:
+            self.quantity_done = new_qty
+        return ml_values

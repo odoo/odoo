@@ -138,7 +138,12 @@ class PurchaseOrder(models.Model):
             companies = order.order_line.product_id.company_id
             if companies and companies != order.company_id:
                 bad_products = order.order_line.product_id.filtered(lambda p: p.company_id and p.company_id != order.company_id)
-                raise ValidationError((_("Your quotation contains products from company %s whereas your quotation belongs to company %s. \n Please change the company of your quotation or remove the products from other companies (%s).") % (', '.join(companies.mapped('display_name')), order.company_id.display_name, ', '.join(bad_products.mapped('display_name')))))
+                raise ValidationError(_(
+                    "Your quotation contains products from company %(product_company)s whereas your quotation belongs to company %(quote_company)s. \n Please change the company of your quotation or remove the products from other companies (%(bad_products)s).",
+                    product_company=', '.join(companies.mapped('display_name')),
+                    quote_company=order.company_id.display_name,
+                    bad_products=', '.join(bad_products.mapped('display_name')),
+                ))
 
     def _compute_access_url(self):
         super(PurchaseOrder, self)._compute_access_url()
@@ -284,7 +289,7 @@ class PurchaseOrder(models.Model):
             # Block if partner only has warning but parent company is blocked
             if partner.purchase_warn != 'block' and partner.parent_id and partner.parent_id.purchase_warn == 'block':
                 partner = partner.parent_id
-            title = _("Warning for %s") % partner.name
+            title = _("Warning for %s", partner.name)
             message = partner.purchase_warn_msg
             warning = {
                 'title': title,
@@ -721,9 +726,14 @@ class PurchaseOrder(models.Model):
     def _compose_note(self, updated_dates):
         """Helper method for creating log note when user update scheduled date
         on portal website."""
-        note = _('<p> %s modified receipt dates for the following products:</p>') % self.partner_id.name
+        note = _('<p> %s modified receipt dates for the following products:</p>', self.partner_id.name)
         for line, date in updated_dates:
-            note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned, date)
+            note += _(
+                '<p> &nbsp; - %(product_name)s from %(date_start)s to %(date_end)s </p>',
+                product_name=line.product_id.display_name,
+                date_start=line.date_planned,
+                date_end=date
+            )
         return note
 
 
@@ -892,7 +902,7 @@ class PurchaseOrderLine(models.Model):
 
     def write(self, values):
         if 'display_type' in values and self.filtered(lambda line: line.display_type != values.get('display_type')):
-            raise UserError("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type.")
+            raise UserError(_("You cannot change the type of a purchase order line. Instead you should delete the current line and create a new line of the proper type."))
 
         if 'product_qty' in values:
             for line in self:
@@ -980,7 +990,7 @@ class PurchaseOrderLine(models.Model):
         product_info = self.product_id
 
         if product_info.purchase_line_warn != 'no-message':
-            title = _("Warning for %s") % product_info.name
+            title = _("Warning for %s", product_info.name)
             message = product_info.purchase_line_warn_msg
             warning['title'] = title
             warning['message'] = message

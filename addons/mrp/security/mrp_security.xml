@@ -30,6 +30,11 @@
         <field name="category_id" ref="base.module_category_hidden"/>
     </record>
 
+    <record id="group_locked_by_default" model="res.groups">
+        <field name="name">Locked by default</field>
+        <field name="category_id" ref="base.module_category_hidden"/>
+    </record>
+
 </data>
 <data noupdate="1">
     <record id="base.default_user" model="res.users">
@@ -75,12 +80,6 @@
     <record model="ir.rule" id="mrp_bom_byproduct_rule">
         <field name="name">mrp_bom_byproduct multi-company</field>
         <field name="model_id" search="[('model','=','mrp.bom.byproduct')]" model="ir.model"/>
-        <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
-    </record>
-
-    <record model="ir.rule" id="mrp_routing_rule">
-        <field name="name">mrp_routing multi-company</field>
-        <field name="model_id" search="[('model','=','mrp.routing')]" model="ir.model"/>
         <field name="domain_force">['|',('company_id', 'in', company_ids),('company_id','=',False)]</field>
     </record>
 

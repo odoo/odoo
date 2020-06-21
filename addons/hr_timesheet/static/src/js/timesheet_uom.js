@@ -6,8 +6,6 @@ const fieldUtils = require('web.field_utils');
 
 const fieldRegistry = require('web.field_registry');
 
-const Timer = require('timer.Timer');
-
 // We need the field registry to be populated, as we bind the
 // timesheet_uom widget on existing field widgets.
 require('web._field_registry');
@@ -74,8 +72,7 @@ const FieldTimesheetToggle = basicFields.FieldFloatToggle.extend({
 
 
 /**
- * Extend float time widget to add the using of a timer for duration
- * (unit_amount) field.
+ * Extend float time widget
  */
 const FieldTimesheetTime = basicFields.FieldFloatTime.extend({
     init: function () {
@@ -85,54 +82,7 @@ const FieldTimesheetTime = basicFields.FieldFloatTime.extend({
             this.nodeOptions.factor = session.timesheet_uom_factor;
             this.parseOptions.factor = session.timesheet_uom_factor;
         }
-    },
-    willstart() {
-        const timePromise = this._rpc({
-            model: 'timer.timer',
-            method: 'get_server_time',
-            args: []
-        }).then((time) => {
-            this.serverTime = time;
-        });
-        return Promise.all([
-            this._super(...arguments),
-            timePromise,
-        ]);
-    },
-
-    _render: async function () {
-        await this._super.apply(this, arguments);
-        // Check if the timer_start exists and it's not false
-        // In other word, when user clicks on play button, this button
-        // launches the "action_timer_start".
-        if (this.recordData.timer_start && !this.recordData.timer_pause) {
-            this.time = Timer.createTimer(this.recordData.unit_amount, this.recordData.timer_start, this.serverTime);
-            this._startTimeCounter();
-        }
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        clearTimeout(this.timer);
-        this._super.apply(this, arguments);
-    },
-    _startTimeCounter: function () {
-        if (this.time) {
-            this.timer = setInterval(() => {
-                this.time.addSecond();
-                if (this.$el.children().length) {
-                    this.$el.contents()[1].replaceWith(this.time.toString());
-                } else {
-                    this.$el.text(this.time.toString());
-                }
-                this.$el.addClass('font-weight-bold text-danger');
-            }, 1000);
-        } else {
-            clearTimeout(this.timer);
-            this.$el.removeClass('font-weight-bold text-danger');
-        }
-    },
+    }
 });
 
 

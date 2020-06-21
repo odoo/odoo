@@ -45,7 +45,7 @@
                         </div>
                         <group>
                             <group>
-                                <field name="product_id"/>
+                                <field name="product_id" context="{'default_type': 'product'}"/>
                                 <label for="scrap_qty"/>
                                 <div class="o_row">
                                     <field name="scrap_qty"/>
@@ -68,8 +68,8 @@
                         </group>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>

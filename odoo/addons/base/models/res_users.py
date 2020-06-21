@@ -166,7 +166,7 @@ class Groups(models.Model):
     def copy(self, default=None):
         self.ensure_one()
         chosen_name = default.get('name') if default else ''
-        default_name = chosen_name or _('%s (copy)') % self.name
+        default_name = chosen_name or _('%s (copy)', self.name)
         default = dict(default or {}, name=default_name)
         return super(Groups, self).copy(default)
 
@@ -585,9 +585,9 @@ class Users(models.Model):
         self.ensure_one()
         default = dict(default or {})
         if ('name' not in default) and ('partner_id' not in default):
-            default['name'] = _("%s (copy)") % self.name
+            default['name'] = _("%s (copy)", self.name)
         if 'login' not in default:
-            default['login'] = _("%s (copy)") % self.login
+            default['login'] = _("%s (copy)", self.login)
         return super(Users, self).copy(default)
 
     @api.model

@@ -113,7 +113,14 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
         payment.action_post()
 
         # Log the payment in the chatter
-        body = (_("A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related to your expense %s has been made.") % (payment.amount, payment.currency_id.symbol, url_encode({'model': 'account.payment', 'res_id': payment.id}), payment.name, expense_sheet.name))
+        body = _(
+            "A payment of %(amount)s %(currency)s with the reference <a href='/mail/view?%(url)s'>%(payment_name)s</a> related to your expense %(expense_name)s has been made.",
+            amount=payment.amount,
+            currency=payment.currency_id.symbol,
+            url=url_encode({'model': 'account.payment', 'res_id': payment.id}),
+            payment_name=payment.name,
+            expense_name=expense_sheet.name
+        )
         expense_sheet.message_post(body=body)
 
         # Reconcile the payment and the expense, i.e. lookup on the payable account move lines

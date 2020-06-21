@@ -596,7 +596,7 @@ class Challenge(models.Model):
     def accept_challenge(self):
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has joined the challenge") % user.name)
+        sudoed.message_post(body=_("%s has joined the challenge", user.name))
         sudoed.write({'invited_user_ids': [(3, user.id)], 'user_ids': [(4, user.id)]})
         return sudoed._generate_goals_from_challenge()
 
@@ -604,7 +604,7 @@ class Challenge(models.Model):
         """The user discard the suggested challenge"""
         user = self.env.user
         sudoed = self.sudo()
-        sudoed.message_post(body=_("%s has refused the challenge") % user.name)
+        sudoed.message_post(body=_("%s has refused the challenge", user.name))
         return sudoed.write({'invited_user_ids': (3, user.id)})
 
     def _check_challenge_reward(self, force=False):
@@ -652,11 +652,15 @@ class Challenge(models.Model):
 
             if challenge_ended:
                 # open chatter message
-                message_body = _("The challenge %s is finished.") % challenge.name
+                message_body = _("The challenge %s is finished.", challenge.name)
 
                 if rewarded_users:
                     user_names = rewarded_users.name_get()
-                    message_body += _("<br/>Reward (badge %s) for every succeeding user was sent to %s.") % (challenge.reward_id.name, ", ".join(name for (user_id, name) in user_names))
+                    message_body += _(
+                        "<br/>Reward (badge %(badge_name)s) for every succeeding user was sent to %(users)s.",
+                        badge_name=challenge.reward_id.name,
+                        users=", ".join(name for (user_id, name) in user_names)
+                    )
                 else:
                     message_body += _("<br/>Nobody has succeeded to reach every goal, no badge is rewarded for this challenge.")
 

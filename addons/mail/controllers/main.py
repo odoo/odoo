@@ -37,7 +37,7 @@ class MailController(http.Controller):
     def _check_token_and_record_or_redirect(cls, model, res_id, token):
         comparison = cls._check_token(token)
         if not comparison:
-            _logger.warning(_('Invalid token in route %s') % request.httprequest.url)
+            _logger.warning(_('Invalid token in route %s', request.httprequest.url))
             return comparison, None, cls._redirect_to_messaging()
         try:
             record = request.env[model].browse(res_id).exists()
@@ -272,6 +272,8 @@ class MailController(http.Controller):
             'is_moderator': request.env.user.is_moderator,
             'moderation_counter': request.env.user.moderation_counter,
             'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
+            'partner_root': request.env.ref('base.partner_root').sudo().mail_partner_format(),
+            'public_partner': request.env.ref('base.public_partner').sudo().mail_partner_format(),
         }
         return values
 

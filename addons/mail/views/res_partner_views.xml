@@ -20,9 +20,9 @@
                 </xpath>
                 <xpath expr="//sheet" position="after">
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </xpath>
             </field>
@@ -57,6 +57,17 @@
                                 domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
                         <separator/>
                     </filter>
+            </field>
+        </record>
+
+        <record id="res_partner_view_tree_inherit_mail" model="ir.ui.view">
+            <field name="name">res.partner.view.tree.inherit.mail</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_tree"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='user_id']" position="after">
+                    <field name="activity_ids" optional="show" widget="list_activity"/>
+                </xpath>
             </field>
         </record>
 

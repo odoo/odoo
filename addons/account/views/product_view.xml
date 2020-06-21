@@ -70,10 +70,10 @@
                     </page>
                 </page>
                 <xpath expr="//div[@name='pricing']" position="after">
-                    <field name="taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'sale'}"/>
+                    <field name="taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'sale', 'search_default_sale': 1, 'search_default_service': type == 'service', 'search_default_goods': type == 'consu'}"/>
                 </xpath>
                 <group name="bill" position="inside">
-                    <field name="supplier_taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'purchase'}"/>
+                    <field name="supplier_taxes_id" widget="many2many_tags" context="{'default_type_tax_use':'purchase', 'search_default_purchase': 1, 'search_default_service': type == 'service', 'search_default_goods': type == 'consu'}"/>
                 </group>
             </field>
         </record>

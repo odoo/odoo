@@ -121,6 +121,12 @@ class AccountChartTemplate(models.Model):
     property_tax_payable_account_id = fields.Many2one('account.account.template', string="Tax current account (payable)")
     property_tax_receivable_account_id = fields.Many2one('account.account.template', string="Tax current account (receivable)")
     property_advance_tax_payment_account_id = fields.Many2one('account.account.template', string="Advance tax payment account")
+    property_cash_basis_base_account_id = fields.Many2one(
+        comodel_name='account.account.template',
+        domain=[('deprecated', '=', False)],
+        string="Base Tax Received Account",
+        help="Account that will be set on lines created in cash basis journal entry and used to keep track of the "
+             "tax base amount.")
 
     @api.model
     def _prepare_transfer_account_template(self, prefix=None):
@@ -249,6 +255,7 @@ class AccountChartTemplate(models.Model):
             'default_cash_difference_income_account_id': acc_template_ref.get(self.default_cash_difference_income_account_id.id, False),
             'default_cash_difference_expense_account_id': acc_template_ref.get(self.default_cash_difference_expense_account_id.id, False),
             'account_journal_suspense_account_id': acc_template_ref.get(self.account_journal_suspense_account_id.id),
+            'account_cash_basis_base_account_id': acc_template_ref.get(self.property_cash_basis_base_account_id.id),
         })
 
         if not company.account_journal_suspense_account_id:
@@ -555,10 +562,9 @@ class AccountChartTemplate(models.Model):
 
         # writing account values after creation of accounts
         for key, value in generated_tax_res['account_dict']['account.tax'].items():
-            if value['cash_basis_transition_account_id'] or value['cash_basis_base_account_id']:
+            if value['cash_basis_transition_account_id']:
                 AccountTaxObj.browse(key).write({
                     'cash_basis_transition_account_id': account_ref.get(value['cash_basis_transition_account_id'], False),
-                    'cash_basis_base_account_id': account_ref.get(value['cash_basis_base_account_id'], False),
                 })
 
         AccountTaxRepartitionLineObj = self.env['account.tax.repartition.line']
@@ -826,8 +832,9 @@ class AccountTaxTemplate(models.Model):
     chart_template_id = fields.Many2one('account.chart.template', string='Chart Template', required=True)
 
     name = fields.Char(string='Tax Name', required=True)
-    type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Scope', required=True, default="sale",
+    type_tax_use = fields.Selection(TYPE_TAX_USE, string='Tax Type', required=True, default="sale",
         help="Determines where the tax is selectable. Note : 'None' means a tax can't be used by itself, however it can still be used in a group.")
+    tax_scope = fields.Selection([('service', 'Service'), ('consu', 'Consumable')], help="Restrict the use of taxes to a type of product.")
     amount_type = fields.Selection(default='percent', string="Tax Computation", required=True,
         selection=[('group', 'Group of Taxes'), ('fixed', 'Fixed'), ('percent', 'Percentage of Price'), ('division', 'Percentage of Price Tax Included')])
     active = fields.Boolean(default=True, help="Set active to false to hide the tax without removing it.")
@@ -855,14 +862,9 @@ class AccountTaxTemplate(models.Model):
         string="Cash Basis Transition Account",
         domain=[('deprecated', '=', False)],
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
-    cash_basis_base_account_id = fields.Many2one(
-        'account.account.template',
-        domain=[('deprecated', '=', False)],
-        string='Base Tax Received Account',
-        help='Account that will be set on lines created in cash basis journal entry and used to keep track of the tax base amount.')
 
     _sql_constraints = [
-        ('name_company_uniq', 'unique(name, type_tax_use, chart_template_id)', 'Tax names must be unique !'),
+        ('name_company_uniq', 'unique(name, type_tax_use, tax_scope, chart_template_id)', 'Tax names must be unique !'),
     ]
 
     @api.depends('name', 'description')
@@ -885,6 +887,7 @@ class AccountTaxTemplate(models.Model):
         val = {
             'name': self.name,
             'type_tax_use': self.type_tax_use,
+            'tax_scope': self.tax_scope,
             'amount_type': self.amount_type,
             'active': self.active,
             'company_id': company.id,
@@ -946,7 +949,6 @@ class AccountTaxTemplate(models.Model):
                 # Since the accounts have not been created yet, we have to wait before filling these fields
                 todo_dict['account.tax'][tax.id] = {
                     'cash_basis_transition_account_id': template.cash_basis_transition_account_id.id,
-                    'cash_basis_base_account_id': template.cash_basis_base_account_id.id,
                 }
 
                 # We also have to delay the assignation of accounts to repartition lines
@@ -1038,7 +1040,7 @@ class AccountTaxRepartitionLineTemplate(models.Model):
         all_tax_rep_lines = self.mapped('plus_report_line_ids') + self.mapped('minus_report_line_ids')
         lines_without_tag = all_tax_rep_lines.filtered(lambda x: not x.tag_name)
         if lines_without_tag:
-            raise ValidationError(_("The following tax report lines are used in some tax repartition template though they don't generate any tag: %s . This probably means you forgot to set a tag_name on these lines.") % str(lines_without_tag.mapped('name')))
+            raise ValidationError(_("The following tax report lines are used in some tax repartition template though they don't generate any tag: %s . This probably means you forgot to set a tag_name on these lines.", str(lines_without_tag.mapped('name'))))
 
     def get_repartition_line_create_vals(self, company):
         rslt = [(5, 0, 0)]

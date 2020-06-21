@@ -168,7 +168,7 @@ class AccountMove(models.Model):
                 }
 
             data = b"<?xml version='1.0' encoding='UTF-8'?>" + invoice._export_as_xml()
-            description = _('Italian invoice: %s') % invoice.move_type
+            description = _('Italian invoice: %s', invoice.move_type)
             invoice.edi_document_ids = self.env['ir.attachment'].create({
                 'name': report_name,
                 'res_id': invoice.id,

@@ -402,7 +402,7 @@ actual arch.
                     if check == "Warning":
                         _logger.warning(_('Invalid view %s definition in %s \n%s'), view_name, view.arch_fs, view.arch)
             except ValueError as e:
-                raise ValidationError(_("Error while validating view:\n\n%s") % tools.ustr(e)).with_traceback(e.__traceback__) from None
+                raise ValidationError(_("Error while validating view:\n\n%s", tools.ustr(e))).with_traceback(e.__traceback__) from None
 
         return True
 
@@ -622,7 +622,7 @@ actual arch.
             error = _("View '%s' accessible only to groups %s ") % \
                      (self.key, ", ".join([g.name for g in self.groups_id]))
         else:
-            error = _("View '%s' is private") % self.key
+            error = _("View '%s' is private", self.key)
         raise AccessError(error)
 
     def handle_view_error(self, message, *, raise_exception=True, from_exception=None, from_traceback=None):
@@ -1085,7 +1085,7 @@ actual arch.
         type_ = node.get('type')
         if special:
             if special not in ('cancel', 'save', 'add'):
-                self.handle_view_error(_("Invalid special '%s' in button") % special)
+                self.handle_view_error(_("Invalid special '%s' in button", special))
         elif type_:
             if type_ == 'edit': # list_renderer, used in kanban view
                 return
@@ -1291,7 +1291,7 @@ actual arch.
                     # further improvement: add all groups to name_manager in
                     # order to batch check them at the end
                     if not self.env['ir.model.data'].xmlid_to_res_id(group.strip(), raise_if_not_found=False):
-                        msg = _("The group %r defined in view does not exist!") % group
+                        msg = _("The group %r defined in view does not exist!", group)
                         self.handle_view_error(msg, raise_exception=False)
 
             elif attr == 'group':
@@ -1842,7 +1842,7 @@ class NameManager:
     """ An object that manages all the named elements in a view. """
 
     def __init__(self, validate, Model):
-        self.available_fields = collections.defaultdict(dict)
+        self.available_fields = dict()
         self.mandatory_fields = dict()
         self.mandatory_parent_fields = dict()
         self.available_actions = set()
@@ -1852,7 +1852,7 @@ class NameManager:
         self.fields_get = self.Model.fields_get()
 
     def has_field(self, name, info=()):
-        self.available_fields[name].update(info)
+        self.available_fields.setdefault(name, {}).update(info)
 
     def has_action(self, name):
         self.available_actions.add(name)
@@ -1887,7 +1887,7 @@ class NameManager:
 
         for field_name in self.available_fields:
             if field_name not in self.fields_get:
-                message = _("Field `%s` does not exist") % field_name
+                message = _("Field `%s` does not exist", field_name)
                 view.handle_view_error(message)
 
         for field, use in self.mandatory_fields.items():

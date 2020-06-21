@@ -446,7 +446,7 @@ class Channel(models.Model):
         action = self.env.ref('website_slides.slide_channel_partner_action').read()[0]
         action['domain'] = [('channel_id', 'in', self.ids)]
         if len(self) == 1:
-            action['display_name'] = _('Attendees of %s') % self.name
+            action['display_name'] = _('Attendees of %s', self.name)
             action['context'] = {'active_test': False, 'default_channel_id': self.id}
         if state:
             action['domain'] += [('completed', '=', state == 'completed')]

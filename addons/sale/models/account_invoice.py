@@ -36,7 +36,7 @@ class AccountMove(models.Model):
             self.fiscal_position_id = fiscal_position
 
     def unlink(self):
-        downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment)
+        downpayment_lines = self.mapped('line_ids.sale_line_ids').filtered(lambda line: line.is_downpayment and line.invoice_lines <= self.mapped('line_ids'))
         res = super(AccountMove, self).unlink()
         if downpayment_lines:
             downpayment_lines.unlink()
@@ -96,7 +96,7 @@ class AccountMove(models.Model):
                 for sale_line in line.sale_line_ids:
                     todo.add((sale_line.order_id, invoice.name))
         for (order, name) in todo:
-            order.message_post(body=_("Invoice %s paid") % name)
+            order.message_post(body=_("Invoice %s paid", name))
         return res
 
     def _get_invoice_delivery_partner_id(self):

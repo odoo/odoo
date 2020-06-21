@@ -350,6 +350,16 @@
 </div>
         </template>
 
+        <template id="message_origin_link">
+            <p>
+                <t t-if="edit">This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been modified from:</t>
+                <t t-else="">This <t t-esc="self.env['ir.model']._get(self._name).name.lower()"/> has been created from:</t>
+                <t t-foreach="origin" t-as="o">
+                    <a href="#" t-att-data-oe-model="o._name" t-att-data-oe-id="o.id"> <t t-esc="o.display_name"/></a><span t-if="origin.ids[-1:] != o.ids">, </span>
+                </t>
+            </p>
+        </template>
+
         <!-- Mail gateway templates -->
         <template id="mail_bounce_catchall">
 <div>
@@ -375,7 +385,7 @@
     <p>Hello <t t-esc='record.name'/></p>
     <p>You have messages to moderate, please go for the proceedings.</p><br/><br/>
     <div style="text-align: center;">
-        <a href="/web#action=mail.action_discuss&amp;active_id=mailbox_moderation" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">Moderate Messages</a>
+        <a href="/web#action=mail.action_discuss&amp;active_id=mail.box_moderation" style="background-color: #1abc9c; padding: 20px; text-decoration: none; color: #fff; border-radius: 5px; font-size: 16px;" class="o_default_snippet_text">Moderate Messages</a>
         <br/><br/><br/>
     </div>
     <p>Thank you!</p>

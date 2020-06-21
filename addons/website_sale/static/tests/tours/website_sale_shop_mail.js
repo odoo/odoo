@@ -81,7 +81,7 @@ tour.register('shop_mail', {
     },
     {
         content: "wait mail to be sent, and go see it",
-        trigger: '.o_thread_message_content:contains("Your"):contains("order")',
+        trigger: '.o_Message_content:contains("Your"):contains("order")',
         run: function () {
             window.location.href = "/web#action=mail.action_view_mail_mail&view_type=list";
         },

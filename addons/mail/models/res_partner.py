@@ -54,6 +54,14 @@ class Partner(models.Model):
 
         return super(Partner, self).find_or_create(email, assert_valid_email=assert_valid_email)
 
+    def mail_partner_format(self):
+        self.ensure_one()
+        return {
+            "id": self.name_get()[0][0],
+            "display_name": self.name_get()[0][1],
+            "active": self.active,
+        }
+
     @api.model
     def get_needaction_count(self):
         """ compute the number of needaction of the current user """

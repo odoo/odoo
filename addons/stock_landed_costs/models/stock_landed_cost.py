@@ -204,7 +204,7 @@ class StockLandedCost(models.Model):
 
         if not lines:
             target_model_descriptions = dict(self._fields['target_model']._description_selection(self.env))
-            raise UserError(_("You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with automated inventory valuation and FIFO or average costing method.") % target_model_descriptions[self.target_model])
+            raise UserError(_("You cannot apply landed costs on the chosen %s(s). Landed costs can only be applied for products with automated inventory valuation and FIFO or average costing method.", target_model_descriptions[self.target_model]))
         return lines
 
     def compute_landed_cost(self):
@@ -285,7 +285,7 @@ class StockLandedCost(models.Model):
         for cost in self:
             if not cost._get_targeted_move_ids():
                 target_model_descriptions = dict(self._fields['target_model']._description_selection(self.env))
-                raise UserError(_('Please define %s on which those additional costs should apply.') % target_model_descriptions[cost.target_model])
+                raise UserError(_('Please define %s on which those additional costs should apply.', target_model_descriptions[cost.target_model]))
 
     def _check_sum(self):
         """ Check if each cost line its valuation lines sum to the correct amount

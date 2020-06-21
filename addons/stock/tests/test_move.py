@@ -4369,6 +4369,7 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
         picking.action_confirm()
         picking.action_assign()
@@ -4458,6 +4459,7 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 1.0,
             'picking_id': picking.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
         move2 = self.env['stock.move'].create({
             'name': 'test_transit_2',
@@ -4467,6 +4469,7 @@ class StockMove(SavepointCase):
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 2.0,
             'picking_id': picking.id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
         })
         picking.action_confirm()
         picking.action_assign()

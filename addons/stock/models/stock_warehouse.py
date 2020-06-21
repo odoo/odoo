@@ -468,7 +468,6 @@ class Warehouse(models.Model):
                 },
                 'rules_values': {
                     'active': True,
-                    'procure_method': 'make_to_order',
                     'propagate_cancel': True,
                 }
             },
@@ -507,6 +506,42 @@ class Warehouse(models.Model):
                 'rules_values': {
                     'active': True,
                     'procure_method': 'make_to_order'
+                }
+            }
+        }
+
+    def _get_receive_routes_values(self, installed_depends):
+        """ Return receive route values with 'procure_method': 'make_to_order'
+        in order to update warehouse routes.
+
+        This function has the same receive route values as _get_routes_values with the addition of
+        'procure_method': 'make_to_order' to the 'rules_values'. This is expected to be used by
+        modules that extend stock and add actions that can trigger receive 'make_to_order' rules (i.e.
+        we don't want any of the generated rules by get_rules_dict to default to 'make_to_stock').
+        Additionally this is expected to be used in conjunction with _get_receive_rules_dict().
+
+        args:
+        installed_depends - string value of installed (warehouse) boolean to trigger updating of reception route.
+        """
+        return {
+            'reception_route_id': {
+                'routing_key': self.reception_steps,
+                'depends': ['reception_steps', installed_depends],
+                'route_update_values': {
+                    'name': self._format_routename(route_type=self.reception_steps),
+                    'active': self.active,
+                },
+                'route_create_values': {
+                    'product_categ_selectable': True,
+                    'warehouse_selectable': True,
+                    'product_selectable': False,
+                    'company_id': self.company_id.id,
+                    'sequence': 9,
+                },
+                'rules_values': {
+                    'active': True,
+                    'propagate_cancel': True,
+                    'procure_method': 'make_to_order',
                 }
             }
         }
@@ -664,9 +699,12 @@ class Warehouse(models.Model):
         customer_loc, supplier_loc = self._get_partner_locations()
         return {
             warehouse.id: {
-                'one_step': [],
-                'two_steps': [self.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push')],
+                'one_step': [self.Routing(supplier_loc, warehouse.lot_stock_id, warehouse.in_type_id, 'pull')],
+                'two_steps': [
+                    self.Routing(supplier_loc, warehouse.wh_input_stock_loc_id, warehouse.in_type_id, 'pull'),
+                    self.Routing(warehouse.wh_input_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push')],
                 'three_steps': [
+                    self.Routing(supplier_loc, warehouse.wh_input_stock_loc_id, warehouse.in_type_id, 'pull'),
                     self.Routing(warehouse.wh_input_stock_loc_id, warehouse.wh_qc_stock_loc_id, warehouse.int_type_id, 'pull_push'),
                     self.Routing(warehouse.wh_qc_stock_loc_id, warehouse.lot_stock_id, warehouse.int_type_id, 'pull_push')],
                 'crossdock': [
@@ -684,9 +722,25 @@ class Warehouse(models.Model):
             } for warehouse in self
         }
 
+    def _get_receive_rules_dict(self):
+        """ Return receive route rules without initial pull rule in order to update warehouse routes.
+
+        This function has the same receive route rules as get_rules_dict without an initial pull rule.
+        This is expected to be used by modules that extend stock and add actions that can trigger receive
+        'make_to_order' rules (i.e. we don't expect the receive route to be able to pull on its own anymore).
+        This is also expected to be used in conjuction with _get_receive_routes_values()
+        """
+        return {
+            'one_step': [],
+            'two_steps': [self.Routing(self.wh_input_stock_loc_id, self.lot_stock_id, self.int_type_id, 'pull_push')],
+            'three_steps': [
+                self.Routing(self.wh_input_stock_loc_id, self.wh_qc_stock_loc_id, self.int_type_id, 'pull_push'),
+                self.Routing(self.wh_qc_stock_loc_id, self.lot_stock_id, self.int_type_id, 'pull_push')],
+        }
+
     def _get_inter_warehouse_route_values(self, supplier_warehouse):
         return {
-            'name': _('%s: Supply Product from %s') % (self.name, supplier_warehouse.name),
+            'name': _('%(warehouse)s: Supply Product from %(supplier)s', warehouse=self.name, supplier=supplier_warehouse.name),
             'warehouse_selectable': True,
             'product_selectable': True,
             'product_categ_selectable': True,

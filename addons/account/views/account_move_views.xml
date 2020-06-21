@@ -380,15 +380,15 @@
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <tree decoration-info="state == 'draft'" string="Journal Entries" decoration-muted="state == 'cancel'">
+                <tree string="Journal Entries">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="partner_id" optional="show"/>
                     <field name="ref" optional="show"/>
                     <field name="journal_id"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                    <field name="amount_total_signed" sum="Total Amount" string="Total"/>
-                    <field name="state"/>
+                    <field name="amount_total_signed" sum="Total Amount" string="Total" decoration-bf="1"/>
+                    <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-success="state == 'posted'"/>
                     <field name="currency_id" invisible="1"/>
                 </tree>
             </field>
@@ -421,8 +421,8 @@
                     <field name="amount_residual_signed" string="Amount Due" sum="Amount Due" optional="hide"/>
                     <field name="currency_id" invisible="1"/>
                     <field name="company_currency_id" invisible="1"/>
-                    <field name="state" optional="hide" decoration-success="state == 'posted'" decoration-info="state == 'draft'" widget="badge"/>
-                    <field name="payment_state" decoration-success="payment_state == 'paid'" decoration-info="payment_state == 'partial' or payment_state == 'not_paid'" decoration-warning="payment_state == 'in_payment'" widget="badge"/>
+                    <field name="state" widget="badge" decoration-success="state == 'posted'" decoration-info="state == 'draft'" optional="show"/>
+                    <field name="payment_state" widget="badge" decoration-warning="payment_state in ('partial', 'in_payment')" decoration-success="payment_state in ('paid', 'reversed')" attrs="{'invisible': [('payment_state', 'in', ('not_paid', 'invoicing_legacy'))]}" nolabel="1"/>
                     <field name="move_type" invisible="context.get('default_move_type', True)"/>
                   </tree>
             </field>
@@ -998,8 +998,7 @@
                                         <label for="ref" string="Customer Reference" />
                                         <field name="ref" nolabel="1"/>
                                         <field name="invoice_user_id" domain="[('share', '=', False)]" widget="many2one_avatar_user"/>
-                                        <field name="invoice_origin" string="Source Document" force_save="1"
-                                               attrs="{'invisible': [('invoice_origin', '=', False)]}"/>
+                                        <field name="invoice_origin" string="Source Document" force_save="1" invisible="1"/>
                                         <field name="partner_bank_id"
                                                context="{'default_partner_id': commercial_partner_id}"
                                                domain="[('partner_id', '=', bank_partner_id)]"
@@ -1050,9 +1049,9 @@
                                 ('state', '!=', 'draft')]}" />
                     <!-- Chatter -->
                     <div class="oe_chatter">
-                        <field name="message_follower_ids" widget="mail_followers" groups="base.group_user"/>
-                        <field name="activity_ids" widget="mail_activity"/>
-                        <field name="message_ids" widget="mail_thread"/>
+                        <field name="message_follower_ids" groups="base.group_user"/>
+                        <field name="activity_ids"/>
+                        <field name="message_ids"/>
                     </div>
                 </form>
             </field>

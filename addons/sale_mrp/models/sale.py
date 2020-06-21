@@ -12,14 +12,14 @@ class SaleOrder(models.Model):
         compute='_compute_mrp_production_count',
         groups='mrp.group_mrp_user')
 
-    @api.depends('procurement_group_id.stock_move_ids.created_production_id')
+    @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_count(self):
         for sale in self:
-            sale.mrp_production_count = len(sale.procurement_group_id.stock_move_ids.created_production_id)
+            sale.mrp_production_count = len(sale.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids)
 
     def action_view_mrp_production(self):
         self.ensure_one()
-        mrp_production_ids = self.procurement_group_id.stock_move_ids.created_production_id.ids
+        mrp_production_ids = self.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids.ids
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',
@@ -86,6 +86,15 @@ class SaleOrderLine(models.Model):
                     }
                     order_qty = order_line.product_uom._compute_quantity(order_line.product_uom_qty, relevant_bom.product_uom_id)
                     order_line.qty_delivered = moves._compute_kit_quantities(order_line.product_id, order_qty, relevant_bom, filters)
+
+                # If no relevant BOM is found, fall back on the all-or-nothing policy. This happens
+                # when the product sold is made only of kits. In this case, the BOM of the stock moves
+                # do not correspond to the product sold => no relevant BOM.
+                elif boms:
+                    if all([m.state == 'done' for m in order_line.move_ids]):
+                        order_line.qty_delivered = order_line.product_uom_qty
+                    else:
+                        order_line.qty_delivered = 0.0
 
     def _get_bom_component_qty(self, bom):
         bom_quantity = self.product_uom._compute_quantity(1, bom.product_uom_id)

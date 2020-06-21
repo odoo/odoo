@@ -38,7 +38,7 @@
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" multi_edit="1">
+                <tree string="Expenses" multi_edit="1" js_class="hr_expense_tree_dashboard_upload">
                     <field name="attachment_number" invisible="True"/>
                     <field name="date" optional="show"/>
                     <field name="accounting_date" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
@@ -132,9 +132,9 @@
                 </sheet>
                 <div class="o_attachment_preview"/>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
                 </form>
             </field>
@@ -297,9 +297,18 @@
             <field name="search_view_id" ref="hr_expense_view_search"/>
             <field name="context">{'search_default_my_expenses': 1, 'search_default_no_report': 1}</field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new expense
-              </p>
+                <p class="o_view_nocontent_expense_receipt">
+                    Did you try the mobile app?
+                </p>
+                <p>Snap pictures of your receipts and let Odoo<br/> automatically create expenses for you.</p>
+                <p>
+                    <a href="https://apps.apple.com/be/app/odoo/id1272543640" target="_blank">
+                        <img alt="Apple App Store" class="img img-fluid h-100" src="/hr_expense/static/img/app_store.png"/>
+                    </a>
+                    <a href="https://play.google.com/store/apps/details?id=com.odoo.mobile" target="_blank">
+                        <img alt="Google Play Store" class="img img-fluid h-100" src="/hr_expense/static/img/play_store.png"/>
+                    </a>
+                </p>
             </field>
         </record>
 
@@ -550,9 +559,9 @@
                      </notebook>
                 </sheet>
                 <div class="oe_chatter">
-                    <field name="message_follower_ids" widget="mail_followers"/>
-                    <field name="activity_ids" widget="mail_activity"/>
-                    <field name="message_ids" widget="mail_thread"/>
+                    <field name="message_follower_ids"/>
+                    <field name="activity_ids"/>
+                    <field name="message_ids"/>
                 </div>
                 </form>
             </field>

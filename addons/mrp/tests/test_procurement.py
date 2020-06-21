@@ -39,7 +39,7 @@ class TestProcurement(TestMrpCommon):
         production_product_6.action_assign()
 
         # check production state is Confirmed
-        self.assertEqual(production_product_6.state, 'confirmed', 'Production order should be for Confirmed state')
+        self.assertEqual(production_product_6.state, 'confirmed')
 
         # Check procurement for product 4 created or not.
         # Check it created a purchase order
@@ -69,14 +69,9 @@ class TestProcurement(TestMrpCommon):
         # produce product4
         # ---------------
 
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': produce_product_4.id,
-            'active_ids': [produce_product_4.id],
-        }))
-        produce_form.qty_producing = produce_product_4.product_qty
-        product_produce = produce_form.save()
-        product_produce.do_produce()
-        produce_product_4.post_inventory()
+        mo_form = Form(produce_product_4)
+        mo_form.qty_producing = produce_product_4.product_qty
+        produce_product_4 = mo_form.save()
         # Check procurement and Production state for product 4.
         produce_product_4.button_mark_done()
         self.assertEqual(produce_product_4.state, 'done', 'Production order should be in state done')
@@ -95,14 +90,9 @@ class TestProcurement(TestMrpCommon):
         # ------------------------------------
 
         self.assertEqual(production_product_6.reservation_state, 'assigned', "Consume material not available")
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': production_product_6.id,
-            'active_ids': [production_product_6.id],
-        }))
-        produce_form.qty_producing = production_product_6.product_qty
-        product_produce = produce_form.save()
-        product_produce.do_produce()
-        production_product_6.post_inventory()
+        mo_form = Form(production_product_6)
+        mo_form.qty_producing = production_product_6.product_qty
+        production_product_6 = mo_form.save()
         # Check procurement and Production state for product 6.
         production_product_6.button_mark_done()
         self.assertEqual(production_product_6.state, 'done', 'Production order should be in state done')
@@ -191,13 +181,9 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(picking_qc_to_stock.state, 'done')
         mo.action_assign()
         self.assertEqual(mo.move_raw_ids.reserved_availability, 3.0)
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': mo.id,
-            'active_ids': [mo.id],
-        }))
+        produce_form = Form(mo)
         produce_form.qty_producing = 3.0
-        produce_wizard = produce_form.save()
-        produce_wizard.do_produce()
+        mo = produce_form.save()
         self.assertEqual(mo.move_raw_ids.quantity_done, 3.0)
         picking_qc_to_stock.move_line_ids.qty_done = 5.0
         self.assertEqual(mo.move_raw_ids.reserved_availability, 5.0)
@@ -340,7 +326,10 @@ class TestProcurement(TestMrpCommon):
             'product_tmpl_id': parent_product.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
-            'routing_id': self.routing_2.id,
+            'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+            ],
             'type': 'normal',
         })
         self.env['mrp.bom.line'].create({
@@ -353,7 +342,10 @@ class TestProcurement(TestMrpCommon):
             'product_tmpl_id': child_product.id,
             'product_uom_id': self.uom_unit.id,
             'product_qty': 4.0,
-            'routing_id': self.routing_2.id,
+            'operation_ids': [
+                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
+            ],
             'type': 'normal',
         })
         self.env['mrp.bom.line'].create({
@@ -413,12 +405,9 @@ class TestProcurement(TestMrpCommon):
         self.env['stock.move'].create(move_values)
 
         production.action_confirm()
-        produce_form = Form(self.env['mrp.product.produce'].with_context({
-            'active_id': production.id,
-            'active_ids': [production.id],
-        }))
-        product_produce = produce_form.save()
-        product_produce.do_produce()
+        produce_form = Form(production)
+        produce_form.qty_producing = production.product_qty
+        production = produce_form.save()
         production.button_mark_done()
 
         move_dest._action_assign()

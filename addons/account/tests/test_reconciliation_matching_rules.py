@@ -12,6 +12,13 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
+        cls.currency_data_2 = cls.setup_multi_currency_data({
+            'name': 'Dark Chocolate Coin',
+            'symbol': '🍫',
+            'currency_unit_label': 'Dark Choco',
+            'currency_subunit_label': 'Dark Cacao Powder',
+        }, rate2016=10.0, rate2017=20.0)
+
         cls.company = cls.company_data['company']
 
         cls.account_pay = cls.company_data['default_account_payable']
@@ -434,7 +441,9 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         self.bank_line_2.unlink()
         self.bank_line_1.write({'partner_id': partner.id, 'foreign_currency_id': currency_statement.id, 'amount_currency': 100, 'payment_ref': 'test'})
         self.env['account.reconcile.model'].flush()
-        self._check_statement_matching(self.rule_1, {self.bank_line_1.id: {'aml_ids': []}}, statements=self.bank_st)
+        self._check_statement_matching(self.rule_1, {
+            self.bank_line_1.id: {'aml_ids': invoice_line.ids, 'model': self.rule_1},
+        }, statements=self.bank_st)
 
     def test_invoice_matching_rule_no_partner(self):
         """ Tests that a statement line without any partner can be matched to the
@@ -511,3 +520,97 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             self.bank_line_1.id: {'aml_ids': [self.invoice_line_1.id], 'model': self.rule_1},
             self.bank_line_2.id: {'aml_ids': []},
         }, self.bank_st)
+
+    def test_match_multi_currencies(self):
+        ''' Ensure the matching of candidates is made using the right statement line currency.
+
+        In this test, the value of the statement line is 100 USD = 300 GOL = 900 DAR and we want to match two journal
+        items of:
+        - 100 USD = 200 GOL (= 600 DAR from the statement line point of view)
+        - 14 USD = 280 DAR
+
+        Both journal items should be suggested to the user because they represents 98% of the statement line amount
+        (DAR).
+        '''
+        partner = self.env['res.partner'].create({'name': 'Bernard Perdant'})
+
+        journal = self.env['account.journal'].create({
+            'name': 'test_match_multi_currencies',
+            'code': 'xxxx',
+            'type': 'bank',
+            'currency_id': self.currency_data['currency'].id,
+        })
+
+        matching_rule = self.env['account.reconcile.model'].create({
+            'name': 'test_match_multi_currencies',
+            'rule_type': 'invoice_matching',
+            'match_partner': True,
+            'match_partner_ids': [(6, 0, partner.ids)],
+            'match_total_amount': True,
+            'match_total_amount_param': 95.0,
+            'match_same_currency': False,
+            'company_id': self.company_data['company'].id,
+        })
+
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_match_multi_currencies',
+            'journal_id': journal.id,
+            'line_ids': [
+                (0, 0, {
+                    'journal_id': journal.id,
+                    'date': '2016-01-01',
+                    'payment_ref': 'line',
+                    'partner_id': partner.id,
+                    'foreign_currency_id': self.currency_data_2['currency'].id,
+                    'amount': 300.0,            # Rate is 3 GOL = 1 USD in 2016.
+                    'amount_currency': 900.0,   # Rate is 10 DAR = 1 USD in 2016 but the rate used by the bank is 9:1.
+                }),
+            ],
+        })
+        statement_line = statement.line_ids
+
+        statement.button_post()
+
+        move = self.env['account.move'].create({
+            'move_type': 'entry',
+            'date': '2017-01-01',
+            'journal_id': self.company_data['default_journal_sale'].id,
+            'line_ids': [
+                # Rate is 2 GOL = 1 USD in 2017.
+                # The statement line will consider this line equivalent to 600 DAR.
+                (0, 0, {
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'partner_id': partner.id,
+                    'currency_id': self.currency_data['currency'].id,
+                    'debit': 100.0,
+                    'credit': 0.0,
+                    'amount_currency': 200.0,
+                }),
+                # Rate is 20 GOL = 1 USD in 2017.
+                (0, 0, {
+                    'account_id': self.company_data['default_account_receivable'].id,
+                    'partner_id': partner.id,
+                    'currency_id': self.currency_data_2['currency'].id,
+                    'debit': 14.0,
+                    'credit': 0.0,
+                    'amount_currency': 280.0,
+                }),
+                # Line to balance the journal entry:
+                (0, 0, {
+                    'account_id': self.company_data['default_account_revenue'].id,
+                    'debit': 0.0,
+                    'credit': 114.0,
+                }),
+            ],
+        })
+        move.post()
+
+        move_line_1 = move.line_ids.filtered(lambda line: line.debit == 100.0)
+        move_line_2 = move.line_ids.filtered(lambda line: line.debit == 14.0)
+
+        self.env['account.reconcile.model'].flush()
+
+        with self.mocked_today('2017-01-01'):
+            self._check_statement_matching(matching_rule, {
+                statement_line.id: {'aml_ids': (move_line_1 + move_line_2).ids, 'model': matching_rule}
+            }, statements=statement)

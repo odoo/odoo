@@ -25,10 +25,27 @@ odoo.define("web.commonEnv", function (require) {
     const { _t } = require("web.translation");
     const utils = require("web.utils");
 
+    const browser = {
+        clearInterval: window.clearInterval.bind(window),
+        clearTimeout: window.clearTimeout.bind(window),
+        Date: window.Date,
+        fetch: (window.fetch || (() => { })).bind(window),
+        Notification: window.Notification,
+        requestAnimationFrame: window.requestAnimationFrame.bind(window),
+        setInterval: window.setInterval.bind(window),
+        setTimeout: window.setTimeout.bind(window),
+    };
+    Object.defineProperty(browser, 'innerHeight', {
+        get: () => window.innerHeight,
+    });
+    Object.defineProperty(browser, 'innerWidth', {
+        get: () => window.innerWidth,
+    });
 
     // Build the basic env
     const env = {
         _t,
+        browser,
         bus,
         device,
         isDebug,

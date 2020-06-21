@@ -20,6 +20,7 @@ _ref_vat = {
     'al': 'ALJ91402501L',
     'ar': 'AR200-5536168-2 or 20055361682',
     'at': 'ATU12345675',
+    'au': '83 914 571 673',
     'be': 'BE0477472701',
     'bg': 'BG1234567892',
     'ch': 'CHE-123.456.788 TVA or CH TVA 123456',  # Swiss by Yannick Vaucher @ Camptocamp
@@ -161,8 +162,18 @@ class ResPartner(models.Model):
         else:
             company = self.env.company
         if company.vat_check_vies:
-            return '\n' + _('The VAT number [%s] for partner [%s] either failed the VIES VAT validation check or did not respect the expected format %s.') % (self.vat, self.name, vat_no)
-        return '\n' + _('The VAT number [%s] for partner [%s] does not seem to be valid. \nNote: the expected format is %s') % (self.vat, self.name, vat_no)
+            return '\n' + _(
+                'The VAT number [%(vat)s] for partner [%(name)s] either failed the VIES VAT validation check or did not respect the expected format %(format)s.',
+                vat=self.vat,
+                name=self.name,
+                format=vat_no
+            )
+        return '\n' + _(
+            'The VAT number [%(vat)s] for partner [%(name)s] does not seem to be valid. \nNote: the expected format is %(format)s',
+            vat=self.vat,
+            name=self.name,
+            format=vat_no
+        )
 
     __check_vat_ch_re1 = re.compile(r'(MWST|TVA|IVA)[0-9]{6}$')
     __check_vat_ch_re2 = re.compile(r'E([0-9]{9}|-[0-9]{3}\.[0-9]{3}\.[0-9]{3})(MWST|TVA|IVA)$')
@@ -457,17 +468,13 @@ class ResPartner(models.Model):
         return False
 
     def check_vat_ua(self, vat):
-        '''
-        Check Ukraine VAT number.
-        Method copied from vatnumber 1.2 lib https://code.google.com/archive/p/vatnumber/
-        '''
-        if len(vat) != 8:
-            return False
-        try:
-            int(vat)
-        except ValueError:
-            return False
-        return True
+        if self.is_company:
+            if len(vat) == 12:
+                return True
+        else:
+            if len(vat) == 10 or len(vat) == 9:
+                return True
+        return False
 
     def check_vat_in(self, vat):
         #reference from https://www.gstzen.in/a/format-of-a-gst-number-gstin.html

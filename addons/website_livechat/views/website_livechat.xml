@@ -3,10 +3,6 @@
     <data>
         <template id="assets_backend" inherit_id="website.assets_backend" name="website_livechat assets backend">
             <xpath expr="." position="inside">
-                <!-- Visitor Chat Request -->
-                <script type="text/javascript" src="/website_livechat/static/src/js/thread_window.js"></script>
-                <script type="text/javascript" src="/website_livechat/static/src/js/channel.js"></script>
-                <link rel="stylesheet" type="text/scss" href="/website_livechat/static/src/scss/mail_thread_visitor_info.scss"/>
             </xpath>
         </template>
 
@@ -16,32 +12,14 @@
         -->
         <template id="assets_frontend" name="im_livechat assets frontend" inherit_id="website.assets_frontend">
             <xpath expr="." position="inside">
-                    <!-- thread window -->
-                    <script type="text/javascript" src="/mail/static/src/js/thread_windows/abstract_thread_window.js"></script>
-                    <script type="text/javascript" src="/im_livechat/static/src/js/website_livechat_window.js"></script>
-
-                <script type="text/javascript" src="/mail/static/src/js/document_viewer.js"></script>
-                <script type="text/javascript" src="/mail/static/src/js/thread_widget.js"></script>
                 <script type="text/javascript" src="/mail/static/src/js/utils.js"></script>
-                <script type="text/javascript" src="/im_livechat/static/src/js/im_livechat.js"></script>
-                <!-- Models -->
-                    <!-- threads -->
-                    <script type="text/javascript" src="/mail/static/src/js/models/threads/abstract_thread.js"></script>
-                    <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat.js"></script>
-                    <script type="text/javascript" src="/mail/static/src/js/models/threads/mixins/thread_typing_mixin.js"></script>
-                    <!-- messages -->
-                    <script type="text/javascript" src="/mail/static/src/js/models/messages/abstract_message.js"></script>
-                    <script type="text/javascript" src="/im_livechat/static/src/js/models/website_livechat_message.js"></script>
-                    <!-- utils -->
-                    <script type="text/javascript" src="/mail/static/src/js/models/utils/timer.js"></script>
-                    <script type="text/javascript" src="/mail/static/src/js/models/utils/timers.js"></script>
-                    <script type="text/javascript" src="/mail/static/src/js/models/utils/cc_throttle_function.js"></script>
+                <script type="text/javascript" src="/website_livechat/static/src/bugfix/public_bugfix.js"></script>
+                <script type="text/javascript" src="/im_livechat/static/src/legacy/public_livechat.js"></script>
                 <!--Chat Request-->
-                <script type="text/javascript" src="/website_livechat/static/src/js/im_livechat.js"></script>
+                <script type="text/javascript" src="/website_livechat/static/src/legacy/public_livechat.js"></script>
                 <!--Stylesheets-->
-                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/abstract_thread_window.scss"></link>
-                <link rel="stylesheet" type="text/scss" href="/mail/static/src/scss/thread.scss"></link>
-                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/scss/im_livechat.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/im_livechat/static/src/legacy/public_livechat.scss"/>
+                <link rel="stylesheet" type="text/scss" href="/website_livechat/static/src/bugfix/public_bugfix.scss"/>
             </xpath>
         </template>
 

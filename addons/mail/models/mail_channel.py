@@ -427,7 +427,7 @@ class Channel(models.Model):
                 'email_from': company.catchall_formatted or company.email_formatted,
                 'author_id': self.env.user.partner_id.id,
                 'body_html': view._render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
-                'subject': _("Guidelines of channel %s") % self.name,
+                'subject': _("Guidelines of channel %s", self.name),
                 'recipient_ids': [(4, partner.id)]
             }
             mail = self.env['mail.mail'].sudo().create(create_values)
@@ -597,6 +597,7 @@ class Channel(models.Model):
             partner_ids = channel_partners.mapped('partner_id').ids
             info['members'] = [partner_infos[partner] for partner in partner_ids]
             info['seen_partners_info'] = [{
+                'id': cp.id,
                 'partner_id': cp.partner_id.id,
                 'fetched_message_id': cp.fetched_message_id.id,
                 'seen_message_id': cp.seen_message_id.id,
@@ -731,6 +732,7 @@ class Channel(models.Model):
                 'fetched_message_id': last_message_id,
             })
             data = {
+                'id': channel_partner.id,
                 'info': 'channel_seen',
                 'last_message_id': last_message_id,
                 'partner_id': self.env.user.partner_id.id,
@@ -760,6 +762,7 @@ class Channel(models.Model):
                 'fetched_message_id': last_message_id,
             })
             data = {
+                'id': channel_partner.id,
                 'info': 'channel_fetched',
                 'last_message_id': last_message_id,
                 'partner_id': self.env.user.partner_id.id,
@@ -798,20 +801,15 @@ class Channel(models.Model):
             'custom_channel_name': name,
         })
 
-    def notify_typing(self, is_typing, is_website_user=False):
+    def notify_typing(self, is_typing):
         """ Broadcast the typing notification to channel members
             :param is_typing: (boolean) tells whether the current user is typing or not
-            :param is_website_user: (boolean) tells whether the user that notifies comes
-              from the website-side. This is useful in order to distinguish operator and
-              unlogged users for livechat, because unlogged users have the same
-              partner_id as the admin (default: False).
         """
         notifications = []
         for channel in self:
             data = {
                 'info': 'typing_status',
                 'is_typing': is_typing,
-                'is_website_user': is_website_user,
                 'partner_id': self.env.user.partner_id.id,
             }
             notifications.append([(self._cr.dbname, 'mail.channel', channel.id), data]) # notify backend users
@@ -978,7 +976,7 @@ class Channel(models.Model):
     def _execute_command_help(self, **kwargs):
         partner = self.env.user.partner_id
         if self.channel_type == 'channel':
-            msg = _("You are in channel <b>#%s</b>.") % self.name
+            msg = _("You are in channel <b>#%s</b>.", self.name)
             if self.public == 'private':
                 msg += _(" This channel is private. People must be invited to join it.")
         else:
@@ -1018,6 +1016,6 @@ class Channel(models.Model):
             msg = _("You are alone in this channel.")
         else:
             dots = "..." if len(members) != len(self.channel_partner_ids) - 1 else ""
-            msg = _("Users in this channel: %s %s and you.") % (", ".join(members), dots)
+            msg = _("Users in this channel: %(members)s %(dots)s and you.", members=", ".join(members), dots=dots)
 
         self._send_transient_message(partner, msg)

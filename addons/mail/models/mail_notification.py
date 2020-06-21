@@ -95,13 +95,10 @@ class MailNotification(models.Model):
     def _notification_format(self):
         """Returns the current notifications in the format expected by the web
         client."""
-        return {
-            notif.id: {
-                'notification_id': notif.id,
-                'notification_type': notif.notification_type,
-                'notification_status': notif.notification_status,
-                'failure_type': notif.failure_type,
-                'partner_id': notif.res_partner_id.id,
-                'partner_name': notif.res_partner_id.display_name,
-            } for notif in self
-        }
+        return [{
+            'id': notif.id,
+            'notification_type': notif.notification_type,
+            'notification_status': notif.notification_status,
+            'failure_type': notif.failure_type,
+            'partner_id': [notif.res_partner_id.id, notif.res_partner_id.display_name],
+        } for notif in self]

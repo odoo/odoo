@@ -81,7 +81,7 @@ class AccountTransferWizard(models.TransientModel):
         # Generate counterpart lines' vals
         for (counterpart_partner, counterpart_currency), counterpart_vals in counterpart_balances.items():
             source_accounts = self.move_line_ids.mapped('account_id')
-            counterpart_label = len(source_accounts) == 1 and _("Transfer from %s") % source_accounts.display_name or _("Transfer counterpart")
+            counterpart_label = len(source_accounts) == 1 and _("Transfer from %s", source_accounts.display_name) or _("Transfer counterpart")
 
             if not self.company_id.currency_id.is_zero(counterpart_vals['balance']) or (counterpart_currency and not counterpart_currency.is_zero(counterpart_vals['amount_currency'])):
                 line_vals.append({
@@ -112,7 +112,7 @@ class AccountTransferWizard(models.TransientModel):
         return {
             'journal_id': self.journal_id.id,
             'date': self.date,
-            'ref': self.destination_account_id.display_name and _("Transfer entry to %s") % self.destination_account_id.display_name or '',
+            'ref': self.destination_account_id.display_name and _("Transfer entry to %s", self.destination_account_id.display_name) or '',
             'line_ids': [(0, 0, line) for line in line_vals],
         }
 

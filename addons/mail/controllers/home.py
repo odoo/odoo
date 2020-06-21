@@ -17,15 +17,16 @@ def _admin_password_warn(uid):
         return
     if ipaddress.ip_address(request.httprequest.remote_addr).is_private:
         return
-    admin = request.env.ref('base.partner_admin')
+    env = request.env(user=SUPERUSER_ID, su=True)
+    admin = env.ref('base.partner_admin')
     if uid not in admin.user_ids.ids:
         return
-    has_demo = bool(request.env['ir.module.module'].sudo().search_count([('demo', '=', True)]))
+    has_demo = bool(env['ir.module.module'].search_count([('demo', '=', True)]))
     if has_demo:
         return
 
     user = request.env(user=uid)['res.users']
-    MailChannel = request.env(user=SUPERUSER_ID, context=user.context_get(), su=True)['mail.channel']
+    MailChannel = env(context=user.context_get())['mail.channel']
     MailChannel.browse(MailChannel.channel_get([admin.id])['id'])\
         .message_post(
             body=_("Your password is the default (admin)! If this system is exposed to untrusted users it is important to change it immediately for security reasons. I will keep nagging you about it!"),

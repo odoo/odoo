@@ -230,7 +230,8 @@ class MailActivity(models.Model):
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
-            self.summary = self.activity_type_id.summary
+            if self.activity_type_id.summary:
+                self.summary = self.activity_type_id.summary
             # Date.context_today is correct because date_deadline is a Date and is meant to be
             # expressed in user TZ
             base = fields.Date.context_today(self)
@@ -432,7 +433,9 @@ class MailActivity(models.Model):
                 record.message_notify(
                     partner_ids=activity.user_id.partner_id.ids,
                     body=body,
-                    subject=_('%s: %s assigned to you') % (activity.res_name, activity.summary or activity.activity_type_id.name),
+                    subject=_('%(activity_name)s: %(summary)s assigned to you',
+                        activity_name=activity.res_name,
+                        summary=activity.summary or activity.activity_type_id.name),
                     record_name=activity.res_name,
                     model_description=model_description,
                     email_layout_xmlid='mail.mail_notification_light',
@@ -617,7 +620,7 @@ class MailActivityMixin(models.AbstractModel):
     Activities come with a new JS widget for the form view. It is integrated in the
     Chatter widget although it is a separate widget. It displays activities linked
     to the current record and allow to schedule, edit and mark done activities.
-    Use widget="mail_activity" on activity_ids field in form view to use it.
+    Just include field activity_ids in the div.oe-chatter to use it.
 
     There is also a kanban widget defined. It defines a small widget to integrate
     in kanban vignettes. It allow to manage activities directly from the kanban

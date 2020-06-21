@@ -1,8 +1,8 @@
 odoo.define('calendar.systray.ActivityMenuTests', function (require) {
 "use strict";
 
+const { start } = require('mail/static/src/utils/test_utils.js');
 var ActivityMenu = require('mail.systray.ActivityMenu');
-var mailUtils = require('mail.testUtils');
 
 var testUtils = require('web.test_utils');
 
@@ -11,7 +11,6 @@ QUnit.module('calendar', {}, function () {
 
 QUnit.module('ActivityMenu', {
     beforeEach: function () {
-        this.services = mailUtils.getMailServices();
         this.data = {
             'calendar.event': {
                 records: [{
@@ -34,15 +33,14 @@ QUnit.module('ActivityMenu', {
                 }],
             },
         };
-    }
+    },
 });
 
 QUnit.test('activity menu widget:today meetings', async function (assert) {
     assert.expect(6);
     var self = this;
-    var activityMenu = new ActivityMenu();
-    await testUtils.mock.addMockEnvironment(activityMenu, {
-        services: this.services,
+
+    const { widget } = await start({
         mockRPC: function (route, args) {
             if (args.method === 'systray_get_activities') {
                 return Promise.resolve(self.data['calendar.event']['records']);
@@ -51,6 +49,7 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
         },
     });
 
+    const activityMenu = new ActivityMenu(widget);
     await activityMenu.appendTo($('#qunit-fixture'));
 
     assert.hasClass(activityMenu.$el,'o_mail_systray_item', 'should be the instance of widget');
@@ -66,7 +65,7 @@ QUnit.test('activity menu widget:today meetings', async function (assert) {
     assert.containsN(activityMenu, '.o_meeting_filter', 2, 'there should be 2 meetings');
     assert.hasClass(activityMenu.$('.o_meeting_filter').eq(0), 'o_meeting_bold', 'this meeting is yet to start');
     assert.doesNotHaveClass(activityMenu.$('.o_meeting_filter').eq(1), 'o_meeting_bold', 'this meeting has been started');
-    activityMenu.destroy();
+    widget.destroy();
 });
 });
 });

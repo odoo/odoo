@@ -268,12 +268,11 @@
                     <field name="package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_package')" groups="stock.group_tracking_lot"/>
                     <field name="result_package_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" groups="stock.group_tracking_lot"/>
                     <field name="owner_id" attrs="{'readonly': ['&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" invisible="not context.get('show_owner')" groups="stock.group_tracking_owner"/>
-                    <field name="is_initial_demand_editable" invisible="1"/>
                     <field name="product_uom_qty" invisible="not context.get('show_reserved_quantity')" readonly="1"/>
                     <field name="state" invisible="1"/>
                     <field name="is_locked" invisible="1"/>
                     <field name="picking_code" invisible="1"/>
-                    <field name="qty_done" attrs="{'readonly': ['|', '|', ('is_initial_demand_editable', '=', True), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
+                    <field name="qty_done" attrs="{'readonly': ['|', '&amp;', ('state', '=', 'done'), ('is_locked', '=', True), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}"/>
                     <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" attrs="{'readonly': ['|', ('product_uom_qty', '!=', 0.0), '&amp;', ('package_level_id', '!=', False), ('parent.picking_type_entire_packs', '=', True)]}" string="Unit of Measure" groups="uom.group_uom"/>
                 </tree>
             </field>
@@ -285,7 +284,7 @@
             <field name="priority">1000</field>
             <field name="arch" type="xml">
                 <tree editable="bottom" decoration-muted="(state == 'done' and is_locked == True)" decoration-danger="qty_done&gt;product_uom_qty and state!='done' and parent.picking_type_code != 'incoming'" decoration-success="qty_done==product_uom_qty and state!='done' and not result_package_id">
-                    <field name="product_id" required="1" attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"/>
+                    <field name="product_id" required="1" context="{'default_type': 'product'}" attrs="{'readonly': ['|', ('state', '=', 'done'), ('move_id', '!=', False)]}"/>
                     <field name="company_id" invisible="1"/>
                     <field name="move_id" invisible="1"/>
                     <field name="picking_id" invisible="1"/>

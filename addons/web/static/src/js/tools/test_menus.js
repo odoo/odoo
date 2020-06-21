@@ -14,7 +14,7 @@
 
     function createWebClientHooks() {
         var AbstractController = odoo.__DEBUG__.services['web.AbstractController'];
-        var Discuss = odoo.__DEBUG__.services['mail.Discuss'];
+        var DiscussWidget = odoo.__DEBUG__.services['mail/static/src/widgets/discuss/discuss.js'];
         var WebClient = odoo.__DEBUG__.services["web.WebClient"];
 
         WebClient.include({
@@ -36,12 +36,11 @@
             },
         });
 
-        if (Discuss) {
-            Discuss.include({
-                _fetchAndRenderThread: function() {
-                    return this._super.apply(this, arguments).then(function (){
-                        viewUpdateCount++;
-                    });
+        if (DiscussWidget) {
+            DiscussWidget.include({
+                on_attach_callback: async function () {
+                    await this._super(...arguments);
+                    viewUpdateCount++;
                 },
             });
         }

@@ -12,14 +12,15 @@ class PurchaseOrder(models.Model):
         compute='_compute_mrp_production_count',
         groups='mrp.group_mrp_user')
 
-    @api.depends('order_line.move_dest_ids.group_id.mrp_production_id')
+    @api.depends('order_line.move_dest_ids.group_id.mrp_production_ids')
     def _compute_mrp_production_count(self):
         for purchase in self:
-            purchase.mrp_production_count = len(purchase.order_line.move_dest_ids.group_id.mrp_production_id)
+            purchase.mrp_production_count = len(purchase.order_line.move_dest_ids.group_id.mrp_production_ids |
+                                                purchase.order_line.move_ids.move_dest_ids.group_id.mrp_production_ids)
 
     def action_view_mrp_productions(self):
         self.ensure_one()
-        mrp_production_ids = self.order_line.move_dest_ids.group_id.mrp_production_id.ids
+        mrp_production_ids = (self.order_line.move_dest_ids.group_id.mrp_production_ids | self.order_line.move_ids.move_dest_ids.group_id.mrp_production_ids).ids 
         action = {
             'res_model': 'mrp.production',
             'type': 'ir.actions.act_window',

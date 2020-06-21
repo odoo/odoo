@@ -991,7 +991,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 # broken transaction, exit and hope the source error was already logged
                 if not any(message['type'] == 'error' for message in messages):
                     info = data_list[0]['info']
-                    messages.append(dict(info, type='error', message=_(u"Unknown database error: '%s'") % e))
+                    messages.append(dict(info, type='error', message=_(u"Unknown database error: '%s'", e)))
                 return
             except Exception:
                 pass
@@ -1188,7 +1188,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                         type='error',
                         record=stream.index,
                         field='.id',
-                        message=_(u"Unknown database identifier '%s'") % dbid))
+                        message=_(u"Unknown database identifier '%s'", dbid)))
                     dbid = False
 
             converted = convert(record, functools.partial(_log, extras, stream.index))
@@ -1442,7 +1442,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                             self._fields, 'date_stop'):
             if not set_first_of(["date_delay", "planned_hours", "x_date_delay", "x_planned_hours"],
                                 self._fields, 'date_delay'):
-                raise UserError(_("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay") % self._name)
+                raise UserError(_("Insufficient fields to generate a Calendar View for %s, missing a date_stop or a date_delay", self._name))
 
         return view
 
@@ -1521,7 +1521,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 result['type'] = view_type
                 result['name'] = 'default'
             except AttributeError:
-                raise UserError(_("No default view of type '%s' could be found !") % view_type)
+                raise UserError(_("No default view of type '%s' could be found !", view_type))
         return result
 
     @api.model
@@ -2221,7 +2221,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             match = regex_field_agg.match(fspec)
             if not match:
-                raise UserError(_("Invalid field specification %r.") % fspec)
+                raise UserError(_("Invalid field specification %r.", fspec))
 
             name, func, fname = match.groups()
             if func:
@@ -2231,9 +2231,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if not field:
                     raise ValueError("Invalid field %r on model %r" % (fname, self._name))
                 if not (field.base_field.store and field.base_field.column_type):
-                    raise UserError(_("Cannot aggregate field %r.") % fname)
+                    raise UserError(_("Cannot aggregate field %r.", fname))
                 if func not in VALID_AGGREGATE_FUNCTIONS:
-                    raise UserError(_("Invalid aggregation function %r.") % func)
+                    raise UserError(_("Invalid aggregation function %r.", func))
             else:
                 # we have 'name', retrieve the aggregator on the field
                 field = self._fields.get(name)
@@ -2249,7 +2249,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             if fname in groupby_fields:
                 continue
             if name in aggregated_fields:
-                raise UserError(_("Output name %r is used twice.") % name)
+                raise UserError(_("Output name %r is used twice.", name))
             aggregated_fields.append(name)
 
             expr = self._inherits_join_calc(self._table, fname, query)
@@ -3657,7 +3657,7 @@ Record ids: %(records)s
                 cr.execute(query, params + [sub_ids])
                 if cr.rowcount != len(sub_ids):
                     raise MissingError(
-                        _('One of the records you are trying to modify has already been deleted (Document type: %s).') % self._description
+                        _('One of the records you are trying to modify has already been deleted (Document type: %s).', self._description)
                         + '\n\n({} {}, {} {})'.format(_('Records:'), sub_ids[:6], _('User:'), self._uid)
                     )
 

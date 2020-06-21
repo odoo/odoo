@@ -171,7 +171,7 @@ class Mailing(models.Model):
             if 'phone' in target._fields:
                 phone_fields.append('phone')
         if not phone_fields:
-            raise UserError(_("Unsupported %s for mass SMS") % self.mailing_model_id.name)
+            raise UserError(_("Unsupported %s for mass SMS", self.mailing_model_id.name))
 
         query = """
             SELECT %(select_query)s
