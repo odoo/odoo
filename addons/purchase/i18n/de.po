@@ -4,7 +4,7 @@
 # 
 # Translators:
 # Maik Steinfeld <info@streward.de>, 2017
-# Jasper Torlitz <inactive+jtorlitz@transifex.com>, 2017
+# 8fabe9d4925701ba6dc5628e7eca4676_ff48aa2 <acca9f42d56c974689860b9f2ffd9149_361329>, 2017
 # JackTheHunter <Maximilian.N98@gmail.com>, 2017
 # Kontor Consulting <p.becker@kontor.consulting>, 2017
 # Niki Waibel, 2017
@@ -19,13 +19,12 @@
 # Gab_Odoo <gab@odoo.com>, 2017
 # brokemeister <work@maltejansen.de>, 2017
 # Fabian Liesch <fabian.liesch@gmail.com>, 2017
-# Ermin Trevisan <trevi@twanda.com>, 2018
 # Tom, 2018
 # Tina Rittmüller <tr@ife.de>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Joerg Hueneburg <melikeymedia@gmail.com>, 2019
 # Anja Uebermuth <anja.uebermuth@arts.eu>, 2019
-# darenkster <inactive+darenkster@transifex.com>, 2019
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2019
 # Andi, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
@@ -38,6 +37,7 @@
 # Leon Grill <leg@odoo.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
 # JEK Odoo <jek@odoo.com>, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -45,7 +45,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:08+0000\n"
-"Last-Translator: JEK Odoo <jek@odoo.com>, 2020\n"
+"Last-Translator: Ermin Trevisan <trevi@twanda.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -118,21 +118,21 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"        Sehr geehrte(r) ${object.partner_id.name}\n"
+"        Guten Tag ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"          im Anhang ist Ihre Bestellbestätigung <strong>${object.name}</strong>\n"
+"          Im Anhang finden Sie unseren Einkaufsauftrag <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            mit der Bestellnummer: ${object.partner_ref}\n"
 "        % endif\n"
-"        Preis in <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        im Betrag von <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "        von ${object.company_id.name}.\n"
 "        <br/><br/>\n"
-"        Wenn Sie Fragen haben , zögern Sie nicht und Kontaktieren uns.\n"
+"        Bei Fragen stehen wir Ihnen gerne zur Verfügung.\n"
 "        <br/><br/>\n"
-"        Mit freundlichen Grüßen,\n"
+"        Mit freundlichen Grüßen\n"
 "    </p>\n"
 "</div>"
 
@@ -160,12 +160,12 @@ msgid ""
 msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
-"       Sehr geehrte (r) ${object.partner_id.name}\n"
+"       Guten Tag ${object.partner_id.name}\n"
 "        % if object.partner_id.parent_id:\n"
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Hier im Anhang ist eine Angebotsanfrage<strong>${object.name}</strong>\n"
+"        Im Anhang finden Sie eine Angebotsanfrage<strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            mit der Referenz: ${object.partner_ref}\n"
 "        % endif\n"
@@ -173,7 +173,7 @@ msgstr ""
 "        <br/><br/>\n"
 "      Bei Fragen stehen wir Ihnen gerne zur Verfügung.\n"
 "        <br/><br/>\n"
-"        Mit Freundliche Grüßen,\n"
+"        Mit freundlichen Grüßen\n"
 "    </p>\n"
 "</div>"
 
@@ -2564,3 +2564,11 @@ msgid ""
 msgstr ""
 "Ihr Angebot enthält Produkte der Firma %s während Ihr Angebot zur Firma %s gehört. \n"
 " Bitte ändern Sie die Firma Ihres Angebots oder entfernen Sie die Produkte von anderen Firmen (%s)."
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid ""
+"You cannot change the type of a purchase order line. Instead you should "
+"delete the current line and create a new line of the proper type."
+msgstr ""

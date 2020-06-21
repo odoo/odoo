@@ -17,7 +17,7 @@
 # Andi, 2017
 # e2f <projects@e2f.com>, 2018
 # Martin K <martinkuenz@gmail.com>, 2018
-# darenkster <inactive+darenkster@transifex.com>, 2018
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Tom, 2018
 # Johannes Croe <jcr@odoo.com>, 2019
@@ -26,11 +26,11 @@
 # Marco Tarsia <marco.y.tarsia@gmail.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # philku79 <philip.kuss@gmx.de>, 2019
-# Ermin Trevisan <trevi@twanda.com>, 2020
 # Leon Grill <leg@odoo.com>, 2020
 # Oliver Roch <oliver.roch@d9t.de>, 2020
 # Martin Trigaux, 2020
 # JEK Odoo <jek@odoo.com>, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -38,7 +38,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:10+0000\n"
-"Last-Translator: JEK Odoo <jek@odoo.com>, 2020\n"
+"Last-Translator: Ermin Trevisan <trevi@twanda.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -113,6 +113,32 @@ msgid ""
 "                </div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"background:#F0F0F0;color:#515166;padding:10px 0px;font-family:Arial,Helvetica,sans-serif;font-size:14px;\">\n"
+"                    <table style=\"width:600px;margin:5px auto;\">\n"
+"                        <tbody>\n"
+"                            <tr><td>\n"
+"                                <!-- We use the logo of the company that created the survey (to handle multi company cases) -->\n"
+"                                <a href=\"/\"><img src=\"/logo.png?company=${object.survey_id.create_uid.company_id.id}\" style=\"vertical-align:baseline;max-width:100px;\"/></a>\n"
+"                            </td><td style=\"text-align:right;vertical-align:middle;\">\n"
+"                                    Zertifikat: ${object.survey_id.display_name}\n"
+"                            </td></tr>\n"
+"                        </tbody>\n"
+"                    </table>\n"
+"                    <table style=\"width:600px;margin:0px auto;background:white;border:1px solid #e1e1e1;\">\n"
+"                        <tbody>\n"
+"                            <tr><td style=\"padding:15px 20px 10px 20px;\">\n"
+"                                Guten Tag <span>${object.partner_id.name or ''}</span></p>\n"
+"                                <p>\n"
+"                                    Anbei finden Sie Ihr Zertifikat\n"
+"                                        <strong>${object.survey_id.display_name}</strong>\n"
+"                                </p>\n"
+"                                <p>Herzliche Gratulation zum bestandenen Test!</p>\n"
+"                            </td></tr>\n"
+"                        </tbody>\n"
+"                    </table>\n"
+"                </div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_page_statistics_question
@@ -149,6 +175,30 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Guten Tag ${object.partner_id.name or 'participant'}<br/><br/>\n"
+"        % if object.survey_id.certification:\n"
+"            Sie sind zu einer neuen Zertifzierung eingeladen worden.\n"
+"        % else:\n"
+"            Wir führen eine Umfrage durch und freuen uns über Ihre Teilnahme.\n"
+"        % endif\n"
+"        <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"            <a href=\"${(object.get_start_url()) | safe}\" style=\"background-color: #875A7B; padding: 8px 16px 8px 16px; text-decoration: none; color: #fff; border-radius: 5px; font-size:13px;\">\n"
+"                % if object.survey_id.certification:\n"
+"                    Start Zertifzierung\n"
+"                % else:\n"
+"                    Start Umfrage\n"
+"                % endif\n"
+"            </a>\n"
+"        </div>\n"
+"        % if object.deadline:\n"
+"            Bitte beantworten Sie die Umfrage bis zum ${format_date(object.deadline)}.<br/><br/>\n"
+"        % endif\n"
+"        Besten Dank für Ihre Teilnahme.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form

@@ -64,13 +64,13 @@
 # Kevin Harrings <kha@odoo.com>, 2020
 # Felix Schubert <felix.schubert@go-erp.com>, 2020
 # Thorsten Vocks <thorsten.vocks@openbig.org>, 2020
-# Ermin Trevisan <trevi@twanda.com>, 2020
 # Leon Grill <leg@odoo.com>, 2020
 # Chris Egal <sodaswed@web.de>, 2020
 # philku79 <philip.kuss@gmx.de>, 2020
 # Nicola Peiffer <epn@odoo.com>, 2020
-# UteHaus <j.v@posteo.de>, 2020
 # Martin Trigaux, 2020
+# Ute Haus, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -78,7 +78,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-26 06:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Ermin Trevisan <trevi@twanda.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -262,6 +262,23 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Guten Tag ${object.partner_id.name}<br/><br/>\n"
+"        Herzlichen Dank für Ihre Zahlung.\n"
+"        Anbei finden Sie Ihren Zahlungsbeleg <strong>${(object.name or '').replace('/','-')}</strong> im Betrag von\n"
+"        <strong>${format_amount(object.amount, object.currency_id)}</strong> für ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        Bei Fragen stehen wir Ihnen gerne zur Verfügung.\n"
+"        <br/><br/>\n"
+"        Mit freundlichen Grüßen\n"
+"        % if user.signature:\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -301,6 +318,40 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Guten Tag\n"
+"        % if object.partner_id.parent_id:\n"
+"            ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"        % else:\n"
+"            ${object.partner_id.name},\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Anbei finden Sie Ihre\n"
+"        % if object.name:\n"
+"            Rechnung <strong>${object.name}</strong>\n"
+"        % else:\n"
+"            Rechnung\n"
+"        %endif\n"
+"        % if object.invoice_origin:\n"
+"            (mit Referenz: ${object.invoice_origin})\n"
+"        % endif\n"
+"        im Betrag von <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        von ${object.company_id.name}.\n"
+"        % if object.payment_state == 'paid':\n"
+"            Diese Rechnung wurde bereits bezahlt.\n"
+"        % else:\n"
+"            Bitte bezahlen Sie die Rechnung so bald als möglich.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Bei Fragen stehen wir Ihnen gerne zur Verfügung.\n"
+"        % if object.invoice_user_id.signature:\n"
+"            <br/>\n"
+"            ${object.invoice_user_id.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -2899,7 +2950,7 @@ msgstr "Kassenprüfung"
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_expense_account_id
 #: model:ir.model.fields,field_description:account.field_res_company__default_cash_difference_expense_account_id
 msgid "Cash Difference Expense Account"
-msgstr ""
+msgstr "Bargelddifferenz-Aufwandskonto"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__default_cash_difference_income_account_id
@@ -5695,6 +5746,8 @@ msgid ""
 "If this checkbox is ticked, this entry will be automatically posted at its "
 "date."
 msgstr ""
+" Wenn dieses Kontrollkästchen angekreuzt ist, wird dieser Eintrag "
+"automatisch an seinem Datum veröffentlicht."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_journal__restrict_mode_hash_table
@@ -5703,6 +5756,8 @@ msgid ""
 "If ticked, the accounting entry or invoice receives a hash as soon as it is "
 "posted and cannot be modified anymore."
 msgstr ""
+"Wenn angekreuzt, erhält der Buchhaltungseintrag oder Rechnung einen Hash, "
+"sobald diese gebucht wird, und kann nicht mehr geändert werden."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -5850,7 +5905,7 @@ msgstr "Inaktiv"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__inalterable_hash
 msgid "Inalterability Hash"
-msgstr ""
+msgstr "Unveränderlichkeits-Hash"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_hash_integrity
@@ -9224,7 +9279,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
 msgid "Reset To Draft"
-msgstr ""
+msgstr "Stornieren"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13043,6 +13098,8 @@ msgid ""
 "You cannot modify the taxes related to a posted journal item, you should "
 "reset the journal entry to draft to do so."
 msgstr ""
+"Sie können die Steuern, die sich auf einen gebuchten Journalposten beziehen,"
+" nicht ändern. Sie sollten die Journalbuchung dazu auf Entwurf zurücksetzen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -13120,6 +13177,8 @@ msgstr ""
 #, python-format
 msgid "You cannot reset to draft a tax cash basis journal entry."
 msgstr ""
+"Sie können den Entwurf einer Journalbuchung auf Steuergeldbasis nicht "
+"zurücksetzen."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0

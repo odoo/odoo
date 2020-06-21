@@ -20,15 +20,15 @@
 # Christopher Bendlin <inactive+cbeodoo@transifex.com>, 2018
 # Jan Brodersen <4rmitxes@gmail.com>, 2018
 # Wolfgang Taferner, 2018
-# Ermin Trevisan <trevi@twanda.com>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Tom, 2018
-# darenkster <inactive+darenkster@transifex.com>, 2019
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2019
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Johannes Croe <jcr@odoo.com>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
 # Martin Trigaux, 2020
+# Ermin Trevisan <trevi@twanda.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -36,7 +36,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2018-03-22 16:02+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Ermin Trevisan <trevi@twanda.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -121,6 +121,28 @@ msgid ""
 "    </p>\n"
 "</div>"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px;font-size: 13px;\">\n"
+"        Guten Tag ${object.partner_id.name},<br/>\n"
+"        Anbei finden Sie Ihren Reparaturauftrag ${doc_name} <strong>${object.name}</strong>\n"
+"        % if object.origin:\n"
+"            (mit Referenz: ${object.origin} )\n"
+"        % endif\n"
+"        % if object.invoice_method != 'none':\n"
+"            im Betrag von <strong>${format_amount(object.amount_total, object.pricelist_id.currency_id)}.</strong><br/>\n"
+"        % else:\n"
+"            .<br/>\n"
+"        % endif\n"
+"        Bei Fragen können Sie gerne auf dieses E-Mail antworten.\n"
+"        <br/><br/>\n"
+"        Besten Dank\n"
+"        % if user.signature\n"
+"            <br/>\n"
+"            ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
