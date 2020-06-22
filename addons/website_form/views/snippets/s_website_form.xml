@@ -21,7 +21,7 @@
     <xpath expr="//div" position="after">
         <!-- Form -->
         <div data-js="WebsiteFormEditor" data-selector=".s_website_form" data-target="form">
-            <we-select string="Marked Fields" data-name="field_mark_select" data-no-preview="true">
+            <we-select string="Marked Fields" data-name="field_mark_select">
                 <we-button data-select-class="">None</we-button>
                 <we-button data-select-class="o_mark_required" data-name="form_required_opt">Required</we-button>
                 <we-button data-select-class="o_mark_optional" data-name="form_optional_opt">Optional</we-button>
@@ -92,8 +92,9 @@
                 <we-button data-multi-checkbox-display="horizontal">Horizontal</we-button>
                 <we-button data-multi-checkbox-display="vertical">Vertical</we-button>
             </we-select>
+            <we-input string="Input Placeholder" class="o_we_large_input" data-name="placeholder_opt" data-set-placeholder=""/>
             <we-input string="Label Name" class="o_we_large_input" data-set-label-text=""/>
-            <we-button-group string="Label Position" data-no-preview="true">
+            <we-button-group string="Label Position">
                 <we-button title="Hide"
                            data-select-label-position="none">
                     <i class="fa fa-eye-slash"/>
@@ -108,7 +109,6 @@
                            data-select-label-position="right"
                            data-img="/website/static/src/img/snippets_options/pos_right.svg"/>
             </we-button-group>
-            <we-input string="Input Placeholder" class="o_we_large_input" data-name="placeholder_opt" data-set-placeholder=""/>
             <we-checkbox string="Required" data-name="required_opt" data-no-preview="true"
                 data-toggle-required="s_website_form_required"/>
             <we-checkbox string="Hidden" data-name="hidden_opt" data-no-preview="true"
