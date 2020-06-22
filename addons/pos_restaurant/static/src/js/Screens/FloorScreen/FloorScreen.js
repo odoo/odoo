@@ -87,17 +87,18 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             }
         }
         async _changeSeatsNum() {
-            if (!this.selectedTable) return;
+            const selectedTable = this.selectedTable
+            if (!selectedTable) return;
             const { confirmed, payload: inputNumber } = await this.showPopup('NumberPopup', {
-                startingValue: this.selectedTable.seats,
+                startingValue: selectedTable.seats,
                 cheap: true,
                 title: this.env._t('Number of Seats ?'),
             });
             if (!confirmed) return;
-            const newSeatsNum = parseInt(inputNumber, 10) || this.selectedTable.seats;
-            if (newSeatsNum !== this.selectedTable.seats) {
-                this.selectedTable.seats = newSeatsNum;
-                await this._save(this.selectedTable);
+            const newSeatsNum = parseInt(inputNumber, 10) || selectedTable.seats;
+            if (newSeatsNum !== selectedTable.seats) {
+                selectedTable.seats = newSeatsNum;
+                await this._save(selectedTable);
             }
         }
         async _changeShape() {
@@ -107,15 +108,16 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             await this._save(this.selectedTable);
         }
         async _renameTable() {
-            if (!this.selectedTable) return;
+            const selectedTable = this.selectedTable;
+            if (!selectedTable) return;
             const { confirmed, payload: newName } = await this.showPopup('TextInputPopup', {
-                startingValue: this.selectedTable.name,
+                startingValue: selectedTable.name,
                 title: this.env._t('Table Name ?'),
             });
             if (!confirmed) return;
-            if (newName !== this.selectedTable.name) {
-                this.selectedTable.name = newName;
-                await this._save(this.selectedTable);
+            if (newName !== selectedTable.name) {
+                selectedTable.name = newName;
+                await this._save(selectedTable);
             }
         }
         async _setTableColor({ detail: color }) {
