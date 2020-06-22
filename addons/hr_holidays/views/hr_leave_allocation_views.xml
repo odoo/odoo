@@ -188,7 +188,7 @@
         <field name="model">hr.leave.allocation</field>
         <field name="priority">16</field>
         <field name="arch" type="xml">
-            <tree string="Allocation Requests">
+            <tree string="Allocation Requests" sample="1">
                 <field name="employee_id"/>
                 <field name="department_id" optional="hide"/>
                 <field name="holiday_status_id"/>
@@ -242,7 +242,7 @@
         <field name="name">hr.leave.allocation.view.kanban</field>
         <field name="model">hr.leave.allocation</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="0">
+            <kanban class="o_kanban_mobile" create="0" sample="1">
                 <field name="employee_id"/>
                 <field name="date_from"/>
                 <field name="date_to"/>

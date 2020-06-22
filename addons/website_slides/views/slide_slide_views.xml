@@ -169,7 +169,8 @@
             <field name="arch" type="xml">
                 <kanban edit="false" group_create="0"
                     records_draggable="0"
-                    class="o_slide_kanban">
+                    class="o_slide_kanban"
+                    sample="1">
                     <field name="id"/>
                     <field name="channel_id"/>
                     <field name="slide_type"/>
@@ -238,7 +239,7 @@
             <field name="name">slide.slide.tree</field>
             <field name="model">slide.slide</field>
             <field name="arch" type="xml">
-                <tree string="Contents">
+                <tree string="Contents" sample="1">
                     <field name="name"/>
                     <field name="website_id" groups="website.group_multi_website"/>
                     <field name="active" invisible="1"/>

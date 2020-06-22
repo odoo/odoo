@@ -223,7 +223,7 @@ ListRenderer.include({
         var self = this;
 
         var oldData = this.state.data;
-        this.state = state;
+        this._setState(state);
         return this.confirmChange(state, id, fields, ev).then(function () {
             // If no record with 'id' can be found in the state, the
             // confirmChange method will have rerendered the whole view already,
@@ -369,7 +369,7 @@ ListRenderer.include({
      * @param {string} recordID
      */
     removeLine: function (state, recordID) {
-        this.state = state;
+        this._setState(state);
         var $row = this._getRow(recordID);
         if ($row.length === 0) {
             return;

@@ -567,11 +567,9 @@ return AbstractRenderer.extend({
     /**
      * Render the calendar view, this is the main entry point.
      *
-     * @override method from AbstractRenderer
-     * @private
-     * @returns {Promise}
+     * @override
      */
-    _render: function () {
+    async _renderView() {
         this.$('.o_calendar_view')[0].prepend(this.calendarElement);
         if (this._isInDOM) {
             this._renderCalendar();
@@ -590,9 +588,7 @@ return AbstractRenderer.extend({
             $a.not('.ui-state-active').addClass('o_color');
         });
 
-        var filterProm = this._renderFilters();
-
-        return Promise.all([filterProm, this._super.apply(this, arguments)]);
+        await this._renderFilters();
     },
     /**
      * Render the specific code for the FullCalendar when it's in the DOM

@@ -1309,7 +1309,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 res_id: 1,
             };
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 assert.ok(record.data.date instanceof moment,
                     "fetched date field should have been formatted");
@@ -1317,7 +1317,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             params.res_id = 2;
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 assert.strictEqual(record.data.date, false,
                     "unset date field should be false");
@@ -1340,7 +1340,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 type: 'list',
             };
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 var firstRecord = record.data[0];
                 var secondRecord = record.data[1];
@@ -1367,7 +1367,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 type: 'record',
             };
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 assert.strictEqual(record.data.date, false, "date default value should be false");
             });
@@ -1391,7 +1391,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 type: 'record',
             };
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 assert.ok(_.isEqual(record.data.category.res_ids, [12, 14]),
                     "category field should have correct default value");
@@ -1958,7 +1958,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
             });
 
-            model.load(this.params);
+            await model.load(this.params);
             assert.verifySteps(['read'],
                 "there should be only one read");
             model.destroy();
@@ -1996,7 +1996,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 data: this.data,
             });
 
-            model.load(params).then(function (resultID) {
+            await model.load(params).then(function (resultID) {
                 var record = model.get(resultID);
                 assert.strictEqual(record.data.product_ids.data[0].data.date, false,
                     "date value should be in data, and should be false");

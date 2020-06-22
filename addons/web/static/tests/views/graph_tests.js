@@ -783,7 +783,7 @@ QUnit.module('Views', {
                         '<field name="bar"/>' +
                 '</graph>',
         });
-        graph.renderer.giveFocus();
+        graph._giveFocus();
         assert.ok(true,"should not generate any error");
         graph.destroy();
     });

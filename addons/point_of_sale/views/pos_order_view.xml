@@ -132,7 +132,7 @@
         <field name="name">pos.order.kanban</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="0">
+            <kanban class="o_kanban_mobile" create="0" sample="1">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="amount_total"/>
@@ -214,7 +214,7 @@
         <field name="name">pos.order.tree</field>
         <field name="model">pos.order</field>
         <field name="arch" type="xml">
-            <tree string="POS Orders" create="0">
+            <tree string="POS Orders" create="0" sample="1">
                 <field name="currency_id" invisible="1"/>
                 <field name="name" decoration-bf="1"/>
                 <field name="session_id" />

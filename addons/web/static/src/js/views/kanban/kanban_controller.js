@@ -21,6 +21,7 @@ var qweb = core.qweb;
 var KanbanController = BasicController.extend({
     buttons_template: 'KanbanView.buttons',
     custom_events: _.extend({}, BasicController.prototype.custom_events, {
+        add_quick_create: '_onAddQuickCreate',
         quick_create_add_column: '_onAddColumn',
         quick_create_record: '_onQuickCreateRecord',
         resequence_columns: '_onResequenceColumn',
@@ -90,6 +91,20 @@ var KanbanController = BasicController.extend({
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * Displays the record quick create widget in the requested column, given its
+     * id (in the first column by default). Ensures that we removed sample data
+     * if any, before displaying the quick create.
+     *
+     * @private
+     * @param {string} [groupId]
+     */
+    _addQuickCreate(groupId) {
+        this._removeSampleData(async () => {
+            await this.update({ shouldUpdateControlPanel: false }, { reload: false });
+            return this.renderer.addQuickCreate(groupId);
+        });
+    },
     /**
      * @override method comes from field manager mixin
      * @private
@@ -205,12 +220,13 @@ var KanbanController = BasicController.extend({
      */
     _shouldBounceOnClick(element) {
         const state = this.model.get(this.handle, {raw: true});
-        if (!state.count) {
+        if (!state.count || state.isSample) {
             const classesList = [
                 'o_kanban_view',
                 'o_kanban_group',
+                'o_kanban_header',
                 'o_column_quick_create',
-                'o_view_nocontent_smiling_face'
+                'o_view_nocontent_smiling_face',
             ];
             return classesList.some(c => element.classList.contains(c));
         }
@@ -269,6 +285,15 @@ var KanbanController = BasicController.extend({
     /**
      * @private
      * @param {OdooEvent} ev
+     * @returns {string} ev.data.groupId
+     */
+    _onAddQuickCreate(ev) {
+        ev.stopPropagation();
+        this._addQuickCreate(ev.data.groupId);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
      */
     _onButtonClicked: function (ev) {
         var self = this;
@@ -309,16 +334,13 @@ var KanbanController = BasicController.extend({
      * @private
      */
     _onButtonNew: function () {
-        var self = this;
         var state = this.model.get(this.handle, {raw: true});
         var quickCreateEnabled = this.quickCreateEnabled && viewUtils.isQuickCreateEnabled(state);
         if (this.on_create === 'quick_create' && quickCreateEnabled && state.data.length) {
             // activate the quick create in the first column when the mutex is
             // unlocked, to ensure that there is no pending re-rendering that
             // would remove it (e.g. if we are currently adding a new column)
-            this.mutex.getUnlockedDef().then(function () {
-                self.renderer.addQuickCreate();
-            });
+            this.mutex.getUnlockedDef().then(this._addQuickCreate.bind(this, null));
         } else if (this.on_create && this.on_create !== 'quick_create') {
             // Execute the given action
             this.do_action(this.on_create, {
@@ -342,7 +364,7 @@ var KanbanController = BasicController.extend({
     _onButtonsKeyDown: function (ev) {
         switch(ev.keyCode) {
             case $.ui.keyCode.DOWN:
-                this.$('.o_kanban_record:first').focus();
+                this._giveFocus();
         }
     },
     /**
@@ -357,15 +379,12 @@ var KanbanController = BasicController.extend({
      * @param {OdooEvent} ev
      */
     _onDeleteColumn: function (ev) {
-        var self = this;
         var column = ev.target;
         var state = this.model.get(this.handle, {raw: true});
         var relatedModelName = state.fields[state.groupedBy[0]].relation;
         this.model
             .deleteRecords([column.db_id], relatedModelName)
-            .then(function () {
-                self.update({}, {reload: !column.isEmpty()});
-            });
+            .then(this.update.bind(this, {}, {}));
     },
     /**
      * @private
