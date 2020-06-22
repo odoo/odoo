@@ -24,6 +24,8 @@ class IrHttp(models.AbstractModel):
                     try:
                         url = request.httprequest.url
                         ip_address = request.httprequest.remote_addr
+                        if not ip_address:
+                            return response
                         website_id = request.website.id
                         rules_excluded = (request.httprequest.cookies.get('rule_ids') or '').split(',')
                         before = time.time()
