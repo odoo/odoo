@@ -104,6 +104,9 @@ function factory(dependencies) {
                 partner_ids: this.mentionedPartners.map(partner => partner.id),
                 message_type: 'comment',
             };
+            if (this.subjectContent) {
+                postData.subject = this.subjectContent;
+            }
             let messageId;
             if (thread.model === 'mail.channel') {
                 const command = this._getCommandFromText(body);
@@ -440,7 +443,8 @@ function factory(dependencies) {
             this.update({
                 attachments: [['unlink-all']],
                 mentionedPartners: [['unlink-all']],
-                textInputContent: '',
+                subjectContent: "",
+                textInputContent: "",
                 textInputCursorStart: 0,
                 textInputCursorEnd: 0,
             });
@@ -544,6 +548,12 @@ function factory(dependencies) {
         mentionedPartners: many2many('mail.partner', {
             compute: '_computeMentionedPartners',
             dependencies: ['textInputContent'],
+        }),
+        /**
+         * Composer subject input content.
+         */
+        subjectContent: attr({
+            default: "",
         }),
         textInputContent: attr({
             default: "",
