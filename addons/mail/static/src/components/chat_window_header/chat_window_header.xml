@@ -18,6 +18,9 @@
                 <div class="o_ChatWindowHeader_item o_ChatWindowHeader_name" t-att-title="chatWindow.name">
                     <t t-esc="chatWindow.name"/>
                 </div>
+                <t t-if="chatWindow.thread and chatWindow.thread.mass_mailing">
+                    <i class="fa fa-envelope-o" title="Messages are sent by email" role="img"/>
+                </t>
                 <t t-if="chatWindow.thread and chatWindow.thread.message_unread_counter > 0">
                     <div class="o_ChatWindowHeader_counter o_ChatWindowHeader_item">
                         (<t t-esc="chatWindow.thread.message_unread_counter"/>)

@@ -558,6 +558,28 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
     );
 });
 
+QUnit.test('sidebar: mailing channel', async function (assert) {
+    assert.expect(1);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: "channel",
+                id: 20,
+                is_pinned: true,
+                mass_mailing: true,
+                name: "General",
+            }],
+        },
+    });
+    await this.start();
+    assert.containsOnce(
+        document.querySelector(`.o_DiscussSidebar_groupChannel .o_DiscussSidebar_item`),
+        '.fa.fa-envelope-o',
+        "should have an icon to indicate that the channel is a mailing channel"
+    );
+});
+
 QUnit.test('sidebar: public/private channel rendering', async function (assert) {
     assert.expect(5);
 

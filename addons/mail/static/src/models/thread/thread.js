@@ -813,6 +813,19 @@ function factory(dependencies) {
 
         /**
          * @private
+         */
+        _computeHasSeenIndicators() {
+            if (this.model !== 'mail.channel') {
+                return false;
+            }
+            if (this.mass_mailing) {
+                return false;
+            }
+            return ['chat', 'livechat'].includes(this.channel_type);
+        }
+
+        /**
+         * @private
          * @returns {boolean}
          */
         _computeIsCurrentPartnerFollowing() {
@@ -1248,6 +1261,19 @@ function factory(dependencies) {
         }),
         group_based_subscription: attr({
             default: false,
+        }),
+        /**
+         * Determine whether this thread has the seen indicators (V and VV)
+         * enabled or not.
+         */
+        hasSeenIndicators: attr({
+            compute: '_computeHasSeenIndicators',
+            default: false,
+            dependencies: [
+                'channel_type',
+                'mass_mailing',
+                'model',
+            ],
         }),
         id: attr(),
         isCurrentPartnerFollowing: attr({

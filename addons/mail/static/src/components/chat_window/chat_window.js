@@ -21,10 +21,12 @@ class ChatWindow extends Component {
         super(...args);
         useStore(props => {
             const chatWindow = this.env.models['mail.chat_window'].get(props.chatWindowLocalId);
+            const thread = chatWindow ? chatWindow.thread : undefined;
             return {
                 chatWindow: chatWindow ? chatWindow.__state : undefined,
                 isDeviceMobile: this.env.messaging.device.isMobile,
                 localeTextDirection: this.env.messaging.locale.textDirection,
+                thread: thread ? thread.__state : undefined,
             };
         });
         /**
