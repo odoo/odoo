@@ -476,31 +476,23 @@ class SaleOrder(models.Model):
         result = super(SaleOrder, self).create(vals)
         return result
 
-    def _write(self, values):
-        """ Override of private write method in order to generate activities
-        based in the invoice status. As the invoice status is a computed field
-        triggered notably when its lines and linked invoice status changes the
-        flow does not necessarily goes through write if the action was not done
-        on the SO itself. We hence override the _write to catch the computation
-        of invoice_status field. """
-        if self.env.context.get('mail_activity_automation_skip'):
-            return super(SaleOrder, self)._write(values)
+    def _compute_field_value(self, field):
+        super()._compute_field_value(field)
+        if field.name != 'invoice_status' or self.env.context.get('mail_activity_automation_skip'):
+            return
 
-        if 'invoice_status' in values:
-            if values['invoice_status'] == 'upselling':
-                filtered_self = self.search([('id', 'in', self.ids),
-                                             ('user_id', '!=', False),
-                                             ('invoice_status', '!=', 'upselling')])
-                filtered_self.activity_unlink(['sale.mail_act_sale_upsell'])
-                for order in filtered_self:
-                    order.activity_schedule(
-                        'sale.mail_act_sale_upsell',
-                        user_id=order.user_id.id,
-                        note=_("Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
-                            order._name, order.id, order.name,
-                            order.partner_id._name, order.partner_id.id, order.partner_id.display_name))
+        filtered_self = self.filtered(lambda so: so.user_id and so.invoice_status == 'upselling')
+        if not filtered_self:
+            return
 
-        return super(SaleOrder, self)._write(values)
+        filtered_self.activity_unlink(['sale.mail_act_sale_upsell'])
+        for order in filtered_self:
+            order.activity_schedule(
+                'sale.mail_act_sale_upsell',
+                user_id=order.user_id.id,
+                note=_("Upsell <a href='#' data-oe-model='%s' data-oe-id='%d'>%s</a> for customer <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>") % (
+                         order._name, order.id, order.name,
+                         order.partner_id._name, order.partner_id.id, order.partner_id.display_name))
 
     def copy_data(self, default=None):
         if default is None:
