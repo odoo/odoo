@@ -52,12 +52,20 @@ class Composer extends Component {
          * Reference of the text input component.
          */
         this._textInputRef = useRef('textInput');
-
+        /**
+         * Reference of the subject input. Useful to set content.
+         */
+        this._subjectRef = useRef('subject');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
     }
 
     mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
+        this._update();
+    }
+
+    patched() {
+        this._update();
     }
 
     willUnmount() {
@@ -178,6 +186,15 @@ class Composer extends Component {
         this.trigger('o-message-posted');
     }
 
+    /**
+     * @private
+     */
+    _update() {
+        if (this._subjectRef.el) {
+            this._subjectRef.el.value = this.composer.subjectContent;
+        }
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -289,6 +306,13 @@ class Composer extends Component {
         this._textInputRef.comp.saveStateInStore();
         this.composer.insertIntoTextInput(ev.detail.unicode);
         this.composer.focus();
+    }
+
+    /**
+     * @private
+     */
+    _onInputSubject() {
+        this.composer.update({ subjectContent: this._subjectRef.el.value });
     }
 
     /**
