@@ -152,7 +152,7 @@ class StockMove(models.Model):
         moves_to_unlink = self.env['stock.move']
         phantom_moves_vals_list = []
         for move in self:
-            if not move.picking_type_id:
+            if not move.picking_type_id or (move.production_id and move.production_id.product_id == move.product_id):
                 moves_to_return |= move
                 continue
             bom = self.env['mrp.bom'].sudo()._bom_find(product=move.product_id, company_id=move.company_id.id, bom_type='phantom')
