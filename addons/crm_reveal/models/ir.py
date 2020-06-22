@@ -23,6 +23,8 @@ class IrHttp(models.AbstractModel):
                     try:
                         url = request.httprequest.url
                         ip_address = request.httprequest.remote_addr
+                        if not ip_address:
+                            return response
                         rules_excluded = (request.httprequest.cookies.get('rule_ids') or '').split(',')
                         before = time.time()
                         new_rules_excluded = request.env['crm.reveal.view'].sudo()._create_reveal_view(url, ip_address, country_code, rules_excluded)
