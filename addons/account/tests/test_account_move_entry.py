@@ -371,12 +371,12 @@ class TestAccountMove(AccountTestInvoicingCommon):
 
         copy4 = copy2.copy()
         copy4.post()
-        self.assertEqual(copy4.name, 'MyMISC/2099/0002')
+        self.assertEqual(copy4.name, 'MISC2/2016/00003')
 
         copy5 = copy2.copy()
         copy5.date = '2021-02-02'
         copy5.post()
-        self.assertEqual(copy5.name, 'MyMISC/2021/0001')
+        self.assertEqual(copy5.name, 'MISC2/2021/00001')
         copy5.name = 'N\'importe quoi?'
 
         copy6 = copy5.copy()
@@ -391,6 +391,8 @@ class TestAccountMove(AccountTestInvoicingCommon):
             ('20190910', '20190911', '20190912', '20190913'),
             ('2019-0910', '2019-0911', '2019-0912', '2017-0001'),
             ('201909-10', '201909-11', '201604-01', '201703-01'),
+            ('20-10-10', '20-10-11', '16-04-01', '17-03-01'),
+            ('2010-10', '2010-11', '2010-12', '2017-01'),
             ('JRNL/2016/00001suffix', 'JRNL/2016/00002suffix', 'JRNL/2016/00003suffix', 'JRNL/2017/00001suffix'),
         ]
         other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
@@ -415,18 +417,51 @@ class TestAccountMove(AccountTestInvoicingCommon):
             self.assertEqual(next_move_month.name, sequence_next_month)
             self.assertEqual(next_move_year.name, sequence_next_year)
 
+    def test_journal_next_sequence(self):
+        prefix = "TEST_ORDER/2016/"
+        self.test_move.name = f"{prefix}1"
+        for c in range(2, 25):
+            copy = self.test_move.copy()
+            copy.name = "/"
+            copy.post()
+            self.assertEqual(copy.name, f"{prefix}{c}")
+
+    def test_journal_sequence_multiple_type(self):
+        entry, entry2, invoice, invoice2, refund, refund2 = (self.test_move.copy() for i in range(6))
+        (invoice + invoice2 + refund + refund2).write({
+            'journal_id': self.company_data['default_journal_sale'],
+            'partner_id': 1,
+            'invoice_date': '2016-01-01',
+        })
+        (invoice + invoice2).move_type = 'out_invoice'
+        (refund + refund2).move_type = 'out_refund'
+        all = (entry + entry2 + invoice + invoice2 + refund + refund2)
+        all.name = False
+        all.post()
+        self.assertEqual(entry.name, 'MISC/2016/01/0002')
+        self.assertEqual(entry2.name, 'MISC/2016/01/0003')
+        self.assertEqual(invoice.name, 'INV/2016/01/0001')
+        self.assertEqual(invoice2.name, 'INV/2016/01/0002')
+        self.assertEqual(refund.name, 'RINV/2016/01/0001')
+        self.assertEqual(refund2.name, 'RINV/2016/01/0002')
+
     def test_journal_override_sequence_regex(self):
         other_moves = self.env['account.move'].search([('journal_id', '=', self.test_move.journal_id.id)]) - self.test_move
         other_moves.unlink()  # Do not interfere when trying to get the highest name for new periods
-        self.test_move.name = '00000876-G 0002'
+        self.test_move.name = '00000876-G 0002/2020'
         next = self.test_move.copy()
         next.post()
-        self.assertEqual(next.name, '00000876-G 0003')  # Wait, I didn't want this!
+        self.assertEqual(next.name, '00000876-G 0002/2021')  # Wait, I didn't want this!
 
-        next.journal_id.sequence_override_regex = r'^(?P<prefix1>)(?P<seq>\d*)(?P<suffix>.*)$'
+        next.journal_id.sequence_override_regex = r'^(?P<seq>\d*)(?P<suffix1>.*?)(?P<year>(\d{4})?)(?P<suffix2>)$'
         next.name = '/'
         next._compute_name()
-        self.assertEqual(next.name, '00000877-G 0002')  # Pfew, better!
+        self.assertEqual(next.name, '00000877-G 0002/2020')  # Pfew, better!
+
+        next = next = self.test_move.copy()
+        next.date = "2017-05-02"
+        next.post()
+        self.assertEqual(next.name, '00000001-G 0002/2017')
 
     def test_journal_sequence_ordering(self):
         self.test_move.name = 'XMISC/2016/00001'

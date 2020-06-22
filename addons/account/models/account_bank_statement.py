@@ -117,6 +117,7 @@ class AccountBankStatement(models.Model):
     _order = "date desc, name desc, id desc"
     _inherit = ['mail.thread', 'sequence.mixin']
     _check_company_auto = True
+    _sequence_index = "journal_id"
 
     # Note: the reason why we did 2 separate function with the same dependencies (one for balance_start and one for balance_end_real)
     # is because if we create a bank statement with a default value for one of the field but not the other, the compute method
@@ -460,19 +461,6 @@ class AccountBankStatement(models.Model):
 
     def _get_starting_sequence(self):
         self.ensure_one()
-        last_sequence = self._get_last_sequence(relaxed=True)
-        if last_sequence:
-            sequence_number_reset = self._deduce_sequence_number_reset(self.search([('date', '<', self.date)], order='date desc', limit=1).name)
-            if sequence_number_reset == 'year':
-                sequence = re.match(self._sequence_yearly_regex, last_sequence)
-                if sequence:
-                    return '%s%04d%s%s%s' % (sequence.group('prefix1'), self.date.year, sequence.group('prefix2'), "0" * len(sequence.group('seq')), sequence.group('suffix'))
-            elif sequence_number_reset == 'month':
-                sequence = re.match(self._sequence_monthly_regex, last_sequence)
-                if sequence:
-                    return '%s%04d%s%02d%s%s%s' % (sequence.group('prefix1'), self.date.year, sequence.group('prefix2'), self.date.month, sequence.group('prefix3'), "0" * len(sequence.group('seq')), sequence.group('suffix'))
-
-        # There was no pattern found, propose one
         return "%s %s %04d/%02d/00000" % (self.journal_id.code, _('Statement'), self.date.year, self.date.month)
 
 
