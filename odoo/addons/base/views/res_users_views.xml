@@ -215,7 +215,7 @@
                                         <field name="active" invisible="1"/>
                                         <label for="lang" />
                                         <div class="o_row">
-                                            <field name="lang"/>
+                                            <field name="lang" required="1"/>
                                             <button
                                                 type="action"
                                                 name="%(base.res_lang_act_window)d"
@@ -353,7 +353,7 @@
                         <group>
                             <label for="lang"/>
                             <div class="o_row">
-                                <field name="lang" readonly="0"/>
+                                <field name="lang" required="1" readonly="0"/>
                                 <button
                                     type="action"
                                     name="%(base.res_lang_act_window)d"
