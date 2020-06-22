@@ -36,6 +36,7 @@ class AccountMove(models.Model):
     _order = 'date desc, name desc, id desc'
     _mail_post_access = 'read'
     _check_company_auto = True
+    _sequence_index = "journal_id"
 
     @property
     def _sequence_monthly_regex(self):
@@ -1088,21 +1089,6 @@ class AccountMove(models.Model):
 
     def _get_starting_sequence(self):
         self.ensure_one()
-        # Try to find a pattern already used by relaxing a domain. If we are here, the domain non relaxed should return nothing.
-        last_sequence = self._get_last_sequence(relaxed=True)
-        if last_sequence:
-            domain = [('journal_id', '=', self.journal_id.id), ('id', '!=', self.id or self._origin.id), ('name', 'not in', ('/', False))]
-            reference_move = self.search(domain + [('date', '<=', self.date)], order='date desc', limit=1) or self.search(domain, order='date asc', limit=1)
-            sequence_number_reset = self._deduce_sequence_number_reset(reference_move.name)
-            if sequence_number_reset == 'year':
-                sequence = re.match(self._sequence_yearly_regex, last_sequence)
-                if sequence:
-                    return '%s%04d%s%s%s' % (sequence.group('prefix1'), self.date.year, sequence.group('prefix2'), "0" * len(sequence.group('seq')), sequence.group('suffix'))
-            elif sequence_number_reset == 'month':
-                sequence = re.match(self._sequence_monthly_regex, last_sequence)
-                if sequence:
-                    return '%s%04d%s%02d%s%s%s' % (sequence.group('prefix1'), self.date.year, sequence.group('prefix2'), self.date.month, sequence.group('prefix3'), "0" * len(sequence.group('seq')), sequence.group('suffix'))
-
         starting_sequence = "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
         if self.journal_id.refund_sequence and self.move_type in ('out_refund', 'in_refund'):
             starting_sequence = "R" + starting_sequence
