@@ -59,6 +59,9 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
 
         /**
          * Press the numpad in sequence based on the given space-separated keys.
+         * Note: Maximum of 2 characters because NumberBuffer only allows 2 consecutive
+         * fast inputs. Fast inputs is the case in tours.
+         *
          * @param {String} keys space-separated numpad keys
          */
         pressNumpad(keys) {
