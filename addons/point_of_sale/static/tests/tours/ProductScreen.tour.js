@@ -27,6 +27,7 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
 
     // Check effects of clicking numpad buttons
     ProductScreen.do.clickOrderline('Letter Tray', '1');
+    ProductScreen.check.selectedOrderlineHas('Letter Tray', '1.0');
     ProductScreen.do.pressNumpad('Backspace');
     ProductScreen.check.selectedOrderlineHas('Letter Tray', '0.0', '0.0');
     ProductScreen.do.pressNumpad('Backspace');
@@ -46,10 +47,10 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     ProductScreen.do.pressNumpad('Price');
     ProductScreen.do.pressNumpad('1');
     ProductScreen.check.selectedOrderlineHas('Desk Organizer', '123.5', '123.5');
-    ProductScreen.do.pressNumpad('1 . 0');
+    ProductScreen.do.pressNumpad('1 .');
     ProductScreen.check.selectedOrderlineHas('Desk Organizer', '123.5', '1,358.5');
     ProductScreen.do.pressNumpad('Disc');
-    ProductScreen.do.pressNumpad('5 . 0');
+    ProductScreen.do.pressNumpad('5 .');
     ProductScreen.check.selectedOrderlineHas('Desk Organizer', '123.5', '1,290.58');
     ProductScreen.do.pressNumpad('Qty');
     ProductScreen.do.pressNumpad('Backspace');
@@ -76,22 +77,29 @@ odoo.define('point_of_sale.tour.ProductScreen', function (require) {
     ProductScreen.do.clickOrderline('Whiteboard Pen', '1.0');
     ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '1.0');
     ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Whiteboard Pen', '0.0');
     ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Monitor Stand', '1.0');
     ProductScreen.do.clickOrderline('Wall Shelf Unit', '1.0');
     ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', '1.0');
     ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Wall Shelf Unit', '0.0');
     ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Monitor Stand', '1.0');
     ProductScreen.do.clickOrderline('Small Shelf', '1.0');
     ProductScreen.check.selectedOrderlineHas('Small Shelf', '1.0');
     ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Small Shelf', '0.0');
     ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Monitor Stand', '1.0');
     ProductScreen.do.clickOrderline('Magnetic Board', '1.0');
     ProductScreen.check.selectedOrderlineHas('Magnetic Board', '1.0');
     ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Magnetic Board', '0.0');
     ProductScreen.do.pressNumpad('Backspace');
-    // Monitor Stand should be automatically selected at this point
     ProductScreen.check.selectedOrderlineHas('Monitor Stand', '1.0');
     ProductScreen.do.pressNumpad('Backspace');
+    ProductScreen.check.selectedOrderlineHas('Monitor Stand', '0.0');
     ProductScreen.do.pressNumpad('Backspace');
     ProductScreen.check.orderIsEmpty();
 

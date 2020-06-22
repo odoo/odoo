@@ -153,15 +153,24 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
             });
             if (!confirmed) return;
             try {
+                const originalSelectedTableId = this.state.selectedTableId;
                 await this.rpc({
                     model: 'restaurant.table',
                     method: 'create_from_ui',
-                    args: [{ active: false, id: this.state.selectedTableId }],
+                    args: [{ active: false, id: originalSelectedTableId }],
                 });
                 this.activeFloor.tables = this.activeTables.filter(
-                    (table) => table.id !== this.state.selectedTableId
+                    (table) => table.id !== originalSelectedTableId
                 );
-                this.state.selectedTableId = null;
+                // Value of an object can change inside async function call.
+                //   Which means that in this code block, the value of `state.selectedTableId`
+                //   before the await call can be different after the finishing the await call.
+                // Since we wanted to disable the selected table after deletion, we should be
+                //   setting the selectedTableId to null. However, we only do this if nothing
+                //   else is selected during the rpc call.
+                if (this.state.selectedTableId === originalSelectedTableId) {
+                    this.state.selectedTableId = null;
+                }
             } catch (error) {
                 if (error.message.code < 0) {
                     await this.showPopup('OfflineErrorPopup', {
