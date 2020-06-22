@@ -33,6 +33,7 @@ class SequenceMixin(models.AbstractModel):
             index_name = self._table + '_sequence_index'
             self.env.cr.execute('SELECT indexname FROM pg_indexes WHERE indexname = %s', (index_name,))
             if not self.env.cr.fetchone():
+<<<<<<< HEAD
                 self.env.cr.execute(sql.SQL("""
                     CREATE INDEX {index_name} ON {table} ({sequence_index}, sequence_prefix desc, sequence_number desc, {field});
                     CREATE INDEX {index2_name} ON {table} ({sequence_index}, id desc, sequence_prefix);
@@ -42,6 +43,16 @@ class SequenceMixin(models.AbstractModel):
                     index2_name=sql.Identifier(index_name + "2"),
                     table=sql.Identifier(self._table),
                     field=sql.Identifier(self._sequence_field),
+=======
+                self.env.cr.execute("""
+                    CREATE INDEX {index_name} ON {table} ({sequence_index}, sequence_prefix desc, sequence_number desc, {field});
+                    CREATE INDEX {index_name}2 ON {table} ({sequence_index}, id desc, sequence_prefix);
+                """.format(
+                    sequence_index=self._sequence_index,
+                    index_name=index_name,
+                    table=self._table,
+                    field=self._sequence_field,
+>>>>>>> adaa88c8df7... temp
                 ))
 
     @api.depends(lambda self: [self._sequence_field])
