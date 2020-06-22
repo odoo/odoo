@@ -107,6 +107,20 @@
     justify-self: center;
 }
 
+.o_Composer_subject {
+    border-top: $border-width solid $border-color;
+    border-right: $border-width solid $border-color;
+    border-left: $border-width solid $border-color;
+    border-radius: $o-mail-rounded-rectangle-border-radius-sm $o-mail-rounded-rectangle-border-radius-sm 0 0;
+}
+
+.o_Composer_subjectInput {
+    display: flex;
+    flex: 1;
+    padding: map-get($spacers, 2) map-get($spacers, 3);
+    border: 0;
+}
+
 .o_Composer_textInput {
     flex: 1 1 auto;
     align-self: stretch;
@@ -114,10 +128,6 @@
     &:not(.o-composer-is-compact) {
         border: 0;
         min-height: 40px;
-
-        .note-editable {
-            min-height: 40px;
-        }
     }
 }
 
@@ -170,25 +180,10 @@
 
 .o_Composer {
     background-color: lighten(gray('300'), 7%);
+}
 
-    &.o-has-current-partner-avatar {
-
-        .o_Composer_actionButtons.o-composer-is-compact > *:last-child {
-            border-radius: 0 10px 10px 0;
-        }
-
-        .o_Composer_textInput {
-            border-radius: 10px 0 0 10px;
-
-            > .note-editor {
-                border-radius: 10px 0 0 10px;
-
-                > .note-editing-area {
-                    border-radius: 10px 0 0 10px;
-                }
-            }
-        }
-    }
+.o_Composer_actionButton.o-last.o-has-current-partner-avatar.o-composer-is-compact {
+    border-radius: 0 $o-mail-rounded-rectangle-border-radius-lg $o-mail-rounded-rectangle-border-radius-lg 0;
 }
 
 .o_Composer_button.o-composer-is-compact {
@@ -209,8 +204,12 @@
 
 .o_Composer_coreMain:not(.o-composer-is-compact) {
     background: white;
-    border-radius: 5px;
     border: 1px solid lighten(gray('400'), 5%);
+
+    // textarea should be all rounded but only when there is no subject field above
+    &:not(.o-composer-is-extended) {
+        border-radius: $o-mail-rounded-rectangle-border-radius-lg;
+    }
 }
 
 .o_Composer_textInput {
@@ -224,6 +223,11 @@
 
     &:not(.o-composer-is-compact) {
         border: 0;
+        border-radius: $o-mail-rounded-rectangle-border-radius-lg;
+    }
+
+    &.o-has-current-partner-avatar.o-composer-is-compact {
+        border-radius: $o-mail-rounded-rectangle-border-radius-lg 0 0 $o-mail-rounded-rectangle-border-radius-lg;
     }
 }
 

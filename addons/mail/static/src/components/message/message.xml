@@ -49,7 +49,7 @@
                                 />
                             </t>
                         </div>
-                        <t t-if="message.isCurrentPartnerAuthor and threadViewer and threadViewer.thread">
+                        <t t-if="message.isCurrentPartnerAuthor and threadViewer and threadViewer.thread and threadViewer.thread.hasSeenIndicators">
                             <MessageSeenIndicator class="o_Message_seenIndicator o-message-squashed" messageLocalId="message.localId" threadLocalId="threadViewer.thread.localId"/>
                         </t>
                     </t>
