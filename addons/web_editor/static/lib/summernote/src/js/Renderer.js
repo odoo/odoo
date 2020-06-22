@@ -843,6 +843,8 @@ define([
       }
 
       //03 editing area
+      // TODO: add control + right shift and control + left shift to switch writing direction between RTL and LTR
+      // TODO: fix when odoo adds o_rtl and switches the views to RTL, it makes writing in RTL fine, but buggy in LTR
       var $editingArea = $('<div class="note-editing-area" />');
       //03. create editable
       var isContentEditable = !$holder.is(':disabled');
@@ -875,7 +877,8 @@ define([
       $editingArea.prependTo($editor);
 
       //06. create Toolbar
-      var $toolbar = $('<div class="note-toolbar panel-heading" />');
+      // TODO: make a RTL version of the note-toolbar of html field instead of forcing note-toolbar to stay LTR
+      var $toolbar = $('<div class="note-toolbar panel-heading" style="direction:ltr;"/>');
       for (var idx = 0, len = options.toolbar.length; idx < len; idx ++) {
         var groupName = options.toolbar[idx][0];
         var groupButtons = options.toolbar[idx][1];
