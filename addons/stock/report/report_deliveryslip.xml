@@ -25,10 +25,10 @@
                         <div t-if="o.state" class="col-auto" name="div_sched_date">
                             <strong>Shipping Date:</strong>
                             <t t-if="o.state == 'done'">
-                                <p t-field="o.date_done" t-options='{"widget": "date"}'/>
+                                <p t-field="o.date_done"/>
                             </t>
                             <t t-if="o.state != 'done'">
-                                <p t-field="o.scheduled_date" t-options='{"widget": "date"}'/>
+                                <p t-field="o.scheduled_date"/>
                            </t>
                         </div>
                     </div>
