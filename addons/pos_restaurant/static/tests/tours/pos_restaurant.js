@@ -71,6 +71,10 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
     function open_table(table_id, order_count) {
         order_count = order_count || null;
         var steps = [{
+            content: 'wait for sync to finish',
+            trigger: '.oe_status .js_connected',
+            run: function() {},
+        },{
             content: 'open table ' + table_id,
             trigger: '.label:contains(' + table_id +')',
             run: 'click',
@@ -99,6 +103,10 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
 
     function finish_order() {
         var steps = [{
+            content: "validate button is highlighted",
+            trigger: '.payment-screen .button.next.highlight',
+            run: function() {},
+        },{
             content: "validate the order",
             trigger: '.payment-screen .button.next:visible',
         }];
@@ -134,7 +142,6 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
     steps = steps.concat(add_product_to_order('Minute Maid'));
     steps = steps.concat(verify_order_total('4.40'));
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
-    steps = steps.concat(generate_payment_screen_keypad_steps('6.05'));
     steps = steps.concat(finish_order());
     steps = steps.concat(open_table('T5', 1));
     steps = steps.concat(verify_order_total('4.40'));
@@ -143,8 +150,14 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         trigger: '.neworder-button',
         run: 'click',
     }]);
+    steps = steps.concat([{
+        content: 'order should be empty',
+        trigger: '.order .order-empty',
+        run: function() {},
+    }]);
     steps = steps.concat(add_product_to_order('Coca-Cola'));
     steps = steps.concat(add_product_to_order('Minute Maid'));
+    steps = steps.concat(verify_order_total('4.40'));
     steps = steps.concat([{
         content: 'back to floor',
         trigger: '.floor-button',
@@ -163,10 +176,6 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         content: 'back to floor',
         trigger: '.floor-button',
         run: 'click',
-    }, {
-        content: 'back to floor',
-        trigger: '.oe_status .js_connected',
-        run: function() {},
     }]);
     steps = steps.concat(open_table('T5', 1));
 
@@ -196,9 +205,8 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         run: function () {},
     })
     steps = steps.concat(generate_product_screen_keypad_steps('1'));
-
+    steps = steps.concat(verify_order_total('4.40'));
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
-    steps = steps.concat(generate_payment_screen_keypad_steps('4.4'));
     steps = steps.concat(finish_order());
     steps = steps.concat(open_table('T2'));
 
@@ -224,6 +232,11 @@ odoo.define('pos_reataurant.tour.synchronized_table_management', function (requi
         content: 'click backspace to remove line',
         trigger: '.numpad-backspace',
         run: 'click',
+    }]);
+    steps = steps.concat([{
+        content: 'order should be empty',
+        trigger: '.order .order-empty',
+        run: function() {},
     }]);
     steps = steps.concat([{
         content: 'back to floor',

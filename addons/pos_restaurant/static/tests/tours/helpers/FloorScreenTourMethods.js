@@ -122,6 +122,7 @@ odoo.define('pos_restaurant.tour.FloorScreenTourMethods', function (require) {
                 {
                     content: `number of seats in table '${table}' is '${val}'`,
                     trigger: `.floor-map .tables .table .label:contains("${table}") ~ .table-seats:contains("${val}")`,
+                    run: () => {},
                 },
             ];
         }

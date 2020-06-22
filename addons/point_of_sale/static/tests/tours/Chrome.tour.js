@@ -12,19 +12,21 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
 
     // Order 1 is at Product Screen
     ProductScreen.do.clickHomeCategory();
-    ProductScreen.exec.order('Desk Pad', '1', '2');
+    ProductScreen.exec.order('Desk Pad', '1', '2', '2.0');
 
     // Order 2 is at Payment Screen
     Chrome.do.newOrder();
-    ProductScreen.exec.order('Monitor Stand', '3', '4');
+    ProductScreen.exec.order('Monitor Stand', '3', '4', '12.0');
     ProductScreen.do.clickPayButton();
     PaymentScreen.check.isShown();
 
     // Order 3 is at Receipt Screen
     Chrome.do.newOrder();
-    ProductScreen.exec.order('Whiteboard Pen', '5', '6');
+    ProductScreen.exec.order('Whiteboard Pen', '5', '6', '30.0');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.validateButtonIsHighlighted(true);
     PaymentScreen.do.clickValidate();
     ReceiptScreen.check.isShown();
 
@@ -47,6 +49,8 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Cash');
     PaymentScreen.do.pressNumpad('2 0');
+    PaymentScreen.check.remainingIs('0.0');
+    PaymentScreen.check.validateButtonIsHighlighted(true);
     PaymentScreen.do.clickValidate();
     ReceiptScreen.check.changeIs('18.0');
 
