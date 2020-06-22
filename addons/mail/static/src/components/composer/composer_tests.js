@@ -58,12 +58,87 @@ QUnit.module('composer_tests.js', {
     },
 });
 
-QUnit.test('composer text input: basic rendering', async function (assert) {
+QUnit.test('composer text input: basic rendering when posting a message', async function (assert) {
     assert.expect(5);
 
     await this.start();
-    const composer = this.env.models['mail.composer'].create();
-    await this.createComposerComponent(composer);
+    const thread = this.env.models['mail.thread'].create({
+        composer: [['create', { isLog: false }]],
+        id: 20,
+        model: 'res.partner',
+    });
+    await this.createComposerComponent(thread.composer);
+    assert.strictEqual(
+        document.querySelectorAll('.o_Composer').length,
+        1,
+        "should have composer in discuss thread"
+    );
+    assert.strictEqual(
+        document.querySelectorAll('.o_Composer_textInput').length,
+        1,
+        "should have text input inside discuss thread composer"
+    );
+    assert.ok(
+        document.querySelector('.o_Composer_textInput').classList.contains('o_ComposerTextInput'),
+        "composer text input of composer should be a ComposerTextIput component"
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_ComposerTextInput_textarea`).length,
+        1,
+        "should have editable part inside composer text input"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        "Send a message to followers...",
+        "should have 'Send a message to followers...' as placeholder composer text input"
+    );
+});
+
+QUnit.test('composer text input: basic rendering when logging note', async function (assert) {
+    assert.expect(5);
+
+    await this.start();
+    const thread = this.env.models['mail.thread'].create({
+        composer: [['create', { isLog: true }]],
+        id: 20,
+        model: 'res.partner',
+    });
+    await this.createComposerComponent(thread.composer);
+    assert.strictEqual(
+        document.querySelectorAll('.o_Composer').length,
+        1,
+        "should have composer in discuss thread"
+    );
+    assert.strictEqual(
+        document.querySelectorAll('.o_Composer_textInput').length,
+        1,
+        "should have text input inside discuss thread composer"
+    );
+    assert.ok(
+        document.querySelector('.o_Composer_textInput').classList.contains('o_ComposerTextInput'),
+        "composer text input of composer should be a ComposerTextIput component"
+    );
+    assert.strictEqual(
+        document.querySelectorAll(`.o_ComposerTextInput_textarea`).length,
+        1,
+        "should have editable part inside composer text input"
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
+        "Log an internal note...",
+        "should have 'Log an internal note...' as placeholder in composer text input if composer is log"
+    );
+});
+
+QUnit.test('composer text input: basic rendering when linked thread is a mail.channel', async function (assert) {
+    assert.expect(5);
+
+    await this.start();
+    const thread = this.env.models['mail.thread'].create({
+        id: 20,
+        model: 'mail.channel',
+    });
+    await this.createComposerComponent(thread.composer);
     assert.strictEqual(
         document.querySelectorAll('.o_Composer').length,
         1,
@@ -86,7 +161,7 @@ QUnit.test('composer text input: basic rendering', async function (assert) {
     assert.strictEqual(
         document.querySelector(`.o_ComposerTextInput_textarea`).placeholder,
         "Write something...",
-        "should have placeholder in note editable of composer text input"
+        "should have 'Write something...' as placeholder in composer text input if composer is for a 'mail.channel'"
     );
 });
 
