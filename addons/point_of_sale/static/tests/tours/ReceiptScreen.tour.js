@@ -11,9 +11,11 @@ odoo.define('point_of_sale.tour.ReceiptScreen', function (require) {
     startSteps();
 
     // press close button in receipt screen
-    ProductScreen.exec.addOrderline('Letter Tray', '10', '5.0');
+    ProductScreen.exec.addOrderline('Letter Tray', '10', '5');
+    ProductScreen.check.selectedOrderlineHas('Letter Tray', '10');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.check.validateButtonIsHighlighted(true);
     PaymentScreen.do.clickValidate();
     ReceiptScreen.check.receiptIsThere();
     // letter tray has 10% tax (search SRC)
@@ -22,15 +24,19 @@ odoo.define('point_of_sale.tour.ReceiptScreen', function (require) {
 
     // send email in receipt screen
     ProductScreen.do.clickHomeCategory();
-    ProductScreen.exec.addOrderline('Desk Pad', '6', '5.0');
-    ProductScreen.exec.addOrderline('Whiteboard Pen', '6', '6.1');
-    ProductScreen.exec.addOrderline('Monitor Stand', '6', '1.3');
+    ProductScreen.exec.addOrderline('Desk Pad', '6', '5', '30.0');
+    ProductScreen.exec.addOrderline('Whiteboard Pen', '6', '6', '36.0');
+    ProductScreen.exec.addOrderline('Monitor Stand', '6', '1', '6.0');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Cash');
-    PaymentScreen.do.pressNumpad('8 0 0');
+    PaymentScreen.do.pressNumpad('7 0');
+    PaymentScreen.check.remainingIs('2.0');
+    PaymentScreen.do.pressNumpad('0');
+    PaymentScreen.check.remainingIs('0.00');
+    PaymentScreen.check.changeIs('628.0');
     PaymentScreen.do.clickValidate();
     ReceiptScreen.check.receiptIsThere();
-    ReceiptScreen.check.totalAmountContains('74.4');
+    ReceiptScreen.check.totalAmountContains('72.0');
     ReceiptScreen.do.setEmail('test@receiptscreen.com');
     ReceiptScreen.do.clickSend();
     ReceiptScreen.check.emailIsSuccessful();
@@ -38,7 +44,7 @@ odoo.define('point_of_sale.tour.ReceiptScreen', function (require) {
 
     // order with tip
     // check if tip amount is displayed
-    ProductScreen.exec.addOrderline('Desk Pad', '6', '5.0');
+    ProductScreen.exec.addOrderline('Desk Pad', '6', '5');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickTipButton();
     NumberPopup.do.pressNumpad('1');

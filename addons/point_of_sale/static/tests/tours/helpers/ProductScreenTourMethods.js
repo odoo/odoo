@@ -52,6 +52,9 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
 
         /**
          * Press the numpad in sequence based on the given space-separated keys.
+         * NOTE: Maximum of 2 characters because NumberBuffer only allows 2 consecutive
+         * fast inputs. Fast inputs is the case in tours.
+         *
          * @param {String} keys space-separated numpad keys
          */
         pressNumpad(keys) {
@@ -187,18 +190,43 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                     content: `order total amount is '${amount}'`,
                     trigger: `.order-container .order .summary .value:contains("${amount}")`,
                     run: () => {},
+                }
+            ]
+        }
+        modeIsActive(mode) {
+            return [
+                {
+                    content: `'${mode}' is active`,
+                    trigger: `.numpad button.selected-mode:contains('${mode}')`,
+                    run: function () {},
                 },
             ];
         }
     }
 
     class Execute {
-        addOrderline(productName, quantity, price) {
+        /**
+         * Create an orderline for the given `productName` and `quantity`.
+         * - If `unitPrice` is provided, price of the product of the created line
+         *   is changed to that value.
+         * - If `expectedTotal` is provided, the created orderline (which is the currently
+         *   selected orderline) is checked if it contains the correct quantity and total
+         *   price.
+         *
+         * @param {string} productName
+         * @param {string} quantity
+         * @param {string} unitPrice
+         * @param {string} expectedTotal
+         */
+        addOrderline(productName, quantity, unitPrice = undefined, expectedTotal = undefined) {
             const res = this._do.clickDisplayedProduct(productName);
-            if (price) {
+            if (unitPrice) {
                 res.push(...this._do.pressNumpad('Price'));
-                res.push(...this._do.pressNumpad(price.toString().split('').join(' ')));
+                res.push(...this._check.modeIsActive('Price'));
+                res.push(...this._do.pressNumpad(unitPrice.toString().split('').join(' ')));
+                res.push(...this._check.selectedOrderlineHas(productName, '1.0', unitPrice));
                 res.push(...this._do.pressNumpad('Qty'));
+                res.push(...this._check.modeIsActive('Qty'));
             }
             for (let char of quantity.toString()) {
                 if ('.0123456789'.includes(char)) {
@@ -206,6 +234,11 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 } else if ('-'.includes(char)) {
                     res.push(...this._do.pressNumpad('+/-'));
                 }
+            }
+            if (expectedTotal) {
+                res.push(...this._check.selectedOrderlineHas(productName, quantity, expectedTotal));
+            } else {
+                res.push(...this._check.selectedOrderlineHas(productName, quantity));
             }
             return res;
         }

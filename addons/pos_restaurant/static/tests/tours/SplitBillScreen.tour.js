@@ -15,9 +15,9 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     startSteps();
 
     FloorScreen.do.clickTable('T2');
-    ProductScreen.exec.addOrderline('Water', '5', '1.2');
-    ProductScreen.exec.addOrderline('Minute Maid', '3', '1.2');
-    ProductScreen.exec.addOrderline('Coca-Cola', '1', '1.2');
+    ProductScreen.exec.addOrderline('Water', '5', '2', '10.0');
+    ProductScreen.exec.addOrderline('Minute Maid', '3', '2', '6.0');
+    ProductScreen.exec.addOrderline('Coca-Cola', '1', '2', '2.0');
     ProductScreen.do.clickSplitBillButton();
 
     // Check if the screen contains all the orderlines
@@ -31,10 +31,10 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     SplitBillScreen.do.clickOrderline('Water');
     SplitBillScreen.do.clickOrderline('Water');
     SplitBillScreen.check.orderlineHas('Water', '5', '3');
-    SplitBillScreen.check.subtotalIs('3.60')
+    SplitBillScreen.check.subtotalIs('6.0')
     SplitBillScreen.do.clickOrderline('Coca-Cola');
     SplitBillScreen.check.orderlineHas('Coca-Cola', '1', '1');
-    SplitBillScreen.check.subtotalIs('4.80')
+    SplitBillScreen.check.subtotalIs('8.0')
 
     // click pay to split, go back to check the lines
     SplitBillScreen.do.clickPay();

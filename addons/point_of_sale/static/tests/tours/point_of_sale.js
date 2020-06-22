@@ -152,20 +152,43 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "change qty to 2 kg",
         trigger: ".numpad button.input-button:visible:contains('2')",
     }, {
+        content: "qty of Wall Shelf line should be 2",
+        trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf')",
+        extra_trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Wall Shelf') ~ .info-list .info em:contains('2.0')",
+        run: function() {},
+    }, {
         content: "verify that unit price of shelf changed to $1",
         trigger: ".total > .value:contains('$ 2.00')",
+        run: function() {},
     }, {
         content: "order different shelf",
         trigger: ".product:contains('Small Shelf')",
     }, {
+        content: "Small Shelf line should be selected with quantity 1",
+        trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf')",
+        extra_trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf') ~ .info-list .info em:contains('1.0')",
+        run: function() {}
+    }, {
         content: "change to price mode",
         trigger: ".numpad button:contains('Price')",
+    }, {
+        content: "make sure price mode is activated",
+        trigger: ".numpad button.selected-mode:contains('Price')",
+        run: function() {},
     }, {
         content: "manually override the unit price of these shelf to $5",
         trigger: ".numpad button.input-button:visible:contains('5')",
     }, {
+        content: "Small Shelf line should be selected with unit price of 5",
+        trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf')",
+        extra_trigger: ".order-container .orderlines .orderline.selected .product-name:contains('Small Shelf') ~ .price:contains('5.0')",
+    }, {
         content: "change back to qty mode",
         trigger: ".numpad button:contains('Qty')",
+    }, {
+        content: "make sure qty mode is activated",
+        trigger: ".numpad button.selected-mode:contains('Qty')",
+        run: function() {},
     }, {
         content: "click pricelist button",
         trigger: ".control-button.o_pricelist_button",
@@ -173,8 +196,7 @@ odoo.define('point_of_sale.tour.pricelist', function (require) {
         content: "select public pricelist",
         trigger: ".selection-item:contains('Public Pricelist')",
     }, {
-        content: "verify that the boni shelf have been recomputed and the\
-shelf have not (their price was manually overridden)",
+        content: "verify that the boni shelf have been recomputed and the shelf have not (their price was manually overridden)",
         trigger: ".total > .value:contains('$ 8.96')",
     }, {
         content: "click pricelist button",
@@ -206,7 +228,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }, {
             content: 'the ' + product_name + ' have been added to the order',
             trigger: '.order .product-name:contains("' + product_name + '")',
-            run: function () {}, // it's a check
+            run: function () {},
         }];
     }
 
@@ -220,7 +242,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }, {
             content: 'the fiscal position ' + fp_name + ' has been set to the order',
             trigger: '.control-button.o_fiscal_position_button:contains("' + fp_name + '")',
-            run: function () {}, // it's a check
+            run: function () {},
         }];
     }
 
@@ -233,20 +255,49 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
                 trigger: keypad_selector + ' .input-button:contains("' + current_char + '"):visible'
             });
         }
-        steps.push({
-            content: 'do nothing check',
-            trigger: '.pos',
-            run: function () {},
-        })
         return steps;
     }
 
-    function generate_payment_screen_keypad_steps(amount_str) {
-        return generate_keypad_steps(amount_str, '.payment-numpad');
+    function press_payment_numpad(val) {
+        return [{
+            content: `press ${val} on payment screen numpad`,
+            trigger: `.payment-numpad .input-button:contains("${val}"):visible`,
+        }]
     }
 
-    function generate_product_screen_keypad_steps(amount_str) {
-        return generate_keypad_steps(amount_str, '.numpad');
+    function press_product_numpad(val) {
+        return [{
+            content: `press ${val} on product screen numpad`,
+            trigger: `.numpad .input-button:contains("${val}"):visible`,
+        }]
+    }
+
+    function selected_payment_has(name, val) {
+        return [{
+            content: `selected payment is ${name} and has ${val}`,
+            trigger: `.paymentlines .paymentline.selected .payment-name:contains("${name}")`,
+            extra_trigger: `.paymentlines .paymentline.selected .payment-name:contains("${name}") ~ .payment-amount:contains("${val}")`,
+            run: function () {},
+        }]
+    }
+
+    function selected_orderline_has({ product, price = null, quantity = null }) {
+        const result = [];
+        if (price !== null) {
+            result.push({
+                content: `Selected line has product '${product}' and price '${price}'`,
+                trigger: `.order-container .orderlines .orderline.selected .product-name:contains("${product}") ~ span.price:contains("${price}")`,
+                run: function () {},
+            });
+        }
+        if (quantity !== null) {
+            result.push({
+                content: `Selected line has product '${product}' and quantity '${quantity}'`,
+                trigger: `.order-container .orderlines .orderline.selected .product-name:contains('${product}') ~ .info-list .info em:contains('${quantity}')`,
+                run: function () {},
+            });
+        }
+        return result;
     }
 
     function verify_order_total(total_str) {
@@ -274,7 +325,7 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         }, {
             content: "verify that the order has been successfully sent to the backend",
             trigger: ".js_connected:visible",
-            run: function () {}, // it's a check
+            run: function () {},
         }, {
             content: "click Next Order",
             trigger: '.receipt-screen .button.next.highlight:visible',
@@ -288,11 +339,10 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
     var steps = [{
             content: 'waiting for loading to finish',
             trigger: 'body:not(:has(.loader))',
-            run: function () {}, // it's a check
+            run: function () {},
         }, { // Leave category displayed by default
             content: "click category switch",
             trigger: ".breadcrumb-home",
-            run: 'click',
         }];
 
     steps = steps.concat(add_product_to_order('Desk Organizer'));
@@ -310,15 +360,16 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
             remaining := 0.00
             change := 1.50
     */
-    steps = steps.concat(generate_payment_screen_keypad_steps("5.20"));
+    steps = steps.concat(press_payment_numpad('5'));
+    steps = steps.concat(selected_payment_has('Cash', '5.0'));
     steps = steps.concat([{
         content: "verify remaining",
-        trigger: '.payment-status-remaining .amount:contains("5.00")',
-        run: function () {}, // it's a check
+        trigger: '.payment-status-remaining .amount:contains("5.20")',
+        run: function () {},
     }, {
         content: "verify change",
         trigger: '.payment-status-change .amount:contains("0.00")',
-        run: function () {}, // it's a check
+        run: function () {},
     }]);
 
     /*  make additional payment line of 6.50
@@ -333,30 +384,39 @@ odoo.define('point_of_sale.tour.acceptance', function (require) {
         content: "pay with cash",
         trigger: '.paymentmethod:contains("Cash")',
     }]);
-    steps = steps.concat(generate_payment_screen_keypad_steps("6.50"));
-
+    steps = steps.concat(selected_payment_has('Cash', '5.2'));
+    steps = steps.concat(press_payment_numpad('6'))
+    steps = steps.concat(selected_payment_has('Cash', '6.0'));
     steps = steps.concat([{
         content: "verify remaining",
         trigger: '.payment-status-remaining .amount:contains("0.00")',
-        run: function () {}, // it's a check
+        run: function () {},
     }, {
         content: "verify change",
-        trigger: '.payment-status-change .amount:contains("1.50")',
-        run: function () {}, // it's a check
+        trigger: '.payment-status-change .amount:contains("0.80")',
+        run: function () {},
     }]);
 
     steps = steps.concat(finish_order());
 
     // test opw-672118 orderline subtotal rounding
     steps = steps.concat(add_product_to_order('Desk Organizer'));
-    steps = steps.concat(generate_product_screen_keypad_steps('.999')); // sets orderline qty
-    steps = steps.concat(verify_order_total('5.09'));
+    steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '1.0'}));
+    steps = steps.concat(press_product_numpad('.'))
+    steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '0.0', price: '0.0'}));
+    steps = steps.concat(press_product_numpad('9'))
+    steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '0.9', price: '4.59'}));
+    steps = steps.concat(press_product_numpad('9'))
+    steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '0.99', price: '5.05'}));
+    steps = steps.concat(press_product_numpad('9'))
+    steps = steps.concat(selected_orderline_has({product: 'Desk Organizer', quantity: '0.999', price: '5.09'}));
     steps = steps.concat(goto_payment_screen_and_select_payment_method());
-    steps = steps.concat(generate_payment_screen_keypad_steps("10"));
+    steps = steps.concat(selected_payment_has('Cash', '5.09'));
     steps = steps.concat(finish_order());
 
     // Test fiscal position one2many map (align with backend)
     steps = steps.concat(add_product_to_order('Letter Tray'));
+    steps = steps.concat(selected_orderline_has({product: 'Letter Tray', quantity: '1.0'}));
     steps = steps.concat(verify_order_total('5.28'));
     steps = steps.concat(set_fiscal_position_on_order('FP-POS-2M'));
     steps = steps.concat(verify_order_total('5.52'));

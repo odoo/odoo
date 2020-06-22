@@ -5,6 +5,9 @@ odoo.define('point_of_sale.tour.NumberPopupTourMethods', function (require) {
 
     class Do {
         /**
+         * Note: Maximum of 2 characters because NumberBuffer only allows 2 consecutive
+         * fast inputs. Fast inputs is the case in tours.
+         *
          * @param {String} keys space-separated input keys
          */
         pressNumpad(keys) {
