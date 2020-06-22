@@ -40,7 +40,7 @@ class StockValuationLayerRevaluation(models.TransientModel):
     reason = fields.Char("Reason", help="Reason of the revaluation")
 
     account_journal_id = fields.Many2one('account.journal', "Journal", required=True, check_company=True)
-    account_id = fields.Many2one('account.account', "Counterpart Account", domain=[('deprecated', '=', False)], required=True, check_company=True)
+    account_id = fields.Many2one('account.account', "Counterpart Account", domain=[('deprecated', '=', False)], check_company=True)
     date = fields.Date("Accounting Date")
 
     @api.depends('current_value_svl', 'current_quantity_svl', 'added_value')
