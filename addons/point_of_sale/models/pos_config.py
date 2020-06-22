@@ -253,7 +253,8 @@ class PosConfig(models.Model):
         """
         for pos_config in self:
             opened_sessions = pos_config.session_ids.filtered(lambda s: not s.state == 'closed')
-            session = pos_config.session_ids.filtered(lambda s: not s.state == 'closed' and not s.rescue)
+            session = pos_config.session_ids.filtered(lambda s: s.user_id.id == self.env.uid and \
+                    not s.state == 'closed' and not s.rescue)
             # sessions ordered by id desc
             pos_config.has_active_session = opened_sessions and True or False
             pos_config.current_session_id = session and session[0].id or False

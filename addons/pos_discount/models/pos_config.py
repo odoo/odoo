@@ -19,6 +19,12 @@ class PosConfig(models.Model):
 
     @api.model
     def _default_discount_value_on_module_install(self):
-        configs = self.env['pos.config'].search([]).filtered(lambda c: not c.current_session_id)
-        for conf in configs:
+        configs = self.env['pos.config'].search([])
+        open_configs = (
+            self.env['pos.session']
+            .search(['|', ('state', '!=', 'closed'), ('rescue', '=', True)])
+            .mapped('config_id')
+        )
+        # Do not modify configs where an opened session exists.
+        for conf in (configs - open_configs):
             conf._default_discount_product_id()
