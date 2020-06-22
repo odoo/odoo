@@ -381,41 +381,6 @@
         ]"/>
     </record>
 
-    <record id="hst14_sale_en" model="account.tax.template">
-        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">HST for sales - 14%</field>
-        <field name="description">HST 14%</field>
-        <field name="type_tax_use">sale</field>
-        <field name="amount">14</field>
-        <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="tax_group_hst_14"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('chart21332_en'),
-            }),
-
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('chart21332_en'),
-            }),
-        ]"/>
-    </record>
-
     <record id="hst15_sale_en" model="account.tax.template">
         <field name="chart_template_id" ref="ca_en_chart_template_en"/>
         <field name="name">HST for sales - 15%</field>
@@ -866,41 +831,6 @@
                 'factor_percent': 100,
                 'repartition_type': 'tax',
                 'account_id': ref('chart11831_en'),
-            }),
-        ]"/>
-    </record>
-
-    <record id="hst14_purc_en" model="account.tax.template">
-        <field name="chart_template_id" ref="ca_en_chart_template_en"/>
-        <field name="name">HST for purchases - 14%</field>
-        <field name="description">HST 14%</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="amount">14</field>
-        <field name="amount_type">percent</field>
-        <field name="tax_group_id" ref="tax_group_hst_14"/>
-        <field name="invoice_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('chart11832_en'),
-            }),
-
-        ]"/>
-        <field name="refund_repartition_line_ids" eval="[(5, 0, 0),
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'base',
-            }),
-
-            (0,0, {
-                'factor_percent': 100,
-                'repartition_type': 'tax',
-                'account_id': ref('chart11832_en'),
             }),
         ]"/>
     </record>
