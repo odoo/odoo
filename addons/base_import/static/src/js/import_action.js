@@ -266,6 +266,7 @@ var DataImport = AbstractAction.extend({
             'MM/DD/YYYY',
             'MM-DD-YY',
             'MM-DD-YYYY',
+            'DD.MM.YYYY',
             'DDMMYY',
             'DDMMYYYY',
             'YYMMDD',
