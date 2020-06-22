@@ -65,6 +65,22 @@ class ComposerTextInput extends Component {
         return this.env.models['mail.composer'].get(this.props.composerLocalId);
     }
 
+    /**
+     * @returns {string}
+     */
+    get textareaPlaceholder() {
+        if (!this.composer) {
+            return "";
+        }
+        if (this.composer.thread && this.composer.thread.model !== 'mail.channel') {
+            if (this.composer.isLog) {
+                return this.env._t("Log an internal note...");
+            }
+            return this.env._t("Send a message to followers...");
+        }
+        return this.env._t("Write something...");
+    }
+
     focusout() {
         this.saveStateInStore();
         this._textareaRef.el.blur();
