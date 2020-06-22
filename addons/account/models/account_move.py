@@ -110,7 +110,11 @@ class AccountMove(models.Model):
     date = fields.Date(string='Date', required=True, index=True, readonly=True,
         states={'draft': [('readonly', False)]},
         default=fields.Date.context_today)
+<<<<<<< HEAD
     ref = fields.Char(string='Reference', copy=False, tracking=True)
+=======
+    ref = fields.Char(string='Reference', copy=False)
+>>>>>>> 56cc8b10fde... temp
     narration = fields.Text(string='Terms and Conditions')
     state = fields.Selection(selection=[
             ('draft', 'Draft'),
