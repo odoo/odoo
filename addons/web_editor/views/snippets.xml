@@ -39,18 +39,83 @@
 </template>
 
 <template id="snippet_options_image_optimization_widgets">
-    <t t-set="filter_label">Color Filter</t>
-    <t t-set="width_label">Width</t>
-    <t t-set="quality_label">Quality</t>
     <div class="o_we_external_warning d-none">
         <we-title title="Quality options are unavailable for external images. If you want to change this image's quality, please first download it from the original source and upload it in Odoo.">
             <i class="fa fa-warning" /> External Image
         </we-title>
     </div>
-    <!-- &emsp; -->
-    <we-colorpicker t-att-string="indent and (' ⌙ %s' % filter_label) or filter_label" data-set-filter="" data-excluded="common, theme"/>
+
+    <t t-set="filter_label">Filter</t>
+    <we-select t-att-string="indent and (' ⌙ %s' % filter_label) or filter_label">
+        <we-button data-gl-filter="">None</we-button>
+        <we-button data-gl-filter="blur">Blur</we-button>
+        <we-button data-gl-filter="1977">1977</we-button>
+        <we-button data-gl-filter="aden">Aden</we-button>
+        <we-button data-gl-filter="brannan">Brannan</we-button>
+        <we-button data-gl-filter="earlybird">EarlyBird</we-button>
+        <we-button data-gl-filter="inkwell">Inkwell</we-button>
+        <we-button data-gl-filter="maven">Maven</we-button>
+        <we-button data-gl-filter="toaster">Toaster</we-button>
+        <we-button data-gl-filter="walden">Walden</we-button>
+        <we-button data-gl-filter="valencia">Valencia</we-button>
+        <we-button data-gl-filter="xpro">Xpro</we-button>
+        <we-button data-gl-filter="custom" data-name="custom_glfilter_opt">Custom</we-button>
+    </we-select>
+    <t t-set="color_label">Color</t>
+    <t t-set="saturation_label">Saturation</t>
+    <t t-set="contrast_label">Contrast</t>
+    <t t-set="brightness_label">Brightness</t>
+    <t t-set="sepia_label">Sepia</t>
+    <t t-set="blur_label">Blur</t>
+    <we-row t-att-string="indent and ('  ⌙ %s' % color_label) or ('⌙ %s' % color_label)">
+        <we-select data-filter-property="blend" data-dependencies="custom_glfilter_opt">
+            <we-button data-custom-filter="normal">Normal</we-button>
+            <we-button data-custom-filter="overlay">overlay</we-button>
+            <we-button data-custom-filter="screen">screen</we-button>
+            <we-button data-custom-filter="multiply">multiply</we-button>
+            <we-button data-custom-filter="lighter">add</we-button>
+            <we-button data-custom-filter="exclusion">exclusion</we-button>
+            <we-button data-custom-filter="darken">darken</we-button>
+            <we-button data-custom-filter="lighten">lighten</we-button>
+        </we-select>
+        <we-colorpicker data-dependencies="custom_glfilter_opt" data-custom-filter="" data-filter-property="filterColor" data-excluded="common, theme"/>
+    </we-row>
+    <we-range t-att-string="indent and ('  ⌙ %s' % saturation_label) or ('⌙ %s' % saturation_label)"
+              data-dependencies="custom_glfilter_opt"
+              data-custom-filter=""
+              data-filter-property="saturation"
+              data-min="-100"
+              data-step="10"/>
+    <we-range t-att-string="indent and ('  ⌙ %s' % contrast_label) or ('⌙ %s' % contrast_label)"
+              data-dependencies="custom_glfilter_opt"
+              data-custom-filter=""
+              data-filter-property="contrast"
+              data-min="-100"
+              data-step="10"/>
+    <we-range t-att-string="indent and ('  ⌙ %s' % brightness_label) or ('⌙ %s' % brightness_label)"
+              data-dependencies="custom_glfilter_opt"
+              data-custom-filter=""
+              data-filter-property="brightness"
+              data-min="-100"
+              data-step="10"/>
+    <we-range t-att-string="indent and ('  ⌙ %s' % sepia_label) or ('⌙ %s' % sepia_label)"
+              data-dependencies="custom_glfilter_opt"
+              data-custom-filter=""
+              data-filter-property="sepia"
+              data-step="5"/>
+    <we-range t-att-string="indent and ('  ⌙ %s' % blur_label) or ('⌙ %s' % blur_label)"
+              data-dependencies="custom_glfilter_opt"
+              data-custom-filter=""
+              data-filter-property="blur"
+              data-max="2000"
+              data-step="100"/>
+
+    <t t-set="width_label">Width</t>
     <we-select t-att-string="indent and (' ⌙ %s' % width_label) or width_label" data-name="width_select_opt"/>
+
+    <t t-set="quality_label">Quality</t>
     <we-range t-att-string="indent and (' ⌙ %s' % quality_label) or quality_label" data-set-quality=""/>
+
     <div class="o_we_image_weight d-none"><small/><b/></div>
 </template>
 
@@ -136,11 +201,11 @@
             </t>
         </div>
 
-        <!-- Color Filter -->
+        <!-- Color filter -->
         <div t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-colorpicker string="⌙ Filter"
+            <we-colorpicker string="⌙ Color filter"
                             data-select-style="true"
                             data-css-property="background-color"
                             data-color-prefix="bg-"
