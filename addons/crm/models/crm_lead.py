@@ -1246,11 +1246,19 @@ class Lead(models.Model):
         :param int team_id: salesteam to assign
         """
         update_vals = {'team_id': team_id} if team_id else {}
-        for index, lead in enumerate(self):
-            if user_ids:
-                update_vals['user_id'] = user_ids[index % len(user_ids)]
-            if update_vals:
-                lead.write(update_vals)
+        if not user_ids:
+            self.write(update_vals)
+        else:
+            lead_ids = self.ids
+            steps = len(user_ids)
+            # pass 1 : lead_ids[0:6:3] = [L1,L4]
+            # pass 2 : lead_ids[1:6:3] = [L2,L5]
+            # pass 3 : lead_ids[2:6:3] = [L3,L6]
+            # ...
+            for idx in range(0, steps):
+                subset_ids = lead_ids[idx:len(lead_ids):steps]
+                update_vals['user_id'] = user_ids[idx]
+                self.env['crm.lead'].browse(subset_ids).write(update_vals)
 
     # ------------------------------------------------------------
     # TOOLS
