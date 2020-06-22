@@ -12,6 +12,7 @@ from odoo import exceptions, tests
 from odoo.addons.test_mail.tests.common import BaseFunctionalTest
 from odoo.addons.test_mail.models.test_mail_models import MailTestActivity
 from odoo.tools import mute_logger
+from odoo.tests.common import Form
 
 
 class TestActivityCommon(BaseFunctionalTest):
@@ -149,6 +150,30 @@ class TestActivityFlow(TestActivityCommon):
         with self.assertNotifications(partner_employee=(0, 'email', 'read')):
             activity.with_user(self.user_admin).write({'user_id': self.user_employee.id})
         self.assertEqual(activity.user_id, self.user_employee)
+
+    @mute_logger('odoo.addons.mail.models.mail_mail')
+    def test_activity_summary_sync(self):
+        """ Test summary from type is copied on activities if set (currently only in form-based onchange) """
+        ActivityType = self.env['mail.activity.type']
+        email_activity_type = ActivityType.create({
+            'name': 'email',
+            'summary': 'Email Summary',
+        })
+        call_activity_type = ActivityType.create({'name': 'call'})
+        with Form(self.env['mail.activity'].with_context(default_res_model_id=self.env.ref('base.model_res_partner'))) as ActivityForm:
+            ActivityForm.res_model_id = self.env.ref('base.model_res_partner')
+
+            ActivityForm.activity_type_id = call_activity_type
+            # activity summary should be empty
+            self.assertEqual(ActivityForm.summary, False)
+
+            ActivityForm.activity_type_id = email_activity_type
+            # activity summary should be replaced with email's default summary
+            self.assertEqual(ActivityForm.summary, email_activity_type.summary)
+
+            ActivityForm.activity_type_id = call_activity_type
+            # activity summary remains unchanged from change of activity type as call activity doesn't have default summary
+            self.assertEqual(ActivityForm.summary, email_activity_type.summary)
 
     def test_action_feedback_attachment(self):
         Partner = self.env['res.partner']

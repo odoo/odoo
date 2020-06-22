@@ -241,7 +241,7 @@ class ResPartner(models.Model):
                       LEFT JOIN account_account_type act ON (a.user_type_id=act.id)
                       WHERE act.type IN ('receivable','payable')
                       AND account_move_line.partner_id IN %s
-                      AND account_move_line.reconciled IS FALSE
+                      AND account_move_line.reconciled IS NOT TRUE
                       """ + where_clause + """
                       GROUP BY account_move_line.partner_id, act.type
                       """, where_params)
