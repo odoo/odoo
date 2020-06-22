@@ -10,7 +10,6 @@ var BasicModel = require('web.BasicModel');
 var viewUtils = require('web.viewUtils');
 
 var KanbanModel = BasicModel.extend({
-
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
@@ -69,28 +68,36 @@ var KanbanModel = BasicModel.extend({
                 context: parent.context, // todo: combine with view context
             })
             .then(function (result) {
-                var newGroup = self._makeDataPoint({
-                    modelName: parent.model,
-                    context: parent.context,
-                    domain: parent.domain.concat([[groupBy,"=",result[0]]]),
-                    fields: parent.fields,
-                    fieldsInfo: parent.fieldsInfo,
-                    isOpen: true,
-                    limit: parent.limit,
-                    parentID: parent.id,
-                    openGroupByDefault: true,
-                    orderedBy: parent.orderedBy,
-                    value: result,
-                    viewType: parent.viewType,
-                });
-                if (parent.progressBar) {
-                    newGroup.progressBarValues = _.extend({
-                        counts: {},
-                    }, parent.progressBar);
-                }
-
-                // newGroup.is_open = true;
+                const createGroupDataPoint = (model, parent) => {
+                    const newGroup = model._makeDataPoint({
+                        modelName: parent.model,
+                        context: parent.context,
+                        domain: parent.domain.concat([[groupBy, "=", result[0]]]),
+                        fields: parent.fields,
+                        fieldsInfo: parent.fieldsInfo,
+                        isOpen: true,
+                        limit: parent.limit,
+                        parentID: parent.id,
+                        openGroupByDefault: true,
+                        orderedBy: parent.orderedBy,
+                        value: result,
+                        viewType: parent.viewType,
+                    });
+                    if (parent.progressBar) {
+                        newGroup.progressBarValues = _.extend({
+                            counts: {},
+                        }, parent.progressBar);
+                    }
+                    return newGroup;
+                };
+                const newGroup = createGroupDataPoint(self, parent);
                 parent.data.push(newGroup.id);
+                if (self.isInSampleMode()) {
+                    // in sample mode, create the new group in both models (main + sample)
+                    const sampleParent = self.sampleModel.localData[parentID];
+                    const newSampleGroup = createGroupDataPoint(self.sampleModel, sampleParent);
+                    sampleParent.data.push(newSampleGroup.id);
+                }
                 return newGroup.id;
             });
     },
@@ -143,7 +150,7 @@ var KanbanModel = BasicModel.extend({
      * @see _readTooltipFields
      * @returns {Object}
      */
-    get: function () {
+    __get: function () {
         var result = this._super.apply(this, arguments);
         var dp = result && this.localData[result.id];
         if (dp) {
@@ -178,7 +185,7 @@ var KanbanModel = BasicModel.extend({
     /**
      * @override
      */
-    load: function (params) {
+    __load: function (params) {
         this.defaultGroupedBy = params.groupBy || [];
         params.groupedBy = (params.groupedBy && params.groupedBy.length) ? params.groupedBy : this.defaultGroupedBy;
         return this._super(params);
@@ -262,6 +269,12 @@ var KanbanModel = BasicModel.extend({
         if (options && options.groupBy && !options.groupBy.length) {
             options.groupBy = this.defaultGroupedBy;
         }
+        return this._super(id, options);
+    },
+    /**
+     * @override
+     */
+    __reload: function (id, options) {
         var def = this._super(id, options);
         if (options && options.loadMoreOffset) {
             return def;

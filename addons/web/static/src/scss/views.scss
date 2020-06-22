@@ -40,7 +40,7 @@
 
 // No content helper
 .o_view_nocontent {
-    @include o-position-absolute(20%, 0, 0, 0);
+    @include o-position-absolute(30%, 0, 0, 0);
     pointer-events: none;
     z-index: 1;
 
@@ -70,5 +70,28 @@
             padding: 100px 0 0 137px;
             background: transparent url(/web/static/src/img/graph_background.png) no-repeat 0 0;
         }
+    }
+}
+
+.o_view_sample_data {
+
+    .o_list_table {
+        cursor: default !important;
+
+        & > thead .o_list_record_selector {
+            pointer-events: none;
+        }
+    }
+
+    .o_nocontent_help {
+        border-radius: 100%;
+        background-color: #f9f9f9;
+        box-shadow: 0 0 120px 100px #f9f9f9;
+    }
+
+    .o_sample_data_disabled {
+        opacity: 0.33;
+        pointer-events: none;
+        user-select: none;
     }
 }

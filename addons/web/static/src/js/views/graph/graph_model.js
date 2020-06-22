@@ -34,7 +34,7 @@ return AbstractModel.extend({
      * @override
      * @returns {Object}
      */
-    get: function () {
+    __get: function () {
         return _.extend({}, this.chart);
     },
     /**
@@ -57,7 +57,7 @@ return AbstractModel.extend({
      * @returns {Promise} The promise does not return a handle, we don't need
      *   to keep track of various entities.
      */
-    load: function (params) {
+    __load: function (params) {
         var groupBys = params.context.graph_groupbys || params.groupBys;
         this.initialGroupBys = groupBys;
         this.fields = params.fields;
@@ -97,7 +97,7 @@ return AbstractModel.extend({
      * @param {Object} [params.timeRanges]
      * @returns {Promise}
      */
-    reload: function (handle, params) {
+    __reload: function (handle, params) {
         if ('context' in params) {
             this.chart.context = params.context;
             this.chart.groupBy = params.context.graph_groupbys || this.chart.groupBy;

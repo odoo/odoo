@@ -148,7 +148,7 @@
             <field name="name">stock.picking.kanban</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" sample="1">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="location_dest_id"/>
@@ -189,7 +189,7 @@
             <field name="name">stock.picking.tree</field>
             <field name="model">stock.picking</field>
             <field name="arch" type="xml">
-                <tree string="Picking list" multi_edit="1">
+                <tree string="Picking list" multi_edit="1" sample="1">
                     <field name="name" decoration-bf="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show"/>
