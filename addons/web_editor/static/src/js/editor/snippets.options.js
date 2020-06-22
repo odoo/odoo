@@ -2993,15 +2993,34 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
     /**
      * @see this.selectClass for parameters
      */
-    setFilter(previewMode, widgetValue, params) {
-        this._getImg().dataset.filter = normalizeColor(widgetValue);
+    setQuality(previewMode, widgetValue, params) {
+        this._getImg().dataset.quality = widgetValue;
         return this._applyOptions();
     },
     /**
      * @see this.selectClass for parameters
      */
-    setQuality(previewMode, widgetValue, params) {
-        this._getImg().dataset.quality = widgetValue;
+    glFilter(previewMode, widgetValue, params) {
+        const dataset = this._getImg().dataset;
+        if (widgetValue) {
+            dataset.glFilter = widgetValue;
+        } else {
+            delete dataset.glFilter;
+        }
+        return this._applyOptions();
+    },
+    /**
+     * @see this.selectClass for parameters
+     */
+    customFilter(previewMode, widgetValue, params) {
+        const img = this._getImg();
+        const {filterOptions} = img.dataset;
+        const {filterProperty} = params;
+        if (filterProperty === 'filterColor') {
+            widgetValue = normalizeColor(widgetValue);
+        }
+        const newOptions = Object.assign(JSON.parse(filterOptions || "{}"), {[filterProperty]: widgetValue});
+        img.dataset.filterOptions = JSON.stringify(newOptions);
         return this._applyOptions();
     },
 
@@ -3026,8 +3045,16 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
                 return img.naturalWidth;
             case 'setFilter':
                 return img.dataset.filter;
+            case 'glFilter':
+                return img.dataset.glFilter || "";
             case 'setQuality':
                 return img.dataset.quality || 95;
+            case 'customFilter': {
+                const {filterProperty} = params;
+                const options = JSON.parse(img.dataset.filterOptions || "{}");
+                const defaultValue = filterProperty === 'blend' ? 'normal' : 0;
+                return options[filterProperty] || defaultValue;
+            }
         }
         return this._super(...arguments);
     },
