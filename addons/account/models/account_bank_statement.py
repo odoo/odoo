@@ -229,6 +229,7 @@ class AccountBankStatement(models.Model):
     _order = "date desc, name desc, id desc"
     _inherit = ['mail.thread', 'sequence.mixin']
     _check_company_auto = True
+    _sequence_index = "journal_id"
 
     name = fields.Char(string='Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True)
     reference = fields.Char(string='External Reference', states={'open': [('readonly', False)]}, copy=False, readonly=True, help="Used to hold the reference of the external mean that created this statement (name of imported file, reference of online synchronization...)")
@@ -442,19 +443,6 @@ class AccountBankStatement(models.Model):
 
     def _get_starting_sequence(self):
         self.ensure_one()
-        last_sequence = self._get_last_sequence(relaxed=True)
-        if last_sequence:
-            sequence_number_reset = self._deduce_sequence_number_reset(self.search([('date', '<', self.date)], order='date desc', limit=1).name)
-            if sequence_number_reset == 'year':
-                sequence = re.match(self._sequence_yearly_regex, last_sequence)
-                if sequence:
-                    return '%s%04d%s%s%s' % (sequence.group('prefix1'), self.date.year, sequence.group('prefix2'), "0" * len(sequence.group('seq')), sequence.group('suffix'))
-            elif sequence_number_reset == 'month':
-                sequence = re.match(self._sequence_monthly_regex, last_sequence)
-                if sequence:
-                    return '%s%04d%s%02d%s%s%s' % (sequence.group('prefix1'), self.date.year, sequence.group('prefix2'), self.date.month, sequence.group('prefix3'), "0" * len(sequence.group('seq')), sequence.group('suffix'))
-
-        # There was no pattern found, propose one
         return "%s/%04d/%02d/0000" % (self.journal_id.code, self.date.year, self.date.month)
 
 
