@@ -2,7 +2,7 @@ odoo.define('mail/static/src/models/chatter/chatter.js', function (require) {
 'use strict';
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
-const { attr, one2many, one2one } = require('mail/static/src/model/model_field.js');
+const { attr, many2one, one2many, one2one } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
@@ -72,19 +72,19 @@ function factory(dependencies) {
         }
 
         showLogNote() {
-            this.update({
-                isComposerLog: true,
-                isComposerVisible: true,
+            this.update({ isComposerVisible: true });
+            this.thread.composer.update({
+                isDoFocus: true,
+                isLog: true,
             });
-            this.thread.composer.update({ isDoFocus: true });
         }
 
         showSendMessage() {
-            this.update({
-                isComposerLog: false,
-                isComposerVisible: true,
+            this.update({ isComposerVisible: true });
+            this.thread.composer.update({
+                isDoFocus: true,
+                isLog: false,
             });
-            this.thread.composer.update({ isDoFocus: true });
         }
 
         toggleActivityBoxVisibility() {
@@ -249,6 +249,9 @@ function factory(dependencies) {
         activitiesState: attr({
             related: 'activities.state',
         }),
+        composer: many2one('mail.composer', {
+            related: 'thread.composer',
+        }),
         context: attr({
             default: {},
         }),
@@ -280,9 +283,6 @@ function factory(dependencies) {
         isAttachmentBoxVisible: attr({
             default: false,
         }),
-        isComposerLog: attr({
-            default: true,
-        }),
         isComposerVisible: attr({
             default: false,
         }),
@@ -301,7 +301,7 @@ function factory(dependencies) {
             compute: '_computeOverdueActivities',
             dependencies: ['activitiesState'],
         }),
-        thread: one2one('mail.thread', {
+        thread: many2one('mail.thread', {
             related: 'threadViewer.thread',
         }),
         threadAttachmentCount: attr({

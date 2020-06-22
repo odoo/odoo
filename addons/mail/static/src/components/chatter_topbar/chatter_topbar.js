@@ -23,6 +23,7 @@ class ChatterTopbar extends Component {
             return {
                 areThreadAttachmentsLoaded: thread && thread.areAttachmentsLoaded,
                 chatter: chatter ? chatter.__state : undefined,
+                composer: chatter && chatter.composer ? chatter.composer.__state : undefined,
                 threadAttachmentsAmount: threadAttachments.length,
             };
         });
@@ -66,7 +67,10 @@ class ChatterTopbar extends Component {
      * @param {MouseEvent} ev
      */
     _onClickLogNote(ev) {
-        if (this.chatter.isComposerVisible && this.chatter.isComposerLog) {
+        if (!this.chatter.composer) {
+            return;
+        }
+        if (this.chatter.isComposerVisible && this.chatter.composer.isLog) {
             this.chatter.update({ isComposerVisible: false });
         } else {
             this.chatter.showLogNote();
@@ -106,7 +110,10 @@ class ChatterTopbar extends Component {
      * @param {MouseEvent} ev
      */
     _onClickSendMessage(ev) {
-        if (this.chatter.isComposerVisible && !this.chatter.isComposerLog) {
+        if (!this.chatter.composer) {
+            return;
+        }
+        if (this.chatter.isComposerVisible && !this.chatter.composer.isLog) {
             this.chatter.update({ isComposerVisible: false });
         } else {
             this.chatter.showSendMessage();

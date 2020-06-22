@@ -124,7 +124,7 @@ class Composer extends Component {
     get hasHeader() {
         return (
             (this.props.hasThreadName && this.composer.thread) ||
-            (this.props.hasFollowers && !this.props.isLog)
+            (this.props.hasFollowers && !this.composer.isLog)
         );
     }
 
@@ -150,9 +150,10 @@ class Composer extends Component {
      * @private
      */
     async _postMessage() {
-        // TODO: take suggested recipients into account
-        await this.composer.postMessage({ isLog: this.props.isLog });
+        // TODO: take suggested recipients into account (task-2283356)
+        await this.composer.postMessage();
         // TODO: we might need to remove trigger and use the store to wait for the post rpc to be done
+        // task-2252858
         this.trigger('o-message-posted');
     }
 
@@ -206,7 +207,7 @@ class Composer extends Component {
             default_body: mailUtils.escapeAndCompactTextContent(this.composer.textInputContent),
             default_attachment_ids: attachmentIds,
             // default_partner_ids: partnerIds,
-            default_is_log: this.props.isLog,
+            default_is_log: this.composer.isLog,
             mail_post_autofollow: true,
         };
 
@@ -316,7 +317,6 @@ Object.assign(Composer, {
         isCompact: true,
         isDiscardOnClickAway: false,
         isExpandable: false,
-        isLog: false,
     },
     props: {
         attachmentLocalIds: {
@@ -359,7 +359,6 @@ Object.assign(Composer, {
         isCompact: Boolean,
         isDiscardOnClickAway: Boolean,
         isExpandable: Boolean,
-        isLog: Boolean,
     },
     template: 'mail.Composer',
 });

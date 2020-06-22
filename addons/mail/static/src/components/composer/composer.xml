@@ -31,7 +31,7 @@
                                 on: <b><t t-esc="composer.thread.displayName"/></b>
                             </span>
                         </t>
-                        <t t-if="props.hasFollowers and !props.isLog">
+                        <t t-if="props.hasFollowers and !composer.isLog">
                             <!-- Text for followers -->
                             <small class="o_Composer_followers">
                                 <b class="text-muted">To: </b>
@@ -141,7 +141,7 @@
                     type="button"
                     t-on-click="_onClickSend"
                 >
-                    <t t-if="!env.messaging.device.isMobile"><t t-if="props.isLog">Log</t><t t-else="">Send</t></t>
+                    <t t-if="!env.messaging.device.isMobile"><t t-if="composer.isLog">Log</t><t t-else="">Send</t></t>
                 </button>
             </t>
             <t t-if="!env.messaging.device.isMobile and props.hasDiscardButton">

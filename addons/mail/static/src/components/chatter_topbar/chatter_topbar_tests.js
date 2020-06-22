@@ -583,6 +583,143 @@ QUnit.test('rendering with multiple channel followers', async function (assert) 
     );
 });
 
+QUnit.test('log note/send message switching', async function (assert) {
+    assert.expect(8);
+
+    await this.start();
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await this.createChatterTopbarComponent(chatter);
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterTopbar_buttonSendMessage',
+        "should have a 'Send Message' button"
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
+        'o-active',
+        "'Send Message' button should not be active"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterTopbar_buttonLogNote',
+        "should have a 'Log Note' button"
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_ChatterTopbar_buttonLogNote'),
+        'o-active',
+        "'Log Note' button should not be active"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
+        'o-active',
+        "'Send Message' button should be active"
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_ChatterTopbar_buttonLogNote'),
+        'o-active',
+        "'Log Note' button should not be active"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
+        'o-active',
+        "'Send Message' button should not be active"
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatterTopbar_buttonLogNote'),
+        'o-active',
+        "'Log Note' button should be active"
+    );
+});
+
+QUnit.test('log note toggling', async function (assert) {
+    assert.expect(4);
+
+    await this.start();
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await this.createChatterTopbarComponent(chatter);
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterTopbar_buttonLogNote',
+        "should have a 'Log Note' button"
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_ChatterTopbar_buttonLogNote'),
+        'o-active',
+        "'Log Note' button should not be active"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatterTopbar_buttonLogNote'),
+        'o-active',
+        "'Log Note' button should be active"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonLogNote`).click()
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_ChatterTopbar_buttonLogNote'),
+        'o-active',
+        "'Log Note' button should not be active"
+    );
+});
+
+QUnit.test('send message toggling', async function (assert) {
+    assert.expect(4);
+
+    await this.start();
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await this.createChatterTopbarComponent(chatter);
+    assert.containsOnce(
+        document.body,
+        '.o_ChatterTopbar_buttonSendMessage',
+        "should have a 'Send Message' button"
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
+        'o-active',
+        "'Send Message' button should not be active"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
+        'o-active',
+        "'Send Message' button should be active"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_ChatterTopbar_buttonSendMessage`).click()
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_ChatterTopbar_buttonSendMessage'),
+        'o-active',
+        "'Send Message' button should not be active"
+    );
+});
+
 });
 });
 });
