@@ -843,7 +843,7 @@ define([
       }
 
       //03 editing area
-      // TODO: add control + right shift and control + left shift to switch writing direction between RTL and LTR
+      // TODO: add summernote-rtl-plugin to switch writing direction between RTL and LTR
       // TODO: fix when odoo adds o_rtl and switches the views to RTL, it makes writing in RTL fine, but buggy in LTR
       var $editingArea = $('<div class="note-editing-area" />');
       //03. create editable
