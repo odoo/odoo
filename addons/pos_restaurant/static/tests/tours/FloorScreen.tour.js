@@ -35,6 +35,7 @@ odoo.define('pos_restaurant.tour.FloorScreen', function (require) {
     FloorScreen.do.clickFloor('Main Floor');
     FloorScreen.check.editModeIsActive(false);
     FloorScreen.do.clickEdit();
+    FloorScreen.check.editModeIsActive(true);
 
     // test add table
     FloorScreen.do.clickAddTable();
@@ -47,13 +48,18 @@ odoo.define('pos_restaurant.tour.FloorScreen', function (require) {
 
     // test duplicate table
     FloorScreen.do.clickDuplicate();
-    FloorScreen.do.clickRename();
-    TextInputPopup.do.inputText('T101');
+    // new table is already named T101
     FloorScreen.check.selectedTableIs('T101');
+    FloorScreen.do.clickRename();
+    TextInputPopup.check.isShown();
+    TextInputPopup.do.inputText('T1111');
+    TextInputPopup.do.clickConfirm();
+    FloorScreen.check.selectedTableIs('T1111');
 
     // switch floor, switch back and check if
     // the new tables are still there
     FloorScreen.do.clickFloor('Second Floor');
+    FloorScreen.check.editModeIsActive(false);
     FloorScreen.check.hasTable('T3');
     FloorScreen.check.hasTable('T1');
 
@@ -62,26 +68,31 @@ odoo.define('pos_restaurant.tour.FloorScreen', function (require) {
     FloorScreen.check.hasTable('T4');
     FloorScreen.check.hasTable('T5');
     FloorScreen.check.hasTable('T100');
-    FloorScreen.check.hasTable('T101');
+    FloorScreen.check.hasTable('T1111');
 
     // test delete table
     FloorScreen.do.clickEdit();
+    FloorScreen.check.editModeIsActive(true);
     FloorScreen.do.clickTable('T2');
+    FloorScreen.check.selectedTableIs('T2');
     FloorScreen.do.clickTrash();
     Chrome.do.confirmPopup();
 
     // change number of seats
     FloorScreen.do.clickTable('T4');
+    FloorScreen.check.selectedTableIs('T4');
     FloorScreen.do.clickSeats();
-    NumberPopup.do.pressNumpad('Backspace 1 0');
+    NumberPopup.do.pressNumpad('Backspace 9');
+    NumberPopup.check.inputShownIs('9');
     NumberPopup.do.clickConfirm();
-    FloorScreen.check.tableSeatIs('T4', '10');
+    FloorScreen.check.tableSeatIs('T4', '9');
 
     // change shape
     FloorScreen.do.changeShapeTo('round');
 
     // Opening product screen in main floor should go back to main floor
     FloorScreen.do.clickEdit();
+    FloorScreen.check.editModeIsActive(false);
     FloorScreen.check.hasTable('T4');
     FloorScreen.do.clickTable('T4');
     ProductScreen.check.isShown();
