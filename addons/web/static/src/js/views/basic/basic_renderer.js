@@ -142,7 +142,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      */
     confirmChange: function (state, id, fields, ev) {
         var self = this;
-        this.state = state;
+        this._setState(state);
         var record = this._getRecord(id);
         if (!record) {
             return this._render().then(_.constant([]));
@@ -455,7 +455,7 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      * @returns {boolean}
      */
     _hasContent: function () {
-        return this.state.count !== 0;
+        return this.state.count !== 0 && (!('isSample' in this.state) || !this.state.isSample);
     },
     /**
      * Force the resequencing of the records after moving one of them to a given
@@ -646,25 +646,25 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         return modifiersData.evaluatedModifiers[record.id];
     },
     /**
-     * Render the view
-     *
      * @override
-     * @returns {Promise}
      */
-    _render: function () {
-        var oldAllFieldWidgets = this.allFieldWidgets;
+    async _render() {
+        const oldAllFieldWidgets = this.allFieldWidgets;
         this.allFieldWidgets = {}; // TODO maybe merging allFieldWidgets and allModifiersData into "nodesData" in some way could be great
         this.allModifiersData = [];
-        var oldWidgets = this.widgets;
+        const oldWidgets = this.widgets;
         this.widgets = [];
-        return this._renderView().then(function () {
-            _.each(oldAllFieldWidgets, function (recordWidgets) {
-                _.each(recordWidgets, function (widget) {
-                    widget.destroy();
-                });
-            });
-            _.invoke(oldWidgets, 'destroy');
-        });
+
+        await this._super(...arguments);
+
+        for (const id in oldAllFieldWidgets) {
+            for (const widget of oldAllFieldWidgets[id]) {
+                widget.destroy();
+            }
+        }
+        for (const widget of oldWidgets) {
+            widget.destroy();
+        }
     },
     /**
      * Instantiates the appropriate AbstractField specialization for the given
@@ -774,22 +774,6 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
         return $('<div>')
             .addClass('o_view_nocontent')
             .append($noContent);
-    },
-    /**
-     * Actual rendering. Supposed to be overridden by concrete renderers.
-     * The basic responsabilities of _renderView are:
-     * - use the xml arch of the view to render a jQuery representation
-     * - instantiate a widget from the registry for each field in the arch
-     *
-     * Note that the 'state' field should contains all necessary information
-     * for the rendering. The field widgets should be as synchronous as
-     * possible.
-     *
-     * @abstract
-     * @returns {Promise}
-     */
-    _renderView: function () {
-        return Promise.resolve();
     },
     /**
      * Instantiate custom widgets

@@ -497,7 +497,7 @@ var PivotModel = AbstractModel.extend({
      * @param {boolean} [options.raw=false]
      * @returns {Object}
      */
-    get: function (options) {
+    __get: function (options) {
         options = options || {};
         var raw = options.raw || false;
         var groupBys = this._getGroupBys();
@@ -546,7 +546,7 @@ var PivotModel = AbstractModel.extend({
      * @param {Object} params.timeRanges
      * @returns {Promise}
      */
-    load: function (params) {
+    __load: function (params) {
         this.initialDomain = params.domain;
         this.initialRowGroupBys = params.context.pivot_row_groupby || params.rowGroupBys;
         this.defaultGroupedBy = params.groupedBy;
@@ -592,7 +592,7 @@ var PivotModel = AbstractModel.extend({
      * @param {Object} [params.timeRanges]
      * @returns {Promise}
      */
-    reload: function (handle, params) {
+    __reload: function (handle, params) {
         var self = this;
         var oldColGroupBys = this.data.colGroupBys;
         var oldRowGroupBys = this.data.rowGroupBys;

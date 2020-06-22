@@ -188,6 +188,10 @@ QUnit.on('OdooAfterTestHook', function () {
         }
     }
 
+    for (const tooltip of document.querySelectorAll('.tooltip')) {
+        tooltip.remove();
+    }
+
     // check for leftovers in #qunit-fixture
     var qunitFixture = document.getElementById('qunit-fixture');
     if (qunitFixture.children.length) {

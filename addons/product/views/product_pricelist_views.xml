@@ -186,7 +186,7 @@
             <field name="name">product.pricelist.tree</field>
             <field name="model">product.pricelist</field>
             <field name="arch" type="xml">
-                <tree string="Products Price List">
+                <tree string="Products Price List" sample="1">
                     <field name="sequence" widget="handle" />
                     <field name="name"/>
                     <field name="discount_policy" groups="product.group_discount_per_so_line"/>
@@ -200,7 +200,7 @@
             <field name="name">product.pricelist.kanban</field>
             <field name="model">product.pricelist</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" sample="1">
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_global_click">

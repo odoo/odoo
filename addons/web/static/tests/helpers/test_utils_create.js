@@ -282,7 +282,7 @@ odoo.define('web.test_utils_create', function (require) {
     async function createModel(params) {
         const widget = new Widget();
 
-        const model = new params.Model(widget);
+        const model = new params.Model(widget, params);
 
         await testUtilsMock.addMockEnvironment(widget, params);
 

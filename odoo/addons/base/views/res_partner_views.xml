@@ -43,7 +43,7 @@
             <field name="model">res.partner</field>
             <field eval="8" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Contacts">
+                <tree string="Contacts" sample="1">
                     <field name="display_name" string="Name"/>
                     <field name="function" invisible="1"/>
                     <field name="phone" class="o_force_ltr" optional="show"/>
@@ -425,7 +425,7 @@
             <field name="name">res.partner.kanban</field>
             <field name="model">res.partner</field>
             <field name="arch" type="xml">
-                <kanban class="o_res_partner_kanban">
+                <kanban class="o_res_partner_kanban" sample="1">
                     <field name="id"/>
                     <field name="color"/>
                     <field name="display_name"/>

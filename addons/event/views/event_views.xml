@@ -285,7 +285,8 @@
             <field name="arch" type="xml">
                 <tree string="Events"
                     decoration-danger="(seats_max and seats_max&lt;seats_reserved)"
-                    multi_edit="1">
+                    multi_edit="1"
+                    sample="1">
                     <field name="name"/>
                     <field name="address_id" readonly="1"/>
                     <field name="organizer_id" readonly="1" optional="hide"/>
@@ -324,7 +325,7 @@
             <field name="name">event.event.kanban</field>
             <field name="model">event.event</field>
             <field name="arch" type="xml">
-                <kanban class="o_event_kanban_view" default_group_by="stage_id" quick_create_view="event.event_event_view_form_quick_create">
+                <kanban class="o_event_kanban_view" default_group_by="stage_id" quick_create_view="event.event_event_view_form_quick_create" sample="1">
                     <field name="user_id"/>
                     <field name="name"/>
                     <field name="stage_id" options='{"group_by_tooltip": {"description": "Description"}}'/>
@@ -498,7 +499,7 @@
             <field name="name">event.registration.tree</field>
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
-                <tree string="Registration" multi_edit="1">
+                <tree string="Registration" multi_edit="1" sample="1">
                     <field name="create_date" optional="hide"/>
                     <field name="date_open" optional="hide"/>
                     <field name="partner_id"/>
@@ -575,7 +576,7 @@
             <field name="model">event.registration</field>
             <field name="priority">10</field>
             <field name="arch" type="xml">
-                <kanban class="o_event_attendee_kanban_view" default_order="name, create_date desc">
+                <kanban class="o_event_attendee_kanban_view" default_order="name, create_date desc" sample="1">
                     <field name="name"/>
                     <field name="partner_id"/>
                     <field name="state"/>

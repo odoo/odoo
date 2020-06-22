@@ -28,7 +28,7 @@
             <field name="name">hr.department.tree</field>
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
-                <tree string="Companies">
+                <tree string="Companies" sample="1">
                     <field name="display_name"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="manager_id"/>
@@ -55,7 +55,7 @@
             <field name="name">hr.department.kanban</field>
             <field name="model">hr.department</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_hr_kanban">
+                <kanban class="oe_background_grey o_kanban_dashboard o_hr_kanban" sample="1">
                     <field name="name"/>
                     <field name="company_id"/>
                     <field name="manager_id"/>

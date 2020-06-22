@@ -66,7 +66,11 @@
         <field name="name">fleet.vehicle.log.contract.tree</field>
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
-            <tree string="Contract logs" decoration-danger="days_left==0" decoration-muted="state=='closed'" default_order="expiration_date">
+            <tree string="Contract logs"
+                decoration-danger="days_left==0"
+                decoration-muted="state=='closed'"
+                default_order="expiration_date"
+                sample="1">
                 <field name="active" invisible="1"/>
                 <field name="name" />
                 <field name="start_date" />
@@ -87,7 +91,7 @@
         <field name="name">fleet.vehicle.log.contract.kanban</field>
         <field name="model">fleet.vehicle.log.contract</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="activity_state"/>
                 <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
                 <templates>

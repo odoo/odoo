@@ -43,7 +43,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         this.hasButtons = params.hasButtons;
         FieldManagerMixin.init.call(this, this.model);
         this.mode = params.mode || 'readonly';
-        this.handle = this.initialState.id;
         // savingDef is used to ensure that we always wait for pending save
         // operations to complete before checking if there are changes to
         // discard when discardChanges is called
@@ -133,12 +132,6 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     getSelectedIds: function () {
         return [];
-    },
-    /**
-     * Gives the focus to the renderer
-     */
-    giveFocus:function() {
-        this.renderer.giveFocus();
     },
     /**
      * Returns true iff the given recordID (or the main recordID) is dirty.
@@ -762,7 +755,7 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
                 await this.model.resequence(this.modelName, resIDs, this.handle, options);
                 this._updateControlPanel();
                 state = this.model.get(this.handle);
-                return this.renderer.updateState(state, { noRender: true });
+                return this._updateRendererState(state, { noRender: true });
             },
         });
     },

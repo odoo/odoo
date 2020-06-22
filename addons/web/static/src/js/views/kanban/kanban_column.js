@@ -191,7 +191,7 @@ var KanbanColumn = Widget.extend({
      *
      * @returns {Promise}
      */
-    addQuickCreate: function () {
+    addQuickCreate: async function () {
         if (this.folded) {
             // first open the column, and then add the quick create
             this.trigger_up('column_toggle_fold', {
@@ -204,7 +204,6 @@ var KanbanColumn = Widget.extend({
             return Promise.reject();
         }
         this.trigger_up('close_quick_create'); // close other quick create widgets
-        this.trigger_up('start_quick_create');
         var context = this.data.getContext();
         context['default_' + this.groupedBy] = viewUtils.getGroupValue(this.data, this.groupedBy);
         this.quickCreateWidget = new RecordQuickCreate(this, {
@@ -212,7 +211,10 @@ var KanbanColumn = Widget.extend({
             formViewRef: this.quickCreateView,
             model: this.modelName,
         });
-        return this.quickCreateWidget.insertAfter(this.$header);
+        await this.quickCreateWidget.appendTo(document.createDocumentFragment());
+        this.trigger_up('start_quick_create');
+        this.quickCreateWidget.$el.insertAfter(this.$header);
+        this.quickCreateWidget.on_attach_callback();
     },
     /**
      * Closes the quick create widget if it isn't dirty.
@@ -285,7 +287,7 @@ var KanbanColumn = Widget.extend({
      * @private
      */
     _onAddQuickCreate: function () {
-        this.addQuickCreate();
+        this.trigger_up('add_quick_create', { groupId: this.db_id });
     },
     /**
      * @private

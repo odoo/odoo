@@ -160,7 +160,7 @@
             <field name="name">slide.channel.view.tree</field>
             <field name="model">slide.channel</field>
             <field name="arch" type="xml">
-                <tree string="Courses">
+                <tree string="Courses" sample="1">
                     <field name="sequence" widget="handle"/>
                     <field name="name"/>
                     <field name="channel_type"/>
@@ -178,7 +178,7 @@
             <field name="model">slide.channel</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <tree string="Courses" create="false" default_order="total_views desc">
+                <tree string="Courses" create="false" default_order="total_views desc" sample="1">
                     <field name="name"/>
                     <field name="total_views"/>
                     <field name="members_count"/>
@@ -214,7 +214,7 @@
             <field name="name">slide.channel.view.kanban</field>
             <field name="model">slide.channel</field>
             <field name="arch" type="xml">
-                <kanban string="eLearning Overview" class="o_emphasize_colors o_kanban_dashboard o_slide_kanban breadcrumb_item active" edit="false">
+                <kanban string="eLearning Overview" class="o_emphasize_colors o_kanban_dashboard o_slide_kanban breadcrumb_item active" edit="false" sample="1">
                     <field name="color"/>
                     <field name="website_published"/>
                     <templates>

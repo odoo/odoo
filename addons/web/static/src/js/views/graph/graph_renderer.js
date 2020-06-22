@@ -76,12 +76,6 @@ return AbstractRenderer.extend({
         this.$tooltip = null;
     },
     /**
-     * @override
-     */
-    updateState: function () {
-        return this._super.apply(this, arguments);
-    },
-    /**
      * Chart.js does not need the canvas to be in dom in order
      * to be able to work well. We could avoid the calls to on_attach_callback
      * and on_detach_callback.
@@ -754,10 +748,8 @@ return AbstractRenderer.extend({
      * immediately, then we render the chart when the widget is in the DOM.
      *
      * @override
-     * @private
-     * @returns {Promise} The _super promise is actually resolved immediately
      */
-    _render: function () {
+    async _renderView() {
         if (this.chart) {
             this.chart.destroy();
         }
@@ -796,7 +788,6 @@ return AbstractRenderer.extend({
 
             this._renderTitle();
         }
-        return this._super.apply(this, arguments);
     },
     /**
      * create bar chart.
