@@ -20,34 +20,36 @@
                     t-on-o-clicked="_onClickedHeader"
                     t-ref="header"
                 />
-                <t t-if="chatWindow.thread">
-                    <ThreadViewer
-                        class="o_ChatWindow_thread"
-                        composerAttachmentsDetailsMode="'card'"
-                        hasComposer="chatWindow.thread.model !== 'mail.box'"
-                        hasComposerCurrentPartnerAvatar="false"
-                        hasComposerSendButton="env.messaging.device.isMobile"
-                        hasSquashCloseMessages="chatWindow.thread.model !== 'mail.box'"
-                        haveMessagesAuthorRedirect="chatWindow.thread.channel_type !== 'chat'"
-                        threadViewerLocalId="chatWindow.threadViewer.localId"
-                        t-on-focusin="_onFocusinThread"
-                        t-ref="thread"
-                    />
-                </t>
-                <t t-else="">
-                    <div class="o_ChatWindow_newMessageForm">
-                        <span class="o_ChatWindow_newMessageFormLabel">
-                            To:
-                        </span>
-                        <AutocompleteInput
-                            class="o_ChatWindow_newMessageFormInput"
-                            isHtml="true"
-                            placeholder="newMessageFormInputPlaceholder"
-                            select="_onAutocompleteSelect"
-                            source="_onAutocompleteSource"
-                            t-ref="input"
+                <t t-if="!chatWindow.isFolded">
+                    <t t-if="chatWindow.thread">
+                        <ThreadViewer
+                            class="o_ChatWindow_thread"
+                            composerAttachmentsDetailsMode="'card'"
+                            hasComposer="chatWindow.thread.model !== 'mail.box'"
+                            hasComposerCurrentPartnerAvatar="false"
+                            hasComposerSendButton="env.messaging.device.isMobile"
+                            hasSquashCloseMessages="chatWindow.thread.model !== 'mail.box'"
+                            haveMessagesAuthorRedirect="chatWindow.thread.channel_type !== 'chat'"
+                            threadViewerLocalId="chatWindow.threadViewer.localId"
+                            t-on-focusin="_onFocusinThread"
+                            t-ref="thread"
                         />
-                    </div>
+                    </t>
+                    <t t-else="">
+                        <div class="o_ChatWindow_newMessageForm">
+                            <span class="o_ChatWindow_newMessageFormLabel">
+                                To:
+                            </span>
+                            <AutocompleteInput
+                                class="o_ChatWindow_newMessageFormInput"
+                                isHtml="true"
+                                placeholder="newMessageFormInputPlaceholder"
+                                select="_onAutocompleteSelect"
+                                source="_onAutocompleteSource"
+                                t-ref="input"
+                            />
+                        </div>
+                    </t>
                 </t>
             </t>
         </div>

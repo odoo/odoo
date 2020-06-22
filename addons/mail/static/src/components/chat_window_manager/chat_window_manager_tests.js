@@ -174,7 +174,7 @@ QUnit.test('chat window new message: close', async function (assert) {
 });
 
 QUnit.test('chat window new message: fold', async function (assert) {
-    assert.expect(3);
+    assert.expect(6);
 
     await this.start({
         async mockRPC(route, args) {
@@ -188,21 +188,39 @@ QUnit.test('chat window new message: fold', async function (assert) {
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_newMessageButton`).click()
     );
-    assert.notOk(
-        document.querySelector(`.o_ChatWindow`).classList.contains('o-folded'),
+    assert.doesNotHaveClass(
+        document.querySelector(`.o_ChatWindow`),
+        'o-folded',
         "chat window should not be folded by default"
     );
-
-    await afterNextRender(() => document.querySelector(`.o_ChatWindow_header`).click());
-    assert.ok(
-        document.querySelector(`.o_ChatWindow`).classList.contains('o-folded'),
-        "chat window should become folded"
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow_newMessageForm',
+        "chat window should have new message form"
     );
 
     await afterNextRender(() => document.querySelector(`.o_ChatWindow_header`).click());
-    assert.notOk(
-        document.querySelector(`.o_ChatWindow`).classList.contains('o-folded'),
+    assert.hasClass(
+        document.querySelector(`.o_ChatWindow`),
+        'o-folded',
+        "chat window should become folded"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow_newMessageForm',
+        "chat window should not have new message form"
+    );
+
+    await afterNextRender(() => document.querySelector(`.o_ChatWindow_header`).click());
+    assert.doesNotHaveClass(
+        document.querySelector(`.o_ChatWindow`),
+        'o-folded',
         "chat window should become unfolded"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow_newMessageForm',
+        "chat window should have new message form"
     );
 });
 
@@ -305,7 +323,7 @@ QUnit.test('chat window: basic rendering', async function (assert) {
 });
 
 QUnit.test('chat window: fold', async function (assert) {
-    assert.expect(24);
+    assert.expect(27);
 
     let foldCall = 0;
     Object.assign(this.data.initMessaging, {
@@ -385,13 +403,30 @@ QUnit.test('chat window: fold', async function (assert) {
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
     );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow_thread',
+        "chat window should have a thread viewer"
+    );
     assert.verifySteps(['rpc:channel_fold/open']);
+
     // Fold chat window
     await afterNextRender(() => document.querySelector(`.o_ChatWindow_header`).click());
     assert.verifySteps(['rpc:channel_fold/folded']);
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow_thread',
+        "chat window should not have any thread viewer"
+    );
+
     // Unfold chat window
     await afterNextRender(() => document.querySelector(`.o_ChatWindow_header`).click());
     assert.verifySteps(['rpc:channel_fold/open']);
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow_thread',
+        "chat window should have a thread viewer"
+    );
 });
 
 QUnit.test('chat window: open / close', async function (assert) {
