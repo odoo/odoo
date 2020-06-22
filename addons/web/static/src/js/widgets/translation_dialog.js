@@ -64,6 +64,9 @@ odoo.define('web.TranslationDialog', function (require) {
             ]).then(() => {
                 this.data = this.translations.map((term) => {
                     let relatedLanguage = this.languages.find((language) => language[0] === term.lang);
+                    if (!term.value && !this.showSrc) {
+                        term.value = term.src;
+                    }
                     return {
                         id: term.id,
                         lang: term.lang,
