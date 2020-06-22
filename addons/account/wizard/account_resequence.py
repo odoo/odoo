@@ -87,40 +87,13 @@ class ReSequenceWizard(models.TransientModel):
                 return (move_id.date.year, move_id.date.month)
             return 'default'
 
-        def _sort_by_name_key(name):
-            match = re.match(self.move_ids[0]._sequence_fixed_regex, name)
-            return (match.group('prefix1'), int(match.group('seq') or '0'), match.group('suffix'))
-
         self.new_values = "{}"
         for record in self.filtered('first_name'):
             moves_by_period = defaultdict(lambda: record.env['account.move'])
             for move in record.move_ids._origin:  # Sort the moves by period depending on the sequence number reset
                 moves_by_period[_get_move_key(move)] += move
 
-            if record.sequence_number_reset == 'month':
-                sequence = re.match(self.move_ids[0]._sequence_monthly_regex, record.first_name)
-                format = '{prefix1}%(year)04d{prefix2}%(month)02d{prefix3}%(seq)0{len}d{suffix}'.format(
-                    prefix1=sequence.group('prefix1'),
-                    prefix2=sequence.group('prefix2'),
-                    prefix3=sequence.group('prefix3'),
-                    len=len(sequence.group('seq')),
-                    suffix=sequence.group('suffix'),
-                )
-            elif record.sequence_number_reset == 'year':
-                sequence = re.match(self.move_ids[0]._sequence_yearly_regex, record.first_name)
-                format = '{prefix1}%(year)04d{prefix2}%(seq)0{len}d{suffix}'.format(
-                    prefix1=sequence.group('prefix1'),
-                    prefix2=sequence.group('prefix2'),
-                    len=len(sequence.group('seq')),
-                    suffix=sequence.group('suffix'),
-                )
-            else:
-                sequence = re.match(self.move_ids[0]._sequence_fixed_regex, record.first_name)
-                format = '{prefix}%(seq)0{len}d{suffix}'.format(
-                    prefix=sequence.group('prefix1'),
-                    len=len(sequence.group('seq')),
-                    suffix=sequence.group('suffix'),
-                )
+            format, format_values = self.env['account.move']._get_sequence_format_param(record.first_name)
 
             new_values = {}
             for j, period_recs in enumerate(moves_by_period.values()):
@@ -133,14 +106,15 @@ class ReSequenceWizard(models.TransientModel):
                         'server-date': str(move.date),
                     }
 
-                new_name_list = [format % {
-                    'year': period_recs[0].date.year,
+                new_name_list = [format.format(**{
+                    **format_values,
+                    'year': period_recs[0].date.year % (10 ** format_values['year_length']),
                     'month': period_recs[0].date.month,
-                    'seq': i + (int(sequence.group('seq') or '1') if j == (len(moves_by_period)-1) else 1),
-                } for i in range(len(period_recs))]
+                    'seq': i + (format_values['seq'] if j == (len(moves_by_period)-1) else 1),
+                }) for i in range(len(period_recs))]
 
                 # For all the moves of this period, assign the name by increasing initial name
-                for move, new_name in zip(period_recs.sorted(lambda m: _sort_by_name_key(m.name)), new_name_list):
+                for move, new_name in zip(period_recs.sorted(lambda m: (m.sequence_prefix, m.sequence_number)), new_name_list):
                     new_values[move.id]['new_by_name'] = new_name
                 # For all the moves of this period, assign the name by increasing date
                 for move, new_name in zip(period_recs.sorted(lambda m: (m.date, m.name, m.id)), new_name_list):
