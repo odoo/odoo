@@ -3,6 +3,7 @@
 from datetime import datetime, timedelta
 import logging
 import pytz
+from psycopg2 import sql
 
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
@@ -20,10 +21,10 @@ def _create_sequence(cr, seq_name, number_increment, number_next):
 
 def _drop_sequences(cr, seq_names):
     """ Drop the PostreSQL sequences if they exist. """
-    names = ','.join(seq_names)
+    names = sql.SQL(',').join(map(sql.Identifier, seq_names))
     # RESTRICT is the default; it prevents dropping the sequence if an
     # object depends on it.
-    cr.execute("DROP SEQUENCE IF EXISTS %s RESTRICT " % names)
+    cr.execute(sql.SQL("DROP SEQUENCE IF EXISTS {} RESTRICT").format(names))
 
 
 def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
@@ -34,38 +35,45 @@ def _alter_sequence(cr, seq_name, number_increment=None, number_next=None):
     if not cr.fetchone():
         # sequence is not created yet, we're inside create() so ignore it, will be set later
         return
-    statement = "ALTER SEQUENCE %s" % (seq_name, )
+    statement = sql.SQL("ALTER SEQUENCE") + sql.Identifier(seq_name)
+    params = []
     if number_increment is not None:
-        statement += " INCREMENT BY %d" % (number_increment, )
+        statement += sql.SQL("INCREMENT BY") + sql.Placeholder()
+        params.append(number_increment)
     if number_next is not None:
-        statement += " RESTART WITH %d" % (number_next, )
-    cr.execute(statement)
+        statement += sql.SQL("RESTART WITH") + sql.Placeholder()
+        params.append(number_next)
+    cr.execute(statement.join(' '), params)
 
 
 def _select_nextval(cr, seq_name):
-    cr.execute("SELECT nextval('%s')" % seq_name)
+    cr.execute("SELECT nextval(%s)", [seq_name])
     return cr.fetchone()
 
 
 def _update_nogap(self, number_increment):
     number_next = self.number_next
-    self._cr.execute("SELECT number_next FROM %s WHERE id=%s FOR UPDATE NOWAIT" % (self._table, self.id))
-    self._cr.execute("UPDATE %s SET number_next=number_next+%s WHERE id=%s " % (self._table, number_increment, self.id))
+    self._cr.execute("SELECT number_next FROM %s WHERE id=%%s FOR UPDATE NOWAIT" % self._table, [self.id])
+    self._cr.execute("UPDATE %s SET number_next=number_next+%%s WHERE id=%%s " % self._table, (number_increment, self.id))
     self.invalidate_cache(['number_next'], [self.id])
     return number_next
 
 def _predict_nextval(self, seq_id):
     """Predict next value for PostgreSQL sequence without consuming it"""
     # Cannot use currval() as it requires prior call to nextval()
-    query = """SELECT last_value,
+    seqname = 'ir_sequence_%s' % seq_id
+    seqtable = sql.Identifier(seqname)
+    query = sql.SQL("""SELECT last_value,
                       (SELECT increment_by
                        FROM pg_sequences
-                       WHERE sequencename = 'ir_sequence_%(seq_id)s'),
+                       WHERE sequencename = %s),
                       is_called
-               FROM ir_sequence_%(seq_id)s"""
+               FROM {}""")
+    params = []
     if self.env.cr._cnx.server_version < 100000:
-        query = "SELECT last_value, increment_by, is_called FROM ir_sequence_%(seq_id)s"
-    self.env.cr.execute(query % {'seq_id': seq_id})
+        query = sql.SQL("SELECT last_value, increment_by, is_called FROM {}")
+        params = []
+    self.env.cr.execute(query.format(seqtable), params)
     (last_value, increment_by, is_called) = self.env.cr.fetchone()
     if is_called:
         return last_value + increment_by

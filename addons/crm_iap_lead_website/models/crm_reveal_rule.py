@@ -262,10 +262,10 @@ class CRMRevealRule(models.Model):
             ON v.reveal_rule_id = r.id
             WHERE v.reveal_state='to_process'
             GROUP BY v.reveal_ip
-            LIMIT %d
-            """ % batch_limit
+            LIMIT %s
+            """
 
-        self.env.cr.execute(query)
+        self.env.cr.execute(query, [batch_limit])
         return self.env.cr.fetchall()
 
     def _prepare_iap_payload(self, pgv):

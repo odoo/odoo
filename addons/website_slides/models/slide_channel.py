@@ -375,9 +375,9 @@ class Channel(models.Model):
         else:
             query = """
                 UPDATE %(table_name)s
-                SET %(column_name)s = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
-                WHERE %(column_name)s IS NULL
-            """ % {'table_name': self._table, 'column_name': column_name}
+                SET access_token = md5(md5(random()::varchar || id::varchar) || clock_timestamp()::varchar)::uuid::varchar
+                WHERE access_token IS NULL
+            """ % {'table_name': self._table}
             self.env.cr.execute(query)
 
     @api.model

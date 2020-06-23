@@ -34,41 +34,50 @@ class OdooBaseChecker(checkers.BaseChecker):
         cursor_name = '.'.join(expr_list)
         return cursor_name
 
-    def _get_func_name(self, node):
-        func_name = (
-            isinstance(node, astroid.Name) and node.name or
-            isinstance(node, astroid.Attribute) and node.attrname or '')
-        return func_name
+    def _allowable(self, node):
+        """
+        :type node: NodeNG
+        """
+        if isinstance(node, astroid.Call):
+            node = node.func
+        # self._thing is OK (mostly self._table), self._thing() also because
+        # it's a common pattern of reports (self._select, self._group_by, ...)
+        return (isinstance(node, astroid.Attribute)
+            and isinstance(node.expr, astroid.Name)
+            and node.attrname.startswith('_')
+        )
 
     def _check_concatenation(self, node):
-        is_bin_op = False
         if isinstance(node, astroid.BinOp) and node.op in ('%', '+'):
-            # execute("..." % self._table)
-            if (isinstance(node.right, astroid.Attribute) and
-                    not node.right.attrname.startswith('_')):
-                is_bin_op = True
             if isinstance(node.right, astroid.Tuple):
-                for elt in node.right.elts:
-                    if (isinstance(elt, astroid.Call) and
-                            # Ignoring for this case: execute("..." % _foo(...))
-                            not self._get_func_name(elt.func).startswith('_')):
-                        is_bin_op = True
+                # execute("..." % (self._table, thing))
+                if not all(map(self._allowable, node.right.elts)):
+                    return True
+            elif isinstance(node.right, astroid.Dict):
+                # execute("..." % {'table': self._table}
+                if not all(self._allowable(v) for _, v in node.right.items):
+                    return True
+            elif not self._allowable(node.right):
+                # execute("..." % self._table)
+                return True
 
-        is_format = False
-        # execute("...".format(self._table, table=self._table))
-        if (isinstance(node, astroid.Call) and
-                self._get_func_name(node.func) == 'format'):
-            for keyword in node.keywords or []:
-                if (isinstance(keyword.value, astroid.Attribute) and
-                        not keyword.value.attrname.startswith('_')):
-                    is_format = True
-                    break
-            for argument in node.args or []:
-                if (isinstance(argument, astroid.Name) and not argument.name.startswith('_')):
-                    is_format = True
-                    break
+        # check execute("...".format(self._table, table=self._table))
+        # ignore sql.SQL().format
+        if isinstance(node, astroid.Call) \
+                and isinstance(node.func, astroid.Attribute) \
+                and isinstance(node.func.expr, astroid.Const) \
+                and node.func.attrname == 'format':
 
-        return is_bin_op or is_format
+            if not all(map(self._allowable, node.args or [])):
+                return True
+
+            if not all(
+                self._allowable(keyword.value)
+                for keyword in (node.keywords or [])
+            ):
+                return True
+
+        return False
 
     def _check_sql_injection_risky(self, node):
         # Inspired from OCA/pylint-odoo project
