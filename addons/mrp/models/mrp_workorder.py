@@ -781,16 +781,6 @@ class MrpWorkorder(models.Model):
                 float_round(self.qty_producing, precision_rounding=rounding)
             )
 
-    def _strict_consumption_check(self):
-        if self.consumption == 'strict':
-            for move in self.move_raw_ids:
-                qty_done = 0.0
-                for line in move.move_line_ids:
-                    qty_done += line.product_uom_id._compute_quantity(line.qty_done, move.product_uom)
-                rounding = move.product_uom_id.rounding
-                if float_compare(qty_done, move.product_uom_qty, precision_rounding=rounding) != 0:
-                    raise UserError(_('You should consume the quantity of %s defined in the BoM. If you want to consume more or less components, change the consumption setting on the BoM.', move.product_id.name))
-
     def _check_sn_uniqueness(self):
         """ Alert the user if the serial number as already been produced """
         if self.product_tracking == 'serial' and self.finished_lot_id:

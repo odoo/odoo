@@ -909,35 +909,6 @@ class MrpProduction(models.Model):
             move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
             move.move_line_ids = move._set_quantity_done_prepare_vals(new_qty)
 
-    def _update_raw_move(self, bom_line, line_data):
-        """ :returns update_move, old_quantity, new_quantity """
-        quantity = line_data['qty']
-        self.ensure_one()
-        move = self.move_raw_ids.filtered(lambda x: x.bom_line_id.id == bom_line.id and x.state not in ('done', 'cancel'))
-        if move:
-            old_qty = move[0].product_uom_qty
-            if quantity > 0:
-                move[0].write({'product_uom_qty': quantity})
-                move[0]._action_assign()
-                return move[0], old_qty, quantity
-            else:
-                if move[0].quantity_done > 0:
-                    raise UserError(_('Lines need to be deleted, but can not as you still have some quantities to consume in them. '))
-                move[0]._action_cancel()
-                move[0].unlink()
-                return self.env['stock.move'], old_qty, quantity
-        else:
-            operation = bom_line.operation_id.id or line_data['parent_line'] and line_data['parent_line'].operation_id.id
-            move_values = self._get_move_raw_values(
-                bom_line.product_id,
-                line_data['qty'],
-                bom_line.product_uom_id,
-                operation,
-                bom_line
-            )
-            move = self.env['stock.move'].create(move_values)
-            return move, 0, quantity
-
     def _update_raw_moves(self, factor):
         self.ensure_one()
         update_info = []
@@ -963,7 +934,6 @@ class MrpProduction(models.Model):
         """
         self.ensure_one()
         first_operation = self.bom_id.operation_ids[0]
-        bom_line_ids = self.env['mrp.bom.line']
         if len(self.bom_id.operation_ids) == 1:
             moves_in_first_operation = self.move_raw_ids
         else:
