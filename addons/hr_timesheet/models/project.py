@@ -170,7 +170,7 @@ class Task(models.Model):
 
     def write(self, values):
         # a timesheet must have an analytic account (and a project)
-        if 'project_id' in values and self and not values.get('project_id'):
+        if 'project_id' in values and not values.get('project_id') and self._get_timesheet():
             raise UserError(_('This task must be part of a project because there are some timesheets linked to it.'))
         res = super(Task, self).write(values)
 
