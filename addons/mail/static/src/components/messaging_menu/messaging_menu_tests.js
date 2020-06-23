@@ -140,13 +140,10 @@ QUnit.test('basic rendering', async function (assert) {
     );
 
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
-    assert.ok(
-        document.querySelector('.o_MessagingMenu').classList.contains('show'),
-        "should mark messaging menu item as shown"
-    );
-    assert.ok(
-        document.querySelector(`.o_MessagingMenu_toggler`).classList.contains('show'),
-        "should mark messaging menu clickable item as shown"
+    assert.hasClass(
+        document.querySelector('.o_MessagingMenu'),
+        "o-is-open",
+        "should mark messaging menu as opened"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_MessagingMenu_dropdownMenu`).length,
@@ -219,6 +216,13 @@ QUnit.test('basic rendering', async function (assert) {
         `).length,
         1,
         "should display no conversation in thread preview list"
+    );
+
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    assert.doesNotHaveClass(
+        document.querySelector('.o_MessagingMenu'),
+        "o-is-open",
+        "should mark messaging menu as closed"
     );
 });
 

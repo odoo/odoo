@@ -367,18 +367,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @static
-         */
-        static openNewMessage() {
-            const discuss = this.env.messaging.discuss;
-            if (discuss.isOpen) {
-                discuss.openNewMessage();
-            } else {
-                this.env.messaging.chatWindowManager.openNewMessage();
-            }
-        }
-
-        /**
          * @param {string} [stringifiedDomain='[]']
          * @returns {mail.thread_cache}
          */
