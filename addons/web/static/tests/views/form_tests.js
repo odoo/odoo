@@ -7217,7 +7217,7 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('display tooltips for buttons', async function (assert) {
+    QUnit.test('display popovers for buttons', async function (assert) {
         assert.expect(2);
 
         var initialDebugMode = odoo.debug;
@@ -7236,20 +7236,20 @@ QUnit.module('Views', {
         });
 
         var $button = form.$('.o_form_statusbar button');
-        $button.tooltip('show', false);
         $button.trigger($.Event('mouseenter'));
 
-        assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1,
-            "should have rendered a tooltip");
+        assert.strictEqual($('.popover.bs-popover-right.show').length, 1,
+            "should have rendered a popover");
         $button.trigger($.Event('mouseleave'));
+        $button.popover('dispose');
 
         var $secondButton = form.$('button[name="other_method"]');
-        $secondButton.tooltip('show', false);
         $secondButton.trigger($.Event('mouseenter'));
 
-        assert.strictEqual($('.tooltip .oe_tooltip_string').length, 1,
-            "should have rendered a tooltip");
+        assert.strictEqual($('.popover.bs-popover-right.show').length, 1,
+            "should have rendered a popover");
         $secondButton.trigger($.Event('mouseleave'));
+        $secondButton.popover('dispose');
 
         odoo.debug = initialDebugMode;
         form.destroy();
