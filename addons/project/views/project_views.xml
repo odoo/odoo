@@ -351,9 +351,21 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-lg-6 o_setting_box"  id="recurring_tasks_setting" groups="project.group_project_recurring_tasks">
+                                    <div class="o_setting_left_pane">
+                                        <field name="allow_recurring_tasks" />
+                                    </div>
+                                    <div class="o_setting_right_pane">
+                                        <label for="allow_recurring_tasks" />
+                                        <div class="text-muted">
+                                            Auto-generate tasks for regular activities
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </page>
                     </notebook>
+
                     <div class="oe_chatter">
                         <field name="message_follower_ids" options="{'post_refresh':True}" help="Follow this project to automatically track the events associated to tasks and issues of this project." groups="base.group_user"/>
                     </div>
@@ -444,6 +456,7 @@
                         <field name="name" class="o_project_name oe_inline"
                             string="Project Name" placeholder="e.g. Office Party"/>
                         <field name="user_id" invisible="1"/>
+                        <field name="allow_recurring_tasks" groups="project.group_project_recurring_tasks" />
                     </group>
                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
                         <label for="alias_enabled" class="oe_inline" string="Create tasks by sending an email to"/>
@@ -607,6 +620,12 @@
                 <form string="Task" class="o_form_project_tasks">
                     <field name="allow_subtasks" invisible="1" />
                     <field name="is_closed" invisible="1" />
+                    <field name="allow_recurring_tasks" invisible="1" />
+                    <field name="repeat_show_dow" invisible="1" />
+                    <field name="repeat_show_day" invisible="1" />
+                    <field name="repeat_show_week" invisible="1" />
+                    <field name="repeat_show_month" invisible="1" />
+                    <field name="recurrence_id" invisible="1" />
                     <header>
                         <button name="action_assign_to_me" string="Assign to Me" type="object" class="oe_highlight"
                             attrs="{'invisible' : [('user_id', '!=', False)]}"/>
@@ -614,6 +633,10 @@
                     </header>
                     <div class="text-center alert alert-primary" role="alert" attrs="{'invisible': ['|', ('ribbon_message', '=', False), ('ribbon_message', '=', '')]}">
                         <field name="ribbon_message"/>
+                    </div>
+                    <div class="alert alert-info oe_edit_only" role="status" attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_id', '=', False)]}">
+                        <p>Edit recurring task</p>
+                        <field name="recurrence_update" widget="radio"/>
                     </div>
                     <sheet string="Task">
                     <div class="oe_button_box" name="button_box">
@@ -623,6 +646,15 @@
                         </button>
                         <button name="%(rating_rating_action_task)d" type="action" attrs="{'invisible': [('rating_count', '=', 0)]}" class="oe_stat_button" icon="fa-smile-o" groups="project.group_project_rating">
                             <field name="rating_count" string="Rating" widget="statinfo"/>
+                        </button>
+                        <button name="action_recurring_tasks" type="object" attrs="{'invisible': [('recurrence_id', '=', False)]}" class="oe_stat_button" icon="fa-repeat" groups="project.group_project_recurring_tasks">
+                            <div class="o_field_widget o_stat_info">
+                                <span class="o_stat_value">
+                                    <field name="recurring_count" widget="statinfo" nolabel="1" />
+                                    Tasks
+                                </span>
+                                <span class="o_stat_text">in Recurrence</span>
+                            </div>
                         </button>
                     </div>
                     <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
@@ -654,6 +686,7 @@
                                 attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
                             />
                             <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
+                            <field name="recurring_task" attrs="{'invisible': [('allow_recurring_tasks', '=', False)]}" />
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
                         </group>
                     </group>
@@ -661,6 +694,51 @@
                         <page name="description_page" string="Description">
                             <field name="description" type="html"/>
                             <div class="oe_clear"/>
+                        </page>
+                        <page name="recurrence" string="Recurrence" attrs="{'invisible': [('recurring_task', '=', False)]}">
+                            <group>
+                                <group>
+                                    <label for="repeat_interval" />
+                                    <div class="o_row">
+                                        <field name="repeat_interval" attrs="{'required': [('recurring_task', '=', True)]}" />
+                                        <field name="repeat_unit" attrs="{'required': [('recurring_task', '=', True)]}" />
+                                    </div>
+
+                                    <label for="repeat_on_month" string="Repeat On" attrs="{'invisible': [('repeat_unit', 'not in', ('month', 'year'))]}" />
+                                    <div class="o_row">
+                                        <field name="repeat_on_month" attrs="{'invisible': [('repeat_unit', '!=', 'month')], 'required': [('repeat_unit', '=', 'month')]}" />
+                                        <field name="repeat_on_year" attrs="{'invisible': [('repeat_unit', '!=', 'year')], 'required': [('repeat_unit', '=', 'year')]}" />
+
+                                        <field name="repeat_day" attrs="{'invisible': [('repeat_show_day', '=', False)], 'required': [('repeat_show_day', '=', True)]}" />
+                                        <field name="repeat_week" attrs="{'invisible': [('repeat_show_week', '=', False)], 'required': [('repeat_show_week', '=', True)]}" />
+                                        <field name="repeat_weekday" attrs="{'invisible': [('repeat_show_week', '=', False)], 'required': [('repeat_show_week', '=', True)]}" />
+                                        <span attrs="{'invisible': ['|', ('repeat_show_week', '=', False), ('repeat_show_month', '=', False)]}">of</span>
+                                        <field name="repeat_month" attrs="{'invisible': [('repeat_show_month', '=', False)], 'required': [('repeat_show_month', '=', True)]}" />
+                                    </div>
+
+
+                                    <field name="mon" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
+                                    <field name="tue" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
+                                    <field name="wed" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
+                                    <field name="thu" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
+                                    <field name="fri" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
+                                    <field name="sat" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
+                                    <field name="sun" attrs="{'invisible': [('repeat_show_dow', '=', False)]}" />
+
+                                    <label for="repeat_type" />
+                                    <div class="o_row">
+                                        <field name="repeat_type" attrs="{'required': [('recurring_task', '=', True)]}" />
+                                        <field name="repeat_until" attrs="{'invisible': [('repeat_type', '!=', 'until')], 'required': [('repeat_type', '=', 'until')]}" />
+                                        <field name="repeat_number" attrs="{'invisible': [('repeat_type', '!=', 'after')], 'required': [('repeat_type', '=', 'after')]}" />
+                                    </div>
+                                </group>
+                            </group>
+                            <group attrs="{'invisible': ['|', ('recurring_task', '=', False), ('recurrence_message', '=', False)]}">
+                                <div class="alert alert-success o_form_project_recurrence_message" role="status">
+                                    <p><span class="fa fa-check-circle"></span> Next Occurrences:</p>
+                                    <field name="recurrence_message" widget="html" class="mb-0" />
+                                </div>
+                            </group>
                         </page>
                         <page name="extra_info" string="Extra Info" groups="base.group_no_one">
                             <group>

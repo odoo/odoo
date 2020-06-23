@@ -40,6 +40,7 @@
         'wizard/project_task_type_delete_views.xml',
     ],
     'demo': ['data/project_demo.xml'],
+    'qweb': ['static/src/xml/project_templates.xml'],
     'test': [
     ],
     'installable': True,
