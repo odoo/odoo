@@ -48,8 +48,8 @@ class HolidaysType(models.Model):
             if holiday_status.timesheet_generate:
                 if not holiday_status.timesheet_project_id or not holiday_status.timesheet_task_id:
                     raise ValidationError(_("Both the internal project and task are required to "
-                    "generate a timesheet for the time off. If you don't want a timesheet, you should "
-                    "leave the internal project and task empty."))
+                    "generate a timesheet for the time off %s. If you don't want a timesheet, you should "
+                    "leave the internal project and task empty.") % (holiday_status.name))
 
 
 class Holidays(models.Model):
