@@ -1304,6 +1304,64 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('button in form view and long willStart', async function (assert) {
+        assert.expect(6);
+
+        var rpcCount = 0;
+
+        var FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('asyncwidget', FieldChar.extend({
+            willStart: function () {
+                assert.step('load '+rpcCount);
+                if (rpcCount === 2) {
+                    return testUtils.makeTestPromise();
+                }
+                return Promise.resolve();
+            },
+        }));
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="state" invisible="1"/>' +
+                    '<header>' +
+                        '<button name="post" class="p" string="Confirm" type="object"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" widget="asyncwidget"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function () {
+                rpcCount++;
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(['load 1']);
+
+        await testUtils.mock.intercept(form, 'execute_action', function (ev) {
+            ev.data.on_success();
+            ev.data.on_closed();
+        });
+
+        await testUtils.dom.click('.o_form_statusbar button.p', form);
+        assert.verifySteps(['load 2']);
+
+        await testUtils.mock.intercept(form, 'execute_action', function (ev) {
+            ev.data.on_success();
+            ev.data.on_closed();
+        });
+
+        await testUtils.dom.click('.o_form_statusbar button.p', form);
+        assert.verifySteps(['load 3']);
+
+        form.destroy();
+    });
+
     QUnit.test('buttons classes in form view', async function (assert) {
         assert.expect(16);
 
