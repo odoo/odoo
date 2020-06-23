@@ -5,7 +5,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import pytz
 
-from odoo.tools import misc, date_utils
+from odoo.tools import misc, date_utils, remove_accents
 from odoo.tests.common import TransactionCase, BaseCase
 
 
@@ -192,3 +192,18 @@ class TestFormatLangDate(TransactionCase):
 
         # Change 3 parameters
         self.assertEqual(misc.format_date(lang.with_context(lang='zh_CN').env, date_str, lang_code='en_US', date_format='MMM d, y'), 'Jan 31, 2017')
+
+
+class TestRemoveAccents(BaseCase):
+    def test_empty_string(self):
+        self.assertEqual(remove_accents(False), False)
+        self.assertEqual(remove_accents(''), '')
+        self.assertEqual(remove_accents(None), None)
+
+    def test_latin(self):
+        self.assertEqual(remove_accents('Niño Hernández'), 'Nino Hernandez')
+        self.assertEqual(remove_accents('Anaïs Clémence'), 'Anais Clemence')
+
+    def test_non_latin(self):
+        self.assertEqual(remove_accents('العربية'), 'العربية')
+        self.assertEqual(remove_accents('русский алфавит'), 'русскии алфавит')
