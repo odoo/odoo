@@ -487,7 +487,7 @@ class GettextAlias(object):
         finally:
             if cr and is_new_cr:
                 cr.close()
-        return res
+        return res or ''
 
 
 @functools.total_ordering
