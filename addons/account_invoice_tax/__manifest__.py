@@ -17,8 +17,8 @@ of a vendor bill.
     ],
     'data': [
         'security/ir.model.access.csv',
+        'wizards/account_invoice_tax_view.xml',
         'views/account_move_view.xml',
-        'wizards/res_partner_view.xml',
     ],
     'installable': True,
     'auto_install': False,
