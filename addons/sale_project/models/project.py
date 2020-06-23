@@ -143,3 +143,13 @@ class ProjectTask(models.Model):
         })
         action['context'] = context
         return action
+
+class ProjectTaskRecurrence(models.Model):
+    _inherit = 'project.task.recurrence'
+
+    def _new_task_values(self, task):
+        values = super(ProjectTaskRecurrence, self)._new_task_values(task)
+        task = self.sudo().task_ids[0]
+        if not task.is_fsm:
+            values['sale_line_id'] = task.sale_line_id.id
+        return values
