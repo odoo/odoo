@@ -49,6 +49,7 @@ class IrActions(models.Model):
                                      ('report', 'Report')],
                                     required=True, default='action')
     binding_view_types = fields.Char(default='list,form')
+    display_in_controlpanel = fields.Boolean(string='Display in Controlpanel', default=False)
 
     def _compute_xml_id(self):
         res = self.get_external_id()
@@ -408,7 +409,6 @@ class IrActionsServer(models.Model):
     fields_lines = fields.One2many('ir.server.object.lines', 'server_id', string='Value Mapping', copy=True)
     groups_id = fields.Many2many('res.groups', 'ir_act_server_group_rel',
                                  'act_id', 'gid', string='Groups')
-    display_in_controlpanel = fields.Boolean(string='Display in Controlpanel', default=False)
 
     @api.constrains('code')
     def _check_python_code(self):
