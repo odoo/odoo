@@ -1,7 +1,10 @@
 odoo.define('mail.systray.ActivityMenuTests', function (require) {
 "use strict";
 
-const { start } = require('mail/static/src/utils/test_utils.js');
+const {
+    afterNextRender,
+    start,
+} = require('mail/static/src/utils/test_utils.js');
 var ActivityMenu = require('mail.systray.ActivityMenu');
 
 var testUtils = require('web.test_utils');
@@ -15,10 +18,10 @@ QUnit.module('ActivityMenu', {
                     name: { type: "char" },
                     model: { type: "char" },
                     type: { type: "char" },
-                    planned_count: { type: "integer"},
-                    today_count: { type: "integer"},
-                    overdue_count: { type: "integer"},
-                    total_count: { type: "integer"},
+                    planned_count: { type: "integer" },
+                    today_count: { type: "integer" },
+                    overdue_count: { type: "integer" },
+                    total_count: { type: "integer" },
                     actions: [{
                         icon: { type: "char" },
                         name: { type: "char" },
@@ -181,17 +184,17 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
     var $second = activityMenu.$('.o_mail_activity_action').eq(1);
     assert.strictEqual($first.data('model_name'), "Issue",
                        "first activity action should link to 'Issue'");
-    assert.hasClass($first,'fa-clock-o', "should display the activity action icon");
+    assert.hasClass($first, 'fa-clock-o', "should display the activity action icon");
 
     assert.strictEqual($second.data('model_name'), "Note",
                        "Second activity action should link to 'Note'");
-    assert.hasClass($second,'fa-clock-o', "should display the activity action icon");
+    assert.hasClass($second, 'fa-clock-o', "should display the activity action icon");
 
     testUtils.mock.intercept(activityMenu, 'do_action', function (ev) {
         if (ev.data.action.name) {
             assert.ok(ev.data.action.domain, "should define a domain on the action");
             assert.deepEqual(ev.data.action.domain, [["activity_ids.user_id", "=", 10]],
-                "should set domain to user's activity only")
+                "should set domain to user's activity only");
             assert.step('do_action:' + ev.data.action.name);
         } else {
             assert.step('do_action:' + ev.data.action);
@@ -218,5 +221,42 @@ QUnit.test('activity menu widget: activity view icon', async function (assert) {
 
     widget.destroy();
 });
+
+QUnit.test('activity menu widget: close on messaging menu click', async function (assert) {
+    assert.expect(2);
+
+    const { widget } = await start({
+        hasMessagingMenu: true,
+        async mockRPC(route, args) {
+            if (args.method === 'systray_get_activities') {
+                return [];
+            }
+            return this._super(route, args);
+        },
+    });
+    const activityMenu = new ActivityMenu(widget);
+    await activityMenu.appendTo($('#qunit-fixture'));
+    await testUtils.nextTick();
+
+    await testUtils.dom.click(activityMenu.$('.dropdown-toggle'));
+    assert.hasClass(
+        activityMenu.el.querySelector('.o_mail_systray_dropdown'),
+        'show',
+        "activity menu should be shown after click on itself"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_toggler`).click()
+    );
+    assert.doesNotHaveClass(
+        activityMenu.el.querySelector('.o_mail_systray_dropdown'),
+        'show',
+        "activity menu should be hidden after click on messaging menu"
+    );
+
+    widget.destroy();
 });
+
+});
+
 });

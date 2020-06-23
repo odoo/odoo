@@ -2,10 +2,10 @@
 <templates xml:space="preserve">
 
     <t t-name="mail.MessagingMenu" owl="1">
-        <li class="o_MessagingMenu" t-att-class="{ show: messagingMenu.isOpen, 'o-mobile': env.messaging.device.isMobile }">
+        <li class="o_MessagingMenu" t-att-class="{ 'o-is-open': messagingMenu.isOpen, 'o-mobile': env.messaging.device.isMobile }">
             <!-- TODO FIXME restore mobile stuff here (activeMobileThread) -->
             <t t-if="!env.messaging.device.isMobile or true">
-                <a class="o_MessagingMenu_toggler o-no-caret" t-att-class="{ show: messagingMenu.isOpen, 'o-no-notification': !messagingMenu.counter }" href="#" t-on-click="_onClickToggler" data-toggle="dropdown" data-display="static" title="Conversations" role="button" aria-expanded="false">
+                <a class="o_MessagingMenu_toggler" t-att-class="{ 'o-no-notification': !messagingMenu.counter }" href="#" title="Conversations" role="button" t-att-aria-expanded="messagingMenu.isOpen ? 'true' : 'false'" aria-haspopup="true" t-on-click="_onClickToggler">
                     <i class="o_MessagingMenu_icon fa fa-comments" role="img" aria-label="Messages"/>
                     <t t-if="!env.messaging.isInitialized">
                         <i class="o_MessagingMenu_loading fa fa-spinner fa-spin"/>
