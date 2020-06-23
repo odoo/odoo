@@ -1517,6 +1517,21 @@ class TestFields(common.TransactionCase):
         line.move_id = move2
         self.assertEqual(line.move_id, move2)
 
+    def test_72_relational_inverse(self):
+        """ Check the consistency of relational fields with inverse(s). """
+        move1 = self.env['test_new_api.move'].create({})
+        move2 = self.env['test_new_api.move'].create({})
+
+        # makes sure that line.move_id is flushed before search
+        line = self.env['test_new_api.move_line'].create({'move_id': move1.id})
+        moves = self.env['test_new_api.move'].search([('line_ids', 'in', line.id)])
+        self.assertEqual(moves, move1)
+
+        # makes sure that line.move_id is flushed before search
+        line.move_id = move2
+        moves = self.env['test_new_api.move'].search([('line_ids', 'in', line.id)])
+        self.assertEqual(moves, move2)
+
     def test_80_copy(self):
         Translations = self.env['ir.translation']
         discussion = self.env.ref('test_new_api.discussion_0')
