@@ -49,7 +49,9 @@ var BasicRenderer = AbstractRenderer.extend({
             if (!canBeSaved) {
                 invalidFields.push(widget.name);
             }
-            widget.$el.toggleClass('o_field_invalid', !canBeSaved);
+            if (widget.el) { // widget may not be started yet
+                widget.$el.toggleClass('o_field_invalid', !canBeSaved);
+            }
         });
         return invalidFields;
     },
