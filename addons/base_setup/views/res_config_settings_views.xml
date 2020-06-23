@@ -80,9 +80,11 @@
                                             <span class='o_form_label' attrs="{'invisible':[('language_count', '&lt;=', '1')]}">
                                                 Languages
                                             </span>
-                                            <a href="https://www.odoo.com/documentation/user/13.0/general/odoo_basics/choose_language.html" title="Documentation" class="o_doc_link" target="_blank"></a>
                                         </div>
                                         <div class="mt8">
+                                            <button name="%(base.action_view_base_language_install)d" icon="fa-arrow-right" type="action" string="Add Language" class="btn-link"/>
+                                        </div>
+                                        <div class="mt8" groups="base.group_no_one">
                                             <button name="%(base.res_lang_act_window)d" icon="fa-arrow-right" type="action" string="Manage Languages" class="btn-link"/>
                                         </div>
                                     </div>
