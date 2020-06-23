@@ -5,7 +5,7 @@ import datetime
 from dateutil.relativedelta import relativedelta
 import pytz
 
-from odoo.tools import misc, date_utils, merge_sequences
+from odoo.tools import misc, date_utils, merge_sequences, remove_accents
 from odoo.tests.common import TransactionCase, BaseCase
 
 
@@ -302,3 +302,18 @@ class TestGroupCalls(BaseCase):
         callbacks.clear()
         callbacks()
         self.assertEqual(log, ["foo", 1, 2, "baz"])
+
+
+class TestRemoveAccents(BaseCase):
+    def test_empty_string(self):
+        self.assertEqual(remove_accents(False), False)
+        self.assertEqual(remove_accents(''), '')
+        self.assertEqual(remove_accents(None), None)
+
+    def test_latin(self):
+        self.assertEqual(remove_accents('Niño Hernández'), 'Nino Hernandez')
+        self.assertEqual(remove_accents('Anaïs Clémence'), 'Anais Clemence')
+
+    def test_non_latin(self):
+        self.assertEqual(remove_accents('العربية'), 'العربية')
+        self.assertEqual(remove_accents('русский алфавит'), 'русскии алфавит')
