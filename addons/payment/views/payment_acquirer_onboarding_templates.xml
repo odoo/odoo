@@ -39,7 +39,7 @@
                                     <field name="paypal_user_type" widget="radio" nolabel="1"/>
                                     <field name="paypal_email_account" attrs="{'required': [('payment_method', '=', 'paypal')]}" string="Email"/>
                                     <field name="paypal_seller_account" attrs="{'invisible': [('paypal_user_type', '=', 'new_user')], 'required': [('paypal_user_type', '!=', 'new_user'), ('payment_method', '=', 'paypal')]}" />
-                                    <field name="paypal_pdt_token" attrs="{'invisible': [('paypal_user_type', '=', 'new_user')], 'required': [('paypal_user_type', '!=', 'new_user'), ('payment_method', '=', 'paypal')]}" />
+                                    <field name="paypal_pdt_token" password="True" attrs="{'invisible': [('paypal_user_type', '=', 'new_user')], 'required': [('paypal_user_type', '!=', 'new_user'), ('payment_method', '=', 'paypal')]}" />
                                 </group>
                                 <p attrs="{'invisible': [('paypal_user_type', '!=', 'new_user')]}">
                                     <span>Start selling directly without an account; an email will be sent by Paypal to create your new account and collect your payments.</span>
@@ -52,9 +52,9 @@
                             </div>
                             <div attrs="{'invisible': [('payment_method', '!=', 'stripe')]}">
                                 <group>
-                                    <field name="stripe_secret_key"
+                                    <field name="stripe_secret_key" password="True"
                                        attrs="{'required': [('payment_method', '=', 'stripe')]}" />
-                                    <field name="stripe_publishable_key"
+                                    <field name="stripe_publishable_key" password="True"
                                        attrs="{'required': [('payment_method', '=', 'stripe')]}" />
                                 </group>
                                 <p>
