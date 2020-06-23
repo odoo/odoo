@@ -595,10 +595,6 @@ var LinkButton = AbstractField.extend({
 
 var FieldDateRange = InputField.extend({
     className: 'o_field_date_range',
-    events: Object.assign({}, InputField.prototype.events, {
-        'show.daterangepicker': '_onDateRangePickerShow',
-        'hide.daterangepicker': '_onDateRangePickerHide',
-    }),
     tagName: 'span',
     jsLibs: [
         '/web/static/lib/daterangepicker/daterangepicker.js',
@@ -702,6 +698,8 @@ var FieldDateRange = InputField.extend({
 
         this.$el.daterangepicker(this.dateRangePickerOptions);
         this.$el.on('apply.daterangepicker', this._applyChanges.bind(this));
+        this.$el.on('show.daterangepicker', this._onDateRangePickerShow.bind(this));
+        this.$el.on('hide.daterangepicker', this._onDateRangePickerHide.bind(this));
         this.$el.off('keyup.daterangepicker');
         this.$pickerContainer = this.$el.data('daterangepicker').container;
 
@@ -740,7 +738,7 @@ var FieldDateRange = InputField.extend({
      */
     _onDateRangePickerShow() {
         this._onScroll = ev => {
-            if (ev.target !== this.$el.data('daterangepicker').element.get(0)) {
+            if (!this.$pickerContainer.get(0).contains(ev.target)) {
                 this.$el.data('daterangepicker').hide();
             }
         };
