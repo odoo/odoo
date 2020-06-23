@@ -98,8 +98,10 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
             if (!canBeSaved) {
                 invalidFields.push(widget.name);
             }
-            widget.$el.toggleClass('o_field_invalid', !canBeSaved);
-            widget.$el.attr('aria-invalid', !canBeSaved);
+            if (widget.el) { // widget may not be started yet
+                widget.$el.toggleClass('o_field_invalid', !canBeSaved);
+                widget.$el.attr('aria-invalid', !canBeSaved);
+            }
         });
         return invalidFields;
     },
