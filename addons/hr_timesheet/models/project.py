@@ -48,31 +48,25 @@ class Project(models.Model):
             total_time *= project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = int(round(total_time))
 
-    @api.model
-    def name_create(self, name):
-        """ Create a project with name_create should generate analytic account creation """
-        values = {
-            'name': name,
-            'allow_timesheets': True,
-        }
-        return self.create(values).name_get()[0]
-
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ Create an analytic account if project allow timesheet and don't provide one
             Note: create it before calling super() to avoid raising the ValidationError from _check_allow_timesheet
         """
-        allow_timesheets = values['allow_timesheets'] if 'allow_timesheets' in values else self.default_get(['allow_timesheets'])['allow_timesheets']
-        if allow_timesheets and not values.get('analytic_account_id'):
-            analytic_account = self._create_analytic_account_from_values(values)
-            values['analytic_account_id'] = analytic_account.id
-        return super(Project, self).create(values)
+        defaults = self.default_get(['allow_timesheets', 'analytic_account_id'])
+        for values in vals_list:
+            allow_timesheets = values.get('allow_timesheets', defaults.get('allow_timesheets'))
+            analytic_account_id = values.get('analytic_account_id', defaults.get('analytic_account_id'))
+            if allow_timesheets and not analytic_account_id:
+                analytic_account = self._create_analytic_account_from_values(values)
+                values['analytic_account_id'] = analytic_account.id
+        return super(Project, self).create(vals_list)
 
     def write(self, values):
         # create the AA for project still allowing timesheet
-        if values.get('allow_timesheets'):
+        if values.get('allow_timesheets') and not values.get('analytic_account_id'):
             for project in self:
-                if not project.analytic_account_id and not values.get('analytic_account_id'):
+                if not project.analytic_account_id:
                     project._create_analytic_account()
         return super(Project, self).write(values)
 
