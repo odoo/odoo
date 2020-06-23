@@ -7,6 +7,8 @@ var publicWidget = require('web.public.widget');
 var wUtils = require('website.utils');
 var animations = require('website.content.snippets.animation');
 
+const extraMenuUpdateCallbacks = [];
+
 const BaseAnimatedHeader = animations.Animation.extend({
     disabledInEditableMode: false,
     effects: [{
@@ -49,8 +51,8 @@ const BaseAnimatedHeader = animations.Animation.extend({
         // We can rely on transitionend which is well supported but not on
         // transitionstart, so we listen to a custom odoo event.
         this._transitionCount = 0;
-        this.$el.on('odoo-transitionstart.BaseAnimatedHeader', () => this._updateMainPaddingTopLoop(1));
-        this.$el.on('transitionend.BaseAnimatedHeader', () => this._updateMainPaddingTopLoop(-1));
+        this.$el.on('odoo-transitionstart.BaseAnimatedHeader', () => this._adaptToHeaderChangeLoop(1));
+        this.$el.on('transitionend.BaseAnimatedHeader', () => this._adaptToHeaderChangeLoop(-1));
 
         return this._super(...arguments);
     },
@@ -71,12 +73,54 @@ const BaseAnimatedHeader = animations.Animation.extend({
 
     /**
      * @private
+     */
+    _adaptToHeaderChange: function () {
+        this._updateMainPaddingTop();
+
+        const bottom = this.el.getBoundingClientRect().bottom
+            || (this.el.nextElementSibling.getBoundingClientRect().top + window.scrollY);
+        for (const callback of extraMenuUpdateCallbacks) {
+            callback(bottom);
+        }
+    },
+    /**
+     * @private
+     * @param {integer} [addCount=0]
+     */
+    _adaptToHeaderChangeLoop: function (addCount = 0) {
+        this._adaptToHeaderChange();
+
+        this._transitionCount += addCount;
+        this._transitionCount = Math.max(0, this._transitionCount);
+
+        // As long as we detected a transition start without its related
+        // transition end, keep updating the main padding top.
+        if (this._transitionCount > 0) {
+            window.requestAnimationFrame(() => this._adaptToHeaderChangeLoop());
+
+            // The normal case would be to have the transitionend event to be
+            // fired but we cannot rely on it, so we use a timeout as fallback.
+            if (addCount !== 0) {
+                clearTimeout(this._changeLoopTimer);
+                this._changeLoopTimer = setTimeout(() => {
+                    this._adaptToHeaderChangeLoop(-this._transitionCount);
+                }, 500);
+            }
+        } else {
+            // When we detected all transitionend events, we need to stop the
+            // setTimeout fallback.
+            clearTimeout(this._changeLoopTimer);
+        }
+    },
+    /**
+     * @private
      * @param {boolean} [useFixed=true]
      */
     _toggleFixedHeader: function (useFixed = true) {
         this.fixedHeader = useFixed;
         this.el.classList.toggle('o_header_affixed', useFixed);
-        this._updateMainPaddingTop();
+        this.el.classList.toggle('o_top_fixed_element', useFixed);
+        this._adaptToHeaderChange();
     },
     /**
      * @private
@@ -90,35 +134,6 @@ const BaseAnimatedHeader = animations.Animation.extend({
         }
         const headerSize = this.el.classList.contains('o_header_affixed');
         this.$main.css('padding-top', headerSize ? this.headerHeight : '');
-    },
-    /**
-     * @private
-     * @param {integer} [addCount=0]
-     */
-    _updateMainPaddingTopLoop: function (addCount = 0) {
-        this._updateMainPaddingTop();
-
-        this._transitionCount += addCount;
-        this._transitionCount = Math.max(0, this._transitionCount);
-
-        // As long as we detected a transition start without its related
-        // transition end, keep updating the main padding top.
-        if (this._transitionCount > 0) {
-            window.requestAnimationFrame(() => this._updateMainPaddingTopLoop());
-
-            // The normal case would be to have the transitionend event to be
-            // fired but we cannot rely on it, so we use a timeout as fallback.
-            if (addCount !== 0) {
-                clearTimeout(this._paddingLoopTimer);
-                this._paddingLoopTimer = setTimeout(() => {
-                    this._updateMainPaddingTopLoop(-this._transitionCount);
-                }, 500);
-            }
-        } else {
-            // When we detected all transitionend events, we need to stop the
-            // setTimeout fallback.
-            clearTimeout(this._paddingLoopTimer);
-        }
     },
 
     //--------------------------------------------------------------------------
@@ -274,13 +289,17 @@ const BaseDisappearingHeader = publicWidget.registry.FixedHeader.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * @abstract
+     * @private
      */
-    _hideHeader: function () {},
+    _hideHeader: function () {
+        this.$el.trigger('odoo-transitionstart');
+    },
     /**
      * @private
      */
-    _showHeader: function () {},
+    _showHeader: function () {
+        this.$el.trigger('odoo-transitionstart');
+    },
 
     //--------------------------------------------------------------------------
     // Handlers
@@ -332,12 +351,14 @@ publicWidget.registry.DisappearingHeader = BaseDisappearingHeader.extend({
      * @override
      */
     _hideHeader: function () {
+        this._super(...arguments);
         this.$el.css('transform', 'translate(0, -100%)');
     },
     /**
      * @override
      */
     _showHeader: function () {
+        this._super(...arguments);
         this.$el.css('transform', this.atTop ? '' : `translate(0, -${this.topGap}px)`);
     },
 });
@@ -353,12 +374,14 @@ publicWidget.registry.FadeOutHeader = BaseDisappearingHeader.extend({
      * @override
      */
     _hideHeader: function () {
+        this._super(...arguments);
         this.$el.stop(false, true).fadeOut();
     },
     /**
      * @override
      */
     _showHeader: function () {
+        this._super(...arguments);
         this.$el.css('transform', this.atTop ? '' : `translate(0, -${this.topGap}px)`);
         this.$el.stop(false, true).fadeIn();
     },
@@ -558,4 +581,8 @@ publicWidget.registry.hoverableDropdown = animations.Animation.extend({
         $dropdown.find(this.$dropdownMenus).removeClass('show');
     },
 });
+
+return {
+    extraMenuUpdateCallbacks: extraMenuUpdateCallbacks,
+};
 });
