@@ -51,7 +51,7 @@ class AccountAnalyticLine(models.Model):
 
     def _compute_encoding_uom_id(self):
         for analytic_line in self:
-            analytic_line.encoding_uom_id = self.env.company.timesheet_encode_uom_id
+            analytic_line.encoding_uom_id = analytic_line.company_id.timesheet_encode_uom_id
 
     @api.onchange('project_id')
     def onchange_project_id(self):
