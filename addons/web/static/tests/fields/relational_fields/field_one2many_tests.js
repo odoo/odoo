@@ -8444,6 +8444,94 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('column_invisible attrs on a button in a one2many list', async function (assert) {
+            assert.expect(6);
+
+            this.data.partner.records[0].p = [2];
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="product_id"/>
+                        <field name="p">
+                            <tree>
+                                <field name="foo"/>
+                                <button name="abc" string="Do it" class="some_button" attrs="{'column_invisible': [('parent.product_id', '=', False)]}"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), '');
+            assert.containsN(form, '.o_list_table th', 2); // foo + trash bin
+            assert.containsNone(form, '.some_button');
+
+            await testUtils.fields.many2one.clickOpenDropdown('product_id');
+            await testUtils.fields.many2one.clickHighlightedItem('product_id');
+
+            assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), 'xphone');
+            assert.containsN(form, '.o_list_table th', 3); // foo + button + trash bin
+            assert.containsOnce(form, '.some_button');
+
+            form.destroy();
+        });
+
+        QUnit.test('column_invisible attrs on adjacent buttons', async function (assert) {
+            assert.expect(14);
+
+            this.data.partner.records[0].p = [2];
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: `
+                    <form>
+                        <field name="product_id"/>
+                        <field name="trululu"/>
+                        <field name="p">
+                            <tree>
+                                <button name="abc1" string="Do it 1" class="some_button1"/>
+                                <button name="abc2" string="Do it 2" class="some_button2" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"/>
+                                <field name="foo"/>
+                                <button name="abc3" string="Do it 3" class="some_button3" attrs="{'column_invisible': [('parent.product_id', '!=', False)]}"/>
+                                <button name="abc4" string="Do it 4" class="some_button4" attrs="{'column_invisible': [('parent.trululu', '!=', False)]}"/>
+                            </tree>
+                        </field>
+                    </form>`,
+                res_id: 1,
+                viewOptions: {
+                    mode: 'edit',
+                },
+            });
+
+            assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), '');
+            assert.strictEqual(form.$('.o_field_widget[name=trululu] input').val(), 'aaa');
+            assert.containsN(form, '.o_list_table th', 4); // button group 1 + foo + button group 2 + trash bin
+            assert.containsOnce(form, '.some_button1');
+            assert.containsOnce(form, '.some_button2');
+            assert.containsOnce(form, '.some_button3');
+            assert.containsNone(form, '.some_button4');
+
+            await testUtils.fields.many2one.clickOpenDropdown('product_id');
+            await testUtils.fields.many2one.clickHighlightedItem('product_id');
+
+            assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), 'xphone');
+            assert.strictEqual(form.$('.o_field_widget[name=trululu] input').val(), 'aaa');
+            assert.containsN(form, '.o_list_table th', 3); // button group 1 + foo + trash bin
+            assert.containsOnce(form, '.some_button1');
+            assert.containsNone(form, '.some_button2');
+            assert.containsNone(form, '.some_button3');
+            assert.containsNone(form, '.some_button4');
+
+            form.destroy();
+        });
+
         QUnit.test('one2many column visiblity depends on onchange of parent field', async function (assert) {
             assert.expect(3);
 

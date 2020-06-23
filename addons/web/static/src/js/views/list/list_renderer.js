@@ -66,7 +66,7 @@ var ListRenderer = BasicRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this._preprocessColumns();
-        this.columnInvisibleFields = params.columnInvisibleFields;
+        this.columnInvisibleFields = params.columnInvisibleFields || {};
         this.rowDecorations = this._extractDecorationAttrs(this.arch);
         this.fieldDecorations = {};
         for (const field of this.arch.children.filter(c => c.tag === 'field')) {
@@ -86,7 +86,7 @@ var ListRenderer = BasicRenderer.extend({
      * @override
      */
     willStart: function () {
-        this._processColumns(this.columnInvisibleFields || {});
+        this._processColumns(this.columnInvisibleFields);
         return this._super.apply(this, arguments);
     },
 
@@ -108,7 +108,8 @@ var ListRenderer = BasicRenderer.extend({
     updateState: function (state, params) {
         this._setState(state);
         this.isGrouped = this.state.groupedBy.length > 0;
-        this._processColumns(params.columnInvisibleFields || {});
+        this.columnInvisibleFields = params.columnInvisibleFields || {};
+        this._processColumns(this.columnInvisibleFields);
         if (params.selectedRecords) {
             this.selection = params.selectedRecords;
         }
@@ -369,7 +370,11 @@ var ListRenderer = BasicRenderer.extend({
                 var reject = c.attrs.modifiers.column_invisible;
                 // If there is an evaluated domain for the field we override the node
                 // attribute to have the evaluated modifier value.
-                if (c.attrs.name in columnInvisibleFields) {
+                if (c.tag === "button_group") {
+                    // FIXME: 'column_invisible' attribute is available for fields *and* buttons,
+                    // so 'columnInvisibleFields' variable name is misleading, it should be renamed
+                    reject = c.children.every(child => columnInvisibleFields[child.attrs.name]);
+                } else if (c.attrs.name in columnInvisibleFields) {
                     reject = columnInvisibleFields[c.attrs.name];
                 }
                 if (!reject && c.attrs.widget === 'handle') {
@@ -523,7 +528,9 @@ var ListRenderer = BasicRenderer.extend({
 
         if (node.tag === 'button_group') {
             for (const buttonNode of node.children) {
-                $td.append(this._renderButton(record, buttonNode));
+                if (!this.columnInvisibleFields[buttonNode.attrs.name]) {
+                    $td.append(this._renderButton(record, buttonNode));
+                }
             }
             return $td;
         } else if (node.tag === 'widget') {
@@ -1237,7 +1244,7 @@ var ListRenderer = BasicRenderer.extend({
             keyParts: this._getOptionalColumnsStorageKeyParts(),
             optionalColumnsEnabled: this.optionalColumnsEnabled,
         });
-        this._processColumns(this.columnInvisibleFields || {});
+        this._processColumns(this.columnInvisibleFields);
         this._render().then(function () {
             self._onToggleOptionalColumnDropdown(ev);
         });
