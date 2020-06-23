@@ -137,9 +137,9 @@ class IrTranslationImport(object):
         cr.execute(""" INSERT INTO %s(name, lang, res_id, src, type, value, module, state, comments)
                        SELECT name, lang, res_id, src, type, value, module, state, comments
                        FROM %s
-                       WHERE %s
+                       WHERE %%s OR noupdate is true
                        ON CONFLICT DO NOTHING;
-                   """ % (self._model_table, self._table, 'noupdate IS TRUE' if self._overwrite else 'TRUE'))
+                   """ % (self._model_table, self._table), [not self._overwrite])
         count += cr.rowcount
 
         if self._debug:

@@ -10,6 +10,7 @@ import traceback
 from xml.etree import ElementTree as ET
 import zipfile
 
+from psycopg2 import sql
 from pytz import country_timezones
 from functools import wraps
 from contextlib import closing
@@ -105,11 +106,11 @@ def _create_empty_database(name):
             cr.autocommit(True)     # avoid transaction block
 
             # 'C' collate is only safe with template0, but provides more useful indexes
-            collate = "LC_COLLATE 'C'" if chosen_template == 'template0' else ""
+            collate = sql.SQL("LC_COLLATE 'C'" if chosen_template == 'template0' else "")
             cr.execute(
-                """CREATE DATABASE "%s" ENCODING 'unicode' %s TEMPLATE "%s" """ %
-                (name, collate, chosen_template)
-            )
+                sql.SQL("CREATE DATABASE {} ENCODING 'unicode' {} TEMPLATE {}").format(
+                sql.Identifier(name), collate, sql.Identifier(chosen_template)
+            ))
 
     if odoo.tools.config['unaccent']:
         try:
@@ -136,7 +137,10 @@ def exp_duplicate_database(db_original_name, db_name):
     with closing(db.cursor()) as cr:
         cr.autocommit(True)     # avoid transaction block
         _drop_conn(cr, db_original_name)
-        cr.execute("""CREATE DATABASE "%s" ENCODING 'unicode' TEMPLATE "%s" """ % (db_name, db_original_name))
+        cr.execute(sql.SQL("CREATE DATABASE {} ENCODING 'unicode' TEMPLATE {}").format(
+            sql.Identifier(db_name),
+            sql.Identifier(db_original_name)
+        ))
 
     registry = odoo.modules.registry.Registry.new(db_name)
     with registry.cursor() as cr:
@@ -179,7 +183,7 @@ def exp_drop(db_name):
         _drop_conn(cr, db_name)
 
         try:
-            cr.execute('DROP DATABASE "%s"' % db_name)
+            cr.execute(sql.SQL('DROP DATABASE {}').format(db_name))
         except Exception as e:
             _logger.info('DROP DB: %s failed:\n%s', db_name, e)
             raise Exception("Couldn't drop database %s: %s" % (db_name, e))
@@ -323,7 +327,7 @@ def exp_rename(old_name, new_name):
         cr.autocommit(True)     # avoid transaction block
         _drop_conn(cr, old_name)
         try:
-            cr.execute('ALTER DATABASE "%s" RENAME TO "%s"' % (old_name, new_name))
+            cr.execute(sql.SQL('ALTER DATABASE {} RENAME TO {}').format(old_name, new_name))
             _logger.info('RENAME DB: %s -> %s', old_name, new_name)
         except Exception as e:
             _logger.info('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
