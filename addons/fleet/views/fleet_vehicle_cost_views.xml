@@ -8,7 +8,7 @@
                 <header>
                     <button name="contract_open" states="futur" type="object" string="Start Contract" class="oe_highlight" groups="fleet.fleet_group_manager"/>
                     <button name="contract_close" states="futur" type="object" string="Cancel" groups="fleet.fleet_group_manager"/>
-                    <button name="contract_close" states="open,expired,future" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
+                    <button name="contract_close" states="open,expired,futur" type="object" class="oe_highlight" string="Close Contract" groups="fleet.fleet_group_manager"/>
                     <button name="contract_draft" states="closed" type="object" string="Reset To Draft" groups="fleet.fleet_group_manager"/>
                     <field name="state" widget="statusbar" />
                 </header>
