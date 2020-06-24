@@ -14,6 +14,9 @@
                     <field name="menu_register_cta"/>
                 </div>
             </xpath>
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="options">{'color_field': 'color', 'no_quick_create': True}</attribute>
+            </xpath>
         </field>
     </record>
 
