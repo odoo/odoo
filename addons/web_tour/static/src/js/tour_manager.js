@@ -235,12 +235,11 @@ return core.Class.extend(mixins.EventDispatcherMixin, ServicesMixin, {
             const sortedTooltips = Object.keys(this.active_tooltips).sort(
                 (a, b) => this.tours[a].sequence - this.tours[b].sequence
             );
+            let visibleTip = false;
             for (const tourName of sortedTooltips) {
                 var tip = this.active_tooltips[tourName];
-                var activated = this._check_for_tooltip(tip, tourName);
-                if (activated) {
-                    break;
-                }
+                tip.hidden = visibleTip;
+                visibleTip = this._check_for_tooltip(tip, tourName) || visibleTip;
             }
         }
     },
