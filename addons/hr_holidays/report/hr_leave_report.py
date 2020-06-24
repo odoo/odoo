@@ -110,6 +110,7 @@ class LeaveReport(models.Model):
 
         return {
             'name': _('Time Off Analysis'),
+            'id': self.env.ref('hr_holidays.action_hr_available_holidays_report').id,
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave.report',
             'view_mode': 'tree,form,pivot',
