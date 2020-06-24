@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="account.view_move_form"/>
         <field name="arch" type="xml">
             <field name="amount_by_group" position="before">
-                <button name="%(account_invoice_tax.action_view_account_invoice_tax)d" type="action" title="Add taxes" states="draft"/>
+                <button name="%(account_invoice_tax.action_view_account_invoice_tax)d" type="action" string="+ Add taxes" class="oe_right oe_link oe_edit_only" attrs="{'invisible': [('type', 'not in', ('in_invoice', 'in_refund', 'out_receipt', 'in_receipt'))]}" colspan="2" context="{'type': type}"/>
             </field>
         </field>
     </record>

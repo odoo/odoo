@@ -1,11 +1,7 @@
-# -*- coding: utf-8 -*-
-# Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
     'name': 'Account Invoice Tax',
     'version': "1.0",
     'description': """
-Functional
-----------
 
 Add new button in the Vendor Bills that let us to add new taxes to all the lines
 of a vendor bill.
@@ -16,7 +12,7 @@ of a vendor bill.
         'account',
     ],
     'data': [
-        'security/ir.model.access.csv',
+        # 'security/ir.model.access.csv', TODO remove if not needed
         'wizards/account_invoice_tax_view.xml',
         'views/account_move_view.xml',
     ],

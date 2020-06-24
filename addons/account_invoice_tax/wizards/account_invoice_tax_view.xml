@@ -5,9 +5,12 @@
         <field name="name">account.invoce.tax.form</field>
         <field name="model">account.invoice.tax</field>
         <field name="arch" type="xml">
-            <form string="Add tax">
-                <field name="tax_id"/>
-                <field name="amount"/>
+            <form string="Add Tax">
+                <group>
+                    <field name="move_id" invisible="1"/>
+                    <field name="tax_id"/>
+                    <field name="amount"/>
+                </group>
                 <footer>
                     <button string='Add' name="add_tax" type="object" class="btn-primary"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
@@ -17,10 +20,10 @@
     </record>
 
     <record id="action_view_account_invoice_tax" model="ir.actions.act_window">
-        <field name="name">Add tax</field>
+        <field name="name">Add Tax</field>
         <field name="res_model">account.invoice.tax</field>
         <field name="view_mode">form</field>
-        <field name="view_id" ref="view_account_invoice_tax"/>
+        <field name="target">new</field>
     </record>
 
 </odoo>
