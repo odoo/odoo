@@ -22,6 +22,7 @@
         'views/event_track_templates_reminder.xml',
         'views/event_track_templates.xml',
         'views/event_track_views.xml',
+        'views/event_track_tag_views.xml',
         'views/event_track_visitor_views.xml',
         'views/event_type_views.xml',
         'views/website_visitor_views.xml',
