@@ -50,7 +50,9 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
      * @override
      */
     destroy: function () {
-        this.$target.addClass('d-none');
+        if (!this.editableMode) {
+            this.$target.addClass('d-none');
+        }
         this._super.apply(this, arguments);
     },
 
