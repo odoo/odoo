@@ -1582,7 +1582,7 @@ var BasicModel = AbstractModel.extend({
                         self._visitChildren(record, function (elem) {
                             _.extend(elem, initialData[elem.id]);
                         });
-                        resolve({});
+                        reject();
                     });
                 } else {
                     resolve(_.keys(changes));
