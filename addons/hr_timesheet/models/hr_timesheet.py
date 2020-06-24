@@ -84,8 +84,9 @@ class AccountAnalyticLine(models.Model):
         return result
 
     def write(self, values):
-        values = self._timesheet_preprocess(values)
-        result = super(AccountAnalyticLine, self).write(values)
+        for rec in self:
+            values = rec._timesheet_preprocess(values)
+            result = super(AccountAnalyticLine, rec).write(values)
         # applied only for timesheet
         self.filtered(lambda t: t.project_id)._timesheet_postprocess(values)
         return result
