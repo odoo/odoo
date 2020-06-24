@@ -1,8 +1,7 @@
 <?xml version="1.0"?>
-<odoo>
-    <data>
+<odoo><data>
 
-    <!-- Res Partner that will be used as locations for events -->
+    <!-- LOCATIONS -->
     <record id="res_partner_location_0" model="res.partner">
         <field name="name">Reno Airfield</field>
         <field name="is_company">1</field>
@@ -32,5 +31,30 @@
         <field name="country_id" ref="base.us"/>
     </record>
 
-    </data>
-</odoo>
+    <!-- SPONSORS / OTHER COUNTRIES -->
+    <record id="res_partner_event_1" model="res.partner">
+        <field name="name">Bloem GmbH</field>
+        <field name="is_company" eval="True"/>
+        <field name="street">Behrenstraße 55</field>
+        <field name="zip">10117</field>
+        <field name="city">Berlin</field>
+        <field name="country_id" ref="base.de"/>
+        <field name="phone">+49 30 12345678</field>
+        <field name="mobile">+49 30 87654321</field>
+        <field name="email">flower@example.com</field>
+        <field name="website">www.flower.example.com</field>
+    </record>
+    <record id="res_partner_event_2" model="res.partner">
+        <field name="name">OpenWood</field>
+        <field name="is_company" eval="True"/>
+        <field name="street">Orval 1</field>
+        <field name="zip">6823</field>
+        <field name="city">Florenville</field>
+        <field name="country_id" ref="base.be"/>
+        <field name="phone">+32 987 65 43 21</field>
+        <field name="mobile">+32 987 65 43 21</field>
+        <field name="email">wow@example.com</field>
+        <field name="website">www.openwood.example.com</field>
+    </record>
+
+</data></odoo>
