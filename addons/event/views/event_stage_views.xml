@@ -56,6 +56,9 @@
         <field name="view_mode">tree,form</field>
     </record>
 
-    <menuitem id="event_stage_menu" name="Event Stages" action="event_stage_action" parent="menu_event_configuration"/>
+    <record id="event_stage_menu" model="ir.ui.menu">
+        <field name="action" ref="event.event_stage_action"/>
+    </record>
+
 </data>
 </odoo>

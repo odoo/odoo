@@ -18,6 +18,6 @@ class TrackStage(models.Model):
     fold = fields.Boolean(
         string='Folded in Kanban',
         help='This stage is folded in the kanban view when there are no records in that stage to display.')
-    is_done = fields.Boolean(string='Accepted Stage')
+    is_done = fields.Boolean(string='Done Stage')
     is_cancel = fields.Boolean(string='Canceled Stage')
     color = fields.Integer(string='Color')

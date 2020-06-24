@@ -18,6 +18,7 @@
         'views/event_sponsor_views.xml',
         'views/event_views.xml',
         'views/website_event_menu_views.xml',
+        'views/event_menus.xml',
     ],
     'demo': [
         'data/res_partner_demo.xml',
