@@ -205,7 +205,7 @@
                             <group>
                                 <field name="active" invisible="1"/>
                                 <label for="date_begin" string="Date"/>
-                                <div class="o_row">
+                                <div class="o_row" name="date_interval">
                                     <field name="date_begin" widget="daterange" nolabel="1" class="oe_inline" options="{'related_end_date': 'date_end'}"/>
                                     <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
                                     <field name="date_end" widget="daterange" nolabel="1" class="oe_inline" options="{'related_start_date': 'date_begin'}"/>
