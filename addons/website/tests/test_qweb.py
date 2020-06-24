@@ -97,8 +97,8 @@ class MockRequest(object):
                 app=app
             )
         )
-        odoo.http._request_stack.push(self.request)
     def __enter__(self):
+        odoo.http._request_stack.push(self.request)
         return self.request
     def __exit__(self, exc_type, exc_value, traceback):
         odoo.http._request_stack.pop()
