@@ -125,6 +125,28 @@
         <field name="partner_id" ref="base.res_partner_address_14"/>
     </record>
 
+    <!-- OpenWood Collection Online Reveal: Gemini (all) -->
+    <record id="event_registration_7_0" model="event.registration">
+        <field name="event_id" ref="event.event_7"/>
+        <field name="event_ticket_id" ref="event.event_7_ticket_1"/>
+        <field name="partner_id" ref="base.res_partner_address_5"/>
+    </record>
+    <record id="event_registration_7_1" model="event.registration">
+        <field name="event_id" ref="event.event_7"/>
+        <field name="event_ticket_id" ref="event.event_7_ticket_1"/>
+        <field name="partner_id" ref="base.res_partner_address_10"/>
+    </record>
+    <record id="event_registration_7_2" model="event.registration">
+        <field name="event_id" ref="event.event_7"/>
+        <field name="event_ticket_id" ref="event.event_7_ticket_2"/>
+        <field name="partner_id" ref="base.res_partner_address_11"/>
+    </record>
+    <record id="event_registration_7_3" model="event.registration">
+        <field name="event_id" ref="event.event_7"/>
+        <field name="event_ticket_id" ref="event.event_7_ticket_2"/>
+        <field name="partner_id" ref="base.res_partner_address_25"/>
+    </record>
+
     <function model="event.registration"
         name="action_confirm"
         eval="[[ref('event_registration_0_0'), ref('event_registration_0_1'),
