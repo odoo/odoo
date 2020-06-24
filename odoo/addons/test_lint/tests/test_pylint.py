@@ -29,8 +29,6 @@ class TestPyLint(TransactionCase):
         'eval-used',
         'unreachable',
 
-        'mixed-indentation',
-        'deprecated-method',
         # custom checkers
         'sql-injection',
     ]
