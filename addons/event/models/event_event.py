@@ -376,7 +376,8 @@ class EventEvent(models.Model):
                 event.seats_limited = event.event_type_id.has_seats_limitation
 
             event.auto_confirm = event.event_type_id.auto_confirm
-            event.tag_ids = event.event_type_id.tag_ids
+            if not event.tag_ids and event.event_type_id.tag_ids:
+                event.tag_ids = event.event_type_id.tag_ids
 
     @api.depends('event_type_id')
     def _compute_event_mail_ids(self):
