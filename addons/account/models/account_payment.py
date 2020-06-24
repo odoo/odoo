@@ -534,7 +534,16 @@ class AccountPayment(models.Model):
         for i, pay in enumerate(payments):
             write_off_line_vals = write_off_line_vals_list[i]
 
+            # Write payment_id on the journal entry plus the fields being stored in both models but having the same
+            # name, e.g. partner_bank_id. The ORM is currently not able to perform such synchronization and make things
+            # more difficult by creating related fields on the fly to handle the _inherits.
+            # Then, when partner_bank_id is in vals, the key is consumed by account.payment but is never written on
+            # account.move.
             to_write = {'payment_id': pay.id}
+            for k, v in vals_list[i].items():
+                if k in self._fields and self._fields[k].store and k in pay.move_id._fields and pay.move_id._fields[k].store:
+                    to_write[k] = v
+
             if 'line_ids' not in vals_list[i]:
                 to_write['line_ids'] = [(0, 0, line_vals) for line_vals in pay._prepare_move_line_default_vals(write_off_line_vals=write_off_line_vals)]
 
@@ -643,7 +652,7 @@ class AccountPayment(models.Model):
 
         if not any(field_name in changed_fields for field_name in (
             'date', 'amount', 'payment_type', 'partner_type', 'payment_reference', 'is_internal_transfer',
-            'currency_id', 'partner_id', 'destination_account_id',
+            'currency_id', 'partner_id', 'destination_account_id', 'partner_bank_id',
         )):
             return
 
@@ -689,6 +698,7 @@ class AccountPayment(models.Model):
             pay.move_id.write({
                 'partner_id': pay.partner_id.id,
                 'currency_id': pay.currency_id.id,
+                'partner_bank_id': pay.partner_bank_id.id,
                 'line_ids': line_ids_commands,
             })
 
