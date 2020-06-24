@@ -5,6 +5,7 @@ import logging
 import re
 
 from binascii import Error as binascii_error
+from collections import defaultdict
 from operator import itemgetter
 from openerp.http import request
 
@@ -531,36 +532,40 @@ class Message(models.Model):
 
     @api.multi
     def _format_mail_failures(self):
-        """
-        A shorter message to notify a failure update
-        """
+        """ A shorter message to notify a failure update """
         failures_infos = []
+
+        # prepare notifications computation in batch
+        all_notifications = self.env['mail.notification'].sudo().search([
+            ('mail_message_id', 'in', self.ids)
+        ])
+        msgid_to_notif = defaultdict(lambda: self.env['mail.notification'].sudo())
+        for notif in all_notifications:
+            msgid_to_notif[notif.mail_message_id.id] += notif
+
         # for each channel, build the information header and include the logged partner information
         for message in self:
-            # Check if user has access to the record before displaying a notification about it.
-            # In case the user switches from one company to another, it might happen that he doesn't
-            # have access to the record related to the notification. In this case, we skip it.
-            if message.model and message.res_id:
-                record = self.env[message.model].browse(message.res_id)
-                try:
-                    record.check_access_rights('read')
-                    record.check_access_rule('read')
-                except AccessError:
-                    continue
-            info = {
-                'message_id': message.id,
-                'record_name': message.record_name,
-                'model_name': self.env['ir.model']._get(message.model).display_name,
-                'uuid': message.message_id,
-                'res_id': message.res_id,
-                'model': message.model,
-                'last_message_date': message.date,
-                'module_icon': '/mail/static/src/img/smiley/mailfailure.jpg',
-                'notifications': dict((notif.res_partner_id.id, (notif.email_status, notif.res_partner_id.name)) for notif in message.notification_ids.sudo())
-            }
+            notifications = msgid_to_notif[message.id]
+            if not any(notification.is_email for notification in notifications):
+                continue
+            info = dict(message._get_mail_failure_dict(),
+                        notifications=dict(
+                            (notif.res_partner_id.id, (notif.email_status, notif.res_partner_id.name)) for notif
+                            in notifications))
             failures_infos.append(info)
         return failures_infos
 
+    def _get_mail_failure_dict(self):
+        return {
+            'message_id': self.id,
+            'record_name': self.record_name,
+            'model_name': self.env['ir.model']._get(self.model).display_name,
+            'uuid': self.message_id,
+            'res_id': self.res_id,
+            'model': self.model,
+            'last_message_date': self.date,
+            'module_icon': '/mail/static/src/img/smiley/mailfailure.jpg',
+        }
     @api.multi
     def _notify_failure_update(self):
         authors = {}
