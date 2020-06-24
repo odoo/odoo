@@ -163,6 +163,10 @@ Object.assign(ThreadViewer, {
             optional: true,
         },
         hasMessageCheckbox: Boolean,
+        hasScrollAdjust: {
+            type: Boolean,
+            optional: true,
+        },
         hasSquashCloseMessages: Boolean,
         haveMessagesAuthorRedirect: Boolean,
         haveMessagesMarkAsReadIcon: Boolean,
