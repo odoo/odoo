@@ -72,9 +72,16 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box" >
-                                <label for="tag_ids" string="Tags"/>
-                                <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                            <div class="col-12 col-lg-6 o_setting_box" name="event_type_visibility_tags">
+                                <div class="o_setting_left_pane"/>
+                                <div class="o_setting_right_pane">
+                                    <label for="tag_ids" string="Tags"/>
+                                    <div class="row">
+                                        <div class="col-12 mt16">
+                                            <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                         <h2>Attendees</h2>
