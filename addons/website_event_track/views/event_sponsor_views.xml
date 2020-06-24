@@ -33,8 +33,6 @@
         <field name="res_model">event.sponsor.type</field>
     </record>
 
-    <menuitem action="event_sponsor_type_action" groups="base.group_no_one" id="menu_event_sponsor_type" parent="event.menu_event_configuration"/>
-
     <record id="event_sponsor_view_search" model="ir.ui.view">
         <field name="name">event.sponsor.search</field>
         <field name="model">event.sponsor</field>
@@ -43,6 +41,10 @@
                 <field name="partner_id"/>
                 <field name="event_id"/>
                 <filter string="Archived" name="archived" domain="[('active', '=', False)]"/>
+                <group string="Group By" expand="0">
+                    <filter string="Event" name="group_by_event_id" domain="[]" context="{'group_by': 'event_id'}"/>
+                    <filter string="Sponsorship" name="group_by_sponsor_type_id" domain="[]" context="{'group_by': 'sponsor_type_id'}"/>
+                </group>
             </search>
         </field>
     </record>
@@ -61,8 +63,7 @@
                         <group>
                             <field name="event_id"/>
                             <field name="partner_email" widget="email"/>
-                            <field name="url" widget="url"/>
-                            <field name="sequence" groups="base.group_no_one"/>
+                            <field name="url" widget="url" string="Website"/>
                         </group>
                         <group>
                             <field name="sponsor_type_id"/>
@@ -87,7 +88,7 @@
             <tree>
                 <field name="sequence" widget="handle"/>
                 <field name="partner_id"/>
-                <field name="url"/>
+                <field name="url" string="Website"/>
                 <field name="sponsor_type_id"/>
             </tree>
         </field>
@@ -126,6 +127,11 @@
         <field name="res_model">event.sponsor</field>
         <field name="view_mode">kanban,tree,form</field>
         <field name="context">{'search_default_event_id': active_id, 'default_event_id': active_id}</field>
+        <field name="help" type="html">
+<p class="o_view_nocontent_smiling_face">
+  Create a Sponsor
+</p>
+        </field>
     </record>
 </data>
 </odoo>
