@@ -120,6 +120,14 @@ class MrpBom(models.Model):
             for line in self.bom_line_ids:
                 line.bom_product_template_attribute_value_ids = False
 
+    def copy(self, default=None):
+        res = super().copy(default)
+        for bom_line in res.bom_line_ids:
+            if bom_line.operation_id:
+                operation = res.operation_ids.filtered(lambda op: op.name == bom_line.operation_id.name and op.workcenter_id == bom_line.operation_id.workcenter_id)
+                bom_line.operation_id = operation
+        return res
+
     @api.model
     def name_create(self, name):
         # prevent to use string as product_tmpl_id
