@@ -36,7 +36,8 @@ class AccountInvoice(models.Model):
             currency = False
             amount_currency = False
 
-        return self.env['product.product']._anglo_saxon_sale_move_lines(i_line.name, i_line.product_id, i_line.uom_id, i_line.quantity, price_unit, currency=currency, amount_currency=amount_currency, fiscal_position=inv.fiscal_position_id, account_analytic=i_line.account_analytic_id, analytic_tags=i_line.analytic_tag_ids)
+        product = i_line.product_id.with_context(force_company=self.company_id.id)
+        return self.env['product.product']._anglo_saxon_sale_move_lines(i_line.name, product, i_line.uom_id, i_line.quantity, price_unit, currency=currency, amount_currency=amount_currency, fiscal_position=inv.fiscal_position_id, account_analytic=i_line.account_analytic_id, analytic_tags=i_line.analytic_tag_ids)
 
     def _get_last_step_stock_moves(self):
         """ To be overridden for customer invoices and vendor bills in order to
