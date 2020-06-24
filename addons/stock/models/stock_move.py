@@ -1078,6 +1078,7 @@ class StockMove(models.Model):
             'warehouse_id': self.warehouse_id or self.picking_id.picking_type_id.warehouse_id or self.picking_type_id.warehouse_id,
             'priority': self.priority,
             'orderpoint_id': self.orderpoint_id,
+            'sale_line_id' : self.sale_line_id.id,
         }
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):

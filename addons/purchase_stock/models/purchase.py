@@ -494,6 +494,7 @@ class PurchaseOrderLine(models.Model):
         res['propagate_date'] = values.get('propagate_date')
         res['propagate_date_minimum_delta'] = values.get('propagate_date_minimum_delta')
         res['product_description_variants'] = values.get('product_description_variants')
+        res['sale_line_id'] = values.get('sale_line_id')        
         return res
 
     def _create_stock_moves(self, picking):
