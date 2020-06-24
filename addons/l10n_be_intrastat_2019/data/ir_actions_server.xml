@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+
+        <record model="ir.actions.server" id="action_intrastat_country_of_origin">
+            <field name="name">[Intrastat] Propagate "Intrastat Country" to "Origin Country of Products"</field>
+            <field name="model_id" ref="account.model_account_invoice"/>
+            <field name="binding_model_id" ref="account.model_account_invoice" />
+            <field name="state">code</field>
+            <field name="code">
+# This server action is dedicated to users who installed l10n_be_intrastat_2019 after having validated some invoices.
+# In that case, the field intrastat_product_origin_country_id of the account.invoice.line was never set and is not editable anymore.
+# This action allows you to batch the edition of that field by copying intrastat_country_id of the account.invoice, if set.
+
+for inv in records.filtered(lambda i: bool(i.intrastat_country_id)):
+    lines_to_update = inv.invoice_line_ids.filtered(lambda invl: not invl.intrastat_product_origin_country_id and invl.product_id.product_tmpl_id.type in ('consu','product'))
+    lines_to_update.write({'intrastat_product_origin_country_id': inv.intrastat_country_id.id})
+            </field>
+        </record>
+
+    </data>
+</odoo>

@@ -11,6 +11,7 @@ Adds the possibility to specify the origin country of goods and the partner VAT 
     'data': [
         'views/account_invoice_line_view.xml',
         'views/report_invoice.xml',
+        'data/ir_actions_server.xml',
     ],
     'auto_install': True,
 }
