@@ -62,7 +62,7 @@ class SaleReport(models.Model):
         with_ = ("WITH %s" % with_clause) if with_clause else ""
 
         select_ = """
-            row_number() over (ORDER BY s.id) as id,
+            coalesce(min(l.id), -s.id) as id,
             l.product_id as product_id,
             t.uom_id as product_uom,
             CASE WHEN l.product_id IS NOT NULL THEN sum(l.product_uom_qty / u.factor * u2.factor) ELSE 0 END as product_uom_qty,
