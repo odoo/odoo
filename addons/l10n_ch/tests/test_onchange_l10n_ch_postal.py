@@ -50,10 +50,10 @@ class TestOnchangePostal(SavepointCase):
 
         self.assertEqual(
             account.acc_number,
-            "ISR {} {}".format(CH_ISR_ISSUER, self.partner.name)
+            "{} {}".format(CH_ISR_ISSUER, self.partner.name)
         )
         self.assertEqual(account.l10n_ch_postal, CH_ISR_ISSUER)
-        self.assertEqual(account.acc_type, 'bank')
+        self.assertEqual(account.acc_type, 'postal')
 
     def test_onchange_acc_number_postal(self):
         """The user entered postal number into acc_number
