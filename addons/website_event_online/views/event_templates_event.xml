@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_layout_main" inherit_id="website_event.layout">
+    <xpath expr="//div[@id='o_wevent_event_submenu']/ul" position="replace">
+        <ul class="navbar-nav w-100" t-att-data-menu_name="editable and 'Event Menu'" t-att-data-content_menu_id="editable and event.menu_id.id">
+            <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                <t t-if="'/register' not in submenu.clean_url()" t-call="website.submenu">
+                    <t t-set="item_class" t-value="'nav-item'"/>
+                    <t t-set="link_class" t-value="'nav-link'"/>
+                </t>
+            </t>
+            <t t-foreach="event.menu_id.child_id" t-as="submenu">
+                <t t-if="'/register' in submenu.clean_url()" t-call="website.submenu">
+                    <t t-set="item_class" t-value="'nav-item ml-auto %s' % ('btn btn-primary p-0' if not event.is_participating else '')"/>
+                    <t t-set="link_class" t-value="'nav-link text-white'"/>
+                </t>
+            </t>
+        </ul>
+    </xpath>
+</template>
+
+</odoo>
