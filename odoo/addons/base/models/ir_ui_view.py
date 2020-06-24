@@ -1738,6 +1738,18 @@ actual arch.
                     # without a "currency_field" options, currency_id is necessary as fallback currency
                     name_manager.must_have_field("currency_id", "monetary widget of field '%s'" % field.name)
 
+            elif attr in ["states", "statusbar_visible"]:
+                states = expr.split(',')
+                fname = node.get("name") if node.tag == "field" and node.get('widget') == 'statusbar' else "state"
+                valid_states = name_manager.Model._fields[fname].get_values(
+                    name_manager.Model.env
+                )
+                for state in states:
+                    if state not in valid_states:
+                        msg = "Invalid %s '%s' specified as '%s' attribute" % (fname, state, attr)
+                        self.handle_view_error(msg, raise_exception=False)
+                name_manager.must_have_field(fname, "%s='%s'" % (attr, expr))
+
     def _validate_classes(self, node, expr):
         """ Validate the classes present on node. """
         classes = set(expr.split(' '))
