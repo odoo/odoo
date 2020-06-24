@@ -39,9 +39,7 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
      * @override
      */
     start: function () {
-        if (config.device.size_class <= config.device.SIZES.XS) {
-            this.$el.addClass('o_xxs_form_view');
-        }
+        this._applyFormSizeClass();
         return this._super.apply(this, arguments);
     },
     /**
@@ -356,6 +354,19 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
                     record: self.state,
                 });
             });
+        }
+    },
+    _applyFormSizeClass: function () {
+        const formEl = this.$el[0];
+        if (config.device.size_class <= config.device.SIZES.XS) {
+            formEl.classList.add('o_xxs_form_view');
+        } else {
+            formEl.classList.remove('o_xxs_form_view');
+        }
+        if (config.device.size_class === config.device.SIZES.XXL) {
+            formEl.classList.add('o_xxl_form_view');
+        } else {
+            formEl.classList.remove('o_xxl_form_view');
         }
     },
     /**

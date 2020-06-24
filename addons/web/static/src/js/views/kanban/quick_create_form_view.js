@@ -15,9 +15,10 @@ var QuickCreateFormRenderer = FormRenderer.extend({
     /**
      * @override
      */
-    start: function () {
+    start: async function () {
+        await this._super.apply(this, arguments);
         this.$el.addClass('o_xxs_form_view');
-        return this._super.apply(this, arguments);
+        this.$el.removeClass('o_xxl_form_view');
     },
 
     //--------------------------------------------------------------------------
