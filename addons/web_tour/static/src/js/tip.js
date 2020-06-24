@@ -27,6 +27,8 @@ var Tip = Widget.extend({
      *  - position [String] tip's position ('top', 'right', 'left' or 'bottom'), default 'right'
      *  - width [int] the width in px of the tip when opened, default 270
      *  - space [int] space in px between anchor and tip, default 10
+     *  - hidden [boolean] if true, the tip won't be visible (but the handlers will still be
+     *    bound on the anchor, so that the tip is consumed if the user clicks on it)
      *  - overlay [Object] x and y values for the number of pixels the mouseout detection area
      *    overlaps the opened tip, default {x: 50, y: 50}
      */
@@ -89,6 +91,7 @@ var Tip = Widget.extend({
         this._bind_anchor_events();
         this._updatePosition(true);
 
+        this.$el.toggleClass('d-none', !!this.info.hidden);
         this.$el.css("opacity", 1);
         core.bus.on("resize", this, _.debounce(function () {
             if (this.tip_opened) {
