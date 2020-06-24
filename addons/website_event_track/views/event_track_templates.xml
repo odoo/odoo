@@ -79,7 +79,7 @@
                             <t t-set="track" t-value="dt[1][location][0]"/>
                             <t t-if="track">
                                 <td t-att-rowspan="dt[1][location][3]" t-attf-class="event_color_#{track.color} #{track and 'event_track' or ''}">
-                                    <t t-if="track">
+                                    <t t-if="track" name="track_agenda_track_cell">
                                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
                                             <span t-esc="track and track.name"/>
                                             <span t-if="not track.website_published" class="badge badge-warning">unpublished</span>
