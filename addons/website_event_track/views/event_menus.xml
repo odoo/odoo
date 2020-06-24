@@ -1,0 +1,41 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <!-- MAIN ITEMS -->
+    <menuitem id="menu_event_track"
+        name="Tracks"
+        action="action_event_track"
+        parent="event.event_main_menu"
+        groups="base.group_no_one"/>
+
+    <!-- CONFIGURATION -->
+    <menuitem name="Track Stages"
+        id="event_track_stage_menu"
+        action="event_track_stage_action"
+        parent="event.menu_event_configuration"
+        groups="base.group_no_one"
+        sequence="30"/>
+
+    <menuitem id="menu_event_track_location"
+        name="Track Locations"
+        action="action_event_track_location"
+        parent="event.menu_event_configuration"
+        groups="base.group_no_one"
+        sequence="32"/>
+
+    <menuitem
+        id="menu_event_track_tag"
+        name="Track Tags"
+        action="action_event_track_tag"
+        parent="event.menu_event_configuration"
+        groups="base.group_no_one"
+        sequence="34"/>
+
+    <menuitem id="menu_event_sponsor_type"
+        name="Sponsor Types"
+        action="event_sponsor_type_action"
+        parent="event.menu_event_configuration"
+        groups="base.group_no_one"
+        sequence="36"/>
+
+</data></odoo>
