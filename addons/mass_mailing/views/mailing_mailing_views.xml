@@ -66,7 +66,7 @@
 
                         <field name="state" readonly="1" widget="statusbar"/>
                     </header>
-                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['&amp;','&amp;','&amp;',('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
+                    <div class="alert alert-info text-center" role="alert" attrs="{'invisible': ['|','&amp;','&amp;','&amp;',('state', '!=', 'in_queue'),('sent', '=', 0),('ignored', '=', 0),('scheduled', '=', 0),('failed', '=', 0)]}">
                         <div attrs="{'invisible': [('ignored', '=', 0)]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_ignored"
@@ -87,7 +87,7 @@
                                 </strong>
                             </button>
                         </div>
-                        <div attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test'))]}">
+                        <div attrs="{'invisible': ['&amp;', ('sent', '=', 0), ('state', 'in', ('draft', 'test', 'in_queue'))]}">
                             <button class="btn-link py-0"
                                     name="action_view_traces_sent"
                                     type="object">
@@ -107,13 +107,14 @@
                                 </strong>
                             </button>
                         </div>
+                        <div attrs="{'invisible': [('state', '!=', 'in_queue')]}">
+                            <strong>
+                                <span name="next_departure_text">This mailing is scheduled for </span>
+                                <field name="next_departure" class="oe_inline"/>.
+                            </strong>
+                        </div>
                     </div>
-                    <div class="alert alert-info text-center" attrs="{'invisible': [('state', '!=', 'in_queue')]}" role="alert">
-                        <strong>
-                            <span name="next_departure_text">This mailing is scheduled for </span>
-                            <field name="next_departure" class="oe_inline"/>.
-                        </strong>
-                    </div>
+
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button name="action_view_delivered"
