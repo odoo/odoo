@@ -1,5 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
-<odoo>
+<odoo><data>
+
+    <record id="event_track_tag_category_1" model="event.track.tag.category">
+        <field name="name">Audience</field>
+        <field name="sequence">10</field>
+    </record>
+    <record id="event_track_tag_category_2" model="event.track.tag.category">
+        <field name="name">Format</field>
+        <field name="sequence">20</field>
+    </record>
+
     <record id="website_event_track.event_7_track_1" model="event.track">
         <field name="wishlisted_by_default" eval="True"/>
     </record>
@@ -12,4 +22,30 @@
     <record id="website_event_track.event_7_track_10" model="event.track">
         <field name="wishlisted_by_default" eval="True"/>
     </record>
-</odoo>
+
+    <record id="website_event_track.event_track_tag1" model="event.track.tag">
+        <field name="category_id" ref="website_event_track_online.event_track_tag_category_1"/>
+        <field name="sequence">1</field>
+    </record>
+    <record id="website_event_track.event_track_tag2" model="event.track.tag">
+        <field name="category_id" ref="website_event_track_online.event_track_tag_category_1"/>
+        <field name="sequence">2</field>
+    </record>
+    <record id="website_event_track.event_track_tag3" model="event.track.tag">
+        <field name="category_id" ref="website_event_track_online.event_track_tag_category_1"/>
+        <field name="sequence">3</field>
+    </record>
+    <record id="website_event_track.event_track_tag11" model="event.track.tag">
+        <field name="category_id" ref="website_event_track_online.event_track_tag_category_2"/>
+        <field name="sequence">11</field>
+    </record>
+    <record id="website_event_track.event_track_tag12" model="event.track.tag">
+        <field name="category_id" ref="website_event_track_online.event_track_tag_category_2"/>
+        <field name="sequence">12</field>
+    </record>
+    <record id="website_event_track.event_track_tag13" model="event.track.tag">
+        <field name="category_id" ref="website_event_track_online.event_track_tag_category_2"/>
+        <field name="sequence">13</field>
+    </record>
+
+</data></odoo>
