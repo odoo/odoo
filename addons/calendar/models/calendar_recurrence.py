@@ -333,16 +333,14 @@ class RecurrenceRule(models.Model):
         return data
 
     def _get_start_of_period(self, dt):
-        if self.rrule_type == 'daily':
-            start = dt
-        elif self.rrule_type == 'weekly':
+        if self.rrule_type == 'weekly':
             lang = self.env['res.lang']._lang_get(self.env.user.lang)
             week_start = int(lang.week_start)  # lang.week_start ranges from '1' to '7'
             week_start = rrule.weekday(week_start - 1)  # expects an int from 0 to 6
             start = dt + relativedelta(weekday=week_start(-1))
         elif self.rrule_type == 'monthly':
             start = dt + relativedelta(day=1)
-        elif self.rrule_type == 'yearly':
+        else:
             start = dt
         return start
 
