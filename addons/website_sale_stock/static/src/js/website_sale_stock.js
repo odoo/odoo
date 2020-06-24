@@ -24,7 +24,7 @@ $('.oe_website_sale').each(function() {
     $(oe_website_sale).find('input[name="add_qty"]').trigger('change');
 
     // Handle case when manually write in input
-    $(oe_website_sale).on('change', '.js_quantity', function(event) {
+    $(oe_website_sale).prependEvent('change', '.oe_cart input.js_quantity[data-product-id]', function(event) {
         var $input = $(event.currentTarget);
         var max_qty = parseInt($input.data('max'));
         if($input.val() > max_qty) {
