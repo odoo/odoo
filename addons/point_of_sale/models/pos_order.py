@@ -263,7 +263,48 @@ class PosOrder(models.Model):
         have_to_group_by = session and session.config_id.group_by or False
         rounding_method = session and session.config_id.company_id.tax_calculation_rounding_method
 
-        def add_anglosaxon_lines(grouped_data):
+        def insert_data(data_type, values, move_id):
+            # if have_to_group_by:
+            values.update({
+                'move_id': move_id.id,
+            })
+
+            key = self._get_account_move_line_group_data_type_key(
+                data_type, values, {'rounding_method': rounding_method})
+            if not key:
+                return
+
+            grouped_data.setdefault(key, [])
+
+            if have_to_group_by:
+                if not grouped_data[key]:
+                    grouped_data[key].append(values)
+                else:
+                    current_value = grouped_data[key][0]
+                    current_value['quantity'] = current_value.get(
+                        'quantity',0.0) + values.get('quantity', 0.0)
+                    current_value['credit'] = current_value.get(
+                        'credit',0.0) + values.get('credit', 0.0)
+                    current_value['debit'] = current_value.get(
+                        'debit',0.0) + values.get('debit', 0.0)
+                    if 'currency_id' in values:
+                        current_value['amount_currency'] = current_value.get(
+                            'amount_currency', 0.0) + values.get(
+                            'amount_currency', 0.0)
+                    if key[0] == 'tax' and rounding_method == 'round_globally':
+                        if current_value['debit'] - current_value['credit'] > 0:
+                            current_value['debit'] = current_value['debit'] - \
+                                                     current_value['credit']
+                            current_value['credit'] = 0
+                        else:
+                            current_value['credit'] = \
+                                current_value['credit'] - \
+                                current_value['debit']
+                            current_value['debit'] = 0
+            else:
+                grouped_data[key].append(values)
+
+        def add_anglosaxon_lines(grouped_data, move_id):
             Product = self.env['product.product']
             Analytic = self.env['account.analytic.account']
             for product_key in list(grouped_data.keys()):
@@ -286,8 +327,7 @@ class PosOrder(models.Model):
                             'credit': line1['credit'] or 0.0,
                             'debit': line1['debit'] or 0.0,
                             'partner_id': line1['partner_id']
-
-                        })
+                        }, move_id)
 
                         line2 = Product._convert_prepared_anglosaxon_line(line2, line['partner_id'])
                         insert_data('counter_part', {
@@ -296,7 +336,7 @@ class PosOrder(models.Model):
                             'credit': line2['credit'] or 0.0,
                             'debit': line2['debit'] or 0.0,
                             'partner_id': line2['partner_id']
-                        })
+                        }, move_id)
 
         for order in self.filtered(lambda o: not o.account_move or o.state == 'paid'):
             current_company = order.sale_journal.company_id
@@ -310,39 +350,6 @@ class PosOrder(models.Model):
                     'pos.closing.journal_id_%s' % current_company.id, default=order.sale_journal.id)
                 move = self._create_account_move(
                     order.session_id.start_at, order.name, int(journal_id), order.company_id.id)
-
-            def insert_data(data_type, values):
-                # if have_to_group_by:
-                values.update({
-                    'move_id': move.id,
-                })
-
-                key = self._get_account_move_line_group_data_type_key(data_type, values, {'rounding_method': rounding_method})
-                if not key:
-                    return
-
-                grouped_data.setdefault(key, [])
-
-                if have_to_group_by:
-                    if not grouped_data[key]:
-                        grouped_data[key].append(values)
-                    else:
-                        current_value = grouped_data[key][0]
-                        current_value['quantity'] = current_value.get('quantity', 0.0) + values.get('quantity', 0.0)
-                        current_value['credit'] = current_value.get('credit', 0.0) + values.get('credit', 0.0)
-                        current_value['debit'] = current_value.get('debit', 0.0) + values.get('debit', 0.0)
-                        if 'currency_id' in values:
-                            current_value['amount_currency'] = current_value.get('amount_currency', 0.0) + values.get('amount_currency', 0.0)
-                        if key[0] == 'tax' and rounding_method == 'round_globally':
-                            if current_value['debit'] - current_value['credit'] > 0:
-                                current_value['debit'] = current_value['debit'] - current_value['credit']
-                                current_value['credit'] = 0
-                            else:
-                                current_value['credit'] = current_value['credit'] - current_value['debit']
-                                current_value['debit'] = 0
-
-                else:
-                    grouped_data[key].append(values)
 
             # because of the weird way the pos order is written, we need to make sure there is at least one line,
             # because just after the 'for' loop there are references to 'line' and 'income_account' variables (that
@@ -396,7 +403,7 @@ class PosOrder(models.Model):
                     data['currency_id'] = cur.id
                     data['amount_currency'] = -abs(line.price_subtotal) if data.get('credit') else abs(line.price_subtotal)
                     amount_cur_company += data['credit'] - data['debit']
-                insert_data('product', data)
+                insert_data('product', data, move)
                 move_lines.append({'data_type': 'product', 'values': data})
 
                 # Create the tax lines
@@ -426,7 +433,7 @@ class PosOrder(models.Model):
                         data['currency_id'] = cur.id
                         data['amount_currency'] = -abs(tax['amount']) if data.get('credit') else abs(tax['amount'])
                         amount_cur_company += data['credit'] - data['debit']
-                    insert_data('tax', data)
+                    insert_data('tax', data, move)
                     move_lines.append({'data_type': 'tax', 'values': data})
 
             # round tax lines per order
@@ -451,12 +458,12 @@ class PosOrder(models.Model):
             if receivable_amounts['amount_currency']:
                 data['currency_id'] = cur.id
                 data['amount_currency'] = -abs(receivable_amounts['amount_currency']) if data.get('credit') else abs(receivable_amounts['amount_currency'])
-            insert_data('counter_part', data)
+            insert_data('counter_part', data, move)
 
             order.write({'state': 'done', 'account_move': move.id})
 
         if self and order.company_id.anglo_saxon_accounting:
-            add_anglosaxon_lines(grouped_data)
+            add_anglosaxon_lines(grouped_data, move)
 
         return {
             'grouped_data': grouped_data,
