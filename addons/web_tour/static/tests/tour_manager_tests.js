@@ -71,10 +71,46 @@ odoo.define('web_tour.tour_manager_tests', async function (require) {
                 debug: true,
             });
 
-            assert.containsOnce(document.body, '.o_tooltip');
-            const tooltip = document.querySelector('.o_tooltip_content');
-            assert.strictEqual(tooltip.innerHTML.trim(), "Oui",
+            assert.containsOnce(document.body, '.o_tooltip:visible');
+            assert.strictEqual($('.o_tooltip_content:visible').text(), "Oui",
                 "content should be that of the third tour");
+
+            tourManager.destroy();
+        });
+
+        QUnit.test("Click on invisible tip consumes it", async function (assert) {
+            assert.expect(5);
+
+            const tourManager = await createTourManager({
+                template: `
+                    <button class="btn anchor1">Anchor</button>
+                    <button class="btn anchor2">Anchor</button>
+                    `,
+                tours: [{
+                    name: "Tour 1",
+                    options: { rainbowMan: false, sequence: 10 },
+                    steps: [{ trigger: '.anchor1', content: "1" }],
+                }, {
+                    name: "Tour 2",
+                    options: { rainbowMan: false, sequence: 5 },
+                    steps: [{ trigger: '.anchor2', content: "2" }],
+                }],
+                // Use this test in "debug" mode because the tips need to be in
+                // the viewport to be able to test their normal content
+                // (otherwise, the tips would indicate to the users that they
+                // have to scroll).
+                debug: true,
+            });
+
+            assert.containsN(document.body, '.o_tooltip', 2);
+            assert.strictEqual($('.o_tooltip_content:visible').text(), "2");
+
+            await testUtils.dom.click($('.anchor1'));
+            assert.containsOnce(document.body, '.o_tooltip');
+            assert.strictEqual($('.o_tooltip_content:visible').text(), "2");
+
+            await testUtils.dom.click($('.anchor2'));
+            assert.containsNone(document.body, '.o_tooltip');
 
             tourManager.destroy();
         });
