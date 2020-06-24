@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <record model="ir.ui.view" id="event_type_view_form">
+        <field name="name">event.type.view.form.inherit.online</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="event.view_event_type_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="options">{'color_field': 'color', 'no_quick_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record model="ir.ui.view" id="event_event_view_form">
+        <field name="name">event.event.view.form.inherit.online</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="options">{'color_field': 'color', 'no_quick_create': True}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</data></odoo>

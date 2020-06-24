@@ -20,4 +20,12 @@
     </xpath>
 </template>
 
+<template id="events_list" inherit_id="website_event.events_list">
+    <xpath expr="//t[@t-foreach='event.tag_ids']/span" position="replace">
+        <span t-attf-class="badge mr8 #{'badge-primary' if tag in search_tags else 'badge-light'}  #{'o_tag_color_%s' % tag.color if tag.color else ''}">
+            <span t-esc="tag.name"/>
+        </span>
+    </xpath>
+</template>
+
 </odoo>
