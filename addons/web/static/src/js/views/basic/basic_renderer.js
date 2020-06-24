@@ -416,22 +416,22 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
      */
     _getPopoverOptions: function (widget) {
         const debug = config.isDebug();
-        let help = widget.attrs.help || widget.field.help || '';
-        if (session.display_switch_company_menu && widget.field.company_dependent) {
-            help += (help ? '\n\n' : '') + _t('Values set here are company-specific.');
-        }
-        if (help || debug) {
-            return {
-                html: true,
-                trigger: 'hover',
-                title: function() {
-                    return qweb.render('WidgetLabelTitle.popover', { debug, widget });
-                },
-                content: function() {
-                    return qweb.render('WidgetLabel.popover', { debug, help, widget });
-                },
-            };
-        }
+        return {
+            html: true,
+            trigger: 'hover',
+            title: function () {
+                return qweb.render('WidgetLabel.popoverTitle', { debug, widget });
+            },
+            content: function () {
+                let help = widget.attrs.help || widget.field.help || '';
+                if (session.display_switch_company_menu && widget.field.company_dependent) {
+                    help += (help ? '\n\n' : '') + _t('Values set here are company-specific.');
+                }
+                if (help || debug) {
+                    return qweb.render('WidgetLabel.popoverContent', { debug, help, widget });
+                }
+            }
+        };
     },
     /**
      * @private

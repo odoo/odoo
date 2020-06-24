@@ -188,7 +188,7 @@ var Dialog = Widget.extend({
      * the first button primary when the dialog opens
      */
     open: function (options) {
-        $('.tooltip').remove(); // remove open tooltip if any to prevent them staying when modal is opened
+        $('.popover').remove(); // remove open tooltip if any to prevent them staying when modal is opened
 
         var self = this;
         this.appendTo($('<div/>')).then(function () {
@@ -362,15 +362,15 @@ var Dialog = Widget.extend({
                 if (!e.shiftKey && e.target.classList.contains("btn-primary")) {
                     e.preventDefault();
                     var $primaryButton = $(e.target);
-                    $primaryButton.tooltip({
+                    $primaryButton.popover({
                         html: true,
-                        delay: {show: 200, hide:0},
-                        title: function(){
-                            return QWeb.render('FormButton.tooltip',{title:$primaryButton.text().toUpperCase()});
+                        delay: {show: 200, hide: 0},
+                        content: function () {
+                            return QWeb.render('FormButton.popover', {title: $primaryButton.text().toUpperCase()});
                         },
                         trigger: 'manual',
                     });
-                    $primaryButton.tooltip('show');
+                    $primaryButton.popover('show');
                 }
                 break;
         }

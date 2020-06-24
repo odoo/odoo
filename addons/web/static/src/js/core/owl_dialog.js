@@ -167,7 +167,7 @@ odoo.define('web.OwlDialog', function () {
                         content: () => this.env.qweb.renderToString('web.DialogButton.popover', {
                             title: this.mainButton.innerText.toUpperCase(),
                         }),
-                        trigger: 'hover',
+                        trigger: 'manual',
                     })
                     .popover('show');
             }

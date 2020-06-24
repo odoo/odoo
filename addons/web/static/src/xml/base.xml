@@ -143,8 +143,8 @@
 </t>
 
 <t t-name="web.DialogButton.popover" owl="1">
-    <div>
-        <div>
+    <div class="oe_popover_string" role="popover">
+        <div class="popover-inner">
             <t>Hit ENTER to <t t-esc="title"/></t>
         </div>
     </div>
@@ -647,31 +647,31 @@
 
 <div t-name="Loading" class="o_loading"/>
 
-<t t-name="WidgetLabelTitle.popover">
-    <div t-if="widget.string">
+<t t-name="WidgetLabel.popoverTitle">
+    <div class="oe_popover_string" t-if="widget.string" role="popover">
         <t t-esc="widget.string"/> <t t-if="debug and widget.nolabel">(nolabel)</t>
     </div>
 </t>
 
-<t t-name="WidgetLabel.popover">
-    <p t-if="help">
+<t t-name="WidgetLabel.popoverContent">
+    <p t-if="help" class="oe_popover_help" role="popover">
         <t t-esc="help"/>
     </p>
-    <ul t-if="debug">
+    <ul t-if="debug" class="oe_popover_technical" role="popover">
         <li data-item="field" t-if="widget.name">
-            <span>Field:</span>
+            <span class="oe_popover_technical_title">Field:</span>
             <t t-esc="widget.name"/>
         </li>
         <li data-item="object">
-            <span>Object:</span>
+            <span class="oe_popover_technical_title">Object:</span>
             <t t-esc="widget.model"/>
         </li>
         <li data-item="type">
-            <span>Type:</span>
+            <span class="oe_popover_technical_title">Type:</span>
             <t t-esc="widget.field.type"/>
         </li>
         <li t-if="widget.attrs.widget" data-item="widget">
-            <span>Widget:</span>
+            <span class="oe_popover_technical_title">Widget:</span>
             <t t-set="description" t-value="widget.attrs.Widget.prototype.description"/>
             <t t-if="description">
                 <t t-esc="description"/> (<t t-esc="widget.attrs.widget"/>)
@@ -681,36 +681,36 @@
             </t>
         </li>
         <li t-if="widget.attrs.size || widget.field.size" data-item="size">
-            <span>Size:</span>
+            <span class="oe_popover_technical_title">Size:</span>
             <t t-esc="widget.attrs.size || widget.field.size"/>
         </li>
         <li t-if="widget.attrs.context || widget.field.context" data-item="context">
-            <span>Context:</span>
+            <span class="oe_popover_technical_title">Context:</span>
             <t t-esc="widget.attrs.context || JSON.stringify(widget.field.context)"/>
         </li>
         <li t-if="widget.attrs.domain || widget.field.domain" data-item="domain">
-            <span>Domain:</span>
+            <span class="oe_popover_technical_title">Domain:</span>
             <t t-esc="widget.attrs.domain || JSON.stringify(widget.field.domain)"/>
         </li>
         <li t-if="widget.attrs.modifiers and !_.isEmpty(widget.attrs.modifiers)" data-item="modifiers">
-            <span>Modifiers:</span>
+            <span class="oe_popover_technical_title">Modifiers:</span>
             <t t-esc="JSON.stringify(widget.attrs.modifiers)"/>
         </li>
         <li t-if="widget.field and widget.field.change_default" data-item="change_default">
-            <span>Change default:</span>
+            <span class="oe_popover_technical_title">Change default:</span>
             Yes
         </li>
         <li t-if="widget.attrs.on_change" data-item="on_change">
-            <span>On change:</span>
+            <span class="oe_popover_technical_title">On change:</span>
             <t t-esc="widget.attrs.on_change"/>
         </li>
         <li t-if="widget.field and widget.field.relation" data-item="relation">
-            <span>Relation:</span>
+            <span class="oe_popover_technical_title">Relation:</span>
             <t t-esc="widget.field.relation"/>
         </li>
         <li t-if="widget.field and widget.field.selection" data-item="selection">
-            <span>Selection:</span>
-            <ul>
+            <span class="oe_popover_technical_title">Selection:</span>
+            <ul class="oe_popover_technical">
                 <li t-foreach="widget.field.selection" t-as="option">
                     [<t t-esc="option[0]"/>]
                     <t t-if="option[1]"> - </t>
@@ -721,7 +721,7 @@
     </ul>
 </t>
 <t t-name="WidgetButtonTitle.popover">
-    <div t-if="debug || node.attrs.string">
+    <div class="oe_popover_string" t-if="debug || node.attrs.string" role="popover">
         <t t-if="debug">
             Button
             <t t-if="node.attrs.string">: </t>
@@ -731,37 +731,37 @@
     </div>
 </t>
 <t t-name="WidgetButton.popover">
-    <p t-if="node.attrs.help">
+    <p t-if="node.attrs.help" class="oe_popover_help" role="popover">
         <t t-esc="node.attrs.help"/>
     </p>
-    <ul t-if="debug">
+    <ul t-if="debug" class="oe_popover_technical" role="popover">
         <li data-item="object">
-            <span>Object:</span>
+            <span class="oe_popover_technical_title">Object:</span>
             <t t-esc="state.model"/>
         </li>
         <li t-if="node.attrs.context" data-item="context">
-            <span>Context:</span>
+            <span class="oe_popover_technical_title">Context:</span>
             <t t-esc="node.attrs.context || widget.field.context"/>
         </li>
         <li t-if="node.attrs.modifiers and !_.isEmpty(node.attrs.modifiers)" data-item="modifiers">
-            <span>Modifiers:</span>
+            <span class="oe_popover_technical_title">Modifiers:</span>
             <t t-esc="JSON.stringify(node.attrs.modifiers)"/>
         </li>
         <li t-if="node.attrs.special" data-item="special">
-            <span>Special:</span>
+            <span class="oe_popover_technical_title">Special:</span>
             <t t-esc="node.attrs.special"/>
         </li>
         <t t-set="button_type" t-value="node.attrs.type"/>
         <li t-if="button_type" data-item="button_type">
-            <span>Button Type:</span>
+            <span class="oe_popover_technical_title">Button Type:</span>
             <t t-esc="button_type"/>
         </li>
         <li t-if="button_type === 'object'" data-item="button_method">
-            <span>Method:</span>
+            <span class="oe_popover_technical_title">Method:</span>
             <t t-esc="node.attrs.name"/>
         </li>
         <li t-if="button_type === 'action'" data-item="button_action">
-            <span>Action ID:</span>
+            <span class="oe_popover_technical_title">Action ID:</span>
             <t t-esc="node.attrs.name"/>
         </li>
     </ul>
@@ -903,24 +903,24 @@
     </div>
 </t>
 <t t-name="SaveCancelButton.popover">
-    <div role="alert">
-        <div>
+    <div class="oe_popover_string" role="alert">
+        <div class="popover-inner">
             Hit ENTER to SAVE<br/>
             Hit ESCAPE to DISCARD
         </div>
     </div>
 </t>
 <t t-name="CreateButton.popover">
-    <div>
-        <div>
+    <div class="oe_popover_string" role="popover">
+        <div class="popover-inner">
             Hit ENTER to CREATE<br/>
             Hit DOWN to navigate to the list below
         </div>
     </div>
 </t>
-<t t-name="FormButton.tooltip">
-    <div class="oe_tooltip_string" role="tooltip">
-        <div class="tooltip-inner">
+<t t-name="FormButton.popover">
+    <div class="oe_popover_string" role="popover ">
+        <div class="popover-inner">
             Hit ENTER to
             <t t-esc="title"></t>
         </div>

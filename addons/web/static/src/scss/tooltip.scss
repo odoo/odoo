@@ -1,10 +1,10 @@
 
-.tooltip {
+.popover {
     &.show {
         opacity: 1;
     }
 
-    .tooltip-inner {
+    .popover-inner {
         max-width: 300px; // fallback for browsers which do not support "vw" unit
         max-width: 100vw;
         background-color: $o-tooltip-background-color;
@@ -16,37 +16,37 @@
 
         text-align: left;
 
-        .oe_tooltip_string {
+        .oe_popover_string {
             background-color: $o-brand-odoo;
             color: white;
             font-weight: bold;
             padding: 5px;
         }
-        .oe_tooltip_help {
+        .oe_popover_help {
             white-space: pre-line;
             padding: 5px 5px 0;
         }
-        .oe_tooltip_technical {
+        .oe_popover_technical {
             padding: 0;
             margin: 5px 0 5px 20px;
             list-style-type: circle;
 
-            .oe_tooltip_technical_title {
+            .oe_popover_technical_title {
                 font-weight: bold;
             }
         }
     }
 
-    &.bs-tooltip-top .arrow::before {
+    &.bs-popover-top .arrow::before {
         border-top-color: $o-tooltip-arrow-color!important;
     }
-    &.bs-tooltip-bottom .arrow::before {
+    &.bs-popover-bottom .arrow::before {
         border-bottom-color: $o-tooltip-arrow-color!important;
     }
-    &.bs-tooltip-left .arrow::before {
+    &.bs-popover-left .arrow::before {
         border-left-color: $o-tooltip-arrow-color!important;
     }
-    &.bs-tooltip-right .arrow::before {
+    &.bs-popover-right .arrow::before {
         border-right-color: $o-tooltip-arrow-color!important;
     }
 }
