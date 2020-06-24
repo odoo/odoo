@@ -7,12 +7,16 @@ from odoo import models, fields, api
 class ProductPackaging(models.Model):
     _inherit = 'product.packaging'
 
+    def _get_default_weight_uom(self):
+        return self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
+
     height = fields.Integer('Height')
     width = fields.Integer('Width')
     length = fields.Integer('Length')
     max_weight = fields.Float('Max Weight', help='Maximum weight shippable in this packaging')
     shipper_package_code = fields.Char('Package Code')
     package_carrier_type = fields.Selection([('none', 'No carrier integration')], string='Carrier', default='none')
+    weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name', default=_get_default_weight_uom)
 
     _sql_constraints = [
         ('positive_height', 'CHECK(height>=0)', 'Height must be positive'),
@@ -28,3 +32,7 @@ class ProductPackaging(models.Model):
             self.shipper_package_code = carrier_id._get_default_custom_package_code()
         else:
             self.shipper_package_code = False
+
+    def _compute_weight_uom_name(self):
+        for packaging in self:
+            packaging.weight_uom_name = self.env['product.template']._get_weight_uom_name_from_ir_config_parameter()
