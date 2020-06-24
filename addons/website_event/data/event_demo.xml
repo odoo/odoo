@@ -148,6 +148,27 @@
         <field name="cover_properties">{"background-image": "none", "background-color": "secondary", "opacity": ""}</field>
     </record>
 
+    <record id="event.event_7" model="event.event">
+        <field name="website_menu">True</field>
+        <field name="website_published">True</field>
+        <field name="subtitle">Our newest collection will be revealed online! Interact with us on our live streams!</field>
+        <field name="cover_properties">{"background-image": "url('/website_event/static/src/img/event_cover_7.jpg')", "resize_class": "o_record_has_cover o_half_screen_height", "opacity": "0.4"}</field>
+        <field name="description" type="html">
+<div class="oe_structure">
+    <h5>The finest OpenWood furnitures are coming to your house in a brand new collection</h5>
+    <p>
+        And this time, we go fully ONLINE! Meet us in our live streams from the confort of your house.<br/>
+        Special discount codes will be handed out during the various streams, make sure to be there on time.
+    </p>
+    <p class="mb-3">For any additional information, please contact us at <a href="mailto:events@openwood.example.com">events@penwood.example.com</a>.</p>
+    <div class="bg-light rounded-right border-left border-secondary p-3 mb-5" style="border-left-width: 3px !important;">
+        <p class="mb-1">This event is fully online and FREE, if you have paid for tickets, you should get a refund.<br/>
+        It will require a good Internet connection to get the best video quality.</p>
+    </div>
+</div>
+        </field>
+    </record>
+
     <record id="base.res_partner_1" model="res.partner">
         <field name="is_published">True</field>
     </record>
