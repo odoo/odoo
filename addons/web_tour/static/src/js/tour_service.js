@@ -58,11 +58,12 @@ return session.is_bound.then(function () {
                     // consider the addition/removal of tracked nodes.
                     for (const nodes of [mutation.addedNodes, mutation.removedNodes]) {
                         for (const node of nodes) {
-                            if (!_isTrackedNode(node)) {
-                                return false;
+                            if (_isTrackedNode(node)) {
+                                return true;
                             }
                         }
                     }
+                    return false;
                 } else if (mutation.type === 'attributes') {
                     // Get old and new value of the attribute. Note: as we
                     // compute the new value after a setTimeout, this might not
