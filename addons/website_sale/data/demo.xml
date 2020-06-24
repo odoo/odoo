@@ -339,6 +339,7 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="(datetime.now()-relativedelta(days=5)).strftime('%Y-%m-%d %H:%M:%S')"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor2'))]"/>
             <field name="state">sale</field>
         </record>
 
@@ -445,6 +446,7 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor1'))]"/>
             <field name="state">sale</field>
         </record>
 
@@ -496,6 +498,7 @@
             <field name="pricelist_id" ref="product.list0"/>
             <field name="team_id" ref="sales_team.salesteam_website_sales"/>
             <field name="date_order" eval="datetime.now()"/>
+            <field name="tag_ids" eval="[(4, ref('sales_team.categ_oppor5'))]"/>
         </record>
 
         <record id="website_sale_order_line_11" model="sale.order.line">
@@ -696,4 +699,41 @@
         <record id="website_sale.product_1_attribute_3_value_2" model="product.template.attribute.value">
             <field name="price_extra">18.00</field>
         </record>
+
+        <record id="website_sale_activity_1" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_3"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_call"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="website_sale_activity_2" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_8"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Follow-up on satisfaction</field>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="website_sale_activity_3" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_9"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_todo"/>
+            <field name="date_deadline" eval="(DateTime.today() + relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Confirm quote</field>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+        <record id="website_sale_activity_5" model="mail.activity">
+            <field name="res_id" ref="website_sale.website_sale_order_11"/>
+            <field name="res_model_id" ref="sale.model_sale_order"/>
+            <field name="activity_type_id" ref="mail.mail_activity_data_email"/>
+            <field name="date_deadline" eval="(DateTime.today() - relativedelta(days=5)).strftime('%Y-%m-%d %H:%M')" />
+            <field name="summary">Send updated pricelist</field>
+            <field name="create_uid" ref="base.user_demo"/>
+            <field name="user_id" ref="base.user_demo"/>
+        </record>
+
 </odoo>

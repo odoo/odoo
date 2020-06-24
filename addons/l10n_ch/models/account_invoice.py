@@ -142,7 +142,6 @@ class AccountMove(models.Model):
 
     @api.depends(
         'move_type', 'name', 'currency_id.name',
-        'partner_bank_id.l10n_ch_postal',
         'partner_bank_id.l10n_ch_isr_subscription_eur',
         'partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_valid(self):
@@ -151,7 +150,6 @@ class AccountMove(models.Model):
             record.l10n_ch_isr_valid = record.move_type == 'out_invoice' and\
                 record.name and \
                 record.l10n_ch_isr_subscription and \
-                record.partner_bank_id.l10n_ch_postal and \
                 record.l10n_ch_currency_name in ['EUR', 'CHF']
 
     def split_total_amount(self):
@@ -219,3 +217,16 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         return self.l10n_ch_isr_number
+
+    @api.model
+    def space_qrr_reference(self, qrr_ref):
+        """ Makes the provided QRR reference human-friendly, spacing its elements
+        by blocks of 5 from right to left.
+        """
+        spaced_qrr_ref = ''
+        i = len(qrr_ref) # i is the index after the last index to consider in substrings
+        while i > 0:
+            spaced_qrr_ref = qrr_ref[max(i-5, 0) : i] + ' ' + spaced_qrr_ref
+            i -= 5
+
+        return spaced_qrr_ref

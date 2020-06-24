@@ -25,10 +25,10 @@
                         <div t-if="o.state" class="col-auto" name="div_sched_date">
                             <strong>Shipping Date:</strong>
                             <t t-if="o.state == 'done'">
-                                <p t-field="o.date_done" t-options='{"widget": "date"}'/>
+                                <p t-field="o.date_done"/>
                             </t>
                             <t t-if="o.state != 'done'">
-                                <p t-field="o.scheduled_date" t-options='{"widget": "date"}'/>
+                                <p t-field="o.scheduled_date"/>
                            </t>
                         </div>
                     </div>
@@ -60,9 +60,11 @@
                         <thead>
                             <tr>
                                 <th name="th_sml_product"><strong>Product</strong></th>
-                                <th name="lot_serial" t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
-                                    Lot/Serial Number
-                                </th>
+                                <t t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
+                                    <th name="lot_serial">
+                                        Lot/Serial Number
+                                    </th>
+                                </t>
                                 <th name="th_sml_quantity" class="text-center"><strong>Quantity</strong></th>
                             </tr>
                         </thead>
@@ -74,12 +76,14 @@
                                         <span t-field="move_line.move_id.description_picking"/>
                                     </p>
                                 </td>
-                                <td t-if="has_serial_number and move_line.lot_name" groups="stock.group_lot_on_delivery_slip">
-                                    <span t-field="move_line.lot_name"/>
-                                </td>
-                                <td t-elif="has_serial_number" groups="stock.group_lot_on_delivery_slip">
-                                    <span t-field="move_line.lot_id.name"/>
-                                </td>
+                                <t t-if="has_serial_number" groups="stock.group_lot_on_delivery_slip">
+                                    <td t-if="move_line.lot_name">
+                                        <span t-field="move_line.lot_name"/>
+                                    </td>
+                                    <td t-else="">
+                                        <span t-field="move_line.lot_id.name"/>
+                                    </td>
+                                </t>
                                 <td class="text-center">
                                     <span t-field="move_line.qty_done"/>
                                     <span t-field="move_line.product_uom_id"/>
@@ -87,11 +91,37 @@
                             </tr>
                         </tbody>
                     </table>
-                    <p>
-                        <span t-if="o.backorder_ids and o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))">
-                            All items couldn't be shipped, the remaining ones will be shipped as soon as they become available.
-                        </span>
-                    </p>
+                    <t t-set="backorders" t-value="o.backorder_ids.filtered(lambda x: x.state not in ('done', 'cancel'))"/>
+                    <t t-if="o.backorder_ids and backorders">
+                        <p>
+                            <span>All items couldn't be shipped, the following items will be shipped as soon as they become available.</span>
+                        </p>
+                        <table class="table table-sm" name="stock_backorder_table">
+                            <thead>
+                                <tr>
+                                    <th name="th_sb_product"><strong>Product</strong></th>
+                                    <th name="th_sb_quantity" class="text-center"><strong>Quantity</strong></th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-foreach="backorders" t-as="backorder">
+                                    <t t-set="bo_lines" t-value="backorder.move_lines.filtered(lambda x: x.product_uom_qty)"/>
+                                    <tr t-foreach="bo_lines" t-as="bo_line">
+                                        <td>
+                                            <span t-field="bo_line.product_id"/>
+                                            <p t-if="bo_line.description_picking != bo_line.product_id.name">
+                                                <span t-field="bo_line.description_picking"/>
+                                            </p>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="bo_line.product_uom_qty"/>
+                                            <span t-field="bo_line.product_uom"/>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                    </t>
 
                     <div t-if="o.signature" class="mt32 ml64 mr4" name="signature">
                         <div class="offset-8">

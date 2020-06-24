@@ -136,7 +136,7 @@
             <field name="model">account.move.line</field>
             <field eval="100" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Journal Items" create="false" edit="false">
+                <tree string="Journal Items" create="false" edit="false" sample="1">
                     <field name="date" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company"/>
                     <field name="journal_id" options='{"no_open":True}'/>
@@ -380,7 +380,7 @@
             <field name="name">account.move.tree</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <tree string="Journal Entries">
+                <tree string="Journal Entries" sample="1">
                     <field name="date"/>
                     <field name="name"/>
                     <field name="partner_id" optional="show"/>
@@ -400,7 +400,8 @@
             <field name="arch" type="xml">
                 <tree string="Invoices"
                       banner_route="/account/account_invoice_onboarding"
-                      js_class="account_tree">
+                      js_class="account_tree"
+                      sample="1">
                     <field name="name" decoration-bf="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="invoice_source_email" invisible="1"/>
@@ -432,7 +433,7 @@
             <field name="name">account.move.kanban</field>
             <field name="model">account.move</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" sample="1">
                     <field name="journal_id"/>
                     <field name="ref"/>
                     <field name="date"/>

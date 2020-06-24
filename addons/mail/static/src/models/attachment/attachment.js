@@ -53,17 +53,21 @@ function factory(dependencies) {
          * View provided attachment(s), with given attachment initially. Prompts
          * the attachment viewer.
          *
+         * @static
          * @param {Object} param0
          * @param {mail.attachment} [param0.attachment]
-         * @param {mail.attachment>[]} param0.attachments
+         * @param {mail.attachments[]} param0.attachments
          * @returns {string|undefined} unique id of open dialog, if open
          */
         static view({ attachment, attachments }) {
-            if (!attachments || attachments.length === 0) {
+            const hasOtherAttachments = attachments && attachments.length > 0;
+            if (!attachment && !hasOtherAttachments) {
                 return;
             }
-            if (!attachment) {
+            if (!attachment && hasOtherAttachments) {
                 attachment = attachments[0];
+            } else if (attachment && !hasOtherAttachments) {
+                attachments = [attachment];
             }
             if (!attachments.includes(attachment)) {
                 return;

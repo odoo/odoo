@@ -297,7 +297,7 @@
             <field name="model">product.product</field>
             <field eval="7" name="priority"/>
             <field name="arch" type="xml">
-                <tree string="Product Variants" multi_edit="1" duplicate="false">
+                <tree string="Product Variants" multi_edit="1" duplicate="false" sample="1">
                     <field name="default_code" optional="show" readonly="1"/>
                     <field name="barcode" optional="hide" readonly="1"/>
                     <field name="name" readonly="1"/>
@@ -354,7 +354,7 @@
             <field name="name">Product Kanban</field>
             <field name="model">product.product</field>
             <field name="arch" type="xml">
-                <kanban>
+                <kanban sample="1">
                     <field name="id"/>
                     <field name="lst_price"/>
                     <field name="activity_state"/>

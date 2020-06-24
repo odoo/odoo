@@ -113,6 +113,8 @@ class MessagingMenu extends Component {
     //--------------------------------------------------------------------------
 
     /**
+     * Closes the menu when clicking outside, if appropriate.
+     *
      * @private
      * @param {MouseEvent} ev
      */
@@ -126,7 +128,7 @@ class MessagingMenu extends Component {
         ) {
             return;
         }
-        // closes the menu when clicking outside
+        // ignore click inside the menu
         if (this.el.contains(ev.target)) {
             return;
         }
@@ -142,7 +144,6 @@ class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickDesktopTabButton(ev) {
-        ev.stopPropagation();
         this.messagingMenu.update({ activeTabId: ev.currentTarget.dataset.tabId });
     }
 
@@ -151,9 +152,8 @@ class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickNewMessage(ev) {
-        ev.stopPropagation();
         if (!this.env.messaging.device.isMobile) {
-            this.env.models['mail.thread'].openNewMessage();
+            this.env.messaging.chatWindowManager.openNewMessage();
             this.messagingMenu.close();
         } else {
             this.messagingMenu.toggleMobileNewMessage();
@@ -165,7 +165,7 @@ class MessagingMenu extends Component {
      * @param {MouseEvent} ev
      */
     _onClickToggler(ev) {
-        ev.stopPropagation();
+        // avoid following dummy href
         ev.preventDefault();
         this.messagingMenu.toggleOpen();
     }

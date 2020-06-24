@@ -114,7 +114,7 @@
                                             <field name="departure_description"/>
                                             <field name="departure_date"/>
                                         </group>
-                                        <group string="Schedule" groups="base.group_no_one">
+                                        <group string="Schedule">
                                             <field name="resource_calendar_id" required="1"/>
                                             <field name="tz"/>
                                         </group>
@@ -201,7 +201,7 @@
             <field name="name">hr.employee.tree</field>
             <field name="model">hr.employee</field>
             <field name="arch" type="xml">
-                <tree string="Employees" multi_edit="1">
+                <tree string="Employees" multi_edit="1" sample="1">
                     <field name="name" readonly="1"/>
                     <field name="work_phone" class="o_force_ltr" readonly="1"/>
                     <field name="work_email"/>
@@ -220,7 +220,7 @@
            <field name="model">hr.employee</field>
            <field name="priority">10</field>
            <field name="arch" type="xml">
-               <kanban class="o_hr_employee_kanban" js_class="hr_employee_kanban">
+               <kanban class="o_hr_employee_kanban" js_class="hr_employee_kanban" sample="1">
                    <field name="id"/>
                    <field name="hr_presence_state"/>
                    <field name="user_id"/>

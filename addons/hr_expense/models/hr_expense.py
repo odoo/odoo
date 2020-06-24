@@ -383,9 +383,9 @@ class HrExpense(models.Model):
                 raise UserError(_("No credit account found for the %s journal, please configure one.") % (self.sheet_id.bank_journal_id.name))
             account_dest = self.sheet_id.bank_journal_id.default_credit_account_id.id
         else:
-            if not self.employee_id.address_home_id:
+            if not self.employee_id.sudo().address_home_id:
                 raise UserError(_("No Home Address found for the employee %s, please configure one.") % (self.employee_id.name))
-            partner = self.employee_id.address_home_id.with_company(self.company_id)
+            partner = self.employee_id.sudo().address_home_id.with_company(self.company_id)
             account_dest = partner.property_account_payable_id.id or partner.parent_id.property_account_payable_id.id
         return account_dest
 
@@ -404,7 +404,7 @@ class HrExpense(models.Model):
             taxes = expense.tax_ids.with_context(round=True).compute_all(expense.unit_amount, expense.currency_id, expense.quantity, expense.product_id)
             total_amount = 0.0
             total_amount_currency = 0.0
-            partner_id = expense.employee_id.address_home_id.commercial_partner_id.id
+            partner_id = expense.employee_id.sudo().address_home_id.commercial_partner_id.id
 
             # source move line
             amount = taxes['total_excluded']
@@ -509,7 +509,7 @@ class HrExpense(models.Model):
                 payment = self.env['account.payment'].create({
                     'payment_method_id': payment_methods and payment_methods[0].id or False,
                     'payment_type': 'outbound' if total_amount < 0 else 'inbound',
-                    'partner_id': expense.employee_id.address_home_id.commercial_partner_id.id,
+                    'partner_id': expense.employee_id.sudo().address_home_id.commercial_partner_id.id,
                     'partner_type': 'supplier',
                     'journal_id': journal.id,
                     'date': expense.date,

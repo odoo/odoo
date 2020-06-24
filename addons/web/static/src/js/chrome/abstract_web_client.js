@@ -126,7 +126,10 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         if (!state.cids) {
             state.cids = utils.get_cookie('cids') !== null ? utils.get_cookie('cids') : String(current_company_id);
         }
-        var stateCompanyIDS = _.map(state.cids.split(','), function (cid) { return parseInt(cid) });
+        // If a key appears several times in the hash, it is available in the
+        // bbq state as an array containing all occurrences of that key
+        const cids = Array.isArray(state.cids) ? state.cids[0] : state.cids;
+        let stateCompanyIDS = cids.split(',').map(cid => parseInt(cid, 10));
         var userCompanyIDS = _.map(session.user_companies.allowed_companies, function(company) {return company[0]});
         // Check that the user has access to all the companies
         if (!_.isEmpty(_.difference(stateCompanyIDS, userCompanyIDS))) {

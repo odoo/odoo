@@ -116,7 +116,7 @@
         <field name="name">stock.inventory.tree</field>
         <field name="model">stock.inventory</field>
         <field name="arch" type="xml">
-            <tree string="Lot/Serial Number Inventory">
+            <tree string="Lot/Serial Number Inventory" sample="1">
                 <field name="date"/>
                 <field name="name"/>
                 <field name="location_ids" widget="many2many_tags" optional="hide" groups="stock.group_stock_multi_locations"/>
@@ -131,7 +131,7 @@
         <field name="name">stock.inventory.kanban</field>
         <field name="model">stock.inventory</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="name"/>
                 <field name="date"/>
                 <field name="state"/>
@@ -168,6 +168,7 @@
                 <button name="action_open_inventory_lines" states="confirm" string="Continue Inventory" type="object" class="oe_highlight" groups="stock.group_stock_user"/>
                 <button name="action_validate" string="Validate Inventory" type="object" attrs="{'invisible': ['|', ('state', '!=', 'confirm'), ('line_ids', '!=', [])]}" groups="stock.group_stock_manager"/>
                 <button name="action_validate" string="Validate Inventory" type="object" attrs="{'invisible': ['|', ('state', '!=', 'confirm'), ('line_ids', '=', [])]}" class="oe_highlight" groups="stock.group_stock_manager"/>
+                <button name="action_print" string="Print Count Sheet" type="object" attrs="{'invisible': [('state', '=', 'draft')]}" groups="stock.group_stock_user"/>
                 <button name="action_cancel_draft" states="cancel" string="Set to Draft" type="object"/>
                 <button name="action_cancel_draft" states="confirm" string="Cancel Inventory" type="object"
                     confirm="If you cancel this inventory adjustment, all its inventory adjustment lines will be lost. Are you sure you want to discard it ?"/>
@@ -204,6 +205,11 @@
                     </group>
                 </group>
             </sheet>
+                <div class="oe_chatter">
+                    <field name="message_follower_ids" widget="mail_followers"/>
+                    <field name="activity_ids" widget="mail_activity"/>
+                    <field name="message_ids" widget="mail_thread"/>
+                </div>
             </form>
         </field>
     </record>

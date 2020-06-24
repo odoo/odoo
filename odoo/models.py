@@ -514,6 +514,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 '_name': name,
                 '_register': False,
                 '_original_module': cls._module,
+                '_inherit_module': dict(),              # map parent to introducing module
                 '_inherit_children': OrderedSet(),      # names of children models
                 '_inherits_children': set(),            # names of children models
                 '_fields': OrderedDict(),               # populated in _setup_base()
@@ -532,7 +533,9 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             else:
                 check_parent(cls, parent_class)
                 bases.add(parent_class)
+                ModelClass._inherit_module[parent] = cls._module
                 parent_class._inherit_children.add(name)
+
         ModelClass.__bases__ = tuple(bases)
 
         # determine the attributes of the model's class
@@ -4414,12 +4417,6 @@ Record ids: %(records)s
         seen_map[self._name].add(self.id)
 
         default = dict(default or [])
-        if 'state' not in default and 'state' in self._fields:
-            field = self._fields['state']
-            if field.default:
-                value = field.default(self)
-                value = field.convert_to_write(value, self)
-                default['state'] = value
 
         # build a black list of fields that should not be copied
         blacklist = set(MAGIC_COLUMNS + ['parent_path'])
@@ -5351,6 +5348,12 @@ Record ids: %(records)s
                 ):
                     id_vals = self.env.all.towrite.pop(model_name)
                     process(self.env[model_name], id_vals)
+
+            # missing for one2many fields, flush their inverse
+            for fname in fnames:
+                field = self._fields[fname]
+                if field.type == 'one2many' and field.inverse_name:
+                    self.env[field.comodel_name].flush([field.inverse_name])
 
     #
     # New records - represent records that do not exist in the database yet;

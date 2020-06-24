@@ -337,6 +337,7 @@
         <script type="text/javascript" src="/web/static/src/js/views/file_upload_mixin.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/file_upload_progress_bar.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/file_upload_progress_card.js"></script>
+        <script type="text/javascript" src="/web/static/src/js/views/sample_server.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/select_create_controllers_registry.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/signature_dialog.js"></script>
         <script type="text/javascript" src="/web/static/src/js/views/standalone_field_manager_mixin.js"></script>
@@ -553,7 +554,7 @@
 
     <template id="web.login" name="Login">
         <t t-call="web.login_layout">
-            <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = this.action + location.hash">
+            <form class="oe_login_form" role="form" t-attf-action="/web/login" method="post" onsubmit="this.action = '/web/login' + location.hash">
                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
 
                 <div class="form-group field-db" t-if="databases and len(databases) &gt; 1">
@@ -701,6 +702,7 @@
         <script type="text/javascript" src="/web/static/tests/fields/special_fields_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/fields/upgrade_fields_tests.js"></script>
 
+        <script type="text/javascript" src="/web/static/tests/views/sample_server_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/abstract_controller_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/abstract_view_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/form_tests.js"></script>
@@ -710,6 +712,7 @@
         <script type="text/javascript" src="/web/static/tests/views/kanban_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/calendar_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/qweb_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/views/abstract_model_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/basic_model_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/abstract_view_banner_tests.js"></script>
         <script type="text/javascript" src="/web/static/tests/views/kanban_model_tests.js"></script>

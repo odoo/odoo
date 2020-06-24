@@ -35,6 +35,7 @@ var FIELD_CLASSES = {
 };
 
 var ListRenderer = BasicRenderer.extend({
+    className: 'o_list_view',
     events: {
         "mousedown": "_onMouseDown",
         "click .o_optional_columns_dropdown .dropdown-item": "_onToggleOptionalColumn",
@@ -49,6 +50,12 @@ var ListRenderer = BasicRenderer.extend({
         'keydown td': '_onKeyDown',
         'keydown th': '_onKeyDown',
     },
+    sampleDataTargets: [
+        '.o_data_row',
+        '.o_group_header',
+        '.o_list_table > tfoot',
+        '.o_list_table > thead .o_list_record_selector',
+    ],
     /**
      * @constructor
      * @param {Widget} parent
@@ -59,7 +66,7 @@ var ListRenderer = BasicRenderer.extend({
     init: function (parent, state, params) {
         this._super.apply(this, arguments);
         this._preprocessColumns();
-        this.columnInvisibleFields = params.columnInvisibleFields;
+        this.columnInvisibleFields = params.columnInvisibleFields || {};
         this.rowDecorations = this._extractDecorationAttrs(this.arch);
         this.fieldDecorations = {};
         for (const field of this.arch.children.filter(c => c.tag === 'field')) {
@@ -79,7 +86,7 @@ var ListRenderer = BasicRenderer.extend({
      * @override
      */
     willStart: function () {
-        this._processColumns(this.columnInvisibleFields || {});
+        this._processColumns(this.columnInvisibleFields);
         return this._super.apply(this, arguments);
     },
 
@@ -89,8 +96,8 @@ var ListRenderer = BasicRenderer.extend({
 
     /**
      * Order to focus to be given to the content of the current view
+     *
      * @override
-     * @public
      */
     giveFocus: function () {
         this.$('th:eq(0) input, th:eq(1)').first().focus();
@@ -99,8 +106,10 @@ var ListRenderer = BasicRenderer.extend({
      * @override
      */
     updateState: function (state, params) {
-        this.isGrouped = state.groupedBy.length > 0;
-        this._processColumns(params.columnInvisibleFields || {});
+        this._setState(state);
+        this.isGrouped = this.state.groupedBy.length > 0;
+        this.columnInvisibleFields = params.columnInvisibleFields || {};
+        this._processColumns(this.columnInvisibleFields);
         if (params.selectedRecords) {
             this.selection = params.selectedRecords;
         }
@@ -361,7 +370,11 @@ var ListRenderer = BasicRenderer.extend({
                 var reject = c.attrs.modifiers.column_invisible;
                 // If there is an evaluated domain for the field we override the node
                 // attribute to have the evaluated modifier value.
-                if (c.attrs.name in columnInvisibleFields) {
+                if (c.tag === "button_group") {
+                    // FIXME: 'column_invisible' attribute is available for fields *and* buttons,
+                    // so 'columnInvisibleFields' variable name is misleading, it should be renamed
+                    reject = c.children.every(child => columnInvisibleFields[child.attrs.name]);
+                } else if (c.attrs.name in columnInvisibleFields) {
                     reject = columnInvisibleFields[c.attrs.name];
                 }
                 if (!reject && c.attrs.widget === 'handle') {
@@ -515,7 +528,9 @@ var ListRenderer = BasicRenderer.extend({
 
         if (node.tag === 'button_group') {
             for (const buttonNode of node.children) {
-                $td.append(this._renderButton(record, buttonNode));
+                if (!this.columnInvisibleFields[buttonNode.attrs.name]) {
+                    $td.append(this._renderButton(record, buttonNode));
+                }
             }
             return $td;
         } else if (node.tag === 'widget') {
@@ -1021,80 +1036,82 @@ var ListRenderer = BasicRenderer.extend({
      * this method does not wait for the field widgets to be ready.
      *
      * @override
-     * @private
      * @returns {Promise} resolved when the view has been rendered
      */
-    _renderView: function () {
-        var self = this;
-
+    async _renderView() {
         const oldPagers = this.pagers;
-        this.pagers = [];
+        let prom;
+        let tableWrapper;
+        if (this.state.count > 0 || !this.noContentHelp) {
+            // render a table if there are records, or if there is no no content
+            // helper (empty table in this case)
+            this.pagers = [];
 
-        // display the no content helper if there is no data to display
-        var displayNoContentHelper = !this._hasContent() && !!this.noContentHelp;
-        this.$el.toggleClass('o_list_view', !displayNoContentHelper);
-        if (displayNoContentHelper) {
-            // destroy the previously instantiated pagers, if any
-            oldPagers.forEach(pager => pager.destroy());
+            const orderedBy = this.state.orderedBy;
+            this.hasHandle = orderedBy.length === 0 || orderedBy[0].name === this.handleField;
+            this._computeAggregates();
 
-            this.$el.removeClass('table-responsive');
-            this.$el.html(this._renderNoContentHelper());
-            return this._super.apply(this, arguments);
-        }
+            const $table = $(
+                '<table class="o_list_table table table-sm table-hover table-striped"/>'
+            );
+            $table.toggleClass('o_list_table_grouped', this.isGrouped);
+            $table.toggleClass('o_list_table_ungrouped', !this.isGrouped);
+            const defs = [];
+            this.defs = defs;
+            if (this.isGrouped) {
+                $table.append(this._renderHeader());
+                $table.append(this._renderGroups(this.state.data));
+                $table.append(this._renderFooter());
 
-        var orderedBy = this.state.orderedBy;
-        this.hasHandle = orderedBy.length === 0 || orderedBy[0].name === this.handleField;
-        this._computeAggregates();
-
-        var $table = $('<table>').addClass('o_list_table table table-sm table-hover table-striped');
-        $table.toggleClass('o_list_table_grouped', this.isGrouped);
-        $table.toggleClass('o_list_table_ungrouped', !this.isGrouped);
-        var defs = [];
-        this.defs = defs;
-        if (this.isGrouped) {
-            $table.append(this._renderHeader());
-            $table.append(this._renderGroups(this.state.data));
-            $table.append(this._renderFooter());
-
-        } else {
-            $table.append(this._renderHeader());
-            $table.append(this._renderBody());
-            $table.append(this._renderFooter());
-        }
-        const tableWrapper = Object.assign(document.createElement('div'), {
-            className: 'table-responsive',
-        });
-        tableWrapper.appendChild($table[0]);
-        delete this.defs;
-
-        var prom = Promise.all(defs).then(() => {
-            // destroy the previously instantiated pagers, if any
-            oldPagers.forEach(pager => pager.destroy());
-
-            // Append the table to the main element
-            self.el.innerHTML = "";
-            dom.append(self.el, tableWrapper, {
-                callbacks: [{ widget: this }],
-                in_DOM: document.body.contains(self.el),
-            });
-
-            if (self.optionalColumns.length) {
-                self.$el.addClass('o_list_optional_columns');
-                self.$('table').append($('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>'));
-                self.$el.append(self._renderOptionalColumnsDropdown());
+            } else {
+                $table.append(this._renderHeader());
+                $table.append(this._renderBody());
+                $table.append(this._renderFooter());
             }
+            tableWrapper = Object.assign(document.createElement('div'), {
+                className: 'table-responsive',
+            });
+            tableWrapper.appendChild($table[0]);
+            delete this.defs;
+            prom = Promise.all(defs);
+        }
 
-            if (self.selection.length) {
-                var $checked_rows = self.$('tr').filter(function (index, el) {
-                    return _.contains(self.selection, $(el).data('id'));
-                });
+        await Promise.all([this._super.apply(this, arguments), prom]);
+
+        this.el.innerHTML = "";
+        this.el.classList.remove('o_list_optional_columns');
+
+        // destroy the previously instantiated pagers, if any
+        oldPagers.forEach(pager => pager.destroy());
+
+        // append the table (if any) to the main element
+        if (tableWrapper) {
+            dom.append(this.el, tableWrapper, {
+                callbacks: [{ widget: this }],
+                in_DOM: document.body.contains(this.el),
+            });
+            if (this.optionalColumns.length) {
+                this.el.classList.add('o_list_optional_columns');
+                this.$('table').append(
+                    $('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>')
+                );
+                this.$el.append(this._renderOptionalColumnsDropdown());
+            }
+            if (this.selection.length) {
+                const $checked_rows = this.$('tr').filter(
+                    (i, el) => this.selection.includes(el.dataset.id)
+                );
                 $checked_rows.find('.o_list_record_selector input').prop('checked', true);
-                if ($checked_rows.length === self.$('.o_data_row').length) { // all rows are checked
-                    self.$('thead .o_list_record_selector input').prop('checked', true);
+                if ($checked_rows.length === this.$('.o_data_row').length) { // all rows are checked
+                    this.$('thead .o_list_record_selector input').prop('checked', true);
                 }
             }
-        });
-        return Promise.all([this._super.apply(this, arguments), prom]);
+        }
+
+        // display the no content helper if necessary
+        if (!this._hasContent() && !!this.noContentHelp) {
+            this.$el.append(this._renderNoContentHelper());
+        }
     },
     /**
      * Each line or cell can be decorated according to a few simple rules. The
@@ -1227,8 +1244,8 @@ var ListRenderer = BasicRenderer.extend({
             keyParts: this._getOptionalColumnsStorageKeyParts(),
             optionalColumnsEnabled: this.optionalColumnsEnabled,
         });
-        this._processColumns(this.columnInvisibleFields || {});
-        this._renderView().then(function () {
+        this._processColumns(this.columnInvisibleFields);
+        this._render().then(function () {
             self._onToggleOptionalColumnDropdown(ev);
         });
     },
@@ -1260,6 +1277,9 @@ var ListRenderer = BasicRenderer.extend({
         var $tr;
         var $futureCell;
         var colIndex;
+        if (this.state.isSample) {
+            return; // we disable keyboard navigation inside the table in "sample" mode
+        }
         switch (ev.keyCode) {
             case $.ui.keyCode.LEFT:
                 ev.preventDefault();
@@ -1342,7 +1362,7 @@ var ListRenderer = BasicRenderer.extend({
             offset: currentMinimum - 1,
             on_success: reloadedGroup => {
                 Object.assign(group, reloadedGroup);
-                this._renderView();
+                this._render();
             },
         });
     },

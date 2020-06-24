@@ -250,7 +250,6 @@ class ProjectTask(models.Model):
 
     @api.onchange('project_id')
     def _onchange_project(self):
-        super(ProjectTask, self)._onchange_project()
         if self.project_id:
             if self.project_id.billable_type == 'employee_rate':
                 if not self.partner_id:
@@ -264,11 +263,12 @@ class ProjectTask(models.Model):
 
     def write(self, values):
         old_sale_line_id = dict([(t.id, t.sale_line_id.id) for t in self])
+        res = super(ProjectTask, self).write(values)
+        # Done after super to avoid constraints on field recomputation
         if values.get('project_id'):
             project_dest = self.env['project.project'].browse(values['project_id'])
             if project_dest.billable_type == 'employee_rate':
-                values['sale_line_id'] = False
-        res = super(ProjectTask, self).write(values)
+                self.write({'sale_line_id': False})
         if 'sale_line_id' in values and self.filtered('allow_timesheets').sudo().timesheet_ids:
             so = self.env['sale.order.line'].browse(values['sale_line_id']).order_id
             if so and not so.analytic_account_id:

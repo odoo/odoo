@@ -213,20 +213,22 @@ var ListController = BasicController.extend({
     _addRecord: function (dataPointId) {
         var self = this;
         this._disableButtons();
-        return this.renderer.unselectRow().then(function () {
-            return self.model.addDefaultRecord(dataPointId, {
-                position: self.editable,
-            });
-        }).then(function (recordID) {
-            var state = self.model.get(self.handle);
-            self.renderer.updateState(state, {keepWidths: true})
-                .then(function () {
-                    self.renderer.editRecord(recordID);
-                })
-                .then(() => {
-                    self._updatePaging(state);
+        return this._removeSampleData(() => {
+            return this.renderer.unselectRow().then(function () {
+                return self.model.addDefaultRecord(dataPointId, {
+                    position: self.editable,
                 });
-        }).then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
+            }).then(function (recordID) {
+                var state = self.model.get(self.handle);
+                self._updateRendererState(state, { keepWidths: true })
+                    .then(function () {
+                        self.renderer.editRecord(recordID);
+                    })
+                    .then(() => {
+                        self._updatePaging(state);
+                    });
+            }).then(this._enableButtons.bind(this)).guardedCatch(this._enableButtons.bind(this));
+        });
     },
     /**
      * Assign on the buttons create additionnal behavior to facilitate the work of the users doing input only using the keyboard
@@ -244,10 +246,14 @@ var ListController = BasicController.extend({
                     break;
                 case $.ui.keyCode.DOWN:
                     e.preventDefault();
-                    self.renderer.giveFocus();
+                    self._giveFocus();
                     break;
                 case $.ui.keyCode.TAB:
-                    if (!e.shiftKey && e.target.classList.contains("btn-primary")) {
+                    if (
+                        !e.shiftKey &&
+                        e.target.classList.contains("btn-primary") &&
+                        !self.model.isInSampleMode()
+                    ) {
                         e.preventDefault();
                         $createButton.tooltip('show');
                     }
@@ -266,7 +272,7 @@ var ListController = BasicController.extend({
      */
     _confirmSave: function (id) {
         var state = this.model.get(this.handle);
-        return this.renderer.updateState(state, {noRender: true})
+        return this._updateRendererState(state, { noRender: true })
             .then(this._setMode.bind(this, 'readonly', id));
     },
     /**
@@ -443,7 +449,7 @@ var ListController = BasicController.extend({
                         // and the list was multi-editable, we do not want to select
                         // the next row.
                         this.selectedRecords = [];
-                        await this.renderer.updateState(state, {
+                        await this._updateRendererState(state, {
                             keepWidths: true,
                             selectedRecords: [],
                         });
@@ -524,7 +530,7 @@ var ListController = BasicController.extend({
      */
     _shouldBounceOnClick() {
         const state = this.model.get(this.handle, {raw: true});
-        return !state.count;
+        return !state.count || state.isSample;
     },
     /**
      * Called when clicking on 'Archive' or 'Unarchive' in the sidebar.

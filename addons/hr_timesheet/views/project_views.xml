@@ -104,6 +104,7 @@
                             <field name="name" required="0"/>
                             <field name="unit_amount" widget="timesheet_uom" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id" invisible="1"/>
+                            <field name="task_id" invisible="1"/>
                             <field name="company_id" invisible="1"/>
                         </tree>
                         <kanban class="o_kanban_mobile">
@@ -113,6 +114,7 @@
                             <field name="name"/>
                             <field name="unit_amount" decoration-danger="unit_amount &gt; 24"/>
                             <field name="project_id"/>
+                            <field name="task_id" invisible="1"/>
                             <templates>
                                 <t t-name="kanban-box">
                                     <div t-attf-class="oe_kanban_card oe_kanban_global_click">
@@ -147,6 +149,7 @@
                                     <field name="name"/>
                                     <field name="unit_amount" string="Duration" widget="float_time" decoration-danger="unit_amount &gt; 24"/>
                                     <field name="project_id" invisible="1"/>
+                                    <field name="task_id" invisible="1"/>
                                     <field name="company_id" invisible="1"/>
                                 </group>
                             </sheet>
@@ -218,7 +221,7 @@
                     <field name="allow_timesheets"/>
                 </templates>
                 <div class="oe_kanban_bottom_left" position="inside">
-                   <t t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
+                   <t name="planned_hours" t-if="record.planned_hours.raw_value &gt; 0 and record.allow_timesheets.raw_value">
                         <t t-set="badge" t-value=""/>
                         <t t-set="badge" t-value="'badge-warning'" t-if="record.progress.raw_value &gt;= 80 and record.progress.raw_value &lt;= 100"/>
                         <t t-set="badge" t-value="'badge-danger'" t-if="record.remaining_hours.raw_value &lt; 0"/>

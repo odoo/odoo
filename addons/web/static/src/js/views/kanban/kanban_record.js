@@ -268,7 +268,7 @@ var KanbanRecord = Widget.extend({
         // it is much more efficient to use a formatter
         var field = this.fields[field_name];
         var value = this.recordData[field_name];
-        var options = { data: this.recordData };
+        var options = { data: this.recordData, html: false };
         var formatted_value = field_utils.format[field.type](value, field, options);
         var $result = $('<span>', {
             text: formatted_value,

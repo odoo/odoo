@@ -307,8 +307,9 @@
         <record id="crm_case_tree_view_leads" model="ir.ui.view">
             <field name="name">crm.lead.tree.lead</field>
             <field name="model">crm.lead</field>
+            <field name="priority">10</field>
             <field name="arch" type="xml">
-                <tree string="Leads" decoration-muted="probability == 100">
+                <tree string="Leads" sample="1">
                     <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Lead"/>
@@ -320,7 +321,7 @@
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
                     <field name="partner_id" invisible="1"/>
-                    <field name="user_id" optional="show"/>
+                    <field name="user_id" optional="show"  widget="many2one_avatar_user"/>
                     <field name="team_id" optional="show"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="active" invisible="1"/>
@@ -332,7 +333,6 @@
                     <field name="message_needaction" invisible="1"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="priority" optional="hide"/>
-                    <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>
         </record>
@@ -342,7 +342,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" archivable="false">
+                <kanban class="o_kanban_mobile" archivable="false" sample="1">
                     <field name="name"/>
                     <field name="contact_name"/>
                     <field name="priority"/>
@@ -455,7 +455,7 @@
             <field name="priority" eval="1"/>
             <field name="arch" type="xml">
                 <kanban default_group_by="stage_id" class="o_kanban_small_column o_opportunity_kanban" on_create="quick_create" quick_create_view="crm.quick_create_opportunity_form"
-                    archivable="false">
+                    archivable="false" sample="1">
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
@@ -576,6 +576,20 @@
             </field>
         </record>
 
+        <act_window name="Send email"
+            res_model="mail.compose.message"
+            binding_model="crm.lead"
+            binding_views="list"
+            view_mode="form"
+            target="new"
+            id="crm_lead_act_window_compose"
+            context="{
+                'default_composition_mode': 'comment',
+                'default_use_template': True,
+                'default_template_id': ref('crm.email_template_opportunity_mail'),
+                }"
+        />
+
         <!--
             crm.lead (as Opportunity) views
         -->
@@ -583,37 +597,89 @@
         <record id="crm_case_tree_view_oppor" model="ir.ui.view">
             <field name="name">crm.lead.tree.opportunity</field>
             <field name="model">crm.lead</field>
+            <field name="priority">1</field>
             <field name="arch" type="xml">
-                <tree string="Opportunities" decoration-muted="probability == 100" decoration-danger="activity_date_deadline and (activity_date_deadline &lt; current_date)">
+                <tree string="Opportunities" sample="1">
+                    <field name="date_deadline" invisible="1"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Opportunity"/>
-                    <field name="partner_id" string="Customer" optional="show"/>
-                    <field name="email_from" optional="show"/>
-                    <field name="phone" class="o_force_ltr" optional="show"/>
-                    <field name="city" optional="show"/>
+                    <field name="partner_id" optional="hide"/>
+                    <field name="contact_name" optional="show"/>
+                    <field name="email_from"/>
+                    <field name="phone" class="o_force_ltr"/>
+                    <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
-                    <field name="country_id" optional="show"/>
-                    <field name="activity_date_deadline" optional="hide"/>
-                    <field name="activity_date_deadline_my" optional="hide" options="{'allow_order': '1'}"/>
-                    <field name="activity_summary" optional="hide" readonly="1"/>
-                    <field name="stage_id" required="1" optional="show"/>
-                    <field name="probability" avg="Avg. of Probability" optional="hide"/>
-                    <field name="user_id" optional="show"/>
+                    <field name="country_id" optional="hide"/>
+                    <field name="user_id" widget="many2one_avatar_user" optional="show"/>
                     <field name="team_id" optional="show"/>
-                    <field name="company_currency" invisible="1"/>
-                    <field name="planned_revenue" sum="Expected Revenues" optional="show" widget='monetary' options="{'currency_field': 'company_currency'}"/>
-                    <field name="referred" invisible="1"/>
-                    <field name="message_needaction" invisible="1"/>
-                    <field name="probability" invisible="1"/>
-                    <field name="write_date" invisible="1"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show" />
+                    <field name="priority" optional="hide"/>
+                    <field name="activity_ids" widget="list_activity"/>
+                    <field name="activity_user_id" optional="hide" string="Activity by" widget="many2one_avatar_user"/>
+                    <field name="activity_date_deadline_my" string="My Deadline" widget="remaining_days" options="{'allow_order': '1'}"/>
                     <field name="campaign_id" optional="hide"/>
                     <field name="medium_id" optional="hide"/>
                     <field name="source_id" optional="hide"/>
+                    <field name="company_currency" invisible="1"/>
+                    <field name="planned_revenue" sum="Expected Revenues" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                    <field name="stage_id" optional="show" decoration-bf="1"/>
+                    <field name="active" invisible="1"/>
+                    <field name="probability" optional="hide"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
-                    <field name="priority" optional="hide"/>
-                    <field name="activity_exception_decoration" widget="activity_exception"/>
+                    <field name="referred" invisible="1"/>
+                    <field name="message_needaction" invisible="1"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="crm_lead_view_list_activities" model="ir.ui.view">
+            <field name="name">crm.lead.list.activities</field>
+            <field name="model">crm.lead</field>
+            <field name="mode">primary</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="crm.crm_case_tree_view_oppor"/>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="default_order">activity_date_deadline_my</attribute>
+                </xpath>
+                <field name="user_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="team_id" position="attributes">
+                    <attribute name="optional">hide</attribute>
+                </field>
+                <field name="message_needaction" position="after">
+                    <button name="action_snooze" type="object" string="Snooze 7d" icon="fa-bell-slash" />
+                    <button name="%(crm.crm_lead_act_window_compose)d" type="action" string="Email" icon="fa-envelope"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_crm_case_my_activities_filter" model="ir.ui.view">
+            <field name="name">crm.lead.search.myactivities</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.view_crm_case_leads_filter"/>
+            <field name="arch" type="xml">
+                <!-- we should not override the whole field but instead just set invisible attribute
+                 to 0. but this approach is not working. the work around is temporary -->
+                <xpath expr="//filter[@name='activities_overdue']" position="replace">
+                    <filter string="Late Activities" name="activities_overdue"
+                        domain="[('activity_ids.date_deadline', '&lt;', context_today().strftime('%Y-%m-%d'))]"
+                        help="Show all opportunities for which the next action date is before today"/>
+                </xpath>
+                <xpath expr="//filter[@name='activities_today']" position="replace">
+                    <filter string="Today Activities" name="activities_today"
+                        domain="[('activity_ids.date_deadline', '=', context_today().strftime('%Y-%m-%d'))]"/>
+                </xpath>
+                <xpath expr="//filter[@name='activities_upcoming_all']" position="replace">
+                    <filter string="Future Activities" name="activities_upcoming_all"
+                        domain="[('activity_ids.date_deadline', '&gt;', context_today().strftime('%Y-%m-%d'))]"/>
+                </xpath>
+                <xpath expr="//filter[@name='assigned_to_me']" position="replace">
+                    <filter string="My Activities" name="assigned_to_me"
+                        domain="[('activity_user_id','=',uid)]"
+                        help="Opportunities that are assigned to me"/>
+                </xpath>
             </field>
         </record>
 
@@ -731,7 +797,7 @@
                             'default_use_template': True,
                             'default_template_id': ref('crm.email_template_opportunity_mail'),
                         }"
-                />
+        />
 
         <!--Update of email_template defined in crm_lead_data, to add ref_ir_act_window
             allowing to have a well formed email template (context action considered as set). -->
@@ -808,6 +874,26 @@ if record:
 
         <record id="crm_menu_leads" model="ir.ui.menu">
             <field name="action" ref="crm.crm_lead_all_leads"/>
+        </record>
+
+        <!-- My Activities Menu -->
+        <record id="crm_lead_action_my_activities" model="ir.actions.act_window">
+            <field name="name">My Activities</field>
+            <field name="res_model">crm.lead</field>
+            <field name="view_mode">tree,kanban,graph,pivot,calendar,form,activity</field>
+            <field name="view_id" ref="crm_lead_view_list_activities"/>
+            <field name="domain">[('type','=','opportunity'), ('activity_ids','!=',False)]</field>
+            <field name="search_view_id" ref="crm.view_crm_case_my_activities_filter"/>
+            <field name="context">{'default_type': 'opportunity',
+                    'search_default_assigned_to_me': 1}
+            </field>
+        </record>
+
+        <record id="crm_lead_action_my_activities_view_tree" model="ir.actions.act_window.view">
+            <field name="sequence">1</field>
+            <field name="view_mode">tree</field>
+            <field name="view_id" ref="crm.crm_lead_view_list_activities"/>
+            <field name="act_window_id" ref="crm_lead_action_my_activities"/>
         </record>
 
         <!-- 'My Pipeline' menu : Server action, act_window_views and act_windows -->
@@ -917,5 +1003,8 @@ if record:
         </record>
         <record id="crm_menu_root" model="ir.ui.menu">
             <field name="action" ref="crm.action_your_pipeline"/>
+        </record>
+        <record id="crm_lead_menu_my_activities" model="ir.ui.menu">
+            <field name="action" ref="crm.crm_lead_action_my_activities"/>
         </record>
 </odoo>

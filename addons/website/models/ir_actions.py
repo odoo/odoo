@@ -51,10 +51,10 @@ class ServerAction(models.Model):
         return eval_context
 
     @api.model
-    def run_action_code_multi(self, action, eval_context=None):
+    def _run_action_code_multi(self, eval_context=None):
         """ Override to allow returning response the same way action is already
             returned by the basic server action behavior. Note that response has
             priority over action, avoid using both.
         """
-        res = super(ServerAction, self).run_action_code_multi(action, eval_context)
+        res = super(ServerAction, self)._run_action_code_multi(eval_context)
         return eval_context.get('response', res)

@@ -189,11 +189,11 @@ class StockQuant(models.Model):
 
     def write(self, vals):
         """ Override to handle the "inventory mode" and create the inventory move. """
-        if self._is_inventory_mode() and 'inventory_quantity' in vals:
+        allowed_fields = self._get_inventory_fields_write()
+        if self._is_inventory_mode() and any([field for field in allowed_fields if field in vals.keys()]):
             if any(quant.location_id.usage == 'inventory' for quant in self):
                 # Do nothing when user tries to modify manually a inventory loss
                 return
-            allowed_fields = self._get_inventory_fields_write()
             if any([field for field in vals.keys() if field not in allowed_fields]):
                 raise UserError(_("Quant's editing is restricted, you can't do this operation."))
             self = self.sudo()
@@ -244,7 +244,7 @@ class StockQuant(models.Model):
     def check_location_id(self):
         for quant in self:
             if quant.location_id.usage == 'view':
-                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view".'))
+                raise ValidationError(_('You cannot take products from or deliver products to a location of type "view" (%s).') % quant.location_id.name)
 
     @api.model
     def _get_removal_strategy(self, product_id, location_id):

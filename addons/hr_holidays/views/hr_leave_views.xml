@@ -95,7 +95,7 @@
         <field name="name">hr.leave.view.kanban</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile" create="0">
+            <kanban class="o_kanban_mobile" create="0" sample="1">
                 <field name="employee_id"/>
                 <field name="date_from"/>
                 <field name="date_to"/>
@@ -484,7 +484,7 @@
         <field name="name">hr.holidays.view.tree</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <tree string="Time Off Requests">
+            <tree string="Time Off Requests" sample="1">
                 <field name="employee_id"/>
                 <field name="department_id"/>
                 <field name="holiday_type" string="Mode" groups="base.group_no_one"/>

@@ -8,7 +8,9 @@ from odoo.exceptions import UserError, ValidationError, RedirectWarning
 class Project(models.Model):
     _inherit = "project.project"
 
-    allow_timesheets = fields.Boolean("Timesheets", default=True, help="Enable timesheeting on the project.")
+    allow_timesheets = fields.Boolean(
+        "Timesheets", compute='_compute_allow_timesheets', store=True, readonly=False,
+        default=True, help="Enable timesheeting on the project.")
     analytic_account_id = fields.Many2one(
         # note: replaces ['|', ('company_id', '=', False), ('company_id', '=', company_id)]
         domain="""[
@@ -23,10 +25,10 @@ class Project(models.Model):
         compute='_compute_total_timesheet_time',
         help="Total number of time (in the proper UoM) recorded in the project, rounded to the unit.")
 
-    @api.onchange('analytic_account_id')
-    def _onchange_analytic_account(self):
-        if not self.analytic_account_id and self._origin:
-            self.allow_timesheets = False
+    @api.depends('analytic_account_id')
+    def _compute_allow_timesheets(self):
+        without_account = self.filtered(lambda t: not t.analytic_account_id and t._origin)
+        without_account.update({'allow_timesheets': False})
 
     @api.constrains('allow_timesheets', 'analytic_account_id')
     def _check_allow_timesheet(self):
@@ -46,31 +48,25 @@ class Project(models.Model):
             total_time *= project.timesheet_encode_uom_id.factor
             project.total_timesheet_time = int(round(total_time))
 
-    @api.model
-    def name_create(self, name):
-        """ Create a project with name_create should generate analytic account creation """
-        values = {
-            'name': name,
-            'allow_timesheets': True,
-        }
-        return self.create(values).name_get()[0]
-
-    @api.model
-    def create(self, values):
+    @api.model_create_multi
+    def create(self, vals_list):
         """ Create an analytic account if project allow timesheet and don't provide one
             Note: create it before calling super() to avoid raising the ValidationError from _check_allow_timesheet
         """
-        allow_timesheets = values['allow_timesheets'] if 'allow_timesheets' in values else self.default_get(['allow_timesheets'])['allow_timesheets']
-        if allow_timesheets and not values.get('analytic_account_id'):
-            analytic_account = self._create_analytic_account_from_values(values)
-            values['analytic_account_id'] = analytic_account.id
-        return super(Project, self).create(values)
+        defaults = self.default_get(['allow_timesheets', 'analytic_account_id'])
+        for values in vals_list:
+            allow_timesheets = values.get('allow_timesheets', defaults.get('allow_timesheets'))
+            analytic_account_id = values.get('analytic_account_id', defaults.get('analytic_account_id'))
+            if allow_timesheets and not analytic_account_id:
+                analytic_account = self._create_analytic_account_from_values(values)
+                values['analytic_account_id'] = analytic_account.id
+        return super(Project, self).create(vals_list)
 
     def write(self, values):
         # create the AA for project still allowing timesheet
-        if values.get('allow_timesheets'):
+        if values.get('allow_timesheets') and not values.get('analytic_account_id'):
             for project in self:
-                if not project.analytic_account_id and not values.get('analytic_account_id'):
+                if not project.analytic_account_id:
                     project._create_analytic_account()
         return super(Project, self).write(values)
 
@@ -168,7 +164,7 @@ class Task(models.Model):
 
     def write(self, values):
         # a timesheet must have an analytic account (and a project)
-        if 'project_id' in values and self and not values.get('project_id'):
+        if 'project_id' in values and not values.get('project_id') and self._get_timesheet():
             raise UserError(_('This task must be part of a project because there are some timesheets linked to it.'))
         res = super(Task, self).write(values)
 

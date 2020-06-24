@@ -38,7 +38,7 @@
             <field name="name">hr.expense.tree</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <tree string="Expenses" multi_edit="1" js_class="hr_expense_tree_dashboard_upload">
+                <tree string="Expenses" multi_edit="1" js_class="hr_expense_tree_dashboard_upload" sample="1">
                     <field name="attachment_number" invisible="True"/>
                     <field name="date" optional="show"/>
                     <field name="accounting_date" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>
@@ -61,6 +61,19 @@
                     <field name="message_unread" invisible="1"/>
                     <field name="state" optional="show" readonly="1" decoration-info="state == 'draft'" decoration-success="state in ['reported', 'approved', 'done']" decoration-danger="state in 'refused'" widget="badge"/>
                 </tree>
+            </field>
+        </record>
+
+        <record id="view_my_expenses_tree" model="ir.ui.view">
+            <field name="name">hr.expense.tree</field>
+            <field name="model">hr.expense</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_expense.view_expenses_tree"/>
+            <field name="mode">primary</field>
+            <field name="arch" type="xml">
+                <xpath expr="//tree" position="attributes">
+                    <attribute name="js_class">hr_expense_tree_dashboard</attribute>
+                </xpath>
             </field>
         </record>
 
@@ -160,7 +173,7 @@
             <field name="name">hr.expense.kanban</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" js_class="hr_expense_kanban">
+                <kanban class="o_kanban_mobile" js_class="hr_expense_kanban" sample="1">
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="total_amount"/>
@@ -295,6 +308,7 @@
             <field name="res_model">hr.expense</field>
             <field name="view_mode">tree,kanban,form,graph,pivot,activity</field>
             <field name="search_view_id" ref="hr_expense_view_search"/>
+            <field name="view_id" ref="view_my_expenses_tree"/>
             <field name="context">{'search_default_my_expenses': 1, 'search_default_no_report': 1}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_expense_receipt">
@@ -421,27 +435,11 @@
             <field name="act_window_id" ref="hr_expense_product"/>
         </record>
 
-        <record id="action_unsubmitted_expense" model="ir.actions.act_window">
-            <field name="name">Unreported Expenses</field>
-            <field name="res_model">hr.expense</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="view_id" ref="view_expenses_tree"/>
-            <field name="domain">[]</field>
-            <field name="context">{"search_default_unsubmitted": 1}</field>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_empty_folder">
-                No unreported employee expenses
-              </p><p>
-                From here the accountant will be able to approve as well as refuse the expenses which are verified by the HR Manager.
-              </p>
-            </field>
-        </record>
-
         <record id="view_hr_expense_sheet_tree" model="ir.ui.view">
             <field name="name">hr.expense.sheet.tree</field>
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
-                <tree string="Expense Reports">
+                <tree string="Expense Reports" sample="1">
                     <field name="accounting_date" optional="show" groups="account.group_account_manager"/>
                     <field name="create_date" optional="hide"/>
                     <field name="name" string="Expense Report"/>
@@ -461,6 +459,7 @@
         <record id="view_hr_expense_sheet_dashboard_tree" model="ir.ui.view">
             <field name="name">hr.expense.sheet.dashboard.tree</field>
             <field name="model">hr.expense.sheet</field>
+            <field name="priority">20</field>
             <field name="inherit_id" ref="hr_expense.view_hr_expense_sheet_tree"/>
             <field name="mode">primary</field>
             <field name="arch" type="xml">
@@ -571,7 +570,7 @@
             <field name="name">hr.expense.sheet.kanban</field>
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" sample="1">
                     <field name="name"/>
                     <field name="employee_id"/>
                     <field name="total_amount"/>
@@ -786,38 +785,6 @@
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
                 Create a new expense report
-              </p><p>
-                Once you have created your expense, submit it to your manager who will validate it.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_request_approve_expense_sheet" model="ir.actions.act_window">
-            <field name="name">Reports to Approve</field>
-            <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="context">{'search_default_submitted': 1}</field>
-            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
-            <field name="view_id" ref="view_hr_expense_sheet_tree"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new expense
-              </p><p>
-                Once you have created your expense, submit it to your manager who will validate it.
-              </p>
-            </field>
-        </record>
-
-        <record id="action_request_to_post_expense_sheet" model="ir.actions.act_window">
-            <field name="name">Reports to Post</field>
-            <field name="res_model">hr.expense.sheet</field>
-            <field name="view_mode">tree,kanban,form,pivot,graph</field>
-            <field name="context">{'search_default_to_post': 1}</field>
-            <field name="search_view_id" ref="hr_expense_sheet_view_search"/>
-            <field name="view_id" ref="view_hr_expense_sheet_tree"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new expense
               </p><p>
                 Once you have created your expense, submit it to your manager who will validate it.
               </p>

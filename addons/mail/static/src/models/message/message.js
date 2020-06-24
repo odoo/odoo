@@ -32,54 +32,7 @@ function factory(dependencies) {
          * @return {Object}
          */
         static convertData(data) {
-            const data2 = {
-                threadCaches: [],
-            };
-            if ('body' in data) {
-                data2.body = data.body;
-            }
-            if ('date' in data && data.date) {
-                data2.date = moment(str_to_datetime(data.date));
-            }
-            if ('email_from' in data) {
-                data2.email_from = data.email_from;
-            }
-            if ('id' in data) {
-                data2.id = data.id;
-            }
-            if ('is_discussion' in data) {
-                data2.is_discussion = data.is_discussion;
-            }
-            if ('is_note' in data) {
-                data2.is_note = data.is_note;
-            }
-            if ('is_notification' in data) {
-                data2.is_notification = data.is_notification;
-            }
-            if ('message_type' in data) {
-                data2.message_type = data.message_type;
-            }
-            if ('moderation_status' in data) {
-                data2.moderation_status = data.moderation_status;
-                const moderationMailbox = this.env.messaging.moderation;
-                if (moderationMailbox && data.moderation_status !== 'pending') {
-                    data2.threadCaches.push(['unlink', moderationMailbox.mainCache]);
-                }
-            }
-            if ('subject' in data) {
-                data2.subject = data.subject;
-            }
-            if ('subtype_description' in data) {
-                data2.subtype_description = data.subtype_description;
-            }
-            if ('subtype_id' in data) {
-                data2.subtype_id = data.subtype_id;
-            }
-            if ('tracking_value_ids' in data) {
-                data2.tracking_value_ids = data.tracking_value_ids;
-            }
-
-            // relations
+            const data2 = {};
             if ('attachment_ids' in data) {
                 if (!data.attachment_ids) {
                     data2.attachments = [['unlink-all']];
@@ -106,6 +59,9 @@ function factory(dependencies) {
                     ];
                 }
             }
+            if ('body' in data) {
+                data2.body = data.body;
+            }
             if ('channel_ids' in data && data.channel_ids) {
                 // AKU FIXME: side-effect of calling convert...
                 const channelList = [];
@@ -116,15 +72,31 @@ function factory(dependencies) {
                     });
                     channelList.push(channel);
                 }
-                data2.threadCaches.push(['replace', channelList.map(channel => channel.mainCache)]);
+                data2.serverChannels = [['replace', channelList]];
+            }
+            if ('date' in data && data.date) {
+                data2.date = moment(str_to_datetime(data.date));
+            }
+            if ('email_from' in data) {
+                data2.email_from = data.email_from;
             }
             if ('history_partner_ids' in data) {
-                const history = this.env.messaging.history;
-                if (data.history_partner_ids.includes(this.env.messaging.currentPartner.id)) {
-                    data2.threadCaches.push(['link', history.mainCache]);
-                } else {
-                    data2.threadCaches.push(['unlink', history.mainCache]);
-                }
+                data2.isHistory = data.history_partner_ids.includes(this.env.messaging.currentPartner.id);
+            }
+            if ('id' in data) {
+                data2.id = data.id;
+            }
+            if ('is_discussion' in data) {
+                data2.is_discussion = data.is_discussion;
+            }
+            if ('is_note' in data) {
+                data2.is_note = data.is_note;
+            }
+            if ('is_notification' in data) {
+                data2.is_notification = data.is_notification;
+            }
+            if ('message_type' in data) {
+                data2.message_type = data.message_type;
             }
             if ('model' in data && 'res_id' in data && data.model && data.res_id) {
                 const originThreadData = {
@@ -142,13 +114,11 @@ function factory(dependencies) {
                 }
                 data2.originThread = [['insert', originThreadData]];
             }
+            if ('moderation_status' in data) {
+                data2.moderation_status = data.moderation_status;
+            }
             if ('needaction_partner_ids' in data) {
-                const inbox = this.env.messaging.inbox;
-                if (data.needaction_partner_ids.includes(this.env.messaging.currentPartner.id)) {
-                    data2.threadCaches.push(['link', inbox.mainCache]);
-                } else {
-                    data2.threadCaches.push(['unlink', inbox.mainCache]);
-                }
+                data2.isNeedaction = data.needaction_partner_ids.includes(this.env.messaging.currentPartner.id);
             }
             if ('notifications' in data) {
                 data2.notifications = [['insert', data.notifications.map(notificationData =>
@@ -156,12 +126,19 @@ function factory(dependencies) {
                 )]];
             }
             if ('starred_partner_ids' in data) {
-                const starred = this.env.messaging.starred;
-                if (data.starred_partner_ids.includes(this.env.messaging.currentPartner.id)) {
-                    data2.threadCaches.push(['link', starred.mainCache]);
-                } else {
-                    data2.threadCaches.push(['unlink', starred.mainCache]);
-                }
+                data2.isStarred = data.starred_partner_ids.includes(this.env.messaging.currentPartner.id);
+            }
+            if ('subject' in data) {
+                data2.subject = data.subject;
+            }
+            if ('subtype_description' in data) {
+                data2.subtype_description = data.subtype_description;
+            }
+            if ('subtype_id' in data) {
+                data2.subtype_id = data.subtype_id;
+            }
+            if ('tracking_value_ids' in data) {
+                data2.tracking_value_ids = data.tracking_value_ids;
             }
 
             return data2;
@@ -346,19 +323,6 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
-         * @private
-         * @returns {mail.thread[]}
-         */
-        _computeAllThreads() {
-            const threads = this.threadCaches.map(cache => cache.thread);
-            let allThreads = threads;
-            if (this.originThread) {
-                allThreads = allThreads.concat([this.originThread]);
-            }
-            return [['replace', [...new Set(allThreads)]]];
-        }
-
-        /**
          * @returns {boolean}
          */
         _computeFailureNotifications() {
@@ -401,22 +365,31 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {boolean}
-         */
-        _computeIsNeedaction() {
-            const inbox = this.env.messaging.inbox;
-            if (!inbox) {
-                return false;
-            }
-            return this.allThreads.includes(inbox);
-        }
-
-        /**
-         * @private
          * @returns {mail.messaging}
          */
         _computeMessaging() {
             return [['link', this.env.messaging]];
+        }
+
+        /**
+         * @private
+         * @returns {mail.thread[]}
+         */
+        _computeNonOriginThreads() {
+            const nonOriginThreads = this.serverChannels.filter(thread => thread !== this.originThread);
+            if (this.isHistory) {
+                nonOriginThreads.push(this.env.messaging.history);
+            }
+            if (this.isNeedaction) {
+                nonOriginThreads.push(this.env.messaging.inbox);
+            }
+            if (this.isStarred) {
+                nonOriginThreads.push(this.env.messaging.starred);
+            }
+            if (this.env.messaging.moderation && this.isModeratedByCurrentPartner) {
+                nonOriginThreads.push(this.env.messaging.moderation);
+            }
+            return [['replace', nonOriginThreads]];
         }
 
         /**
@@ -455,6 +428,18 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         * @returns {mail.thread[]}
+         */
+        _computeThreads() {
+            const threads = [...this.nonOriginThreads];
+            if (this.originThread) {
+                threads.push(this.originThread);
+            }
+            return [['replace', threads]];
+        }
+
+        /**
          * @override
          */
         _createRecordLocalId(data) {
@@ -465,13 +450,6 @@ function factory(dependencies) {
     }
 
     Message.fields = {
-        allThreads: many2many('mail.thread', {
-            compute: '_computeAllThreads',
-            dependencies: [
-                'originThread',
-                'threadCachesThread',
-            ],
-        }),
         attachments: many2many('mail.attachment', {
             inverse: 'messages',
         }),
@@ -521,14 +499,6 @@ function factory(dependencies) {
                 'originThreadIsModeratedByCurrentPartner',
             ],
         }),
-        isNeedaction: attr({
-            compute: '_computeIsNeedaction',
-            dependencies: [
-                'allThreads',
-                'messagingInbox',
-            ],
-            default: false,
-        }),
         isTemporary: attr({
             default: false,
         }),
@@ -538,10 +508,31 @@ function factory(dependencies) {
         is_discussion: attr({
             default: false,
         }),
+        /**
+         * Determine whether the message was a needaction. Useful to make it
+         * present in history mailbox.
+         */
+        isHistory: attr({
+            default: false,
+        }),
+        /**
+         * Determine whether the message is needaction. Useful to make it
+         * present in inbox mailbox and messaging menu.
+         */
+        isNeedaction: attr({
+            default: false,
+        }),
         is_note: attr({
             default: false,
         }),
         is_notification: attr({
+            default: false,
+        }),
+        /**
+         * Determine whether the message is starred. Useful to make it present
+         * in starred mailbox.
+         */
+        isStarred: attr({
             default: false,
         }),
         message_type: attr(),
@@ -551,10 +542,38 @@ function factory(dependencies) {
         messagingCurrentPartner: many2one('mail.partner', {
             related: 'messaging.currentPartner',
         }),
+        messagingHistory: many2one('mail.thread', {
+            related: 'messaging.history',
+        }),
         messagingInbox: many2one('mail.thread', {
             related: 'messaging.inbox',
         }),
+        messagingModeration: many2one('mail.thread', {
+            related: 'messaging.moderation',
+        }),
+        messagingStarred: many2one('mail.thread', {
+            related: 'messaging.starred',
+        }),
         moderation_status: attr(),
+        /**
+         * List of non-origin threads that this message is linked to. This field
+         * is read-only.
+         */
+        nonOriginThreads: many2many('mail.thread', {
+            compute: '_computeNonOriginThreads',
+            dependencies: [
+                'isHistory',
+                'isModeratedByCurrentPartner',
+                'isNeedaction',
+                'isStarred',
+                'messagingHistory',
+                'messagingInbox',
+                'messagingModeration',
+                'messagingStarred',
+                'originThread',
+                'serverChannels',
+            ],
+        }),
         notifications: one2many('mail.notification', {
             inverse: 'message',
             isCausal: true,
@@ -563,9 +582,10 @@ function factory(dependencies) {
             default: [],
             related: 'notifications.notification_status',
         }),
-        originThread: many2one('mail.thread', {
-            inverse: 'originThreadMessages',
-        }),
+        /**
+         * Origin thread of this message (if any).
+         */
+        originThread: many2one('mail.thread'),
         originThreadIsModeratedByCurrentPartner: attr({
             default: false,
             related: 'originThread.isModeratedByCurrentPartner',
@@ -583,15 +603,26 @@ function factory(dependencies) {
         subject: attr(),
         subtype_description: attr(),
         subtype_id: attr(),
-        threadCaches: many2many('mail.thread_cache', {
+        /**
+         * All threads that this message is linked to. This field is read-only.
+         */
+        threads: many2many('mail.thread', {
+            compute: '_computeThreads',
+            dependencies: [
+                'originThread',
+                'nonOriginThreads',
+            ],
             inverse: 'messages',
-        }),
-        threadCachesThread: many2many('mail.thread', {
-            related: 'threadCaches.thread',
         }),
         tracking_value_ids: attr({
             default: [],
         }),
+
+        /**
+         * All channels that this message is linked to (from server message
+         * format).
+         */
+        serverChannels: many2many('mail.thread'),
     };
 
     Message.modelName = 'mail.message';
