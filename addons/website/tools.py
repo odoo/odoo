@@ -54,9 +54,9 @@ class MockRequest(object):
             },
             'website': kw.get('website'),
         })
-        odoo.http._request_stack.push(self.request)
 
     def __enter__(self):
+        odoo.http._request_stack.push(self.request)
         return self.request
 
     def __exit__(self, exc_type, exc_value, traceback):
