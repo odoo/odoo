@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- Add Register additional CTA button, in addition to menus -->
+<template id="event_layout_main" inherit_id="website_event.layout">
+    <xpath expr="//div[@id='o_wevent_event_submenu']/ul" position="after">
+        <a t-if="event.menu_register_cta and not event.is_participating"
+            t-att-href="'/event/%s/register' % (slug(event))"
+            class="btn btn-primary ml-auto">
+            Register
+        </a>
+    </xpath>
+</template>
+
+</odoo>
