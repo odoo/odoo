@@ -50,9 +50,10 @@
                     <span class="navbar-brand h4 my-0">Events</span>
                     <ul class="o_wevent_index_topbar_filters nav"/>
                 </div>
-                <div class="col-lg-3 col-sm-12 d-flex align-items-center flex-wrap px16">
+                <div class="col-lg-3 col-sm-12 d-flex align-items-center flex-wrap pl-3 pr-0">
                     <t t-call="website_event.events_search_box">
                         <t t-set="_searches" t-value="searches"/>
+                        <t t-set="_placeholder" t-value="'Search an event ...'"/>
                     </t>
                     <a href="/event" class="btn btn-info text-nowrap mr-0 w-100" role="button" title="Clear filters">
                         <i class="fa fa-eraser"/> Clear filters
@@ -154,6 +155,7 @@
         <form t-attf-class="o_wevent_event_searchbar_form o_wait_lazy_js w-100 my-1 my-lg-0 #{_classes}"
               t-att-action="action if action else '/event'" method="get">
             <t t-set="search" t-value="search or _searches and _searches['search']"/>
+            <t t-set="placeholder" t-value="placeholder or _placeholder"/>
             <t>$0</t>
             <t t-foreach="_searches" t-as="search">
                 <input t-if="search != 'search' and search_value != 'all'" type="hidden"
