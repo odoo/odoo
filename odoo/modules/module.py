@@ -62,10 +62,6 @@ class AddonsHook(object):
 
         return odoo_module
 
-# need to register loader with setuptools as Jinja relies on it when using
-# PackageLoader
-pkg_resources.register_loader_type(AddonsHook, pkg_resources.DefaultProvider)
-
 class OdooHook(object):
     """ Makes odoo package also available as openerp """
 
