@@ -461,15 +461,37 @@ function beforeEach(self) {
         },
         'res.partner': {
             fields: {
+                activity_ids: {
+                    string: "Activities",
+                    type: 'one2many',
+                    relation: 'mail.activity',
+                },
+                description: {
+                    string: 'description',
+                    type: 'text',
+                },
                 display_name: { string: "Displayed name", type: "char" },
                 im_status: {
                     string: "status",
                     type: 'char',
                 },
                 message_follower_ids: {
-                    relation: 'follower',
+                    relation: 'mail.followers',
                     string: "Followers",
                     type: "one2many",
+                },
+                message_attachment_count: {
+                    string: 'Attachment count',
+                    type: 'integer',
+                },
+                message_ids: {
+                    string: "Messages",
+                    type: 'one2many',
+                    relation: 'mail.message',
+                },
+                name: {
+                    string: "Name",
+                    type: 'char',
                 },
             },
             records: [],
