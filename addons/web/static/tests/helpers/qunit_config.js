@@ -45,6 +45,24 @@ var sortButtonAppended = false;
  * browser_js is closed as soon as an error is logged.
  */
 const errorMessages = [];
+/**
+ * List of elements tolerated in the body after a test. The property "keep"
+ * prevents the element from being removed (typically: qunit suite elements).
+ */
+const validElements = [
+    // always in the body:
+    { tagName: 'DIV', attr: 'id', value: 'qunit', keep: true },
+    { tagName: 'DIV', attr: 'id', value: 'qunit-fixture', keep: true },
+    // shouldn't be in the body after a test but are tolerated:
+    { tagName: 'SCRIPT', attr: 'id', value: '' },
+    { tagName: 'DIV', attr: 'className', value: 'o_notification_manager' },
+    { tagName: 'DIV', attr: 'className', value: 'tooltip fade bs-tooltip-auto' },
+    { tagName: 'DIV', attr: 'className', value: 'tooltip fade bs-tooltip-auto show' },
+    { tagName: 'SPAN', attr: 'className', value: 'select2-hidden-accessible' },
+    // Due to a Document Kanban bug (already present in 12.0)
+    { tagName: 'DIV', attr: 'className', value: 'ui-helper-hidden-accessible' },
+    { tagName: 'UL', attr: 'className', value: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front' },
+];
 
 /**
  * Waits for the module system to end processing the JS modules, so that we can
@@ -143,63 +161,36 @@ QUnit.moduleDone(function(result) {
  * Note: this event is not QUnit standard, we added it for this specific use case.
  */
 QUnit.on('OdooAfterTestHook', function () {
+    const toRemove = [];
     // check for leftover elements in the body
-    var $bodyChilds = $('body > *');
-    var validElements = [
-        // always in the body:
-        {tagName: 'DIV', attrToCompare: 'id', value: 'qunit'},
-        {tagName: 'DIV', attrToCompare: 'id', value: 'qunit-fixture'},
-        {tagName: 'SCRIPT', attrToCompare: 'id', value: ''},
-        // shouldn't be in the body after a test but are tolerated:
-        {tagName: 'DIV', attrToCompare: 'className', value: 'o_notification_manager'},
-        {tagName: 'DIV', attrToCompare: 'className', value: 'tooltip fade bs-tooltip-auto'},
-        {tagName: 'DIV', attrToCompare: 'className', value: 'tooltip fade bs-tooltip-auto show'},
-        {tagName: 'I', attrToCompare: 'title', value: 'Raphaël Colour Picker'},
-        {tagName: 'SPAN', attrToCompare: 'className', value: 'select2-hidden-accessible'},
-        // Due to a Document Kanban bug (already present in 12.0)
-        {tagName: 'DIV', attrToCompare: 'className', value: 'ui-helper-hidden-accessible'},
-        {tagName: 'UL', attrToCompare: 'className', value: 'ui-menu ui-widget ui-widget-content ui-autocomplete ui-front'},
-    ];
-    if ($bodyChilds.length > 3) {
-        for (var i = 0; i < $bodyChilds.length; i++) {
-            var bodyChild = $bodyChilds[i];
-            var isValid = false;
-
-            for (var j = 0; j < validElements.length; j++) {
-                var toleratedElement = validElements[j];
-                if (toleratedElement.tagName === bodyChild.tagName) {
-                    var attr = toleratedElement.attrToCompare;
-                    if (toleratedElement.value === bodyChild[attr]) {
-                        isValid = true;
-                        break;
-                    }
-                }
-            }
-
-            if (!isValid) {
-                console.error('Body still contains undesirable elements:' +
-                    '\nInvalid element:\n' + bodyChild.outerHTML +
-                    '\nBody HTML: \n' + $('body').html());
-                if (!document.body.classList.contains('debug')) {
-                    $(bodyChild).remove();
-                }
-                QUnit.pushFailure(`Body still contains undesirable elements`);
-            }
+    for (const bodyChild of document.body.children) {
+        const tolerated = validElements.find((e) =>
+            e.tagName === bodyChild.tagName && bodyChild[e.attr] === e.value
+        );
+        if (!tolerated) {
+            console.error('Body still contains undesirable elements:' +
+                '\nInvalid element:\n' + bodyChild.outerHTML +
+                '\nBody HTML: \n' + $('body').html());
+            QUnit.pushFailure(`Body still contains undesirable elements`);
+        }
+        if (!tolerated || !tolerated.keep) {
+            toRemove.push(bodyChild);
         }
     }
 
-    for (const tooltip of document.querySelectorAll('.tooltip')) {
-        tooltip.remove();
-    }
-
     // check for leftovers in #qunit-fixture
-    var qunitFixture = document.getElementById('qunit-fixture');
+    const qunitFixture = document.getElementById('qunit-fixture');
     if (qunitFixture.children.length) {
         console.error('#qunit-fixture still contains elements:' +
             '\n#qunit-fixture HTML:\n' + qunitFixture.outerHTML);
         QUnit.pushFailure(`#qunit-fixture still contains elements`);
-        if (!document.body.classList.contains('debug')) {
-            $(qunitFixture.children).remove();
+        toRemove.push(...qunitFixture.children);
+    }
+
+    // remove unwanted elements if not in debug
+    if (!document.body.classList.contains('debug')) {
+        for (const el of toRemove) {
+            el.remove();
         }
     }
 });
