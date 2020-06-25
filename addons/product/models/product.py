@@ -65,6 +65,7 @@ class ProductCategory(models.Model):
         main_category = self.env.ref('product.product_category_all')
         if main_category in self:
             raise UserError(_("You cannot delete this product category, it is the default generic category."))
+        return super().unlink()
 
 
 class ProductProduct(models.Model):
