@@ -16,8 +16,18 @@
         'website_event_track',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'views/assets.xml',
+        'views/event_track_templates_reminder.xml',
+        'views/event_track_templates.xml',
+        'views/event_track_views.xml',
+        'views/event_track_visitor_views.xml',
+        'views/website_visitor_views.xml',
+        'views/event_menus.xml',
     ],
     'demo': [
+        'data/event_track_demo.xml',
+        'data/event_track_visitor_demo.xml',
     ],
     'application': False,
     'installable': True,
