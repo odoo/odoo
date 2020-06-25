@@ -42,7 +42,6 @@
                 <field name="active" invisible="1"/>
                 <field name="allowed_route_ids" invisible="1"/>
                 <field name="product_category_id" invisible="1"/>
-                <field name="warehouse_id" invisible="1"/>
                 <field name="product_tmpl_id" invisible="1"/>
                 <field name="product_id" attrs="{'readonly': [('product_id', '!=', False)]}" invisible="context.get('default_product_id')" force_save="1"/>
                 <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
