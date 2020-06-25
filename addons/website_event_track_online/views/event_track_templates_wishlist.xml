@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="track_widget_wishlist_star">
+    <div class="o_wetrack_js_wishlist mx-2">
+        <i t-att-class="'fa fa-star%s %s' % (
+            '' if track.is_wishlisted or track.wishlisted_by_default else '-o',
+            'o_wishlist_locked' if track.wishlisted_by_default else '')"
+           t-att-data-track-id="track.id"
+           t-att-data-wishlisted-by-default="track.wishlisted_by_default"
+           t-att-title="'Key track' if track.wishlisted_by_default else 'Wishlisted' if track.is_wishlisted else 'Wishlist'"
+           t-att-data-wishlisted="bool(track.is_wishlisted)"></i>
+    </div>
+</template>
+
+</odoo>
