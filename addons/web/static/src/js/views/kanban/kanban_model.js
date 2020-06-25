@@ -198,10 +198,11 @@ var KanbanModel = BasicModel.extend({
         let domain = group.domain;
         if (activeFilter) {
             const activeFilterDomain = [[group.progressBarValues.field, '=', activeFilter]];
-            domain = group.domain.concat(activeFilterDomain);
+            group.domain = group.domain.concat(activeFilterDomain);
         }
-        return this.reload(group.id, {
-            filter_domain: domain,
+        return this.reload(group.id).then(function (res) {
+            group.domain = domain
+            return res;
         });
     },
     /**
