@@ -4,9 +4,9 @@ odoo.define('web.control_panel_model_tests', function (require) {
     const ControlPanelModel = require('web.ControlPanelModel');
     const makeTestEnvironment = require('web.test_env');
 
-    function createControlPanelModel(config = {}) {
+    function createControlPanelModel(config = {}, env, rpc) {
         return new ControlPanelModel(Object.assign(
-            { env: makeTestEnvironment() },
+            { env: makeTestEnvironment(env, rpc) },
             config
         ));
     }
@@ -333,5 +333,72 @@ odoo.define('web.control_panel_model_tests', function (require) {
 
         });
 
+        QUnit.test('search default field many2one with filter domain', async function (assert) {
+            assert.expect(3);
+
+            const actionContext = {
+                search_default_bar: 20,
+            };
+            const arch = `
+                <search>
+                    <field name="bar" string="Partner" filter_domain="[('bar', 'ilike', self)]"/>
+                </search>`;
+            const fields = this.fields;
+            const model = createControlPanelModel(
+                { viewInfo: { arch, fields }, actionContext }, {},
+                async function mockRPC(route, params) {
+                    assert.deepEqual(params, {
+                        args: [20],
+                        kwargs: {},
+                        method: "name_get",
+                        model: "partner",
+                    });
+                    return [[20, "Gandalf"]];
+                }
+            );
+
+            // Labels not fetched: self = undefined
+            assert.throws(() => model.getQuery());
+
+            await model.isReady;
+
+            // Labels fetched: domain should be ready
+            assert.deepEqual(model.getQuery().domain, [["bar", "ilike", "Gandalf"]]);
+        });
+
+        QUnit.test('search default field many2one with filter domain and default favorite', async function (assert) {
+            assert.expect(2);
+
+            const actionContext = {
+                search_default_bar: 20,
+            };
+            const arch = `
+                <search>
+                    <field name="bar" string="Partner" filter_domain="[('bar', 'ilike', self)]"/>
+                </search>`;
+            const favoriteFilters = [{
+                domain: "[('user_id', '=', uid)]",
+                id: 5,
+                is_default: true,
+                name: 'Sorted filter',
+                user_id: [2, "Mitchell Admin"],
+            }];
+            const fields = this.fields;
+            const model = createControlPanelModel(
+                { viewInfo: { arch, favoriteFilters, fields }, actionContext },
+                { session: { user_context: { uid: 2 } } },
+                async function mockRPC() {
+                    throw new Error("There should be no name_get");
+                }
+            );
+
+            // Labels not fetched, but favorite overrides search_default
+            assert.deepEqual(model.getQuery().domain, [["user_id", "=", 2]]);
+
+            await model.isReady;
+
+            // domain should be the same
+            assert.deepEqual(model.getQuery().domain, [["user_id", "=", 2]]);
+        });
     });
 });
