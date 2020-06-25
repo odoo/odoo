@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+<template id="event_exhibitor_widget_connect" name="Exhibitor: Connect Widget">
+    <span style="right: 0; top: 0;"
+        t-att-class="'o_wesponsor_js_connect %s' % (_classes if _classes else '')"
+        t-att-data-sponsor-id="sponsor.id"
+        t-att-data-sponsor-name="sponsor.name"
+        t-att-data-sponsor-image-url="website.image_url(sponsor, 'image_512')"
+        t-att-data-sponsor-subtitle="sponsor.subtitle"
+        t-att-data-sponsor-website-description="sponsor.website_description"
+        t-att-data-sponsor-country-flag-url="website.image_url(sponsor.partner_id.country_id, 'image')"
+        t-att-data-sponsor-country-name="sponsor.partner_id.country_id.name"
+        t-att-data-is-in-opening-hours="sponsor.event_id.is_in_opening_hours">
+        <a t-att-href="sponsor.website_url" class="btn btn-primary">Connect</a>
+    </span>
+</template>
+
+</data></odoo>
