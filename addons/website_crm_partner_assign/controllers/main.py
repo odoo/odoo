@@ -32,8 +32,8 @@ class WebsiteAccount(CustomerPortal):
             ('type', '=', 'opportunity')
         ]
 
-    def _prepare_portal_layout_values(self):
-        values = super(WebsiteAccount, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self):
+        values = super(WebsiteAccount, self)._prepare_home_portal_values()
         lead_count = request.env['crm.lead'].search_count(self.get_domain_my_lead(request.env.user))
         opp_count = request.env['crm.lead'].search_count(self.get_domain_my_opp(request.env.user))
         values.update({

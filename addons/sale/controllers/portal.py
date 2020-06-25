@@ -14,8 +14,8 @@ from odoo.osv import expression
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(CustomerPortal, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self):
+        values = super(CustomerPortal, self)._prepare_home_portal_values()
         partner = request.env.user.partner_id
 
         SaleOrder = request.env['sale.order']
