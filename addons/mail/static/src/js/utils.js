@@ -95,6 +95,7 @@ function htmlToTextContentInline(htmlString) {
     const fragment = document.createDocumentFragment();
     const div = document.createElement('div');
     fragment.appendChild(div);
+    htmlString = htmlString.replace(/<br\s*\/?>/gi,' ');
     try {
         div.innerHTML = htmlString;
     } catch (e) {

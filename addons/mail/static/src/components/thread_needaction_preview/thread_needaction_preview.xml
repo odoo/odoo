@@ -45,7 +45,7 @@
                                     threadLocalId="thread.localId"
                                 />
                             </t>
-                            <t t-raw="inlineLastNeedactionMessageBody"/>
+                            <t t-esc="inlineLastNeedactionMessageBody"/>
                         </span>
                         <span class="o-autogrow"/>
                         <span class="o_ThreadNeedactionPreview_coreItem o_ThreadNeedactionPreview_markAsRead fa fa-check" title="Mark as Read" t-on-click="_onClickMarkAsRead" t-ref="markAsRead"/>
