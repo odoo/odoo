@@ -1,0 +1,30 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_sponsor_view_form" model="ir.ui.view">
+        <field name="name">event.sponsor.view.form.inherit.exhibitor</field>
+        <field name="model">event.sponsor</field>
+        <field name="inherit_id" ref="website_event_track_online.event_sponsor_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//h1" position="after">
+                <field name="subtitle"/>
+            </xpath>
+            <xpath expr="//field[@name='mobile']" position="after">
+                <label for="hour_from" string="Opening Hours"/>
+                <div class="o_row">
+                    <field name="hour_from" widget="float_time" nolabel="1" class="oe_inline"/>
+                    <i class="fa fa-long-arrow-right mx-2" aria-label="Arrow icon" title="Arrow"/>
+                    <field name="hour_to" widget="float_time" nolabel="1" class="oe_inline"/>
+                </div>
+            </xpath>
+            <xpath expr="//sheet/group" position="after">
+                <notebook>
+                    <page string="Jitsi">
+                        <group>
+                            <field name="chat_room_id"/>
+                        </group>
+                    </page>
+                </notebook>
+            </xpath>
+        </field>
+    </record>
+</odoo>

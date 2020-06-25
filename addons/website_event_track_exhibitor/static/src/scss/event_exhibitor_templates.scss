@@ -1,0 +1,119 @@
+.o_wesponsor_index {
+
+    /*
+     * COMMON
+     */
+
+    .o_wesponsor_gradient {
+        background-image: linear-gradient(120deg, #875A7B, darken(#875A7B, 10%));
+        opacity: 0.8;
+    }
+
+    // BG color
+    &.o_wesponsor_index_bg {
+        @if (color('body') == $o-portal-default-body-bg) {
+            @extend .bg-200;
+        }
+    }
+
+    /*
+     * MAIN PAGE: LIST
+     */
+
+    // Sponsor card
+    .o_wesponsor_card {
+        .card-body {
+            padding: 1rem;
+        }
+
+        .card-footer {
+            padding: 0.75rem 1rem;
+        }
+
+        .o_wesponsor_card_header_badge {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            padding: $card-spacer-y $card-spacer-x;
+            text-align: right;
+        }
+        &.o_wesponsor_card_unpublished {
+            opacity: 0.8;
+        }
+
+        .o_wesponsor_bg_image {
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position:center;
+        }
+
+        // Display connect block on hover on large devices only
+        .o_wesponsor_js_connect {
+            display: none;
+            position: absolute !important;
+            right: 0;
+            top: 40%;
+            margin-left: auto;
+            margin-right: auto;
+            width: 100%;
+            text-align: center;
+        }
+
+        @include media-breakpoint-up(md) {
+            :hover .o_wesponsor_js_connect {
+                display: inline-block;
+            }
+            &:hover {
+                opacity: 0.8;
+            }
+        }
+    }
+
+    /*
+     * EXHIBITOR PAGE
+     */
+
+    .o_wesponsor_exhibitor_container {
+        @include media-breakpoint-up(md) {
+            &:not(.container) {
+                padding-left: 0.5rem;
+                padding-right: 0.5rem;
+            }
+        }
+
+        // Main panel
+        .o_wesponsor_exhibitor_main {
+
+            // Main panel: exhibitor display
+            .o_wesponsor_exhibitor_main_exhibitor {
+                border: 1px solid $border-color;
+
+                @include media-breakpoint-up(md) {
+                    border-top-width: 0;
+                }
+            }
+
+            // Jitsi container
+            #o_wsponsor_jitsi_iframe {
+                height: 400px;
+            }
+        }
+
+        // Left panel
+        .o_wesponsor_exhibitor_aside {
+
+            // Left panel: other exhibitors
+            .o_wesponsor_exhibitor_aside_exhibitors {
+                border: 1px solid $border-color;
+
+                @include media-breakpoint-up(md) {
+                    border-top-width: 0;
+                }
+
+                .o_wesponsor_exhibitor_aside_collapse.collapsed {
+                    transform: rotate(90deg);
+                }
+            }
+        }
+    }
+}

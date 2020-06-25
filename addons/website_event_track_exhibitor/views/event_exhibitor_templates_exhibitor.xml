@@ -1,0 +1,134 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_exhibitor_main" name="Event Exhibitor">
+    <t t-call="website_event.layout">
+        <div class="o_wesponsor_index o_wesponsor_index_bg">
+            <!-- Options -->
+            <t t-set="option_widescreen" t-value="option_widescreen or False"/>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wesponsor_index_1" class="oe_structure"/>
+            <!-- Content -->
+            <div t-att-class="'o_wesponsor_exhibitor_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
+                <div class="row mb-5">
+                    <t t-call="website_event_track_exhibitor.exhibitor_aside"/>
+                    <t t-call="website_event_track_exhibitor.exhibitor_main"/>
+                </div>
+            </div>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wesponsor_index_2" class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<!-- ============================================================ -->
+<!-- CONTENT: MAIN TEMPLATES -->
+<!-- ============================================================ -->
+
+<template id="exhibitor_main" name="Exhibitor: Main Content">
+    <div t-att-class="'col-12 o_wesponsor_exhibitor_main %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
+        <div class="bg-white pt-3 o_wesponsor_exhibitor_main_exhibitor">
+            <div t-if="not sponsor.event_id.is_ongoing" class="mx-3 mt-3 alert alert-warning">
+                Event <span t-esc="sponsor.event_id.name" class="font-weight-bold"/>
+                <span t-if="sponsor.event_id.start_today">
+                    starts in
+                    <span t-esc="sponsor.event_id.start_remaining"
+                        t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>
+                </span>
+                <span class="my-0" t-else="sponsor.event_id.start_today">
+                    starts at
+                    <span t-field="sponsor.event_id.with_context(tz=sponsor.event_id.date_tz).date_begin"
+                        t-options="{'format': 'long'}"/>
+                </span>
+            </div>
+            <div class="mx-3">
+                <div t-if="sponsor.chat_room_id" class="d-flex flex-column mb-3">
+                    <div id="o_wsponsor_jitsi_iframe"/>
+                    <div class="d-flex flex-row-reverse">
+                        <t t-call="website_jitsi.chat_room_join_button">
+                            <t t-set="_classes" t-value="'d-none'"/>
+                            <t t-set="room_name" t-value="sponsor.room_name"/>
+                            <t t-set="chat_room_id" t-value="sponsor.chat_room_id.id"/>
+                            <t t-set="auto_open" t-value="1"/>
+                            <t t-set="attach_to" t-value="'#o_wsponsor_jitsi_iframe'"/>
+                            <t t-set="check_full" t-value="option_can_edit"/>
+                        </t>
+                    </div>
+                </div>
+                <span class="h5 mb-0">About <t t-esc="sponsor.name"/></span>
+                <hr class="mt-2 pb-1 mb-1"/>               
+                <div class="row mt32">
+                    <div class="col-2">
+                        <span t-if="sponsor.image_512" t-field="sponsor.image_512" t-options="{'widget': 'image'}"/>
+                        <span t-else="" t-field="sponsor.partner_id.image_512" t-options="{'widget': 'image'}"/>
+                    </div>
+                    <div class="col-10">
+                        <div class="d-flex align-items-top mb-3">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center">
+                                    <h4 t-field="sponsor.name" class="mb4"/>
+                                    <span class="badge badge-primary ml-2"
+                                        t-esc="sponsor.sponsor_type_id.name"/>
+                                </div>
+                                <span t-if="sponsor.partner_id.website">
+                                    <i class="fa fa-home mr-2"/><a t-att-href="sponsor.partner_id.website"><span t-field="sponsor.partner_id.website"/></a>
+                                </span>
+                                <span t-if="sponsor.email">
+                                    <i class="fa fa-envelope mr-2"/><a t-att-mailto="sponsor.email"><span t-field="sponsor.email"/></a>
+                                </span>
+                                <span t-if="sponsor.phone">
+                                    <i class="fa fa-phone mr-2"/><span t-field="sponsor.phone"/>
+                                </span>
+                            </div>
+                            <a t-att-href="'/event/%s/exhibitors?countries=%s' % (slug(sponsor.event_id), [sponsor.partner_id.country_id.id])"
+                                class="ml-auto">
+                                <img class="img"
+                                    style="max-height: 36px;"
+                                    t-att-src="website.image_url(sponsor.partner_id.country_id, 'image')"
+                                    t-att-alt="sponsor.partner_id.country_id.name"/>
+                            </a>
+                        </div>
+                    </div>
+                    <div t-field="sponsor.website_description" class="col-12 oe_no_empty"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- ============================================================ -->
+<!-- ASIDE: CONTROL PANEL -->
+<!-- ============================================================ -->
+
+<template id="exhibitor_aside" name="Exhibitor: Aside">
+    <div t-att-class="'col-12 o_wesponsor_exhibitor_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+        <div class="bg-white pt-3 o_wesponsor_exhibitor_aside_exhibitors">
+            <div class="d-flex align-items-center justify-content-between mx-2">
+                <span class="h5 mb-0">Other exhibitors</span>
+                <a href="#collapse_exhibitor_aside" data-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wesponsor_exhibitor_aside_collapse">
+                    <i class="fa fa-chevron-down d-lg-none"/>
+                </a>
+            </div>
+            <hr class="mt-2 pb-1 mb-1 mx-2 d-lg-block"/>
+            <ul id="collapse_exhibitor_aside" class="list-unstyled mx-2 collapse d-lg-block">
+                <li t-foreach="sponsors_other" t-as="sponsor_other">
+                    <div t-attf-class="d-flex mb-3">
+                        <img class="mr-2"
+                            style="max-width: 40px;"
+                            t-att-src="website.image_url(sponsor_other.partner_id.country_id, 'image')"
+                            t-att-alt="sponsor_other.partner_id.country_id.name"/>
+                        <div class="flex-grow-1">
+                            <span class="d-flex align-items-top">
+                                <a t-att-href="sponsor_other.website_url" t-esc="sponsor_other.name"/>
+                                <span class="badge badge-light ml-auto" t-esc="sponsor_other.sponsor_type_id.name"/>
+                            </span>
+                            <small class="text-muted" t-esc="sponsor_other.subtitle"/>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+</odoo>

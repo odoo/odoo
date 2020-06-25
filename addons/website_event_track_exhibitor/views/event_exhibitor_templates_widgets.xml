@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+<template id="event_exhibitor_widget_connect" name="Exhibitor: Connect Widget">
+    <span t-att-class="'o_wesponsor_js_connect %s' % (_classes if _classes else '')"
+        t-att-data-sponsor-id="sponsor.id"
+        t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
+        t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours">
+        <a t-att-href="sponsor.website_url" class="btn btn-primary">Connect</a>
+    </span>
+</template>
+
+</data></odoo>
