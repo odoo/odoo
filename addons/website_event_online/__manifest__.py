@@ -14,8 +14,13 @@
         'website_event'
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'views/event_registration_views.xml',
+        'views/website_visitor_views.xml',
     ],
     'demo': [
+        'data/website_visitor_demo.xml',
+        'data/event_registration_demo.xml',
     ],
     'application': False,
     'installable': True,
