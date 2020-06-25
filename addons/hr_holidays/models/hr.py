@@ -137,9 +137,6 @@ class Employee(models.Model):
                 ('employee_id', '=', employee.id),
                 ('holiday_status_id.active', '=', True),
                 ('state', '=', 'validate'),
-                '|',
-                    ('date_to', '=', False),
-                    ('date_to', '>=', datetime.date.today()),
             ])
             employee.allocation_count = sum(allocations.mapped('number_of_days'))
 
