@@ -605,7 +605,7 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {})
         ctx.pop('group_by', None)
         action = {
-            'name': _('Update Quantity'),
+            'name': _('Stock On Hand'),
             'view_type': 'tree',
             'view_mode': 'list',
             'res_model': 'stock.quant',
