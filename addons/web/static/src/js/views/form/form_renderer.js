@@ -324,18 +324,27 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         return this.lastActivatedFieldIndex;
     },
     /**
-     * Add a tooltip on a button
+     * Add a popover on a button
      *
      * @private
      * @param {Object} node
      * @param {jQuery} $button
      */
-    _addButtonTooltip: function (node, $button) {
+    _addButtonPopover: function (node, $button) {
         var self = this;
-        $button.tooltip({
-            title: function () {
-                return qweb.render('WidgetButton.tooltip', {
-                    debug: config.isDebug(),
+        const debug = config.isDebug();
+        $button.popover({
+            html: true,
+            trigger: 'hover',
+            title: function() {
+                return qweb.render('WidgetButtonTitle.popover', {
+                    debug,
+                    node: node,
+                });
+            },
+            content: function () {
+                return qweb.render('WidgetButton.popover', {
+                    debug,
                     state: self.state,
                     node: node,
                 });
@@ -514,9 +523,9 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         this._handleAttributes($button, node);
         this._registerModifiers(node, this.state, $button);
 
-        // Display tooltip
+        // Display popover
         if (config.isDebug() || node.attrs.help) {
-            this._addButtonTooltip(node, $button);
+            this._addButtonPopover(node, $button);
         }
         return $button;
     },
@@ -717,7 +726,7 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         });
         $button.append(_.map(node.children, this._renderNode.bind(this)));
         if (node.attrs.help) {
-            this._addButtonTooltip(node, $button);
+            this._addButtonPopover(node, $button);
         }
         this._addOnClickAction($button, node);
         this._handleAttributes($button, node);
@@ -764,9 +773,9 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         this._handleAttributes($button, node);
         this._registerModifiers(node, this.state, $button);
 
-        // Display tooltip
+        // Display popover
         if (config.isDebug() || node.attrs.help) {
-            this._addButtonTooltip(node, $button);
+            this._addButtonPopover(node, $button);
         }
 
         return $button;
@@ -1024,7 +1033,7 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         this.$el.toggleClass('o_form_editable', this.mode === 'edit');
         this.$el.toggleClass('o_form_readonly', this.mode === 'readonly');
 
-        // Attach the tooltips on the fields' label
+        // Attach the popovers on the fields' label
         _.each(this.allFieldWidgets[this.state.id], function (widget) {
             var idForLabel = self.idsForLabels[widget.name];
             // We usually don't support multiple widgets for the same field on the
@@ -1036,7 +1045,7 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
             var $widgets = self.$('.o_field_widget[name=' + widget.name + ']');
             var $label = idForLabel ? self.$('.o_form_label[for=' + idForLabel + ']') : $();
             $label = $label.eq($widgets.index(widget.$el));
-            self._addFieldTooltip(widget, $label);
+            self._addFieldPopover(widget, $label);
             if (widget.attrs.widget === 'upgrade_boolean') {
                 // this widget needs a reference to its $label to be correctly
                 // rendered

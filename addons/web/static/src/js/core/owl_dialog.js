@@ -70,13 +70,13 @@ odoo.define('web.OwlDialog', function () {
                 }
             }
 
-            this._removeTooltips();
+            this._removePopovers();
         }
 
         willUnmount() {
             this.env.bus.off('close_dialogs', this, this._close);
 
-            this._removeTooltips();
+            this._removePopovers();
 
             this.constructor.hide(this);
         }
@@ -105,12 +105,12 @@ odoo.define('web.OwlDialog', function () {
         }
 
         /**
-         * Remove any existing tooltip present in the DOM.
+         * Remove any existing popover present in the DOM.
          * @private
          */
-        _removeTooltips() {
-            for (const tooltip of document.querySelectorAll('.tooltip')) {
-                tooltip.remove(); // remove open tooltip if any to prevent them staying when modal is opened
+        _removePopovers() {
+            for (const popover of document.querySelectorAll('.popover')) {
+                popover('hide'); // remove open popover if any to prevent them staying when modal is opened
             }
         }
 
@@ -152,7 +152,7 @@ odoo.define('web.OwlDialog', function () {
 
         /**
          * Manage the TAB key on the main button. If the focus is on a primary
-         * button and the user tries to tab to go to the next button : a tooltip
+         * button and the user tries to tab to go to the next button : a popover
          * will be displayed.
          * @private
          * @param {KeyboardEvent} ev
@@ -161,14 +161,15 @@ odoo.define('web.OwlDialog', function () {
             if (ev.key === 'Tab' && !ev.shiftKey) {
                 ev.preventDefault();
                 $(this.mainButton)
-                    .tooltip({
+                    .popover({
+                        html: true,
                         delay: { show: 200, hide: 0 },
-                        title: () => this.env.qweb.renderToString('web.DialogButton.tooltip', {
+                        content: () => this.env.qweb.renderToString('web.DialogButton.popover', {
                             title: this.mainButton.innerText.toUpperCase(),
                         }),
                         trigger: 'manual',
                     })
-                    .tooltip('show');
+                    .popover('show');
             }
         }
 

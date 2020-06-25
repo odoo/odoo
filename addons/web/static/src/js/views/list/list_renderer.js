@@ -924,7 +924,7 @@ var ListRenderer = BasicRenderer.extend({
                 record: this.state,
                 attrs: _.extend({}, node.attrs, this.state.fieldsInfo.list[name]),
             };
-            this._addFieldTooltip(fieldDescr, $th);
+            this._addFieldPopover(fieldDescr, $th);
         } else {
             $th.attr('title', description);
         }

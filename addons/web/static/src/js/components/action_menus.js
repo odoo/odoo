@@ -22,11 +22,11 @@ odoo.define('web.ActionMenus', function (require) {
     class ActionMenus extends Component {
 
         mounted() {
-            this._addTooltips();
+            this._addPopovers();
         }
 
         patched() {
-            this._addTooltips();
+            this._addPopovers();
         }
 
         //---------------------------------------------------------------------
@@ -74,12 +74,12 @@ odoo.define('web.ActionMenus', function (require) {
         //---------------------------------------------------------------------
 
         /**
-         * Add teh tooltips to the items
+         * Add teh popovers to the items
          * @private
          */
-        _addTooltips() {
-            $(this.el.querySelectorAll('[title]')).tooltip({
-                delay: { show: 500, hide: 0 }
+        _addPopovers() {
+            $(this.el.querySelectorAll('[title]')).popover({
+                delay: { show: 500, hide: 0 },
             });
         }
 
