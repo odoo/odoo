@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="event_7_sponsor_0_chat_room" model="chat.room">
+        <field name="name">Meet-Wood-Corner</field>
+        <field name="max_capacity">8</field>
+    </record>
+    <record id="event_7_sponsor_1_chat_room" model="chat.room">
+        <field name="name">Meet-Bloem</field>
+        <field name="max_capacity">12</field>
+    </record>
+    <record id="event_7_sponsor_2_chat_room" model="chat.room">
+        <field name="name">Meet-Gemini-Furniture</field>
+        <field name="max_capacity">8</field>
+    </record>
+
+    <record id="website_event_track.event_7_sponsor_0" model="event.sponsor">
+        <field name="is_published" eval="True"/>
+        <field name="subtitle">Catchy sentence !</field>
+        <field name="chat_room_id" ref="website_event_track_exhibitor.event_7_sponsor_0_chat_room"/>
+    </record>
+    <record id="website_event_track.event_7_sponsor_1" model="event.sponsor">
+        <field name="is_published" eval="True"/>
+        <field name="subtitle">You won't believe this sponsor</field>
+        <field name="chat_room_id" ref="website_event_track_exhibitor.event_7_sponsor_1_chat_room"/>
+    </record>
+    <record id="website_event_track.event_7_sponsor_2" model="event.sponsor">
+        <field name="is_published" eval="True"/>
+        <field name="subtitle">Honestly we are good</field>
+        <field name="chat_room_id" ref="website_event_track_exhibitor.event_7_sponsor_2_chat_room"/>
+    </record>
+    <record id="website_event_track.event_7_sponsor_3" model="event.sponsor">
+        <field name="is_published" eval="True"/>
+        <field name="subtitle">Catchy sentence !</field>
+    </record>
+    <record id="website_event_track.event_7_sponsor_4" model="event.sponsor">
+        <field name="is_published" eval="True"/>
+        <field name="subtitle">You won't believe this sponsor</field>
+    </record>
+    <record id="website_event_track.event_7_sponsor_5" model="event.sponsor">
+        <field name="is_published" eval="True"/>
+        <field name="subtitle">Honestly we are good</field>
+    </record>
+
+</odoo>
