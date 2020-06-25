@@ -1,0 +1,22 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="event_track_view_form" model="ir.ui.view">
+        <field name="name">event.track.view.form.inherit.session</field>
+        <field name="model">event.track</field>
+        <field name="inherit_id" ref="website_event_track.view_event_track_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='speakers']" position="after">
+                <page string="Options" name="options">
+                    <group>
+                        <field name="website_cta"/>
+                        <field name="website_cta_title"/>
+                        <field name="website_cta_url"/>
+                        <field name="website_cta_delay"/>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
