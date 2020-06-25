@@ -442,6 +442,10 @@ class MrpProduction(models.Model):
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
+        # Clear move raws if we are changing the product. In case of creation (self._origin is empty),
+        # we need to avoid keeping incorrect lines, so clearing is necessary too.
+        if self.product_id != self._origin.product_id:
+            self.move_raw_ids = [(5,)]
         if self.bom_id and self.product_qty > 0:
             # keep manual entries
             list_move_raw = [(4, move.id) for move in self.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
