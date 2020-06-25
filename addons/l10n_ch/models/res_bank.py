@@ -14,7 +14,7 @@ CLEARING = "09000"
 _re_postal = re.compile('^[0-9]{2}-[0-9]{1,6}-[0-9]$')
 
 def _is_l10n_ch_postal(account_ref):
-    """ Returns True iff the string account_ref is a valid postal account number,
+    """ Returns True if the string account_ref is a valid postal account number,
     i.e. it only contains ciphers and is last cipher is the result of a recursive
     modulo 10 operation ran over the rest of it. Shorten form with - is also accepted.
     """
@@ -91,7 +91,7 @@ class ResPartnerBank(models.Model):
                 # In case of ISR issuer, this number is not
                 # unique and we fill acc_number with partner
                 # name to give proper information to the user
-                if self.acc_number[:2] in ["01", "03"]:
+                if self.partner_id and self.acc_number[:2] in ["01", "03"]:
                     self.acc_number = ("{} {}").format(self.acc_number, self.partner_id.name)
 
     @api.model
@@ -107,7 +107,7 @@ class ResPartnerBank(models.Model):
     def _pretty_postal_num(self, number):
         """format a postal account number or an ISR subscription number
         as per specifications with '-' separators.
-        eg. 010000628 -> 01-162-8
+        eg. 010001628 -> 01-162-8
         """
         if re.match('^[0-9]{2}-[0-9]{1,6}-[0-9]$', number or ''):
             return number
