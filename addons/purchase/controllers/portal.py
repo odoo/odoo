@@ -16,8 +16,8 @@ from odoo.addons.web.controllers.main import Binary
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(CustomerPortal, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self):
+        values = super(CustomerPortal, self)._prepare_home_portal_values()
         values['purchase_count'] = request.env['purchase.order'].search_count([
             ('state', 'in', ['purchase', 'done', 'cancel'])
         ])
