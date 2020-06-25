@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="track_widget_reminder">
+    <div t-att-class="'o_wetrack_js_reminder mx-2 d-flex align-items-center rounded %s'
+                            % ('o_wetrack_reminder_light' if reminder_light else '')">
+        <span class="o_wetrack_js_reminder_text text-white text-center">
+            <t t-esc="'Set a reminder' if not track.is_reminder_on else 'Reminder On'"/>
+        </span>
+        <div>
+            <i t-att-class="'fa fa-bell%s' % ('' if track.is_reminder_on else '-o')"
+               t-att-data-track-id="track.id"
+               t-att-title="'Reminder On' if track.is_reminder_on else 'Set a Reminder'"
+               t-att-data-reminder-on="bool(track.is_reminder_on)"></i>
+        </div>
+    </div>
+</template>
+
+</odoo>

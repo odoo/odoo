@@ -1,0 +1,54 @@
+.o_wetrack_js_reminder {
+    span {
+        font-size: 12px;
+    }
+    div {
+        text-align: right;
+        i {
+            margin-left:1em;
+            position: relative;
+            &.fa-bell {
+                color: gold;
+            }
+            &.fa-bell-o {
+                color: white
+            }
+        }
+    }
+
+    &.o_wetrack_reminder_light {
+        padding: 0.25em 0em 0.25em 0.5em;
+        span {
+            display:none;
+        }
+        div i {
+            cursor: pointer;
+            transition: margin-right .3s ease;
+        }
+        &:hover {
+            background: grey;
+            width: fit-content;
+            height: fit-content;
+            span {
+                display:inline;
+            }
+            div i {
+                margin-right: 0.5em;
+            }
+        }
+    }
+    &:not(.o_wetrack_reminder_light) {
+        padding: 0.25em 0.5em 0.25em 0.5em;
+        background: grey;
+        width: fit-content;
+        height: fit-content;
+        cursor: pointer;
+
+        span {
+            min-width: 84px;
+        }
+        div i {
+            margin-right: 0.5em;
+        }
+    }
+}
