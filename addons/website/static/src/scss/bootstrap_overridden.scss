@@ -32,9 +32,7 @@ $link-hover-decoration: if(o-website-value('link-underline') != 'never', underli
 // Note: for the 'active' color, color preset edition is not really flexible but
 // this could come in a future update.
 $component-active-bg: o-color('o-cc1-btn-primary') !default;
-@if $component-active-bg {
-    $component-active-color: color-yiq($component-active-bg) !default;
-}
+$component-active-color: if($component-active-bg, color-yiq($component-active-bg), null) !default;
 
 // Fonts
 //
