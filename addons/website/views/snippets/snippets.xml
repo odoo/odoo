@@ -531,32 +531,47 @@
                      data-select-class="mx-md-auto"
                      data-no-preview="true"/>
 
-        <we-select id="header_visibilities_list" string="Header Visibility">
+        <we-select string="Header Effect">
+            <t t-set="header_effect_standard_label">Standard</t>
+            <t t-set="header_effect_scroll_label">Scroll</t>
+            <t t-set="header_effect_fixed_label">Fixed</t>
+            <t t-set="header_effect_disappears_label">Disappears</t>
+            <t t-set="header_effect_fadeout_label">Fade Out</t>
             <we-button id="option_header_visibility_standard"
+                       t-att-data-select-label="header_effect_standard_label"
+                       class="o_we_img_animate"
                        data-name="header_visibility_standard_opt"
                        data-select-class="o_header_standard"
                        data-customize-website-views="website.header_visibility_standard"
-                       data-img="/website/static/src/img/snippets_options/header_effect_standard.gif"/>
+                       data-img="/website/static/src/img/snippets_options/header_effect_standard.png"/>
             <we-button id="option_header_effect_scroll"
+                       t-att-data-select-label="header_effect_scroll_label"
+                       class="o_we_img_animate"
                        data-name="header_effect_scroll_opt"
                        data-select-class=""
                        data-customize-website-views=""
-                       data-img="/website/static/src/img/snippets_options/header_effect_scroll.gif"/>
+                       data-img="/website/static/src/img/snippets_options/header_effect_scroll.png"/>
             <we-button id="option_header_effect_fixed"
+                       t-att-data-select-label="header_effect_fixed_label"
+                       class="o_we_img_animate"
                        data-name="header_effect_fixed_opt"
                        data-select-class="o_header_fixed"
                        data-customize-website-views="website.header_visibility_fixed"
-                       data-img="/website/static/src/img/snippets_options/header_effect_fixed.gif"/>
+                       data-img="/website/static/src/img/snippets_options/header_effect_fixed.png"/>
             <we-button id="option_header_effect_disappears"
+                       t-att-data-select-label="header_effect_disappears_label"
+                       class="o_we_img_animate"
                        data-name="header_effect_disappears_opt"
                        data-select-class="o_header_disappears"
                        data-customize-website-views="website.header_visibility_disappears"
-                       data-img="/website/static/src/img/snippets_options/header_effect_disappears.gif"/>
+                       data-img="/website/static/src/img/snippets_options/header_effect_disappears.png"/>
             <we-button id="option_header_effect_fade_out"
+                       t-att-data-select-label="header_effect_fadeout_label"
+                       class="o_we_img_animate"
                        data-name="header_effect_fade_out_opt"
                        data-select-class="o_header_fade_out"
                        data-customize-website-views="website.header_visibility_fade_out"
-                       data-img="/website/static/src/img/snippets_options/header_effect_fade_out.gif"/>
+                       data-img="/website/static/src/img/snippets_options/header_effect_fade_out.png"/>
         </we-select>
 
         <we-select id="option_header_dropdown" string="Sub Menus" data-dependencies="!header_hamburger_opt" data-no-preview="true">
