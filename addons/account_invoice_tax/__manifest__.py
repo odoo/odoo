@@ -12,7 +12,6 @@ of a vendor bill.
         'account',
     ],
     'data': [
-        # 'security/ir.model.access.csv', TODO remove if not needed
         'wizards/account_invoice_tax_view.xml',
         'views/account_move_view.xml',
     ],
