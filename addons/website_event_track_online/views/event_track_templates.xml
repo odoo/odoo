@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="tracks_wishlist"
+    name="Wishlist on Tracks"
+    inherit_id="website_event_track.tracks"
+    customize_show="True">
+    <xpath expr="//h3" position="replace">
+        <h3 class="mt0 mb0 d-flex">
+            <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }" class="text-secondary"><span t-field="track.name"> </span></a>
+            <small t-if="not track.website_published" class="badge badge-danger">unpublished</small>
+            <t t-call="website_event_track_online.track_widget_reminder"/>
+        </h3>
+    </xpath>
+</template>
+
+<template id="track_view_wishlist"
+    name="Wishlist on Track"
+    inherit_id="website_event_track.track_view"
+    customize_show="True">
+    <xpath expr="//h1" position="replace">
+        <div class="d-flex">
+            <h1 t-field="track.name"/>
+            <div class="ml-2 pt-1">
+                <t t-call="website_event_track_online.track_widget_reminder"/>
+            </div>
+        </div>
+    </xpath>
+</template>
+
+</odoo>
