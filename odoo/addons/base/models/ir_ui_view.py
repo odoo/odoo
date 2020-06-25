@@ -1313,6 +1313,7 @@ actual arch.
         if not node_info['validate']:
             return
         allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header')
+        fnames = []
         for child in node.iterchildren(tag=etree.Element):
             if child.tag not in allowed_tags and not isinstance(child, etree._Comment):
                 msg = _(
@@ -1320,6 +1321,16 @@ actual arch.
                     tags=', '.join(allowed_tags), wrong_tag=child.tag,
                 )
                 self._raise_view_error(msg, child)
+            elif child.tag == "field" and not child.get('string'):
+                # Only case where two same fields has any sense is when they have different labels
+                # TODO needed : and not child.get('position') ?
+                if child.get('name') in fnames:
+                    msg = _('Tree view %s contains field %s twice (or more)')
+                    self.handle_view_error(msg % (
+                        self.env.context.get('install_xmlid') or self.xml_id,
+                        child.get('name'),
+                    ), raise_exception=False)
+                fnames.append(child.get('name'))
 
     def _validate_tag_graph(self, node, name_manager, node_info):
         if not node_info['validate']:
