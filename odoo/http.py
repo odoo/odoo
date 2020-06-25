@@ -154,10 +154,6 @@ def dispatch_rpc(service_name, method, params):
         return result
     except NO_POSTMORTEM:
         raise
-    except odoo.exceptions.DeferredException as e:
-        _logger.exception(odoo.tools.exception_to_unicode(e))
-        odoo.tools.debugger.post_mortem(odoo.tools.config, e.traceback)
-        raise
     except Exception as e:
         _logger.exception(odoo.tools.exception_to_unicode(e))
         odoo.tools.debugger.post_mortem(odoo.tools.config, sys.exc_info())
