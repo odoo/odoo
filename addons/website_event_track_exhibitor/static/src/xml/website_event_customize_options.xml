@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+    <t t-extend="website_event.customize_options">
+        <t t-jquery="a[name='display-website-menu']" t-operation="after">
+            <a href="#" name="display-showcase-exhibitors" class="dropdown-item" role="menuitem">
+                <label class="o_switch" for="display-showcase-exhibitors">
+                    <input id="display-showcase-exhibitors" type="checkbox"/>
+                    <span/>
+                    Showcase Exhibitors
+                </label>
+            </a>
+        </t>
+    </t>
+
+</templates>

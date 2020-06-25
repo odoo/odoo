@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="exhibitor.connect.closed.modal">
+        <div class="o_wesponsor_js_connect_modal_main container">
+            <div class="row mx-2">
+                <div class="col-12 alert alert-warning text-center" role="alert">
+                    This sponsor is not available right now!<br />
+                    Come back during the event opening hours to meet <t t-esc="widget.sponsorData.sponsorName"/>.
+                </div>
+            </div>
+            <div class="row mt-2">
+                <div class="col-5">
+                    <img class="img"
+                        style="max-height: 80px;"
+                        t-att-src="widget.sponsorData.sponsorImageUrl"
+                        t-att-alt="widget.sponsorData.sponsorName"/>
+                </div>
+                <div class="col-7">
+                    <span class="h3" t-esc="widget.sponsorData.sponsorName"/><br />
+                    <span class="text-muted" t-esc="widget.sponsorData.sponsorSubtitle"/><br />
+                    <span class="d-flex">
+                        <img class="img"
+                            style="max-height: 20px;"
+                            t-att-src="widget.sponsorData.sponsorCountryFlagUrl"
+                            t-att-alt="widget.sponsorData.sponsorCountryName"/>
+                        <span class="text-muted ml-2" t-esc="widget.sponsorData.sponsorCountryName"/>    
+                    </span>
+                    <span class="mt-2" t-raw="widget.sponsorData.sponsorWebsiteDescription"/>
+                </div>
+            </div>
+            <div>
+            </div>
+        </div>
+    </t>
+
+</templates>
