@@ -544,23 +544,13 @@ odoo.define('web.ControlPanelModel', function (require) {
          * @private
          */
         _activateDefaultFilters() {
-            const defaultFilters = [];
-            const defaultFavorites = [];
-            for (const fId in this.state.filters) {
-                if (this.state.filters[fId].isDefault) {
-                    if (this.state.filters[fId].type === 'favorite') {
-                        defaultFavorites.push(this.state.filters[fId]);
-                    } else {
-                        defaultFilters.push(this.state.filters[fId]);
-                    }
-                }
-            }
-            if (this.activateDefaultFavorite && defaultFavorites.length) {
+            if (this.defaultFavoriteId) {
                 // Activate default favorite
-                this.toggleFilter(defaultFavorites[0].id);
+                this.toggleFilter(this.defaultFavoriteId);
             } else {
                 // Activate default filters
-                defaultFilters
+                Object.values(this.state.filters)
+                    .filter((f) => f.isDefault && f.type !== 'favorite')
                     .sort((f1, f2) => (f1.defaultRank || 100) - (f2.defaultRank || 100))
                     .forEach(f => {
                         if (f.hasOptions) {
@@ -589,9 +579,9 @@ odoo.define('web.ControlPanelModel', function (require) {
          * @private
          */
         _addFilters() {
+            this._createGroupOfFavorites();
             this._createGroupOfFiltersFromArch();
             this._createGroupOfDynamicFilters();
-            this._createGroupOfFavorites();
         }
 
         /**
@@ -707,6 +697,9 @@ odoo.define('web.ControlPanelModel', function (require) {
             this.favoriteFilters.forEach(irFilter => {
                 const favorite = this._irFilterToFavorite(irFilter);
                 this._createGroupOfFilters([favorite]);
+                if (this.activateDefaultFavorite && favorite.isDefault) {
+                    this.defaultFavoriteId = favorite.id;
+                }
             });
         }
 
@@ -721,7 +714,7 @@ odoo.define('web.ControlPanelModel', function (require) {
             pregroup.forEach(preFilter => {
                 const filter = Object.assign(preFilter, { groupId, id: filterId });
                 this.state.filters[filterId] = filter;
-                if (filter.isDefault && filter.type === 'field') {
+                if (!this.defaultFavoriteId && filter.isDefault && filter.type === 'field') {
                     this._prepareDefaultLabel(filter);
                 }
                 filterId++;
