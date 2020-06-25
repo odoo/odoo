@@ -1,7 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import api, fields, models
+import threading
+
+from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 
 
 class ProductTemplate(models.Model):
@@ -67,6 +70,21 @@ class ProductTemplate(models.Model):
             self.invoice_policy = 'order'
         return res
 
+    def unlink(self):
+        time_product = self.env.ref('sale_timesheet.time_product')
+        if time_product.product_tmpl_id in self:
+            raise ValidationError(_('The product %s cannot be archived, nor deleted.') % time_product.name)
+        return super(ProductTemplate, self).unlink()
+
+    def write(self, vals):
+        # timesheet product can't be archived
+        test_mode = getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        if not test_mode and 'active' in vals and not vals['active']:
+            time_product = self.env.ref('sale_timesheet.time_product')
+            if time_product.product_tmpl_id in self:
+                raise ValidationError(_('The product %s cannot be archived, nor deleted.') % time_product.name)
+        return super(ProductTemplate, self).write(vals)
+
 
 class ProductProduct(models.Model):
     _inherit = 'product.product'
@@ -75,3 +93,18 @@ class ProductProduct(models.Model):
         """ Check if the product is a delivered timesheet """
         self.ensure_one()
         return self.type == 'service' and self.service_policy == 'delivered_timesheet'
+
+    def unlink(self):
+        time_product = self.env.ref('sale_timesheet.time_product')
+        if time_product in self:
+            raise ValidationError(_('The product %s cannot be archived, nor deleted.') % time_product.name)
+        return super(ProductProduct, self).unlink()
+
+    def write(self, vals):
+        # timesheet product can't be archived
+        test_mode = getattr(threading.currentThread(), 'testing', False) or self.env.registry.in_test_mode()
+        if not test_mode and 'active' in vals and not vals['active']:
+            time_product = self.env.ref('sale_timesheet.time_product')
+            if time_product in self:
+                raise ValidationError(_('The product %s cannot be archived, nor deleted.') % time_product.name)
+        return super(ProductProduct, self).write(vals)
