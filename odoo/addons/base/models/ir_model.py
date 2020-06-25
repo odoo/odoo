@@ -1051,7 +1051,7 @@ class IrModelFields(models.Model):
                     # module introduced field on model by inheritance
                     field_name in self.env[parent]._fields
                     for parent, parent_module in model._inherit_module.items()
-                    if module == parent_module
+                    if module == parent_module and self.env[parent]._abstract
                 )
             ):
                 xml_id = field_xmlid(module, field_model, field_name)
