@@ -137,7 +137,7 @@ var AbstractField = Widget.extend({
 
         // the 'string' property is a human readable (and translated) description
         // of the field. Mostly useful to be displayed in various places in the
-        // UI, such as tooltips or create dialogs.
+        // UI, such as popovers or create dialogs.
         this.string = this.attrs.string || this.field.string || this.name;
 
         // Widget can often be configured in the 'options' attribute in the

@@ -307,7 +307,7 @@ odoo.define('web.AbstractFieldOwl', function (require) {
         /**
          * Human readable (and translated) description of the field.
          * Mostly useful to be displayed in various places in the
-         * UI, such as tooltips or create dialogs.
+         * UI, such as popovers or create dialogs.
          *
          * @returns {string}
          */

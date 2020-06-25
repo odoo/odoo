@@ -188,7 +188,7 @@ var Dialog = Widget.extend({
      * the first button primary when the dialog opens
      */
     open: function (options) {
-        $('.popover').remove(); // remove open tooltip if any to prevent them staying when modal is opened
+        $('.popover').remove(); // remove open popover if any to prevent them staying when modal is opened
 
         var self = this;
         this.appendTo($('<div/>')).then(function () {
@@ -254,7 +254,7 @@ var Dialog = Widget.extend({
 
         this._super();
 
-        $('.tooltip').remove(); //remove open tooltip if any to prevent them staying when modal has disappeared
+        $('.popover').remove(); //remove open popover if any to prevent them staying when modal has disappeared
         if (this.$modal) {
             this.$modal.modal('hide');
             this.$modal.remove();
@@ -351,7 +351,7 @@ var Dialog = Widget.extend({
     /**
      * Manages the TAB key on the buttons. If you the focus is on a primary
      * button and the users tries to tab to go to the next button, display
-     * a tooltip
+     * a popover
      *
      * @param {jQueryEvent} e
      * @private
