@@ -11,23 +11,28 @@ registerInstancePatchModel('mail.messaging_initializer', 'mail_bot/static/src/mo
     /**
      * @private
      */
-    _showOdoobotTimeout() {
-        setTimeout(() => {
-            this.env.session.odoobot_initialized = true;
-            this.env.services.rpc({
-                model: 'mail.channel',
-                method: 'init_odoobot',
-            });
-        }, 2 * 60 * 1000);
+    async _initializeOdooBot() {
+        await this.async(() => new Promise(resolve =>
+            this.env.browser.setTimeout(resolve, 2 * 60 * 1000)
+        ));
+        const data = await this.async(() => this.env.services.rpc({
+            model: 'mail.channel',
+            method: 'init_odoobot',
+        }));
+        if (!data) {
+            return;
+        }
+        this.env.session.odoobot_initialized = true;
     },
+
     /**
      * @override
      */
-    async _start() {
+    async start() {
         await this.async(() => this._super());
 
         if ('odoobot_initialized' in this.env.session && !this.env.session.odoobot_initialized) {
-            this._showOdoobotTimeout();
+            this._initializeOdooBot();
         }
     },
 });

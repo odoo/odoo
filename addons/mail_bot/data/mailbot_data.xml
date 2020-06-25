@@ -6,5 +6,9 @@
             <field name="email">odoobot@example.com</field>
             <field name="image_1920" type="base64" file="mail/static/src/img/odoobot.png"/>
         </record>
+
+        <record id="base.user_root" model="res.users">
+            <field name="odoobot_state">disabled</field>
+        </record>
     </data>
 </odoo>
