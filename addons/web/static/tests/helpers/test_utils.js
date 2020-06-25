@@ -262,3 +262,49 @@ odoo.define('web.test_utils', async function (require) {
         unpatch: deprecated(testUtilsMock.unpatch, 'mock'),
     };
 });
+
+odoo.define('web.test_utils.leak', function (require) {
+    "use strict";
+    const mixins = require('web.mixins');
+    const RamStorage = require('web.RamStorage');
+    const oldInit = mixins.ParentedMixin.init
+
+    const ws = [];
+    QUnit.testStart(() => {
+        ws.length = 0;
+        mixins.ParentedMixin.init = function() {
+            oldInit.apply(this, arguments);
+            ws.push(this);
+        };
+    });
+    QUnit.testDone((details) => {
+        mixins.ParentedMixin.init = oldInit;
+
+        // only check for zombies if the test succeeded
+        if (details.failed) {
+            ws.length = 0;
+            return;
+        }
+        // ignore ramstorage as mail.testUtils ensures we've got a ton of
+        // uncleanable ramstorages lying around
+        var zombies = _(ws).filter(function (w) {
+            return !(w instanceof RamStorage || w.isDestroyed());
+        });
+        if (zombies.length) {
+            console.log('--------------------------------------------------');
+            console.log("Found non-destroyed widgets in ", details.module, ":", details.name);
+            _(zombies).each(function (it) {
+                console.log(it);
+                console.log(Object.entries(it).map(([k, v]) => {
+                    try {
+                        return `${k}=${v}`;
+                    } catch (_) {
+                        return `${k}=<unprintable>`;
+                    }
+                }).join('; '));
+            });
+        }
+        ws.length = 0;
+    });
+    return ws;
+});
