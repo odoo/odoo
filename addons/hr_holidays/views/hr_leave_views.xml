@@ -460,7 +460,6 @@
                 <field name="payslip_status" widget="toggle_button" options='{"active": "Reported in last payslips", "inactive": "To Report in Payslip"}' groups="hr_holidays.group_hr_holidays_user" nolabel="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
                 <field name="category_id" invisible="1"/>
-                <field name="department_id" invisible="1"/>
                 <field name="user_id" invisible="1"/>
                 <field name="message_needaction" invisible="1"/>
                 <button string="Approve" name="action_approve" type="object"
