@@ -576,13 +576,14 @@
             </field>
         </record>
 
-        <act_window name="Send email"
+        <act_window name="Email"
             res_model="mail.compose.message"
             binding_model="crm.lead"
             binding_views="list"
             view_mode="form"
             target="new"
             id="crm_lead_act_window_compose"
+            display_in_controlpanel="True"
             context="{
                 'default_composition_mode': 'comment',
                 'default_use_template': True,

@@ -2,12 +2,13 @@
 <odoo>
     <!-- Add action entry in the Action Menu for Leads -->
     <act_window id="crm_lead_act_window_sms_composer_single"
-        name="Send SMS Text Message"
+        name="SMS"
         binding_model="crm.lead"
         res_model="sms.composer"
         binding_views="list"
         view_mode="form"
         target="new"
+        display_in_controlpanel="True"
         context="{
             'default_composition_mode': 'mass',
             'default_mass_keep_log': True,
