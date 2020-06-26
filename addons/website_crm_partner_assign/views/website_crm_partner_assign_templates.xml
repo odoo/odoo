@@ -34,7 +34,7 @@
                     <li class="nav-header nav-item"><h3>Filter by Level</h3></li>
                     <t t-foreach="grades" t-as="grade">
                         <li class="nav-item">
-                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') }"
+                            <a t-attf-href="/partners#{ grade['grade_id'][0] and '/grade/%s' % grade['grade_id'][0] or '' }#{ current_country and '/country/%s' % slug(current_country) or '' }#{ '?' + (search_path or '') + '&amp;' + keep_query('country_all') }"
                                t-attf-class="nav-link#{grade['active'] and ' active' or ''}">
                                 <span class="badge badge-pill float-right" t-esc="grade['grade_id_count'] or ''"/>
                                 <t t-esc="grade['grade_id'][1]"/>
@@ -63,6 +63,7 @@
                     <t t-call="website.pager"/>
                     <form action="" method="get" class="form-inline ml-auto">
                         <div class="form-group">
+                            <input t-if="country_all" type="hidden" name="country_all" value="True" />
                             <input type="text" name="search" class="search-query form-control" placeholder="Search" t-att-value="searches.get('search', '')"/>
                         </div>
                     </form>

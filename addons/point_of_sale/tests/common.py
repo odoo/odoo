@@ -405,7 +405,6 @@ class TestPoSCommon(TransactionCase):
             'lst_price': lst_price,
             'standard_price': standard_price if standard_price else 0.0,
         })
-        product.invoice_policy = 'delivery'
         if sale_account:
             product.property_account_income_id = sale_account
         return product

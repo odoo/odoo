@@ -13741,6 +13741,9 @@ msgid ""
 "* if False, the view currently does not extend its parent but can be enabled\n"
 "         "
 msgstr ""
+"Ak je toto zobrazenie zdedené,\n"
+"* Ak je pravda, zobrazenie sa vždy rozširuje nadradené\n"
+"* Ak to nie je pravda, pohľad v súčasnosti nerozširuje pôvodné, ale môže byť povolený"
 
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.view_rule_form
@@ -13904,7 +13907,7 @@ msgstr "Import / Export"
 #. module: base
 #: model:ir.module.module,summary:base.module_sale_amazon
 msgid "Import Amazon orders and sync deliveries"
-msgstr ""
+msgstr "Importujte objednávky Amazonu a synchronizujte dodávky"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_account_facturx
@@ -18183,6 +18186,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Použije sa iba v prípade, že toto zobrazenie zdedí od iného (inherit_id nie je False / Null).\n"
+"\n"
+"* ak je rozšírenie (predvolené), ak sa požaduje toto zobrazenie, najbližšie primárne zobrazenie\n"
+"sa vyhľadá (prostredníctvom inherit_id), potom sa z toho dedia všetky zobrazenia\n"
+"použije sa model zobrazenia\n"
+"* ak je primárne, najbližšie primárne zobrazenie je úplne vyriešené (aj keď používa\n"
+"iný model ako tento), potom špecifikácie pôvodného\n"
+"(<xpath/>) sa použijú a výsledok sa použije, akoby išlo o toto zobrazenie\n"
+"aktuálny.\n"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rate_unique_name_per_day
@@ -22885,7 +22897,7 @@ msgstr "Formát času"
 #: model:ir.module.category,name:base.module_category_human_resources_time_off
 #: model:ir.module.module,shortdesc:base.module_hr_holidays
 msgid "Time Off"
-msgstr ""
+msgstr "Voľno"
 
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_hr_holidays_gantt
