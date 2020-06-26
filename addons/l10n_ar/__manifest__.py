@@ -101,6 +101,7 @@ Master Data:
         'views/ir_sequence_view.xml',
         'views/report_invoice.xml',
         'views/templates.xml',
+        'views/res_config_settings_view.xml',
         'report/invoice_report_view.xml',
     ],
     'demo': [
