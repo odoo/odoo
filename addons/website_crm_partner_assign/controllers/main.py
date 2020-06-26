@@ -301,6 +301,7 @@ class WebsiteCrmPartnerAssign(WebsitePartnerPage):
 
         values = {
             'countries': countries,
+            'country_all': country_all,
             'current_country': country,
             'grades': grades,
             'current_grade': grade,
