@@ -483,6 +483,7 @@ class EventEvent(models.Model):
         res = super(EventEvent, self).create(vals)
         if res.organizer_id:
             res.message_subscribe([res.organizer_id.id])
+        res.flush()
         return res
 
     def write(self, vals):
