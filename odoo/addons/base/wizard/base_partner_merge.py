@@ -321,10 +321,13 @@ class MergePartnerAutomatic(models.TransientModel):
         self._update_reference_fields(src_partners, dst_partner)
         self._update_values(src_partners, dst_partner)
 
-        _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
+        self._log_merge_operation(src_partners, dst_partner)
 
         # delete source partner, since they are merged
         src_partners.unlink()
+
+    def _log_merge_operation(self, src_partners, dst_partner):
+        _logger.info('(uid = %s) merged the partners %r with %s', self._uid, src_partners.ids, dst_partner.id)
 
     # ----------------------------------------
     # Helpers
