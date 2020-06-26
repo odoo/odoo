@@ -1,11 +1,8 @@
 {
     'name': 'Account Invoice Tax',
     'version': "1.0",
-    'description': """
-
-Add new button in the Vendor Bills that let us to add new taxes to all the lines
-of a vendor bill.
-""",
+    'description': """Add new buttons in the Vendor Bills that let us to add/remove taxes to all the lines
+of a vendor bill.""",
     'author': 'ADHOC SA',
     'category': 'Localization',
     'depends': [
