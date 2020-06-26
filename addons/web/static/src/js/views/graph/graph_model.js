@@ -35,7 +35,7 @@ return AbstractModel.extend({
      * @returns {Object}
      */
     __get: function () {
-        return _.extend({}, this.chart);
+        return Object.assign({ isSample: this.isSampleModel }, this.chart);
     },
     /**
      * Initial loading.
@@ -165,7 +165,12 @@ return AbstractModel.extend({
             this.chart.comparisonFieldIndex = -1;
         }
     },
-
+    /**
+     * @override
+     */
+    _isEmpty() {
+        return this.chart.dataPoints.length === 0;
+    },
     /**
      * Fetch and process graph data.  It is basically a(some) read_group(s)
      * with correct fields for each domain.  We have to do some light processing

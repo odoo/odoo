@@ -54,6 +54,7 @@ var MAX_LEGEND_LENGTH = 4 * (Math.max(1, config.device.size_class));
 
 return AbstractRenderer.extend({
     className: "o_graph_renderer",
+    sampleDataTargets: ['.o_graph_renderer'],
     /**
      * @override
      * @param {Widget} parent

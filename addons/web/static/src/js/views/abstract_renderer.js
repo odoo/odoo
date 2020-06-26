@@ -166,7 +166,8 @@ return mvc.Renderer.extend({
         }
         const rootEls = [];
         for (const selector of this.sampleDataTargets) {
-            rootEls.push(...this.el.querySelectorAll(`:scope ${selector}`));
+            const els = [this.el, ...this.el.querySelectorAll(`:scope ${selector}`)];
+            rootEls.push(...els.filter(el => el.matches(selector)));
         }
         const focusableEls = new Set(rootEls);
         for (const rootEl of rootEls) {
