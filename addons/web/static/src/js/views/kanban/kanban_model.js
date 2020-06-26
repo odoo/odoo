@@ -195,15 +195,15 @@ var KanbanModel = BasicModel.extend({
      */
     loadActiveFilter(groupID, activeFilter) {
         const group = this.localData[groupID];
-        let domain = group.domain;
         if (activeFilter) {
+            group.progressBarValues.activeFilter = activeFilter;
             const activeFilterDomain = [[group.progressBarValues.field, '=', activeFilter]];
             group.domain = group.domain.concat(activeFilterDomain);
+        } else {
+            group.domain = group.domain.filter(domain =>
+                            !domain.includes(group.progressBarValues.field, group.progressBarValues.activeFilter));
         }
-        return this.reload(group.id).then(function (res) {
-            group.domain = domain
-            return res;
-        });
+        return this.reload(group.id);
     },
     /**
      * Load more records in a group.
