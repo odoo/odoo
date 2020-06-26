@@ -8,6 +8,7 @@ const time = require('web.time');
 var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
+const {normalizeColor} = weUtils;
 var weWidgets = require('wysiwyg.widgets');
 const {
     loadImage,
@@ -2831,7 +2832,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @see this.selectClass for parameters
      */
     setFilter(previewMode, widgetValue, params) {
-        this._getImg().dataset.filter = this._normalizeColor(widgetValue);
+        this._getImg().dataset.filter = normalizeColor(widgetValue);
         return this._applyOptions();
     },
     /**
@@ -2967,23 +2968,6 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      * @returns {Int} the maximum width at which the image can be displayed
      */
     _computeMaxDisplayWidth() {},
-
-    //--------------------------------------------------------------------------
-    // Util
-    //--------------------------------------------------------------------------
-
-    /**
-     * Normalize a color into a css value usable by the canvas rendering context.
-     *
-     * @private
-     * @param {string} color the color to normalize into a css value
-     */
-    _normalizeColor(color) {
-        if (!ColorpickerWidget.isCSSColor(color)) {
-            color = weUtils.getCSSVariableValue(color);
-        }
-        return color;
-    },
 });
 
 /**
