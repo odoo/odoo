@@ -179,6 +179,76 @@ MockServer.include({
         };
     },
     /**
+     * Simulate the 'get_mention_suggestions' on 'res.partner'.
+     *
+     * @private
+     * @returns {Array[]}
+     */
+    _mockResPartnerGetMentionSuggestions(args) {
+        const search = args.kwargs.search || '';
+        const limit = args.kwargs.limit || 8;
+
+        /**
+         * Returns the given list of partners after filtering it according to
+         * the logic of the Python method `get_mention_suggestions` for the
+         * given search term. The result is truncated to the given limit and
+         * formatted as expected by the original method.
+         *
+         * @param {Object[]} partners
+         * @param {string} search
+         * @param {integer} limit
+         * @returns {Object[]}
+         */
+        const mentionSuggestionsFilter = function (partners, search, limit) {
+            const matchingPartners = partners
+                .filter(partner => {
+                    // avoid inactive
+                    if (partner.active === false) {
+                        return false;
+                    }
+                    // no search term is considered as return all
+                    if (!search) {
+                        return true;
+                    }
+                    // otherwise name or email must match search term
+                    if (partner.name && partner.name.includes(search)) {
+                        return true;
+                    }
+                    if (partner.email && partner.email.includes(search)) {
+                        return true;
+                    }
+                    return false;
+                }).map(partner => {
+                    // expected format
+                    return {
+                        email: partner.email,
+                        id: partner.id,
+                        name: partner.name,
+                    };
+                });
+            // reduce results to max limit
+            matchingPartners.length = Math.min(matchingPartners.length, limit);
+            return matchingPartners;
+        };
+
+        // add main suggestions based on users
+        const partnersFromUsers = this.data['res.users'].records
+            .map(user => this.data['res.partner'].records[user.partner_id])
+            .filter(partner => partner);
+        const mainMatchingPartners = mentionSuggestionsFilter(partnersFromUsers, search, limit);
+
+        let extraMatchingPartners = [];
+        // if not enough results add extra suggestions based on partners
+        if (mainMatchingPartners.length < limit) {
+            const partners = this.data['res.partner'].records.filter(partner =>
+                // avoid duplicates in extra
+                !partnersFromUsers.includes(partner)
+            );
+            extraMatchingPartners = mentionSuggestionsFilter(partners, search, limit);
+        }
+        return [mainMatchingPartners, extraMatchingPartners];
+    },
+    /**
      * Simulate the '/mail/init_messaging' route
      *
      * @private
@@ -375,6 +445,11 @@ MockServer.include({
         }
         if (args.method === 'get_activity_data') {
             return Promise.resolve(this._mockGetActivityData(args));
+        }
+        if (args.method === 'get_mention_suggestions') {
+            if (args.model === 'res.partner') {
+                return this._mockResPartnerGetMentionSuggestions(args);
+            }
         }
         if (args.method === 'message_fetch') {
             return Promise.resolve(this._mockMessageFetch(args));
