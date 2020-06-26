@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="address_b2b" inherit_id="website_sale.address_b2b">
+        <xpath expr="//input[@name='vat']/.." position="before">
+            <t t-if="mode[1] == 'billing'" positon="inside">
+                <t t-if="res_company.country_id == env.ref('base.ar')">
+                    <t t-set="partner" t-value="website_sale_order.partner_id"/>
+                    <t t-call="l10n_ar.partner_info"/>
+                </t>
+            </t>
+        </xpath>
+        <label for="vat" position="attributes">
+            <attribute name="t-if">res_company.country_id != env.ref('base.ar')</attribute>
+        </label>
+        <label for="vat" position="after">
+            <label t-if="res_company.country_id == env.ref('base.ar')" class="col-form-label label-optional" for="vat">Number</label>
+        </label>
+    </template>
+
+</odoo>
