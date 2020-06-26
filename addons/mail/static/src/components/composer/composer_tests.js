@@ -258,21 +258,15 @@ QUnit.test('add emoji replaces (keyboard) text selection', async function (asser
 QUnit.test('display partner mention suggestions on typing "@"', async function (assert) {
     assert.expect(2);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'get_mention_suggestions') {
-                return [
-                    [{
-                        email: "testpartnert@odoo.com",
-                        id: 11,
-                        name: "TestPartner",
-                    }],
-                    [],
-                ];
-            }
-            return this._super(...arguments);
-        },
-    });
+    this.data['res.partner'].records = [{
+        email: "testpartnert@odoo.com",
+        id: 11,
+        name: "TestPartner",
+    }];
+    this.data['res.users'].records = [{
+        partner_id: 11,
+    }];
+    await this.start({});
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
@@ -299,21 +293,15 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
 QUnit.test('mention a partner', async function (assert) {
     assert.expect(4);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'get_mention_suggestions') {
-                return [
-                    [{
-                        email: "testpartnert@odoo.com",
-                        id: 11,
-                        name: "TestPartner",
-                    }],
-                    [],
-                ];
-            }
-            return this._super(...arguments);
-        },
-    });
+    this.data['res.partner'].records = [{
+        email: "testpartnert@odoo.com",
+        id: 11,
+        name: "TestPartner",
+    }];
+    this.data['res.users'].records = [{
+        partner_id: 11,
+    }];
+    await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
@@ -355,21 +343,15 @@ QUnit.test('mention a partner', async function (assert) {
 QUnit.test('mention a partner after some text', async function (assert) {
     assert.expect(5);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'get_mention_suggestions') {
-                return [
-                    [{
-                        email: "testpartnert@odoo.com",
-                        id: 11,
-                        name: "TestPartner",
-                    }],
-                    [],
-                ];
-            }
-            return this._super(...arguments);
-        },
-    });
+    this.data['res.partner'].records = [{
+        email: "testpartnert@odoo.com",
+        id: 11,
+        name: "TestPartner",
+    }];
+    this.data['res.users'].records = [{
+        partner_id: 11,
+    }];
+    await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
@@ -419,21 +401,15 @@ QUnit.test('mention a partner after some text', async function (assert) {
 QUnit.test('add an emoji after a partner mention', async function (assert) {
     assert.expect(5);
 
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'get_mention_suggestions') {
-                return [
-                    [{
-                        email: "testpartnert@odoo.com",
-                        id: 11,
-                        name: "TestPartner",
-                    }],
-                    [],
-                ];
-            }
-            return this._super(...arguments);
-        },
-    });
+    this.data['res.partner'].records = [{
+        email: "testpartnert@odoo.com",
+        id: 11,
+        name: "TestPartner",
+    }];
+    this.data['res.users'].records = [{
+        partner_id: 11,
+    }];
+    await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 
