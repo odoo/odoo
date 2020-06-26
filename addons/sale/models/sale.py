@@ -972,6 +972,7 @@ Reason(s) of this behavior could be:
             'currency_id': currency.id,
             'partner_id': partner.id,
             'sale_order_ids': [(6, 0, self.ids)],
+            'type': self[0]._get_payment_type(),
         })
 
         transaction = self.env['payment.transaction'].create(vals)
