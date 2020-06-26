@@ -10,6 +10,7 @@
                 'o-has-header': hasHeader,
                 'o-is-compact': props.isCompact,
             }"
+            t-on-keydown="_onKeydown"
         >
             <t t-if="composer">
                 <t t-if="isDropZoneVisible.value">
@@ -77,18 +78,19 @@
                                 <div class="o_Composer_toolButtonSeparator"/>
                             </t>
                             <div class="o_Composer_primaryToolButtons" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
-                                <Popover position="'top'" t-on-o-emoji-selection="_onEmojiSelection" t-ref="emojisPopover">
+                                <Popover position="'top'" t-on-o-emoji-selection="_onEmojiSelection">
                                     <!-- TODO FIXME o-open not possible to code due to https://github.com/odoo/owl/issues/693 -->
                                     <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light"
                                         t-att-class="{
                                             'o-open': false and state.displayed,
                                             'o-mobile': env.messaging.device.isMobile,
                                         }"
+                                        t-on-keydown="_onKeydownEmojiButton"
                                     >
                                         <i class="fa fa-smile-o"/>
                                     </button>
                                     <t t-set="opened">
-                                        <EmojisPopover/>
+                                        <EmojisPopover t-ref="emojisPopover"/>
                                     </t>
                                 </Popover>
                                 <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="_onClickAddAttachment"/>
