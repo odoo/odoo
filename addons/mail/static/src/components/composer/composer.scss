@@ -95,6 +95,11 @@
 .o_Composer_primaryToolButtons {
     display: flex;
     align-items: center;
+
+    &.o-composer-is-compact {
+        padding-left: map-get($spacers, 2);
+        padding-right: map-get($spacers, 2);
+    }
 }
 
 .o_Composer_sidebarMain {
@@ -128,38 +133,40 @@
 }
 
 .o_Composer_toolButton {
-    margin: 0 2px;
-
-    &:not(.o-mobile) {
-        margin-top: 2px;
-        margin-bottom: 2px;
-    }
+    // keep a margin between the buttons to prevent their focus shadow from overlapping
+    margin-left: map-get($spacers, 1);
+    margin-right: map-get($spacers, 1);
 }
 
 .o_Composer_toolButtons {
     display: flex;
+    padding-top: map-get($spacers, 1);
+    padding-bottom: map-get($spacers, 1);
 
     &:not(.o-composer-is-compact) {
         flex-direction: row;
         justify-content: space-between;
         flex: 100%;
     }
-
-    &:not(:last-child) .o_Composer_toolButton:last-child {
-        margin-right: 5px;
-    }
 }
 
 .o_Composer_toolButtonSeparator {
     flex: 0 0 auto;
-    margin-top: 5px;
-    margin-bottom: 5px;
-    margin-right: 5px;
+    margin-top: map-get($spacers, 2);
+    margin-bottom: map-get($spacers, 2);
 }
 
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
+
+// TODO FIXME o-open on the button should be enough.
+// Style of button when popover is "open" comes from web.Popover, and we can't
+// define a modifier on .o_Composer_button due to not being aware of Popover's
+// state in context of template. https://github.com/odoo/owl/issues/693
+.o_is_open .o_Composer_toolButton {
+    background-color: gray('200');
+}
 
 .o_Composer {
     background-color: lighten(gray('300'), 7%);
@@ -184,23 +191,11 @@
     }
 }
 
-.o_Composer_button {
-    color: gray('600');
+.o_Composer_button.o-composer-is-compact {
+    border-left: none; // overrides bootstrap button style
 
-    &.o-open{
-        background-color: gray('200');
-    }
-
-    &.o-composer-is-compact {
-        border-left: none;
+    :last-child {
         border-radius: 0 3px 3px 0;
-    }
-}
-
-// TODO FIXME o-open on the button should be enough, https://github.com/odoo/owl/issues/693
-.o_is_open {
-    .o_Composer_button {
-        background-color: gray('200');
     }
 }
 
@@ -210,23 +205,6 @@
 
 .o_Composer_buttons {
     border: 0;
-}
-
-.o_Composer_buttonSend {
-    border: 1px solid darken($o-brand-primary, 5%);
-
-    &:disabled {
-        // enforce this style (override jQuery style)
-        border: 1px solid darken($o-brand-primary, 5%);
-
-        &.o-composer-is-compact {
-            border-left: none;
-        }
-    }
-
-    &:not(:last-child) {
-        border-right: none;
-    }
 }
 
 .o_Composer_coreMain:not(.o-composer-is-compact) {
@@ -250,11 +228,12 @@
 }
 
 .o_Composer_toolButton {
-    border: 0;
+    border: 0; // overrides bootstrap btn
+    background-color: white; // overrides bootstrap btn-light
+    color: gray('600'); // overrides bootstrap btn-light
 
-    &:hover {
-        // enforce this style (webclient btn-secondary)
-        border: 0;
+    &.o-open {
+        background-color: gray('200');
     }
 }
 
