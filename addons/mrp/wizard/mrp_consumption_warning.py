@@ -29,6 +29,9 @@ class MrpConsumptionWarning(models.TransientModel):
             wizard.consumption = "strict" in consumption_map and "strict" or "warning" in consumption_map and "warning" or "flexible"
 
     def action_confirm(self):
+        if self.env.context.get('from_workorder'):
+            if self.env.context.get('active_model') == 'mrp_workorder':
+                return self.env['mrp.workorder'].browse(self.env.context.get('active_id')).do_finish()
         return self.mrp_production_ids.with_context(skip_consumption=True).button_mark_done()
 
     def action_cancel(self):
