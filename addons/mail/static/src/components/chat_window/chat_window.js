@@ -129,9 +129,9 @@ class ChatWindow extends Component {
      * @private
      */
     _saveThreadScrollTop() {
-        this.chatWindow.update({
-            threadInitialScrollTop: this._threadRef.comp.getScrollTop(),
-        });
+        this.chatWindow.threadViewer.saveThreadCacheScrollPositionsAsInitial(
+            this._threadRef.comp.getScrollTop()
+        );
     }
 
     /**
@@ -239,6 +239,9 @@ class ChatWindow extends Component {
             this.chatWindow.unfold();
             this.chatWindow.focus();
         } else {
+            if (this.chatWindow.thread) {
+                this._saveThreadScrollTop();
+            }
             this.chatWindow.fold();
         }
     }
@@ -322,7 +325,9 @@ class ChatWindow extends Component {
         if (!this.chatWindow.thread) {
             return;
         }
-        this._saveThreadScrollTop();
+        if (!this.chatWindow.isFolded) {
+            this._saveThreadScrollTop();
+        }
     }
 
     /**
@@ -337,7 +342,9 @@ class ChatWindow extends Component {
         if (!this.chatWindow.thread) {
             return;
         }
-        this._saveThreadScrollTop();
+        if (!this.chatWindow.isFolded) {
+            this._saveThreadScrollTop();
+        }
     }
 
 }
