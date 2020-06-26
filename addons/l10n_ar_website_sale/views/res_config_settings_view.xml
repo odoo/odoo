@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="res_config_settings_view_form1" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='website_tax_inclusion_setting']//div[hasclass('text-muted')]" position="replace">
+                <div class="text-muted">
+                    Product prices displaying in web catalog (only apply for portal and public users)
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="res_config_settings_view_form2" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.account</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="account.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='invoicing_settings']//field[@name='show_line_subtotals_tax_selection']/../../.." position="attributes">
+                <attribute name="attrs">{'invisible': [('l10n_ar_country_code', '=', 'AR')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>
