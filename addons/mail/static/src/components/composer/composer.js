@@ -11,6 +11,10 @@ const components = {
 };
 const useDragVisibleDropZone = require('mail/static/src/component_hooks/use_drag_visible_dropzone/use_drag_visible_dropzone.js');
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const {
+    isEventHandled,
+    markEventHandled,
+} = require('mail/static/src/utils/utils.js');
 const mailUtils = require('mail.utils');
 
 const { Component } = owl;
@@ -35,8 +39,8 @@ class Composer extends Component {
             };
         });
         /**
-         * Reference of the emoji button. Useful to include emoji popover as
-         * click "inside" the composer for the prop `isDiscardOnClickAway`.
+         * Reference of the emoji popover. Useful to include emoji popover as
+         * contained "inside" the composer.
          */
         this._emojisPopoverRef = useRef('emojisPopover');
         /**
@@ -48,6 +52,7 @@ class Composer extends Component {
          * Reference of the text input component.
          */
         this._textInputRef = useRef('textInput');
+
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
     }
 
@@ -68,6 +73,22 @@ class Composer extends Component {
      */
     get composer() {
         return this.env.models['mail.composer'].get(this.props.composerLocalId);
+    }
+
+    /**
+     * Returns whether the given node is self or a children of self, including
+     * the emoji popover.
+     *
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    contains(node) {
+        // emoji popover is outside but should be considered inside
+        const emojisPopover = this._emojisPopoverRef.comp;
+        if (emojisPopover && emojisPopover.contains(node)) {
+            return true;
+        }
+        return this.el.contains(node);
     }
 
     /**
@@ -172,23 +193,13 @@ class Composer extends Component {
     }
 
     /**
-     * Discards the composer when clicking away from the Inbox reply in discuss.
-     * TODO maybe move this in discuss. task-2092950
+     * Discards the composer when clicking away.
      *
      * @private
      * @param {MouseEvent} ev
      */
     _onClickCaptureGlobal(ev) {
-        // in discuss app: prevents discarding the composer when clicking away
-        if (!this.props.isDiscardOnClickAway) {
-            return;
-        }
-        // prevents discarding when clicking on self (on discuss and not on discuss)
-        if (this.el.contains(ev.target)) {
-            return;
-        }
-        // emoji popover is outside but should be considered inside
-        if (this._emojisPopoverRef.comp.isInsideEventTarget(ev.target)) {
+        if (this.contains(ev.target)) {
             return;
         }
         this.composer.discard();
@@ -282,6 +293,37 @@ class Composer extends Component {
 
     /**
      * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onKeydown(ev) {
+        if (ev.key === 'Escape') {
+            if (isEventHandled(ev, 'ComposerTextInput.closeMentionSuggestions')) {
+                return;
+            }
+            if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                return;
+            }
+            ev.preventDefault();
+            this.composer.discard();
+        }
+    }
+
+    /**
+     * @private
+     * @param {KeyboardEvent} ev
+     */
+    _onKeydownEmojiButton(ev) {
+        if (ev.key === 'Escape') {
+            if (this._emojisPopoverRef.comp) {
+                this._emojisPopoverRef.comp.close();
+                this.composer.focus();
+                markEventHandled(ev, 'Composer.closeEmojisPopover');
+            }
+        }
+    }
+
+    /**
+     * @private
      * @param {CustomEvent} ev
      */
     async _onPasteTextInput(ev) {
@@ -315,7 +357,6 @@ Object.assign(Composer, {
         hasThreadName: false,
         hasThreadTyping: false,
         isCompact: true,
-        isDiscardOnClickAway: false,
         isExpandable: false,
     },
     props: {
@@ -357,7 +398,6 @@ Object.assign(Composer, {
             optional: true,
         },
         isCompact: Boolean,
-        isDiscardOnClickAway: Boolean,
         isExpandable: Boolean,
     },
     template: 'mail.Composer',

@@ -27,17 +27,14 @@ function factory(dependencies) {
             });
         }
 
+        /**
+         * Hides the composer, which only makes sense if the composer is
+         * currently used as a Discuss Inbox reply composer.
+         */
         discard() {
-            const discuss = this.env.messaging.discuss;
-            const thread = this.thread;
-            if (
-                !discuss.isOpen ||
-                discuss.thread !== thread ||
-                !discuss.isReplyingToMessage
-            ) {
-                return;
+            if (this.discussAsReplying) {
+                this.discussAsReplying.clearReplyingToMessage();
             }
-            discuss.clearReplyingToMessage();
         }
 
         focus() {
@@ -508,6 +505,14 @@ function factory(dependencies) {
                 'textInputContent',
             ],
             default: false,
+        }),
+        /**
+         * Instance of discuss if this composer is used as the reply composer
+         * from Inbox. This field is computed from the inverse relation and
+         * should be considered read-only.
+         */
+        discussAsReplying: one2one('mail.discuss', {
+            inverse: 'replyingToMessageOriginThreadComposer',
         }),
         extraSuggestedPartners: many2many('mail.partner', {
             compute: '_computeExtraSuggestedPartners',

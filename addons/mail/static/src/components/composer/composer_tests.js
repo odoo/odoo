@@ -266,7 +266,7 @@ QUnit.test('display partner mention suggestions on typing "@"', async function (
     this.data['res.users'].records = [{
         partner_id: 11,
     }];
-    await this.start({});
+    await this.start();
     const composer = this.env.models['mail.composer'].create();
     await this.createComposerComponent(composer);
 

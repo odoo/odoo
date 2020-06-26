@@ -7,6 +7,7 @@ const components = {
     ThreadViewer: require('mail/static/src/components/thread_viewer/thread_viewer.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
+const { isEventHandled } = require('mail/static/src/utils/utils.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -250,6 +251,10 @@ class ChatWindow extends Component {
      */
     _onFocusinThread(ev) {
         ev.stopPropagation();
+        if (!this.chatWindow) {
+            // prevent crash on destroy
+            return;
+        }
         this.chatWindow.update({ isFocused: true });
     }
 
@@ -293,6 +298,12 @@ class ChatWindow extends Component {
                 }
                 break;
             case 'Escape':
+                if (isEventHandled(ev, 'ComposerTextInput.closeMentionSuggestions')) {
+                    break;
+                }
+                if (isEventHandled(ev, 'Composer.closeEmojisPopover')) {
+                    break;
+                }
                 ev.preventDefault();
                 this.chatWindow.close();
                 break;

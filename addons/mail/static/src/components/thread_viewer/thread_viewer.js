@@ -89,7 +89,7 @@ class ThreadViewer extends Component {
      *
      * @private
      */
-    async _update() {
+    _update() {
         const messageList = this._messageListRef.comp;
         this.trigger('o-rendered');
         /**

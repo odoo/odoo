@@ -6,6 +6,7 @@ const useStore = require('mail/static/src/component_hooks/use_store/use_store.js
 const components = {
     PartnerMentionSuggestion: require('mail/static/src/components/partner_mention_suggestion/partner_mention_suggestion.js'),
 };
+const { markEventHandled } = require('mail/static/src/utils/utils.js');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -206,6 +207,13 @@ class ComposerTextInput extends Component {
      */
     _onKeydownTextarea(ev) {
         switch (ev.key) {
+            case 'Escape':
+                if (this.composer.hasSuggestedPartners) {
+                    ev.preventDefault();
+                    this.composer.closeMentionSuggestions();
+                    markEventHandled(ev, 'ComposerTextInput.closeMentionSuggestions');
+                }
+                break;
             // UP, DOWN, TAB: prevent moving cursor if navigation in mention suggestions
             case 'ArrowUp':
             case 'PageUp':
@@ -256,9 +264,8 @@ class ComposerTextInput extends Component {
      */
     _onKeyupTextarea(ev) {
         switch (ev.key) {
-            // ESCAPE: close mention suggestions
             case 'Escape':
-                this._onKeyupTextareaEscape(ev);
+                // already handled in _onKeydownTextarea, break to avoid default
                 break;
             // ENTER, HOME, END, UP, DOWN, PAGE UP, PAGE DOWN, TAB: check if navigation in mention suggestions
             case 'Enter':
@@ -305,21 +312,6 @@ class ComposerTextInput extends Component {
             default:
                 this.saveStateInStore();
                 this.composer._detectDelimiter();
-        }
-    }
-
-    /**
-     * @private
-     * @param {KeyboardEvent} ev
-     */
-    _onKeyupTextareaEscape(ev) {
-        if (this.composer.hasSuggestedPartners) {
-            this.composer.closeMentionSuggestions();
-        } else {
-            if (!this._isEmpty()) {
-                return;
-            }
-            this.composer.discard();
         }
     }
 

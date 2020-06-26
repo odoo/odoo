@@ -16,6 +16,27 @@ class EmojisPopover extends Component {
     }
 
     //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    close() {
+        this.trigger('o-popover-close');
+    }
+
+    /**
+     * Returns whether the given node is self or a children of self.
+     *
+     * @param {Node} node
+     * @returns {boolean}
+     */
+    contains(node) {
+        if (!this.el) {
+            return false;
+        }
+        return this.el.contains(node);
+    }
+
+    //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
 
@@ -24,7 +45,7 @@ class EmojisPopover extends Component {
      * @param {MouseEvent} ev
      */
     _onClickEmoji(ev) {
-        this.trigger('o-popover-close');
+        this.close();
         this.trigger('o-emoji-selection', {
             unicode: ev.currentTarget.dataset.unicode,
         });
