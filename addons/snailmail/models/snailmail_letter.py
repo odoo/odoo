@@ -336,7 +336,7 @@ class SnailmailLetter(models.Model):
         response = jsonrpc(endpoint + PRINT_ENDPOINT, params=params)
         for doc in response['request']['documents']:
             if doc.get('sent') and response['request_code'] == 200:
-                note = _('The document was correctly sent by post.<br>The tracking id is %s' % doc['send_id'])
+                note = _('The document was correctly sent by post.<br>The tracking id is %s', doc['send_id'])
                 letter_data = {'info_msg': note, 'state': 'sent', 'error_code': False}
                 notification_data = {
                     'notification_status': 'sent',

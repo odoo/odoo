@@ -91,7 +91,7 @@ class Warehouse(models.Model):
     @api.model
     def create(self, vals):
         # create view location for warehouse then create all locations
-        loc_vals = {'name': _(vals.get('code')), 'usage': 'view',
+        loc_vals = {'name': vals.get('code'), 'usage': 'view',
                     'location_id': self.env.ref('stock.stock_location_locations').id}
         if vals.get('company_id'):
             loc_vals['company_id'] = vals.get('company_id')

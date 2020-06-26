@@ -93,8 +93,8 @@ class Inventory(models.Model):
             raise UserError(_("Only a stock manager can validate an inventory adjustment."))
         if self.state != 'confirm':
             raise UserError(_(
-                "You can't validate the inventory '%s', maybe this inventory " +
-                "has been already validated or isn't ready.") % (self.name))
+                "You can't validate the inventory '%s', maybe this inventory "
+                "has been already validated or isn't ready.", self.name))
         inventory_lines = self.line_ids.filtered(lambda l: l.product_id.tracking in ['lot', 'serial'] and not l.prod_lot_id and l.theoretical_qty != l.product_qty)
         lines = self.line_ids.filtered(lambda l: float_compare(l.product_qty, 1, precision_rounding=l.product_uom_id.rounding) > 0 and l.product_id.tracking == 'serial' and l.prod_lot_id)
         if inventory_lines and not lines:
@@ -117,7 +117,11 @@ class Inventory(models.Model):
     def _action_done(self):
         negative = next((line for line in self.mapped('line_ids') if line.product_qty < 0 and line.product_qty != line.theoretical_qty), False)
         if negative:
-            raise UserError(_('You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s') % (negative.product_id.display_name, negative.product_qty))
+            raise UserError(_(
+                'You cannot set a negative product quantity in an inventory line:\n\t%s - qty: %s',
+                negative.product_id.display_name,
+                negative.product_qty
+            ))
         self.action_check()
         self.write({'state': 'done'})
         self.post_inventory()

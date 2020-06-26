@@ -32,7 +32,7 @@ class PurchaseOrder(models.Model):
             })
         else:
             action.update({
-                'name': _("Manufacturing Source of %s" % self.name),
+                'name': _("Manufacturing Source of %s", self.name),
                 'domain': [('id', 'in', mrp_production_ids)],
                 'view_mode': 'tree,form',
             })

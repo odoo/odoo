@@ -163,6 +163,6 @@ class MassMailController(http.Controller):
             model = request.env[mailing.mailing_model_real]
             records = model.sudo().search([('email_normalized', '=', tools.email_normalize(email))])
             for record in records:
-                record.sudo().message_post(body=_("Feedback from %s: %s" % (email, feedback)))
+                record.sudo().message_post(body=_("Feedback from %(email)s: %(feedback)s", email=email, feedback=feedback))
             return bool(records)
         return 'error'

@@ -23,4 +23,4 @@ class EventTag(models.Model):
     category_id = fields.Many2one("event.tag.category", string="Category", required=True, ondelete='cascade')
 
     def name_get(self):
-        return [(tag.id, _("%s: %s" % (tag.category_id.name, tag.name))) for tag in self]
+        return [(tag.id, "%s: %s" % (tag.category_id.name, tag.name)) for tag in self]

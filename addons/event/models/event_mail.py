@@ -133,20 +133,26 @@ class EventMailScheduler(models.Model):
             try:
                 event, template = scheduler.event_id, scheduler.template_id
                 emails = list(set([event.organizer_id.email, event.user_id.email, template.write_uid.email]))
-                subject = _("WARNING: Event Scheduler Error for event: %s" % event.name)
+                subject = _("WARNING: Event Scheduler Error for event: %s", event.name)
                 body = _("""Event Scheduler for:
-                              - Event: %s (%s)
-                              - Scheduled: %s
-                              - Template: %s (%s)
+  - Event: %(event_name)s (%(event_id)s)
+  - Scheduled: %(date)s
+  - Template: %(template_name)s (%(template_id)s)
 
-                            Failed with error:
-                              - %s
+Failed with error:
+  - %(error)s
 
-                            You receive this email because you are:
-                              - the organizer of the event,
-                              - or the responsible of the event,
-                              - or the last writer of the template."""
-                         % (event.name, event.id, scheduler.scheduled_date, template.name, template.id, ex_s))
+You receive this email because you are:
+  - the organizer of the event,
+  - or the responsible of the event,
+  - or the last writer of the template.
+""",
+                         event_name=event.name,
+                         event_id=event.id,
+                         date=scheduler.scheduled_date,
+                         template_name=template.name,
+                         template_id=template.id,
+                         error=ex_s)
                 email = self.env['ir.mail_server'].build_email(
                     email_from=self.env.user.email,
                     email_to=emails,

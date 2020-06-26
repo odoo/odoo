@@ -180,9 +180,9 @@ class StockPickingBatch(models.Model):
                 erroneous_pickings = batch.picking_ids - batch.allowed_picking_ids
                 raise UserError(_(
                     "The following transfers cannot be added to batch transfer %s. "
-                    "Please check their states and operation types, if they aren't immediate " +
+                    "Please check their states and operation types, if they aren't immediate "
                     "transfers or if they're not already part of another batch transfer.\n\n"
-                    "Incompatibilities: %s") % (batch.name, ', '.join(erroneous_pickings.mapped('name'))))
+                    "Incompatibilities: %s", batch.name, ', '.join(erroneous_pickings.mapped('name'))))
 
     def _track_subtype(self, init_values):
         if 'state' in init_values:
