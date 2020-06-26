@@ -187,6 +187,19 @@ function _getCSSVariableValue(key, htmlStyle) {
     // double-quotes when reading them through getPropertyValue...
     return value.replace(/"/g, "'");
 }
+/**
+ * Normalize a color in case it is a variable name so it can be used outside of
+ * css.
+ *
+ * @param {string} color the color to normalize into a css value
+ * @returns {string} the normalized color
+ */
+function _normalizeColor(color) {
+    if (ColorpickerWidget.isCSSColor(color)) {
+        return color;
+    }
+    return _getCSSVariableValue(color);
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -199,5 +212,6 @@ return {
     isColorCombinationName: _isColorCombinationName,
     computeColorClasses: _computeColorClasses,
     getCSSVariableValue: _getCSSVariableValue,
+    normalizeColor: _normalizeColor,
 };
 });
