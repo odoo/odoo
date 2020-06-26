@@ -365,49 +365,50 @@
     </xpath>
 </template>
 
-<!-- Footer options -->
-<template id="footer_custom" inherit_id="website.layout" name="Footer">
+<!-- Footer templates -->
+<template id="footer_custom" inherit_id="website.layout" name="Default" active="True">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt16 pb8" data-snippet="s_text_block">
+            <section class="s_text_block pt40 pb16" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
                     <div class="row">
-                        <div class="col-lg-4">
-                            <h5>Our Products &amp; Services</h5>
+                        <div class="col-lg-2 pt24 pb24">
+                            <h5 class="mb-3">Useful Links</h5>
                             <ul class="list-unstyled">
                                 <li><a href="/">Home</a></li>
-                            </ul>
-                        </div>
-                        <div class="col-lg-4" id="connect">
-                            <h5>Connect with us</h5>
-                            <ul class="list-unstyled">
+                                <li><a href="#">About us</a></li>
+                                <li><a href="#">Products</a></li>
+                                <li><a href="#">Services</a></li>
+                                <li><a href="#">Legal</a></li>
                                 <li><a href="/contactus">Contact us</a></li>
-                                <li><i class="fa fa-phone fa-fw"/> <span class="o_force_ltr"><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span></li>
-                                <li><i class="fa fa-envelope fa-fw"/>  <span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                             </ul>
-                            <p class="o_footer_social_media_links">
-                                <a href="/website/social/facebook" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-facebook-square"/></a>
-                                <a href="/website/social/twitter" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-twitter"/></a>
-                                <a href="/website/social/linkedin" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-linkedin"/></a>
-                                <a href="/website/social/youtube" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-youtube-play"/></a>
-                                <a href="/website/social/github" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-github"/></a>
-                                <a href="/website/social/instagram" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-instagram"/></a>
-                            </p>
                         </div>
-                        <div class="col-lg-4">
-                            <div class="o_footer_about_us">
-                                <h5>
-                                    <span>YourCompany</span>
-                                </h5>
-                                <p>
-                                    We are a team of passionate people whose goal is to improve everyone's
-                                    life through disruptive products. We build great products to solve your
-                                    business problems.
-                                </p>
-                                <p>
-                                    Our products are designed for small to medium size companies willing to optimize
-                                    their performance.
-                                </p>
+                        <div class="col-lg-5 pt24 pb24">
+                            <h5 class="mb-3">About us</h5>
+                            <p>We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems.
+                            <br/><br/>Our products are designed for small to medium size companies willing to optimize their performance.</p>
+                        </div>
+                        <div id="connect" class="col-lg-4 offset-lg-1 pt24 pb24">
+                            <h5 class="mb-3">Connect with us</h5>
+                            <ul class="list-unstyled">
+                                <li><i class="fa fa-comment fa-fw mr-2"/><span><a href="/contactus">Contact us</a></span></li>
+                                <li><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
+                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span></li>
+                            </ul>
+                            <div class="s_share text-left" data-name="Social Media">
+                                <h4 class="s_share_title d-none">Follow us</h4>
+                                <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                    <i class="fa fa-facebook rounded-circle shadow-sm"/>
+                                </a>
+                                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-twitter rounded-circle shadow-sm"/>
+                                </a>
+                                <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                    <i class="fa fa-linkedin rounded-circle shadow-sm"/>
+                                </a>
+                                <a href="/" class="float-right" target="_blank">
+                                    <i class="fa fa-home bg-primary rounded-circle shadow-sm"/>
+                                </a>
                             </div>
                         </div>
                     </div>
@@ -417,46 +418,44 @@
     </xpath>
 </template>
 
-<!-- Logo - About us (below)-->
-<template id="template_footer_logo_about_us_below" inherit_id="website.layout" name="Template Footer Logo About Us Below" active="False">
+<template id="template_footer_descriptive" inherit_id="website.layout" name="Descriptive" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt16 pb8">
+            <section class="s_title pt48 pb24">
+                <div class="container s_allow_columns">
+                    <h4><b>Designed</b> for companies</h4>
+                </div>
+            </section>
+            <section class="s_text_block pb32" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <div class="row">
-                        <div class="col-md-5 o_footer_logo">
-                            <a href="/" class="footer-brand logo">
-                                <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
-                            </a>
-                        </div>
-                    </div>
                     <div class="row">
                         <div class="col-lg-5">
-                            <div class="o_footer_about_us">
-                                <h5>
-                                    <span>YourCompany</span>
-                                </h5>
-                                <p>
-                                    We are a team of passionate people whose goal is to improve everyone's
-                                    life through disruptive products. We build great products to solve your
-                                    business problems.
-                                </p>
-                                <p>
-                                    Our products are designed for small to medium size companies willing to optimize
-                                    their performance.
-                                </p>
+                            <p>We are a team of passionate people whose goal is to improve everyone's life through disruptive products. We build great products to solve your business problems. Our products are designed for small to medium size companies willing to optimize their performance.</p>
+                        </div>
+                        <div class="col-lg-3 offset-lg-1">
+                            <p class="text-muted"><b>My Company</b><br/>250 Executive Park Blvd, Suite 3400 <br/> San Francisco CA 94134 <br/>United States</p>
+                        </div>
+                        <div class="col-lg-3">
+                            <ul class="list-unstyled mb-2">
+                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">+1 (650) 691-3277</a></span></li>
+                                <li><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></span></li>
+                            </ul>
+                            <div class="s_share text-left no_icon_color" data-name="Social Media">
+                                <h4 class="s_share_title d-none">Follow us</h4>
+                                <a href="/website/social/github" class="s_share_github mr-2" target="_blank">
+                                    <i class="fa fa-2x fa-github"/>
+                                </a>
+                                <a href="/website/social/twitter" class="s_share_twitter mr-2" target="_blank">
+                                    <i class="fa fa-2x fa-twitter"/>
+                                </a>
+                                <a href="/website/social/instagram" class="s_share_instagram mr-2" target="_blank">
+                                    <i class="fa fa-2x fa-instagram"/>
+                                </a>
+                                <a href="/website/social/linkedin" class="s_share_linkedin mr-2" target="_blank">
+                                    <i class="fa fa-2x fa-linkedin"/>
+                                </a>
                             </div>
                         </div>
-                        <div class="col-lg-7 text-lg-right">
-                            <p class="o_footer_social_media_links text-lg-right">
-                                <a href="/website/social/facebook" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-facebook-square"/></a>
-                                <a href="/website/social/twitter" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-twitter"/></a>
-                                <a href="/website/social/linkedin" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-linkedin"/></a>
-                                <a href="/website/social/youtube" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-youtube-play"/></a>
-                                <a href="/website/social/github" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-github"/></a>
-                                <a href="/website/social/instagram" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-instagram"/></a>
-                            </p>
-                        </div>
                     </div>
                 </div>
             </section>
@@ -464,31 +463,36 @@
     </xpath>
 </template>
 
-<!-- Links - Address - Logo-->
-<template id="template_footer_links_address_logo" inherit_id="website.layout" name="Template Footer Links Address Logo" active="False">
+<template id="template_footer_centered" inherit_id="website.layout" name="Centered" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt16 pb8">
-                <div class="container">
-                    <p class="o_footer_social_media_links">
-                        <a href="/website/social/facebook" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-facebook-square"/></a>
-                        <a href="/website/social/twitter" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-twitter"/></a>
-                        <a href="/website/social/linkedin" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-linkedin"/></a>
-                        <a href="/website/social/youtube" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-youtube-play"/></a>
-                        <a href="/website/social/github" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-github"/></a>
-                        <a href="/website/social/instagram" class="btn btn-sm btn-link" target="_blank"><i class="fa fa-2x fa-instagram"/></a>
-                    </p>
-                    <ul class="list-inline">
-                        <li class="list-inline-item"><a href="/">Home</a></li>
-                        <li class="list-inline-item"><a href="/contactus">Contact us</a></li>
+            <section class="s_text_block pt32" data-snippet="s_text_block" data-name="Text">
+                <div class="container s_allow_columns">
+                    <div class="s_share text-center mb-4" data-name="Social Media">
+                        <h4 class="s_share_title d-none">Share</h4>
+                        <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                            <i class="fa fa-facebook rounded-circle rounded shadow-sm"/>
+                        </a>
+                        <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                            <i class="fa fa-twitter rounded-circle rounded shadow-sm"/>
+                        </a>
+                        <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                            <i class="fa fa-linkedin rounded-circle rounded shadow-sm"/>
+                        </a>
+                    </div>
+                    <p class="text-center mb-1">250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
+                    <ul class="list-inline text-center">
+                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">+1 (650) 691-3277</a></span></li>
+                        <li class="list-inline-item mx-3"><i class="fa fa-1x fa-fw fa-envelope mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
                     </ul>
-                    <div class="o_footer_address">
-                        250 Executive Park Blvd, Suite 3400<br/>San Francisco CA 94134<br/>United States
-                    </div>
-                    <div class="row s_nb_column_fixed">
-                        <div class="offset-md-3 col-md-6 o_footer_logo">
-                            <a href="/" class="footer-brand logo">
-                                <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
+                </div>
+            </section>
+            <section class="s_text_block pt16 pb16" data-snippet="s_text_block" data-name="Logo">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-2 offset-lg-5">
+                            <a href="/" class="o_footer_logo logo">
+                                <img src="/website/static/src/img/website_logo.png" class="img-fluid mx-auto" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
                             </a>
                         </div>
                     </div>
@@ -498,36 +502,49 @@
     </xpath>
 </template>
 
-<!-- Website name - Logo - (below) Links - About us-->
-<template id="template_footer_name_logo_links_about_us" inherit_id="website.layout" name="Template Footer Name Logo Links About us" active="False">
+<template id="template_footer_links" inherit_id="website.layout" name="Links" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt16 pb8">
+            <section class="s_text_block pt48 pb16" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <div class="row mt-2 mb-4">
-                        <div class="col-lg-6 mb-3 mb-lg-0">
-                            <h3><a href="/" class="text-decoration-none">YourCompany</a></h3>
-                        </div>
-                        <div class="col-lg-6 o_footer_logo text-center text-lg-right">
-                            <a href="/" class="footer-brand logo">
-                                <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
-                            </a>
-                        </div>
-                    </div>
                     <div class="row">
-                        <div class="col-lg-6">
-                            <ul class="list-inline">
-                                <li class="list-inline-item"><a href="/">Home</a></li>
-                                <li class="list-inline-item"><a href="/contactus">Contact us</a></li>
+                        <div class="col-lg-2 pb16">
+                            <h5>Explore</h5>
+                            <ul class="list-unstyled">
+                                <li class="list-item py-1"><a href="/">Home</a></li>
+                                <li class="list-item py-1"><a href="#">Our Company</a></li>
+                                <li class="list-item py-1"><a href="#">Case Studies</a></li>
+                                <li class="list-item py-1"><a href="#">Blog</a></li>
                             </ul>
                         </div>
-                        <div class="col-lg-6 text-lg-right">
-                            <p>
-                                We are a team of passionate people whose goal is to improve everyone's
-                                life through disruptive products. We build great products to solve your
-                                business problems. Our products are designed for small to medium size
-                                companies willing to optimize their performance.
-                            </p>
+                        <div class="col-lg-2 pb16">
+                            <h5>Services</h5>
+                            <ul class="list-unstyled">
+                                <li class="py-1"><a href="#">Documentation</a></li>
+                                <li class="py-1"><a href="#">Marketplace</a></li>
+                                <li class="py-1"><a href="#">Design</a></li>
+                                <li class="py-1"><a href="#">Resources</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-2 pb16">
+                            <h5>Follow us</h5>
+                            <ul class="list-unstyled">
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-facebook-square mr-2"/><a href="/website/social/facebook" target="_blank">Facebook</a></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-twitter-square mr-2"/><a href="/website/social/twitter" target="_blank">Twitter</a></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-linkedin-square mr-2"/><a href="/website/social/linkedin" target="_blank">Linkedin</a></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-instagram mr-2"/><a href="/website/social/instagram" target="_blank">Instagram</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 pb16">
+                            <h5>Get in touch</h5>
+                            <ul class="list-unstyled">
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-envelope mr-2"/><a href="mailto:info@yourcompany.com">info@yourcompany.com</a></li>
+                                <li class="py-1"><i class="fa fa-1x fa-fw fa-phone mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">+1 (650) 691-3277</a></span></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 pb16">
+                            <h5>MyCompany</h5>
+                            <p class="text-muted">250 Executive Park Blvd, Suite 3400 <br/> San Francisco CA 94134 <br/>United States</p>
                         </div>
                     </div>
                 </div>
@@ -536,18 +553,42 @@
     </xpath>
 </template>
 
-<!-- Logo only-->
-<template id="template_footer_logo_only" inherit_id="website.layout" name="Template Footer Logo Only" active="False">
+<template id="template_footer_minimalist" inherit_id="website.layout" name="Minimalist" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt16 pb8">
+            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <div class="row s_nb_column_fixed">
-                        <div class="offset-md-3 col-md-6 o_footer_logo text-center my-3">
-                            <a href="/" class="footer-brand logo">
-                                <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
+                    <div class="row align-items-center">
+                        <div class="col-lg-2 pt16 pb16">
+                            <a href="/" class="o_footer_logo logo">
+                                <img src="/website/static/src/img/website_logo.png" class="img-fluid mx-auto" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
                             </a>
                         </div>
+                        <div class="col-lg-5 d-flex align-items-center justify-content-center justify-content-lg-start pt16 pb16">
+                            <ul class="list-inline mb-0 ml-3">
+                                <li class="list-inline-item"><a href="/">Home</a></li>
+                                <li class="list-inline-item"><a href="#">About us</a></li>
+                                <li class="list-inline-item"><a href="#">Products</a></li>
+                                <li class="list-inline-item"><a href="#">Services</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 pt16 pb16">
+                            <div class="s_share text-right no_icon_color" data-name="Social Media">
+                                <h4 class="s_share_title d-none">Follow us</h4>
+                                <a href="/website/social/github" class="s_share_github" target="_blank">
+                                    <i class="fa fa-2x fa-github"/>
+                                </a>
+                                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-2x fa-twitter"/>
+                                </a>
+                                <a href="/website/social/instagram" class="s_share_instagram" target="_blank">
+                                    <i class="fa fa-2x fa-instagram"/>
+                                </a>
+                            </div>
+                        </div>
+                        <div class="col-lg-2 pt16 pb16">
+                            <a href="/contactus" class="btn btn-block btn-primary">Get in touch</a>
+                        </div>
                     </div>
                 </div>
             </section>
@@ -555,22 +596,152 @@
     </xpath>
 </template>
 
-<!-- Address - Logo (below)-->
-<template id="template_footer_address_logo" inherit_id="website.layout" name="Template Footer Address Logo" active="False">
+<template id="template_footer_contact" inherit_id="website.layout" name="Contact" active="False">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
-            <section class="s_text_block pt16 pb8 text-center">
+            <section class="s_text_block pt32 pb16" data-snippet="s_text_block" data-name="Text">
                 <div class="container">
-                    <div class="m-4">
-                        YourCompany, 250 Executive Park Blvd, Suite 3400,<br/>
-                        San Francisco CA 94134, United States<br/>
-                        <a href="tel:+1 (650) 691-3277">+1 (650) 691-3277</a> - <a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a>
+                    <div class="row align-items-end">
+                        <div class="col-lg-3 pt16 pb16">
+                            <p class="mb-2">How can we help?</p>
+                            <h4>Contact us anytime</h4>
+                        </div>
+                        <div class="col-lg-3 pt16 pb16">
+                            <p class="mb-2">Call us</p>
+                            <h5><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">+1 (650) 691-3277</a></span></h5>
+                        </div>
+                        <div class="col-lg-3 pt16 pb16">
+                            <p class="mb-2">Send us a message</p>
+                            <h5><a href="mailto:hello@mycompany.com">hello@mycompany.com</a></h5>
+                        </div>
+                        <div class="col-lg-3 pt16 pb16">
+                            <div class="s_share text-right no_icon_color" data-name="Social Media">
+                                <p class="s_share_title d-block mb-1">Follow us</p>
+                                <a href="/website/social/twitter" class="px-1 ml-1" target="_blank"><i class="fa fa-2x fa-twitter"/></a>
+                                <a href="/website/social/linkedin" class="px-1 ml-1" target="_blank"><i class="fa fa-2x fa-linkedin"/></a>
+                                <a href="/website/social/instagram" class="px-1 ml-1" target="_blank"><i class="fa fa-2x fa-instagram"/></a>
+                            </div>
+                        </div>
                     </div>
+                </div>
+            </section>
+            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                <div class="container allow_columns">
+                    <div class="s_hr pt16 pb16">
+                        <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-color: var(--600);"/>
+                    </div>
+                </div>
+            </section>
+            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-2 pb16">
+                            <a href="/" class="o_footer_logo logo">
+                                <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img"/>
+                            </a>
+                        </div>
+                        <div class="col-lg-10 pb16 text-right">
+                            <ul class="list-inline mb-0">
+                                <li class="list-inline-item"><a href="/">Home</a></li>
+                                <li class="list-inline-item">•</li>
+                                <li class="list-inline-item"><a href="#">About us</a></li>
+                                <li class="list-inline-item">•</li>
+                                <li class="list-inline-item"><a href="#">Products</a></li>
+                                <li class="list-inline-item">•</li>
+                                <li class="list-inline-item"><a href="#">Terms of Services</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<!-- Call-to-Action -->
+<template id="template_footer_call_to_action" inherit_id="website.layout" name="Call-to-Action" active="False">
+    <xpath expr="//div[@id='footer']" position="replace">
+        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+            <section class="s_call_to_action pt48">
+                <div class="container">
                     <div class="row">
-                        <div class="offset-lg-3 col-lg-6 o_footer_logo my-4">
-                            <a href="/" class="footer-brand logo">
-                                <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
-                            </a>
+                        <div class="col-lg-9 pb24">
+                            <h3>50,000+ companies run Odoo to grow their businesses.</h3>
+                            <p class="lead">Join us and make your company a better place.</p>
+                        </div>
+                        <div class="col-lg-3 pb24">
+                            <a href="/contactus" class="btn btn-primary btn-lg btn-block">Start Button</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                <div class="container s_allow_columns">
+                    <div class="s_hr pt16 pb16">
+                        <hr class="w-100 mx-auto" style="border-top-width: 1px; border-top-style: solid; border-color: var(--600);"/>
+                    </div>
+                </div>
+            </section>
+            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-9">
+                            <p><i class="fa fa-1x fa-fw fa-map-marker mr-2"/>250 Executive Park Blvd, Suite 3400 • San Francisco CA 94134 • United States</p>
+                        </div>
+                        <div class="col-lg-3">
+                            <p><i class="fa fa-1x fa-fw fa-envelope mr-2"/><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+
+<!-- Headline -->
+<template id="template_footer_headline" inherit_id="website.layout" name="Headline" active="False">
+    <xpath expr="//div[@id='footer']" position="replace">
+        <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
+            <section class="s_text_block pt48" data-snippet="s_text_block" data-name="Text">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-lg-3 pb24">
+                            <h4><b>Designed</b> <br/>for Companies</h4>
+                        </div>
+                        <div class="col-lg-9 pb24">
+                            <p class="lead">We are a team of passionate people whose goal is to improve everyone's life.<br/>Our services are designed for small to medium size companies.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section class="s_text_block" data-snippet="s_text_block" data-name="Text">
+                <div class="container">
+                    <div class="row align-items-center">
+                        <div class="col-lg-3 pb24">
+                            <ul class="pl-3 mb-0">
+                                <li><a href="/">Home</a></li>
+                                <li><a href="/contactus">Contact us</a></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-6 pb24">
+                            <ul class="list-unstyled mb-0">
+                                <li><i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span></li>
+                                <li><i class="fa fa-envelope fa-fw mr-2"/><span><a href="mailto:info@yourcompany.example.com">info@yourcompany.example.com</a></span></li>
+                            </ul>
+                        </div>
+                        <div class="col-lg-3 pb24">
+                            <div class="s_share text-right" data-name="Social Media">
+                                <h4 class="s_share_title d-none">Share</h4>
+                                <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                    <i class="fa fa-1x fa-facebook rounded-circle shadow-sm"/>
+                                </a>
+                                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-1x fa-twitter rounded-circle shadow-sm"/>
+                                </a>
+                                <a href="/website/social/instagram" class="s_share_instagram" target="_blank">
+                                    <i class="fa fa-1x fa-instagram rounded-circle shadow-sm"/>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -593,6 +764,7 @@
     </xpath>
 </template>
 
+<!-- Scroll to Top option -->
 <template id="option_footer_scrolltop" inherit_id="website.layout" active="False">
     <xpath expr="//div[@id='footer']" position="after">
         <div id="o_footer_scrolltop_wrapper" class="container h-0 d-flex align-items-center justify-content-center">
@@ -607,6 +779,7 @@
     </xpath>
 </template>
 
+<!-- Cookie Bar -->
 <template id="cookies_bar" inherit_id="website.layout" name="Cookies Bar">
     <xpath expr="//footer" position="after">
         <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible" data-name="Cookies Bar" data-vcss="001" data-invisible="1">
