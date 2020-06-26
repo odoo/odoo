@@ -68,7 +68,7 @@ class SaleOrder(models.Model):
         self.env['sale.order.line'].search([('order_id', 'in', self.ids), ('is_delivery', '=', True)]).unlink()
 
     @api.multi
-    def set_delivery_line(self):
+    def set_delivery_line(self, rate_fetched=None):
 
         # Remove delivery products from the sales order
         self._remove_delivery_line()
@@ -81,7 +81,10 @@ class SaleOrder(models.Model):
             elif not order.delivery_rating_success:
                 raise UserError(_('Please use "Check price" in order to compute a shipping price for this quotation.'))
             else:
-                price_unit = order.carrier_id.rate_shipment(order)['price']
+                if rate_fetched == True:
+                    price_unit = order.delivery_price
+                else:
+                    price_unit = order.carrier_id.rate_shipment(order)['price']
                 # TODO check whether it is safe to use delivery_price here
                 order._create_delivery_line(order.carrier_id, price_unit)
         return True
