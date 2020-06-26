@@ -167,6 +167,7 @@ class PaymentTransaction(models.Model):
     def render_sale_button(self, order, submit_txt=None, render_values=None):
         values = {
             'partner_id': order.partner_id.id,
+            'type': self.type,
         }
         if render_values:
             values.update(render_values)
