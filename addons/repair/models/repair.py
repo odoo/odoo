@@ -314,6 +314,7 @@ class Repair(models.Model):
                 invoice_vals = {
                     'type': 'out_invoice',
                     'partner_id': partner_invoice.id,
+                    'partner_shipping_id': repair.address_id.id,
                     'currency_id': currency.id,
                     'narration': narration,
                     'line_ids': [],
