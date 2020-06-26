@@ -24,15 +24,16 @@
 import collections
 import contextlib
 import datetime
-import dateutil
+import dis
 import fnmatch
 import functools
-import itertools
 import io
+import itertools
 import logging
 import operator
-import pytz
 import re
+import sys
+import types
 import uuid
 from collections import defaultdict, OrderedDict
 from collections.abc import MutableMapping
@@ -41,8 +42,10 @@ from inspect import getmembers, currentframe
 from operator import attrgetter, itemgetter
 
 import babel.dates
+import dateutil
 import dateutil.relativedelta
 import psycopg2, psycopg2.extensions
+import pytz
 from lxml import etree
 from lxml.builder import E
 from psycopg2.extensions import AsIs
@@ -73,6 +76,19 @@ regex_pg_name = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 regex_field_agg = re.compile(r'(\w+)(?::(\w+)(?:\((\w+)\))?)?')
 
 AUTOINIT_RECALCULATE_STORED_FIELDS = 1000
+
+checked_for_overrides = set()
+# operations valid in the context of a `super` deref / use
+SUPERVALID = {
+    dis.opmap[op] for op in [
+        'LOAD_CONST', 'LOAD_FAST', 'LOAD_GLOBAL', 'LOAD_CLOSURE', 'LOAD_DEREF',
+        'LOAD_ATTR',
+        'CALL_FUNCTION', 'CALL_FUNCTION_KW', 'MAKE_FUNCTION',
+        'POP_TOP',
+        'BUILD_TUPLE', 'BUILD_LIST', 'BUILD_SET', 'BUILD_MAP', 'BUILD_CONST_KEY_MAP',
+        'BINARY_ADD', 'BINARY_SUBTRACT', 'BINARY_AND', 'BINARY_OR',
+    ]
+}
 
 def check_object_name(name):
     """ Check if the given name is a valid model name.
@@ -2650,6 +2666,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # the classes that define this model's base fields and methods
         cls._model_classes = tuple(c for c in cls.mro() if getattr(c, 'pool', None) is None)
+        self._verify_overrides()
 
         # reset those attributes on the model's class for _setup_fields() below
         for attr in ('_rec_name', '_active_name'):
@@ -2657,6 +2674,93 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 delattr(cls, attr)
             except AttributeError:
                 pass
+
+    def _skip_to_called(self, instructions):
+        """ Skips to right after the CALL_FUNCTION matching the current TOS.
+
+        :return: True if found the CALL_FUNCTION, False if the end of scope was
+                 reached (or some error happened)
+        """
+        depth = 0
+        # needs basic symbolic processing of stack in order to
+        # correctly identify the attribute resolved on the proxy for
+        # cases like super(L10nInReportAccount, self.with_context(options or {}))
+        # or super(ProductProduct, self.filtered(lambda p: p not in bom_kits))
+        for skip in instructions:
+            if skip.opname in ('JUMP_IF_TRUE_OR_POP', 'JUMP_IF_FALSE_OR_POP'):
+                # no effect on stack but we want to skip ahead and ignore the
+                # second half of and/or
+                assert skip.arg > skip.offset, "only allows forward jumps"
+                self._jump_before(skip, instructions)
+                continue
+            elif skip.opcode in SUPERVALID:
+                depth += dis.stack_effect(skip.opcode, skip.arg)
+            else:
+                _logger.warning("Unknown operation %s", skip)
+                return False
+
+            if depth <= 0:
+                return True
+        return False
+
+    # FIXME: do we still support 3.5? Is there a better flag to check for wordcode?
+    if sys.version_info < (3, 6):
+        def _jump_before(self, instr, instructions):
+            """ Before 3.5, instructions are either 1 byte if
+            opcode < dis.HAVE_ARGUMENT or 3 otherwise
+            """
+            target = instr.offset
+            for instr in instructions:
+                if instr.offset + (1 if instr.opcode < dis.HAVE_ARGUMENT else 3) == target:
+                    return
+    else:
+        def _jump_before(self, instr, instructions):
+            """ From 3.6, bytecode instructions are always 2 bytes
+            """
+            target = instr.arg - 2
+            for instr in instructions:
+                if instr.offset + 2 == target:
+                    return
+
+    def _verify_overrides(self):
+        # We can't resolve classes individually because we set up models as a
+        # flat-and-wide tree rather than one matching dependencies e.g. given
+        # foo.A, bar.A (extend A, depend on foo) and baz.A (extend A, depend on
+        # foo) we're not building A(baz.A(foo.A), bar.A(foo.A)) instead we're
+        # building A(baz.A, bar.A, foo.A) meaning if bar.A overrides a method
+        # from foo.A we need the MRO from the final A to resolve it,
+        # individually bar.A will only extend Model itself
+        mro = type(self).mro()
+        for i, cls in enumerate(mro):
+            if cls in checked_for_overrides:
+                continue
+            checked_for_overrides.add(cls)
+            for name, attr in vars(cls).items():
+                if not isinstance(attr, types.FunctionType):
+                    continue
+
+                instructions = dis.get_instructions(attr)
+                for instr in instructions:
+                    if (instr.opname, instr.argval) != ('LOAD_GLOBAL', 'super'):
+                        continue
+
+                    # skip ahead to having called super(), bail if we never find
+                    # that call
+                    if not self._skip_to_called(instructions):
+                        break
+
+                    following = next(instructions)
+                    if following.opname == 'LOAD_ATTR':
+                        attname = following.argval
+                        if not any(hasattr(c, attname) for c in mro[i+1:]):
+                            _logger.warning(
+                                "%s.%s.%s calls super() to get an attribute %s which doesn't exist in any parent",
+                                cls.__module__, cls.__name__, name,
+                                attname
+                            )
+                            # current function is known-broken, go ahead and do
+                            # the next one
+                            break
 
     @api.model
     def _setup_base(self):
