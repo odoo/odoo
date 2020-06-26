@@ -76,10 +76,10 @@
                             <t t-if="props.isCompact">
                                 <div class="o_Composer_toolButtonSeparator"/>
                             </t>
-                            <div class="o_Composer_primaryToolButtons">
+                            <div class="o_Composer_primaryToolButtons" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
                                 <Popover position="'top'" t-on-o-emoji-selection="_onEmojiSelection" t-ref="emojisPopover">
                                     <!-- TODO FIXME o-open not possible to code due to https://github.com/odoo/owl/issues/693 -->
-                                    <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-secondary"
+                                    <button class="o_Composer_button o_Composer_buttonEmojis o_Composer_toolButton btn btn-light"
                                         t-att-class="{
                                             'o-open': false and state.displayed,
                                             'o-mobile': env.messaging.device.isMobile,
@@ -91,11 +91,11 @@
                                         <EmojisPopover/>
                                     </t>
                                 </Popover>
-                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-secondary fa fa-paperclip" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="_onClickAddAttachment"/>
+                                <button class="o_Composer_button o_Composer_buttonAttachment o_Composer_toolButton btn btn-light fa fa-paperclip" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Add attachment" type="button" t-on-click="_onClickAddAttachment"/>
                             </div>
                             <t t-if="props.isExpandable">
                                 <div class="o_Composer_secondaryToolButtons">
-                                    <button class="btn btn-secondary fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Full composer" type="button" t-on-click="_onClickFullComposer"/>
+                                    <button class="btn btn-light fa fa-expand o_Composer_button o_Composer_buttonFullComposer o_Composer_toolButton" t-att-class="{ 'o-mobile': env.messaging.device.isMobile }" title="Full composer" type="button" t-on-click="_onClickFullComposer"/>
                                 </div>
                             </t>
                         </div>
