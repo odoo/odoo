@@ -171,18 +171,6 @@ Object.assign(ThreadViewer, {
         haveMessagesAuthorRedirect: Boolean,
         haveMessagesMarkAsReadIcon: Boolean,
         haveMessagesReplyIcon: Boolean,
-        /**
-         * Set the initial scroll position of message list on mount. Note that
-         * this prop is not directly passed to message list as props because
-         * it may compute scroll top without composer, and then composer may alter
-         * them on mount. To solve this issue, thread handles setting initial scroll
-         * positions, so that this is always done after composer has been mounted.
-         * (child `mounted()` are called before parent `mounted()`)
-         */
-        messageListInitialScrollTop: {
-            type: Number,
-            optional: true
-        },
         order: {
             type: String,
             validate: prop => ['asc', 'desc'].includes(prop),
