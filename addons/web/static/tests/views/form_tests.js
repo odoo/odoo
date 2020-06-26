@@ -9294,6 +9294,33 @@ QUnit.module('Views', {
 
         form.destroy();
     });
+
+    QUnit.test('reload a form view with a pie chart does not crash', async function (assert) {
+        assert.expect(3);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form>
+                      <widget name="pie_chart" title="qux by product" attrs="{'measure\': 'qux', 'groupby': 'product_id'}"/>
+                  </form>`,
+        });
+
+        assert.containsOnce(form, '.o_widget');
+        const canvasId1 = form.el.querySelector('.o_widget canvas').id;
+
+        await form.reload();
+        await testUtils.nextTick();
+
+        assert.containsOnce(form, '.o_widget');
+        const canvasId2 = form.el.querySelector('.o_widget canvas').id;
+        // A new canvas should be found in the dom
+        assert.notStrictEqual(canvasId1, canvasId2);
+
+        form.destroy();
+        delete widgetRegistry.map.test;
+    });
 });
 
 });

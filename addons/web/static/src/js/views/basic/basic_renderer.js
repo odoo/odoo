@@ -802,9 +802,6 @@ var BasicRenderer = AbstractRenderer.extend(WidgetAdapterMixin, {
             self._registerModifiers(node, record, widget);
             widget.$el.addClass('o_widget');
             $el.replaceWith(widget.$el);
-            if (self._isInDom && widget.on_attach_callback) {
-                widget.on_attach_callback();
-            }
         });
 
         return $el;

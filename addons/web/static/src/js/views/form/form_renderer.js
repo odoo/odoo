@@ -55,6 +55,7 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
     on_attach_callback: function () {
         WidgetAdapterMixin.on_attach_callback.call(this);
         this._isInDom = true;
+        _.invoke(this.widgets, 'on_attach_callback');
         this._super.apply(this, arguments);
     },
     /**
@@ -1010,6 +1011,7 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
                 _.forEach(self.allFieldWidgets, function (widgets){
                     _.invoke(widgets, 'on_attach_callback');
                 });
+                _.invoke(self.widgets, 'on_attach_callback');
             }
         }).guardedCatch(function () {
             $form.remove();
