@@ -8,6 +8,36 @@ function factory(dependencies) {
 
     class ChatWindow extends dependencies['mail.model'] {
 
+        /**
+         * @override
+         */
+        static create(data) {
+            const chatWindow = super.create(data);
+            chatWindow._onShowHomeMenu.bind(chatWindow);
+            chatWindow._onHideHomeMenu.bind(chatWindow)
+
+            chatWindow.env.messagingBus.on(
+                'hide_home_menu',
+                chatWindow,
+                chatWindow._onHideHomeMenu
+            );
+            chatWindow.env.messagingBus.on(
+                'show_home_menu',
+                chatWindow,
+                chatWindow._onShowHomeMenu
+            );
+            return chatWindow;
+        }
+
+        /**
+         * @override
+         */
+        delete() {
+            this.env.messagingBus.off('hide_home_menu', this, this._onHideHomeMenu);
+            this.env.messagingBus.off('show_home_menu', this, this._onShowHomeMenu);
+            super.delete();
+        }
+
         //----------------------------------------------------------------------
         // Public
         //----------------------------------------------------------------------
@@ -84,6 +114,7 @@ function factory(dependencies) {
         unfold() {
             if (this.thread) {
                 this.thread.update({ pendingFoldState: 'open' });
+                this.threadViewer.addComponentHint('chat-window-unfolded');
             } else {
                 this.update({ _isFolded: false });
             }
@@ -206,23 +237,28 @@ function factory(dependencies) {
             return nextToFocus;
         }
 
+        //----------------------------------------------------------------------
+        // Handlers
+        //----------------------------------------------------------------------
+
         /**
-         * @override
+         * @private
          */
-        _updateAfter(previous) {
-            // thread
-            if (previous.thread && this.thread !== previous.thread) {
-                this.update({ threadInitialScrollTop: undefined });
+        async _onHideHomeMenu() {
+            if (!this.threadViewer) {
+                return;
             }
+            this.threadViewer.addComponentHint('home-menu-hidden');
         }
 
         /**
-         * @override
+         * @private
          */
-        _updateBefore() {
-            return {
-                thread: this.thread,
-            };
+        async _onShowHomeMenu() {
+            if (!this.threadViewer) {
+                return;
+            }
+            this.threadViewer.addComponentHint('home-menu-shown');
         }
 
     }
@@ -289,11 +325,6 @@ function factory(dependencies) {
                 'threadDisplayName',
             ],
         }),
-        /**
-         * If set, this is the scroll top position of the thread of this
-         * chat window to put initially on mount.
-         */
-        threadInitialScrollTop: attr(),
         thread: many2one('mail.thread', {
             related: 'threadViewer.thread',
         }),

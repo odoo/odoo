@@ -28,8 +28,35 @@ QUnit.module('chat_window_manager_tests.js', {
             }, params, {
                 data: this.data,
             }));
+            this.debug = params && params.debug;
             this.env = env;
             this.widget = widget;
+        };
+
+        /**
+         * Simulates the external behaviours & DOM changes implied by hiding home menu.
+         * Needed to assert validity of tests at technical level (actual code of home menu could not
+         * be used in these tests).
+         */
+        this.hideHomeMenu = async () => {
+            await this.env.bus.trigger('will_hide_home_menu');
+            await this.env.bus.trigger('hide_home_menu');
+        };
+
+        /**
+         * Simulates the external behaviours & DOM changes implied by showing home menu.
+         * Needed to assert validity of tests at technical level (actual code of home menu could not
+         * be used in these tests).
+         */
+        this.showHomeMenu = async () => {
+            await this.env.bus.trigger('will_show_home_menu');
+            const $frag = document.createDocumentFragment();
+            // in real condition, chat window will be removed and put in a fragment then
+            // reinserted into DOM
+            const selector = this.debug ? 'body' : '#qunit-fixture';
+            $(selector).contents().appendTo($frag);
+            await this.env.bus.trigger('show_home_menu');
+            $(selector).append($frag);
         };
     },
     afterEach() {
@@ -644,8 +671,10 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     assert.verifySteps(['rpc:channel_fold/closed']);
 });
 
-QUnit.test('chat window: state conservation on toggle home menu', async function (assert) {
-    assert.expect(9);
+QUnit.test('[technical] chat window: composer state conservation on toggle home menu', async function (assert) {
+    // technical as show/hide home menu simulation are involved and home menu implementation
+    // have side-effects on DOM that may make chat window components not work
+    assert.expect(6);
 
     Object.assign(this.data.initMessaging, {
         channel_slots: {
@@ -660,51 +689,16 @@ QUnit.test('chat window: state conservation on toggle home menu', async function
             }],
         },
     });
-    await this.start({
-        async mockRPC(route, args) {
-            if (args.method === 'channel_fetch_preview') {
-                return [{
-                    id: 20,
-                    last_message: {
-                        author_id: [7, "Demo"],
-                        body: "<p>test</p>",
-                        channel_ids: [20],
-                        id: 100,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        res_id: 20,
-                    },
-                }];
-            } else if (args.method === 'channel_fold') {
-                return;
-            } else if (args.method === 'message_fetch') {
-                return [...Array(20).keys()].map(i => {
-                    return {
-                        author_id: [11, "Demo"],
-                        body: "<p>body</p>",
-                        channel_ids: [20],
-                        date: "2019-04-20 10:00:00",
-                        id: i + 10,
-                        message_type: 'comment',
-                        model: 'mail.channel',
-                        record_name: 'General',
-                        res_id: i + 1,
-                    };
-                });
-            }
-            return this._super(...arguments);
-        },
-    });
+    await this.start();
     await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
     await afterNextRender(() =>
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
     );
-    // Set a scroll position to chat window
-    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 142;
-    // Set html content of the composer of the chat window
-    let composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
-    composerTextInputTextArea.focus();
-    document.execCommand('insertText', false, 'XDU for the win !');
+    // Set content of the composer of the chat window
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, 'XDU for the win !');
+    });
     // Set attachments of the composer
     const files = [
         await createFile({
@@ -725,59 +719,102 @@ QUnit.test('chat window: state conservation on toggle home menu', async function
         )
     );
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
-        142,
-        "verify chat window initial scrollTop"
-    );
-    composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
-    assert.strictEqual(
-        composerTextInputTextArea.value,
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "XDU for the win !",
-        "verifif chat window composer initial html input"
+        "chat window composer initial text input should contain 'XDU for the win !'"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_Attachment`).length,
+    assert.containsN(
+        document.body,
+        '.o_Composer .o_Attachment',
         2,
         "verify chat window composer initial attachment count"
     );
-    // Hide home menu
-    await this.env.bus.trigger('will_hide_home_menu');
-    await this.env.bus.trigger('hide_home_menu');
+
+    await this.hideHomeMenu();
     assert.strictEqual(
-        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
-        142,
-        "chat window scrollTop should still be the same (1)"
-    );
-    composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
-    assert.strictEqual(
-        composerTextInputTextArea.value,
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
         "XDU for the win !",
-        "Chat window composer should still have the same html input (1)"
+        "Chat window composer should still have the same input after hiding home menu"
     );
-    assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_Attachment`).length,
+    assert.containsN(
+        document.body,
+        '.o_Composer .o_Attachment',
         2,
-        "Chat window composer should have 2 attachments (1)"
+        "Chat window composer should have 2 attachments after hiding home menu"
     );
 
     // Show home menu
-    await this.env.bus.trigger('will_show_home_menu');
-    await this.env.bus.trigger('show_home_menu');
+    await this.showHomeMenu();
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "XDU for the win !",
+        "chat window composer should still have the same input showing home menu"
+    );
+    assert.containsN(
+        document.body,
+        '.o_Composer .o_Attachment',
+        2,
+        "Chat window composer should have 2 attachments showing home menu"
+    );
+});
+
+QUnit.test('[technical] chat window: scroll conservation on toggle home menu', async function (assert) {
+    // technical as show/hide home menu simulation are involved and home menu implementation
+    // have side-effects on DOM that may make chat window components not work
+    assert.expect(3);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 20,
+                is_minimized: false,
+                is_pinned: true,
+                name: "General",
+                state: 'open',
+                uuid: 'channel-20-uuid',
+            }],
+        },
+    });
+    this.data['mail.message'].records = [];
+    for (const i of Array(20).keys()) {
+        this.data['mail.message'].records.push({
+            author_id: [7, "Demo"],
+            body: "<p>body</p>",
+            channel_ids: [20],
+            date: "2019-04-20 10:00:00",
+            id: i + 10,
+            message_type: 'comment',
+            model: 'mail.channel',
+            record_name: "General",
+            res_id: 20,
+        });
+    }
+    await this.start();
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
+    );
+    // Set a scroll position to chat window
+    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 142;
     assert.strictEqual(
         document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
         142,
-        "chat window scrollTop should still be the same (2)"
+        "chat window initial scrollTop should be 142px"
     );
-    composerTextInputTextArea = document.querySelector(`.o_ComposerTextInput_textarea`);
+
+    await afterNextRender(() => this.hideHomeMenu());
     assert.strictEqual(
-        composerTextInputTextArea.value,
-        "XDU for the win !",
-        "chat window composer should still have the same html input (2)"
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        142,
+        "chat window scrollTop should still be the same after home menu is hidden"
     );
+
+    await afterNextRender(() => this.showHomeMenu());
     assert.strictEqual(
-        document.querySelectorAll(`.o_Composer .o_Attachment`).length,
-        2,
-        "Chat window composer should have 2 attachments (2)"
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        142,
+        "chat window scrollTop should still be the same after home menu is shown"
     );
 });
 
@@ -1348,6 +1385,229 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
         chatWindows[0].querySelector('.o_ComposerTextInput_textarea'),
         document.activeElement,
         "The 1st chatWindow composer must have focus (channel with ID 1)"
+    );
+});
+
+QUnit.test('chat window with a thread: keep scroll position in message list on folded', async function (assert) {
+    assert.expect(3);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 20,
+                is_minimized: false,
+                is_pinned: true,
+                name: "General",
+                state: 'open',
+                uuid: 'channel-20-uuid',
+            }],
+        },
+    });
+    this.data['mail.message'].records = [];
+    for(const i of Array(20).keys()) {
+        this.data['mail.message'].records.push({
+            author_id: [7, "Demo"],
+            body: "<p>body</p>",
+            channel_ids: [20],
+            date: "2019-04-20 10:00:00",
+            id: i,
+            message_type: 'comment',
+            model: 'mail.channel',
+            record_name: "General",
+            res_id: 20,
+        });
+    }
+    await this.start();
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await afterNextRender(() =>
+        document.querySelector(`.o_NotificationList_preview`).click()
+    );
+    // Set a scroll position to chat window
+    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 142;
+    assert.strictEqual(
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        142,
+        "verify chat window initial scrollTop"
+    );
+
+    // fold chat window
+    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    assert.containsNone(
+        document.body,
+        ".o_ThreadViewer",
+        "chat window should be folded so no thread viewer should be present"
+    );
+
+    // unfold chat window
+    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    assert.strictEqual(
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        142,
+        "chat window scrollTop should still be the same when chat window is unfolded"
+    );
+});
+
+QUnit.test('[technical] chat window: composer state conservation on toggle home menu when folded', async function (assert) {
+    // technical as show/hide home menu simulation are involved and home menu implementation
+    // have side-effects on DOM that may make chat window components not work
+    assert.expect(6);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 20,
+                is_minimized: false,
+                is_pinned: true,
+                name: "General",
+                state: 'open',
+                uuid: 'channel-20-uuid',
+            }],
+        },
+    });
+    await this.start();
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
+    );
+    // Set content of the composer of the chat window
+    await afterNextRender(() => {
+        document.querySelector(`.o_ComposerTextInput_textarea`).focus();
+        document.execCommand('insertText', false, 'XDU for the win !');
+    });
+    // Set attachments of the composer
+    const files = [
+        await createFile({
+            name: 'text state conservation on toggle home menu.txt',
+            content: 'hello, world',
+            contentType: 'text/plain',
+        }),
+        await createFile({
+            name: 'text2 state conservation on toggle home menu.txt',
+            content: 'hello, xdu is da best man',
+            contentType: 'text/plain',
+        })
+    ];
+    await afterNextRender(() =>
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            files
+        )
+    );
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "XDU for the win !",
+        "verify chat window composer initial html input"
+    );
+    assert.containsN(
+        document.body,
+        '.o_Composer .o_Attachment',
+        2,
+        "verify chat window composer initial attachment count"
+    );
+
+    // fold chat window
+    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    await this.hideHomeMenu();
+    // unfold chat window
+    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "XDU for the win !",
+        "Chat window composer should still have the same input after hiding home menu"
+    );
+    assert.containsN(
+        document.body,
+        '.o_Composer .o_Attachment',
+        2,
+        "Chat window composer should have 2 attachments after hiding home menu"
+    );
+
+    // fold chat window
+    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    await this.showHomeMenu();
+    // unfold chat window
+    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    assert.strictEqual(
+        document.querySelector(`.o_ComposerTextInput_textarea`).value,
+        "XDU for the win !",
+        "chat window composer should still have the same input after showing home menu"
+    );
+    assert.containsN(
+        document.body,
+        '.o_Composer .o_Attachment',
+        2,
+        "Chat window composer should have 2 attachments after showing home menu"
+    );
+});
+
+QUnit.test('[technical] chat window with a thread: keep scroll position in message list on toggle home menu when folded', async function (assert) {
+    // technical as show/hide home menu simulation are involved and home menu implementation
+    // have side-effects on DOM that may make chat window components not work
+    assert.expect(3);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 20,
+                is_minimized: false,
+                is_pinned: true,
+                name: "General",
+                state: 'open',
+                uuid: 'channel-20-uuid',
+            }],
+        },
+    });
+    this.data['mail.message'].records = [];
+    for (const i of Array(20).keys()) {
+        this.data['mail.message'].records.push({
+            author_id: [7, "Demo"],
+            body: "<p>body</p>",
+            channel_ids: [20],
+            date: "2019-04-20 10:00:00",
+            id: i + 10,
+            message_type: 'comment',
+            model: 'mail.channel',
+            record_name: "General",
+            res_id: 20,
+        });
+    }
+    await this.start();
+    await afterNextRender(() => document.querySelector(`.o_MessagingMenu_toggler`).click());
+    await afterNextRender(() =>
+        document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
+    );
+    // Set a scroll position to chat window
+    document.querySelector(`.o_ThreadViewer_messageList`).scrollTop = 142;
+    assert.strictEqual(
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        142,
+        "should have scrolled to 142px"
+    );
+
+    // fold chat window
+    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    await this.hideHomeMenu();
+    // unfold chat window
+    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    assert.strictEqual(
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        142,
+        "chat window scrollTop should still be the same after home menu is hidden"
+    );
+
+    // fold chat window
+    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    // Show home menu
+    await this.showHomeMenu();
+    // unfold chat window
+    await afterNextRender(() => document.querySelector('.o_ChatWindow_header').click());
+    assert.strictEqual(
+        document.querySelector(`.o_ThreadViewer_messageList`).scrollTop,
+        142,
+        "chat window scrollTop should still be the same after home menu is shown"
     );
 });
 

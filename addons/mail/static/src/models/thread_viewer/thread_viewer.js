@@ -33,7 +33,7 @@ function factory(dependencies) {
          *   adjustments on the component.
          */
         addComponentHint(hintType, hintData) {
-            const hint = this._makeComponentHint(hintType, hintData);
+            const hint = { data: hintData, type: hintType };
             this.update({
                 componentHintList: this.componentHintList.concat([hint]),
             });
@@ -56,7 +56,7 @@ function factory(dependencies) {
             let filterFun;
             switch (hint.type) {
                 case 'current-partner-just-posted-message':
-                    filterFun = h => h.type !== hint.type && h.messageId !== hint.messageId;
+                    filterFun = h => h.type !== hint.type && h.messageId !== hint.data.messageId;
                     break;
                 default:
                     filterFun = h => h.type !== hint.type;
@@ -127,7 +127,7 @@ function factory(dependencies) {
          * @private
          * @returns {integer|undefined}
          */
-        _computeThreadCacheInitialPosition() {
+        _computeThreadCacheInitialScrollPosition() {
             if (!this.threadCache) {
                 return undefined;
             }
@@ -153,33 +153,6 @@ function factory(dependencies) {
             this._loaderTimeout = null;
             this.isShowingLoading = false;
             this._isPreparingLoading = false;
-        }
-
-        /**
-         * @private
-         * @param {string} hintType
-         * @param {any} hintData
-         * @returns {Object}
-         */
-        _makeComponentHint(hintType, hintData) {
-            let hint;
-            switch (hintType) {
-                case 'change-of-thread-cache':
-                    hint = { type: hintType };
-                    break;
-                case 'current-partner-just-posted-message':
-                    hint = {
-                        messageId: hintData,
-                        type: hintType,
-                    };
-                    break;
-                case 'more-messages-loaded':
-                    hint = { type: hintType };
-                    break;
-                default:
-                    throw new Error(`Undefined component hint "${hintType}" for ThreadViewer`);
-            }
-            return hint;
         }
 
         /**
@@ -276,8 +249,8 @@ function factory(dependencies) {
                 'threadCaches',
             ],
         }),
-        threadCacheInitialPosition: attr({
-            compute: '_computeThreadCacheInitialPosition',
+        threadCacheInitialScrollPosition: attr({
+            compute: '_computeThreadCacheInitialScrollPosition',
             dependencies: [
                 'threadCache',
                 'threadCacheInitialScrollPositions',
