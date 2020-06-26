@@ -7,20 +7,22 @@ class AccountInvoiceTax(models.TransientModel):
     _name = 'account.invoice.tax'
     _description = 'Account Invoice Tax'
 
-    move_id = fields.Many2one('account.move')
+    move_id = fields.Many2one('account.move', required=True)
+    type_operation = fields.Selection([('add', 'Add Tax'), ('remove', 'Remove Tax')])
     tax_id = fields.Many2one('account.tax', required=True)
-    amount = fields.Float(required=True)
+    amount = fields.Float()
 
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
         move_ids = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.env['account.move']
         res['move_id'] = move_ids[0].id if move_ids else False
+        res['type_operation'] = self.env.context.get('type_operation', 'add')
         return res
 
     @api.onchange('move_id')
     def onchange_move_id(self):
-        taxes = self.env['account.tax'].search([])
+        taxes = self.env['account.tax'].search([]) if self.type_operation == 'add' else self.move_id.mapped('invoice_line_ids.tax_ids')
         return {'domain': {'tax_id': [('id', '=', taxes.ids)]}}
 
     def _get_amount_updated_values(self):
@@ -49,11 +51,17 @@ class AccountInvoiceTax(models.TransientModel):
     def add_tax(self):
         """ Add the given taxes to all the invoice line of the current invoice """
         move_id = self.move_id.with_context(check_move_validity=False)
-        if self.move_id:
+        move_id.invoice_line_ids.write({'tax_ids': [(4, self.tax_id.id)]})
+        move_id._recompute_dynamic_lines(recompute_tax_base_amount=True)
 
-            move_id.invoice_line_ids.write({'tax_ids': [(4, self.tax_id.id)]})
-            move_id._recompute_dynamic_lines(recompute_tax_base_amount=True)
+        # set amount in the new created tax line
+        line_with_tax = move_id.line_ids.filtered(lambda x: x.tax_line_id == self.tax_id)
+        line_with_tax.write(self._get_amount_updated_values())
 
-            # set amount in the new created tax line
-            line_with_tax = move_id.line_ids.filtered(lambda x: x.tax_line_id == self.tax_id)
-            line_with_tax.write(self._get_amount_updated_values())
+    def remove_tax(self):
+        """ Remove the given taxes to all the invoice line of the current invoice """
+        move_id = self.move_id.with_context(check_move_validity=False)
+        line_with_tax = move_id.line_ids.filtered(lambda x: x.tax_line_id == self.tax_id)
+        move_id.line_ids -= line_with_tax
+        move_id.invoice_line_ids.write({'tax_ids': [(3, self.tax_id.id)]})
+        move_id._recompute_dynamic_lines(recompute_tax_base_amount=True)

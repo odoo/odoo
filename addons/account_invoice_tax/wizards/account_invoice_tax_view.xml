@@ -5,14 +5,18 @@
         <field name="name">account.invoce.tax.form</field>
         <field name="model">account.invoice.tax</field>
         <field name="arch" type="xml">
-            <form string="Add Tax">
+            <form>
+                <h1>
+                    <field name="type_operation" nolabel="1" colspan="2" readonly="1"/>
+                </h1>
                 <group>
                     <field name="move_id" invisible="1"/>
-                    <field name="tax_id"/>
-                    <field name="amount"/>
+                    <field name="tax_id" options="{'no_create': True, 'no_edit': True}"/>
+                    <field name="amount" attrs="{'invisible': [('type_operation', '=', 'remove')], 'required': [('type_operation', '=', 'add')]}"/>
                 </group>
                 <footer>
-                    <button string='Add' name="add_tax" type="object" class="btn-primary"/>
+                    <button string='Add' name="add_tax" type="object" class="btn-primary" attrs="{'invisible': [('type_operation', '=', 'remove')]}"/>
+                    <button string='Remove' name="remove_tax" type="object" class="btn-primary"  attrs="{'invisible': [('type_operation', '=', 'add')]}"/>
                     <button string="Cancel" class="btn-secondary" special="cancel"/>
                 </footer>
             </form>
@@ -20,7 +24,7 @@
     </record>
 
     <record id="action_view_account_invoice_tax" model="ir.actions.act_window">
-        <field name="name">Add Tax</field>
+        <field name="name">Edit tax lines</field>
         <field name="res_model">account.invoice.tax</field>
         <field name="view_mode">form</field>
         <field name="target">new</field>
