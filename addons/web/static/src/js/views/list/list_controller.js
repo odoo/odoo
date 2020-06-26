@@ -59,9 +59,17 @@ var ListController = BasicController.extend({
         this.fieldChangedPrevented = false;
         this.isPageSelected = false; // true iff all records of the page are selected
         this.isDomainSelected = false; // true iff the user selected all records matching the domain
-        this.actionButtons = !config.device.isMobile &&
-            this.toolbarActions.action &&
-            this.toolbarActions.action.filter((action) => action.display_in_controlpanel);
+        this.actionButtons = [];
+
+        !config.device.isMobile &&
+        (this.toolbarActions.action || this.toolbarActions.print) &&
+        Object.keys(this.toolbarActions).forEach((actionType) => {
+            const actions = this.toolbarActions[actionType].filter((action) => action.display_in_controlpanel);
+            if (actions) {
+                this.actionButtons = this.actionButtons.concat(actions);
+            }
+        });
+
         session.user_has_group('base.group_allow_export').then(has_group => {
             this.isExportEnable = has_group;
         });

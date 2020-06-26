@@ -63,7 +63,8 @@ odoo.define('web.ActionMenus', function (require) {
          * @returns {Object[]}
          */
         get printItems() {
-            const printActions = this.props.items.print || [];
+            const printActions = (this.props.items.print || [])
+                .filter((action) => !action.display_in_controlpanel || this.env.view.type !== 'list');
             const printItems = printActions.map(
                 action => ({ action, description: action.name, key: action.id })
             );
