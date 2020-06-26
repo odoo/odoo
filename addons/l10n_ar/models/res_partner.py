@@ -110,3 +110,9 @@ class ResPartner(models.Model):
                 raise ValidationError(_('Only numbers allowed for "%s"') % rec.l10n_latam_identification_type_id.name)
             except Exception as error:
                 raise ValidationError(repr(error))
+
+    def _fix_vat_number(self, vat, country_id):
+        """ This method add as prefix the country code to the vat name, we do not want this for Argentinan Companies """
+        if self.env.company.country_id == self.env.ref('base.ar'):
+            return vat
+        return super()._fix_vat_number(vat, country_id)

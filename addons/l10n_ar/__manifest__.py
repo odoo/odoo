@@ -100,6 +100,7 @@ Master Data:
         'views/l10n_latam_document_type_view.xml',
         'views/ir_sequence_view.xml',
         'views/report_invoice.xml',
+        'views/templates.xml',
         'report/invoice_report_view.xml',
     ],
     'demo': [
