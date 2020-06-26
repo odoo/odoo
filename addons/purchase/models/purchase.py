@@ -539,7 +539,7 @@ class PurchaseOrder(models.Model):
             'invoice_origin': self.name,
             'invoice_payment_term_id': self.payment_term_id.id,
             'invoice_line_ids': [],
-            'company_id': self.company_id
+            'company_id': self.company_id.id,
         }
         return invoice_vals
 
