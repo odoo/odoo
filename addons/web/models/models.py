@@ -5,14 +5,14 @@ from lxml import etree
 import base64
 import json
 
-from odoo import _, api, fields, models
+from odoo import _, _lt, api, fields, models
 from odoo.osv.expression import AND, TRUE_DOMAIN, normalize_domain
 from odoo.tools import lazy
 from odoo.tools.misc import get_lang
 from odoo.exceptions import UserError
 from collections import defaultdict
 
-SEARCH_PANEL_ERROR_MESSAGE = "Too many items to display."
+SEARCH_PANEL_ERROR_MESSAGE = _lt("Too many items to display.")
 
 def is_true_domain(domain):
     return normalize_domain(domain) == TRUE_DOMAIN
@@ -476,8 +476,12 @@ class Base(models.AbstractModel):
         field = self._fields[field_name]
         supported_types = ['many2one', 'selection']
         if field.type not in supported_types:
-            raise UserError(_('Only types %(supported_types)s are supported for category (found type %(field_type)s)') % ({
-                            'supported_types': supported_types, 'field_type': field.type}))
+            types = dict(self.env["ir.model.fields"]._fields["ttype"]._description_selection(self.env))
+            raise UserError(_(
+                'Only types %(supported_types)s are supported for category (found type %(field_type)s)',
+                supported_types=", ".join(types[t] for t in supported_types),
+                field_type=types[field.type],
+            ))
 
         model_domain = kwargs.get('search_domain', [])
         extra_domain = AND([
@@ -522,7 +526,7 @@ class Base(models.AbstractModel):
         if not (expand or hierarchize or comodel_domain):
             values = list(domain_image.values())
             if limit and len(values) == limit:
-                return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
+                return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
             return {
                 'parent_field': parent_name,
                 'values': values,
@@ -542,7 +546,7 @@ class Base(models.AbstractModel):
             comodel_records = self._search_panel_sanitized_parent_hierarchy(comodel_records, parent_name, ids)
 
         if limit and len(comodel_records) == limit:
-            return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
+            return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
 
         field_range = {}
         for record in comodel_records:
@@ -602,8 +606,8 @@ class Base(models.AbstractModel):
         field = self._fields[field_name]
         supported_types = ['many2one', 'many2many', 'selection']
         if field.type not in supported_types:
-            raise UserError(_('Only types %(supported_types)s are supported for filter (found type %(field_type)s)') % ({
-                            'supported_types': supported_types, 'field_type': field.type}))
+            raise UserError(_('Only types %(supported_types)s are supported for filter (found type %(field_type)s)',
+                              supported_types=supported_types, field_type=field.type))
 
         model_domain = kwargs.get('search_domain', [])
         extra_domain = AND([
@@ -650,7 +654,7 @@ class Base(models.AbstractModel):
         if field.type == 'many2many':
             comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
             if expand and limit and len(comodel_records) == limit:
-                return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
+                return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
 
             group_domain = kwargs.get('group_domain')
             field_range = []
@@ -694,7 +698,7 @@ class Base(models.AbstractModel):
                     field_range.append(values)
 
             if not expand and limit and len(field_range) == limit:
-                return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
+                return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
 
             return { 'values': field_range, }
 
@@ -713,7 +717,7 @@ class Base(models.AbstractModel):
             if not (expand or group_by or comodel_domain):
                 values = list(domain_image.values())
                 if limit and len(values) == limit:
-                    return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
+                    return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
                 return {'values': values, }
 
             if not expand:
@@ -724,7 +728,7 @@ class Base(models.AbstractModel):
                 ])
             comodel_records = Comodel.search_read(comodel_domain, field_names, limit=limit)
             if limit and len(comodel_records) == limit:
-                return {'error_msg': _(SEARCH_PANEL_ERROR_MESSAGE)}
+                return {'error_msg': str(SEARCH_PANEL_ERROR_MESSAGE)}
 
             field_range = []
             for record in comodel_records:

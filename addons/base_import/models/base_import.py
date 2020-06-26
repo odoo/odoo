@@ -737,7 +737,7 @@ class Import(models.TransientModel):
             old_value = line[index]
             line[index] = self._remove_currency_symbol(line[index])
             if line[index] is False:
-                raise ValueError(_("Column %s contains incorrect values (value: %s)" % (name, old_value)))
+                raise ValueError(_("Column %s contains incorrect values (value: %s)", name, old_value))
 
     def _infer_separators(self, value, options):
         """ Try to infer the shape of the separators: if there are two

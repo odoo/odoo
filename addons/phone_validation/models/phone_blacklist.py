@@ -98,7 +98,7 @@ class PhoneBlackList(models.Model):
         records = self.remove(number)
         if reason:
             for record in records:
-                record.message_post(body=_("Unblacklisting Reason: %s" % (reason)))
+                record.message_post(body=_("Unblacklisting Reason: %s", reason))
         return records
 
     def remove(self, number):

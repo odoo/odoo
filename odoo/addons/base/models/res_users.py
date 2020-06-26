@@ -1175,8 +1175,7 @@ class GroupsView(models.Model):
                 user_type_attrs = {}
 
             for xml_cat in sorted(xml_by_category.keys(), key=lambda it: it[0]):
-                xml_cat_name = xml_cat[1]
-                master_category_name = (_(xml_cat_name))
+                master_category_name = xml_cat[1]
                 xml2.append(E.group(*(xml_by_category[xml_cat]), col="2", string=master_category_name))
 
             xml = E.field(

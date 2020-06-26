@@ -3,7 +3,7 @@ import base64
 import re
 from collections import OrderedDict
 from io import BytesIO
-from odoo import api, fields, models, _
+from odoo import api, fields, models, _, _lt
 from PIL import Image
 import babel
 import babel.dates
@@ -465,13 +465,13 @@ class MonetaryConverter(models.AbstractModel):
 
 
 TIMEDELTA_UNITS = (
-    ('year',   3600 * 24 * 365),
-    ('month',  3600 * 24 * 30),
-    ('week',   3600 * 24 * 7),
-    ('day',    3600 * 24),
-    ('hour',   3600),
-    ('minute', 60),
-    ('second', 1)
+    ('year',   _lt('year'),   3600 * 24 * 365),
+    ('month',  _lt('month'),  3600 * 24 * 30),
+    ('week',   _lt('week'),   3600 * 24 * 7),
+    ('day',    _lt('day'),    3600 * 24),
+    ('hour',   _lt('hour'),   3600),
+    ('minute', _lt('minute'), 60),
+    ('second', _lt('second'), 1)
 )
 
 
@@ -513,7 +513,7 @@ class DurationConverter(models.AbstractModel):
     @api.model
     def get_available_options(self):
         options = super(DurationConverter, self).get_available_options()
-        unit = [[u[0], _(u[0])] for u in TIMEDELTA_UNITS]
+        unit = [(value, str(label)) for value, label, ratio in TIMEDELTA_UNITS]
         options.update(
             digital=dict(type="boolean", string=_('Digital formatting')),
             unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
@@ -523,7 +523,7 @@ class DurationConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
-        units = dict(TIMEDELTA_UNITS)
+        units = {unit: duration for unit, label, duration in TIMEDELTA_UNITS}
 
         locale = babel.Locale.parse(self.user_lang().code)
         factor = units[options.get('unit', 'second')]
@@ -537,7 +537,7 @@ class DurationConverter(models.AbstractModel):
         sections = []
 
         if options.get('digital'):
-            for unit, secs_per_unit in TIMEDELTA_UNITS:
+            for unit, label, secs_per_unit in TIMEDELTA_UNITS:
                 if secs_per_unit > 3600:
                     continue
                 v, r = divmod(r, secs_per_unit)
@@ -551,7 +551,7 @@ class DurationConverter(models.AbstractModel):
         if value < 0:
             r = -r
             sections.append(u'-')
-        for unit, secs_per_unit in TIMEDELTA_UNITS:
+        for unit, label, secs_per_unit in TIMEDELTA_UNITS:
             v, r = divmod(r, secs_per_unit)
             if not v:
                 continue

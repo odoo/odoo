@@ -685,8 +685,7 @@ class IrModelFields(models.Model):
             if rec.ttype == 'many2one' and rec.required and rec.on_delete == 'set null':
                 return {'warning': {'title': _("Warning"), 'message': _(
                     "The m2o field %s is required but declares its ondelete policy "
-                    "as being 'set null'. Only 'restrict' and 'cascade' make sense."
-                    % (rec.name)
+                    "as being 'set null'. Only 'restrict' and 'cascade' make sense.", rec.name,
                 )}}
 
     def _get(self, model_name, name):
