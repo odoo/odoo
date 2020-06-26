@@ -34,7 +34,7 @@ class Project(models.Model):
     def _check_allow_timesheet(self):
         for project in self:
             if project.allow_timesheets and not project.analytic_account_id:
-                raise ValidationError(_('To allow timesheet, your project %s should have an analytic account set.' % (project.name,)))
+                raise ValidationError(_('To allow timesheet, your project %s should have an analytic account set.', project.name))
 
     @api.depends('timesheet_ids')
     def _compute_total_timesheet_time(self):

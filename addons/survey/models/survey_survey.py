@@ -952,7 +952,7 @@ class Survey(models.Model):
         self.ensure_one()
         goal = self.env['gamification.goal.definition'].create({
             'name': self.title,
-            'description': "%s certification passed" % self.title,
+            'description': _("%s certification passed", self.title),
             'domain': "['&', ('survey_id', '=', %s), ('scoring_success', '=', True)]" % self.id,
             'computation_mode': 'count',
             'display_mode': 'boolean',
@@ -963,7 +963,7 @@ class Survey(models.Model):
             'batch_user_expression': 'user.partner_id.id'
         })
         challenge = self.env['gamification.challenge'].create({
-            'name': _('%s challenge certification' % self.title),
+            'name': _('%s challenge certification', self.title),
             'reward_id': self.certification_badge_id.id,
             'state': 'inprogress',
             'period': 'once',

@@ -145,7 +145,7 @@ class AccountMove(models.Model):
 
         for tax_line in self.line_ids.filtered(lambda line: line.tax_line_id):
             if not tax_line.tax_line_id.l10n_it_has_exoneration and tax_line.tax_line_id.amount == 0:
-                raise ValidationError(_("%s has an amount of 0.0, you must indicate the kind of exoneration." % tax_line.name))
+                raise ValidationError(_("%s has an amount of 0.0, you must indicate the kind of exoneration.", tax_line.name))
 
     def invoice_generate_xml(self):
         for invoice in self:

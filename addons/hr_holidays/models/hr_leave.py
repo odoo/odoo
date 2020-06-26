@@ -686,7 +686,7 @@ class HolidaysRequest(models.Model):
         if state == 'validate1':
             employees = employees.filtered(lambda employee: employee.leave_manager_id != self.env.user)
             if employees and not is_leave_user:
-                raise AccessError(_('You cannot first approve a time off for %s, because you are not his time off manager' % (employees[0].name,)))
+                raise AccessError(_('You cannot first approve a time off for %s, because you are not his time off manager', employees[0].name))
         elif state == 'validate' and not is_leave_user:
             # Is probably handled via ir.rule
             raise AccessError(_('You don\'t have the rights to apply second approval on a time off request'))
@@ -904,7 +904,11 @@ class HolidaysRequest(models.Model):
         # Post a second message, more verbose than the tracking message
         for holiday in self.filtered(lambda holiday: holiday.employee_id.user_id):
             holiday.message_post(
-                body=_('Your %s planned on %s has been accepted' % (holiday.holiday_status_id.display_name, holiday.date_from)),
+                body=_(
+                    'Your %(leave_type)s planned on %(date)s has been accepted',
+                    leave_type=holiday.holiday_status_id.display_name,
+                    date=holiday.date_from
+                ),
                 partner_ids=holiday.employee_id.user_id.partner_id.ids)
 
         self.filtered(lambda hol: not hol.validation_type == 'both').action_validate()

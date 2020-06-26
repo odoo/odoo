@@ -64,7 +64,11 @@ class ProjectTask(models.Model):
         for task in self.sudo():
             if task.sale_line_id:
                 if not task.sale_line_id.is_service or task.sale_line_id.is_expense:
-                    raise ValidationError(_('You cannot link the order item %s - %s to this task because it is a re-invoiced expense.' % (task.sale_line_id.order_id.id, task.sale_line_id.product_id.name)))
+                    raise ValidationError(_(
+                        'You cannot link the order item %(order_id)s - %(product_id)s to this task because it is a re-invoiced expense.',
+                        order_id=task.sale_line_id.order_id.id,
+                        product_name=task.sale_line_id.product_id.name,
+                    ))
 
     def unlink(self):
         if any(task.sale_line_id for task in self):

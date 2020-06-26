@@ -39,7 +39,7 @@ class ProductionLot(models.Model):
         for rec in records:
             if rec['__count'] != 1:
                 product_name = self.env['product.product'].browse(rec['product_id'][0]).display_name
-                error_message_lines.append(_(" - Product: %s, Serial Number: %s") % (product_name, rec['name']))
+                error_message_lines.append(_(" - Product: %s, Serial Number: %s", product_name, rec['name']))
         if error_message_lines:
             raise ValidationError(_('The combination of serial number and product must be unique across a company.\nFollowing combination contains duplicates:\n') + '\n'.join(error_message_lines))
 
@@ -88,8 +88,8 @@ class ProductionLot(models.Model):
             move_lines = self.env['stock.move.line'].search([('lot_id', 'in', self.ids), ('product_id', '!=', vals['product_id'])])
             if move_lines:
                 raise UserError(_(
-                    'You are not allowed to change the product linked to a serial or lot number ' +
-                    'if some stock moves have already been created with that number. ' +
+                    'You are not allowed to change the product linked to a serial or lot number '
+                    'if some stock moves have already been created with that number. '
                     'This would lead to inconsistencies in your stock.'
                 ))
         return super(ProductionLot, self).write(vals)

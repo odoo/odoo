@@ -35,8 +35,12 @@ class PaymentWizard(models.TransientModel):
 
     @api.onchange('journal_name', 'acc_number')
     def _set_manual_post_msg_value(self):
-        self.manual_post_msg = _('<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: %s</li><li>Account Holder: %s</li></ul>') %\
-                               (self.journal_name or _("Bank") , self.acc_number or _("Account"), self.env.company.name)
+        self.manual_post_msg = _(
+            '<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: %s</li><li>Account Holder: %s</li></ul>',
+            self.journal_name or _("Bank"),
+            self.acc_number or _("Account"),
+            self.env.company.name
+        )
 
     _payment_acquirer_onboarding_cache = {}
 
@@ -128,7 +132,7 @@ class PaymentWizard(models.TransientModel):
                 manual_acquirer = self._get_manual_payment_acquirer(new_env)
                 if not manual_acquirer:
                     raise UserError(_(
-                        'No manual payment method could be found for this company. ' +
+                        'No manual payment method could be found for this company. '
                         'Please create one from the Payment Acquirer menu.'
                     ))
                 manual_acquirer.name = self.manual_name
@@ -140,7 +144,7 @@ class PaymentWizard(models.TransientModel):
                     journal.name = self.journal_name
                     journal.bank_acc_number = self.acc_number
                 else:
-                    raise UserError(_("You have to set a journal for your payment acquirer %s." % (self.manual_name,)))
+                    raise UserError(_("You have to set a journal for your payment acquirer %s.", self.manual_name))
 
             # delete wizard data immediately to get rid of residual credentials
             self.sudo().unlink()

@@ -1462,8 +1462,8 @@ class AccountMove(models.Model):
             if move._affect_tax_report() and move.company_id.tax_lock_date and move.date and move.date <= move.company_id.tax_lock_date:
                 move.tax_lock_date_message = _(
                     "The accounting date is prior to the tax lock date which is set on %s. "
-                    "Then, this will be moved to the next available one during the invoice validation."
-                    % format_date(self.env, move.company_id.tax_lock_date))
+                    "Then, this will be moved to the next available one during the invoice validation.",
+                    format_date(self.env, move.company_id.tax_lock_date))
             else:
                 move.tax_lock_date_message = False
 
@@ -2324,7 +2324,7 @@ class AccountMove(models.Model):
 
         for move in self:
             if move.auto_post and move.date > fields.Date.today():
-                raise UserError(_("This move is configured to be auto-posted on {}".format(move.date.strftime(get_lang(self.env).date_format))))
+                raise UserError(_("This move is configured to be auto-posted on %s", move.date.strftime(get_lang(self.env).date_format)))
 
             move.message_subscribe([p.id for p in [move.partner_id] if p not in move.sudo().message_partner_ids])
 
@@ -3893,11 +3893,14 @@ class AccountMoveLine(models.Model):
         for field in fields:
             redirect_link = '<a href=# data-oe-model=account.move.line data-oe-id=%d>#%d</a>' % (field['line_id'], field['line_id']) # Account move line link
             if field.get('error', False):
-                msg += '<li>%s: A modication has been operated on the line %s.</li>' % (field['field_error'], redirect_link)
+                msg += '<li>%s: %s</li>' % (
+                    field['field_error'],
+                    _('A modification has been operated on the line %s.', redirect_link)
+                )
             else:
                 msg += '<li>%s: %s %s %s (%s)</li>' % (field['field_name'], field['old_value'], ARROW_RIGHT, field['new_value'], redirect_link)
         msg += '</ul>'
-        return _(msg)
+        return msg
 
     # -------------------------------------------------------------------------
     # RECONCILIATION

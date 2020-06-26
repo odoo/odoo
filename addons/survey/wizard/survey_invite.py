@@ -133,9 +133,10 @@ class SurveyInvite(models.TransientModel):
                     ('id', 'in', self.partner_ids.ids)
                 ])
                 if invalid_partners:
-                    raise UserError(
-                        _('The following recipients have no user account: %s. You should create user accounts for them or allow external signup in configuration.' %
-                            (','.join(invalid_partners.mapped('name')))))
+                    raise UserError(_(
+                        'The following recipients have no user account: %s. You should create user accounts for them or allow external signup in configuration.',
+                        ', '.join(invalid_partners.mapped('name'))
+                    ))
 
     @api.depends('template_id')
     def _compute_template_values(self):

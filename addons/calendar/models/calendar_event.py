@@ -774,7 +774,10 @@ class Meeting(models.Model):
         grouped_fields = set(group_field.split(':')[0] for group_field in groupby)
         private_fields = grouped_fields - self._get_public_fields()
         if not self.env.su and private_fields:
-            raise AccessError(_("Grouping by %s is not allowed." % ', '.join([self._fields[field_name].string for field_name in private_fields])))
+            raise AccessError(_(
+                "Grouping by %s is not allowed.",
+                ', '.join([self._fields[field_name].string for field_name in private_fields])
+            ))
         return super(Meeting, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
 
     def unlink(self):

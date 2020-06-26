@@ -47,9 +47,10 @@ class SlideChannelInvite(models.TransientModel):
                     ('id', 'in', self.partner_ids.ids)
                 ])
                 if invalid_partners:
-                    raise UserError(
-                        _('The following recipients have no user account: %s. You should create user accounts for them or allow external sign up in configuration.' %
-                            (','.join(invalid_partners.mapped('name')))))
+                    raise UserError(_(
+                        'The following recipients have no user account: %s. You should create user accounts for them or allow external sign up in configuration.',
+                        ', '.join(invalid_partners.mapped('name'))
+                    ))
 
     @api.model
     def create(self, values):

@@ -141,13 +141,16 @@ class AccountMove(models.Model):
         without_doc_type = validated_invoices.filtered(lambda x: not x.l10n_latam_document_type_id)
         if without_doc_type:
             raise ValidationError(_(
-                'The journal require a document type but not document type has been selected on invoices %s.' % (
-                    without_doc_type.ids)))
+                'The journal require a document type but not document type has been selected on invoices %s.',
+                without_doc_type.ids
+            ))
         without_number = validated_invoices.filtered(
             lambda x: not x.l10n_latam_document_number and x.l10n_latam_manual_document_number)
         if without_number:
-            raise ValidationError(_('Please set the document number on the following invoices %s.' % (
-                without_number.ids)))
+            raise ValidationError(_(
+                'Please set the document number on the following invoices %s.',
+                without_number.ids
+            ))
 
     @api.constrains('move_type', 'l10n_latam_document_type_id')
     def _check_invoice_type_document_type(self):
@@ -158,7 +161,7 @@ class AccountMove(models.Model):
                rec.l10n_latam_document_type_id.code != '99':
                 raise ValidationError(_('You can not use a %s document type with a refund invoice', internal_type))
             elif internal_type == 'credit_note' and invoice_type in ['out_invoice', 'in_invoice']:
-                raise ValidationError(_('You can not use a %s document type with a invoice') % (internal_type))
+                raise ValidationError(_('You can not use a %s document type with a invoice', internal_type))
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()
