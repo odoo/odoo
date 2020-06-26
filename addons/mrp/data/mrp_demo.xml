@@ -282,6 +282,9 @@
         <function model="stock.move" name="create">
             <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_3')._get_moves_raw_values()"/>
         </function>
+        <function model="stock.move" name="create">
+            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_3')._get_moves_finished_values()"/>
+        </function>
 
         <record id="mrp_bom_table_top" model="mrp.bom">
             <field name="product_tmpl_id" ref="product_product_computer_desk_head_product_template"/>
