@@ -1027,28 +1027,6 @@ header {
     }
 }
 
-// Footer Templates
-#footer {
-    @if o-website-value('footer-template') != 'products_contacts_about_us' {
-        @if o-website-value('footer-template') == 'logo_about_us_below' {
-            .o_footer_logo {
-                margin-top: $spacer;
-                margin-bottom: $spacer;
-            }
-            .o_footer_about_us {
-                margin-bottom: $spacer;
-            }
-        } @else if o-website-value('footer-template') == 'links_address_logo' {
-            &, p {
-                text-align: center;
-            }
-            &, ul, .o_footer_address, .o_footer_logo {
-                padding-top: $spacer;
-            }
-        }
-    }
-}
-
 @if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
     @include media-breakpoint-up(lg) {
         #wrapwrap.o_footer_effect_enable {

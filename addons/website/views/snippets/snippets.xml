@@ -681,37 +681,35 @@
             data-excluded="theme, common, custom"/>
     </div>
 
+    <!-- Footer - Colors & Layouts -->
     <div data-selector="#wrapwrap > footer"
          data-no-check="true"
          groups="website.group_website_designer">
+
+        <!-- Colors -->
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="footer"
                         data-with-combinations="true"/>
-        <we-select string="Footer Template" data-variable="footer-template" data-reload="/">
-            <we-button id="option_template_footer_products_contacts_about_us"
-                       data-customize-website-views="website.footer_custom"
-                       data-customize-website-variable="'products_contacts_about_us'"
-                       string="Products - Contacts - About us"/>
-            <we-button id="option_template_footer_logo_about_us_below"
-                       data-customize-website-views="website.template_footer_logo_about_us_below"
-                       data-customize-website-variable="'logo_about_us_below'"
-                       string="Logo - About us"/>
-            <we-button id="option_template_footer_links_address_logo"
-                       data-customize-website-views="website.template_footer_links_address_logo"
-                       data-customize-website-variable="'links_address_logo'"
-                       string="Links - Address - Logo"/>
-            <we-button id="option_template_footer_name_logo_links_about_us"
-                       data-customize-website-views="website.template_footer_name_logo_links_about_us"
-                       data-customize-website-variable="'name_logo_links_about_us'"
-                       string="Name - Logo - Links - About us"/>
-            <we-button id="option_template_footer_logo_only"
-                       data-customize-website-views="website.template_footer_logo_only"
-                       data-customize-website-variable="'logo_only'"
-                       string="Logo only"/>
-            <we-button id="option_template_footer_address_logo"
-                       data-customize-website-views="website.template_footer_address_logo"
-                       data-customize-website-variable="'address_logo'"
-                       string="Address - Logo"/>
+        <!-- Layouts -->
+        <we-select string="Layout"
+            data-variable="footer-template"
+            data-reload="/">
+            <we-button data-customize-website-views="website.footer_custom"
+                       data-customize-website-variable="'default'">Default</we-button>
+            <we-button data-customize-website-views="website.template_footer_descriptive"
+                       data-customize-website-variable="'descriptive'">Descriptive</we-button>
+            <we-button data-customize-website-views="website.template_footer_centered"
+                       data-customize-website-variable="'centered'">Centered</we-button>
+            <we-button data-customize-website-views="website.template_footer_links"
+                       data-customize-website-variable="'links'">Links</we-button>
+            <we-button data-customize-website-views="website.template_footer_minimalist"
+                       data-customize-website-variable="'minimalist'">Minimalist</we-button>
+            <we-button data-customize-website-views="website.template_footer_contact"
+                       data-customize-website-variable="'contact'">Contact</we-button>
+            <we-button data-customize-website-views="website.template_footer_call_to_action"
+                       data-customize-website-variable="'call_to_action'">Call-to-action</we-button>
+            <we-button data-customize-website-views="website.template_footer_headline"
+                       data-customize-website-variable="'headline'">Headline</we-button>
         </we-select>
         <we-select string="Slideout Effect" data-variable="footer-effect" data-reload="/">
             <we-button string="Regular"
@@ -734,7 +732,22 @@
                 data-customize-website-views="website.footer_no_copyright|portal.footer_language_selector"
                 data-no-preview="true"
                 data-reload="/"/>
+    </div>
 
+    <!-- Footer - Borders & Shadows -->
+    <div data-js="Box"
+         data-selector="#wrapwrap > footer"
+         data-target="#footer"
+         data-no-check="true"
+         groups="website.group_website_designer">
+        <t t-call="website.snippet_options_border_widgets"/>
+        <t t-call="website.snippet_options_shadow_widgets"/>
+    </div>
+
+    <!-- Scroll to Top -->
+    <div data-selector="#wrapwrap > footer"
+         data-no-check="true"
+         groups="website.group_website_designer">
         <we-row string="Scroll Top Button">
             <we-checkbox data-name="footer_scrolltop_opt"
                          data-customize-website-views="website.option_footer_scrolltop"
@@ -759,6 +772,7 @@
                      data-no-preview="true"/>
     </div>
 
+    <!-- Copyright -->
     <div data-selector=".o_footer_copyright"
          data-no-check="true"
          groups="website.group_website_designer">
