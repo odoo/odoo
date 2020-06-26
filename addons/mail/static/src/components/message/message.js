@@ -79,6 +79,10 @@ class Message extends Component {
             },
         });
         /**
+         * The intent of the reply button depends on the last rendered state.
+         */
+        this._wasSelected;
+        /**
          * Reference to the content of the message.
          */
         this._contentRef = useRef('content');
@@ -399,6 +403,7 @@ class Message extends Component {
      * @private
      */
     _update() {
+        this._wasSelected = this.props.isSelected;
         if (!this.state.timeElapsed) {
             this.state.timeElapsed = timeFromNow(this.message.date);
         }
@@ -549,8 +554,15 @@ class Message extends Component {
      * @param {MouseEvent} ev
      */
     _onClickReply(ev) {
-        ev.stopPropagation();
-        this.message.replyTo();
+        // Use this._wasSelected because this.props.isSelected might be changed
+        // by a global capture click handler (for example the one from Composer)
+        // before the current handler is executed. Indeed because it does a
+        // toggle it needs to take into account the value before the click.
+        if (this._wasSelected) {
+            this.env.messaging.discuss.clearReplyingToMessage();
+        } else {
+            this.message.replyTo();
+        }
     }
 
     /**

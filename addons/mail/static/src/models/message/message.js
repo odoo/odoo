@@ -277,18 +277,11 @@ function factory(dependencies) {
         }
 
         /**
-         * Action to initiate reply to given message.
+         * Action to initiate reply to current message in Discuss Inbox. Assumes
+         * that Discuss and Inbox are already opened.
          */
         replyTo() {
-            const discuss = this.env.messaging.discuss;
-            if (!discuss.isOpen) {
-                return;
-            }
-            if (discuss.replyingToMessage === this) {
-                discuss.clearReplyingToMessage();
-            } else {
-                discuss.update({ replyingToMessage: [['link', this]] });
-            }
+            this.env.messaging.discuss.replyToMessage(this);
         }
 
         /**
