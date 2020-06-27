@@ -30,11 +30,17 @@ class ResPartner(models.Model):
         ], string="GST Treatment")
     l10n_in_country_code = fields.Char(related='country_id.code', string='Country code')
     l10n_in_journal_count = fields.Integer(compute='_compute_l10n_in_journal_count', string='Journals')
+    l10n_in_fiscal_position_count = fields.Integer(compute='_compute_l10n_in_fiscal_position_count', string='Fiscal position')
 
     def _compute_l10n_in_journal_count(self):
         for unit in self:
             count = self.env['account.journal'].search_count([('l10n_in_gstin_partner_id','=',unit.id)])
             unit.l10n_in_journal_count = count
+
+    def _compute_l10n_in_fiscal_position_count(self):
+        for unit in self:
+            count = self.env['account.fiscal.position'].search_count([('l10n_in_gstin_partner_id','=',unit.id)])
+            unit.l10n_in_fiscal_position_count = count
 
     @api.onchange('company_type')
     def onchange_company_type(self):
@@ -75,7 +81,7 @@ class ResPartner(models.Model):
 
     def write(self, vals):
         result = super().write(vals)
-        if self._context.get('l10n_in_multiple_gstn', False):
+        if self._context.get('l10n_in_multiple_gstn', False) and (vals.get('state_id') or vals.get('vat')):
             for gstn in self:
                 gstn._l10n_in_check_gstn_unit()
         return result
@@ -121,6 +127,17 @@ class ResPartner(models.Model):
             }
             AccountJournal.create(vals)
 
+    def _l10n_in_setup_fiscal_position(self):
+        self.ensure_one()
+        inter_state_fiscal_position =  self.env.ref("l10n_in.%s_fiscal_position_in_inter_state"%(self.env.company.id))
+        inter_state_fiscal_position.copy({
+            'name': "Inter State - %s"%(self.state_id.code),
+            'l10n_in_gstin_partner_id': self.id,
+            'auto_apply': True,
+            'country_id': self.country_id.id,
+            'state_ids': self.env['res.country.state'].search([('country_id','=', self.country_id.id), ('code', '!=', self.state_id.code)]).ids
+            })
+
     @api.model
     def create(self, vals):
         if self._context.get('l10n_in_multiple_gstn', False):
@@ -133,4 +150,5 @@ class ResPartner(models.Model):
             res._l10n_in_check_gstn_unit()
             res._l10n_in_setup_gstn()
             res._l10n_in_rearrange_journal_groups()
+            res._l10n_in_setup_fiscal_position()
         return res
