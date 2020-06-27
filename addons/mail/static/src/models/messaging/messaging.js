@@ -151,6 +151,7 @@ function factory(dependencies) {
         }),
         discuss: one2one('mail.discuss', {
             autocreate: true,
+            inverse: 'messaging',
             isCausal: true,
         }),
         /**

@@ -89,7 +89,7 @@ class ThreadViewer extends Component {
      *
      * @private
      */
-    async _update() {
+    _update() {
         const messageList = this._messageListRef.comp;
         this.trigger('o-rendered');
         /**
@@ -163,6 +163,10 @@ Object.assign(ThreadViewer, {
             optional: true,
         },
         hasMessageCheckbox: Boolean,
+        hasScrollAdjust: {
+            type: Boolean,
+            optional: true,
+        },
         hasSquashCloseMessages: Boolean,
         haveMessagesAuthorRedirect: Boolean,
         haveMessagesMarkAsReadIcon: Boolean,

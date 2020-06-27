@@ -27,17 +27,14 @@ function factory(dependencies) {
             });
         }
 
+        /**
+         * Hides the composer, which only makes sense if the composer is
+         * currently used as a Discuss Inbox reply composer.
+         */
         discard() {
-            const discuss = this.env.messaging.discuss;
-            const thread = this.thread;
-            if (
-                !discuss.isOpen ||
-                discuss.thread !== thread ||
-                !discuss.isReplyingToMessage
-            ) {
-                return;
+            if (this.discussAsReplying) {
+                this.discussAsReplying.clearReplyingToMessage();
             }
-            discuss.clearReplyingToMessage();
         }
 
         focus() {
@@ -85,40 +82,11 @@ function factory(dependencies) {
         }
 
         /**
-         * Post a message in provided composer's thread with given data.
-         *
-         * @param {Object} data
-         * @param {string[]} data.attachments
-         * @param {*[]} data.canned_response_ids
-         * @param {integer[]} data.channel_ids
-         * @param {boolean} [data.isLog=false]
-         * @param {string} data.subject
-         * @param {integer} [data.subtype_id]
-         * @param {string} [data.subtype_xmlid='mail.mt_comment']
-         * @param {Object} [options]
-         * @param {integer} options.res_id
-         * @param {string} options.res_model
+         * Post a message in provided composer's thread based on current composer fields values.
          */
-        async postMessage(data, options) {
+        async postMessage() {
             const thread = this.thread;
             this.thread.unregisterCurrentPartnerIsTyping({ immediateNotify: true });
-            if (thread.model === 'mail.box') {
-                const { res_id, res_model } = options;
-                const otherThread = this.env.models['mail.thread'].find(thread =>
-                    thread.id === res_id &&
-                    thread.model === res_model
-                );
-                return otherThread.composer.postMessage(Object.assign({}, data));
-            }
-            const {
-                canned_response_ids,
-                channel_ids = [],
-                context,
-                isLog = false,
-                subject,
-                subtype_id,
-                // subtype_xmlid='mail.mt_comment',
-            } = data;
             const escapedAndCompactContent = escapeAndCompactTextContent(this.textInputContent);
             let body = escapedAndCompactContent.replace(/&nbsp;/g, ' ').trim();
             // This message will be received from the mail composer as html content
@@ -151,16 +119,7 @@ function factory(dependencies) {
                 }));
             } else {
                 Object.assign(postData, {
-                    channel_ids: channel_ids.map(channelId => [4, channelId, false]),
-                    canned_response_ids
-                });
-                if (subject) {
-                    postData.subject = subject;
-                }
-                Object.assign(postData, {
-                    context,
-                    subtype_id,
-                    subtype_xmlid: isLog ? 'mail.mt_note' : 'mail.mt_comment',
+                    subtype_xmlid: this.isLog ? 'mail.mt_note' : 'mail.mt_comment',
                 });
                 messageId = await this.async(() => this.env.services.rpc({
                     model: thread.model,
@@ -547,6 +506,14 @@ function factory(dependencies) {
             ],
             default: false,
         }),
+        /**
+         * Instance of discuss if this composer is used as the reply composer
+         * from Inbox. This field is computed from the inverse relation and
+         * should be considered read-only.
+         */
+        discussAsReplying: one2one('mail.discuss', {
+            inverse: 'replyingToMessageOriginThreadComposer',
+        }),
         extraSuggestedPartners: many2many('mail.partner', {
             compute: '_computeExtraSuggestedPartners',
             dependencies: [
@@ -565,6 +532,12 @@ function factory(dependencies) {
             default: false,
         }),
         isDoFocus: attr({
+            default: false,
+        }),
+        /**
+         * If true composer will log a note, else a comment will be posted.
+         */
+        isLog: attr({
             default: false,
         }),
         mainSuggestedPartners: many2many('mail.partner'),

@@ -17,7 +17,6 @@
                         hasTextInputSendOnEnterEnabled="false"
                         isCompact="false"
                         isExpandable="true"
-                        isLog="chatter.isComposerLog"
                         t-on-o-message-posted="_onComposerMessagePosted"
                         t-ref="composer"
                     />
@@ -39,6 +38,7 @@
                         <ThreadViewer
                             class="o_Chatter_thread"
                             hasComposer="false"
+                            hasScrollAdjust="chatter.hasMessageListScrollAdjust"
                             haveMessagesAuthorRedirect="true"
                             order="'desc'"
                             threadViewerLocalId="chatter.threadViewer.localId"

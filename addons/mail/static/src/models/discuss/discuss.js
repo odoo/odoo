@@ -177,10 +177,21 @@ function factory(dependencies) {
         }
 
         /**
+         * Action to initiate reply to given message in Inbox. Assumes that
+         * Discuss and Inbox are already opened.
+         *
+         * @param {mail.message} message
+         */
+        replyToMessage(message) {
+            this.update({ replyingToMessage: [['link', message]] });
+            this.replyingToMessageOriginThreadComposer.focus();
+        }
+
+        /**
          * @param {mail.thread} thread
          */
         setThreadRenaming(thread) {
-            this.update({ renamingThreads: [['link', thread ]] });
+            this.update({ renamingThreads: [['link', thread]] });
         }
 
         /**
@@ -262,6 +273,8 @@ function factory(dependencies) {
         }
 
         /**
+         * Ensures the reply feature is disabled if discuss is not open.
+         *
          * @private
          * @returns {mail.message|undefined}
          */
@@ -272,6 +285,23 @@ function factory(dependencies) {
             return [];
         }
 
+        /**
+         * @private
+         */
+        _onChangeThreadIsPinned() {
+            let thread = this.thread;
+            // No thread, or thread is being removed
+            // so we display discuss the messaging's Inbox.
+            if (
+                (!thread || !thread.isPinned) &&
+                this.messaging
+            ) {
+                thread = this.messaging.inbox;
+            }
+            if (thread && this.threadViewer && thread !== this.thread) {
+                this.threadViewer.update({ thread: [['link', thread]] });
+            }
+        }
     }
 
     Discuss.fields = {
@@ -358,6 +388,9 @@ function factory(dependencies) {
             default: false,
             dependencies: ['replyingToMessage'],
         }),
+        isThreadPinned: attr({
+            related: 'thread.isPinned',
+        }),
         /**
          * The menu_id of discuss app, received on mail/init_messaging and
          * used to open discuss from elsewhere.
@@ -365,10 +398,47 @@ function factory(dependencies) {
         menu_id: attr({
             default: null,
         }),
+        messaging: one2one('mail.messaging', {
+            inverse: 'discuss',
+        }),
+        /**
+         * When a thread changes, or some properties of it change
+         * Computes whether we should display it or change it
+         */
+        onChangeThreadIsPinned: attr({
+            compute: '_onChangeThreadIsPinned',
+            dependencies: [
+                'isThreadPinned',
+                'thread',
+            ],
+        }),
         renamingThreads: one2many('mail.thread'),
-        replyingToMessage: one2one('mail.message', {
+        /**
+         * The message that is currently selected as being replied to in Inbox.
+         * There is only one reply composer shown at a time, which depends on
+         * this selected message.
+         */
+        replyingToMessage: many2one('mail.message', {
             compute: '_computeReplyingToMessage',
-            dependencies: ['isOpen'],
+            dependencies: [
+                'isOpen',
+                'replyingToMessage',
+            ],
+        }),
+        /**
+         * The thread concerned by the reply feature in Inbox. It depends on the
+         * message set to be replied, and should be considered read-only.
+         */
+        replyingToMessageOriginThread: many2one('mail.thread', {
+            related: 'replyingToMessage.originThread',
+        }),
+        /**
+         * The composer to display for the reply feature in Inbox. It depends
+         * on the message set to be replied, and should be considered read-only.
+         */
+        replyingToMessageOriginThreadComposer: one2one('mail.composer', {
+            inverse: 'discussAsReplying',
+            related: 'replyingToMessageOriginThread.composer',
         }),
         /**
          * Quick search input value in the discuss sidebar (desktop). Useful

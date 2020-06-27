@@ -232,6 +232,7 @@ QUnit.test('chat window: basic rendering', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -332,6 +333,7 @@ QUnit.test('chat window: fold', async function (assert) {
                 channel_type: 'channel',
                 id: 20,
                 is_minimized: false,
+                is_pinned: true,
                 name: "General",
                 state: 'open',
                 uuid: 'channel-20-uuid',
@@ -439,6 +441,7 @@ QUnit.test('chat window: open / close', async function (assert) {
                 channel_type: 'channel',
                 id: 20,
                 is_minimized: false,
+                is_pinned: true,
                 name: "General",
                 state: 'open',
                 uuid: 'channel-20-uuid',
@@ -524,14 +527,20 @@ QUnit.test('chat window: open / close', async function (assert) {
 });
 
 QUnit.test('chat window: close on ESCAPE', async function (assert) {
-    assert.expect(4);
+    assert.expect(12);
 
+    this.data['res.partner'].records = [{
+        email: "testpartnert@odoo.com",
+        id: 11,
+        name: "TestPartner",
+    }];
     Object.assign(this.data.initMessaging, {
         channel_slots: {
             channel_channel: [{
                 channel_type: 'channel',
                 id: 20,
                 is_minimized: false,
+                is_pinned: true,
                 name: "General",
                 state: 'open',
                 uuid: 'channel-20-uuid',
@@ -565,12 +574,73 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
         document.querySelector(`.o_MessagingMenu_dropdownMenu .o_NotificationList_preview`).click()
     );
     assert.verifySteps(['rpc:channel_fold/open']);
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "chat window should be opened after click on preview"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`.o_Composer_buttonEmojis`).click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_EmojisPopover',
+        "emojis popover should be opened after click on emojis button"
+    );
 
     await afterNextRender(() => {
-        document.querySelector(`.o_ChatWindow`).focus();
-        const kevt = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
-        document.querySelector(`.o_ChatWindow`).dispatchEvent(kevt);
+        const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
+        document.querySelector(`.o_Composer_buttonEmojis`).dispatchEvent(ev);
     });
+    assert.containsNone(
+        document.body,
+        '.o_EmojisPopover',
+        "emojis popover should be closed after pressing escape on emojis button"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "chat window should still be opened after pressing escape on emojis button"
+    );
+
+    await afterNextRender(() => {
+        document.execCommand('insertText', false, "@");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown'));
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keyup'));
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ComposerTextInput_mentionDropdownPropositionList',
+        "mention suggestion should be opened after typing @"
+    );
+
+    await afterNextRender(() => {
+        const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
+        document.querySelector(`.o_ComposerTextInput_textarea`).dispatchEvent(ev);
+    });
+    assert.containsNone(
+        document.body,
+        '.o_ComposerTextInput_mentionDropdownPropositionList',
+        "mention suggestion should be closed after pressing escape on mention suggestion"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "chat window should still be opened after pressing escape on mention suggestion"
+    );
+
+    await afterNextRender(() => {
+        const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
+        document.querySelector(`.o_ComposerTextInput_textarea`).dispatchEvent(ev);
+    });
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow',
+        "chat window should be closed after pressing escape if there was no other priority escape handler"
+    );
     assert.verifySteps(['rpc:channel_fold/closed']);
 });
 
@@ -583,6 +653,7 @@ QUnit.test('chat window: state conservation on toggle home menu', async function
                 channel_type: 'channel',
                 id: 20,
                 is_minimized: false,
+                is_pinned: true,
                 name: "General",
                 state: 'open',
                 uuid: 'channel-20-uuid',
@@ -731,6 +802,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
             channel_direct_message: [{
@@ -740,6 +812,7 @@ QUnit.test('open 2 different chat windows: enough screen width [REQUIRE FOCUS]',
                     name: "Demo",
                 }],
                 id: 10,
+                is_pinned: true,
             }],
         },
     });
@@ -891,6 +964,7 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
     const channel = {
         channel_type: "channel",
         id: 20,
+        is_pinned: true,
         name: "General",
     };
     const chat = {
@@ -900,6 +974,7 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
             name: "Demo",
         }],
         id: 10,
+        is_pinned: true,
     };
     this.data['mail.channel'].records = [channel, chat];
     Object.assign(this.data.initMessaging, {
@@ -1010,14 +1085,17 @@ QUnit.test('open 3 different chat windows: not enough screen width', async funct
             channel_channel: [{
                 channel_type: "channel",
                 id: 1,
+                is_pinned: true,
                 name: "channel1",
             }, {
                 channel_type: "channel",
                 id: 2,
+                is_pinned: true,
                 name: "channel2",
             }, {
                 channel_type: "channel",
                 id: 3,
+                is_pinned: true,
                 name: "channel3",
             }],
         },
@@ -1172,10 +1250,12 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 1,
+                is_pinned: true,
                 name: "channel1",
             }, {
                 channel_type: "channel",
                 id: 2,
+                is_pinned: true,
                 name: "channel2",
             }],
         },

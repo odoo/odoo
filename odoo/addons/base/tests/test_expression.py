@@ -1083,7 +1083,7 @@ class TestMany2one(TransactionCase):
             SELECT "res_company".id
             FROM "res_company"
             WHERE ("res_company"."name"::text LIKE %s)
-            ORDER BY "res_company"."sequence", "res_company"."name"
+            ORDER BY "res_company"."id"
         ''', '''
             SELECT "res_partner".id
             FROM "res_partner"
@@ -1096,12 +1096,12 @@ class TestMany2one(TransactionCase):
             SELECT "res_partner".id
             FROM "res_partner"
             WHERE ("res_partner"."name"::text LIKE %s)
-            ORDER BY "res_partner"."display_name"
+            ORDER BY "res_partner"."id"
         ''', '''
             SELECT "res_company".id
             FROM "res_company"
             WHERE ("res_company"."partner_id" IN (%s))
-            ORDER BY "res_company"."sequence", "res_company"."name"
+            ORDER BY "res_company"."id"
         ''', '''
             SELECT "res_partner".id
             FROM "res_partner"
@@ -1114,12 +1114,12 @@ class TestMany2one(TransactionCase):
             SELECT "res_country".id
             FROM "res_country"
             WHERE ("res_country"."code"::text LIKE %s)
-            ORDER BY "res_country"."name"
+            ORDER BY "res_country"."id"
         ''', '''
             SELECT "res_company".id
             FROM "res_company"
             WHERE ("res_company"."name"::text LIKE %s)
-            ORDER BY "res_company"."sequence", "res_company"."name"
+            ORDER BY "res_company"."id"
         ''', '''
             SELECT "res_partner".id
             FROM "res_partner"
@@ -1152,7 +1152,7 @@ class TestMany2one(TransactionCase):
             SELECT "res_partner".id
             FROM "res_partner"
             WHERE ("res_partner"."name"::text LIKE %s)
-            ORDER BY "res_partner"."display_name"
+            ORDER BY "res_partner"."id"
         ''', '''
             SELECT "res_partner".id
             FROM "res_partner"
@@ -1174,7 +1174,7 @@ class TestMany2one(TransactionCase):
             LEFT JOIN "res_partner" AS "res_company__partner_id" ON
                 ("res_company"."partner_id" = "res_company__partner_id"."id")
             WHERE ("res_company__partner_id"."name"::text LIKE %s)
-            ORDER BY "res_company"."sequence", "res_company"."name"
+            ORDER BY "res_company"."id"
         ''', '''
             SELECT "res_partner".id
             FROM "res_partner"
@@ -1277,7 +1277,7 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner_bank".id
             FROM "res_partner_bank"
             WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
-            ORDER BY "res_partner_bank"."sequence", "res_partner_bank"."id"
+            ORDER BY "res_partner_bank"."id"
         ''', '''
             SELECT DISTINCT "partner_id"
             FROM "res_partner_bank"
@@ -1294,7 +1294,7 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner_bank".id
             FROM "res_partner_bank"
             WHERE ("res_partner_bank"."sanitized_acc_number"::text LIKE %s)
-            ORDER BY "res_partner_bank"."sequence", "res_partner_bank"."id"
+            ORDER BY "res_partner_bank"."id"
         ''', '''
             SELECT DISTINCT "partner_id"
             FROM "res_partner_bank"
@@ -1303,7 +1303,7 @@ class TestOne2many(TransactionCase):
             SELECT "res_partner".id
             FROM "res_partner"
             WHERE ("res_partner"."id" IN (%s))
-            ORDER BY "res_partner"."display_name"
+            ORDER BY "res_partner"."id"
         ''', '''
             SELECT DISTINCT "parent_id"
             FROM "res_partner"
@@ -1487,7 +1487,7 @@ class TestMany2many(TransactionCase):
             SELECT "res_groups".id
             FROM "res_groups"
             WHERE ("res_groups"."color" = %s)
-            ORDER BY "res_groups"."name"
+            ORDER BY "res_groups"."id"
         ''', '''
             SELECT "res_users".id
             FROM "res_users"
@@ -1501,16 +1501,15 @@ class TestMany2many(TransactionCase):
         with self.assertQueries(['''
             SELECT "ir_rule".id
             FROM "ir_rule"
-            LEFT JOIN "ir_model" AS "ir_rule__model_id" ON ("ir_rule"."model_id" = "ir_rule__model_id"."id")
             WHERE ("ir_rule"."name"::text LIKE %s)
-            ORDER BY "ir_rule__model_id"."model" DESC, "ir_rule"."id"
+            ORDER BY "ir_rule"."id"
         ''', '''
             SELECT "res_groups".id
             FROM "res_groups"
             WHERE ("res_groups"."id" IN (
                 SELECT "group_id" FROM "rule_group_rel" WHERE "rule_group_id" IN %s
             ))
-            ORDER BY "res_groups"."name"
+            ORDER BY "res_groups"."id"
         ''', '''
             SELECT "res_users".id
             FROM "res_users"

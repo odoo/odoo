@@ -8,7 +8,12 @@ const {
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
+const config = require('web.config');
 const FormView = require('web.FormView');
+const {
+    dom: { triggerEvent },
+    fields: { editInput },
+} = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('widgets', {}, function () {
@@ -16,36 +21,11 @@ QUnit.module('form_renderer', {}, function () {
 QUnit.module('form_renderer_tests.js', {
     beforeEach() {
         utilsBeforeEach(this);
-        this.data['res.partner'].fields = {
-            activity_ids: {
-                string: "Activities",
-                type: 'one2many',
-                relation: 'mail.activity',
-            },
-            message_attachment_count: {
-                string: 'Attachment count',
-                type: 'integer',
-            },
-            message_follower_ids: {
-                string: "Followers",
-                type: 'one2many',
-                relation: 'mail.followers',
-            },
-            message_ids: {
-                string: "Messages",
-                type: 'one2many',
-                relation: 'mail.message',
-            },
-            name: {
-                string: "Name",
-                type: 'char',
-            },
-        };
-        this.underscoreDebounce = _.debounce;
-        this.underscoreThrottle = _.throttle;
-        _.debounce = _.identity;
-        _.throttle = _.identity;
         // FIXME archs could be removed once task-2248306 is done
+        // The mockServer will try to get the list view
+        // of every relational fields present in the main view.
+        // In the case of mail fields, we don't really need them,
+        // but they still need to be defined.
         this.createView = async (viewParams, ...args) => {
             await afterNextRender(async () => {
                 const viewArgs = Object.assign({
@@ -57,15 +37,13 @@ QUnit.module('form_renderer_tests.js', {
                     viewParams,
                 );
                 const { widget } = await start(viewArgs, ...args);
-                this.view = widget;
+                this.widget = widget;
             });
         };
     },
     afterEach() {
-        _.debounce = this.underscoreDebounce;
-        _.throttle = this.underscoreThrottle;
-        if (this.view) {
-            this.view.destroy();
+        if (this.widget) {
+            this.widget.destroy();
         }
         utilsAfterEach(this);
     },
@@ -445,6 +423,112 @@ QUnit.test('chatter should become enabled when creation done', async function (a
     assert.notOk(
         document.querySelector(`.o_ChatterTopbar_buttonAttachments`).disabled,
         "attachments button should now be enabled"
+    );
+});
+
+QUnit.test('Form view not scrolled when switching record', async function (assert) {
+    assert.expect(6);
+
+    this.data['res.partner'].records = [{
+        activity_ids: [],
+        id: 1,
+        display_name: "Partner 1",
+        description: [...Array(60).keys()].join('\n'),
+        message_ids: [],
+        message_follower_ids: [],
+    }, {
+        activity_ids: [],
+        id: 2,
+        display_name: "Partner 2",
+        message_ids: [],
+        message_follower_ids: [],
+    }];
+
+    const messages = [...Array(60).keys()].map(id => {
+        return {
+            author_id: [10, "Demo User"],
+            body: `<p>Message ${id + 1}</p>`,
+            date: "2019-04-20 10:00:00",
+            id: id + 1,
+            message_type: 'comment',
+            model: 'res.partner',
+            record_name: `Partner ${id % 2 ? 1 : 2}`,
+            res_id: id % 2 ? 1 : 2,
+        };
+    });
+    this.data['mail.message'].records = messages;
+
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                    <field name="description"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+        viewOptions: {
+            currentId: 1,
+            ids: [1, 2],
+        },
+        config: {
+            device: { size_class: config.device.SIZES.LG },
+        },
+        env: {
+            device: { size_class: config.device.SIZES.LG },
+        },
+    });
+
+    const controllerContentEl = document.querySelector('.o_content');
+    const formViewEl = document.querySelector('.o_form_view');
+
+    assert.strictEqual(
+        document.querySelector('.breadcrumb-item.active').textContent,
+        'Partner 1',
+        "Form view should display partner 'Partner 1'"
+    );
+    assert.strictEqual(controllerContentEl.scrollTop, 0,
+        "The top of the form view is visible"
+    );
+
+    await afterNextRender(async () => {
+        controllerContentEl.scrollTop = controllerContentEl.scrollHeight - controllerContentEl.offsetHeight;
+        await triggerEvent(
+            document.querySelector('.o_ThreadViewer_messageList'),
+            'scroll'
+        );
+    });
+    assert.strictEqual(
+        controllerContentEl.scrollTop,
+        controllerContentEl.scrollHeight - controllerContentEl.offsetHeight,
+        "The controller container should be scrolled to its bottom"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_pager_next').click()
+    );
+    assert.strictEqual(
+        document.querySelector('.breadcrumb-item.active').textContent,
+        'Partner 2',
+        "The form view should display partner 'Partner 2'"
+    );
+    assert.strictEqual(controllerContentEl.scrollTop, 0,
+        "The top of the form view should be visible when switching record from pager"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_pager_previous').click()
+    );
+    assert.strictEqual(controllerContentEl.scrollTop, 0,
+        "Form view's scroll position should have been reset when switching back to first record"
     );
 });
 

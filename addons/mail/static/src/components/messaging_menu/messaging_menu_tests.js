@@ -455,6 +455,7 @@ QUnit.test('channel preview: basic rendering', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -565,6 +566,7 @@ QUnit.test('filtered previews', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
             channel_direct_message: [{
@@ -574,6 +576,7 @@ QUnit.test('filtered previews', async function (assert) {
                     name: "Demo",
                 }],
                 id: 10,
+                is_pinned: true,
             }],
         },
     });
@@ -760,6 +763,7 @@ QUnit.test('open chat window from preview', async function (assert) {
             channel_channel: [{
                 channel_type: "channel",
                 id: 20,
+                is_pinned: true,
                 name: "General",
             }],
         },
@@ -793,26 +797,26 @@ QUnit.test('no code injection in message body preview', async function (assert) 
     Object.assign(this.data.initMessaging, {
         channel_slots: {
             channel_channel: [{
-                channel_type: "channel",
+                channel_type: 'channel',
                 id: 1,
+                is_pinned: true,
                 name: "General",
             }],
         },
     });
-
     this.data['mail.channel'].records = [{
-        id: 1,
-        name: "general",
-        channel_type: "channel",
         channel_message_ids: [1],
+        channel_type: 'channel',
+        id: 1,
+        is_pinned: true,
+        name: "General",
     }];
     this.data['mail.message'].records = [{
-        id: 1,
-        author_id: [1, 'Georges'],
+        author_id: [1, "Georges"],
         body: "<p><em>&shoulnotberaised</em><script>throw new Error('CodeInjectionError');</script></p>",
         channel_ids: [1],
+        id: 1,
     }];
-
     await this.start();
 
     await afterNextRender(() => {
@@ -843,6 +847,118 @@ QUnit.test('no code injection in message body preview', async function (assert) 
         document.querySelector('.o_ThreadPreview_inlineText'),
         'script',
         "last message inline content should not have any code injection"
+    );
+});
+
+QUnit.test('no code injection in message body preview from sanitized message', async function (assert) {
+    assert.expect(5);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 1,
+                is_pinned: true,
+                name: "General",
+            }],
+        },
+    });
+    this.data['mail.channel'].records = [{
+        channel_message_ids: [1],
+        channel_type: 'channel',
+        id: 1,
+        is_pinned: true,
+        name: "General",
+    }];
+    this.data['mail.message'].records = [{
+        author_id: [1, "Georges"],
+        body: "<p>&lt;em&gt;&shoulnotberaised&lt;/em&gt;&lt;script&gt;throw new Error('CodeInjectionError');&lt;/script&gt;</p>",
+        channel_ids: [1],
+        id: 1,
+    }];
+    await this.start();
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_MessagingMenu_toggler`).click();
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_MessagingMenu_dropdownMenu .o_ThreadPreview',
+        "should display a preview",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadPreview_core',
+        "preview should have core in content",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadPreview_inlineText',
+        "preview should have inline text in core of content",
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ThreadPreview_inlineText')
+            .textContent.replace(/\s/g, ""),
+        "Georges:<em>&shoulnotberaised</em><script>thrownewError('CodeInjectionError');</script>",
+        "should display correct uninjected last message inline content"
+    );
+    assert.containsNone(
+        document.querySelector('.o_ThreadPreview_inlineText'),
+        'script',
+        "last message inline content should not have any code injection"
+    );
+});
+
+QUnit.test('<br/> tags in message body preview are transformed in spaces', async function (assert) {
+    assert.expect(4);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 1,
+                is_pinned: true,
+                name: "General",
+            }],
+        },
+    });
+    this.data['mail.channel'].records = [{
+        channel_message_ids: [1],
+        channel_type: 'channel',
+        id: 1,
+        is_pinned: true,
+        name: "general",
+    }];
+    this.data['mail.message'].records = [{
+        author_id: [1, "Georges"],
+        body: "<p>a<br/>b<br>c<br   />d<br     ></p>",
+        channel_ids: [1],
+        id: 1,
+    }];
+    await this.start();
+
+    await afterNextRender(() => {
+        document.querySelector(`.o_MessagingMenu_toggler`).click();
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_MessagingMenu_dropdownMenu .o_ThreadPreview',
+        "should display a preview",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadPreview_core',
+        "preview should have core in content",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadPreview_inlineText',
+        "preview should have inline text in core of content",
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ThreadPreview_inlineText').textContent,
+        "Georges: a b c d",
+        "should display correct last message inline content with brs replaced by spaces"
     );
 });
 

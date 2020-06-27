@@ -323,7 +323,7 @@ QUnit.test('mark channel as fetched when a new message is loaded and as seen whe
         // FIXME should not be needed, see task-2277537
         composer: [['create']], // avoid initial focus
         id: 100,
-        isPinned: true, // just to avoid joinChannel to be called
+        isServerPinned: true, // just to avoid joinChannel to be called
         members: [['insert', [
             {
                 email: "john@example.com",
@@ -393,7 +393,7 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
     });
     const thread = this.env.models['mail.thread'].create({
         id: 100,
-        isPinned: true, // just to avoid joinChannel to be called
+        isServerPinned: true, // just to avoid joinChannel to be called
         members: [['insert', [
             {
                 email: "john@example.com",

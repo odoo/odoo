@@ -294,7 +294,7 @@ function factory(dependencies) {
          * chat window to put initially on mount.
          */
         threadInitialScrollTop: attr(),
-        thread: one2one('mail.thread', {
+        thread: many2one('mail.thread', {
             related: 'threadViewer.thread',
         }),
         threadDisplayName: attr({

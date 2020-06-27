@@ -321,12 +321,16 @@ class MessageList extends Component {
         let isProcessed = false;
         if (threadCache.messages.length > 0) {
             if (this.threadViewer.threadCacheInitialPosition !== undefined) {
-                this.el.scrollTop = this.threadViewer.threadCacheInitialPosition;
+                if (this.props.hasScrollAdjust) {
+                    this.el.scrollTop = this.threadViewer.threadCacheInitialPosition;
+                }
                 isProcessed = true;
             } else {
                 const lastMessage = threadCache.lastMessage;
                 if (this.messageRefFromId(lastMessage.id)) {
-                    this._scrollToMostRecentMessage();
+                    if (this.props.hasScrollAdjust) {
+                        this._scrollToMostRecentMessage();
+                    }
                     isProcessed = true;
                 }
             }
@@ -349,7 +353,9 @@ class MessageList extends Component {
         if (threadCache.isLoaded) {
             const threadCacheMessageIds = threadCache.messages.map(message => message.id);
             if (threadCacheMessageIds.includes(messageId) && this.messageRefFromId(messageId)) {
-                await this._scrollToMessage(messageId);
+                if (this.props.hasScrollAdjust) {
+                    await this._scrollToMessage(messageId);
+                }
                 this.threadViewer.markComponentHintProcessed(hint);
             }
         }
@@ -365,7 +371,7 @@ class MessageList extends Component {
             return;
         }
         const { scrollHeight, scrollTop } = this._willPatchSnapshot;
-        if (this.props.order === 'asc') {
+        if (this.props.order === 'asc' && this.props.hasScrollAdjust) {
             this.el.scrollTop = this.el.scrollHeight - scrollHeight + scrollTop;
         }
         this.threadViewer.markComponentHintProcessed(hint);
@@ -495,6 +501,7 @@ Object.assign(MessageList, {
     components,
     defaultProps: {
         hasMessageCheckbox: false,
+        hasScrollAdjust: true,
         hasSquashCloseMessages: false,
         haveMessagesAuthorRedirect: false,
         haveMessagesMarkAsReadIcon: false,
@@ -507,6 +514,7 @@ Object.assign(MessageList, {
         haveMessagesAuthorRedirect: Boolean,
         haveMessagesMarkAsReadIcon: Boolean,
         haveMessagesReplyIcon: Boolean,
+        hasScrollAdjust: Boolean,
         order: {
             type: String,
             validate: prop => ['asc', 'desc'].includes(prop),
