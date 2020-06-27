@@ -97,4 +97,15 @@
         <field name="act_window_id" ref="action_l10n_in_view_gstn"/>
     </record>
 
+    <record id="l10n_in_view_fiscal_position_form" model="ir.ui.view">
+        <field name="name">l10n.in.account.fiscal.position.inherit</field>
+        <field name="model">account.fiscal.position</field>
+        <field name="priority" eval="100"/>
+        <field name="inherit_id" ref="account.view_account_position_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='auto_apply']" position="before">
+                <field name="l10n_in_gstin_partner_id" groups="l10n_in.group_l10n_in_multiple_gstn"/>
+            </xpath>
+        </field>
+    </record>
 </odoo>

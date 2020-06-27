@@ -32,12 +32,30 @@ class AccountMove(models.Model):
     l10n_in_shipping_port_code_id = fields.Many2one('l10n_in.port.code', 'Port code', states={'draft': [('readonly', False)]})
     l10n_in_reseller_partner_id = fields.Many2one('res.partner', 'Reseller', domain=[('vat', '!=', False)], help="Only Registered Reseller", readonly=True, states={'draft': [('readonly', False)]})
 
+    @api.onchange('journal_id')
+    def _onchange_journal(self):
+        partner_id = self.journal_id.l10n_in_gstin_partner_id or self.company_id.partner_id
+        if self.env.user.has_group('l10n_in.group_l10n_in_multiple_gstn') and self.l10n_in_company_country_code == 'IN':
+            self = self.with_context({'gstn_partner_id': partner_id.id})
+
+            delivery_partner_id = self._get_invoice_delivery_partner_id()
+            self.fiscal_position_id = self.env['account.fiscal.position'].get_fiscal_position(
+                self.partner_id.id, delivery_id=delivery_partner_id)
+            self._recompute_dynamic_lines()
+
+        return super(AccountMove, self)._onchange_journal()
+
     @api.onchange('partner_id')
     def _onchange_partner_id(self):
         """Use journal type to define document type because not miss state in any entry including POS entry"""
         if self.l10n_in_company_country_code == 'IN':
             self.l10n_in_gst_treatment = self.partner_id.l10n_in_gst_treatment
-        return super()._onchange_partner_id()
+
+            partner_id = self.journal_id.l10n_in_gstin_partner_id or self.company_id.partner_id
+            if self.env.user.has_group('l10n_in.group_l10n_in_multiple_gstn'):
+                self = self.with_context({'gstn_partner_id': partner_id.id})
+
+        return super(AccountMove, self)._onchange_partner_id()
 
     @api.model
     def _l10n_in_get_indian_state(self, partner):

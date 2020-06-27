@@ -35,3 +35,13 @@ class SaleOrder(models.Model):
         if self.l10n_in_company_country_code == 'IN':
             self.l10n_in_gst_treatment = self.partner_id.l10n_in_gst_treatment
         return super().onchange_partner_id()
+
+    @api.onchange('partner_shipping_id', 'partner_id', 'l10n_in_journal_id')
+    def onchange_partner_shipping_id(self):
+        """
+        Trigger the change of fiscal position when the shipping address is modified.
+        """
+        partner_id = self.l10n_in_journal_id.l10n_in_gstin_partner_id or self.company_id.partner_id
+        if self.l10n_in_company_country_code == 'IN':
+            self = self.with_context({'gstn_partner_id': partner_id.id})
+        return  super(SaleOrder, self).onchange_partner_shipping_id()

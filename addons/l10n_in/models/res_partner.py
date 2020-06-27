@@ -4,6 +4,18 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import ValidationError
 
+class AccountFiscalPosition(models.Model):
+    _inherit = 'account.fiscal.position'
+
+    l10n_in_gstin_partner_id = fields.Many2one('res.partner', string='GSTIN Unit', ondelete='restrict',
+        help='GSTIN related to this journal. If empty then consider as company GSTIN.')
+
+    def _build_fpos_by_region_base_domain(self, vat_required=False):
+        base_domain = super()._build_fpos_by_region_base_domain()
+        base_domain += [('l10n_in_gstin_partner_id', '=', self._context.get('gstn_partner_id', False))]
+        return base_domain
+
+
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
@@ -114,8 +126,7 @@ class ResPartner(models.Model):
         if self._context.get('l10n_in_multiple_gstn', False):
             vals.update({
                 'parent_id': self.env.company.partner_id.id,
-                'type': 'other',
-                'l10n_in_shipping_gstin': vals.get('vat')
+                'type': 'other'
             })
         res = super(ResPartner, self).create(vals)
         if self._context.get('l10n_in_multiple_gstn', False):

@@ -16,3 +16,12 @@ class ResPartner(models.Model):
         wrong_shipping_gstin_partner = self.filtered(lambda p: p.l10n_in_shipping_gstin and not check_vat_in(p.l10n_in_shipping_gstin))
         if wrong_shipping_gstin_partner:
             raise ValidationError(_("The shipping GSTIN number [%s] does not seem to be valid") %(",".join(p.l10n_in_shipping_gstin for p in wrong_shipping_gstin_partner)))
+
+    @api.model
+    def create(self, vals):
+        if self._context.get('l10n_in_multiple_gstn', False):
+            vals.update({
+                'l10n_in_shipping_gstin': vals.get('vat')
+            })
+        res = super(ResPartner, self).create(vals)
+        return res
