@@ -28,7 +28,6 @@
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2019
 # Ramiro Pereira de Magalhães <ramiro.p.magalhaes@gmail.com>, 2019
 # Frederico Freire Boaventura <fboaventura@live.com>, 2019
-# danimaribeiro <danimaribeiro@gmail.com>, 2019
 # Juliene Gomes <juliene_faria@hotmail.com>, 2019
 # Silmar <pinheirosilmar@gmail.com>, 2019
 # Diego Bittencourt <diegomb86@gmail.com>, 2019
@@ -47,6 +46,7 @@
 # Guilherme Libardi <guilherme.libardig@gmail.com>, 2020
 # Mateus Lopes <mateus1@gmail.com>, 2020
 # Fernando Colus <fcolus1@gmail.com>, 2020
+# danimaribeiro <danimaribeiro@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -54,7 +54,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-05-26 06:05+0000\n"
 "PO-Revision-Date: 2016-08-05 12:55+0000\n"
-"Last-Translator: Fernando Colus <fcolus1@gmail.com>, 2020\n"
+"Last-Translator: danimaribeiro <danimaribeiro@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -306,7 +306,7 @@ msgid ""
 "title=\"Selection\"/>"
 msgstr ""
 "<i class=\"fa fa-ellipsis-v\" aria-label=\"Selection\" role=\"img\" "
-"title=\"Seleção”/>"
+"title=\"Selection\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -13217,6 +13217,12 @@ msgstr ""
 "Você deve configurar a 'Conta de Perda de Câmbio' nas configurações "
 "contábeis, para gerenciar automaticamente o registro das entradas contábeis "
 "referente às diferenças entre as taxas de câmbio."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
