@@ -16,6 +16,7 @@
 # Peter Dovicovic <dovicovic@gmail.com>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Jojo1 Jojo <jojo1@atlas.sk>, 2020
+# Igor K <igorkocis12@gmail.com>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
@@ -55,7 +56,7 @@ msgstr "# Číslic"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_cashbox_line__number
 msgid "#Coins/Bills"
-msgstr ""
+msgstr "Hodnota mincí/bankoviek"
 
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
@@ -677,7 +678,7 @@ msgstr "<strong>Dátum splatnosti:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Ending Balance</strong>"
-msgstr ""
+msgstr "<strong>Konečný zostatok</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -727,7 +728,7 @@ msgstr "<strong>Objednávka:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr ""
+msgstr "<strong>Počiatočný stav</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1068,12 +1069,12 @@ msgstr "Štatistiky účtu"
 #. module: account
 #: model:ir.model,name:account.model_account_account_tag
 msgid "Account Tag"
-msgstr "Menovka účtu"
+msgstr "Tag účtu"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.account_tag_action
 msgid "Account Tags"
-msgstr "Menovky účtu"
+msgstr "Tagy účtu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_tax_view_tree
@@ -1202,7 +1203,7 @@ msgstr "Výkaz účtu s položkami platieb"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account_template__tag_ids
 msgid "Account tag"
-msgstr "Menovka účtu"
+msgstr "Tag účtu"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__cash_basis_base_account_id
@@ -1289,7 +1290,7 @@ msgstr "Prehľad účtovníctva"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #, python-format
 msgid "Accounting Periods"
-msgstr ""
+msgstr "Účtovné obdobie"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1468,7 +1469,7 @@ msgstr "Pridaj nový účet"
 #. module: account
 #: model_terms:ir.actions.act_window,help:account.account_tag_action
 msgid "Add a new tag"
-msgstr "Pridaj nový štítok"
+msgstr "Pridaj nový tag"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -1936,14 +1937,14 @@ msgstr "Analytické riadky"
 #: model:ir.model.fields,field_description:account.field_res_config_settings__group_analytic_tags
 #: model:ir.ui.menu,name:account.account_analytic_tag_menu
 msgid "Analytic Tags"
-msgstr "Analytické štítky "
+msgstr "Analytické tagy "
 
 #. module: account
 #. openerp-web
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Analytic Tags."
-msgstr "Analytické štítky."
+msgstr "Analytické tagy."
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__analytic_line_ids
@@ -7690,8 +7691,7 @@ msgstr "Voliteľné vytvorenie"
 #: model:ir.model.fields,help:account.field_account_account__tag_ids
 #: model:ir.model.fields,help:account.field_account_account_template__tag_ids
 msgid "Optional tags you may want to assign for custom reporting"
-msgstr ""
-"Voliteľné menovky ktoré môžete chcieť priradiť pre upravené vykazovanie"
+msgstr "Voliteľné tagy, ktoré môžete chcieť priradiť pre upravené vykazovanie"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax_report_line__code
@@ -9341,7 +9341,7 @@ msgstr "Druhý analytický účet"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__second_analytic_tag_ids
 msgid "Second Analytic Tags"
-msgstr "Druhé analytické štítky "
+msgstr "Druhé analytické tagy "
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_reconcile_model__second_journal_id
@@ -9957,7 +9957,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_account_tag__name
 #: model:ir.model.fields,field_description:account.field_account_tax_report_line__tag_name
 msgid "Tag Name"
-msgstr "Názov visačky"
+msgstr "Názov tagu"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -9982,7 +9982,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_form
 #: model_terms:ir.ui.view,arch_db:account.account_tag_view_tree
 msgid "Tags"
-msgstr "Štítky"
+msgstr "Tagy"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tag_ids
@@ -11963,12 +11963,12 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__user_id
 msgid "User"
-msgstr "Používateľ"
+msgstr "Užívateľ"
 
 #. module: account
 #: model:ir.model,name:account.model_res_users
 msgid "Users"
-msgstr "Používatelia"
+msgstr "Užívatelia"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement_line__journal_currency_id
@@ -12733,6 +12733,12 @@ msgstr ""
 "rozdielmi medzi výmennými kurzami."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "Rozsah PSČ"
@@ -12933,7 +12939,7 @@ msgstr "transakcie v"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "unpaid invoices"
-msgstr "Neuhradené faktúry"
+msgstr "neuhradené faktúry"
 
 #. module: account
 #. openerp-web

@@ -47,7 +47,6 @@
 # Brice Reul <brice@bluerice.be>, 2020
 # Fernanda Marques <fem@odoo.com>, 2020
 # Fabien FML, 2020
-# Caroline Renson <car@odoo.com>, 2020
 # Vincent Luba <vincent@biz-4-africa.com>, 2020
 # Alice Van Goethem <vga@odoo.com>, 2020
 # romrik_, 2020
@@ -57,7 +56,7 @@
 # qma.odoo <qma@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Sylvain Dubuisson <sylvain@orderly.fr>, 2020
-# Jonathan <jcs@odoo.com>, 2020
+# Jonathan Castillo <jcs@odoo.com>, 2020
 # Priscilla Sanchez <prs@odoo.com>, 2020
 # Martin Trigaux, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
@@ -65,6 +64,7 @@
 # Julien Goergen <jgo@odoo.com>, 2020
 # Jonathan Quique <jqu@odoo.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
+# Caroline Renson <car@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -72,7 +72,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Cécile Collart <cco@odoo.com>, 2020\n"
+"Last-Translator: Caroline Renson <car@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -8102,7 +8102,7 @@ msgstr "Vue d'ensemble"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Package"
-msgstr "Colis"
+msgstr "Package"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__paid
@@ -13255,6 +13255,12 @@ msgstr ""
 "Veuillez configurer le compte de 'Perte de change' dans les paramètres "
 "comptables afin de permettre un enregistrement comptable automatique de la "
 "différence de change."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

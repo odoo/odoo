@@ -58,13 +58,13 @@ msgstr "\" varoitus jossa"
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" can not be empty."
-msgstr ""
+msgstr "\"URL kohde\" ei voi olla tyhjä."
 
 #. module: website
 #: code:addons/website/models/website_rewrite.py:0
 #, python-format
 msgid "\"URL to\" must start with a leading slash."
-msgstr ""
+msgstr "\"URL kohde\" täytyy alkaa kauttaviivalla."
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
@@ -2768,7 +2768,7 @@ msgstr "Kuvake"
 #. module: website
 #: model:ir.model.fields,help:website.field_website__specific_user_account
 msgid "If True, new accounts will be associated to the current website"
-msgstr ""
+msgstr "Jos tosi, uudet tilit liittyvät nykyseen verkkosivuun"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__social_default_image
@@ -2776,6 +2776,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "If set, replaces the company logo as the default social share image."
 msgstr ""
+"Jos asetettu, korvaa oletuksena yrityksen logon sosiaalisen median "
+"esikatselukuvalla."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.qweb_500
@@ -5350,7 +5352,7 @@ msgstr "Näkyy nykysellä verkkosivulla"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_track__visit_datetime
 msgid "Visit Date"
-msgstr ""
+msgstr "Vierailupäivä"
 
 #. module: website
 #: model:ir.model,name:website.model_website_track
@@ -5362,7 +5364,7 @@ msgstr "Vieraillut sivut"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__website_track_ids
 msgid "Visited Pages History"
-msgstr ""
+msgstr "Vierailtujen sivujen historia"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_track__visitor_id
@@ -5374,27 +5376,27 @@ msgstr "Vierailija"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_form
 msgid "Visitor Informations"
-msgstr ""
+msgstr "Vierailijan tiedot"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_graph
 msgid "Visitor Page Views"
-msgstr ""
+msgstr "Vierailijan sivujen katselut"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_page_view_tree
 msgid "Visitor Page Views History"
-msgstr ""
+msgstr "Vierailijan sivujen katseluhistoria"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_track_view_graph
 msgid "Visitor Views"
-msgstr ""
+msgstr "Vierailijan katselut"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_track_view_tree
 msgid "Visitor Views History"
-msgstr ""
+msgstr "Vierailijan katseluhistoria"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.website_visitors_action
@@ -5405,7 +5407,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_graph
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
 msgid "Visitors"
-msgstr ""
+msgstr "Vierailijat"
 
 #. module: website
 #. openerp-web
@@ -5457,12 +5459,12 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
 msgid "We found these ones:"
-msgstr ""
+msgstr "Löysimme nämä:"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_tree
 msgid "Web Visitors"
-msgstr ""
+msgstr "Verkkosivun vierailijat"
 
 #. module: website
 #. openerp-web
@@ -5490,24 +5492,24 @@ msgstr "Verkkosivu"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_company_id
 msgid "Website Company"
-msgstr ""
+msgstr "Verkkosivun yritys"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_domain
 #: model:ir.model.fields,field_description:website.field_website__domain
 msgid "Website Domain"
-msgstr ""
+msgstr "Verkkosivun verkkotunnus"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__favicon
 msgid "Website Favicon"
-msgstr ""
+msgstr "Verkkosivun favicon"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_logo
 #: model:ir.model.fields,field_description:website.field_website__logo
 msgid "Website Logo"
-msgstr ""
+msgstr "Verkkosivun logo"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_menu
@@ -5518,7 +5520,7 @@ msgstr "Verkkosivuston valikko"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_menus_form_view
 msgid "Website Menus Settings"
-msgstr ""
+msgstr "Verkkosivun valikoiden asetukset"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__website_name
@@ -5530,19 +5532,19 @@ msgstr "Verkkosivun nimi"
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__first_page_id
 #: model:ir.model.fields,field_description:website.field_website_page__first_page_id
 msgid "Website Page"
-msgstr ""
+msgstr "Verkkosivun sivu"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_pages_form_view
 msgid "Website Page Settings"
-msgstr ""
+msgstr "Verkkosivun sivun asetukset"
 
 #. module: website
 #: model:ir.actions.act_window,name:website.action_website_pages_list
 #: model_terms:ir.ui.view,arch_db:website.website_pages_tree_view
 #: model_terms:ir.ui.view,arch_db:website.website_pages_view_search
 msgid "Website Pages"
-msgstr ""
+msgstr "Verkkosivun sivut"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_base_automation__website_path
@@ -5554,7 +5556,7 @@ msgstr "Verkkosivun polku"
 #. module: website
 #: model:ir.model,name:website.model_website_published_mixin
 msgid "Website Published Mixin"
-msgstr ""
+msgstr "Website Published Mixin"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.view_website_form
@@ -5564,7 +5566,7 @@ msgstr "Verkkosivuston asetukset"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Website Title"
-msgstr ""
+msgstr "Verkkosivun otsikko"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_attachment__website_url
@@ -5582,7 +5584,7 @@ msgstr "Verkkosivuston osoite"
 #: model:ir.model.fields,field_description:website.field_ir_actions_server__website_url
 #: model:ir.model.fields,field_description:website.field_ir_cron__website_url
 msgid "Website Url"
-msgstr ""
+msgstr "Verkkosivun URL"
 
 #. module: website
 #: model:ir.model,name:website.model_website_visitor
@@ -5594,7 +5596,7 @@ msgstr "Verkkosivun vierailija"
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "Website Visitor #%s"
-msgstr ""
+msgstr "Verkkosivun vierailija #%s"
 
 #. module: website
 #: model:ir.actions.server,name:website.website_visitor_cron_ir_actions_server
@@ -5837,19 +5839,19 @@ msgstr ""
 #: code:addons/website/static/src/js/menu/seo.js:0
 #, python-format
 msgid "Your description looks too long."
-msgstr ""
+msgstr "Kuvauksesi on liian pitkä"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/js/menu/seo.js:0
 #, python-format
 msgid "Your description looks too short."
-msgstr ""
+msgstr "Kuvauksesi on liian lyhyt."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.list_website_pages
 msgid "Your search '"
-msgstr ""
+msgstr "Hakusi '"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__social_youtube
@@ -5862,7 +5864,7 @@ msgstr "YouTube-tili"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "and copy paste the embed code here."
-msgstr ""
+msgstr "ja liitä upotuskoodi tähän"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -5875,7 +5877,7 @@ msgstr "murupolku"
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
 msgid "e.g. About Us"
-msgstr ""
+msgstr "esim. Tietoa meistä"
 
 #. module: website
 #: model:ir.ui.menu,name:website.menu_website_dashboard
@@ -5887,14 +5889,14 @@ msgstr "Verkkokaupan työpöytä"
 #: code:addons/website/static/src/xml/website.editor.xml:0
 #, python-format
 msgid "fonts.google.com"
-msgstr ""
+msgstr "fonts.google.com"
 
 #. module: website
 #. openerp-web
 #: code:addons/website/static/src/xml/website.xml:0
 #, python-format
 msgid "found(s)"
-msgstr ""
+msgstr "löytynyttä"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.brand_promotion
@@ -5925,7 +5927,7 @@ msgstr "tai Muokkaa pääsivua"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "page, snippets, ...)"
-msgstr ""
+msgstr "sivu, kappaleet, ...)"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5964,4 +5966,4 @@ msgstr "kyllä"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid "— Jane DOE, CEO of <b>MyCompany</b>"
-msgstr ""
+msgstr "— Jane DOE, <b>MyCompany</b> TJ"
