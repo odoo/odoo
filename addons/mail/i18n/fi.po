@@ -162,12 +162,13 @@ msgstr ""
 #, python-format
 msgid "%(user_name)s invited you to follow %(document)s document: %(title)s"
 msgstr ""
+"%(user_name)s kutsui sinut seuraamaan %(document)s dokumenttia: %(title)s"
 
 #. module: mail
 #: code:addons/mail/wizard/invite.py:31
 #, python-format
 msgid "%(user_name)s invited you to follow a new document."
-msgstr ""
+msgstr "%(user_name)s kutsui sinut seuraamaan uutta dokumenttia."
 
 #. module: mail
 #. openerp-web
@@ -405,6 +406,8 @@ msgid ""
 "<strong>Only records checked in list view will be used.</strong><br/>\n"
 "                                The email will be sent for all the records selected in the list."
 msgstr ""
+"<strong>Vain listanäkymässä valittuja tietueita käytetään.</strong><br/>\n"
+"                                Sähköposti lähetetään kaikille listasta valituille tietueille."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -563,7 +566,7 @@ msgstr "Toimenpide"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_mixin
 msgid "Activity Mixin"
-msgstr ""
+msgstr "Activity Mixin"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_activity_type
@@ -613,7 +616,7 @@ msgstr "Lisää seuraajia"
 #: code:addons/mail/models/ir_actions.py:36
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
-msgstr ""
+msgstr "Vain sähköpostiketju-mallille voi lisätä seuraajia"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_user_signature
@@ -981,7 +984,7 @@ msgstr "Kanava"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_message_ids
 msgid "Channel Message"
-msgstr ""
+msgstr "Kanavan viesti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_type
@@ -1124,7 +1127,7 @@ msgstr "Kirjoitustila"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Configure your activity types"
-msgstr ""
+msgstr "Konfiguroi aktiviteettien tyypit"
 
 #. module: mail
 #. openerp-web
@@ -1138,7 +1141,7 @@ msgstr "Hienoa! Saapuneet-laatikkosi on tyhjä"
 #: code:addons/mail/static/src/js/client_action.js:650
 #, python-format
 msgid "Congratulations, your inbox is empty!"
-msgstr ""
+msgstr "Hienoa! Saapuneet-laatikkosi on tyhjä."
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_partner
@@ -1511,7 +1514,7 @@ msgstr "Dokumentin seuraajat"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_res_name
 msgid "Document Name"
-msgstr ""
+msgstr "Dokumentin nimi"
 
 #. module: mail
 #. openerp-web
@@ -1755,7 +1758,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mail.field_mail_mail_failure_reason
 #: model:ir.ui.view,arch_db:mail.view_mail_form
 msgid "Failure Reason"
-msgstr ""
+msgstr "Epäonnistumisen syy"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_failure_reason
@@ -1790,7 +1793,7 @@ msgstr "Kenttä"
 #: code:addons/mail/models/ir_model.py:30
 #, python-format
 msgid "Field \"Mail Thread\" cannot be changed to \"False\"."
-msgstr ""
+msgstr "Kenttää \"Sähköpostiketju\" ei voida vaihtaa tyhjäksi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_field_desc
@@ -2041,7 +2044,7 @@ msgstr "Seuraajien lomake"
 #: code:addons/mail/static/src/xml/chatter.xml:15
 #, python-format
 msgid "Followers of"
-msgstr ""
+msgstr "Seuraajat - "
 
 #. module: mail
 #: selection:mail.alias,alias_contact:0
@@ -2059,7 +2062,7 @@ msgstr "Seurataan"
 #: model:ir.model.fields,help:mail.field_mail_activity_icon
 #: model:ir.model.fields,help:mail.field_mail_activity_type_icon
 msgid "Font awesome icon e.g. fa-tasks"
-msgstr ""
+msgstr "Font awesome ikoni esim.. fa-tasks"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_email_from
@@ -2087,7 +2090,7 @@ msgstr "Tulevat toimenpiteet"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_form
 msgid "Gateway"
-msgstr ""
+msgstr "Yhdyskäytävä"
 
 #. module: mail
 #: code:addons/mail/models/res_users.py:55
@@ -2115,17 +2118,17 @@ msgstr "Ryhmät"
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle by Emails"
-msgstr ""
+msgstr "Hallitse sähköpostissa"
 
 #. module: mail
 #: selection:res.users,notification_type:0
 msgid "Handle in Odoo"
-msgstr ""
+msgstr "Hallitse Odoossa"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
 msgid "Has Mentions"
-msgstr ""
+msgstr "On mainintoja"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_message_search
@@ -2142,7 +2145,7 @@ msgstr "Otsakkeet"
 #: code:addons/mail/wizard/invite.py:35
 #, python-format
 msgid "Hello,"
-msgstr ""
+msgstr "Hei,"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_subtype_hidden
@@ -2210,7 +2213,7 @@ msgstr "Seuratun resurssin id"
 #: code:addons/mail/static/src/xml/client_action.xml:203
 #, python-format
 msgid "Idle"
-msgstr ""
+msgstr "Inaktiivinen"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_account_analytic_account_message_unread
@@ -2488,7 +2491,7 @@ msgstr "Kutsu seuraaja"
 #: code:addons/mail/static/src/xml/client_action.xml:133
 #, python-format
 msgid "Invite people"
-msgstr ""
+msgstr "Kutsu ihmisiä"
 
 #. module: mail
 #. openerp-web
@@ -2579,22 +2582,22 @@ msgstr "On ilmoitus"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_message_res_partner_needaction_rel_is_read
 msgid "Is Read"
-msgstr ""
+msgstr "On luettu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_subscribed
 msgid "Is Subscribed"
-msgstr ""
+msgstr "On tilattu"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_is_member
 msgid "Is a member"
-msgstr ""
+msgstr "On jäsen"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_partner_is_pinned
 msgid "Is pinned on the interface"
-msgstr ""
+msgstr "On kiinnitetty käyttöliittymään"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_kanban
@@ -2797,17 +2800,17 @@ msgstr ""
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_channel_id
 msgid "Listener"
-msgstr ""
+msgstr "Kuuntelija"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_channel_partner_ids
 msgid "Listeners"
-msgstr ""
+msgstr "Kuuntelijat"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_channel_partner
 msgid "Listeners of a Channel"
-msgstr ""
+msgstr "Kanavan kuuntelijat"
 
 #. module: mail
 #: selection:mail.channel,channel_type:0
@@ -2870,7 +2873,7 @@ msgstr "Mail-toiminnan tyyppi"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Mail Channel Form"
-msgstr ""
+msgstr "Sähköpostikanavan lomake"
 
 #. module: mail
 #: code:addons/mail/models/mail_mail.py:372
@@ -2882,12 +2885,12 @@ msgstr "Sähköpostin lähetys epäonnistui"
 #: model:ir.model.fields,field_description:mail.field_ir_model_is_mail_thread
 #: model:ir.ui.view,arch_db:mail.model_search_view
 msgid "Mail Thread"
-msgstr ""
+msgstr "Sähköpostiketju"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_tracking_value
 msgid "Mail Tracking Value"
-msgstr ""
+msgstr "Sähköpostin seuranta-arvo"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_mail_notification
@@ -2900,13 +2903,13 @@ msgstr ""
 #: model:ir.cron,cron_name:mail.ir_cron_mail_scheduler_action
 #: model:ir.cron,name:mail.ir_cron_mail_scheduler_action
 msgid "Mail: Email Queue Manager"
-msgstr ""
+msgstr "Sähköposti: Sähköpostijonon hallinta"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:837
 #, python-format
 msgid "Mailbox unavailable - %s"
-msgstr ""
+msgstr "Sähköpostilaatikko ei ole saatavilla - %s"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_partner_view_form_inherit_mail
@@ -2944,7 +2947,7 @@ msgstr "Kirjaa valmiiksi"
 #: code:addons/mail/static/src/xml/thread.xml:211
 #, python-format
 msgid "Mark as Read"
-msgstr ""
+msgstr "Merkitse luetuksi"
 
 #. module: mail
 #. openerp-web
@@ -3009,7 +3012,7 @@ msgstr "Viestin ID"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_notification
 msgid "Message Notifications"
-msgstr ""
+msgstr "Viestien ilmoitukset"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_record_name
@@ -3039,7 +3042,7 @@ msgstr "Viestin viitteet, kuten tunnisteet aikaisemmista viesteistä"
 #: code:addons/mail/static/src/xml/client_action.xml:124
 #, python-format
 msgid "Message sent in \""
-msgstr ""
+msgstr "Viesti lähetetty \""
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_name
@@ -3169,6 +3172,7 @@ msgstr "Viestien haku"
 #, python-format
 msgid "Messages can be <b>starred</b> to remind you to check back later."
 msgstr ""
+"Viestille voi antaa <b>tähden</b> muistutukseksi palata siihen myöhemmin."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_internal
@@ -3279,32 +3283,32 @@ msgstr "Uusi viesti"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_char
 msgid "New Value Char"
-msgstr ""
+msgstr "Uusi Char-arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_datetime
 msgid "New Value Datetime"
-msgstr ""
+msgstr "Uusi Datetime-arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_float
 msgid "New Value Float"
-msgstr ""
+msgstr "Uusi Float-arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_integer
 msgid "New Value Integer"
-msgstr ""
+msgstr "Uusi Integer-arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_monetary
 msgid "New Value Monetary"
-msgstr ""
+msgstr "Uusi Monetary-arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_new_value_text
 msgid "New Value Text"
-msgstr ""
+msgstr "Uusi Text-arvo"
 
 #. module: mail
 #. openerp-web
@@ -3335,7 +3339,7 @@ msgstr "Uudet viestit tulevat näkyviin tähän."
 #: code:addons/mail/static/src/js/client_action.js:97
 #, python-format
 msgid "New people"
-msgstr ""
+msgstr "Uudet ihmiset"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_tree
@@ -3417,7 +3421,7 @@ msgstr "Seuraavan toimenpiteen tyyppi"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_has_recommended_activities
 msgid "Next activities available"
-msgstr ""
+msgstr "Seuraavat saatavilla olevat aktiviteetit"
 
 #. module: mail
 #. openerp-web
@@ -3453,7 +3457,7 @@ msgstr "Haku ei tuottanut tuloksia"
 #: code:addons/mail/static/src/xml/thread.xml:17
 #, python-format
 msgid "No message matches your search. Try to change your search filters."
-msgstr ""
+msgstr "Yksikään viesti ei vastaa hakua. Koita muuttaa hakuehtoja."
 
 #. module: mail
 #. openerp-web
@@ -3751,32 +3755,32 @@ msgstr "Poissa"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_char
 msgid "Old Value Char"
-msgstr ""
+msgstr "Vanha Char-arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_datetime
 msgid "Old Value DateTime"
-msgstr ""
+msgstr "Vanha Datetime-arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_float
 msgid "Old Value Float"
-msgstr ""
+msgstr "Vanha Float-arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_integer
 msgid "Old Value Integer"
-msgstr ""
+msgstr "Vanha Integer-arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_monetary
 msgid "Old Value Monetary"
-msgstr ""
+msgstr "Vanha Monetary-arvo"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value_old_value_text
 msgid "Old Value Text"
-msgstr ""
+msgstr "Vanha Text-arvo"
 
 #. module: mail
 #: selection:ir.model.fields,track_visibility:0
@@ -3847,7 +3851,7 @@ msgstr "Avaa keskustelu"
 #: code:addons/mail/static/src/xml/extended_chat_window.xml:15
 #, python-format
 msgid "Open in Discuss"
-msgstr ""
+msgstr "Avaa keskustelussa"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_res_partner_opt_out
@@ -3951,7 +3955,7 @@ msgstr "Myöhässä"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Override author's email"
-msgstr ""
+msgstr "Yliaja luojan sähköposti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_alias_alias_user_id
@@ -4156,7 +4160,7 @@ msgstr "Edeltävät toimenpiteet"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.email_template_form
 msgid "Preferred reply address"
-msgstr ""
+msgstr "Suositeltu vastausosoite"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_reply_to
@@ -4177,7 +4181,7 @@ msgstr "Esikatselu:"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_previous_activity_type_id
 msgid "Previous Activity Type"
-msgstr ""
+msgstr "Edellisen toiminnon tyyppi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel_public
@@ -4205,7 +4209,7 @@ msgstr "Julkiset kanavat"
 #: model:ir.cron,cron_name:mail.ir_cron_module_update_notification
 #: model:ir.cron,name:mail.ir_cron_module_update_notification
 msgid "Publisher: Update Notification"
-msgstr ""
+msgstr "Julkaisija: Päivitä ilmoitus"
 
 #. module: mail
 #: code:addons/mail/wizard/mail_compose_message.py:179
@@ -4241,7 +4245,7 @@ msgstr "Vastaanottajat"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_recommended_activity_type_id
 msgid "Recommended Activity Type"
-msgstr ""
+msgstr "Suositellun toiminnon tyyppi"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type_next_type_ids
@@ -4288,12 +4292,12 @@ msgstr "Liittyvä dokumenttimalli"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_res_model
 msgid "Related Document Model Name"
-msgstr ""
+msgstr "Liittyvän dokumentin mallin nimi"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 msgid "Related Message"
-msgstr ""
+msgstr "Liittyvä viesti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_followers_partner_id
@@ -4418,7 +4422,7 @@ msgstr "Tallenna uutena mallina"
 #: code:addons/mail/static/src/js/chat_window.js:41
 #, python-format
 msgid "Say something"
-msgstr ""
+msgstr "Sano jotain"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -4590,13 +4594,13 @@ msgstr "Näytä kaikki tietueet joissa on toimenpide myöhässä."
 #: code:addons/mail/models/mail_channel.py:675
 #, python-format
 msgid "Show an helper message"
-msgstr ""
+msgstr "Näytä apuviesti"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_email_template_preview_ref_ir_act_window
 #: model:ir.model.fields,field_description:mail.field_mail_template_ref_ir_act_window
 msgid "Sidebar action"
-msgstr ""
+msgstr "Sivupalkin toiminto"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview_ref_ir_act_window
@@ -4771,7 +4775,7 @@ msgstr "Aihe:"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_shortcode_substitution
 msgid "Substitution"
-msgstr ""
+msgstr "Korvaus"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_subtype_id
@@ -5020,13 +5024,13 @@ msgstr "Seuranta"
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_form
 #: model:ir.ui.view,arch_db:mail.view_mail_tracking_value_tree
 msgid "Tracking Value"
-msgstr ""
+msgstr "Seuranta-arvo"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_view_mail_tracking_value
 #: model:ir.ui.menu,name:mail.menu_mail_tracking_value
 msgid "Tracking Values"
-msgstr ""
+msgstr "Seuranta-arvot"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message_tracking_value_ids
@@ -5285,12 +5289,12 @@ msgstr "Käytä mallia"
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
 msgid "Use your own email servers"
-msgstr ""
+msgstr "Käytä omia lähtevän postin palvelimia"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype_sequence
 msgid "Used to order subtypes."
-msgstr ""
+msgstr "Käytetään alityyppien järjestämiseen."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_alias_search
@@ -5305,7 +5309,7 @@ msgstr "Käyttäjä"
 #: code:addons/mail/static/src/xml/extended_chat_window.xml:8
 #, python-format
 msgid "User name"
-msgstr ""
+msgstr "Käyttäjänimi"
 
 #. module: mail
 #: model:ir.model,name:mail.model_res_users
@@ -5316,7 +5320,7 @@ msgstr "Käyttäjät"
 #: code:addons/mail/models/mail_channel.py:719
 #, python-format
 msgid "Users in this channel: %s %s and you."
-msgstr ""
+msgstr "Kanavan käyttäjät: %s %s jas sinä."
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.res_config_settings_view_form
@@ -5420,19 +5424,19 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:716
 #, python-format
 msgid "You are alone in this channel."
-msgstr ""
+msgstr "Olet yksin kanavalla."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:685
 #, python-format
 msgid "You are in a private conversation with <b>@%s</b>."
-msgstr ""
+msgstr "Olet yksitykseskustelussa <b>@%s</b> kanssa."
 
 #. module: mail
 #: code:addons/mail/models/mail_channel.py:680
 #, python-format
 msgid "You are in channel <b>#%s</b>."
-msgstr ""
+msgstr "Olet kanavalla <b>#%s</b>."
 
 #. module: mail
 #. openerp-web
@@ -5509,14 +5513,14 @@ msgstr "Peruit tilauksen <b>%s</b>."
 #: code:addons/mail/static/src/xml/client_action.xml:217
 #, python-format
 msgid "You:"
-msgstr ""
+msgstr "Sinä:"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/js/thread_field.js:83
 #, python-format
 msgid "Your message has not been sent."
-msgstr ""
+msgstr "Viestiäsi ei lähetetty"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:30
@@ -5528,12 +5532,12 @@ msgstr ""
 #: code:addons/mail/models/mail_thread.py:971
 #, python-format
 msgid "alias %s: %s"
-msgstr ""
+msgstr "alias %s: %s"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_2
 msgid "board-meetings"
-msgstr ""
+msgstr "johtokunnan tapaamiset"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.view_mail_form
@@ -5592,7 +5596,7 @@ msgstr ":"
 #. module: mail
 #: model:mail.channel,name:mail.channel_all_employees
 msgid "general"
-msgstr ""
+msgstr "yleinen"
 
 #. module: mail
 #: model:ir.ui.view,arch_db:mail.message_origin_link
@@ -5603,13 +5607,13 @@ msgstr "on"
 #: code:addons/mail/models/mail_alias.py:282
 #, python-format
 msgid "incorrectly configured alias"
-msgstr ""
+msgstr "virheellisesti konfiguroitu alias"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:278
 #, python-format
 msgid "incorrectly configured alias (unknown reference record)"
-msgstr ""
+msgstr "virheellisesti konfiguroitu alias (tuntematon tietueviittaus)"
 
 #. module: mail
 #: model:ir.model,name:mail.model_ir_actions_server
@@ -5630,7 +5634,7 @@ msgstr "mail.alias.mixin"
 #: code:addons/mail/models/mail_thread.py:948
 #, python-format
 msgid "model %s does not accept document creation"
-msgstr ""
+msgstr "malli %s ei salli dokumentin luontia"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:943
@@ -5741,24 +5745,24 @@ msgstr ""
 #: code:addons/mail/models/mail_channel.py:254
 #, python-format
 msgid "restricted to channel members"
-msgstr ""
+msgstr "rajoitettu kanavan jäsenille"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:287
 #, python-format
 msgid "restricted to followers"
-msgstr ""
+msgstr "rajoitettu seuraajille"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:291
 #, python-format
 msgid "restricted to known authors"
-msgstr ""
+msgstr "rajoitettu tunnetuille kirjoittajille"
 
 #. module: mail
 #: model:mail.channel,name:mail.channel_1
 msgid "sales"
-msgstr ""
+msgstr "myynnit"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:922
@@ -5781,10 +5785,10 @@ msgstr "tämä dokumentti"
 #: code:addons/mail/models/mail_thread.py:971
 #, python-format
 msgid "unknown error"
-msgstr ""
+msgstr "tuntematon virhe"
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:911
 #, python-format
 msgid "unknown target model %s"
-msgstr ""
+msgstr "tuntematon kohdemalli %s"
