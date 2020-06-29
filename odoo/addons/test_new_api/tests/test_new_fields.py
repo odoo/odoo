@@ -1349,6 +1349,29 @@ class TestFields(common.TransactionCase):
         self.assertNotEqual(new_disc.participants, disc.participants)
         self.assertEqual(new_disc.participants._origin, disc.participants)
 
+    def test_41_new_compute(self):
+        """ Check recomputation of fields on new records. """
+        move = self.env['test_new_api.move'].create({
+            'line_ids': [(0, 0, {'quantity': 1}), (0, 0, {'quantity': 1})],
+        })
+        move.flush()
+        line = move.line_ids[0]
+
+        new_move = move.new(origin=move)
+        new_line = line.new(origin=line)
+
+        # move_id is fetched from origin
+        self.assertEqual(new_line.move_id, move)
+        self.assertEqual(new_move.quantity, 2)
+        self.assertEqual(move.quantity, 2)
+
+        # modifying new_line must trigger recomputation on new_move, even if
+        # new_line.move_id is not new_move!
+        new_line.quantity = 2
+        self.assertEqual(new_line.move_id, move)
+        self.assertEqual(new_move.quantity, 3)
+        self.assertEqual(move.quantity, 2)
+
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_41_new_related(self):
         """ test the behavior of related fields starting on new records. """
@@ -1493,6 +1516,21 @@ class TestFields(common.TransactionCase):
         # accidentally override 'move_id' (by prefetch).
         line.move_id = move2
         self.assertEqual(line.move_id, move2)
+
+    def test_72_relational_inverse(self):
+        """ Check the consistency of relational fields with inverse(s). """
+        move1 = self.env['test_new_api.move'].create({})
+        move2 = self.env['test_new_api.move'].create({})
+
+        # makes sure that line.move_id is flushed before search
+        line = self.env['test_new_api.move_line'].create({'move_id': move1.id})
+        moves = self.env['test_new_api.move'].search([('line_ids', 'in', line.id)])
+        self.assertEqual(moves, move1)
+
+        # makes sure that line.move_id is flushed before search
+        line.move_id = move2
+        moves = self.env['test_new_api.move'].search([('line_ids', 'in', line.id)])
+        self.assertEqual(moves, move2)
 
     def test_80_copy(self):
         Translations = self.env['ir.translation']

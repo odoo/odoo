@@ -95,7 +95,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         default=fields.Date.context_today)
     ref = fields.Char(string='Reference', copy=False)
-    narration = fields.Text(string='Internal Note')
+    narration = fields.Text(string='Terms and Conditions')
     state = fields.Selection(selection=[
             ('draft', 'Draft'),
             ('posted', 'Posted'),
@@ -1012,15 +1012,25 @@ class AccountMove(models.Model):
                     JOIN account_move_line line ON line.move_id = move.id
                     JOIN account_partial_reconcile part ON part.debit_move_id = line.id OR part.credit_move_id = line.id
                     JOIN account_move_line rec_line ON
-                        (rec_line.id = part.credit_move_id AND line.id = part.debit_move_id)
-                        OR
                         (rec_line.id = part.debit_move_id AND line.id = part.credit_move_id)
                     JOIN account_payment payment ON payment.id = rec_line.payment_id
                     JOIN account_journal journal ON journal.id = rec_line.journal_id
                     WHERE payment.state IN ('posted', 'sent')
                     AND journal.post_at = 'bank_rec'
                     AND move.id IN %s
-                ''', [tuple(invoice_ids)]
+                UNION
+                    SELECT move.id
+                    FROM account_move move
+                    JOIN account_move_line line ON line.move_id = move.id
+                    JOIN account_partial_reconcile part ON part.debit_move_id = line.id OR part.credit_move_id = line.id
+                    JOIN account_move_line rec_line ON
+                        (rec_line.id = part.credit_move_id AND line.id = part.debit_move_id)
+                    JOIN account_payment payment ON payment.id = rec_line.payment_id
+                    JOIN account_journal journal ON journal.id = rec_line.journal_id
+                    WHERE payment.state IN ('posted', 'sent')
+                    AND journal.post_at = 'bank_rec'
+                    AND move.id IN %s
+                ''', [tuple(invoice_ids), tuple(invoice_ids)]
             )
             in_payment_set = set(res[0] for res in self._cr.fetchall())
         else:
@@ -2226,7 +2236,7 @@ class AccountMove(models.Model):
         return action
 
     def action_post(self):
-        if self.mapped('line_ids.payment_id') and any(post_at == 'bank_rec' for post_at in self.mapped('journal_id.post_at')):
+        if self.filtered(lambda x: x.journal_id.post_at == 'bank_rec').mapped('line_ids.payment_id').filtered(lambda x: x.state != 'reconciled'):
             raise UserError(_("A payment journal entry generated in a journal configured to post entries only when payments are reconciled with a bank statement cannot be manually posted. Those will be posted automatically after performing the bank reconciliation."))
         return self.post()
 
@@ -2490,7 +2500,7 @@ class AccountMoveLine(models.Model):
         help='Utility field to express amount currency')
     country_id = fields.Many2one(comodel_name='res.country', related='move_id.company_id.country_id')
     account_id = fields.Many2one('account.account', string='Account',
-        index=True, ondelete="cascade", check_company=True,
+        index=True, ondelete="restrict", check_company=True,
         domain=[('deprecated', '=', False)])
     account_internal_type = fields.Selection(related='account_id.user_type_id.type', string="Internal Type", store=True, readonly=True)
     account_root_id = fields.Many2one(related='account_id.root_id', string="Account Root", store=True, readonly=True)
@@ -3151,10 +3161,39 @@ class AccountMoveLine(models.Model):
                 if record.move_id.tax_cash_basis_rec_id:
                     reconciled_amls = record.move_id.tax_cash_basis_rec_id.debit_move_id + record.move_id.tax_cash_basis_rec_id.credit_move_id
                     invoice_aml = reconciled_amls.filtered(lambda x: x.journal_id.type in ('sale', 'purchase')) # To exclude the payment
-                else:
-                    invoice_aml = record
 
-                tag_amount = (tag.tax_negate and -1 or 1) * (invoice_aml.move_id.is_inbound() and -1 or 1) * record.balance
+                    if len(invoice_aml) > 1:
+
+                        caba_origin_inv_journal_type = invoice_aml.mapped('journal_id.type')[0]
+                        type_prefixes = {'sale': 'out', 'purchase': 'in'}
+
+                        if record.tax_repartition_line_id:
+                            # If tax_repartition_line_id is set, we know for sure we are on a tax line.
+                            # We can then simply check whether the repartition line is intended for invoices or refunds
+                            type_postfix = record.tax_repartition_line_id.invoice_tax_id and 'invoice' or 'refund'
+                            caba_origin_inv_type = "%s_%s" % (type_prefixes[caba_origin_inv_journal_type], type_postfix)
+
+                        elif record.tax_ids:
+                            # If it's a base line, we rely on debit/credit to guess the type of the CABA origin invoice.
+                            if (caba_origin_inv_journal_type == 'sale' and record.credit) \
+                               or (caba_origin_inv_journal_type == 'purchase' and record.debit):
+                                caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_invoice'
+                            else:
+                                caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_refund'
+
+                        else:
+                            # Default type for non-tax related lines is invoice. (in/out depending of the journal)
+                            caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_invoice'
+
+                        if caba_origin_inv_type not in invoice_aml.mapped('move_id.type'):
+                            caba_origin_inv_type = type_prefixes[caba_origin_inv_journal_type] + '_invoice'
+                    else:
+                        caba_origin_inv_type = invoice_aml.move_id.type
+
+                else:
+                    caba_origin_inv_type = record.move_id.type
+
+                tag_amount = (tag.tax_negate and -1 or 1) * (caba_origin_inv_type in record.move_id.get_inbound_types() and -1 or 1) * record.balance
 
                 if tag.tax_report_line_ids:
                     #Then, the tag comes from a report line, and hence has a + or - sign (also in its name)
@@ -3758,7 +3797,8 @@ class AccountMoveLine(models.Model):
             lambda m: m.is_invoice(include_receipts=True) and m.invoice_payment_state not in ('paid', 'in_payment')
         )
 
-        self._check_reconcile_validity()
+        reconciled_lines = self.filtered(lambda aml: float_is_zero(aml.balance, precision_rounding=aml.move_id.company_id.currency_id.rounding) and aml.reconciled)
+        (self - reconciled_lines)._check_reconcile_validity()
         #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
 

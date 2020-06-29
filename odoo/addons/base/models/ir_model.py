@@ -1992,6 +1992,10 @@ class IrModelData(models.Model):
                         bad_imd_ids.append(id)
         if bad_imd_ids:
             self.browse(bad_imd_ids).unlink()
+
+        # Once all views are created create specific ones
+        self.env['ir.ui.view']._create_all_specific_views(modules)
+
         loaded_xmlids.clear()
 
     @api.model

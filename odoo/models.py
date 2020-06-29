@@ -5427,6 +5427,12 @@ Record ids: %(records)s
                     id_vals = self.env.all.towrite.pop(model_name)
                     process(self.env[model_name], id_vals)
 
+            # missing for one2many fields, flush their inverse
+            for fname in fnames:
+                field = self._fields[fname]
+                if field.type == 'one2many' and field.inverse_name:
+                    self.env[field.comodel_name].flush([field.inverse_name])
+
     #
     # New records - represent records that do not exist in the database yet;
     # they are used to perform onchanges.
@@ -5753,6 +5759,9 @@ Record ids: %(records)s
 
                         # TODO: find a better fix
                         if key.model_name == records._name:
+                            if not any(self._ids):
+                                # if self are new, records should be new as well
+                                records = records.browse(it and NewId(it) for it in records._ids)
                             break
                 else:
                     new_records = self.filtered(lambda r: not r.id)

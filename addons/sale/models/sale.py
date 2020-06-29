@@ -375,7 +375,7 @@ class SaleOrder(models.Model):
         user_id = partner_user.id
         if not self.env.context.get('not_self_saleperson'):
             user_id = user_id or self.env.uid
-        if self.user_id.id != user_id:
+        if user_id and self.user_id.id != user_id:
             values['user_id'] = user_id
 
         if self.env['ir.config_parameter'].sudo().get_param('account.use_invoice_terms') and self.env.company.invoice_terms:
@@ -969,7 +969,7 @@ class SaleOrder(models.Model):
 
     def _get_payment_type(self):
         self.ensure_one()
-        return 'form_save' if self.require_payment else 'form'
+        return 'form'
 
     def _get_portal_return_action(self):
         """ Return the action used to display orders when returning from customer portal. """
@@ -1030,6 +1030,8 @@ class SaleOrderLine(models.Model):
                 'price_total': taxes['total_included'],
                 'price_subtotal': taxes['total_excluded'],
             })
+            if self.env.context.get('import_file', False) and not self.env.user.user_has_groups('account.group_account_manager'):
+                line.tax_id.invalidate_cache(['invoice_repartition_line_ids'], [line.tax_id.id])
 
     @api.depends('product_id', 'order_id.state', 'qty_invoiced', 'qty_delivered')
     def _compute_product_updatable(self):
@@ -1453,7 +1455,7 @@ class SaleOrderLine(models.Model):
             return product.with_context(pricelist=self.order_id.pricelist_id.id).price
         product_context = dict(self.env.context, partner_id=self.order_id.partner_id.id, date=self.order_id.date_order, uom=self.product_uom.id)
 
-        final_price, rule_id = self.order_id.pricelist_id.with_context(product_context).get_product_price_rule(self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
+        final_price, rule_id = self.order_id.pricelist_id.with_context(product_context).get_product_price_rule(product or self.product_id, self.product_uom_qty or 1.0, self.order_id.partner_id)
         base_price, currency = self.with_context(product_context)._get_real_price_currency(product, rule_id, self.product_uom_qty, self.product_uom, self.order_id.pricelist_id.id)
         if currency != self.order_id.pricelist_id.currency_id:
             base_price = currency._convert(

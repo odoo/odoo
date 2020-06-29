@@ -103,7 +103,11 @@ class AccountMove(models.Model):
                     continue
 
                 # Retrieve accounts needed to generate the COGS.
-                accounts = line.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=move.fiscal_position_id)
+                accounts = (
+                    line.product_id.product_tmpl_id
+                    .with_context(force_company=line.company_id.id)
+                    .get_product_accounts(fiscal_pos=move.fiscal_position_id)
+                )
                 debit_interim_account = accounts['stock_output']
                 credit_expense_account = accounts['expense']
                 if not debit_interim_account or not credit_expense_account:

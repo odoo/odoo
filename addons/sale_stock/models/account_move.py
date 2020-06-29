@@ -15,9 +15,11 @@ class AccountMove(models.Model):
         Returns the stock moves associated to this invoice."""
         rslt = super(AccountMove, self)._stock_account_get_last_step_stock_moves()
         for invoice in self.filtered(lambda x: x.type == 'out_invoice'):
-            rslt += invoice.mapped('invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
+            rslt += invoice.mapped('invoice_line_ids.sale_line_ids.move_ids').filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'customer')
         for invoice in self.filtered(lambda x: x.type == 'out_refund'):
-            rslt += invoice.mapped('reversed_entry_id.invoice_line_ids.sale_line_ids.order_id.picking_ids.move_lines').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
+            rslt += invoice.mapped('reversed_entry_id.invoice_line_ids.sale_line_ids.move_ids').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
+            # Add refunds generated from the SO
+            rslt += invoice.mapped('invoice_line_ids.sale_line_ids.move_ids').filtered(lambda x: x.state == 'done' and x.location_id.usage == 'customer')
         return rslt
 
     def _get_invoiced_lot_values(self):
@@ -98,6 +100,11 @@ class AccountMove(models.Model):
 
 class AccountMoveLine(models.Model):
     _inherit = "account.move.line"
+
+    def _sale_can_be_reinvoice(self):
+        self.ensure_one()
+        return not self.is_anglo_saxon_line and super(AccountMoveLine, self)._sale_can_be_reinvoice()
+
 
     def _stock_account_get_anglo_saxon_price_unit(self):
         self.ensure_one()

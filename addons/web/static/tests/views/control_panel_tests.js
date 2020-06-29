@@ -396,8 +396,8 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('fiels and filters with groups/invisible attribute are not always rendered but activable as search default', async function (assert) {
-        assert.expect(13);
+    QUnit.test('fields and filters with groups/invisible attribute are not always rendered but activable as search default', async function (assert) {
+        assert.expect(15);
         var controlPanel = await createControlPanel({
             model: 'partner',
             arch: "<search>" +
@@ -405,15 +405,19 @@ QUnit.module('Views', {
                         "<field name=\"foo\" string=\"Foo A\"/>" +
                         "<filter name=\"filterA\" string=\"FA\" domain=\"[]\"/>" +
                         "<filter name=\"filterB\" string=\"FB\" invisible=\"1\" domain=\"[]\"/>" +
+                        "<filter name=\"filterC\" string=\"FC\" invisible=\"not context.get('show_filterC')\"/>" +
                         "<filter name=\"groupByA\" string=\"GA\" context=\"{'group_by': 'date_field:day'}\"/>" +
                         "<filter name=\"groupByB\" string=\"GB\" context=\"{'group_by': 'date_field:day'}\" invisible=\"1\"/>" +
                     "</search>",
             data: this.data,
             searchMenuTypes: ['filter', 'groupBy'],
-            context: {
-                search_default_display_name: 'value',
-                search_default_filterB: true,
-                search_default_groupByB: true,
+            viewOptions: {
+                context: {
+                    show_filterC: true,
+                    search_default_display_name: 'value',
+                    search_default_filterB: true,
+                    search_default_groupByB: true,
+                },
             },
         });
 
@@ -424,6 +428,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("FA")');
         assert.containsNone(controlPanel, '.o_menu_item a:contains("FB")');
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("FC")');
         // default filter should be activated even if invisible
         assert.containsOnce(controlPanel, '.o_searchview_facet .o_facet_values:contains(FB)');
 
@@ -450,6 +455,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("FA")');
         assert.containsNone(controlPanel, '.o_menu_item a:contains("FB")');
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("FC")');
 
         await testUtils.dom.click(controlPanel.$('button span.fa-bars'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("GA")');

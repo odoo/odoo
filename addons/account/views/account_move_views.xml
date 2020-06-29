@@ -1076,10 +1076,11 @@
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state','=','draft')]"/>
                     <filter name="posted" string="Posted" domain="[('state', '=', 'posted')]"/>
+                    <filter name="cancel" string="Cancelled" domain="[('state', '=', 'cancel')]"/>
                     <separator/>
-                    <filter name="in_payment" string="In Payment" domain="[('invoice_payment_state', '=', 'in_payment')]"/>
-                    <filter name="paid" string="Paid" domain="[('invoice_payment_state', '=', 'paid')]"/>
-                    <filter name="unpaid" string="Not Paid" domain="[('invoice_payment_state', '=', 'not_paid')]"/>
+                    <filter name="in_payment" string="In Payment" domain="[('invoice_payment_state', '=', 'in_payment'), ('state', '=', 'posted')]"/>
+                    <filter name="paid" string="Paid" domain="[('invoice_payment_state', '=', 'paid'), ('state', '=', 'posted')]"/>
+                    <filter name="unpaid" string="Not Paid" domain="[('invoice_payment_state', '=', 'not_paid'), ('state', '=', 'posted')]"/>
                     <filter name="late" string="Overdue" domain="['&amp;', ('invoice_date_due', '&lt;', time.strftime('%%Y-%%m-%%d')), ('state', '=', 'posted'), ('invoice_payment_state', '=', 'not_paid')]" help="Overdue invoices, maturity date passed"/>
                     <separator/>
                     <filter name="invoice_date" string="Invoice Date" date="invoice_date"/>

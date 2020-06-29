@@ -708,3 +708,46 @@ class TestSaleCouponProgramNumbers(TestSaleCouponCommon):
         # TOTAL                                              |   78.34 |   87.00 |   8.66
         self.assertEqual(order.amount_total, 87.00, "Total untaxed should be as per above comment")
         self.assertEqual(order.amount_untaxed, 78.34, "Total with taxes should be as per above comment")
+
+    def test_program_numbers_free_prod_with_min_amount_and_qty_on_same_prod(self):
+        # This test focus on giving a free product based on both
+        # minimum amount and quantity condition on an
+        # auto applied promotion program
+
+        order = self.empty_order
+        self.p3 = self.env['sale.coupon.program'].create({
+            'name': 'Buy 2 Chairs, get 1 free',
+            'promo_code_usage': 'no_code_needed',
+            'reward_type': 'product',
+            'program_type': 'promotion_program',
+            'reward_product_id': self.conferenceChair.id,
+            'rule_min_quantity': 2,
+            'rule_minimum_amount': self.conferenceChair.lst_price * 2,
+            'rule_products_domain': '[["sale_ok","=",True], ["id","=", %d]]' % self.conferenceChair.id,
+        })
+        sol1 = self.env['sale.order.line'].create({
+            'product_id': self.conferenceChair.id,
+            'name': 'Conf Chair',
+            'product_uom_qty': 2.0,
+            'order_id': order.id,
+        })
+        sol2 = self.env['sale.order.line'].create({
+            'product_id': self.drawerBlack.id,
+            'name': 'Drawer',
+            'product_uom_qty': 1.0,
+            'order_id': order.id,
+        }) # dummy line
+
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 2, "The promotion lines should not be applied")
+        sol1.write({'product_uom_qty': 3.0})
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 3, "The promotion lines should have been added")
+        self.assertEqual(order.amount_total, self.conferenceChair.lst_price * (sol1.product_uom_qty - 1) + self.drawerBlack.lst_price * sol2.product_uom_qty, "The promotion line was not applied to the amount total")
+        sol2.unlink()
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 2, "The other product should not affect the promotion")
+        self.assertEqual(order.amount_total, self.conferenceChair.lst_price * (sol1.product_uom_qty - 1), "The promotion line was not applied to the amount total")
+        sol1.write({'product_uom_qty': 2.0})
+        order.recompute_coupon_lines()
+        self.assertEqual(len(order.order_line.ids), 1, "The promotion lines should have been removed")

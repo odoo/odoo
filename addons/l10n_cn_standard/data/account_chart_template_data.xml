@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-    <data noupdate="1">
+    <data>
         <record id="l10n_chart_china_standard_business" model="account.chart.template">
             <field name="property_account_receivable_id" ref="account_1122" />
             <field name="property_account_payable_id" ref="account_2202" />
@@ -11,7 +11,9 @@
             <field name="expense_currency_exchange_account_id" ref="account_6061" />
             <field name="default_pos_receivable_account_id" ref="account_1124" />
         </record>
+    </data>
 
+    <data noupdate="1">
         <function model="account.chart.template" name="try_loading">
             <value eval="[ref('l10n_cn_standard.l10n_chart_china_standard_business')]"/>
         </function>

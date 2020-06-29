@@ -6,14 +6,14 @@
 # Pedro Filipe <pedro2.10@hotmail.com>, 2019
 # José Gomes <jg@opencloud.pro>, 2019
 # Pedro Castro Silva <pedrocs@exo.pt>, 2019
-# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2019
 # Martin Trigaux, 2019
-# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2019
+# 425fe09b3064b9f906f637fff94056ae_a00ea56 <0fa3588fa89906bfcb3a354600956e0e_308047>, 2019
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2019
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2019
-# Manuela Silva <manuelarodsilva@gmail.com>, 2019
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019
 # Nuno Silva <nuno.silva@arxi.pt>, 2020
+# Manuela Silva <manuelarodsilva@gmail.com>, 2020
+# Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Nuno Silva <nuno.silva@arxi.pt>, 2020\n"
+"Last-Translator: Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2020\n"
 "Language-Team: Portuguese (https://www.transifex.com/odoo/teams/41243/pt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,7 +32,7 @@ msgstr ""
 #. module: event
 #: model:mail.template,subject:event.event_reminder
 msgid "${object.event_id.name}: ${object.get_date_range_str()}"
-msgstr ""
+msgstr "${object.event_id.name}: ${object.get_date_range_str()}"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -50,7 +50,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -58,6 +58,8 @@ msgid ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
 msgstr ""
+"<b><i class=\"fa fa-clock-o\"/>\n"
+"                                        A</b>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -118,6 +120,17 @@ msgid ""
 "    % endif\n"
 "</div>"
 msgstr ""
+"<div>\n"
+"    Car@ ${object.name},<br/>\n"
+"    Obrigado pela sua solicitação.<br/>\n"
+"    Aqui está o seu crachá para o evento ${object.event_id.name}.<br/>\n"
+"    Se tiver alguma questão, informe-nos.\n"
+"    <br/><br/>\n"
+"    Obrigado,<br/>\n"
+"    % if object.event_id.user_id and object.event_id.user_id.signature:\n"
+"        ${object.event_id.user_id.signature | safe}\n"
+"    % endif\n"
+"</div>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -167,6 +180,9 @@ msgid ""
 "                                        to\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                        até\n"
+"                                    </span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -188,6 +204,8 @@ msgid ""
 "<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
 " Registration Limit. Are you sure you want to confirm it?</span>"
 msgstr ""
+"<span class=\"o_form_label\">Atenção: Este evento não atingiu o mínimo de "
+"registos. Tem a certeza que deseja confirmar?</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -604,16 +622,18 @@ msgid ""
 "Add a navigation menu to your event web pages with schedule, tracks, a track"
 " proposal form, etc."
 msgstr ""
+"Adicione um menu de navegação às páginas web do seu evento com agenda, "
+"palestras, formulários de propostas para palestras, etc."
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.act_event_registration_from_event
 msgid "Add a new attendee"
-msgstr ""
+msgstr "Adicionar um novo participante"
 
 #. module: event
 #: model_terms:ir.actions.act_window,help:event.action_event_view
 msgid "Add a new event"
-msgstr ""
+msgstr "Adicionar um novo evento"
 
 #. module: event
 #: model:res.groups,name:event.group_event_manager
@@ -624,7 +644,7 @@ msgstr "Administrador"
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_sub
 #: model:ir.model.fields.selection,name:event.selection__event_type_mail__interval_type__after_sub
 msgid "After each registration"
-msgstr ""
+msgstr "Depois de cada registo"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_type__after_event
@@ -649,6 +669,8 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
+"Tem a certeza que pretende cancelar este evento? Todos os participantes vão "
+"também ser cancelados."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -714,17 +736,17 @@ msgstr "Participantes"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__auto_confirm
 msgid "Autoconfirm Registrations"
-msgstr ""
+msgstr "Autoconfirmar Registos"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__auto_confirm
 msgid "Automatically Confirm Registrations"
-msgstr ""
+msgstr "Confirmar Registos Automaticamente"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__use_mail_schedule
 msgid "Automatically Send Emails"
-msgstr ""
+msgstr "Enviar Emails Automaticamente"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_available
@@ -744,7 +766,7 @@ msgstr "Frente do Crashá"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_innerleft
 msgid "Badge Inner Left"
-msgstr ""
+msgstr "Interior Esquerdo do Crachá"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__badge_innerright
@@ -837,17 +859,18 @@ msgstr "Conferência"
 #: model_terms:event.event,description:event.event_2
 #: model:event.event,name:event.event_2
 msgid "Conference for Architects"
-msgstr ""
+msgstr "Conferência para Arquitetos"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
 msgstr ""
+"As conferências, workshops e formações vão ser organizadas em 6 salas:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
 msgid "Config Settings"
-msgstr "config configurações"
+msgstr "Definições de Configuração"
 
 #. module: event
 #: model:ir.ui.menu,name:event.menu_event_configuration
@@ -962,7 +985,7 @@ msgstr "Descrição"
 #. module: event
 #: model:event.event,name:event.event_0
 msgid "Design Fair Los Angeles"
-msgstr ""
+msgstr "Feira do Design de Los Angeles"
 
 #. module: event
 #: model:event.event,subtitle:event.event_4
@@ -1001,6 +1024,8 @@ msgid ""
 "During this conference, our team will give a detailed overview of our "
 "business applications. You’ll know all the benefits of using it."
 msgstr ""
+"Durante esta conferência, a nossa equipa dará um resumo detalhado das nossas"
+" aplicações empresariais. Irá descobrir todos os benefícios de as usar."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__email
@@ -1042,7 +1067,7 @@ msgstr "Evento"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Envio de Email Automático do Evento"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
@@ -1054,7 +1079,7 @@ msgstr "Crashá do Evento"
 #: model:ir.ui.menu,name:event.menu_event_type
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Event Categories"
-msgstr ""
+msgstr "Categorias do Evento"
 
 #. module: event
 #: model:ir.model,name:event.model_event_type
@@ -1132,6 +1157,18 @@ msgid ""
 "                              - or the responsible of the event,\n"
 "                              - or the last writer of the template."
 msgstr ""
+"Planificador de Evento para:\n"
+"                              - Evento: %s (%s)\n"
+"                              - Agendado para: %s\n"
+"                              - Modelo: %s (%s)\n"
+"\n"
+"                            Falha com o erro:\n"
+"                              - %s\n"
+"\n"
+"                            Está a receber este email porque:\n"
+"                              - organizou o evento,\n"
+"                              - é responsável pelo evento,\n"
+"                              - fez a última alteração ao modelo."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__event_begin_date
@@ -1149,7 +1186,7 @@ msgstr "Tipo de evento"
 #: model:ir.cron,cron_name:event.event_mail_scheduler
 #: model:ir.cron,name:event.event_mail_scheduler
 msgid "Event: Mail Scheduler"
-msgstr ""
+msgstr "Evento: Planificador de Emails"
 
 #. module: event
 #: model:ir.actions.act_window,name:event.action_event_view
@@ -1182,6 +1219,8 @@ msgid ""
 "Events and registrations will automatically be confirmed\n"
 "                                            upon creation, easing the flow for simple events."
 msgstr ""
+"Eventos e registos serão automaticamente confirmados\n"
+"                                            quando criados, facilitando o fluxo de eventos simples."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__auto_confirm
@@ -1189,6 +1228,8 @@ msgid ""
 "Events and registrations will automatically be confirmed upon creation, "
 "easing the flow for simple events."
 msgstr ""
+"Eventos e registos serão automaticamente confirmados quando criados, "
+"facilitando o fluxo de eventos simples."
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1251,7 +1292,7 @@ msgstr "Seguidores (Parceiros)"
 #: model_terms:event.event,description:event.event_0
 #: model_terms:event.event,description:event.event_2
 msgid "For any additional information, please contact us at"
-msgstr ""
+msgstr "Para obter informação adicional, contacte-nos em"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_max
@@ -1259,6 +1300,8 @@ msgid ""
 "For each event you can define a maximum registration of seats(number of "
 "attendees), above this numbers the registrations are not accepted."
 msgstr ""
+"Para cada evento pode definir um máximo de registos (número de "
+"participantes), acima deste número não serão aceites mais registos."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__seats_min
@@ -1267,11 +1310,14 @@ msgid ""
 "attendees), if it does not reach the mentioned registrations the event can "
 "not be confirmed (keep 0 to ignore this rule)"
 msgstr ""
+"Para cada evento pode definir um mínimo de lugares reservados (número de "
+"participantes), se não atingir este número de registos o evento não poderá "
+"ser confirmado (mantenha a 0 para ignorar esta regra)"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Functional flow of the main applications;"
-msgstr ""
+msgstr "Fluxo funcional das aplicações principais;"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1299,6 +1345,7 @@ msgstr "Agrupar por"
 #: model_terms:event.event,description:event.event_2
 msgid "Having attended this conference, participants should be able to:"
 msgstr ""
+"Tendo assistido a esta conferência, os participantes deverão ser capazes de:"
 
 #. module: event
 #: model:event.event,name:event.event_5
@@ -1358,6 +1405,10 @@ msgid ""
 " status is set to 'Done'. If event is cancelled the status is set to "
 "'Cancelled'."
 msgstr ""
+"Se o evento for criado, o estado é 'Rascunho'. Se o evento for confirmado "
+"para as datas fornecidas o estado é 'Confirmado'. Se o evento tiver acabado,"
+" o estado passa a 'Concluído'. Se o evento for cancelado o estado passa a "
+"'Cancelado'."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1401,11 +1452,13 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_event_type__default_registration_max
 msgid "It will select this default maximum value when you choose this event"
 msgstr ""
+"Este valor máximo irá ser usado por defeito quando escolhe este evento."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__default_registration_min
 msgid "It will select this default minimum value when you choose this event"
 msgstr ""
+"Este valor mínimo irá ser usado por defeito quando escolhe este evento."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1469,7 +1522,7 @@ msgstr "Limitado"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__has_seats_limitation
 msgid "Limited Seats"
-msgstr ""
+msgstr "Lugares Limitados"
 
 #. module: event
 #: model:event.event,name:event.event_3
@@ -1497,7 +1550,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail__mail_registration_ids
 msgid "Mail Registration"
-msgstr ""
+msgstr "Registo de Email"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__event_mail_ids
@@ -1518,7 +1571,7 @@ msgstr "Agendadores de Email"
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Agendamento de Emails em Categoria de Evento"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -1539,22 +1592,22 @@ msgstr "Anexos Principais"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
 msgid "Manage &amp; publish a schedule with tracks"
-msgstr ""
+msgstr "Gira &amp; publique um agendamento de palestras"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_availability
 msgid "Maximum Attendees"
-msgstr ""
+msgstr "Máximo de Participantes"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_max
 msgid "Maximum Attendees Number"
-msgstr ""
+msgstr "Número Máximo de Participantes"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_max
 msgid "Maximum Registrations"
-msgstr ""
+msgstr "Máximo de Registos"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -1562,6 +1615,8 @@ msgstr ""
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
 msgstr ""
+"O número máximo de participantes deve ser superior ao número mínimo de "
+"participantes."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
@@ -1578,12 +1633,12 @@ msgstr "Mensagens"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_min
 msgid "Minimum Attendees"
-msgstr ""
+msgstr "Mínimo de Participantes"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_type__default_registration_min
 msgid "Minimum Registrations"
-msgstr ""
+msgstr "Mínimo de Registos"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_registration__mobile
@@ -1623,13 +1678,13 @@ msgstr "Tipo de atividade seguinte "
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "No more available seats."
-msgstr ""
+msgstr "Não há mais lugares disponíveis."
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "No more seats available for this event."
-msgstr ""
+msgstr "Sem lugares disponíveis para este evento."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_needaction_counter
@@ -1640,7 +1695,7 @@ msgstr "Número de Ações"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_expected
 msgid "Number of Expected Attendees"
-msgstr ""
+msgstr "Número Esperado de Participantes"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__seats_used
@@ -1657,7 +1712,7 @@ msgstr ""
 #: model:ir.model.fields,help:event.field_res_partner__event_count
 #: model:ir.model.fields,help:event.field_res_users__event_count
 msgid "Number of events the partner has participated."
-msgstr ""
+msgstr "Número de eventos nos quais o parceiro participou."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__message_needaction_counter
@@ -1693,7 +1748,7 @@ msgstr "Online"
 #: model:ir.model.fields,field_description:event.field_event_type__is_online
 #: model_terms:ir.ui.view,arch_db:event.event_type_view_search
 msgid "Online Event"
-msgstr ""
+msgstr "Evento Online"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -1703,7 +1758,7 @@ msgstr "Eventos Online"
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_website_event_sale
 msgid "Online Ticketing"
-msgstr ""
+msgstr "Bilheteira Online"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
@@ -1711,6 +1766,8 @@ msgid ""
 "Online events like webinars do not require a specific location\n"
 "                                            and are hosted online."
 msgstr ""
+"Eventos online como webinars não requerem uma localização específica\n"
+"                                            e são realizadas online."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__is_online
@@ -1718,6 +1775,8 @@ msgid ""
 "Online events like webinars do not require a specific location and are "
 "hosted online."
 msgstr ""
+"Eventos online como webinars não requerem uma localização específica e são "
+"realizadas online."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1749,7 +1808,7 @@ msgstr "Telefone"
 #. module: event
 #: model:event.type,name:event.event_type_data_physical
 msgid "Physical Event"
-msgstr ""
+msgstr "Evento Físico"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -1934,7 +1993,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:event.action_event_configuration
 #: model:ir.ui.menu,name:event.menu_event_global_settings
 msgid "Settings"
-msgstr "Configurações"
+msgstr "Definições"
 
 #. module: event
 #: model:event.type,name:event.event_type_3
@@ -2025,7 +2084,7 @@ msgstr ""
 #. module: event
 #: model:ir.model.fields,field_description:event.field_res_config_settings__module_event_sale
 msgid "Tickets"
-msgstr ""
+msgstr "Tickets"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_tz
@@ -2164,13 +2223,13 @@ msgstr "Gestão de Armazém, Fabricação (MRP) e Vendas, Importar/Exportar."
 #: model:ir.model.fields,field_description:event.field_event_event__website_message_ids
 #: model:ir.model.fields,field_description:event.field_event_registration__website_message_ids
 msgid "Website Messages"
-msgstr "Mensagens do Website"
+msgstr "Mensagens do Site da Web"
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_event__website_message_ids
 #: model:ir.model.fields,help:event.field_event_registration__website_message_ids
 msgid "Website communication history"
-msgstr "Histórico de Comunicação do Website"
+msgstr "Histórico de comunicação do site da Web"
 
 #. module: event
 #: model:ir.model.fields.selection,name:event.selection__event_mail__interval_unit__weeks
