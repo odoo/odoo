@@ -1531,7 +1531,6 @@ QUnit.module('Views', {
                         "name": "new event",
                         "start": "2016-12-14 05:00:00",
                         "stop": "2016-12-15 17:00:00",
-                        'source': 'js-quickcreate'
                     },
                     "should send the correct data to create events");
                 }

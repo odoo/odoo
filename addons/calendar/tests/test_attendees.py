@@ -38,11 +38,19 @@ class TestEventNotifications(SavepointCase):
 
     # This test ensure that the self.env.user is automatically an attendee if created with the quick create js pop up
     def test_attendee_added_create_from_js_quick_create(self):
+
         event = self.env['calendar.event'].create({
             'name': "Doom's day",
             'start': datetime(2019, 10, 25, 8, 0),
             'stop': datetime(2019, 10, 27, 18, 0),
-            'source': 'js-quickcreate'
+        })
+
+        self.assertFalse(event.attendee_ids, "It should not have any attendee")
+
+        event = self.env['calendar.event'].with_context(source='js-quickcreate').create({
+            'name': "Renaissance's day",
+            'start': datetime(2019, 10, 28, 8, 0),
+            'stop': datetime(2019, 10, 29, 18, 0),
         })
         self.assertTrue(event.attendee_ids, "It should have one attendee, the creator of the event from the quickcreate")
 

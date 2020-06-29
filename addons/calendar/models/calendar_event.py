@@ -682,8 +682,7 @@ class Meeting(models.Model):
             # If the call is from js, from the quickcreate, it won't have
             # any partners associated. But we know that the creator is the current user.
             # We therefore add it here ourselves
-            if not 'partner_ids' in new_vals and 'source' in new_vals and new_vals['source'] == 'js-quickcreate':
-                del new_vals['source']
+            if not 'partner_ids' in new_vals and 'source' in self.env.context and self.env.context['source'] == 'js-quickcreate':
                 new_vals = dict(new_vals, partner_ids=[[6, False, [self.env.user.partner_id.id]]])
 
             new_val_list.append(new_vals)

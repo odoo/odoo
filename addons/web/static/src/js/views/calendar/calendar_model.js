@@ -149,7 +149,8 @@ return AbstractModel.extend({
         }
 
         // To keep track this is a rpc from frontend and quickcreate
-        data.source = 'js-quickcreate'
+        // data.source = 'js-quickcreate'
+        event.data.options.context.source = 'js-quickcreate'
 
         return this._rpc({
                 model: this.modelName,
