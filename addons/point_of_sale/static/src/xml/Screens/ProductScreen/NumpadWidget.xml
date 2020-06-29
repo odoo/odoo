@@ -6,14 +6,14 @@
             <button class="input-button number-char" t-on-click="sendInput('1')">1</button>
             <button class="input-button number-char" t-on-click="sendInput('2')">2</button>
             <button class="input-button number-char" t-on-click="sendInput('3')">3</button>
-            <button class="mode-button" t-att-class="{'selected-mode': state.mode === 'quantity'}"
+            <button class="mode-button" t-att-class="{'selected-mode': props.activeMode === 'quantity'}"
                     t-on-click="changeMode('quantity')">Qty</button>
             <br />
             <button class="input-button number-char" t-on-click="sendInput('4')">4</button>
             <button class="input-button number-char" t-on-click="sendInput('5')">5</button>
             <button class="input-button number-char" t-on-click="sendInput('6')">6</button>
             <button class="mode-button" t-att-class="{
-                        'selected-mode': state.mode === 'discount',
+                        'selected-mode': props.activeMode === 'discount',
                         'disabled-mode': !hasManualDiscount
                     }"
                     t-att-disabled="!hasManualDiscount"
@@ -23,7 +23,7 @@
             <button class="input-button number-char" t-on-click="sendInput('8')">8</button>
             <button class="input-button number-char" t-on-click="sendInput('9')">9</button>
             <button class="mode-button" t-att-class="{
-                    'selected-mode': state.mode === 'price',
+                    'selected-mode': props.activeMode === 'price',
                     'disabled-mode': !hasPriceControlRights
                 }" t-att-disabled="!hasPriceControlRights"
                     t-on-click="changeMode('price')">Price</button>
