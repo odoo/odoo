@@ -1114,7 +1114,7 @@ var ListRenderer = BasicRenderer.extend({
 
         // display the no content helper if necessary
         if (!this._hasContent() && !!this.noContentHelp) {
-            this.$el.append(this._renderNoContentHelper());
+            this._renderNoContentHelper();
         }
     },
     /**
