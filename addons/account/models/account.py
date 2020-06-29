@@ -1588,7 +1588,7 @@ class AccountTax(models.Model):
         # For the computation of move lines, we could have a negative base value.
         # In this case, compute all with positive values and negate them at the end.
         sign = 1
-        if base < 0:
+        if base <= 0:
             base = -base
             sign = -1
 
