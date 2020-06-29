@@ -931,6 +931,62 @@ header {
     }
 }
 
+@if o-website-value('header-template') == 'sidebar' {
+    @include media-breakpoint-up(lg) {
+        #wrapwrap {
+            // Hack: padding is used by layout option (boxed, etc) so use
+            // border here to be able to combine the effect.
+            @if $-hamburger-right {
+                border-right: o-website-value('sidebar-width') solid transparent;
+            } @else {
+                border-left: o-website-value('sidebar-width') solid transparent;
+            }
+
+            > header {
+                @if $-hamburger-right {
+                    @include o-position-absolute(0, 0, 0, auto);
+                } @else {
+                    @include o-position-absolute(0, auto, 0, 0);
+                }
+                position: fixed;
+                z-index: $zindex-fixed;
+                display: flex;
+                width: o-website-value('sidebar-width');
+                transform: none !important;
+
+                .navbar {
+                    width: 100%;
+                    align-items: start;
+                    padding: $spacer;
+
+                    .navbar-brand {
+                        max-width: 100%;
+                        padding: 0 0 $spacer 0;
+                    }
+                    #top_menu_container {
+                        flex-direction: column;
+                        align-items: start;
+                        padding: 0;
+                    }
+                    .navbar-nav {
+                        flex-direction: column;
+                    }
+                    .nav-link,
+                    .dropdown-item {
+                        white-space: initial;
+                    }
+                    .dropdown-menu {
+                        position: relative;
+                    }
+                }
+            }
+        }
+        body.o_connected_user #wrapwrap > header {
+            top: $o-navbar-height;
+        }
+    }
+}
+
 // Mega menu
 .o_mega_menu {
     width: 100%;
