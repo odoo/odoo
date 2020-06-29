@@ -362,6 +362,15 @@
     </xpath>
 </template>
 
+<template id="template_header_sidebar" inherit_id="website.layout" name="Template Header Sidebar" active="False">
+    <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
+        <attribute name="class" remove="navbar-expand-md" add="navbar-expand-lg" separator=" "/>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']" position="attributes">
+        <attribute name="class" remove="text-right ml-auto" add="" separator=" "/>
+    </xpath>
+</template>
+
 <!-- Navbar Hamburger Options -->
 <template id="option_header_off_canvas" inherit_id="website.layout" name="Off-Canvas Header" active="False">
     <xpath expr="//header//ul[@id='top_menu']" position="attributes">

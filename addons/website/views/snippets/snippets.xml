@@ -505,7 +505,17 @@
                        data-customize-website-views="website.template_header_vertical"
                        data-customize-website-variable="'vertical'"
                        data-img="/website/static/src/img/snippets_options/header_template_vertical.png"/>
+            <we-button string="Sidebar"
+                       data-name="header_sidebar_opt"
+                       data-customize-website-views="website.template_header_sidebar, website.no_autohide_menu"
+                       data-customize-website-variable="sidebar"/>
         </we-select>
+        <we-input string="⌙ Width"
+                  data-customize-website-variable="null"
+                  data-variable="sidebar-width"
+                  data-unit="px"
+                  data-save-unit="rem"
+                  data-dependencies="header_sidebar_opt"/>
 
         <we-title id="hamburger_opt_label">Hamburger (Mobile)</we-title>
         <we-select string="⌙ Type" data-variable="hamburger-type" data-reload="/">
@@ -531,7 +541,7 @@
                      data-select-class="mx-md-auto"
                      data-no-preview="true"/>
 
-        <we-select string="Header Effect">
+        <we-select string="Header Effect" data-dependencies="!header_sidebar_opt">
             <t t-set="header_effect_standard_label">Standard</t>
             <t t-set="header_effect_scroll_label">Scroll</t>
             <t t-set="header_effect_fixed_label">Fixed</t>

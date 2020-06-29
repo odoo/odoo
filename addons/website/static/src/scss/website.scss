@@ -961,6 +961,73 @@ header {
     }
 }
 
+@if o-website-value('header-template') == 'sidebar' {
+    @include media-breakpoint-up(lg) {
+        #wrapwrap {
+            // Hack: padding-left is used by layout option (boxed, etc) so use
+            // border-left here to be able to combine the effect.
+            border-left: o-website-value('sidebar-width') solid transparent;
+
+            > header {
+                @include o-position-absolute(0, auto, 0, 0);
+                position: fixed;
+                z-index: $zindex-fixed;
+                display: flex;
+                // Important to define the width on the header itself as the
+                // preheader would stretch it over the content otherwise
+                width: o-website-value('sidebar-width');
+                transform: none !important;
+
+                .navbar:not(#o_preheader) {
+                    width: 100%;
+                    align-items: start;
+                    padding: $spacer;
+
+                    .navbar-brand {
+                        max-width: 100%;
+                        padding: 0 0 $spacer 0;
+                    }
+                    #top_menu_container {
+                        flex-direction: column;
+                        align-items: start;
+                        padding: 0;
+                    }
+                    .navbar-nav {
+                        flex-direction: column;
+                    }
+                    .nav-link,
+                    .dropdown-item {
+                        white-space: initial;
+                    }
+                    .dropdown-menu {
+                        position: relative;
+                    }
+                }
+            }
+        }
+        body.o_connected_user #wrapwrap > header {
+            top: $o-navbar-height;
+        }
+        @if o-website-value('preheader-template') {
+            #o_preheader {
+                position: fixed;
+                right: 0;
+                left: o-website-value('sidebar-width');
+            }
+            @if index(('magazine', 'icons'), o-website-value('preheader-template')) {
+                #wrapwrap > main {
+                    // Header visibilities
+                    padding-top: $spacer * 3 !important;
+                }
+            } @else if o-website-value('preheader-template') == 'image' {
+                #wrapwrap > main {
+                    padding-top: o-website-value('preheader-height');
+                }
+            }
+        }
+    }
+}
+
 // Mega menu
 .o_mega_menu {
     width: 100%;
