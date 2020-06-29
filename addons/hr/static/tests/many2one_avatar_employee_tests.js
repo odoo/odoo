@@ -132,7 +132,7 @@ QUnit.module('hr', {}, function () {
     });
 
     QUnit.test('many2one_avatar_employee: click on an employee not associated with a user', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         this.data['hr.employee'].records[0].user_partner_id = false;
         const { widget: form } = await start({
@@ -150,6 +150,12 @@ QUnit.module('hr', {}, function () {
             res_id: 1,
         });
 
+        mock.intercept(form, 'call_service', (ev) => {
+            if (ev.data.service === 'notification') {
+                assert.step(`display notification "${ev.data.args[0].message}"`);
+            }
+        }, true);
+
         assert.strictEqual(form.$('.o_field_widget[name=employee_id]').text().trim(), 'Mario');
 
         await dom.click(form.$('.o_m2o_avatar'));
@@ -157,13 +163,14 @@ QUnit.module('hr', {}, function () {
         assert.verifySteps([
             'read foo 1',
             'read hr.employee 11',
+            'display notification "You can only chat with employees that have a dedicated user"',
         ]);
 
         form.destroy();
     });
 
     QUnit.test('many2one_avatar_employee: click on self', async function (assert) {
-        assert.expect(4);
+        assert.expect(5);
 
         const { widget: form } = await start({
             hasView: true,
@@ -174,6 +181,10 @@ QUnit.module('hr', {}, function () {
             mockRPC(route, args) {
                 if (args.method === 'read') {
                     assert.step(`read ${args.model} ${args.args[0]}`);
+                }
+                if (args.method === 'xmlid_to_res_id') {
+                    assert.step(`xmlid_to_res_id ${args.kwargs.xmlid}`);
+                    return Promise.resolve(2);
                 }
                 return this._super(...arguments);
             },
@@ -190,6 +201,7 @@ QUnit.module('hr', {}, function () {
         assert.verifySteps([
             'read foo 1',
             'read hr.employee 11',
+            'xmlid_to_res_id base.partner_root', // get odoobot ID to open odoobot chat window
         ]);
 
         form.destroy();

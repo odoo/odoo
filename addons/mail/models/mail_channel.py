@@ -389,8 +389,8 @@ class Channel(models.Model):
     def message_comment(self, *,
                        partner_ids=False, parent_id=False, model=False, res_id=False,
                        author_id=None, email_from=None, body='', subject=False, **kwargs):
-        # To post a new message as a comment(Discussion) in an existing thread
-        # Returns new mail.message ID
+        """ Post a new message as a comment(Discussion) in an existing thread
+        Returns new mail.message ID """
         if self:
             self.ensure_one()
         # split message additional values from notify additional values

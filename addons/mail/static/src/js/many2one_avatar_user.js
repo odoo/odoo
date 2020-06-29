@@ -62,12 +62,7 @@ odoo.define('mail.Many2OneAvatarUser', function (require) {
          *
          * @private
          */
-        _displayWarning() {
-            this.displayNotification({
-                message: _t('You cannot chat with yourself'),
-                type: 'info',
-            });
-        },
+        _displayWarning() {},
         /**
          * @private
          * @param {number} resId
@@ -129,15 +124,18 @@ odoo.define('mail.Many2OneAvatarUser', function (require) {
             let partnerId;
             if (this.field.relation !== 'res.users' || this.value.res_id !== session.uid) {
                 partnerId = await this._resIdToPartnerId(this.value.res_id);
-            } else {
+            }
+            // if clicked on self or partnerId fetched is same as session.partnerId then open OdooBot
+            if (this.value.res_id === session.uid || partnerId === session.partner_id) {
                 partnerId = await this._getOdooBotPartnerId();
             }
+
             if (partnerId && partnerId !== session.partner_id) {
                 const env = Component.env;
                 const partner = env.models['mail.partner'].insert({
                     id: partnerId,
                 });
-                const channel_id = await partner.openChat();
+                const channelId = await partner.openChat();
                 if (this.value.res_id === session.uid) {
                     let postData = {
                         attachment_ids: [],
@@ -146,18 +144,18 @@ odoo.define('mail.Many2OneAvatarUser', function (require) {
                         message_type: 'comment',
                         reply_to: partnerId,
                         res_id: partnerId,
-                        channel_ids: [channel_id],
+                        channel_ids: [channelId],
                         moderation_status: 'accepted'
                     };
                     this._rpc({
                         model: "mail.channel",
                         method: 'message_comment',
-                        args: [channel_id],
+                        args: [channelId],
                         kwargs: postData
                     });
                 }
             } else {
-                this._displayWarning();
+                this._displayWarning(partnerId);
             }
         }
     });
