@@ -501,6 +501,10 @@ class account_journal(models.Model):
         elif self.type == 'purchase':
             action['domain'] = [(domain_type_field, 'in', ('in_invoice', 'in_refund', 'in_receipt'))]
 
+        if action_name == 'account.action_move_journal_line':
+            action['domain'] = []
+            if action['context'].get('search_default_misc_filter') and action['context'].get('search_default_journal_id'):
+                del action['context']['search_default_misc_filter']
         return action
 
     def open_spend_money(self):
