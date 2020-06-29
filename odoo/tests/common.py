@@ -1402,7 +1402,7 @@ class HttpCase(TransactionCase):
         `browser_js` can be passed as keyword arguments."""
         step_delay = ', %s' % step_delay if step_delay else ''
         code = kwargs.pop('code', "odoo.startTour('%s'%s)" % (tour_name, step_delay))
-        ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours.%s.ready" % tour_name)
+        ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours['%s'].ready" % tour_name)
         res = self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
         # some tests read the result after the tour, and as  the tour does not
         # use this environment's cache, invalidate it to fetch the data from the
