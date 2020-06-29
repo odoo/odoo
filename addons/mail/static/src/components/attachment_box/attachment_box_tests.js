@@ -301,6 +301,87 @@ QUnit.test('view attachments', async function (assert) {
     );
 });
 
+QUnit.test('save image after rotation', async function (assert) {
+    assert.expect(8);
+
+    await this.start({
+        hasDialog: true,
+        async mockRPC(route, args) {
+            if (args.method === "rotate_image") {
+                assert.step('rotate_image');
+                assert.deepEqual(
+                    args.args[0],
+                    [750 ,751],
+                    "it should contains the ids of attachments"
+                );
+                assert.deepEqual(
+                    args.kwargs.angles,
+                    [90, 90],
+                    "images should be rotated at 90 Degrees"
+                );
+                return;
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].create({
+        attachments: [
+            ['insert', {
+                filename: "test.png",
+                id: 750,
+                mimetype: "image/png",
+                name: "test.png",
+            }],
+            ['insert', {
+                filename: "test_1.png",
+                id: 751,
+                mimetype: "image/png",
+                name: "test_1.png",
+            }]
+        ],
+        id: 100,
+        model: 'res.partner',
+    });
+
+    const firstAttachment = this.env.models['mail.attachment'].all()[0];
+    await this.createAttachmentBoxComponent(thread);
+    assert.strictEqual(
+        document.querySelectorAll('.o_Attachment_image').length,
+        2,
+        "attachment box should have two images"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_Attachment_image').click());
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentViewer',
+        "an attachment viewer should have been opened once attachment image is clicked",
+    );
+
+    await afterNextRender(
+        () => document.querySelector('.o_AttachmentViewer_toolbarButton .fa-repeat').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentViewer_buttonNavigationNext',
+        "attachment viewer should allow to see next attachment",
+    );
+
+    await afterNextRender(
+        () => document.querySelector('.o_AttachmentViewer_buttonNavigationNext').click()
+    );
+    await afterNextRender(
+        () => document.querySelector('.o_AttachmentViewer_toolbarButton .fa-repeat').click()
+    );
+    await afterNextRender(
+        () => document.querySelector('.o_AttachmentViewer_headerItemButtonClose').click()
+    );
+    assert.strictEqual(firstAttachment.angle, 90, "should have a image rotated to 90deg");
+    assert.verifySteps(
+        ['rotate_image'],
+        "rotate_image rpc should be called once only on close"
+    );
+});
 
 });
 });

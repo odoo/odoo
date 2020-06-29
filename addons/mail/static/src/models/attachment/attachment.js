@@ -142,7 +142,7 @@ function factory(dependencies) {
          */
         _computeDefaultSource() {
             if (this.fileType === 'image') {
-                return `/web/image/${this.id}?unique=1&amp;signature=${this.checksum}&amp;model=ir.attachment`;
+                return `/web/image/${this.id}?unique=${this.uuid}&amp;signature=${this.checksum}&amp;model=ir.attachment`;
             }
             if (this.fileType === 'application/pdf') {
                 return `/web/static/lib/pdfjs/web/viewer.html?file=/web/content/${this.id}?model%3Dir.attachment`;
@@ -246,12 +246,29 @@ function factory(dependencies) {
             return this.mimetype && this.mimetype.split('/').shift();
         }
 
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _computeSaveRotateImage() {
+            return this.isLinkedToComposer || this.fileType !== 'image' ? false : true;
+        }
+
+        /**
+         * @private
+         * @returns {string}
+         */
+        _computeUUID() {
+            return _.uniqueId(this.id);
+        }
+
     }
 
     Attachment.fields = {
         activities: many2many('mail.activity', {
             inverse: 'attachments',
         }),
+        angle: attr(),
         attachmentViewer: many2many('mail.attachment_viewer', {
             inverse: 'attachments',
         }),
@@ -267,6 +284,7 @@ function factory(dependencies) {
                 'fileType',
                 'id',
                 'url',
+                'uuid',
             ],
         }),
         displayName: attr({
@@ -323,12 +341,20 @@ function factory(dependencies) {
         originThread: many2one('mail.thread', {
             inverse: 'originThreadAttachments',
         }),
+        saveRotateImage: attr({
+            compute: '_computeSaveRotateImage',
+            dependencies: ['isLinkedToComposer', 'fileType'],
+        }),
         size: attr(),
         threads: many2many('mail.thread', {
             inverse: 'attachments',
         }),
         type: attr(),
         url: attr(),
+        uuid: attr({
+            compute: '_computeUUID',
+            dependencies: ['id'],
+        }),
     };
 
     Attachment.modelName = 'mail.attachment';

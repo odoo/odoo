@@ -77,7 +77,7 @@ class Attachment extends Component {
         } else {
             size = '160x160';
         }
-        return `background-image:url(/web/image/${this.attachment.id}/${size}/?crop=true);`;
+        return `background-image:url(/web/image/${this.attachment.id}/${size}/?crop=true&uuid=${this.attachment.uuid});`;
     }
 
     //--------------------------------------------------------------------------

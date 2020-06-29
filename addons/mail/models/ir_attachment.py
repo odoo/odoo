@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
+import io
+
+from PIL import Image
 
 from odoo import api, models
 from odoo.exceptions import AccessError
@@ -34,3 +38,11 @@ class IrAttachment(models.Model):
                     related_record.message_main_attachment_id = self
                 except AccessError:
                     pass
+
+    def rotate_image(self, angles):
+        for rec, angle in zip(self, angles):
+            image = Image.open(io.BytesIO(base64.decodebytes(rec.datas)))
+            rotated_image = image.rotate(-angle, expand=1)
+            buffered = io.BytesIO()
+            rotated_image.save(buffered, format=image.format)
+            rec.datas = base64.b64encode(buffered.getvalue())

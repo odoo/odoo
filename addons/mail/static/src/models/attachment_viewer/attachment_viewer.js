@@ -21,6 +21,24 @@ function factory(dependencies) {
                 dialog.delete();
             }
         }
+        /**
+         * save rotated image if it was rotated in attachmentviewer.
+         *
+         * @param {object} rotatedAttachments
+         */
+        async saveRotateImage(rotatedAttachments) {
+            const rotatedAttachmentIds = Object.keys(rotatedAttachments).map(Number);
+            await this.env.services.rpc({
+                model: 'ir.attachment',
+                method: 'rotate_image',
+                args: [rotatedAttachmentIds],
+                kwargs: { angles: Object.values(rotatedAttachments) },
+            });
+            rotatedAttachmentIds.forEach((id) => {
+                const attachment = this.attachments.find((attachment) => attachment.id === id);
+                attachment.update({ uuid: _.uniqueId(attachment.id), angle: rotatedAttachments[id] });
+            });
+        }
     }
 
     AttachmentViewer.fields = {

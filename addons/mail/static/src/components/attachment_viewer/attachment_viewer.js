@@ -18,6 +18,7 @@ class AttachmentViewer extends Component {
     constructor(...args) {
         super(...args);
         this.MIN_SCALE = MIN_SCALE;
+        this.rotatedAttachments = {};
         useStore(props => {
             const attachmentViewer = this.env.models['mail.attachment_viewer'].get(props.localId);
             return {
@@ -135,7 +136,10 @@ class AttachmentViewer extends Component {
      *
      * @private
      */
-    _close() {
+    async _close() {
+        if (Object.keys(this.rotatedAttachments).length) {
+            await this.attachmentViewer.saveRotateImage(this.rotatedAttachments);
+        }
         this.attachmentViewer.close();
     }
 
@@ -166,7 +170,7 @@ class AttachmentViewer extends Component {
     }
 
     /**
-     * Display the previous attachment in the list of attachments.
+     * Display the next attachment in the list of attachments.
      *
      * @private
      */
@@ -176,9 +180,7 @@ class AttachmentViewer extends Component {
             attachment === attachmentViewer.attachment
         );
         const nextIndex = (index + 1) % attachmentViewer.attachments.length;
-        attachmentViewer.update({
-            attachment: [['link', attachmentViewer.attachments[nextIndex]]],
-        });
+        this._updateAttachment(nextIndex);
     }
 
     /**
@@ -194,9 +196,7 @@ class AttachmentViewer extends Component {
         const nextIndex = index === 0
             ? attachmentViewer.attachments.length - 1
             : index - 1;
-        attachmentViewer.update({
-            attachment: [['link', attachmentViewer.attachments[nextIndex]]],
-        });
+        this._updateAttachment(nextIndex);
     }
 
     /**
@@ -234,6 +234,9 @@ class AttachmentViewer extends Component {
      */
     _rotate() {
         this.attachmentViewer.update({ angle: this.attachmentViewer.angle + 90 });
+        if (this.attachmentViewer.attachment.saveRotateImage) {
+            this.rotatedAttachments[this.attachmentViewer.attachment.id] = this.attachmentViewer.angle;
+        }
     }
 
     /**
@@ -248,6 +251,20 @@ class AttachmentViewer extends Component {
         this._translate.dx = 0;
         this._translate.dy = 0;
         this._updateZoomerStyle();
+    }
+
+    /**
+     * Update the attachment in viewer with given Index.
+     *
+     * @private
+     * @param {integer} nextIndex
+     */
+    _updateAttachment(nextIndex) {
+        const nextAttachment = this.attachmentViewer.attachments[nextIndex];
+        this.attachmentViewer.update({
+            attachment: [['link', nextAttachment]],
+            angle: this.rotatedAttachments[nextAttachment.id] || 0,
+        });
     }
 
     /**
