@@ -6,6 +6,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
+    const { useState } = owl.hooks;
 
     class ProductScreen extends PosComponent {
         constructor() {
@@ -30,7 +31,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 triggerAtInput: 'update-selected-orderline',
                 useWithBarcode: true,
             });
-            this.numpadMode = 'quantity';
+            this.state = useState({ numpadMode: 'quantity' });
             this.mobile_pane = this.props.mobile_pane || 'right';
         }
         mounted() {
@@ -134,11 +135,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
         async _setNumpadMode(event) {
             const { mode } = event.detail;
-            this.numpadMode = mode;
+            this.state.numpadMode = mode;
             NumberBuffer.reset();
         }
         async _updateSelectedOrderline(event) {
-            if(this.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
+            if(this.state.numpadMode === 'quantity' && this.env.pos.disallowLineQuantityChange()) {
                 let order = this.env.pos.get_order();
                 let selectedLine = order.get_selected_orderline();
                 let lastId = order.orderlines.last().cid;
@@ -168,11 +169,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
         _setValue(val) {
             if (this.currentOrder.get_selected_orderline()) {
-                if (this.numpadMode === 'quantity') {
+                if (this.state.numpadMode === 'quantity') {
                     this.currentOrder.get_selected_orderline().set_quantity(val);
-                } else if (this.numpadMode === 'discount') {
+                } else if (this.state.numpadMode === 'discount') {
                     this.currentOrder.get_selected_orderline().set_discount(val);
-                } else if (this.numpadMode === 'price') {
+                } else if (this.state.numpadMode === 'price') {
                     var selected_orderline = this.currentOrder.get_selected_orderline();
                     selected_orderline.price_manually_set = true;
                     selected_orderline.set_unit_price(val);
