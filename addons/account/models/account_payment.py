@@ -568,7 +568,7 @@ class account_payment(models.Model):
     @api.model
     def default_get(self, fields):
         rec = super(account_payment, self).default_get(fields)
-        invoice_defaults = self.resolve_2many_commands('invoice_ids', rec.get('invoice_ids'))
+        invoice_defaults = self.sudo().resolve_2many_commands('invoice_ids', rec.get('invoice_ids'))
         if invoice_defaults and len(invoice_defaults) == 1:
             invoice = invoice_defaults[0]
             rec['communication'] = invoice['reference'] or invoice['name'] or invoice['number']
