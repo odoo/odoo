@@ -173,6 +173,13 @@ body.editor_enable.editor_has_snippets {
 }
 
 .editor_enable {
+    @if o-website-value('header-template') == 'sidebar' {
+        #wrapwrap > header {
+            @if o-website-value('hamburger-position') != 'right' {
+                left: $o-we-sidebar-width;
+            }
+        }
+    }
     @if o-website-value('hamburger-type') == 'off-canvas' {
         #top_menu_collapse {
             &.collapsing, &.show {

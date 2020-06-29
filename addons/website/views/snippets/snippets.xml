@@ -577,7 +577,18 @@
                        data-customize-website-views="website.template_header_vertical"
                        data-customize-website-variable="'vertical'"
                        data-img="/website/static/src/img/snippets_options/header_template_vertical.png"/>
+            <we-button data-name="header_sidebar_opt"
+                       data-customize-website-views="website.template_header_sidebar, website.no_autohide_menu"
+                       data-customize-website-variable="'sidebar'">Sidebar</we-button>
         </we-select>
+
+        <!-- Header Sidebar Template - Options -->
+        <we-input string="⌙ Width"
+                  data-dependencies="header_sidebar_opt"
+                  data-customize-website-variable="null"
+                  data-variable="sidebar-width"
+                  data-unit="px"
+                  data-save-unit="rem"/>
 
         <!-- Generic alignment option controling all the template at once. -->
         <!-- Currently needed to be this way as the SCSS variable controls -->
@@ -600,14 +611,14 @@
                        data-customize-website-views="">Default</we-button>
             <we-button data-name="off_canvas_menu_opt"
                        data-customize-website-variable="'off-canvas'"
-                       data-customize-website-views="website.option_header_off_canvas, website.option_header_off_canvas_template_header_hamburger">Off-Canvas</we-button>
+                       data-customize-website-views="website.option_header_off_canvas, website.option_header_off_canvas_template_header_hamburger, website.option_header_off_canvas_template_header_sidebar">Off-Canvas</we-button>
         </we-select>
         <we-select string=" ⌙ Logo" data-dependencies="off_canvas_menu_opt" data-reload="/">
             <we-button data-customize-website-views="">Text</we-button>
             <we-button data-customize-website-views="website.option_header_off_canvas_logo_show">Image</we-button>
         </we-select>
 
-        <we-select id="header_visibilities_list" string="Header Visibility">
+        <we-select id="header_visibilities_list" string="Header Visibility" data-dependencies="!header_sidebar_opt">
             <we-button id="option_header_visibility_standard"
                        data-name="header_visibility_standard_opt"
                        data-select-class="o_header_standard"
