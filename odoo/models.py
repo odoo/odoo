@@ -493,14 +493,16 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
         # determine inherited models
         parents = cls._inherit
-        parents = [parents] if isinstance(parents, str) else (parents or [])
+        parents = list([parents] if isinstance(parents, str) else (parents or []))
 
         # determine the model's name
         name = cls._name or (len(parents) == 1 and parents[0]) or cls.__name__
 
         # all models except 'base' implicitly inherit from 'base'
         if name != 'base':
-            parents = list(parents) + ['base']
+            parents = parents + ['base']
+        if {'mail.thread', 'portal.mixin'}.issubset(parents):
+            parents.remove('mail.thread')
 
         # create or retrieve the model's class
         if name in parents:
@@ -537,7 +539,6 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 parent_class._inherit_children.add(name)
 
         ModelClass.__bases__ = tuple(bases)
-
         # determine the attributes of the model's class
         ModelClass._build_model_attributes(pool)
 
