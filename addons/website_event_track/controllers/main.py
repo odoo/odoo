@@ -126,6 +126,14 @@ class WebsiteEventTrackController(http.Controller):
         }
         return request.render("website_event_track.tracks", values)
 
+    @http.route('/event/<model("event.event"):event>/our_sponsors', type='json', auth='public', website=True)
+    def our_sponsors(self, event, **kwargs):
+        """returns list of sponsors for event"""
+        if event.can_access_from_current_website():
+            return request.env['event.sponsor'].search_read(
+                [('event_id','=', event.id)],
+                ['id', 'url', 'partner_name', 'sponsor_type_id'])
+
     @http.route(['''/event/<model("event.event"):event>/track_proposal'''], type='http', auth="public", website=True, sitemap=False)
     def event_track_proposal(self, event, **post):
         if not event.can_access_from_current_website():
