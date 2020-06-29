@@ -518,6 +518,16 @@ class DurationConverter(models.AbstractModel):
             digital=dict(type="boolean", string=_('Digital formatting')),
             unit=dict(type="selection", params=unit, string=_('Date unit'), description=_('Date unit used for comparison and formatting'), default_value='second', required=True),
             round=dict(type="selection", params=unit, string=_('Rounding unit'), description=_("Date unit used for the rounding. The value must be smaller than 'hour' if you use the digital formatting."), default_value='second'),
+            format=dict(
+                type="selection",
+                params=[
+                    ('long', _('Long')),
+                    ('short', _('Short')),
+                    ('narrow', _('Narrow'))],
+                string=_('Format'),
+                description=_("Formatting: long, short, narrow (not used for digital)"),
+                default_value='long'
+            ),
         )
         return options
 
@@ -556,7 +566,7 @@ class DurationConverter(models.AbstractModel):
             if not v:
                 continue
             section = babel.dates.format_timedelta(
-                v*secs_per_unit, threshold=1, locale=locale)
+                v*secs_per_unit, format=options.get('format', 'long'), threshold=1, locale=locale)
             if section:
                 sections.append(section)
 
