@@ -69,7 +69,7 @@ class SaleOrder(models.Model):
             if carrier:
                 self.get_delivery_price()
                 if self.delivery_rating_success:
-                    self.set_delivery_line()
+                    self.set_delivery_line(rate_fetched=True)
 
         return bool(carrier)
 
