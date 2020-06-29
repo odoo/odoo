@@ -65,15 +65,17 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
     });
 
     QUnit.test('NumpadWidget', async function (assert) {
-        assert.expect(23);
+        assert.expect(25);
 
         class Parent extends PosComponent {
             constructor() {
                 super(...arguments);
                 useListener('set-numpad-mode', this.setNumpadMode);
                 useListener('numpad-click-input', this.numpadClickInput);
+                this.state = useState({ mode: 'quantity' });
             }
             setNumpadMode({ detail: { mode } }) {
+                this.state.mode = mode;
                 assert.step(mode);
             }
             numpadClickInput({ detail: { key } }) {
@@ -82,7 +84,7 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
         }
         Parent.env = makePosTestEnv();
         Parent.template = xml/* html */ `
-            <div><NumpadWidget></NumpadWidget></div>
+            <div><NumpadWidget activeMode="state.mode"></NumpadWidget></div>
         `;
 
         const pos = Parent.env.pos;
@@ -162,6 +164,10 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
 
         assert.ok(priceButton.classList.contains('disabled-mode'));
         assert.ok(qtyButton.classList.contains('selected-mode'));
+        // after the cashier is changed, since it is not a manager,
+        // the 'set-numpad-mode' is triggered, setting the mode to
+        // 'quantity'.
+        assert.verifySteps(['quantity']);
 
         // reset old config and cashier values to pos
         pos.config = old_config;
