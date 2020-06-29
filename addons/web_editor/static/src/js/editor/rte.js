@@ -658,11 +658,12 @@ var RTEWidget = Widget.extend({
     _onMousedown: function (ev) {
         var $target = $(ev.target);
         var $editable = $target.closest('.o_editable');
+        var isLink = $target.is('a');
 
         if (this && this.$last && this.$last.length && this.$last[0] !== $target[0]) {
             $('.o_editable_date_field_linked').removeClass('o_editable_date_field_linked');
         }
-        if (!$editable.length || $.summernote.core.dom.isContentEditableFalse($target)) {
+        if (!$editable.length || (!isLink && $.summernote.core.dom.isContentEditableFalse($target))) {
             return;
         }
 
@@ -674,7 +675,7 @@ var RTEWidget = Widget.extend({
             $editable.find('[_moz_abspos]').removeAttr('_moz_abspos');
         });
 
-        if ($target.is('a')) {
+        if (isLink) {
             /**
              * Remove content editable everywhere and add it on the link only so that characters can be added
              * and removed at the start and at the end of it.
