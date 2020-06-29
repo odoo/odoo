@@ -896,25 +896,6 @@ return AbstractRenderer.extend({
         });
     },
     /**
-     * @private
-     */
-    _renderNoContentHelper: function (context) {
-        let templateName;
-        if (!context && this.noContentHelp) {
-            templateName = "web.ActionHelper";
-            context = { noContentHelp: this.noContentHelp };
-        } else {
-            templateName = "web.NoContentHelper";
-        }
-        const template = document.createElement('template');
-        // FIXME: retrieve owl qweb instance via the env set on Component s.t.
-        // it also works in the tests (importing 'web.env' wouldn't). This won't
-        // be necessary as soon as this rendering will be written in owl.
-        const OwlQweb = owl.Component.env.qweb;
-        template.innerHTML = OwlQweb.renderToString(templateName, context);
-        this.el.append(template.content.firstChild);
-    },
-    /**
      * create pie chart
      *
      * @private

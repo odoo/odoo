@@ -133,6 +133,26 @@ return mvc.Renderer.extend({
         this._suppressFocusableElements();
     },
     /**
+     * @private
+     * @param {Object} context
+     */
+    _renderNoContentHelper: function (context) {
+        let templateName;
+        if (!context && this.noContentHelp) {
+            templateName = "web.ActionHelper";
+            context = { noContentHelp: this.noContentHelp };
+        } else {
+            templateName = "web.NoContentHelper";
+        }
+        const template = document.createElement('template');
+        // FIXME: retrieve owl qweb instance via the env set on Component s.t.
+        // it also works in the tests (importing 'web.env' wouldn't). This
+        // won't be necessary as soon as this will be written in owl.
+        const owlQWeb = owl.Component.env.qweb;
+        template.innerHTML = owlQWeb.renderToString(templateName, context);
+        this.el.append(template.content.firstChild);
+    },
+    /**
      * Actual rendering. This method is meant to be overridden by concrete
      * renderers.
      *
