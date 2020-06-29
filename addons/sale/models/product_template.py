@@ -88,6 +88,10 @@ class ProductTemplate(models.Model):
         }
         return action
 
+    @api.model
+    def browse_create_product_variant(self, template_id, product_template_attribute_value_ids):
+        return self.browse(template_id).create_product_variant(product_template_attribute_value_ids)
+
     def create_product_variant(self, product_template_attribute_value_ids):
         """ Create if necessary and possible and return the id of the product
         variant matching the given combination for this template.
@@ -120,7 +124,7 @@ class ProductTemplate(models.Model):
         :rtype: int
         """
         combination = self.env['product.template.attribute.value'] \
-            .browse(json.loads(product_template_attribute_value_ids))
+            .browse(product_template_attribute_value_ids)
 
         return self._create_product_variant(combination, log_warning=True).id or 0
 
