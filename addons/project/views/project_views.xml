@@ -804,7 +804,7 @@
                 <form>
                     <group>
                         <field name="name" string = "Task Title"/>
-                        <field name="user_id" options="{'no_open': True,'no_create': True}"/>
+                        <field name="user_id" options="{'no_open': True,'no_create': True}" domain="[('share', '=', False)]"/>
                         <field name="project_id" required="1" invisible="context.get('all_task', 1)"/>
                         <field name="company_id" invisible="1"/>
                         <field name="parent_id" invisible="1"/>
