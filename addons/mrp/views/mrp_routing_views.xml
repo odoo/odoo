@@ -26,7 +26,7 @@
                                 <field name="name"/>
                                 <field name="workcenter_id" context="{'default_company_id': company_id}"/>
                                 <field name="sequence" groups="base.group_no_one"/>
-                                <field name="company_id" groups="base.group_multi_company" />
+                                <field name="bom_id" readonly="1"/>
                             </group><group name="workorder">
                                 <field name="workorder_count" invisible="1"/>
                                 <field name="time_mode" widget="radio"/>
@@ -41,6 +41,7 @@
                                     <field name="time_cycle_manual" widget="float_time" class="oe_inline"/> minutes
                                 </div>
                                 <field name="time_cycle" invisible="1"/>
+                                <field name="company_id" groups="base.group_multi_company" />
                             </group>
                             <group>
                                 <field name="batch" widget="radio"/>
