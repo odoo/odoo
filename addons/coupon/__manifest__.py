@@ -10,6 +10,7 @@
     'data': [
         'wizard/coupon_generate_views.xml',
         'security/coupon_security.xml',
+        'security/ir.model.access.csv',
         'views/coupon_views.xml',
         'views/coupon_program_views.xml',
         'report/coupon_report.xml',
