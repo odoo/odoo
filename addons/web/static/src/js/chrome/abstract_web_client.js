@@ -209,7 +209,7 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         var self = this;
         this.action_manager = new ActionManager(this, session.user_context);
         this.env.bus.on('do-action', this, payload => {
-            this.action_manager.doAction(payload.action, payload.options)
+            this.do_action(payload.action, payload.options || {})
                 .then(payload.on_success || (() => {}))
                 .guardedCatch(payload.on_fail || (() => {}));
         });
