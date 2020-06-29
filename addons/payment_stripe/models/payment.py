@@ -294,6 +294,7 @@ class PaymentTransactionStripe(models.Model):
             return True
         if status == 'requires_payment_method':
             self._set_transaction_cancel()
+            self.acquirer_id._stripe_request('payment_intents/%s/cancel' % self.stripe_payment_intent)
             return False
         else:
             error = tree.get("failure_message") or tree.get('error', {}).get('message')
