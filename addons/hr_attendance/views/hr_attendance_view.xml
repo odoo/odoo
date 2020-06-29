@@ -7,11 +7,24 @@
         <field name="name">hr.attendance.tree</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <tree string="Employee attendances" editable="bottom">
+            <tree string="Employee attendances" edit="0">
                 <field name="employee_id"/>
                 <field name="check_in"/>
                 <field name="check_out"/>
                 <field name="worked_hours" string="Work Hours" widget="float_time"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_attendance_tree_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.tree.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.view_attendance_tree"/>
+        <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
+        <field name="arch" type="xml">
+            <tree position="attributes">
+                <attribute name="edit">1</attribute>
+                <attribute name="editable">bottom</attribute>
             </tree>
         </field>
     </record>
@@ -50,7 +63,7 @@
         <field name="name">hr.attendance.form</field>
         <field name="model">hr.attendance</field>
         <field name="arch" type="xml">
-            <form string="Employee attendances">
+            <form string="Employee attendances" edit="0">
                 <sheet>
                     <group>
                         <field name="employee_id"/>
@@ -58,6 +71,18 @@
                         <field name="check_out"/>
                     </group>
                 </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="hr_attendance_view_form_inherit" model="ir.ui.view">
+        <field name="name">hr.attendance.form.inherit</field>
+        <field name="model">hr.attendance</field>
+        <field name="inherit_id" ref="hr_attendance.hr_attendance_view_form"/>
+        <field name="groups_id" eval="[(4, ref('hr_attendance.group_hr_attendance_user'))]"/>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="edit">1</attribute>
             </form>
         </field>
     </record>
