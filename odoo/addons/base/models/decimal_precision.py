@@ -48,22 +48,6 @@ class DecimalPrecision(models.Model):
         self.clear_caches()
         return res
 
-
-class DecimalPrecisionFloat(models.AbstractModel):
-    """ Override qweb.field.float to add a `decimal_precision` domain option
-    and use that instead of the column's own value if it is specified
-    """
-    _inherit = 'ir.qweb.field.float'
-
-
-    @api.model
-    def precision(self, field, options=None):
-        dp = options and options.get('decimal_precision')
-        if dp:
-            return self.env['decimal.precision'].precision_get(dp)
-
-        return super().precision(field, options=options)
-
 # compatibility for decimal_precision.get_precision(): expose the module in addons namespace
 dp = sys.modules['odoo.addons.base.models.decimal_precision']
 odoo.addons.decimal_precision = dp
