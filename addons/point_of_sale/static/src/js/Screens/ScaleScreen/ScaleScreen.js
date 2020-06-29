@@ -17,8 +17,11 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
             this.state = useState({ weight: 0 });
         }
         mounted() {
-            // start the scale reading
-            this._readScale();
+            // start a continuous scale reading
+            this.env.pos.proxy_queue.schedule(this._setWeight.bind(this), {
+                duration: 500,
+                repeat: true,
+            });
         }
         willUnmount() {
             // stop the scale reading
@@ -41,12 +44,6 @@ odoo.define('point_of_sale.ScaleScreen', function(require) {
             } else if (event.key === 'Enter') {
                 this.confirm();
             }
-        }
-        _readScale() {
-            this.env.pos.proxy_queue.schedule(this._setWeight.bind(this), {
-                duration: 500,
-                repeat: true,
-            });
         }
         async _setWeight() {
             const reading = await this.env.pos.proxy.scale_read();
