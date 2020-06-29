@@ -547,8 +547,9 @@ function factory(dependencies) {
         openExpanded() {
             const discuss = this.env.messaging.discuss;
             if (['mail.channel', 'mail.box'].includes(this.model)) {
+                discuss.threadViewer.update({ thread: [['replace', this]] });
                 this.env.bus.trigger('do-action', {
-                    action: 'mail.action_new_discuss',
+                    action: 'mail.action_discuss',
                     options: {
                         clear_breadcrumbs: false,
                         active_id: discuss.threadToActiveId(this),
