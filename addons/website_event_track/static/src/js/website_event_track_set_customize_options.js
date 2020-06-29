@@ -20,31 +20,51 @@ EventSpecificOptions.include({
         this._super.apply(this, arguments);
     },
 
-    _initCheckbox: function () {
-        this._rpc({
-            model: this.modelName,
-            method: 'read',
-            args: [[this.eventId], ['website_menu', 'website_url', 'website_track', 'website_track_proposal']],
-        }).then((data) => {
-            if (data[0]['website_track']) {
-                this.$displayTalksInput.attr('checked', 'checked');
-            }
-            if (data[0]['website_track_proposal']) {
-                this.$allowTalksInput.attr('checked', 'checked');
-            }
-            if (data[0]['website_menu']) {
-                this.$submenuInput.attr('checked', 'checked');
-            } else {
-                this.$displayTalksInput.closest('a').addClass('d-none');
-                this.$allowTalksInput.closest('a').addClass('d-none');
-            }
-            this.eventUrl = data[0]['website_url'];
-        });
-    },
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
     _onAllowTalkProposalChange: function () {
         var checkboxValue = this.$allowTalksInput.is(':checked');
         this._toggleTalkProposal(checkboxValue);
+    },
+
+    _onDisplayTalksChange: function () {
+        var checkboxValue = this.$displayTalksInput.is(':checked');
+        this._toggleDisplayTalks(checkboxValue);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _getCheckboxFields: function () {
+        var fields = this._super();
+        fields = _.union(fields, ['website_track', 'website_track_proposal']);
+        return fields;
+    },
+
+    _getCheckboxFieldMatch: function (checkboxField) {
+        if (checkboxField === 'website_track') {
+            return this.$displayTalksInput;
+        }
+        if (checkboxField === 'website_track_proposal') {
+            return this.$allowTalksInput;
+        }
+        return this._super(checkboxField);
+    },
+
+    _initCheckboxCallback: function (rpcData) {
+        this._super(rpcData);
+        var submenuInput;
+        if (rpcData[0]['website_track']) {
+            submenuInput = this._getCheckboxFieldMatch('website_track');
+            submenuInput.attr('checked', 'checked');
+        }
+        if (rpcData[0]['website_track_proposal']) {
+            submenuInput = this._getCheckboxFieldMatch('website_track_proposal');
+            submenuInput.attr('checked', 'checked');
+        }
     },
 
     _toggleTalkProposal: function (val) {
@@ -56,11 +76,6 @@ EventSpecificOptions.include({
         }).then(function () {
             self._reloadEventPage();
         });
-    },
-
-    _onDisplayTalksChange: function () {
-        var checkboxValue = this.$displayTalksInput.is(':checked');
-        this._toggleDisplayTalks(checkboxValue);
     },
 
     _toggleDisplayTalks: function (val) {
