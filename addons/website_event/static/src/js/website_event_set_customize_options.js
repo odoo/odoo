@@ -21,22 +21,62 @@ var EventSpecificOptions = publicWidget.Widget.extend({
         this._initCheckbox();
     },
 
-    _initCheckbox: function () {
-        this._rpc({
-            model: this.modelName,
-            method: 'read',
-            args: [[this.eventId], ['website_menu', 'website_url']],
-        }).then((data) => {
-            if (data[0]['website_menu']) {
-                this.$submenuInput.attr('checked', 'checked');
-            }
-            this.eventUrl = data[0]['website_url'];
-        });
-    },
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
 
     _onDisplaySubmenuChange: function (ev) {
         var checkboxValue = this.$submenuInput.is(':checked');
         this._toggleSubmenuDisplay(checkboxValue);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _getCheckboxFields: function () {
+        return ['website_menu', 'website_url'];
+    },
+
+    _getCheckboxFieldMatch: function (checkboxField) {
+        if (checkboxField === 'website_menu') {
+            return this.$submenuInput;
+        }
+    },
+
+    _getEventObject: function() {
+        var repr = $('html').data('main-object');
+        var m = repr.match(/(.+)\((\d+),(.*)\)/);
+        return {
+            model: m[1],
+            id: m[2] | 0,
+        };
+    },
+
+    _initCheckbox: function () {
+        var self = this;
+        this._rpc({
+            model: this.modelName,
+            method: 'read',
+            args: [
+                [this.eventId],
+                this._getCheckboxFields()
+            ],
+        }).then((data) => {
+            self._initCheckboxCallback(data);
+        });
+    },
+
+    _initCheckboxCallback: function (rpcData) {
+        if (rpcData[0]['website_menu']) {
+            var submenuInput = this._getCheckboxFieldMatch('website_menu');
+            submenuInput.attr('checked', 'checked');
+        }
+        this.eventUrl = rpcData[0]['website_url'];
+    },
+
+    _reloadEventPage: function () {
+        window.location = this.eventUrl;
     },
 
     _toggleSubmenuDisplay: function (val) {
@@ -49,19 +89,6 @@ var EventSpecificOptions = publicWidget.Widget.extend({
             self._reloadEventPage();
         });
     },
-
-    _reloadEventPage: function () {
-        window.location = this.eventUrl;
-    },
-
-    _getEventObject: function() {
-        var repr = $('html').data('main-object');
-        var m = repr.match(/(.+)\((\d+),(.*)\)/);
-        return {
-            model: m[1],
-            id: m[2] | 0,
-        };
-    }
 
 });
 
