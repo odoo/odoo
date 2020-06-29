@@ -43,9 +43,30 @@ class SaleOrder(models.Model):
         """
         for order in self:
             amount_untaxed = amount_tax = 0.0
+
+            # Compute 'amount_untaxed'.
+            base_line_vals_list = []
             for line in order.order_line:
                 amount_untaxed += line.price_subtotal
-                amount_tax += line.price_tax
+
+                base_line_vals_list.append({
+                    'partner_id': order.partner_shipping_id.id,
+                    'currency_id': order.currency_id.id,
+                    'product_id': line.product_id.id,
+                    'company_id': order.company_id.id,
+                    'tax_ids': line.tax_id.ids,
+                    'quantity': line.product_uom_qty,
+                    'discount': line.discount,
+                    'price_unit': line.price_unit,
+                })
+
+            # Compute 'amount_tax'.
+            tax_result = self.env['account.tax']._compute_tax_lines(base_line_vals_list)
+
+            for tax_line_to_add in tax_result['tax_lines_to_add']:
+                amount_tax += tax_line_to_add['amount']
+
+            # Update order values.
             order.update({
                 'amount_untaxed': amount_untaxed,
                 'amount_tax': amount_tax,

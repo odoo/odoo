@@ -49,8 +49,29 @@ class AccountTax(models.Model):
 
     def get_grouping_key(self, invoice_tax_val):
         """ Returns a string that will be used to group account.invoice.tax sharing the same properties"""
+        # DEAD CODE: REMOVE IN MASTER
         key = super(AccountTax, self).get_grouping_key(invoice_tax_val)
         if self.company_id.country_id.code == 'IN':
             key += "-%s-%s"% (invoice_tax_val.get('l10n_in_product_id', False),
                 invoice_tax_val.get('l10n_in_uom_id', False))
         return key
+
+    @api.model
+    def _get_tax_grouping_key_from_tax_line(self, tax_line_vals):
+        # OVERRIDE to group taxes also by product.
+        res = super()._get_tax_grouping_key_from_tax_line(tax_line_vals)
+        if 'company_id' in tax_line_vals and 'product_id' in tax_line_vals:
+            company = self.env['res.company'].browse(tax_line_vals['company_id'])
+            if company.country_id.code == 'IN':
+                res['product_id'] = tax_line_vals['product_id']
+        return res
+
+    @api.model
+    def _get_tax_grouping_key_from_base_line(self, base_line_vals, tax_vals):
+        # OVERRIDE to group taxes also by product.
+        res = super()._get_tax_grouping_key_from_base_line(base_line_vals, tax_vals)
+        if 'company_id' in base_line_vals and 'product_id' in base_line_vals:
+            company = self.env['res.company'].browse(base_line_vals['company_id'])
+            if company.country_id.code == 'IN':
+                res['product_id'] = base_line_vals['product_id']
+        return res

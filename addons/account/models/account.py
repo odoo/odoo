@@ -1740,6 +1740,207 @@ class AccountTax(models.Model):
             line_taxes = line_taxes.filtered(lambda tax: tax.company_id == company_id)
         return self._fix_tax_included_price(price, prod_taxes, line_taxes)
 
+    @api.model
+    def _get_tax_grouping_key_from_tax_line(self, tax_line_vals):
+        ''' Create the dictionary based on a tax line that will be used as key to group taxes together.
+        /!\ Must be consistent with '_get_tax_grouping_key_from_base_line'.
+        :param tax_line:    An account.move.line being a tax line (with 'tax_repartition_line_id' set then).
+        :return:            A dictionary containing all fields on which the tax will be grouped.
+        '''
+        tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_line_vals['tax_repartition_line_id'])
+        tax = tax_repartition_line.invoice_tax_id or tax_repartition_line.refund_tax_id
+        return {
+            'tax_repartition_line_id': tax_repartition_line.id,
+            'account_id': tax_line_vals.get('account_id'),
+            'partner_id': tax_line_vals.get('partner_id'),
+            'currency_id': tax_line_vals.get('currency_id'),
+            'analytic_tag_ids': tax_line_vals.get('analytic_tag_ids', []) if tax.analytic else [],
+            'analytic_account_id': tax_line_vals.get('analytic_account_id') if tax.analytic else False,
+            'tax_ids': tax_line_vals.get('tax_ids', []),
+            'tag_ids': tax_line_vals.get('tag_ids', []),
+        }
+
+    @api.model
+    def _get_tax_grouping_key_from_base_line(self, base_line_vals, tax_vals):
+        ''' Create the dictionary based on a base line that will be used as key to group taxes together.
+        /!\ Must be consistent with '_get_tax_grouping_key_from_tax_line'.
+        :param base_line:   An account.move.line being a base line (that could contains something in 'tax_ids').
+        :param tax_vals:    An element of compute_all(...)['taxes'].
+        :return:            A dictionary containing all fields on which the tax will be grouped.
+        '''
+        tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_vals['tax_repartition_line_id'])
+        tax = tax_repartition_line.invoice_tax_id or tax_repartition_line.refund_tax_id
+
+        if tax.tax_exigibility == 'on_payment':
+            account_id = tax.cash_basis_transition_account_id.id
+        else:
+            account_id = tax_repartition_line.account_id.id
+        if not account_id:
+            account_id = base_line_vals.get('account_id')
+
+        return {
+            'tax_repartition_line_id': tax_vals['tax_repartition_line_id'],
+            'account_id': account_id,
+            'partner_id': base_line_vals.get('partner_id'),
+            'currency_id': base_line_vals.get('currency_id'),
+            'analytic_tag_ids': base_line_vals.get('analytic_tag_ids', []) if tax_vals['analytic'] else [],
+            'analytic_account_id': base_line_vals.get('analytic_account_id') if tax_vals['analytic'] else False,
+            'tax_ids': tax_vals['tax_ids'],
+            'tag_ids': tax_vals['tag_ids'],
+        }
+
+    @api.model
+    def _compute_tax_lines(
+            self,
+            base_line_vals_list,
+            tax_line_vals_list=[],
+            handle_price_include=True,
+            recompute_tax_base_amount=False,
+            is_refund=False):
+
+        def _serialize_tax_grouping_key(grouping_dict):
+            ''' Serialize the dictionary values to be used in the taxes_map.
+            :param grouping_dict: The values returned by '_get_tax_grouping_key_from_tax_line' or '_get_tax_grouping_key_from_base_line'.
+            :return: A string representing the values.
+            '''
+            return '-'.join(str(v) for v in grouping_dict.values())
+
+        result = {
+            'tax_lines_to_add': [],
+            'tax_lines_to_remove': [],
+            'tax_lines_to_edit': [],
+            'base_lines_to_edit': [],
+        }
+
+        taxes_map = {}
+        company = None
+
+        # ==== Add tax lines ====
+        for tax_line_vals in tax_line_vals_list:
+            grouping_dict = self._get_tax_grouping_key_from_tax_line(tax_line_vals)
+            grouping_key = _serialize_tax_grouping_key(grouping_dict)
+            if grouping_key in taxes_map:
+                # A line with the same key does already exist, we only need one
+                # to modify it; we have to drop this one.
+                result['tax_lines_to_remove'].append(tax_line_vals)
+            else:
+                taxes_map[grouping_key] = {
+                    'tax_line': tax_line_vals,
+                    'amount': 0.0,
+                    'tax_base_amount': 0.0,
+                    'grouping_dict': False,
+                }
+
+            if not company:
+                tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_line_vals['tax_repartition_line_id'])
+                tax = tax_repartition_line.invoice_tax_id or tax_repartition_line.refund_tax_id
+                company = tax.company_id
+                
+        # ==== Mount base lines ====
+        for base_line_vals in base_line_vals_list:
+
+            # Don't call compute_all if there is no tax.
+            if not base_line_vals.get('tax_ids'):
+                result['base_lines_to_edit'].append((base_line_vals, {'tag_ids': [(5, 0)]}))
+                continue
+
+            edit_vals = {}
+            price_unit = base_line_vals.get('price_unit', 0.0)
+            quantity = base_line_vals.get('quantity', 0.0)
+            discount = base_line_vals.get('discount', 0.0)
+            taxes = self.browse(base_line_vals.get('tax_ids', []))
+            product = self.env['product.product'].browse(base_line_vals.get('product_id', []))
+            partner = self.env['res.partner'].browse(base_line_vals.get('partner_id', []))
+
+            if not company:
+                company = taxes[0].company_id
+
+            currency = self.env['res.currency'].browse(base_line_vals.get('currency_id', [])) or company.currency_id
+
+            taxes_res = taxes.compute_all(
+                price_unit * (1 - (discount / 100.0)),
+                currency=currency,
+                quantity=quantity,
+                product=product,
+                partner=partner,
+                is_refund=is_refund,
+                handle_price_include=handle_price_include,
+            )
+
+            # Assign tags on base line
+            edit_vals['tag_ids'] = [(6, 0, taxes_res['base_tags'])]
+
+            tax_exigible = True
+            for tax_vals in taxes_res['taxes']:
+                grouping_dict = self._get_tax_grouping_key_from_base_line(base_line_vals, tax_vals)
+                grouping_key = _serialize_tax_grouping_key(grouping_dict)
+
+                tax_repartition_line = self.env['account.tax.repartition.line'].browse(tax_vals['tax_repartition_line_id'])
+                tax = tax_repartition_line.invoice_tax_id or tax_repartition_line.refund_tax_id
+
+                if tax.tax_exigibility == 'on_payment':
+                    tax_exigible = False
+
+                taxes_map_entry = taxes_map.setdefault(grouping_key, {
+                    'tax_line': None,
+                    'amount': 0.0,
+                    'tax_base_amount': 0.0,
+                    'grouping_dict': False,
+                })
+                taxes_map_entry['amount'] += tax_vals['amount']
+                taxes_map_entry['tax_base_amount'] += tax_vals['base']
+                taxes_map_entry['grouping_dict'] = grouping_dict
+
+            edit_vals['tax_exigible'] = tax_exigible
+            result['base_lines_to_edit'].append((base_line_vals, edit_vals))
+
+        # ==== Process taxes_map ====
+        for taxes_map_entry in taxes_map.values():
+
+            # The tax line is no longer used in any base lines, drop it.
+            if taxes_map_entry['tax_line'] and not taxes_map_entry['grouping_dict']:
+                result['tax_lines_to_remove'].append(taxes_map_entry['tax_line'])
+                continue
+
+            if taxes_map_entry['grouping_dict']['currency_id']:
+                currency = self.env['res.currency'].browse(taxes_map_entry['grouping_dict']['currency_id'])
+            else:
+                currency = company.currency_id
+
+            # Don't create tax lines with zero balance.
+            if currency.is_zero(taxes_map_entry['amount']):
+                if taxes_map_entry['tax_line']:
+                    result['tax_lines_to_remove'].append(taxes_map_entry['tax_line'])
+                continue
+
+            edit_vals = {
+                'amount': currency.round(taxes_map_entry['amount']),
+                'tax_base_amount': taxes_map_entry['tax_base_amount'],
+            }
+
+            # Recompute only the tax_base_amount.
+            if taxes_map_entry['tax_line'] and recompute_tax_base_amount:
+                result['tax_lines_to_edit'].append((
+                    taxes_map_entry['tax_line'],
+                    {'tax_base_amount': taxes_map_entry['tax_base_amount']},
+                ))
+                continue
+
+            if taxes_map_entry['tax_line']:
+                # Update an existing tax line.
+                result['tax_lines_to_edit'].append((
+                    taxes_map_entry['tax_line'],
+                    edit_vals,
+                ))
+            else:
+                # Create a new tax line.
+                result['tax_lines_to_add'].append({
+                    **edit_vals,
+                    **taxes_map_entry['grouping_dict'],
+                })
+
+        return result
+
 
 class AccountTaxRepartitionLine(models.Model):
     _name = "account.tax.repartition.line"

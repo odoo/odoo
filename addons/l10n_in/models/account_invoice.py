@@ -32,6 +32,7 @@ class AccountMove(models.Model):
     @api.model
     def _get_tax_grouping_key_from_tax_line(self, tax_line):
         # OVERRIDE to group taxes also by product.
+        # REMOVE IN MASTER
         res = super()._get_tax_grouping_key_from_tax_line(tax_line)
         res['product_id'] = tax_line.product_id.id
         return res
@@ -39,6 +40,7 @@ class AccountMove(models.Model):
     @api.model
     def _get_tax_grouping_key_from_base_line(self, base_line, tax_vals):
         # OVERRIDE to group taxes also by product.
+        # REMOVE IN MASTER
         res = super()._get_tax_grouping_key_from_base_line(base_line, tax_vals)
         res.update({
             'product_id': base_line.product_id.id,
@@ -49,7 +51,8 @@ class AccountMove(models.Model):
     def _get_tax_key_for_group_add_base(self, line):
         tax_key = super(AccountMove, self)._get_tax_key_for_group_add_base(line)
 
-        tax_key += [
-            line.product_id.id,
-        ]
+        if line.move_id.company_id.country_id.code == 'IN':
+            tax_key += [
+                line.product_id.id,
+            ]
         return tax_key
