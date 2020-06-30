@@ -68,26 +68,33 @@ class ResUsers(models.Model):
 
     @classmethod
     def authenticate(cls, db, login, password, user_agent_env):
-        """ Override to link the logged in user's res.partner to website.visitor """
+        """ Override to link the logged in user's res.partner to website.visitor.
+        If both a request-based visitor and a user-based visitor exist we try
+        to update them (have same partner_id), and move sub records to the main
+        visitor (user one). Purpose is to try to keep a main visitor with as
+        much sub-records (tracked pages, leads, ...) as possible. """
         uid = super(ResUsers, cls).authenticate(db, login, password, user_agent_env)
         if uid:
             with cls.pool.cursor() as cr:
                 env = api.Environment(cr, uid, {})
                 visitor_sudo = env['website.visitor']._get_visitor_from_request()
                 if visitor_sudo:
-                    partner = env.user.partner_id
-                    partner_visitor = env['website.visitor'].with_context(active_test=False).sudo().search([('partner_id', '=', partner.id)])
-                    if partner_visitor and partner_visitor.id != visitor_sudo.id:
-                        # Link history to older Visitor and delete the newest
-                        visitor_sudo.website_track_ids.write({'visitor_id': partner_visitor.id})
-                        visitor_sudo.unlink()
-                        # If archived (most likely by the cron for inactivity reasons), reactivate the partner's visitor
-                        if not partner_visitor.active:
-                            partner_visitor.write({'active': True})
+                    user_partner = env.user.partner_id
+                    other_user_visitor_sudo = env['website.visitor'].with_context(active_test=False).sudo().search(
+                        [('partner_id', '=', user_partner.id), ('id', '!=', visitor_sudo.id)],
+                        order='last_connection_datetime DESC',
+                    )  # current 13.3 state: 1 result max as unique visitor / partner
+                    if other_user_visitor_sudo:
+                        visitor_main = other_user_visitor_sudo[0]
+                        other_visitors = other_user_visitor_sudo[1:]  # normally void
+                        (visitor_sudo + other_visitors)._link_to_visitor(visitor_main, keep_unique=True)
+                        visitor_main.name = user_partner.name
+                        visitor_main.active = True
+                        visitor_main._update_visitor_last_visit()
                     else:
-                        vals = {
-                            'partner_id': partner.id,
-                            'name': partner.name
-                        }
-                        visitor_sudo.write(vals)
+                        if visitor_sudo.partner_id != user_partner:
+                            visitor_sudo._link_to_partner(
+                                user_partner,
+                                update_values={'partner_id': user_partner.id})
+                        visitor_sudo._update_visitor_last_visit()
         return uid
