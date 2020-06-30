@@ -224,7 +224,7 @@
     </xpath>
 </template>
 
-<!-- Navbar templates -->
+<!-- Header templates -->
 <template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Logo Hamburger" active="False">
     <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
         <attribute name="class" remove="navbar-expand-md" separator=" "/>
@@ -252,7 +252,7 @@
     </xpath>
 </template>
 
-<!-- Navbar options -->
+<!-- Header options -->
 <template id="option_layout_hide_header" inherit_id="website.layout" active="False">
     <xpath expr="//header" position="before">
         <t t-set="no_header" t-value="True"/>
@@ -273,25 +273,25 @@
     </xpath>
 </template>
 
-<template id="header_visibility_standard" inherit_id="website.layout" name="Header Visibility Standard">
+<template id="header_visibility_standard" inherit_id="website.layout" name="Header Effect Standard">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_standard o_top_fixed_element" separator=" "/>
     </xpath>
 </template>
 
-<template id="header_visibility_fixed" inherit_id="website.layout" name="Header Visibility Fixed" active="False">
+<template id="header_visibility_fixed" inherit_id="website.layout" name="Header Effect Fixed" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_fixed o_top_fixed_element" separator=" "/>
     </xpath>
 </template>
 
-<template id="header_visibility_disappears" inherit_id="website.layout" name="Header Visibility Disappears" active="False">
+<template id="header_visibility_disappears" inherit_id="website.layout" name="Header Effect Disappears" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_disappears o_top_fixed_element" separator=" "/>
     </xpath>
 </template>
 
-<template id="header_visibility_fade_out" inherit_id="website.layout" name="Header Visibility Fade Out" active="False">
+<template id="header_visibility_fade_out" inherit_id="website.layout" name="Header Effect Fade Out" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_fade_out o_top_fixed_element" separator=" "/>
     </xpath>
@@ -332,7 +332,7 @@
     </xpath>
 </template>
 
-<!-- Footer templates -->
+<!-- Footer options -->
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
