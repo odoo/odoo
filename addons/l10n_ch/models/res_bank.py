@@ -27,10 +27,14 @@ def _is_l10n_ch_postal(account_ref):
 class ResPartnerBank(models.Model):
     _inherit = 'res.partner.bank'
 
-    l10n_ch_postal = fields.Char(string='Swiss Postal Account', help='This field is used for the Swiss postal account number '
-                                                                     'on a vendor account and for the client number on your '
-                                                                     'own account.  The client number is mostly 6 numbers without '
-                                                                     '-, while the postal account number can be e.g. 01-162-8')
+    l10n_ch_postal = fields.Char(
+        string="Swiss Postal Account",
+        readonly=False, store=True,
+        compute='_compute_l10n_ch_postal',
+        help="This field is used for the Swiss postal account number on a vendor account and for the client number on "
+             "your own account. The client number is mostly 6 numbers without -, while the postal account number can "
+             "be e.g. 01-162-8")
+
     # fields to configure ISR payment slip generation
     l10n_ch_isr_subscription_chf = fields.Char(string='CHF ISR Subscription Number', help='The subscription number provided by the bank or Postfinance to identify the bank, used to generate ISR in CHF. eg. 01-162-8')
     l10n_ch_isr_subscription_eur = fields.Char(string='EUR ISR Subscription Number', help='The subscription number provided by the bank or Postfinance to identify the bank, used to generate ISR in EUR. eg. 03-162-5')
@@ -75,17 +79,18 @@ class ResPartnerBank(models.Model):
         else:
             return super(ResPartnerBank, self).retrieve_acc_type(acc_number)
 
-    @api.onchange('acc_number', 'partner_id', 'acc_type')
-    def _onchange_set_l10n_ch_postal(self):
-        if self.acc_type == 'iban':
-            self.l10n_ch_postal = self._retrieve_l10n_ch_postal(self.sanitized_acc_number)
-        elif self.acc_type == 'postal':
-            if self.acc_number and " " in self.acc_number:
-                self.l10n_ch_postal = self.acc_number.split(" ")[0]
-            else:
-                self.l10n_ch_postal = self.acc_number
-                if self.partner_id:
-                    self.acc_number = self.acc_number + '  ' + self.partner_id.name
+    @api.depends('acc_number', 'partner_id', 'acc_type')
+    def _compute_l10n_ch_postal(self):
+        for record in self:
+            if record.acc_type == 'iban':
+                record.l10n_ch_postal = self._retrieve_l10n_ch_postal(record.sanitized_acc_number)
+            elif record.acc_type == 'postal':
+                if record.acc_number and " " in record.acc_number:
+                    record.l10n_ch_postal = record.acc_number.split(" ")[0]
+                else:
+                    record.l10n_ch_postal = record.acc_number
+                    if record.partner_id:
+                        record.acc_number = record.acc_number + '  ' + record.partner_id.name
 
     @api.model
     def _retrieve_l10n_ch_postal(self, iban):
