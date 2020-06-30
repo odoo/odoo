@@ -75,13 +75,20 @@
     <template id="header" inherit_id="website.layout" name="Header Shop My Cart Link">
         <xpath expr="//header//ul[@id='top_menu']/li" position="before">
             <t t-set="website_sale_order" t-value="website.sale_get_order()" />
+            <t t-set="show_cart" t-value="true"/>
             <li class="nav-item divider d-none"/> <!-- Make sure the cart and related menus are not folded (see autohideMenu) -->
-            <li t-attf-class="nav-item o_wsale_my_cart #{'' if website_sale_order and website_sale_order.cart_quantity else 'd-none'}">
+            <li t-attf-class="nav-item o_wsale_my_cart #{not show_cart and 'd-none'}">
                 <a href="/shop/cart" class="nav-link">
                     <i class="fa fa-shopping-cart"></i>
                     My Cart <sup t-attf-class="my_cart_quantity badge badge-primary" t-esc="website_sale_order and website_sale_order.cart_quantity or ''" t-att-data-order-id="website_sale_order and website_sale_order.id or ''"/>
                 </a>
             </li>
+        </xpath>
+    </template>
+
+    <template id="hide_cart_if_empty" inherit_id="website_sale.header" name="Hide Cart If Empty">
+        <xpath expr="//t[@t-set='show_cart']" position="after">
+            <t t-set="show_cart" t-value="show_cart and website_sale_order and website_sale_order.cart_quantity" />
         </xpath>
     </template>
 

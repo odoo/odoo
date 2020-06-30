@@ -95,6 +95,14 @@
                 <we-button data-change-sequence="bottom">Push to bottom</we-button>
             </div>
         </div>
+        <div data-selector="#wrapwrap > header"
+            data-no-check="true"
+            groups="website.group_website_designer">
+            <we-checkbox string="Always Show Cart"
+                        data-customize-website-views="website_sale.hide_cart_if_empty|"
+                        data-no-preview="true"
+                        data-reload="/"/>
+        </div>
     </xpath>
 </template>
 
