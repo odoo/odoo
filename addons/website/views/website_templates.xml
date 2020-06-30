@@ -179,7 +179,7 @@
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
         <t groups="website.group_website_publisher">
-            <t t-foreach="['header_overlay', 'header_color']" t-as="optionName">
+            <t t-foreach="['header_overlay', 'header_color', 'header_visible']" t-as="optionName">
                 <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" t-att-name="optionName" t-att-value="main_object[optionName]"/>
             </t>
         </t>
@@ -189,6 +189,9 @@
     </xpath>
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{main_object.header_color if 'header_color' in main_object else ''}" separator=" "/>
+    </xpath>
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'header_visible' in main_object and not main_object.header_visible else ''}" separator=" "/>
     </xpath>
 </template>
 
@@ -247,6 +250,12 @@
 </template>
 
 <!-- Navbar options -->
+<template id="option_layout_hide_header" inherit_id="website.layout" active="False">
+    <xpath expr="//header" position="before">
+        <t t-set="no_header" t-value="True"/>
+    </xpath>
+</template>
+
 <template id="layout_logo_show" inherit_id="website.layout" name="Show Logo">
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
