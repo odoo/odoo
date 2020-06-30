@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+
+<div t-name="website_event_track_suggestion"
+    class="owevent_track_suggestion position-absolute w-100 px-5 py-3">
+    <div class="h-100 w-100 d-flex flex-column align-items-center">
+        <div class="h1 text-white" t-esc="widget.name"/>
+        <div class="flex-grow-1 h-100 w-100 owevent_track_suggestion_image" t-attf-style="background-image: url('#{widget.imageSrc}');"/>
+        <div class="text-right h2 w-100">
+            <div class="owevent_track_suggestion_timer d-inline-block py-1 px-2">
+                <i class="fa fa-remove mr-2"/>
+                <span>Starting in</span>
+                <span class="owevent_track_suggestion_timer_text ml-2">5</span>
+            </div>
+        </div>
+    </div>
+</div>
+
+</templates>

@@ -15,8 +15,16 @@
         'website_event_track_session',
     ],
     'data': [
+        'views/assets.xml',
+        'views/event_track_templates_track.xml',
+        'views/event_views.xml',
+        'views/res_config_settings.xml'
     ],
     'demo': [
+        'data/event_track_demo.xml'
+    ],
+    'qweb': [
+        'static/src/xml/website_event_track_live_templates.xml'
     ],
     'application': False,
     'installable': True,
