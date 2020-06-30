@@ -444,7 +444,6 @@
                                 <tree
                                     string="Sales Order Lines"
                                     editable="bottom"
-                                    decoration-info="(not display_type and invoice_status == 'to invoice')"
                                 >
                                     <control>
                                         <create name="add_product_control" string="Add a product"/>
@@ -532,6 +531,7 @@
                                         string="Invoiced"
                                         attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"
                                         optional="show"
+                                        decoration-info="(not display_type and invoice_status == 'to invoice')"
                                     />
                                     <field name="qty_to_invoice" invisible="1"/>
                                     <field name="product_uom_readonly" invisible="1"/>
@@ -675,7 +675,7 @@
                                 <group name="sale_shipping">
                                     <label for="commitment_date" string="Delivery Date"/>
                                     <div name="commitment_date_div" class="o_row">
-                                        <field name="commitment_date"/> <span class="text-muted">Expected: <field name="expected_date" widget="date"/></span>
+                                        <field name="commitment_date"/> <field name="expected_date" invisible="1"/>
                                     </div>
                                 </group>
                                 <group string="Reporting" name="sale_reporting" groups="base.group_no_one">
