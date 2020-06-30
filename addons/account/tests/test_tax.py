@@ -66,6 +66,16 @@ class TestTaxCommon(AccountTestInvoicingCommon):
                 (4, cls.percent_tax.id, 0)
             ]
         })
+        cls.group_tax_percent = cls.env['account.tax'].create({
+            'name': "Group tax percent",
+            'amount_type': 'group',
+            'amount': 0,
+            'sequence': 6,
+            'children_tax_ids': [
+                (4, cls.percent_tax.id, 0),
+                (4, cls.percent_tax_bis.id, 0)
+            ]
+        })
         cls.group_of_group_tax = cls.env['account.tax'].create({
             'name': "Group of group tax",
             'amount_type': 'group',
@@ -185,6 +195,21 @@ class TestTax(TestTaxCommon):
                 # ---------------------------------------------------
                 (200.0, 10.0),    # |  1  |    10  |      |
                 (200.0, 20.0),    # |  3  |    10% |      |
+                # ---------------------------------------------------
+            ],
+            res
+        )
+
+    def test_tax_group_percent(self):
+        res = self.group_tax_percent.with_context({'force_price_include':True}).compute_all(100.0)
+        self._check_compute_all_results(
+            100,    # 'total_included'
+            83.33,    # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (83.33, 8.33),    # |  1  |    10% |      |
+                (83.33, 8.34),    # |  2  |    10% |      |
                 # ---------------------------------------------------
             ],
             res
