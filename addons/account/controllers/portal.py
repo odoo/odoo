@@ -57,7 +57,7 @@ class PortalAccount(CustomerPortal):
             filterby = 'all'
         domain += searchbar_filters[filterby]['domain']
 
-        archive_groups = self._get_archive_groups('account.move', domain)
+        archive_groups = self._get_archive_groups('account.move', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
