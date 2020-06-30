@@ -778,6 +778,22 @@ odoo.define('web.ControlPanelModel', function (require) {
                         // and others are passive (require input(s) to become determined)
                         // What is the right place to process the attrs?
                     };
+                    if (preFilter.attrs && JSON.parse(preFilter.attrs.modifiers || '{}').invisible) {
+                        filter.invisible = true;
+
+                        var preFilterFieldName = null;
+                        if (preFilter.tag == 'filter' && preFilter.attrs.date) {
+                            preFilterFieldName = preFilter.attrs.date;
+                        } else if (preFilter.tag == 'groupBy') {
+                            preFilterFieldName = preFilter.attrs.fieldName;
+                        }
+                        if (preFilterFieldName && !this.fields[preFilterFieldName]) {
+                            // In some case when a field is limited to specific groups
+                            // on the model, we need to ensure to discard related filter
+                            // as it may still be present in the view (in 'invisible' state)
+                            return;
+                        }
+                    }
                     if (filter.type === 'filter' || filter.type === 'groupBy') {
                         filter.groupNumber = groupNumber;
                     }
@@ -908,9 +924,6 @@ odoo.define('web.ControlPanelModel', function (require) {
                 filter.isDefault = attrs.isDefault;
             }
             filter.description = attrs.string || attrs.help || attrs.name || attrs.domain || 'Ω';
-            if (JSON.parse(attrs.modifiers || '{}').invisible) {
-                filter.invisible = true;
-            }
             switch (filter.type) {
                 case 'filter':
                     if (attrs.context) {
