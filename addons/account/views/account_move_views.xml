@@ -778,7 +778,6 @@
                                         <field name="product_uom_category_id" invisible="1"/>
                                         <field name="product_uom_id" groups="uom.group_uom"/>
                                         <field name="price_unit"/>
-                                        <field name="display_type"/>
                                         <templates>
                                             <t t-name="kanban-box">
                                                 <div t-attf-class="oe_kanban_card oe_kanban_global_click {{ record.display_type.raw_value ? 'o_is_' + record.display_type.raw_value : '' }}">
