@@ -1,119 +1,94 @@
-from unittest.mock import patch
-
-from odoo.addons.account.tests.common import AccountTestUsersCommon
+# -*- coding: utf-8 -*-
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestAccountJournalDashboard(AccountTestUsersCommon):
+class TestAccountJournalDashboard(AccountTestInvoicingCommon):
+
     def test_customer_invoice_dashboard(self):
-        def patched_today(*args, **kwargs):
-            return '2019-01-22'
+        with self.mocked_today('2019-01-22'):
 
-        date_invoice = '2019-01-21'
+            journal = self.company_data['default_journal_sale']
 
-        journal = self.env['account.journal'].create({
-            'name': 'sale_0',
-            'code': 'SALE0',
-            'type': 'sale',
-        })
+            invoice = self.env['account.move'].create({
+                'move_type': 'out_invoice',
+                'journal_id': journal.id,
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2019-01-21',
+                'date': '2019-01-21',
+                'invoice_line_ids': [(0, 0, {
+                    'product_id': self.product_a.id,
+                    'quantity': 40.0,
+                    'name': 'product test 1',
+                    'discount': 10.00,
+                    'price_unit': 2.27,
+                })]
+            })
+            refund = self.env['account.move'].create({
+                'move_type': 'out_refund',
+                'journal_id': journal.id,
+                'partner_id': self.partner_a.id,
+                'invoice_date': '2019-01-21',
+                'date': '2019-01-21',
+                'invoice_line_ids': [(0, 0, {
+                    'product_id': self.product_a.id,
+                    'quantity': 1.0,
+                    'name': 'product test 1',
+                    'price_unit': 13.3,
+                })]
+            })
 
-        res_partner_3 = self.env['res.partner'].create({
-            'name': 'Gemini Furniture',
-        })
+            # Check Draft
+            dashboard_data = journal.get_journal_dashboard_datas()
 
-        product_product_1 = self.env['product.product'].create({
-            'name': 'Virtual Interior Design',
-            'standard_price': 20.5,
-            'list_price': 30.75,
-            'type': 'service',
-        })
+            self.assertEqual(dashboard_data['number_draft'], 2)
+            self.assertIn('68.42', dashboard_data['sum_draft'])
 
-        invoice = self.env['account.move'].create({
-            'move_type': 'out_invoice',
-            'journal_id': journal.id,
-            'partner_id': res_partner_3.id,
-            'invoice_date': date_invoice,
-            'date': date_invoice,
-            'invoice_line_ids': [(0, 0, {
-                'product_id': product_product_1.id,
-                'quantity': 40.0,
-                'name': 'product test 1',
-                'discount': 10.00,
-                'price_unit': 2.27,
-            })]
-        })
-        refund = self.env['account.move'].create({
-            'move_type': 'out_refund',
-            'journal_id': journal.id,
-            'partner_id': res_partner_3.id,
-            'invoice_date': '2019-01-21',
-            'date': date_invoice,
-            'invoice_line_ids': [(0, 0, {
-                'product_id': product_product_1.id,
-                'quantity': 1.0,
-                'name': 'product test 1',
-                'price_unit': 13.3,
-            })]
-        })
+            self.assertEqual(dashboard_data['number_waiting'], 0)
+            self.assertIn('0.00', dashboard_data['sum_waiting'])
 
-        # Check Draft
-        dashboard_data = journal.get_journal_dashboard_datas()
+            # Check Both
+            invoice.post()
 
-        self.assertEqual(dashboard_data['number_draft'], 2)
-        self.assertIn('68.42', dashboard_data['sum_draft'])
+            dashboard_data = journal.get_journal_dashboard_datas()
+            self.assertEqual(dashboard_data['number_draft'], 1)
+            self.assertIn('-13.30', dashboard_data['sum_draft'])
 
-        self.assertEqual(dashboard_data['number_waiting'], 0)
-        self.assertIn('0.00', dashboard_data['sum_waiting'])
+            self.assertEqual(dashboard_data['number_waiting'], 1)
+            self.assertIn('81.72', dashboard_data['sum_waiting'])
 
-        # Check Both
-        invoice.post()
+            # Check waiting payment
+            refund.post()
 
-        dashboard_data = journal.get_journal_dashboard_datas()
-        self.assertEqual(dashboard_data['number_draft'], 1)
-        self.assertIn('-13.30', dashboard_data['sum_draft'])
+            dashboard_data = journal.get_journal_dashboard_datas()
+            self.assertEqual(dashboard_data['number_draft'], 0)
+            self.assertIn('0.00', dashboard_data['sum_draft'])
 
-        self.assertEqual(dashboard_data['number_waiting'], 1)
-        self.assertIn('81.72', dashboard_data['sum_waiting'])
+            self.assertEqual(dashboard_data['number_waiting'], 2)
+            self.assertIn('68.42', dashboard_data['sum_waiting'])
 
-        # Check waiting payment
-        refund.post()
+            # Check partial
+            receivable_account = refund.line_ids.mapped('account_id').filtered(lambda a: a.internal_type == 'receivable')
+            payment = self.env['account.payment'].create({
+                'amount': 10.0,
+                'payment_type': 'outbound',
+                'partner_type': 'customer',
+                'partner_id': self.partner_a.id,
+            })
+            payment.action_post()
 
-        dashboard_data = journal.get_journal_dashboard_datas()
-        self.assertEqual(dashboard_data['number_draft'], 0)
-        self.assertIn('0.00', dashboard_data['sum_draft'])
+            (refund + payment.move_id).line_ids\
+                .filtered(lambda line: line.account_internal_type == 'receivable')\
+                .reconcile()
 
-        self.assertEqual(dashboard_data['number_waiting'], 2)
-        self.assertIn('68.42', dashboard_data['sum_waiting'])
+            dashboard_data = journal.get_journal_dashboard_datas()
+            self.assertEqual(dashboard_data['number_draft'], 0)
+            self.assertIn('0.00', dashboard_data['sum_draft'])
 
-        # Check partial
-        receivable_account = refund.line_ids.mapped('account_id').filtered(lambda a: a.internal_type == 'receivable')
-        payment_move = self.env['account.move'].create({
-            'journal_id': journal.id,
-        })
-        payment_move_line = self.env['account.move.line'].with_context(check_move_validity=False).create({
-            'move_id': payment_move.id,
-            'account_id': receivable_account.id,
-            'debit': 10.00,
-        })
-        self.env['account.move.line'].with_context(check_move_validity=False).create({
-            'move_id': payment_move.id,
-            'account_id': self.env['account.account'].search([('user_type_id', '=', self.env.ref('account.data_account_type_liquidity').id)], limit=1).id,
-            'credit': 10.00,
-        })
+            self.assertEqual(dashboard_data['number_waiting'], 2)
+            self.assertIn('78.42', dashboard_data['sum_waiting'])
 
-        payment_move.post()
-
-        refund.js_assign_outstanding_line(payment_move_line.id)
-
-        dashboard_data = journal.get_journal_dashboard_datas()
-        self.assertEqual(dashboard_data['number_draft'], 0)
-        self.assertIn('0.00', dashboard_data['sum_draft'])
-
-        self.assertEqual(dashboard_data['number_waiting'], 2)
-        self.assertIn('78.42', dashboard_data['sum_waiting'])
-
-        with patch('odoo.fields.Date.today', patched_today):
             dashboard_data = journal.get_journal_dashboard_datas()
             self.assertEqual(dashboard_data['number_late'], 2)
             self.assertIn('78.42', dashboard_data['sum_late'])
