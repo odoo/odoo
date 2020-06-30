@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- MAIN: REMOVE HEADER/FOOTER IF WIDESCREEN -->
+<template id="event_track_main" inherit_id="website_event_track_session.event_track_main">
+    <xpath expr="//t[@t-call='website_event.layout']" position="before">
+        <t t-set="no_header" t-value="option_widescreen"/>
+        <t t-set="no_footer" t-value="option_widescreen"/>
+    </xpath>
+</template>
+
+<!-- MAIN: ADD VIDEO -->
+<template id="event_track_content" inherit_id="website_event_track_session.event_track_content">
+    <xpath expr="//div[hasclass('o_wesession_track_main_description')]" position="before">
+        <div t-if="track.youtube_video_url" class="flex-grow-1 o_wevent_event_track_live mx-3"
+            t-att-data-track-id="track.id"
+            t-att-data-youtube-video-id="track.youtube_video_id">
+            <div id="o_wevent_youtube_iframe_container" class="w-100"/>
+        </div>
+    </xpath>
+</template>
+
+<!-- ASIDE: ADD CHAT TAB FOR VIDEOS -->
+<template id="event_track_aside" inherit_id="website_event_track_session.event_track_aside">
+    <xpath expr="//ul[hasclass('o_wesession_track_aside_nav')]" position="inside">
+        <li t-if="track.youtube_video_url and (track.is_track_upcoming or track.is_track_live)" class="nav-item flex-grow-1">
+            <a href="#track_chat" aria-controls="track_chat" class="nav-link" role="tab" data-toggle="tab">
+                Chat
+            </a>
+        </li>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wesession_track_aside_tabs')]" position="inside">
+        <div t-if="track.youtube_video_url and (track.is_track_upcoming or track.is_track_live)" id="track_chat"
+            class="tab-pane fade o_wesession_track_aside_tab_chat" role="tabpanel">
+            <iframe t-attf-src="https://www.youtube.com/live_chat?v=#{track.youtube_video_id}&amp;embed_domain=#{hostname}"
+                height="100%"
+                width="100%"
+                frameborder="0" allowfullscreen="allowfullscreen"/>
+        </div>
+    </xpath>
+</template>
+
+</odoo>
