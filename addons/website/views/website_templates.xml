@@ -255,6 +255,12 @@
     </xpath>
 </template>
 
+<template id="header_logo_none" inherit_id="website.layout" name="No Logo" active="False">
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
+        <a href="/" class="navbar-brand d-none"/>
+    </xpath>
+</template>
+
 <template id="header_visibility_standard" inherit_id="website.layout" name="Header Visibility Standard">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_standard o_top_fixed_element" separator=" "/>

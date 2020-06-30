@@ -409,7 +409,8 @@
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
 
-    <div id="so_header_theme"
+    <div data-js="Header"
+         id="so_header_theme"
          data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
@@ -424,19 +425,21 @@
         <we-select string="Logo" data-reload="/">
             <we-button data-customize-website-views="website.website_name">Text</we-button>
             <we-button data-customize-website-views="website.layout_logo_show">Image</we-button>
+            <we-button data-customize-website-views="website.header_logo_none" data-name="header_logo_none_opt">None</we-button>
         </we-select>
         <we-input string="Logo Height"
+                  data-dependencies="!header_logo_none_opt"
                   data-customize-website-variable="null"
                   data-variable="logo-height"
                   data-unit="px"
                   data-save-unit="rem"/>
-        <we-input id="option_logo_height_scrolled"
-                  string="Logo Height (Scrolled)"
+        <we-input string="Logo Height (Scrolled)"
+                  data-name="option_logo_height_scrolled"
+                  data-dependencies="!header_visibility_scroll_opt"
                   data-customize-website-variable="null"
                   data-variable="fixed-logo-height"
                   data-unit="px"
-                  data-save-unit="rem"
-                  data-dependencies="!header_visibility_scroll_opt"/>
+                  data-save-unit="rem"/>
         <we-row string="Font">
             <we-fontfamilypicker data-variable="navbar-font-number"/>
             <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
