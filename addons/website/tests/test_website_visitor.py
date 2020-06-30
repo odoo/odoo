@@ -293,11 +293,14 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
         # reconnect with new visitor.
         self.url_open(self.tracked_page.url)
         new_visitor = self._get_last_visitor()
+        self.assertFalse(new_visitor.partner_id)
         self.assertTrue(new_visitor.id > old_visitor.id, "A new visitor should have been created.")
         self.assertVisitorTracking(new_visitor, self.tracked_page)
 
         with self.mock_visitor_from_request(force_visitor=new_visitor):
             self.authenticate('demo', 'demo')
+        (new_visitor | old_visitor).flush()
+        partner_demo.invalidate_cache(fnames=['visitor_ids'])
         self.assertEqual(partner_demo.visitor_ids, old_visitor, "The partner visitor should be back to the 'old' visitor.")
 
         new_visitor = self.env['website.visitor'].search([('id', '=', new_visitor.id)])
