@@ -1387,11 +1387,7 @@ class MrpProduction(models.Model):
         return backorders
 
     def button_mark_done(self):
-        self._check_company()
-        for order in self:
-            # TODO : multi _check_sn_uniqueness + error message with MO name
-            order._check_sn_uniqueness()
-
+        self._button_mark_done_sanity_checks()
         res = self._pre_button_mark_done()
         if res is not True:
             return res
@@ -1465,6 +1461,11 @@ class MrpProduction(models.Model):
         if quantity_issues:
             return self._action_generate_backorder_wizard(quantity_issues)
         return True
+
+    def _button_mark_done_sanity_checks(self):
+        self._check_company()
+        for order in self:
+            order._check_sn_uniqueness()
 
     def do_unreserve(self):
         for production in self:
