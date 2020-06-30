@@ -44,7 +44,7 @@ odoo.define('web.ActionMenus', function (require) {
             // Action based actions
             const relateActions = this.props.items.relate || [];
             const actionActions = (this.props.items.action || [])
-                .filter((action) => !action.display_in_controlpanel || this.env.view.type !== 'list');
+                .filter((action) => !action.display_in_control_panel || this.env.view.type !== 'list');
             const formattedActions = [...actionActions, ...relateActions].map(
                 action => ({ action, description: action.name, key: action.id })
             );
@@ -64,7 +64,7 @@ odoo.define('web.ActionMenus', function (require) {
          */
         get printItems() {
             const printActions = (this.props.items.print || [])
-                .filter((action) => !action.display_in_controlpanel || this.env.view.type !== 'list');
+                .filter((action) => !action.display_in_control_panel || this.env.view.type !== 'list');
             const printItems = printActions.map(
                 action => ({ action, description: action.name, key: action.id })
             );
