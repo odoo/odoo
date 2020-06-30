@@ -60,7 +60,7 @@ class CustomerPortal(CustomerPortal):
             sortby = 'date'
         sort_order = searchbar_sortings[sortby]['order']
 
-        archive_groups = self._get_archive_groups('sale.order', domain)
+        archive_groups = self._get_archive_groups('sale.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -111,7 +111,7 @@ class CustomerPortal(CustomerPortal):
             sortby = 'date'
         sort_order = searchbar_sortings[sortby]['order']
 
-        archive_groups = self._get_archive_groups('sale.order', domain)
+        archive_groups = self._get_archive_groups('sale.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
