@@ -24,7 +24,7 @@ class AccountPayment(models.Model):
     @api.depends('payment_method_id', 'currency_id', 'amount')
     def _compute_check_amount_in_words(self):
         for pay in self:
-            if pay.currency_id and pay.payment_method_id == self.env.ref('account_check_printing.account_payment_method_check'):
+            if pay.currency_id and pay.payment_method_id.code == 'check_printing':
                 pay.check_amount_in_words = pay.currency_id.amount_to_text(pay.amount)
             else:
                 pay.check_amount_in_words = False
