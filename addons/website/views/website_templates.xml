@@ -156,7 +156,7 @@
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="class" add="o_colored_level o_cc" separator=" "/>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//span[@t-field='res_company.name']" position="after">
+    <xpath expr="//div[hasclass('o_footer_copyright')]//span[hasclass('o_footer_copyright_name')]" position="after">
         <t t-call="website.language_selector"/>
     </xpath>
     <xpath expr="//t[@t-call='web.brand_promotion']/.." position="attributes">
@@ -426,7 +426,7 @@
                     <div class="o_footer_address">
                         250 Executive Park Blvd, Suite 3400<br/>San Francisco CA 94134<br/>United States
                     </div>
-                    <div class="row">
+                    <div class="row s_nb_column_fixed">
                         <div class="offset-md-3 col-md-6 o_footer_logo">
                             <a href="/" class="footer-brand logo">
                                 <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
@@ -483,7 +483,7 @@
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt16 pb8">
                 <div class="container">
-                    <div class="row">
+                    <div class="row s_nb_column_fixed">
                         <div class="offset-md-3 col-md-6 o_footer_logo text-center my-3">
                             <a href="/" class="footer-brand logo">
                                 <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
