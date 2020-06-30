@@ -465,6 +465,43 @@ QUnit.module('Views', {
         controlPanel.destroy();
     });
 
+    QUnit.test('invisible fields and filters with unknown related fields should not be rendered', async function (assert) {
+        assert.expect(2);
+
+        // This test case considers that the current user is not a member of
+        // the "base.group_system" group and both "bar" and "date_field" fields
+        // have field-level access control that limit access to them only from
+        // that group.
+        //
+        // As MockServer currently does not support "groups" access control, we:
+        //
+        // - emulate field-level access control of fields_get() by removing
+        //   "bar" and "date_field" from the model fields
+        // - set filters with groups="base.group_system" as `invisible=1` in
+        //   view to emulate the behavior of fields_view_get()
+        //   [see ir.ui.view `_apply_group()`]
+
+        delete this.data['partner'].fields['bar'];
+        delete this.data['partner'].fields['date_field'];
+
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search>" +
+                        "<field name=\"foo\"/>" +
+                        "<filter name=\"filterDate\" string=\"Date\" date=\"date_field\" default_period=\"last_365_days\" invisible=\"1\" groups=\"base.group_system\"/>" +
+                        "<filter name=\"groupByBar\" string=\"Bar\" context=\"{'group_by': 'bar'}\" invisible=\"1\" groups=\"base.group_system\"/>" +
+                    "</search>",
+            data: this.data,
+        });
+
+        assert.containsNone(controlPanel, '.o_search_options .o_dropdown:contains("Filters")',
+            "there should not be filter dropdown");
+        assert.containsNone(controlPanel, '.o_search_options .o_dropdown:contains("Group By")',
+            "there should not be groupby dropdown");
+
+        controlPanel.destroy();
+    });
+
     QUnit.test('Favorites Use by Default and Share are exclusive', async function (assert) {
         assert.expect(11);
         var controlPanel = await createControlPanel({
