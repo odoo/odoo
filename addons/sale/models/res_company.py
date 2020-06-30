@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import base64
 
 from odoo import api, fields, models, _
-
+from odoo.modules.module import get_module_resource
+from odoo.modules.module import get_resource_path
 
 class ResCompany(models.Model):
     _inherit = "res.company"
@@ -52,9 +54,13 @@ class ResCompany(models.Model):
             # take any existing product or create one
             product = self.env['product.product'].search([], limit=1)
             if len(product) == 0:
+                default_image_path = get_module_resource('product', 'static/img', 'product_product_13-image.png')
                 product = self.env['product.product'].create({
-                    'name': _('Sample Product')
+                    'name': _('Sample Product'),
+                    'active': False,
+                    'image_1920': base64.b64encode(open(default_image_path, 'rb').read())
                 })
+                product.product_tmpl_id.write({'active': False})
             self.env['sale.order.line'].create({
                 'name': _('Sample Order Line'),
                 'product_id': product.id,
