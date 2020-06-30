@@ -120,8 +120,12 @@ odoo.define('web.OwlDialog', function () {
 
         /**
          * @private
+         * @param {MouseEvent} ev
          */
-        _onBackdropClick() {
+        _onBackdropClick(ev) {
+            if (!this.props.backdrop || ev.target !== ev.currentTarget) {
+                return;
+            }
             if (this.props.backdrop === 'static') {
                 if (this.mainButton) {
                     this.mainButton.focus();
