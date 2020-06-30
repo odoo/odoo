@@ -751,7 +751,7 @@ class ChromeBrowser():
 
         if ffmpeg_path:
             framerate = int(len(self.screencast_frames) / (self.screencast_frames[-1].get('timestamp') - self.screencast_frames[0].get('timestamp')))
-            r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_dir, outfile])
+            r = subprocess.run([ffmpeg_path, '-framerate', str(framerate), '-i', '%s/frame_%%05d.png' % self.screencasts_frames_dir, outfile])
             self._logger.log(25, 'Screencast in: %s', outfile)
         else:
             outfile = outfile.strip('.mp4')
