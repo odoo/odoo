@@ -1539,28 +1539,66 @@ options.registry.Header = options.Class.extend({
     },
 });
 
-options.registry.topMenuTransparency = options.Class.extend({
+options.registry.TopMenuVisibility = options.Class.extend({
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        const shown = await this._isShown();
+        this.trigger_up('snippet_option_visibility_update', {show: shown});
+    },
+    /**
+     * @override
+     */
+    async onTargetShow() {
+        // TODO improve: here we make a hack so that if we make the invisible
+        // header appear for edition, its actual visibility for the page is
+        // toggled (otherwise it would be about editing an element which
+        // is actually never displayed on the page).
+        const widget = this._requestUserValueWidgets('regular_header_visibility_opt')[0];
+        widget.$el.click();
+    },
 
     //--------------------------------------------------------------------------
     // Options
     //--------------------------------------------------------------------------
 
     /**
-     * Handles the toggling between normal and overlay positions of the header.
+     * Handles the switching between 3 differents visibilities of the header.
      *
      * @see this.selectClass for params
      */
-    transparent: function (previewMode, widgetValue, params) {
-        var self = this;
-        this.trigger_up('action_demand', {
-            actionName: 'toggle_page_option',
-            params: [{name: 'header_overlay'}],
-            onSuccess: function () {
-                self.trigger_up('action_demand', {
-                    actionName: 'toggle_page_option',
-                    params: [{name: 'header_color', value: ''}],
-                });
-            },
+    async visibility(previewMode, widgetValue, params) {
+        const show = (widgetValue !== 'hidden');
+        await new Promise(resolve => {
+            this.trigger_up('action_demand', {
+                actionName: 'toggle_page_option',
+                params: [{name: 'header_visible', value: show}],
+                onSuccess: () => resolve(),
+            });
+        });
+        this.trigger_up('snippet_option_visibility_update', {show: show});
+        if (!show) {
+            return;
+        }
+        const transparent = (widgetValue === 'transparent');
+        await new Promise(resolve => {
+            this.trigger_up('action_demand', {
+                actionName: 'toggle_page_option',
+                params: [{name: 'header_overlay', value: transparent}],
+                onSuccess: () => resolve(),
+            });
+        });
+        if (!transparent) {
+            return;
+        }
+        await new Promise(resolve => {
+            this.trigger_up('action_demand', {
+                actionName: 'toggle_page_option',
+                params: [{name: 'header_color', value: ''}],
+                onSuccess: () => resolve(),
+            });
         });
     },
 
@@ -1571,17 +1609,34 @@ options.registry.topMenuTransparency = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName, params) {
-        if (methodName === 'transparent') {
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'visibility') {
+            const shown = await this._isShown();
+            if (!shown) {
+                return "hidden";
+            }
             return new Promise(resolve => {
                 this.trigger_up('action_demand', {
                     actionName: 'get_page_option',
                     params: ['header_overlay'],
-                    onSuccess: v => resolve(v ? 'true' : ''),
+                    onSuccess: v => resolve(v ? 'transparent' : 'regular'),
                 });
             });
         }
         return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    async _isShown() {
+        return new Promise(resolve => {
+            this.trigger_up('action_demand', {
+                actionName: 'get_page_option',
+                params: ['header_visible'],
+                onSuccess: v => resolve(!!v),
+            });
+        });
     },
 });
 

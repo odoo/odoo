@@ -504,14 +504,15 @@
                      data-no-preview="true"/>
     </div>
 
-    <div data-js="topMenuTransparency"
+    <div data-js="TopMenuVisibility"
         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
         data-no-check="true">
-        <we-checkbox id="option_header_transparent"
-                     string="Transparent on this page"
-                     data-name="header_transparent_opt"
-                     data-transparent="true"
-                     data-no-preview="true"/>
+        <we-select string="Visibility (On This Page)" id="option_header_visibility" data-no-preview="true">
+            <we-button data-name="regular_header_visibility_opt"
+                       data-visibility="regular">Regular</we-button>
+            <we-button data-visibility="transparent">Transparent</we-button>
+            <we-button data-visibility="hidden">Hidden</we-button>
+        </we-select>
     </div>
 
     <div data-js="topMenuColor"
@@ -741,6 +742,7 @@
             </we-select>
             <we-imagepicker data-name="body_bg_image_opt" data-dependencies="!no_background_opt" data-customize-body-bg=""/>
         </we-row>
+        <we-checkbox string="Show Header" data-customize-website-views="website.option_layout_hide_header|" data-reload="/"/>
         <we-row string="Code Injection" title="Enter code that will be added into every page of your site">
             <we-button data-no-preview="true" data-open-custom-code-dialog="head">&amp;lt;head&amp;gt;</we-button>
             <we-button data-no-preview="true" data-open-custom-code-dialog="footer">&amp;lt;/body&amp;gt;</we-button>
