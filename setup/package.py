@@ -119,7 +119,7 @@ def gen_deb_package(args, published_files):
         shutil.copy(pub_file_path, temp_path)
 
     commands = [
-        (['dpkg-scanpackages', '.'], "Packages"),  # Generate Packages file
+        (['dpkg-scanpackages', '--multiversion', '.'], "Packages"),  # Generate Packages file
         (['dpkg-scansources', '.'], "Sources"),  # Generate Sources file
         (['apt-ftparchive', 'release', '.'], "Release")  # Generate Release file
     ]
