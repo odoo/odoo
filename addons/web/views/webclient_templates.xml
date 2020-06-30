@@ -486,7 +486,7 @@
                 </main>
                 <footer t-if="not no_footer" id="bottom" data-anchor="true" t-attf-class="bg-light o_footer">
                     <div id="footer"/>
-                    <div class="o_footer_copyright">
+                    <div t-if="not no_copyright" class="o_footer_copyright">
                         <div class="container py-3">
                             <div class="row">
                                 <div class="col-sm text-center text-sm-left text-muted">
