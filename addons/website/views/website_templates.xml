@@ -520,6 +520,13 @@
     </xpath>
 </template>
 
+<!-- slideout effect -->
+<template id="template_footer_slideout" inherit_id="website.layout" name="Template Footer Slideout" active="False">
+    <xpath expr="//footer[@id='bottom']" position="attributes">
+        <attribute name="class" add="o_footer_slideout" separator=" "/>
+    </xpath>
+</template>
+
 <template id="cookies_bar" inherit_id="website.footer_custom" name="Cookies Bar">
     <xpath expr="//footer" position="after">
         <div id="website_cookies_bar" t-if="website.cookies_bar" class="s_popup o_snippet_invisible" data-name="Cookies Bar" data-vcss="001" data-invisible="1">

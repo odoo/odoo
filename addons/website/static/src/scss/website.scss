@@ -863,6 +863,24 @@ header {
     }
 }
 
+@if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
+    @include media-breakpoint-up(lg) {
+        #wrapwrap.o_footer_effect_enable {
+            > main {
+                background-color: $body-bg;
+                @if o-website-value('footer-effect') == 'slideout_shadow' {
+                    box-shadow: $box-shadow;
+                }
+            }
+            > footer {
+                @include o-position-absolute(0, 0, 0, 0);
+                position: sticky;
+                z-index: -1;
+            }
+        }
+    }
+}
+
 // Copyright
 .o_footer_copyright {
 
