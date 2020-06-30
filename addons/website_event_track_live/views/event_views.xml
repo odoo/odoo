@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+
+<record model="ir.ui.view" id="event_track_view_form">
+    <field name="name">event.track.view.form.inherit.live</field>
+    <field name="model">event.track</field>
+     <field name="inherit_id" ref="website_event_track.view_event_track_form"/>
+    <field name="arch" type="xml">
+        <xpath expr="//field[@name='active']" position="after">
+            <field name="youtube_video_url" widget="url" />
+        </xpath>
+    </field>
+</record>
+
+</odoo>
