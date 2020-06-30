@@ -414,7 +414,7 @@
          data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
-        <we-checkbox string="Show Sign In" data-customize-website-views="portal.portal_show_sign_in" data-reload="/"/>
+        <we-checkbox string="Sign In" data-customize-website-views="portal.portal_show_sign_in" data-reload="/"/>
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="menu"
                         data-with-combinations="true"/>
@@ -427,24 +427,24 @@
             <we-button data-customize-website-views="website.layout_logo_show">Image</we-button>
             <we-button data-customize-website-views="website.header_logo_none" data-name="header_logo_none_opt">None</we-button>
         </we-select>
-        <we-input string="Logo Height"
+        <we-input string="⌙ Height"
                   data-dependencies="!header_logo_none_opt"
                   data-customize-website-variable="null"
                   data-variable="logo-height"
                   data-unit="px"
                   data-save-unit="rem"/>
-        <we-input string="Logo Height (Scrolled)"
+        <we-input string="⌙ Height (Scrolled)"
                   data-name="option_logo_height_scrolled"
-                  data-dependencies="!header_visibility_scroll_opt"
                   data-customize-website-variable="null"
                   data-variable="fixed-logo-height"
                   data-unit="px"
-                  data-save-unit="rem"/>
+                  data-save-unit="rem"
+                  data-dependencies="!header_effect_scroll_opt"/>
         <we-row string="Font">
             <we-fontfamilypicker data-variable="navbar-font-number"/>
             <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
         </we-row>
-        <we-select id="header_templates_select" data-variable="header-template" string="Header Template" data-reload="/">
+        <we-select id="header_templates_select" data-variable="header-template" string="Template" data-reload="/">
             <we-button id="option_template_header_logo_menu"
                        data-name="header_logo_menu_opt"
                        data-customize-website-views=""
@@ -471,37 +471,38 @@
                        data-customize-website-variable="logo_hamburger"
                        string="Logo - Hamburger (cover)"/>
         </we-select>
-        <we-select id="header_visibilities_list" string="Header Visibility">
-            <we-button id="option_header_visibility_standard"
-                       data-name="header_visibility_standard_opt"
+        <we-select id="header_effect_list" string="Effect">
+            <we-button id="option_header_effect_standard"
+                       data-name="header_effect_standard_opt"
                        data-select-class="o_header_standard"
                        data-customize-website-views="website.header_visibility_standard"
                        string="Standard"/>
-            <we-button id="option_header_visibility_scroll"
-                       data-name="header_visibility_scroll_opt"
+            <we-button id="option_header_effect_scroll"
+                       data-name="header_effect_scroll_opt"
                        data-select-class=""
                        data-customize-website-views=""
                        string="Scroll"/>
-            <we-button id="option_header_visibility_fixed"
-                       data-name="header_visibility_fixed_opt"
+            <we-button id="option_header_effect_fixed"
+                       data-name="header_effect_fixed_opt"
                        data-select-class="o_header_fixed"
                        data-customize-website-views="website.header_visibility_fixed"
                        string="Fixed"/>
-            <we-button id="option_header_visibility_disappears"
-                       data-name="header_visibility_disappears_opt"
+            <we-button id="option_header_effect_disappears"
+                       data-name="header_effect_disappears_opt"
                        data-select-class="o_header_disappears"
                        data-customize-website-views="website.header_visibility_disappears"
                        string="Disappears"/>
-            <we-button id="option_header_visibility_fade_out"
-                       data-name="header_visibility_fade_out_opt"
+            <we-button id="option_header_effect_fade_out"
+                       data-name="header_effect_fade_out_opt"
                        data-select-class="o_header_fade_out"
                        data-customize-website-views="website.header_visibility_fade_out"
                        string="Fade Out"/>
         </we-select>
-        <we-checkbox string="Hoverable Dropdown"
-                     data-customize-website-views="website.header_hoverable_dropdown"
-                     data-select-class="o_hoverable_dropdown"
-                     data-no-preview="true"/>
+        <we-select id="option_header_dropdown" string="Sub Menus" data-no-preview="true">
+            <we-button data-select-class="o_hoverable_dropdown"
+                       data-customize-website-views="website.header_hoverable_dropdown">On Hover</we-button>
+            <we-button data-select-class="" data-name="header_dropdown_on_click_opt">On Click</we-button>
+        </we-select>
 
         <we-checkbox string="Button" data-customize-website-views="website.header_button" data-reload="/"/>
     </div>
