@@ -6,6 +6,7 @@ from odoo.exceptions import UserError, ValidationError
 from odoo.osv.expression import AND, NEGATIVE_TERM_OPERATORS
 from odoo.tools import float_round
 
+import itertools
 from collections import defaultdict
 
 
@@ -131,6 +132,32 @@ class MrpBom(models.Model):
                     raise ValidationError(_("By-products cost shares must be positive."))
             if sum(bom.byproduct_ids.mapped('cost_share')) > 100:
                 raise ValidationError(_("The total cost share for a BoM's by-products cannot exceed 100."))
+
+    @api.constrains("bom_line_ids")
+    def check_recursion(self):
+        cr = self._cr
+        self.flush(["bom_line_ids"])
+        query = 'SELECT "{}", "{}" FROM "{}" WHERE "{}" IN %s'.format(
+            "bom_id", "id", "mrp_bom_line", "bom_id")
+        succs = defaultdict(set)  # transitive closure of successors
+        preds = defaultdict(set)  # transitive closure of predecessors
+        todo, done = set(self.ids), set()
+        while todo:
+            cr.execute(query, [tuple(todo)])
+            bom_rel = [(id1, self.env["mrp.bom.line"].browse(id2).child_bom_id.id) for (id1, id2) in cr.fetchall()]
+            done.update(todo)
+            todo.clear()
+            for id1, id2 in bom_rel:
+                if not id2:
+                    continue
+                # connect id1 and its predecessors to id2 and its successors
+                for x, y in itertools.product([id1] + list(preds[id1]), [id2] + list(succs[id2])):
+                    if x == y:
+                        raise ValidationError(_("You can not create recursive labels."))
+                    succs[x].add(y)
+                    preds[y].add(x)
+                if id2 not in done:
+                    todo.add(id2)
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_id(self):
