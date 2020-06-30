@@ -98,9 +98,10 @@ class ChatterTopbar extends Component {
         return this.env.bus.trigger('do-action', {
             action,
             options: {
-                // A bit "extreme", could be improved:
-                // normally only an activity is created (no update nor delete)
-                on_close: () => this.chatter.refreshActivities(),
+                on_close: () => {
+                    this.chatter.refreshActivities();
+                    this.chatter.refresh();
+                },
             },
         });
     }
