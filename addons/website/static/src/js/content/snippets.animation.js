@@ -967,6 +967,28 @@ registry.ScrollButton = registry.anchorSlide.extend({
     },
 });
 
+registry.FooterSlideout = publicWidget.Widget.extend({
+    selector: '#wrapwrap:has(.o_footer_slideout)',
+    disabledInEditableMode: false,
+
+    /**
+     * @override
+     */
+    async start() {
+        const $main = this.$('> main');
+        const slideoutEffect = $main.outerHeight() >= $(window).outerHeight();
+        this.el.classList.toggle('o_footer_effect_enable', slideoutEffect);
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this._super(...arguments);
+        this.el.classList.remove('o_footer_effect_enable');
+    },
+});
+
 return {
     Widget: publicWidget.Widget,
     Animation: Animation,
