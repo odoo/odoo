@@ -1,8 +1,14 @@
+var onYouTubeIframeAPIReady;
+
 odoo.define('website_event_track.website_event_youtube_embed', function (require) {
 'use strict';
 
 var publicWidget = require('web.public.widget');
 var utils = require('web.utils');
+
+var YOUTUBE_VIDEO_ENDED = 0;
+var YOUTUBE_VIDEO_PLAYING = 1;
+var YOUTUBE_VIDEO_PAUSED = 2;
 
 /**
  * Modal responsible for showing the Youtube live stream / video.
@@ -58,7 +64,6 @@ publicWidget.registry.websiteEventYoutubeModal = publicWidget.Widget.extend({
         this.isLiveOrUpcoming = options.isLiveOrUpcoming;
 
         if (this.youtubeId) {
-            this.videoUrl = `https://www.youtube.com/embed/${this.youtubeId}?autoplay=1`;
             this.chatUrl = `https://www.youtube.com/live_chat?v=${this.youtubeId}&amp;embed_domain=${window.location.hostname}`;
         }
 
@@ -71,6 +76,8 @@ publicWidget.registry.websiteEventYoutubeModal = publicWidget.Widget.extend({
     start: function () {
         var self = this;
         this._super.apply(this, arguments).then(function () {
+            self.$el.on('shown.bs.modal', self._setupYoutubePlayer.bind(self));
+
             self.$el.modal('show');
             self.$el.on('hidden.bs.modal', function () {
                 self.destroy();
@@ -90,6 +97,45 @@ publicWidget.registry.websiteEventYoutubeModal = publicWidget.Widget.extend({
         this.$('.o_wevent_youtube_side_panel').toggleClass('d-none');
         this.$('.o_wevent_youtube_side_panel_restore').toggleClass('d-none');
     },
+
+    _onPlayerStateChange: function (event) {
+        if (event.data === YOUTUBE_VIDEO_ENDED) {
+            this.trigger('video-ended');
+        } else if (event.data === YOUTUBE_VIDEO_PLAYING) {
+            this.trigger('video-playing');
+        } else if (event.data === YOUTUBE_VIDEO_PAUSED) {
+            this.trigger('video-paused');
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    _setupYoutubePlayer: function () {
+        var self = this;
+
+        // fuck this, try creating the iFrame completely with API maybe?
+        var $youtubeElement = $('<script/>', {src: 'https://www.youtube.com/iframe_api'});
+        $(document.head).append($youtubeElement);
+
+        onYouTubeIframeAPIReady = function () {
+            new YT.Player('o_wevent_youtube_iframe_container', {
+                height: '100%',
+                width: '100%',
+                videoId: self.youtubeId,
+                playerVars: {
+                    autoplay: 1,
+                    enablejsapi: 1,
+                    origin: window.location.origin,
+                    widget_referrer: window.location.origin,
+                },
+                events: {
+                    'onStateChange': self._onPlayerStateChange
+                }
+            });
+        };
+    }
 });
 
 publicWidget.registry.websiteEventYoutubeButton = publicWidget.Widget.extend({
