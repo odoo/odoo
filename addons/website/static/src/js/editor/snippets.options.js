@@ -1518,6 +1518,27 @@ options.registry.collapse = options.Class.extend({
     },
 });
 
+options.registry.Header = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Needs to be done manually for now because data-dependencies
+     * doesn't work with "AND" conditions.
+     * TODO: improve this.
+     *
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'option_logo_height_scrolled') {
+            return !this.$('.navbar-brand').hasClass('d-none');
+        }
+        return this._super(...arguments);
+    },
+});
+
 options.registry.topMenuTransparency = options.Class.extend({
 
     //--------------------------------------------------------------------------
