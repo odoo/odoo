@@ -571,6 +571,16 @@
         </we-select>
     </div>
 
+    <div data-js="HideFooter"
+        data-selector="[data-main-object^='website.page('] #wrapwrap > footer"
+        data-no-check="true"
+        groups="website.group_website_designer">
+        <we-checkbox string="Show on this page"
+                     data-name="hide_footer_page_opt"
+                     data-visibility="hidden|shown"
+                     data-no-preview="true"/>
+    </div>
+
     <div data-selector=".o_footer_copyright"
          data-no-check="true"
          groups="website.group_website_designer">
