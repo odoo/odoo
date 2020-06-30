@@ -315,6 +315,14 @@
     </xpath>
 </template>
 
+<template id="header_button" inherit_id="website.layout" name="Header Button" active="False">
+    <xpath expr="//ul[@id='top_menu']" position="inside">
+        <li class="nav-item align-self-md-center ml-1 o_header_menu_button">
+            <a href="/contactus" class="btn btn-primary">Contact us</a>
+        </li>
+    </xpath>
+</template>
+
 <!-- Features template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">

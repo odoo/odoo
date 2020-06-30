@@ -402,7 +402,7 @@
 
     <div data-js="menu_data"
          data-selector="#top_menu li > a"
-         data-exclude=".dropdown-toggle"
+         data-exclude=".dropdown-toggle, li.o_header_menu_button a"
          data-no-check="true"/>
 
     <div data-js="company_data"
@@ -502,6 +502,8 @@
                      data-customize-website-views="website.header_hoverable_dropdown"
                      data-select-class="o_hoverable_dropdown"
                      data-no-preview="true"/>
+
+        <we-checkbox string="Button" data-customize-website-views="website.header_button" data-reload="/"/>
     </div>
 
     <div data-js="TopMenuVisibility"
