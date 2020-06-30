@@ -769,6 +769,8 @@ class PosOrder(models.Model):
             except psycopg2.DatabaseError:
                 # do not hide transactional errors, the order(s) won't be saved!
                 raise
+            except UserError as e:
+                raise
             except Exception as e:
                 _logger.error('Could not fully process the POS Order: %s', tools.ustr(e), exc_info=True)
 
