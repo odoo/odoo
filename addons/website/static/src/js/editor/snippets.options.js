@@ -1539,7 +1539,11 @@ options.registry.Header = options.Class.extend({
     },
 });
 
-options.registry.TopMenuVisibility = options.Class.extend({
+const VisibilityPageOptionUpdate = options.Class.extend({
+    pageOptionName: undefined,
+    showOptionWidgetName: undefined,
+    shownValue: '',
+
     /**
      * @override
      */
@@ -1556,9 +1560,61 @@ options.registry.TopMenuVisibility = options.Class.extend({
         // header appear for edition, its actual visibility for the page is
         // toggled (otherwise it would be about editing an element which
         // is actually never displayed on the page).
-        const widget = this._requestUserValueWidgets('regular_header_visibility_opt')[0];
+        const widget = this._requestUserValueWidgets(this.showOptionWidgetName)[0];
         widget.$el.click();
     },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for params
+     */
+    async visibility(previewMode, widgetValue, params) {
+        const show = (widgetValue !== 'hidden');
+        await new Promise(resolve => {
+            this.trigger_up('action_demand', {
+                actionName: 'toggle_page_option',
+                params: [{name: this.pageOptionName, value: show}],
+                onSuccess: () => resolve(),
+            });
+        });
+        this.trigger_up('snippet_option_visibility_update', {show: show});
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'visibility') {
+            const shown = await this._isShown();
+            return shown ? this.shownValue : 'hidden';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @private
+     * @returns {boolean}
+     */
+    async _isShown() {
+        return new Promise(resolve => {
+            this.trigger_up('action_demand', {
+                actionName: 'get_page_option',
+                params: [this.pageOptionName],
+                onSuccess: v => resolve(!!v),
+            });
+        });
+    },
+});
+
+options.registry.TopMenuVisibility = VisibilityPageOptionUpdate.extend({
+    pageOptionName: 'header_visible',
+    showOptionWidgetName: 'regular_header_visibility_opt',
 
     //--------------------------------------------------------------------------
     // Options
@@ -1570,15 +1626,8 @@ options.registry.TopMenuVisibility = options.Class.extend({
      * @see this.selectClass for params
      */
     async visibility(previewMode, widgetValue, params) {
+        await this._super(...arguments);
         const show = (widgetValue !== 'hidden');
-        await new Promise(resolve => {
-            this.trigger_up('action_demand', {
-                actionName: 'toggle_page_option',
-                params: [{name: 'header_visible', value: show}],
-                onSuccess: () => resolve(),
-            });
-        });
-        this.trigger_up('snippet_option_visibility_update', {show: show});
         if (!show) {
             return;
         }
@@ -1610,12 +1659,9 @@ options.registry.TopMenuVisibility = options.Class.extend({
      * @override
      */
     async _computeWidgetState(methodName, params) {
+        const _super = this._super.bind(this);
         if (methodName === 'visibility') {
-            const shown = await this._isShown();
-            if (!shown) {
-                return "hidden";
-            }
-            return new Promise(resolve => {
+            this.shownValue = await new Promise(resolve => {
                 this.trigger_up('action_demand', {
                     actionName: 'get_page_option',
                     params: ['header_overlay'],
@@ -1623,20 +1669,7 @@ options.registry.TopMenuVisibility = options.Class.extend({
                 });
             });
         }
-        return this._super(...arguments);
-    },
-    /**
-     * @private
-     * @returns {boolean}
-     */
-    async _isShown() {
-        return new Promise(resolve => {
-            this.trigger_up('action_demand', {
-                actionName: 'get_page_option',
-                params: ['header_visible'],
-                onSuccess: v => resolve(!!v),
-            });
-        });
+        return _super(...arguments);
     },
 });
 
@@ -1678,6 +1711,15 @@ options.registry.topMenuColor = options.Class.extend({
             });
         });
     },
+});
+
+/**
+ * Hide/show footer in the current page.
+ */
+options.registry.HideFooter = VisibilityPageOptionUpdate.extend({
+    pageOptionName: 'footer_visible',
+    showOptionWidgetName: 'hide_footer_page_opt',
+    shownValue: 'shown',
 });
 
 /**

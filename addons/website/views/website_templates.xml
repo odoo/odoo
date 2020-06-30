@@ -149,7 +149,7 @@
     <xpath expr="//footer" position="attributes">
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
-        <attribute name="class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
+        <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
@@ -179,7 +179,7 @@
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
         <t groups="website.group_website_publisher">
-            <t t-foreach="['header_overlay', 'header_color', 'header_visible']" t-as="optionName">
+            <t t-foreach="['header_overlay', 'header_color', 'header_visible', 'footer_visible']" t-as="optionName">
                 <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" t-att-name="optionName" t-att-value="main_object[optionName]"/>
             </t>
         </t>
@@ -192,6 +192,9 @@
     </xpath>
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'header_visible' in main_object and not main_object.header_visible else ''}" separator=" "/>
+    </xpath>
+    <xpath expr="//footer[@id='bottom']" position="attributes">
+        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.footer_visible else ''}" separator=" "/>
     </xpath>
 </template>
 
@@ -538,7 +541,7 @@
 <!-- slideout effect -->
 <template id="template_footer_slideout" inherit_id="website.layout" name="Template Footer Slideout" active="False">
     <xpath expr="//footer[@id='bottom']" position="attributes">
-        <attribute name="class" add="o_footer_slideout" separator=" "/>
+        <attribute name="t-attf-class" add="o_footer_slideout" separator=" "/>
     </xpath>
 </template>
 
