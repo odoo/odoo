@@ -60,7 +60,7 @@ class WebsiteAccount(CustomerPortal):
         order = searchbar_sortings[sortby]['order']
 
         # archive groups - Default Group By 'create_date'
-        archive_groups = self._get_archive_groups('crm.lead', domain)
+        archive_groups = self._get_archive_groups('crm.lead', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
         # pager
@@ -126,7 +126,7 @@ class WebsiteAccount(CustomerPortal):
             CrmLead = CrmLead.with_context(active_test=False)
 
         # archive groups - Default Group By 'create_date'
-        archive_groups = self._get_archive_groups('crm.lead', domain)
+        archive_groups = self._get_archive_groups('crm.lead', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
         # pager
