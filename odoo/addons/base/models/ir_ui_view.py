@@ -1332,6 +1332,29 @@ actual arch.
                     ), child)
                 fnames.append(child.get('name'))
 
+    # Optional validation, used for cleanup when desired
+    def _validate_tag_kanban(self, node, name_manager, node_info):
+        if len([c for c in node if c.tag == 'templates']) > 1:
+            self._raise_view_error(_('Kanban views can only contain one template'))
+        allowed_tags = ('field', 'progressbar', 'templates')
+        all_fnames = set()
+        for child in node.iterchildren(tag=etree.Element):
+            if child.tag not in allowed_tags and not isinstance(child, etree._Comment):
+                msg = _('Kanban view %s should only have one of %s tag (not %s)')
+                self._raise_view_error(msg % (
+                    self.env.context.get('install_xmlid') or self.xml_id,
+                    ', '.join(allowed_tags), child.tag,
+                ), child)
+            if child.tag == "field":
+                fname = child.get("name")
+                if fname in all_fnames:
+                    msg = _("Duplicate field '%s' definition in preface of Kanban view %s")
+                    self._log_view_warning(msg % (
+                        fname,
+                        self.env.context.get('install_xmlid') or self.xml_id,
+                    ), child)
+                all_fnames.add(fname)
+
     def _validate_tag_graph(self, node, name_manager, node_info):
         if not node_info['validate']:
             return
