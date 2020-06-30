@@ -130,6 +130,49 @@ odoo.define('web.control_panel_tests', function (require) {
             controlPanel.destroy();
         });
 
+        QUnit.test('invisible fields and filters with unknown related fields should not be rendered', async function (assert) {
+            assert.expect(2);
+
+            // This test case considers that the current user is not a member of
+            // the "base.group_system" group and both "bar" and "date_field" fields
+            // have field-level access control that limit access to them only from
+            // that group.
+            //
+            // As MockServer currently does not support "groups" access control, we:
+            //
+            // - emulate field-level access control of fields_get() by removing
+            //   "bar" and "date_field" from the model fields
+            // - set filters with groups="base.group_system" as `invisible=1` in
+            //   view to emulate the behavior of fields_view_get()
+            //   [see ir.ui.view `_apply_group()`]
+
+            delete this.fields['bar'];
+            delete this.fields['date_field'];
+
+            const arch = `
+                <search>
+                    <field name="foo"/>
+                    <filter name="filterDate" string="Date" date="date_field" default_period="last_365_days" invisible="1" groups="base.group_system"/>
+                    <filter name="groupByBar" string="Bar" context="{'group_by': 'bar'}" invisible="1" groups="base.group_system"/>
+                </search>`;
+            const searchMenuTypes = [];
+            const params = {
+                cpStoreConfig: {
+                    viewInfo: { arch, fields: this.fields },
+                    searchMenuTypes
+                },
+                cpProps: { fields: this.fields, searchMenuTypes },
+            };
+            const controlPanel = await createControlPanel(params);
+
+            assert.containsNone(controlPanel.el, 'div.o_search_options div.o_filter_menu',
+                "there should not be filter dropdown");
+            assert.containsNone(controlPanel.el, 'div.o_search_options div.o_group_by_menu',
+                "there should not be groupby dropdown");
+
+            controlPanel.destroy();
+        });
+
         QUnit.test('groupby menu is not rendered if searchMenuTypes does not have groupBy', async function (assert) {
             assert.expect(2);
 
