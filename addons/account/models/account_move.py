@@ -317,8 +317,6 @@ class AccountMove(models.Model):
     @api.multi
     def post(self, invoice=False):
         self._post_validate()
-        # Create the analytic lines in batch is faster as it leads to less cache invalidation.
-        self.mapped('line_ids').create_analytic_lines()
         for move in self:
             if move.name == '/':
                 new_name = False
@@ -349,6 +347,8 @@ class AccountMove(models.Model):
                 # installing Accounting- with bank statements)
                 move.company_id.account_bank_reconciliation_start = move.date
 
+        # Create the analytic lines in batch is faster as it leads to less cache invalidation.
+        self.mapped('line_ids').create_analytic_lines()
         return self.write({'state': 'posted'})
 
     @api.multi
@@ -1405,7 +1405,7 @@ class AccountMoveLine(models.Model):
             'product_uom_id': self.product_uom_id and self.product_uom_id.id or False,
             'amount': amount,
             'general_account_id': self.account_id.id,
-            'ref': self.ref,
+            'ref': self.ref or self.move_id.name,
             'move_id': self.id,
             'user_id': self.invoice_id.user_id.id or self._uid,
             'partner_id': self.partner_id.id,
