@@ -3,7 +3,7 @@ from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicin
 
 import base64
 
-from lxml.objectify import fromstring
+from lxml import etree
 
 
 class AccountTestEdiCommon(AccountTestInvoicingCommon):
@@ -78,7 +78,7 @@ class AccountTestEdiCommon(AccountTestInvoicingCommon):
         :param xpath:       The xpath to apply as a string.
         :return:            The resulting etree after applying the xpaths.
         '''
-        diff_xml_tree = fromstring('<data>%s</data>' % xpath)
+        diff_xml_tree = etree.fromstring('<data>%s</data>' % xpath)
         return self.env['ir.ui.view'].apply_inheritance_specs(xml_tree, diff_xml_tree, None)
 
     def get_xml_tree_from_attachment(self, attachment):
@@ -86,11 +86,11 @@ class AccountTestEdiCommon(AccountTestInvoicingCommon):
         :param attachment:  An ir.attachment.
         :return:            An instance of etree.
         '''
-        return fromstring(base64.b64decode(attachment.with_context(bin_size=False).datas))
+        return etree.fromstring(base64.b64decode(attachment.with_context(bin_size=False).datas))
 
     def get_xml_tree_from_string(self, xml_tree_str):
         ''' Convert the string passed as parameter to an instance of etree.
         :param xml_tree_str:    A string representing an xml.
         :return:                An instance of etree.
         '''
-        return fromstring(xml_tree_str)
+        return etree.fromstring(xml_tree_str)
