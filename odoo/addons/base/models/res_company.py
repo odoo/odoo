@@ -76,8 +76,9 @@ class Company(models.Model):
     city = fields.Char(compute='_compute_address', inverse='_inverse_city')
     state_id = fields.Many2one(
         'res.country.state', compute='_compute_address', inverse='_inverse_state',
-        string="Fed. State", domain="[('country_id', '=?', country_id)]"
+        string="State", domain="[('country_id', '=?', country_id)]"
     )
+    is_state_required = fields.Boolean(compute='_compute_state_required')
     bank_ids = fields.One2many('res.partner.bank', 'company_id', string='Bank Accounts', help='Bank accounts related to this company')
     country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
@@ -114,6 +115,11 @@ class Company(models.Model):
     def _get_company_address_update(self, partner):
         return dict((fname, partner[fname])
                     for fname in self._get_company_address_field_names())
+
+    @api.depends('country_id')
+    def _compute_state_required(self):
+        for company in self:
+            company.is_state_required = company.country_id.is_state_required
 
     # TODO @api.depends(): currently now way to formulate the dependency on the
     # partner's contact address

@@ -60,6 +60,7 @@ class Country(models.Model):
     country_group_ids = fields.Many2many('res.country.group', 'res_country_res_country_group_rel',
                          'res_country_id', 'res_country_group_id', string='Country Groups')
     state_ids = fields.One2many('res.country.state', 'country_id', string='States')
+    is_state_required = fields.Boolean(string="State Mandatory", help="If checked, the state will be required in address forms.")
     name_position = fields.Selection([
             ('before', 'Before Address'),
             ('after', 'After Address'),

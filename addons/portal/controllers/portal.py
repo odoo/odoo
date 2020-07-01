@@ -284,6 +284,14 @@ class CustomerPortal(Controller):
         error = dict()
         error_message = []
 
+        # Check if state required
+        if data.get('country_id'):
+            country = request.env['res.country'].browse(int(data.get('country_id')))
+            if country.is_state_required:
+                self.MANDATORY_BILLING_FIELDS.append('state_id')
+            elif 'state_id' in self.MANDATORY_BILLING_FIELDS:
+                self.MANDATORY_BILLING_FIELDS.remove('state_id')
+
         # Validation
         for field_name in self.MANDATORY_BILLING_FIELDS:
             if not data.get(field_name):

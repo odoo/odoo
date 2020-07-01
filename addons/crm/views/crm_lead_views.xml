@@ -93,12 +93,13 @@
                                         'show_vat': True
                                     }" groups="base.group_no_one"/>
                                 <field name="partner_name"/>
+                                <field name="is_state_required" invisible="1"/>
                                 <label for="street" string="Address"/>
                                 <div class="o_address_format">
                                     <field name="street" placeholder="Street..." class="o_address_street"/>
                                     <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                     <field name="city" placeholder="City" class="o_address_city"/>
-                                    <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
+                                    <field name="state_id" class="o_address_state" attrs="{'required': [('is_state_required', '=', True)]}" placeholder="State" options='{"no_open": True}'/>
                                     <field name="zip" placeholder="ZIP" class="o_address_zip"/>
                                     <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
                                 </div>

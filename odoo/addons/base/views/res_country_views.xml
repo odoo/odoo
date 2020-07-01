@@ -41,14 +41,18 @@
                                 <div colspan="2" name="div_address_format" class="text-muted">Change the way addresses are displayed in reports</div>
                                 <field name="name_position"/>
                             </group>
+                            <group string="States" colspan="4">
+                                <group>
+                                    <field name="is_state_required"/>
+                                </group>
+                                <field name="state_ids" nolabel="1" colspan="2">
+                                    <tree editable="bottom">
+                                        <field name="name"/>
+                                        <field name="code"/>
+                                    </tree>
+                                </field>
+                            </group>
                         </group>
-                        <label for="state_ids"/>
-                        <field name="state_ids">
-                            <tree editable="bottom">
-                                <field name="name"/>
-                                <field name="code"/>
-                            </tree>
-                        </field>
                     </sheet>
                 </form>
             </field>

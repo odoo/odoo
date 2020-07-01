@@ -164,6 +164,7 @@ class Lead(models.Model):
     country_id = fields.Many2one(
         'res.country', string='Country',
         compute='_compute_partner_id_values', readonly=False, store=True)
+    is_state_required = fields.Boolean(related='country_id.is_state_required')
     # Probability (Opportunity only)
     probability = fields.Float(
         'Probability', group_operator="avg", copy=False,
