@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import datetime
+import pytz
 from uuid import uuid4
 
 from odoo import api, fields, models, _
@@ -218,7 +219,8 @@ class PosConfig(models.Model):
                 order="stop_at desc", limit=1)
             if session:
                 pos_config.last_session_closing_cash = session[0]['cash_register_balance_end_real']
-                pos_config.last_session_closing_date = session[0]['stop_at'].date()
+                timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+                pos_config.last_session_closing_date = session[0]['stop_at'].astimezone(timezone).date()
             else:
                 pos_config.last_session_closing_cash = 0
                 pos_config.last_session_closing_date = False
