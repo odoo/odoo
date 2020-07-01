@@ -6,3 +6,4 @@ from . import event_sponsor
 from . import event_track
 from . import event_track_stage
 from . import website_event_menu
+from . import website_menu
