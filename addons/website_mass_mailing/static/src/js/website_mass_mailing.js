@@ -35,6 +35,7 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
             self.$('input.js_subscribe_email')
                 .val(data.email || "")
                 .prop('disabled', isSubscriber);
+            // Compat: remove d-none for DBs that have the button saved with it.
             self.$target.removeClass('d-none');
             self.$('.js_subscribe_btn').toggleClass('d-none', !!isSubscriber);
             self.$('.js_subscribed_btn').toggleClass('d-none', !isSubscriber);
@@ -45,15 +46,6 @@ publicWidget.registry.subscribe = publicWidget.Widget.extend({
                 'list_id': this.$target.data('list-id'),
             },
         }).then(always).guardedCatch(always)]);
-    },
-    /**
-     * @override
-     */
-    destroy: function () {
-        if (!this.editableMode) {
-            this.$target.addClass('d-none');
-        }
-        this._super.apply(this, arguments);
     },
 
     //--------------------------------------------------------------------------
