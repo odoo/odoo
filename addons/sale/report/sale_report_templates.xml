@@ -64,7 +64,8 @@
             <t t-set="display_discount" t-value="any([l.discount for l in doc.order_line])"/>
 
             <table class="table table-sm o_main_table">
-                <thead>
+                <!-- In case we want to repeat the header, remove "display: table-row-group" -->
+                <thead style="display: table-row-group">
                     <tr>
                         <th name="th_description" class="text-left">Description</th>
                         <th name="th_quantity" class="text-right">Quantity</th>
