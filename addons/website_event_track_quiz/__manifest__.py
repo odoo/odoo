@@ -11,13 +11,24 @@
     'website': 'https://www.odoo.com/page/events',
     'description': "",
     'depends': [
-        'gamification_quiz',
-        'website_event_track_online',
+        'website_profile',
+        'website_event_track_session',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'views/assets.xml',
+        'views/event_leaderboard_templates.xml',
+        'views/event_quiz_views.xml',
+        'views/event_quiz_question_views.xml',
+        'views/event_track_views.xml',
+        'views/event_menus.xml',
+        'views/event_quiz_templates.xml',
+        'views/event_track_templates_page.xml',
+        'views/event_type_views.xml'
     ],
     'demo': [
+        'data/quiz_demo.xml',
     ],
-    'application': True,
-    'installable': True,  # set to False
+    'application': False,
+    'installable': True,
 }
