@@ -165,10 +165,11 @@ class StockMove(models.Model):
     package_level_id = fields.Many2one('stock.package_level', 'Package Level')
     picking_type_entire_packs = fields.Boolean(related='picking_type_id.show_entire_packs', readonly=True)
 
-    @api.onchange('product_id', 'picking_type_id')
+    @api.onchange('product_id', 'picking_type_id', 'picking_id')
     def onchange_product(self):
         if self.product_id:
-            self.description_picking = self.product_id._get_description(self.picking_type_id)
+            product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
+            self.description_picking = product._get_description(self.picking_type_id)
 
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):

@@ -210,6 +210,11 @@ class StockRule(models.Model):
         )
         # it is possible that we've already got some move done, so check for the done qty and create
         # a new move with the correct qty
+
+        partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
+        if partner:
+            product_id = product_id.with_context(lang=partner.lang or self.env.user.lang)
+
         qty_left = product_qty
         move_values = {
             'name': name[:2000],
@@ -217,7 +222,7 @@ class StockRule(models.Model):
             'product_id': product_id.id,
             'product_uom': product_uom.id,
             'product_uom_qty': qty_left,
-            'partner_id': self.partner_address_id.id or (values.get('group_id', False) and values['group_id'].partner_id.id) or False,
+            'partner_id':  partner.id if partner else False,
             'location_id': self.location_src_id.id,
             'location_dest_id': location_id.id,
             'move_dest_ids': values.get('move_dest_ids', False) and [(4, x.id) for x in values['move_dest_ids']] or [],

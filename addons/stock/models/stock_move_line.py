@@ -89,11 +89,12 @@ class StockMoveLine(models.Model):
             if move_line.state == 'done' and not float_is_zero(move_line.product_uom_qty, precision_digits=self.env['decimal.precision'].precision_get('Product Unit of Measure')):
                 raise ValidationError(_('A done move line should never have a reserved quantity.'))
 
-    @api.onchange('product_id', 'product_uom_id')
+    @api.onchange('product_id', 'product_uom_id', 'picking_id')
     def onchange_product_id(self):
         if self.product_id:
             if self.picking_id:
-                self.description_picking = self.product_id._get_description(self.picking_id.picking_type_id)
+                product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
+                self.description_picking = product._get_description(self.picking_id.picking_type_id)
             self.lots_visible = self.product_id.tracking != 'none'
             if not self.product_uom_id or self.product_uom_id.category_id != self.product_id.uom_id.category_id:
                 if self.move_id.product_uom:
