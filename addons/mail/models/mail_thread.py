@@ -392,7 +392,7 @@ class MailThread(models.AbstractModel):
             if "oe_view_nocontent_alias" not in help:
                 return "%(static_help)s<p class='oe_view_nocontent_alias'>%(dyn_help)s</p>" % {
                     'static_help': help,
-                    'dyn_help': _("Create a new %(document)s by sending an email to %(email_link)s") %  {
+                    'dyn_help': _("Create new %(document)s by sending an email to %(email_link)s") %  {
                         'document': document_name,
                         'email_link': email_link,
                     }
@@ -400,7 +400,7 @@ class MailThread(models.AbstractModel):
 
         if nothing_here:
             return "<p class='o_view_nocontent_smiling_face'>%(dyn_help)s</p>" % {
-                'dyn_help': _("Create a new %(document)s") % {
+                'dyn_help': _("Create new %(document)s") % {
                     'document': document_name,
                 }
             }
