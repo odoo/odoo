@@ -10,4 +10,7 @@ class EventMenu(models.Model):
 
     menu_id = fields.Many2one('website.menu', string='Menu', ondelete='cascade')
     event_id = fields.Many2one('event.event', string='Event', ondelete='cascade')
-    menu_type = fields.Selection([('track', 'Event Tracks Menus'), ('track_proposal', 'Event Proposals Menus')])
+    menu_type = fields.Selection([
+        ('track', 'Event Tracks Menus'),
+        ('track_proposal', 'Event Proposals Menus'),
+    ])

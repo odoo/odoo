@@ -291,7 +291,7 @@ class Website(models.Model):
                 copy_menu(submenu, new_top_menu)
 
     @api.model
-    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None):
+    def new_page(self, name=False, add_menu=False, template='website.default_page', ispage=True, namespace=None, force_track=False):
         """ Create a new website page, and assign it a xmlid based on the given one
             :param name : the name of the page
             :param template : potential xml_id of the page to create
@@ -319,6 +319,8 @@ class Website(models.Model):
             'arch': template_record.arch.replace(template, key),
             'name': name,
         })
+        if force_track:
+            view.write({'track': True})
 
         if view.arch_fs:
             view.arch_fs = False
