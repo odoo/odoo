@@ -12,6 +12,8 @@ const cpHelpers = testUtils.controlPanel;
 var createActionManager = testUtils.createActionManager;
 var createView = testUtils.createView;
 
+const patchDate = testUtils.mock.patchDate;
+
 QUnit.module('Dashboard', {
     beforeEach: function () {
         this.data = {
@@ -1039,4 +1041,111 @@ QUnit.test('click on a cell of pivot view inside dashboard', async function (ass
     form.destroy();
 });
 
+QUnit.test('correctly save the time ranges of a reporting view in comparison mode', async function (assert) {
+    assert.expect(1);
+
+    const unpatchDate = patchDate(2020, 6, 1, 11, 0, 0);
+
+    this.data.partner.fields.date = { string: 'Date', type: 'date', sortable: true };
+
+    const actionManager = await createActionManager({
+        data: this.data,
+        archs: {
+            'partner,false,pivot': '<pivot><field name="foo"/></pivot>',
+            'partner,false,search': '<search></search>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/add_to_dashboard') {
+                assert.deepEqual(args.context_to_save.time_ranges, {
+                    fieldName: "date",
+                    fieldDescription: "Date",
+                    rangeId: "this_month",
+                    rangeDescription: "This Month",
+                    range: ["&",["date", ">=", "2020-07-01"], ["date", "<", "2020-08-01"]],
+                    comparisonRangeId: "previous_period",
+                    comparisonRange: ["&", ["date", ">=", "2020-06-01"], ["date", "<", "2020-07-01"]],
+                    comparisonRangeDescription: "Previous Period",
+                });
+                return Promise.resolve(true);
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    await actionManager.doAction({
+        id: 1,
+        res_model: 'partner',
+        type: 'ir.actions.act_window',
+        views: [[false, 'pivot']],
+    });
+
+    // compare this month and previous month
+    await cpHelpers.toggleTimeRangeMenu(actionManager);
+    await cpHelpers.toggleTimeRangeMenuBox(actionManager);
+    await cpHelpers.applyTimeRange(actionManager);
+
+    // add the view to the dashboard
+    await cpHelpers.toggleFavoriteMenu(actionManager);
+
+    await testUtils.dom.click($('.o_add_to_board > button'));
+    await testUtils.fields.editInput($('.o_add_to_board input'), 'a name');
+    await testUtils.dom.click($('.o_add_to_board div button'));
+
+    unpatchDate();
+    actionManager.destroy();
+});
+
+QUnit.test('correctly display the time range descriptions of a reporting view in comparison mode', async function (assert) {
+    assert.expect(1);
+
+    this.data.partner.fields.date = { string: 'Date', type: 'date', sortable: true };
+    this.data.partner.records[0].date = '2020-07-15';
+
+    const form = await createView({
+        View: BoardView,
+        model: 'board',
+        data: this.data,
+        arch: `<form string="My Dashboard">
+                <board style="2-1">
+                    <column>
+                        <action string="ABC" name="51"></action>
+                    </column>
+                </board>
+            </form>`,
+        archs: {
+            'partner,1,pivot':
+                '<pivot string="Partner"></pivot>',
+        },
+        mockRPC: function (route, args) {
+            if (route === '/board/static/src/img/layout_1-1-1.png') {
+                return Promise.resolve();
+            }
+            if (route === '/web/action/load') {
+                return Promise.resolve({
+                    context: JSON.stringify({ time_ranges: {
+                        fieldName: "date",
+                        fieldDescription: "Date",
+                        rangeId: "this_month",
+                        rangeDescription: "This Month",
+                        range: ["&",["date", ">=", "2020-07-01"], ["date", "<", "2020-08-01"]],
+                        comparisonRangeId: "previous_period",
+                        comparisonRange: ["&", ["date", ">=", "2020-06-01"], ["date", "<", "2020-07-01"]],
+                        comparisonRangeDescription: "Previous Period",
+                    }}),
+                    domain: '[]',
+                    res_model: 'partner',
+                    views: [[1, 'pivot']],
+                });
+            }
+            return this._super.apply(this, arguments);
+        },
+    });
+
+    assert.deepEqual(
+        [...form.el.querySelectorAll('div.o_pivot th.o_pivot_origin_row')].map(el => el.innerText),
+        ['This Month', 'Previous Period', 'Variation']
+    );
+
+    form.destroy();
+});
 });
