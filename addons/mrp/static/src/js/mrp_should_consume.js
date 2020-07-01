@@ -50,7 +50,7 @@ var MrpShouldConsume = FieldFloat.extend({
         // without losing track of the actual input.
         var def = this._super.apply(this, arguments);
         if (this.displayShouldConsume) {
-            var $container = this._addShouldConsume(this.$el, this.should_consume_qty);
+            var $container = this._addShouldConsume(this.$el.clone(), this.should_consume_qty);
             $container.addClass('o_row');
             this.$el = $container;
         };
