@@ -161,6 +161,8 @@ const UserValueWidget = Widget.extend({
      * Closes the widget (only meaningful for widgets that can be closed).
      */
     close: function () {
+        this.trigger_up('user_value_widget_closing');
+        this.el.classList.remove('o_we_widget_opened');
         this._userValueWidgets.forEach(widget => widget.close());
     },
     /**
@@ -378,6 +380,13 @@ const UserValueWidget = Widget.extend({
         }
 
         this.trigger_up('user_value_update', data);
+    },
+    /**
+     * Opens the widget (only meaningful for widgets that can be opened).
+     */
+    open() {
+        this.trigger_up('user_value_widget_opening');
+        this.el.classList.add('o_we_widget_opened');
     },
     /**
      * Adds the given widget to the known list of user value sub-widgets (useful
@@ -699,6 +708,13 @@ const SelectUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
+    open() {
+        this._super(...arguments);
+        this.menuTogglerEl.classList.add('active');
+    },
+    /**
+     * @override
+     */
     setValue: function (value, methodName) {
         this._userValueWidgets.forEach(widget => {
             widget.setValue('__NULL__', methodName);
@@ -751,8 +767,7 @@ const SelectUserValueWidget = UserValueWidget.extend({
         }
 
         if (!this.menuTogglerEl.classList.contains('active')) {
-            this.trigger_up('user_value_widget_opening');
-            this.menuTogglerEl.classList.add('active');
+            this.open();
         } else {
             this.close();
         }
@@ -966,7 +981,9 @@ const MultiUserValueWidget = UserValueWidget.extend({
      * @override
      */
     start: function () {
-        this.containerEl.appendChild(_buildRowElement('', this.options));
+        if (this.options && this.options.childNodes) {
+            this.options.childNodes.forEach(node => this.containerEl.appendChild(node));
+        }
         return this._super(...arguments);
     },
 
@@ -1330,7 +1347,8 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
         await this._super(...arguments);
 
         const datetimePickerId = _.uniqueId('datetimepicker');
-        this.inputEl.setAttribute('class', 'datetimepicker-input mx-0 text-left');
+        this.el.classList.add('o_we_large_input');
+        this.inputEl.classList.add('datetimepicker-input', 'mx-0', 'text-left');
         this.inputEl.setAttribute('id', datetimePickerId);
         this.inputEl.setAttribute('data-target', '#' + datetimePickerId);
 
@@ -1443,7 +1461,6 @@ const RangeUserValueWidget = UserValueWidget.extend({
         await this._super(...arguments);
         this.input = document.createElement('input');
         this.input.type = "range";
-        this.input.className = "custom-range";
         this.containerEl.appendChild(this.input);
     },
 

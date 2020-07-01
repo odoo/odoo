@@ -8,7 +8,7 @@ body {
     // Set frontend direction that will be flipped with
     // rtlcss for right-to-left text direction.
     direction: ltr;
-    transition: padding 0.35s;
+    transition: padding 400ms ease 0s;
 }
 body.o_connected_user {
     padding-top: $o-navbar-height!important;
@@ -29,9 +29,6 @@ body.o_connected_user {
         }
     }
 }
-#oe_main_menu_navbar, #web_editor-top-edit, #oe_snippets {
-    transition: transform 0.35s !important;
-}
 
 // MAIN MENU STYLE (added above navbar.scss)
 #oe_main_menu_navbar {
@@ -39,9 +36,10 @@ body.o_connected_user {
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
     z-index: $zindex-modal - 10;
-
     font-family: $o-we-font-family;
     font-size: 14px;
+    transition: transform 400ms ease 0s; // For fullscreen
+
     a:hover, a:focus {
         text-decoration: none;
     }
@@ -164,7 +162,7 @@ body .modal {
                         }
                     }
                     .close {
-                        color: $o-we-color-light;
+                        color: #4e525b;
                     }
                 }
 

@@ -834,6 +834,7 @@ var SnippetsMenu = Widget.extend({
         'block_preview_overlays': '_onBlockPreviewOverlays',
         'unblock_preview_overlays': '_onUnblockPreviewOverlays',
         'user_value_widget_opening': '_onUserValueWidgetOpening',
+        'user_value_widget_closing': '_onUserValueWidgetClosing',
         'reload_snippet_template': '_onReloadSnippetTemplate',
     },
     // enum of the SnippetsMenu's tabs.
@@ -1838,7 +1839,7 @@ var SnippetsMenu = Widget.extend({
                 stop: function (ev, ui) {
                     $toInsert.removeClass('oe_snippet_body');
 
-                    if (!dropped && ui.position.top > 3 && ui.position.left + 50 > self.$el.outerWidth()) {
+                    if (!dropped && ui.position.top > 3 && ui.position.left > self.el.getBoundingClientRect().right) {
                         var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
                         if ($el.length) {
                             $el.after($toInsert);
@@ -2276,10 +2277,18 @@ var SnippetsMenu = Widget.extend({
     },
     /**
      * Called when an user value widget is being opened -> close all the other
-     * user value widgets of all editors.
+     * user value widgets of all editors + add backdrop.
      */
     _onUserValueWidgetOpening: function () {
         this._closeWidgets();
+        this.el.classList.add('o_we_backdrop');
+    },
+    /**
+     * Called when an user value widget is being closed -> rely on the fact only
+     * one widget can be opened at a time: remove the backdrop.
+     */
+    _onUserValueWidgetClosing: function () {
+        this.el.classList.remove('o_we_backdrop');
     },
 });
 

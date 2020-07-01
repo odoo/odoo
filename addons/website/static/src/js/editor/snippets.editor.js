@@ -1,6 +1,7 @@
 odoo.define('website.snippet.editor', function (require) {
 'use strict';
 
+const {_t} = require('web.core');
 const weSnippetEditor = require('web_editor.snippet.editor');
 const wSnippetOptions = require('website.editor.snippets.options');
 
@@ -64,7 +65,7 @@ weSnippetEditor.Class.include({
 
         if (!this.fakeThemeEl) {
             this.fakeThemeEl = document.createElement('theme');
-            this.fakeThemeEl.dataset.name = "";
+            this.fakeThemeEl.dataset.name = _t("General Options");
             this.el.appendChild(this.fakeThemeEl);
         }
 
