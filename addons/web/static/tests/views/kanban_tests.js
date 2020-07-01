@@ -6716,6 +6716,29 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('kanban view with boolean field', async function (assert) {
+        assert.expect(2);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="bar"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.containsN(kanban, '.o_kanban_record:contains(True)', 3);
+        assert.containsOnce(kanban, '.o_kanban_record:contains(False)');
+
+        kanban.destroy();
+    });
+
     QUnit.test('kanban view with boolean widget', async function (assert) {
         assert.expect(1);
 
