@@ -87,9 +87,9 @@ class Event(models.Model):
         event, possibly depending on some options in inheriting modules. """
         self.ensure_one()
         return [
-            (_('Introduction'), False, 'website_event.template_intro'),
-            (_('Location'), False, 'website_event.template_location'),
-            (_('Register'), '/event/%s/register' % slug(self), False),
+            (_('Introduction'), False, 'website_event.template_intro', False),
+            (_('Location'), False, 'website_event.template_location', False),
+            (_('Register'), '/event/%s/register' % slug(self), False, False),
         ]
 
     def _update_website_menus(self):
@@ -99,13 +99,13 @@ class Event(models.Model):
             elif event.website_menu and not event.menu_id:
                 root_menu = self.env['website.menu'].create({'name': event.name, 'website_id': event.website_id.id})
                 event.menu_id = root_menu
-                for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
-                    event._create_menu(sequence, name, url, xml_id)
+                for sequence, (name, url, xml_id, force_track) in enumerate(event._get_menu_entries()):
+                    event._create_menu(sequence, name, url, xml_id, force_track=force_track)
 
-    def _create_menu(self, sequence, name, url, xml_id):
+    def _create_menu(self, sequence, name, url, xml_id, force_track=False):
         if not url:
             self.env['ir.ui.view'].search([('name', '=', name + ' ' + self.name)]).unlink()
-            newpath = self.env['website'].new_page(name + ' ' + self.name, template=xml_id, ispage=False)['url']
+            newpath = self.env['website'].new_page(name + ' ' + self.name, template=xml_id, ispage=False, force_track=force_track)['url']
             url = "/event/" + slug(self) + "/page/" + newpath[1:]
         menu = self.env['website.menu'].create({
             'name': name,
