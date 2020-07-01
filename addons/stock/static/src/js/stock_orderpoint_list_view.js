@@ -4,6 +4,7 @@ odoo.define('stock.StockOrderpointListView', function (require) {
 var ListView = require('web.ListView');
 var StockOrderpointListController = require('stock.StockOrderpointListController');
 var StockOrderpointListModel = require('stock.StockOrderpointListModel');
+var StockOrderpointListRenderer = require('stock.StockOrderpointListRenderer');
 var viewRegistry = require('web.view_registry');
 
 
@@ -11,6 +12,7 @@ var StockOrderpointListView = ListView.extend({
     config: _.extend({}, ListView.prototype.config, {
         Controller: StockOrderpointListController,
         Model: StockOrderpointListModel,
+        Renderer: StockOrderpointListRenderer,
     }),
 });
 
