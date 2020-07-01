@@ -4,7 +4,7 @@
 from datetime import timedelta
 
 from odoo import api, fields, models
-from odoo.tools import float_is_zero
+from odoo.tools.float_utils import float_is_zero
 
 
 class StockPicking(models.Model):
@@ -24,12 +24,14 @@ class StockPicking(models.Model):
                 continue
             # Hide if no components are track
             subcontracted_productions = picking._get_subcontracted_productions()
-            subcontracted_moves = subcontracted_productions.mapped('move_raw_ids')
-            if all(subcontracted_move.has_tracking == 'none' for subcontracted_move in subcontracted_moves):
+            component_sub_moves = subcontracted_productions.mapped('move_raw_ids')
+            if all(subcontracted_move.has_tracking == 'none' for subcontracted_move in component_sub_moves):
                 picking.display_action_record_components = False
                 continue
-            # Hide if the production is to close
-            if not subcontracted_productions.filtered(lambda mo: mo.state not in ('to_close', 'done')):
+            # Hide if all tracked product move line have a lot and all productions are in rigth state
+            tracked_move_line = component_sub_moves.filtered(lambda sm: sm.has_tracking != 'none').move_line_ids
+            if all(sub_mo.state in ('to_close', 'done') for sub_mo in subcontracted_productions)\
+                    and all(sub_sml.lot_id for sub_sml in tracked_move_line):
                 picking.display_action_record_components = False
                 continue
             picking.display_action_record_components = True
@@ -39,29 +41,12 @@ class StockPicking(models.Model):
     # -------------------------------------------------------------------------
     def _action_done(self):
         res = super(StockPicking, self)._action_done()
-        productions = self.env['mrp.production']
         for picking in self:
-            for move in picking.move_lines:
-                if not move.is_subcontract:
-                    continue
-                production = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))
-                if len(production) > 1:
-                    production = production[-1]
-                if move._has_tracked_subcontract_components():
-                    move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel')).move_line_ids.unlink()
-                    move_finished_ids = move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
-                    for ml in move.move_line_ids:
-                        ml.copy({
-                            'picking_id': False,
-                            'production_id': move_finished_ids.production_id.id,
-                            'move_id': move_finished_ids.id,
-                            'qty_done': ml.qty_done,
-                            'result_package_id': False,
-                            'location_id': move_finished_ids.location_id.id,
-                            'location_dest_id': move_finished_ids.location_dest_id.id,
-                        })
-                else:
-                    if not move.move_line_ids.lot_id:
+            # Auto set qty_producing if not tracked component
+            for move in picking.move_lines.filtered(lambda move: move.is_subcontract):
+                if not move._has_tracked_subcontract_components():
+                    production = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))
+                    if production:
                         qty_done_production_uom = move.product_uom._compute_quantity(move.quantity_done, production.product_uom_id)
                         production.qty_producing += qty_done_production_uom
                         for move in (production.move_raw_ids | production.move_finished_ids.filtered(lambda m: m.product_id != production.product_id)):
@@ -74,12 +59,15 @@ class StockPicking(models.Model):
                                 rounding_method='HALF-UP')
                             move.move_line_ids.filtered(lambda ml: ml.state not in ('done', 'cancel')).qty_done = 0
                             move.move_line_ids = move._set_quantity_done_prepare_vals(new_qty)
-                productions |= production
-            for subcontracted_production in productions:
+
+            productions_to_done = picking.move_lines.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))
+            # TODO : to change in master with field on mrp
+            productions_to_done = productions_to_done.filtered(lambda pro: all(line.lot_id for line in pro.move_raw_ids.filtered(lambda sm: sm.has_tracking != 'none').move_line_ids))
+            for subcontracted_production in productions_to_done:
                 if subcontracted_production.state == 'progress':
                     subcontracted_production._post_inventory()
                 else:
-                    subcontracted_production.button_mark_done()
+                    subcontracted_production.with_context(subcontract_move_id=True).button_mark_done()
                 # For concistency, set the date on production move before the date
                 # on picking. (Tracability report + Product Moves menu item)
                 minimum_date = min(picking.move_line_ids.mapped('date'))
@@ -93,8 +81,8 @@ class StockPicking(models.Model):
         for move in self.move_lines:
             if not move._has_tracked_subcontract_components():
                 continue
-            production = move.move_orig_ids.production_id
-            if not production or production.state in ('done', 'to_close'):
+            production = move.move_orig_ids.production_id[-1:]
+            if not production:
                 continue
             return move._action_record_components()
 
@@ -145,3 +133,7 @@ class StockPicking(models.Model):
             finished_move = mo.move_finished_ids.filtered(lambda m: m.product_id == move.product_id)
             finished_move.write({'move_dest_ids': [(4, move.id, False)]})
             mo.action_assign()
+
+            if move._has_tracked_subcontract_components():
+                mo.qty_producing = move.product_uom_qty
+                mo.with_context(subcontract_move_id=True)._set_qty_producing()

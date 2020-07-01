@@ -1093,6 +1093,7 @@ class StockMove(models.Model):
             'location_id': self.location_id.id,
             'location_dest_id': location_dest_id,
             'picking_id': self.picking_id.id,
+            'company_id': self.company_id.id,
         }
         if quantity:
             uom_quantity = self.product_id.uom_id._compute_quantity(quantity, self.product_uom, rounding_method='HALF-UP')

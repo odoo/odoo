@@ -1,20 +1,64 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from collections import defaultdict
+from odoo import fields, models, _, api
+from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare, float_is_zero
 
 
 class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
-    def write(self, vals):
-        res = super().write(vals)
-        if self.env.context.get('subcontract_move_id'):
-            for production in self:
-                if production.state not in ('cancel', 'done') and \
-                        ('lot_producing_id' in vals or 'qty_producing' in vals):
-                    production._update_finished_move()
+    move_line_raw_ids = fields.One2many(
+        'stock.move.line', string="Detail Component", readonly=False,
+        inverse='_inverse_move_line_raw_ids', compute='_compute_move_line_raw_ids'
+    )
+
+    @api.depends('move_raw_ids.move_line_ids')
+    def _compute_move_line_raw_ids(self):
+        for production in self:
+            production.move_line_raw_ids = production.move_raw_ids.move_line_ids
+
+    def _inverse_move_line_raw_ids(self):
+        for production in self:
+            line_by_product = defaultdict(lambda: self.env['stock.move.line'])
+            for line in production.move_line_raw_ids:
+                line_by_product[line.product_id] |= line
+            for move in production.move_raw_ids:
+                move.move_line_ids = line_by_product.pop(move.product_id, self.env['stock.move.line'])
+            for product_id, lines in line_by_product.items():
+                qty = sum(line.product_uom_id._compute_quantity(line.qty_done, product_id.uom_id) for line in lines)
+                move = production._get_move_raw_values(product_id, qty, product_id.uom_id)
+                move['additional'] = True
+                production.move_raw_ids = [(0, 0, move)]
+                production.move_raw_ids.filtered(lambda m: m.product_id == product_id)[:1].move_line_ids = lines
+
+    def subcontracting_record_component(self):
+        self.ensure_one()
+        assert self.env.context.get('subcontract_move_id')
+        if float_is_zero(self.qty_producing, precision_rounding=self.product_uom_id.rounding):
+            return {'type': 'ir.actions.act_window_close'}
+        for sml in self.move_raw_ids.move_line_ids:
+            if sml.tracking != 'none' and not sml.lot_id:
+                raise UserError(_('You must enter a serial number for each line of %s') % sml.product_id.name)
+        self._update_finished_move()
+        quantity_issues = self._get_quantity_produced_issues()
+        if quantity_issues:
+            backorder = self._generate_backorder_productions(close_mo=False)
+            # No qty to consume to avoid propagate additional move
+            # TODO avoid : stock move created in backorder with 0 as qty
+            backorder.move_raw_ids.filtered(lambda m: m.additional).product_uom_qty = 0.0
+
+            backorder.qty_producing = backorder.product_qty
+            backorder._set_qty_producing()
+
+            self.product_qty = self.qty_producing
+            subcontract_move_id = self.env['stock.move'].browse(self.env.context.get('subcontract_move_id'))
+            action = subcontract_move_id._action_record_components()
+            action.update({'res_id': backorder.id})
+            return action
+        return {'type': 'ir.actions.act_window_close'}
 
     def _pre_button_mark_done(self):
         if self.env.context.get('subcontract_move_id'):
@@ -23,8 +67,8 @@ class MrpProduction(models.Model):
 
     def _update_finished_move(self):
         """ After producing, set the move line on the subcontract picking. """
+        self.ensure_one()
         subcontract_move_id = self.env.context.get('subcontract_move_id')
-        res = None
         if subcontract_move_id:
             subcontract_move_id = self.env['stock.move'].browse(subcontract_move_id)
             quantity = self.qty_producing
@@ -73,8 +117,7 @@ class MrpProduction(models.Model):
                     'qty_done': quantity,
                     'lot_id': self.lot_producing_id and self.lot_producing_id.id,
                 })
-
-            if not self._get_todo():
+            if not self._get_quantity_to_backorder():
                 ml_reserved = subcontract_move_id.move_line_ids.filtered(lambda ml:
                     float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding) and
                     not float_is_zero(ml.product_uom_qty, precision_rounding=ml.product_uom_id.rounding))
@@ -82,11 +125,3 @@ class MrpProduction(models.Model):
                 for ml in subcontract_move_id.move_line_ids:
                     ml.product_uom_qty = ml.qty_done
                 subcontract_move_id._recompute_state()
-        return res
-
-    def _get_todo(self):
-        """ This method will return remaining todo quantity of production. """
-        main_product_moves = self.move_finished_ids.filtered(lambda x: x.product_id.id == self.product_id.id)
-        todo_quantity = self.product_qty - sum(main_product_moves.mapped('quantity_done'))
-        todo_quantity = todo_quantity if (todo_quantity > 0) else 0
-        return todo_quantity

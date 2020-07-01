@@ -54,8 +54,7 @@ class StockMove(models.Model):
         if 'product_uom_qty' in values:
             if self.env.context.get('cancel_backorder') is False:
                 return super(StockMove, self).write(values)
-            self.filtered(lambda m: m.is_subcontract and
-            m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty(values['product_uom_qty'])
+            self.filtered(lambda m: m.is_subcontract and m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty(values['product_uom_qty'])
         return super(StockMove, self).write(values)
 
     def action_show_details(self):
@@ -65,7 +64,7 @@ class StockMove(models.Model):
         self.ensure_one()
         if self.is_subcontract:
             rounding = self.product_uom.rounding
-            production = self.move_orig_ids.production_id
+            production = self.move_orig_ids.production_id[-1:]
             if self._has_tracked_subcontract_components() and\
                     float_compare(production.qty_produced, production.product_uom_qty, precision_rounding=rounding) < 0 and\
                     float_compare(self.quantity_done, self.product_uom_qty, precision_rounding=rounding) < 0:
@@ -84,6 +83,7 @@ class StockMove(models.Model):
         moves = self.move_orig_ids.production_id.move_raw_ids
         tree_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_move_tree_view')
         form_view = self.env.ref('mrp_subcontracting.mrp_subcontracting_move_form_view')
+        ctx = dict(self._context, search_default_by_product=True, subcontract_move_id=self.id)
         return {
             'name': _('Raw Materials for %s') % (self.product_id.display_name),
             'type': 'ir.actions.act_window',
@@ -91,6 +91,7 @@ class StockMove(models.Model):
             'views': [(tree_view.id, 'list'), (form_view.id, 'form')],
             'target': 'current',
             'domain': [('id', 'in', moves.ids)],
+            'context': ctx
         }
 
     def _action_cancel(self):
@@ -127,8 +128,8 @@ class StockMove(models.Model):
 
     def _action_record_components(self):
         self.ensure_one()
-        production = self.move_orig_ids.production_id
-        view = self.env.ref('mrp.mrp_production_form_view')
+        production = self.move_orig_ids.production_id[-1:]
+        view = self.env.ref('mrp_subcontracting.mrp_production_subcontracting_form_view')
         return {
             'name': _('Subcontract'),
             'type': 'ir.actions.act_window',
@@ -140,32 +141,6 @@ class StockMove(models.Model):
             'res_id': production.id,
             'context': dict(self.env.context, subcontract_move_id=self.id),
         }
-
-
-    def _check_overprocessed_subcontract_qty(self):
-        """ If a subcontracted move use tracked components. Do not allow to add
-        quantity without the produce wizard. Instead update the initial demand
-        and use the register component button. Split or correct a lot/sn is
-        possible.
-        """
-        overprocessed_moves = self.env['stock.move']
-        for move in self:
-            if not move.is_subcontract:
-                continue
-            # Extra quantity is allowed when components do not need to be register
-            if not move._has_tracked_subcontract_components():
-                continue
-            rounding = move.product_uom.rounding
-#            if float_compare(move.quantity_done, move.move_orig_ids.production_id.qty_produced, precision_rounding=rounding) > 0:
-#                overprocessed_moves |= move
-        if overprocessed_moves:
-            raise UserError(_("""
-You have to use 'Records Components' button in order to register quantity for a
-subcontracted product(s) with tracked component(s):
- %s.
-If you want to process more than initially planned, you
-can use the edit + unlock buttons in order to adapt the initial demand on the
-operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name'))))
 
     def _get_subcontract_bom(self):
         self.ensure_one()
@@ -192,6 +167,11 @@ operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name
         vals['location_id'] = self.location_id.id
         return vals
 
+    def _should_bypass_set_qty_producing(self):
+        if self.env.context.get('subcontract_move_id'):
+            return False
+        return super()._should_bypass_set_qty_producing()
+
     def _should_bypass_reservation(self):
         """ If the move is subcontracted then ignore the reservation. """
         should_bypass_reservation = super(StockMove, self)._should_bypass_reservation()
@@ -199,12 +179,19 @@ operations.""") % ('\n'.join(overprocessed_moves.mapped('product_id.display_name
             return True
         return should_bypass_reservation
 
-    def _update_subcontract_order_qty(self, quantity):
+    def _update_subcontract_order_qty(self, new_quantity):
         for move in self:
-            quantity_change = quantity - move.product_uom_qty
-            production = move.move_orig_ids.production_id
-            if production:
-                self.env['change.production.qty'].with_context(skip_activity=True).create({
-                    'mo_id': production.id,
-                    'product_qty': production.product_uom_qty + quantity_change
-                }).change_prod_qty()
+            quantity_to_remove = move.product_uom_qty - new_quantity
+            productions = move.move_orig_ids.production_id.filtered(lambda p: p.state not in ('done', 'cancel'))[::-1]
+            # Cancel productions until reach new_quantity
+            for production in productions:
+                if quantity_to_remove <= 0.0:
+                    break
+                if quantity_to_remove >= production.product_qty:
+                    quantity_to_remove -= production.product_qty
+                    production.action_cancel()
+                else:
+                    self.env['change.production.qty'].with_context(skip_activity=True).create({
+                        'mo_id': production.id,
+                        'product_qty': production.product_uom_qty - quantity_to_remove
+                    }).change_prod_qty()

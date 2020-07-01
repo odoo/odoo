@@ -161,7 +161,7 @@
                             <field name="bom_id"
                                 context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
-                        <group>
+                        <group name="group_extra_info">
                             <field name="date_deadline"/>
                             <label for="date_planned_start"/>
                             <div class="o_row">
