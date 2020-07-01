@@ -9,20 +9,20 @@
         <div class="o_hr_attendance_kiosk_mode_container o_home_menu_background">
             <span class="o_hr_attendance_kiosk_backdrop"/>
             <div class="o_hr_attendance_clock text-center"/>
-            <div class="o_hr_attendance_kiosk_mode">
-                <h1><small>Welcome to</small><br/> <t t-esc="widget.company_name"/></h1>
+            <div class="o_hr_attendance_kiosk_mode o_barcode_main">
+                <h2><small>Welcome to</small> <t t-esc="widget.company_name"/></h2>
                 <img t-attf-src="{{widget.company_image_url}}" alt="Company Logo" class="o_hr_attendance_kiosk_company_image"/>
                 <div class="row o_hr_attendance_kiosk_welcome_row">
-                    <div class="col-sm-5">
-                        <img class="img img-fluid d-block mx-auto" src="/hr_attendance/static/src/img/barcode.png"/>
-                        <h5 class="mt8 mb0">Scan your badge</h5>
+                    <div class="col-sm-5 mt16">
+                        <img class="img img-fluid d-block mx-auto" src="/barcodes/static/src/img/barcode.png"/>
+                        <h5 class="mt8 mb0 text-muted">Scan your badge</h5>
                     </div>
-                    <div class="col-sm-2">
-                        <h3 class="mt0 mb8 text-muted"><i>or</i></h3>
+                    <div class="col-sm-2 mt32">
+                        <h4 class="mt0 mb8"><i>or</i></h4>
                     </div>
-                    <div class="col-sm-5">
+                    <div class="col-sm-5 mt16">
                         <button class="o_hr_attendance_button_employees btn btn-primary mb16">
-                            <div class="mb16 mt16">Identify<br/>Manually</div>
+                            <div class="mb16 mt16">Identify Manually</div>
                         </button>
                     </div>
                 </div>
