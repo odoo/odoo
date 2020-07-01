@@ -18,7 +18,10 @@ class HrExpense(models.Model):
 
     @api.model
     def _default_employee_id(self):
-        return self.env.user.employee_id
+        employee = self.env.user.employee_id
+        if not employee and not self.env.user.has_group('hr_expense.group_hr_expense_team_approver'):
+            raise ValidationError(_('The current user has no related employee. Please, create one.'))
+        return employee
 
     @api.model
     def _default_product_uom_id(self):
@@ -172,8 +175,9 @@ class HrExpense(models.Model):
 
     @api.depends('company_id')
     def _compute_employee_id(self):
-        for expense in self:
-            expense.employee_id = self.env.user.with_company(expense.company_id).employee_id
+        if not self.env.context.get('default_employee_id'):
+            for expense in self:
+                expense.employee_id = self.env.user.with_company(expense.company_id).employee_id
 
     @api.onchange('product_id', 'date', 'account_id')
     def _onchange_product_id_date_account_id(self):
@@ -747,7 +751,7 @@ class HrExpenseSheet(models.Model):
         return self.env['account.journal'].search([('type', 'in', ['cash', 'bank']), ('company_id', '=', default_company_id)], limit=1)
 
     name = fields.Char('Expense Report Summary', required=True, tracking=True)
-    expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', states={'approve': [('readonly', True)], 'done': [('readonly', True)], 'post': [('readonly', True)]}, copy=False)
+    expense_line_ids = fields.One2many('hr.expense', 'sheet_id', string='Expense Lines', copy=False)
     state = fields.Selection([
         ('draft', 'Draft'),
         ('submit', 'Submitted'),
@@ -756,10 +760,10 @@ class HrExpenseSheet(models.Model):
         ('done', 'Paid'),
         ('cancel', 'Refused')
     ], string='Status', index=True, readonly=True, tracking=True, copy=False, default='draft', required=True, help='Expense Report State')
-    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, tracking=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True)
+    employee_id = fields.Many2one('hr.employee', string="Employee", required=True, readonly=True, tracking=True, states={'draft': [('readonly', False)]}, default=_default_employee_id, check_company=True, domain= lambda self: self.env['hr.expense']._get_employee_id_domain())
     address_id = fields.Many2one('res.partner', compute='_compute_from_employee_id', store=True, readonly=False, copy=True, string="Employee Home Address", check_company=True)
     payment_mode = fields.Selection(related='expense_line_ids.payment_mode', default='own_account', readonly=True, string="Paid By", tracking=True)
-    user_id = fields.Many2one('res.users', 'Manager', compute='_compute_from_employee_id', store=True, readonly=True, copy=False, states={'draft': [('readonly', False)]}, tracking=True)
+    user_id = fields.Many2one('res.users', 'Manager', compute='_compute_from_employee_id', store=True, readonly=True, copy=False, states={'draft': [('readonly', False)]}, tracking=True, domain=lambda self: [('groups_id', 'in', self.env.ref('hr_expense.group_hr_expense_team_approver').id)])
     total_amount = fields.Monetary('Total Amount', currency_field='currency_id', compute='_compute_amount', store=True, tracking=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', string='Currency', readonly=True, states={'draft': [('readonly', False)]}, default=lambda self: self.env.company.currency_id)

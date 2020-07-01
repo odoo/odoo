@@ -108,7 +108,7 @@ $-header-nav-link-height: $nav-link-height;
     header {
         font-size: o-website-value('header-font-size');
 
-        .dropdown-menu {
+        .dropdown-menu, .btn {
             font-size: inherit;
         }
     }
@@ -637,7 +637,6 @@ $-transition-duration: 200ms;
     display: block;
     @include o-position-absolute(0, 0, auto, 0);
     position: fixed;
-    z-index: $zindex-modal - 20;
     background: $light;
 
     &:not(.o_header_no_transition) {
@@ -703,6 +702,10 @@ $-transition-duration: 200ms;
 
 // Header templates
 header {
+    &#top {
+        // We need this z-index for the shadow option of the header
+        z-index: $zindex-modal - 20;
+    }
     &:not(.o_header_no_transition) {
         .navbar-brand {
             transition: font-size $-transition-duration, opacity $-transition-duration ease-out;
@@ -856,8 +859,23 @@ header {
             &, ul, .o_footer_address, .o_footer_logo {
                 padding-top: $spacer;
             }
-            li a {
-                text-transform: uppercase;
+        }
+    }
+}
+
+@if index(('slideout_slide_hover', 'slideout_shadow'), o-website-value('footer-effect')) {
+    @include media-breakpoint-up(lg) {
+        #wrapwrap.o_footer_effect_enable {
+            > main {
+                background-color: $body-bg;
+                @if o-website-value('footer-effect') == 'slideout_shadow' {
+                    box-shadow: $box-shadow;
+                }
+            }
+            > footer {
+                @include o-position-absolute(0, 0, 0, 0);
+                position: sticky;
+                z-index: -1;
             }
         }
     }

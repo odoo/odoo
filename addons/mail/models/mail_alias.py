@@ -160,7 +160,7 @@ class Alias(models.Model):
     def _get_alias_bounced_body_fallback(self, message_dict):
         return _("""Hi,<br/>
 The following email sent to %s cannot be accepted because this is a private email address.
-Only allowed people can contact us at this address.""" % message_dict.get('to'))
+Only allowed people can contact us at this address.""", message_dict.get('to'))
 
     def _get_alias_bounced_body(self, message_dict):
         """Get the body of the email return in case of bounced email.

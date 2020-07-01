@@ -149,14 +149,14 @@
     <xpath expr="//footer" position="attributes">
         <attribute name="data-name">Footer</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
-        <attribute name="class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
+        <attribute name="t-attf-class" add="o_colored_level o_cc" remove="bg-light" separator=" "/>
     </xpath>
     <xpath expr="//div[hasclass('o_footer_copyright')]" position="attributes">
         <attribute name="data-name">Copyright</attribute>
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="class" add="o_colored_level o_cc" separator=" "/>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//span[@t-field='res_company.name']" position="after">
+    <xpath expr="//div[hasclass('o_footer_copyright')]//span[hasclass('o_footer_copyright_name')]" position="after">
         <t t-call="website.language_selector"/>
     </xpath>
     <xpath expr="//t[@t-call='web.brand_promotion']/.." position="attributes">
@@ -179,7 +179,7 @@
     <!-- Page options -->
     <xpath expr="//div[@id='wrapwrap']" position="before">
         <t groups="website.group_website_publisher">
-            <t t-foreach="['header_overlay', 'header_color']" t-as="optionName">
+            <t t-foreach="['header_overlay', 'header_color', 'header_visible', 'footer_visible']" t-as="optionName">
                 <input t-if="optionName in main_object" type="hidden" class="o_page_option_data" t-att-name="optionName" t-att-value="main_object[optionName]"/>
             </t>
         </t>
@@ -189,6 +189,12 @@
     </xpath>
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="#{main_object.header_color if 'header_color' in main_object else ''}" separator=" "/>
+    </xpath>
+    <xpath expr="//header" position="attributes">
+        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'header_visible' in main_object and not main_object.header_visible else ''}" separator=" "/>
+    </xpath>
+    <xpath expr="//footer[@id='bottom']" position="attributes">
+        <attribute name="t-attf-class" add="#{'d-none o_snippet_invisible' if 'footer_visible' in main_object and not main_object.footer_visible else ''}" separator=" "/>
     </xpath>
 </template>
 
@@ -218,7 +224,7 @@
     </xpath>
 </template>
 
-<!-- Navbar templates -->
+<!-- Header templates -->
 <template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Logo Hamburger" active="False">
     <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
         <attribute name="class" remove="navbar-expand-md" separator=" "/>
@@ -246,7 +252,13 @@
     </xpath>
 </template>
 
-<!-- Navbar options -->
+<!-- Header options -->
+<template id="option_layout_hide_header" inherit_id="website.layout" active="False">
+    <xpath expr="//header" position="before">
+        <t t-set="no_header" t-value="True"/>
+    </xpath>
+</template>
+
 <template id="layout_logo_show" inherit_id="website.layout" name="Show Logo">
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
         <a href="/" class="navbar-brand logo">
@@ -255,25 +267,31 @@
     </xpath>
 </template>
 
-<template id="header_visibility_standard" inherit_id="website.layout" name="Header Visibility Standard">
+<template id="header_logo_none" inherit_id="website.layout" name="No Logo" active="False">
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="replace">
+        <a href="/" class="navbar-brand d-none"/>
+    </xpath>
+</template>
+
+<template id="header_visibility_standard" inherit_id="website.layout" name="Header Effect Standard">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_standard o_top_fixed_element" separator=" "/>
     </xpath>
 </template>
 
-<template id="header_visibility_fixed" inherit_id="website.layout" name="Header Visibility Fixed" active="False">
+<template id="header_visibility_fixed" inherit_id="website.layout" name="Header Effect Fixed" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_fixed o_top_fixed_element" separator=" "/>
     </xpath>
 </template>
 
-<template id="header_visibility_disappears" inherit_id="website.layout" name="Header Visibility Disappears" active="False">
+<template id="header_visibility_disappears" inherit_id="website.layout" name="Header Effect Disappears" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_disappears o_top_fixed_element" separator=" "/>
     </xpath>
 </template>
 
-<template id="header_visibility_fade_out" inherit_id="website.layout" name="Header Visibility Fade Out" active="False">
+<template id="header_visibility_fade_out" inherit_id="website.layout" name="Header Effect Fade Out" active="False">
     <xpath expr="//header" position="attributes">
         <attribute name="t-attf-class" add="o_header_fade_out o_top_fixed_element" separator=" "/>
     </xpath>
@@ -297,6 +315,14 @@
     </xpath>
 </template>
 
+<template id="header_button" inherit_id="website.layout" name="Header Button" active="False">
+    <xpath expr="//ul[@id='top_menu']" position="inside">
+        <li class="nav-item align-self-md-center ml-1 o_header_menu_button">
+            <a href="/contactus" class="btn btn-primary">Contact us</a>
+        </li>
+    </xpath>
+</template>
+
 <!-- Features template -->
 <template id="login_layout" inherit_id="web.login_layout" name="Website Login Layout" priority="20">
     <xpath expr="t" position="replace">
@@ -306,7 +332,7 @@
     </xpath>
 </template>
 
-<!-- Footer templates -->
+<!-- Footer options -->
 <template id="footer_custom" inherit_id="website.layout" name="Footer">
     <xpath expr="//div[@id='footer']" position="replace">
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
@@ -426,7 +452,7 @@
                     <div class="o_footer_address">
                         250 Executive Park Blvd, Suite 3400<br/>San Francisco CA 94134<br/>United States
                     </div>
-                    <div class="row">
+                    <div class="row s_nb_column_fixed">
                         <div class="offset-md-3 col-md-6 o_footer_logo">
                             <a href="/" class="footer-brand logo">
                                 <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
@@ -483,7 +509,7 @@
         <div id="footer" class="oe_structure oe_structure_solo" t-ignore="true" t-if="not no_footer">
             <section class="s_text_block pt16 pb8">
                 <div class="container">
-                    <div class="row">
+                    <div class="row s_nb_column_fixed">
                         <div class="offset-md-3 col-md-6 o_footer_logo text-center my-3">
                             <a href="/" class="footer-brand logo">
                                 <img src="/website/static/src/img/website_logo.png" class="img-fluid" aria-label="Logo of MyCompany" title="MyCompany" role="img" style="width: 50%;"/>
@@ -517,6 +543,20 @@
                 </div>
             </section>
         </div>
+    </xpath>
+</template>
+
+<!-- slideout effect -->
+<template id="template_footer_slideout" inherit_id="website.layout" name="Template Footer Slideout" active="False">
+    <xpath expr="//footer[@id='bottom']" position="attributes">
+        <attribute name="t-attf-class" add="o_footer_slideout" separator=" "/>
+    </xpath>
+</template>
+
+<!-- Hide Copyright -->
+<template id="footer_no_copyright" inherit_id="website.layout" name="Footer No Copyright" active="False">
+    <xpath expr="//div[hasclass('o_footer_copyright')]" position="before">
+        <t t-set="no_copyright" t-value="True"/>
     </xpath>
 </template>
 

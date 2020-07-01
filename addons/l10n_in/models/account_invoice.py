@@ -46,7 +46,7 @@ class AccountMove(models.Model):
         Also we raise if state is not set in Indian customer.
         State is big role under GST because tax type is depend on.for more information check this https://www.cbic.gov.in/resources//htdocs-cbec/gst/Integrated%20goods%20&%20Services.pdf"""
         if partner.country_id and partner.country_id.code == 'IN' and not partner.state_id:
-            raise ValidationError(_("State is missing from address in '%s'. First set state after post this invoice again." %(partner.name)))
+            raise ValidationError(_("State is missing from address in '%s'. First set state after post this invoice again.", partner.name))
         elif partner.country_id and partner.country_id.code != 'IN':
             return self.env.ref('l10n_in.state_in_ot')
         return partner.state_id
@@ -96,14 +96,23 @@ class AccountMove(models.Model):
             """Check state is set in company/sub-unit"""
             company_unit_partner = move.journal_id.l10n_in_gstin_partner_id or move.journal_id.company_id
             if not company_unit_partner.state_id:
-                raise ValidationError(_("State is missing from your company/unit %s(%s).\nFirst set state in your company/unit." % (company_unit_partner.name, company_unit_partner.id)))
+                raise ValidationError(_(
+                    "State is missing from your company/unit %(company_name)s (%(company_id)s).\nFirst set state in your company/unit.",
+                    company_name=company_unit_partner.name,
+                    company_id=company_unit_partner.id
+                ))
             elif self.journal_id.type == 'purchase':
                 move.l10n_in_state_id = company_unit_partner.state_id
 
             shipping_partner = move._l10n_in_get_shipping_partner()
             move.l10n_in_gstin = move._l10n_in_get_shipping_partner_gstin(shipping_partner)
             if not move.l10n_in_gstin and move.l10n_in_gst_treatment in ['regular', 'composition', 'special_economic_zone', 'deemed_export']:
-                raise ValidationError(_("Partner %s(%s) GSTIN is required under GST Treatment %s" % (shipping_partner.name, shipping_partner.id, gst_treatment_name_mapping.get(move.l10n_in_gst_treatment))))
+                raise ValidationError(_(
+                    "Partner %(partner_name)s (%(partner_id)s) GSTIN is required under GST Treatment %(name)s",
+                    partner_name=shipping_partner.name,
+                    partner_id=shipping_partner.id,
+                    name=gst_treatment_name_mapping.get(move.l10n_in_gst_treatment)
+                ))
             if self.journal_id.type == 'sale':
                 move.l10n_in_state_id = self._l10n_in_get_indian_state(shipping_partner)
                 if not move.l10n_in_state_id:

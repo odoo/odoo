@@ -220,36 +220,61 @@ class IrRule(models.Model):
 
         model = records._name
         description = self.env['ir.model']._get(model).name or model
-        if not self.env.user.has_group('base.group_no_one'):
-            return AccessError(_('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: "%(document_kind)s" (%(document_model)s), Operation: %(operation)s)') % {
-                'document_kind': description,
-                'document_model': model,
-                'operation': operation,
-            })
+        msg_heads = {
+            # Messages are declared in extenso so they are properly exported in translation terms
+            'read':   _("Due to security restrictions, you are not allowed to access '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model),
+            'write':  _("Due to security restrictions, you are not allowed to modify '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model),
+            'create': _("Due to security restrictions, you are not allowed to create '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model),
+            'unlink': _("Due to security restrictions, you are not allowed to delete '%(document_kind)s' (%(document_model)s) records.", document_kind=description, document_model=model)
+        }
+        operation_error = msg_heads[operation]
+        resolution_info = _("Contact your administrator to request access if necessary.")
+
+        if not self.env.user.has_group('base.group_no_one') or not self.env.user.has_group('base.group_user'):
+            msg = """{operation_error}
+
+{resolution_info}""".format(
+                operation_error=operation_error,
+                resolution_info=resolution_info)
+            return AccessError(msg)
 
         # This extended AccessError is only displayed in debug mode.
         # Note that by default, public and portal users do not have
         # the group "base.group_no_one", even if debug mode is enabled,
-        # so it is relatively safe here to include the list of rules and
-        # record names.
+        # so it is relatively safe here to include the list of rules and record names.
         rules = self._get_failing(records, mode=operation).sudo()
-        error = AccessError(_("""The requested operation ("%(operation)s" on "%(document_kind)s" (%(document_model)s)) was rejected because of the following rules:
-%(rules_list)s
-%(multi_company_warning)s
-(Records: %(example_records)s, User: %(user_id)s)""") % {
-            'operation': operation,
-            'document_kind': description,
-            'document_model': model,
-            'rules_list': '\n'.join('- %s' % rule.name for rule in rules),
-            'multi_company_warning': ('\n' + _('Note: this might be a multi-company issue.') + '\n') if any(
-                'company_id' in (r.domain_force or []) for r in rules) else '',
-            'example_records': ' - '.join(['%s (id=%s)' % (rec.display_name, rec.id) for rec in records[:6].sudo()]),
-            'user_id': '%s (id=%s)' % (self.env.user.name, self.env.user.id),
-        })
+
+        records_description = ', '.join(['%s (id=%s)' % (rec.display_name, rec.id) for rec in records[:6].sudo()])
+        failing_records = _("Records: %s", records_description)
+
+        user_description = '%s (id=%s)' % (self.env.user.name, self.env.user.id)
+        failing_user = _("User: %s", user_description)
+
+        rules_description = '\n'.join('- %s' % rule.name for rule in rules)
+        failing_rules = _("This restriction is due to the following rules:\n%s", rules_description)
+        if any('company_id' in (r.domain_force or []) for r in rules):
+            failing_rules += "\n\n" + _('Note: this might be a multi-company issue.')
+
+        msg = """{operation_error}
+
+{failing_records}
+{failing_user}
+
+{failing_rules}
+
+{resolution_info}""".format(
+                operation_error=operation_error,
+                failing_records=failing_records,
+                failing_user=failing_user,
+                failing_rules=failing_rules,
+                resolution_info=resolution_info)
+
         # clean up the cache of records prefetched with display_name above
         for record in records[:6]:
             record._cache.clear()
-        return error
+
+        return AccessError(msg)
+
 
 #
 # Hack for field 'global': this field cannot be defined like others, because

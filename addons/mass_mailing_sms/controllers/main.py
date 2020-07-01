@@ -73,7 +73,7 @@ class MailingSMSController(http.Controller):
                 ('opt_out', '=', False),
             ]).mapped('list_id')
         elif tocheck_number:
-            unsubscribe_error = _('Number %s not found' % tocheck_number)
+            unsubscribe_error = _('Number %s not found', tocheck_number)
         else:
             unsubscribe_error = sanitize_res['msg']
 

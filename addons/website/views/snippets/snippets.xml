@@ -402,18 +402,19 @@
 
     <div data-js="menu_data"
          data-selector="#top_menu li > a"
-         data-exclude=".dropdown-toggle"
+         data-exclude=".dropdown-toggle, li.o_header_menu_button a"
          data-no-check="true"/>
 
     <div data-js="company_data"
          data-selector="[data-oe-expression='res_company.partner_id']"
          data-no-check="true"/>
 
-    <div id="so_header_theme"
+    <div data-js="Header"
+         id="so_header_theme"
          data-selector="#wrapwrap > header"
          data-no-check="true"
          groups="website.group_website_designer">
-        <we-checkbox string="Show Sign In" data-customize-website-views="portal.portal_show_sign_in" data-reload="/"/>
+        <we-checkbox string="Sign In" data-customize-website-views="portal.portal_show_sign_in" data-reload="/"/>
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="menu"
                         data-with-combinations="true"/>
@@ -424,24 +425,26 @@
         <we-select string="Logo" data-reload="/">
             <we-button data-customize-website-views="website.website_name">Text</we-button>
             <we-button data-customize-website-views="website.layout_logo_show">Image</we-button>
+            <we-button data-customize-website-views="website.header_logo_none" data-name="header_logo_none_opt">None</we-button>
         </we-select>
-        <we-input string="Logo Height"
+        <we-input string="⌙ Height"
+                  data-dependencies="!header_logo_none_opt"
                   data-customize-website-variable="null"
                   data-variable="logo-height"
                   data-unit="px"
                   data-save-unit="rem"/>
-        <we-input id="option_logo_height_scrolled"
-                  string="Logo Height (Scrolled)"
+        <we-input string="⌙ Height (Scrolled)"
+                  data-name="option_logo_height_scrolled"
                   data-customize-website-variable="null"
                   data-variable="fixed-logo-height"
                   data-unit="px"
                   data-save-unit="rem"
-                  data-dependencies="!header_visibility_scroll_opt"/>
+                  data-dependencies="!header_effect_scroll_opt"/>
         <we-row string="Font">
             <we-fontfamilypicker data-variable="navbar-font-number"/>
             <we-input data-customize-website-variable="null" data-variable="header-font-size" data-unit="px" data-save-unit="rem"/>
         </we-row>
-        <we-select id="header_templates_select" data-variable="header-template" string="Header Template" data-reload="/">
+        <we-select id="header_templates_select" data-variable="header-template" string="Template" data-reload="/">
             <we-button id="option_template_header_logo_menu"
                        data-name="header_logo_menu_opt"
                        data-customize-website-views=""
@@ -468,47 +471,51 @@
                        data-customize-website-variable="logo_hamburger"
                        string="Logo - Hamburger (cover)"/>
         </we-select>
-        <we-select id="header_visibilities_list" string="Header Visibility">
-            <we-button id="option_header_visibility_standard"
-                       data-name="header_visibility_standard_opt"
+        <we-select id="header_effect_list" string="Effect">
+            <we-button id="option_header_effect_standard"
+                       data-name="header_effect_standard_opt"
                        data-select-class="o_header_standard"
                        data-customize-website-views="website.header_visibility_standard"
                        string="Standard"/>
-            <we-button id="option_header_visibility_scroll"
-                       data-name="header_visibility_scroll_opt"
+            <we-button id="option_header_effect_scroll"
+                       data-name="header_effect_scroll_opt"
                        data-select-class=""
                        data-customize-website-views=""
                        string="Scroll"/>
-            <we-button id="option_header_visibility_fixed"
-                       data-name="header_visibility_fixed_opt"
+            <we-button id="option_header_effect_fixed"
+                       data-name="header_effect_fixed_opt"
                        data-select-class="o_header_fixed"
                        data-customize-website-views="website.header_visibility_fixed"
                        string="Fixed"/>
-            <we-button id="option_header_visibility_disappears"
-                       data-name="header_visibility_disappears_opt"
+            <we-button id="option_header_effect_disappears"
+                       data-name="header_effect_disappears_opt"
                        data-select-class="o_header_disappears"
                        data-customize-website-views="website.header_visibility_disappears"
                        string="Disappears"/>
-            <we-button id="option_header_visibility_fade_out"
-                       data-name="header_visibility_fade_out_opt"
+            <we-button id="option_header_effect_fade_out"
+                       data-name="header_effect_fade_out_opt"
                        data-select-class="o_header_fade_out"
                        data-customize-website-views="website.header_visibility_fade_out"
                        string="Fade Out"/>
         </we-select>
-        <we-checkbox string="Hoverable Dropdown"
-                     data-customize-website-views="website.header_hoverable_dropdown"
-                     data-select-class="o_hoverable_dropdown"
-                     data-no-preview="true"/>
+        <we-select id="option_header_dropdown" string="Sub Menus" data-no-preview="true">
+            <we-button data-select-class="o_hoverable_dropdown"
+                       data-customize-website-views="website.header_hoverable_dropdown">On Hover</we-button>
+            <we-button data-select-class="" data-name="header_dropdown_on_click_opt">On Click</we-button>
+        </we-select>
+
+        <we-checkbox string="Button" data-customize-website-views="website.header_button" data-reload="/"/>
     </div>
 
-    <div data-js="topMenuTransparency"
+    <div data-js="TopMenuVisibility"
         data-selector="[data-main-object^='website.page('] #wrapwrap > header"
         data-no-check="true">
-        <we-checkbox id="option_header_transparent"
-                     string="Transparent on this page"
-                     data-name="header_transparent_opt"
-                     data-transparent="true"
-                     data-no-preview="true"/>
+        <we-select string="Visibility (On This Page)" id="option_header_visibility" data-no-preview="true">
+            <we-button data-name="regular_header_visibility_opt"
+                       data-visibility="regular">Regular</we-button>
+            <we-button data-visibility="transparent">Transparent</we-button>
+            <we-button data-visibility="hidden">Hidden</we-button>
+        </we-select>
     </div>
 
     <div data-js="topMenuColor"
@@ -554,6 +561,31 @@
                        data-customize-website-variable="address_logo"
                        string="Address - Logo"/>
         </we-select>
+        <we-select string="Slideout Effect" data-variable="footer-effect" data-reload="/">
+            <we-button string="Regular"
+                       data-customize-website-views=""
+                       data-customize-website-variable=""/>
+            <we-button string="Slide Hover"
+                       data-customize-website-views="website.template_footer_slideout"
+                       data-customize-website-variable="slideout_slide_hover"/>
+            <we-button string="Shadow"
+                       data-customize-website-views="website.template_footer_slideout"
+                       data-customize-website-variable="slideout_shadow"/>
+        </we-select>
+        <we-checkbox string="Copyright"
+                data-customize-website-views="website.footer_no_copyright|"
+                data-no-preview="true"
+                data-reload="/"/>
+    </div>
+
+    <div data-js="HideFooter"
+        data-selector="[data-main-object^='website.page('] #wrapwrap > footer"
+        data-no-check="true"
+        groups="website.group_website_designer">
+        <we-checkbox string="Show on this page"
+                     data-name="hide_footer_page_opt"
+                     data-visibility="hidden|shown"
+                     data-no-preview="true"/>
     </div>
 
     <div data-selector=".o_footer_copyright"
@@ -727,6 +759,7 @@
             </we-select>
             <we-imagepicker data-name="body_bg_image_opt" data-dependencies="!no_background_opt" data-customize-body-bg=""/>
         </we-row>
+        <we-checkbox string="Show Header" data-customize-website-views="website.option_layout_hide_header|" data-reload="/"/>
         <we-row string="Code Injection" title="Enter code that will be added into every page of your site">
             <we-button data-no-preview="true" data-open-custom-code-dialog="head">&amp;lt;head&amp;gt;</we-button>
             <we-button data-no-preview="true" data-open-custom-code-dialog="footer">&amp;lt;/body&amp;gt;</we-button>

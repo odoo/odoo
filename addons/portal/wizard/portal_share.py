@@ -60,7 +60,7 @@ class PortalShare(models.TransientModel):
             active_record.with_context(mail_post_autofollow=True).message_post_with_view(template,
                 values={'partner': partner, 'note': self.note, 'record': active_record,
                         'share_link': share_link},
-                subject=_("You are invited to access %s" % active_record.display_name),
+                subject=_("You are invited to access %s", active_record.display_name),
                 subtype_id=note.id,
                 email_layout_xmlid='mail.mail_notification_light',
                 partner_ids=[(6, 0, partner.ids)])
@@ -72,7 +72,7 @@ class PortalShare(models.TransientModel):
             active_record.with_context(mail_post_autofollow=True).message_post_with_view(template,
                 values={'partner': partner, 'note': self.note, 'record': active_record,
                         'share_link': share_link},
-                subject=_("You are invited to access %s" % active_record.display_name),
+                subject=_("You are invited to access %s", active_record.display_name),
                 subtype_id=note.id,
                 email_layout_xmlid='mail.mail_notification_light',
                 partner_ids=[(6, 0, partner.ids)])

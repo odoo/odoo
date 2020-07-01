@@ -951,7 +951,7 @@ class PaymentTransaction(models.Model):
     def _check_authorize_state(self):
         failed_tx = self.filtered(lambda tx: tx.state == 'authorized' and tx.acquirer_id.provider not in self.env['payment.acquirer']._get_feature_support()['authorize'])
         if failed_tx:
-            raise exceptions.ValidationError(_('The %s payment acquirers are not allowed to manual capture mode!' % failed_tx.mapped('acquirer_id.name')))
+            raise exceptions.ValidationError(_('The %s payment acquirers are not allowed to manual capture mode!', failed_tx.mapped('acquirer_id.name')))
 
     @api.model
     def create(self, values):

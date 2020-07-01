@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
 from odoo import api, fields, models, SUPERUSER_ID, _
 from odoo.tools.float_utils import float_compare
 from datetime import datetime
@@ -253,24 +252,29 @@ class PurchaseOrder(models.Model):
                     subtype_id=self.env.ref('mail.mt_note').id)
         return True
 
-    def _update_date_planned_for_lines(self, updated_dates):
-        note = self._compose_note(updated_dates)
-
+    def _add_picking_info(self, activity):
+        """Helper method to add picking info to the Date Updated activity when
+        vender updates date_planned of the po lines.
+        """
         validated_picking = self.picking_ids.filtered(lambda p: p.state == 'done')
         if validated_picking:
-            note += _("<p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>", validated_picking.name)
+            activity.note += _("<p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>") % validated_picking[0].name
+        elif not self.picking_ids:
+            activity.note += _("<p>Corresponding receipt not found.</p>")
         else:
-            note += _("<p>Those dates have been updated accordingly on the receipt %s.</p>", self.picking_ids[0].name)
-            for line, date in updated_dates:
-                date = datetime.strptime(date, '%Y-%m-%d %H:%M:%S')
-                line._update_date_planned(date)
+            activity.note += _("<p>Those dates have been updated accordingly on the receipt %s.</p>") % self.picking_ids[0].name
 
-        self.activity_schedule(
-            'mail.mail_activity_data_warning',
-            summary="Date Updated",
-            note=note,
-            user_id=self.user_id.id or SUPERUSER_ID
-        )
+    def _create_update_date_activity(self, updated_dates):
+        activity = super()._create_update_date_activity(updated_dates)
+        self._add_picking_info(activity)
+
+    def _update_update_date_activity(self, updated_dates, activity):
+        # remove old picking info to update it
+        note_lines = activity.note.split('<p>')
+        note_lines.pop()
+        activity.note = '<p>'.join(note_lines)
+        super()._update_update_date_activity(updated_dates, activity)
+        self._add_picking_info(activity)
 
     @api.model
     def _get_orders_to_remind(self):
@@ -329,7 +333,7 @@ class PurchaseOrderLine(models.Model):
                             total -= move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
                         else:
                             total += move.product_uom._compute_quantity(move.product_uom_qty, line.product_uom)
-                line.qty_received = total
+                line.write({'qty_received': total})
 
     @api.model_create_multi
     def create(self, vals_list):

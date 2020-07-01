@@ -195,7 +195,8 @@
                                 <span>Ask confirmation</span>
                                 <div class="o_row oe_inline" attrs="{'invisible': [('receipt_reminder_email', '=', False)]}">
                                     <field name="reminder_date_before_receipt" class="oe_inline"/>
-                                    days before <button name="send_reminder_preview" icon="fa-info-circle" type="object" class="oe_inline oe_link" title="Preveiw the reminder email by sending it to yourself."/>
+                                    days before 
+                                    <widget name='toaster_button' button_name="send_reminder_preview" title="Preview the reminder email by sending it to yourself."/>
                                 </div>
                             </div>
                             <field name="origin" attrs="{'invisible': [('origin','=',False)]}"/>

@@ -685,8 +685,7 @@ class IrModelFields(models.Model):
             if rec.ttype == 'many2one' and rec.required and rec.on_delete == 'set null':
                 return {'warning': {'title': _("Warning"), 'message': _(
                     "The m2o field %s is required but declares its ondelete policy "
-                    "as being 'set null'. Only 'restrict' and 'cascade' make sense."
-                    % (rec.name)
+                    "as being 'set null'. Only 'restrict' and 'cascade' make sense.", rec.name,
                 )}}
 
     def _get(self, model_name, name):
@@ -1718,26 +1717,34 @@ class IrModelAccess(models.Model):
 
         if not r and raise_exception:
             groups = '\n'.join('\t- %s' % g for g in self.group_names_with_access(model, mode))
+            document_kind = self.env['ir.model']._get(model).name or model
             msg_heads = {
                 # Messages are declared in extenso so they are properly exported in translation terms
-                'read': _("Sorry, you are not allowed to access documents of type '%(document_kind)s' (%(document_model)s)."),
-                'write':  _("Sorry, you are not allowed to modify documents of type '%(document_kind)s' (%(document_model)s)."),
-                'create': _("Sorry, you are not allowed to create documents of type '%(document_kind)s' (%(document_model)s)."),
-                'unlink': _("Sorry, you are not allowed to delete documents of type '%(document_kind)s' (%(document_model)s)."),
+                'read': _("You are not allowed to access '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
+                'write':  _("You are not allowed to modify '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
+                'create': _("You are not allowed to create '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
+                'unlink': _("You are not allowed to delete '%(document_kind)s' (%(document_model)s) records.", document_kind=document_kind, document_model=model),
             }
-            msg_params = {
-                'document_kind': self.env['ir.model']._get(model).name or model,
-                'document_model': model,
-            }
+            operation_error = msg_heads[mode]
+
             if groups:
-                msg_tail = _("This operation is allowed for the groups:\n%(groups_list)s")
-                msg_params['groups_list'] = groups
+                group_info = _("This operation is allowed for the following groups:\n%(groups_list)s", groups_list=groups)
             else:
-                msg_tail = _("No group currently allows this operation.")
-            msg_tail += u' - ({} {}, {} {})'.format(_('Operation:'), mode, _('User:'), self._uid)
+                group_info = _("No group currently allows this operation.")
+
+            resolution_info = _("Contact your administrator to request access if necessary.")
+
             _logger.info('Access Denied by ACLs for operation: %s, uid: %s, model: %s', mode, self._uid, model)
-            msg = '%s %s' % (msg_heads[mode], msg_tail)
-            raise AccessError(msg % msg_params)
+            msg = """{operation_error}
+
+{group_info}
+
+{resolution_info}""".format(
+                operation_error=operation_error,
+                group_info=group_info,
+                resolution_info=resolution_info)
+
+            raise AccessError(msg)
 
         return bool(r)
 

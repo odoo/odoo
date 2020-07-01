@@ -109,8 +109,8 @@ class AuthorizeAPI():
 
         if response and response.get('err_code'):
             raise UserError(_(
-                "Authorize.net Error:\nCode: %s\nMessage: %s"
-                % (response.get('err_code'), response.get('err_msg'))
+                "Authorize.net Error:\nCode: %s\nMessage: %s",
+                response.get('err_code'), response.get('err_msg'),
             ))
 
         return {

@@ -32,7 +32,7 @@ class PosSession(models.Model):
         index=True)
     name = fields.Char(string='Session ID', required=True, readonly=True, default='/')
     user_id = fields.Many2one(
-        'res.users', string='Responsible',
+        'res.users', string='Opened By',
         required=True,
         index=True,
         readonly=True,
@@ -311,10 +311,6 @@ class PosSession(models.Model):
             # Set the uninvoiced orders' state to 'done'
             self.env['pos.order'].search([('session_id', '=', self.id), ('state', '=', 'paid')]).write({'state': 'done'})
         else:
-            # The cash register needs to be confirmed for cash diffs
-            # made thru cash in/out when sesion is in cash_control.
-            if self.config_id.cash_control:
-                self.cash_register_id.button_validate()
             self.move_id.unlink()
         self.write({'state': 'closed'})
         return {
@@ -644,7 +640,6 @@ class PosSession(models.Model):
             if not self.config_id.cash_control:
                 statement.write({'balance_end_real': statement.balance_end})
             statement.button_post()
-            statement.button_validate()
             all_lines = (
                   split_cash_statement_lines[statement].mapped('move_id.line_ids').filtered(lambda aml: aml.account_id.internal_type == 'receivable')
                 | combine_cash_statement_lines[statement].mapped('move_id.line_ids').filtered(lambda aml: aml.account_id.internal_type == 'receivable')
@@ -655,6 +650,17 @@ class PosSession(models.Model):
             lines_by_account = [all_lines.filtered(lambda l: l.account_id == account) for account in accounts]
             for lines in lines_by_account:
                 lines.reconcile()
+            # We try to validate the statement after the reconciliation is done
+            # because validating the statement requires each statement line to be
+            # reconciled.
+            # Furthermore, if the validation failed, which is caused by unreconciled
+            # cash difference statement line, we just ignore that. Leaving the statement
+            # not yet validated. Manual reconciliation and validation should be made
+            # by the user in the accounting app.
+            try:
+                statement.button_validate()
+            except UserError:
+                pass
 
         # reconcile invoice receivable lines
         for account_id in order_account_move_receivable_lines:

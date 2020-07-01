@@ -106,7 +106,7 @@ class CrmTeam(models.Model):
         ]
         for team in self:
             if team in default_teams:
-                raise UserError(_('Cannot delete default team "%s"' % (team.name)))
+                raise UserError(_('Cannot delete default team "%s"', team.name))
         return super(CrmTeam,self).unlink()
 
     # ------------------------------------------------------------

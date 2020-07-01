@@ -461,12 +461,13 @@
 <t t-name="web.OwlDialog" owl="1">
     <Portal target="'body'">
         <div class="o_dialog" t-on-focus="_onFocus" t-on-click="_onClick">
-            <div t-if="props.backdrop" class="modal-backdrop show" t-on-click="_onBackdropClick"/>
             <div role="dialog" class="modal"
                 tabindex="-1"
                 t-att-class="{ o_technical_modal: props.technical, o_modal_full: props.fullscreen }"
+                t-att-data-backdrop="'' + props.backdrop"
                 t-ref="modal"
                 t-on-close_dialog.stop="_close"
+                t-on-click="_onBackdropClick"
                 >
                 <div class="modal-dialog" t-att-class="size">
                     <div class="modal-content" t-att-class="props.contentClass">
@@ -624,6 +625,7 @@
             title="env._t('Action')"
             items="actionItems"
             icon="'fa fa-cog'"
+            closeOnSelected="true"
         />
     </div>
 </t>

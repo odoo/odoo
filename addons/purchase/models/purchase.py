@@ -669,6 +669,7 @@ class PurchaseOrder(models.Model):
                     raise_exception=False,
                     email_values={'email_to': self.env.user.email, 'recipient_ids': []},
                     notif_layout="mail.mail_notification_paynow")
+            return {'toast_message': _("A sample email has been sent to %s.") % self.env.user.email}
 
     @api.model
     def _get_orders_to_remind(self):
@@ -711,30 +712,39 @@ class PurchaseOrder(models.Model):
                 order.message_post(body="The order receipt has been acknowledged by %s." % order.partner_id.name)
 
     def _update_date_planned_for_lines(self, updated_dates):
-        if updated_dates:
-            note = self._compose_note(updated_dates)
-            self.activity_schedule(
-                'mail.mail_activity_data_warning',
-                summary="Date Updated",
-                note=note,
-                user_id=self.user_id.id
-            )
+        # create or update the activity
+        activity = self.env['mail.activity'].search([
+            ('summary', '=', _('Date Updated')),
+            ('res_model_id', '=', 'purchase.order'),
+            ('res_id', '=', self.id),
+            ('user_id', '=', self.user_id.id)], limit=1)
+        if activity:
+            self._update_update_date_activity(updated_dates, activity)
+        else:
+            self._create_update_date_activity(updated_dates)
 
-            for line, date in updated_dates:
-                line._update_date_planned(date)
-
-    def _compose_note(self, updated_dates):
-        """Helper method for creating log note when user update scheduled date
-        on portal website."""
-        note = _('<p> %s modified receipt dates for the following products:</p>', self.partner_id.name)
+        # update the date on PO line
         for line, date in updated_dates:
-            note += _(
-                '<p> &nbsp; - %(product_name)s from %(date_start)s to %(date_end)s </p>',
-                product_name=line.product_id.display_name,
-                date_start=line.date_planned,
-                date_end=date
-            )
-        return note
+            line._update_date_planned(date)
+
+    def _create_update_date_activity(self, updated_dates):
+        note = _('<p> %s modified receipt dates for the following products:</p>') % self.partner_id.name
+        for line, date in updated_dates:
+            note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned.date(), date.date())
+        activity = self.activity_schedule(
+            'mail.mail_activity_data_warning',
+            summary=_("Date Updated"),
+            user_id=self.user_id.id
+        )
+        # add the note after we post the activity because the note can be soon
+        # changed when updating the date of the next PO line. So instead of
+        # sending a mail with incomplete note, we send one with no note.
+        activity.note = note
+        return activity
+
+    def _update_update_date_activity(self, updated_dates, activity):
+        for line, date in updated_dates:
+            activity.note += _('<p> &nbsp; - %s from %s to %s </p>') % (line.product_id.display_name, line.date_planned.date(), date.date())
 
 
 class PurchaseOrderLine(models.Model):
@@ -910,6 +920,12 @@ class PurchaseOrderLine(models.Model):
                     line.order_id.message_post_with_view('purchase.track_po_line_template',
                                                          values={'line': line, 'product_qty': values['product_qty']},
                                                          subtype_id=self.env.ref('mail.mt_note').id)
+        if 'qty_received' in values:
+            for line in self:
+                if values['qty_received'] != line.qty_received and line.order_id.state == 'purchase':
+                    line.order_id.message_post_with_view('purchase.track_po_line_qty_received_template',
+                                                         values={'line': line, 'qty_received': values['qty_received']},
+                                                         subtype_id=self.env.ref('mail.mt_note').id)
         return super(PurchaseOrderLine, self).write(values)
 
     def unlink(self):
@@ -936,7 +952,7 @@ class PurchaseOrderLine(models.Model):
             date_planned = date_order + relativedelta(days=seller.delay if seller else 0)
         else:
             date_planned = datetime.today() + relativedelta(days=seller.delay if seller else 0)
-        return timezone(self.order_id.user_id.tz or 'UTC').localize(datetime.combine(date_planned.date(), time.max)).astimezone(UTC).replace(tzinfo=None, microsecond=0, second=0)
+        return self._convert_to_last_minute_of_day(date_planned)
 
     @api.depends('product_id', 'date_order')
     def _compute_analytic_id_and_tag_ids(self):
@@ -957,7 +973,7 @@ class PurchaseOrderLine(models.Model):
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
-        self.date_planned = self.order_id.date_planned or timezone(self.order_id.user_id.tz or 'UTC').localize(datetime.combine(datetime.today(), time.max)).astimezone(UTC).replace(tzinfo=None, microsecond=0, second=0)
+        self.date_planned = self.order_id.date_planned or self._convert_to_last_minute_of_day(datetime.today())
         self.price_unit = self.product_qty = 0.0
 
         self._product_id_change()
@@ -1146,6 +1162,12 @@ class PurchaseOrderLine(models.Model):
             'taxes_id': [(6, 0, taxes_id.ids)],
             'order_id': po.id,
         }
+
+    def _convert_to_last_minute_of_day(self, date):
+        """Return a datetime which is the last minute of the input date(time)
+        according to order user's time zone, convert to UTC time.
+        """
+        return timezone(self.order_id.user_id.tz or 'UTC').localize(datetime.combine(date, time.max)).astimezone(UTC).replace(tzinfo=None, microsecond=0, second=0)
 
     def _update_date_planned(self, updated_date):
         self.date_planned = updated_date
