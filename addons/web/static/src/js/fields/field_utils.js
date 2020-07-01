@@ -329,8 +329,8 @@ function formatX2Many(value) {
  *        the number of digits that should be used, instead of the default
  *        digits precision in the field. Note: if the currency defines a
  *        precision, the currency's one is used.
- * @param {boolean} [options.html=true]
- *        if true, returns a string encoding the html formatted value (with
+ * @param {boolean} [options.forceString=false]
+ *        if false, returns a string encoding the html formatted value (with
  *        whitespace encoded as '&nbsp;')
  * @returns {string}
  */
@@ -338,7 +338,7 @@ function formatMonetary(value, field, options) {
     if (value === false) {
         return "";
     }
-    options = Object.assign({ html: true }, options);
+    options = Object.assign({ forceString: false }, options);
 
     var currency = options.currency;
     if (!currency) {
@@ -361,7 +361,7 @@ function formatMonetary(value, field, options) {
     if (!currency || options.noSymbol) {
         return formatted_value;
     }
-    const ws = options.html ? '&nbsp;' : ' ';
+    const ws = options.forceString ? ' ' : '&nbsp;';
     if (currency.position === "after") {
         return formatted_value + ws + currency.symbol;
     } else {
