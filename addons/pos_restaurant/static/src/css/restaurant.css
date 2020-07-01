@@ -315,3 +315,79 @@
     margin-right: 4px;
 }
 
+/* ------ SPLIT BILL SCREEN ------- */
+
+.splitbill-screen.screen .contents {
+    display: flex;
+    flex-flow: column nowrap;
+    margin: 0px auto;
+    max-width: 1024px;
+    border-left: dashed 1px rgb(215,215,215);
+    border-right: dashed 1px rgb(215,215,215);
+    height: 100%;
+}
+.splitbill-screen.screen .main {
+    display: flex;
+    flex-flow: row nowrap;
+    /* take the remaining vertical space */
+    flex: 1;
+    /* do not capture overflow in this element */
+    overflow: hidden;
+}
+.splitbill-screen.screen .main .lines {
+    display: flex;
+    flex: 1;
+    justify-content: center;
+    /* show scrollbar inside this element if its content overflows */
+    overflow-y: auto;
+}
+.splitbill-screen.screen .main .controls {
+    display: flex;
+    flex-flow: column nowrap;
+}
+.splitbill-screen.screen .pay-button {
+    margin: 16px;
+}
+.splitbill-screen.screen .pay-button .button {
+    background: #e2e2e2;
+    line-height: 74px;
+    font-size: 16px;
+    border: solid 1px rgb(202, 202, 202);
+    border-top-width: 0px;
+    cursor: pointer;
+    width: 100%;
+    text-align: center;
+}
+.splitbill-screen.screen .pay-button .button:first-child {
+    border-top-width: 1px;
+    border-top-left-radius: 3px;
+    border-top-right-radius: 3px;
+}
+.splitbill-screen.screen .pay-button .button:last-child {
+    border-bottom-left-radius: 3px;
+    border-bottom-right-radius: 3px;
+}
+.splitbill-screen.screen .pay-button .button:active {
+    background: black;
+    border-color: black;
+    color: white;
+}
+
+.splitbill-screen.screen .main .lines {
+    border-right: dashed 1px rgb(215,215,215);
+}
+
+.splitbill-screen.screen .main .controls {
+    flex: 1;
+}
+
+/* ------ NARROWER SCREEN ------ */
+@media screen and (max-width: 768px) {
+    .splitbill-screen.screen .main {
+        flex-flow: column nowrap;
+    }
+    .splitbill-screen.screen .main .controls {
+        border-top: dashed 1px rgb(215,215,215);
+        flex: none;
+    }
+}
