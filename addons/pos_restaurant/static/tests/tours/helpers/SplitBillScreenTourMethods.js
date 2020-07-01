@@ -28,7 +28,7 @@ odoo.define('pos_restaurant.tour.SplitBillScreenTourMethods', function (require)
             return [
                 {
                     content: 'click pay button',
-                    trigger: `.splitbill-screen .paymentmethods .payment`
+                    trigger: `.splitbill-screen .pay-button .button`
                 }
             ]
         }
