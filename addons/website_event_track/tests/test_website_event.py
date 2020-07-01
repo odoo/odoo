@@ -30,6 +30,41 @@ class TestEventWebsiteTrack(TestWebsiteEventCommon):
 
         self._assert_website_menus(event)
 
+    @users('user_event_web_manager')
+    def test_menu_management_frontend(self):
+        event = self.env['event.event'].create({
+            'name': 'TestEvent',
+            'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
+            'date_end': fields.Datetime.to_string(datetime.today() + timedelta(days=15)),
+            'website_menu': True,
+            'website_track': True,
+            'website_track_proposal': True,
+        })
+        self.assertTrue(event.website_track)
+        self.assertTrue(event.website_track_proposal)
+        self._assert_website_menus(event)
+
+        introduction_menu = event.menu_id.child_id.filtered(lambda menu: menu.name == 'Introduction')
+        introduction_menu.unlink()
+        self._assert_website_menus(event, set(['Location', 'Register', 'Talks', 'Agenda', 'Talk Proposals']))
+
+        menus = event.menu_id.child_id.filtered(lambda menu: menu.name in ['Agenda', 'Talk Proposals'])
+        menus.unlink()
+        self.assertTrue(event.website_track)
+        self.assertFalse(event.website_track_proposal)
+
+        menus = event.menu_id.child_id.filtered(lambda menu: menu.name in ['Talks'])
+        menus.unlink()
+        self.assertFalse(event.website_track)
+        self.assertFalse(event.website_track_proposal)
+
+        self._assert_website_menus(event, set(['Location', 'Register']))
+
+        event.write({'website_track_proposal': True})
+        self.assertTrue(event.website_track)
+        self.assertTrue(event.website_track_proposal)
+        self._assert_website_menus(event, set(['Location', 'Register', 'Talks', 'Agenda', 'Talk Proposals']))
+
     @users('user_eventmanager')
     def test_write_menu(self):
         event = self.env['event.event'].browse(self.event_0.id)
