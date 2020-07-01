@@ -15,6 +15,10 @@
         'website_profile',
     ],
     'data': [
+        'security/ir.model.access.csv',
+        'views/assets.xml',
+        'views/quiz_question_views.xml',
+        'views/quiz_templates.xml'
     ],
     'demo': [
     ],
