@@ -2,69 +2,182 @@
 /// This files regroups the variables and mixins which are specific to the editor.
 ///
 
-$o-support-13-0-color-system: false !default;
+//------------------------------------------------------------------------------
+// Odoo Editor UI
+//------------------------------------------------------------------------------
 
-$o-we-font-family: Roboto, 'Montserrat', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$o-we-bg-darkest: #000000 !default;
+$o-we-bg-darker: #141217 !default;
+$o-we-bg-dark: #191922 !default;
+$o-we-bg-light: #23232D !default;
+$o-we-bg-lighter: #32323D !default;
 
-$o-we-font-size: 13px;
-$o-we-line-height: 1.5;
-$o-we-bg-color: #F7F7F7 !default;
-$o-we-bg-color-dark: #a7a7a7 !default;
-$o-we-color: #212629 !default;
-$o-we-border-width: 1px !default;
-$o-we-border-color: rgba(0, 0, 0, 0.125) !default;
-$o-we-dropdown-bg-color: #FFFFFF;
-$o-we-dropdown-color: inherit;
+$o-we-fg-darker: #808080 !default;
+$o-we-fg-dark: #C6C6C6 !default;
+$o-we-fg-light: #D9D9D9 !default;
+$o-we-fg-lighter: #FFFFFF !default;
 
-$o-we-color-dark: #2c2c36 !default;
-$o-we-color-darker: darken($o-we-color-dark, 2%) !default;
-$o-we-color-divider: #33363e !default;
-$o-we-color-light: #4e525b !default;
-$o-we-color-normal: #3D4047 !default;
-$o-we-color-text-normal: #999999 !default;
-$o-we-color-text-light: #d4d5d7 !default;
-$o-we-color-text-lighter: #ebecee !default;
 $o-we-color-danger: #e6586c !default;
 $o-we-color-warning: #f0ad4e !default;
 $o-we-color-success: #40ad67 !default;
 $o-we-color-info: #6999a8 !default;
 
-$o-we-sidebar-width: 230px !default;
+$o-we-bg: $o-we-bg-light !default;
+$o-we-color: $o-we-fg-light !default;
+$o-we-font-size: 13px !default;
+$o-we-font-family: Roboto, 'Montserrat', 'Segoe UI', 'Helvetica Neue', Helvetica, Arial, sans-serif !default;
+$o-we-accent: #00ABC1 !default;
+$o-we-border-width: 1px !default;
+$o-we-border-color: $o-we-bg-light !default;
+
+$o-we-ace-color: #2F3129 !default;
 
 $o-we-handles-offset-to-hide: 10000px !default;
 $o-we-handles-btn-size: 18px !default;
-$o-we-handles-accent-color: #00e2ff !default;
+$o-we-handles-accent-color: $o-we-accent !default;
 $o-we-handles-accent-color-preview: $o-enterprise-color !default;
 $o-we-handle-edge-size: 8px !default;
 $o-we-handle-border-width: 2px !default;
 
-// Transitions
-$o-we-md-ease: cubic-bezier(0.19, 1, 0.22, 1) !default;
-
-// Editor
 $o-we-dropzone-size: 30px !default; // $grid-gutter-width (todo: allow to use the variable)
 $o-we-dropzone-border-width: 2px !default;
 $o-we-dropzone-border: $o-we-dropzone-border-width dashed $o-brand-odoo !default;
 
-$o-we-ace-color: #2F3129 !default;
+// Translations
+$o-we-content-to-translate-color: rgb(255, 255, 90) !default;
+$o-we-translated-content-color: rgb(120, 215, 110) !default;
 
-$o-we-switch-size: 2ex !default;
-$o-we-switch-inactive-color: $o-we-bg-color !default;
+$o-we-toolbar-height: 32px !default;
 
-// Checklist
-$o-checklist-margin-left: 20px;
-$o-checklist-checkmark-width: 2px;
-$o-checklist-before-size: 13px;
+$o-we-item-border-width: 1px !default;
+$o-we-item-border-color: $o-we-bg-darkest !default;
+$o-we-item-border-radius: 1px !default;
+$o-we-item-clickable-bg: linear-gradient($o-we-bg-light, $o-we-bg-darker) !default;
+$o-we-item-pressed-bg: linear-gradient($o-we-bg-darkest, $o-we-bg-darker) !default;
+$o-we-item-pressed-color: $o-we-fg-light !default;
 
-$o-we-toolbar-height: 32px;
+$o-we-dropdown-spacing: 5px !default;
+$o-we-dropdown-bg: $o-we-bg-darker !default;
+$o-we-dropdown-border-width: 1px !default;
+$o-we-dropdown-border-color: $o-we-bg-darkest !default;
+$o-we-dropdown-shadow: 0 2px 8px 0 rgba(black, 0.5) !default;
+$o-we-dropdown-item-height: 30px !default;
+$o-we-dropdown-item-spacing: 1px !default;
+$o-we-dropdown-item-bg: $o-we-bg-light !default;
+$o-we-dropdown-item-color: $o-we-fg-dark !default;
+$o-we-dropdown-item-active-color: $o-we-fg-light !default;
 
-// ============    'Preview' component Mixins    ===============
-// Create a "preview" work-area to edit/customize specific elements
+$o-we-sidebar-bg: $o-we-bg !default;
+$o-we-sidebar-color: $o-we-color !default;
+$o-we-sidebar-font-size: 11px !default;
+$o-we-sidebar-border-width: $o-we-border-width !default;
+$o-we-sidebar-border-color: $o-we-border-color !default;
+$o-we-sidebar-width: $o-we-sidebar-border-width + 270px !default;
+
+$o-we-sidebar-top-height: 26px !default;
+
+$o-we-sidebar-tabs-border-width: $o-we-sidebar-border-width !default;
+$o-we-sidebar-tabs-border-color: $o-we-sidebar-border-color !default;
+$o-we-sidebar-tabs-height: $o-we-sidebar-tabs-border-width + 29px !default;
+$o-we-sidebar-tabs-bg: $o-we-bg-darker !default;
+$o-we-sidebar-tabs-color: $o-we-sidebar-color !default;
+$o-we-sidebar-tabs-disabled-color: $o-we-fg-darker !default;
+$o-we-sidebar-tabs-active-border-width: 2px !default;
+$o-we-sidebar-tabs-active-border-color: $o-we-accent !default;
+$o-we-sidebar-tabs-active-color: $o-we-fg-lighter !default;
+
+$o-we-sidebar-blocks-content-bg: $o-we-bg-dark !default;
+$o-we-sidebar-blocks-content-spacing: 10px !default;
+$o-we-sidebar-blocks-content-snippet-spacing: 2px !default;
+$o-we-sidebar-blocks-content-snippet-bg: $o-we-bg-lighter !default;
+
+$o-we-sidebar-content-highlight-bar-width: 2px !default;
+$o-we-sidebar-content-highlight-bar-color: $o-we-accent !default;
+
+$o-we-sidebar-content-gutter-item-indent: 5px !default;
+$o-we-sidebar-content-indent: $o-we-sidebar-content-gutter-item-indent + $o-we-sidebar-content-highlight-bar-width + 12px !default;
+$o-we-sidebar-content-backdrop-bg: rgba(black, 0.5) !important;
+
+$o-we-sidebar-content-main-title-border-width: 1px !default;
+$o-we-sidebar-content-main-title-border-color: $o-we-bg-light !default;
+$o-we-sidebar-content-main-title-height: 32px !default;
+$o-we-sidebar-content-main-title-shadow-start: rgba(black, 0.7);
+$o-we-sidebar-content-main-title-shadow: linear-gradient($o-we-sidebar-content-main-title-shadow-start, rgba(black, 0)) !default;
+$o-we-sidebar-content-main-title-color: $o-we-fg-lighter !default;
+$o-we-sidebar-content-main-title-font-size: 13px !default;
+$o-we-sidebar-content-main-title-margin-bottom: 2px !default;
+
+$o-we-sidebar-content-block-spacing: 10px !default;
+
+$o-we-sidebar-content-fold-block-bg: $o-we-bg-dark !default;
+$o-we-sidebar-content-fold-block-inner-spacing: $o-we-sidebar-content-block-spacing !default;
+
+$o-we-sidebar-content-field-spacing: 5px !default;
+$o-we-sidebar-content-field-color: $o-we-fg-dark !default;
+$o-we-sidebar-content-field-control-item-color: $o-we-fg-darker !default;
+$o-we-sidebar-content-field-control-item-size: 1em !default;
+$o-we-sidebar-content-field-control-item-spacing: 0.5em !default;
+$o-we-sidebar-content-field-label-spacing: 4px !default;
+$o-we-sidebar-content-field-label-width: $o-we-sidebar-content-field-label-spacing + 102px !default;
+$o-we-sidebar-content-field-multi-spacing: $o-we-sidebar-content-field-label-spacing !default;
+$o-we-sidebar-content-field-height: 22px !default;
+
+$o-we-sidebar-content-field-border-width: $o-we-item-border-width !default;
+$o-we-sidebar-content-field-border-color:$o-we-item-border-color !default;
+$o-we-sidebar-content-field-border-radius: $o-we-item-border-radius !default;
+$o-we-sidebar-content-field-disabled-color: $o-we-sidebar-content-field-control-item-color !default;
+$o-we-sidebar-content-field-clickable-bg: $o-we-item-clickable-bg !default;
+$o-we-sidebar-content-field-clickable-spacing: $o-we-sidebar-content-field-label-spacing !default;
+$o-we-sidebar-content-field-pressed-bg: $o-we-item-pressed-bg !default;
+$o-we-sidebar-content-field-pressed-color: $o-we-item-pressed-color !default;
+
+$o-we-sidebar-content-field-dropdown-spacing: $o-we-dropdown-spacing !default;
+$o-we-sidebar-content-field-dropdown-bg: $o-we-dropdown-bg !default;
+$o-we-sidebar-content-field-dropdown-border-width: $o-we-dropdown-border-width !default;
+$o-we-sidebar-content-field-dropdown-border-color: $o-we-dropdown-border-color !default;
+$o-we-sidebar-content-field-dropdown-shadow: $o-we-dropdown-shadow !default;
+$o-we-sidebar-content-field-dropdown-item-height: $o-we-dropdown-item-height !default;
+$o-we-sidebar-content-field-dropdown-item-spacing: $o-we-dropdown-item-spacing !default;
+$o-we-sidebar-content-field-dropdown-item-bg: $o-we-dropdown-item-bg !default;
+$o-we-sidebar-content-field-dropdown-item-color: $o-we-dropdown-item-color !default;
+$o-we-sidebar-content-field-dropdown-item-active-color: $o-we-dropdown-item-active-color !default;
+
+$o-we-sidebar-content-field-colorpicker-size: 20px !default;
+$o-we-sidebar-content-field-colorpicker-shadow: inset 0 0 0 1px rgba(white, 0.5) !default;
+$o-we-sidebar-content-field-colorpicker-dropdown-bg: $o-we-bg-light !important;
+$o-we-sidebar-content-field-colorpicker-dropdown-color: $o-we-fg-light !important;
+$o-we-sidebar-content-field-colorpicker-dropdown-active-color: $o-we-fg-lighter !important;
+$o-we-sidebar-content-field-colorpicker-cc-width: 208px !important;
+$o-we-sidebar-content-field-colorpicker-cc-height: 26px !important;
+
+$o-we-sidebar-content-field-input-max-width: 60px !default;
+$o-we-sidebar-content-field-input-bg: $o-we-bg-darker !default;
+$o-we-sidebar-content-field-input-font-family: monospace !default;
+$o-we-sidebar-content-field-input-unit-font-size: 9px !default;
+$o-we-sidebar-content-field-input-border-color: $o-we-accent !default;
+
+$o-we-sidebar-content-field-progress-height: 3px !default;
+$o-we-sidebar-content-field-progress-control-height: 7px !default;
+$o-we-sidebar-content-field-progress-color: $o-we-fg-darker !default;
+$o-we-sidebar-content-field-progress-active-color: $o-we-accent !default;
+
+$o-we-sidebar-content-field-toggle-width: 20px !default;
+$o-we-sidebar-content-field-toggle-height: 12px !default;
+$o-we-sidebar-content-field-toggle-bg: $o-we-fg-darker !default;
+$o-we-sidebar-content-field-toggle-active-bg: $o-we-accent !default;
+$o-we-sidebar-content-field-toggle-control-width: 11px !default;
+$o-we-sidebar-content-field-toggle-control-height: $o-we-sidebar-content-field-toggle-height - 2px !default;
+$o-we-sidebar-content-field-toggle-control-bg: $o-we-fg-lighter !default;
+$o-we-sidebar-content-field-toggle-control-shadow: 0 2px 3px 0 $o-we-bg-darkest !default;
+
+//------------------------------------------------------------------------------
+// Preview component Mixins
+//------------------------------------------------------------------------------
 
 @mixin o-we-preview-box($color-text: white) {
     border-top: 1px solid black;
     border-bottom: 1px solid white;
-    background-image: linear-gradient(-150deg, $o-we-color-dark, $o-we-color-darker);
+    background-image: linear-gradient(-150deg, $o-we-bg-light, $o-we-bg-dark);
 
     color:  $color-text;
 }
@@ -76,17 +189,18 @@ $o-we-toolbar-height: 32px;
     box-shadow: 0 0 15px 2px #000;
 }
 
-// ============    Preservation mixins    ===============
-// Used to preserve web_editor and website UI from themes customizations
+//------------------------------------------------------------------------------
+// Mixins to shield UI from themed bootstrap
+//------------------------------------------------------------------------------
 
 @mixin o-w-preserve-base {
     font-size: $o-we-font-size;
     font-family: $o-we-font-family;
     line-height: 1.5;
-    color: $o-we-color-divider;
+    color: #33363e;
 
     .text-muted {
-        color: $o-we-color-text-normal !important;
+        color: #999999 !important;
     }
 }
 
@@ -94,7 +208,7 @@ $o-we-toolbar-height: 32px;
     h1, h2, h3, h4, h5, h6, .h1, .h2, .h3, .h4, .h5, .h6 {
         font-family: $o-we-font-family;
         line-height: 1.5;
-        color: $o-we-color-dark;
+        color: $o-we-bg-light;
         font-weight: bold;
     }
     h1, .h1 {
@@ -141,7 +255,7 @@ $o-we-toolbar-height: 32px;
         padding: 6px 12px;
         font-size: 14px;
         line-height: 1.5;
-        border: 1px solid $o-we-color-text-light;
+        border: 1px solid #d4d5d7;
         color: #555;
         background-color: #fff;
         border-radius: 0;
@@ -172,10 +286,9 @@ $o-we-toolbar-height: 32px;
 }
 
 @mixin o-w-preserve-modals {
-
     .modal-content {
         border-radius: 0;
-        background-color: $o-we-bg-color;
+        background-color: white;
 
         .modal-header {
             border-bottom-color: #e9ecef;
@@ -201,7 +314,7 @@ $o-we-toolbar-height: 32px;
         > li  {
             > a {
                 line-height: 1.5;
-                color: $o-we-color-light;
+                color: #4e525b;
 
                 &:hover {
                     border-color: #dee2e6;
@@ -209,8 +322,8 @@ $o-we-toolbar-height: 32px;
 
                 &.active {
                     &, &:hover, &:focus {
-                        color: $o-we-color-normal;
-                        background-color: $o-we-bg-color;
+                        color: #3D4047;
+                        background-color: white;
                         border-color: #dee2e6 #dee2e6 #FFFFFF;
                     }
                 }
@@ -231,11 +344,11 @@ $o-we-toolbar-height: 32px;
             color: white;
         }
         &.btn-secondary {
-            @include button-variant($o-we-bg-color, $o-we-bg-color);
+            @include button-variant(white, white);
             color: $o-brand-primary;
         }
         &.btn-link {
-            @include button-variant($o-we-bg-color, $o-we-bg-color);
+            @include button-variant(white, white);
             color: $o-brand-primary;
         }
         &.btn-success {
@@ -248,11 +361,11 @@ $o-we-toolbar-height: 32px;
         }
         &.btn-warning {
             @include button-variant($o-we-color-warning, $o-we-color-warning);
-            color: $o-we-color-divider;
+            color: #33363e;
         }
         &.btn-danger {
             @include button-variant($o-we-color-danger, $o-we-color-danger);
-            color: $o-we-color-divider;
+            color: #33363e;
         }
     }
 }
@@ -261,8 +374,8 @@ $o-we-toolbar-height: 32px;
     .card {
         padding: 19px;
         margin-bottom: 20px;
-        background-color: $o-we-bg-color;
-        border: 1px solid darken($o-we-bg-color, 5%);
+        background-color: white;
+        border: 1px solid darken(white, 5%);
         border-radius: 0;
         box-shadow: none;
     }
@@ -285,6 +398,17 @@ $o-we-toolbar-height: 32px;
         }
     }
 }
+
+//------------------------------------------------------------------------------
+// Edited content
+//------------------------------------------------------------------------------
+
+$o-support-13-0-color-system: false !default;
+
+$o-checklist-margin-left: 20px;
+$o-checklist-checkmark-width: 2px;
+$o-checklist-before-size: 13px;
+
 
 // Edition colors
 
@@ -415,10 +539,6 @@ $o-color-combinations-presets: (
     ),
 ) !default;
 $o-color-combinations-preset-number: 1;
-
-// Translations
-$o-we-content-to-translate-color: rgb(255, 255, 90) !default;
-$o-we-translated-content-color: rgb(120, 215, 110) !default;
 
 // We allow snippets to be colored and elements like card and columns to be
 // colored as well. We need components targeted by those colored classes to
