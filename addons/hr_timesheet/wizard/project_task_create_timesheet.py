@@ -28,4 +28,5 @@ class ProjectTaskCreateTimesheet(models.TransientModel):
             'user_id': self.env.uid,
             'unit_amount': self.time_spent,
         }
+        self.task_id.user_timer_id.unlink()
         return self.env['account.analytic.line'].create(values)
