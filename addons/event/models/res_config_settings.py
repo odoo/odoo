@@ -10,3 +10,4 @@ class ResConfigSettings(models.TransientModel):
     module_website_event_questions = fields.Boolean("Registration Survey")
     module_event_barcode = fields.Boolean("Barcode")
     module_website_event_sale = fields.Boolean("Online Ticketing")
+    module_website_event_track_quiz = fields.Boolean("Add quiz on event tracks")

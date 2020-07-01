@@ -12,12 +12,16 @@
     'description': "",
     'depends': [
         'gamification_quiz',
-        'website_event_track_online',
+        'website_event_track_session',
     ],
     'data': [
+        'views/event_track_views.xml',
+        'views/event_track_templates_track.xml',
+        'security/ir.model.access.csv'
     ],
     'demo': [
+        'data/quiz_demo.xml',
     ],
-    'application': True,
-    'installable': True,  # set to False
+    'application': False,
+    'auto_install': True,
 }

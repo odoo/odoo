@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="event_7_track_1_question_0" model="quiz.question">
+        <field name="question">What is a strawberry ?</field>
+        <field name="sequence">1</field>
+        <field name="track_id" ref="website_event_track.event_7_track_1"/>
+    </record>
+    <record id="event_7_track_1_question_0_0" model="quiz.question.answer">
+        <field name="text_value">A fruit</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct ! A strawberry is a fruit because it's the product of a tree.</field>
+        <field name="question_id" ref="event_7_track_1_question_0"/>
+    </record>
+    <record id="event_7_track_1_question_0_1" model="quiz.question.answer">
+        <field name="text_value">A vegetable</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect ! A strawberry is not a vegetable.</field>
+        <field name="question_id" ref="event_7_track_1_question_0"/>
+    </record>
+    <record id="event_7_track_1_question_0_2" model="quiz.question.answer">
+        <field name="text_value">A table</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect ! A table is a piece of furniture.</field>
+        <field name="question_id" ref="event_7_track_1_question_0"/>
+    </record>
+    <record id="event_7_track_1_question_1" model="quiz.question">
+        <field name="question">What is the best tool to dig a hole for your plants ?</field>
+        <field name="sequence">2</field>
+        <field name="track_id" ref="website_event_track.event_7_track_1"/>
+    </record>
+    <record id="event_7_track_1_question_1_0" model="quiz.question.answer">
+        <field name="text_value">A shovel</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct ! A shovel is the perfect tool to dig a hole.</field>
+        <field name="question_id" ref="event_7_track_1_question_1"/>
+    </record>
+    <record id="event_7_track_1_question_1_1" model="quiz.question.answer">
+        <field name="text_value">A spoon</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect ! Good luck digging a hole with a spoon...</field>
+        <field name="question_id" ref="event_7_track_1_question_1"/>
+    </record>
+
+</data></odoo>
