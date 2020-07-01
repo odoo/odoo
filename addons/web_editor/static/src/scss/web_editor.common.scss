@@ -149,8 +149,13 @@ ol > li.o_indent, ul > li.o_indent {
     }
 }
 
-
 // Medias
+img.o_we_custom_image {
+    // Images added with the editor are .img-fluid by default but should
+    // still behave like inline content.
+    display: inline-block;
+}
+
 img.shadow {
     box-shadow: 0px 3px 8px rgba(0, 0, 0, 0.2);
 }
@@ -185,7 +190,8 @@ img.ml-auto, img.mx-auto {
 .fa-10x {
     font-size: 10em;
 }
-.fa.d-block.mx-auto {
+.fa.mx-auto {
+    display: block;
     text-align: center;
 }
 
@@ -235,8 +241,6 @@ div.media_iframe_video {
 html[data-browser^="msie"] div.media_iframe_video iframe {
     margin-left: 0;
 }
-
-
 
 // Fields
 address {
