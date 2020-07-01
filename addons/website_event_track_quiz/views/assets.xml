@@ -1,0 +1,12 @@
+<?xml version="1.0" ?>
+<odoo><data>
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Event Track Quiz Frontend Assets">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_event_track_quiz/static/src/scss/event_quiz.scss" t-ignore="true"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_event_track_quiz/static/src/js/event_quiz.js"/>
+            <script type="text/javascript" src="/website_event_track_quiz/static/src/js/event_quiz_leaderboard.js"/>
+        </xpath>
+    </template>
+</data></odoo>
