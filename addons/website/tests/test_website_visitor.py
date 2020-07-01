@@ -273,6 +273,8 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
     def test_visitor_archive(self):
         """ Test cron archiving inactive visitors and their re-activation when
         authenticating an user. """
+        self.env['ir.config_parameter'].sudo().set_param('website.visitor.live.days', 7)
+
         partner_demo = self.partner_demo
         old_visitor = self.env['website.visitor'].create({
             'lang_id': self.env.ref('base.lang_en').id,

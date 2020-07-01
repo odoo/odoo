@@ -241,8 +241,9 @@ class WebsiteVisitor(models.Model):
         return self.sudo().create(vals)
 
     def _cron_archive_visitors(self):
-        one_week_ago = datetime.now() - timedelta(days=7)
-        visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', one_week_ago)])
+        delay_days = int(self.env['ir.config_parameter'].sudo().get_param('website.visitor.live.days', 30))
+        deadline = datetime.now() - timedelta(days=delay_days)
+        visitors_to_archive = self.env['website.visitor'].sudo().search([('last_connection_datetime', '<', deadline)])
         visitors_to_archive.write({'active': False})
 
     def _update_visitor_last_visit(self):
