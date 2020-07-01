@@ -917,9 +917,7 @@ var SnippetsMenu = Widget.extend({
             $('<div/>', {
                 text: _t('Invisible Elements'),
                 class: 'o_panel_header',
-            }).prepend(
-                $('<i/>', {class: 'fa fa-eye-slash'})
-            )[0]
+            })[0]
         );
 
         this._addTabLoading(this.tabs.BLOCKS);

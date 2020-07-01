@@ -34,9 +34,7 @@ const SNIPPETS_TEMPLATE = `
     <h2 id="snippets_menu">Add blocks</h2>
     <div id="o_scroll">
         <div id="snippet_structure" class="o_panel">
-            <div class="o_panel_header">
-                <i class="fa fa-th-large"/> First Panel
-            </div>
+            <div class="o_panel_header">First Panel</div>
             <div class="o_panel_body">
                 <div name="Separator" data-oe-type="snippet" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png">
                     <div class="s_hr pt32 pb32">
