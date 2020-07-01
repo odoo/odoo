@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_track_aside_inherit" inherit_id="website_event_track_session.event_track_aside">
+    <xpath expr="//ul[hasclass('o_wesession_track_aside_nav')]" position="inside">
+        <li class="nav-item flex-grow-1">
+            <a href="#quiz_list" aria-controls="quiz_list" class="nav-link" role="tab" data-toggle="tab">
+                Quiz
+            </a>
+        </li>
+    </xpath>
+    <xpath expr="//div[hasclass('o_wesession_track_aside_tabs')]" position="inside">
+        <div class="tab-pane fade active" id="quiz_list" role="tabpanel">
+            <ul class="col-12 list-unstyled mt-3">
+                <li t-foreach="tracks_other" t-as="track_other"
+                    class="mt-2">
+                    <div t-if="track_other.quiz_id">
+                        <a t-attf-href="#{'%s?quiz=True' % (track_other.website_url)}"
+                            class="w-100"
+                            t-esc="track_other.name"/>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </xpath>
+</template>
+
+<template id="event_track_content_inherit" inherit_id="website_event_track_session.event_track_content">
+    <xpath expr="//div[hasclass('o_wesession_track_main_description')]" position="before">
+        <div t-if="track.quiz_id and show_quiz" class="o_quiz_js_quiz_container o_quiz_main px-2 pb-4 mb-2 col-12 bg-white" t-att-data-object-id="track.id">
+            <t t-call="website_event_track_quiz.quiz_content">
+                <t t-set="track" t-value="track"/>
+                <t t-set="quiz_completed" t-value="visitor.quiz_completed"/>
+                <t t-set="quiz_points" t-value="visitor.quiz_points"/>
+            </t>
+        </div>
+        <div t-if="track.quiz_id and not show_quiz" class="d-flex justify-content-end px-2 pb-2 mt-2 mb-2 mr-3">
+            <a class="btn btn-primary" t-attf-href="#{'%s?quiz=True' % (track.website_url)}">Take the Quiz</a>
+        </div>
+    </xpath>
+</template>
+
+</odoo>

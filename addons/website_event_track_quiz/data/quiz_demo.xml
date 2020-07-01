@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo><data>
+
+    <record id="event_7_track_1_quiz" model="event.quiz">
+        <field name="name">What This Event Is All About</field>
+    </record>
+
+    <record id="event_7_track_1_question_0" model="event.quiz.question">
+        <field name="name">What does a home absolutely need ?</field>
+        <field name="sequence">1</field>
+        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_1_quiz"/>
+    </record>
+    <record id="event_7_track_1_question_0_0" model="event.quiz.question.answer">
+        <field name="text_value">Resources</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct ! It needs water, electricity and more !</field>
+        <field name="question_id" ref="event_7_track_1_question_0"/>
+    </record>
+    <record id="event_7_track_1_question_0_1" model="event.quiz.question.answer">
+        <field name="text_value">A dog</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect ! Even if we all know that dogs are awesome, a home needs resources.</field>
+        <field name="question_id" ref="event_7_track_1_question_0"/>
+    </record>
+    <record id="event_7_track_1_question_0_2" model="event.quiz.question.answer">
+        <field name="text_value">A garage</field>
+        <field name="sequence">3</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect ! A garage is just a nice to have. A home needs resources</field>
+        <field name="question_id" ref="event_7_track_1_question_0"/>
+    </record>
+    <record id="event_7_track_1_question_1" model="event.quiz.question">
+        <field name="name">Can the earth sustain our current way of living ?</field>
+        <field name="sequence">2</field>
+        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_1_quiz"/>
+    </record>
+    <record id="event_7_track_1_question_1_0" model="event.quiz.question.answer">
+        <field name="text_value">No !</field>
+        <field name="sequence">1</field>
+        <field name="is_correct" eval="True"/>
+        <field name="comment">Correct ! To prevent global warming, we need to produce cleaner energy which will drastically reduce our carbon emissions !</field>
+        <field name="question_id" ref="event_7_track_1_question_1"/>
+    </record>
+    <record id="event_7_track_1_question_1_1" model="event.quiz.question.answer">
+        <field name="text_value">Yes !</field>
+        <field name="sequence">2</field>
+        <field name="is_correct" eval="False"/>
+        <field name="comment">Incorrect ! Carbon emissions cause global warming, which is the biggest threat we have ever faced !</field>
+        <field name="question_id" ref="event_7_track_1_question_1"/>
+    </record>
+
+    <record id="website_event_track.event_7_track_1" model="event.track">
+        <field name="quiz_id" ref="website_event_track_quiz.event_7_track_1_quiz"/>
+    </record>
+
+</data></odoo>
