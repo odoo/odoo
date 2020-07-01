@@ -269,8 +269,7 @@ var BoardRenderer = FormRenderer.extend({
 
                     if (['pivot', 'dashboard', 'graph', 'cohort'].includes(viewType)) {
                         if (context.time_ranges) {
-                            const { field: fieldName, range, comparisonRange } = context.time_ranges;
-                            searchQuery.timeRanges = { fieldName, range, comparisonRange };
+                            searchQuery.timeRanges = context.time_ranges;
                         } else {
                             searchQuery.timeRanges = {};
                         }
