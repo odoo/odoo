@@ -5,18 +5,6 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 // external assets bundle can influence it without duplicating the css.
 :root {
     @include print-variable('o-we-toolbar-height', $o-we-toolbar-height);
-
-    @include print-variable('o-we-bg-color', $o-we-bg-color);
-    @include print-variable('o-we-bg-color-dark', $o-we-bg-color-dark);
-    @include print-variable('o-we-color', $o-we-color);
-    @include print-variable('o-we-color-accent', $o-we-color);
-
-    @include print-variable('o-we-dropdown-bg-color', $o-we-dropdown-bg-color);
-    @include print-variable('o-we-dropdown-color', $o-we-dropdown-color);
-
-    @include print-variable('o-we-snippets-bg-color', $o-we-bg-color);
-    @include print-variable('o-we-snippets-bg-info', $o-we-color-info);
-    @include print-variable('o-we-snippets-color', $o-we-color);
 }
 
 // EDITOR TOP BAR AND POPOVER
@@ -24,6 +12,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     max-width: 350px;
     left: 50% !important;
     transform: translate(-50%, 0);
+
     .popover-body {
         white-space: normal;
     }
@@ -31,6 +20,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 
 .editor_enable {
     padding-top: var(--o-we-toolbar-height) !important;
+
     .note-popover .popover .popover-body {
         height: var(--o-we-toolbar-height);
     }
@@ -44,7 +34,8 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     position: fixed;
     z-index: $o-we-zindex;
     height: var(--o-we-toolbar-height);
-    background-color: var(--o-we-bg-color);
+    background-color: $o-we-bg;
+    transition: transform 400ms ease 0s; // For fullscreen
 
     .note-popover .popover {
         top: 0 !important;
@@ -69,7 +60,8 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 .panel-heading.note-toolbar {
     padding-bottom: 0;
     border-bottom: $o-we-border-width solid $o-we-border-color;
-    background-color: var(--o-we-bg-color);
+    background-color: $o-we-bg;
+    color: $o-we-color;
     font-family: $o-we-font-family;
 
     // Main layout of buttons
@@ -89,20 +81,13 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     // Active buttons and opened dropdowns
     .btn {
         padding: 0.5em 0.75em !important;
-        border-left: 1px solid transparent;
-        border-right: 1px solid transparent;
-        color: var(--o-we-color);
+        border-left: $o-we-item-border-width solid $o-we-item-border-color;
+        border-right: $o-we-item-border-width solid $o-we-item-border-color;
+        background: $o-we-sidebar-content-field-clickable-bg;
+        color: inherit;
         font-size: $o-we-font-size !important;
 
-        &.active {
-            background-color: var(--o-we-bg-color-dark);
-            color: var(--o-we-color-accent);
-        }
-
-        &:hover {
-            color: var(--o-we-color-accent);
-        }
-
+        &.active,
         &:focus, &:active, &:focus:active {
             @extend %we-active-button;
         }
@@ -115,24 +100,20 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             content: '';
             @include o-position-absolute(100%, $o-we-border-width, auto, $o-we-border-width);
             height: $o-we-border-width;
-            background-color: var(--o-we-dropdown-bg-color);
         }
     }
     %we-active-button {
-        border-left-color: $o-we-border-color;
-        border-right-color: $o-we-border-color;
-        background: var(--o-we-dropdown-bg-color);
+        background: $o-we-sidebar-content-field-pressed-bg;
+        color: $o-we-sidebar-content-field-pressed-color;
         box-shadow: none !important;
         outline: none !important;
     }
     .dropdown-menu {
-        margin-top: 0;
-        border: $o-we-border-width solid $o-we-border-color;
-        border-top-color: transparent;
-        border-radius: 0;
-        background-color: var(--o-we-dropdown-bg-color);
-        color: var(--o-we-dropdown-color);
-        box-shadow: none;
+        margin-top: $o-we-dropdown-spacing;
+        padding: 0;
+        border: $o-we-dropdown-border-width solid $o-we-dropdown-border-color;
+        background-color: $o-we-dropdown-bg;
+        box-shadow: $o-we-dropdown-shadow;
     }
     .dropdown-menu.show { // To overcome .note-XXX .dropdown-menu rules
         min-width: 0;
@@ -141,14 +122,47 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         display: block;
         max-width: none;
         overflow: visible;
-        color: var(--o-we-color);
+        margin-top: 0;
+        padding: 0 1em;
+        border: none;
+        background: none;
+        background-clip: padding-box;
+        background-color: $o-we-dropdown-item-bg;
+        color: $o-we-dropdown-item-color;
+        line-height: $o-we-dropdown-item-height;
 
-        &:hover {
-            background-color: var(--o-we-bg-color) !important;
-            color: var(--o-we-color-accent) !important;
+        &:not(.d-none) ~ .dropdown-item {
+            // Use a border-top instead of a margin-top as when the
+            // mouse goes from one select button to another, the
+            // option preview should switch from the first button's
+            // option to the second one without reset to selected
+            // state in between.
+            border-top: $o-we-dropdown-item-spacing solid transparent;
+        }
 
+        &.active {
+            color: $o-we-dropdown-item-active-color;
+        }
+    }
+    li > .dropdown-item {
+        border-top: $o-we-dropdown-item-spacing solid transparent;
+    }
+
+    .note-style {
+        .dropdown-item {
             > * {
-                color: inherit !important;
+                display: inline;;
+            }
+            &, > * {
+                line-height: 2;
+            }
+            &[data-value="blockquote"] {
+                padding-top: 0.5em;
+                padding-bottom: 0.5em;
+
+                > * {
+                    display: block;
+                }
             }
         }
     }
@@ -159,7 +173,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
         max-width: 150px;
     }
     .note-color-palette div .note-color-btn {
-        border-color: var(--o-we-dropdown-bg-color);
+        border-color: $o-we-dropdown-bg;
     }
     .note-custom-color-palette .note-color-row {
         height: auto!important;
@@ -169,7 +183,7 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
             width: 20px;
             padding: 0;
             margin: 0;
-            border: 1px solid var(--o-we-dropdown-bg-color);
+            border: 1px solid $o-we-dropdown-bg;
         }
     }
 }
@@ -457,13 +471,9 @@ img::selection {
         button:not(.btn), label {
             margin: 0;
             border: none;
-            border-right: 1px solid var(--o-we-bg-color-dark);
-            background-color: var(--o-we-bg-color);
-            color: var(--o-we-color);
-
-            &:hover {
-                background-color: var(--o-we-bg-color-dark);
-            }
+            border-right: 1px solid $o-we-bg;
+            background-color: $o-we-bg;
+            color: $o-we-color;
 
             &:first-child {
                 border-top-left-radius: 0.25rem;

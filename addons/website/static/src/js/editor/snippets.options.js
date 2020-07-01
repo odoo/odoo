@@ -33,7 +33,8 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         linkButton.classList.add('o_we_redirect_to', 'fa', 'fa-fw', 'fa-external-link');
         linkButton.title = _t("Redirect to URL in a new tab");
         this.containerEl.appendChild(linkButton);
-        $(this.inputEl).addClass('text-left');
+        this.el.classList.add('o_we_large_input');
+        this.inputEl.classList.add('text-left');
         wUtils.autocompleteWithPages(this, $(this.inputEl));
     },
 
@@ -590,6 +591,33 @@ options.registry.background.include({
     },
 });
 
+options.registry.SwitchTheme = options.Class.extend({
+    isTopOption: true,
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    switchTheme: async function (previewMode, widgetValue, params) {
+        const save = await new Promise(resolve => {
+            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
+                confirm_callback: () => resolve(true),
+                cancel_callback: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
+        }
+        this.trigger_up('request_save', {
+            reload: false,
+            onSuccess: () => window.location.href = '/web#action=website.theme_install_kanban_action',
+        });
+    },
+});
+
 options.registry.Theme = options.Class.extend({
     events: {
         'click .o_color_combinations_edition we-toggler': '_onCCTogglerClick',
@@ -723,24 +751,6 @@ options.registry.Theme = options.Class.extend({
             });
             dialog.on('closed', this, resolve);
             dialog.open();
-        });
-    },
-    /**
-     * @see this.selectClass for parameters
-     */
-    switchTheme: async function (previewMode, widgetValue, params) {
-        const save = await new Promise(resolve => {
-            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
-                confirm_callback: () => resolve(true),
-                cancel_callback: () => resolve(false),
-            });
-        });
-        if (!save) {
-            return;
-        }
-        this.trigger_up('request_save', {
-            reload: false,
-            onSuccess: () => window.location.href = '/web#action=website.theme_install_kanban_action',
         });
     },
 
