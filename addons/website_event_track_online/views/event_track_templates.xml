@@ -1,6 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<!-- Set original template for tracks / track as tracking visitors -->
+<record model="ir.ui.view" id="website_event_track.tracks">
+    <field name="track" eval="True"/>
+</record>
+<record model="ir.ui.view" id="website_event_track.track_view">
+    <field name="track" eval="True"/>
+</record>
+
+<!-- Add wishlist button on tracks / track templates -->
 <template id="tracks_wishlist"
     name="Wishlist on Tracks"
     inherit_id="website_event_track.tracks"
