@@ -40,31 +40,58 @@ class OdooBaseChecker(checkers.BaseChecker):
             isinstance(node, astroid.Attribute) and node.attrname or '')
         return func_name
 
+    def _is_injection_node(self, node):
+        if isinstance(node, astroid.Attribute) and not node.attrname.startswith('_'):
+            #   execute("..." % record.field)
+            # or
+            #   execute("..." % self.table)
+            # Ignoring for this case: execute("..." % record._field)
+            # Ignoring for this case: execute("..." % self._table)
+            return True
+        if isinstance(node, astroid.Call) and not self._get_func_name(node.func).startswith('_'):
+            #   execute("..." % get_params())
+            # Ignoring for this case: execute("..." % _get_params())
+            return True
+        if isinstance(node, astroid.Name):
+            # def method(param):
+            #   execute("..." % param)
+            # or
+            # def method():
+            #   variable = '...'
+            #   execute("..." % variable)
+            return True
+        if isinstance(node, astroid.Call) and not self._get_func_name(node.func).startswith('_'):
+            # execute("..." % foo(...))
+            # Ignoring for this case: execute("..." % _foo(...))
+            return True
+
     def _check_concatenation(self, node):
         is_bin_op = False
         if isinstance(node, astroid.BinOp) and node.op in ('%', '+'):
-            # execute("..." % self._table)
-            if (isinstance(node.right, astroid.Attribute) and
-                    not node.right.attrname.startswith('_')):
+            # execute("..." % params)
+            # execute("..." + params)
+            if self._is_injection_node(node.right):
                 is_bin_op = True
-            if isinstance(node.right, astroid.Tuple):
+            # execute("..." % (param1, param2))
+            # execute("..." + (param1, param2))
+            # execute("..." % [param1, param2])
+            # execute("..." + [param1, param2])
+            elif isinstance(node.right, (astroid.Tuple, astroid.List)):
                 for elt in node.right.elts:
-                    if (isinstance(elt, astroid.Call) and
-                            # Ignoring for this case: execute("..." % _foo(...))
-                            not self._get_func_name(elt.func).startswith('_')):
+                    if self._is_injection_node(elt):
                         is_bin_op = True
+                        break
 
         is_format = False
         # execute("...".format(self._table, table=self._table))
         if (isinstance(node, astroid.Call) and
                 self._get_func_name(node.func) == 'format'):
             for keyword in node.keywords or []:
-                if (isinstance(keyword.value, astroid.Attribute) and
-                        not keyword.value.attrname.startswith('_')):
+                if self._is_injection_node(keyword.value):
                     is_format = True
                     break
             for argument in node.args or []:
-                if (isinstance(argument, astroid.Name) and not argument.name.startswith('_')):
+                if self._is_injection_node(argument):
                     is_format = True
                     break
 
