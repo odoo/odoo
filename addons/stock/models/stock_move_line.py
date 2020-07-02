@@ -112,7 +112,8 @@ class StockMoveLine(models.Model):
             if not self.id and self.user_has_groups('stock.group_stock_multi_locations'):
                 self.location_dest_id = self.location_dest_id._get_putaway_strategy(self.product_id) or self.location_dest_id
             if self.picking_id:
-                self.description_picking = self.product_id._get_description(self.picking_id.picking_type_id)
+                product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
+                self.description_picking = product._get_description(self.picking_id.picking_type_id)
             self.lots_visible = self.product_id.tracking != 'none'
             if not self.product_uom_id or self.product_uom_id.category_id != self.product_id.uom_id.category_id:
                 if self.move_id.product_uom:
