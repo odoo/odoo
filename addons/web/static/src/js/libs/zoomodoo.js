@@ -166,6 +166,11 @@ ZoomOdoo.prototype.show = function (e, testMouseOver) {
         }
 
         this.$flyout.css('transform', 'translate3d(' + left + 'px, ' + top + 'px, 0px)');
+    } else {
+        // Computing flyout max-width depending to the available space on the right to avoid overflow-x issues
+        // e.g. width too high so a right zoomed element is not visible (need to scroll on x axis)
+        var rightAvailableSpace = document.body.clientWidth - this.$flyout[0].getBoundingClientRect().left;
+        this.$flyout.css('max-width', rightAvailableSpace);
     }
 
     w1 = this.$target[0].offsetWidth;
