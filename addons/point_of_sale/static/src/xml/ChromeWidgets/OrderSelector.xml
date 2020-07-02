@@ -3,7 +3,7 @@
 
     <t t-name="OrderSelector" owl="1">
         <div class="order-selector">
-            <span class="orders touch-scrollable">
+            <span class="orders">
                 <t t-foreach="orderList" t-as="order" t-key="order.cid">
                     <t t-if="order === env.pos.get_order()">
                         <span class="order-button select-order selected">
