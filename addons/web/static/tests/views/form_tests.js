@@ -990,6 +990,216 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('input ids for multiple occurrences of fields in form view', async function (assert) {
+        // A same field can occur several times in the view, but its id must be
+        // unique by occurrence, otherwise there is a warning in the console (in
+        // edit mode) as we get several inputs with the same "id" attribute, and
+        // several labels the same "for" attribute.
+        assert.expect(2);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="foo"/>
+                        <label for="qux"/>
+                        <div><field name="qux"/></div>
+                    </group>
+                    <group>
+                        <field name="foo"/>
+                        <label for="qux2"/>
+                        <div><field name="qux" id="qux2"/></div>
+                    </group>
+                </form>`,
+        });
+
+        const fieldIdAttrs = [...form.$('.o_field_widget')].map(n => n.getAttribute('id'));
+        const labelForAttrs = [...form.$('.o_form_label')].map(n => n.getAttribute('for'));
+
+        assert.strictEqual([...new Set(fieldIdAttrs)].length, 4,
+            "should have generated a unique id for each field occurrence");
+        assert.deepEqual(fieldIdAttrs, labelForAttrs,
+            "the for attribute of labels must coincide with field ids");
+
+        form.destroy();
+    });
+
+    QUnit.test('input ids for multiple occurrences of fields in sub form view (inline)', async function (assert) {
+        // A same field can occur several times in the view, but its id must be
+        // unique by occurrence, otherwise there is a warning in the console (in
+        // edit mode) as we get several inputs with the same "id" attribute, and
+        // several labels the same "for" attribute.
+        assert.expect(3);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="p">
+                        <tree><field name="foo"/></tree>
+                        <form>
+                            <group>
+                                <field name="foo"/>
+                                <label for="qux"/>
+                                <div><field name="qux"/></div>
+                            </group>
+                            <group>
+                                <field name="foo"/>
+                                <label for="qux2"/>
+                                <div><field name="qux" id="qux2"/></div>
+                            </group>
+                        </form>
+                    </field>
+                </form>`,
+        });
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+
+        assert.containsOnce(document.body, '.modal .o_form_view');
+
+        const fieldIdAttrs = [...$('.modal .o_form_view .o_field_widget')].map(n => n.getAttribute('id'));
+        const labelForAttrs = [...$('.modal .o_form_view .o_form_label')].map(n => n.getAttribute('for'));
+
+        assert.strictEqual([...new Set(fieldIdAttrs)].length, 4,
+            "should have generated a unique id for each field occurrence");
+        assert.deepEqual(fieldIdAttrs, labelForAttrs,
+            "the for attribute of labels must coincide with field ids");
+
+        form.destroy();
+    });
+
+    QUnit.test('input ids for multiple occurrences of fields in sub form view (not inline)', async function (assert) {
+        // A same field can occur several times in the view, but its id must be
+        // unique by occurrence, otherwise there is a warning in the console (in
+        // edit mode) as we get several inputs with the same "id" attribute, and
+        // several labels the same "for" attribute.
+        assert.expect(3);
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="p"/></form>',
+            archs: {
+                'partner,false,list': '<tree><field name="foo"/></tree>',
+                'partner,false,form': `
+                    <form>
+                        <group>
+                            <field name="foo"/>
+                            <label for="qux"/>
+                            <div><field name="qux"/></div>
+                        </group>
+                        <group>
+                            <field name="foo"/>
+                            <label for="qux2"/>
+                            <div><field name="qux" id="qux2"/></div>
+                        </group>
+                    </form>`
+            },
+        });
+
+        await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
+
+        assert.containsOnce(document.body, '.modal .o_form_view');
+
+        const fieldIdAttrs = [...$('.modal .o_form_view .o_field_widget')].map(n => n.getAttribute('id'));
+        const labelForAttrs = [...$('.modal .o_form_view .o_form_label')].map(n => n.getAttribute('for'));
+
+        assert.strictEqual([...new Set(fieldIdAttrs)].length, 4,
+            "should have generated a unique id for each field occurrence");
+        assert.deepEqual(fieldIdAttrs, labelForAttrs,
+            "the for attribute of labels must coincide with field ids");
+
+        form.destroy();
+    });
+
+    QUnit.test('two occurrences of invalid field in form view', async function (assert) {
+        assert.expect(2);
+
+        this.data.partner.fields.trululu.required = true;
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="trululu"/>
+                        <field name="trululu"/>
+                    </group>
+                </form>`,
+        });
+
+        await testUtils.form.clickSave(form);
+
+        assert.containsN(form, '.o_form_label.o_field_invalid', 2);
+        assert.containsN(form, '.o_field_many2one.o_field_invalid', 2);
+
+        form.destroy();
+    });
+
+    QUnit.test('tooltips on multiple occurrences of fields and labels', async function (assert) {
+        assert.expect(4);
+
+        const initialDebugMode = odoo.debug;
+        odoo.debug = false;
+
+        this.data.partner.fields.foo.help = 'foo tooltip';
+        this.data.partner.fields.bar.help = 'bar tooltip';
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <group>
+                        <field name="foo"/>
+                        <label for="bar"/>
+                        <div><field name="bar"/></div>
+                    </group>
+                    <group>
+                        <field name="foo"/>
+                        <label for="bar2"/>
+                        <div><field name="bar" id="bar2"/></div>
+                    </group>
+                </form>`,
+        });
+
+        const $fooLabel1 = form.$('.o_form_label:nth(0)');
+        $fooLabel1.tooltip('show', false);
+        $fooLabel1.trigger($.Event('mouseenter'));
+        assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(), "foo tooltip");
+        $fooLabel1.trigger($.Event('mouseleave'));
+
+        const $fooLabel2 = form.$('.o_form_label:nth(2)');
+        $fooLabel2.tooltip('show', false);
+        $fooLabel2.trigger($.Event('mouseenter'));
+        assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(), "foo tooltip");
+        $fooLabel2.trigger($.Event('mouseleave'));
+
+        const $barLabel1 = form.$('.o_form_label:nth(1)');
+        $barLabel1.tooltip('show', false);
+        $barLabel1.trigger($.Event('mouseenter'));
+        assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(), "bar tooltip");
+        $barLabel1.trigger($.Event('mouseleave'));
+
+        const $barLabel2 = form.$('.o_form_label:nth(3)');
+        $barLabel2.tooltip('show', false);
+        $barLabel2.trigger($.Event('mouseenter'));
+        assert.strictEqual($('.tooltip .oe_tooltip_help').text().trim(), "bar tooltip");
+        $barLabel2.trigger($.Event('mouseleave'));
+
+        odoo.debug = initialDebugMode;
+        form.destroy();
+    });
+
     QUnit.test('readonly attrs on fields are re-evaluated on field change', async function (assert) {
         assert.expect(4);
 
