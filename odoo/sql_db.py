@@ -257,6 +257,7 @@ class Cursor(BaseCursor):
         self._default_log_exceptions = True
 
         self.cache = {}
+        self._now = None
 
     def __build_dict(self, row):
         return {d.name: row[i] for i, d in enumerate(self._obj.description)}
@@ -444,6 +445,7 @@ class Cursor(BaseCursor):
         flush_env(self)
         self.precommit.run()
         result = self._cnx.commit()
+        self._now = None
         self.prerollback.clear()
         self.postrollback.clear()
         self.postcommit.run()
@@ -457,6 +459,7 @@ class Cursor(BaseCursor):
         self.postcommit.clear()
         self.prerollback.run()
         result = self._cnx.rollback()
+        self._now = None
         self.postrollback.run()
         return result
 
@@ -467,6 +470,13 @@ class Cursor(BaseCursor):
     @property
     def closed(self):
         return self._closed
+
+    def now(self):
+        """ Return the transaction's timestamp ``NOW() AT TIME ZONE 'UTC'``. """
+        if self._now is None:
+            self.execute("SELECT (now() AT TIME ZONE 'UTC')")
+            self._now = self.fetchone()[0]
+        return self._now
 
 
 class TestCursor(BaseCursor):
