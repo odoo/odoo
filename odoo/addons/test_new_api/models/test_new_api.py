@@ -379,9 +379,10 @@ class Related(models.Model):
     message_name = fields.Text(related="message.body", related_sudo=False, string='Message Body')
     message_currency = fields.Many2one(related="message.author", string='Message Author')
 
-class ComputeProtected(models.Model):
-    _name = 'test_new_api.compute.protected'
-    _description = 'Test New API Compute Protected'
+
+class ComputeReadonly(models.Model):
+    _name = 'test_new_api.compute.readonly'
+    _description = 'Model with a computed readonly field'
 
     foo = fields.Char(default='')
     bar = fields.Char(compute='_compute_bar', store=True)
@@ -391,9 +392,10 @@ class ComputeProtected(models.Model):
         for record in self:
             record.bar = record.foo
 
+
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
-    _description = 'Test New API Compute Inversse'
+    _description = 'Model with a computed inversed field'
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
@@ -518,6 +520,19 @@ class ComputeCascade(models.Model):
     def _compute_baz(self):
         for record in self:
             record.baz = "<%s>" % (record.bar or "")
+
+
+class ComputeReadWrite(models.Model):
+    _name = 'test_new_api.compute.readwrite'
+    _description = 'Model with a computed non-readonly field'
+
+    foo = fields.Char()
+    bar = fields.Char(compute='_compute_bar', store=True, readonly=False)
+
+    @api.depends('foo')
+    def _compute_bar(self):
+        for record in self:
+            record.bar = record.foo
 
 
 class ComputeOnchange(models.Model):

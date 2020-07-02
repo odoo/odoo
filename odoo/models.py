@@ -3633,7 +3633,7 @@ Record ids: %(records)s
         # determine SQL values
         columns = []                    # list of (column_name, format, value)
 
-        for name, val in vals.items():
+        for name, val in sorted(vals.items()):
             if self._log_access and name in LOG_ACCESS_COLUMNS and not val:
                 continue
             field = self._fields[name]
