@@ -6,6 +6,7 @@ from odoo.tests.common import SavepointCase, HttpCase, tagged, Form
 
 import time
 import logging
+import datetime
 
 from contextlib import contextmanager
 from unittest.mock import patch
@@ -993,14 +994,22 @@ class AccountTestInvoicingCommon(SavepointCase):
         '''
 
         if isinstance(forced_today, str):
-            forced_today = fields.Date.from_string(forced_today)
+            forced_today_date = fields.Date.from_string(forced_today)
+            forced_today_datetime = fields.Datetime.from_string(forced_today)
+        elif isinstance(forced_today, datetime.datetime):
+            forced_today_datetime = forced_today
+            forced_today_date = forced_today_datetime.date()
+        else:
+            forced_today_date = forced_today
+            forced_today_datetime = datetime.datetime.combine(forced_today_date, datetime.time())
 
         def today(*args, **kwargs):
-            return forced_today
+            return forced_today_date
 
         with patch.object(fields.Date, 'today', today):
             with patch.object(fields.Date, 'context_today', today):
-                yield
+                with patch.object(fields.Datetime, 'now', return_value=forced_today_datetime):
+                    yield
 
     @classmethod
     def init_invoice(cls, move_type, partner=None, invoice_date=None):
