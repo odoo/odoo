@@ -1,11 +1,13 @@
-odoo.define('pos_restaurant.chrome', function(require) {
+odoo.define('pos_restaurant.chrome', function (require) {
     'use strict';
 
     const Chrome = require('point_of_sale.Chrome');
-    const { onWillUnmount } = owl.hooks;
     const Registries = require('point_of_sale.Registries');
 
-    const PosResChrome = Chrome =>
+    const NON_IDLE_EVENTS = 'mousemove mousedown touchstart touchend touchmove click scroll keypress'.split(/\s+/);
+    let IDLE_TIMER_SETTER;
+
+    const PosResChrome = (Chrome) =>
         class extends Chrome {
             /**
              * @override
@@ -49,13 +51,9 @@ odoo.define('pos_restaurant.chrome', function(require) {
                 }
             }
             _setActivityListeners() {
-                const events = 'mousemove mousedown touchstart click scroll keypress'.split(' ');
-                const boundHandler = this._setIdleTimer.bind(this);
-                for (let eventName of events) {
-                    this.el.addEventListener(eventName, boundHandler);
-                    onWillUnmount(() => {
-                        this.el.removeEventListener(eventName, boundHandler);
-                    });
+                IDLE_TIMER_SETTER = this._setIdleTimer.bind(this);
+                for (const event of NON_IDLE_EVENTS) {
+                    window.addEventListener(event, IDLE_TIMER_SETTER);
                 }
             }
             _setIdleTimer() {
@@ -67,18 +65,30 @@ odoo.define('pos_restaurant.chrome', function(require) {
                 }
             }
             _actionAfterIdle() {
+                if (this.tempScreen.isShown) {
+                    this.trigger('close-temp-screen');
+                }
                 this.showScreen('FloorScreen', { floor: this.env.pos.table.floor });
             }
             _shouldResetIdleTimer() {
-                return (
-                    this.env.pos.config.iface_floorplan &&
-                    this.mainScreen.name !== 'FloorScreen' &&
-                    !this.tempScreen.isShown
-                );
+                return this.env.pos.config.iface_floorplan && this.mainScreen.name !== 'FloorScreen';
             }
             __showScreen() {
                 super.__showScreen(...arguments);
                 this._setIdleTimer();
+            }
+            /**
+             * @override
+             * Before closing pos, we remove the event listeners set on window
+             * for detecting activities outside FloorScreen.
+             */
+            async _closePos() {
+                if (IDLE_TIMER_SETTER) {
+                    for (const event of NON_IDLE_EVENTS) {
+                        window.removeEventListener(event, IDLE_TIMER_SETTER);
+                    }
+                }
+                await super._closePos();
             }
         };
 
