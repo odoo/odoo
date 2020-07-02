@@ -2,6 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.exceptions import ValidationError
 from odoo import models, fields, api, _
+from odoo.osv import expression
 
 
 class AccountMove(models.Model):
@@ -46,7 +47,7 @@ class AccountMove(models.Model):
                         'base.cl') or self.partner_id.l10n_cl_sii_taxpayer_type == '4':
                     partner_domain += [('code', 'in', [])]
                 document_type_ids = self.env['l10n_latam.document.type'].search(partner_domain).ids
-            domain = [('id', 'in', document_type_ids)]
+            domain = expression.AND([domain, [('id', 'in', document_type_ids)]])
         return domain
 
     def _check_document_types_post(self):
