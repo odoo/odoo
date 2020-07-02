@@ -2130,7 +2130,7 @@ class TestViews(ViewCase):
         )
         self.assertInvalid(
             '<form><label for="model"/></form>',
-            "Name 'model' used in 'label for' must be present in view but is missing.",
+            "Name or id 'model' used in 'label for' must be present in view but is missing.",
         )
 
     def test_col_colspan_numerical(self):

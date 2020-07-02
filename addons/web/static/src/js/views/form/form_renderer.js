@@ -11,6 +11,9 @@ var viewUtils = require('web.viewUtils');
 var _t = core._t;
 var qweb = core.qweb;
 
+// symbol used as key to set the <field> node id on its widget
+const symbol = Symbol('form');
+
 var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
     className: "o_form_view",
     events: _.extend({}, BasicRenderer.prototype.events, {
@@ -28,9 +31,12 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
 
     /**
      * @override
+     * @param {Object} params.fieldIdsToNames maps <field> node ids to field names
+     *   (useful when there are several occurrences of the same field in the arch)
      */
-    init: function () {
+    init: function (parent, state, params) {
         this._super.apply(this, arguments);
+        this.fieldIdsToNames = params.fieldIdsToNames;
         this.idsForLabels = {};
         this.lastActivatedFieldIndex = -1;
         this.alertFields = {};
@@ -113,20 +119,21 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
      * @returns {string[]}
      */
     canBeSaved: function () {
-        var self = this;
         var fieldNames = this._super.apply(this, arguments);
 
         var $labels = this.$('label');
         $labels.removeClass('o_field_invalid');
 
-        _.each(fieldNames, function (fieldName) {
-            var idForLabel = self.idsForLabels[fieldName];
+        const allWidgets = this.allFieldWidgets[this.state.id] || [];
+        const widgets = allWidgets.filter(w => fieldNames.includes(w.name));
+        for (const widget of widgets) {
+            const idForLabel = this.idsForLabels[widget[symbol]];
             if (idForLabel) {
                 $labels
                     .filter('[for=' + idForLabel + ']')
                     .addClass('o_field_invalid');
             }
-        });
+        }
         return fieldNames;
     },
     /*
@@ -171,7 +178,7 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         var self = this;
         return this._super.apply(this, arguments).then(function (resetWidgets) {
             _.each(resetWidgets, function (widget) {
-                self._setIDForLabel(widget, self.idsForLabels[widget.name]);
+                self._setIDForLabel(widget, self.idsForLabels[widget[symbol]]);
             });
             if (self.$('.o_field_invalid').length) {
                 self.canBeSaved(self.state.id);
@@ -372,16 +379,14 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
     },
     /**
      * @private
-     * @param {string} name
+     * @param {string} uid a <field> node id
      * @returns {string}
      */
-    _getIDForLabel: function (name) {
-        var idForLabel = this.idsForLabels[name];
-        if (!idForLabel) {
-            idForLabel = _.uniqueId('o_field_input_');
-            this.idsForLabels[name] = idForLabel;
+    _getIDForLabel: function (uid) {
+        if (!this.idsForLabels[uid]) {
+            this.idsForLabels[uid] = _.uniqueId('o_field_input_');
         }
-        return idForLabel;
+        return this.idsForLabels[uid];
     },
     /**
      * @override
@@ -396,7 +401,9 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
      */
     _postProcessField: function (widget, node) {
         this._super.apply(this, arguments);
-        this._setIDForLabel(widget, this._getIDForLabel(node.attrs.name));
+        // set the node id on the widget, as it might be necessary later (tooltips, confirmChange...)
+        widget[symbol] = node.attrs.id;
+        this._setIDForLabel(widget, this._getIDForLabel(node.attrs.id));
         if (JSON.parse(node.attrs.default_focus || "0")) {
             this.defaultFocusField = widget;
         }
@@ -656,12 +663,12 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
     },
     /**
      * @private
-     * @param {string} label
+     * @param {Object} node
      * @returns {jQueryElement}
      */
-    _renderInnerGroupLabel: function (label) {
+    _renderInnerGroupLabel: function (node) {
         return $('<td/>', {class: 'o_td_label'})
-            .append(this._renderTagLabel(label));
+            .append(this._renderTagLabel(node));
     },
     /**
      * Render a node, from the arch of the view. It is a generic method, that
@@ -846,17 +853,22 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
     _renderTagLabel: function (node) {
         var self = this;
         var text;
-        var fieldName = node.tag === 'label' ? node.attrs.for : node.attrs.name;
+        let fieldName;
+        if (node.tag === 'label') {
+            fieldName = this.fieldIdsToNames[node.attrs.for]; // 'for' references a <field> node id
+        } else {
+            fieldName = node.attrs.name;
+        }
         if ('string' in node.attrs) { // allow empty string
             text = node.attrs.string;
         } else if (fieldName) {
             text = this.state.fields[fieldName].string;
-        } else  {
+        } else {
             return this._renderGenericTag(node);
         }
         var $result = $('<label>', {
             class: 'o_form_label',
-            for: this._getIDForLabel(fieldName),
+            for: this._getIDForLabel(node.tag === 'label' ? node.attrs.for : node.attrs.id),
             text: text,
         });
         if (node.tag === 'label') {
@@ -1039,16 +1051,8 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
 
         // Attach the tooltips on the fields' label
         _.each(this.allFieldWidgets[this.state.id], function (widget) {
-            var idForLabel = self.idsForLabels[widget.name];
-            // We usually don't support multiple widgets for the same field on the
-            // same view but it is the case with the new settings view on V11.0.
-            // Therefore, we need to retrieve the correct label since it could be
-            // displayed multiple times on the view, otherwise, for example the
-            // enterprise label will be displayed as many times as the field
-            // exists on settings.
-            var $widgets = self.$('.o_field_widget[name=' + widget.name + ']');
+            const idForLabel = self.idsForLabels[widget[symbol]];
             var $label = idForLabel ? self.$('.o_form_label[for=' + idForLabel + ']') : $();
-            $label = $label.eq($widgets.index(widget.$el));
             self._addFieldTooltip(widget, $label);
             if (widget.attrs.widget === 'upgrade_boolean') {
                 // this widget needs a reference to its $label to be correctly

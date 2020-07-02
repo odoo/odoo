@@ -969,7 +969,7 @@ actual arch.
 
     def _postprocess_tag_field(self, node, name_manager, node_info):
         if node.get('name'):
-            attrs = {'select': node.get('select')}
+            attrs = {'id': node.get('id'), 'select': node.get('select')}
             field = name_manager.Model._fields.get(node.get('name'))
             if field:
                 # apply groups (no tested)
@@ -1224,7 +1224,7 @@ actual arch.
                     'without corresponding field or button, use \'class="o_form_label"\'.')
             self.handle_view_error(msg)
         else:
-            name_manager.must_have_name(for_, 'label for') # this could be done in check_attr
+            name_manager.must_have_name_or_id(for_, 'label for') # this could be done in check_attr
 
     def _validate_tag_page(self, node, name_manager, node_info):
         if node.getparent() is None or node.getparent().tag != 'notebook':
@@ -1908,13 +1908,15 @@ class NameManager:
         self.mandatory_fields = dict()
         self.mandatory_parent_fields = dict()
         self.available_actions = set()
-        self.mandatory_names = dict()
+        self.mandatory_names_or_ids = dict()
+        self.available_names_or_ids = set()
         self.validate = validate
         self.Model = Model
         self.fields_get = self.Model.fields_get()
 
     def has_field(self, name, info=()):
         self.available_fields.setdefault(name, {}).update(info)
+        self.available_names_or_ids.add(info.get('id') or name)
 
     def has_action(self, name):
         self.available_actions.add(name)
@@ -1929,8 +1931,8 @@ class NameManager:
         for name, use in name_uses.items():
             self.must_have_field(name, use)
 
-    def must_have_name(self, name, use):
-        self.mandatory_names[name] = use
+    def must_have_name_or_id(self, name, use):
+        self.mandatory_names_or_ids[name] = use
 
     def final_check(self):
         if self.mandatory_fields:
@@ -1943,11 +1945,11 @@ class NameManager:
         if not self.validate:
             return
 
-        for action, use in self.mandatory_names.items():
-            if action not in self.available_actions and action not in self.available_fields:
+        for action, use in self.mandatory_names_or_ids.items():
+            if action not in self.available_actions and action not in self.available_names_or_ids:
                 msg = _(
-                    "Name '%(name)s' used in '%(use)s' must be present in view but is missing.",
-                    name=action, use=use,
+                    "Name or id '%(name_or_id)s' used in '%(use)s' must be present in view but is missing.",
+                    name_or_id=action, use=use,
                 )
                 view.handle_view_error(msg)
 
