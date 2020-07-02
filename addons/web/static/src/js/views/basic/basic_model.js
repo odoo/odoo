@@ -1515,7 +1515,9 @@ var BasicModel = AbstractModel.extend({
         }
 
         if (options.notifyChange === false) {
-            return Promise.resolve(_.keys(changes));
+            return Promise.all(defs).then(function () {
+                return Promise.resolve(_.keys(changes));
+            });
         }
 
         return Promise.all(defs).then(function () {
