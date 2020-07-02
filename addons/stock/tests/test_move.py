@@ -1263,6 +1263,24 @@ class StockMove(SavepointCase):
         self.assertEqual(move_receipt.state, 'assigned')
         self.assertEqual(move_receipt.move_line_ids.product_uom_qty, 3)
 
+    def test_availability_10(self):
+        """Test a "dry run" reservation"""
+        self.env['stock.quant']._update_available_quantity(self.product, self.stock_location, 30.0)
+        move1 = self.env['stock.move'].create({
+            'name': 'test_availability_10',
+            'location_id': self.stock_location.id,
+            'location_dest_id': self.customer_location.id,
+            'product_id': self.product.id,
+            'product_uom': self.uom_unit.id,
+            'product_uom_qty': 15.0,
+        })
+        move1._action_confirm()
+        to_partially_available, to_assign = move1._action_assign_dry_run()
+        self.assertEqual(move1.state, 'confirmed')
+        self.assertTrue(move1 in to_assign)
+        self.assertFalse(move1 in to_partially_available)
+        self.assertEqual(self.gather_relevant(self.product, self.stock_location).reserved_quantity, 0)
+
     def test_unreserve_1(self):
         """ Check that unreserving a stock move sets the products reserved as available and
         set the state back to confirmed.

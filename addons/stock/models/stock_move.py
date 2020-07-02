@@ -1376,6 +1376,17 @@ class StockMove(models.Model):
         to_partially_available.write({'state': 'partially_available'})
         to_assign.write({'state': 'assigned'})
         self.mapped('picking_id')._check_entire_pack()
+        return to_partially_available, to_assign
+
+    def _action_assign_dry_run(self):
+        to_partially_available, to_assign = self.browse(), self.browse()
+        try:
+            with self.env.cr.savepoint():
+                to_partially_available, to_assign = self._action_assign()
+                raise Exception  # force rollback of current savepoint
+        except:
+            pass
+        return to_partially_available, to_assign
 
     def _action_cancel(self):
         if any(move.state == 'done' and not move.scrapped for move in self):
