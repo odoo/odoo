@@ -211,7 +211,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * @returns {Promise}
      */
     reload: async function (params = {}) {
-        let searchPanelUpdateProm;
         const controllerState = params.controllerState || {};
         const cpState = controllerState.cpState;
         if (this.withControlPanel && cpState) {
@@ -226,19 +225,19 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             }
             if (controllerState.spState) {
                 this._searchPanel.importState(controllerState.spState);
-                this.searchPanelDomain = this._searchPanel.getDomain();
             } else {
                 const viewDomain = await this._getViewDomain();
-                searchPanelUpdateProm =  this._searchPanel.update({
+                await this._searchPanel.update({
                     searchDomain: this.controlPanelDomain,
                     viewDomain,
                 });
                 postponeRendering = !params.noRender;
                 params.noRender = true; // wait for searchpanel to be ready to render
             }
+            this.searchPanelDomain = this._searchPanel.getDomain();
             params.domain = this.controlPanelDomain.concat(this.searchPanelDomain);
         }
-        await Promise.all([this.update(params, {}), searchPanelUpdateProm]);
+        await this.update(params, {});
         if (postponeRendering) {
             return this._updateRendererState(false);
         }
