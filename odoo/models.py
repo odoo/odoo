@@ -3582,6 +3582,12 @@ Fields:
             if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
+        # set magic fields
+        vals = {key: val for key, val in vals.items() if key not in bad_names}
+        if self._log_access:
+            vals.setdefault('write_uid', self.env.uid)
+            vals.setdefault('write_date', self.env.cr.now())
+
         determine_inverses = defaultdict(list)      # {inverse: fields}
         records_to_inverse = {}                     # {field: records}
         relational_names = []
@@ -3645,24 +3651,9 @@ Fields:
 
             real_recs = self.filtered('id')
 
-            # If there are only fields that do not trigger _write (e.g. only
-            # determine inverse), the below ensures that `write_date` and
-            # `write_uid` are updated (`test_orm.py`, `test_write_date`)
-            if self._log_access and self.ids:
-                towrite = env.all.towrite[self._name]
-                for record in real_recs:
-                    towrite[record.id]['write_uid'] = self.env.uid
-                    towrite[record.id]['write_date'] = False
-                self.env.cache.invalidate([
-                    (self._fields['write_date'], self.ids),
-                    (self._fields['write_uid'], self.ids),
-                ])
-
             # for monetary field, their related currency field must be cached
             # before the amount so it can be rounded correctly
             for fname in sorted(vals, key=lambda x: self._fields[x].type=='monetary'):
-                if fname in bad_names:
-                    continue
                 field = self._fields[fname]
                 field.write(self, vals[fname])
 
@@ -3722,6 +3713,12 @@ Fields:
         # determine records that require updating parent_path
         parent_records = self._parent_store_update_prepare(vals)
 
+        if self._log_access:
+            # set magic fields (already done by write(), but not for computed fields)
+            vals = dict(vals)
+            vals.setdefault('write_uid', self.env.uid)
+            vals.setdefault('write_date', self.env.cr.now())
+
         # determine SQL values
         columns = []                    # list of (column_name, format, value)
 
@@ -3736,12 +3733,6 @@ Fields:
 
             assert field.column_type
             columns.append((name, field.column_format, val))
-
-        if self._log_access:
-            if not vals.get('write_uid'):
-                columns.append(('write_uid', '%s', self._uid))
-            if not vals.get('write_date'):
-                columns.append(('write_date', '%s', AsIs("(now() at time zone 'UTC')")))
 
         # update columns
         if columns:
@@ -3810,6 +3801,15 @@ Fields:
             # add missing defaults
             vals = self._add_missing_default_values(vals)
 
+            # set magic fields
+            for name in bad_names:
+                vals.pop(name, None)
+            if self._log_access:
+                vals.setdefault('create_uid', self.env.uid)
+                vals.setdefault('create_date', self.env.cr.now())
+                vals.setdefault('write_uid', self.env.uid)
+                vals.setdefault('write_date', self.env.cr.now())
+
             # distribute fields into sets for various purposes
             data = {}
             data['stored'] = stored = {}
@@ -3817,8 +3817,6 @@ Fields:
             data['inherited'] = inherited = defaultdict(dict)
             data['protected'] = protected = set()
             for key, val in vals.items():
-                if key in bad_names:
-                    continue
                 field = self._fields.get(key)
                 if not field:
                     raise ValueError("Invalid field %r on model %r" % (key, self._name))
@@ -3919,18 +3917,10 @@ Fields:
         other_fields = set()            # non-column fields
         translated_fields = set()       # translated fields
 
-        # column names, formats and values (for common fields)
-        columns0 = [('id', "nextval(%s)", self._sequence)]
-        if self._log_access:
-            columns0.append(('create_uid', "%s", self._uid))
-            columns0.append(('create_date', "%s", AsIs("(now() at time zone 'UTC')")))
-            columns0.append(('write_uid', "%s", self._uid))
-            columns0.append(('write_date', "%s", AsIs("(now() at time zone 'UTC')")))
-
         for data in data_list:
             # determine column values
             stored = data['stored']
-            columns = [column for column in columns0 if column[0] not in stored]
+            columns = [('id', "nextval(%s)", self._sequence)]
             for name, val in sorted(stored.items()):
                 field = self._fields[name]
                 assert field.store
