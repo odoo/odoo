@@ -10,6 +10,7 @@ var Widget = require('web.Widget');
 var options = require('web_editor.snippets.options');
 var Wysiwyg = require('web_editor.wysiwyg');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
+const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
 
 var _t = core._t;
 
@@ -18,169 +19,6 @@ var globalSelector = {
     all: () => $(),
     is: () => false,
 };
-
-/**
- * Component that provides smooth scroll behaviour on drag.
- *
- * Do not forget to call unsetDraggable to ensure proper resource clearing.
- * @see {@link unsetDraggable}.
- */
-const SmoothOnDragComponent = Class.extend({
-    /**
-     * @constructor
-     * @param {jQuery} $element The element the smooth drag has to be set on
-     * @param {Object} jQueryDraggableOptions The configuration to be passed to
-     *        the jQuery draggable function
-     */
-    init($element, jQueryDraggableOptions) {
-        this.$element = $element;
-        this.$scrollTarget = $('html');
-        this.autoScrollHandler = null;
-        this.cursorAt = jQueryDraggableOptions.cursorAt || {left: 0, top: 0};
-        this.draggableOffset = 0;
-        this.mainNavBarHeight = $('.o_main_navbar').innerHeight();
-        this.scrollOffsetThreshold = 150;
-        this.scrollStep = 20;
-        this.scrollStepDirection = 1;
-        this.scrollStepDirectionEnum = {up: -1, down: 1};
-        this.scrollDecelerator = 0;
-        this.scrollTimer = 5;
-        this.visibleBottomOffset = 0;
-        this.visibleTopOffset = 0;
-
-        jQueryDraggableOptions.scroll = false;
-        const draggableOptions = Object.assign({}, jQueryDraggableOptions, {
-            start: (ev, ui) => this._onSmoothDragStart(ev, ui, jQueryDraggableOptions.start),
-            drag: (ev, ui) => this._onSmoothDrag(ev, ui, jQueryDraggableOptions.drag),
-            stop: (ev, ui) => this._onSmoothDragStop(ev, ui, jQueryDraggableOptions.stop),
-        });
-        this.$element.draggable(draggableOptions);
-    },
-
-    //--------------------------------------------------------------------------
-    // Public
-    //--------------------------------------------------------------------------
-
-    /**
-     * Ensures correct clearing of resources.
-     */
-    unsetDraggable() {
-        this._stopSmoothScroll();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Starts the scroll process using the options.
-     * The options will be updated dynamically when the handler _onSmoothDrag
-     * will be called. The interval will be cleared when the handler
-     * _onSmoothDragStop will be called.
-     *
-     * @private
-     */
-    _startSmoothScroll() {
-        this._stopSmoothScroll();
-        this.autoScrollHandler = setInterval(
-            () => {
-                this.$scrollTarget.scrollTop(
-                    this.$scrollTarget.scrollTop() +
-                    this.scrollStepDirection *
-                    this.scrollStep *
-                    (1 - this.scrollDecelerator)
-                );
-            },
-            this.scrollTimer
-        );
-    },
-    /**
-     * Stops the scroll process if any is running.
-     *
-     * @private
-     */
-    _stopSmoothScroll() {
-        clearInterval(this.autoScrollHandler);
-    },
-    /**
-     * Updates the options depending on the offset position of the draggable
-     * helper. In the same time options are used by an interval to trigger
-     * scroll behaviour.
-     * @see {@link _startSmoothScroll} for interval implementation details.
-     *
-     * @private
-     * @param {number} dragTopOffset The offset position of the draggable helper
-     */
-    _updatePositionOptions(dragTopOffset) {
-        this.draggableOffset = this.cursorAt.top + dragTopOffset;
-        this.visibleBottomOffset = this.$scrollTarget.scrollTop() +
-            this.$scrollTarget.get(0).clientHeight - this.draggableOffset;
-        this.visibleTopOffset = this.draggableOffset - this.$scrollTarget.scrollTop();
-        if (this.visibleTopOffset <= this.scrollOffsetThreshold + this.mainNavBarHeight) {
-            this.scrollDecelerator = this.visibleTopOffset /
-                (this.scrollOffsetThreshold + this.mainNavBarHeight);
-            this.scrollStepDirection = this.scrollStepDirectionEnum.up;
-        } else if (this.visibleBottomOffset <= this.scrollOffsetThreshold) {
-            this.scrollDecelerator = this.visibleBottomOffset /
-                this.scrollOffsetThreshold;
-            this.scrollStepDirection = this.scrollStepDirectionEnum.down;
-        } else {
-            this.scrollDecelerator = 1;
-        }
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called when dragging the element.
-     * Updates the position options and call the provided callback if any.
-     *
-     * @private
-     * @param {Object} ev The jQuery drag handler event parameter.
-     * @param {Object} ui The jQuery drag handler ui parameter.
-     * @param {Function} onDragCallback The jQuery drag callback.
-     */
-    _onSmoothDrag(ev, ui, onDragCallback) {
-        this._updatePositionOptions(ui.offset.top);
-        if (typeof onDragCallback === 'function') {
-            onDragCallback.call(ui.helper, ev, ui);
-        }
-    },
-    /**
-     * Called when starting to drag the element.
-     * Updates the position params, starts smooth scrolling process and call the
-     * provided callback if any.
-     *
-     * @private
-     * @param {Object} ev The jQuery drag handler event parameter.
-     * @param {Object} ui The jQuery drag handler ui parameter.
-     * @param {Function} onDragStartCallBack The jQuery drag callback.
-     */
-    _onSmoothDragStart(ev, ui, onDragStartCallBack) {
-        this._updatePositionOptions(ui.offset.top);
-        this._startSmoothScroll();
-        if (typeof onDragStartCallBack === 'function') {
-            onDragStartCallBack.call(ui.helper, ev, ui);
-        }
-    },
-    /**
-     * Called when stopping to drag the element.
-     * Stops the smooth scrolling process and call the provided callback if any.
-     *
-     * @private
-     * @param {Object} ev The jQuery drag handler event parameter.
-     * @param {Object} ui The jQuery drag handler ui parameter.
-     * @param {Function} onDragEndCallBack The jQuery drag callback.
-     */
-    _onSmoothDragStop(ev, ui, onDragEndCallBack) {
-        this._stopSmoothScroll();
-        if (typeof onDragEndCallBack === 'function') {
-            onDragEndCallBack.call(ui.helper, ev, ui);
-        }
-    },
-});
 
 /**
  * Management of the overlay and option list for a snippet.
@@ -235,32 +73,39 @@ var SnippetEditor = Widget.extend({
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
             this.dropped = false;
-            this.draggableComponent = new SmoothOnDragComponent(this.$el, {
-                appendTo: this.$body,
-                cursor: 'move',
-                cursorAt: {
-                    left: 10,
-                    top: 10
+            const smoothScrollOptions = {
+                offsetElements: {
+                    $top: $('#top'),
+                    $left: $('#oe_snippets'),
                 },
-                greedy: true,
-                handle: '.o_move_handle',
-                helper: () => {
-                    var $clone = this.$el.clone().css({width: '24px', height: '24px', border: 0});
-                    $clone.appendTo(this.$body).removeClass('d-none');
-                    return $clone;
+                jQueryDraggableOptions: {
+                    appendTo: this.$body,
+                    cursor: 'move',
+                    cursorAt: {
+                        left: 10,
+                        top: 10
+                    },
+                    greedy: true,
+                    handle: '.o_move_handle',
+                    helper: () => {
+                        var $clone = this.$el.clone().css({width: '24px', height: '24px', border: 0});
+                        $clone.appendTo(this.$body).removeClass('d-none');
+                        return $clone;
+                    },
+                    scroll: false,
+                    start: this._onDragAndDropStart.bind(this),
+                    stop: (...args) => {
+                        // Delay our stop handler so that some summernote handlers
+                        // which occur on mouseup (and are themself delayed) are
+                        // executed first (this prevents the library to crash
+                        // because our stop handler may change the DOM).
+                        setTimeout(() => {
+                            this._onDragAndDropStop(...args);
+                        }, 0);
+                    },
                 },
-                scroll: false,
-                start: this._onDragAndDropStart.bind(this),
-                stop: (...args) => {
-                    // Delay our stop handler so that some summernote handlers
-                    // which occur on mouseup (and are themself delayed) are
-                    // executed first (this prevents the library to crash
-                    // because our stop handler may change the DOM).
-                    setTimeout(() => {
-                        this._onDragAndDropStop(...args);
-                    }, 0);
-                },
-            });
+            };
+            this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, $('html'), smoothScrollOptions);
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
             $customize.find('.oe_snippet_clone').addClass('d-none');
@@ -304,9 +149,6 @@ var SnippetEditor = Widget.extend({
      */
     destroy: function () {
         this._super(...arguments);
-        if (this.draggableComponent) {
-            this.draggableComponent.unsetDraggable();
-        }
         this.$target.removeData('snippet-editor');
         this.$target.off('.snippet_editor');
     },
@@ -1186,9 +1028,6 @@ var SnippetsMenu = Widget.extend({
      */
     destroy: function () {
         this._super.apply(this, arguments);
-        if (this.draggableComponent) {
-            this.draggableComponent.unsetDraggable();
-        }
         if (this.$window) {
             this.$snippetEditorArea.remove();
             this.$window.off('.snippets_menu');
@@ -1929,117 +1768,124 @@ var SnippetsMenu = Widget.extend({
         var $tumb = $snippets.find('.oe_snippet_thumbnail_img:first');
         var $toInsert, dropped, $snippet;
 
-        this.draggableComponent = new SmoothOnDragComponent($snippets, {
-            appendTo: this.$body,
-            cursor: 'move',
-            distance: 0,
-            greedy: true,
-            handle: '.oe_snippet_thumbnail',
-            helper: function () {
-                const dragSnip = this.cloneNode(true);
-                dragSnip.querySelectorAll('.o_delete_btn, .o_image_ribbon').forEach(
-                    el => el.remove()
-                );
-                return dragSnip;
+        const smoothScrollOptions = {
+            offsetElements: {
+                $top: $('#top'),
+                $left: $('#oe_snippets'),
             },
-            scroll: false,
-            start: function () {
-                dropped = false;
-                $snippet = $(this);
-                var $baseBody = $snippet.find('.oe_snippet_body');
-                var $selectorSiblings = $();
-                var $selectorChildren = $();
-                var temp = self.templateOptions;
-                for (var k in temp) {
-                    if ($baseBody.is(temp[k].base_selector) && !$baseBody.is(temp[k].base_exclude)) {
-                        if (temp[k]['drop-near']) {
-                            $selectorSiblings = $selectorSiblings.add(temp[k]['drop-near'].all());
-                        }
-                        if (temp[k]['drop-in']) {
-                            $selectorChildren = $selectorChildren.add(temp[k]['drop-in'].all());
+            jQueryDraggableOptions: {
+                appendTo: this.$body,
+                cursor: 'move',
+                distance: 0,
+                greedy: true,
+                handle: '.oe_snippet_thumbnail',
+                helper: function () {
+                    const dragSnip = this.cloneNode(true);
+                    dragSnip.querySelectorAll('.o_delete_btn, .o_image_ribbon').forEach(
+                        el => el.remove()
+                    );
+                    return dragSnip;
+                },
+                scroll: false,
+                start: function () {
+                    dropped = false;
+                    $snippet = $(this);
+                    var $baseBody = $snippet.find('.oe_snippet_body');
+                    var $selectorSiblings = $();
+                    var $selectorChildren = $();
+                    var temp = self.templateOptions;
+                    for (var k in temp) {
+                        if ($baseBody.is(temp[k].base_selector) && !$baseBody.is(temp[k].base_exclude)) {
+                            if (temp[k]['drop-near']) {
+                                $selectorSiblings = $selectorSiblings.add(temp[k]['drop-near'].all());
+                            }
+                            if (temp[k]['drop-in']) {
+                                $selectorChildren = $selectorChildren.add(temp[k]['drop-in'].all());
+                            }
                         }
                     }
-                }
 
-                $toInsert = $baseBody.clone();
+                    $toInsert = $baseBody.clone();
 
-                if (!$selectorSiblings.length && !$selectorChildren.length) {
-                    console.warn($snippet.find('.oe_snippet_thumbnail_title').text() + " have not insert action: data-drop-near or data-drop-in");
-                    return;
-                }
-
-                self._activateSnippet(false);
-                self._activateInsertionZones($selectorSiblings, $selectorChildren);
-
-                self.getEditableArea().find('.oe_drop_zone').droppable({
-                    over: function () {
-                        if (!dropped) {
-                            dropped = true;
-                            $(this).first().after($toInsert).addClass('d-none');
-                            $toInsert.removeClass('oe_snippet_body');
-                        }
-                    },
-                    out: function () {
-                        var prev = $toInsert.prev();
-                        if (this === prev[0]) {
-                            dropped = false;
-                            $toInsert.detach();
-                            $(this).removeClass('d-none');
-                            $toInsert.addClass('oe_snippet_body');
-                        }
-                    },
-                });
-            },
-            stop: function (ev, ui) {
-                $toInsert.removeClass('oe_snippet_body');
-
-                if (!dropped && ui.position.top > 3 && ui.position.left + 50 > self.$el.outerWidth()) {
-                    var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
-                    if ($el.length) {
-                        $el.after($toInsert);
-                        dropped = true;
-                    }
-                }
-
-                self.getEditableArea().find('.oe_drop_zone').droppable('destroy').remove();
-
-                if (dropped) {
-                    var prev = $toInsert.first()[0].previousSibling;
-                    var next = $toInsert.last()[0].nextSibling;
-
-                    if (prev) {
-                        $toInsert.detach();
-                        self.trigger_up('request_history_undo_record', {$target: $(prev)});
-                        $toInsert.insertAfter(prev);
-                    } else if (next) {
-                        $toInsert.detach();
-                        self.trigger_up('request_history_undo_record', {$target: $(next)});
-                        $toInsert.insertBefore(next);
-                    } else {
-                        var $parent = $toInsert.parent();
-                        $toInsert.detach();
-                        self.trigger_up('request_history_undo_record', {$target: $parent});
-                        $parent.prepend($toInsert);
+                    if (!$selectorSiblings.length && !$selectorChildren.length) {
+                        console.warn($snippet.find('.oe_snippet_thumbnail_title').text() + " have not insert action: data-drop-near or data-drop-in");
+                        return;
                     }
 
-                    var $target = $toInsert;
+                    self._activateSnippet(false);
+                    self._activateInsertionZones($selectorSiblings, $selectorChildren);
 
-                    _.defer(function () {
-                        self.trigger_up('snippet_dropped', {$target: $target});
-                        self._disableUndroppableSnippets();
-
-                        self._callForEachChildSnippet($target, function (editor, $snippet) {
-                            return editor.buildSnippet();
-                        }).then(function () {
-                            $target.trigger('content_changed');
-                            return self._updateInvisibleDOM();
-                        });
+                    self.getEditableArea().find('.oe_drop_zone').droppable({
+                        over: function () {
+                            if (!dropped) {
+                                dropped = true;
+                                $(this).first().after($toInsert).addClass('d-none');
+                                $toInsert.removeClass('oe_snippet_body');
+                            }
+                        },
+                        out: function () {
+                            var prev = $toInsert.prev();
+                            if (this === prev[0]) {
+                                dropped = false;
+                                $toInsert.detach();
+                                $(this).removeClass('d-none');
+                                $toInsert.addClass('oe_snippet_body');
+                            }
+                        },
                     });
-                } else {
-                    $toInsert.remove();
-                }
+                },
+                stop: function (ev, ui) {
+                    $toInsert.removeClass('oe_snippet_body');
+
+                    if (!dropped && ui.position.top > 3 && ui.position.left + 50 > self.$el.outerWidth()) {
+                        var $el = $.nearest({x: ui.position.left, y: ui.position.top}, '.oe_drop_zone', {container: document.body}).first();
+                        if ($el.length) {
+                            $el.after($toInsert);
+                            dropped = true;
+                        }
+                    }
+
+                    self.getEditableArea().find('.oe_drop_zone').droppable('destroy').remove();
+
+                    if (dropped) {
+                        var prev = $toInsert.first()[0].previousSibling;
+                        var next = $toInsert.last()[0].nextSibling;
+
+                        if (prev) {
+                            $toInsert.detach();
+                            self.trigger_up('request_history_undo_record', {$target: $(prev)});
+                            $toInsert.insertAfter(prev);
+                        } else if (next) {
+                            $toInsert.detach();
+                            self.trigger_up('request_history_undo_record', {$target: $(next)});
+                            $toInsert.insertBefore(next);
+                        } else {
+                            var $parent = $toInsert.parent();
+                            $toInsert.detach();
+                            self.trigger_up('request_history_undo_record', {$target: $parent});
+                            $parent.prepend($toInsert);
+                        }
+
+                        var $target = $toInsert;
+
+                        _.defer(function () {
+                            self.trigger_up('snippet_dropped', {$target: $target});
+                            self._disableUndroppableSnippets();
+
+                            self._callForEachChildSnippet($target, function (editor, $snippet) {
+                                return editor.buildSnippet();
+                            }).then(function () {
+                                $target.trigger('content_changed');
+                                return self._updateInvisibleDOM();
+                            });
+                        });
+                    } else {
+                        $toInsert.remove();
+                    }
+                },
             },
-        });
+        };
+        this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $('html'), smoothScrollOptions);
     },
     /**
      * Adds the 'o_default_snippet_text' class on nodes which contain only
@@ -2439,7 +2285,6 @@ var SnippetsMenu = Widget.extend({
 return {
     Class: SnippetsMenu,
     Editor: SnippetEditor,
-    SmoothOnDragComponent: SmoothOnDragComponent,
     globalSelector: globalSelector,
 };
 });
