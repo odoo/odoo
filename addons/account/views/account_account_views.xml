@@ -55,6 +55,7 @@
                     <field name="code"/>
                     <field name="name"/>
                     <field name="user_type_id" widget="account_hierarchy_selection"/>
+                    <field name="group_id" optional="hide"/>
                     <field name="internal_type" invisible="1"/>
                     <field name="internal_group" invisible="1"/>
                     <field name="reconcile" widget="boolean_toggle" attrs="{'invisible': ['|', ('internal_type','=','liquidity'), ('internal_group', '=', 'off_balance')]}"/>
