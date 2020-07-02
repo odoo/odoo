@@ -981,6 +981,7 @@ if record:
             <field name="name">Crm: My Pipeline</field>
             <field name="model_id" ref="crm.model_crm_team"/>
             <field name="state">code</field>
+            <field name="groups_id"  eval="[(4, ref('base.group_user'))]"/>
             <field name="code">action = model.action_your_pipeline()</field>
         </record>
 
