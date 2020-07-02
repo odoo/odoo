@@ -4066,5 +4066,74 @@ QUnit.module('Views', {
 
         kanban.destroy();
     });
+
+    QUnit.test("Categories with default attributes should be udpated when external domain changes", async function (assert) {
+        assert.expect(11);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+            services: this.services,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="filter_on_def" string="DEF" domain="[('state', '=', 'def')]"/>
+                        <searchpanel>
+                            <field name="state"/>
+                        </searchpanel>
+                    </search>`,
+            },
+        });
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            '/web/dataset/search_read',
+        ]);
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
+            ['All', 'ABC', 'DEF', 'GHI']
+        );
+
+        // select 'ABC' in search panel --> no need to update the category value
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+
+        assert.verifySteps([
+            '/web/dataset/search_read',
+        ]);
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
+            ['All', 'ABC', 'DEF', 'GHI']
+        );
+
+        // select DEF in filter menu --> the external domain changes --> the values should be updated
+        await testUtils.controlPanel.toggleFilterMenu(kanban);
+        await testUtils.controlPanel.toggleMenuItem(kanban, 'DEF');
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            '/web/dataset/search_read',
+        ]);
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
+            ['All', 'DEF']
+        );
+
+        kanban.destroy();
+    });
 });
 });
