@@ -183,7 +183,7 @@ class Company(models.Model):
         """ Returns the user's company
             - Deprecated
         """
-        _logger.warning(_("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore"))
+        _logger.warning("The method '_company_default_get' on res.company is deprecated and shouldn't be used anymore")
         return self.env.company
 
     # deprecated, use clear_caches() instead
