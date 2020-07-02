@@ -12,6 +12,7 @@ from odoo.tools.safe_eval import safe_eval
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
 ESTIMATE_ENDPOINT = '/iap/snailmail/1/estimate'
 PRINT_ENDPOINT = '/iap/snailmail/1/print'
+DEFAULT_TIMEOUT = 30
 
 
 class SnailmailLetter(models.Model):
@@ -233,8 +234,9 @@ class SnailmailLetter(models.Model):
         """
         self.write({'state': 'pending'})
         endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
+        timeout = self.env['ir.config_parameter'].sudo().get_param('snailmail.timeout', DEFAULT_TIMEOUT)
         params = self._snailmail_create('print')
-        response = jsonrpc(endpoint + PRINT_ENDPOINT, params=params)
+        response = jsonrpc(endpoint + PRINT_ENDPOINT, params=params, timeout=timeout)
         for doc in response['request']['documents']:
             letter = self.browse(doc['letter_id'])
             record = self.env[doc['res_model']].browse(doc['res_id'])
