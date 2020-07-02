@@ -67,7 +67,7 @@ class AccountEdiFormat(models.Model):
             elif elements and elements[0].text and elements[0].text == 'TD04':
                 self_ctx = invoice.with_context(default_move_type='in_refund')
             else:
-                _logger.info(_('Document type not managed: %s.') % (elements[0].text))
+                _logger.info('Document type not managed: %s.', elements[0].text)
 
             # type must be present in the context to get the right behavior of the _default_journal method (account.move).
             # journal_id must be present in the context to get the right behavior of the _default_account method (account.move.line).
@@ -83,9 +83,9 @@ class AccountEdiFormat(models.Model):
             else:
                 company = self.env.company
                 if elements:
-                    _logger.info(_('Company not found with codice fiscale: %s. The company\'s user is set by default.', elements[0].text))
+                    _logger.info('No company found with codice fiscale: %s. The user\'s company is set by default.', elements[0].text)
                 else:
-                    _logger.info(_('Company not found. The company\'s user is set by default.'))
+                    _logger.info('Company not found. The user\'s company is set by default.')
 
             if not self.env.is_superuser():
                 if self.env.company != company:
