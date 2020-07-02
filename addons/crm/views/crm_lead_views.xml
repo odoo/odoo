@@ -164,23 +164,23 @@
                                 <field name="phone_blacklisted" invisible="1"/>
                                 <field name="email_state" invisible="1"/>
                                 <field name="phone_state" invisible="1"/>
-                                <label for="email_from" class="oe_inline"/>
+                                <label for="email_from_group_lead_info" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
                                     <button name="mail_action_blacklist_remove" class="fa fa-ban text-danger"
                                         title="This email is blacklisted for mass mailings. Click to unblacklist."
                                         type="object" context="{'default_email': email_from}" groups="base.group_user"
                                         attrs="{'invisible': [('is_blacklisted', '=', False)]}"/>
-                                    <field name="email_from" string="Email" widget="email"/>
+                                    <field name="email_from" id="email_from_group_lead_info" string="Email" widget="email"/>
                                 </div>
                                 <field name="email_cc" groups="base.group_no_one"/>
                                 <field name="function"/>
-                                <label for="phone" class="oe_inline"/>
+                                <label for="phone_group_lead_info" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
                                     <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
                                         title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
                                         type="object" context="{'default_phone': phone}" groups="base.group_user"
                                         attrs="{'invisible': [('phone_blacklisted', '=', False)]}"/>
-                                    <field name="phone" widget="phone"/>
+                                    <field name="phone" id="phone_group_lead_info" widget="phone"/>
                                 </div>
                                 <label for="mobile" class="oe_inline"/>
                                 <div class="o_row o_row_readonly">
@@ -242,9 +242,9 @@
                                 <group>
                                     <group string="Contact Information">
                                         <field name="partner_name"/>
-                                        <label for="street" string="Address"/>
+                                        <label for="street_page_lead" string="Address"/>
                                         <div class="o_address_format">
-                                            <field name="street" placeholder="Street..." class="o_address_street"/>
+                                            <field name="street" id="street_page_lead" placeholder="Street..." class="o_address_street"/>
                                             <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                             <field name="city" placeholder="City" class="o_address_city"/>
                                             <field name="state_id" class="o_address_state" placeholder="State" options='{"no_open": True}'/>
@@ -255,19 +255,19 @@
                                         <field name="lang_id" options="{'no_create': True}"/>
                                     </group>
                                     <group class="mt48">
-                                        <label for="contact_name"/>
+                                        <label for="contact_name_page_lead"/>
                                         <div class="o_row">
-                                            <field name="contact_name"/>
+                                            <field name="contact_name" id="contact_name_page_lead"/>
                                             <field name="title" placeholder="Title" domain="[]" options='{"no_open": True}'/>
                                         </div>
                                         <field name="function"/>
-                                        <label for="mobile" class="oe_inline"/>
+                                        <label for="mobile_page_lead" class="oe_inline"/>
                                         <div class="o_row o_row_readonly">
                                             <button name="phone_action_blacklist_remove" class="fa fa-ban text-danger"
                                                 title="This phone number is blacklisted for SMS Marketing. Click to unblacklist."
                                                 type="object" context="{'default_phone': mobile}" groups="base.group_user"
                                                 attrs="{'invisible': [('mobile_blacklisted', '=', False)]}"/>
-                                            <field name="mobile" widget="phone"/>
+                                            <field name="mobile" id="mobile_page_lead" widget="phone"/>
                                         </div>
                                     </group>
                                     <group string="Marketing">
