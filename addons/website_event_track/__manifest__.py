@@ -19,6 +19,9 @@
         'views/event_views.xml',
     ],
     'demo': [
+        'data/res_partner_demo.xml',
         'data/event_demo.xml',
+        'data/event_track_demo.xml',
+        'data/event_track_demo_description.xml',
     ],
 }

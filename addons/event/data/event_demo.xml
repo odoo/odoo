@@ -28,45 +28,66 @@
     <!-- Category and Tags -->
     <record id="event_tag_category_1" model="event.tag.category">
         <field name="name">Age</field>
+        <field name="sequence">3</field>
     </record>
-
     <record id="event_tag_category_2" model="event.tag.category">
         <field name="name">Activity</field>
+        <field name="sequence">1</field>
+    </record>
+    <record id="event_tag_category_3" model="event.tag.category">
+        <field name="name">Type</field>
+        <field name="sequence">2</field>
     </record>
 
     <record id="event_tag_category_1_tag_1" model="event.tag">
         <field name="name">5-10</field>
+        <field name="sequence">1</field>
         <field name="category_id" ref="event_tag_category_1"/>
     </record>
 
     <record id="event_tag_category_1_tag_2" model="event.tag">
         <field name="name">10-14</field>
+        <field name="sequence">2</field>
         <field name="category_id" ref="event_tag_category_1"/>
     </record>
 
     <record id="event_tag_category_1_tag_3" model="event.tag">
         <field name="name">15-18</field>
+        <field name="sequence">3</field>
         <field name="category_id" ref="event_tag_category_1"/>
     </record>
 
     <record id="event_tag_category_1_tag_4" model="event.tag">
         <field name="name">18+</field>
+        <field name="sequence">4</field>
         <field name="category_id" ref="event_tag_category_1"/>
     </record>
 
     <record id="event_tag_category_2_tag_1" model="event.tag">
         <field name="name">Culture</field>
+        <field name="sequence">10</field>
         <field name="category_id" ref="event_tag_category_2"/>
     </record>
-
     <record id="event_tag_category_2_tag_2" model="event.tag">
         <field name="name">Music</field>
+        <field name="sequence">11</field>
+        <field name="category_id" ref="event_tag_category_2"/>
+    </record>
+    <record id="event_tag_category_2_tag_3" model="event.tag">
+        <field name="name">Sport</field>
+        <field name="sequence">12</field>
         <field name="category_id" ref="event_tag_category_2"/>
     </record>
 
-    <record id="event_tag_category_2_tag_3" model="event.tag">
-        <field name="name">Sport</field>
-        <field name="category_id" ref="event_tag_category_2"/>
+    <record id="event_tag_category_3_tag_1" model="event.tag">
+        <field name="name">Online</field>
+        <field name="sequence">20</field>
+        <field name="category_id" ref="event_tag_category_3"/>
+    </record>
+    <record id="event_tag_category_3_tag_2" model="event.tag">
+        <field name="name">Conference</field>
+        <field name="sequence">21</field>
+        <field name="category_id" ref="event_tag_category_3"/>
     </record>
 
     <!-- Event -->
@@ -81,8 +102,7 @@
         <field name="date_tz">US/Pacific</field>
         <field name="event_type_id" ref="event_type_0"/>
         <field name="stage_id" ref="event_stage_booked"/>
-        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_1,event_tag_category_2_tag_1])]"/>
-        <field name="event_ticket_ids" eval="False"/>
+        <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_1')), (4, ref('event.event_tag_category_2_tag_1'))]"/>
     </record>
     <record id="event_0_ticket_0" model="event.event.ticket">
         <field name="name">Free</field>
@@ -118,7 +138,7 @@
         <field name="address_id" ref="event.res_partner_location_0"/>
         <field name="stage_id" ref="event_stage_booked"/>
         <field name="kanban_state">blocked</field>
-        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_4,event_tag_category_2_tag_3])]"/>
+        <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_4')), (4, ref('event.event_tag_category_2_tag_3'))]"/>
     </record>
 
     <record id="message_event_1_0" model="mail.message">
@@ -172,8 +192,7 @@
         <field name="seats_limited">True</field>
         <field name="seats_max">200</field>
         <field name="stage_id" ref="event_stage_booked"/>
-        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_4,event_tag_category_2_tag_1])]"/>
-        <field name="event_ticket_ids" eval="False"/>
+        <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_4')), (4, ref('event.event_tag_category_2_tag_1'))]"/>
     </record>
     <record id="event_2_ticket_1" model="event.event.ticket">
         <field name="name">Standard</field>
@@ -209,8 +228,7 @@
         <field name="event_type_id" ref="event_type_0"/>
         <field name="address_id" ref="event.res_partner_location_1"/>
         <field name="stage_id" ref="event_stage_announced"/>
-        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_3,event_tag_category_2_tag_2])]"/>
-        <field name="event_ticket_ids" eval="False"/>
+        <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_3')), (4, ref('event.event_tag_category_2_tag_2'))]"/>
     </record>
     <record id="event_3_ticket_0" model="event.event.ticket">
         <field name="name">Standard</field>
@@ -251,8 +269,7 @@
         <field name="event_type_id" ref="event_type_1"/>
         <field name="stage_id" ref="event_stage_done"/>
         <field name="kanban_state">done</field>
-        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_4,event_tag_category_2_tag_1])]"/>
-        <field name="event_ticket_ids" eval="False"/>
+        <field name="tag_ids" eval="[(4, ref('event.event_tag_category_1_tag_4')), (4, ref('event.event_tag_category_2_tag_1'))]"/>
     </record>
     <record id="event_4_ticket_0" model="event.event.ticket">
         <field name="name">General Admission</field>
@@ -277,7 +294,7 @@
         <field eval="(DateTime.today()+ timedelta(days=371)).strftime('%Y-%m-%d 17:00:00')" name="date_end"/>
         <field name="event_type_id" ref="event_type_2"/>
         <field name="address_id" ref="event.res_partner_location_1"/>
-        <field name="tag_ids" eval="[(6, 0, [event_tag_category_1_tag_2,event_tag_category_2_tag_3])]"/>
+        <field name="tag_ids" eval="[(6, 0, [ref('event.event_tag_category_1_tag_2'), ref('event.event_tag_category_2_tag_3')])]"/>
     </record>
 
     <record id="event.event_6" model="event.event">
@@ -287,6 +304,41 @@
         <field eval="(DateTime.today()+ timedelta(days=30)).strftime('%Y-%m-%d 17:30:00')" name="date_end"/>
         <field name="event_type_id" ref="event_type_0"/>
         <field name="address_id" ref="event.res_partner_location_1"/>
+    </record>
+
+    <record id="event.event_7" model="event.event">
+        <field name="name">OpenWood Collection Online Reveal</field>
+        <field name="date_tz">Europe/Brussels</field>
+        <field name="event_type_id" ref="event_type_0"/>
+        <field name="stage_id" ref="event.event_stage_booked"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="date_begin" eval="DateTime.now().strftime('%Y-%m-%d 05:00:00')"/>
+        <field name="date_end" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+        <field name="address_id" ref="res_partner_location_2"/>
+        <field name="tag_ids" eval="[(4, ref('event.event_tag_category_3_tag_1'))]"/>
+        <field name="description" type="html">
+<div class="oe_structure">
+    <h5>The finest OpenWood furnitures are coming to your house in a brand new collection</h5>
+    <p>And this time, we go fully ONLINE! Meet us in our live streams from the confort of your house.<br/>
+    Special discount codes will be handed out during the various streams, make sure to be there on time.</p>
+    <p class="mb-3">For any additional information, please contact us at <a href="mailto:events@idea.com">events@idea.com</a>.</p>
+    <div class="bg-light rounded-right border-left border-secondary p-3 mb-5" style="border-left-width: 3px !important;">
+        <p class="mb-1">This event is fully online and FREE, if you have paid for tickets, you should get a refund.<br/>
+        It will require a good Internet connection to get the best video quality.</p>
+    </div>
+</div>
+        </field>
+    </record>
+    <record id="event_7_ticket_1" model="event.event.ticket">
+        <field name="name">Standard</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="end_sale_date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+    </record>
+    <record id="event_7_ticket_2" model="event.event.ticket">
+        <field name="name">VIP</field>
+        <field name="event_id" ref="event.event_7"/>
+        <field name="end_sale_date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+        <field name="seats_max">10</field>
     </record>
 
     </data>
