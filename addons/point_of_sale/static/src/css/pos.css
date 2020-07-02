@@ -117,7 +117,14 @@ td {
     font-family: "Lato","Lucida Grande", Helvetica, Verdana, Arial;
     color: #555555;
     font-size: 12px;
-    position: absolute;
+    /* Some elements inside .pos are allowed to be moved/resized. When
+     * this 'move/resize' event is performed in touch devices, .pos
+     * element also tries to scroll (as the default action of touchstart+
+     * touchmove events).
+     * Position is fixed to prevent the movement of .pos element during
+     * the described touch events.
+     */
+    position: fixed;
     left: 0;
     top: 0;
     width: 100%;

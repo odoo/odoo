@@ -357,7 +357,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 this.state.uiState.hasBigScrollBars = true;
             }
 
-            this._disableRubberbanding();
             this._disableBackspaceBack();
             this._replaceCrashmanager();
         }
@@ -381,38 +380,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 },
             });
         }
-        _disableRubberbanding() {
-            var self = this;
-
-            document.body.addEventListener('touchstart', function (event) {
-                self.previous_touch_y_coordinate = event.touches[0].clientY;
-            });
-
-            // prevent the pos body from being scrollable.
-            document.body.addEventListener('touchmove', function (event) {
-                var node = event.target;
-                var current_touch_y_coordinate = event.touches[0].clientY;
-                var scrolling_down;
-
-                if (current_touch_y_coordinate < self.previous_touch_y_coordinate) {
-                    scrolling_down = true;
-                } else {
-                    scrolling_down = false;
-                }
-
-                while (node) {
-                    if (
-                        node.classList &&
-                        node.classList.contains('touch-scrollable') &&
-                        self._scrollable(node, scrolling_down)
-                    ) {
-                        return;
-                    }
-                    node = node.parentNode;
-                }
-                event.preventDefault();
-            });
-        }
         // prevent backspace from performing a 'back' navigation
         _disableBackspaceBack() {
             $(document).on('keydown', function (e) {
@@ -420,21 +387,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     e.preventDefault();
                 }
             });
-        }
-        _scrollable(element, scrolling_down) {
-            var $element = $(element);
-            var scrollable = true;
-
-            if (!scrolling_down && $element.scrollTop() <= 0) {
-                scrollable = false;
-            } else if (
-                scrolling_down &&
-                $element.scrollTop() + $element.height() >= element.scrollHeight
-            ) {
-                scrollable = false;
-            }
-
-            return scrollable;
         }
     }
     Chrome.template = 'Chrome';

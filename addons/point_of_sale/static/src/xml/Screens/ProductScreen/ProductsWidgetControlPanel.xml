@@ -28,7 +28,7 @@
             <!-- Subcategories -->
             <t t-if="props.subcategories.length > 0 &amp;&amp; !env.isMobile">
                 <div class="categories">
-                    <div class="category-list-scroller touch-scrollable">
+                    <div class="category-list-scroller">
                         <div class="category-list"
                              t-att-class="{simple: !env.pos.config.iface_display_categ_images}">
                             <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
