@@ -141,11 +141,10 @@ FormRenderer.include({
      * @override
      */
     _renderNode(node) {
-        if (
-            !this._isFromFormViewDialog &&
-            node.tag === 'div' &&
-            node.attrs.class === 'oe_chatter'
-        ) {
+        if (node.tag === 'div' && node.attrs.class === 'oe_chatter') {
+            if (this._isFromFormViewDialog) {
+                return $('<div/>');
+            }
             return this._makeChatterContainerTarget();
         }
         return this._super(...arguments);
