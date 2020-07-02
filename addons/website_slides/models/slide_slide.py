@@ -107,12 +107,12 @@ class Slide(models.Model):
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
-        'sequence': 'sequence asc',
+        'sequence': 'sequence asc, id asc',
         'most_viewed': 'total_views desc',
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
     }
-    _order = 'sequence asc, is_category asc'
+    _order = 'sequence asc, is_category asc, id asc'
 
     # description
     name = fields.Char('Title', required=True, translate=True)
