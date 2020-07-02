@@ -146,7 +146,7 @@ QUnit.test('reply: discard on discard button click', async function (assert) {
         needaction: true,
         needaction_partner_ids: [3],
         model: 'project.task',
-        record_name: 'Refactoring',
+        record_name: "Refactoring",
         res_id: 20,
     }];
     await this.start();
@@ -192,7 +192,7 @@ QUnit.test('reply: discard on reply button toggle', async function (assert) {
         needaction: true,
         needaction_partner_ids: [3],
         model: 'project.task',
-        record_name: 'Refactoring',
+        record_name: "Refactoring",
         res_id: 20,
     }];
     await this.start();
@@ -233,7 +233,7 @@ QUnit.test('reply: discard on click away', async function (assert) {
         needaction: true,
         needaction_partner_ids: [3],
         model: 'project.task',
-        record_name: 'Refactoring',
+        record_name: "Refactoring",
         res_id: 20,
     }];
     await this.start();
@@ -291,6 +291,124 @@ QUnit.test('reply: discard on click away', async function (assert) {
         '.o_Composer',
         "reply composer should be closed after clicking away"
     );
+});
+
+QUnit.test('"reply to" composer should log note if message replied to is a note', async function (assert) {
+    assert.expect(6);
+
+    this.data['mail.message'].records = [{
+        author_id: [7, "Demo"],
+        body: "<p>Test</p>",
+        date: "2019-04-20 11:00:00",
+        id: 100,
+        is_discussion: false,
+        is_notification: false,
+        message_type: 'comment',
+        needaction: true,
+        needaction_partner_ids: [3],
+        model: 'project.task',
+        record_name: "Refactoring",
+        res_id: 20,
+    }];
+
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+                assert.strictEqual(
+                    args.kwargs.message_type,
+                    "comment",
+                    "should set message type as 'comment'"
+                );
+                assert.strictEqual(
+                    args.kwargs.subtype_xmlid,
+                    "mail.mt_note",
+                    "should set subtype_xmlid as 'note'"
+                );
+            }
+            return this._super(...arguments);
+        },
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display a single message"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_Message_commandReply').click()
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Composer_buttonSend').textContent.trim(),
+        "Log",
+        "Send button text should be 'Log'"
+    );
+
+    await afterNextRender(() => {
+        document.execCommand('insertText', false, "Test");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+    assert.verifySteps(['message_post']);
+});
+
+QUnit.test('"reply to" composer should send message if message replied to is not a note', async function (assert) {
+    assert.expect(6);
+
+    this.data['mail.message'].records = [{
+        author_id: [7, "Demo"],
+        body: "<p>Test</p>",
+        date: "2019-04-20 11:00:00",
+        id: 100,
+        is_discussion: true,
+        is_notification: false,
+        message_type: 'comment',
+        needaction: true,
+        needaction_partner_ids: [3],
+        model: 'project.task',
+        record_name: "Refactoring",
+        res_id: 20,
+    }];
+
+    await this.start({
+        async mockRPC(route, args) {
+            if (args.method === 'message_post') {
+                assert.step('message_post');
+                assert.strictEqual(
+                    args.kwargs.message_type,
+                    "comment",
+                    "should set message type as 'comment'"
+                );
+                assert.strictEqual(
+                    args.kwargs.subtype_xmlid,
+                    "mail.mt_comment",
+                    "should set subtype_xmlid as 'comment'"
+                );
+            }
+            return this._super(...arguments);
+        },
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display a single message"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_Message_commandReply').click()
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Composer_buttonSend').textContent.trim(),
+        "Send",
+        "Send button text should be 'Send'"
+    );
+
+    await afterNextRender(() => {
+        document.execCommand('insertText', false, "Test");
+        document.querySelector(`.o_ComposerTextInput_textarea`)
+            .dispatchEvent(new window.KeyboardEvent('keydown', { key: 'Enter' }));
+    });
+    assert.verifySteps(['message_post']);
 });
 
 });
