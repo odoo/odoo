@@ -3714,7 +3714,7 @@ QUnit.test('receive new needaction messages', async function (assert) {
 });
 
 QUnit.test('reply to message from inbox (message linked to document)', async function (assert) {
-    assert.expect(20);
+    assert.expect(19);
 
     Object.assign(this.data.initMessaging, { needaction_inbox_counter: 1 });
 
@@ -3755,11 +3755,6 @@ QUnit.test('reply to message from inbox (message linked to document)', async fun
                     args.kwargs.message_type,
                     "comment",
                     "should set message type as 'comment'"
-                );
-                assert.strictEqual(
-                    args.kwargs.subtype_xmlid,
-                    "mail.mt_comment",
-                    "should set subtype_xmlid as 'comment'"
                 );
                 messagesData.push({
                     author_id: [3, "Admin"],
