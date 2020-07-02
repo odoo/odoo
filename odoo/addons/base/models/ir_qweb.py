@@ -48,9 +48,6 @@ class IrQWeb(models.AbstractModel, QWeb):
             * ``profile`` (float) profile the rendering (use astor lib) (filter
               profile line with time ms >= profile)
         """
-        for method in dir(self):
-            if method.startswith('render_'):
-                _logger.warning("Unused method '%s' is found in ir.qweb." % method)
 
         context = dict(self.env.context, dev_mode='qweb' in tools.config['dev_mode'])
         context.update(options)
