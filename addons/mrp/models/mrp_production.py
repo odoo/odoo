@@ -1054,6 +1054,19 @@ class MrpProduction(models.Model):
         if self.product_id.tracking == 'serial':
             self._set_qty_producing()
 
+    def _action_generate_immediate_wizard(self):
+        view = self.env.ref('mrp.view_immediate_production')
+        return {
+            'name': _('Immediate Production?'),
+            'type': 'ir.actions.act_window',
+            'view_mode': 'form',
+            'res_model': 'mrp.immediate.production',
+            'views': [(view.id, 'form')],
+            'view_id': view.id,
+            'target': 'new',
+            'context': dict(self.env.context, default_mo_ids=[(4, mo.id) for mo in self]),
+        }
+
     def action_confirm(self):
         self._check_company()
         for production in self:
@@ -1416,6 +1429,9 @@ class MrpProduction(models.Model):
 
     def button_mark_done(self):
         self._button_mark_done_sanity_checks()
+
+        if not self.env.context.get('button_mark_done_production_ids'):
+            self = self.with_context(button_mark_done_production_ids=self.ids)
         res = self._pre_button_mark_done()
         if res is not True:
             return res
@@ -1481,6 +1497,14 @@ class MrpProduction(models.Model):
         return action
 
     def _pre_button_mark_done(self):
+        productions_to_immediate = self._check_immediate()
+        if productions_to_immediate:
+            return productions_to_immediate._action_generate_immediate_wizard()
+
+        for production in self:
+            if float_is_zero(production.qty_producing, precision_rounding=production.product_uom_id.rounding):
+                raise UserError(_('The quantity to produce must be positive!'))
+
         consumption_issues = self._get_consumption_issues()
         if consumption_issues:
             return self._action_generate_consumption_wizard(consumption_issues)
@@ -1686,3 +1710,15 @@ class MrpProduction(models.Model):
                 duplicates = co_prod_move_lines.filtered(lambda ml: ml.qty_done and ml.lot_id == move_line.lot_id) - move_line
                 if duplicates:
                     raise UserError(message)
+
+    def _check_immediate(self):
+        immediate_productions = self.browse()
+        if self.env.context.get('skip_immediate'):
+            return immediate_productions
+        pd = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for production in self:
+            if all(float_is_zero(ml.qty_done, precision_digits=pd) for
+                    ml in production.move_raw_ids.move_line_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
+                    ) and float_is_zero(production.qty_producing, precision_digits=pd):
+                immediate_productions |= production
+        return immediate_productions
