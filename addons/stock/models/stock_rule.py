@@ -283,6 +283,9 @@ class StockRule(models.Model):
         date_expected = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
         )
+        partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
+        if partner:
+            product_id = product_id.with_context(lang=partner.lang or self.env.user.lang)
         picking_description = product_id._get_description(self.picking_type_id)
         if values.get('product_description_variants'):
             picking_description += values['product_description_variants']
@@ -300,7 +303,7 @@ class StockRule(models.Model):
             'product_id': product_id.id,
             'product_uom': product_uom.id,
             'product_uom_qty': qty_left,
-            'partner_id': self.partner_address_id.id or (values.get('group_id', False) and values['group_id'].partner_id.id) or False,
+            'partner_id': partner.id if partner else False,
             'location_id': self.location_src_id.id,
             'location_dest_id': location_id.id,
             'move_dest_ids': move_dest_ids,
