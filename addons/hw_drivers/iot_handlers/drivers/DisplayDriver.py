@@ -58,9 +58,9 @@ class DisplayDriver(Driver):
         return len(displays) and iot_devices[displays[0]]
 
     def action(self, data):
-        if data.get('action') == "update_url":
+        if data.get('action') == "update_url" and self.device_identifier != 'distant_display':
             self.update_url(data.get('url'))
-        elif data.get('action') == "display_refresh":
+        elif data.get('action') == "display_refresh" and self.device_identifier != 'distant_display':
             self.call_xdotools('F5')
         elif data.get('action') == "take_control":
             self.take_control(self.data['owner'], data.get('html'))
@@ -146,7 +146,7 @@ class DisplayController(http.Controller):
     @http.route('/hw_proxy/display_refresh', type='json', auth='none', cors='*')
     def display_refresh(self):
         display = DisplayDriver.get_default_display()
-        if display:
+        if display and display.device_identifier != 'distant_display':
             return display.call_xdotools('F5')
 
     @http.route('/hw_proxy/customer_facing_display', type='json', auth='none', cors='*')
