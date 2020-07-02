@@ -182,7 +182,8 @@ class StockMove(models.Model):
     @api.onchange('product_id', 'picking_type_id')
     def onchange_product(self):
         if self.product_id:
-            self.description_picking = self.product_id._get_description(self.picking_type_id)
+            product = self.product_id.with_context(lang=self.picking_id.partner_id.lang or self.env.user.lang)
+            self.description_picking = product._get_description(self.picking_type_id)
 
     @api.depends('has_tracking', 'picking_type_id.use_create_lots', 'picking_type_id.use_existing_lots', 'state')
     def _compute_display_assign_serial(self):
