@@ -1,6 +1,22 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
+<template id="s_popup_content" name="Popup Content">
+    <section class="s_banner oe_img_bg pt96 pb96"
+        data-snippet="s_banner"
+        style="background-image: url('/web/image/website.s_popup_default_image');">
+        <div class="container">
+            <div class="row s_nb_column_fixed">
+                <div class="col-lg-10 offset-lg-1 text-center o_cc o_cc1 jumbotron pt48 pb48">
+                    <h2><font style="font-size: 62px;">Win $20</font></h2>
+                    <p class="lead">Check out now and get $20 off your first order.</p>
+                    <a href="#" class="btn btn-primary">New customer</a>
+                </div>
+            </div>
+        </div>
+    </section>
+</template>
+
 <template id="s_popup" name="Popup">
     <div class="s_popup o_snippet_invisible" data-vcss="001">
         <div class="modal fade s_popup_middle"
@@ -15,7 +31,7 @@
             <div class="modal-dialog d-flex">
                 <div class="modal-content oe_structure">
                     <div class="s_popup_close js_close_popup o_we_no_overlay o_not_editable" aria-label="Close">×</div>
-                    <section class="s_banner oe_img_bg o_bg_img_center pt96 pb96"
+                    <section id="s_popup_content" class="s_banner oe_img_bg o_bg_img_center pt96 pb96"
                              data-snippet="s_banner"
                              style="background-image: url('/web/image/website.s_popup_default_image');">
                         <div class="container">

@@ -159,8 +159,7 @@ options.registry.newsletter_popup = options.registry.mailing_list_subscribe.exte
      * @override
      */
     onTargetShow: function () {
-        // Open the modal
-        this.$target.data('quick-open', true);
+        this.$target.modal('show');
         return this._refreshPublicWidgets();
     },
     /**
@@ -194,6 +193,7 @@ options.registry.newsletter_popup = options.registry.mailing_list_subscribe.exte
      */
     destroy: function () {
         this.$target.off('.newsletter_popup_option');
+        this.$target.find('.o_newsletter_content').empty();
         this._super.apply(this, arguments);
     },
 
