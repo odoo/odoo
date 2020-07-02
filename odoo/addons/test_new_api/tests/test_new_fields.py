@@ -2609,6 +2609,11 @@ class TestSelectionDeleteUpdate(common.TransactionCase):
 
     MODEL_ABSTRACT = 'test_new_api.state_mixin'
 
+    def setUp(self):
+        super().setUp()
+        # enable unlinking ir.model.fields.selection
+        self.patch(self.registry, 'ready', False)
+
     def test_unlink_asbtract(self):
         self.env['ir.model.fields.selection'].search([
             ('field_id.model', '=', self.MODEL_ABSTRACT),
