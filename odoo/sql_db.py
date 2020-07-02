@@ -438,6 +438,8 @@ class Cursor(BaseCursor):
         result = self._cnx.commit()
         self.prerollback.clear()
         self.postrollback.clear()
+        if hasattr(self, '_now'):
+            del self._now
         self.postcommit()
         return result
 
@@ -449,6 +451,8 @@ class Cursor(BaseCursor):
         self.postcommit.clear()
         self.prerollback()
         result = self._cnx.rollback()
+        if hasattr(self, '_now'):
+            del self._now
         self.postrollback()
         return result
 
@@ -459,6 +463,14 @@ class Cursor(BaseCursor):
     @property
     def closed(self):
         return self._closed
+
+    def now(self):
+        try:
+            return self._now
+        except AttributeError:
+            self.execute("SELECT (now() AT TIME ZONE 'UTC')")
+            self._now = self.fetchone()[0]
+            return self._now
 
 
 class TestCursor(BaseCursor):

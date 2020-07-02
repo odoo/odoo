@@ -606,6 +606,7 @@ class TestAssetsBundleWithIRAMock(FileTouchable):
             # anything.
             self.env['ir.attachment'].flush(['checksum'])
             self.cr.execute("update ir_attachment set write_date=clock_timestamp() + interval '10 seconds' where id = (select max(id) from ir_attachment)")
+            self.env['ir.attachment'].invalidate_cache(['write_date'])
 
             # Compile a fourth time, without changes
             self._bundle(self._get_asset(), False, False)

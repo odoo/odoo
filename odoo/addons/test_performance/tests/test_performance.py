@@ -112,7 +112,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # create N lines on rec1: O(N) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(1):
             rec1.write({'line_ids': [(0, 0, {'value': 0})]})
         self.assertEqual(len(rec1.line_ids), 1)
 
@@ -136,12 +136,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # delete N lines: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=16, demo=16):
+        with self.assertQueryCount(__system__=17, demo=17):
             rec1.write({'line_ids': [(2, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=14, demo=14):
+        with self.assertQueryCount(__system__=15, demo=15):
             rec1.write({'line_ids': [(2, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -156,7 +156,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec1.line_ids, lines[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=14, demo=14):
+        with self.assertQueryCount(__system__=15, demo=15):
             rec1.write({'line_ids': [(3, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -167,7 +167,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # link N lines from rec1 to rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(2):
+        with self.assertQueryCount(1):
             rec2.write({'line_ids': [(4, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
@@ -190,7 +190,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # empty N lines in rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=15, demo=15):
+        with self.assertQueryCount(__system__=16, demo=16):
             rec2.write({'line_ids': [(5,)]})
         self.assertFalse(rec2.line_ids)
 
@@ -209,12 +209,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec1.line_ids, lines[1:])
         self.assertEqual(rec2.line_ids, lines[0])
 
-        with self.assertQueryCount(5):
+        with self.assertQueryCount(4):
             rec2.write({'line_ids': [(6, 0, lines.ids)]})
         self.assertFalse(rec1.line_ids)
         self.assertEqual(rec2.line_ids, lines)
 
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(1):
             rec2.write({'line_ids': [(6, 0, lines.ids)]})
         self.assertEqual(rec2.line_ids, lines)
 
@@ -238,7 +238,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # create N tags on rec1: O(N) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(4):
+        with self.assertQueryCount(3):
             rec1.write({'tag_ids': [(0, 0, {'name': 0})]})
         self.assertEqual(len(rec1.tag_ids), 1)
 
@@ -291,7 +291,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # link N tags from rec1 to rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(3):
+        with self.assertQueryCount(2):
             rec2.write({'tag_ids': [(4, tag.id) for tag in tags[0]]})
         self.assertEqual(rec2.tag_ids, tags[0])
 
