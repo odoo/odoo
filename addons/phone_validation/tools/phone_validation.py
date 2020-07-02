@@ -48,7 +48,7 @@ try:
             if raise_exception:
                 raise
             else:
-                _logger.warning(_('Unable to format %s:\n%s'), number, e)
+                _logger.warning('Unable to format phone number %s:\n%s', number, e)
                 return number
         if force_format == 'E164':
             phone_fmt = phonenumbers.PhoneNumberFormat.E164
