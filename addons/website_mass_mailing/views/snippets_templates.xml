@@ -79,8 +79,11 @@
         <t t-set="selector" t-value="'.js_subscribe'"/>
         <div data-js="mailing_list_subscribe"
             t-att-data-selector="selector"
-            t-attf-data-exclude=".o_newsletter_modal #{selector}">
-            <we-button data-select_mailing_list="" data-no-preview="true">Change Newsletter</we-button>
+            t-attf-data-exclude=".o_newsletter_content #{selector}">
+            <we-row>
+                <we-title>Change Newsletter</we-title>
+                <we-select data-name="mailing_list" data-no-preview="true"></we-select>
+            </we-row>
         </div>
         <div data-js="recaptchaSubscribe"
             t-att-data-selector="selector">
@@ -88,9 +91,11 @@
             <we-checkbox t-if="recaptcha_public_key" string="Show reCaptcha Policy" data-toggle-recaptcha-legal="" data-no-preview="true"/>
         </div>
         <div t-att-data-selector="selector" data-drop-near="p, h1, h2, h3, blockquote, .card"/>
-        <div data-js="newsletter_popup"
-            data-selector=".o_newsletter_popup">
-            <we-button data-select_mailing_list="" data-no-preview="true">Change Newsletter</we-button>
+        <div data-js="newsletter_popup" data-selector=".o_newsletter_popup">
+            <we-row>
+                <we-title>Change Newsletter</we-title>
+                <we-select data-name="mailing_list" data-no-preview="true"></we-select>
+            </we-row>
         </div>
     </xpath>
 </template>
