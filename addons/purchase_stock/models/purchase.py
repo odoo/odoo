@@ -446,7 +446,8 @@ class PurchaseOrderLine(models.Model):
 
     def _prepare_stock_move_vals(self, picking, price_unit, product_uom_qty, product_uom):
         self.ensure_one()
-        description_picking = self.product_id._get_description(self.order_id.picking_type_id)
+        product = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)
+        description_picking = product._get_description(self.order_id.picking_type_id)
         if self.product_description_variants:
             description_picking += self.product_description_variants
         return {
