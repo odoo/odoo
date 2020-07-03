@@ -528,5 +528,53 @@ odoo.define('web.search_bar_tests', function (require) {
 
             actionManager.destroy();
         });
+
+        QUnit.test("widgets are supported in search view", async function (assert) {
+            assert.expect(7);
+
+            this.data.partner.fields.ref = { type: 'reference', string: "Reference" };
+            this.data.partner.records.forEach((record, i) => {
+                record.ref = `ref${String(i).padStart(3, "0")}`;
+            });
+            const archs = Object.assign({}, this.archs, {
+                'partner,false,search': `
+                    <search>
+                        <field name="ref" widget="char"/>
+                    </search>`,
+            });
+            const actionManager = await createActionManager({
+                actions: this.actions,
+                archs,
+                data: this.data,
+                async mockRPC(route, { domain }) {
+                    if (route === '/web/dataset/search_read') {
+                        assert.step(JSON.stringify(domain));
+                    }
+                    return this._super(...arguments);
+
+                }
+            });
+            await actionManager.doAction(1);
+
+            await cpHelpers.editSearch(actionManager, "ref");
+            await cpHelpers.validateSearch(actionManager);
+
+            assert.containsN(actionManager, ".o_data_row", 5);
+
+            await cpHelpers.removeFacet(actionManager, 0);
+            await cpHelpers.editSearch(actionManager, "ref002");
+            await cpHelpers.validateSearch(actionManager);
+
+            assert.containsOnce(actionManager, ".o_data_row");
+
+            assert.verifySteps([
+                '[]',
+                '[["ref","ilike","ref"]]',
+                '[]',
+                '[["ref","ilike","ref002"]]',
+            ]);
+
+            actionManager.destroy();
+        });
     });
 });

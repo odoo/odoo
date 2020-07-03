@@ -604,7 +604,7 @@
                 </a>
                 <a href="#" t-on-click.prevent="">
                     <t t-if="src.label" t-esc="src.label"/>
-                    <t t-elif="['date', 'datetime'].includes(props.fields[src.fieldName].type)">
+                    <t t-elif="['date', 'datetime'].includes(src.type)">
                         <t>Search <em t-esc="src.description"/> at: <strong t-esc="state.inputValue"/></t>
                     </t>
                     <t t-else="">Search <em t-esc="src.description"/> for: <strong t-esc="state.inputValue"/></t>

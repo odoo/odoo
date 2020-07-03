@@ -92,34 +92,41 @@ odoo.define('web.SearchBar', function (require) {
          * @returns {Object}
          */
         _createSource(filter) {
+            const field = this.props.fields[filter.fieldName];
+            const type = filter.widget || field.type;
             const source = {
                 active: true,
                 description: filter.description,
-                fieldName: filter.fieldName,
                 filterId: filter.id,
                 filterOperator: filter.operator,
                 id: sourceId ++,
-                operator: CHAR_FIELDS.includes(filter.fieldType) ? 'ilike' : '=',
+                operator: CHAR_FIELDS.includes(type) ? 'ilike' : '=',
                 parent: false,
+                type,
             };
-            switch (filter.fieldType) {
-                case 'selection':
+            switch (type) {
+                case 'selection': {
                     source.active = false;
-                    source.selection = this.props.fields[filter.fieldName].selection;
+                    source.selection = field.selection || [];
                     break;
-                case 'boolean':
+                }
+                case 'boolean': {
                     source.active = false;
                     source.selection = [
                         [true, this.env._t("Yes")],
                         [false, this.env._t("No")],
                     ];
                     break;
-                case 'many2one':
+                }
+                case 'many2one': {
                     source.expand = true;
                     source.expanded = false;
+                    source.context = field.context;
+                    source.relation = field.relation;
                     if (filter.domain) {
                         source.domain = filter.domain;
                     }
+                }
             }
             return source;
         }
@@ -133,7 +140,6 @@ odoo.define('web.SearchBar', function (require) {
         _createSubSource(source, [value, label], active = true) {
             const subSource = {
                 active,
-                fieldName: source.fieldName,
                 filterId: source.filterId,
                 filterOperator: source.filterOperator,
                 id: sourceId ++,
@@ -161,16 +167,15 @@ odoo.define('web.SearchBar', function (require) {
                         args = [];
                     }
                 }
-                const { context, relation } = this.props.fields[source.fieldName];
                 const results = await this.rpc({
                     kwargs: {
                         args,
-                        context,
+                        context: source.context,
                         limit: 8,
                         name: this.state.inputValue.trim(),
                     },
                     method: 'name_search',
-                    model: relation,
+                    model: source.relation,
                 });
                 const options = results.map(result => this._createSubSource(source, result));
                 const parentIndex = this.state.sources.indexOf(source);
@@ -235,8 +240,7 @@ odoo.define('web.SearchBar', function (require) {
          * @param {Object} source
          * @returns {string}
          */
-        _parseWithSource(rawValue, source) {
-            const { type } = this.props.fields[source.fieldName];
+        _parseWithSource(rawValue, { type }) {
             const parser = field_utils.parse[type];
             let parsedValue;
             switch (type) {
