@@ -61,10 +61,6 @@ var ListController = BasicController.extend({
         session.user_has_group('base.group_allow_export').then(has_group => {
             this.isExportEnable = has_group;
         });
-        Object.defineProperty(this, 'mode', {
-            get: () => this.renderer.isEditable() ? 'edit' : 'readonly',
-            set: () => {},
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -519,6 +515,7 @@ var ListController = BasicController.extend({
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) !== this.handle) {
+            this.mode = mode;
             this.updateButtons(mode);
             return this.renderer.setRowMode(recordID, mode);
         } else {
