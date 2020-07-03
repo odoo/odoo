@@ -877,6 +877,9 @@ odoo.define('web.ControlPanelModel', function (require) {
                         filter.defaultRank = -10;
                         filter.defaultAutocompleteValue = attrs.defaultAutocompleteValue;
                     }
+                    if (attrs.widget) { // FIXME: drop support in master
+                        filter.widget = attrs.widget;
+                    }
                     break;
             }
             if (filter.fieldName && !attrs.string) {
