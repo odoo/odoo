@@ -29,7 +29,8 @@ var KanbanColumn = Widget.extend({
         'click .o_kanban_load_more': '_onLoadMore',
         'click .o_kanban_toggle_fold': '_onToggleFold',
         'click .o_column_archive_records': '_onArchiveRecords',
-        'click .o_column_unarchive_records': '_onUnarchiveRecords'
+        'click .o_column_unarchive_records': '_onUnarchiveRecords',
+        'click .o_kanban_config .dropdown-menu': '_onConfigDropdownClicked',
     },
     /**
      * @override
@@ -294,6 +295,15 @@ var KanbanColumn = Widget.extend({
      */
     _onCancelQuickCreate: function () {
         this._cancelQuickCreate();
+    },
+    /**
+     * Prevent from closing the config dropdown when the user clicks on a
+     * disabled item (e.g. 'Fold' in sample mode).
+     *
+     * @private
+     */
+    _onConfigDropdownClicked(ev) {
+        ev.stopPropagation();
     },
     /**
      * @private
