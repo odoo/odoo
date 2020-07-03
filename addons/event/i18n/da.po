@@ -12,9 +12,9 @@
 # Martin Trigaux, 2019
 # Pernille Kristensen <pernillekristensen1994@gmail.com>, 2019
 # lhmflexerp <lhm@flexerp.dk>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2020
 # JonathanStein <jstein@image.dk>, 2020
 # Walther Barnett <wba@miracle.dk>, 2020
+# Sanne Kristensen <sanne@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Walther Barnett <wba@miracle.dk>, 2020\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,7 +46,7 @@ msgstr "%s (kopi)"
 msgid ""
 "'Registration Event - %s' % (object.name or 'Attendee').replace('/','')"
 msgstr ""
-"'Registrering Arrangement - %s' % (object.name or "
+"'Registrering af arrangement - %s' % (object.name or "
 "'Deltager').replace('/','')"
 
 #. module: event
@@ -70,7 +70,7 @@ msgid ""
 "<b>Business Room</b> - To discuss implementation methodologies, best sales "
 "practices, etc."
 msgstr ""
-"<b>Forretning Rum</b> - Diskussion af implementerings metoder, \"Det bedste "
+"<b>Forretningsrum</b> - Diskussion af implementerings metoder, \"Det bedste "
 "salg\", etc."
 
 #. module: event
@@ -78,7 +78,7 @@ msgstr ""
 msgid ""
 "<b>Technical Rooms</b> - One dedicated to advanced Odoo developers, one for "
 "new developers."
-msgstr "<b>Tekniske Rum</b> - Et til øvede Odoo udviklere, et til begyndere."
+msgstr "<b>Tekniske rum</b> - Et til øvede Odoo udviklere, et til begyndere."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -117,7 +117,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr "<b>Workshop Rum</b> - Forbeholdt udviklere."
+msgstr "<b>Workshop rum</b> - Forbeholdt udviklere."
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -136,8 +136,8 @@ msgid ""
 msgstr ""
 "<div>\n"
 "    Kære ${object.name},<br/>\n"
-"    Takf or din forespørgelse.<br/>\n"
-"    Her er adgangskort til arrangementet  ${object.event_id.name}.<br/>\n"
+"    Tak for din forespørgsel.<br/>\n"
+"    Her er dit adgangkort til arrangementet  ${object.event_id.name}.<br/>\n"
 "    Kontakt os gerne, hvis du har nogle spørgsmål.\n"
 "    <br/><br/>\n"
 "    Tak,<br/>\n"
@@ -162,7 +162,7 @@ msgid ""
 "are in <b>English</b>!"
 msgstr ""
 "<i class=\"fa fa-info-circle mr-2\"></i>Dette arrangement og alle "
-"konferancer er på<b>engelsk</b>!"
+"konferencer er på<b>engelsk</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -940,7 +940,7 @@ msgstr ""
 "                    <table style=\"width:100%;border-top:1px solid #e1e1e1;\">\n"
 "                        <tr>\n"
 "                            <td style=\"padding:25px 0px;\">\n"
-"                                <strong>Tilføj arrangement til din kalender:</strong>\n"
+"                                <strong>Tilføj arrangementet til din kalender:</strong>\n"
 "                                <a href=\"https://www.google.com/calendar/render?action=TEMPLATE&amp;text=${object.event_id.name}&amp;dates=${date_begin}/${date_end}&amp;location=${location}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> Google</a>\n"
 "                                <a href=\"/event/${slug(object.event_id)}/ics\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\"><img src=\"/web_editor/font_to_img/61525/rgb(135,90,123)/16\" style=\"vertical-align:middle;\" height=\"16\" alt=\"\"/> iCal/Outlook</a>\n"
 "                                <a href=\"https://calendar.yahoo.com/?v=60&amp;view=d&amp;type=20&amp;title=${object.event_id.name}&amp;in_loc=${location}&amp;st=${format_datetime(object.event_id.date_begin, tz='UTC', dt_format='%Y%m%dT%H%M%S')}&amp;et=${format_datetime(object.event_id.date_end, tz='UTC', dt_format='%Y%m%dT%H%M%S')}\" style=\"padding:3px 5px;border:1px solid #875A7B;color:#875A7B;text-decoration:none;border-radius:3px;\" target=\"new\">\n"
@@ -977,7 +977,7 @@ msgstr ""
 "        Sent af<a target=\"_blank\" href=\"${object.company_id.website}\" style=\"color: #875A7B;\">${object.company_id.name}</a>\n"
 "        % if 'website_url' in object.event_id and object.event_id.website_url:\n"
 "        <br/>\n"
-"        Discover <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">all our events</a>.\n"
+"        Se <a href=\"/event\" style=\"text-decoration:none;color:#717188;\">alle vores arrangementer</a>.\n"
 "        % endif\n"
 "      </td></tr>\n"
 "    </table>\n"
@@ -1266,12 +1266,12 @@ msgstr "Konference"
 #: model_terms:event.event,description:event.event_2
 #: model:event.event,name:event.event_2
 msgid "Conference for Architects"
-msgstr "Arkitekt Konference "
+msgstr "Arkitekt konference "
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "Conferences, workshops and trainings will be organized in 6 rooms:"
-msgstr "Konferancer, workshops og uddannelse er fordelt på 6 rum:"
+msgstr "Konferencer, workshops og uddannelse er fordelt på 6 rum:"
 
 #. module: event
 #: model:ir.model,name:event.model_res_config_settings
@@ -1476,7 +1476,7 @@ msgstr "Arrangement"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr "Automatiseret Arrangement kommunikation "
+msgstr "Automatiseret udsendelser vedr. arrangementer "
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
@@ -2646,7 +2646,7 @@ msgstr "Synlighed"
 #: code:addons/event/models/event_mail.py:0
 #, python-format
 msgid "WARNING: Event Scheduler Error for event: %s"
-msgstr "ADVARSEL: Fejl til Arrangement planlægning for begivenhed: %s"
+msgstr "ADVARSEL: Arrangementsplanlægning for begivenhed fejler: %s"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2

@@ -75,7 +75,7 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                 AND (am.state IN %s)
                 AND (account_account.internal_type IN %s)
                 AND (
-                        l.reconciled IS FALSE
+                        l.reconciled IS NOT TRUE
                         OR l.id IN(
                             SELECT credit_move_id FROM account_partial_reconcile where max_date > %s
                             UNION ALL
@@ -221,7 +221,8 @@ class ReportAgedPartnerBalance(models.AbstractModel):
             total[(i + 1)] += values['total']
             values['partner_id'] = partner['partner_id']
             if partner['partner_id']:
-                values['name'] = len(partner['name']) >= 45 and partner['name'][0:40] + '...' or partner['name']
+                name = partner['name'] or ''
+                values['name'] = len(name) >= 45 and name[0:40] + '...' or name
                 values['trust'] = partner['trust']
             else:
                 values['name'] = _('Unknown Partner')

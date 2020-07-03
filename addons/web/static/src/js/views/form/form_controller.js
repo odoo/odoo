@@ -255,7 +255,9 @@ var FormController = BasicController.extend({
                 for (var k = 0; k < changedFields.length; k++) {
                     var field = fields[changedFields[k]];
                     var fieldData = data[changedFields[k]];
-                    if (field.translate && fieldData) {
+                    // An empty HTML field will always contain at least '<p><br></p>'. Do not
+                    // suggest a translation in this case.
+                    if (field.translate && fieldData && fieldData !== '<p><br></p>') {
                         alertFields[changedFields[k]] = field;
                     }
                 }

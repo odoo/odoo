@@ -14,6 +14,7 @@ from odoo.exceptions import ValidationError
 from odoo.tools.misc import DEFAULT_SERVER_DATETIME_FORMAT
 from odoo.tools.misc import formatLang
 from odoo.http import request
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -341,7 +342,12 @@ class PaymentAcquirer(models.Model):
             company = self.env.company
         if not partner:
             partner = self.env.user.partner_id
-        active_acquirers = self.search([('state', 'in', ['enabled', 'test']), ('company_id', '=', company.id)])
+
+        domain = expression.AND([
+            ['&', ('state', 'in', ['enabled', 'test']), ('company_id', '=', company.id)],
+            ['|', ('country_ids', '=', False), ('country_ids', 'in', [partner.country_id.id])]
+        ])
+        active_acquirers = self.search(domain)
         acquirers = active_acquirers.filtered(lambda acq: (acq.payment_flow == 'form' and acq.view_template_id) or
                                                                (acq.payment_flow == 's2s' and acq.registration_view_template_id))
         return {

@@ -250,7 +250,8 @@ class PosConfig(models.Model):
         """If there is an open session, store it to current_session_id / current_session_State.
         """
         for pos_config in self:
-            session = pos_config.session_ids.filtered(lambda s: not s.state == 'closed' and not s.rescue)
+            session = pos_config.session_ids.filtered(lambda s: s.user_id.id == self.env.uid and \
+                    not s.state == 'closed' and not s.rescue)
             # sessions ordered by id desc
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
@@ -547,9 +548,6 @@ class PosConfig(models.Model):
         """
         self.ensure_one()
         if not self.current_session_id:
-            if not self.company_has_template:
-                raise UserError(_("A Chart of Accounts is not yet installed in your current company. Please install a "
-                                  "Chart of Accounts through the Invoicing/Accounting settings before launching a PoS session." ))
             self._check_company_journal()
             self._check_company_invoice_journal()
             self._check_company_payment()

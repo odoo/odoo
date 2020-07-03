@@ -367,7 +367,8 @@
                         <div class="card">
                             <div class="card-body p-2 pr-3">
                                 <div class="media align-items-center">
-                                  <img width="38" height="38" t-att-src="website.image_url(badge.badge_id, 'image_128')" class="o_object_fit_cover mr-0"/>
+                                  <img t-if="not badge.badge_id.image_128 and badge.level" t-attf-src="/website_profile/static/src/img/badge_#{badge.badge_id.level}.svg" class="m-1" style="height:2.5em" t-att-alt="badge.badge_id.name"/>
+                                  <img t-else="" width="38" height="38" t-att-src="website.image_url(badge.badge_id, 'image_128')" class="o_object_fit_cover mr-1"/>
                                   <div class="media-body col-md-10 p-0">
                                     <h6 class="my-0 text-truncate" t-field="badge.badge_id.name"/>
                                   </div>

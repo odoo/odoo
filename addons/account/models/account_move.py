@@ -95,7 +95,7 @@ class AccountMove(models.Model):
         states={'draft': [('readonly', False)]},
         default=fields.Date.context_today)
     ref = fields.Char(string='Reference', copy=False)
-    narration = fields.Text(string='Internal Note')
+    narration = fields.Text(string='Terms and Conditions')
     state = fields.Selection(selection=[
             ('draft', 'Draft'),
             ('posted', 'Posted'),
@@ -3157,14 +3157,16 @@ class AccountMoveLine(models.Model):
             audit_str = ''
             for tag in record.tag_ids:
 
-                # In case of cash basis entries, we need to consider the original invoice, not the current move
-                if record.move_id.tax_cash_basis_rec_id:
-                    reconciled_amls = record.move_id.tax_cash_basis_rec_id.debit_move_id + record.move_id.tax_cash_basis_rec_id.credit_move_id
-                    invoice_aml = reconciled_amls.filtered(lambda x: x.journal_id.type in ('sale', 'purchase')) # To exclude the payment
-                else:
-                    invoice_aml = record
+                caba_origin_inv_type = record.move_id.type
+                caba_origin_inv_journal_type = record.journal_id.type
 
-                tag_amount = (tag.tax_negate and -1 or 1) * (invoice_aml.move_id.is_inbound() and -1 or 1) * record.balance
+                if record.move_id.tax_cash_basis_rec_id:
+                    # Cash basis entries are always treated as misc operations, applying the tag sign directly to the balance
+                    type_multiplicator = 1
+                else:
+                    type_multiplicator = (record.journal_id.type == 'sale' and -1 or 1) * (record.move_id.type in ('in_refund', 'out_refund') and -1 or 1)
+
+                tag_amount = type_multiplicator * (tag.tax_negate and -1 or 1) * record.balance
 
                 if tag.tax_report_line_ids:
                     #Then, the tag comes from a report line, and hence has a + or - sign (also in its name)
@@ -3768,7 +3770,8 @@ class AccountMoveLine(models.Model):
             lambda m: m.is_invoice(include_receipts=True) and m.invoice_payment_state not in ('paid', 'in_payment')
         )
 
-        self._check_reconcile_validity()
+        reconciled_lines = self.filtered(lambda aml: float_is_zero(aml.balance, precision_rounding=aml.move_id.company_id.currency_id.rounding) and aml.reconciled)
+        (self - reconciled_lines)._check_reconcile_validity()
         #reconcile everything that can be
         remaining_moves = self.auto_reconcile_lines()
 
@@ -4122,6 +4125,35 @@ class AccountMoveLine(models.Model):
             ('statement_line_id', '!=', False),
         ]
 
+    def _convert_tags_for_cash_basis(self, tags):
+        """ Cash basis entries are managed by the tax report just like misc operations.
+        So it means that the tax report will not apply any additional multiplicator
+        to the balance of the cash basis lines.
+
+        For invoices move lines whose multiplicator would have been -1 (if their
+        taxes had not CABA), it will hence cause sign inversion if we directly copy
+        the tags from those lines. Instead, we need to invert all the signs from these
+        tags (if they come from tax report lines; tags created in data for financial
+        reports will stay onchanged).
+        """
+        self.ensure_one()
+        tax_multiplicator = (self.journal_id.type == 'sale' and -1 or 1) * (self.move_id.type in ('in_refund', 'out_refund') and -1 or 1)
+        if tax_multiplicator == -1:
+            # Take the opposite tags instead
+            rslt = self.env['account.account.tag']
+            for tag in tags:
+                if tag.tax_report_line_ids:
+                    # tag created by an account.tax.report.line
+                    new_tag = tag.tax_report_line_ids[0].tag_ids.filtered(lambda x: x.tax_negate != tag.tax_negate)
+                    rslt += new_tag
+                else:
+                    # tag created in data for use by an account.financial.html.report.line
+                    rslt += tag
+
+            return rslt
+
+        return tags
+
 
 class AccountPartialReconcile(models.Model):
     _name = "account.partial.reconcile"
@@ -4321,7 +4353,7 @@ class AccountPartialReconcile(models.Model):
                             'journal_id': newly_created_move.journal_id.id,
                             'tax_repartition_line_id': line.tax_repartition_line_id.id,
                             'tax_base_amount': line.tax_base_amount,
-                            'tag_ids': [(6, 0, line.tag_ids.ids)],
+                            'tag_ids': [(6, 0, line._convert_tags_for_cash_basis(line.tag_ids).ids)],
                         })
                         if line.account_id.reconcile and not line.reconciled:
                             #setting the account to allow reconciliation will help to fix rounding errors
@@ -4349,7 +4381,7 @@ class AccountPartialReconcile(models.Model):
                                 'journal_id': newly_created_move.journal_id.id,
                                 'tax_repartition_line_id': line.tax_repartition_line_id.id,
                                 'tax_base_amount': line.tax_base_amount,
-                                'tag_ids': [(6, 0, line.tag_ids.ids)],
+                                'tag_ids': [(6, 0, line._convert_tags_for_cash_basis(line.tag_ids).ids)],
                             })
                             self.env['account.move.line'].with_context(check_move_validity=False).create({
                                 'name': line.name,

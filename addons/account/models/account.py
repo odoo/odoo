@@ -1588,7 +1588,7 @@ class AccountTax(models.Model):
         # For the computation of move lines, we could have a negative base value.
         # In this case, compute all with positive values and negate them at the end.
         sign = 1
-        if base < 0:
+        if base <= 0:
             base = -base
             sign = -1
 
@@ -1644,8 +1644,10 @@ class AccountTax(models.Model):
             tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
             sum_repartition_factor = sum(tax_repartition_lines.mapped('factor'))
 
+            price_include = self._context.get('force_price_include', tax.price_include)
+
             #compute the tax_amount
-            if (self._context.get('force_price_include') or tax.price_include) and total_included_checkpoints.get(i):
+            if price_include and total_included_checkpoints.get(i):
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
@@ -1657,7 +1659,7 @@ class AccountTax(models.Model):
             tax_amount = round(tax_amount, prec)
             factorized_tax_amount = round(tax_amount * sum_repartition_factor, prec)
 
-            if tax.price_include and not total_included_checkpoints.get(i):
+            if price_include and not total_included_checkpoints.get(i):
                 cumulated_tax_included_amount += factorized_tax_amount
 
             # If the tax affects the base of subsequent taxes, its tax move lines must
@@ -1696,7 +1698,7 @@ class AccountTax(models.Model):
                     'sequence': tax.sequence,
                     'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
                     'analytic': tax.analytic,
-                    'price_include': tax.price_include or self._context.get('force_price_include'),
+                    'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
                     'tag_ids': (repartition_line.tag_ids + subsequent_tags).ids,

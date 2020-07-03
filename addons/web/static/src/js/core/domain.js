@@ -93,15 +93,15 @@ var Domain = collections.Tree.extend({
                 case ">=":
                     return (fieldValue >= this._data[2]);
                 case "in":
-                    return _.contains(
+                    return _.intersection(
                         _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
-                        fieldValue
-                    );
+                        _.isArray(fieldValue) ? fieldValue : [fieldValue],
+                    ).length !== 0;;
                 case "not in":
-                    return !_.contains(
+                    return _.intersection(
                         _.isArray(this._data[2]) ? this._data[2] : [this._data[2]],
-                        fieldValue
-                    );
+                        _.isArray(fieldValue) ? fieldValue : [fieldValue],
+                    ).length === 0;
                 case "like":
                     return (fieldValue.toLowerCase().indexOf(this._data[2].toLowerCase()) >= 0);
                 case "=like":
