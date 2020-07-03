@@ -32,7 +32,9 @@ class HttpCaseWithUserDemo(HttpCase):
 
     def setUp(self):
         super(HttpCaseWithUserDemo, self).setUp()
-        self.env.ref('base.partner_admin').write({'name': 'Mitchell Admin'})
+        self.user_admin = self.env.ref('base.user_admin')
+        self.user_admin.write({'name': 'Mitchell Admin'})
+        self.partner_admin = self.user_admin.partner_id
         self.user_demo = self.env['res.users'].search([('login', '=', 'demo')])
         self.partner_demo = self.user_demo.partner_id
 
