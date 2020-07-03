@@ -459,6 +459,9 @@
             .o_kanban_config {
                 visibility: hidden;
 
+                > .dropdown-menu {
+                    cursor: default;
+                }
                 i {
                     @include o-kanban-icon;
                 }
@@ -488,7 +491,7 @@
         }
     }
 
-    &.ui-sortable .o_kanban_header_title {
+    &.ui-sortable .o_kanban_header_title .o_column_title {
         cursor: move;
     }
 
