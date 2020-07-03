@@ -60,7 +60,7 @@ var ListView = BasicView.extend({
         this.controllerParams.editable = editable;
         this.controllerParams.hasSidebar = params.hasSidebar;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
-        this.controllerParams.mode = editable ? 'edit' : 'readonly';
+        this.controllerParams.mode = 'readonly';
         this.controllerParams.selectedRecords = selectedRecords;
 
         this.rendererParams.arch = this.arch;
