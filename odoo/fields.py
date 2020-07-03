@@ -28,6 +28,7 @@ from odoo.exceptions import CacheMiss
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
+POST_CREATE_FIELDS = ['create_date', 'create_uid', 'write_date', 'write_uid']
 
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
@@ -180,6 +181,11 @@ class Field(MetaField('DummyField', (object,), {})):
 
         .. seealso:: :ref:`Advanced Fields/Compute fields <reference/fields/compute>`
 
+    :param bool pre_compute: whether the field should be computed before record insertion
+        in database.  Should be used to specify manually some fields as pre_compute=True
+        when the field has to be or could be computed before record insertion.
+        (default: `False`)
+
     :param bool compute_sudo: whether the field should be recomputed as superuser
         to bypass access rights (by default ``True`` for stored fields, ``False``
         for non stored fields)
@@ -225,6 +231,7 @@ class Field(MetaField('DummyField', (object,), {})):
     recursive = False                   # whether self depends on itself
     compute = None                      # compute(recs) computes field on recs
     compute_sudo = False                # whether field should be recomputed as superuser
+    pre_compute = True                  # whether field has to be computed before creation
     inverse = None                      # inverse(recs) inverses field on recs
     search = None                       # search(recs, operator, value) searches on self
     related = None                      # sequence of field names, for related fields
@@ -320,6 +327,7 @@ class Field(MetaField('DummyField', (object,), {})):
             if not (attrs['store'] and not attrs.get('readonly', True)):
                 attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', not attrs.get('inverse'))
+            attrs['pre_compute'] = attrs.get('pre_compute', True)
         if attrs.get('related'):
             # by default, related fields are not stored, computed in superuser
             # mode, not copied and readonly
@@ -327,6 +335,7 @@ class Field(MetaField('DummyField', (object,), {})):
             attrs['compute_sudo'] = attrs.get('compute_sudo', attrs.get('related_sudo', True))
             attrs['copy'] = attrs.get('copy', False)
             attrs['readonly'] = attrs.get('readonly', True)
+            attrs['pre_compute'] = attrs.get('pre_compute', True)
         if attrs.get('company_dependent'):
             # by default, company-dependent fields are not stored, not computed
             # in superuser mode and not copied
@@ -619,6 +628,9 @@ class Field(MetaField('DummyField', (object,), {})):
                 field = Model._fields[fname]
                 if field is self and index:
                     self.recursive = True
+
+                if fname in POST_CREATE_FIELDS:
+                    self.pre_compute = False
 
                 field_seq.append(field)
 

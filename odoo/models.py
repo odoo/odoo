@@ -330,6 +330,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     consistency on the relational fields having ``check_company=True``
     as attribute.
     """
+    _pre_compute = False
 
     # default values for _transient_vacuum()
     _transient_max_count = lazy_classproperty(lambda _: config.get('osv_memory_count_limit'))
@@ -3666,6 +3667,112 @@ Record ids: %(records)s
 
         return True
 
+    def _add_missing_computes(self, data_list):
+        """ Adds missing computed fields to data_list values.
+
+        Only applies for pre_compute=True fields.
+        """
+
+        stored_computed_fields = [
+            field for field in self._fields.values()
+            if field.store and field.compute and field.pre_compute
+        ]
+
+        # x2m_stored_fields = [
+        #     field for field in self._fields.values()
+        #     if field.store
+        #     and field.type in ('one2many', 'many2many')
+        #     and not field.compute
+        # ]
+
+        if not stored_computed_fields:
+            return data_list
+
+        for data in data_list:
+            missing_fields = [
+                field for field in stored_computed_fields
+                if field.name not in data['stored']
+                and field not in data['protected']
+            ]
+
+            if missing_fields:
+                # Specific context to know when we are in this specific case.
+                new_obj = self.new(
+                    dict(data['stored'], **data['inversed']))
+
+                # # While we already have a new of the main record,
+                # # Try to pre compute the computed fields of its x2m fields.
+                # x2m_precomputables = [
+                #     field for field in x2m_stored_fields
+                #     if field.name in vals
+                # ]
+
+                # for field in x2m_precomputables:
+                #     # Trigger pre_computation of x2m pre_compute=True fields
+                #     # Allow batch computation for models with lots of x2m content
+                #     # SO with K lines, all lines pre_compute are computed in the new
+                #     # SO, avoiding another new for all lines.
+                #     updated = new_obj[field.name]._rec_force_precomputes(field)
+                #     if updated:
+                #         # If the x2m records are supposed updated, keep their
+                #         # values for the create to avoid useless recomputations.
+                #         field_value = field.convert_to_write(new_obj[field.name], self)
+                #         vals[field.name] = field_value
+
+                for field in missing_fields:
+                    # computed stored fields with a column
+                    # have to be computed before create
+                    # s.t. required and constraints can be applied on those fields.
+                    field_value = field.convert_to_write(new_obj[field.name], self)
+                    data['stored'][field.name] = field_value
+                    data['protected'].update(
+                        self.pool.field_computed.get(field, [field])
+                    )
+
+        return data_list
+
+    def _rec_force_precomputes(self, source_field):
+        """Recursively force precomputation of x2m fields pre_computed fields.
+
+        :return: Whether a value may have recomputed (cannot be totally guaranteed)
+        :rtype: bool
+        """
+        if not self or len(self.ids) == len(self._ids):
+            # Avoid computation on existing records or on empty recordsets.
+            # It should be mainly useless and is not the target of this feature
+            # i.e. recomputing taxes compute fields on SO/SOL creation.
+            return False
+
+        updated = False
+
+        # VFE TODO cache the _fields targeted for each model ?
+        stored_computed_fields = [
+            field for field in self._fields.values()
+            if field.store and field.compute and field.pre_compute
+        ]
+
+        for field in stored_computed_fields:
+            # Force computation of pre_compute=True fields (if not defined)
+            # We can't be sure that the field wasn't already defined in values
+            # Thus if any field on the model is compute and pre_compute=True
+            # updated will be True
+            updated = True
+            self.mapped(field.name)
+
+        # VFE TODO cache the _fields targeted for each model ?
+        x2m_stored_fields = [
+            field for field in self._fields.values()
+            if field.store and not field.compute
+            and field.type in ("one2many", "many2many")
+        ]
+
+        for field in x2m_stored_fields:
+            # If x2m fields of x2m fields may have been precomputed
+            # current new recordset has updated values in cache.
+            if source_field not in self._field_inverses[field]:
+                updated = updated or self[field.name]._rec_force_precomputes(field)
+        return updated
+
     @api.model_create_multi
     @api.returns('self', lambda value: value.id)
     def create(self, vals_list):
@@ -3731,6 +3838,12 @@ Record ids: %(records)s
                 field = self._fields.get(key)
                 if not field:
                     raise ValueError("Invalid field %r on model %r" % (key, self._name))
+                if field.compute and field.readonly and field.pre_compute and self._pre_compute:
+                    # If a value is given for a readonly compute
+                    # The pre-computation won't happen
+                    # Do not consider this given value for data_list
+                    # To ensure field is correctly pre-computed
+                    continue
                 if field.company_dependent:
                     irprop_def = self.env['ir.property']._get(key, self._name)
                     cached_def = field.convert_to_cache(irprop_def, self)
@@ -3772,6 +3885,8 @@ Record ids: %(records)s
                 for parent, data in zip(parents, parent_data_list):
                     data['stored'][parent_name] = parent.id
 
+        if self._pre_compute:
+            data_list = self._add_missing_computes(data_list)
         # create records with stored fields
         records = self._create(data_list)
 
