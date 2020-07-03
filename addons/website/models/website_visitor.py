@@ -4,7 +4,7 @@
 from datetime import datetime, timedelta
 import uuid
 
-from odoo import fields, models, api, registry, _
+from odoo import fields, models, api, _
 from odoo.addons.base.models.res_partner import _tz_get
 from odoo.exceptions import UserError
 from odoo.tools.misc import _format_time_ago
