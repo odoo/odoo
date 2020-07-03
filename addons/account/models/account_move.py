@@ -243,7 +243,13 @@ class AccountMove(models.Model):
             processed_taxes += to_process_taxes
 
             # Apply tags on base line
-            line.tag_ids = line.tax_ids.mapped('invoice_repartition_line_ids').filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids')
+            tax_type = line.tax_ids[0].type_tax_use if line.tax_ids else None
+            is_refund = (tax_type == 'sale' and line.debit) or (tax_type == 'purchase' and line.credit)
+            repartition_field = is_refund and 'refund_repartition_line_ids' or 'invoice_repartition_line_ids'
+            repartition_tags = line.tax_ids.mapped(repartition_field).filtered(lambda x: x.repartition_type == 'base').mapped('tag_ids')
+            tags_need_inversion = (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund)
+
+            line.tag_ids = self.env['account.move.line']._revert_signed_tags(repartition_tags) if tags_need_inversion else repartition_tags
 
             # Process taxes.
             for tax in to_process_taxes:
@@ -256,12 +262,12 @@ class AccountMove(models.Model):
                 # Compute the tax amount one by one.
                 if self.company_id.tax_calculation_rounding_method == 'round_globally':
                     quantity = len(lines_to_sum) if tax.amount_type == 'fixed' else 1
-                    taxes_vals = tax.compute_all(balance, quantity=quantity, currency=line.currency_id, product=line.product_id, partner=line.partner_id)
+                    taxes_vals = tax.compute_all(balance, quantity=quantity, currency=line.currency_id, product=line.product_id, partner=line.partner_id, is_refund=is_refund)
                 else:
                     taxes_vals_line = [
                         tax.compute_all(
                             lts.balance, quantity=1.0, currency=line.currency_id,
-                            product=line.product_id, partner=line.partner_id
+                            product=line.product_id, partner=line.partner_id, is_refund=is_refund
                         )
                         for lts in lines_to_sum
                     ]
@@ -300,8 +306,12 @@ class AccountMove(models.Model):
                                 # Reset debit/credit in case of the originator line is temporary set to 0 in both debit/credit.
                                 tax_line.debit = tax_line.credit = 0.0
                         else:
-                             # Create a new tax_line.
+                            tax_tags_orm_cmd = line_vals['tag_ids']
 
+                            if tags_need_inversion:
+                                tax_tags_orm_cmd = [(6, 0, self.env['account.move.line']._revert_signed_tags(self.env['account.account.tag'].browse(line_vals['tag_ids'][0][2])).ids)]
+
+                             # Create a new tax_line.
                             amount = line_vals['amount']
                             to_create_vals = {
                                 'account_id': line_vals['account_id'] or line.account_id.id,
@@ -316,7 +326,7 @@ class AccountMove(models.Model):
                                 'company_id': self.company_id.id,
                                 'company_currency_id': self.company_id.currency_id.id,
                                 'tax_repartition_line_id': line_vals['tax_repartition_line_id'],
-                                'tag_ids': line_vals['tag_ids'],
+                                'tag_ids': tax_tags_orm_cmd,
                                 'tax_base_amount': line_vals['base'],
                             }
                             # N.B. currency_id/amount_currency are not set because if we have two lines with the same tax
@@ -1635,19 +1645,23 @@ class AccountMoveLine(models.Model):
         tax_multiplicator = (self.journal_id.type == 'sale' and -1 or 1) * (self.invoice_id.type in ('in_refund', 'out_refund') and -1 or 1)
         if tax_multiplicator == -1:
             # Take the opposite tags instead
-            rslt = self.env['account.account.tag']
-            for tag in tags:
-                if tag.tax_report_line_ids:
-                    # tag created by an account.tax.report.line
-                    new_tag = tag.tax_report_line_ids[0].tag_ids.filtered(lambda x: x.tax_negate != tag.tax_negate)
-                    rslt += new_tag
-                else:
-                    # tag created in data for use by an account.financial.html.report.line
-                    rslt += tag
-
-            return rslt
+            return self._revert_signed_tags(tags)
 
         return tags
+
+    @api.model
+    def _revert_signed_tags(self, tags):
+        rslt = self.env['account.account.tag']
+        for tag in tags:
+            if tag.tax_report_line_ids:
+                # tag created by an account.tax.report.line
+                new_tag = tag.tax_report_line_ids[0].tag_ids.filtered(lambda x: x.tax_negate != tag.tax_negate)
+                rslt += new_tag
+            else:
+                # tag created in data for use by an account.financial.html.report.line
+                rslt += tag
+
+        return rslt
 
 
 class AccountPartialReconcile(models.Model):
