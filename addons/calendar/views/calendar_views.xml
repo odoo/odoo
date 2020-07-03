@@ -278,7 +278,6 @@
                 <field name="categ_ids"/>
                 <field name="user_id"/>
                 <field name="show_as"/>
-                <field name="privacy" string="Privacy"/>
                 <!-- TODO clean this filter and context key -->
                 <filter string="My Meetings" help="My Meetings" name="mymeetings" context='{"mymeetings": 1}'/>
                 <separator/>
@@ -288,7 +287,6 @@
                 <group expand="0" string="Group By">
                     <filter string="Responsible" name="responsible" domain="[]" context="{'group_by': 'user_id'}"/>
                     <filter string="Availability" name="availability" domain="[]" context="{'group_by': 'show_as'}"/>
-                    <filter string="Privacy" name="privacy" domain="[]" context="{'group_by': 'privacy'}"/>
                 </group>
             </search>
         </field>
