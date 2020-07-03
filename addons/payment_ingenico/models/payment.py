@@ -51,6 +51,7 @@ class PaymentAcquirerOgone(models.Model):
         """
         res = super(PaymentAcquirerOgone, self)._get_feature_support()
         res['tokenize'].append('ogone')
+        res['authorize'].append('ogone')
         return res
 
     def _get_ogone_urls(self, environment):
@@ -162,6 +163,7 @@ class PaymentAcquirerOgone(models.Model):
         param_plus = {
             'return_url': ogone_tx_values.pop('return_url', False)
         }
+        # TODO I must also implement split here !
         temp_ogone_tx_values = {
             'PSPID': self.ogone_pspid,
             'ORDERID': values['reference'],
@@ -179,6 +181,7 @@ class PaymentAcquirerOgone(models.Model):
             'DECLINEURL': urls.url_join(base_url, OgoneController._decline_url),
             'EXCEPTIONURL': urls.url_join(base_url, OgoneController._exception_url),
             'CANCELURL': urls.url_join(base_url, OgoneController._cancel_url),
+            'OPERATION': 'RES' if self.acquirer_id.capture_manually else 'SAL',
             'PARAMPLUS': urls.url_encode(param_plus),
         }
         if self.save_token in ['ask', 'always']:
@@ -363,7 +366,7 @@ class PaymentTxOgone(models.Model):
             'ORDERID': reference,
             'AMOUNT': int(self.amount * 100),
             'CURRENCY': self.currency_id.name,
-            'OPERATION': 'SAL',
+            'OPERATION': 'RES' if self.acquirer_id.capture_manually else 'SAL',
             'ECI': 9,   # Recurring (from eCommerce)
             'ALIAS': self.payment_token_id.acquirer_ref,
             'RTIMEOUT': 30,
@@ -390,12 +393,15 @@ class PaymentTxOgone(models.Model):
 
         data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
 
-        direct_order_url = 'https://secure.ogone.com/ncol/%s/orderdirect.asp' % ('prod' if self.acquirer_id.state == 'enabled' else 'test')
+        if self.acquirer_id.state == 'enabled':
+            direct_order_url = 'https://secure.ogone.com/ncol/prod/orderdirect.asp'
+        else:
+            direct_order_url = 'https://ogone.test.v-psp.com/ncol/test/orderdirect.asp'
 
         logged_data = data.copy()
         logged_data.pop('PSWD')
         _logger.info("ogone_s2s_do_transaction: Sending values to URL %s, values:\n%s", direct_order_url, pformat(logged_data))
-        result = requests.post(direct_order_url, data=data).content
+        result = requests.post(direct_order_url, data=data).content  # expect status 9 if payment, 5 if authorization
 
         try:
             tree = objectify.fromstring(result)
@@ -404,6 +410,39 @@ class PaymentTxOgone(models.Model):
             # invalid response from ogone
             _logger.exception('Invalid xml response from ogone')
             _logger.info('ogone_s2s_do_transaction: Values received:\n%s', result)
+            raise
+
+        return self._ogone_s2s_validate_tree(tree)
+
+    def ogone_s2s_capture_transaction(self, **kwargs):
+        self.ensure_one()
+        data = {
+            'OPERATION': 'SAS',  # capture last partial amount or full amount,
+            'ORDERID': self.reference,
+            'PSPID': self.acquirer_id.ogone_pspid,
+            'PSWD': self.acquirer_id.ogone_password,
+            'USERID': self.acquirer_id.ogone_userid,
+        }
+        data['SHASIGN'] = self.acquirer_id._ogone_generate_shasign('in', data)
+
+        if self.acquirer_id.state == 'enabled':
+            direct_maintenance_url = 'https://secure.ogone.com/ncol/prod/maintenancedirect.asp'
+        else:
+            direct_maintenance_url = 'https://ogone.test.v-psp.com/ncol/test/maintenancedirect.asp'
+
+        logged_data = data.copy()
+        logged_data.pop('PSWD')
+        _logger.info("ogone_s2s_capture_transaction: Sending values to URL %s, values:\n%s", direct_maintenance_url, pformat(logged_data))
+        result = requests.post(direct_maintenance_url, data=data).content  # expect status 91 if capture went well
+
+        try:
+            tree = objectify.fromstring(result)
+            _logger.info('ogone_s2s_capture_transaction: Values received:\n%s',
+                         etree.tostring(tree, pretty_print=True, encoding='utf-8'))
+        except etree.XMLSyntaxError:
+            # invalid response from ogone
+            _logger.exception('Invalid xml response from ogone')
+            _logger.info('ogone_s2s_capture_transaction: Values received:\n%s', result)
             raise
 
         return self._ogone_s2s_validate_tree(tree)
@@ -469,7 +508,10 @@ class PaymentTxOgone(models.Model):
                 self.write({'payment_token_id': pm.id})
             if self.payment_token_id:
                 self.payment_token_id.verified = True
-            self._set_transaction_done()
+            if status == 5:
+                self._set_transaction_authorized()
+            else:
+                self._set_transaction_done()
             self.execute_callback()
             # if this transaction is a validation one, then we refund the money we just withdrawn
             if self.type == 'validation':
