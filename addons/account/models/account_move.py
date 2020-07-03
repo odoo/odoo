@@ -4122,7 +4122,7 @@ class AccountMoveLine(models.Model):
                             'tax_base_amount': line.tax_base_amount,
                             'tax_repartition_line_id': line.tax_repartition_line_id.id,
                             'tax_ids': [(6, 0, line.tax_ids.ids)],
-                            'tax_tag_ids': [(6, 0, line.tax_tag_ids.ids)],
+                            'tax_tag_ids': [(6, 0, line._convert_tags_for_cash_basis(line.tax_tag_ids).ids)],
                             'debit': line.debit,
                             'credit': line.credit,
                         }
