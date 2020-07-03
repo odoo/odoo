@@ -33,6 +33,7 @@ class HrPlanWizard(models.TransientModel):
                     'user_id': responsible.id,
                 })
                 activity._onchange_activity_type_id()
+                activity.user_id = responsible.id
 
         return {
             'type': 'ir.actions.act_window',

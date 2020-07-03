@@ -2,13 +2,14 @@
 <odoo>
     <data>
         <template id="account_invoice_line_facturx_export">
+            <t t-set="line" t-value="line_values['line']"/>
             <t  xmlns:ram="urn:un:unece:uncefact:data:standard:ReusableAggregateBusinessInformationEntity:100"
                 xmlns:rsm="urn:un:unece:uncefact:data:standard:CrossIndustryInvoice:100"
                 xmlns:udt="urn:un:unece:uncefact:data:standard:UnqualifiedDataType:100">
                 <ram:IncludedSupplyChainTradeLineItem>
                     <!-- Line number. -->
                     <ram:AssociatedDocumentLineDocument>
-                        <ram:LineID t-esc="line_counter"/>
+                        <ram:LineID t-esc="line_values['index']"/>
                     </ram:AssociatedDocumentLineDocument>
 
                     <!-- Product. -->
@@ -25,23 +26,15 @@
 
                     <!-- Amounts. -->
                     <ram:SpecifiedLineTradeAgreement>
-                        <t t-set="taxes"
-                           t-value="line.tax_ids.compute_all(
-                                line.price_unit,
-                                currency=line.currency_id,
-                                quantity=line.quantity,
-                                product=line.product_id,
-                                partner=record.partner_id,
-                                is_refund=line.move_id.type in ('in_refund', 'out_refund'))"/>
                         <ram:GrossPriceProductTradePrice>
                             <ram:ChargeAmount
                                 t-att-currencyID="currency.name"
-                                t-esc="format_monetary(taxes['total_excluded'], currency)"/>
+                                t-esc="format_monetary(line.price_unit, currency)"/>
 
                             <!-- Discount. -->
                             <ram:AppliedTradeAllowanceCharge t-if="line.discount">
                                 <ram:ChargeIndicator>
-                                    <udt:Indicator t-esc="'false' if line.discount == 1 else 'true'"/>
+                                    <udt:Indicator t-esc="'false' if line.discount == 100 else 'true'"/>
                                 </ram:ChargeIndicator>
                                 <ram:CalculationPercent t-esc="line.discount"/>
                             </ram:AppliedTradeAllowanceCharge>
@@ -55,7 +48,8 @@
                     </ram:SpecifiedLineTradeDelivery>
 
                     <ram:SpecifiedLineTradeSettlement>
-                        <t t-foreach="line.tax_ids" t-as="tax">
+                        <t t-foreach="line_values['tax_details']" t-as="tax_vals">
+                            <t t-set="tax" t-value="tax_vals['tax']"/>
                             <ram:ApplicableTradeTax t-if="tax.amount_type == 'percent'">
                                 <ram:RateApplicablePercent t-esc="tax.amount"/>
                             </ram:ApplicableTradeTax>
@@ -130,9 +124,7 @@
 
                 <rsm:SupplyChainTradeTransaction>
                     <!-- Invoice lines. -->
-                    <t t-set="line_counter" t-value="0"/>
-                    <t t-foreach="record.invoice_line_ids.filtered(lambda l: not l.display_type)" t-as="line">
-                        <t t-set="line_counter" t-value="line_counter + 1"/>
+                    <t t-foreach="invoice_line_values" t-as="line_values">
                         <t t-call="account_facturx.account_invoice_line_facturx_export"/>
                     </t>
 
@@ -191,14 +183,15 @@
                         </ram:SpecifiedTradeSettlementPaymentMeans>
 
                         <!-- Tax Summary. -->
-                        <t t-foreach="record.line_ids.filtered(lambda line: line.tax_line_id)" t-as="tax_line">
+                        <t t-foreach="tax_details" t-as="tax_vals">
+                            <t t-set="tax_line" t-value="tax_vals['line']"/>
                             <ram:ApplicableTradeTax>
                                 <ram:CalculatedAmount
                                     t-att-currencyID="currency.name"
-                                    t-esc="format_monetary(tax_line.price_unit, currency)"/>
+                                    t-esc="format_monetary(tax_vals['tax_amount'], currency)"/>
                                 <ram:BasisAmount
                                     t-att-currencyID="currency.name"
-                                    t-esc="format_monetary(tax_line.tax_base_amount, currency)"/>
+                                    t-esc="format_monetary(tax_vals['tax_base_amount'], currency)"/>
                                 <ram:RateApplicablePercent
                                     t-if="tax_line.tax_line_id.amount_type == 'percent'"
                                     t-esc="tax_line.tax_line_id.amount"/>
@@ -220,7 +213,7 @@
                                 t-esc="format_monetary(record.amount_untaxed, currency)"/>
                             <ram:TaxBasisTotalAmount
                                 t-att-currencyID="currency.name"
-                                t-esc="format_monetary(sum(record.line_ids.filtered(lambda line: line.tax_line_id).mapped('price_unit')), currency)"/>
+                                t-esc="format_monetary(record.amount_untaxed, currency)"/>
                             <ram:TaxTotalAmount
                                 t-att-currencyID="currency.name"
                                 t-esc="format_monetary(record.amount_tax, currency)"/>
