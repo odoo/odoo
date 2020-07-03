@@ -523,7 +523,7 @@
                                 attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '!=', 'entry')]}"/>
                         <button name="action_post" string="Confirm" class="oe_highlight"
                                 type="object" groups="account.group_account_invoice"
-                                attrs="{'invisible': ['|', '|', ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '=', 'entry')]}"/>
+                                attrs="{'invisible': ['|', '|', '|', ('state', '!=', 'draft'), ('auto_post', '=', True), ('move_type', '=', 'entry'), ('display_inactive_currency_warning','=',True)]}"/>
                         <!-- Send (only invoices) -->
                         <button name="action_invoice_sent"
                                 type="object"
@@ -562,23 +562,32 @@
                     </header>
                     <!-- Invoice outstanding credits -->
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-warning" role="alert" style="margin-bottom:0px;"
+                         class="alert alert-warning mb-0" role="alert"
                          attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('tax_lock_date_message', '=', False)]}">
                         <field name="tax_lock_date_message" nolabel="1"/>
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         class="alert alert-info mb-0" role="alert"
                          attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('out_invoice', 'out_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding payments</a></bold> for this customer. You can allocate them to mark this invoice as paid.
                     </div>
                     <div groups="account.group_account_invoice,account.group_account_readonly"
-                         class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                         class="alert alert-info mb-0" role="alert"
                          attrs="{'invisible': ['|', '|', ('move_type', 'not in', ('in_invoice', 'in_refund')), ('invoice_has_outstanding', '=', False), ('payment_state', 'not in', ('not_paid', 'partial'))]}">
                         You have <bold><a class="alert-link" href="#outstanding" role="button">outstanding debits</a></bold> for this vendor. You can allocate them to mark this bill as paid.
                     </div>
-                    <div class="alert alert-info" role="alert" style="margin-bottom:0px;"
+                    <div class="alert alert-info mb-0" role="alert"
                          attrs="{'invisible': ['|', ('state', '!=', 'draft'), ('auto_post', '=', False)]}">
                         This move is configured to be posted automatically at the accounting date: <field name="date" readonly="1"/>.
+                    </div>
+                    <!-- Currency consistency -->
+                    <div class="alert alert-warning mb-0" role="alert"
+                         attrs="{'invisible': ['|', ('display_inactive_currency_warning', '=', False), ('move_type', 'not in', ('in_invoice', 'in_refund', 'in_receipt'))]}">
+                        In order to validate this bill, you must <button class="oe_link" type="object" name="action_activate_currency" style="padding: 0; vertical-align: baseline;">activate the currency of the bill</button>. The journal entries need to be computed by Odoo before being posted in your company's currency.
+                    </div>
+                    <div class="alert alert-warning mb-0" role="alert"
+                         attrs="{'invisible': ['|', ('display_inactive_currency_warning', '=', False), ('move_type', 'not in', ('out_invoice', 'out_refund', 'out_receipt'))]}">
+                        In order to validate this invoice, you must <button class="oe_link" type="object" name="action_activate_currency" style="padding: 0; vertical-align: baseline;">activate the currency of the invoice</button>. The journal entries need to be computed by Odoo before being posted in your company's currency.
                     </div>
                     <sheet>
                         <div name="button_box" class="oe_button_box">
@@ -626,6 +635,7 @@
                         <field name="has_reconciled_entries" invisible="1"/>
                         <field name="restrict_mode_hash_table" invisible="1"/>
                         <field name="country_code" invisible="1"/>
+                        <field name="display_inactive_currency_warning" invisible="1"/>
 
                         <div class="oe_title">
                             <!-- Invoice draft header -->

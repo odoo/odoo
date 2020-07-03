@@ -745,3 +745,25 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can remove journal items if the related journal entry is draft.
         self.test_move.button_draft()
         self.test_move.line_ids.unlink()
+
+    def test_account_move_inactive_currency_raise_error_on_post(self):
+        """ Ensure a move cannot be posted when using an inactive currency """
+        move = self.env['account.move'].create({
+            'move_type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [{}]
+        })
+
+        move.currency_id.active = False
+
+        with self.assertRaises(UserError), self.cr.savepoint():
+            move.action_post()
+
+        # Make sure that the invoice can still be posted when the currency is active
+        move.action_activate_currency()
+        move.action_post()
+
+        self.assertEqual(move.state, 'posted')
