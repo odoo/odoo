@@ -218,7 +218,7 @@ class AccountPartialReconcile(models.Model):
             'partner_id': base_line.partner_id.id,
             'account_id': account.id,
             'tax_ids': [(6, 0, base_line.tax_ids.ids)],
-            'tax_tag_ids': [(6, 0, base_line.tax_tag_ids.ids)],
+            'tax_tag_ids': [(6, 0, base_line._convert_tags_for_cash_basis(base_line.tax_tag_ids).ids)],
             'tax_exigible': True,
         }
 
@@ -259,7 +259,7 @@ class AccountPartialReconcile(models.Model):
             'tax_base_amount': tax_line.tax_base_amount,
             'tax_repartition_line_id': tax_line.tax_repartition_line_id.id,
             'tax_ids': [(6, 0, tax_line.tax_ids.ids)],
-            'tax_tag_ids': [(6, 0, tax_line.tax_tag_ids.ids)],
+            'tax_tag_ids': [(6, 0, tax_line._convert_tags_for_cash_basis(tax_line.tax_tag_ids).ids)],
             'account_id': tax_line.tax_repartition_line_id.account_id.id or tax_line.account_id.id,
             'amount_currency': amount_currency,
             'currency_id': tax_line.currency_id.id,
@@ -314,7 +314,7 @@ class AccountPartialReconcile(models.Model):
             base_line.partner_id.id,
             (account or base_line.account_id).id,
             tuple(base_line.tax_ids.ids),
-            tuple(base_line.tax_tag_ids.ids),
+            tuple(base_line._convert_tags_for_cash_basis(base_line.tax_tag_ids).ids),
         )
 
     @api.model
@@ -344,7 +344,7 @@ class AccountPartialReconcile(models.Model):
             tax_line.partner_id.id,
             (account or tax_line.account_id).id,
             tuple(tax_line.tax_ids.ids),
-            tuple(tax_line.tax_tag_ids.ids),
+            tuple(tax_line._convert_tags_for_cash_basis(tax_line.tax_tag_ids).ids),
             tax_line.tax_repartition_line_id.id,
         )
 
