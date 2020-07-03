@@ -56,10 +56,6 @@ var ListController = BasicController.extend({
         this.selectedRecords = params.selectedRecords || [];
         this.multipleRecordsSavingPromise = null;
         this.fieldChangedPrevented = false;
-        Object.defineProperty(this, 'mode', {
-            get: () => this.renderer.isEditable() ? 'edit' : 'readonly',
-            set: () => {},
-        });
     },
 
     //--------------------------------------------------------------------------
@@ -467,6 +463,7 @@ var ListController = BasicController.extend({
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) !== this.handle) {
+            this.mode = mode;
             this._updateButtons(mode);
             return this.renderer.setRowMode(recordID, mode);
         } else {
