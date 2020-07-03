@@ -2659,6 +2659,8 @@ class Many2one(_Relational):
         corecord = self.convert_to_record(value, records)
         for invf in records._field_inverses[self]:
             valid_records = records.filtered_domain(invf.get_domain_list(corecord))
+            # do not mix new records and real records
+            valid_records = valid_records.filtered(lambda r: bool(r.id) == bool(corecord.id))
             if not valid_records:
                 continue
             ids0 = cache.get(corecord, invf, None)
