@@ -171,7 +171,7 @@ class CRMRevealRule(models.Model):
                         # Remove country because rule doesn't apply to any state
                         states.remove((state_id.country_id.code, False))
                     states += [(state_id.country_id.code, state_id.code)]
-                
+
             rules.append({
                 'id': rule.id,
                 'regex': regex_url,
@@ -262,10 +262,10 @@ class CRMRevealRule(models.Model):
             ON v.reveal_rule_id = r.id
             WHERE v.reveal_state='to_process'
             GROUP BY v.reveal_ip
-            LIMIT %d
-            """ % batch_limit
+            LIMIT %s
+            """
 
-        self.env.cr.execute(query)
+        self.env.cr.execute(query, (batch_limit,))
         return self.env.cr.fetchall()
 
     def _prepare_iap_payload(self, pgv):
