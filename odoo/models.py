@@ -2524,15 +2524,15 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     continue            # don't update custom fields
                 new = field.update_db(self, columns)
                 if new and field.compute:
-                    fields_to_compute.append(field.name)
+                    fields_to_compute.append(field)
 
             if fields_to_compute:
-                @self.pool.post_init
-                def mark_fields_to_compute():
-                    recs = self.with_context(active_test=False).search([])
-                    for field in fields_to_compute:
-                        _logger.info("Storing computed values of %s", field)
-                        self.env.add_to_compute(recs._fields[field], recs)
+                # mark existing records for computation
+                cr.execute('SELECT id FROM "{}"'.format(self._table))
+                records = self.browse(row[0] for row in cr.fetchall())
+                for field in fields_to_compute:
+                    _logger.info("Prepare computation of %s", field)
+                    self.env.add_to_compute(field, records)
 
         if self._auto:
             self._add_sql_constraints()
