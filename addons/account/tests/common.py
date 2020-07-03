@@ -801,29 +801,30 @@ class AccountTestInvoicingCommon(SavepointCase):
         }
 
     @classmethod
-    def setup_multi_currency_data(cls):
-        gold_currency = cls.env['res.currency'].create({
+    def setup_multi_currency_data(cls, default_values={}, rate2016=3.0, rate2017=2.0):
+        foreign_currency = cls.env['res.currency'].create({
             'name': 'Gold Coin',
             'symbol': '☺',
             'rounding': 0.001,
             'position': 'after',
             'currency_unit_label': 'Gold',
             'currency_subunit_label': 'Silver',
+            **default_values,
         })
         rate1 = cls.env['res.currency.rate'].create({
             'name': '2016-01-01',
-            'rate': 3.0,
-            'currency_id': gold_currency.id,
+            'rate': rate2016,
+            'currency_id': foreign_currency.id,
             'company_id': cls.env.company.id,
         })
         rate2 = cls.env['res.currency.rate'].create({
             'name': '2017-01-01',
-            'rate': 2.0,
-            'currency_id': gold_currency.id,
+            'rate': rate2017,
+            'currency_id': foreign_currency.id,
             'company_id': cls.env.company.id,
         })
         return {
-            'currency': gold_currency,
+            'currency': foreign_currency,
             'rates': rate1 + rate2,
         }
 
