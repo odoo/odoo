@@ -77,7 +77,7 @@ class SendSMS(models.TransientModel):
     @api.depends('res_ids_count', 'active_domain_count')
     def _compute_composition_mode(self):
         for composer in self:
-            if self.env.context.get('composition_mode_default') == 'guess' or not composer.composition_mode:
+            if self.env.context.get('guess_composition_mode') or not composer.composition_mode:
                 if composer.res_ids_count > 1 or (composer.use_active_domain and composer.active_domain_count > 1):
                     composer.composition_mode = 'mass'
                 else:

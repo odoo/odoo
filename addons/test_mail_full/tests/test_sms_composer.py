@@ -519,7 +519,7 @@ class TestSMSComposerMass(TestMailFullCommon):
         # Composer creation with context from a template context action (simulate) - comment (single recipient)
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
-                composition_mode_default='guess',
+                guess_composition_mode=True,
                 default_res_ids=[test_record_2.id],
                 default_res_id=test_record_2.id,
                 active_ids=[test_record_2.id],
@@ -541,7 +541,7 @@ class TestSMSComposerMass(TestMailFullCommon):
         # Composer creation with context from a template context action (simulate) - mass (multiple recipient)
         with self.with_user('employee'):
             composer = self.env['sms.composer'].with_context(
-                composition_mode_default='guess',
+                guess_composition_mode=True,
                 default_res_ids=[test_record_1.id, test_record_2.id],
                 default_res_id=test_record_1.id,
                 active_ids=[test_record_1.id, test_record_2.id],
