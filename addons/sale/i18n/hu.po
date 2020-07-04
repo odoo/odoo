@@ -1621,7 +1621,7 @@ msgstr "Követők (Partnerek)"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
+msgstr "Tiltott értékek a nem számlázható értékesítési rendelési soron"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
@@ -1669,7 +1669,7 @@ msgstr "Számla automatikus létrehozása az online fizetés megerősítésekor.
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr ""
+msgstr "Figyelmeztetések megjelenítése a termékek vagy ügyfelek rendeléseiben"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1691,7 +1691,7 @@ msgstr "Csoportosítás"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
-msgstr ""
+msgstr "HTML színjegyzék"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -1752,6 +1752,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Ha az értékesítés zárolva van, akkor többé nem lehet módosítani. Azonban "
+"továbbra is lehet számlázni vagy kiszállítani."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -1803,13 +1805,13 @@ msgstr "Érvénytelen aláírás."
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Érvénytelen token! Token szolgáltató %s != %s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Érvénytelen token! Token partner %s != %s"
 
 #. module: sale
 #: code:addons/sale/models/account_invoice.py:0
@@ -1937,7 +1939,7 @@ msgstr "Számlázási szabály"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr ""
+msgstr "Számlázási cél"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1976,6 +1978,8 @@ msgstr ""
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
+"Igaz, ha az értékesítési rendelés sor egy kiadásból vagy egy beszállítói "
+"számlából származik"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -1984,12 +1988,15 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Tilos módosítani a következő mezőket egy zárolt rendelésben:\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
 msgstr ""
+"Nem engedélyezett a rendelések megerősítése a következő állapotokban: %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -2052,6 +2059,8 @@ msgstr "Átfutási idő"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr ""
+"Engedje meg az ügyfeleinek a bejelentkezést a dokumentumaik megtekintése "
+"érdekében"
 
 #. module: sale
 #. openerp-web
@@ -2061,6 +2070,8 @@ msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually point"
 " to the next logical actions.</i>"
 msgstr ""
+"Hozzunk létre egy új árajánlatot. <br/><i> Figyelje meg, hogy a színes "
+"gombok általában a következő logikai akciókra mutatnak. </i>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2071,7 +2082,7 @@ msgstr "Zárolás"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_auto_done_setting
 #: model:res.groups,name:sale.group_auto_done_setting
 msgid "Lock Confirmed Sales"
-msgstr ""
+msgstr "Megerősített értékesítések zárolása"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__done
@@ -2185,7 +2196,7 @@ msgstr "Szállított mennyiség frissítésének módszere"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
+msgstr "Hiányzó kötelező mezők a számlázható értékesítési rendelés soron."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
