@@ -16945,6 +16945,15 @@ msgid ""
 "(<xpath/>) are applied, and the result is used as if it were this view's\n"
 "actual arch.\n"
 msgstr ""
+"Aplica-se apenas se essa exibição for herdada de outra (herd_id não é Falso / Nulo).\n"
+"\n"
+"* se extensão (padrão), se essa visualização for solicitada, a visualização principal mais próxima\n"
+"é procurada (via herdit_id), todas as visualizações que herdarem dela com este\n"
+"modelo de visão são aplicados\n"
+"* se primário, a visualização principal mais próxima é totalmente resolvida (mesmo que use um\n"
+"modelo diferente deste), então as especificações de herança dessa visualização\n"
+"(<xpath/>) são aplicados, e o resultado é usado como se fosse essa visão\n"
+"arco real.\n"
 
 #. module: base
 #: sql_constraint:res.currency.rate:0
