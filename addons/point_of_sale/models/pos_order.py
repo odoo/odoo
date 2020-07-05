@@ -600,13 +600,13 @@ class PosOrderLine(models.Model):
     name = fields.Char(string='Line No', required=True, copy=False)
     notice = fields.Char(string='Discount Notice')
     product_id = fields.Many2one('product.product', string='Product', domain=[('sale_ok', '=', True)], required=True, change_default=True)
-    price_unit = fields.Float(string='Unit Price', digits=0)
+    price_unit = fields.Float(string='Unit Price', digits='Product Price')
     qty = fields.Float('Quantity', digits='Product Unit of Measure', default=1)
     price_subtotal = fields.Float(string='Subtotal w/o Tax', digits=0,
         readonly=True, required=True)
     price_subtotal_incl = fields.Float(string='Subtotal', digits=0,
         readonly=True, required=True)
-    discount = fields.Float(string='Discount (%)', digits=0, default=0.0)
+    discount = fields.Float(string='Discount (%)', digits='Discount', default=0.0)
     order_id = fields.Many2one('pos.order', string='Order Ref', ondelete='cascade', required=True)
     tax_ids = fields.Many2many('account.tax', string='Taxes', readonly=True)
     tax_ids_after_fiscal_position = fields.Many2many('account.tax', compute='_get_tax_ids_after_fiscal_position', string='Taxes to Apply')
