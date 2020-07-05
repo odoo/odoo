@@ -481,6 +481,21 @@ class HrExpense(models.Model):
             move_line_values_by_expense[expense.id] = move_line_values
         return move_line_values_by_expense
 
+    def _prepare_payment_vals(self, journal, different_currency, total_amount, total_amount_currency):
+        payment_methods = journal.outbound_payment_method_ids if total_amount < 0 else journal.inbound_payment_method_ids
+        journal_currency = journal.currency_id or journal.company_id.currency_id
+        return {
+            'payment_method_id': payment_methods and payment_methods[0].id or False,
+            'payment_type': 'outbound' if total_amount < 0 else 'inbound',
+            'partner_id': self.employee_id.sudo().address_home_id.commercial_partner_id.id,
+            'partner_type': 'supplier',
+            'journal_id': journal.id,
+            'date': self.date,
+            'currency_id': self.currency_id.id if different_currency else journal_currency.id,
+            'amount': abs(total_amount_currency) if different_currency else abs(total_amount),
+            'ref': self.name,
+        }
+
     def action_move_create(self):
         '''
         main function that is called when trying to create the accounting entries related to an expense
@@ -508,19 +523,9 @@ class HrExpense(models.Model):
                     raise UserError(_("No credit account found for the %s journal, please configure one.") % (expense.sheet_id.bank_journal_id.name))
                 journal = expense.sheet_id.bank_journal_id
                 # create payment
-                payment_methods = journal.outbound_payment_method_ids if total_amount < 0 else journal.inbound_payment_method_ids
-                journal_currency = journal.currency_id or journal.company_id.currency_id
-                payment = self.env['account.payment'].create({
-                    'payment_method_id': payment_methods and payment_methods[0].id or False,
-                    'payment_type': 'outbound' if total_amount < 0 else 'inbound',
-                    'partner_id': expense.employee_id.sudo().address_home_id.commercial_partner_id.id,
-                    'partner_type': 'supplier',
-                    'journal_id': journal.id,
-                    'date': expense.date,
-                    'currency_id': expense.currency_id.id if different_currency else journal_currency.id,
-                    'amount': abs(total_amount_currency) if different_currency else abs(total_amount),
-                    'ref': expense.name,
-                })
+                payment = self.env['account.payment'].create(
+                    expense._prepare_payment_vals(journal, different_currency, total_amount, total_amount_currency)
+                )
                 move_line_dst['payment_id'] = payment.id
 
             # link move lines to move, and move to expense sheet
