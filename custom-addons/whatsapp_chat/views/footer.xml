@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+    <!-- Add whatsapp icon to footer  -->
+    <template id="whatsapp_container" inherit_id="website.layout" name="Whatsapp Container">
+
+        <xpath expr="//div[@id='footer']" position="inside">
+            <div class="whatsapp-container">
+                <a href="https://wa.me/59398086595?text=Hola%2C%20quisera%20cotizar%20un%20seguro." target="_blank">
+                    <i class="fa fa-whatsapp"></i>
+                </a>
+            </div>
+        </xpath>
+    </template>
+</odoo>
