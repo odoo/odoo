@@ -18,22 +18,28 @@
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" placeholder="e.g. Sales Manager"/></h1>
                         </div>
-                        <group>
-                            <group name="recruitment">
-                                <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
-                                <field name="department_id"/>
-                            </group>
-                            <group>
-                                <field name="no_of_recruitment"/>
-                            </group>
-                        </group>
-                        <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
-                            <label for="description"/>
-                            <field name="description"/>
-                        </div>
+                        <notebook> 
+                            <page string="Job Description">
+                                <div attrs="{'invisible': [('state', '!=', 'recruit')]}">
+                                    <label for="description"/>
+                                    <field name="description"/>
+                                </div>
+                            </page>
+                            <page string="Recruitment">
+                                <group>
+                                    <group name="recruitment">
+                                        <field name="company_id" options="{'no_create': True}" groups="base.group_multi_company"/>
+                                        <field name="department_id"/>
+                                    </group>
+                                    <group>
+                                        <field name="no_of_recruitment"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
                     </sheet>
                     <div class="oe_chatter">
-                        <field name="message_follower_ids"/>
+                        <field name="message_follower_ids" options="{'open_attachments': True}"/>
                     </div>
                 </form>
             </field>
