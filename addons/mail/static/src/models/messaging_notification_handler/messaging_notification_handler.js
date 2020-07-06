@@ -3,6 +3,7 @@ odoo.define('mail/static/src/models/messaging_notification_handler/messaging_not
 
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { one2one } = require('mail/static/src/model/model_field.js');
+const { parseAndTransform, stripHTML } = require('mail.utils');
 
 const PREVIEW_MSG_MAX_SIZE = 350; // optimal for native English speakers
 
@@ -693,22 +694,16 @@ function factory(dependencies) {
                     // hack: notification template does not support OWL components,
                     // so we simply use their template to make HTML as if it comes
                     // from component
-                    const channelIcon = this.env.qweb.renderToString('mail.ThreadIcon', {
-                        env: this.env,
-                        thread: channel,
-                    });
-                    const channelName = owl.utils.escape(channel.displayName);
-                    const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = _.str.sprintf(
                         this.env._t("%s from %s"),
                         owl.utils.escape(authorName),
-                        channelNameWithIcon
+                        owl.utils.escape(channel.displayName),
                     );
                 } else {
                     notificationTitle = owl.utils.escape(authorName);
                 }
             }
-            const notificationContent = message.prettyBody.substr(0, PREVIEW_MSG_MAX_SIZE);
+            const notificationContent = parseAndTransform(message.prettyBody, stripHTML).substr(0, PREVIEW_MSG_MAX_SIZE);
             this.env.services['bus_service'].sendNotification(notificationTitle, notificationContent);
             messaging.update({ outOfFocusUnreadMessageCounter: messaging.outOfFocusUnreadMessageCounter + 1 });
             const titlePattern = messaging.outOfFocusUnreadMessageCounter === 1
