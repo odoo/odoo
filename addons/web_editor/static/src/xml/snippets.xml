@@ -62,7 +62,7 @@
         <div t-attf-class="o_colorpicker_sections #{widget.withCombinations ? 'd-none' : ''} p-1" data-color-tab="theme-colors"/>
     </div>
     <t t-name="web_editor.colorpalette.combination.btn">
-        <button type="button" class="o_we_color_btn o_we_color_combination_btn o_we_cc_preview_container"
+        <button type="button" class="o_we_color_btn o_we_color_combination_btn"
                 t-att-data-color="number" t-attf-title="Preset #{number}">
             <t t-call="web_editor.color.combination.preview"/>
         </button>

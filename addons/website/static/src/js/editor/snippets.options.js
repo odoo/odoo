@@ -860,7 +860,6 @@ options.registry.Theme = options.Class.extend({
             const togglerEl = document.createElement('we-toggler');
             togglerEl.classList.add('pt-0', 'pb-0', 'pl-0');
             const divEl = document.createElement('div');
-            divEl.classList.add('o_we_cc_preview_container');
             const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
             ccPreviewEl.classList.add('p-1', 'text-center', `o_cc${i}`);
             divEl.appendChild(ccPreviewEl);

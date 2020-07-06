@@ -98,6 +98,31 @@
     @return if($luma > $threshold, $-dark, $-light);
 }
 
+// Extend placeholder which adds a chess-like background below the color and
+// image of an element to preview the transparency of that color and image.
+// This is done thanks to both ::before and ::after elements so they must both
+// be available.
+%o-preview-alpha-background {
+    position: relative;
+    z-index: 0;
+
+    &::before {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        z-index: -1;
+        background-image: url('/web/static/src/img/transparent.png');
+        background-size: 10px auto;
+        border-radius: inherit;
+    }
+    &::after {
+        content: "";
+        @include o-position-absolute(0, 0, 0, 0);
+        z-index: -1;
+        background: inherit; // Inherit all background properties
+        border-radius: inherit;
+    }
+}
+
 // ------------------------------------------------------------------
 // Padding
 // ------------------------------------------------------------------
