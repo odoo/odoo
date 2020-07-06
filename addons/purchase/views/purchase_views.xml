@@ -731,7 +731,7 @@
         <field name="binding_model_id" ref="purchase.model_purchase_order"/>
         <field name='groups_id' eval="[(4, ref('account.group_account_invoice'))]"/>
         <field name="state">code</field>
-        <field name="display_in_control_panel" eval="True"/>
+        <field name="display_as_button" eval="True"/>
         <field name="code">
             if records:
                 action = records.action_create_invoice()

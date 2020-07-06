@@ -12,7 +12,8 @@
                     <group>
                         <field name="name"/>
                         <field name="type"/>
-                        <field name="display_in_control_panel"/>
+                        <field name="binding_model_id" invisible="1"/>
+                        <field name="display_as_button" attrs="{'invisible':[('binding_model_id','=',False)]}"/>
                     </group>
                 </sheet>
                 </form>
@@ -78,7 +79,7 @@
                                 <field name="model"/>
                                 <field name="report_name"/>
                                 <field name="print_report_name" />
-                                <field name="display_in_control_panel"/>
+                                <field name="display_as_button" attrs="{'invisible':[('binding_model_id','=',False)]}"/>
                             </group>
                         </group>
                         <notebook>
@@ -166,7 +167,8 @@
                             <field name="usage"/>
                             <field name="type" readonly="1"/>
                             <field name="target"/>
-                            <field name="display_in_control_panel"/>
+                            <field name="binding_model_id" invisible="1"/>
+                            <field name="display_as_button" attrs="{'invisible':[('binding_model_id','=',False)]}"/>
                         </group>
                     </group>
                     <notebook>
@@ -271,7 +273,7 @@
                             <group name="action_content">
                                 <field name="model_id" options="{'no_create': True}"/>
                                 <field name="model_name" invisible="1"/>
-                                <field name="display_in_control_panel"/>
+                                <field name="display_as_button" attrs="{'invisible':[('binding_model_id','=',False)]}"/>
                             </group>
                             <group>
                                 <field name="state"/>

@@ -26,7 +26,7 @@ QUnit.module('Views', {
 
     QUnit.module('ListViewMobile');
 
-    QUnit.test('server action with display_in_control_panel should not be shown as button in list view in mobile', async function (assert) {
+    QUnit.test('server action with display_as_button should not be shown as button in list view in mobile', async function (assert) {
         assert.expect(1);
 
         const list = await createView({
@@ -46,7 +46,7 @@ QUnit.module('Views', {
                     name: 'Server Action 2',
                     type: 'ir.actions.server',
                     usage: 'ir_actions_server',
-                    display_in_control_panel: true
+                    display_as_button: true
                 }],
             }
         });

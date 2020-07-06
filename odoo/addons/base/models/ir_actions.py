@@ -49,7 +49,7 @@ class IrActions(models.Model):
                                      ('report', 'Report')],
                                     required=True, default='action')
     binding_view_types = fields.Char(default='list,form')
-    display_in_control_panel = fields.Boolean(string='Display in Control Panel', default=False, help="Setting a True value makes this action to be displayed in the control panel as a Button and also removes it from the action dropdown.")
+    display_as_button = fields.Boolean(string='Display as Button', default=False, help="Setting a True value makes this action to be displayed in the control panel as a Button and also removes it from the action dropdown.")
 
     def _compute_xml_id(self):
         res = self.get_external_id()

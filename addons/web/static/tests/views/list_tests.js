@@ -254,7 +254,7 @@ QUnit.module('Views', {
         list.destroy();
     });
 
-    QUnit.test('server action with display_in_control_panel should be shown as button in list view', async function (assert) {
+    QUnit.test('server action with display_as_button should be shown as button in list view', async function (assert) {
         assert.expect(7);
 
         const list = await createView({
@@ -274,7 +274,7 @@ QUnit.module('Views', {
                     name: 'Button Action',
                     type: 'ir.actions.server',
                     usage: 'ir_actions_server',
-                    display_in_control_panel: true
+                    display_as_button: true
                 }],
             },
             mockRPC: function (route, args) {
@@ -1795,7 +1795,7 @@ QUnit.module('Views', {
                     name: 'Button Action',
                     type: 'ir.actions.server',
                     usage: 'ir_actions_server',
-                    display_in_control_panel: true
+                    display_as_button: true
                 }],
             },
         });

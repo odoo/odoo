@@ -336,7 +336,7 @@ form: module.record_id""" % (xml_id,)
         view_mode = rec.get('view_mode') or 'tree,form'
         usage = rec.get('usage')
         limit = rec.get('limit')
-        display_in_control_panel = rec.get('display_in_control_panel')
+        display_as_button = rec.get('display_as_button')
         uid = self.env.user.id
 
         # Act_window's 'domain' and 'context' contain mostly literals
@@ -391,7 +391,7 @@ form: module.record_id""" % (xml_id,)
             'view_mode': view_mode,
             'usage': usage,
             'limit': limit,
-            'display_in_control_panel': display_in_control_panel
+            'display_as_button': display_as_button
         }
 
         if rec.get('groups'):

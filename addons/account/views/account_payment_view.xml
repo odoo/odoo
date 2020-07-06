@@ -332,7 +332,7 @@
             <field name="binding_model_id" ref="account.model_account_move"/>
             <field name="binding_view_types">list</field>
             <field name="state">code</field>
-            <field name="display_in_control_panel" eval="True"/>
+            <field name="display_as_button" eval="True"/>
             <field name="code">
                 if records:
                     action = records.action_register_payment()
@@ -348,7 +348,7 @@
             <field name="model_id" ref="account.model_account_payment"/>
             <field name="binding_model_id" ref="account.model_account_payment"/>
             <field name="binding_view_types">list</field>
-            <field name="display_in_control_panel" eval="True"/>
+            <field name="display_as_button" eval="True"/>
             <field name="code">
                 records.action_post()
             </field>

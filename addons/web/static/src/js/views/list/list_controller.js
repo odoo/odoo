@@ -64,7 +64,7 @@ var ListController = BasicController.extend({
         !config.device.isMobile &&
         (this.toolbarActions.action || this.toolbarActions.print) &&
         Object.keys(this.toolbarActions).forEach((actionType) => {
-            const actions = this.toolbarActions[actionType].filter((action) => action.display_in_control_panel);
+            const actions = this.toolbarActions[actionType].filter((action) => action.display_as_button);
             if (actions) {
                 this.actionButtons = this.actionButtons.concat(actions);
             }

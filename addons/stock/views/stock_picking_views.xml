@@ -504,7 +504,7 @@
             <field name="binding_model_id" ref="stock.model_stock_picking"/>
             <field name="binding_view_types">list</field>
             <field name="state">code</field>
-            <field name="display_in_control_panel" eval="True"/>
+            <field name="display_as_button" eval="True"/>
             <field name="code">
             if records:
                 records.do_unreserve()
