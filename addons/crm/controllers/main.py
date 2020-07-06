@@ -4,6 +4,7 @@ import logging
 
 from odoo.addons.mail.controllers.main import MailController
 from odoo import http
+from odoo.http import request
 
 _logger = logging.getLogger(__name__)
 
@@ -15,7 +16,7 @@ class CrmController(http.Controller):
         comparison, record, redirect = MailController._check_token_and_record_or_redirect('crm.lead', int(res_id), token)
         if comparison and record:
             try:
-                record.action_set_won()
+                record.action_set_won_rainbowman()
             except Exception:
                 _logger.exception("Could not mark crm.lead as won")
                 return MailController._redirect_to_messaging()

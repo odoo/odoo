@@ -4,7 +4,7 @@
             <field name="name">crm.lead.form</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <form class="o_lead_opportunity_form">
+                <form class="o_lead_opportunity_form" js_class="crm_form">
                     <header>
                         <button name="action_set_won_rainbowman" string="Mark Won"
                             type="object" class="oe_highlight"
@@ -355,7 +355,7 @@
             <field name="model">crm.lead</field>
             <field name="priority" eval="100"/>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" archivable="false" sample="1">
+                <kanban class="o_kanban_mobile" archivable="false" js_class="crm_kanban" sample="1">
                     <field name="name"/>
                     <field name="contact_name"/>
                     <field name="priority"/>

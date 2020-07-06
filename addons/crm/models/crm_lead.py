@@ -739,6 +739,26 @@ class Lead(models.Model):
         self.ensure_one()
         self.action_set_won()
 
+        message = self._get_rainbowman_message()
+        if message:
+            return {
+                'effect': {
+                    'fadeout': 'slow',
+                    'message': message,
+                    'img_url': '/web/image/%s/%s/image_1024' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image_1024 else '/web/static/src/img/smile.svg',
+                    'type': 'rainbow_man',
+                }
+            }
+        return True
+
+    def get_rainbowman_message(self):
+        self.ensure_one()
+        if self.stage_id.is_won:
+            return self._get_rainbowman_message()
+        return False
+
+    def _get_rainbowman_message(self):
+        message = False
         if self.user_id and self.team_id and self.expected_revenue:
             query = """
                 SELECT
@@ -763,7 +783,6 @@ class Lead(models.Model):
                                         'team_id': self.team_id.id})
             query_result = self.env.cr.dictfetchone()
 
-            message = False
             if query_result['total_won'] == 1:
                 message = _('Go, go, go! Congrats for your first deal.')
             elif query_result['max_team_30'] == self.expected_revenue:
@@ -774,17 +793,7 @@ class Lead(models.Model):
                 message = _('You just beat your personal record for the past 30 days.')
             elif query_result['max_user_7'] == self.expected_revenue:
                 message = _('You just beat your personal record for the past 7 days.')
-
-            if message:
-                return {
-                    'effect': {
-                        'fadeout': 'slow',
-                        'message': message,
-                        'img_url': '/web/image/%s/%s/image_1024' % (self.team_id.user_id._name, self.team_id.user_id.id) if self.team_id.user_id.image_1024 else '/web/static/src/img/smile.svg',
-                        'type': 'rainbow_man',
-                    }
-                }
-        return True
+        return message
 
     def action_schedule_meeting(self):
         """ Open meeting's calendar view to schedule meeting on current opportunity.
