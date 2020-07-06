@@ -484,11 +484,19 @@ class Slide(models.Model):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context(base_url=base_url)._render_template(publish_template.body_html, 'slide.slide', slide.id)
             subject = publish_template._render_template(publish_template.subject, 'slide.slide', slide.id)
+            # We want to use the 'reply_to' of the template if set. However, `mail.message` will check
+            # if the key 'reply_to' is in the kwargs before calling _get_reply_to. If the value is
+            # falsy, we don't include it in the 'message_post' call.
+            kwargs = {}
+            reply_to = publish_template._render_template(publish_template.reply_to, 'slide.slide', slide.id)
+            if reply_to:
+                kwargs['reply_to'] = reply_to
             slide.channel_id.with_context(mail_create_nosubscribe=True).message_post(
                 subject=subject,
                 body=html_body,
                 subtype='website_slides.mt_channel_slide_published',
                 email_layout_xmlid='mail.mail_notification_light',
+                **kwargs,
             )
         return True
 
