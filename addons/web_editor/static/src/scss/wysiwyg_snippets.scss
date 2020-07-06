@@ -486,7 +486,7 @@ body.editor_enable.editor_has_snippets {
             flex: 0 0 auto;
 
             .o_we_color_preview {
-                @include o-alpha-button-preview;
+                @extend %o-preview-alpha-background;
                 display: block;
                 flex: 0 0 auto;
                 width: 1em;
@@ -676,9 +676,8 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
-.o_we_cc_preview_container {
-    background-color: white !important;
-    background-image: url("/web_editor/static/src/img/transparent.png") !important;
+.o_we_cc_preview_wrapper {
+    @extend %o-preview-alpha-background;
     font-family: sans-serif !important;
     font-size: 16px !important;
 }
@@ -790,7 +789,7 @@ body.editor_enable.editor_has_snippets {
 
             &[data-name="transparent_grayscale"], &[data-name="theme"], &[data-name="reset"] {
                 .o_we_color_btn {
-                    @include o-alpha-button-preview;
+                    @extend %o-preview-alpha-background;
 
                     &::before, &::after {
                         box-shadow: inherit;

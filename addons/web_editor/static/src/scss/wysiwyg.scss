@@ -221,9 +221,12 @@ body .modal {
                 min-height: 300px;
             }
 
-            .o_we_images > .o_existing_attachment_cell img {
-                max-width: 100%;
-                background-image: url("/web_editor/static/src/img/transparent.png");
+            .o_we_images > .o_existing_attachment_cell .o_we_media_dialog_img_wrapper {
+                @extend %o-preview-alpha-background;
+
+                &, > img {
+                    max-width: 100%;
+                }
             }
 
             .o_existing_attachment_cell {
