@@ -421,7 +421,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 660.0,
                 'amount_currency': 0.0,
                 'currency_id': currency_id,
-                'account_id': exchange_diff.journal_id.default_credit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.income_currency_exchange_account_id.id,
             },
         ])
 
@@ -548,7 +548,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 780.0,
                 'currency_id': currency1_id,
-                'account_id': exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
             {
                 'debit': 0.0,
@@ -563,7 +563,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 480.0,
                 'currency_id': currency2_id,
-                'account_id': exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
             {
                 'debit': 0.0,
@@ -578,7 +578,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 1440.0,
                 'currency_id': currency2_id,
-                'account_id': exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
             {
                 'debit': 0.0,
@@ -593,7 +593,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 2040.0,
                 'currency_id': currency2_id,
-                'account_id': exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
             {
                 'debit': 0.0,
@@ -608,7 +608,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 1200.0,
                 'currency_id': currency1_id,
-                'account_id': exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
             {
                 'debit': 0.0,
@@ -1345,7 +1345,7 @@ class TestAccountMoveReconcile(AccountTestInvoicingCommon):
                 'credit': 0.0,
                 'amount_currency': 0.0,
                 'currency_id': currency_id,
-                'account_id': transfer_exchange_diff.journal_id.default_debit_account_id.id,
+                'account_id': transfer_exchange_diff.journal_id.company_id.expense_currency_exchange_account_id.id,
             },
         ])
 

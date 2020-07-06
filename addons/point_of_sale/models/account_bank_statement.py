@@ -9,7 +9,7 @@ class AccountBankStatement(models.Model):
     _inherit = 'account.bank.statement'
 
     pos_session_id = fields.Many2one('pos.session', string="Session", copy=False)
-    account_id = fields.Many2one('account.account', related='journal_id.default_debit_account_id', readonly=True)
+    account_id = fields.Many2one('account.account', related='journal_id.default_account_id', readonly=True)
 
     def button_validate_or_action(self):
         # OVERRIDE to check the consistency of the statement's state regarding the session's state.

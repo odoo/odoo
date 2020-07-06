@@ -123,8 +123,7 @@ class AccountAccount(models.Model):
         self.env['account.account'].flush(['currency_id'])
         self.env['account.journal'].flush([
             'currency_id',
-            'default_debit_account_id',
-            'default_credit_account_id',
+            'default_account_id',
             'payment_debit_account_id',
             'payment_credit_account_id',
             'suspense_account_id',
@@ -134,9 +133,7 @@ class AccountAccount(models.Model):
             FROM account_account account
             JOIN res_company company ON company.id = account.company_id
             JOIN account_journal journal ON
-                journal.default_debit_account_id = account.id
-                OR
-                journal.default_credit_account_id = account.id
+                journal.default_account_id = account.id
             WHERE account.id IN %s
             AND journal.type IN ('bank', 'cash')
             AND journal.currency_id IS NOT NULL
@@ -179,7 +176,7 @@ class AccountAccount(models.Model):
             SELECT account.id
             FROM account_account account
             JOIN account_account_type acc_type ON account.user_type_id = acc_type.id
-            JOIN account_journal journal ON journal.default_credit_account_id = account.id OR journal.default_debit_account_id = account.id
+            JOIN account_journal journal ON journal.default_account_id = account.id
             WHERE account.id IN %s
             AND acc_type.type IN ('receivable', 'payable')
             AND journal.type IN ('sale', 'purchase')

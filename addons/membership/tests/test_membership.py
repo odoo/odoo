@@ -121,13 +121,10 @@ class TestMembership(TestMembershipCommon):
             'membership: after opening the invoice, customer should be in invoiced status')
 
         # the invoice is paid -> customer goes to paid status
-        bank_journal = self.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
-
         payment = self.env['account.payment.register']\
             .with_context(active_model='account.move', active_ids=invoice.ids)\
             .create({
-                'amount': 86.25,
-                'journal_id': bank_journal.id,
+                'amount': 86.25
             })\
             ._create_payments()
 
