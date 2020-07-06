@@ -316,7 +316,7 @@
                     <field name="name"/>
                     <field name="date"/>
                     <field name="account_id"/>
-                    <field name="tag_ids" widget="many2many_tags"/>
+                    <field name="tag_ids"/>
                     <filter string="Date" name="date" date="date"/>
                     <group string="Group By..." expand="0" name="groupby">
                         <filter string="Analytic Account" name="account_id" context="{'group_by': 'account_id'}"/>
