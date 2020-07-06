@@ -916,9 +916,6 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                         filter.defaultRank = -10;
                         filter.defaultAutocompleteValue = attrs.defaultAutocompleteValue;
                     }
-                    if (attrs.widget) {
-                        filter.widget = attrs.widget;
-                    }
                     break;
                 }
             }

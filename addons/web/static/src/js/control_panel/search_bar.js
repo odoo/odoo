@@ -93,7 +93,7 @@ odoo.define('web.SearchBar', function (require) {
          */
         _createSource(filter) {
             const field = this.props.fields[filter.fieldName];
-            const type = filter.widget || field.type;
+            const type = field.type === "reference" ? "char" : field.type;
             const source = {
                 active: true,
                 description: filter.description,
