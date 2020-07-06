@@ -161,9 +161,20 @@
                                         <div class="mt8">
                                             <button name="%(base.action_currency_all_form)d" icon="fa-arrow-right" type="action" string="Activate Other Currencies" class="btn-link"/>
                                         </div>
-                                        <div class="row mt16">
-                                            <label for="currency_exchange_journal_id" class="col-lg-3 o_light_label"/>
+                                        <div class="mt16">
+                                            <b>Post Exchange difference entries in:</b>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="currency_exchange_journal_id" class="col-lg-3 o_light_label" string="Journal" />
                                             <field name="currency_exchange_journal_id"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="income_currency_exchange_account_id" class="col-lg-3 o_light_label"/>
+                                            <field name="income_currency_exchange_account_id"/>
+                                        </div>
+                                        <div class="row mt8">
+                                            <label for="expense_currency_exchange_account_id" class="col-lg-3 o_light_label"/>
+                                            <field name="expense_currency_exchange_account_id"/>
                                         </div>
                                     </div>
                                 </div>

@@ -149,7 +149,7 @@ class TestTaxCommon(AccountTestInvoicingCommon):
         })
 
         cls.bank_journal = cls.company_data['default_journal_bank']
-        cls.bank_account = cls.bank_journal.default_debit_account_id
+        cls.bank_account = cls.bank_journal.default_account_id
         cls.expense_account = cls.company_data['default_account_expense']
 
     def _check_compute_all_results(self, total_included, total_excluded, taxes, res):

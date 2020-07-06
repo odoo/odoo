@@ -538,7 +538,7 @@ class AccountBankStatementLine(models.Model):
         other_lines = self.env['account.move.line']
 
         for line in self.move_id.line_ids:
-            if line.account_id in (self.journal_id.default_debit_account_id, self.journal_id.default_credit_account_id):
+            if line.account_id == self.journal_id.default_account_id:
                 liquidity_lines += line
             elif line.account_id == self.journal_id.suspense_account_id:
                 suspense_lines += line
@@ -590,7 +590,7 @@ class AccountBankStatementLine(models.Model):
             'move_id': self.move_id.id,
             'partner_id': self.partner_id.id,
             'currency_id': currency_id,
-            'account_id': journal.default_debit_account_id.id if balance >= 0 else journal.default_credit_account_id.id,
+            'account_id': journal.default_account_id.id,
             'debit': balance > 0 and balance or 0.0,
             'credit': balance < 0 and -balance or 0.0,
             'amount_currency': amount_currency,

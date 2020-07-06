@@ -1620,12 +1620,7 @@ class AccountMove(models.Model):
             # Doing line.account_id triggers a default_get(['account_id']) that could returns a result.
             # A section / note must not have an account_id set.
             if not line._cache.get('account_id') and not line.display_type and not line._origin:
-                line.account_id = line._get_computed_account()
-                if not line.account_id:
-                    if self.is_sale_document(include_receipts=True):
-                        line.account_id = self.journal_id.default_credit_account_id
-                    elif self.is_purchase_document(include_receipts=True):
-                        line.account_id = self.journal_id.default_debit_account_id
+                line.account_id = line._get_computed_account() or self.journal_id.default_account_id
             if line.product_id and not line._cache.get('name'):
                 line.name = line._get_computed_name()
 
@@ -3834,20 +3829,12 @@ class AccountMoveLine(models.Model):
         # OVERRIDE
         values = super(AccountMoveLine, self).default_get(default_fields)
 
-        if 'account_id' in default_fields \
+        if 'account_id' in default_fields and not values.get('account_id') \
             and (self._context.get('journal_id') or self._context.get('default_journal_id')) \
-            and not values.get('account_id') \
-            and self._context.get('default_move_type') in self.move_id.get_inbound_types():
+            and self._context.get('default_move_type') in ('out_invoice', 'out_refund', 'in_invoice', 'in_refund', 'out_receipt', 'in_receipt'):
             # Fill missing 'account_id'.
             journal = self.env['account.journal'].browse(self._context.get('default_journal_id') or self._context['journal_id'])
-            values['account_id'] = journal.default_credit_account_id.id
-        elif 'account_id' in default_fields \
-            and (self._context.get('journal_id') or self._context.get('default_journal_id')) \
-            and not values.get('account_id') \
-            and self._context.get('default_move_type') in self.move_id.get_outbound_types():
-            # Fill missing 'account_id'.
-            journal = self.env['account.journal'].browse(self._context.get('default_journal_id') or self._context['journal_id'])
-            values['account_id'] = journal.default_debit_account_id.id
+            values['account_id'] = journal.default_account_id.id
         elif self._context.get('line_ids') and any(field_name in default_fields for field_name in ('debit', 'credit', 'account_id', 'partner_id')):
             move = self.env['account.move'].new({'line_ids': self._context['line_ids']})
 
@@ -4076,18 +4063,17 @@ class AccountMoveLine(models.Model):
                     # amount_residual_currency == 0 and amount_residual has to be fixed.
 
                     if line.amount_residual > 0.0:
-                        exchange_line_account = journal.default_debit_account_id
+                        exchange_line_account = journal.company_id.expense_currency_exchange_account_id
                     else:
-                        exchange_line_account = journal.default_credit_account_id
+                        exchange_line_account = journal.company_id.income_currency_exchange_account_id
 
                 elif line.currency_id and not line.currency_id.is_zero(line.amount_residual_currency):
                     # amount_residual == 0 and amount_residual_currency has to be fixed.
 
                     if line.amount_residual_currency > 0.0:
-                        exchange_line_account = journal.default_debit_account_id
+                        exchange_line_account = journal.company_id.expense_currency_exchange_account_id
                     else:
-                        exchange_line_account = journal.default_credit_account_id
-
+                        exchange_line_account = journal.company_id.income_currency_exchange_account_id
                 else:
                     continue
 
@@ -4222,9 +4208,9 @@ class AccountMoveLine(models.Model):
                     journal = account.company_id.currency_exchange_journal_id
 
                     if balance > 0.0:
-                        exchange_line_account = journal.default_debit_account_id
+                        exchange_line_account = journal.company_id.expense_currency_exchange_account_id
                     else:
-                        exchange_line_account = journal.default_credit_account_id
+                        exchange_line_account = journal.company_id.income_currency_exchange_account_id
 
                     sequence = len(exchange_diff_move_vals['line_ids'])
                     exchange_diff_move_vals['line_ids'] += [
@@ -4253,11 +4239,11 @@ class AccountMoveLine(models.Model):
 
         # Check the configuration of the exchange difference journal.
         if not journal:
-            raise UserError(_("You should configure the 'Exchange Rate Journal' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-        if not journal.default_debit_account_id.id:
-            raise UserError(_("You should configure the 'Loss Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
-        if not journal.default_credit_account_id.id:
-            raise UserError(_("You should configure the 'Gain Exchange Rate Account' in the accounting settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+            raise UserError(_("You should configure the 'Exchange Gain or Loss Journal' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+        if not journal.company_id.expense_currency_exchange_account_id:
+            raise UserError(_("You should configure the 'Loss Exchange Rate Account' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
+        if not journal.company_id.income_currency_exchange_account_id.id:
+            raise UserError(_("You should configure the 'Gain Exchange Rate Account' in your company settings, to manage automatically the booking of accounting entries related to differences between exchange rates."))
 
         exchange_diff_move_vals = {
             'move_type': 'entry',

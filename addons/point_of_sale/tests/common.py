@@ -78,7 +78,7 @@ class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
         # Create POS journal
         cls.pos_config.journal_id = cls.env['account.journal'].create({
             'type': 'sale',
-            'name': 'Point of Sale',
+            'name': 'Point of Sale - Test',
             'code': 'POSS - Test',
             'company_id': cls.env.company.id,
             'sequence': 20

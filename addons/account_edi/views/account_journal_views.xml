@@ -6,8 +6,8 @@
             <field name="model">account.journal</field>
             <field name="inherit_id" ref="account.view_account_journal_form" />
             <field name="arch" type="xml">
-                <xpath expr="//page[@name='advanced_settings']/group" position="inside">
-                    <group string="Electronic Data Interchange" >
+                <xpath expr="//page[@name='advanced_settings']//group[@name='group_alias_edit']" position="after">
+                    <group string="Electronic Data Interchange" attrs="{'invisible': [('type', '!=', 'sale')]}">
                         <field name="edi_format_ids" widget="many2many_tags"/>
                     </group>
                 </xpath>

@@ -41,17 +41,11 @@
                     <field name="company_id" invisible="1"/>
                     <field name="linked_journal_id" invisible="1"/>
                     <sheet>
-                        <div class="oe_title">
-                            <h1><field name="new_journal_name" placeholder="e.g Checking account" class="oe_inline"/></h1>
-                        </div>
                         <group>
                             <group>
                                 <field name="acc_number" placeholder="e.g BE15001559627230"/>
                                 <field name="bank_id" placeholder="e.g Bank of America"/>
-                                <field name="new_journal_code"/>
-                            </group>
-                            <group>
-                                <field name="related_acc_type" attrs="{'invisible': [('acc_number','=',False)]}"/>
+                                <field name="bank_bic" placeholder="e.g GEBABEBB" string="Bank Identifier Code"/>
                             </group>
                         </group>
                         <group attrs="{'invisible': [('num_journals_without_account', '&lt;', 2)]}">
