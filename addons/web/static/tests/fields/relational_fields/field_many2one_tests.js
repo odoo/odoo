@@ -1184,6 +1184,31 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
+        QUnit.test('form: quick create for field that returns false after name_create call', async function (assert) {
+            assert.expect(3);
+            const form = await createView({
+                View: FormView,
+                model: 'partner',
+                data: this.data,
+                arch: '<form><field name="trululu"/></form>',
+                mockRPC: function (route, args) {
+                    const result = this._super.apply(this, arguments);
+                    if (args.method === 'name_create') {
+                        assert.step('name_create');
+                        // Resolve the name_create call to false. This is possible if
+                        // _rec_name for the model of the field is unassigned.
+                        return Promise.resolve(false);
+                    }
+                    return result;
+                },
+            });
+            await testUtils.fields.many2one.searchAndClickItem('trululu', { search: 'beam' });
+            assert.verifySteps(['name_create'], 'attempt to name_create');
+            assert.strictEqual(form.$(".o_input_dropdown input").val(), "",
+                "the input should contain no text after search and click")
+            form.destroy();
+        });
+
         QUnit.test('list: quick create then save directly', async function (assert) {
             assert.expect(8);
 
