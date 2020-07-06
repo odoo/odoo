@@ -538,7 +538,7 @@ odoo.define('web.search_bar_tests', function (require) {
             actionManager.destroy();
         });
 
-        QUnit.test("widgets are supported in search view", async function (assert) {
+        QUnit.test("reference fields are supported in search view", async function (assert) {
             assert.expect(7);
 
             this.data.partner.fields.ref = { type: 'reference', string: "Reference" };
@@ -548,7 +548,7 @@ odoo.define('web.search_bar_tests', function (require) {
             const archs = Object.assign({}, this.archs, {
                 'partner,false,search': `
                     <search>
-                        <field name="ref" widget="char"/>
+                        <field name="ref"/>
                     </search>`,
             });
             const actionManager = await createActionManager({
