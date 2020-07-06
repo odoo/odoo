@@ -188,7 +188,7 @@ class GoogleService(models.TransientModel):
                 response = ""
             else:
                 _logger.exception("Bad google request : %s !", error.response.content)
-                if error.response.status_code in (400, 401, 410):
+                if error.response.status_code in (400, 401, 403, 410):
                     raise error
                 raise self.env['res.config.settings'].get_config_warning(_("Something went wrong with your request to google"))
         return (status, response, ask_time)
