@@ -198,7 +198,7 @@ odoo.define('web.SampleServer', function (require) {
             const field = this.data[modelName].fields[fieldName];
             switch (field.type) {
                 case "boolean":
-                    return fieldName === 'active' ? true : Math.random() < 0.5;
+                    return fieldName === 'active' ? true : this._getRandomBool();
                 case "char":
                 case "text":
                     if (["display_name", "name"].includes(fieldName)) {
@@ -227,23 +227,22 @@ odoo.define('web.SampleServer', function (require) {
                     return false;
                 case "date":
                 case "datetime": {
-                    const delta = Math.floor((Math.random() - Math.random()) * SampleServer.DATE_DELTA);
-                    const date = new moment().add(delta, "hour").format(
-                        field.type === "date" ? "YYYY-MM-DD" : "YYYY-MM-DD HH:mm:ss"
-                    );
-                    return date;
+                    const format = field.type === "date" ?
+                        "YYYY-MM-DD" :
+                        "YYYY-MM-DD HH:mm:ss";
+                    return this._getRandomDate(format);
                 }
                 case "float":
-                    return Math.random() * SampleServer.MAX_FLOAT;
+                    return this._getRandomFloat(SampleServer.MAX_FLOAT);
                 case "integer": {
                     let max = SampleServer.MAX_INTEGER;
                     if (fieldName.includes('color')) {
-                        max = Math.random() < 0.5 ? SampleServer.MAX_COLOR_INT : 0;
+                        max = this._getRandomBool() ? SampleServer.MAX_COLOR_INT : 0;
                     }
-                    return Math.floor(Math.random() * max);
+                    return this._getRandomInt(max);
                 }
                 case "monetary":
-                    return Math.floor(Math.random() * SampleServer.MAX_MONETARY);
+                    return this._getRandomInt(SampleServer.MAX_MONETARY);
                 case "many2one":
                     if (field.relation === 'res.currency') {
                         return session.company_currency_id;
@@ -256,8 +255,7 @@ odoo.define('web.SampleServer', function (require) {
                 }
                 case "selection": {
                     if (field.selection.length > 0) {
-                        const index = Math.floor(Math.random() * field.selection.length);
-                        return field.selection[index][0];
+                        return this._getRandomArrayEl(field.selection)[0];
                     }
                     return false;
                 }
@@ -267,7 +265,55 @@ odoo.define('web.SampleServer', function (require) {
         }
 
         /**
-         * Generates a random id in the range of ids generated for sub models.
+         * @private
+         * @param {any[]} array
+         * @returns {any}
+         */
+        _getRandomArrayEl(array) {
+            return array[Math.floor(Math.random() * array.length)];
+        }
+
+        /**
+         * @private
+         * @returns {boolean}
+         */
+        _getRandomBool() {
+            return Math.random() < 0.5;
+        }
+
+        /**
+         * @private
+         * @param {string} format
+         * @returns {moment}
+         */
+        _getRandomDate(format) {
+            const delta = Math.floor(
+                (Math.random() - Math.random()) * SampleServer.DATE_DELTA
+            );
+            return new moment()
+                .add(delta, "hour")
+                .format(format);
+        }
+
+        /**
+         * @private
+         * @param {number} max
+         * @returns {number} float in [O, max[
+         */
+        _getRandomFloat(max) {
+            return Math.random() * max;
+        }
+
+        /**
+         * @private
+         * @param {number} max
+         * @returns {number} int in [0, max[
+         */
+        _getRandomInt(max) {
+            return Math.floor(Math.random() * max);
+        }
+
+        /**
          * @private
          * @returns {number} id in [1, SUB_RECORDSET_SIZE]
          */

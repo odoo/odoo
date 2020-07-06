@@ -8,8 +8,30 @@ odoo.define('web.sample_server_tests', function (require) {
     const {
         MAIN_RECORDSET_SIZE, SEARCH_READ_LIMIT, // Limits
         SAMPLE_COUNTRIES, SAMPLE_PEOPLE, SAMPLE_TEXTS, // Text values
-        MAX_COLOR_INT, MAX_FLOAT, MAX_INTEGER, MAX_MONETARY // Number values
+        MAX_COLOR_INT, MAX_FLOAT, MAX_INTEGER, MAX_MONETARY, // Number values
+        SUB_RECORDSET_SIZE, // Records sise
     } = SampleServer;
+
+    /**
+     * Transforms random results into deterministic ones.
+     */
+    class DeterministicSampleServer extends SampleServer {
+        constructor() {
+            super(...arguments);
+            this.arrayElCpt = 0;
+            this.boolCpt = 0;
+            this.subRecordIdCpt = 0;
+        }
+        _getRandomArrayEl(array) {
+            return array[this.arrayElCpt++ % array.length];
+        }
+        _getRandomBool() {
+            return Boolean(this.boolCpt++ % 2);
+        }
+        _getRandomSubRecordId() {
+            return (this.subRecordIdCpt++ % SUB_RECORDSET_SIZE) + 1;
+        }
+    }
 
     QUnit.module("Sample Server", {
         beforeEach() {
@@ -62,7 +84,7 @@ odoo.define('web.sample_server_tests', function (require) {
             });
 
             const allFieldNames = Object.keys(this.fields['res.users']);
-            const server = new SampleServer('res.users', this.fields['res.users']);
+            const server = new DeterministicSampleServer('res.users', this.fields['res.users']);
             const { records } = await server.mockRpc({
                 method: '/web/dataset/search_read',
                 model: 'res.users',
@@ -127,12 +149,12 @@ odoo.define('web.sample_server_tests', function (require) {
             assert.strictEqual(typeof rec.manager_id[0], 'number');
             assert.ok(SAMPLE_PEOPLE.includes(rec.manager_id[1]));
 
-            assert.ok([1, 2].includes(rec.managed_ids.length));
+            assert.strictEqual(rec.managed_ids.length, 2);
             assert.ok(rec.managed_ids.every(
                 (id) => typeof id === 'number')
             );
 
-            assert.ok([1, 2].includes(rec.tag_ids.length));
+            assert.strictEqual(rec.tag_ids.length, 2);
             assert.ok(rec.tag_ids.every(
                 (id) => typeof id === 'number')
             );
@@ -143,7 +165,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Sample data: country type", async function (assert) {
             assert.expect(1);
 
-            const server = new SampleServer('res.country', this.fields['res.country']);
+            const server = new DeterministicSampleServer('res.country', this.fields['res.country']);
             const { records } = await server.mockRpc({
                 method: '/web/dataset/search_read',
                 model: 'res.country',
@@ -156,7 +178,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Sample data: any type", async function (assert) {
             assert.expect(1);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const { records } = await server.mockRpc({
                 method: '/web/dataset/search_read',
@@ -172,7 +194,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Send 'search_read' RPC: valid field names", async function (assert) {
             assert.expect(3);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const result = await server.mockRpc({
                 method: '/web/dataset/search_read',
@@ -193,7 +215,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Send 'search_read' RPC: invalid field names", async function (assert) {
             assert.expect(3);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const result = await server.mockRpc({
                 method: '/web/dataset/search_read',
@@ -214,7 +236,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Send 'web_read_group' RPC: no group", async function (assert) {
             assert.expect(1);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
             server.setExistingGroups([]);
 
             const result = await server.mockRpc({
@@ -227,9 +249,9 @@ odoo.define('web.sample_server_tests', function (require) {
         });
 
         QUnit.test("Send 'web_read_group' RPC: 2 groups", async function (assert) {
-            assert.expect(6);
+            assert.expect(5);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
             const existingGroups = [
                 { profession: 'gardener', profession_count: 0 },
                 { profession: 'adventurer', profession_count: 0 },
@@ -246,9 +268,10 @@ odoo.define('web.sample_server_tests', function (require) {
             assert.strictEqual(result.length, 2);
             assert.strictEqual(result.groups.length, 2);
 
-            const professions = result.groups.map((g) => g.profession);
-            assert.ok(professions.includes("gardener"));
-            assert.ok(professions.includes("adventurer"));
+            assert.deepEqual(
+                result.groups.map((g) => g.profession),
+                ["gardener", "adventurer"]
+            );
 
             assert.strictEqual(
                 result.groups.reduce((acc, g) => acc + g.profession_count, 0),
@@ -260,9 +283,9 @@ odoo.define('web.sample_server_tests', function (require) {
         });
 
         QUnit.test("Send 'web_read_group' RPC: all groups", async function (assert) {
-            assert.expect(7);
+            assert.expect(5);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
             const existingGroups = [
                 { profession: 'gardener', profession_count: 0 },
                 { profession: 'brewer', profession_count: 0 },
@@ -280,10 +303,10 @@ odoo.define('web.sample_server_tests', function (require) {
             assert.strictEqual(result.length, 3);
             assert.strictEqual(result.groups.length, 3);
 
-            const professions = result.groups.map((g) => g.profession);
-            assert.ok(professions.includes("gardener"));
-            assert.ok(professions.includes("brewer"));
-            assert.ok(professions.includes("adventurer"));
+            assert.deepEqual(
+                result.groups.map((g) => g.profession),
+                ["gardener", "brewer", "adventurer"]
+            );
 
             assert.strictEqual(
                 result.groups.reduce((acc, g) => acc + g.profession_count, 0),
@@ -297,7 +320,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Send 'read_group' RPC: no group", async function (assert) {
             assert.expect(1);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const result = await server.mockRpc({
                 method: 'read_group',
@@ -313,9 +336,9 @@ odoo.define('web.sample_server_tests', function (require) {
         });
 
         QUnit.test("Send 'read_group' RPC: groupBy", async function (assert) {
-            assert.expect(5);
+            assert.expect(3);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const result = await server.mockRpc({
                 method: 'read_group',
@@ -325,12 +348,10 @@ odoo.define('web.sample_server_tests', function (require) {
             });
 
             assert.strictEqual(result.length, 3);
-
-            const professions = result.map((g) => g.profession);
-            assert.ok(professions.includes("gardener"));
-            assert.ok(professions.includes("brewer"));
-            assert.ok(professions.includes("adventurer"));
-
+            assert.deepEqual(
+                result.map((g) => g.profession),
+                ["gardener", "brewer", "adventurer"]
+            );
             assert.strictEqual(
                 result.reduce((acc, g) => acc + g.profession_count, 0),
                 MAIN_RECORDSET_SIZE,
@@ -338,9 +359,9 @@ odoo.define('web.sample_server_tests', function (require) {
         });
 
         QUnit.test("Send 'read_group' RPC: groupBy and field", async function (assert) {
-            assert.expect(6);
+            assert.expect(4);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const result = await server.mockRpc({
                 method: 'read_group',
@@ -350,17 +371,14 @@ odoo.define('web.sample_server_tests', function (require) {
             });
 
             assert.strictEqual(result.length, 3);
-
-            const professions = result.map((g) => g.profession);
-            assert.ok(professions.includes("gardener"));
-            assert.ok(professions.includes("brewer"));
-            assert.ok(professions.includes("adventurer"));
-
+            assert.deepEqual(
+                result.map((g) => g.profession),
+                ["gardener", "brewer", "adventurer"]
+            );
             assert.strictEqual(
                 result.reduce((acc, g) => acc + g.profession_count, 0),
                 MAIN_RECORDSET_SIZE,
             );
-
             assert.strictEqual(
                 result.reduce((acc, g) => acc + g.age, 0),
                 server.data.hobbit.records.reduce((acc, g) => acc + g.age, 0)
@@ -370,7 +388,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Send 'read_group' RPC: multiple groupBys and lazy", async function (assert) {
             assert.expect(2);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const result = await server.mockRpc({
                 method: 'read_group',
@@ -386,7 +404,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Send 'read_group' RPC: multiple groupBys and not lazy", async function (assert) {
             assert.expect(2);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const result = await server.mockRpc({
                 method: 'read_group',
@@ -403,7 +421,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Send 'read' RPC: no id", async function (assert) {
             assert.expect(1);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const result = await server.mockRpc({
                 method: 'read',
@@ -419,7 +437,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Send 'read' RPC: one id", async function (assert) {
             assert.expect(3);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const result = await server.mockRpc({
                 method: 'read',
@@ -440,7 +458,7 @@ odoo.define('web.sample_server_tests', function (require) {
         QUnit.test("Send 'read' RPC: more than all available ids", async function (assert) {
             assert.expect(1);
 
-            const server = new SampleServer('hobbit', this.fields.hobbit);
+            const server = new DeterministicSampleServer('hobbit', this.fields.hobbit);
 
             const amount = MAIN_RECORDSET_SIZE + 3;
             const ids = new Array(amount).fill().map((_, i) => i + 1);
