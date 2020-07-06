@@ -20,29 +20,75 @@ class RecruitmentSource(models.Model):
     _description = "Source of Applicants"
     _inherits = {"utm.source": "source_id"}
 
+    @api.model
+    def _default_campaign_id(self):
+        return self.env.ref('hr_recruitment.utm_campaign_job', raise_if_not_found=False)
+
     source_id = fields.Many2one('utm.source', "Source", ondelete='cascade', required=True)
+    campaign_id = fields.Many2one('utm.campaign', default=_default_campaign_id, required=True)
     email = fields.Char(related='alias_id.display_name', string="Email", readonly=True)
-    job_id = fields.Many2one('hr.job', "Job", ondelete='cascade')
+    job_id = fields.Many2one('hr.job', "Job", ondelete='cascade', required=True)
     alias_id = fields.Many2one('mail.alias', "Alias ID")
+    currency_id = fields.Many2one(related='job_id.company_id.currency_id')
+    cost = fields.Monetary(string='Cost', help='Money spent for this source.')
+    nb_application = fields.Integer('Applications', compute='_compute_nb_applicant')
+    nb_hired = fields.Integer('Hired', compute='_compute_nb_hired')
+
+    def _compute_nb_applicant(self, compute_sudo=True):
+        grouped_data = self.env['hr.applicant']
+        if compute_sudo:
+            grouped_data = grouped_data.sudo()
+        grouped_data = grouped_data.read_group([
+                ('source_id', '!=', False),
+                ('campaign_id', '!=', False)
+                ], ['job_id', 'campaign_id', 'source_id'], ['job_id', 'campaign_id', 'source_id'], lazy=False)
+
+        mapped_count = {}
+        for data in grouped_data:
+            key = (data['job_id'][0], data['campaign_id'][0], data['source_id'][0])
+            mapped_count[key] = data['__count']
+
+        for source in self:
+            source.nb_application = mapped_count.get((source.job_id.id, source.campaign_id.id, source.source_id.id), 0)
+
+    def _compute_nb_hired(self, compute_sudo=True):
+        grouped_data = self.env['hr.applicant']
+        if compute_sudo:
+            grouped_data = grouped_data.sudo()
+        grouped_data = grouped_data.read_group([
+                ('source_id', '!=', False),
+                ('campaign_id', '!=', False),
+                ('date_closed', '!=', False)
+                ], ['job_id', 'campaign_id', 'source_id'], 
+                   ['job_id', 'campaign_id', 'source_id'], lazy=False)
+
+        mapped_count = {}
+        for data in grouped_data:
+            key = (data['job_id'][0], data['campaign_id'][0], data['source_id'][0])
+            mapped_count[key] = data['__count']
+
+        for source in self:
+            source.nb_hired = mapped_count.get((source.job_id.id, source.campaign_id.id, source.source_id.id), 0)
 
     def create_alias(self):
-        campaign = self.env.ref('hr_recruitment.utm_campaign_job')
         medium = self.env.ref('utm.utm_medium_email')
         for source in self:
             vals = {
                 'alias_parent_thread_id': source.job_id.id,
                 'alias_model_id': self.env['ir.model']._get('hr.applicant').id,
                 'alias_parent_model_id': self.env['ir.model']._get('hr.job').id,
-                'alias_name': "%s+%s" % (source.job_id.alias_name or source.job_id.name, source.name),
+                'alias_name': "%s+%s+%s" % (
+                    source.job_id.alias_name or source.job_id.name, source.name, source.campaign_id.name),
                 'alias_defaults': {
                     'job_id': source.job_id.id,
-                    'campaign_id': campaign.id,
+                    'campaign_id': source.campaign_id.id,
                     'medium_id': medium.id,
                     'source_id': source.source_id.id,
                 },
             }
             source.alias_id = self.env['mail.alias'].create(vals)
             source.name = source.source_id.name
+
 
 class RecruitmentStage(models.Model):
     _name = "hr.recruitment.stage"
@@ -114,8 +160,8 @@ class Applicant(models.Model):
     categ_ids = fields.Many2many('hr.applicant.category', string="Tags")
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one(
-        'res.users', "Responsible", compute='_compute_user',
-        tracking=True, store=True, readonly=False)
+        'res.users', "Recruiter", compute='_compute_user',
+        tracking=True, default=lambda self: self.env.uid, store=True, readonly=False)
     date_closed = fields.Datetime("Closed", compute='_compute_date_closed', store=True, index=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
@@ -308,11 +354,28 @@ class Applicant(models.Model):
             res = super(Applicant, self).write(vals)
         return res
 
-    @api.model
     def get_empty_list_help(self, help):
-        return super(Applicant, self.with_context(empty_list_help_model='hr.job',
-                                                  empty_list_help_id=self.env.context.get('default_job_id'),
-                                                  empty_list_help_document_name=_("job applicant"))).get_empty_list_help(help)
+        if 'active_id' in  self.env.context:
+            alias_id = self.env['hr.job'].browse(self.env.context['active_id']).alias_id
+        else:
+            alias_id = False
+
+        nocontent_values = {
+            'help_title': _('No application yet'),
+            'para_1': _('Let people apply by email to save time.') ,
+            'para_2': _('Attachments, like resumes, get indexed automatically.'),
+        }
+        nocontent_body = """
+            <p class="o_view_nocontent_empty_folder">%(help_title)s</p>
+            <p>%(para_1)s<br/>%(para_2)s</p>"""
+
+        if alias_id and alias_id.alias_domain and alias_id.alias_name:
+            email = alias_id.display_name 
+            email_link = "<a href='mailto:%s'>%s</a>" % (email, email)
+            nocontent_values['email_link'] = email_link
+            nocontent_body += """<p class="o_copy_paste_email">%(email_link)s</p>"""
+
+        return nocontent_body % nocontent_values
 
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
@@ -454,33 +517,24 @@ class Applicant(models.Model):
                 applicant.partner_id = new_partner_id
                 address_id = new_partner_id.address_get(['contact'])['contact']
             if applicant.partner_name or contact_name:
-                employee = self.env['hr.employee'].create({
-                    'name': applicant.partner_name or contact_name,
-                    'job_id': applicant.job_id.id or False,
-                    'job_title': applicant.job_id.name,
+                employee_data = {
+                    'default_name': applicant.partner_name or contact_name,
+                    'default_job_id': applicant.job_id.id,
+                    'default_job_title': applicant.job_id.name,
                     'address_home_id': address_id,
-                    'department_id': applicant.department_id.id or False,
-                    'address_id': applicant.company_id and applicant.company_id.partner_id
+                    'default_department_id': applicant.department_id.id or False,
+                    'default_address_id': applicant.company_id and applicant.company_id.partner_id
                             and applicant.company_id.partner_id.id or False,
-                    'work_email': applicant.department_id and applicant.department_id.company_id
+                    'default_work_email': applicant.department_id and applicant.department_id.company_id
                             and applicant.department_id.company_id.email or False,
-                    'work_phone': applicant.department_id and applicant.department_id.company_id
-                            and applicant.department_id.company_id.phone or False})
-                applicant.write({'emp_id': employee.id})
-                if applicant.job_id:
-                    applicant.job_id.write({'no_of_hired_employee': applicant.job_id.no_of_hired_employee + 1})
-                    applicant.job_id.message_post(
-                        body=_('New Employee %s Hired', applicant.partner_name if applicant.partner_name else applicant.name),
-                        subtype_xmlid="hr_recruitment.mt_job_applicant_hired")
-                applicant.message_post_with_view(
-                    'hr_recruitment.applicant_hired_template',
-                    values={'applicant': applicant},
-                    subtype_id=self.env.ref("hr_recruitment.mt_applicant_hired").id)
-
+                    'default_work_phone': applicant.department_id.company_id.phone,
+                    'form_view_initial_mode': 'edit',
+                    'default_applicant_id': applicant.ids,
+                    }
+                    
         employee_action = self.env.ref('hr.open_view_employee_list')
         dict_act_window = employee_action.read([])[0]
-        dict_act_window['context'] = {'form_view_initial_mode': 'edit'}
-        dict_act_window['res_id'] = employee.id
+        dict_act_window['context'] = employee_data
         return dict_act_window
 
     def archive_applicant(self):
