@@ -102,6 +102,14 @@ class TestSequencing(slides_common.SlidesCase):
         self.assertEqual([s.id for s in self.channel.slide_ids], [self.slide.id, new_category.id, self.slide_3.id, self.category.id, self.slide_2.id])
 
 
+class TestDeleteCategory(slides_common.SlidesCase):
+
+    @users('user_manager')
+    def test_delete_category_with_archived_slides(self):
+        self.slide_2.active = False
+        self.category.with_user(self.user_manager).unlink()
+
+
 class TestFromURL(slides_common.SlidesCase):
     def test_youtube_urls(self):
         urls = {
