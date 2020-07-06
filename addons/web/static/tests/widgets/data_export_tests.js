@@ -40,7 +40,9 @@ QUnit.module('widgets', {
                 records: [],
             },
         };
-
+        this.mockSession = {
+            async user_has_group(g) { return g === 'base.group_allow_export'; }
+        }
         this.mockDataExportRPCs = function (route) {
             if (route === '/web/export/formats') {
                 return Promise.resolve([
@@ -100,6 +102,7 @@ QUnit.module('widgets', {
             },
             mockRPC: this.mockDataExportRPCs,
             session: {
+                ...this.mockSession,
                 get_file: function (params) {
                     assert.step(params.url);
                     params.complete();
@@ -148,6 +151,7 @@ QUnit.module('widgets', {
             },
             mockRPC: this.mockDataExportRPCs,
             session: {
+                ...this.mockSession,
                 get_file: function (params) {
                     const data = JSON.parse(params.data.data);
                     assert.deepEqual({ids: data.ids, domain: data.domain}, expectedData);
@@ -207,6 +211,7 @@ QUnit.module('widgets', {
             viewOptions: {
                 hasActionMenus: true,
             },
+            session: this.mockSession,
             mockRPC: this.mockDataExportRPCs,
         });
 
@@ -249,6 +254,7 @@ QUnit.module('widgets', {
             viewOptions: {
                 hasActionMenus: true,
             },
+            session: this.mockSession,
             mockRPC: this.mockDataExportRPCs,
         });
 
@@ -283,6 +289,7 @@ QUnit.module('widgets', {
             model: 'partner',
             data: this.data,
             arch: `<tree export_xlsx="0"><field name="foo"/></tree>`,
+            session: this.mockSession,
         });
         assert.containsNone(list, '.o_list_export_xlsx')
         list.destroy();
@@ -302,6 +309,7 @@ QUnit.module('widgets', {
                 </tree>`,
             domain: [['bar', '!=', 'glou']],
             session: {
+                ...this.mockSession,
                 get_file(args) {
                     let data = JSON.parse(args.data.data);
                     assert.strictEqual(args.url, '/web/export/xlsx', "should call get_file with the correct url");
@@ -348,6 +356,7 @@ QUnit.module('widgets', {
             groupBy: ['foo', 'bar'],
             domain: [['bar', '!=', 'glou']],
             session: {
+                ...this.mockSession,
                 get_file(args) {
                     let data = JSON.parse(args.data.data);
                     assert.strictEqual(args.url, '/web/export/xlsx', "should call get_file with the correct url");

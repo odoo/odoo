@@ -162,12 +162,11 @@ async function addMockEnvironment(widget, params) {
     dom.DEBOUNCE = 0;
     var initialSession, initialConfig, initialParameters, initialDebounce, initialThrottle;
     initialSession = _.extend({}, session);
-    session.getTZOffset = function () {
-        return 0; // by default, but may be overridden in specific tests
-    };
-    if ('session' in params) {
-        _.extend(session, params.session);
-    }
+    _.extend(session, {
+        getTZOffset() { return 0; },
+        async user_has_group() { return false; },
+    }, params.session);
+
     if ('config' in params) {
         initialConfig = _.clone(config);
         initialConfig.device = _.clone(config.device);
