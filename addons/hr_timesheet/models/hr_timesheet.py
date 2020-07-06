@@ -39,10 +39,10 @@ class AccountAnalyticLine(models.Model):
         return []
 
     task_id = fields.Many2one(
-        'project.task', 'Task', index=True,
+        'project.task', 'Task', compute='_compute_project_task_id', store=True, readonly=False, index=True,
         domain="[('company_id', '=', company_id), ('project_id.allow_timesheets', '=', True), ('project_id', '=?', project_id)]")
     project_id = fields.Many2one(
-        'project.project', 'Project', compute='_compute_project_id', store=True, readonly=False,
+        'project.project', 'Project', compute='_compute_project_task_id', store=True, readonly=False,
         domain=_domain_project_id)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
     employee_id = fields.Many2one('hr.employee', "Employee", check_company=True, domain=_domain_employee_id)
@@ -53,16 +53,12 @@ class AccountAnalyticLine(models.Model):
         for analytic_line in self:
             analytic_line.encoding_uom_id = analytic_line.company_id.timesheet_encode_uom_id
 
-    @api.onchange('project_id')
-    def onchange_project_id(self):
-        if self.project_id and self.project_id != self.task_id.project_id:
-            # reset task when changing project
-            self.task_id = False
-
-    @api.depends('task_id.project_id')
-    def _compute_project_id(self):
+    @api.depends('task_id', 'task_id.project_id', 'project_id')
+    def _compute_project_task_id(self):
         for line in self.filtered(lambda line: not line.project_id):
             line.project_id = line.task_id.project_id
+        for line in self.filtered(lambda line: not line.project_id and line.project_id != line.task_id.project_id):
+            line.task_id = False
 
     @api.depends('employee_id')
     def _compute_user_id(self):
