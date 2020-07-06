@@ -1570,6 +1570,11 @@ class StockMove(models.Model):
 
             if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) <= 0:
                 break
+
+        for ml in self.move_line_ids:
+            if float_is_zero(ml.product_uom_qty, precision_rounding=ml.product_uom_id.rounding) and float_is_zero(ml.qty_done, precision_rounding=ml.product_uom_id.rounding):
+                res.append((2, ml.id))
+
         if float_compare(qty, 0.0, precision_rounding=self.product_uom.rounding) > 0:
             if self.product_id.tracking != 'serial':
                 vals = self._prepare_move_line_vals(quantity=0)
