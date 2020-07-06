@@ -549,7 +549,7 @@
     <title t-esc="blog.name"/>
     <link t-att-href="'%s/blog/%s' % (base_url ,blog.id)"/>
     <id t-esc="'%s/blog/%s' % (base_url, blog.id)"/>
-    <updated t-esc="(posts[0] if posts else blog).post_date.replace(' ', 'T') + 'Z'"/>
+    <updated t-esc="(posts[0].post_date if posts else blog.write_date).replace(' ', 'T') + 'Z'"/>
     <entry t-foreach="posts" t-as="post">
         <title t-esc="post.name"/>
         <link t-att-href="'%s%s' % (base_url, post.website_url)"/>
