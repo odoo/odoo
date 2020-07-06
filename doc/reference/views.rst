@@ -1856,10 +1856,6 @@ Possible children elements of the search view are:
                   ``filter_domain="[]"``
     ``groups``
         make the field only available to specific users
-    ``widget``
-        use specific search widget for the field (the only use case in
-        standard Odoo 8.0 is a ``selection`` widget for
-        :class:`~odoo.fields.Many2one` fields)
     ``domain``
         if the field can provide an auto-completion
         (e.g. :class:`~odoo.fields.Many2one`), filters the possible
