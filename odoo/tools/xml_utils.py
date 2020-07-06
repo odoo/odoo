@@ -1,22 +1,56 @@
 # -*- coding: utf-8 -*-
+import base64
+from io import BytesIO
 from lxml import etree
-from odoo.tools.misc import file_open
+
 from odoo.exceptions import UserError
+
+
+class odoo_resolver(etree.Resolver):
+    """Odoo specific file resolver that can be added to the XML Parser.
+
+    It will search filenames in the ir.attachments
+    """
+
+    def __init__(self, env):
+        super().__init__()
+        self.env = env
+
+    def resolve(self, url, id, context):
+        """Search url in ``ir.attachment`` and return the resolved content."""
+        attachment = self.env['ir.attachment'].search([('name', '=', url)])
+        if attachment:
+            return self.resolve_string(base64.b64decode(attachment.datas), context)
+
 
 def check_with_xsd(tree_or_str, stream):
     raise UserError("Method 'check_with_xsd' deprecated ")
 
+def _check_with_xsd(tree_or_str, stream, env=None):
+    """Check an XML against an XSD schema.
 
-def _check_with_xsd(tree_or_str, stream):
+    This will raise a UserError if the XML file is not valid according to the
+    XSD file.
+    :param tree_or_str (etree, str): representation of the tree to be checked
+    :param stream (io.IOBase, str): the byte stream used to build the XSD schema.
+        If env is given, it can also be the name of an attachment in the filestore
+    :param env (odoo.api.Environment): If it is given, it enables resolving the
+        imports of the schema in the filestore with ir.attachments.
+    """
     if not isinstance(tree_or_str, etree._Element):
         tree_or_str = etree.fromstring(tree_or_str)
-    xml_schema_doc = etree.parse(stream)
-    xsd_schema = etree.XMLSchema(xml_schema_doc)
+    parser = etree.XMLParser()
+    if env:
+        parser.resolvers.add(odoo_resolver(env))
+        if isinstance(stream, str) and stream.endswith('.xsd'):
+            attachment = env['ir.attachment'].search([('name', '=', stream)])
+            if not attachment:
+                raise FileNotFoundError()
+            stream = BytesIO(base64.b64decode(attachment.datas))
+    xsd_schema = etree.XMLSchema(etree.parse(stream, parser=parser))
     try:
         xsd_schema.assertValid(tree_or_str)
     except etree.DocumentInvalid as xml_errors:
-        #import UserError only here to avoid circular import statements with tools.func being imported in exceptions.py
-        from odoo.exceptions import UserError
         raise UserError('\n'.join(str(e) for e in xml_errors.error_log))
 
 
