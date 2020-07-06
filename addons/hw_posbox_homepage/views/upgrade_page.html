@@ -43,7 +43,7 @@
                                 url: '/hw_proxy/get_version',
                                 timeout: 4000,
                             }).done(function(version) {
-                                if (version === {{ flashToVersion }}) {
+                                if (version == {{ flashToVersion }}) {
                                     window.location = '/';
                                 }
                             });
