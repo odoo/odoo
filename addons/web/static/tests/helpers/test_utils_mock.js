@@ -168,14 +168,13 @@ async function _getMockedOwlEnv(params, mockServer) {
  *   end of the test
  */
 function _mockGlobalObjects(params) {
+    // store initial session state (for restoration)
+    const initialSession = Object.assign({}, session);
     // patch session
-    let initialSession = Object.assign({}, session);
-    session.getTZOffset = function () {
-        return 0; // by default, but may be overridden in specific tests
-    };
-    if ('session' in params) {
-        Object.assign(session, params.session);
-    }
+    Object.assign(session, {
+        getTZOffset() { return 0; },
+        async user_has_group() { return false; },
+    }, params.session);
 
     // patch config
     let initialConfig;
