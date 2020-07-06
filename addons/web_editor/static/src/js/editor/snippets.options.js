@@ -1907,33 +1907,45 @@ const SnippetOptionWidget = Widget.extend({
                 obj = createPropertyProxy(this, '$target', $firstSubTarget);
             }
 
-            const show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
-            if (!show) {
-                widget.toggleVisibility(false);
-                return;
+            // Make sure to check the visibility of all sub-widgets. For
+            // simplicity and efficiency, those will be checked with main
+            // widgets params.
+            const allSubWidgets = [widget];
+            let i = 0;
+            while (i < allSubWidgets.length) {
+                allSubWidgets.push(...allSubWidgets[i]._userValueWidgets);
+                i++;
             }
-
-            const dependencies = widget.getDependencies();
-            const dependenciesData = [];
-            dependencies.forEach(depName => {
-                const toBeActive = (depName[0] !== '!');
-                if (!toBeActive) {
-                    depName = depName.substr(1);
+            const proms = allSubWidgets.map(async widget => {
+                const show = await this._computeWidgetVisibility.call(obj, widget.getName(), params);
+                if (!show) {
+                    widget.toggleVisibility(false);
+                    return;
                 }
 
-                const widget = this._requestUserValueWidgets(depName)[0];
-                if (widget) {
-                    dependenciesData.push({
-                        widget: widget,
-                        toBeActive: toBeActive,
-                    });
-                }
-            });
-            const dependenciesOK = !dependenciesData.length || dependenciesData.some(depData => {
-                return (depData.widget.isActive() === depData.toBeActive);
-            });
+                const dependencies = widget.getDependencies();
+                const dependenciesData = [];
+                dependencies.forEach(depName => {
+                    const toBeActive = (depName[0] !== '!');
+                    if (!toBeActive) {
+                        depName = depName.substr(1);
+                    }
 
-            widget.toggleVisibility(dependenciesOK);
+                    const widget = this._requestUserValueWidgets(depName)[0];
+                    if (widget) {
+                        dependenciesData.push({
+                            widget: widget,
+                            toBeActive: toBeActive,
+                        });
+                    }
+                });
+                const dependenciesOK = !dependenciesData.length || dependenciesData.some(depData => {
+                    return (depData.widget.isActive() === depData.toBeActive);
+                });
+
+                widget.toggleVisibility(dependenciesOK);
+            });
+            return Promise.all(proms);
         });
 
         const showUI = await this._computeVisibility();
