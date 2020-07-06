@@ -51,4 +51,6 @@ class TestEventOnlineCommon(TestEventCommon, EventDtPatcher):
         cls.event_0.write({
             'date_begin': datetime.combine(cls.reference_now, time(7, 0)) - timedelta(days=1),
             'date_end': datetime.combine(cls.reference_now, time(13, 0)) + timedelta(days=1),
+            'hour_from': 8.0,
+            'hour_to': 18.0,
         })
