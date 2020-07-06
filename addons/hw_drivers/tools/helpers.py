@@ -162,7 +162,7 @@ def get_token():
     return read_file_first_line('token')
 
 def get_version():
-    return subprocess.check_output(['cat', '/home/pi/iotbox_version']).decode().rstrip()
+    return subprocess.check_output(['cat', '/var/odoo/iotbox_version']).decode().rstrip()
 
 def get_wifi_essid():
     wifi_options = []

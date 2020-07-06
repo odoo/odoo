@@ -545,11 +545,6 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                     value = bool(value)
             res[name] = value
 
-        # other fields: call the method 'get_values'
-        # The other methods that start with `get_default_` are deprecated
-        for method in dir(self):
-            if method.startswith('get_default_'):
-                _logger.warning(_('Methods that start with `get_default_` are deprecated. Override `get_values` instead(Method %s)', method))
         res.update(self.get_values())
 
         return res
@@ -602,12 +597,6 @@ class ResConfigSettings(models.TransientModel, ResConfigModuleInstallationMixin)
                 # value is a (possibly empty) recordset
                 value = value.id
             IrConfigParameter.set_param(icp, value)
-
-        # other fields: execute method 'set_values'
-        # Methods that start with `set_` are now deprecated
-        for method in dir(self):
-            if method.startswith('set_') and method != 'set_values':
-                _logger.warning(_('Methods that start with `set_` are deprecated. Override `set_values` instead (Method %s)', method))
 
     def execute(self):
         self.ensure_one()

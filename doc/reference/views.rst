@@ -800,6 +800,9 @@ system. Available semantic components are:
 
   ``name`` (mandatory)
     the name of the field to render
+  ``id``
+    the node id. Useful when there are several occurrences of the same field in
+    the view (see ``label`` component below). Default is the field name.
   ``widget``
     fields have a default rendering based on their type
     (e.g. :class:`~odoo.fields.Char`,
@@ -870,6 +873,27 @@ system. Available semantic components are:
   ``kanban_view_ref``
     for opening specific kanban view when selecting records from m2o/m2m in mobile
     environment
+
+``label``
+  when a ``field`` component isn't placed directly inside a ``group``, or when
+  its ``nolabel`` attribute is set, the field's label isn't automatically
+  displayed alongside its value. The ``label`` component is the manual alternative
+  of displaying the label of a field. Possible attributes are:
+  ``for`` (mandatory)
+    the reference to the field associated with the label. Can be either the name
+    of a field, or its id (``id`` attribute set on the ``field``). When there are
+    several occurrences of the same field in the view, and there are several
+    ``label`` components associated with these ``field`` nodes, those labels
+    must have unique ``for`` attributes (in this case referencing the ``id``
+    attribute of the corresponding ``field`` nodes).
+  ``string``
+    the label to display. Display the field's label (coming from the field
+    definition in the model) by default.
+  ``class``
+    same as for ``field`` component.
+  ``attrs``
+    same as for ``field`` component.
+
 
 Generic structure
 ~~~~~~~~~~~~~~~~~

@@ -2,11 +2,11 @@ odoo.define('web.FormView', function (require) {
 "use strict";
 
 var BasicView = require('web.BasicView');
-var config = require('web.config');
 var Context = require('web.Context');
 var core = require('web.core');
 var FormController = require('web.FormController');
 var FormRenderer = require('web.FormRenderer');
+const { generateID } = require('web.utils');
 
 var _lt = core._lt;
 
@@ -48,6 +48,7 @@ var FormView = BasicView.extend({
 
         this.rendererParams.mode = mode;
         this.rendererParams.isFromFormViewDialog = params.isFromFormViewDialog;
+        this.rendererParams.fieldIdsToNames = this.fieldsView.fieldIdsToNames;
     },
 
     //--------------------------------------------------------------------------
@@ -147,6 +148,39 @@ var FormView = BasicView.extend({
             });
         }
         return Promise.all(defs);
+    },
+    /**
+     * @override
+     */
+    _processArch(arch, fv) {
+        fv.fieldIdsToNames = {}; // maps field ids (identifying <field> nodes) to field names
+        return this._super(...arguments);
+    },
+    /**
+     * Override to populate the 'fieldIdsToNames' dict mapping <field> node ids
+     * to field names. Those ids are computed as follows:
+     *   - if set on the node, we use the 'id' attribute
+     *   - otherwise
+     *       - if this is the first occurrence of the field in the arch, we use
+     *         its name as id ('name' attribute)
+     *       - otherwise we generate an id by concatenating the field name with
+     *         a unique id
+     *       - in both cases, we set the id we generated in the attrs, as it
+     *         will be used by the renderer.
+     *
+     * @override
+     */
+    _processNode(node, fv) {
+        if (node.tag === 'field') {
+            const name = node.attrs.name;
+            let uid = node.attrs.id;
+            if (!uid) {
+                uid = name in fv.fieldIdsToNames ? `${name}__${generateID()}__` : name;
+                node.attrs.id = uid;
+            }
+            fv.fieldIdsToNames[uid] = name;
+        }
+        return this._super(...arguments);
     },
     /**
      * We set here the limit for the number of records fetched (in one page).

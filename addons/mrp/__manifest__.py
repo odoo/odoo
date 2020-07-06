@@ -36,6 +36,7 @@
         'views/res_config_settings_views.xml',
         'views/mrp_templates.xml',
         'views/stock_scrap_views.xml',
+        'report/report_deliveryslip.xml',
         'report/mrp_report_views_main.xml',
         'report/mrp_report_bom_structure.xml',
         'report/mrp_production_templates.xml',

@@ -113,7 +113,7 @@ const SearchPanel = Widget.extend({
         this.fields = params.fields;
         this.model = params.model;
         this.className = params.classes.concat(['o_search_panel']).join(' ');
-        this.reloadOptions = null;
+        this.internalChangeOccurred = false;
         this.searchDomain = params.searchDomain;
         this.viewDomain = params.viewDomain;
     },
@@ -126,7 +126,7 @@ const SearchPanel = Widget.extend({
             this.filters = this.initialState.filters;
             this.categories = this.initialState.categories;
         } else {
-            await this._fetchCategories(true);
+            await this._fetchCategories({ initialLoad: true });
             await this._fetchFilters();
             await this._applyDefaultFilterValues();
         }
@@ -236,14 +236,13 @@ const SearchPanel = Widget.extend({
     async update(params) {
         const currentDomain = JSON.stringify([...this.searchDomain, ...this.viewDomain]);
         const newDomain = JSON.stringify([...params.searchDomain, ...params.viewDomain]);
-        if (this.reloadOptions || (currentDomain !== newDomain)) {
+        const externalDomainUpdated = currentDomain !== newDomain;
+        if (this.internalChangeOccurred || externalDomainUpdated) {
             this.searchDomain = params.searchDomain;
             this.viewDomain = params.viewDomain;
-            if (!this.reloadOptions || this.reloadOptions.shouldFetchCategories) {
-                await this._fetchCategories();
-            }
+            await this._fetchCategories({ externalDomainUpdated });
             await this._fetchFilters();
-            this.reloadOptions = null;
+            this.internalChangeOccurred = false;
         }
         return this._render();
     },
@@ -387,17 +386,19 @@ const SearchPanel = Widget.extend({
     },
     /**
      * Fetch values for each category at startup. At reload a category is only
-     * fetched if the searchDomain changes and displayCounters is true for it.
+     * fetched if the situation requires it.
      *
      * @private
-     * @param {boolean} [force]
+     * @param {Object} [options={}]
+     * @param {boolean} [options.initialLoad]
+     * @param {boolean} [options.externalDomainUpdated]
      * @returns {Promise} resolved when all categories have been fetched
      */
-    _fetchCategories(force) {
+    _fetchCategories(options = {}) {
         const proms = [];
         for (const category of Object.values(this.categories)) {
             const { enableCounters, expand, hierarchize, limit } = category;
-            if (force || enableCounters) {
+            if (options.initialLoad || enableCounters || (options.externalDomainUpdated && !expand)) {
                 const prom = this._rpc({
                     method: 'search_panel_select_range',
                     model: this.model,
@@ -646,7 +647,7 @@ const SearchPanel = Widget.extend({
      * @private
      */
     _notifyDomainUpdated() {
-        this.reloadOptions = { shouldFetchCategories: true };
+        this.internalChangeOccurred = true;
         this.trigger_up('search_panel_domain_updated', {
             domain: this.getDomain(),
         });

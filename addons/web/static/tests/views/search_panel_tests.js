@@ -491,10 +491,11 @@ QUnit.module('Views', {
         var Storage = RamStorage.extend({
             getItem: function (key) {
                 assert.step('getItem ' + key);
-                return 3; // 'asustek'
+                return this._super(...arguments) || 3; // default: 'asustek'
             },
             setItem: function (key, value) {
                 assert.step('setItem ' + key + ' to ' + value);
+                this._super(...arguments);
             },
         });
         var RamStorageService = AbstractStorageService.extend({
@@ -2673,8 +2674,8 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             'search_panel_select_range',
-            '/web/dataset/search_read',
-            "search_panel_select_multi_range"
+            "search_panel_select_multi_range",
+            '/web/dataset/search_read'
         ]);
 
         kanban.destroy();
@@ -3990,6 +3991,147 @@ QUnit.module('Views', {
         assert.containsOnce(kanban, 'section div.alert.alert-warning');
         assert.strictEqual(kanban.el.querySelector('section div.alert.alert-warning').innerText, "Too many items to display.");
         assert.containsNone(kanban, '.o_search_panel_filter_value');
+
+        kanban.destroy();
+    });
+
+    QUnit.test("a selected value becomming invalid should no more impact the view", async function (assert) {
+        assert.expect(16);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+            services: this.services,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="filter_on_def" string="DEF" domain="[('state', '=', 'def')]"/>
+                        <searchpanel>
+                            <field name="state" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+        });
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            '/web/dataset/search_read',
+        ]);
+
+        await assert.containsN(kanban, '.o_kanban_record span', 4);
+
+        // select 'ABC' in search panel
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            '/web/dataset/search_read',
+        ]);
+
+        assert.containsOnce(kanban, '.o_kanban_record span');
+        assert.strictEqual(kanban.el.querySelector('.o_kanban_record span').innerText, 'yop' );
+
+        // select DEF in filter menu
+        await testUtils.controlPanel.toggleFilterMenu(kanban);
+        await testUtils.controlPanel.toggleMenuItem(kanban, 'DEF');
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            '/web/dataset/search_read',
+        ]);
+
+        const firstCategoryValue = kanban.el.querySelector('.o_search_panel_category_value header');
+        assert.strictEqual(firstCategoryValue.innerText, 'All');
+        assert.hasClass(
+            firstCategoryValue, 'active',
+            "the value 'All' should be selected since ABC is no longer a valid value with respect to search domain"
+        );
+        assert.containsOnce(kanban, '.o_kanban_record span');
+        assert.strictEqual(kanban.el.querySelector('.o_kanban_record span').innerText, 'blip' );
+
+        kanban.destroy();
+    });
+
+    QUnit.test("Categories with default attributes should be udpated when external domain changes", async function (assert) {
+        assert.expect(11);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            mockRPC: function (route, args) {
+                assert.step(args.method || route);
+                return this._super.apply(this, arguments);
+            },
+            services: this.services,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div>
+                                <field name="foo"/>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <filter name="filter_on_def" string="DEF" domain="[('state', '=', 'def')]"/>
+                        <searchpanel>
+                            <field name="state"/>
+                        </searchpanel>
+                    </search>`,
+            },
+        });
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            '/web/dataset/search_read',
+        ]);
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
+            ['All', 'ABC', 'DEF', 'GHI']
+        );
+
+        // select 'ABC' in search panel --> no need to update the category value
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+
+        assert.verifySteps([
+            '/web/dataset/search_read',
+        ]);
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
+            ['All', 'ABC', 'DEF', 'GHI']
+        );
+
+        // select DEF in filter menu --> the external domain changes --> the values should be updated
+        await testUtils.controlPanel.toggleFilterMenu(kanban);
+        await testUtils.controlPanel.toggleMenuItem(kanban, 'DEF');
+
+        assert.verifySteps([
+            'search_panel_select_range',
+            '/web/dataset/search_read',
+        ]);
+        assert.deepEqual(
+            [...kanban.el.querySelectorAll('.o_search_panel_category_value header label')].map(el => el.innerText),
+            ['All', 'DEF']
+        );
 
         kanban.destroy();
     });
