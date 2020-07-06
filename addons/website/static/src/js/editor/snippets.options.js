@@ -1895,6 +1895,15 @@ options.registry.Box = options.Class.extend({
         }
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'fake_inset_shadow_opt') {
+            return false;
+        }
+        return this._super(...arguments);
+    },
 });
 
 options.registry.CookiesBar = options.registry.SnippetPopup.extend({
