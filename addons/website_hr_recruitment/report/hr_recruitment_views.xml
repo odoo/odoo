@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="recruitment_source_report_view_pivot_extends" model="ir.ui.view">
+        <field name="name">hr.recruitment.source.report.pivot</field>
+        <field name="model">hr.recruitment.source.report</field>
+        <field name="inherit_id" ref="hr_recruitment.recruitment_source_report_view_pivot"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='applicant']"  position="before">
+                <field name="click" type="measure"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

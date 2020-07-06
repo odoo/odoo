@@ -933,7 +933,7 @@ action = act
          <field name="name">hr.applicant.pivot</field>
          <field name="model">hr.applicant</field>
          <field name="arch" type="xml">
-             <pivot string="Recruitment Analysis">
+             <pivot string="Recruitment">
                  <field name="stage_id" type="row"/>
                  <field name="job_id" type="col"/>
              </pivot>
@@ -944,7 +944,7 @@ action = act
          <field name="name">hr.applicant.graph</field>
          <field name="model">hr.applicant</field>
          <field name="arch" type="xml">
-             <graph string="Recruitment Analysis">
+             <graph string="Recruitment">
                  <field name="stage_id" type="row"/>
                  <field name="job_id" type="col"/>
              </graph>
@@ -956,7 +956,7 @@ action = act
         <field name="model">hr.applicant</field>
         <field name="priority">32</field>
         <field name="arch" type="xml">
-            <search string="Recruitment Analysis">
+            <search string="Recruitment">
                 <field name="job_id"/>
                 <field name="department_id" operator="child_of"/>
                 <field name="user_id"/>
@@ -992,7 +992,7 @@ action = act
     </record>
 
     <record id="hr_applicant_action_analysis" model="ir.actions.act_window">
-        <field name="name">Recruitment Analysis</field>
+        <field name="name">Recruitment</field>
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="hr_applicant_view_search"/>
@@ -1005,10 +1005,10 @@ action = act
     <menuitem name="Reporting" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
     sequence="99"/>
 
-    <menuitem name="Recruitment Analysis" id="hr_applicant_report_menu" parent="report_hr_recruitment"
+    <menuitem name="Recruitment" id="hr_applicant_report_menu" parent="report_hr_recruitment"
     sequence="50" action="hr_applicant_action_analysis"/>
     <record id="action_hr_recruitment_report_filtered_department" model="ir.actions.act_window">
-        <field name="name">Recruitment Analysis</field>
+        <field name="name">Recruitment</field>
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="hr_applicant_view_search"/>
@@ -1019,7 +1019,7 @@ action = act
     </record>
 
     <record id="action_hr_recruitment_report_filtered_job" model="ir.actions.act_window">
-        <field name="name">Recruitment Analysis</field>
+        <field name="name">Recruitment</field>
         <field name="res_model">hr.applicant</field>
         <field name="view_mode">graph,pivot</field>
         <field name="search_view_id" ref="hr_applicant_view_search"/>

@@ -32,6 +32,7 @@
         'views/mail_activity_views.xml',
         'views/digest_views.xml',
         'wizard/applicant_refuse_reason_views.xml',
+        'report/hr_recruitment_source_report_views.xml',
     ],
     'demo': [
         'data/hr_recruitment_demo.xml',
