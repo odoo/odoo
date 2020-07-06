@@ -437,6 +437,6 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
         // be avoided and use the class in XML if possible.
         @extend .o_cc#{$-related-color};
     } @else {
-        @include o-bg-color(o-color($-related-color), $background: $background);
+        @include o-bg-color(o-color($-related-color), $background: $background, $important: false);
     }
 }
