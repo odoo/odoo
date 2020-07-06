@@ -5,17 +5,13 @@ import logging
 import os
 import shutil
 import tempfile
-import threading
-import traceback
-from xml.etree import ElementTree as ET
 import zipfile
-
-from pytz import country_timezones
-from functools import wraps
-from contextlib import closing
-from decorator import decorator
+from contextlib import closing, ExitStack
+from xml.etree import ElementTree as ET
 
 import psycopg2
+from decorator import decorator
+from pytz import country_timezones
 
 import odoo
 from odoo import SUPERUSER_ID
@@ -393,7 +389,13 @@ def list_db_incompatible(databases):
     incompatible_databases = []
     server_version = '.'.join(str(v) for v in version_info[:2])
     for database_name in databases:
-        with closing(db_connect(database_name).cursor()) as cr:
+        with ExitStack() as st:
+            try:
+                cr = st.enter_context(closing(db_connect(database_name).cursor()))
+            except psycopg2.OperationalError:
+                incompatible_databases.append(database_name)
+                continue
+
             if odoo.tools.table_exists(cr, 'ir_module_module'):
                 cr.execute("SELECT latest_version FROM ir_module_module WHERE name=%s", ('base',))
                 base_version = cr.fetchone()

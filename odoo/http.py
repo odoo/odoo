@@ -1439,7 +1439,7 @@ class Root(object):
                         odoo.registry(db).check_signaling()
                         with odoo.tools.mute_logger('odoo.sql_db'):
                             ir_http = request.registry['ir.http']
-                    except (AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
+                    except (KeyError, AttributeError, psycopg2.OperationalError, psycopg2.ProgrammingError):
                         # psycopg2 error or attribute error while constructing
                         # the registry. That means either
                         # - the database probably does not exists anymore
@@ -1447,12 +1447,7 @@ class Root(object):
                         # - the database version doesnt match the server version
                         # Log the user out and fall back to nodb
                         request.session.logout()
-                        if request.httprequest.path == '/web':
-                            # Internal Server Error
-                            raise
-                        else:
-                            # If requesting /web this will loop
-                            result = _dispatch_nodb()
+                        result = _dispatch_nodb()
                     else:
                         result = ir_http._dispatch()
                 else:

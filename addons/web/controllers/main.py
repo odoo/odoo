@@ -35,6 +35,7 @@ import odoo
 import odoo.modules.registry
 from odoo.api import call_kw, Environment
 from odoo.modules import get_module_path, get_resource_path
+from odoo.service.db import list_db_incompatible
 from odoo.tools import image_process, topological_sort, html_escape, pycompat, ustr, apply_inheritance_specs, lazy_property
 from odoo.tools.mimetypes import guess_mimetype
 from odoo.tools.translate import _
@@ -147,7 +148,7 @@ def ensure_db(redirect='/web/database/selector'):
     if db and db not in http.db_filter([db]):
         db = None
 
-    if db and not request.session.db:
+    if db and not request.session.db and db not in list_db_incompatible([db]):
         # User asked a specific database on a new session.
         # That mean the nodb router has been used to find the route
         # Depending on installed module in the database, the rendering of the page
@@ -173,7 +174,7 @@ def ensure_db(redirect='/web/database/selector'):
 
     # if no db can be found til here, send to the database selector
     # the database selector will redirect to database manager if needed
-    if not db:
+    if not db or db in list_db_incompatible([db]):
         werkzeug.exceptions.abort(werkzeug.utils.redirect(redirect, 303))
 
     # always switch the session to the computed db
