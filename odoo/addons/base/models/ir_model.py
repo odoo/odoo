@@ -383,7 +383,7 @@ class IrModel(models.Model):
             ids = upsert(self.env.cr, self._table, cols, rows, ['model'])
             for row, id_ in zip(rows, ids):
                 model_ids[row[0]] = id_
-            self.pool.post_init(mark_modified, self.browse(ids), cols)
+            self.pool.post_init(mark_modified, self.browse(ids), cols[1:])
 
         # update their XML id
         module = self._context.get('module')
@@ -1032,7 +1032,7 @@ class IrModelFields(models.Model):
             ids = upsert(cr, self._table, cols, rows, ['model', 'name'])
             for row, id_ in zip(rows, ids):
                 field_ids[row[:2]] = id_
-            self.pool.post_init(mark_modified, self.browse(ids), cols)
+            self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
 
         # update their XML id
         module = self._context.get('module')
@@ -1208,7 +1208,7 @@ class IrModelSelection(models.Model):
         rows = [key + val for key, val in expected.items() if existing.get(key) != val]
         if rows:
             ids = upsert(cr, self._table, cols, rows, ['field_id', 'value'])
-            self.pool.post_init(mark_modified, self.browse(ids), cols)
+            self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
 
         # update their XML ids
         module = self._context.get('module')
