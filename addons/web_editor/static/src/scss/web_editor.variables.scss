@@ -76,27 +76,6 @@ $o-we-toolbar-height: 32px;
     box-shadow: 0 0 15px 2px #000;
 }
 
-// Mixins for buttons with alpha bg-color
-@mixin o-alpha-button-preview {
-    position: relative;
-    z-index: 1;
-
-    // Place an overlay that inherit the button's bg-color.
-    &::before {
-        content: "";
-        @include o-position-absolute(0, 0, 0, 0);
-        background-color: inherit;
-    }
-
-    &::after {
-        content: "";
-        @include o-position-absolute(0, 0, 0, 0);
-        z-index: -1;
-        background-image: url('/web_editor/static/src/img/transparent.png');
-        background-size: 10px auto;
-    }
-}
-
 // ============    Preservation mixins    ===============
 // Used to preserve web_editor and website UI from themes customizations
 
