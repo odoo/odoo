@@ -1605,6 +1605,12 @@ var BasicModel = AbstractModel.extend({
                 args: [data.display_name],
                 context: this._getContext(record, {fieldName: fieldName, viewType: options.viewType}),
             });
+            // Check if a record is really created. Models without defined
+            // _rec_name cannot create record based on name_create.
+            if (!result) {
+                record._changes[fieldName] = false;
+                return Promise.resolve();
+            }
             data = {id: result[0], display_name: result[1]};
         }
 
