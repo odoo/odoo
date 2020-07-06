@@ -161,5 +161,11 @@ class GoogleService(models.AbstractModel):
                 response = ""
             else:
                 _logger.exception("Bad google request : %s !", error.response.content)
+<<<<<<< HEAD
                 raise error
+=======
+                if error.response.status_code in (400, 401, 403, 410):
+                    raise error
+                raise self.env['res.config.settings'].get_config_warning(_("Something went wrong with your request to google"))
+>>>>>>> 845aa45ffbb... temp
         return (status, response, ask_time)
