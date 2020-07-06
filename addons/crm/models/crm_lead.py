@@ -127,6 +127,14 @@ class Lead(models.Model):
     # Opportunity specific
     expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
     prorated_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_prorated_revenue")
+    recurring_revenue = fields.Monetary('Recurring Revenues', currency_field='company_currency', groups="crm.group_use_recurring_revenues")
+    recurring_plan = fields.Many2one('crm.recurring.plan', string="Recurring Plan", groups="crm.group_use_recurring_revenues")
+    recurring_revenue_monthly = fields.Monetary('Expected MRR', currency_field='company_currency', store=True,
+                                               compute="_compute_recurring_revenue_monthly",
+                                               groups="crm.group_use_recurring_revenues")
+    recurring_revenue_monthly_prorated = fields.Monetary('Prorated MRR', currency_field='company_currency', store=True,
+                                               compute="_compute_recurring_revenue_monthly_prorated",
+                                               groups="crm.group_use_recurring_revenues")
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
@@ -370,6 +378,16 @@ class Lead(models.Model):
     def _compute_prorated_revenue(self):
         for lead in self:
             lead.prorated_revenue = round((lead.expected_revenue or 0.0) * (lead.probability or 0) / 100.0, 2)
+
+    @api.depends('recurring_revenue', 'recurring_plan.number_of_months')
+    def _compute_recurring_revenue_monthly(self):
+        for lead in self:
+            lead.recurring_revenue_monthly = (lead.recurring_revenue or 0.0) / (lead.recurring_plan.number_of_months or 1)
+
+    @api.depends('recurring_revenue_monthly', 'probability')
+    def _compute_recurring_revenue_monthly_prorated(self):
+        for lead in self:
+            lead.recurring_revenue_monthly_prorated = (lead.recurring_revenue_monthly or 0.0) * (lead.probability or 0) / 100.0
 
     def _compute_meeting_count(self):
         if self.ids:

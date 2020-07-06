@@ -3,7 +3,7 @@
 
 {
     'name': 'CRM',
-    'version': '1.1',
+    'version': '1.2',
     'category': 'Sales/CRM',
     'sequence': 5,
     'summary': 'Track leads and close opportunities',
@@ -32,6 +32,7 @@
         'data/crm_team_data.xml',
         'data/digest_data.xml',
         'data/mail_data.xml',
+        'data/crm_recurring_plan_data.xml',
 
         'wizard/crm_lead_lost_views.xml',
         'wizard/crm_lead_to_opportunity_views.xml',
@@ -40,6 +41,7 @@
 
         'views/assets.xml',
         'views/calendar_views.xml',
+        'views/crm_recurring_plan_views.xml',
         'views/crm_menu_views.xml',
         'views/crm_lost_reason_views.xml',
         'views/crm_stage_views.xml',

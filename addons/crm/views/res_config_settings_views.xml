@@ -51,6 +51,23 @@
                         </div>
                     </div>
                     <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="group_use_recurring_revenues"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="group_use_recurring_revenues"/>
+                                <div class="text-muted">
+                                    Define recurring plans and revenues on Opportunities
+                                </div>
+                                <div attrs="{'invisible': [('group_use_recurring_revenues', '=', False)]}">
+                                    <button type="action" name="crm.crm_recurring_plan_action"
+                                            string="Manage Recurring Plans" icon="fa-arrow-right" class="oe_link"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="row mt16 o_settings_container">
                         <div class="col-12 col-lg-6 o_setting_box"
                             title="This can be used to compute statistical probability to close a lead"
                             name="predictive_lead_setting_container">
