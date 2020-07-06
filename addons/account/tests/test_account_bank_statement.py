@@ -335,7 +335,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             'name': cls.statement_line.payment_ref,
             'partner_id': cls.statement_line.partner_id.id,
             'currency_id': cls.currency_2.id,
-            'account_id': cls.statement.journal_id.default_debit_account_id.id,
+            'account_id': cls.statement.journal_id.default_account_id.id,
             'debit': 1250.0,
             'credit': 0.0,
             'amount_currency': 2500.0,
@@ -741,7 +741,7 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             {
                 'debit': 1.0,
                 'credit': 0,
-                'account_id': self.bank_journal_2.default_debit_account_id.id,
+                'account_id': self.bank_journal_2.default_account_id.id,
                 'move_id': st_line.move_id.id,
             },
             {

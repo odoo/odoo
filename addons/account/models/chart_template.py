@@ -256,6 +256,8 @@ class AccountChartTemplate(models.Model):
             'default_cash_difference_expense_account_id': acc_template_ref.get(self.default_cash_difference_expense_account_id.id, False),
             'account_journal_suspense_account_id': acc_template_ref.get(self.account_journal_suspense_account_id.id),
             'account_cash_basis_base_account_id': acc_template_ref.get(self.property_cash_basis_base_account_id.id),
+            'income_currency_exchange_account_id': acc_template_ref.get(self.income_currency_exchange_account_id.id),
+            'expense_currency_exchange_account_id': acc_template_ref.get(self.expense_currency_exchange_account_id.id),
         })
 
         if not company.account_journal_suspense_account_id:
@@ -427,11 +429,7 @@ class AccountChartTemplate(models.Model):
                 default_account = acc_template_ref.get(self.property_account_income_categ_id.id)
             elif journal['type'] == 'purchase':
                 default_account = acc_template_ref.get(self.property_account_expense_categ_id.id)
-            elif journal['type'] == 'general' and journal['code'] == _('EXCH'):
-                if type=='credit':
-                    default_account = acc_template_ref.get(self.income_currency_exchange_account_id.id)
-                else:
-                    default_account = acc_template_ref.get(self.expense_currency_exchange_account_id.id)
+
             return default_account
 
         journals = [{'name': _('Customer Invoices'), 'type': 'sale', 'code': _('INV'), 'favorite': True, 'color': 11, 'sequence': 5},
@@ -450,8 +448,7 @@ class AccountChartTemplate(models.Model):
                 'name': journal['name'],
                 'code': journal['code'],
                 'company_id': company.id,
-                'default_credit_account_id': _get_default_account(journal, 'credit'),
-                'default_debit_account_id': _get_default_account(journal, 'debit'),
+                'default_account_id': _get_default_account(journal),
                 'show_on_dashboard': journal['favorite'],
                 'color': journal.get('color', False),
                 'sequence': journal['sequence']

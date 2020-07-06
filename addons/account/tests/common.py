@@ -416,10 +416,10 @@ class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
         })
 
         cls.bank_journal_euro = cls.env['account.journal'].create({'name': 'Bank', 'type': 'bank', 'code': 'BNK67'})
-        cls.account_euro = cls.bank_journal_euro.default_debit_account_id
+        cls.account_euro = cls.bank_journal_euro.default_account_id
 
         cls.bank_journal_usd = cls.env['account.journal'].create({'name': 'Bank US', 'type': 'bank', 'code': 'BNK68', 'currency_id': cls.currency_usd_id})
-        cls.account_usd = cls.bank_journal_usd.default_debit_account_id
+        cls.account_usd = cls.bank_journal_usd.default_account_id
 
         cls.fx_journal = cls.company.currency_exchange_journal_id
         cls.diff_income_account = cls.company.income_currency_exchange_account_id

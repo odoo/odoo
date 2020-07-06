@@ -24,8 +24,8 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
         cls.account_pay = cls.company_data['default_account_payable']
         cls.account_rcv = cls.company_data['default_account_receivable']
-        cls.account_bnk = cls.company_data['default_journal_bank'].default_debit_account_id
-        cls.account_cash = cls.company_data['default_journal_cash'].default_debit_account_id
+        cls.account_bnk = cls.company_data['default_journal_bank'].default_account_id
+        cls.account_cash = cls.company_data['default_journal_cash'].default_account_id
 
         cls.partner_1 = cls.env['res.partner'].create({'name': 'partner_1', 'company_id': cls.company.id})
         cls.partner_2 = cls.env['res.partner'].create({'name': 'partner_2', 'company_id': cls.company.id})
@@ -428,8 +428,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         bank_st = self.env['account.bank.statement'].create({
             'name': 'test bank journal', 'journal_id': self.bank_journal.id,
         })
-        bank_st.journal_id.default_credit_account_id = payment_bnk_line.account_id
-        bank_st.journal_id.default_debit_account_id = payment_bnk_line.account_id
+        bank_st.journal_id.default_account_id = payment_bnk_line.account_id
         bank_line_1 = self.env['account.bank.statement.line'].create({
             'statement_id': bank_st.id,
             'payment_ref': '8',
