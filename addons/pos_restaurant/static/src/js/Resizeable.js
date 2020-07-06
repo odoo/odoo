@@ -42,6 +42,38 @@ odoo.define('pos_restaurant.Resizeable', function(require) {
             useExternalListener(document, 'mouseup', this.endResizeSE);
             useListener('mousedown', '.resize-handle-se', this.startResizeSE);
 
+            useExternalListener(document, 'touchmove', this.resizeN);
+            useExternalListener(document, 'touchend', this.endResizeN);
+            useListener('touchstart', '.resize-handle-n', this.startResizeN);
+
+            useExternalListener(document, 'touchmove', this.resizeS);
+            useExternalListener(document, 'touchend', this.endResizeS);
+            useListener('touchstart', '.resize-handle-s', this.startResizeS);
+
+            useExternalListener(document, 'touchmove', this.resizeW);
+            useExternalListener(document, 'touchend', this.endResizeW);
+            useListener('touchstart', '.resize-handle-w', this.startResizeW);
+
+            useExternalListener(document, 'touchmove', this.resizeE);
+            useExternalListener(document, 'touchend', this.endResizeE);
+            useListener('touchstart', '.resize-handle-e', this.startResizeE);
+
+            useExternalListener(document, 'touchmove', this.resizeNW);
+            useExternalListener(document, 'touchend', this.endResizeNW);
+            useListener('touchstart', '.resize-handle-nw', this.startResizeNW);
+
+            useExternalListener(document, 'touchmove', this.resizeNE);
+            useExternalListener(document, 'touchend', this.endResizeNE);
+            useListener('touchstart', '.resize-handle-ne', this.startResizeNE);
+
+            useExternalListener(document, 'touchmove', this.resizeSW);
+            useExternalListener(document, 'touchend', this.endResizeSW);
+            useListener('touchstart', '.resize-handle-sw', this.startResizeSW);
+
+            useExternalListener(document, 'touchmove', this.resizeSE);
+            useExternalListener(document, 'touchend', this.endResizeSE);
+            useListener('touchstart', '.resize-handle-se', this.startResizeSE);
+
             this.size = { height: 0, width: 0 };
             this.loc = { top: 0, left: 0 };
             this.tempSize = {};
@@ -93,7 +125,6 @@ odoo.define('pos_restaurant.Resizeable', function(require) {
                 this.el.style.height = `${this.size.height - dY}px`;
                 this.el.style.top = `${this.loc.top + dY}px`;
             }
-            event.preventDefault();
         }
         endResizeN() {
             if (this.isResizingN && !this.isResizingE && !this.isResizingW && !this.isResizingS) {
@@ -126,7 +157,6 @@ odoo.define('pos_restaurant.Resizeable', function(require) {
                 }
                 this.el.style.height = `${this.size.height + dY}px`;
             }
-            event.preventDefault();
         }
         endResizeS() {
             if (!this.isResizingN && !this.isResizingE && !this.isResizingW && this.isResizingS) {
@@ -160,7 +190,6 @@ odoo.define('pos_restaurant.Resizeable', function(require) {
                 this.el.style.width = `${this.size.width - dX}px`;
                 this.el.style.left = `${this.loc.left + dX}px`;
             }
-            event.preventDefault();
         }
         endResizeW() {
             if (!this.isResizingN && !this.isResizingE && this.isResizingW && !this.isResizingS) {
@@ -200,7 +229,6 @@ odoo.define('pos_restaurant.Resizeable', function(require) {
                 }
                 this.el.style.width = `${this.size.width + dX}px`;
             }
-            event.preventDefault();
         }
         endResizeE() {
             if (!this.isResizingN && this.isResizingE && !this.isResizingW && !this.isResizingS) {

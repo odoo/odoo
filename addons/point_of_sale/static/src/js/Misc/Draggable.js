@@ -92,7 +92,6 @@ odoo.define('point_of_sale.Draggable', function(require) {
                 this.el.style.left = `${posLeft}px`;
                 this.el.style.top = `${posTop}px`;
             }
-            event.preventDefault();
         }
         endDrag() {
             if (this.isDragging) {
