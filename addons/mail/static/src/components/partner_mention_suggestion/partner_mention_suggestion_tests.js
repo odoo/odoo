@@ -84,7 +84,7 @@ QUnit.test('partner mention suggestion correct data', async function (assert) {
         "Partner mention suggestion should be present"
     );
     assert.strictEqual(
-        document.querySelectorAll(`.o_PartnerImStatusIcon`).length,
+        document.querySelectorAll(`.o_RecordStatusIcon`).length,
         1,
         "Partner's im_status should be displayed"
     );

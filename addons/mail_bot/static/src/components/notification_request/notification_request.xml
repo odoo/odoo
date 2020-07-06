@@ -6,10 +6,11 @@
             <div class="o_NotificationRequest_sidebar">
                 <div class="o_NotificationRequest_imageContainer o_NotificationRequest_sidebarItem">
                     <img class="o_NotificationRequest_image rounded-circle" src="/mail/static/src/img/odoobot.png" alt="Avatar of OdooBot"/>
-                    <PartnerImStatusIcon
+                    <RecordStatusIcon
                         class="o_NotificationRequest_partnerImStatusIcon"
                         t-att-class="{ 'o-mobile': env.messaging.device.isMobile }"
-                        partnerLocalId="env.messaging.partnerRoot.localId"
+                        recordModel="'mail.partner'"
+                        recordLocalId="env.messaging.partnerRoot.localId"
                     />
                 </div>
             </div>

@@ -2,7 +2,7 @@ odoo.define('mail/static/src/components/thread_icon/thread_icon.js', function (r
 'use strict';
 
 const components = {
-    ThreadTypingIcon: require('mail/static/src/components/thread_typing_icon/thread_typing_icon.js'),
+    RecordStatusIcon: require('mail/static/src/components/record_status_icon/record_status_icon.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
@@ -39,6 +39,25 @@ class ThreadIcon extends Component {
         return this.env.models['mail.thread'].get(this.props.threadLocalId);
     }
 
+    /**
+     * @returns {string}
+     */
+    get avatar() {
+        if (!this.thread) {
+            return '';
+        }
+        if (this.thread.channel_type === 'channel') {
+            return `/web/image/${this.thread.model}/${this.thread.id}/image_128`;
+        }
+        if (this.thread.correspondent) {
+            if (this.thread.correspondent === this.env.messaging.partnerRoot) {
+                return '/mail/static/src/img/odoobot.png';
+            } else {
+                return `/web/image/res.partner/${this.thread.correspondent.id}/image_128`;
+            }
+        }
+        return '/mail/static/src/img/smiley/avatar.jpg';
+    }
 }
 
 Object.assign(ThreadIcon, {

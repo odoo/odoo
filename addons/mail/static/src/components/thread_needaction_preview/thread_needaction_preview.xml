@@ -12,12 +12,13 @@
                     <div class="o_ThreadNeedactionPreview_imageContainer o_ThreadNeedactionPreview_sidebarItem">
                         <img class="o_ThreadNeedactionPreview_image" t-att-src="image()" alt="Thread Image"/>
                         <t t-if="thread.correspondent and thread.correspondent.im_status">
-                            <PartnerImStatusIcon
+                            <RecordStatusIcon
                                 class="o_ThreadNeedactionPreview_partnerImStatusIcon"
                                 t-att-class="{
                                     'o-mobile': env.messaging.device.isMobile,
                                 }"
-                                partnerLocalId="thread.correspondent.localId"
+                                recordModel="'mail.partner'"
+                                recordLocalId="thread.correspondent.localId"
                             />
                         </t>
                     </div>

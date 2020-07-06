@@ -8,7 +8,7 @@ const components = {
     ModerationDiscardDialog: require('mail/static/src/components/moderation_discard_dialog/moderation_discard_dialog.js'),
     ModerationRejectDialog: require('mail/static/src/components/moderation_reject_dialog/moderation_reject_dialog.js'),
     NotificationPopover: require('mail/static/src/components/notification_popover/notification_popover.js'),
-    PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
+    RecordStatusIcon: require('mail/static/src/components/record_status_icon/record_status_icon.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const { timeFromNow } = require('mail.utils');

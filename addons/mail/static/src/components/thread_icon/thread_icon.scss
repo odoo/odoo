@@ -1,16 +1,43 @@
-
 // ------------------------------------------------------------------
 // Layout
 // ------------------------------------------------------------------
 
 .o_ThreadIcon {
     display: flex;
-    width: 13px;
+    position: relative;
     justify-content: center;
+    width: 28px;
 }
 
-.o_ThreadIcon_typing {
-    flex: 1 1 auto;
+.o_ThreadIcon_avatar {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    margin-inline-end: map_get($spacers, 2);
+}
+
+.o_ThreadIcon_channelPrivacy {
+    position: absolute;
+    right: 0;
+    font-size: x-small;
+}
+
+.o_ThreadIcon_channelTypingContainer {
+    font-size: x-small;
+    display: flex;
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    width: 1.2em;
+    height: 1.2em;
+    line-height: 1.3em;
+}
+
+.o_ThreadIcon_status {
+    position: absolute;
+    right: 0;
+    bottom: 0;
+    font-size: x-small;
 }
 
 // ------------------------------------------------------------------

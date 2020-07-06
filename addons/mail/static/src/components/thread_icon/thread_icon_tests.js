@@ -98,7 +98,7 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     );
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_online',
+        '.o_RecordStatusIcon_icon.o-online',
         "should have thread icon with partner im status icon 'online'"
     );
 
@@ -114,11 +114,11 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_typing',
+        '.o_RecordStatusIcon_typing',
         "should have thread icon with partner currently typing"
     );
     assert.strictEqual(
-        document.querySelector('.o_ThreadIcon_typing').title,
+        document.querySelector('.o_RecordStatusIcon_typing').title,
         "Demo is typing...",
         "title of icon should tell demo is currently typing"
     );
@@ -135,8 +135,126 @@ QUnit.test('chat: correspondent is typing', async function (assert) {
     });
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_online',
+        '.o_RecordStatusIcon_icon.o-online',
         "should have thread icon with partner im status icon 'online' (no longer typing)"
+    );
+});
+
+QUnit.test('channel: correspondent is typing', async function (assert) {
+    assert.expect(11);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 20,
+                is_pinned: true,
+                members: [{
+                    email: 'admin@odoo.com',
+                    id: 3,
+                    name: 'Admin',
+                }, {
+                    email: 'demo@odoo.com',
+                    id: 7,
+                    im_status: 'online',
+                    name: 'Demo',
+                }],
+                public: 'private',
+            }],
+        },
+    });
+    await this.start({
+        env: {
+            session: {
+                name: 'Admin',
+                partner_display_name: 'Your Company, Admin',
+                partner_id: 3,
+                uid: 2,
+            },
+        },
+    });
+    const thread = this.env.models['mail.thread'].find(thread =>
+        thread.id === 20 &&
+        thread.model === 'mail.channel'
+    );
+    await this.createThreadIcon(thread);
+
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadIcon',
+        "should have thread icon"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadIcon_avatar',
+        "should have thread avatar"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadIcon_channelPrivate',
+        "should have thread privacy icon"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_RecordStatusIcon_typing',
+        "should not have thread icon with partner currently typing"
+    );
+
+    // simulate receive typing notification from demo "is typing"
+    await afterNextRender(() => {
+        const typingData = {
+            info: 'typing_status',
+            partner_id: 7,
+            is_typing: true,
+        };
+        const notification = [[false, 'mail.channel', 20], typingData];
+        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadIcon_avatar',
+        "should still have thread avatar"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadIcon_channelPrivate',
+        "should still have thread privacy icon"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_RecordStatusIcon_typing',
+        "should have thread icon with partner currently typing"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_RecordStatusIcon_typing').title,
+        "Demo is typing...",
+        "title of icon should tell demo is currently typing"
+    );
+
+    // simulate receive typing notification from demo "no longer is typing"
+    await afterNextRender(() => {
+        const typingData = {
+            info: 'typing_status',
+            partner_id: 7,
+            is_typing: false,
+        };
+        const notification = [[false, 'mail.channel', 20], typingData];
+        this.widget.call('bus_service', 'trigger', 'notification', [notification]);
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadIcon_avatar',
+        "should still have thread avatar"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadIcon_channelPrivate',
+        "should still have thread privacy icon"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_RecordStatusIcon_typing',
+        "should not have thread icon with partner currently typing anymore"
     );
 });
 

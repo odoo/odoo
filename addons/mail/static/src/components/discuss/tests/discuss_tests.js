@@ -873,17 +873,17 @@ QUnit.test('sidebar: chat im_status rendering', async function (assert) {
         }"]
     `);
     assert.strictEqual(
-        chat1.querySelectorAll(`:scope .o_ThreadIcon_offline`).length,
+        chat1.querySelectorAll(`:scope .o_RecordStatusIcon_icon.o-offline`).length,
         1,
         "chat1 should have offline icon"
     );
     assert.strictEqual(
-        chat2.querySelectorAll(`:scope .o_ThreadIcon_online`).length,
+        chat2.querySelectorAll(`:scope .o_RecordStatusIcon_icon.o-online`).length,
         1,
         "chat2 should have online icon"
     );
     assert.strictEqual(
-        chat3.querySelectorAll(`:scope .o_ThreadIcon_away`).length,
+        chat3.querySelectorAll(`:scope .o_RecordStatusIcon_icon.o-away`).length,
         1,
         "chat3 should have away icon"
     );

@@ -4,7 +4,7 @@ odoo.define('mail/static/src/components/partner_mention_suggestion/partner_menti
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const components = {
-    PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
+    RecordStatusIcon: require('mail/static/src/components/record_status_icon/record_status_icon.js'),
 };
 
 const { Component } = owl;

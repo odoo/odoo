@@ -2,34 +2,36 @@
 // Layout
 // ------------------------------------------------------------------
 
-.o_PartnerImStatusIcon {
+.o_RecordStatusIcon {
     display: flex;
     flex-flow: column;
-
+    justify-content: center;
     width: 1.2em;
     height: 1.2em;
     line-height: 1.3em;
+
+    &.o-no-background {
+        transform: scale(1);
+        margin-inline-end: map-get($spacers, 1);
+        margin-top: 2px;
+    }
 }
 
-.o_PartnerImStatusIcon_outerBackground {
+.o_RecordStatusIcon_outerBackground {
     transform: scale(1.5);
-}
 
-.o-background {
-    transform: scale(1);
-    margin-inline-end: map-get($spacers, 1);
-    margin-top: 2px;
+
 }
 
 // ------------------------------------------------------------------
 // Style
 // ------------------------------------------------------------------
 
-.o_PartnerImStatusIcon_innerBackground {
+.o_RecordStatusIcon_innerBackground {
     color: white;
 }
 
-.o_PartnerImStatusIcon_icon {
+.o_RecordStatusIcon_icon {
 
     &.o-away {
         color: theme-color('warning');

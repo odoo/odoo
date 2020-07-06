@@ -10,15 +10,17 @@
             <t t-if="thread">
                 <div class="o_ThreadPreview_sidebar">
                     <div class="o_ThreadPreview_imageContainer o_ThreadPreview_sidebarItem">
+                        <!-- TODO? {XDU} Shouldn't it use ThreadIcon ? -->
                         <img class="o_ThreadPreview_image rounded-circle" t-att-src="image()" alt="Thread Image"/>
                         <t t-if="thread.correspondent and thread.correspondent.im_status">
-                            <PartnerImStatusIcon
+                            <RecordStatusIcon
                                 class="o_ThreadPreview_partnerImStatusIcon"
                                 t-att-class="{
                                     'o-mobile': env.messaging.device.isMobile,
                                     'o-muted': thread.message_unread_counter === 0,
                                 }"
-                                partnerLocalId="thread.correspondent.localId"
+                                recordModel="'mail.partner'"
+                                recordLocalId="thread.correspondent.localId"
                             />
                         </t>
                     </div>

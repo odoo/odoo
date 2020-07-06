@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+
+    <t t-name="mail.RecordStatusIcon" owl="1">
+        <span
+            class="o_RecordStatusIcon"
+            t-att-class="{ 'o-no-background': !props.hasBackground }"
+            t-att-data-record-local-id="props.recordLocalId"
+            t-att-data-record-model="props.recordModel"
+        >
+            <t t-if="record" name="rootCondition">
+                <t t-if="isTyping or props.recordModel === 'mail.partner'">
+                    <t t-if="props.hasBackground">
+                        <i class="o_RecordStatusIcon_outerBackground fa fa-circle fa-stack-1x"/>
+                        <i class="o_RecordStatusIcon_innerBackground fa fa-circle fa-stack-1x"/>
+                    </t>
+                    <t t-if="isTyping">
+                        <ThreadTypingIcon class="o_RecordStatusIcon_typing" animation="'pulse'" title="thread.typingStatusText"/>
+                    </t>
+                    <t t-elif="props.recordModel === 'mail.partner'" name="partnerCondition">
+                        <t t-if="record.im_status === 'online'">
+                            <i class="o_RecordStatusIcon_icon o-online fa fa-circle fa-stack-1x" title="Online" role="img" aria-label="User is online"/>
+                        </t>
+                        <t t-elif="record.im_status === 'away'">
+                            <i class="o_RecordStatusIcon_icon o-away fa fa-circle fa-stack-1x" title="Idle" role="img" aria-label="User is idle"/>
+                        </t>
+                        <t t-elif="record.im_status === 'offline'">
+                            <i class="o_RecordStatusIcon_icon o-offline fa fa-circle-o fa-stack-1x" title="Offline" role="img" aria-label="User is offline"/>
+                        </t>
+                        <t t-else="" name="noStatusCondition">
+                            <i class="o_RecordStatusIcon_icon o-no-status fa fa-question-circle" title="No IM status available"/>
+                        </t>
+                    </t>
+                </t>
+            </t>
+        </span>
+    </t>
+
+</templates>

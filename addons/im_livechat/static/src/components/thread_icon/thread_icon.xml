@@ -4,10 +4,11 @@
         <xpath expr="//*[@name='rootCondition']" position="inside">
             <t t-elif="thread.channel_type === 'livechat'">
                 <t t-if="thread.orderedOtherTypingMembers.length > 0">
-                    <ThreadTypingIcon
-                        class="o_ThreadIcon_typing"
-                        animation="'pulse'"
-                        title="thread.typingStatusText"
+                    <RecordStatusIcon
+                        class="o_ThreadIcon_status o_ThreadIcon_liveChatStatus"
+                        recordModel="'mail.thread'"
+                        recordLocalId="thread.localId"
+                        threadLocalId="thread.localId"
                     />
                 </t>
                 <t t-else="">

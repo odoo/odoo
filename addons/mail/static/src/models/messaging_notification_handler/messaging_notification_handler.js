@@ -690,19 +690,12 @@ function factory(dependencies) {
             } else {
                 const authorName = author.nameOrDisplayName;
                 if (channel.channel_type === 'channel') {
-                    // hack: notification template does not support OWL components,
-                    // so we simply use their template to make HTML as if it comes
-                    // from component
-                    const channelIcon = this.env.qweb.renderToString('mail.ThreadIcon', {
-                        env: this.env,
-                        thread: channel,
-                    });
+                    // TODO bring back channelIcon if possible (task-2293245)
                     const channelName = owl.utils.escape(channel.displayName);
-                    const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = _.str.sprintf(
                         this.env._t("%s from %s"),
                         owl.utils.escape(authorName),
-                        channelNameWithIcon
+                        channelName
                     );
                 } else {
                     notificationTitle = owl.utils.escape(authorName);

@@ -2,7 +2,7 @@ odoo.define('mail_bot/static/src/components/notification_request/notification_re
 'use strict';
 
 const components = {
-    PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
+    RecordStatusIcon: require('mail/static/src/components/record_status_icon/record_status_icon.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 

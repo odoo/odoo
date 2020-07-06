@@ -4,9 +4,10 @@
     <t t-name="mail.PartnerMentionSuggestion" owl="1">
         <a class="o_PartnerMentionSuggestion dropdown-item" t-att-class="{ 'active': props.isActive }" href="#" role="menuitem" t-on-click="_onClick" t-on-mouseover="_onMouseOver">
             <t t-if="partner">
-                <PartnerImStatusIcon
+                <RecordStatusIcon
                     hasBackground="false"
-                    partnerLocalId="partner.localId"
+                    recordModel="'mail.partner'"
+                    recordLocalId="partner.localId"
                 />
                 <span class="o_PartnerMentionSuggestion_name"><t t-esc="partner.nameOrDisplayName"/></span>
                 <t t-if="partner.email">

@@ -112,11 +112,11 @@ QUnit.test('livechat: public website visitor is typing', async function (assert)
     });
     assert.containsOnce(
         document.body,
-        '.o_ThreadIcon_typing',
+        '.o_RecordStatusIcon_typing',
         "should have thread icon with visitor currently typing"
     );
     assert.strictEqual(
-        document.querySelector('.o_ThreadIcon_typing').title,
+        document.querySelector('.o_RecordStatusIcon_typing').title,
         "Visitor is typing...",
         "title of icon should tell visitor is currently typing"
     );

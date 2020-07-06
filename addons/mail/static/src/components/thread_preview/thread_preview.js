@@ -3,7 +3,7 @@ odoo.define('mail/static/src/components/thread_preview/thread_preview.js', funct
 
 const components = {
     MessageAuthorPrefix: require('mail/static/src/components/message_author_prefix/message_author_prefix.js'),
-    PartnerImStatusIcon: require('mail/static/src/components/partner_im_status_icon/partner_im_status_icon.js'),
+    RecordStatusIcon: require('mail/static/src/components/record_status_icon/record_status_icon.js'),
 };
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 const mailUtils = require('mail.utils');
