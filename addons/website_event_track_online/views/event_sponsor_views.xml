@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_sponsor_view_form" model="ir.ui.view">
+        <field name="name">event.sponsor.view.form.inherit.online</field>
+        <field name="model">event.sponsor</field>
+        <field name="inherit_id" ref="website_event_track.event_sponsor_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='image_128']" position="replace">
+                <field name="image_512" widget="image" class="oe_avatar"/>
+            </xpath>
+            <xpath expr="//h1//field[@name='partner_id']" position="replace">
+                <field name="name"/>
+            </xpath>
+            <xpath expr="//field[@name='event_id']" position="after">
+                <field name="partner_id"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_email']" position="replace">
+                <field name="email" widget="email"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_phone']" position="replace">
+                <field name="phone" widget="phone" options="{'enable_sms': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_mobile']" position="replace">
+                <field name="mobile" widget="phone" options="{'enable_sms': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>
