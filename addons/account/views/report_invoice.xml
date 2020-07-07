@@ -157,6 +157,29 @@
                                             <span class="text-nowrap" t-field="o.amount_total"/>
                                         </td>
                                     </tr>
+                                    <t t-if="print_with_payments">
+                                        <t t-if="o.payment_state != 'invoicing_legacy'">
+                                            <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
+                                            <t t-foreach="payments_vals" t-as="payment_vals">
+                                                <tr>
+                                                    <td>
+                                                        <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
+                                                    </td>
+                                                    <td class="text-right">
+                                                        <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                            <t t-if="len(payments_vals) > 0">
+                                                <tr class="border-black">
+                                                    <td><strong>Amount Due</strong></td>
+                                                    <td class="text-right">
+                                                        <span t-field="o.amount_residual"/>
+                                                    </td>
+                                                </tr>
+                                            </t>
+                                        </t>
+                                    </t>
                                 </table>
                             </div>
                         </div>
@@ -186,37 +209,11 @@
             </t>
         </template>
 
-        <template id="report_invoice_document_with_payments" inherit_id="account.report_invoice_document" primary="True">
-            <xpath expr="//div[@id='total']/div/table" position="inside">
-                <t t-if="o.payment_state != 'invoicing_legacy'">
-                    <t t-set="payments_vals" t-value="o.sudo()._get_reconciled_info_JSON_values()"/>
-                    <t t-foreach="payments_vals" t-as="payment_vals">
-                        <tr>
-                            <td>
-                                <i class="oe_form_field text-right oe_payment_label">Paid on <t t-esc="payment_vals['date']" t-options='{"widget": "date"}'/></i>
-                            </td>
-                            <td class="text-right">
-                                <span t-esc="payment_vals['amount']" t-options='{"widget": "monetary", "display_currency": o.currency_id}'/>
-                            </td>
-                        </tr>
-                    </t>
-                    <t t-if="len(payments_vals) > 0">
-                        <tr class="border-black">
-                            <td><strong>Amount Due</strong></td>
-                            <td class="text-right">
-                                 <span t-field="o.amount_residual"/>
-                            </td>
-                        </tr>
-                    </t>
-                </t>
-            </xpath>
-        </template>
-
         <template id="report_invoice">
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
-                    <t t-call="account.report_invoice_document" t-lang="lang"/>
+                    <t t-call="#{ o._get_name_invoice_report() }" t-lang="lang"/>
                 </t>
             </t>
         </template>
@@ -225,7 +222,8 @@
             <t t-call="web.html_container">
                 <t t-foreach="docs" t-as="o">
                     <t t-set="lang" t-value="o.invoice_user_id.sudo().lang if o.move_type in ('in_invoice', 'in_refund') else o.partner_id.lang"/>
-                    <t t-call="account.report_invoice_document_with_payments" t-lang="lang"/>
+                    <t t-set="print_with_payments" t-value="True"/>
+                    <t t-call="#{ o._get_name_invoice_report() }" t-lang="lang"/>
                 </t>
             </t>
         </template>
