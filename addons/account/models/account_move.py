@@ -2558,6 +2558,12 @@ class AccountMove(models.Model):
             raise UserError(_("Only invoices could be printed."))
         return self._get_move_display_name()
 
+    def _get_name_invoice_report(self):
+        """ This method need to be inherit by the localizations if they want to print a custom invoice report instead of
+        the default one. For example please review the l10n_ar module """
+        self.ensure_one()
+        return 'account.report_invoice_document'
+
     def preview_invoice(self):
         self.ensure_one()
         return {
