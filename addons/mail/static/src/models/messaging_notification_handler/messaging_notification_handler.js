@@ -694,10 +694,13 @@ function factory(dependencies) {
                     // hack: notification template does not support OWL components,
                     // so we simply use their template to make HTML as if it comes
                     // from component
+                    const channelIcon = channel.public === 'private' ? '🔒' : '#';
+                    const channelName = owl.utils.escape(channel.displayName);
+                    const channelNameWithIcon = channelIcon + channelName;
                     notificationTitle = _.str.sprintf(
                         this.env._t("%s from %s"),
                         owl.utils.escape(authorName),
-                        owl.utils.escape(channel.displayName),
+                        channelNameWithIcon
                     );
                 } else {
                     notificationTitle = owl.utils.escape(authorName);
