@@ -598,6 +598,13 @@ class Partner(models.Model):
             partner._handle_first_contact_creation()
         return partners
 
+    @api.constrains('email')
+    def _check_email_coding(self):
+        try:
+            address = self.email_formatted
+        except UnicodeEncodeError:
+            raise ValidationError(_('The coding of email address is wrong!'))
+
     def _load_records_create(self, vals_list):
         partners = super(Partner, self.with_context(_partners_skip_fields_sync=True))._load_records_create(vals_list)
 
