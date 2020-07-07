@@ -671,6 +671,82 @@ QUnit.test('chat window: close on ESCAPE', async function (assert) {
     assert.verifySteps(['rpc:channel_fold/closed']);
 });
 
+QUnit.test('focus next visible chat window when closing current chat window with ESCAPE', async function (assert) {
+    /**
+     * computation uses following info:
+     * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
+     * (others: @see mail/static/src/models/chat_window_manager/chat_window_manager.js:visual)
+     *
+     * - chat window width: 325px
+     * - start/end/between gap width: 10px/10px/5px
+     * - hidden menu width: 200px
+     * - global width: 1920px
+     *
+     * Enough space for 2 visible chat windows:
+     *  10 + 325 + 5 + 325 + 10 = 670 < 1920
+     */
+    assert.expect(4);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [
+                {
+                    channel_type: 'channel',
+                    id: 20,
+                    is_minimized: true,
+                    is_pinned: true,
+                    name: "General",
+                    state: 'open',
+                    uuid: 'channel-20-uuid',
+                },
+                {
+                    channel_type: 'channel',
+                    id: 21,
+                    is_minimized: true,
+                    is_pinned: true,
+                    name: "other chat",
+                    state: 'open',
+                    uuid: 'channel-21-uuid',
+                },
+            ],
+        },
+    });
+    await this.start({
+        env: {
+            browser: {
+                innerWidth: 1920,
+            },
+        },
+    });
+    assert.containsN(
+        document.body,
+        '.o_ChatWindow .o_ComposerTextInput_textarea',
+        2,
+        "initialy, 2 chat windows should be present"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow.o-folded',
+        "both chat windows should be open"
+    );
+
+    await afterNextRender(() => {
+        const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: 'Escape' });
+        document.querySelector('.o_ComposerTextInput_textarea').dispatchEvent(ev);
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow',
+        "only one chat window should remain after pressing escape on first chat window"
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatWindow'),
+        'o-focused',
+        "next visible chat window should be focused after pressing escape on first chat window"
+    );
+});
+
+
 QUnit.test('[technical] chat window: composer state conservation on toggle home menu', async function (assert) {
     // technical as show/hide home menu simulation are involved and home menu implementation
     // have side-effects on DOM that may make chat window components not work
