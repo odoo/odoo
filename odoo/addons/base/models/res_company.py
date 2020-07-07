@@ -72,14 +72,14 @@ class Company(models.Model):
     user_ids = fields.Many2many('res.users', 'res_company_users_rel', 'cid', 'user_id', string='Accepted Users')
     street = fields.Char(compute='_compute_address', inverse='_inverse_street')
     street2 = fields.Char(compute='_compute_address', inverse='_inverse_street2')
-    zip = fields.Char(compute='_compute_address', inverse='_inverse_zip')
+    zip = fields.Char(compute='_compute_address', inverse='_inverse_address_country_constrains')
     city = fields.Char(compute='_compute_address', inverse='_inverse_city')
     state_id = fields.Many2one(
-        'res.country.state', compute='_compute_address', inverse='_inverse_state',
+        'res.country.state', compute='_compute_address', inverse='_inverse_address_country_constrains',
         string="Fed. State", domain="[('country_id', '=?', country_id)]"
     )
     bank_ids = fields.One2many('res.partner.bank', 'company_id', string='Bank Accounts', help='Bank accounts related to this company')
-    country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_country', string="Country")
+    country_id = fields.Many2one('res.country', compute='_compute_address', inverse='_inverse_address_country_constrains', string="Country")
     email = fields.Char(related='partner_id.email', store=True, readonly=False)
     phone = fields.Char(related='partner_id.phone', store=True, readonly=False)
     website = fields.Char(related='partner_id.website', readonly=False)
@@ -124,6 +124,21 @@ class Company(models.Model):
                 partner = company.partner_id.browse(address_data['contact']).sudo()
                 company.update(company._get_company_address_update(partner))
 
+    def _inverse_address_country_constrains(self):
+        """ Need to group these 3 fields because inverse method are not ordered
+            and we can not warranty that country_id will be called as the last one.
+            In some (random) case, inverse method for country_id was called before the
+            state_id, and when this last one is required, a ValidationError was raised
+            altough inverse method state_id will be called immediately after into the
+            same "transaction".
+        """
+        for company in self:
+            company.partner_id.write({
+                'zip': company.zip,
+                'state_id': company.state_id,
+                'country_id': company.country_id,
+            })
+
     def _inverse_street(self):
         for company in self:
             company.partner_id.street = company.street
@@ -132,21 +147,9 @@ class Company(models.Model):
         for company in self:
             company.partner_id.street2 = company.street2
 
-    def _inverse_zip(self):
-        for company in self:
-            company.partner_id.zip = company.zip
-
     def _inverse_city(self):
         for company in self:
             company.partner_id.city = company.city
-
-    def _inverse_state(self):
-        for company in self:
-            company.partner_id.state_id = company.state_id
-
-    def _inverse_country(self):
-        for company in self:
-            company.partner_id.country_id = company.country_id
 
     @api.depends('partner_id.image_1920')
     def _compute_logo_web(self):

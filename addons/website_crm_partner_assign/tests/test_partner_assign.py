@@ -52,6 +52,7 @@ class TestPartnerAssign(TransactionCase):
             "name": "Think Big Systems",
             "is_company": True,
             "city": "London",
+            "zip": "E1AB",
             "country_id": self.env.ref("base.uk").id,
             "street": "89 Lingfield Tower",
             "partner_weight": 10,

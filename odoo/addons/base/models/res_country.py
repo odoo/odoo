@@ -67,6 +67,9 @@ class Country(models.Model):
         help="Determines where the customer/company name should be placed, i.e. after or before the address.")
     vat_label = fields.Char(string='Vat Label', translate=True, help="Use this field if you want to change vat label.")
 
+    state_required = fields.Boolean(default=False)
+    zip_required = fields.Boolean(default=True)
+
     _sql_constraints = [
         ('name_uniq', 'unique (name)',
             'The name of the country must be unique !'),

@@ -124,6 +124,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'street': '57th Street',
             'city': 'New New York',
             'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_1').id,
             'zip': '12345',
         })
         cls.contact_1 = cls.env['res.partner'].create({
@@ -136,6 +137,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'street': 'Actually the sewers',
             'city': 'New York',
             'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_1').id,
             'zip': '54321',
         })
         cls.contact_2 = cls.env['res.partner'].create({
@@ -146,6 +148,7 @@ class TestCrmCommon(TestSalesCommon, MailCase):
             'street': 'Cookieville Minimum-Security Orphanarium',
             'city': 'New New York',
             'country_id': cls.env.ref('base.us').id,
+            'state_id': cls.env.ref('base.state_us_1').id,
             'mobile': '+1 202 555 0999',
             'zip': '97648',
         })

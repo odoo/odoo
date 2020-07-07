@@ -198,6 +198,8 @@ class Partner(models.Model):
     city = fields.Char()
     state_id = fields.Many2one("res.country.state", string='State', ondelete='restrict', domain="[('country_id', '=?', country_id)]")
     country_id = fields.Many2one('res.country', string='Country', ondelete='restrict')
+    country_state_required = fields.Boolean(related='country_id.state_required', readonly=True)
+    country_zip_required = fields.Boolean(related='country_id.zip_required', readonly=True)
     partner_latitude = fields.Float(string='Geo Latitude', digits=(16, 5))
     partner_longitude = fields.Float(string='Geo Longitude', digits=(16, 5))
     email = fields.Char()
@@ -314,6 +316,21 @@ class Partner(models.Model):
     def _check_parent_id(self):
         if not self._check_recursion():
             raise ValidationError(_('You cannot create recursive Partner hierarchies.'))
+
+    @api.constrains('country_id', 'zip', 'state_id', 'street')
+    def _check_country_constrains(self):
+        # Required field is already done in form view with attrs
+        # In some flow, we want to have a first contact created based e.g. on the Country GeoLocalized
+        # without knowing the state or zip, even if it is required in the format address we need to
+        # be able to have a Contact name, with a country but without address.
+        # So we consider these fields required only when an address (and so at least a street)
+        # is filled on the contact and that we could, maybe, send a letter / parcel by post.
+        for record in self:
+            if record.country_id and record.street:
+                if record.country_id.zip_required and not record.zip:
+                    raise ValidationError(_('Zip is required for country %r', record.country_id.name))
+                if record.country_id.state_required and not record.state_id:
+                    raise ValidationError(_('State is required for country %r', record.country_id.name))
 
     def copy(self, default=None):
         self.ensure_one()

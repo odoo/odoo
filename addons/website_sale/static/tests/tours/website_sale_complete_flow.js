@@ -55,6 +55,7 @@ odoo.define('website_sale_tour.tour', function (require) {
             $('input[name="email"]').val('abc@odoo.com');
             $('input[name="street"]').val('SO1 Billing Street, 33');
             $('input[name="city"]').val('SO1BillingCity');
+            $('input[name="zip"]').val('10000');
             $('#country_id option:eq(1)').attr('selected', true);
         },
     },
@@ -75,6 +76,7 @@ odoo.define('website_sale_tour.tour', function (require) {
             $('input[name="phone"]').val('8888888888');
             $('input[name="street"]').val('17, SO1 Shipping Road');
             $('input[name="city"]').val('SO1ShippingCity');
+            $('input[name="zip"]').val('10000');
             $('#country_id option:eq(1)').attr('selected', true);
         },
     },
@@ -263,6 +265,7 @@ odoo.define('website_sale_tour.tour', function (require) {
             $('input[name="phone"]').val('7777777777');
             $('input[name="street"]').val('SO2New Shipping Street, 5');
             $('input[name="city"]').val('SO2NewShipping');
+            $('input[name="zip"]').val('1200');
             $('#country_id option:eq(1)').attr('selected', true);
         },
     },

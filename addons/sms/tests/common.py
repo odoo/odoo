@@ -204,6 +204,7 @@ class SMSCommon(MailCommon, MockSMS):
         cls.user_employee.write({'login': 'employee'})
 
         # update country to belgium in order to test sanitization of numbers
+        _ =  cls.user_employee.company_id.state_id  # noqa -- to check with RCO - need prefetch here
         cls.user_employee.company_id.write({'country_id': cls.env.ref('base.be').id})
 
         # some numbers for testing

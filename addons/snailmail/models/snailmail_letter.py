@@ -6,6 +6,8 @@ import base64
 from odoo import fields, models, api, _
 from odoo.addons.iap import jsonrpc
 from odoo.tools.safe_eval import safe_eval
+from odoo.exceptions import ValidationError
+
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
 PRINT_ENDPOINT = '/iap/snailmail/1/print'
@@ -62,6 +64,15 @@ class SnailmailLetter(models.Model):
     city = fields.Char('City')
     state_id = fields.Many2one("res.country.state", string='State')
     country_id = fields.Many2one('res.country', string='Country')
+
+    @api.constrains('country_id', 'zip', 'state_id', 'street')
+    def _check_country_constrains(self):
+        for record in self:
+            if record.country_id and record.street:
+                if record.country_id.zip_required and not record.zip:
+                    raise ValidationError(_('Zip is required for country %r', record.country_id.name))
+                if record.country_id.state_required and not record.state_id:
+                    raise ValidationError(_('State is required for country %r', record.country_id.name))
 
     @api.depends('reference', 'partner_id')
     def _compute_display_name(self):

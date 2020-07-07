@@ -10,7 +10,7 @@ from odoo import api, fields, models, tools, SUPERUSER_ID
 from odoo.osv import expression
 from odoo.tools.translate import _
 from odoo.tools import email_re, email_split
-from odoo.exceptions import UserError, AccessError
+from odoo.exceptions import UserError, AccessError, ValidationError
 from odoo.addons.phone_validation.tools import phone_validation
 from collections import OrderedDict, defaultdict
 
@@ -180,6 +180,15 @@ class Lead(models.Model):
     _sql_constraints = [
         ('check_probability', 'check(probability >= 0 and probability <= 100)', 'The probability of closing the deal should be between 0% and 100%!')
     ]
+
+    @api.constrains('country_id', 'zip', 'state_id', 'street')
+    def _check_country_constrains(self):
+        for record in self:
+            if record.country_id and record.street:
+                if record.country_id.zip_required and not record.zip:
+                    raise ValidationError(_('Zip is required for country %r', record.country_id.name))
+                if record.country_id.state_required and not record.state_id:
+                    raise ValidationError(_('State is required for country %r', record.country_id.name))
 
     @api.depends('activity_date_deadline')
     def _compute_kanban_state(self):

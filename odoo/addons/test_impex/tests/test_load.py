@@ -1060,7 +1060,7 @@ class test_realworld(SavepointCaseWithUserDemo):
 
     def test_backlink(self):
         fnames = ["name", "type", "street", "city", "country_id", "category_id",
-                  "is_company", "parent_id"]
+                  "is_company", "parent_id", "zip"]
         data = json.loads(pkgutil.get_data(self.__module__, 'contacts.json').decode('utf-8'))
         result = self.env['res.partner'].load(fnames, data)
         self.assertFalse(result['messages'])

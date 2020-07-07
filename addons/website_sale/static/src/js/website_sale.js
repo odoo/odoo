@@ -347,13 +347,13 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
             },
         }).then(function (data) {
             // placeholder phone_code
-            //$("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
+            $("input[name='phone']").attr('placeholder', data.phone_code !== 0 ? '+'+ data.phone_code : '');
 
             // populate states and display
             var selectStates = $("select[name='state_id']");
             // dont reload state at first loading (done in qweb)
             if (selectStates.data('init')===0 || selectStates.find('option').length===1) {
-                if (data.states.length) {
+                if (data.states.length || data.state_required) {
                     selectStates.html('');
                     _.each(data.states, function (x) {
                         var opt = $('<option>').text(x[1])
@@ -382,6 +382,11 @@ publicWidget.registry.WebsiteSale = publicWidget.Widget.extend(VariantMixin, {
                     $(".checkout_autoformat .div_" + field.split('_')[0]).toggle($.inArray(field, data.fields)>=0);
                 });
             }
+
+            $("label[for='zip']").toggleClass('label-optional', !data.zip_required);
+            $("label[for='state_id']").toggleClass('label-optional', !data.state_required);
+            $("label[for='zip']").get(0).toggleAttribute('required', !!data.zip_required);
+            $("label[for='state_id']").get(0).toggleAttribute('required', !!data.state_required);
         });
     },
     /**

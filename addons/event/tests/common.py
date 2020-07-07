@@ -93,6 +93,7 @@ class TestEventCommon(common.SavepointCase):
         })
 
         # set country in order to format Belgian numbers
+        _ =  cls.user_employee.company_id.state_id  # noqa -- to check with RCO - need prefetch here
         cls.event_0.company_id.write({'country_id': cls.env.ref('base.be').id})
 
     @classmethod

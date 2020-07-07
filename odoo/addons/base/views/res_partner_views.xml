@@ -117,9 +117,11 @@
                                 <field name="street" placeholder="Street..." class="o_address_street"/>
                                 <field name="street2" placeholder="Street 2..." class="o_address_street"/>
                                 <field name="city" placeholder="City" class="o_address_city"/>
-                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': country_id}"/>
-                                <field name="zip" placeholder="ZIP" class="o_address_zip"/>
+                                <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}" context="{'default_country_id': country_id}" attrs="{'required': [('country_state_required','=', True)]}"/>
+                                <field name="zip" placeholder="ZIP" class="o_address_zip" attrs="{'required': [('country_zip_required','=', True)]}"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'/>
+                                <field name="country_state_required" invisible="1" />
+                                <field name="country_zip_required" invisible="1" />
                             </div>
                             <field name="website" widget="url" placeholder="e.g. https://www.odoo.com"/>
                         </group>
@@ -185,11 +187,13 @@
                                 <field name="city" placeholder="City" class="o_address_city"
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
                                 <field name="state_id" class="o_address_state" placeholder="State" options="{'no_open': True, 'no_quick_create': True}"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)], 'required': [('country_state_required','=', True)]}" context="{'country_id': country_id, 'default_country_id': country_id, 'zip': zip}"/>
                                 <field name="zip" placeholder="ZIP" class="o_address_zip"
-                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                    attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)], 'required': [('country_zip_required','=', True)]}"/>
                                 <field name="country_id" placeholder="Country" class="o_address_country" options='{"no_open": True, "no_create": True}'
                                     attrs="{'readonly': [('type', '=', 'contact'),('parent_id', '!=', False)]}"/>
+                                <field name="country_state_required" invisible="1" />
+                                <field name="country_zip_required" invisible="1" />
                             </div>
                             <field name="vat" placeholder="e.g. BE0477472701" attrs="{'readonly': [('parent_id','!=',False)]}"/>
                         </group>
