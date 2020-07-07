@@ -65,7 +65,7 @@ class AccountInvoiceSend(models.TransientModel):
     @api.multi
     def _send_email(self):
         if self.is_email:
-            self.composer_id.send_mail()
+            self.composer_id.send_mail(auto_commit=True)
             if self.env.context.get('mark_invoice_as_sent'):
                 self.mapped('invoice_ids').write({'sent': True})
 
