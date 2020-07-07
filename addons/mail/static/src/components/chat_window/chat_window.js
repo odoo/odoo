@@ -310,6 +310,7 @@ class ChatWindow extends Component {
                     break;
                 }
                 ev.preventDefault();
+                this.chatWindow.focusNextVisibleUnfoldedChatWindow();
                 this.chatWindow.close();
                 break;
         }
