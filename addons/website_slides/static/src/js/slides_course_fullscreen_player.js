@@ -574,6 +574,9 @@ odoo.define('website_slides.fullscreen', function (require) {
                 var $wpContainer = $('<div>').addClass('o_wslide_fs_webpage_content bg-white block w-100 overflow-auto');
                 $(slide.htmlContent).appendTo($wpContainer);
                 $content.append($wpContainer);
+                this.trigger_up('widgets_start_request', {
+                    $target: $content,
+                });
             }
             return Promise.resolve();
         },
