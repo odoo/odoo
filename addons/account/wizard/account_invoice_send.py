@@ -51,6 +51,7 @@ class AccountInvoiceSend(models.TransientModel):
         for wizard in self:
             if wizard.composer_id:
                 wizard.composer_id.template_id = wizard.template_id.id
+                wizard._compute_composition_mode()
                 wizard.composer_id.onchange_template_id_wrapper()
 
     @api.onchange('is_email')
