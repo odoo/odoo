@@ -9,6 +9,8 @@ import email.policy
 import logging
 import re
 import smtplib
+from socket import gaierror, timeout
+from ssl import SSLError
 import sys
 import threading
 
@@ -129,6 +131,18 @@ class IrMailServer(models.Model):
             except UserError as e:
                 # let UserErrors (messages) bubble up
                 raise e
+            except UnicodeError as e:
+                raise UserError(_("Invalid server name !\n %s", ustr(e)))
+            except (gaierror, timeout) as e:
+                raise UserError(_("No response received. Check server address and port number.\n %s", ustr(e)))
+            except smtplib.SMTPServerDisconnected as e:
+                raise UserError(_("The server has closed the connection unexpectedly. Check configuration served on this port number.\n %s", ustr(e.strerror)))
+            except smtplib.SMTPResponseException as e:
+                raise UserError(_("Server replied with following exception:\n %s", ustr(e.smtp_error)))
+            except smtplib.SMTPException as e:
+                raise UserError(_("An SMTP exception occurred. Check port number and connection security type.\n %s", ustr(e.smtp_error)))
+            except SSLError as e:
+                raise UserError(_("An SSL exception occurred. Check connection security type.\n %s", ustr(e)))
             except Exception as e:
                 raise UserError(_("Connection Test Failed! Here is what we got instead:\n %s", ustr(e)))
             finally:
