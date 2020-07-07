@@ -31,10 +31,6 @@ class TestPrePostComputes(common.TransactionCase):
     def test_pre_post_create_computes(self):
         Model = self.env["test_new_api.model_advanced_computes"]
 
-        # Check automatic assignation of pre_compute=False on pre_compute=True fields
-        # 1) dependency on create_date/create_uid/write_date/write_uid
-        self.assertFalse(Model._fields.get('create_month').pre_compute)
-
         # Force computation on a new and assertRaises Error
         new_record = Model.new({
             'name1': 'Nathan',
@@ -63,8 +59,6 @@ class TestPrePostComputes(common.TransactionCase):
         self.assertEqual(records[1].duplicates, records[0])
 
         self.assertEqual(records[0].full_upper_name, records[1].full_upper_name)
-        self.assertTrue(records[0].create_month)
-        self.assertTrue(records[1].create_month)
 
     def test_x2m_precomputation(self):
         Model = self.env["test_new_api.model_advanced_computes"]

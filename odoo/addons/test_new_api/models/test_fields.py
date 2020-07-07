@@ -17,11 +17,6 @@ class ModelAdvancedComputes(models.Model):
     # pre-compute False basic field
     full_upper_name = fields.Char(compute="_compute_full_upper", pre_compute=False, store=True)
 
-    # Field depending on post_computed fields
-    create_month = fields.Integer(compute="_compute_create_month", store=True)
-
-    # VFE TODO one related field?
-
     # pre_compute False relational field
     duplicates = fields.Many2many(
         comodel_name='test_new_api.model_advanced_computes',
@@ -42,13 +37,6 @@ class ModelAdvancedComputes(models.Model):
                 raise ValidationError("Should be computed before record creation")
             rec.upper_name_1 = rec.name1.title()
             rec.upper_name_2 = rec.name2.title()
-
-    @api.depends('create_date')
-    def _compute_create_month(self):
-        for rec in self:
-            if not rec.id or not rec.env.context.get('creation', False):
-                raise ValidationError("Should be computed after record creation")
-            rec.create_month = rec.create_date and rec.create_date.month
 
     @api.depends('upper_name_1', 'upper_name_2')
     def _compute_full_upper(self):

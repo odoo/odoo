@@ -28,7 +28,6 @@ from odoo.exceptions import CacheMiss
 
 DATE_LENGTH = len(date.today().strftime(DATE_FORMAT))
 DATETIME_LENGTH = len(datetime.now().strftime(DATETIME_FORMAT))
-POST_CREATE_FIELDS = ['create_date', 'create_uid', 'write_date', 'write_uid']
 
 IR_MODELS = (
     'ir.model', 'ir.model.data', 'ir.model.fields', 'ir.model.fields.selection',
@@ -629,8 +628,6 @@ class Field(MetaField('DummyField', (object,), {})):
                 if field is self and index:
                     self.recursive = True
 
-                if fname in POST_CREATE_FIELDS:
-                    self.pre_compute = False
 
                 field_seq.append(field)
 
