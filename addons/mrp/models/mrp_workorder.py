@@ -95,8 +95,8 @@ class MrpWorkorder(models.Model):
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Expected duration (in minutes)")
     duration = fields.Float(
-        'Real Duration', compute='_compute_duration',
-        readonly=True, store=True)
+        'Real Duration', compute='_compute_duration', inverse='_set_duration',
+        readonly=False, store=True)
     duration_unit = fields.Float(
         'Duration Per Unit', compute='_compute_duration',
         readonly=True, store=True)
@@ -282,6 +282,42 @@ class MrpWorkorder(models.Model):
             else:
                 order.duration_percent = 0
 
+    def _set_duration(self):
+
+        def _float_duration_to_second(duration):
+            minutes = duration // 1
+            seconds = (duration % 1) * 60
+            return minutes * 60 + seconds
+
+        for order in self:
+            old_order_duation = sum(order.time_ids.mapped('duration'))
+            new_order_duration = order.duration
+            if new_order_duration == old_order_duation:
+                continue
+
+            delta_duration = new_order_duration - old_order_duation
+
+            if delta_duration > 0:
+                date_start = datetime.now() - timedelta(seconds=_float_duration_to_second(delta_duration))
+                self.env['mrp.workcenter.productivity'].create(
+                    order._prepare_timeline_vals(delta_duration, date_start, datetime.now())
+                )
+            else:
+                duration_to_remove = abs(delta_duration)
+                timelines = order.time_ids.sorted(lambda t: t.date_start)
+                timelines_to_unlink = self.env['mrp.workcenter.productivity']
+                for timeline in timelines:
+                    if duration_to_remove <= 0.0:
+                        break
+                    if timeline.duration <= duration_to_remove:
+                        duration_to_remove -= timeline.duration
+                        timelines_to_unlink |= timeline
+                    else:
+                        new_time_line_duration = timeline.duration - duration_to_remove
+                        timeline.date_start = timeline.date_end - timedelta(seconds=_float_duration_to_second(new_time_line_duration))
+                        break
+                timelines_to_unlink.unlink()
+
     @api.depends('duration', 'duration_expected', 'state')
     def _compute_progress(self):
         for order in self:
@@ -343,7 +379,7 @@ class MrpWorkorder(models.Model):
                     if workorder.state in ('progress', 'done', 'cancel'):
                         raise UserError(_('You cannot change the workcenter of a work order that is in progress or done.'))
                     workorder.leave_id.resource_id = self.env['mrp.workcenter'].browse(values['workcenter_id']).resource_id
-        if any(k not in ['time_ids', 'duration_expected', 'next_work_order_id'] for k in values.keys()) and any(workorder.state == 'done' for workorder in self):
+        if 'next_work_order_id' in values and any(workorder.state == 'done' for workorder in self):
             raise UserError(_('You can not change the finished work order.'))
         if 'date_planned_start' in values or 'date_planned_finished' in values:
             for workorder in self:
@@ -484,29 +520,13 @@ class MrpWorkorder(models.Model):
         if self.product_tracking == 'serial':
             self.qty_producing = 1.0
 
-        # Need a loss in case of the real time exceeding the expected
-        timeline = self.env['mrp.workcenter.productivity']
-        if not self.duration_expected or self.duration < self.duration_expected:
-            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','productive')], limit=1)
-            if not len(loss_id):
-                raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
-        else:
-            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type','=','performance')], limit=1)
-            if not len(loss_id):
-                raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        self.env['mrp.workcenter.productivity'].create(
+            self._prepare_timeline_vals(self.duration, datetime.now())
+        )
         if self.production_id.state != 'progress':
             self.production_id.write({
                 'date_start': datetime.now(),
             })
-        timeline.create({
-            'workorder_id': self.id,
-            'workcenter_id': self.workcenter_id.id,
-            'description': _('Time Tracking: %(user)s', user=self.env.user.name),
-            'loss_id': loss_id[0].id,
-            'date_start': datetime.now(),
-            'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id
-            'company_id': self.company_id.id,
-        })
         if self.state == 'progress':
             return True
         start_date = datetime.now()
@@ -706,6 +726,27 @@ class MrpWorkorder(models.Model):
             uom,
             round=False
         )
+
+    def _prepare_timeline_vals(self, duration, date_start, date_end=False):
+        # Need a loss in case of the real time exceeding the expected
+        if not self.duration_expected or duration < self.duration_expected:
+            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'productive')], limit=1)
+            if not len(loss_id):
+                raise UserError(_("You need to define at least one productivity loss in the category 'Productivity'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        else:
+            loss_id = self.env['mrp.workcenter.productivity.loss'].search([('loss_type', '=', 'performance')], limit=1)
+            if not len(loss_id):
+                raise UserError(_("You need to define at least one productivity loss in the category 'Performance'. Create one from the Manufacturing app, menu: Configuration / Productivity Losses."))
+        return {
+            'workorder_id': self.id,
+            'workcenter_id': self.workcenter_id.id,
+            'description': _('Time Tracking: %(user)s', user=self.env.user.name),
+            'loss_id': loss_id[0].id,
+            'date_start': date_start,
+            'date_end': date_end,
+            'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id
+            'company_id': self.company_id.id,
+        }
 
     def _update_finished_move(self):
         """ Update the finished move & move lines in order to set the finished

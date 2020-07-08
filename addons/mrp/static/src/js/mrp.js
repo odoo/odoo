@@ -4,6 +4,7 @@ odoo.define('mrp.mrp_state', function (require) {
 var AbstractField = require('web.AbstractField');
 var core = require('web.core');
 var fields = require('web.basic_fields');
+var fieldUtils = require('web.field_utils');
 var field_registry = require('web.field_registry');
 var time = require('web.time');
 
@@ -44,11 +45,13 @@ var SetBulletStatus = AbstractField.extend({
     }
 });
 
-var TimeCounter = AbstractField.extend({
-    supportedFieldTypes: [],
-    /**
-     * @override
-     */
+var TimeCounter = fields.FieldFloatTime.extend({
+
+    init: function () {
+        this._super.apply(this, arguments);
+        this.duration = this.record.data.duration;
+    },
+
     willStart: function () {
         var self = this;
         var def = this._rpc({
@@ -56,16 +59,19 @@ var TimeCounter = AbstractField.extend({
             method: 'search_read',
             domain: [
                 ['workorder_id', '=', this.record.data.id],
+                ['date_end', '=', false],
             ],
         }).then(function (result) {
-            if (self.mode === 'readonly') {
-                var currentDate = new Date();
-                self.duration = 0;
-                _.each(result, function (data) {
-                    self.duration += data.date_end ?
-                        self._getDateDifference(data.date_start, data.date_end) :
-                        self._getDateDifference(time.auto_str_to_date(data.date_start), currentDate);
-                });
+            var currentDate = new Date();
+            var duration = 0;
+            if (result.length > 0) {
+                duration += self._getDateDifference(time.auto_str_to_date(result[0].date_start), currentDate);
+            }
+            var minutes = duration / 60 >> 0;
+            var seconds = duration % 60;
+            self.duration += minutes + seconds / 60;
+            if (self.mode === 'edit') {
+                self.value = self.duration;
             }
         });
         return Promise.all([this._super.apply(this, arguments), def]);
@@ -100,13 +106,17 @@ var TimeCounter = AbstractField.extend({
      * @returns {integer} the difference in millisecond
      */
     _getDateDifference: function (dateStart, dateEnd) {
-        return moment(dateEnd).diff(moment(dateStart));
+        return moment(dateEnd).diff(moment(dateStart), 'seconds');
     },
     /**
      * @override
      */
-    _render: function () {
-        this._startTimeCounter();
+    _renderReadonly: function () {
+        if (this.record.data.is_user_working) {
+            this._startTimeCounter();
+        } else {
+            this._super.apply(this, arguments);
+        }
     },
     /**
      * @private
@@ -116,13 +126,13 @@ var TimeCounter = AbstractField.extend({
         clearTimeout(this.timer);
         if (this.record.data.is_user_working) {
             this.timer = setTimeout(function () {
-                self.duration += 1000;
+                self.duration += 1/60;
                 self._startTimeCounter();
             }, 1000);
         } else {
             clearTimeout(this.timer);
         }
-        this.$el.html($('<span>' + moment.utc(this.duration).format("HH:mm:ss") + '</span>'));
+        this.$el.text(fieldUtils.format.float_time(this.duration));
     },
 });
 
