@@ -80,6 +80,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         this.nbFonts = parseInt(style.getPropertyValue('--number-of-fonts'));
         const googleFontsProperty = style.getPropertyValue('--google-fonts').trim();
         this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
+        this.googleFonts = this.googleFonts.map(font => font.substring(1, font.length - 1)); // Unquote
 
         await this._super(...arguments);
 
