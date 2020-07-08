@@ -64,6 +64,6 @@ setup(
         'SSL': ['pyopenssl'],
     },
     tests_require=[
-        'mock',
+        'freezegun',
     ],
 )
