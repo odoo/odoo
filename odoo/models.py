@@ -3515,15 +3515,17 @@ Record ids: %(records)s
             vals.setdefault('write_uid', self.env.uid)
             vals.setdefault('write_date', self.env.cr.now())
 
+        to_write = []
         determine_inverses = defaultdict(list)      # {inverse: fields}
         records_to_inverse = {}                     # {field: records}
         relational_names = []
         protected = set()
         check_company = False
-        for fname in vals:
+        for fname, value in vals.items():
             field = self._fields.get(fname)
             if not field:
                 raise ValueError("Invalid field %r on model %r" % (fname, self._name))
+            to_write.append((field, value))
             if field.inverse:
                 if field.type in ('one2many', 'many2many'):
                     # The written value is a list of commands that must applied
@@ -3561,11 +3563,12 @@ Record ids: %(records)s
 
             real_recs = self.filtered('id')
 
-            # for monetary field, their related currency field must be cached
-            # before the amount so it can be rounded correctly
-            for fname in sorted(vals, key=lambda x: self._fields[x].type=='monetary'):
-                field = self._fields[fname]
-                field.write(self, vals[fname])
+            # field.write_order determines an order for writing on fields. For
+            # monetary field, their related currency field must be cached before
+            # the amount so it can be rounded correctly. X2many fields are also
+            # written last, because they flush self when deleting lines.
+            for field, value in sorted(to_write, key=lambda item: item[0].write_order):
+                field.write(self, value)
 
             # determine records depending on new values
             #

@@ -136,12 +136,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # delete N lines: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=17, demo=17):
+        with self.assertQueryCount(__system__=16, demo=16):
             rec1.write({'line_ids': [(2, line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=15, demo=15):
+        with self.assertQueryCount(__system__=14, demo=14):
             rec1.write({'line_ids': [(2, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -156,7 +156,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec1.line_ids, lines[1:])
 
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=15, demo=15):
+        with self.assertQueryCount(__system__=14, demo=14):
             rec1.write({'line_ids': [(3, line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
         self.assertFalse(lines.exists())
@@ -190,7 +190,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
 
         # empty N lines in rec2: O(1) queries
         rec1.invalidate_cache()
-        with self.assertQueryCount(__system__=16, demo=16):
+        with self.assertQueryCount(__system__=15, demo=15):
             rec2.write({'line_ids': [(5,)]})
         self.assertFalse(rec2.line_ids)
 

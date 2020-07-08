@@ -196,6 +196,7 @@ class Field(MetaField('DummyField', (object,), {})):
     type = None                         # type of the field (string)
     relational = False                  # whether the field is a relational one
     translate = False                   # whether the field is translated
+    write_order = 0                     # field ordering for write()
 
     column_type = None                  # database column type (ident, spec)
     column_format = '%s'                # placeholder for value in queries
@@ -1275,6 +1276,8 @@ class Monetary(Field):
         this monetary field is expressed in (default: `\'currency_id\'`)
     """
     type = 'monetary'
+    write_order = 1
+
     column_type = ('numeric', 'numeric')
     column_cast_from = ('float8',)
 
@@ -2979,6 +2982,7 @@ class One2many(_RelationalMulti):
     the case of related fields or field extensions.
     """
     type = 'one2many'
+    write_order = 2
 
     inverse_name = None                 # name of the inverse field
     auto_join = False                   # whether joins are generated upon search
@@ -3258,6 +3262,7 @@ class Many2many(_RelationalMulti):
     :param int limit: optional limit to use upon read
     """
     type = 'many2many'
+    write_order = 2
 
     _explicit = True                    # whether schema is explicitly given
     relation = None                     # name of table
