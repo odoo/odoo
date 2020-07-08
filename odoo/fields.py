@@ -204,6 +204,7 @@ class Field(MetaField('DummyField', (object,), {})):
     column_type = None                  # database column type (ident, spec)
     column_format = '%s'                # placeholder for value in queries
     column_cast_from = ()               # column types that may be cast to this
+    write_sequence = 0                  # field ordering for write()
 
     args = None                         # the parameters given to __init__()
     _module = None                      # the field's module name
@@ -1371,6 +1372,8 @@ class Monetary(Field):
         this monetary field is expressed in (default: `\'currency_id\'`)
     """
     type = 'monetary'
+    write_sequence = 10
+
     column_type = ('numeric', 'numeric')
     column_cast_from = ('float8',)
 
@@ -2984,6 +2987,7 @@ class Command(enum.IntEnum):
 
 class _RelationalMulti(_Relational):
     """ Abstract class for relational fields *2many. """
+    write_sequence = 20
 
     # Important: the cache contains the ids of all the records in the relation,
     # including inactive records.  Inactive records are filtered out by

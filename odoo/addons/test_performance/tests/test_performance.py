@@ -136,12 +136,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec1.line_ids, lines)
 
         # delete N lines: O(1) queries
-        with self.assertQueryCount(15):
+        with self.assertQueryCount(14):
             rec1.invalidate_cache()
             rec1.write({'line_ids': [Command.delete(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
-        with self.assertQueryCount(13):
+        with self.assertQueryCount(12):
             rec1.invalidate_cache()
             rec1.write({'line_ids': [Command.delete(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
@@ -151,12 +151,12 @@ class TestPerformance(SavepointCaseWithUserDemo):
         lines = rec1.line_ids
 
         # unlink N lines: O(1) queries
-        with self.assertQueryCount(15):
+        with self.assertQueryCount(14):
             rec1.invalidate_cache()
             rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[0]]})
         self.assertEqual(rec1.line_ids, lines[1:])
 
-        with self.assertQueryCount(13):
+        with self.assertQueryCount(12):
             rec1.invalidate_cache()
             rec1.write({'line_ids': [Command.unlink(line.id) for line in lines[1:]]})
         self.assertFalse(rec1.line_ids)
@@ -190,7 +190,7 @@ class TestPerformance(SavepointCaseWithUserDemo):
         self.assertEqual(rec2.line_ids, lines)
 
         # empty N lines in rec2: O(1) queries
-        with self.assertQueryCount(14):
+        with self.assertQueryCount(13):
             rec1.invalidate_cache()
             rec2.write({'line_ids': [Command.clear()]})
         self.assertFalse(rec2.line_ids)
