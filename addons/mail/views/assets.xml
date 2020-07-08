@@ -219,6 +219,9 @@
         </template>
 
         <template id="assets_tests" name="Mail Assets Tests" inherit_id="web.assets_tests">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/mail/static/tests/tours/mail_full_composer_test_tour.js"/>
+            </xpath>
         </template>
 
         <template id="tests_assets" name="mail_tests_assets" inherit_id="web.tests_assets">
