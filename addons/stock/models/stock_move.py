@@ -990,16 +990,18 @@ class StockMove(models.Model):
                 origin += "..."
         partners = self.mapped('partner_id')
         partner = len(partners) == 1 and partners.id or False
-        return {
+        vals = {
             'origin': origin,
             'company_id': self.mapped('company_id').id,
             'user_id': False,
-            'move_type': self.mapped('group_id').move_type or 'direct',
             'partner_id': partner,
             'picking_type_id': self.mapped('picking_type_id').id,
             'location_id': self.mapped('location_id').id,
             'location_dest_id': self.mapped('location_dest_id').id,
         }
+        if self.group_id and self.group_id.move_type:
+            vals['move_type'] = self.group_id.move_type
+        return vals
 
     def _should_be_assigned(self):
         self.ensure_one()
