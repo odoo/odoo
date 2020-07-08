@@ -137,14 +137,15 @@
                 sample="1">
                 <field name="active" invisible="1"/>
                 <field name="license_plate"/>
-                <field name="model_id"/>
-                <field name="driver_id"/>
-                <field name="future_driver_id"/>
+                <field name="model_id" widget="many2one_avatar" />
+                <field name="driver_id" widget="many2one_avatar"/>
+                <field name="future_driver_id"  widget="many2one_avatar"/>
                 <field name="log_drivers" invisible="1"/>
                 <field name="vin_sn"/>
-                <field name="co2"/>
+                <field name="co2" string="CO2 Emissions g/km" optional="hide" />
                 <field name="acquisition_date"/>
-                <field name="state_id"/>
+                <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                <field name="state_id" widget="badge" />
                 <field name="company_id" groups="base.group_multi_company"/>
                 <field name="contract_renewal_due_soon" invisible="1"/>
                 <field name="contract_renewal_overdue" invisible="1"/>
@@ -285,9 +286,9 @@
         <field name="view_mode">kanban,tree,form,activity</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Create a new vehicle
+            Ready to manage your fleet more efficiently ?
           </p><p>
-            Manage your fleet by keeping track of the contracts, services and odometers associated to each vehicle.
+            Let's create your first vehicle.
           </p>
         </field>
     </record>
@@ -318,8 +319,8 @@
         <field name="arch" type="xml">
             <tree string="Odometer Logs" editable="top">
                 <field name="date" />
-                <field name="vehicle_id"/>
-                <field name="driver_id"/>
+                <field name="vehicle_id" widget="many2one_avatar"/>
+                <field name="driver_id" widget="many2one_avatar"/>
                 <field name="value" />
                 <field name="unit" />
             </tree>
@@ -336,12 +337,12 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div>
                                 <strong>
-                                    <field name="vehicle_id"/>
+                                    <field name="vehicle_id" widget="res_partner_many2one"/>
                                     <span class="float-right"><field name="date"/></span>
                                 </strong>
                             </div>
                             <div>
-                                <span><field name="driver_id"/></span>
+                                <span><field name="driver_id" widget="res_partner_many2one"/></span>
                                 <span class="float-right"><field name="value"/> Km</span>
                             </div>
                         </div>
@@ -398,7 +399,7 @@
         <field name="name">fleet.service.type.tree</field>
         <field name="model">fleet.service.type</field>
         <field name="arch" type="xml">
-            <tree string="Service Types" editable="top">
+            <tree string="Service Types">
                 <field name="name" />
             </tree>
         </field>
