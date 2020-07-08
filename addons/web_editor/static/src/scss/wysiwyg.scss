@@ -4,19 +4,19 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
 // Use css variables to control the default style of the editor so that an
 // external assets bundle can influence it without duplicating the css.
 :root {
-    --o-we-toolbar-height: #{$o-we-toolbar-height};
+    @include print-variable('o-we-toolbar-height', $o-we-toolbar-height);
 
-    --o-we-bg-color: #{$o-we-bg-color};
-    --o-we-bg-color-dark: #{$o-we-bg-color-dark};
-    --o-we-color: #{$o-we-color};
-    --o-we-color-accent: #{$o-we-color};
+    @include print-variable('o-we-bg-color', $o-we-bg-color);
+    @include print-variable('o-we-bg-color-dark', $o-we-bg-color-dark);
+    @include print-variable('o-we-color', $o-we-color);
+    @include print-variable('o-we-color-accent', $o-we-color);
 
-    --o-we-dropdown-bg-color: #{$o-we-dropdown-bg-color};
-    --o-we-dropdown-color: #{$o-we-dropdown-color};
+    @include print-variable('o-we-dropdown-bg-color', $o-we-dropdown-bg-color);
+    @include print-variable('o-we-dropdown-color', $o-we-dropdown-color);
 
-    --o-we-snippets-bg-color: #{$o-we-bg-color};
-    --o-we-snippets-bg-info: #{$o-we-color-info};
-    --o-we-snippets-color: #{$o-we-color};
+    @include print-variable('o-we-snippets-bg-color', $o-we-bg-color);
+    @include print-variable('o-we-snippets-bg-info', $o-we-color-info);
+    @include print-variable('o-we-snippets-color', $o-we-color);
 }
 
 // EDITOR TOP BAR AND POPOVER
