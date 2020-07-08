@@ -184,11 +184,11 @@
 
     <!-- H-ALIGN -->
     <div id="so_text_align" data-selector=".s_share">
-        <we-select string="Alignment">
-            <we-button data-select-class="text-left">Left</we-button>
-            <we-button data-select-class="text-center">Center</we-button>
-            <we-button data-select-class="text-right">Right</we-button>
-        </we-select>
+        <we-button-group string="Alignment">
+            <we-button title="Left" data-select-class="text-left"><i class="fa fa-fw fa-align-left"/></we-button>
+            <we-button title="Center" data-select-class="text-center"><i class="fa fa-fw fa-align-center"/></we-button>
+            <we-button title="Right" data-select-class="text-right"><i class="fa fa-fw fa-align-right"/></we-button>
+        </we-button-group>
     </div>
 
     <div id="so_width" data-selector=".s_alert, .s_card, .s_blockquote">
@@ -201,11 +201,11 @@
     </div>
 
     <div id="so_block_align" data-selector=".s_alert, .s_card, .s_blockquote">
-        <we-select string="Alignment" data-dependencies="!so_width_100">
-            <we-button data-select-class="mr-auto">Left</we-button>
-            <we-button data-select-class="mx-auto">Center</we-button>
-            <we-button data-select-class="ml-auto">Right</we-button>
-        </we-select>
+        <we-button-group string="Alignment" data-dependencies="!so_width_100">
+            <we-button title="Left" data-select-class="mr-auto"><i class="fa fa-fw fa-align-left"/></we-button>
+            <we-button title="Center" data-select-class="mx-auto"><i class="fa fa-fw fa-align-center"/></we-button>
+            <we-button title="Right" data-select-class="ml-auto"><i class="fa fa-fw fa-align-right"/></we-button>
+        </we-button-group>
     </div>
 
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
@@ -628,20 +628,32 @@
     <!-- Stretch section -->
     <div data-js="ContainerWidth" data-selector="section"
         data-target="> .container, > .container-fluid, > .o_container_small">
-        <we-select string="Content Width">
-            <we-button data-select-class="container-fluid">Full</we-button>
-            <we-button data-select-class="container">Regular</we-button>
-            <we-button data-select-class="o_container_small">Small</we-button>
-        </we-select>
+        <we-button-group string="Content Width">
+            <we-button data-select-class="container-fluid"
+                       data-img="/website/static/src/img/snippets_options/content_width_full.svg"
+                       title="Full"/>
+            <we-button data-select-class="container"
+                       data-img="/website/static/src/img/snippets_options/content_width_normal.svg"
+                       title="Regular"/>
+            <we-button data-select-class="o_container_small"
+                       data-img="/website/static/src/img/snippets_options/content_width_small.svg"
+                       title="Small"/>
+        </we-button-group>
     </div>
 
     <!-- Min height of section -->
     <div data-selector="section">
-        <we-select string="Height">
-            <we-button data-select-class="">Fit content</we-button>
-            <we-button data-select-class="o_half_screen_height">Half screen</we-button>
-            <we-button data-select-class="o_full_screen_height">Full screen</we-button>
-        </we-select>
+        <we-button-group string="Height">
+            <we-button data-select-class=""
+                       data-img="/website/static/src/img/snippets_options/height_auto.svg"
+                       title="Fit content"/>
+            <we-button data-select-class="o_half_screen_height"
+                       data-img="/website/static/src/img/snippets_options/height_half.svg"
+                       title="Half screen"/>
+            <we-button data-select-class="o_full_screen_height"
+                       data-img="/website/static/src/img/snippets_options/height_full.svg"
+                       title="Full screen"/>
+        </we-button-group>
     </div>
 
     <!-- Scroll to next section button (only for full height) -->
@@ -666,13 +678,12 @@
 
     <!--  Vertical Alignment -->
     <div id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
-        <we-select string="Vert. Alignment" title="Vertical Alignment">
-            <we-button data-select-class="align-items-start">Top</we-button>
-            <we-button data-select-class="align-items-center">Middle</we-button>
-            <we-button data-select-class="align-items-end">Bottom</we-button>
-            <we-divider/>
-            <we-button data-select-class="align-items-stretch">Equal height</we-button>
-        </we-select>
+        <we-button-group string="Vert. Alignment" title="Vertical Alignment">
+            <we-button title="Top" data-select-class="align-items-start"><i class="fa fa-fw fa-long-arrow-up"/></we-button>
+            <we-button title="Middle" data-select-class="align-items-center"><i class="fa fa-fw fa-circle"/></we-button>
+            <we-button title="Bottom" data-select-class="align-items-end"><i class="fa fa-fw fa-long-arrow-down"/></we-button>
+            <we-button title="Equal height" data-select-class="align-items-stretch"><i class="fa fa-fw fa-arrows-v"/></we-button>
+        </we-button-group>
     </div>
 
     <!-- Cookies Bar -->
