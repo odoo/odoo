@@ -372,7 +372,7 @@ body.editor_enable.editor_has_snippets {
                     line-height: $o-we-sidebar-content-main-title-height - $o-we-sidebar-content-main-title-border-width;
                 }
 
-                > we-button-group {
+                > we-top-button-group {
                     flex: 0 0 auto;
                     display: block;
                     margin-left: auto;
@@ -499,6 +499,13 @@ body.editor_enable.editor_has_snippets {
             }
         }
 
+        // Selection (select and button groups)
+        we-selection-items {
+            .o_we_user_value_widget {
+                margin-top: 0;
+            }
+        }
+
         // Selects
         we-select.o_we_user_value_widget {
             position: relative;
@@ -507,7 +514,7 @@ body.editor_enable.editor_has_snippets {
                 @include large-component();
             }
 
-            we-select-menu {
+            we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
                 max-height: 600px;
@@ -520,7 +527,6 @@ body.editor_enable.editor_has_snippets {
 
                 we-button {
                     @include we-icon-button('', $align: left); // Always a padding on the left
-                    margin-top: 0;
                     border: none;
                     background: none;
                     background-clip: padding-box;
@@ -542,6 +548,29 @@ body.editor_enable.editor_has_snippets {
 
                     &.active {
                         color: $o-we-sidebar-content-field-dropdown-item-active-color;
+                    }
+                }
+            }
+        }
+
+        // Button groups
+        we-button-group.o_we_user_value_widget {
+            we-selection-items {
+                display: flex;
+                max-width: 100%;
+
+                we-button {
+                    padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
+
+                    &.active {
+                        padding-left: $o-we-sidebar-content-field-button-group-button-spacing;
+
+                        &::after {
+                            display: none;
+                        }
+                    }
+                    + we-button {
+                        border-left: none;
                     }
                 }
             }

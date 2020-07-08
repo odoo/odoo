@@ -1012,7 +1012,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
             const togglerEl = document.createElement('we-toggler');
             togglerEl.textContent = addItemTitle;
             addItemButton.appendChild(togglerEl);
-            const selectMenuEl = document.createElement('we-select-menu');
+            const selectMenuEl = document.createElement('we-selection-items');
             addItemButton.appendChild(selectMenuEl);
             this._loadListDropdown(selectMenuEl);
         }
@@ -1035,7 +1035,7 @@ options.registry.WebsiteFieldEditor = FieldEditor.extend({
      * @param {HTMLElement} selectMenu
      */
     _loadListDropdown: function (selectMenu) {
-        selectMenu = selectMenu || this.el.querySelector('we-list we-select-menu');
+        selectMenu = selectMenu || this.el.querySelector('we-list we-selection-items');
         if (selectMenu) {
             selectMenu.innerHTML = '';
             const field = Object.assign({}, this.fields[this._getFieldName()]);

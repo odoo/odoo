@@ -677,7 +677,63 @@ const CheckboxUserValueWidget = ButtonUserValueWidget.extend({
     },
 });
 
-const SelectUserValueWidget = UserValueWidget.extend({
+const BaseSelectionUserValueWidget = UserValueWidget.extend({
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+
+        this.menuEl = document.createElement('we-selection-items');
+        if (this.options && this.options.childNodes) {
+            this.options.childNodes.forEach(node => this.menuEl.appendChild(node));
+        }
+        this.containerEl.appendChild(this.menuEl);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getValue(methodName) {
+        let activeWidget = this._userValueWidgets.find(widget => widget.isPreviewed());
+        if (!activeWidget) {
+            activeWidget = this._userValueWidgets.find(widget => widget.isActive());
+        }
+        if (activeWidget) {
+            return activeWidget.getActiveValue(methodName);
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    isContainer() {
+        return true;
+    },
+    /**
+     * @override
+     */
+    setValue(value, methodName) {
+        this._userValueWidgets.forEach(widget => {
+            widget.setValue('__NULL__', methodName);
+        });
+        for (const widget of [...this._userValueWidgets].reverse()) {
+            widget.setValue(value, methodName);
+            if (widget.isActive()) {
+                // Only one select item can be true at a time, we consider the
+                // last one if multiple would be active.
+                return;
+            }
+        }
+        this._super(...arguments);
+    },
+});
+
+const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
     tagName: 'we-select',
     events: {
         'click': '_onClick',
@@ -686,9 +742,11 @@ const SelectUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    start: function () {
+    async start() {
+        await this._super(...arguments);
+
         if (this.options && this.options.valueEl) {
-            this.containerEl.appendChild(this.options.valueEl);
+            this.containerEl.insertBefore(this.options.valueEl, this.menuEl);
         }
 
         this.menuTogglerEl = document.createElement('we-toggler');
@@ -699,15 +757,7 @@ const SelectUserValueWidget = UserValueWidget.extend({
             iconEl.classList.add('fa', 'fa-fw', this.icon);
             this.menuTogglerEl.appendChild(iconEl);
         }
-        this.containerEl.appendChild(this.menuTogglerEl);
-
-        this.menuEl = document.createElement('we-select-menu');
-        if (this.options && this.options.childNodes) {
-            this.options.childNodes.forEach(node => this.menuEl.appendChild(node));
-        }
-        this.containerEl.appendChild(this.menuEl);
-
-        return this._super(...arguments);
+        this.containerEl.insertBefore(this.menuTogglerEl, this.menuEl);
     },
 
     //--------------------------------------------------------------------------
@@ -724,25 +774,6 @@ const SelectUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    getValue: function (methodName) {
-        let activeWidget = this._userValueWidgets.find(widget => widget.isPreviewed());
-        if (!activeWidget) {
-            activeWidget = this._userValueWidgets.find(widget => widget.isActive());
-        }
-        if (activeWidget) {
-            return activeWidget.getActiveValue(methodName);
-        }
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    isContainer: function () {
-        return true;
-    },
-    /**
-     * @override
-     */
     isPreviewed: function () {
         return this._super(...arguments) || this.menuTogglerEl.classList.contains('active');
     },
@@ -752,23 +783,6 @@ const SelectUserValueWidget = UserValueWidget.extend({
     open() {
         this._super(...arguments);
         this.menuTogglerEl.classList.add('active');
-    },
-    /**
-     * @override
-     */
-    setValue: function (value, methodName) {
-        this._userValueWidgets.forEach(widget => {
-            widget.setValue('__NULL__', methodName);
-        });
-        for (const widget of [...this._userValueWidgets].reverse()) {
-            widget.setValue(value, methodName);
-            if (widget.isActive()) {
-                // Only one select item can be true at a time, we consider the
-                // last one if multiple would be active.
-                return;
-            }
-        }
-        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -832,6 +846,10 @@ const SelectUserValueWidget = UserValueWidget.extend({
             this.menuEl.scrollTop = activeButton.el.offsetTop - (this.menuEl.offsetHeight / 2);
         }
     },
+});
+
+const ButtonGroupUserValueWidget = BaseSelectionUserValueWidget.extend({
+    tagName: 'we-button-group',
 });
 
 const InputUserValueWidget = UserValueWidget.extend({
@@ -1545,11 +1563,11 @@ const RangeUserValueWidget = UserValueWidget.extend({
     },
 });
 
-
 const userValueWidgetsRegistry = {
     'we-button': ButtonUserValueWidget,
     'we-checkbox': CheckboxUserValueWidget,
     'we-select': SelectUserValueWidget,
+    'we-button-group': ButtonGroupUserValueWidget,
     'we-input': InputUserValueWidget,
     'we-multi': MultiUserValueWidget,
     'we-colorpicker': ColorpickerUserValueWidget,

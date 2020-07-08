@@ -60,17 +60,17 @@
             <t t-call="website.snippet_options_shadow"/>
         </div>
         <div data-selector=".s_media_list_item" data-target="> .row">
-            <we-select string="Image Position" title="Image Position">
-                <we-button data-select-class="">Left</we-button>
-                <we-button data-select-class="flex-row-reverse">Right</we-button>
-            </we-select>
+            <we-button-group string="Image Position">
+                <we-button title="Left" data-select-class=""><i class="fa fa-fw fa-align-left"/></we-button>
+                <we-button title="Right" data-select-class="flex-row-reverse"><i class="fa fa-fw fa-align-right"/></we-button>
+            </we-button-group>
             <!-- Don't use the standard Vert. Alignement option to not suggest
                  Equal Height, which is useless for this snippet -->
-            <we-select string="Vert. Alignment" title="Vertical Alignment">
-                <we-button data-select-class="align-items-start">Top</we-button>
-                <we-button data-select-class="align-items-center">Middle</we-button>
-                <we-button data-select-class="align-items-end">Bottom</we-button>
-            </we-select>
+            <we-button-group string="Vert. Alignment" title="Vertical Alignment">
+                <we-button title="Top" data-select-class="align-items-start"><i class="fa fa-fw fa-long-arrow-up"/></we-button>
+                <we-button title="Middle" data-select-class="align-items-center"><i class="fa fa-fw fa-circle"/></we-button>
+                <we-button title="Bottom" data-select-class="align-items-end"><i class="fa fa-fw fa-long-arrow-down"/></we-button>
+            </we-button-group>
         </div>
         <div data-js="MediaItemLayout" data-selector=".s_media_list_item">
             <we-select string="Layout">
