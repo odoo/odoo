@@ -681,6 +681,13 @@
         <field name="res_model">product.supplierinfo</field>
         <field name="view_mode">tree,form,kanban</field>
         <field name="context">{'visible_product_tmpl_id':False}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Create a vendor pricelist
+            </p><p>
+                Register the prices requested by your vendors for each product, based on the quantity and the period.
+            </p>
+        </field>
     </record>
 
     <record id="action_product_price_list_report" model="ir.actions.server">
