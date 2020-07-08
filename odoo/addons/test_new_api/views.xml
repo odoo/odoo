@@ -296,5 +296,27 @@
                 </form>
             </field>
         </record>
+
+        <record id="model_shared_cache_compute_parent_view_form" model="ir.ui.view">
+            <field name="name">model_shared_cache_compute_parent_view_form</field>
+            <field name="model">test_new_api.model_shared_cache_compute_parent</field>
+            <field name="arch" type="xml">
+                <form>
+                    <sheet>
+                        <group>
+                            <field name="name"/>
+                            <field name="total_amount"/>
+                            <field name="line_ids">
+                                <tree editable="bottom">
+                                    <field name="parent_id"/>
+                                    <field name="amount"/>
+                                    <field name="user_id"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </sheet>
+                </form>
+            </field>
+        </record>
     </data>
 </odoo>
