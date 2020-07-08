@@ -4,6 +4,7 @@ odoo.define('mail/static/src/models/composer/composer.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
+const mailUtils = require('mail.utils');
 
 const {
     addLink,
@@ -79,6 +80,43 @@ function factory(dependencies) {
                 textInputCursorEnd: textLeft.length + partnerName.length + 1,
                 textInputCursorStart: textLeft.length + partnerName.length + 1,
             });
+        }
+
+        /**
+         * Open the full composer modal.
+         */
+        async openFullComposer() {
+            const attachmentIds = this.attachments.map(attachment => attachment.res_id);
+
+            const context = {
+                default_attachment_ids: attachmentIds,
+                default_body: mailUtils.escapeAndCompactTextContent(this.textInputContent),
+                default_is_log: this.isLog,
+                default_model: this.thread.model,
+                /* FIXME would need to use suggested_partners here task-2280157 */
+                // default_partner_ids: partnerIds,
+                default_res_id: this.thread.id,
+                mail_post_autofollow: true,
+            };
+
+            const action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.compose.message',
+                view_mode: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: context,
+            };
+            const options = {
+                on_close: () => {
+                    if (!this.constructor.get(this)) {
+                        return;
+                    }
+                    this._reset();
+                    this.thread.loadNewMessages();
+                },
+            };
+            await this.env.bus.trigger('do-action', { action, options });
         }
 
         /**
