@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import fields
+from freezegun import freeze_time
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
@@ -625,7 +626,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
         self.env['account.reconcile.model'].flush()
 
-        with self.mocked_today('2017-01-01'):
+        with freeze_time('2017-01-01'):
             self._check_statement_matching(matching_rule, {
                 statement_line.id: {'aml_ids': (move_line_1 + move_line_2).ids, 'model': matching_rule}
             }, statements=statement)
