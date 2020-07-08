@@ -78,7 +78,7 @@
                             <t t-if="message.isCurrentPartnerAuthor and threadViewer and threadViewer.thread">
                                 <MessageSeenIndicator class="o_Message_seenIndicator" messageLocalId="message.localId" threadLocalId="threadViewer.thread.localId"/>
                             </t>
-                            <t t-if="hasDifferentOriginThread">
+                            <t t-if="threadViewer and message.originThread and message.originThread !== threadViewer.thread">
                                 <div class="o_Message_originThread" t-att-class="{ 'o-message-selected': props.isSelected }">
                                     <t t-if="message.originThread.model === 'mail.channel'">
                                         (from <a class="o_Message_originThreadLink" href="#" t-on-click="_onClickOriginThread">#<t t-esc="message.originThread.name"/></a>)
@@ -91,7 +91,7 @@
                             <t t-if="message.moderation_status === 'pending_moderation' and !message.isModeratedByCurrentPartner">
                                 <span class="o_Message_moderationPending o-author" title="Your message is pending moderation.">Pending moderation</span>
                             </t>
-                            <t t-if="message.notifications.length > 0">
+                            <t t-if="threadViewer and message.originThread and message.originThread === threadViewer.thread and message.notifications.length > 0">
                                 <t t-if="message.failureNotifications.length > 0">
                                     <span class="o_Message_notificationIconContainer o-error" t-on-click="_onClickFailure">
                                         <i name="failureIcon" class="o_Message_notificationIcon fa fa-envelope"/>
