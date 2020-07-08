@@ -21,6 +21,13 @@
                     </a>
                 </li>
             </ul>
+            <!-- 'Search Box' -->
+            <form id="o_wblog_post_search" class="form-inline w-100 w-md-auto pt-2 pt-md-0 d-md-flex"
+                  role="search" t-att-action="blog_url(tag=tag,search=search)" method="get">
+                <t t-call="website.website_search_box">
+                    <t t-set="_classes" t-valuef="w-100"/>
+                </t>
+            </form>
         </div>
     </nav>
 </template>
