@@ -63,8 +63,8 @@ class FleetVehicle(models.Model):
     odometer = fields.Float(compute='_get_odometer', inverse='_set_odometer', string='Last Odometer',
         help='Odometer measure of the vehicle at the moment of this log')
     odometer_unit = fields.Selection([
-        ('kilometers', 'Kilometers'),
-        ('miles', 'Miles')
+        ('kilometers', 'km'),
+        ('miles', 'mi')
         ], 'Odometer Unit', default='kilometers', help='Unit of the odometer ', required=True)
     transmission = fields.Selection([('manual', 'Manual'), ('automatic', 'Automatic')], 'Transmission', help='Transmission Used by the vehicle')
     fuel_type = fields.Selection([
