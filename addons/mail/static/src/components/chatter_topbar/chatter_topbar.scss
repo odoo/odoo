@@ -9,14 +9,11 @@
 }
 
 .o_ChatterTopbar_actions {
+    border-bottom: $border-width solid;
     display: flex;
     flex: 1;
     flex-direction: row;
     flex-wrap: wrap;
-
-    &.o-has-active-button {
-        border-bottom: $border-width solid;
-    }
 }
 
 .o_ChatterTopbar_button {
@@ -54,8 +51,12 @@
 // Style
 // ------------------------------------------------------------------
 
-.o_ChatterTopbar_actions.o-has-active-button {
-    border-color: $border-color;
+.o_ChatterTopbar_actions {
+    border-color: transparent;
+
+    &.o-has-active-button {
+        border-color: $border-color;
+    }
 }
 
 .o_ChatterTopbar_button {
