@@ -1335,7 +1335,9 @@ ListRenderer.include({
      * Set a maximum width on the largest columns in the list in case the table
      * is overflowing. The idea is to shrink largest columns first, but to
      * ensure that they are still the largest at the end (maybe in equal measure
-     * with other columns).
+     * with other columns). Button columns aren't impacted by this function, as
+     * we assume that they can't be squeezed (we want all buttons to always be
+     * available, not being replaced by ellipsis).
      *
      * @private
      * @returns {integer[]} width (in px) of each column s.t. the table doesn't
@@ -1363,7 +1365,7 @@ ListRenderer.include({
             return thresholdReached;
         };
         // Sort columns, largest first
-        const sortedThs = [...thead.getElementsByTagName('th')]
+        const sortedThs = [...thead.querySelectorAll('th:not(.o_list_button)')]
             .sort((a, b) => getWidth(b) - getWidth(a));
         const allowedWidth = table.parentNode.offsetWidth;
 

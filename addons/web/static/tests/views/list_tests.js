@@ -2787,6 +2787,42 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test("button columns in a list view don't have a max width", async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(ListRenderer, {
+            RESIZE_DELAY: 0,
+        });
+
+        // set a long foo value s.t. the column can be squeezed
+        this.data.foo.records[0].foo = 'Lorem ipsum dolor sit amet';
+        const list = await createView({
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <button name="b1" string="Do This"/>
+                    <button name="b2" string="Do That"/>
+                    <button name="b3" string="Or Rather Do Something Else"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // simulate a window resize (buttons column width should not be squeezed)
+        list.$el.width('300px');
+        core.bus.trigger('resize');
+        await testUtils.nextTick();
+
+        assert.strictEqual(list.$('th:nth(1)').css('max-width'), '92px',
+            "max-width should be set on column foo to the minimum column width (92px)");
+        assert.strictEqual(list.$('th:nth(2)').css('max-width'), '100%',
+            "no max-width should be harcoded on the buttons column");
+
+        testUtils.mock.unpatch(ListRenderer);
+        list.destroy();
+    });
+
     QUnit.test('column widths are kept when editing multiple records', async function (assert) {
         assert.expect(4);
 
@@ -4650,12 +4686,12 @@ QUnit.module('Views', {
             },
         });
 
-        assert.containsN(list, '.o_list_button', 4,
+        assert.containsN(list, 'tbody .o_list_button', 4,
             "there should be one button per row");
-        assert.containsOnce(list, '.o_list_button:first .o_icon_button .fa.fa-car',
+        assert.containsOnce(list, 'tbody .o_list_button:first .o_icon_button .fa.fa-car',
             'buttons should have correct icon');
 
-        await testUtils.dom.click(list.$('.o_list_button:first > button'));
+        await testUtils.dom.click(list.$('tbody .o_list_button:first > button'));
         assert.verifySteps(['/web/dataset/search_read', '/web/dataset/search_read'],
             "should have reloaded the view (after the action is complete)");
         list.destroy();

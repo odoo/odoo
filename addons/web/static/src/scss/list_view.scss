@@ -28,8 +28,11 @@
             }
         }
         tbody > tr > td:not(.o_list_record_selector) {
-            &:not(.o_handle_cell) {
+            &:not(.o_handle_cell):not(.o_list_button) {
                 @include o-text-overflow(table-cell);
+                &.o_list_text {
+                    white-space: pre-wrap;
+                }
             }
 
             &.o_list_number {
@@ -37,16 +40,18 @@
             }
             &.o_list_text {
                 word-break: break-word;
-                white-space: pre-wrap;
             }
             &.o_list_char.o_color_cell .o_field_color {
                 width: 17px;
                 height: 17px;
             }
-            &.o_list_button > button {
-                padding: 0 5px;
-                &:not(:last-child) {
-                    margin-right: 3px;
+            &.o_list_button {
+                white-space: nowrap;
+                > button {
+                    padding: 0 5px;
+                    &:not(:last-child) {
+                        margin-right: 3px;
+                    }
                 }
             }
         }
