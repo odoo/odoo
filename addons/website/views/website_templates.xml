@@ -1055,7 +1055,7 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
 
 <template id="website_search_box" name="Website Searchbox">
     <div t-attf-class="input-group #{_classes}" role="search">
-        <input type="text" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search"/>
+        <input type="search" name="search" class="search-query form-control oe_search_box" placeholder="Search..." t-att-value="search"/>
         <div class="input-group-append">
             <button type="submit" class="btn btn-primary oe_search_button" aria-label="Search" title="Search"><i class="fa fa-search"/></button>
         </div>

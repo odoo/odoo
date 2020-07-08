@@ -54,7 +54,7 @@ class WebsiteBlog(http.Controller):
 
         return OrderedDict((year, [m for m in months]) for year, months in itertools.groupby(groups, lambda g: g['year']))
 
-    def _prepare_blog_values(self, blogs, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False):
+    def _prepare_blog_values(self, blogs, blog=False, date_begin=False, date_end=False, tags=False, state=False, page=False, search=None):
         """ Prepare all values to display the blogs index page or one specific blog"""
         BlogPost = request.env['blog.post']
         BlogTag = request.env['blog.tag']
@@ -101,6 +101,10 @@ class WebsiteBlog(http.Controller):
             if use_cover and not fullwidth_cover:
                 offset += 1
 
+        if search:
+            tags_like_search = BlogTag.search([('name', 'ilike', search)])
+            domain += ['|', '|', '|', ('author_name', 'ilike', search), ('name', 'ilike', search), ('content', 'ilike', search), ('tag_ids', 'in', tags_like_search.ids)]
+
         posts = BlogPost.search(domain, offset=offset, limit=self._blog_post_per_page, order="is_published desc, post_date desc, id asc")
         total = BlogPost.search_count(domain)
 
@@ -134,6 +138,8 @@ class WebsiteBlog(http.Controller):
             'state_info': state and {"state": state, "published": published_count, "unpublished": unpublished_count},
             'blogs': blogs,
             'blog': blog,
+            'search': search,
+            'search_count': total,
         }
 
     @http.route([
@@ -146,7 +152,7 @@ class WebsiteBlog(http.Controller):
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>''',
         '''/blog/<model("blog.blog"):blog>/tag/<string:tag>/page/<int:page>''',
     ], type='http', auth="public", website=True, sitemap=True)
-    def blog(self, blog=None, tag=None, page=1, **opt):
+    def blog(self, blog=None, tag=None, page=1, search=None, **opt):
         Blog = request.env['blog.blog']
         if blog and not blog.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
@@ -162,10 +168,10 @@ class WebsiteBlog(http.Controller):
             # redirect get tag-1,tag-2 -> get tag-1
             tags = tag.split(',')
             if len(tags) > 1:
-                url = QueryURL('' if blog else '/blog', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end)()
+                url = QueryURL('' if blog else '/blog', ['blog', 'tag'], blog=blog, tag=tags[0], date_begin=date_begin, date_end=date_end, search=search)()
                 return request.redirect(url, code=302)
 
-        values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page)
+        values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page, search=search)
 
         # in case of a redirection need by `_prepare_blog_values` we follow it
         if isinstance(values, werkzeug.wrappers.Response):
@@ -174,9 +180,9 @@ class WebsiteBlog(http.Controller):
         if blog:
             values['main_object'] = blog
             values['edit_in_backend'] = True
-            values['blog_url'] = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end)
+            values['blog_url'] = QueryURL('', ['blog', 'tag'], blog=blog, tag=tag, date_begin=date_begin, date_end=date_end, search=search)
         else:
-            values['blog_url'] = QueryURL('/blog', ['tag'], date_begin=date_begin, date_end=date_end)
+            values['blog_url'] = QueryURL('/blog', ['tag'], date_begin=date_begin, date_end=date_end, search=search)
 
         return request.render("website_blog.blog_post_short", values)
 
