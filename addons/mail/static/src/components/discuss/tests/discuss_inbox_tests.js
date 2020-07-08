@@ -411,6 +411,54 @@ QUnit.test('"reply to" composer should send message if message replied to is not
     assert.verifySteps(['message_post']);
 });
 
+QUnit.test('error notifications should not be shown in inbox', async function (assert) {
+    assert.expect(3);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 20,
+                is_pinned: true,
+                name: "General",
+            }],
+        },
+        needaction_inbox_counter: 1,
+    });
+    this.data['mail.message'].records = [{
+        author_id: [7, "Demo"],
+        body: "<p>Test</p>",
+        date: "2019-04-20 11:00:00",
+        id: 100,
+        message_type: 'comment',
+        model: 'mail.channel',
+        needaction: true,
+        needaction_partner_ids: [3],
+        notifications: [{
+            id: 11,
+            notification_status: 'exception',
+            notification_type: 'email',
+        }],
+        res_id: 20,
+    }];
+    await this.start();
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display a single message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_originThreadLink',
+        "should display origin thread link"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Message_notificationIcon',
+        "should not display any notification icon in inbox"
+    );
+});
+
 QUnit.test('show subject of message in inbox', async function (assert) {
     assert.expect(3);
 
