@@ -457,7 +457,7 @@ var SnippetEditor = Widget.extend({
         var $optionsSection = $(core.qweb.render('web_editor.customize_block_options_section', {
             name: this.getName(),
         })).data('editor', this);
-        const $optionsSectionBtnGroup = $optionsSection.find('we-button-group');
+        const $optionsSectionBtnGroup = $optionsSection.find('we-top-button-group');
         $optionsSectionBtnGroup.contents().each((i, node) => {
             if (node.nodeType === Node.TEXT_NODE) {
                 node.parentNode.removeChild(node);

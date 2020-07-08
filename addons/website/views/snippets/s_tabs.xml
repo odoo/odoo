@@ -102,13 +102,13 @@
                 <we-button data-select-class="nav-justified">Justified</we-button>
             </we-select>
             <we-divider/>
-            <we-select string="Transition" data-apply-to=".s_tabs_content:first">
-                <we-button data-select-class="">No Slide Effect</we-button>
-                <we-button data-select-class="s_tabs_slide_up">Slide Up</we-button>
-                <we-button data-select-class="s_tabs_slide_down">Slide Down</we-button>
-                <we-button data-select-class="s_tabs_slide_left">Slide Left</we-button>
-                <we-button data-select-class="s_tabs_slide_right">Slide Right</we-button>
-            </we-select>
+            <we-button-group string="Slide" data-apply-to=".s_tabs_content:first">
+                <we-button title="Slide Left" data-select-class="s_tabs_slide_left"><i class="fa fa-fw fa-long-arrow-left"/></we-button>
+                <we-button title="Slide Up" data-select-class="s_tabs_slide_up"><i class="fa fa-fw fa-long-arrow-up"/></we-button>
+                <we-button title="Slide Down" data-select-class="s_tabs_slide_down"><i class="fa fa-fw fa-long-arrow-down"/></we-button>
+                <we-button title="Slide Right" data-select-class="s_tabs_slide_right"><i class="fa fa-fw fa-long-arrow-right"/></we-button>
+                <we-button title="No Slide Effect" data-select-class=""><i class="fa fa-fw fa-ban"/></we-button>
+            </we-button-group>
         </div>
     </xpath>
 </template>
