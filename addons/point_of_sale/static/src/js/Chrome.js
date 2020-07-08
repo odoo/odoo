@@ -115,6 +115,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 // We can then test PosModel independently from Chrome by supplying
                 // mocked version of these default attributes.
                 const posModelDefaultAttributes = {
+                    env: this.env,
                     rpc: this.rpc.bind(this),
                     session: this.env.session,
                     do_action: this.props.webClient.do_action.bind(this.props.webClient),

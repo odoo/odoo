@@ -36,6 +36,7 @@ exports.PosModel = Backbone.Model.extend({
         var  self = this;
         this.flush_mutex = new Mutex();                   // used to make sure the orders are sent to the server once at time
 
+        this.env = this.get('env');
         this.rpc = this.get('rpc');
         this.session = this.get('session');
         this.do_action = this.get('do_action');
@@ -1238,6 +1239,29 @@ exports.PosModel = Backbone.Model.extend({
 
         if (orders.length) {
             this.get('orders').add(orders);
+        }
+    },
+
+    /**
+     * Directly calls the requested service, instead of triggering a
+     * 'call_service' event up, which wouldn't work as services have no parent
+     *
+     * @param {OdooEvent} ev
+     */
+    _trigger_up: function (ev) {
+        if (ev.is_stopped()) {
+            return;
+        }
+        const payload = ev.data;
+        if (ev.name === 'call_service') {
+            let args = payload.args || [];
+            if (payload.service === 'ajax' && payload.method === 'rpc') {
+                // ajax service uses an extra 'target' argument for rpc
+                args = args.concat(ev.target);
+            }
+            const service = this.env.services[payload.service];
+            const result = service[payload.method].apply(service, args);
+            payload.callback(result);
         }
     },
 
