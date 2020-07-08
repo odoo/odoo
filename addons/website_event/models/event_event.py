@@ -82,6 +82,13 @@ class Event(models.Model):
         (menu_to_activate | menu_to_deactivate)._update_website_menus()
         return res
 
+    # ------------------------------------------------------------
+    # WEBSITE MENU MANAGEMENT
+    # ------------------------------------------------------------
+
+    def toggle_website_menu(self, val):
+        self.website_menu = val
+
     def _get_menu_entries(self):
         """ Method returning menu entries to display on the website view of the
         event, possibly depending on some options in inheriting modules. """
@@ -115,6 +122,10 @@ class Event(models.Model):
             'website_id': self.website_id.id,
         })
         return menu
+
+    # ------------------------------------------------------------
+    # TOOLS
+    # ------------------------------------------------------------
 
     def google_map_link(self, zoom=8):
         self.ensure_one()
@@ -168,6 +179,3 @@ class Event(models.Model):
 
     def get_backend_menu_id(self):
         return self.env.ref('event.event_main_menu').id
-
-    def toggle_website_menu(self, val):
-        self.website_menu = val
