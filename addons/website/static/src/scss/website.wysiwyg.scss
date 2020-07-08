@@ -6,24 +6,24 @@
 }
 
 :root {
-    // Override css variables to influence the default style of the editor without
-    // duplicating the css.
-    --o-we-toolbar-height: #{$o-navbar-height};
-    --o-we-bg-color: #{$o-we-color-dark};
-    --o-we-bg-color-dark: #{$o-we-color-darker};
-    --o-we-color: #{$o-we-color-text-normal};
-    --o-we-color-accent: #{$o-we-color-text-light};
+    // Override css variables to influence the default style of the editor
+    // without duplicating the css.
+    @include print-variable('o-we-toolbar-height', $o-navbar-height);
+    @include print-variable('o-we-bg-color', $o-we-color-dark);
+    @include print-variable('o-we-bg-color-dark', $o-we-color-darker);
+    @include print-variable('o-we-color', $o-we-color-text-normal);
+    @include print-variable('o-we-color-accent', $o-we-color-text-light);
 
-    --o-we-dropdown-bg-color: #{$o-we-color-darker};
-    --o-we-dropdown-color: #{$o-we-color-text-normal};
+    @include print-variable('o-we-dropdown-bg-color', $o-we-color-darker);
+    @include print-variable('o-we-dropdown-color', $o-we-color-text-normal);
 
-    --o-we-snippets-bg-color: #{$o-we-color-normal};
-    --o-we-snippets-color: #{$o-we-color-text-light};
+    @include print-variable('o-we-snippets-bg-color', $o-we-color-normal);
+    @include print-variable('o-we-snippets-color', $o-we-color-text-light);
 
     // Need info about the color of each color palette
     @for $index from 1 through length($o-color-palettes) - 1 { // Not the user one
         @each $name, $color in nth($o-color-palettes, $index) {
-            --o-palette-#{$index}-#{$name}: #{$color};
+            @include print-variable('o-palette-#{$index}-#{$name}', $color);
         }
     }
 }

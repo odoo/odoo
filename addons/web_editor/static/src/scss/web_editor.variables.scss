@@ -440,3 +440,18 @@ $o-color-extras-nesting-selector: '&, .o_colored_level &';
         @include o-bg-color(o-color($-related-color), $background: $background, $important: false);
     }
 }
+
+// Print a document property the right way (depending on the type of the printed
+// variable).
+@mixin print-variable($key, $value) {
+    @if $value != null {
+        $-type: type-of($value);
+        @if $-type == 'string' {
+            --#{$key}: '#{$value}';
+        } @else if $-type == 'list' {
+            --#{$key}: #{inspect($value)};
+        } @else {
+            --#{$key}: #{$value};
+        }
+    }
+}
