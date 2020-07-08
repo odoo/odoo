@@ -81,6 +81,28 @@ class Event(models.Model):
         for event in self:
             event.tracks_tag_ids = event.track_ids.mapped('tag_ids').filtered(lambda tag: tag.color != 0).ids
 
+    def write(self, values):
+        track_activated = self.filtered(lambda event: event.website_track)
+        track_deactivated = self.filtered(lambda event: not event.website_track)
+        track_proposal_activated = self.filtered(lambda event: event.website_track_proposal)
+        track_proposal_deactivated = self.filtered(lambda event: not event.website_track_proposal)
+        super(Event, self).write(values)
+        to_deactivate = track_activated.filtered(lambda event: not event.website_track)
+        to_activate = track_deactivated.filtered(lambda event: event.website_track)
+        track_proposal_to_deactivate = track_proposal_activated.filtered(lambda event: not event.website_track_proposal)
+        track_proposal_to_activate = track_proposal_deactivated.filtered(lambda event: event.website_track_proposal)
+        (to_activate | to_deactivate | track_proposal_to_activate | track_proposal_to_deactivate)._update_website_menus()
+
+    # ------------------------------------------------------------
+    # WEBSITE MENU MANAGEMENT
+    # ------------------------------------------------------------
+
+    def toggle_website_track(self, val):
+        self.website_track = val
+
+    def toggle_website_track_proposal(self, val):
+        self.website_track_proposal = val
+
     def _update_website_menus(self):
         super(Event, self)._update_website_menus()
         for event in self:
@@ -105,18 +127,6 @@ class Event(models.Model):
             elif not event.website_track_proposal:
                 event.track_proposal_menu_ids.mapped('menu_id').unlink()
 
-    def write(self, values):
-        track_activated = self.filtered(lambda event: event.website_track)
-        track_deactivated = self.filtered(lambda event: not event.website_track)
-        track_proposal_activated = self.filtered(lambda event: event.website_track_proposal)
-        track_proposal_deactivated = self.filtered(lambda event: not event.website_track_proposal)
-        super(Event, self).write(values)
-        to_deactivate = track_activated.filtered(lambda event: not event.website_track)
-        to_activate = track_deactivated.filtered(lambda event: event.website_track)
-        track_proposal_to_deactivate = track_proposal_activated.filtered(lambda event: not event.website_track_proposal)
-        track_proposal_to_activate = track_proposal_deactivated.filtered(lambda event: event.website_track_proposal)
-        (to_activate | to_deactivate | track_proposal_to_activate | track_proposal_to_deactivate)._update_website_menus()
-
     def _get_track_menu_entries(self):
         self.ensure_one()
         res = [
@@ -128,9 +138,3 @@ class Event(models.Model):
         self.ensure_one()
         res = [(_('Talk Proposals'), '/event/%s/track_proposal' % slug(self), False, 'track_proposal')]
         return res
-
-    def toggle_website_track(self, val):
-        self.website_track = val
-
-    def toggle_website_track_proposal(self, val):
-        self.website_track_proposal = val
