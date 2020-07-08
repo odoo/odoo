@@ -3588,15 +3588,17 @@ Fields:
             vals.setdefault('write_uid', self.env.uid)
             vals.setdefault('write_date', self.env.cr.now())
 
+        field_values = []                           # [(field, value)]
         determine_inverses = defaultdict(list)      # {inverse: fields}
         records_to_inverse = {}                     # {field: records}
         relational_names = []
         protected = set()
         check_company = False
-        for fname in vals:
+        for fname, value in vals.items():
             field = self._fields.get(fname)
             if not field:
                 raise ValueError("Invalid field %r on model %r" % (fname, self._name))
+            field_values.append((field, value))
             if field.inverse:
                 if field.type in ('one2many', 'many2many'):
                     # The written value is a list of commands that must applied
@@ -3651,11 +3653,12 @@ Fields:
 
             real_recs = self.filtered('id')
 
-            # for monetary field, their related currency field must be cached
-            # before the amount so it can be rounded correctly
-            for fname in sorted(vals, key=lambda x: self._fields[x].type=='monetary'):
-                field = self._fields[fname]
-                field.write(self, vals[fname])
+            # field.write_sequence determines a priority for writing on fields.
+            # Monetary fields need their corresponding currency field in cache
+            # for rounding values. X2many fields must be written last, because
+            # they flush other fields when deleting lines.
+            for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
+                field.write(self, value)
 
             # determine records depending on new values
             #
@@ -5127,9 +5130,6 @@ Fields:
             :param values: dict of field values, in any format.
             :param validate: whether values must be checked
         """
-        def is_monetary(pair):
-            return pair[0].type == 'monetary'
-
         self.ensure_one()
         cache = self.env.cache
         fields = self._fields
@@ -5138,8 +5138,8 @@ Fields:
         except KeyError as e:
             raise ValueError("Invalid field %r on model %r" % (e.args[0], self._name))
 
-        # convert monetary fields last in order to ensure proper rounding
-        for field, value in sorted(field_values, key=is_monetary):
+        # convert monetary fields after other columns for correct value rounding
+        for field, value in sorted(field_values, key=lambda item: item[0].write_sequence):
             cache.set(self, field, field.convert_to_cache(value, self, validate))
 
             # set inverse fields on new records in the comodel
