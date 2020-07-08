@@ -77,7 +77,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
      */
     start: async function () {
         const style = window.getComputedStyle(document.documentElement);
-        this.nbFonts = parseInt(style.getPropertyValue('--number-of-fonts'));
+        const nbFonts = parseInt(style.getPropertyValue('--number-of-fonts'));
         const googleFontsProperty = style.getPropertyValue('--google-fonts').trim();
         this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
         this.googleFonts = this.googleFonts.map(font => font.substring(1, font.length - 1)); // Unquote
@@ -87,12 +87,12 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const fontEls = [];
         const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
         const variable = this.el.dataset.variable;
-        _.times(this.nbFonts, fontNb => {
+        _.times(nbFonts, fontNb => {
             const realFontNb = fontNb + 1;
             const fontEl = document.createElement('we-button');
             fontEl.classList.add(`o_we_option_font_${realFontNb}`);
             fontEl.dataset.variable = variable;
-            fontEl.dataset[methodName] = realFontNb;
+            fontEl.dataset[methodName] = style.getPropertyValue(`--font-number-${realFontNb}`).trim();
             fontEl.dataset.font = realFontNb;
             fontEls.push(fontEl);
             this.menuEl.appendChild(fontEl);
@@ -155,10 +155,8 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                         }
                         const font = m[1].replace(/\+/g, ' ');
                         this.googleFonts.push(font);
-                        const values = {};
-                        values[variable] = this.nbFonts + 1;
                         this.trigger_up('google_fonts_custo_request', {
-                            values: values,
+                            values: {[variable]: `'${font}'`},
                             googleFonts: this.googleFonts,
                         });
                     },
@@ -188,27 +186,20 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             return;
         }
 
-        const nbBaseFonts = this.nbFonts - this.googleFonts.length;
-
         // Remove Google font
         const googleFontIndex = parseInt(ev.target.dataset.fontIndex);
+        const googleFont = this.googleFonts[googleFontIndex];
         this.googleFonts.splice(googleFontIndex, 1);
 
         // Adapt font variable indexes to the removal
         const values = {};
         const style = window.getComputedStyle(document.documentElement);
         _.each(FontFamilyPickerUserValueWidget.prototype.fontVariables, variable => {
-            const value = parseInt(style.getPropertyValue('--' + variable));
-            const googleFontValue = nbBaseFonts + 1 + googleFontIndex;
-            if (value === googleFontValue) {
+            const value = style.getPropertyValue(`--${variable}`).trim();
+            if (value.substring(1, value.length - 1) === googleFont) {
                 // If an element is using the google font being removed, reset
-                // it to the first base font.
-                values[variable] = 1;
-            } else if (value > googleFontValue) {
-                // If an element is using a google font whose index is higher
-                // than the one of the font being removed, that index must be
-                // lowered by 1 so that the font is unchanged.
-                values[variable] = value - 1;
+                // it to the theme default.
+                values[variable] = 'null';
             }
         });
 
