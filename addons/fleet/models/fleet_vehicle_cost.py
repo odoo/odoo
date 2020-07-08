@@ -17,7 +17,7 @@ class FleetVehicleLogContract(models.Model):
         start_date = fields.Date.from_string(strdate)
         return fields.Date.to_string(start_date + oneyear)
 
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', default=1, required=True, help='Vehicle concerned by this log')
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log')
     cost_subtype_id = fields.Many2one('fleet.service.type', 'Type', help='Cost type purchased with this cost', domain=[('category', '=', 'contract')])
     amount = fields.Float('Cost')
     date = fields.Date(help='Date when the cost has been executed')
@@ -141,7 +141,7 @@ class FleetVehicleLogServices(models.Model):
         return res
 
     active = fields.Boolean(default=True)
-    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', default=1, required=True, help='Vehicle concerned by this log')
+    vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log')
     amount = fields.Float('Cost')
     description = fields.Char('Description')
     odometer_id = fields.Many2one('fleet.vehicle.odometer', 'Odometer', help='Odometer measure of the vehicle at the moment of this log')
