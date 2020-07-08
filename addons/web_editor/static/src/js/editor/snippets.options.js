@@ -74,6 +74,15 @@ function _buildTitleElement(title) {
     return titleEl;
 }
 /**
+ * @param {string} src
+ * @returns {HTMLElement}
+ */
+function _buildImgElement(src) {
+    const imgEl = document.createElement('img');
+    imgEl.src = src;
+    return imgEl;
+}
+/**
  * Build the correct DOM for a we-row element.
  *
  * @param {string} [title] - @see _buildElement
@@ -147,10 +156,42 @@ const UserValueWidget = Widget.extend({
      */
     _makeDescriptive: function () {
         const $el = this._super(...arguments);
-        _addTitleAndAllowedAttributes($el[0], this.title, this.options);
+        const el = $el[0];
+        _addTitleAndAllowedAttributes(el, this.title, this.options);
         this.containerEl = document.createElement('div');
-        $el.append(this.containerEl);
+
+        if (el.dataset.img) {
+            const imgEl = _buildImgElement(el.dataset.img);
+            this.containerEl.appendChild(imgEl);
+        }
+
+        el.appendChild(this.containerEl);
         return $el;
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+
+        if (this.el.classList.contains('o_we_img_animate')) {
+            const buildImgExtensionSwitcher = (from, to) => {
+                const regex = new RegExp(`${from}$`, 'i');
+                return ev => {
+                    const img = ev.currentTarget;
+                    img.src = img.src.replace(regex, to);
+                };
+            };
+            this.$el.on('mouseenter.img_animate', 'img', buildImgExtensionSwitcher('png', 'gif'));
+            this.$el.on('mouseleave.img_animate', 'img', buildImgExtensionSwitcher('gif', 'png'));
+        }
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$el.off('.img_animate');
+        this._super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -744,12 +785,27 @@ const SelectUserValueWidget = UserValueWidget.extend({
             return;
         }
 
-        const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
-        let value = "/";
-        if (activeWidget) {
-            value = activeWidget.el.dataset.selectLabel || activeWidget.el.textContent;
+        if (this.menuTogglerImgEl) {
+            this.menuTogglerImgEl.remove();
         }
-        this.menuTogglerEl.textContent = value;
+        this.menuTogglerEl.textContent = '';
+
+        const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
+        if (activeWidget) {
+            const value = (activeWidget.el.dataset.selectLabel || activeWidget.el.textContent.trim());
+            const imgSrc = activeWidget.el.dataset.img;
+            if (value) {
+                this.menuTogglerEl.textContent = value;
+            } else if (imgSrc) {
+                if (!this.menuTogglerImgEl) {
+                    this.menuTogglerImgEl = document.createElement('img');
+                }
+                this.menuTogglerImgEl.src = imgSrc;
+                this.menuTogglerEl.appendChild(this.menuTogglerImgEl);
+            }
+        } else {
+            this.menuTogglerEl.textContent = "/";
+        }
     },
 
     //--------------------------------------------------------------------------
