@@ -35,22 +35,19 @@ according to the enabled options.
             </div>
         </div>
 
-        <!-- No blog post yet -->
-        <div t-if="not posts and not first_post" class="row">
-            <div class="col">
-                <h2>No blog post yet.</h2>
-                <div class="alert alert-info" groups="website.group_website_designer">
-                    Click on "<b>New</b>" in the top-right corner to write your first blog post.
-                </div>
-            </div>
-        </div>
-        <div t-if="posts" t-attf-class="row #{'mx-n2' if not opt_blog_readable else ''}">
-            <!-- If posts are filtered by date or tags, show applyed filters -->
-            <div t-if="tag or date_begin" class="col-12 mb-3">
-                <div class="h4 mb-3"> <t t-esc="len(posts)"/>
+        <div t-attf-class="row #{posts and not opt_blog_readable and 'mx-n2'}">
+            <!-- Filters -->
+            <div t-if="tag or date_begin or search" class="col-12 mb-3">
+                <div t-if="posts" class="h4 mb-3">
+                    <t t-esc="len(posts)"/>
                     <t t-if="len(posts) &lt; 2">Article</t>
                     <t t-else="">Articles</t>
                 </div>
+                <span t-if="search" class="align-items-baseline border d-inline-flex pl-2 rounded mb-2">
+                    <i class="fa fa-search mr-2 text-muted"/>
+                    <t t-esc="search"/>
+                    <a t-att-href="blog_url(search=False, tag=tag)" class="btn border-0 py-1 post_link">&#215;</a>
+                </span>
                 <t t-if="tag">
                     <!-- Show active tags with a category set -->
                     <t t-foreach="tag_category" t-as="nav_tag_category">
@@ -73,6 +70,18 @@ according to the enabled options.
                 </span>
                 <hr class="mt-2"/>
             </div>
+
+            <!-- No blog post yet -->
+            <div t-if="not posts" class="col">
+                <t t-set="no_results_str">No results for "%s".</t>
+                <h2 t-if="search" t-esc="no_results_str % search" class="font-weight-bold"/>
+                <h2 t-else="">No blog post yet.</h2>
+                <div class="alert alert-info" groups="website.group_website_designer">
+                    Click on "<b>New</b>" in the top-right corner to write your first blog post.
+                </div>
+            </div>
+
+            <!-- Posts -->
 
             <!-- Define 'colWidth' qWeb variable, to be assigned later.
             Adjust accordingly if sidebar and/or readability modes are active. -->
