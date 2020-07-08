@@ -86,7 +86,7 @@
                 <field name="date_finished" optional="hide" readonly="1"/>
                 <field name="duration_expected" widget="float_time"/>
                 <field name="duration" widget="mrp_time_counter"
-                  attrs="{'invisible': ['|', ('production_state','=', 'draft'), ('time_ids', '=', [])]}"/>
+                  attrs="{'invisible': [('production_state','=', 'draft')], 'readonly': [('is_user_working', '=', True)]}"/>
                 <field name="state" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
                 <button name="button_start" type="object" string="Start" class="btn-success"
                   attrs="{'invisible': ['|', '|', '|', ('production_state','in', ('draft', 'done')), ('working_state', '=', 'blocked'), ('state', '=', 'done'), ('is_user_working', '!=', False)]}"/>
