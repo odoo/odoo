@@ -242,6 +242,20 @@
     @return set-nth($list, $j, $tmp);
 }
 
+// Function to get an element of a list with a default value in case the index
+// is out-of-bounds; also return that value if the retrieved value is null.
+@function o-safe-nth($list, $index, $default: null) {
+    $value: if($index > 0 and $index <= length($list), nth($list, $index), null);
+    @return if($value != null, $value, $default);
+}
+
+// Function to get an element of a map with a default value in case the key
+// does not exist; also return that value if the retrieved value is null.
+@function o-safe-get($map, $key, $default: null) {
+    $value: map-get($map, $key);
+    @return if($value != null, $value, $default);
+}
+
 // ------- Kanban grouped mixins -------
 @mixin o-kanban-icon($base-opacity: 0.5) {
     display: block;

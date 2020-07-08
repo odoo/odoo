@@ -2,20 +2,12 @@
 /// This file regroups the website design rules.
 ///
 
-$-seen: ();
-$-font-numbers: (
-    o-website-value('font-number'),
-    o-website-value('headings-font-number'),
-    o-website-value('navbar-font-number'),
-    o-website-value('buttons-font-number'),
-);
-@each $-number in $-font-numbers {
-    @if index($-seen, $-number) == null {
-        $-seen: append($-seen, $-number);
-        $-theme-font: nth($o-theme-font-urls, $-number);
-        @if $-theme-font {
-            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}&display=swap");
-        }
+$-seen-urls: ();
+@each $alias, $key in $o-font-aliases-to-keys {
+    $-url: o-get-font-info($alias, 'url');
+    @if $-url and index($-seen-urls, $-url) == null {
+        $-seen-urls: append($-seen-urls, $-url);
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap");
     }
 }
 
@@ -45,7 +37,14 @@ $-font-numbers: (
 
     @include print-variable('logo-height', $o-theme-navbar-logo-height);
     @include print-variable('fixed-logo-height', $o-theme-navbar-fixed-logo-height);
-    @include print-variable('number-of-fonts', length($o-theme-fonts));
+
+    $-font-names: map-keys($o-theme-font-configs);
+    @include print-variable('number-of-fonts', length($-font-names));
+    $i: 1;
+    @each $font-name in $-font-names {
+        @include print-variable('font-number-#{$i}', $font-name);
+        $i: $i + 1;
+    }
 
     @include print-variable('number-of-color-palettes', length($o-color-palettes) - 1); // -1 since the last one is the user customized one
     @include print-variable('color-palettes-number', $o-original-color-palette-number);
