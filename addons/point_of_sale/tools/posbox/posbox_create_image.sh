@@ -132,7 +132,7 @@ chroot "${MOUNT_POINT}" /bin/bash -c "sudo /etc/init_posbox_image.sh"
 
 # copy iotbox version
 mkdir -pv "${MOUNT_POINT}"/var/odoo
-echo "${VERSION_IOTBOX}" > "${MOUNT_POINT}"/var/odoo/iotbox_version
+echo "${VERSION_IOTBOX}" | tee "${MOUNT_POINT}"/var/odoo/iotbox_version "${MOUNT_POINT}"/home/pi/iotbox_version
 
 # get rid of the git clone
 rm -rfv "${CLONE_DIR}"
