@@ -889,6 +889,9 @@ var ListRenderer = BasicRenderer.extend({
         if (node.attrs.readOnly) {
             $th.addClass('oe_read_only');
         }
+        if (node.tag === 'button_group') {
+            $th.addClass('o_list_button');
+        }
         if (!field || node.attrs.nolabel === '1') {
             return $th;
         }
