@@ -151,7 +151,7 @@ class FleetVehicleLogServices(models.Model):
     date = fields.Date(help='Date when the cost has been executed')
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
-    purchaser_id = fields.Many2one(related='vehicle_id.driver_id', string="Driver")
+    purchaser_id = fields.Many2one('res.partner', string="Driver", compute='_compute_purchaser_id', readonly=False, store=True)
     inv_ref = fields.Char('Vendor Reference')
     vendor_id = fields.Many2one('res.partner', 'Vendor')
     notes = fields.Text()
@@ -189,3 +189,8 @@ class FleetVehicleLogServices(models.Model):
                 # odometer log with 0, which is to be avoided
                 del data['odometer']
         return super(FleetVehicleLogServices, self).create(vals_list)
+
+    @api.depends('vehicle_id')
+    def _compute_purchaser_id(self):
+        for service in self:
+            service.purchaser_id = service.vehicle_id.driver_id
