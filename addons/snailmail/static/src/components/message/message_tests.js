@@ -20,12 +20,12 @@ QUnit.module('message_tests.js', {
     beforeEach() {
         utilsBeforeEach(this);
 
-        this.createMessageComponent = async message => {
+        this.createMessageComponent = async (message, otherProps) => {
             const MessageComponent = components.Message;
             MessageComponent.env = this.env;
-            this.component = new MessageComponent(null, {
+            this.component = new MessageComponent(null, Object.assign({
                 messageLocalId: message.localId,
-            });
+            }, otherProps));
             delete MessageComponent.env;
             await this.component.mount(this.widget.el);
         };
@@ -57,6 +57,12 @@ QUnit.test('Sent', async function (assert) {
     assert.expect(8);
 
     await this.start();
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
@@ -65,8 +71,11 @@ QUnit.test('Sent', async function (assert) {
             notification_status: 'sent',
             notification_type: 'snail',
         }]],
+        originThread: [['link', threadViewer.thread]],
     });
-    await this.createMessageComponent(message);
+    await this.createMessageComponent(message, {
+        threadViewerLocalId: threadViewer.localId
+    });
 
     assert.containsOnce(
         document.body,
@@ -118,6 +127,12 @@ QUnit.test('Canceled', async function (assert) {
     assert.expect(8);
 
     await this.start();
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
@@ -126,8 +141,11 @@ QUnit.test('Canceled', async function (assert) {
             notification_status: 'canceled',
             notification_type: 'snail',
         }]],
+        originThread: [['link', threadViewer.thread]],
     });
-    await this.createMessageComponent(message);
+    await this.createMessageComponent(message, {
+        threadViewerLocalId: threadViewer.localId
+    });
 
     assert.containsOnce(
         document.body,
@@ -179,6 +197,12 @@ QUnit.test('Pending', async function (assert) {
     assert.expect(8);
 
     await this.start();
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
@@ -187,8 +211,11 @@ QUnit.test('Pending', async function (assert) {
             notification_status: 'ready',
             notification_type: 'snail',
         }]],
+        originThread: [['link', threadViewer.thread]],
     });
-    await this.createMessageComponent(message);
+    await this.createMessageComponent(message, {
+        threadViewerLocalId: threadViewer.localId
+    });
 
     assert.containsOnce(
         document.body,
@@ -248,6 +275,12 @@ QUnit.test('No Price Available', async function (assert) {
             return this._super(...arguments);
         },
     });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
@@ -257,8 +290,11 @@ QUnit.test('No Price Available', async function (assert) {
             notification_status: 'exception',
             notification_type: 'snail',
         }]],
+        originThread: [['link', threadViewer.thread]],
     });
-    await this.createMessageComponent(message);
+    await this.createMessageComponent(message, {
+        threadViewerLocalId: threadViewer.localId
+    });
 
     assert.containsOnce(
         document.body,
@@ -329,6 +365,12 @@ QUnit.test('Credit Error', async function (assert) {
             return this._super(...arguments);
         },
     });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
@@ -338,8 +380,11 @@ QUnit.test('Credit Error', async function (assert) {
             notification_status: 'exception',
             notification_type: 'snail',
         }]],
+        originThread: [['link', threadViewer.thread]],
     });
-    await this.createMessageComponent(message);
+    await this.createMessageComponent(message, {
+        threadViewerLocalId: threadViewer.localId
+    });
 
     assert.containsOnce(
         document.body,
@@ -415,6 +460,12 @@ QUnit.test('Trial Error', async function (assert) {
             return this._super(...arguments);
         },
     });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
@@ -424,8 +475,11 @@ QUnit.test('Trial Error', async function (assert) {
             notification_status: 'exception',
             notification_type: 'snail',
         }]],
+        originThread: [['link', threadViewer.thread]],
     });
-    await this.createMessageComponent(message);
+    await this.createMessageComponent(message, {
+        threadViewerLocalId: threadViewer.localId
+    });
 
     assert.containsOnce(
         document.body,
@@ -505,6 +559,12 @@ QUnit.test('Format Error', async function (assert) {
     });
 
     await this.start({ env: { bus } });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
@@ -514,8 +574,11 @@ QUnit.test('Format Error', async function (assert) {
             notification_status: 'exception',
             notification_type: 'snail',
         }]],
+        originThread: [['link', threadViewer.thread]],
     });
-    await this.createMessageComponent(message);
+    await this.createMessageComponent(message, {
+        threadViewerLocalId: threadViewer.localId
+    });
 
     assert.containsOnce(
         document.body,
@@ -575,6 +638,12 @@ QUnit.test('Missing Required Fields', async function (assert) {
             return this._super(...arguments);
         },
     });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'snailmail',
@@ -584,8 +653,11 @@ QUnit.test('Missing Required Fields', async function (assert) {
             notification_status: 'exception',
             notification_type: 'snail',
         }]],
+        originThread: [['link', threadViewer.thread]]
     });
-    await this.createMessageComponent(message);
+    await this.createMessageComponent(message, {
+        threadViewerLocalId: threadViewer.localId
+    });
 
     assert.containsOnce(
         document.body,
