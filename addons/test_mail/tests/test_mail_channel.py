@@ -210,6 +210,41 @@ class TestChannelFeatures(common.BaseFunctionalTest, common.MockEmails):
         infos = test_chat.with_user(self.user_admin).channel_info()
         self.assertEqual(infos[0]['direct_partner'][0]['out_of_office_message'], 'Out')
 
+    @mute_logger('odoo.models.unlink')
+    def test_channel_auto_unsubscribe_archived_or_deleted_users(self):
+        """Archiving / deleting a user should automatically unsubscribe related partner from private channels"""
+        test_channel_private = self.env['mail.channel'].with_context(self._test_context).create({
+            'name': 'Winden caves',
+            'description': 'Channel to travel through time',
+            'public': 'private',
+        })
+        test_channel_group = self.env['mail.channel'].with_context(self._test_context).create({
+            'name': 'Sic Mundus',
+            'public': 'groups',
+            'group_public_id': self.env.ref('base.group_user').id})
+
+        test_user = self.env['res.users'].create({
+            "login": "adam",
+            "name": "Jonas",
+        })
+        test_partner = test_user.partner_id
+
+        self._join_channel(self.test_channel, self.user_employee.partner_id | test_partner)
+        self._join_channel(test_channel_private, self.user_employee.partner_id | test_partner)
+        self._join_channel(test_channel_group, self.user_employee.partner_id | test_partner)
+
+        # Unsubscribe archived user from the private channels, but not from public channels
+        self.user_employee.active = False
+        self.assertEqual(test_channel_private.channel_partner_ids, test_partner)
+        self.assertEqual(test_channel_group.channel_partner_ids, test_partner)
+        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+
+        # Unsubscribe deleted user from the private channels, but not from public channels
+        test_user.unlink()
+        self.assertEqual(test_channel_private.channel_partner_ids, self.env['res.partner'])
+        self.assertEqual(test_channel_group.channel_partner_ids, self.env['res.partner'])
+        self.assertEqual(self.test_channel.channel_partner_ids, self.user_employee.partner_id | test_partner)
+
 
 @tagged('moderation')
 class TestChannelModeration(common.Moderation):

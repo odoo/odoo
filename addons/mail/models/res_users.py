@@ -93,6 +93,8 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
 
     def write(self, vals):
         write_res = super(Users, self).write(vals)
+        if 'active' in vals and not vals['active']:
+            self._unsubscribe_from_channels()
         sel_groups = [vals[k] for k in vals if is_selection_groups(k) and vals[k]]
         if vals.get('groups_id'):
             # form: {'group_ids': [(3, 10), (3, 3), (4, 10), (4, 3)]} or {'group_ids': [(6, 0, [ids]}
@@ -102,6 +104,21 @@ GROUP BY channel_moderator.res_users_id""", [tuple(self.ids)])
         elif sel_groups:
             self.env['mail.channel'].search([('group_ids', 'in', sel_groups)])._subscribe_users()
         return write_res
+
+    def unlink(self):
+        self._unsubscribe_from_channels()
+        return super().unlink()
+
+    def _unsubscribe_from_channels(self):
+        """ This method un-subscribes users from private mail channels. Main purpose of this
+            method is to prevent sending internal communication to archived / deleted users.
+            We do not un-subscribes users from public channels because in most common cases,
+            public channels are mailing list (e-mail based) and so users should always receive
+            updates from public channels until they manually un-subscribe themselves.
+        """
+        self.mapped('partner_id.channel_ids').filtered(lambda c: c.public != 'public').write({
+            'channel_partner_ids': [(3, pid) for pid in self.mapped('partner_id').ids]
+        })
 
     @api.model
     def systray_get_activities(self):
