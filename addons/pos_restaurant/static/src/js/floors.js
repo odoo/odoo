@@ -2,6 +2,8 @@ odoo.define('pos_restaurant.floors', function (require) {
 "use strict";
 
 var models = require('point_of_sale.models');
+const { Gui } = require('point_of_sale.Gui');
+const { posbus } = require('point_of_sale.utils');
 
 // At POS Startup, load the floors, and add them to the pos model
 models.load_models({
@@ -213,7 +215,12 @@ models.PosModel = models.PosModel.extend({
         this._get_from_server(table.id).then(function (server_orders) {
             var orders = self.get_order_list();
             orders.forEach(function(order){
-                if (order.server_id){
+                const screen = order.get_screen_data();
+                // Only remove the 'Receipt' status order when 'Next Order'
+                // from the receipt screen is clicked. We are bypassing the
+                // removal of paid order here to make sure those orders are
+                // still in the tickets list.
+                if (order.server_id && screen.name !== 'ReceiptScreen'){
                     self.get("orders").remove(order);
                     order.destroy();
                 }
@@ -257,6 +264,7 @@ models.PosModel = models.PosModel.extend({
         if(!table){
             this.sync_from_server(table, this.get_order_list(), this.get_order_with_uid());
             this.set_order(null);
+            this.table = null;
         } else if (this.order_to_transfer_to_different_table) {
             var order_ids = this.get_order_with_uid();
 
@@ -269,6 +277,7 @@ models.PosModel = models.PosModel.extend({
             this.table = table;
             this.sync_to_server(table, order);
         }
+        posbus.trigger('table-set');
     },
 
     // if we have tables, we do not load a default order, as the default order will be
@@ -284,9 +293,12 @@ models.PosModel = models.PosModel.extend({
     add_new_order: function() {
         if (this.config.iface_floorplan) {
             if (this.table) {
-                return _super_posmodel.add_new_order.call(this);
+                return _super_posmodel.add_new_order.apply(this, arguments);
             } else {
-                console.warn("WARNING: orders cannot be created when there is no active table in restaurant mode");
+                Gui.showPopup('ConfirmPopup', {
+                    title: 'Unable to create order',
+                    body: 'Orders cannot be created when there is no active table in restaurant mode',
+                });
                 return undefined;
             }
         } else {
@@ -298,7 +310,7 @@ models.PosModel = models.PosModel.extend({
     // get the list of unpaid orders (associated to the current table)
     get_order_list: function() {
         var orders = _super_posmodel.get_order_list.call(this);
-        if (!this.config.iface_floorplan) {
+        if (!(this.config && this.config.iface_floorplan)) {
             return orders;
         } else if (!this.table) {
             return [];
@@ -345,7 +357,7 @@ models.PosModel = models.PosModel.extend({
                 this.db.set_order_to_remove_from_server(removed_order);
             }
             if( (reason === 'abandon' || removed_order.temporary) && order_list.length > 0){
-                this.set_order(order_list[index] || order_list[order_list.length -1]);
+                this.set_order(order_list[index] || order_list[order_list.length - 1], { silent: true });
             } else if (order_list.length === 0) {
                 this.set_order(null);
             }

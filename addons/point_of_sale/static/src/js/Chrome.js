@@ -197,7 +197,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
             this.showScreen(name, props);
         }
         _getSavedScreen(order) {
-            return order.get_screen_data('screen') || { name: 'ProductScreen' };
+            return order.get_screen_data();
         }
         __showTempScreen(event) {
             const { name, props, resolve } = event.detail;
@@ -236,7 +236,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
         _setScreenData(name, props) {
             const order = this.env.pos.get_order();
             if (order) {
-                order.set_screen_data('screen', { name, props });
+                order.set_screen_data({ name, props });
             }
         }
         async _closePos() {
@@ -323,6 +323,10 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 this.loading.skipButtonIsShown = true;
                 this._loadingSkipCallback = callback;
             }
+        }
+
+        get isTicketScreenShown() {
+            return this.mainScreen.name === 'TicketScreen';
         }
 
         // MISC METHODS //

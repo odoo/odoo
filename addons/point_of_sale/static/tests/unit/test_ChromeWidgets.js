@@ -49,53 +49,6 @@ odoo.define('point_of_sale.tests.ChromeWidgets', function (require) {
         parent.destroy();
     });
 
-    QUnit.test('OrderSelector', async function (assert) {
-        assert.expect(4);
-
-        class Parent extends PopupControllerMixin(PosComponent) {}
-        Parent.env = makePosTestEnv();
-        Parent.env.chrome = new owl.Context({ showOrderSelector: true });
-        Parent.template = xml/* html */ `
-            <div>
-                <OrderSelector></OrderSelector>
-                <t t-if="popup.isShown" t-component="popup.component" t-props="popupProps" t-key="popup.name" />
-            </div>
-        `;
-
-        const pos = Parent.env.pos;
-
-        const parent = new Parent();
-        await parent.mount(testUtils.prepareTarget());
-
-        const plusButton = parent.el.querySelector('.neworder-button');
-        const minusButton = parent.el.querySelector('.deleteorder-button');
-
-        await testUtils.dom.click(plusButton);
-        await testUtils.nextTick();
-        assert.strictEqual(2, parent.el.querySelectorAll('.order-sequence').length);
-        await testUtils.dom.click(minusButton);
-        await testUtils.nextTick();
-        assert.strictEqual(1, parent.el.querySelectorAll('.order-sequence').length);
-
-        const product = Object.values(pos.db.product_by_id)[0];
-        pos.get_order().add_product(product);
-
-        // try deleting the order with orderline
-        await testUtils.dom.click(minusButton);
-        await testUtils.nextTick();
-
-        // confirm popup should appear
-        assert.ok(parent.el.querySelector('.popup'));
-        // confirm deletion
-        await testUtils.dom.click(parent.el.querySelector('.confirm'));
-        await testUtils.nextTick();
-        // there should be new order created
-        assert.strictEqual(1, parent.el.querySelectorAll('.order-sequence').length);
-
-        parent.unmount();
-        parent.destroy();
-    });
-
     QUnit.test('SyncNotification', async function (assert) {
         assert.expect(5);
 

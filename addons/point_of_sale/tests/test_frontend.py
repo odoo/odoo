@@ -510,3 +510,7 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.main_pos_config.write({ 'product_configurator': True })
         self.main_pos_config.open_session_cb(check_coa=False)
         self.start_tour("/pos/web?config_id=%d" % self.main_pos_config, 'ProductConfiguratorTour', login="admin", step_delay=50)
+
+    def test_05_ticket_screen(self):
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'TicketScreenTour', login="admin", step_delay=50)

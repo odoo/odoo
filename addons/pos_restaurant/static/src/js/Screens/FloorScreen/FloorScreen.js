@@ -171,12 +171,12 @@ odoo.define('pos_restaurant.FloorScreen', function (require) {
                 }
             }
         }
-        async _onSelectTable(event) {
+        _onSelectTable(event) {
             const table = event.detail;
             if (this.state.isEditMode) {
                 this.state.selectedTableId = table.id;
             } else {
-                await this.env.pos.set_table(table);
+                this.env.pos.set_table(table);
             }
         }
         _onDeselectTable() {

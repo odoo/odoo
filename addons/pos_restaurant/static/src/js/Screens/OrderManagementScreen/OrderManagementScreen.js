@@ -12,10 +12,9 @@ odoo.define('pos_restaurant.OrderManagementScreen', function (require) {
             _setOrder(order) {
                 if (this.env.pos.config.module_pos_restaurant) {
                     const currentOrder = this.env.pos.get_order();
+                    this.env.pos.set_table(order.table, order);
                     if (currentOrder && currentOrder.uid === order.uid) {
                         this.close();
-                    } else {
-                        this.env.pos.set_table(order.table, order);
                     }
                 } else {
                     super._setOrder(order);
