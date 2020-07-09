@@ -110,7 +110,7 @@ function factory(dependencies) {
                     { shadow: true }
                 );
                 for (const data of partnersData) {
-                    const partner = this.insert(data);
+                    const partner = this.insert(this.convertData(data));
                     partners.push(partner);
                 }
             }
