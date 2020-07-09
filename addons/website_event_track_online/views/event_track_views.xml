@@ -51,6 +51,12 @@
                     <field name="wishlist_visitor_count" string="Wishlisted By" widget="statinfo"/>
                 </button>
             </field>
+            <xpath expr="//field[@name='image']" position="replace">
+                <field name="website_image" widget="image" class="oe_avatar"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_biography']" position="after">
+                <field name="image" widget="image" class="oe_avatar float-left"/>
+            </xpath>
         </field>
     </record>
 
