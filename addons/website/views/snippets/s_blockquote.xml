@@ -24,27 +24,18 @@
                 <we-button data-select-class="s_blockquote_minimalist" data-display="minimalist" data-name="blockquote_minimalist_opt">Minimalist</we-button>
             </we-select>
         </div>
-        <!-- Background Image -->
-        <div data-js="background" string="Background" data-selector=".s_blockquote" data-target=".s_blockquote_content">
-            <we-imagepicker string="Background" data-background="" data-dependencies="blockquote_cover_opt"/>
-        </div>
-        <!-- Background Image Size/Position -->
-        <div data-js="BackgroundPosition" data-selector=".s_blockquote" data-target=".s_blockquote_content">
-            <we-row>
-                <we-select data-no-preview="true">
-                    <we-button data-background-type="cover" data-name="cover_background_opt">Cover</we-button>
-                    <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
-                </we-select>
-                <we-button class="fa fa-fw fa-crosshairs" title="Background Position"
-                        data-background-position-overlay="true" data-no-preview="true"/>
-            </we-row>
-            <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
-                <we-input string="Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
-                <we-input string="Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
-            </we-multi>
-        </div>
+
+        <!-- Color and images -->
+        <t t-call="web_editor.snippet_options_background_options">
+            <t t-set="selector" t-value="'.s_blockquote'"/>
+            <t t-set="target" t-value="'.s_blockquote_content'"/>
+            <t t-set="with_colors" t-value="True"/>
+            <t t-set="with_images" t-value="True"/>
+            <t t-set="images_dependencies" t-value="'blockquote_cover_opt'"/>
+        </t>
+
         <!-- Filter -->
-        <div data-js="background" data-selector=".s_blockquote" data-target=".s_blockquote_filter">
+        <div data-selector=".s_blockquote" data-target=".s_blockquote_filter">
             <we-colorpicker string="Filter"
                 data-select-style="true"
                 data-css-property="background-color"
@@ -52,14 +43,9 @@
                 data-excluded="common, theme, custom"
                 data-dependencies="blockquote_cover_opt"/>
         </div>
-        <!-- Background Color -->
+        <!-- Shadow -->
         <div data-js="Box" data-selector=".s_blockquote" data-target=".s_blockquote_content">
-            <we-colorpicker string="Background Color"
-                data-name="bg_color_opt"
-                data-select-style="true"
-                data-css-property="background-color"
-                data-color-prefix="bg-"/>
-            <t t-call="website.snippet_options_shadow"/>
+            <t t-call="website.snippet_options_shadow_widgets"/>
         </div>
         <!-- Border Color -->
         <div data-selector="blockquote">
