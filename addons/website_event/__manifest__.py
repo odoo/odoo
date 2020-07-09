@@ -19,6 +19,7 @@
         'security/event_security.xml',
     ],
     'demo': [
+        'data/res_partner_demo.xml',
         'data/event_demo.xml'
     ],
     'application': True,
