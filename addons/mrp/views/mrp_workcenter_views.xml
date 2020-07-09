@@ -142,7 +142,7 @@
             <field name="name">mrp.workcenter.kanban</field>
             <field name="model">mrp.workcenter</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey o_kanban_dashboard o_workcenter_kanban" create="0">
+                <kanban class="oe_background_grey o_kanban_dashboard o_workcenter_kanban" create="0" sample="1">
                     <field name="name"/>
                     <field name="color"/>
                     <field name="workorder_count"/>
@@ -400,9 +400,8 @@
               <p class="o_view_nocontent_smiling_face">
                 Create a new work center
               </p><p>
-                Manufacturing operations are processed at Work Centers. A Work Center can be composed
-                of workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
-                The Work Centers are defined on the Routing's operations.
+                Manufacturing operations are processed at Work Centers. A Work Center can be composed of
+                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
               </p>
             </field>
         </record>
@@ -420,7 +419,7 @@
               </p><p>
                 Manufacturing operations are processed at Work Centers. A Work Center can be composed of
                 workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
-                The Work Centers are defined on the Routing's operations.
+                They can be defined via the configuration menu.
               </p>
             </field>
         </record>
