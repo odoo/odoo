@@ -113,6 +113,9 @@
         <field name="priority" eval="10"/>
         <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">0</attribute>
+            </xpath>
             <field name="workcenter_id" position="after">
                 <field name="production_id"/>
             </field>
@@ -258,7 +261,7 @@
         <field name="name">mrp.production.work.order.calendar</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id" event_limit="5" delete="0">
+            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id" event_limit="5" delete="0" create="0">
                 <field name="workcenter_id" filters="1"/>
                 <field name="production_id"/>
                 <field name="state"/>
@@ -473,9 +476,10 @@
         <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Plan a Manufacturing Order
+            Create a Manufacturing Order
           </p><p>
-            Work orders correspond to the different operations, taking place at specific workcenters, which are performed to manufacture a product. Those can be defined in a routing that will be assigned to a bill of material.
+            Work orders correspond to the different operations, taking place at specific workcenters, which are performed to manufacture a product.
+            Those can be defined on bills of materials or directly on manufacturing orders.
             </p>
         </field>
     </record>
