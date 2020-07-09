@@ -11,6 +11,8 @@ odoo.define('web.web_client', function (require) {
     owl.config.mode = env.isDebug() ? 'dev' : 'prod';
     owl.Component.env = env;
 
+    Registries.Component.add(owl.misc.Portal);
+
     function setupResponsivePlugin(env) {
         const isMobile = () => window.innerWidth <= 768;
         env.isMobile = isMobile();

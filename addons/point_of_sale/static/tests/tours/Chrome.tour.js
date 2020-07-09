@@ -4,6 +4,7 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     const { ProductScreen } = require('point_of_sale.tour.ProductScreenTourMethods');
     const { ReceiptScreen } = require('point_of_sale.tour.ReceiptScreenTourMethods');
     const { PaymentScreen } = require('point_of_sale.tour.PaymentScreenTourMethods');
+    const { TicketScreen } = require('point_of_sale.tour.TicketScreenTourMethods');
     const { Chrome } = require('point_of_sale.tour.ChromeTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');
     var Tour = require('web_tour.tour');
@@ -13,62 +14,75 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     // Order 1 is at Product Screen
     ProductScreen.do.clickHomeCategory();
     ProductScreen.exec.addOrderline('Desk Pad', '1', '2');
+    Chrome.do.clickTicketButton();
+    TicketScreen.check.checkStatus('-0001', 'Ongoing');
 
     // Order 2 is at Payment Screen
-    Chrome.do.newOrder();
+    TicketScreen.do.clickNewTicket();
     ProductScreen.exec.addOrderline('Monitor Stand', '3', '4');
     ProductScreen.do.clickPayButton();
     PaymentScreen.check.isShown();
+    Chrome.do.clickTicketButton();
+    TicketScreen.check.checkStatus('-0002', 'Payment');
 
     // Order 3 is at Receipt Screen
-    Chrome.do.newOrder();
+    TicketScreen.do.clickNewTicket();
     ProductScreen.exec.addOrderline('Whiteboard Pen', '5', '6');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Bank');
     PaymentScreen.do.clickValidate();
     ReceiptScreen.check.isShown();
+    Chrome.do.clickTicketButton();
+    TicketScreen.check.checkStatus('-0003', 'Receipt');
 
     // Select order 1, should be at Product Screen
-    Chrome.do.selectOrder('1');
+    TicketScreen.do.selectOrder('-0001');
     ProductScreen.check.productIsDisplayed('Desk Pad');
     ProductScreen.check.selectedOrderlineHas('Desk Pad', '1.0', '2.0');
 
     // Select order 2, should be at Payment Screen
-    Chrome.do.selectOrder('2');
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.selectOrder('-0002');
     PaymentScreen.check.emptyPaymentlines('12.0');
     PaymentScreen.check.validateButtonIsHighlighted(false);
 
     // Select order 3, should be at Receipt Screen
-    Chrome.do.selectOrder('3');
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.selectOrder('-0003');
     ReceiptScreen.check.changeIs('0.0');
 
     // Pay order 1, with change
-    Chrome.do.selectOrder('1');
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.selectOrder('-0001');
     ProductScreen.do.clickPayButton();
     PaymentScreen.do.clickPaymentMethod('Cash');
     PaymentScreen.do.pressNumpad('2 0');
     PaymentScreen.do.clickValidate();
     ReceiptScreen.check.changeIs('18.0');
 
+    // Order 1 now should have Receipt status
+    Chrome.do.clickTicketButton();
+    TicketScreen.check.checkStatus('-0001', 'Receipt');
+
     // Select order 3, should still be at Receipt Screen
     // but change should be different.
-    Chrome.do.selectOrder('3');
+    TicketScreen.do.selectOrder('-0003');
     ReceiptScreen.check.changeIs('0.0');
 
     // click next screen on order 3
     // then delete the new empty order
     ReceiptScreen.do.clickNextOrder();
     ProductScreen.check.orderIsEmpty();
-    Chrome.do.deleteOrder();
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.deleteOrder('-0004');
+    TicketScreen.do.deleteOrder('-0001');
 
-    // Order 2 should be the current order
-    // Deleting it should open a popup, confirm it.
-    Chrome.do.deleteOrder();
+    // After deleting order 1 above, order 2 became
+    // the 2nd-row order and it has payment status
+    TicketScreen.check.nthRowContains(2, 'Payment')
+    TicketScreen.do.deleteOrder('-0002');
     Chrome.do.confirmPopup();
-
-    // Now left with order 1 in payment screen
-    // go next screen
-    ReceiptScreen.do.clickNextOrder();
+    TicketScreen.do.clickNewTicket();
 
     // Invoice an order
     ProductScreen.exec.addOrderline('Whiteboard Pen', '5', '6');

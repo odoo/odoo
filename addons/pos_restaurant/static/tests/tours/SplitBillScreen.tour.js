@@ -6,6 +6,7 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     const { FloorScreen } = require('pos_restaurant.tour.FloorScreenTourMethods');
     const { ProductScreen } = require('pos_restaurant.tour.ProductScreenTourMethods');
     const { SplitBillScreen } = require('pos_restaurant.tour.SplitBillScreenTourMethods');
+    const { TicketScreen } = require('point_of_sale.tour.TicketScreenTourMethods');
     const { getSteps, startSteps } = require('point_of_sale.tour.utils');
     var Tour = require('web_tour.tour');
 
@@ -42,7 +43,8 @@ odoo.define('pos_restaurant.tour.SplitBillScreen', function (require) {
     ProductScreen.do.clickOrderline('Coca-Cola', '1.0')
 
     // go back to the original order and see if the order is changed
-    Chrome.do.selectOrder('1');
+    Chrome.do.clickTicketButton();
+    TicketScreen.do.selectOrder('-0001');
     ProductScreen.do.clickOrderline('Water', '2.0')
     ProductScreen.do.clickOrderline('Minute Maid', '3.0')
 

@@ -179,3 +179,7 @@ class TestFrontend(odoo.tests.HttpCase):
         self.pos_config.write({'manage_orders': True})
         self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
         self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'PosResOrderManagementScreenTour', login="admin", step_delay=50)
+
+    def test_04_ticket_screen(self):
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'PosResTicketScreenTour', login="admin", step_delay=50)

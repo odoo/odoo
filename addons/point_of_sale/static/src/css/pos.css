@@ -319,22 +319,24 @@ td {
     margin:0;
     padding:0;
     color: gray;
-    background: #393939;
+    background: #875A7B;
     display: flex;
 }
 
 /*  a) The left part of the top-bar */
 
 .pos .pos-branding{
-    max-width: 459px;
+    min-width: 503px;
+    max-width: 503px;
     flex-grow: 1;
     height:100%;
     margin:0;
     padding:0;
-    border-right: 1px solid #373737;
     text-align:left;
     line-height:100%;
     vertical-align: middle;
+    display: flex;
+    justify-content: space-between;
 }
 .pos .pos-logo {
     height: 35px;
@@ -352,6 +354,10 @@ td {
     cursor: pointer;
 }
 
+.pos .ticket-button {
+    display: flex;
+}
+
 /*  b) The right part of the top-bar */
 
 .pos .pos-rightheader {
@@ -362,7 +368,17 @@ td {
     overflow-x: auto;
 }
 .pos .pos-rightheader > * {
-    border-right: 1px solid #292929;
+    border-right: 1px solid #875A7B;
+}
+
+.pos .status-buttons-portal {
+    flex: 1;
+}
+
+.pos .status-buttons {
+    display: flex;
+    justify-content: flex-end;
+    flex: 1;
 }
 
 .pos .order-button{
@@ -456,8 +472,8 @@ td {
     height: 48px;
     padding-left: 16px;
     padding-right: 16px;
-    border-right: 1px solid #292929;
-    border-left: 1px solid #292929;
+    border-right: 1px solid #875A7B;
+    border-left: 1px solid #875A7B;
     color: #DDD;
     line-height: 48px;
     text-align: center;
@@ -468,7 +484,7 @@ td {
     -webkit-transition-timing-function: ease-out;
 }
 .pos .pos-rightheader .header-button:last-child{
-    border-left:  1px solid #3a3a3a;
+    border-left:  1px solid #875A7B;
 }
 .pos .pos-rightheader .header-button:active{
     background: rgba(0,0,0,0.2);
@@ -852,11 +868,18 @@ td {
 
 .pos .rightpane-header {
     padding: 0;
-    height: 48px;
-    border-bottom: 1px solid #c7c7c7;
     background: #d3d3d3;
     text-align: center;
     display: flex;
+    flex-flow: row wrap;
+}
+
+.pos .green-border-bottom {
+    border-bottom: solid 3px rgb(110, 200, 155);
+}
+
+.pos .grey-border-bottom {
+    border-bottom: 1px solid #c7c7c7;
 }
 
 /*  ********* The product list  ********* */
@@ -885,11 +908,6 @@ td {
 
 /*  a) the product list navigation bar */
 
-.pos .breadcrumbs{
-    display: inline-block;
-    text-align: left;
-    float:left;
-}
 .pos .breadcrumb{
     float: left;
     display: inline-block;
@@ -911,8 +929,6 @@ td {
 }
 .pos .breadcrumb-button.breadcrumb-home {
     line-height: 50px;
-    padding: 0;
-    width: 50px;
     font-size: 25px;
     text-align: center;
 }
@@ -936,16 +952,13 @@ td {
 /*  b) the search box */
 
 .pos .searchbox {
-    position: absolute;
-    right: 2px;
     flex-grow: 1;
+    position: relative;
 }
 .pos .searchbox input {
-    width: 100px;
+    width: 150px;
     border: 1px solid #cecbcb;
     padding: 10px 20px;
-    padding-left: 38px;
-    padding-right: 33px;
     margin: 6px;
     background-color: white;
     border-radius: 20px;
@@ -959,7 +972,6 @@ td {
 }
 
 .pos .search-clear {
-    position: absolute;
     top: 9px;
     width: 30px;
     height: 30px;
@@ -971,12 +983,13 @@ td {
 .search-clear.left {
     left: 11px;
     color: #808080;
+    margin: 6px;
 }
 
 .search-clear.right {
-    left: 145px;
     color: #808080;
     cursor: pointer;
+    margin: 6px;
 }
 
 @media screen and (max-width: 768px) {
@@ -1004,6 +1017,7 @@ td {
 .pos .categories {
     position: relative;
     border-bottom: solid 3px rgb(110, 200, 155);
+    flex: 1;
 }
 .pos .categories h4 {
     display: inline-block;
@@ -1016,7 +1030,7 @@ td {
             box-sizing: border-box;
     width:100%;
     height:100%;
-    max-height:60vh;
+    max-height:40vh;
     overflow: hidden;
     overflow-y: auto;
     -webkit-overflow-scrolling: touch;
@@ -1027,16 +1041,13 @@ td {
     text-align: left;
     padding: 10px;
     background: rgb(229, 229, 229);
-    border-bottom: 1px solid #cecece;
 }
 .pos .category-list.simple {
     padding: 0px;
     background: #cecece;
-    display: -webkit-flex;
     display: flex;
-    -webkit-flex-flow: row wrap;
     flex-flow: row wrap;
-    border-bottom: none;
+    flex: 1;
 }
 
 
@@ -1058,17 +1069,16 @@ td {
 }
 
 .pos .category-simple-button{
-    position: relative;
-    display: inline-block;
+    display: flex;
+    align-items: center;
     font-size: 14px;
-    margin-right: 1px;
-    margin-bottom: 1px;
     padding: 5px 12px;
-    line-height: 32px;
-    flex-grow: 1;
-    -webkit-flex-grow: 1;
     cursor: pointer;
-    background: #e2e2e2;
+    flex: 1;
+    text-align: left;
+    background: rgb(229, 229, 229);
+    border-right: solid 1px #d3d3d3;
+    border-top: solid 1px #d3d3d3;
 }
 .pos .category-simple-button:active{
     color: white;
@@ -1370,12 +1380,6 @@ td {
     width:100%;
     display: flex;
     flex-grow: 1;
-}
-
-.pos .screen .header-row {
-    border:none;
-    width:100%;
-    height:0px;
 }
 
 .pos .screen .header-cell{
@@ -3143,4 +3147,333 @@ td {
 
 .pos .product_configurator_attributes .configurator_color.active input {
     margin: 18px;
+}
+
+/* TICKET SCREEN */
+
+.ticket-screen {
+    font-size: medium;
+}
+
+.ticket-screen .orders {
+    display: flex;
+    flex-flow: column nowrap;
+    overflow: hidden;
+    overflow-y: hidden;
+    overflow-y: auto;
+}
+
+.ticket-screen .orders .header-row{
+    display: flex;
+    flex-flow: row nowrap;
+    flex: 1;
+    justify-content: space-evenly;
+    background: #868686;
+    color: white;
+}
+
+.ticket-screen .orders .order-row {
+    display: flex;
+    flex-flow: row nowrap;
+    flex: 1;
+    justify-content: space-evenly;
+}
+
+.ticket-screen .orders .col {
+    display: flex;
+    flex: 1;
+    padding: 10px;
+}
+
+.ticket-screen .orders .col.start {
+    justify-content: flex-start;
+}
+
+.ticket-screen .orders .col.center {
+    justify-content: center;
+}
+
+.ticket-screen .orders .col.end {
+    justify-content: flex-end;
+}
+
+.ticket-screen .orders .col.very-narrow {
+    flex: 0.2;
+}
+
+.ticket-screen .orders .col.narrow {
+    flex: 0.5;
+}
+
+.ticket-screen .orders .col.wide {
+    flex: 1.5;
+}
+
+.ticket-screen .order-row:nth-child(odd) {
+    background: #DDD;
+}
+
+.ticket-screen .order-row:nth-child(even) {
+    background: white;
+}
+
+.ticket-screen .order-row:hover {
+    background: rgb(110,200,155);
+    color: white;
+}
+
+.ticket-screen .pointer {
+    cursor: pointer;
+}
+
+.ticket-screen .controls {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin: 0px 20px;
+    border-bottom: dashed 1px rgb(215,215,215);
+    flex: 0 0 80px;
+}
+
+.ticket-screen .controls button {
+    font-size: medium;
+    padding: 12px;
+    margin-right: 20px;
+    font-weight: bold;
+}
+
+.ticket-screen .controls button.discard {
+    background: rgb(230, 230, 230);
+    border: solid 1px rgb(209, 209, 209);
+}
+
+.ticket-screen .controls button.highlight {
+    background: #6EC89B;
+    border: solid 1px #64AF8A;
+    color: white;
+}
+
+.ticket-screen .pos-search-bar {
+    vertical-align: middle;
+    white-space: nowrap;
+    position: relative;
+    display: flex;
+    max-width: 500px;
+    flex: 1;
+}
+
+.ticket-screen .pos-search-bar .search {
+    display: flex;
+    position: relative;
+    flex: 1;
+}
+
+.ticket-screen .pos-search-bar .search input {
+    height: 40px;
+    font-size: medium;
+    color: #63717f;
+    padding-left: 40px;
+    border: solid 1px rgb(209, 209, 209);
+    flex: 1;
+}
+
+.ticket-screen .pos-search-bar .radius-right {
+    border-top-right-radius: 5px;
+    border-bottom-right-radius: 5px;
+}
+
+.ticket-screen .pos-search-bar .radius-left {
+    border-top-left-radius: 5px;
+    border-bottom-left-radius: 5px;
+}
+
+.ticket-screen .pos-search-bar .search input:focus {
+    outline: none;
+}
+
+.ticket-screen .pos-search-bar .search .search-icon {
+    position: absolute;
+    left: 15px;
+    top: 12px;
+    z-index: 1;
+    color: #4f5b66;
+}
+
+.ticket-screen .pos-search-bar .search ul {
+    background: white;
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 2px;
+    left: 2px;
+    box-shadow: 1px 1px 3px grey;
+    font-size: small;
+}
+
+.ticket-screen .pos-search-bar .search li {
+    color: rgb(1,160,157);
+    margin: 0.2em 0;
+    padding-top: 0.2em;
+    padding-bottom: 0.2em;
+    padding-left: 35px;
+}
+
+.ticket-screen .pos-search-bar .search li:hover {
+    background: #DDD;
+}
+
+.ticket-screen .pos-search-bar .search li .field {
+    font-style: italic;
+}
+
+.ticket-screen .pos-search-bar .search li .term {
+    font-weight: bold;
+}
+
+.ticket-screen .pos-search-bar .search li.highlight {
+    background: #DDD;
+}
+
+.ticket-screen .pos-search-bar .filter .down-icon {
+    position: absolute;
+    right: 13px;
+    top: 10px;
+}
+
+.ticket-screen .pos-search-bar .filter {
+    height: 40px;
+    background: white;
+    padding-top: 1px;
+    padding-bottom: 1px;
+    padding-left: 20px;
+    padding-right: 40px;
+    border: solid 1px rgb(209, 209, 209);
+    border-left: none;
+    position: relative;
+    display: flex;
+    align-items: center;
+    max-width: 150px;
+    font-size: medium;
+}
+
+.ticket-screen .pos-search-bar .filter:hover {
+    color: #868686;
+}
+
+.ticket-screen .pos-search-bar .filter .options {
+    display: block;
+    position: absolute;
+    top: calc(100% + 5px);
+    right: 0;
+    z-index: 1;
+    box-shadow: 1px 1px 5px grey;
+    padding: 0.5em 0;
+    background: white;
+    color: #555555;
+}
+
+.ticket-screen .pos-search-bar .filter ul.options li {
+    padding: 0.2em 1.2em;
+    border-top: none;
+    display: flex;
+    justify-content: start;
+    align-items: center;
+}
+
+.ticket-screen .pos-search-bar .filter ul.options li:hover {
+    background-color: #DDD;
+}
+
+.ticket-screen .pos-search-bar .search {
+    display: flex;
+}
+
+.ticket-button {
+    display: flex;
+    align-items: center;
+    padding: 0 15px;
+    font-size: medium;
+    color: white;
+}
+
+.ticket-button.highlight {
+    background: rgb(104,69,95);
+}
+
+.ticket-button:hover {
+    background: rgb(104,69,95);
+    cursor: pointer;
+}
+
+.ticket-button .with-badge {
+    margin-right: 0.7em;
+    font-size: larger;
+}
+
+[badge] {
+    position: relative;
+}
+
+[badge]:after {
+    background: rgb(1,160,157);
+    border-radius: 10rem;
+    color: #fff;
+    content: attr(badge);
+    font-size: small;
+    min-width: 20px;
+    padding: 2px;
+    position: absolute;
+    text-align: center;
+    left: 0.6em;
+    bottom: 0.6em;
+}
+
+[badge^="-"]:after,
+[badge="0"]:after,
+[badge=""]:after {
+ display: none;
+}
+
+/* Product Screen Search Bar */
+
+.search-bar-portal {
+    display: flex;
+}
+
+.search-bar-portal .search-box {
+    font-size: medium;
+    position: relative;
+    display: flex;
+    align-items: center;
+    margin: 0 15px;
+}
+
+.search-bar-portal .search-box input {
+    font-size: medium;
+    height: 30px;
+    border: none;
+    color: #63717f;
+    padding-left: 38px;
+    padding-right: 38px;
+    border-radius: 5px;
+}
+
+.search-bar-portal .search-box input:focus {
+    outline: none;
+}
+
+.search-bar-portal .search-box .icon {
+    position: absolute;
+    left: 0;
+    margin-left: 12px;
+    z-index: 1;
+    color: #4f5b66;
+}
+
+.search-bar-portal .search-box .clear-icon {
+    position: absolute;
+    right: 0;
+    margin-right: 12px;
+    z-index: 1;
+    color: #4f5b66;
+    cursor: pointer;
 }

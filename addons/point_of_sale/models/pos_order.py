@@ -578,6 +578,8 @@ class PosOrder(models.Model):
         """
         orders = self.search([('id', 'in', server_ids),('state', '=', 'draft')])
         orders.write({'state': 'cancel'})
+        # TODO Looks like delete cascade is a better solution.
+        orders.mapped('payment_ids').sudo().unlink()
         orders.sudo().unlink()
         return orders.ids
 

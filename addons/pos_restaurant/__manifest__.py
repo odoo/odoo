@@ -27,6 +27,8 @@ This module adds several features to the Point of Sale that are specific to rest
     ],
     'qweb': [
         'static/src/xml/Resizeable.xml',
+        'static/src/xml/Chrome.xml',
+        'static/src/xml/Screens/TicketScreen.xml',
         'static/src/xml/Screens/OrderManagementScreen/OrderList.xml',
         'static/src/xml/Screens/OrderManagementScreen/OrderRow.xml',
         'static/src/xml/Screens/ProductScreen/ControlButtons/OrderlineNoteButton.xml',
@@ -44,7 +46,6 @@ This module adds several features to the Point of Sale that are specific to rest
         'static/src/xml/Screens/FloorScreen/EditBar.xml',
         'static/src/xml/Screens/FloorScreen/TableWidget.xml',
         'static/src/xml/Screens/FloorScreen/EditableTable.xml',
-        'static/src/xml/ChromeWidgets/OrderSelector.xml',
         'static/src/xml/ChromeWidgets/BackToFloorButton.xml',
         'static/src/xml/multiprint.xml',
     ],

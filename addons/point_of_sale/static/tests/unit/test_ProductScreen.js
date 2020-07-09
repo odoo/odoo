@@ -244,8 +244,10 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
         }
         Parent.env = makePosTestEnv();
         Parent.template = xml/* html */ `
-            <div>
-                <ProductsWidgetControlPanel breadcrumbs="breadcrumbs" subcategories="subcategories" />
+            <div class="pos">
+                <div class="search-bar-portal">
+                    <ProductsWidgetControlPanel breadcrumbs="breadcrumbs" subcategories="subcategories" />
+                </div>
             </div>
         `;
 
@@ -337,7 +339,7 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
             });
         };
 
-        const inputEl = parent.el.querySelector('.searchbox input');
+        const inputEl = parent.el.querySelector('.search-box input');
         await testUtils.dom.triggerEvent(inputEl, 'keyup', { key: 'A' });
         // Triggering keyup event doesn't type the key to the input
         // so we manually assign the value of the input.
@@ -358,7 +360,7 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
         assert.verifySteps(['ABCD']);
 
         // clear the search bar
-        await testUtils.dom.click(parent.el.querySelector('.search-clear.right'));
+        await testUtils.dom.click(parent.el.querySelector('.search-box .clear-icon'));
         await testUtils.nextTick();
         assert.verifySteps(['cleared']);
         assert.ok(inputEl.value === '', 'value of the input element should be empty');

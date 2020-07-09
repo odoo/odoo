@@ -3,9 +3,9 @@
 
     <t t-name="ProductsWidget" owl="1">
       <div class="products-widget">
-          <ProductsWidgetControlPanel breadcrumbs="breadcrumbs"
-                                 subcategories="subcategories" />
-
+            <t t-if="!hasNoCategories">
+                <ProductsWidgetControlPanel breadcrumbs="breadcrumbs" subcategories="subcategories" />
+            </t>
             <ProductList products="productsToDisplay" searchWord="searchWord" />
         </div>
     </t>

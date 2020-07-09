@@ -54,6 +54,9 @@ odoo.define('point_of_sale.ProductsWidget', function(require) {
                 this.selectedCategoryId,
             ].map(id => this.env.pos.db.get_category_by_id(id));
         }
+        get hasNoCategories() {
+            return this.env.pos.db.get_category_childs_ids(0).length === 0;
+        }
         _switchCategory(event) {
             this.env.pos.set('selectedCategoryId', event.detail);
         }

@@ -23,8 +23,6 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             useListener('send-payment-cancel', this._sendPaymentCancel);
             useListener('send-payment-reverse', this._sendPaymentReverse);
             useListener('send-force-done', this._sendForceDone);
-            onChangeOrder(this._onPrevOrder, this._onNewOrder);
-            useErrorHandlers();
             NumberBuffer.use({
                 // The numberBuffer listens to this event to update its state.
                 // Basically means 'update the buffer when this event is triggered'
@@ -33,6 +31,8 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                 // Note that the component listens to it.
                 triggerAtInput: 'update-selected-paymentline',
             });
+            onChangeOrder(this._onPrevOrder, this._onNewOrder);
+            useErrorHandlers();
             this.payment_interface = null;
         }
         get currentOrder() {
