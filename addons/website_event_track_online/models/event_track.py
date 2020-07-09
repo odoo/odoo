@@ -3,12 +3,27 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools.mail import is_html_empty
+from odoo.modules.module import get_resource_path
 
 
 class Track(models.Model):
     _name = "event.track"
     _inherit = ['event.track']
 
+    # speaker
+    partner_biography = fields.Html(
+        string='Biography', compute='_compute_partner_biography',
+        readonly=False, store=True)
+    image = fields.Image(
+        string="Speaker Photo", compute="_compute_speaker_image",
+        readonly=False, store=True,
+        max_width=256, max_height=256)
+    # frontend description
+    website_image = fields.Image(string="Website Image", max_width=1024, max_height=1024)
+    website_image_url = fields.Char(
+        string='Image URL', compute='_compute_website_image_url',
+        compute_sudo=True, store=False)
     # wishlist / visitors management
     event_track_visitor_ids = fields.One2many(
         'event.track.visitor', 'track_id', string="Track Visitors",
@@ -26,6 +41,33 @@ class Track(models.Model):
     wishlisted_by_default = fields.Boolean(
         string='Always Wishlisted',
         help="""If set, the talk will be starred for each attendee registered to the event. The attendee won't be able to un-star this talk.""")
+
+    # SPEAKER
+
+    @api.depends('partner_id')
+    def _compute_partner_biography(self):
+        for track in self:
+            if not track.partner_biography:
+                track.partner_biography = track.partner_id.website_description
+            elif track.partner_id and is_html_empty(track.partner_biography) and \
+                not is_html_empty(track.partner_id.website_description):
+                track.partner_biography = track.partner_id.website_description
+
+    @api.depends('partner_id')
+    def _compute_speaker_image(self):
+        for track in self:
+            if not track.image:
+                track.image = track.partner_id.image_256
+
+    # FRONTEND DESCRIPTION
+
+    @api.depends('image', 'partner_id.image_256')
+    def _compute_website_image_url(self):
+        for track in self:
+            if track.website_image:
+                track.website_image_url = self.env['website'].image_url(track, 'website_image', size=1024)
+            else:
+                track.website_image_url = '/website_event_track/static/src/img/event_track_default_%d.jpeg' % (track.id % 2)
 
     # WISHLIST / VISITOR MANAGEMENT
 
