@@ -238,7 +238,7 @@
         <field name="model">stock.quant.package</field>
         <field eval="10" name="priority"/>
         <field name="arch" type="xml">
-            <tree string="Package">
+            <tree string="Package" sample="1">
                 <field name="display_name"/>
                 <field name="location_id" options="{'no_create': True}"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -250,7 +250,7 @@
         <field name="name">stock.quant.package.kanban</field>
         <field name="model">stock.quant.package</field>
         <field name="arch" type="xml">
-            <kanban>
+            <kanban sample="1">
                 <templates>
                 <field name="name"/>
                     <t t-name="kanban-box">
@@ -274,7 +274,8 @@
             <p class="o_view_nocontent_smiling_face">
                 Create a new package
             </p><p>
-                Packages are usually created by pack operations made on transfers and can contains several different products. You can then reuse a package to move its whole content somewhere else, or to pack it into another bigger package. A package can also be unpacked, allowing the disposal of its former content as single units again.
+                Packages are usually created via transfers (during pack operation) and can contain different products.
+                Once created, the whole package can be moved at once, or products can be unpacked and moved as single units again.
             </p>
         </field>
     </record>
