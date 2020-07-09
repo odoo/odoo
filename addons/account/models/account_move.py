@@ -3175,10 +3175,99 @@ class AccountMoveLine(models.Model):
     def _compute_tax_audit(self):
         separator = '        '
 
+<<<<<<< HEAD
         for record in self:
             currency = record.company_id.currency_id
             audit_str = ''
             for tag in record.tag_ids:
+=======
+    @api.depends('move_id.line_ids', 'move_id.line_ids.tax_line_id', 'move_id.line_ids.debit', 'move_id.line_ids.credit')
+    def _compute_tax_base_amount(self):
+        for move_line in self:
+            if move_line.tax_line_id:
+                base_lines = move_line.move_id.line_ids.filtered(lambda line: move_line.tax_line_id in line.tax_ids)
+                move_line.tax_base_amount = abs(sum(base_lines.mapped('balance')))
+            else:
+                move_line.tax_base_amount = 0
+
+    @api.depends('move_id')
+    def _compute_parent_state(self):
+        for record in self.filtered('move_id'):
+            record.parent_state = record.move_id.state
+
+    @api.one
+    @api.depends('move_id.line_ids')
+    def _get_counterpart(self):
+        counterpart = set()
+        for line in self.move_id.line_ids:
+            if (line.account_id.code != self.account_id.code):
+                counterpart.add(line.account_id.code)
+        if len(counterpart) > 2:
+            counterpart = list(counterpart)[0:2] + ["..."]
+        self.counterpart = ",".join(counterpart)
+
+    name = fields.Char(string="Label")
+    quantity = fields.Float(digits=dp.get_precision('Product Unit of Measure'),
+        help="The optional quantity expressed by this line, eg: number of product sold. The quantity is not a legal requirement but is very useful for some reports.")
+    product_uom_id = fields.Many2one('product.uom', string='Unit of Measure')
+    product_id = fields.Many2one('product.product', string='Product')
+    debit = fields.Monetary(default=0.0, currency_field='company_currency_id')
+    credit = fields.Monetary(default=0.0, currency_field='company_currency_id')
+    balance = fields.Monetary(compute='_store_balance', store=True, currency_field='company_currency_id',
+        help="Technical field holding the debit - credit in order to open meaningful graph views from reports")
+    debit_cash_basis = fields.Monetary(currency_field='company_currency_id', compute='_compute_cash_basis', store=True)
+    credit_cash_basis = fields.Monetary(currency_field='company_currency_id', compute='_compute_cash_basis', store=True)
+    balance_cash_basis = fields.Monetary(compute='_compute_cash_basis', store=True, currency_field='company_currency_id',
+        help="Technical field holding the debit_cash_basis - credit_cash_basis in order to open meaningful graph views from reports")
+    amount_currency = fields.Monetary(default=0.0, help="The amount expressed in an optional other currency if it is a multi-currency entry.")
+    company_currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string="Company Currency", readonly=True,
+        help='Utility field to express amount currency', store=True)
+    currency_id = fields.Many2one('res.currency', string='Currency', default=_get_currency,
+        help="The optional other currency if it is a multi-currency entry.")
+    amount_residual = fields.Monetary(compute='_amount_residual', string='Residual Amount', store=True, currency_field='company_currency_id',
+        help="The residual amount on a journal item expressed in the company currency.")
+    amount_residual_currency = fields.Monetary(compute='_amount_residual', string='Residual Amount in Currency', store=True,
+        help="The residual amount on a journal item expressed in its currency (possibly not the company currency).")
+    tax_base_amount = fields.Monetary(string="Base Amount", compute='_compute_tax_base_amount', currency_field='company_currency_id', store=True)
+    account_id = fields.Many2one('account.account', string='Account', required=True, index=True,
+        ondelete="cascade", domain=[('deprecated', '=', False)], default=lambda self: self._context.get('account_id', False))
+    move_id = fields.Many2one('account.move', string='Journal Entry', ondelete="cascade",
+        help="The move of this entry line.", index=True, required=True, auto_join=True)
+    narration = fields.Text(related='move_id.narration', string='Narration')
+    ref = fields.Char(related='move_id.ref', string='Reference', store=True, copy=False, index=True)
+    payment_id = fields.Many2one('account.payment', string="Originator Payment", help="Payment that created this entry", copy=False)
+    statement_line_id = fields.Many2one('account.bank.statement.line', index=True, string='Bank statement line reconciled with this entry', copy=False, readonly=True)
+    statement_id = fields.Many2one('account.bank.statement', related='statement_line_id.statement_id', string='Statement', store=True,
+        help="The bank statement used for bank reconciliation", index=True, copy=False)
+    reconciled = fields.Boolean(compute='_amount_residual', store=True)
+    full_reconcile_id = fields.Many2one('account.full.reconcile', string="Matching Number", copy=False)
+    matched_debit_ids = fields.One2many('account.partial.reconcile', 'credit_move_id', String='Matched Debits',
+        help='Debit journal items that are matched with this journal item.')
+    matched_credit_ids = fields.One2many('account.partial.reconcile', 'debit_move_id', String='Matched Credits',
+        help='Credit journal items that are matched with this journal item.')
+    journal_id = fields.Many2one('account.journal', related='move_id.journal_id', string='Journal',
+        index=True, store=True, copy=False)  # related is required
+    blocked = fields.Boolean(string='No Follow-up', default=False,
+        help="You can check this box to mark this journal item as a litigation with the associated partner")
+    date_maturity = fields.Date(string='Due date', index=True, required=True, copy=False,
+        help="This field is used for payable and receivable journal entries. You can put the limit date for the payment of this line.")
+    date = fields.Date(related='move_id.date', string='Date', index=True, store=True, copy=False)  # related is required
+    analytic_line_ids = fields.One2many('account.analytic.line', 'move_id', string='Analytic lines', oldname="analytic_lines")
+    tax_ids = fields.Many2many('account.tax', string='Taxes', domain=['|', ('active', '=', False), ('active', '=', True)])
+    tax_line_id = fields.Many2one('account.tax', string='Originator tax', ondelete='restrict')
+    analytic_account_id = fields.Many2one('account.analytic.account', string='Analytic Account')
+    analytic_tag_ids = fields.Many2many('account.analytic.tag', string='Analytic tags')
+    company_id = fields.Many2one('res.company', related='account_id.company_id', string='Company', store=True, readonly=True)
+    counterpart = fields.Char("Counterpart", compute='_get_counterpart', help="Compute the counter part accounts of this journal item for this journal entry. This can be needed in reports.")
+
+    # TODO: put the invoice link and partner_id on the account_move
+    invoice_id = fields.Many2one('account.invoice', oldname="invoice", copy=False)
+    partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
+    user_type_id = fields.Many2one('account.account.type', related='account_id.user_type_id', index=True, store=True, oldname="user_type", readonly=True)
+    tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,
+        help="Technical field used to mark a tax line as exigible in the vat report or not (only exigible journal items are displayed). By default all new journal items are directly exigible, but with the feature cash_basis on taxes, some will become exigible only when the payment is recorded.")
+    parent_state = fields.Char(compute="_compute_parent_state", help="State of the parent account.move")
+>>>>>>> 08bc58bc88b... temp
 
                 caba_origin_inv_type = record.move_id.type
                 caba_origin_inv_journal_type = record.journal_id.type
