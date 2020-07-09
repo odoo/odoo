@@ -1059,10 +1059,6 @@ class OpenERPSession(sessions.Session):
         """
         lang = context.get('lang')
 
-        # inane OpenERP locale
-        if lang == 'ar_AR':
-            lang = 'ar'
-
         # lang to lang_REGION (datejs only handles lang_REGION, no bare langs)
         if lang in babel.core.LOCALE_ALIASES:
             lang = babel.core.LOCALE_ALIASES[lang]
