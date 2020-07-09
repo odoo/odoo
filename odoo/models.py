@@ -55,7 +55,7 @@ from .tools import frozendict, lazy_classproperty, lazy_property, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, pycompat, groupby
 from .tools.config import config
 from .tools.func import frame_codeinfo
-from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
+from .tools.misc import CountingStream, clean_context, format_date, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT
 from .tools.safe_eval import safe_eval
 from .tools.translate import _
 from .tools import date_utils
@@ -766,6 +766,10 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     # in order to reproduce the former behavior
                     if not isinstance(value, BaseModel):
                         current[i] = field.convert_to_export(value, record)
+
+                        # transform dates to their string representation - opw 2250447
+                        if field.type == 'date':
+                            current[i] = format_date(self.env, current[i])
                     else:
                         primary_done.append(name)
 
