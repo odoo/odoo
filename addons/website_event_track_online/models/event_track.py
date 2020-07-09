@@ -3,12 +3,21 @@
 
 from odoo import api, fields, models
 from odoo.osv import expression
+from odoo.tools.mail import is_html_empty
+from odoo.modules.module import get_resource_path
 
 
 class Track(models.Model):
     _name = "event.track"
     _inherit = ['event.track']
 
+    # speaker
+    partner_biography = fields.Html(
+        string='Biography', compute='_compute_partner_biography',
+        readonly=False, store=True)
+    website_image_url = fields.Char(
+        string='Image URL', max_width=256, max_height=256,
+        compute='_compute_website_image_url', compute_sudo=True, store=False)
     # wishlist / visitors maanagement
     event_track_visitor_ids = fields.One2many(
         'event.track.visitor', 'track_id', string="Track Visitors",
@@ -34,6 +43,26 @@ class Track(models.Model):
     wishlisted_by_default = fields.Boolean(
         string='Always Wishlisted',
         help="""If set, the talk will be starred for each attendee registered to the event. The attendee won't be able to un-star this talk.""")
+
+    # SPEAKER
+
+    @api.depends('partner_id')
+    def _compute_partner_biography(self):
+        for track in self:
+            if track.partner_id and is_html_empty(track.partner_biography):
+                track.partner_biography = track.partner_id.website_description
+
+    @api.depends('image', 'partner_id.image_256')
+    def _compute_website_image_url(self):
+        for track in self:
+            if track.image:
+                track.website_image_url = self.env['website'].image_url(track, 'image', size=256)
+            elif track.partner_id.image_256:
+                track.website_image_url = self.env['website'].image_url(track.partner_id, 'image_256', size=256)
+            else:
+                track.website_image_url = get_resource_path('website_event_track', 'static/src/img', 'event_track_default_%d.png' % (track.id % 2))
+
+    # WISHLIST / VISITOR MANAGEMENT
 
     @api.depends('event_track_visitor_ids.visitor_id', 'event_track_visitor_ids.partner_id')
     @api.depends_context('uid')
