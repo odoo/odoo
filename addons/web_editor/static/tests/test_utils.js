@@ -66,7 +66,7 @@ const SNIPPETS_TEMPLATE = `
         <div data-selector=".test_option_all">
             <we-colorpicker string="Background Color" data-select-style="true" data-css-property="background-color" data-color-prefix="bg-"/>
         </div>
-        <div data-js="background" data-selector=".test_option_all">
+        <div data-js="BackgroundImage" data-selector=".test_option_all">
             <we-button data-choose-image="true" data-no-preview="true">
                 <i class="fa fa-picture-o"/> Background Image
             </we-button>

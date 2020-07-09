@@ -130,6 +130,8 @@ function createPropertyProxy(obj, propertyName, value) {
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
+const NULL_ID = '__NULL__';
+
 /**
  * Base class for components to be used in snippet options widgets to retrieve
  * user values.
@@ -304,7 +306,7 @@ const UserValueWidget = Widget.extend({
      * @returns {boolean}
      */
     isActive: function () {
-        return !!this._value;
+        return this._value && this._value !== NULL_ID;
     },
     /**
      * Indicates if the widget can contain sub user value widgets or not.
@@ -719,7 +721,7 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
      */
     setValue(value, methodName) {
         this._userValueWidgets.forEach(widget => {
-            widget.setValue('__NULL__', methodName);
+            widget.setValue(NULL_ID, methodName);
         });
         for (const widget of [...this._userValueWidgets].reverse()) {
             widget.setValue(value, methodName);
@@ -1304,10 +1306,9 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
 });
 
 const ImagepickerUserValueWidget = UserValueWidget.extend({
-    tagName: 'we-imagepicker',
+    tagName: 'we-button',
     events: {
-        'click .o_we_edit_image': '_onEditImage',
-        'click .o_we_remove_image': '_onRemoveImage',
+        'click': '_onEditImage',
     },
 
     /**
@@ -1315,18 +1316,13 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
      */
     start: async function () {
         await this._super(...arguments);
+
         const allowedSelector = this.el.dataset.allowVideos;
         this.allowVideos = allowedSelector ? this.$target.is(allowedSelector) : false;
 
-        this.editImageButton = document.createElement('we-button');
-        this.editImageButton.classList.add('o_we_edit_image', 'fa', 'fa-fw', 'fa-edit');
-
-        this.removeImageButton = document.createElement('we-button');
-        this.removeImageButton.classList.add('o_we_remove_image', 'fa', 'fa-fw', 'fa-times');
-        this.removeImageButton.title = _t("Remove");
-
-        this.containerEl.appendChild(this.editImageButton);
-        this.containerEl.appendChild(this.removeImageButton);
+        const iconEl = document.createElement('i');
+        iconEl.classList.add('fa', 'fa-fw', 'fa-camera');
+        this.containerEl.appendChild(iconEl);
     },
     /**
      * @override
@@ -1342,9 +1338,9 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    _updateUI: async function () {
+    async _updateUI() {
         await this._super(...arguments);
-        this.removeImageButton.classList.toggle('d-none', !this.isActive());
+        this.el.classList.toggle('active', this.isActive());
     },
 
     //--------------------------------------------------------------------------
@@ -1370,8 +1366,8 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
             noDocuments: true,
             noVideos: !this.allowVideos,
             isForBgVideo: true,
-            res_model: $editable.data('oe-model'),
-            res_id: $editable.data('oe-id'),
+            'res_model': $editable.data('oe-model'),
+            'res_id': $editable.data('oe-id'),
         }, dummyEl).open();
         mediaDialog.on('save', this, data => {
             if (data.bgVideoSrc) {
@@ -1386,16 +1382,6 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
             }
             this._onUserValueChange();
         });
-    },
-    /**
-     * Called when the remove background button is clicked.
-     *
-     * @private
-     */
-    _onRemoveImage: function (ev) {
-        this._value = '';
-        this.isVideo = false;
-        this._onUserValueChange(ev);
     },
 });
 
@@ -2543,44 +2529,6 @@ const registry = {};
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
-/**
- * Marks color levels of any element that may get or has a color classes. This
- * is done for the specific main colorpicker option so that those are marked on
- * snippet drop (so that base snippet definition do not need to care about that)
- * and on first focus (for compatibility).
- */
-registry.MainColorpicker = SnippetOptionWidget.extend({
-    /**
-     * @override
-     */
-    start: function () {
-        this._markColorLevel();
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    onBuilt: function () {
-        this._markColorLevel();
-    },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
-    /**
-     * Adds a specific class indicating the element is colored so that nested
-     * color classes work (we support one-level). Removing it is not useful,
-     * technically the class can be added on anything that *may* receive a color
-     * class: this does not come with any CSS rule.
-     *
-     * @private
-     */
-    _markColorLevel: function () {
-        this.$target.addClass('o_colored_level');
-    },
-});
-
 registry.sizing = SnippetOptionWidget.extend({
     /**
      * @override
@@ -2975,7 +2923,9 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
         }
         const dataURL = await applyModifications(img);
         const weight = dataURL.split(',')[1].length / 4 * 3;
-        this.$el.find('.o_we_image_weight').text(`${(weight / 1024).toFixed(1)}kb`);
+        const $weight = this.$el.find('.o_we_image_weight');
+        $weight.find('> span').text(`${(weight / 1024).toFixed(1)}kb`);
+        $weight.removeClass('d-none');
         img.classList.add('o_modified_image_to_save');
         return loadImage(dataURL, img);
     },
@@ -3220,7 +3170,7 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
 /**
  * Handles the edition of snippet's background image.
  */
-registry.background = SnippetOptionWidget.extend({
+registry.BackgroundImage = SnippetOptionWidget.extend({
     /**
      * @override
      */
@@ -3649,6 +3599,44 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
 });
 
 /**
+ * Marks color levels of any element that may get or has a color classes. This
+ * is done for the specific main colorpicker option so that those are marked on
+ * snippet drop (so that base snippet definition do not need to care about that)
+ * and on first focus (for compatibility).
+ */
+registry.ColoredLevelBackground = registry.BackgroundImage.extend({
+    /**
+     * @override
+     */
+    start: function () {
+        this._markColorLevel();
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    onBuilt: function () {
+        this._markColorLevel();
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Adds a specific class indicating the element is colored so that nested
+     * color classes work (we support one-level). Removing it is not useful,
+     * technically the class can be added on anything that *may* receive a color
+     * class: this does not come with any CSS rule.
+     *
+     * @private
+     */
+    _markColorLevel: function () {
+        this.$target.addClass('o_colored_level');
+    },
+});
+
+/**
  * Allows to replace a text value with the name of a database record.
  * @todo replace this mechanism with real backend m2o field ?
  */
@@ -3889,6 +3877,7 @@ return {
     SnippetOptionWidget: SnippetOptionWidget,
     snippetOptionRegistry: registry,
 
+    NULL_ID: NULL_ID,
     UserValueWidget: UserValueWidget,
     userValueWidgetsRegistry: userValueWidgetsRegistry,
 

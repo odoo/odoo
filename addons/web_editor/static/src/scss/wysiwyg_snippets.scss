@@ -841,6 +841,10 @@ body.editor_enable.editor_has_snippets {
             we-select.o_we_user_value_widget {
                 position: static;
             }
+
+            &.o_we_full_row > div {
+                flex: 1 1 auto;
+            }
         }
 
         %o-we-inline {
@@ -869,6 +873,17 @@ body.editor_enable.editor_has_snippets {
                 > div {
                     margin-top: 0;
                 }
+            }
+        }
+
+        .o_we_image_weight {
+            margin-top: $o-we-sidebar-content-field-spacing;
+            text-align: right;
+            color: $o-we-color-success;
+            line-height: $o-we-sidebar-content-field-height;
+
+            > .fa {
+                margin-right: $o-we-sidebar-content-field-label-spacing;
             }
         }
     }

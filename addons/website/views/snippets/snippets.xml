@@ -119,7 +119,7 @@
     </xpath>
 </template>
 
-<template id="website.snippet_options_border">
+<template id="snippet_options_border_widgets">
     <we-row string="Border">
         <we-colorpicker data-dependencies="border_width_opt"
                         data-select-style="true" data-css-property="border-color" data-color-prefix="border-"/>
@@ -139,7 +139,7 @@
               data-unit="px" data-extra-class="rounded"/>
 </template>
 
-<template id="website.snippet_options_shadow">
+<template id="snippet_options_shadow_widgets">
     <we-select string="Shadow" data-no-preview="true" data-shadow-class="shadow">
         <we-button data-set-shadow="">None</we-button>
         <we-button data-set-shadow="outset" data-name="shadow_active_opt">Outset</we-button>
@@ -166,12 +166,12 @@
     <div data-js="Box"
          data-selector=".s_three_columns .row > div, .s_comparisons .row > div"
          data-target=".card">
-        <we-colorpicker string="Background Color"
+        <we-colorpicker string="Colors"
             data-select-style="true"
             data-css-property="background-color"
             data-color-prefix="bg-"/>
-        <t t-call="website.snippet_options_border"/>
-        <t t-call="website.snippet_options_shadow"/>
+        <t t-call="website.snippet_options_border_widgets"/>
+        <t t-call="website.snippet_options_shadow_widgets"/>
     </div>
 
     <!-- COLOR | .s_cards -->
@@ -209,16 +209,18 @@
     </div>
 
     <!-- Carousel | .s_carousel | .s_quotes_carousel -->
+    <!-- Dedicated colorpicker so that there is not 3 level of
+         o_colored_level. Use inline-style color for the same reason. -->
+    <t t-call="web_editor.snippet_options_background_options">
+        <t t-set="selector" t-value="'section'"/>
+        <t t-set="target" t-value="'> .carousel'"/>
+        <t t-set="with_colors" t-value="True"/>
+        <t t-set="with_images" t-value="True"/>
+        <t t-set="css_compatible" t-value="True"/>
+    </t>
     <div data-js="Carousel"
-        data-selector="section"
-        data-target="> .carousel">
-         <!-- Dedicated colorpicker so that there is not 3 level of
-              o_colored_level. Use inline-style color for the same reason. -->
-        <we-colorpicker string="Background Color"
-            data-select-style="true"
-            data-css-property="background-color"
-            data-color-prefix="bg-"
-            data-css-compatible="true"/>
+         data-selector="section"
+         data-target="> .carousel">
         <we-select string="Transition">
             <we-button data-select-class="slide">Slide</we-button>
             <we-button data-select-class="carousel-fade slide">Fade</we-button>
@@ -278,37 +280,39 @@
         <we-button class="fa fa-fw fa-angle-right" data-move-snippet="next" data-no-preview="true" data-name="move_right_opt"/>
     </div>
 
-    <!-- Background Image -->
-    <t t-set="bg_selector" t-value="'section, .parallax, .carousel-item'"/>
-    <t t-set="bg_exclude" t-value="'.s_hr, .s_image_gallery, .o_gallery .carousel-item'"/>
-    <div data-js="background" string="Background"
-        t-att-data-selector="bg_selector"
-        t-att-data-exclude="bg_exclude">
-        <we-imagepicker string="Background" data-background="" data-allow-videos=":not(.parallax, .s_parallax_bg)" data-name="bg_img_opt"/>
-    </div>
-    <div data-js="BackgroundOptimize" string="Background"
-        t-att-data-selector="bg_selector"
-        t-att-data-exclude="bg_exclude">
-        <t t-call="web_editor.image_optimization_controls"/>
-    </div>
+    <!-- Background -->
+    <t t-set="only_bg_color_selector" t-value="'section .row > div'"/>
+    <t t-set="only_bg_color_exclude" t-value="'.s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .s_masonry_block .row > div, .s_color_blocks_2 .row > div, .o_mega_menu .row > div, .o_gallery .row > div'"/>
 
-    <!-- Background Image Size/Position -->
-    <div data-js="BackgroundPosition"
-        data-selector="section, .parallax, .carousel-item"
-        data-exclude=".o_gallery .carousel-item">
-        <we-row>
-            <we-select data-no-preview="true">
-                <we-button data-background-type="cover">Cover</we-button>
-                <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
-            </we-select>
-            <we-button class="fa fa-fw fa-crosshairs" title="Background Position"
-                       data-background-position-overlay="true" data-no-preview="true"/>
-        </we-row>
-        <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
-            <we-input string="Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
-            <we-input string="Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
-        </we-multi>
-    </div>
+    <t t-set="base_only_bg_image_selector" t-value="'.parallax, .s_tabs .oe_structure > *, footer .oe_structure > *'"/>
+    <t t-set="only_bg_image_selector" t-value="base_only_bg_image_selector"/>
+    <t t-set="only_bg_image_exclude" t-value="''"/>
+
+    <t t-set="both_bg_color_image_selector" t-value="'section, .carousel-item, .s_masonry_block .row > div, .s_color_blocks_2 .row > div'"/>
+    <t t-set="both_bg_color_image_exclude" t-value="base_only_bg_image_selector + ', .s_carousel_wrapper, .s_color_blocks_2, .o_gallery .carousel-item'"/>
+
+    <t t-call="web_editor.snippet_options_background_options">
+        <t t-set="selector" t-value="both_bg_color_image_selector"/>
+        <t t-set="exclude" t-value="both_bg_color_image_exclude"/>
+        <t t-set="with_colors" t-value="True"/>
+        <t t-set="with_images" t-value="True"/>
+        <t t-set="with_color_combinations" t-value="True"/>
+    </t>
+
+    <t t-call="web_editor.snippet_options_background_options">
+        <t t-set="selector" t-value="only_bg_color_selector"/>
+        <t t-set="exclude" t-value="only_bg_color_exclude"/>
+        <t t-set="with_colors" t-value="True"/>
+        <t t-set="with_images" t-value="False"/>
+        <t t-set="with_color_combinations" t-value="True"/>
+    </t>
+
+    <t t-call="web_editor.snippet_options_background_options">
+        <t t-set="selector" t-value="only_bg_image_selector"/>
+        <t t-set="exclude" t-value="only_bg_image_exclude"/>
+        <t t-set="with_colors" t-value="False"/>
+        <t t-set="with_images" t-value="True"/>
+    </t>
 
     <!-- Parallax -->
     <div data-js="parallax" data-selector=".parallax">
@@ -322,24 +326,7 @@
             <we-button data-select-data-attribute="1.6">Fast</we-button>
             <we-button data-select-data-attribute="2">Very Fast</we-button>
         </we-select>
-    </div>
 
-    <!-- Background Color -->
-    <div id="so_main_colorpicker"
-         data-js="MainColorpicker"
-         data-selector="section, .carousel-item, section .row > div, .o_record_cover_container"
-         data-exclude=".parallax, .o_gallery .carousel-item, .s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div, .s_carousel_wrapper, .s_tabs .oe_structure > *, footer .oe_structure > *, .o_mega_menu .row > div">
-        <we-colorpicker string="Background Color"
-            data-name="bg_color_opt"
-            data-select-style="true"
-            data-css-property="background-color"
-            data-color-prefix="bg-"
-            data-with-combinations="true"
-            data-dependencies="!cover_background_opt"/>
-    </div>
-
-    <!-- FILTER | .s_parallax -->
-    <div data-selector=".parallax">
         <we-colorpicker string="Filter"
             data-select-style="true"
             data-css-property="background-color"
@@ -351,8 +338,8 @@
     <div data-js="Box"
          data-selector="section .row > div"
          data-exclude=".s_col_no_bgcolor, .s_col_no_bgcolor.row > div, .o_gallery .row > div">
-        <t t-call="website.snippet_options_border"/>
-        <t t-call="website.snippet_options_shadow"/>
+        <t t-call="website.snippet_options_border_widgets"/>
+        <t t-call="website.snippet_options_shadow_widgets"/>
     </div>
 
     <div data-js="sizing_y"
@@ -606,7 +593,11 @@
          data-drop-near=".o_mega_menu .nav-link"/>
 
     <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
-        <we-imagepicker string="Image" data-background="" data-name="cover_background_opt"/>
+        <t t-call="web_editor.snippet_options_background_selection_widgets">
+            <t t-set="with_colors" t-value="True"/>
+            <t t-set="with_images" t-value="True"/>
+            <t t-set="with_color_combinations" t-value="True"/>
+        </t>
         <we-select string="Size" data-cover-opt-name="size">
             <we-button data-select-class="o_record_has_cover o_full_screen_height">Full Screen</we-button>
             <we-button class="o_record_cover_opt_size_default" data-select-class="o_record_has_cover o_half_screen_height">Half Screen</we-button>
@@ -751,14 +742,22 @@
             <we-button data-customize-website-views="" data-name="layout_full_opt">Full</we-button>
             <we-button data-customize-website-views="website.option_layout_boxed_variables" id="option_layout_boxed">Boxed</we-button>
         </we-select>
-        <we-row string="Background">
-            <we-colorpicker data-name="body_bg_color_opt" data-dependencies="!layout_full_opt" data-customize-website-color="" data-color="body"/>
-            <we-select data-name="body_bg_type_opt">
-                <we-button data-name="no_background_opt" data-customize-website-views="">None</we-button>
-                <we-button data-customize-website-views="website.option_custom_body_image">Image</we-button>
-                <we-button data-customize-website-views="website.option_custom_body_image, website.option_custom_body_pattern">Pattern</we-button>
-            </we-select>
-            <we-imagepicker data-name="body_bg_image_opt" data-dependencies="!no_background_opt" data-customize-body-bg=""/>
+        <we-row string="Background" data-no-preview="true">
+            <we-colorpicker data-dependencies="!layout_full_opt"
+                            data-customize-website-color=""
+                            data-color="body"/>
+            <we-button-group>
+                <we-button title="Image"
+                           data-customize-website-views="website.option_custom_body_image"
+                           data-enable-imagepicker="body_bg_image_opt"><i class="fa fa-fw fa-camera"/></we-button>
+                <we-button title="Pattern"
+                           data-customize-website-views="website.option_custom_body_image, website.option_custom_body_pattern"
+                           data-enable-imagepicker="body_bg_image_opt"><i class="fa fa-fw fa-th"/></we-button>
+                <we-button title="None"
+                           data-customize-website-views=""><i class="fa fa-fw fa-ban"/></we-button>
+            </we-button-group>
+            <!-- Hidden imagepicker enabled by above button-group -->
+            <we-imagepicker data-name="body_bg_image_opt" data-customize-body-bg=""/>
         </we-row>
         <we-checkbox string="Show Header" data-customize-website-views="website.option_layout_hide_header|" data-reload="/"/>
         <we-row string="Code Injection" title="Enter code that will be added into every page of your site">

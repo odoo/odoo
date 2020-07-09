@@ -11,8 +11,8 @@
 </template>
 
 <template id="s_text_highlight_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@id='so_main_colorpicker']" position="attributes">
-        <attribute name="data-selector" add=".s_text_highlight"/>
+    <xpath expr="//t[@t-set='only_bg_color_selector']" position="after">
+        <t t-set="only_bg_color_selector" t-value="only_bg_color_selector + ', .s_text_highlight'"/>
     </xpath>
     <xpath expr="//div[@id='so_width']" position="attributes">
         <attribute name="data-selector" add=".s_text_highlight"/>
@@ -20,7 +20,7 @@
     <xpath expr="//div[@id='so_text_align']" position="attributes">
         <attribute name="data-selector" add=".s_text_highlight"/>
     </xpath>
-    <xpath expr="//div[@data-js='background']" position="before">
+    <xpath expr="//div[@data-js='parallax']" position="before">
         <div data-selector=".s_text_highlight">
             <we-button-group string="Position">
                 <we-button title="Left" data-select-class=""><i class="fa fa-fw fa-align-left"/></we-button>
