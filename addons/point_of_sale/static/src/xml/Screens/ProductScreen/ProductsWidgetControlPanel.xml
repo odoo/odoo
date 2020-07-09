@@ -3,7 +3,10 @@
 
     <t t-name="ProductsWidgetControlPanel" owl="1">
         <div class="products-widget-control">
-            <div class="rightpane-header">
+            <div class="rightpane-header" t-att-class="{
+                'green-border-bottom': !env.pos.config.iface_display_categ_images,
+                'grey-border-bottom': env.pos.config.iface_display_categ_images,
+            }">
                 <!-- Breadcrumbs -->
                 <div class="breadcrumbs">
                     <HomeCategoryBreadcrumb subcategories="props.subcategories" currentCat="props.breadcrumbs[props.breadcrumbs.length - 1]"/>
@@ -13,36 +16,33 @@
                         </t>
                     </t>
                 </div>
-                <!-- Searchbox -->
-                <div class="searchbox">
-                    <input t-ref="search-word-input" placeholder="Search Products"
-                           t-on-keyup="updateSearch" />
-                    <span class="search-clear left">
-                        <i class="fa fa-search" />
-                    </span>
-                    <span class="search-clear right" t-on-click="clearSearch">
-                        <i class="fa fa-remove" />
-                    </span>
-                </div>
+                <!-- Subcategories -->
+                <t t-if="props.subcategories.length > 0 and !env.pos.config.iface_display_categ_images and !env.isMobile">
+                    <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
+                        <CategorySimpleButton category="category" />
+                    </t>
+                </t>
             </div>
-            <!-- Subcategories -->
-            <t t-if="props.subcategories.length > 0 &amp;&amp; !env.isMobile">
+            <t t-if="props.subcategories.length > 0 and env.pos.config.iface_display_categ_images and !env.isMobile">
                 <div class="categories">
                     <div class="category-list-scroller">
-                        <div class="category-list"
-                             t-att-class="{simple: !env.pos.config.iface_display_categ_images}">
+                        <div class="category-list">
                             <t t-foreach="props.subcategories" t-as="category" t-key="category.id">
-                                <t t-if="env.pos.config.iface_display_categ_images">
-                                    <CategoryButton category="category" />
-                                </t>
-                                <t t-else="">
-                                    <CategorySimpleButton category="category" />
-                                </t>
+                                <CategoryButton category="category" />
                             </t>
                         </div>
                     </div>
                 </div>
             </t>
+            <Portal target="'.pos .search-bar-portal'">
+                <div class="search-box">
+                    <span class="icon"><i class="fa fa-search"></i></span>
+                    <span t-on-click="clearSearch" class="clear-icon">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </span>
+                    <input t-ref="search-word-input" type="text" placeholder="Search Products..." t-on-keyup="updateSearch" />
+                </div>
+            </Portal>
         </div>
     </t>
 

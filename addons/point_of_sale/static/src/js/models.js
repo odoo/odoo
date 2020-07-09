@@ -717,11 +717,11 @@ exports.PosModel = Backbone.Model.extend({
         var order_list = this.get_order_list();
         if( (reason === 'abandon' || removed_order.temporary) && order_list.length > 0){
             // when we intentionally remove an unfinished order, and there is another existing one
-            this.set_order(order_list[index] || order_list[order_list.length -1]);
+            this.set_order(order_list[index] || order_list[order_list.length - 1], { silent: true });
         }else{
             // when the order was automatically removed after completion,
             // or when we intentionally delete the only concurrent order
-            this.add_new_order();
+            this.add_new_order({ silent: true });
         }
     },
 
@@ -739,10 +739,10 @@ exports.PosModel = Backbone.Model.extend({
         this.db.set_cashier(this.get('cashier'));
     },
     // creates a new empty order and sets it as the current order
-    add_new_order: function(){
+    add_new_order: function(options){
         var order = new exports.Order({},{pos:this});
         this.get('orders').add(order);
-        this.set('selectedOrder', order);
+        this.set('selectedOrder', order, options);
         return order;
     },
     /**
@@ -810,8 +810,8 @@ exports.PosModel = Backbone.Model.extend({
     },
 
     // change the current order
-    set_order: function(order){
-        this.set({ selectedOrder: order });
+    set_order: function(order, options){
+        this.set({ selectedOrder: order }, options);
     },
 
     // return the list of unpaid orders
@@ -2469,6 +2469,12 @@ exports.Paymentline = Backbone.Model.extend({
             ticket: this.ticket,
         };
     },
+    // If payment status is a non-empty string, then it is an electronic payment.
+    // TODO: There has to be a less confusing way to distinguish simple payments
+    // from electronic transactions. Perhaps use a flag?
+    is_electronic: function() {
+        return Boolean(this.get_payment_status());
+    },
 });
 
 var PaymentlineCollection = Backbone.Collection.extend({
@@ -3280,23 +3286,27 @@ exports.Order = Backbone.Model.extend({
     // the order also stores the screen status, as the PoS supports
     // different active screens per order. This method is used to
     // store the screen status.
-    set_screen_data: function(key,value){
-        if(arguments.length === 2){
-            this.screen_data[key] = value;
-        }else if(arguments.length === 1){
-            for(var key in arguments[0]){
-                this.screen_data[key] = arguments[0][key];
-            }
-        }
+    set_screen_data: function(value){
+        this.screen_data['value'] = value;
     },
     //see set_screen_data
-    get_screen_data: function(key){
-        return this.screen_data[key];
+    get_screen_data: function(){
+        const screen = this.screen_data['value'];
+        // If no screen data is saved
+        //   no payment line -> product screen
+        //   with payment line -> payment screen
+        if (!screen) {
+            if (this.get_paymentlines().length > 0) return { name: 'PaymentScreen' };
+            return { name: 'ProductScreen' };
+        }
+        if (screen.name !== 'ReceiptScreen' && this.get_paymentlines().length > 0) {
+            return { name: 'PaymentScreen' };
+        }
+        return screen;
     },
     wait_for_push_order: function () {
         return this.is_to_email();
     },
-
     /**
      * @returns {Object} object to use as props for instantiating OrderReceipt.
      */
