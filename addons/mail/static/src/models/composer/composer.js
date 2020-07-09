@@ -79,6 +79,24 @@ function factory(dependencies) {
         }
 
         /**
+         * @private
+         * @returns {mail.partner[]}
+         */
+        _computeRecipients() {
+            const mentionned = this.mentionedPartners.map(partner => partner.id);
+            let suggestedRecipientInfoList = [];
+            if (this.thread && this.thread.suggestedRecipientInfoList) {
+                suggestedRecipientInfoList = this.thread.suggestedRecipientInfoList.filter(partner => partner.checked && partner.partner).map(partner => partner.partner);
+            }
+            /**
+             * Merge mentionned and suggestedRecipientInfoList. Use a Set to avoid
+             * duplication entry
+             */
+            const recipients = [...new Set([...mentionned, ...suggestedRecipientInfoList])];
+            return [['replace', recipients]];
+        }
+
+        /**
          * Open the full composer modal.
          */
         async openFullComposer() {
@@ -89,8 +107,7 @@ function factory(dependencies) {
                 default_body: mailUtils.escapeAndCompactTextContent(this.textInputContent),
                 default_is_log: this.isLog,
                 default_model: this.thread.model,
-                /* FIXME would need to use suggested_partners here task-2280157 */
-                // default_partner_ids: partnerIds,
+                default_partner_ids: this.recipients.map(partner => partner.id),
                 default_res_id: this.thread.id,
                 mail_post_autofollow: true,
             };
@@ -135,8 +152,8 @@ function factory(dependencies) {
             let postData = {
                 attachment_ids: this.attachments.map(attachment => attachment.id),
                 body,
-                partner_ids: this.mentionedPartners.map(partner => partner.id),
                 message_type: 'comment',
+                partner_ids: this.recipients.map(partner => partner.id),
             };
             if (this.subjectContent) {
                 postData.subject = this.subjectContent;
@@ -612,6 +629,20 @@ function factory(dependencies) {
         mentionedPartners: many2many('mail.partner', {
             compute: '_computeMentionedPartners',
             dependencies: ['textInputContent'],
+        }),
+        threadSuggestedRecipients: many2many('mail.suggested_recipient_info', {
+            related: 'thread.suggestedRecipientInfoList'
+        }),
+        /**
+         * This is the merge between mentionned partners and suggested
+         * recipients. It hold the people who will recive a notification.
+         */
+        recipients: many2many('mail.partner', {
+            compute: '_computeRecipients',
+            dependencies: [
+                'thread',
+                'threadSuggestedRecipients',
+            ]
         }),
         /**
          * Composer subject input content.

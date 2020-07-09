@@ -74,6 +74,8 @@
         'static/src/components/chatter_container/chatter_container.xml',
         'static/src/components/chatter_topbar/chatter_topbar.xml',
         'static/src/components/composer/composer.xml',
+        'static/src/components/composer_suggested_recipient_info/composer_suggested_recipient_info.xml',
+        'static/src/components/composer_suggested_recipients_list/composer_suggested_recipients_list.xml',
         'static/src/components/composer_text_input/composer_text_input.xml',
         'static/src/components/dialog/dialog.xml',
         'static/src/components/dialog_manager/dialog_manager.xml',

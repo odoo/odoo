@@ -115,6 +115,9 @@ MockServer.include({
             const follower_id = args.follower_id;
             return this._mockRouteMailReadSubscriptionData(follower_id);
         }
+        if (route === '/mail/get_suggested_recipients') {
+            return this._mockGetSuggestedRecipient(args);
+        }
         // mail.activity methods
         if (args.model === 'mail.activity' && args.method === 'activity_format') {
             let res = this._mockRead(args.model, args.args, args.kwargs);
@@ -1523,6 +1526,19 @@ MockServer.include({
             "active": partner.active,
         };
     },
+    _mockGetSuggestedRecipient(args) {
+        let partners = this._getRecords(
+            args.model,
+            [['id', 'in', args.res_ids]],
+        );
+
+        // Convert the partner to the ugly format
+        partners = partners.map(partner => {
+            return [partner.id, partner.display_name, partner.email];
+        });
+
+        return partners;
+    }
 });
 
 });

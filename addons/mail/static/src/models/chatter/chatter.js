@@ -85,6 +85,7 @@ function factory(dependencies) {
         }
 
         showSendMessage() {
+            this.thread.fetchUpdateSuggestedRecipients();
             this.update({ isComposerVisible: true });
             this.thread.composer.update({ isLog: false });
             this.focus();

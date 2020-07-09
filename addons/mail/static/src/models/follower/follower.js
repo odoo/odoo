@@ -88,6 +88,8 @@ function factory(dependencies) {
                 method: 'message_unsubscribe',
                 args
             }));
+
+            this.followedThread.fetchUpdateSuggestedRecipients();
             this.delete();
         }
 

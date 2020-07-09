@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates xml:space="preserve">
+    <t t-name="mail.ComposerSuggestedRecipient" owl="1">
+        <div class="o_ComposerSuggestedRecipient" t-attf-title="Add as recipient and follower (reason: {{suggestedRecipient.reason}})">
+            <div class="custom-control custom-checkbox">
+                <input t-ref="input" t-on-change="_onChangeSuggestedRecipient" type="checkbox" class="custom-control-input" t-attf-id="o_ComposerSuggestedRecipient_{{ id }}_checkbox" t-att-checked="suggestedRecipient.checked ? 'checked' : undefined" />
+                <label t-attf-for="o_ComposerSuggestedRecipient_{{ id }}_checkbox" class="custom-control-label">
+                    <t t-if="suggestedRecipient.partner">
+                        <t t-esc="partner.name"/>
+                        <t t-if="partner.email">
+                            (<t t-esc="partner.email"/>)
+                        </t>
+                    </t>
+                    <t t-elif="suggestedRecipient.name">
+                        <t t-esc="suggestedRecipient.name"></t>
+                    </t>
+                </label>
+            </div>
+            <t t-if="!suggestedRecipient.partner">
+                <ComponentAdapter
+                    Component="formViewDialog"
+                    params="{
+                               res_model: 'res.partner',
+                               res_id: false,
+                               context: {
+                                   active_model: 'mail.compose.message',
+                                   active_id: thread.id,
+                                   force_email: true,
+                                   ref: 'compound_context',
+                                   default_name: suggestedRecipient.name,
+                                   default_email: suggestedRecipient.email,
+                               },
+                               title: PLEASE_COMPLETE_CUSTOMER_INFORMATION,
+                               disable_multiple_selection: true
+                            }"
+                    t-ref="suggestedPartnerDialog_{{ suggestedRecipient.localId }}"
+                />
+            </t>
+        </div>
+    </t>
+</templates>

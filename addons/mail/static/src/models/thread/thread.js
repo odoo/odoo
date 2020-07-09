@@ -427,6 +427,27 @@ function factory(dependencies) {
         }
 
         /**
+         * Fetch suggested recipients from the backend
+         */
+        async fetchUpdateSuggestedRecipients() {
+            const { [this.id]: data } = await this.async(() => this.env.services.rpc({
+                route: '/mail/get_suggested_recipients',
+                params: {
+                    model: this.model,
+                    res_ids: [this.id],
+                },
+            }));
+            if (!data) {
+                return;
+            }
+            this.update({
+                suggestedRecipientInfoList: [['insert-and-replace', data.map(data => {
+                    return this.env.models['mail.suggested_recipient_info'].convertData(data);
+                })]],
+            });
+        }
+
+        /**
          * Add current user to provided thread's followers.
          */
         async follow() {
@@ -612,6 +633,7 @@ function factory(dependencies) {
                     followers: [['unlink-all']],
                 });
             }
+            await this.fetchUpdateSuggestedRecipients();
         }
 
         /**
@@ -1008,6 +1030,17 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {array}
+         */
+        _computeRecipientsWithoutPartner() {
+            const recipientsWithoutPartner = this.suggestedRecipientInfoList.filter(
+                suggested => suggested.checked && !suggested.partner
+            );
+            return[['replace', recipientsWithoutPartner]];
+        }
+
+        /**
+         * @private
          * @returns {string}
          */
         _computeTypingStatusText() {
@@ -1263,6 +1296,11 @@ function factory(dependencies) {
         followers: one2many('mail.follower', {
             inverse: 'followedThread',
         }),
+        /**
+         * This field containt all the suggested recipient that will be display
+         * inside the list.
+         */
+        suggestedRecipientInfoList: many2many('mail.suggested_recipient_info', {}),
         group_based_subscription: attr({
             default: false,
         }),
@@ -1452,6 +1490,12 @@ function factory(dependencies) {
          */
         pendingFoldState: attr(),
         public: attr(),
+        recipientsWithoutPartner: many2many('mail.suggested_recipient_info', {
+            compute: '_computeRecipientsWithoutPartner',
+            dependencies: [
+                'suggestedRecipientInfoList'
+            ]
+        }),
         seen_message_id: attr(),
         /**
          * Determine the last fold state known by the server, which is the fold
