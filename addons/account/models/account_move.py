@@ -468,7 +468,7 @@ class AccountMoveLine(models.Model):
     counterpart = fields.Char("Counterpart", compute='_get_counterpart', help="Compute the counter part accounts of this journal item for this journal entry. This can be needed in reports.")
 
     # TODO: put the invoice link and partner_id on the account_move
-    invoice_id = fields.Many2one('account.invoice', oldname="invoice")
+    invoice_id = fields.Many2one('account.invoice', oldname="invoice", copy=False)
     partner_id = fields.Many2one('res.partner', string='Partner', ondelete='restrict')
     user_type_id = fields.Many2one('account.account.type', related='account_id.user_type_id', index=True, store=True, oldname="user_type", readonly=True)
     tax_exigible = fields.Boolean(string='Appears in VAT report', default=True,
