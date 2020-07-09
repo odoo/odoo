@@ -407,16 +407,15 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
                     self.env.user.flush()
                     self.env.cr.precommit()
 
-        self.assertEqual(
-            len(actual_queries), len(expected),
-            "%d queries done, %d expected" % (len(actual_queries), len(expected)),
-        )
-        for actual_query, expect_query in zip(actual_queries, expected):
-            self.assertEqual(
-                "".join(actual_query.lower().split()),
-                "".join(expect_query.lower().split()),
-                "\n---- actual query:\n%s\n---- not like:\n%s" % (actual_query, expect_query),
-            )
+        crunched_act = ["".join(query.lower().split()) for query in actual_queries]
+        crunched_exp = ["".join(query.lower().split()) for query in expected]
+        if crunched_act == crunched_exp:
+            return
+
+        self.fail("Queries differ\n--- expected:\n%s\n--- actual:\n%s" % (
+            "\n".join(query.strip() for query in expected),
+            "\n".join(query.strip() for query in actual_queries),
+        ))
 
     @contextmanager
     def assertQueryCount(self, default=0, flush=True, **counters):
