@@ -45,7 +45,7 @@
                                 <label for="name" class="oe_edit_only"/>
                                 <h1>
                                     <field name="name" placeholder="Employee's Name" required="True"/>
-                                    <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                    <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
                                 </h1>
                                 <h2>
                                     <field name="job_title" placeholder="Job Title" />
