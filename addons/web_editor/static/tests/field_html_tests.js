@@ -253,7 +253,7 @@ QUnit.module('web_editor', {}, function () {
                             return Promise.resolve();
                         }
                     }
-                    if (route.indexOf('/web_editor/static/src/img/') === 0) {
+                    if (route.indexOf('/web/static/src/img/transparent.png') === 0) {
                         return Promise.resolve();
                     }
                     if (route.indexOf('/web_unsplash/fetch_images') === 0) {
