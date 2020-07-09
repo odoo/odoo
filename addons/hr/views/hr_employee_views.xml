@@ -77,7 +77,7 @@
                         <div class="oe_title">
                             <h1>
                                 <field name="name" placeholder="Employee's Name" required="True"/>
-                                <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
+                                <a title="Chat" icon="fa-comments" href="#" class="ml8 o_employee_chat_btn" invisible="not context.get('chat_icon')" attrs="{'invisible': [('user_id','=', False)]}" role="button"><i class="fa fa-comments"/></a>
                             </h1>
                             <h2>
                                 <field name="job_title" placeholder="Job Position" />
@@ -294,7 +294,7 @@
             <field name="res_model">hr.employee</field>
             <field name="view_mode">kanban,tree,form,activity</field>
             <field name="domain">[]</field>
-            <field name="context">{}</field>
+            <field name="context">{'chat_icon': True}</field>
             <field name="view_id" eval="False"/>
             <field name="search_view_id" ref="view_employee_filter"/>
             <field name="help" type="html">
