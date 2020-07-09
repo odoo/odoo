@@ -148,7 +148,9 @@
                         <notebook>
                             <page string="Speakers" name="speakers">
                                 <group>
-                                    <field name="partner_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                                    <field name="partner_id"
+                                        domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                                        context="{'default_phone': partner_phone, 'default_email': partner_email}"/>
                                     <field name="partner_name"/>
                                     <field name="partner_email"/>
                                     <field name="partner_phone" class="o_force_ltr"/>
