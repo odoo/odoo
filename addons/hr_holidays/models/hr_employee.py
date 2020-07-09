@@ -40,6 +40,7 @@ class HrEmployeeBase(models.AbstractModel):
     allocation_used_display = fields.Char(compute='_compute_total_allocation_used')
     hr_icon_display = fields.Selection(selection_add=[('presence_holiday_absent', 'On leave'),
                                                       ('presence_holiday_present', 'Present but on leave')])
+    accrual_plan_id = fields.Many2one('hr.accrual.plan', string='Accrual Plan')
 
     def _get_date_start_work(self):
         return self.create_date

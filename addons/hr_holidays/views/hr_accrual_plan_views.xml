@@ -15,8 +15,8 @@
                             <field name="company_id" groups="base.group_multi_company"/>
                         </group>
                     </group>
-                        <label for="line_ids"/>
-                        <field name="line_ids"/>
+                        <label for="accrual_ids"/>
+                        <field name="accrual_ids"/>
                 </sheet>
             </form>
         </field>
@@ -43,94 +43,41 @@
         </field>
     </record>
 
-    <record id="hr_accrual_plan_line_view_form" model="ir.ui.view">
-        <field name="name">hr.accrual.plan.line.form</field>
-        <field name="model">hr.accrual.plan.line</field>
+    <record id="hr_accrual_view_form" model="ir.ui.view">
+        <field name="name">hr.accrual.form</field>
+        <field name="model">hr.accrual</field>
         <field name="arch" type="xml">
-            <form string="Accrual Plan Line">
+            <form string="Accrual Name">
                 <sheet>
-                <group class="col-md-11">
-                     <label for="name" string="Level Name"/>
-                     <div class="o_row">
-                          <field name="name"/>
-                     </div>
-                    <label for="start_count" string="Start Accrual"/>
-                    <div class="o_row col-md-6" style="padding-left:0;">
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name"/>
+                        </h1>
+                    </div>
+                <group>
+                    <label for="start_count" string="Start Date"/>
+                    <div class="o_row">
                            <field name="start_count"/>
                            <field name="start_type"/>
                            <span> after employee's start date</span>
                     </div>
                     <label for="added_hours" string="Accrue of"/>
                     <div class="o_row">
-                            <field name="added_hours" class="col-md-2" style="padding-left:0;"/>
-                            <span>hours of time off</span>
-                            <field name="frequency"/>
+                            <field name="added_hours"/>
+                            <span> hours per worked hours</span>
                     </div>
-                    <label for="added_hours" invisible="1" attrs="{'invisible': [('frequency', '!=', 'weekly'),('frequency', '!=', 'every other week')]}"/>
-                    <div class="col-md-6" attrs="{'invisible': [('frequency', '!=', 'weekly'),('frequency', '!=', 'every other week')]}">
-                        <div class="o_row" >
-                            <span>on</span>
-                            <field name="period_weekday"/>
-                            <span attrs="{'invisible': [('frequency', '!=', 'every other week')]}">Which weeks ? </span>
-                            <field name="period_even_or_odd_week" attrs="{'invisible': [('frequency', '!=', 'every other week')]}"/>
-                        </div>
-                    </div>
-                    <!-- START OF THE FIRST PERIOD -->
-                    <label for="added_hours" invisible="1" attrs="{'invisible': [('frequency', '!=', 'monthly'),('frequency','!=','twice a month'),('frequency','!=','twice a year'),('frequency','!=','quarterly'),('frequency','!=','yearly')]}"/>
-                    <div class="col-md-6"  attrs="{'invisible': [('frequency', '!=', 'monthly'),('frequency','!=','twice a month'),('frequency','!=','twice a year'),('frequency','!=','quarterly'),('frequency','!=','yearly')]}">
-                        <div class="o_row" >
-                            <span>on the</span>
-                            <field name="period_day_1"/>
-                            <span attrs="{'invisible': [('frequency','!=','twice a year'),('frequency','!=','quarterly'),('frequency','!=','yearly')]}">day of </span>
-                            <field name="period_month_1" attrs="{'invisible': [('frequency','!=','twice a year'),('frequency','!=','quarterly'),('frequency','!=','yearly')]}"/>
-                        </div>
-                    </div>
-                    <!-- START OF THE SECOND PERIOD -->
-                    <label for="added_hours" invisible="1" attrs="{'invisible': [('frequency','!=','twice a month'),('frequency','!=','twice a year'),('frequency','!=','quarterly')]}"/>
-                    <div class="col-md-6"  attrs="{'invisible': [('frequency','!=','twice a month'),('frequency','!=','twice a year'),('frequency','!=','quarterly')]}">
-                        <div class="o_row">
-                            <span>and the</span>
-                            <field name="period_day_2"/>
-                            <span attrs="{'invisible': [('frequency','!=','twice a year'),('frequency','!=','quarterly')]}"> day of </span>
-                            <field name="period_month_2" attrs="{'invisible': [('frequency','!=','twice a year'),('frequency','!=','quarterly')]}"/>
-                        </div>
-                    </div>
-                     <!-- START OF THE THIRD PERIOD -->
-                    <label for="added_hours" invisible="1" attrs="{'invisible': [('frequency','!=','quarterly')]}"/>
-                    <div class="col-md-6" attrs="{'invisible': [('frequency','!=','quarterly')]}">
-                        <div class="o_row" >
-                             <span>and the</span>
-                             <field name="period_day_3"/>
-                             <span> day of </span>
-                             <field name="period_month_3"/>
-                        </div>
-                    </div>
-                     <!-- START OF THE FOURTH PERIOD -->
-                    <label for="added_hours" invisible="1" attrs="{'invisible': [('frequency','!=','quarterly')]}"/>
-                    <div class="col-md-6" attrs="{'invisible': [('frequency','!=','quarterly')]}">
-                        <div class="o_row" >
-                             <span>and the</span>
-                             <field name="period_day_4"/>
-                             <span> day of </span>
-                             <field name="period_month_4"/>
-                        </div>
-                    </div>
-
-                    <label for="maximum_hours" string="Max Accrual"/>
+                    <label for="frequency" string="Accrual period"/>
                     <div class="o_row">
-                           <field name="maximum_hours" class="oe_inline"/>
+                         <field name="frequency"/>
+                         <field name="period"/>
+                         <span> of the accrual period</span>
                     </div>
-                    <label for="allow_negative_hours" string="Negative hours"/>
+                    <label for="maximum" string="Max Accrual"/>
                     <div class="o_row">
-                           <field name="allow_negative_hours"/>
-                    </div>
-                    <label for="carryover_type" string="Carryover"/>
-                    <div class="o_row col-md-3" style="padding-left:0;">
-                           <field name="carryover_type" class="oe_inline"/>
-                            <span attrs="{'invisible': [('carryover_type', '!=', 'until')]}">
-                                 <field name="carryover_amount"  class="oe_inline ml-2 mr-2"/>
-                            hours/year
-                            </span>
+                           <field name="maximum"/>
+                           <field name="maximum_type"/>
+                            <span> by </span>
+                           <field name="maximum_period"/>
                     </div>
                   </group>
                 </sheet>
@@ -138,20 +85,43 @@
         </field>
     </record>
 
-    <record id="view_accrual_plan_line_view_tree" model="ir.ui.view">
-        <field name="name">hr.accrual.plan.line.tree</field>
-        <field name="model">hr.accrual.plan.line</field>
+    <record id="view_accrual_view_tree" model="ir.ui.view">
+        <field name="name">hr.accrual.tree</field>
+        <field name="model">hr.accrual</field>
         <field name="arch" type="xml">
             <tree string="Accrual Plan Line">
                 <field name="name"/>
-                <field name="start_count"/>
-                <field name="start_type"/>
                 <field name="added_hours"/>
                 <field name="frequency"/>
-                <field name="maximum_hours"/>
-                <field name="allow_negative_hours"/>
-                <field name="carryover_type"/>
             </tree>
         </field>
     </record>
+    <record id="hr_employee_view_form_inherit_accrual" model="ir.ui.view">
+        <field name="name">hr.employee.form.accrual</field>
+        <field name="model">hr.employee</field>
+        <field name="inherit_id" ref="hr.view_employee_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='hr_settings']" position="inside">
+                <field name="allow_accrual" invisible="1"/>
+                <group attrs="{'invisible': [('allow_accrual', '=', False)]}">
+                    <group string="Time Off" name="timeoff" groups="hr_holidays.group_hr_holidays_manager">
+                        <label for="accrual_plan_id"/>
+                        <div>
+                            <field name="accrual_plan_id" class="oe_inline"/>
+                        </div>
+                    </group>
+                </group>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_holidays_config_settings_action" model="ir.actions.act_window">
+        <field name="name">Settings</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.config.settings</field>
+        <field name="view_mode">form</field>
+        <field name="target">inline</field>
+        <field name="context">{'module' : 'hr_holidays'}</field>
+    </record>
+
 </odoo>

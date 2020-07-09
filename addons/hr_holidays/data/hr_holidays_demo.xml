@@ -483,40 +483,34 @@
 
     <!-- accrual plan -->
 
-    <record id="hr_accrual_plan_line_first_year" model="hr.accrual.plan.line">
+    <record id="hr_accrual_US_first_year" model="hr.accrual">
         <field name="name">First year</field>
         <field name="start_count">0</field>
         <field name="start_type">years</field>
         <field name="added_hours">3.33</field>
         <field name="frequency">twice a month</field>
-        <field name="period_day_1">1</field>
-        <field name="period_day_2">16</field>
     </record>
-    <record id="hr_accrual_plan_line_second_year" model="hr.accrual.plan.line">
+    <record id="hr_accrual_US_second_year" model="hr.accrual">
         <field name="name">Second year</field>
         <field name="start_count">1</field>
         <field name="start_type">years</field>
         <field name="added_hours">5</field>
         <field name="frequency">twice a month</field>
-        <field name="period_day_1">1</field>
-        <field name="period_day_2">16</field>
     </record>
-    <record id="hr_accrual_plan_line_third_year" model="hr.accrual.plan.line">
+    <record id="hr_accrual_US_third_year" model="hr.accrual">
         <field name="name">Third year</field>
         <field name="start_count">2</field>
         <field name="start_type">years</field>
         <field name="added_hours">6.66</field>
         <field name="frequency">twice a month</field>
-        <field name="period_day_1">1</field>
-        <field name="period_day_2">16</field>
     </record>
     <record id="hr_accrual_plan_US_market" model="hr.accrual.plan">
         <field name="name">US market</field>
         <field name="company_id" ref="base.main_company"/>
-        <field name="line_ids" eval="[(6, 0, [
-                ref('hr_accrual_plan_line_first_year'),
-                ref('hr_accrual_plan_line_second_year'),
-                ref('hr_accrual_plan_line_third_year'),
+        <field name="accrual_ids" eval="[(6, 0, [
+                ref('hr_accrual_US_first_year'),
+                ref('hr_accrual_US_second_year'),
+                ref('hr_accrual_US_third_year'),
                 ])]"/>
     </record>
 </data>
