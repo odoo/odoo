@@ -511,19 +511,7 @@ options.Class.include({
     },
 });
 
-options.registry.BackgroundOptimize.include({
-    /**
-     * @override
-     */
-    _computeVisibility() {
-        if (this.$target.hasClass('o_background_video')) {
-            return false;
-        }
-        return this._super(...arguments);
-    },
-});
-
-options.registry.background.include({
+options.registry.BackgroundImage.include({
     background: async function (previewMode, widgetValue, params) {
         if (previewMode === 'reset' && this.videoSrc) {
             return this._setBgVideo(false, this.videoSrc);
@@ -588,6 +576,18 @@ options.registry.background.include({
             this._setBgVideo(previewMode, '');
         }
         return ret;
+    },
+});
+
+options.registry.BackgroundOptimize.include({
+    /**
+     * @override
+     */
+    _computeVisibility() {
+        if (this.$target.hasClass('o_background_video')) {
+            return false;
+        }
+        return this._super(...arguments);
     },
 });
 
@@ -678,6 +678,14 @@ options.registry.Theme = options.Class.extend({
         }
 
         await this._reloadBundles();
+    },
+    async enableImagepicker(previewMode, widgetValue, params) {
+        if (widgetValue) {
+            // TODO improve: here we make a hack so that a hidden imagepicker
+            // widget opens...
+            const widget = this._requestUserValueWidgets(widgetValue)[0];
+            widget.$el.click();
+        }
     },
     /**
      * @see this.selectClass for parameters
@@ -786,6 +794,15 @@ options.registry.Theme = options.Class.extend({
             const bgURL = $('#wrapwrap').css('background-image');
             const srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
             return bgURL && bgURL.replace(srcValueWrapper, '') || '';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'body_bg_image_opt') {
+            return false;
         }
         return this._super(...arguments);
     },
@@ -1367,7 +1384,7 @@ options.registry.parallax = options.Class.extend({
      */
     onFocus: function () {
         this.trigger_up('option_update', {
-            optionNames: ['background', 'BackgroundPosition'],
+            optionNames: ['BackgroundImage', 'BackgroundPosition'],
             name: 'target',
             data: this.$target.find('> .s_parallax_bg'),
         });

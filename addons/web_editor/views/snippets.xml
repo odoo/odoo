@@ -33,17 +33,75 @@
     </div>
 </template>
 
-<template id="image_optimization_controls">
+<template id="snippet_options_image_optimization_widgets">
     <we-range string="Quality" data-set-quality=""/>
     <!-- Select filled in JS -->
     <we-select string="Width" data-name="width_select_opt" data-no-preview="true"/>
-    <span class="o_we_image_weight text-right"/>
     <we-colorpicker string="Color filter" data-set-filter="" data-no-preview="true" data-excluded="common, theme"/>
     <div class="o_we_external_warning d-none">
         <we-title title="Quality options are unavailable for external images. If you want to change this image's quality, please first download it from the original source and upload it in Odoo.">
             <i class="fa fa-warning" /> External Image
         </we-title>
     </div>
+    <div class="o_we_image_weight d-none"><i class="fa fa-long-arrow-right"/><span/></div>
+</template>
+
+<template id="snippet_options_background_selection_widgets">
+    <we-row t-if="with_colors or with_images" string="Background" class="o_we_full_row">
+        <we-colorpicker t-if="with_colors"
+                        title="Color"
+                        data-name="bg_color_opt"
+                        data-select-style=""
+                        data-css-property="background-color"
+                        data-color-prefix="bg-"
+                        t-att-data-with-combinations="with_color_combinations and 'true' or None"
+                        t-att-data-css-compatible="css_compatible and 'true' or None"/>
+        <we-button-group t-if="with_images"
+                         class="ml-auto"
+                         t-att-data-dependencies="images_dependencies"
+                         data-no-preview="true">
+            <we-imagepicker title="Image"
+                            data-background=""
+                            data-allow-videos=":not(.parallax, .s_parallax_bg)"/>
+            <we-button title="None"
+                       data-background=""><i class="fa fa-fw fa-ban"/></we-button>
+        </we-button-group>
+    </we-row>
+</template>
+
+<template id="snippet_options_background_options">
+    <div t-att-data-js="with_colors and with_color_combinations and 'ColoredLevelBackground' or 'BackgroundImage'"
+         t-att-data-selector="selector"
+         t-att-data-exclude="exclude"
+         t-att-data-target="target">
+        <t t-call="web_editor.snippet_options_background_selection_widgets"/>
+    </div>
+    <t t-if="with_images">
+        <div data-js="BackgroundPosition"
+             t-att-data-selector="selector"
+             t-att-data-exclude="exclude"
+             t-att-data-target="target">
+            <we-row>
+                <we-select data-no-preview="true">
+                    <we-button data-background-type="cover">Cover</we-button>
+                    <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
+                </we-select>
+                <we-button class="fa fa-fw fa-crosshairs" title="Background Position"
+                        data-background-position-overlay="true" data-no-preview="true"/>
+            </we-row>
+            <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
+                <we-input string="Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
+                <we-input string="Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
+            </we-multi>
+        </div>
+
+        <div data-js="BackgroundOptimize"
+             t-att-data-selector="selector"
+             t-att-data-exclude="exclude"
+             t-att-data-target="target">
+            <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
+        </div>
+    </t>
 </template>
 
 <!-- options (data-selector, data-drop-in, data-drop-near, data-js to link js object ) -->
@@ -61,7 +119,7 @@
 
     <div data-js="ImageOptimize"
          data-selector="img">
-         <t t-call="web_editor.image_optimization_controls"/>
+         <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
      </div>
 </template>
 

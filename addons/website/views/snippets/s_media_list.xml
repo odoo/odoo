@@ -47,17 +47,16 @@
 
 <template id="s_media_list_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
-        <div data-js="MainColorpicker" data-selector=".s_media_list_item" data-target="> .row">
-            <we-colorpicker string="Background Color"
-                            data-name="bg_color_opt"
-                            data-select-style="true"
-                            data-css-property="background-color"
-                            data-color-prefix="bg-"
-                            data-with-combinations="true"/>
-        </div>
+        <t t-call="web_editor.snippet_options_background_options">
+            <t t-set="selector" t-value="'.s_media_list_item'"/>
+            <t t-set="target" t-value="'> .row'"/>
+            <t t-set="with_colors" t-value="True"/>
+            <t t-set="with_images" t-value="False"/>
+            <t t-set="with_color_combinations" t-value="True"/>
+        </t>
         <div data-js="Box" data-selector=".s_media_list_item" data-target="> .row">
-            <t t-call="website.snippet_options_border"/>
-            <t t-call="website.snippet_options_shadow"/>
+            <t t-call="website.snippet_options_border_widgets"/>
+            <t t-call="website.snippet_options_shadow_widgets"/>
         </div>
         <div data-selector=".s_media_list_item" data-target="> .row">
             <we-button-group string="Image Position">
