@@ -1595,3 +1595,13 @@ def hmac(env, scope, message, hash_function=hashlib.sha256):
         message.encode(),
         hash_function,
     ).hexdigest()
+
+
+def monkey_patch(cls):
+    """ Return a method decorator to monkey-patch the given class. """
+    def decorate(func):
+        name = func.__name__
+        func.super = getattr(cls, name, None)
+        setattr(cls, name, func)
+        return func
+    return decorate

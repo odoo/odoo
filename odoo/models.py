@@ -3057,7 +3057,9 @@ Fields:
             query_str = "SELECT %s FROM %s WHERE %s" % (",".join(qual_names), from_clause, where_clause)
 
             # fetch one list of record values per field
-            param_pos = params.index(param_ids)
+            for param_pos, param in enumerate(params):
+                if param is param_ids:
+                    break
 
             result = []
             for sub_ids in cr.split_for_in_conditions(self.ids):
@@ -3075,13 +3077,14 @@ Fields:
             fetched = self.browse(ids)
 
             for field in fields_pre:
-                values = next(cols)
+                values = list(next(cols))
                 if context.get('lang') and not field.inherited and callable(field.translate):
                     translate = field.get_trans_func(fetched)
-                    values = list(values)
                     for index in range(len(ids)):
                         values[index] = translate(ids[index], values[index])
 
+                for index in range(len(ids)):
+                    values[index] = field.convert_to_cache(values[index], fetched[index])
                 # store values in cache
                 self.env.cache.update(fetched, field, values)
 
