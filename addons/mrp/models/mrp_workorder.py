@@ -36,7 +36,7 @@ class MrpWorkorder(models.Model):
     product_tracking = fields.Selection(related="product_id.tracking")
     product_uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True, readonly=True)
     use_create_components_lots = fields.Boolean(related="production_id.picking_type_id.use_create_components_lots")
-    production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True)
+    production_id = fields.Many2one('mrp.production', 'Manufacturing Order', required=True, check_company=True, readonly=True)
     production_availability = fields.Selection(
         string='Stock Availability', readonly=True,
         related='production_id.reservation_state', store=True,
