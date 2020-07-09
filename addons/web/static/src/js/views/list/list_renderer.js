@@ -981,6 +981,7 @@ var ListRenderer = BasicRenderer.extend({
             'href': "#",
             'role': "button",
             'data-toggle': "dropdown",
+            'data-display': "static",
             'aria-expanded': false,
         });
         $a.appendTo($optionalColumnsDropdown);
