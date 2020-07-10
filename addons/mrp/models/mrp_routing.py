@@ -41,11 +41,6 @@ class MrpRoutingWorkcenter(models.Model):
         help="Time in minutes. Is the time used in manual mode, or the first time supposed in real time when there are not any work orders yet.")
     time_cycle = fields.Float('Duration', compute="_compute_time_cycle")
     workorder_count = fields.Integer("# Work Orders", compute="_compute_workorder_count")
-    batch = fields.Selection([
-        ('no',  'Once all products are processed'),
-        ('yes', 'Once some products are processed')], string='Start Next Operation',
-        default='no', required=True)
-    batch_size = fields.Float('Quantity to Process', default=1.0)
     workorder_ids = fields.One2many('mrp.workorder', 'operation_id', string="Work Orders")
 
     @api.depends('time_cycle_manual', 'time_mode', 'workorder_ids')
