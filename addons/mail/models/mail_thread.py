@@ -1029,7 +1029,7 @@ class MailThread(models.AbstractModel):
 
             # disabled subscriptions during message_new/update to avoid having the system user running the
             # email gateway become a follower of all inbound messages
-            ModelCtx = Model.with_user(user_id).sudo()
+            ModelCtx = Model.with_user(alias and alias.alias_user_id or user_id).sudo()
             if thread_id and hasattr(ModelCtx, 'message_update'):
                 thread = ModelCtx.browse(thread_id)
                 thread.message_update(message_dict)
