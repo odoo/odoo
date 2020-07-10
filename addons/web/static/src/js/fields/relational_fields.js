@@ -3050,6 +3050,14 @@ var FieldRadio = FieldSelection.extend({
 
     /**
      * @override
+     * @returns {jQuery}
+     */
+    getFocusableElement: function () {
+        return this.mode === 'edit' && this.$input || this.$el;
+    },
+
+    /**
+     * @override
      * @returns {boolean} always true
      */
     isSet: function () {
