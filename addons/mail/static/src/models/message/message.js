@@ -132,11 +132,11 @@ function factory(dependencies) {
                 data2.subject = data.subject;
             }
             if ('subtype_description' in data) {
-                data.subtype_description=false;
-                
-                console.log("h>>>>>>>", data.subtype_description)
-                data2.subtype_description = data.subtype_description;
-          
+                if (data.subtype_description === "Opportunity created") {
+                    data2.subtype_description = false;
+                } else {
+                    data2.subtype_description = data.subtype_description;
+                }
             }
             if ('subtype_id' in data) {
                 data2.subtype_id = data.subtype_id;
