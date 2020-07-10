@@ -801,26 +801,34 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
             return;
         }
 
-        if (this.menuTogglerImgEl) {
-            this.menuTogglerImgEl.remove();
+        if (this.menuTogglerItemEl) {
+            this.menuTogglerItemEl.remove();
+            this.menuTogglerItemEl = null;
         }
-        this.menuTogglerEl.textContent = '';
 
+        let textContent = '';
         const activeWidget = this._userValueWidgets.find(widget => !widget.isPreviewed() && widget.isActive());
         if (activeWidget) {
             const value = (activeWidget.el.dataset.selectLabel || activeWidget.el.textContent.trim());
             const imgSrc = activeWidget.el.dataset.img;
             if (value) {
-                this.menuTogglerEl.textContent = value;
+                textContent = value;
             } else if (imgSrc) {
-                if (!this.menuTogglerImgEl) {
-                    this.menuTogglerImgEl = document.createElement('img');
+                this.menuTogglerItemEl = document.createElement('img');
+                this.menuTogglerItemEl.src = imgSrc;
+            } else {
+                const fakeImgEl = activeWidget.el.querySelector('.o_we_fake_img_item');
+                if (fakeImgEl) {
+                    this.menuTogglerItemEl = fakeImgEl.cloneNode(true);
                 }
-                this.menuTogglerImgEl.src = imgSrc;
-                this.menuTogglerEl.appendChild(this.menuTogglerImgEl);
             }
         } else {
-            this.menuTogglerEl.textContent = "/";
+            textContent = "/";
+        }
+
+        this.menuTogglerEl.textContent = textContent;
+        if (this.menuTogglerItemEl) {
+            this.menuTogglerEl.appendChild(this.menuTogglerItemEl);
         }
     },
 
