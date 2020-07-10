@@ -3,7 +3,6 @@
 
 import random
 import re
-import requests
 
 from odoo import api, fields, models
 
@@ -27,34 +26,6 @@ class Track(models.Model):
 
             if not track.youtube_video_id:
                 track.youtube_video_id = False
-
-    def _get_viewers_count(self):
-        """ Uses the Youtube Data API to request the viewers count of all tracks in recordset (self).
-        We collect data for both live and past videos, returning a dict with the following structure:
-        {'trackId': {
-            'live_views': 42, // relevant for streamings that are currently live
-            'total_views': 5899 // relevant for existing videos or recorded live streams that are passed
-        }}
-        This is obviously only relevant for tracks that have a configured 'youtube_video_url'.
-        The method is called when necessary, it would not make sense to make actual 'fields' for those values
-        as it's constantly changing (we need to make the API call every time). """
-
-        youtube_api_key = self.env['website'].get_current_website().website_event_track_youtube_api_key
-        video_ids = {track.youtube_video_id: track.id for track in self if track.youtube_video_id}
-        viewers_by_track = {}
-        if video_ids.keys() and youtube_api_key:
-            youtube_api_request = requests.get('https://www.googleapis.com/youtube/v3/videos', params={
-                'part': 'statistics,liveStreamingDetails',
-                'id': ','.join(video_ids.keys()),
-                'key': youtube_api_key,
-            })
-            for youtube_result in youtube_api_request.json().get('items', []):
-                viewers_by_track[video_ids[youtube_result['id']]] = {
-                    'live_views': youtube_result.get('liveStreamingDetails', {}).get('concurrentViewers', 0),
-                    'total_views': youtube_result.get('statistics', {}).get('viewCount', 0),
-                }
-
-        return viewers_by_track
 
     def _get_next_track_suggestion(self):
         """ Returns the next track that can be auto-played when this one is done.

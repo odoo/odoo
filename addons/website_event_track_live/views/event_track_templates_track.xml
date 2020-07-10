@@ -24,17 +24,6 @@
                 frameborder="0" allowfullscreen="allowfullscreen"/>
         </div>
     </xpath>
-    <xpath expr="//div[hasclass('o_wesession_track_aside_tabs')]//div[hasclass('tab-pane')]" position="before">
-        <t t-set="viewers_count" t-value="tracks_other._get_viewers_count()"/>
-    </xpath>
-    <xpath expr="//div[hasclass('o_wesession_track_aside_info')]//small" position="before">
-        <small t-if="int(viewers_count.get(track_other.id, {}).get('live_views', 0)) > 0" class="text-muted mr-2">
-            <span t-esc="viewers_count.get(track_other.id).get('live_views')"/><span> watching</span>
-        </small>
-        <small t-elif="int(viewers_count.get(track_other.id, {}).get('total_views', 0)) > 0" class="text-muted mr-2">
-            <span t-esc="viewers_count.get(track_other.id).get('total_views')"/><span> views</span>
-        </small>
-    </xpath>
     <xpath expr="//div[hasclass('o_wesession_track_main_content')]" position="replace">
         <div t-attf-class="row bg-white ml-3 o_wesession_track_main_content #{'pt-3' if not track.youtube_video_url else ''}">
             <t t-if="track.youtube_video_url">
@@ -46,36 +35,6 @@
             </t>
             <t t-else="" t-call="website_event_track_session.event_track_description"/>
         </div>
-    </xpath>
-</template>
-
-<template id="tracks_cards_track" inherit_id="website_event_track_session.tracks_cards_track">
-    <xpath expr="//article//footer" position="inside">
-        <div t-if="int(viewers_count.get(track.id, {}).get('live_views', 0)) > 0" class="text-muted text-right mt-1">
-            <span t-esc="viewers_count.get(track.id).get('live_views')"/><span> watching</span>
-        </div>
-        <div t-elif="int(viewers_count.get(track.id, {}).get('total_views', 0)) > 0" class="text-muted text-right mt-1">
-            <span t-esc="viewers_count.get(track.id).get('total_views')"/><span> views</span>
-        </div>
-    </xpath>
-</template>
-
-<template id="tracks_display_list" inherit_id="website_event_track_session.tracks_display_list">
-    <xpath expr="//span[@name='o_wesession_tracks_list_topic_label']" position="attributes">
-        <attribute name="class">col-md-3 o_wesession_tracks_list_topic_label</attribute>
-    </xpath>
-    <xpath expr="//a[@name='o_wesession_tracks_list_topic_value']" position="attributes">
-        <attribute name="class">col-md-3 o_wesession_tracks_list_topic_value</attribute>
-    </xpath>
-    <xpath expr="//span[@name='o_wesession_tracks_list_partner_label']" position="after">
-        <span class="col-md-1">Viewers</span>
-    </xpath>
-    <xpath expr="//span[@name='o_wesession_tracks_list_partner_value']" position="after">
-        <span t-if="int(viewers_count.get(track.id, {}).get('live_views', 0)) > 0"
-            class="text-muted col-md-1" t-esc="viewers_count.get(track.id).get('live_views')"/>
-        <span t-elif="int(viewers_count.get(track.id, {}).get('total_views', 0)) > 0"
-            class="text-muted col-md-1" t-esc="viewers_count.get(track.id).get('total_views')"/>
-        <span t-else="" class="col-md-1"/>
     </xpath>
 </template>
 
