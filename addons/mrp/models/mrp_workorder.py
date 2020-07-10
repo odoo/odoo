@@ -462,13 +462,6 @@ class MrpWorkorder(models.Model):
         return self.production_id.move_finished_ids.filtered(lambda x: (x.product_id.id != self.production_id.product_id.id) and (x.state not in ('done', 'cancel')))
 
     def _start_nextworkorder(self):
-        rounding = self.product_id.uom_id.rounding
-        if self.next_work_order_id.state == 'pending' and (
-                (self.operation_id.batch == 'no' and
-                 float_compare(self.qty_production, self.qty_produced, precision_rounding=rounding) <= 0) or
-                (self.operation_id.batch == 'yes' and
-                 float_compare(self.operation_id.batch_size, self.qty_produced, precision_rounding=rounding) <= 0)):
-            self.next_work_order_id.state = 'ready'
         if self.state == 'done' and self.next_work_order_id.state == 'pending':
             self.next_work_order_id.state = 'ready'
 
