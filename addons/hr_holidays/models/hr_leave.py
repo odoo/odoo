@@ -637,20 +637,22 @@ class HolidaysRequest(models.Model):
     def create(self, vals_list):
         """ Override to avoid automatic logging of creation """
         if not self._context.get('leave_fast_create'):
+            leave_types = self.env['hr.leave.type'].browse([values.get('holiday_status_id') for values in vals_list])
+            mapped_validation_type = {leave_type.id: leave_type.validation_type for leave_type in leave_types}
+
             for values in vals_list:
                 employee_id = values.get('employee_id', False)
                 leave_type_id = values.get('holiday_status_id')
-                leave_type = self.env['hr.leave.type'].browse(leave_type_id)
                 # Handle automatic department_id
                 if not values.get('department_id'):
                     values.update({'department_id': self.env['hr.employee'].browse(employee_id).department_id.id})
 
                 # Handle no_validation
-                if leave_type.validation_type == 'no_validation':
+                if mapped_validation_type[leave_type_id] == 'no_validation':
                     values.update({'state': 'confirm'})
 
                 # Handle double validation
-                if leave_type.validation_type == 'both':
+                if mapped_validation_type[leave_type_id] == 'both':
                     self._check_double_validation_rules(employee_id, values.get('state', False))
 
         holidays = super(HolidaysRequest, self.with_context(mail_create_nosubscribe=True)).create(vals_list)
@@ -673,7 +675,7 @@ class HolidaysRequest(models.Model):
                 holiday_sudo.add_follower(employee_id)
                 if holiday.validation_type == 'manager':
                     holiday_sudo.message_subscribe(partner_ids=holiday.employee_id.leave_manager_id.partner_id.ids)
-                if leave_type.validation_type == 'no_validation':
+                if holiday.holiday_status_id.validation_type == 'no_validation':
                     # Automatic validation should be done in sudo, because user might not have the rights to do it by himself
                     holiday_sudo.action_validate()
                     holiday_sudo.message_subscribe(partner_ids=[holiday_sudo._get_responsible_for_approval().partner_id.id])
