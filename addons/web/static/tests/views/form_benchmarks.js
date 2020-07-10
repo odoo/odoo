@@ -94,5 +94,15 @@ odoo.define('web.form_benchmarks', function (require) {
                 await testUtils.fields.editInput(form.$('input:first'), "tralala");
             });
         });
+
+        QUnit.test('form view with 100 fields, half of them being invisible', function (assert) {
+            assert.expect(1);
+
+            this.arch = `
+                <form>
+                    ${[...Array(100)].map((_, i) => '<field name="foo"' + (i % 2 ? ' invisible="1"' : '') + '/>').join('')}
+                </form>`;
+            return this.run(assert);
+        });
     });
 });

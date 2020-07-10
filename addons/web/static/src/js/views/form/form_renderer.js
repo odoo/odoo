@@ -40,6 +40,11 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         this.idsForLabels = {};
         this.lastActivatedFieldIndex = -1;
         this.alertFields = {};
+        // The form renderer doesn't render invsible fields (invisible="1") by
+        // default, to speed up the rendering. However, we sometimes have to
+        // display them (e.g. in Studio, in "show invisible" mode). This flag
+        // allows to disable this optimization.
+        this.renderInvisible = false;
     },
     /**
      * @override
@@ -499,6 +504,17 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         return [2, 2, 2, 4][config.device.size_class] || 7;
     },
     /**
+     * Do not render a field widget if it is always invisible.
+     *
+     * @override
+     */
+    _renderFieldWidget(node) {
+        if (!this.renderInvisible && node.attrs.modifiers.invisible === true) {
+            return $();
+        }
+        return this._super(...arguments);
+    },
+    /**
      * @private
      * @param {Object} node
      * @returns {jQueryElement}
@@ -861,6 +877,11 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
      * @returns {jQueryElement}
      */
     _renderTagLabel: function (node) {
+        if (!this.renderInvisible && node.tag === 'field' &&
+            node.attrs.modifiers.invisible === true) {
+            // skip rendering of invisible fields/labels
+            return $();
+        }
         var self = this;
         var text;
         let fieldName;
