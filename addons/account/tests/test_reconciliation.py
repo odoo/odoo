@@ -13,7 +13,17 @@ from odoo.tests import Form, tagged
 @tagged('post_install', '-at_install')
 class TestReconciliationExec(TestAccountReconciliationCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super().setUpClass()
+        cls.env['res.currency.rate'].search([]).unlink()
+
     def test_statement_euro_invoice_usd_transaction_euro_full(self):
+        self.env['res.currency.rate'].create({
+            'name': '%s-07-01' % time.strftime('%Y'),
+            'rate': 1.5289,
+            'currency_id': self.currency_usd_id,
+        })
         # Create a customer invoice of 50 USD.
         partner = self.env['res.partner'].create({'name': 'test'})
         move = self.env['account.move'].with_context(default_move_type='out_invoice').create({
@@ -588,11 +598,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
             'company_id': self.env.company.id,
         })
 
-        # Delete any old rate - to make sure that we use the ones we need.
-        old_rates = self.env['res.currency.rate'].search(
-            [('currency_id', '=', self.currency_usd_id)])
-        old_rates.unlink()
-
         self.env['res.currency.rate'].create({
             'currency_id': self.currency_usd_id,
             'name': time.strftime('%Y') + '-01-01',
@@ -824,7 +829,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
 
     def test_inv_refund_foreign_payment_writeoff_domestic2(self):
         company = self.company
-        self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'name': time.strftime('%Y') + '-07-01',
             'rate': 1.0,
@@ -892,7 +896,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         Invoices should be marked as paid
         """
         company = self.company
-        self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'name': time.strftime('%Y') + '-07-01',
             'rate': 1.0,
@@ -962,7 +965,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         Invoices should be marked as paid
         """
         company = self.company
-        self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'name': time.strftime('%Y') + '-07-01',
             'rate': 1.0,
@@ -1041,7 +1043,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         Invoices should be marked as paid
         """
         company = self.company
-        self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'name': time.strftime('%Y') + '-07-01',
             'rate': 1.0,
@@ -1101,7 +1102,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
                         |   315.15 (350.00)  PAYMENT > Done in domestic (the 350.00 is virtual, non stored)
         """
         company = self.company
-        self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'name': time.strftime('%Y') + '-07-01',
             'rate': 1.0,
@@ -1165,7 +1165,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         foreign_1 = self.env['res.currency'].browse(self.currency_usd_id)
 
         company = self.company
-        self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'name': time.strftime('%Y') + '-07-01',
             'rate': 1.0,
@@ -1241,7 +1240,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         Invoices should be marked as paid
         """
         company = self.company
-        self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'name': time.strftime('%Y') + '-07-01',
             'rate': 1.0,
@@ -1288,7 +1286,6 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         Because the WriteOff is on a different line than the payment
         """
         company = self.company
-        self.env['res.currency.rate'].search([]).unlink()
         self.env['res.currency.rate'].create({
             'name': time.strftime('%Y') + '-07-01',
             'rate': 1.0,
