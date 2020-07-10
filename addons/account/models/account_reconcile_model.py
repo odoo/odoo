@@ -302,7 +302,11 @@ class AccountReconcileModel(models.Model):
                 # only allow to set the force_tax_included field if we have one tax selected
                 if line.force_tax_included:
                     tax = tax[0].with_context(force_price_include=True)
-                new_aml_dicts += self._get_taxes_move_lines_dict(tax, writeoff_line)
+                tax_vals_list = self._get_taxes_move_lines_dict(tax, writeoff_line)
+                new_aml_dicts += tax_vals_list
+                if not line.force_tax_included:
+                    for tax_line in tax_vals_list:
+                        residual_balance -= tax_line.get('debit', 0) - tax_line.get('credit', 0)
 
         return new_aml_dicts
 
