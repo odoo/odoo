@@ -26,6 +26,22 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         cls.company = cls.company_data['company']
 
         cls.account_pay = cls.company_data['default_account_payable']
+<<<<<<< HEAD
+=======
+        cls.account_rcv = cls.company_data['default_account_receivable']
+        cls.account_bnk = cls.company_data['default_journal_bank'].default_debit_account_id
+        cls.account_cash = cls.company_data['default_journal_cash'].default_debit_account_id
+
+        cls.partner_1 = cls.env['res.partner'].create({'name': 'partner_1', 'company_id': cls.company.id})
+        cls.partner_2 = cls.env['res.partner'].create({'name': 'partner_2', 'company_id': cls.company.id})
+
+        cls.invoice_line_1 = cls._create_invoice_line(100, cls.partner_1, 'out_invoice')
+        cls.invoice_line_2 = cls._create_invoice_line(200, cls.partner_1, 'out_invoice')
+        cls.invoice_line_3 = cls._create_invoice_line(300, cls.partner_1, 'in_refund')
+        cls.invoice_line_3.move_id.name = "RBILL/2019/09/0013" # Without demo data, avoid to match with the first invoice
+        cls.invoice_line_4 = cls._create_invoice_line(1000, cls.partner_2, 'in_invoice')
+
+>>>>>>> d5d00f618f9... temp
         cls.current_assets_account = cls.env['account.account'].search([
             ('user_type_id', '=', cls.env.ref('account.data_account_type_current_assets').id),
             ('company_id', '=', cls.company.id)], limit=1)
@@ -45,6 +61,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'amount': 12,
         })
 
+<<<<<<< HEAD
         cls.partner_1 = cls.env['res.partner'].create({'name': 'partner_1', 'company_id': cls.company.id})
         cls.partner_2 = cls.env['res.partner'].create({'name': 'partner_2', 'company_id': cls.company.id})
         cls.partner_3 = cls.env['res.partner'].create({'name': 'partner_3', 'company_id': cls.company.id})
@@ -66,6 +83,12 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'company_id': cls.company.id,
             'line_ids': [(0, 0, {'account_id': cls.current_assets_account.id})],
         })
+=======
+        cls.rule_1 = cls.rule_0.copy()
+        cls.rule_1.write({'line_ids': [(0, 0, {'account_id': cls.current_assets_account.id})]})
+        cls.rule_1.match_partner = True
+        cls.rule_1.match_partner_ids |= cls.partner_1 + cls.partner_2
+>>>>>>> d5d00f618f9... temp
         cls.rule_2 = cls.env['account.reconcile.model'].create({
             'name': 'write-off model',
             'rule_type': 'writeoff_suggestion',
@@ -151,6 +174,12 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         cls.bank_line_3, cls.bank_line_4, cls.bank_line_5 = cls.bank_st_2.line_ids
         cls.cash_line_1 = cls.cash_st.line_ids
         cls._post_statements(cls)
+
+        cls.tax12 = cls.env['account.tax'].create({
+            'name': '12%',
+            'type_tax_use': 'purchase',
+            'amount': 12,
+        })
 
     @classmethod
     def _create_invoice_line(cls, amount, partner, type, currency=None, pay_reference=None, ref=None, name=None):
@@ -472,7 +501,16 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         }, statements=self.bank_st)
 
         # Check first line has been well reconciled.
+<<<<<<< HEAD
         self.assertRecordValues(self.bank_line_1.line_ids, [
+=======
+        self.assertRecordValues(self.bank_line_1.journal_entry_ids, [
+            {'partner_id': self.partner_1.id, 'debit': 50.0, 'credit': 0.0, 'tax_ids': [self.tax21.id], 'tax_line_id': False},
+            {'partner_id': self.partner_1.id, 'debit': 10.5, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': self.tax21.id},
+            {'partner_id': self.partner_1.id, 'debit': 60.5, 'credit': 0.0, 'tax_ids': [self.tax12.id], 'tax_line_id': False},
+            {'partner_id': self.partner_1.id, 'debit': 7.26, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': self.tax12.id},
+            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 7.26, 'tax_ids': [], 'tax_line_id': False},
+>>>>>>> d5d00f618f9... temp
             {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 121.0, 'tax_ids': [], 'tax_line_id': False},
             {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 7.26, 'tax_ids': [], 'tax_line_id': False},
             {'partner_id': self.partner_1.id, 'debit': 50.0, 'credit': 0.0, 'tax_ids': [self.tax21.id], 'tax_line_id': False},

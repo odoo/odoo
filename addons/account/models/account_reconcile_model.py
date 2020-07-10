@@ -356,6 +356,7 @@ class AccountReconcileModel(models.Model):
                 if line.force_tax_included:
                     tax = tax[0].with_context(force_price_include=True)
                 tax_vals_list = self._get_taxes_move_lines_dict(tax, writeoff_line)
+<<<<<<< HEAD
                 lines_vals_list += tax_vals_list
                 if not line.force_tax_included:
                     for tax_line in tax_vals_list:
@@ -379,6 +380,21 @@ class AccountReconcileModel(models.Model):
         :param aml_ids: The ids of some account.move.line to reconcile.
         :param partner: An optional res.partner record. If not specified, fallback on the statement line's partner.
         :return: A list of dictionary to be passed to the account.bank.statement.line's 'reconcile' method.
+=======
+                new_aml_dicts += tax_vals_list
+                if not line.force_tax_included:
+                    for tax_line in tax_vals_list:
+                        residual_balance -= tax_line.get('debit', 0) - tax_line.get('credit', 0)
+
+        return new_aml_dicts
+
+    def _prepare_reconciliation(self, st_line, move_lines=None, partner=None):
+        ''' Reconcile the statement line with some move lines using this reconciliation model.
+        :param st_line:     An account.bank.statement.line record.
+        :param move_lines:  An account.move.line recordset.
+        :param partner_id:  An optional res.partner record. If not set, st_line.partner_id will be used.
+        :return:            Counterpart account.moves.
+>>>>>>> d5d00f618f9... temp
         '''
         self.ensure_one()
         liquidity_lines, suspense_lines, other_lines = st_line._seek_for_lines()
