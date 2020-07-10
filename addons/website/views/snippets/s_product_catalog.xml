@@ -61,13 +61,14 @@
 <template id="s_product_catalog_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-js="ProductCatalog" data-selector=".s_product_catalog">
-            <we-colorpicker string="Separator" data-select-style=""
-                            data-apply-to=".s_product_catalog_dish_description"
-                            data-css-property="border-top-color"
-                            data-color-prefix="border-"
-                            data-dependencies="s_product_catalog_descriptions_opt"/>
             <we-checkbox string="Descriptions" data-toggle-description="true"
-                         data-no-preview="true" data-name="s_product_catalog_descriptions_opt"/>
+                         data-no-preview="true"/>
+            <t t-call="website.snippet_options_border_line_widgets">
+                <t t-set="label">⌙ Separator</t>
+                <t t-set="direction" t-value="'top'"/>
+                <t t-set="apply_to" t-value="'.s_product_catalog_dish_description'"/>
+                <!-- Note: no need of extra dependency thanks to the apply-to -->
+            </t>
         </div>
         <div data-selector=".s_product_catalog_dish"/>
     </xpath>

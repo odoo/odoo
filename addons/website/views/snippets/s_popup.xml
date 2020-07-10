@@ -50,15 +50,15 @@
                 <we-button data-select-class="s_popup_size_full" data-name="s_popup_size_full">Full</we-button>
             </we-select>
             <we-row string="Backdrop">
+                <we-checkbox data-name="popup_backdrop_opt"
+                             data-select-class="s_popup_no_backdrop|"
+                             data-set-backdrop="true"
+                             data-no-preview="true"/>
                 <we-colorpicker data-dependencies="popup_backdrop_opt"
                                 data-select-style="true"
                                 data-css-property="background-color"
                                 data-color-prefix="bg-"
                                 data-css-compatible="true"/>
-                <we-checkbox data-name="popup_backdrop_opt"
-                             data-select-class="s_popup_no_backdrop|"
-                             data-set-backdrop="true"
-                             data-no-preview="true"/>
             </we-row>
         </t>
         <t t-set="extra_popup_options">
@@ -71,7 +71,7 @@
                 <we-button data-select-data-attribute="afterDelay" data-name="show_delay">Delay</we-button>
                 <we-button data-select-data-attribute="mouseExit">On Exit</we-button>
             </we-select>
-            <we-input string="Delay"
+            <we-input string="⌙ Delay"
                       data-select-data-attribute=""
                       data-attribute-name="showAfter"
                       data-unit="s"

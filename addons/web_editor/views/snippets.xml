@@ -34,15 +34,17 @@
 </template>
 
 <template id="snippet_options_image_optimization_widgets">
-    <we-range string="Quality" data-set-quality=""/>
-    <!-- Select filled in JS -->
-    <we-select string="Width" data-name="width_select_opt" data-no-preview="true"/>
-    <we-colorpicker string="Color filter" data-set-filter="" data-no-preview="true" data-excluded="common, theme"/>
+    <t t-set="filter_label">Color filter</t>
+    <t t-set="width_label">Width</t>
+    <t t-set="quality_label">Quality</t>
     <div class="o_we_external_warning d-none">
         <we-title title="Quality options are unavailable for external images. If you want to change this image's quality, please first download it from the original source and upload it in Odoo.">
             <i class="fa fa-warning" /> External Image
         </we-title>
     </div>
+    <we-colorpicker t-att-string="indent and ('⌙ %s' % filter_label) or filter_label" data-set-filter="" data-no-preview="true" data-excluded="common, theme"/>
+    <we-select t-att-string="indent and ('⌙ %s' % width_label) or width_label" data-name="width_select_opt" data-no-preview="true"/>
+    <we-range t-att-string="indent and ('⌙ %s' % quality_label) or quality_label" data-set-quality=""/>
     <div class="o_we_image_weight d-none"><i class="fa fa-long-arrow-right"/><span/></div>
 </template>
 
@@ -81,7 +83,7 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-row>
+            <we-row string="⌙ Position">
                 <we-select data-no-preview="true">
                     <we-button data-background-type="cover">Cover</we-button>
                     <we-button data-background-type="repeat-pattern" data-name="background_repeat_opt">Repeat pattern</we-button>
@@ -90,8 +92,8 @@
                         data-background-position-overlay="true" data-no-preview="true"/>
             </we-row>
             <we-multi data-css-property="background-size" data-dependencies="background_repeat_opt">
-                <we-input string="Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
-                <we-input string="Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
+                <we-input string="⌙ Width" data-select-style="auto" placeholder="auto" data-unit="px"/>
+                <we-input string="⌙ Height" data-select-style="auto" placeholder="auto" data-unit="px"/>
             </we-multi>
         </div>
 
@@ -99,7 +101,9 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <t t-call="web_editor.snippet_options_image_optimization_widgets"/>
+            <t t-call="web_editor.snippet_options_image_optimization_widgets">
+                <t t-set="indent" t-value="True"/>
+            </t>
         </div>
     </t>
 </template>

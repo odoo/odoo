@@ -10,28 +10,17 @@
 <template id="s_hr_options" inherit_id="website.snippet_options">
     <xpath expr="." position="inside">
         <div data-selector=".s_hr" data-target="hr">
-            <we-row string="Thickness">
-                <we-colorpicker
-                    data-select-style="true"
-                    data-css-property="border-color"
-                    data-color-prefix="border-"
-                    data-excluded="transparent_grayscale"/>
-                <we-input data-unit="px" data-select-style="1px"
-                          data-css-property="border-top-width"/>
-            </we-row>
-            <we-select string="Style" data-css-property="border-top-style">
-                <we-button data-select-style="solid">Solid</we-button>
-                <we-button data-select-style="dashed">Dashed</we-button>
-                <we-button data-select-style="dotted">Dotted</we-button>
-                <we-button data-select-style="double">Double</we-button>
-            </we-select>
+            <t t-call="website.snippet_options_border_line_widgets">
+                <t t-set="label">Border</t>
+                <t t-set="direction" t-value="'top'"/>
+            </t>
             <we-select string="Width">
                 <we-button data-select-class="w-25">25%</we-button>
                 <we-button data-select-class="w-50">50%</we-button>
                 <we-button data-select-class="w-75">75%</we-button>
-                <we-button data-select-class="w-100">100%</we-button>
+                <we-button data-select-class="w-100" data-name="so_width_100">100%</we-button>
             </we-select>
-            <we-button-group string="Alignment">
+            <we-button-group string="Alignment" data-dependencies="!so_width_100">
                 <we-button title="Left" data-select-class="mr-auto"><i class="fa fa-fw fa-align-left"/></we-button>
                 <we-button title="Center" data-select-class="mx-auto"><i class="fa fa-fw fa-align-center"/></we-button>
                 <we-button title="Right" data-select-class="ml-auto"><i class="fa fa-fw fa-align-right"/></we-button>
