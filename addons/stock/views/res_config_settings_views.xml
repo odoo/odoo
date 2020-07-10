@@ -11,22 +11,6 @@
                     <div class="app_settings_block" data-string="Inventory" string="Inventory" data-key="stock" groups="stock.group_stock_manager">
                         <h2>Operations</h2>
                         <div class="row mt16 o_settings_container" name="operations_setting_container">
-                            <div class="col-12 col-lg-6 o_setting_box" id="process_operations_barcodes">
-                                <div class="o_setting_left_pane">
-                                    <field name="module_stock_barcode" widget="upgrade_boolean"/>
-                                </div>
-                                <div class="o_setting_right_pane" id="barcode_settings">
-                                    <label for="module_stock_barcode"/>
-                                    <a href="https://www.odoo.com/documentation/user/13.0/inventory/barcode/setup/software.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
-                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
-                                    <div class="text-muted" name="stock_barcode">
-                                        Process operations faster with barcodes
-                                    </div>
-                                    <div class="content-group">
-                                        <div id="use_product_barcode"/>
-                                    </div>
-                                </div>
-                            </div>
                             <div class="col-12 col-lg-6 o_setting_box"
                                 id="product_packs_tracking"
                                 title="Put your products in packs (e.g. parcels, boxes) and track them">
@@ -60,6 +44,25 @@
                                     <label for="group_warning_stock" string="Warnings"/>
                                     <div class="text-muted">
                                         Get informative or blocking warnings on partners
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <h2>Barcode</h2>
+                        <div class="row mt16 o_settings_container" name="barcode_setting_container">
+                            <div class="col-12 col-lg-6 o_setting_box" id="process_operations_barcodes">
+                                <div class="o_setting_left_pane">
+                                    <field name="module_stock_barcode" widget="upgrade_boolean"/>
+                                </div>
+                                <div class="o_setting_right_pane" id="barcode_settings">
+                                    <label for="module_stock_barcode"/>
+                                    <a href="https://www.odoo.com/documentation/user/13.0/inventory/barcode/setup/software.html" title="Documentation" class="mr-2 o_doc_link" target="_blank"></a>
+                                    <span class="fa fa-lg fa-building-o" title="Values set here are company-specific." groups="base.group_multi_company"/>
+                                    <div class="text-muted" name="stock_barcode">
+                                        Process operations faster with barcodes
+                                    </div>
+                                    <div class="content-group">
+                                        <div id="use_product_barcode"/>
                                     </div>
                                 </div>
                             </div>
