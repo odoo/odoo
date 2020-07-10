@@ -150,6 +150,7 @@ update-rc.d -f dnsmasq remove
 update-rc.d timesyncd defaults
 
 systemctl enable ramdisks.service
+systemctl enable led-status.service
 systemctl disable dphys-swapfile.service
 systemctl enable ssh
 systemctl set-default graphical.target

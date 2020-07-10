@@ -1891,7 +1891,9 @@ var FieldBinaryImage = AbstractFieldBinary.extend({
                     attach: '.o_content',
                     attachToTarget: true,
                     onShow: function () {
-                        if(this.$zoom.height() < 256 && this.$zoom.width() < 256) {
+                        var zoomHeight = Math.ceil(this.$zoom.height());
+                        var zoomWidth = Math.ceil(this.$zoom.width());
+                        if( zoomHeight < 128 && zoomWidth < 128) {
                             this.hide();
                         }
                     },
