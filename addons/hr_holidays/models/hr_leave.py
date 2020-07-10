@@ -17,6 +17,7 @@ from odoo.exceptions import AccessError, UserError, ValidationError
 from odoo.tools import float_compare
 from odoo.tools.float_utils import float_round
 from odoo.tools.translate import _
+from odoo.osv import expression
 
 _logger = logging.getLogger(__name__)
 
@@ -489,17 +490,17 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('date_from', 'date_to', 'state', 'employee_id')
     def _check_date(self):
-        for holiday in self.filtered('employee_id'):
-            domain = [
-                ('date_from', '<', holiday.date_to),
-                ('date_to', '>', holiday.date_from),
-                ('employee_id', '=', holiday.employee_id.id),
-                ('id', '!=', holiday.id),
-                ('state', 'not in', ['cancel', 'refuse']),
-            ]
-            nholidays = self.search_count(domain)
-            if nholidays:
-                raise ValidationError(_('You can not set 2 times off that overlaps on the same day for the same employee.'))
+        employees = self.mapped('employee_id')
+        domains = [[
+            ('date_from', '<', holiday.date_to),
+            ('date_to', '>', holiday.date_from),
+            ('employee_id', '=', holiday.employee_id.id),
+            ('id', '!=', holiday.id),
+            ('state', 'not in', ['cancel', 'refuse']),
+        ] for holiday in self.filtered('employee_id')]
+        domain = expression.OR(domains)
+        if self.search_count(domain):
+            raise ValidationError(_('You can not set 2 times off that overlaps on the same day for the same employee.'))
 
     @api.constrains('state', 'number_of_days', 'holiday_status_id')
     def _check_holidays(self):
