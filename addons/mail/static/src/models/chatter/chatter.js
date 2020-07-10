@@ -68,7 +68,7 @@ function factory(dependencies) {
                 );
                 activities.push(activity);
             }
-            this.update({ activities: [['replace', activities]] });
+            this.update({ activities: [['replace', activities]], activityIds: [newActivityIds] });
         }
 
         showLogNote() {
@@ -169,8 +169,10 @@ function factory(dependencies) {
                     previous.thread.delete();
                 }
             }
-
-            if (previous.activityIds.join(',') !== this.activityIds.join(',')) {
+            if (
+                previous.activityIds.join(',') !== this.activityIds.join(',') &&
+                this.activities.map((activity) => activity.id).join(',') !== this.activityIds.join(',')
+            ) {
                 this.refreshActivities();
             }
             if (
