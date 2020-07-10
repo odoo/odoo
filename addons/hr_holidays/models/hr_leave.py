@@ -825,9 +825,9 @@ class HolidaysRequest(models.Model):
                 (4, self.user_id.partner_id.id)]
         return meeting_values
 
-    def _prepare_holiday_values(self, employee):
+    def _prepare_holiday_values(self, employees):
         self.ensure_one()
-        values = {
+        return [{
             'name': self.name,
             'holiday_type': 'employee',
             'holiday_status_id': self.holiday_status_id.id,
@@ -840,8 +840,7 @@ class HolidaysRequest(models.Model):
             'parent_id': self.id,
             'employee_id': employee.id,
             'state': 'validate',
-        }
-        return values
+        } for employee in employees]
 
     def action_draft(self):
         if any(holiday.state not in ['confirm', 'refuse'] for holiday in self):
@@ -973,14 +972,16 @@ class HolidaysRequest(models.Model):
 
                 split_leaves.filtered(lambda l: l.state in 'validate')._validate_leave_request()
 
-            values = [holiday._prepare_holiday_values(employee) for employee in employees]
+            values = holiday._prepare_holiday_values(employees)
             leaves = self.env['hr.leave'].with_context(
                 tracking_disable=True,
                 mail_activity_automation_skip=True,
                 leave_fast_create=True,
                 leave_skip_state_check=True,
             ).create(values)
+
             leaves._validate_leave_request()
+
         employee_requests = self.filtered(lambda hol: hol.holiday_type == 'employee')
         employee_requests._validate_leave_request()
         if not self.env.context.get('leave_fast_create'):
