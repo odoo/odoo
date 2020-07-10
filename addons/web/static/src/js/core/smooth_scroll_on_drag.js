@@ -183,7 +183,6 @@ const SmoothScrollOnDrag = Class.extend(mixins.ParentedMixin, {
                         left: offset.left + this.horizontalDelta
                     });
                 }
-                console.log(this.verticalDelta);
                 this.$scrollTarget.scrollTop(
                     this.$scrollTarget.scrollTop() +
                     this.verticalDelta
