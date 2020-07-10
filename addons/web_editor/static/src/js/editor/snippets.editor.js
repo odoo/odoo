@@ -2,7 +2,6 @@ odoo.define('web_editor.snippet.editor', function (require) {
 'use strict';
 
 var concurrency = require('web.concurrency');
-var Class = require('web.Class');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var dom = require('web.dom');
@@ -1765,7 +1764,6 @@ var SnippetsMenu = Widget.extend({
      */
     _makeSnippetDraggable: function ($snippets) {
         var self = this;
-        var $tumb = $snippets.find('.oe_snippet_thumbnail_img:first');
         var $toInsert, dropped, $snippet;
 
         const smoothScrollOptions = {
