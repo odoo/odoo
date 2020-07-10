@@ -1158,12 +1158,7 @@ class MrpProduction(models.Model):
 
             # Instantiate start_date for the next workorder planning
             if workorder.next_work_order_id:
-                if not workorder.operation_id or workorder.operation_id.batch == 'no' or workorder.operation_id.batch_size >= qty_to_produce:
-                    start_date = best_finished_date
-                else:
-                    cycle_number = float_round(workorder.operation_id.batch_size / best_workcenter.capacity, precision_digits=0, rounding_method='UP')
-                    duration = best_workcenter.time_start + cycle_number * workorder.operation_id.time_cycle * 100.0 / best_workcenter.time_efficiency
-                    start_date = best_workcenter.resource_calendar_id.plan_hours(duration / 60.0, best_start_date, compute_leaves=True, resource=best_workcenter.resource_id, domain=[('time_type', 'in', ['leave', 'other'])])
+                start_date = best_finished_date
 
             # Create leave on chosen workcenter calendar
             leave = self.env['resource.calendar.leaves'].create({
