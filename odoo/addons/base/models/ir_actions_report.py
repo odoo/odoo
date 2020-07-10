@@ -795,6 +795,7 @@ class IrActionsReport(models.Model):
                 'doc_model': self.model,
                 'docs': docs,
             })
+        data['report_paperformat_id'] = self.get_paperformat()
         return data
 
     def render(self, res_ids, data=None):

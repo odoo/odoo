@@ -31,7 +31,7 @@
                     <h1>QR-bill for invoice <t t-esc="o.name"/></h1>
                 </div>
 
-                <div class="swissqr_content">
+                <div class="swissqr_content" t-attf-style="position: relative; top: -#{report_paperformat_id.margin_top * 1.27}mm">
 
                     <div class="swissqr_receipt" t-if="o.invoice_partner_bank_id.validate_swiss_code_arguments(o.invoice_partner_bank_id.currency_id, o.partner_id, o.invoice_payment_ref) and ((o.currency_id.name == 'EUR') or (o.currency_id.name == 'CHF'))">
                         <div id="receipt_title_zone" class="main_title swissqr_column_left">
