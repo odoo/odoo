@@ -536,35 +536,35 @@ class TestFillTemporal(common.TransactionCase):
 
         We group year by quarter and check that it is consistent with timezone.
         """
-        self.Model.create({'datetime': '2019-01-01 03:30:00', 'value': 2})
-        self.Model.create({'datetime': '2019-12-30 22:30:00', 'value': 3})
+        self.Model.create({'datetime': '2016-01-01 03:30:00', 'value': 2})
+        self.Model.create({'datetime': '2016-12-30 22:30:00', 'value': 3})
 
         expected = [{
             '__domain': ['&',
-                ('datetime', '>=', '2018-12-31 17:00:00'),
-                ('datetime', '<', '2019-03-31 16:00:00')],
-            'datetime:quarter': 'Q1 2019',
+                ('datetime', '>=', '2015-12-31 17:00:00'),
+                ('datetime', '<', '2016-03-31 16:00:00')],
+            'datetime:quarter': 'Q1 2016',
             'datetime_count': 1,
             'value': 2
         }, {
             '__domain': ['&',
-                       ('datetime', '>=', '2019-03-31 16:00:00'),
-                       ('datetime', '<', '2019-06-30 16:00:00')],
-            'datetime:quarter': 'Q2 2019',
+                       ('datetime', '>=', '2016-03-31 16:00:00'),
+                       ('datetime', '<', '2016-06-30 16:00:00')],
+            'datetime:quarter': 'Q2 2016',
             'datetime_count': 0,
             'value': False
         }, {
             '__domain': ['&',
-                       ('datetime', '>=', '2019-06-30 16:00:00'),
-                       ('datetime', '<', '2019-09-30 17:00:00')],
-            'datetime:quarter': 'Q3 2019',
+                       ('datetime', '>=', '2016-06-30 16:00:00'),
+                       ('datetime', '<', '2016-09-30 17:00:00')],
+            'datetime:quarter': 'Q3 2016',
             'datetime_count': 0,
             'value': False
         }, {
             '__domain': ['&',
-                       ('datetime', '>=', '2019-09-30 17:00:00'),
-                       ('datetime', '<', '2019-12-31 17:00:00')],
-            'datetime:quarter': 'Q4 2019',
+                       ('datetime', '>=', '2016-09-30 17:00:00'),
+                       ('datetime', '<', '2016-12-31 17:00:00')],
+            'datetime:quarter': 'Q4 2016',
             'datetime_count': 1,
             'value': 3
         }]
