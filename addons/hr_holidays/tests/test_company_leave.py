@@ -314,7 +314,9 @@ class TestCompanyLeave(SavepointCase):
         })
         company_leave._onchange_request_parameters()
 
-        with self.assertQueryCount(__system__=1, demo=1):
+        has_enterprise = self.env['ir.module.module'].search([('name', '=', 'web_enterprise')])
+        count = 145 if has_enterprise else 144
+        with self.assertQueryCount(__system__=count, admin=count):
             # Original query count: 1987
             # Without tracking/activity context keys: 5154
             company_leave.action_validate()
