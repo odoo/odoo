@@ -319,7 +319,7 @@ QUnit.test('widget barcode_handler', async function (assert) {
         arch: '<form>' +
                     '<field name="display_name"/>' +
                     '<field name="int_field"/>' +
-                    '<field name="barcode_scanned" widget="barcode_handler" invisible="1"/>' +
+                    '<field name="barcode_scanned" widget="barcode_handler"/>' +
                 '</form>',
         mockRPC: function (route, args) {
             if (args.method === 'onchange') {
