@@ -660,8 +660,6 @@
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
         <script type="text/javascript" src="/web/static/tests/helpers/test_env.js"></script>
-
-        <script type="text/javascript" src="/web/static/tests/component_extension_tests.js"></script>
     </template>
 
     <template id="web.qunit_suite">
@@ -773,6 +771,7 @@
         <script type="text/javascript" src="/web/static/tests/helpers/test_utils_tests.js"></script>
 
         <script type="text/javascript" src="/web/static/tests/owl_compatibility_tests.js"></script>
+        <script type="text/javascript" src="/web/static/tests/component_extension_tests.js"></script>
     </template>
 
     <template id="web.qunit_mobile_suite">
@@ -807,9 +806,6 @@
             <t t-set="html_data" t-value="{'style': 'height: 100%;'}"/>
             <t t-set="title">Web Benchmarks</t>
             <t t-set="head">
-                <link type="text/css" rel="stylesheet" href="/web/static/lib/qunit/qunit-2.9.1.css"/>
-                <script type="text/javascript" src="/web/static/lib/qunit/qunit-2.9.1.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/qunit_config.js"></script>
                 <script type="text/javascript" src="/web/static/lib/benchmarkjs/lodash.js"></script>
                 <script type="text/javascript" src="/web/static/lib/benchmarkjs/benchmark.js"></script>
 
@@ -817,30 +813,11 @@
                 <t t-call-assets="web.assets_backend" t-js="false"/>
                 <t t-call-assets="web.assets_common" t-css="false"/>
                 <t t-call-assets="web.assets_backend" t-css="false"/>
-
-                <script type="text/javascript" src="/web/static/tests/helpers/qunit_asserts.js"></script>
+                <t t-call-assets="web.tests_assets" t-js="false"/>
+                <t t-call-assets="web.tests_assets" t-css="false"/>
 
                 <script type="text/javascript">
                     QUnit.config.hidepassed = false;
-
-                    odoo.define('web.WebClientWithoutServices', function (require) {
-                        var WebClient = require('web.WebClient');
-                        var WebClientWithoutServices = WebClient.extend({
-                            /**
-                             * Patch web client so that it is no longer a service provider.
-                             *
-                             * @override
-                             */
-                            _onCallService: function () {},
-                        });
-                        return WebClientWithoutServices;
-                    });
-                    // define the 'web.web_client' module because some other modules require it
-                    odoo.define('web.web_client', function (require) {
-                        var WebClient = require('web.WebClientWithoutServices');
-                        var web_client = new WebClient();
-                        return web_client;
-                    });
                 </script>
 
                 <style>
@@ -856,18 +833,6 @@
                         display: inherit;
                     }
                 </style>
-
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_create.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_dom.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_fields.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_form.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_graph.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_kanban.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_mock.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_modal.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils_pivot.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/test_utils.js"></script>
-                <script type="text/javascript" src="/web/static/tests/helpers/mock_server.js"></script>
 
                 <script type="text/javascript" src="/web/static/tests/views/list_benchmarks.js"></script>
                 <script type="text/javascript" src="/web/static/tests/views/kanban_benchmarks.js"></script>
