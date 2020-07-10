@@ -34,19 +34,11 @@
             <t t-set="images_dependencies" t-value="'blockquote_cover_opt'"/>
         </t>
 
-        <!-- Filter -->
-        <div data-selector=".s_blockquote" data-target=".s_blockquote_filter">
-            <we-colorpicker string="Filter"
-                data-select-style="true"
-                data-css-property="background-color"
-                data-color-prefix="bg-"
-                data-excluded="common, theme, custom"
-                data-dependencies="blockquote_cover_opt"/>
-        </div>
         <!-- Shadow -->
         <div data-js="Box" data-selector=".s_blockquote" data-target=".s_blockquote_content">
             <t t-call="website.snippet_options_shadow_widgets"/>
         </div>
+
         <!-- Border Color -->
         <div data-selector="blockquote">
             <we-colorpicker string="Border Color"
