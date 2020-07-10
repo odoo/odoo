@@ -221,8 +221,9 @@ class MrpWorkorder(models.Model):
 
     def _set_qty_producing(self):
         for workorder in self:
-            workorder.production_id.qty_producing = workorder.qty_producing
-            workorder.production_id._set_qty_producing()
+            if workorder.qty_producing != 0 and workorder.production_id.qty_producing != workorder.qty_producing:
+                workorder.production_id.qty_producing = workorder.qty_producing
+                workorder.production_id._set_qty_producing()
 
     # Both `date_planned_start` and `date_planned_finished` are related fields on `leave_id`. Let's say
     # we slide a workorder on a gantt view, a single call to write is made with both
