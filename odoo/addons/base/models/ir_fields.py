@@ -346,7 +346,6 @@ class IrFieldsConverter(models.AbstractModel):
             field_type = _(u"name")
             if value == '':
                 return False, field_type, warnings
-            flush()
             ids = RelatedModel.name_search(name=value, operator='=')
             if ids:
                 if len(ids) > 1:
