@@ -150,21 +150,21 @@
         </div>
         <ul class="list-unstyled mx-3">
             <li class="o_wesession_list_item row bg-white shadow-sm border-bottom-0 py-2">
-                <span name="o_wesession_tracks_list_topic_label" class="col-md-4">Topic</span>
+                <span class="col-md-4">Topic</span>
                 <div class="col-md-2">Tags</div>
-                <span name="o_wesession_tracks_list_partner_label" class="col-md-2">Speaker</span>
+                <span class="col-md-2">Speaker</span>
                 <span class="col-md-1">Duration</span>
                 <span class="col-md-3">Starts</span>
             </li>
             <t t-foreach="tracks" t-as="track">
                <li class="o_wesession_list_item row bg-white-50 border-top-0 py-2">
-                    <a name="o_wesession_tracks_list_topic_value" t-att-href="track.website_url" class="col-md-4" t-esc="track.name"/>
+                    <a t-att-href="track.website_url" class="col-md-4" t-esc="track.name"/>
                     <div class="col-md-2">
                         <t t-foreach="track.tag_ids" t-as="tag">
                             <t t-call="website_event_track_session.track_tag_badge_link"/>
                         </t>
                     </div>
-                    <span name="o_wesession_tracks_list_partner_value" class="col-md-2" t-esc="track.partner_name"/>
+                    <span class="col-md-2" t-esc="track.partner_name"/>
                     <span class="col-md-1" t-esc="track.duration"
                         t-options="{'widget': 'duration', 'digital': False, 'format': 'short', 'unit': 'hour', 'round': 'minute'}"/>
                     <span class="col-md-3 d-flex align-items-center">
