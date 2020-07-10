@@ -10,27 +10,6 @@
     </div>
 </template>
 
-<template id="s_text_highlight_options" inherit_id="website.snippet_options">
-    <xpath expr="//t[@t-set='only_bg_color_selector']" position="after">
-        <t t-set="only_bg_color_selector" t-value="only_bg_color_selector + ', .s_text_highlight'"/>
-    </xpath>
-    <xpath expr="//div[@id='so_width']" position="attributes">
-        <attribute name="data-selector" add=".s_text_highlight"/>
-    </xpath>
-    <xpath expr="//div[@id='so_text_align']" position="attributes">
-        <attribute name="data-selector" add=".s_text_highlight"/>
-    </xpath>
-    <xpath expr="//div[@data-js='parallax']" position="before">
-        <div data-selector=".s_text_highlight">
-            <we-button-group string="Position">
-                <we-button title="Left" data-select-class=""><i class="fa fa-fw fa-align-left"/></we-button>
-                <we-button title="Center" data-select-class="mx-auto"><i class="fa fa-fw fa-align-center"/></we-button>
-                <we-button title="Right" data-select-class="ml-auto"><i class="fa fa-fw fa-align-right"/></we-button>
-            </we-button-group>
-        </div>
-    </xpath>
-</template>
-
 <template id="assets_snippet_s_text_highlight_css_000" inherit_id="website.assets_frontend">
     <xpath expr="//link[last()]" position="after">
         <link rel="stylesheet" type="text/scss" href="/website/static/src/snippets/s_text_highlight/000.scss"/>
