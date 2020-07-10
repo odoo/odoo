@@ -1013,7 +1013,10 @@ class AccountTestInvoicingCommon(SavepointCase):
 
     @classmethod
     def init_invoice(cls, move_type, partner=None, invoice_date=None):
-        move_form = Form(cls.env['account.move'].with_context(default_move_type=move_type))
+        move_form = Form(cls.env['account.move'].with_context(
+            default_move_type=move_type,
+            default_date=invoice_date or fields.Date.from_string('2019-01-01'),
+        ))
         move_form.invoice_date = invoice_date or fields.Date.from_string('2019-01-01')
         move_form.partner_id = partner or cls.partner_a
         with move_form.invoice_line_ids.new() as line_form:
