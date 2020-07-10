@@ -268,6 +268,7 @@ QWeb2.Engine = (function() {
                             return this.tools.exception("Can't clone undefined template " + extend);
                         }
                         this.templates[name] = this.templates[extend].cloneNode(true);
+                        this.extend_templates[name] = (this.extend_templates[extend] || []).slice();
                         extend = name;
                         name = undefined;
                     }
