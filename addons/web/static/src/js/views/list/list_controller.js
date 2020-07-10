@@ -174,9 +174,9 @@ var ListController = BasicController.extend({
             this.$buttons.toggleClass('o-editing', mode === 'edit');
             const state = this.model.get(this.handle, {raw: true});
             if (state.count) {
-                this.$('.o_list_export_xlsx').show();
+                this.$buttons.find('.o_list_export_xlsx').show();
             } else {
-                this.$('.o_list_export_xlsx').hide();
+                this.$buttons.find('.o_list_export_xlsx').hide();
             }
         }
         this._updateSelectionBox();

@@ -278,6 +278,25 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('export button in empty list view', async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            View: ListView,
+            model: "foo",
+            data: this.data,
+            arch: '<tree><field name="foo"/></tree>',
+            domain: [["id", "<", 0]], // such that no record matches the domain
+        });
+
+        assert.isNotVisible(list.el.querySelector('.o_list_export_xlsx'));
+
+        await list.reload({ domain: [['id', '>', 0]] });
+        assert.isVisible(list.el.querySelector('.o_list_export_xlsx'));
+
+        list.destroy();
+    });
+
     QUnit.test('list view with adjacent buttons', async function (assert) {
         assert.expect(2);
 
