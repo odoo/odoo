@@ -916,14 +916,14 @@ class HolidaysRequest(models.Model):
                 if holiday.leave_type_request_unit != 'day' or any(l.leave_type_request_unit == 'hour' for l in conflicting_leaves):
                     raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
 
+                target_states = {l.employee_id: l.state for l in conflicting_leaves}
                 conflicting_leaves.action_refuse()
+                split_leaves_vals = []
                 for conflicting_leave in conflicting_leaves:
                     if conflicting_leave.leave_type_request_unit == 'half_day' and conflicting_leave.request_unit_half:
                         continue
 
                     # Leaves in days
-                    split_leaves = self.env['hr.leave']
-                    target_state = conflicting_leave.state
                     if conflicting_leave.date_from < holiday.date_from:
                         before_leave_vals = conflicting_leave.copy_data({
                             'date_from': conflicting_leave.date_from.date(),
@@ -942,11 +942,7 @@ class HolidaysRequest(models.Model):
                         # new instead of create. As the leave is not actually created yet, the sql
                         # constraint didn't check date_from < date_to yet.
                         if before_leave.date_from < before_leave.date_to:
-                            split_leaves |= self.env['hr.leave'].with_context(
-                                tracking_disable=True,
-                                mail_activity_automation_skip=True,
-                                leave_fast_create=True
-                            ).create(before_leave._convert_to_write(before_leave._cache))
+                            split_leaves_vals.append(before_leave._convert_to_write(before_leave._cache))
                     if conflicting_leave.date_to > holiday.date_to:
                         after_leave_vals = conflicting_leave.copy_data({
                             'date_from': holiday.date_to.date() + timedelta(days=1),
@@ -957,22 +953,25 @@ class HolidaysRequest(models.Model):
                         # Could happen for part-time contract, that time off is not necessary
                         # anymore.
                         if after_leave.date_from < after_leave.date_to:
-                            split_leaves |= self.env['hr.leave'].with_context(
-                                tracking_disable=True,
-                                mail_activity_automation_skip=True,
-                                leave_fast_create=True
-                            ).create(after_leave._convert_to_write(after_leave._cache))
-                    for split_leave in split_leaves:
-                        if target_state == 'draft':
-                            continue
-                        if target_state == 'confirm':
-                            split_leave.action_confirm()
-                        elif target_state == 'validate1':
-                            split_leave.action_confirm()
-                            split_leave.action_approve()
-                        elif target_state == 'validate':
-                            split_leave.action_confirm()
-                            split_leave.action_validate()
+                            split_leaves_vals.append(after_leave._convert_to_write(after_leave._cache))
+
+                split_leaves = self.env['hr.leave'].with_context(
+                    tracking_disable=True,
+                    mail_activity_automation_skip=True,
+                    leave_fast_create=True
+                ).create(split_leaves_vals)
+
+                e_to_confirm, e_to_approve, e_to_validate = [], [], []
+                for employee, state in target_states.items():
+                    if state == 'confirm':
+                        e_to_confirm.append(employee)
+                    if state == 'validate1':
+                        e_to_approve.append(employee)
+                    if state == 'validate':
+                        e_to_validate.append(employee)
+                split_leaves.filtered(lambda l: l.employee_id.id in e_to_confirm + e_to_approve + e_to_validate).action_confirm()
+                split_leaves.filtered(lambda l: l.employee_id.id in e_to_approve).action_approve()
+                split_leaves.filtered(lambda l: l.employee_id.id in e_to_validate).action_validate()
 
             values = [holiday._prepare_holiday_values(employee) for employee in employees]
             leaves = self.env['hr.leave'].with_context(
