@@ -8,6 +8,7 @@
     "depends": ["account", "base_vat"],
     "data": [
         "data/account_chart_template_before_accounts.xml",
+        "data/account.account.tag.csv",
         "data/account.account.template.csv",
         "data/account_chart_template_after_accounts.xml",
         "data/account_tax_group.xml",
