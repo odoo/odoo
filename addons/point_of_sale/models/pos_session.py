@@ -416,8 +416,13 @@ class PosSession(models.Model):
 
                 if self.company_id.anglo_saxon_accounting and order.picking_id.id:
                     # Combine stock lines
+                    order_pickings = self.env['stock.picking'].search([
+                        '|',
+                        ('origin', '=', order.name),
+                        ('id', '=', order.picking_id.id)
+                    ])
                     stock_moves = self.env['stock.move'].search([
-                        ('picking_id', '=', order.picking_id.id),
+                        ('picking_id', 'in', order_pickings.ids),
                         ('company_id.anglo_saxon_accounting', '=', True),
                         ('product_id.categ_id.property_valuation', '=', 'real_time')
                     ])
@@ -603,7 +608,11 @@ class PosSession(models.Model):
             ).reconcile()
 
         # reconcile stock output lines
-        stock_moves = self.env['stock.move'].search([('picking_id', 'in', self.order_ids.filtered(lambda order: not order.is_invoiced).mapped('picking_id').ids)])
+        orders_to_invoice = self.order_ids.filtered(lambda order: not order.is_invoiced)
+        stock_moves = (
+            orders_to_invoice.mapped('picking_id') +
+            self.env['stock.picking'].search([('origin', 'in', orders_to_invoice.mapped('name'))])
+        ).mapped('move_lines')
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
             ( stock_output_lines[account_id].filtered(lambda aml: not aml.reconciled)

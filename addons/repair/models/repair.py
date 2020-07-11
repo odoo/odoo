@@ -43,7 +43,7 @@ class Repair(models.Model):
     product_uom_category_id = fields.Many2one(related='product_id.uom_id.category_id')
     partner_id = fields.Many2one(
         'res.partner', 'Customer',
-        index=True, states={'confirmed': [('readonly', True)]},
+        index=True, states={'confirmed': [('readonly', True)]}, change_default=True,
         help='Choose partner for whom the order will be invoiced and delivered. You can find a partner by its Name, TIN, Email or Internal Reference.')
     address_id = fields.Many2one(
         'res.partner', 'Delivery Address',
@@ -648,7 +648,10 @@ class RepairLine(models.Model):
             else:
                 self.name = self.product_id.display_name
             if self.product_id.description_sale:
-                self.name += '\n' + self.product_id.description_sale
+                if partner:
+                    self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+                else:
+                    self.name += '\n' + self.product_id.description_sale
             self.product_uom = self.product_id.uom_id.id
         if self.type != 'remove':
             if partner and self.product_id:
@@ -732,7 +735,10 @@ class RepairFee(models.Model):
                 self.name = self.product_id.display_name
             self.product_uom = self.product_id.uom_id.id
             if self.product_id.description_sale:
-                self.name += '\n' + self.product_id.description_sale
+                if partner:
+                    self.name += '\n' + self.product_id.with_context(lang=partner.lang).description_sale
+                else:
+                    self.name += '\n' + self.product_id.description_sale
 
         warning = False
         if not pricelist:

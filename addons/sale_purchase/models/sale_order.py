@@ -257,8 +257,8 @@ class SaleOrderLine(models.Model):
         for line in self:
             line = line.with_context(force_company=line.company_id.id)
             # determine vendor of the order (take the first matching company and product)
-            # VFE fixme why isn't the _select_seller function used ???
-            suppliers = line.product_id.seller_ids.filtered(lambda vendor: (not vendor.company_id or vendor.company_id == line.company_id) and (not vendor.product_id or vendor.product_id == line.product_id))
+            suppliers = line.product_id.with_context(force_company=line.company_id.id)._select_seller(
+                quantity=line.product_uom_qty, uom_id=line.product_uom)
             if not suppliers:
                 raise UserError(_("There is no vendor associated to the product %s. Please define a vendor for this product.") % (line.product_id.display_name,))
             supplierinfo = suppliers[0]
