@@ -4,18 +4,18 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Jeffery CHEN <jeffery9@gmail.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
+# Felix Yang/杨孟泽 <felixyangsh@aliyun.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.4\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-12 11:32+0000\n"
-"PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2019\n"
+"POT-Creation-Date: 2020-02-13 07:24+0000\n"
+"PO-Revision-Date: 2016-08-05 13:29+0000\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -54,12 +54,12 @@ msgstr "记录的成本"
 #. module: mrp_account
 #: model:ir.model.fields,field_description:mrp_account.field_mrp_production__extra_cost
 msgid "Extra Cost"
-msgstr ""
+msgstr "额外成本"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_production__extra_cost
 msgid "Extra cost per produced unit"
-msgstr ""
+msgstr "每个生产单位的额外成本"
 
 #. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter__costs_hour_account_id
@@ -84,21 +84,18 @@ msgid "Production Order"
 msgstr "生产订单"
 
 #. module: mrp_account
+#: model:ir.model.fields,field_description:mrp_account.field_mrp_production__show_valuation
+msgid "Show Valuation"
+msgstr ""
+
+#. module: mrp_account
 #: model:ir.model.fields,help:mrp_account.field_mrp_workcenter_productivity__cost_already_recorded
 msgid ""
 "Technical field automatically checked when a ongoing production posts "
 "journal entries for its costs. This way, we can record one production's cost"
 " multiple times and only consider new entries in the work centers time "
 "lines."
-msgstr "技术领域在正在进行的生产过帐日记帐分录时自动检查其成本。 这样，我们可以多次记录一个生产成本，只考虑工作中心时间线上的新条目。"
-
-#. module: mrp_account
-#: code:addons/mrp_account/models/product.py:40
-#, python-format
-msgid ""
-"The inventory valuation of some products %s is automated. You can only "
-"update their cost from the product form."
-msgstr "某些产品%s的库存估值是自动计算的。您只能更新产品中的成本。"
+msgstr "技术领域在正在进行的生产过帐会计凭证时自动检查其成本。 这样，我们可以多次记录一个生产成本，只考虑工作中心时间线上的新条目。"
 
 #. module: mrp_account
 #: model_terms:ir.ui.view,arch_db:mrp_account.mrp_production_form_view_inherited

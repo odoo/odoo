@@ -3,19 +3,32 @@
 # 	* pos_restaurant
 # 
 # Translators:
-# Martin Trigaux, 2019
-# Felix Schubert <felix.schubert@go-erp.com>, 2019
+# JackTheHunter <Maximilian.N98@gmail.com>, 2017
+# Niki Waibel, 2017
+# Charly Chimpo <charlychimpo@gmail.com>, 2017
+# Tina Rittmüller <tr@ife.de>, 2017
+# Henry Mineehen <info@mineehen.de>, 2017
+# Ralf Hilgenstock <rh@dialoge.info>, 2017
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2017
+# dd5cd5bab88c61e9dedf84f5ea59b147, 2017
+# Ermin Trevisan <trevi@twanda.com>, 2017
+# Fabian Liesch <fabian.liesch@gmail.com>, 2017
+# Dejan Dinic, 2017
+# e2f <projects@e2f.com>, 2018
+# Katharina Moritz <kmo@e2f.com>, 2018
 # Wolfgang Taferner, 2019
-# Leon Grill <leg@odoo.com>, 2019
 # Chris Egal <sodaswed@web.de>, 2019
+# Martin Trigaux, 2019
+# Leon Grill <leg@odoo.com>, 2019
+# Kevin Harrings <kha@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:15+0000\n"
-"PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Chris Egal <sodaswed@web.de>, 2019\n"
+"POT-Creation-Date: 2020-02-13 08:33+0000\n"
+"PO-Revision-Date: 2016-08-05 13:08+0000\n"
+"Last-Translator: Kevin Harrings <kha@odoo.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -62,11 +75,6 @@ msgid ""
 msgstr ""
 "Ein Restaurant Plan repräsentiert den Platz wo Kunden bedient werden, hier "
 "können Sie die Postion der Tische definieren."
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Accept customer tips or convert their change to a tip"
-msgstr "Trinkgelder annehmen oder das Wechselgeld in Trinkgeld umwandeln"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__active
@@ -227,7 +235,7 @@ msgstr "Änderungen konnten nicht gespeichert werden"
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "Close"
-msgstr "Abschliessen"
+msgstr "Schließen"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__color
@@ -254,20 +262,6 @@ msgstr "Erstellt am"
 #, python-format
 msgid "Delete"
 msgstr "Löschen"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Discount:"
-msgstr "Rabatt:"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Discounts"
-msgstr "Rabatte"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__display_name
@@ -405,14 +399,14 @@ msgstr "Ist eine Bar/ein Restaurant"
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer____last_update
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table____last_update
 msgid "Last Modified on"
-msgstr "Letzte Änderung am"
+msgstr "Zuletzt geändert am"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__write_uid
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__write_uid
 msgid "Last Updated by"
-msgstr "Zuletzt aktualisiert von"
+msgstr "Zuletzt aktualisiert durch"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__write_date
@@ -430,16 +424,19 @@ msgid "Light grey"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Logo"
-msgstr "Logo"
-
-#. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
 msgid "Manage table orders"
 msgstr "Tabellenaufträge verwalten"
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__mp_dirty
+msgid "Mp Dirty"
+msgstr ""
+
+#. module: pos_restaurant
+#: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__multiprint_resume
+msgid "Multiprint Resume"
+msgstr ""
 
 #. module: pos_restaurant
 #. openerp-web
@@ -468,6 +465,13 @@ msgstr "Notiz"
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order_line__note
 msgid "Note added by the waiter."
 msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
+#: code:addons/pos_restaurant/static/src/js/printbill.js:0
+#, python-format
+msgid "Nothing to Print"
+msgstr "Nichts zum Ausdrucken!"
 
 #. module: pos_restaurant
 #. openerp-web
@@ -532,6 +536,13 @@ msgstr "POS Printer"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
+#, python-format
+msgid "PRO FORMA"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/splitbill.xml:0
 #, python-format
 msgid "Payment"
@@ -582,7 +593,7 @@ msgstr "Druckername"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_printer__printer_type
 msgid "Printer Type"
-msgstr ""
+msgstr "Druckermodell"
 
 #. module: pos_restaurant
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
@@ -675,14 +686,7 @@ msgstr "Plätze"
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_floor__sequence
 msgid "Sequence"
-msgstr "Sequenz"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Served by"
-msgstr "Bedient durch"
+msgstr "Reihenfolge"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_restaurant_table__shape
@@ -719,20 +723,6 @@ msgid "Square Shape"
 msgstr ""
 
 #. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Subtotal"
-msgstr "Zwischensumme"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "TOTAL"
-msgstr "GESAMT"
-
-#. module: pos_restaurant
 #: model:ir.model.fields,field_description:pos_restaurant.field_pos_order__table_id
 msgid "Table"
 msgstr "Tabelle"
@@ -759,13 +749,6 @@ msgstr "Tischname?"
 #: model_terms:ir.ui.view,arch_db:pos_restaurant.view_restaurant_floor_form
 msgid "Tables"
 msgstr "Tabellen"
-
-#. module: pos_restaurant
-#. openerp-web
-#: code:addons/pos_restaurant/static/src/xml/printbill.xml:0
-#, python-format
-msgid "Tel:"
-msgstr "Tel.:"
 
 #. module: pos_restaurant
 #: model:ir.model.fields,help:pos_restaurant.field_restaurant_printer__proxy_ip
@@ -839,15 +822,17 @@ msgstr "Tischbreite in pixeln"
 
 #. module: pos_restaurant
 #. openerp-web
+#: code:addons/pos_restaurant/static/src/js/printbill.js:0
+#, python-format
+msgid "There are no order lines"
+msgstr ""
+
+#. module: pos_restaurant
+#. openerp-web
 #: code:addons/pos_restaurant/static/src/xml/floors.xml:0
 #, python-format
 msgid "This floor has no tables yet, use the"
 msgstr "Dieser Plan hat keine Tische, verwenden Sie die"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "This product is used as reference on customer receipts."
-msgstr "Dieses Produkt wird als Referenz auf Kundenquittungen verwendet."
 
 #. module: pos_restaurant
 #. openerp-web
@@ -855,16 +840,6 @@ msgstr "Dieses Produkt wird als Referenz auf Kundenquittungen verwendet."
 #, python-format
 msgid "Tint"
 msgstr ""
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Tip Product"
-msgstr "Produkt für Trinkgeld"
-
-#. module: pos_restaurant
-#: model_terms:ir.ui.view,arch_db:pos_restaurant.pos_config_view_form_inherit_restaurant
-msgid "Tips"
-msgstr "Tipps"
 
 #. module: pos_restaurant
 #. openerp-web
