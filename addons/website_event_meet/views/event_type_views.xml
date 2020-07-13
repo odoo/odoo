@@ -1,0 +1,15 @@
+<?xml version="1.0"?>
+<odoo>
+<record id="event_type_view_form_inherit_track" model="ir.ui.view">
+        <field name="name">event.type.view.form.inherit.track</field>
+        <field name="model">event.type</field>
+        <field name="inherit_id" ref="website_event.event_type_view_form_inherit_website"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@name='event_type_visibility_website']/div[hasclass('o_setting_right_pane')]" position='inside'>
+                <div class="row mt16" attrs="{'invisible': [('website_menu', '=', False)]}">
+                    <label class="col-lg-4" for="website_meeting_room"/> <field name="website_meeting_room"/>
+                </div>
+            </xpath>
+        </field>
+    </record>
+</odoo>

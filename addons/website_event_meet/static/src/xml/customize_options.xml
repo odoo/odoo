@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<templates xml:space="preserve">
+    <t t-extend="website_event.customize_options">
+        <t t-jquery="a[name='display-website-menu']" t-operation="after">
+            <a class="dropdown-item" href="#" name="display-community" role="menuitem">
+                <label class="o_switch" for="display-community">
+                    <input id="display-community" type="checkbox"/>
+                    <span/>
+                    Community
+                </label>
+            </a>
+        </t>
+    </t>
+</templates>
