@@ -18,13 +18,14 @@ odoo.define('web.comparison_menu_tests', function (require) {
                 float_field: { string: "Float", type: "float", group_operator: 'sum' },
                 foo: { string: "Foo", type: "char", store: true, sortable: true },
             };
-            this.viewInfo = {
+            this.cpModelConfig = {
                 arch: `
                     <search>
                         <filter name="birthday" date="birthday"/>
                         <filter name="date_field" date="date_field"/>
                     </search>`,
                 fields: this.fields,
+                searchMenuTypes,
             };
         },
     }, function () {
@@ -36,7 +37,7 @@ odoo.define('web.comparison_menu_tests', function (require) {
 
             const unpatchDate = patchDate(1997, 0, 9, 12, 0, 0);
             const params = {
-                cpStoreConfig: { viewInfo: this.viewInfo, searchMenuTypes },
+                cpModelConfig: this.cpModelConfig,
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -71,7 +72,7 @@ odoo.define('web.comparison_menu_tests', function (require) {
 
             const unpatchDate = patchDate(1997, 0, 9, 12, 0, 0);
             const params = {
-                cpStoreConfig: { viewInfo: this.viewInfo, searchMenuTypes },
+                cpModelConfig: this.cpModelConfig,
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -125,10 +126,9 @@ odoo.define('web.comparison_menu_tests', function (require) {
         QUnit.test('no timeRanges key in search query if "comparison" not in searchMenuTypes', async function (assert) {
             assert.expect(1);
 
+            this.cpModelConfig.searchMenuTypes = ['filter'];
             const params = {
-                cpStoreConfig: {
-                    viewInfo: this.viewInfo, searchMenuTypes: ['filter'],
-                },
+                cpModelConfig: this.cpModelConfig,
                 cpProps: { fields: this.fields, searchMenuTypes: ['filter'] },
             };
             const controlPanel = await createControlPanel(params);

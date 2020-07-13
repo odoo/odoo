@@ -23,7 +23,7 @@ odoo.define('web.filter_menu_tests', function (require) {
             assert.expect(2);
 
             const params = {
-                cpStoreConfig: { searchMenuTypes },
+                cpModelConfig: { searchMenuTypes },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -43,7 +43,7 @@ odoo.define('web.filter_menu_tests', function (require) {
                     <filter string="Foo" name="foo" domain="[]"/>
                 </search>`;
             const params = {
-                cpStoreConfig: { viewInfo: { arch, fields: this.fields }, searchMenuTypes },
+                cpModelConfig: { arch, fields: this.fields, searchMenuTypes },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -60,7 +60,7 @@ odoo.define('web.filter_menu_tests', function (require) {
             assert.expect(2);
 
             const params = {
-                cpStoreConfig: { viewInfo: { fields: this.fields }, searchMenuTypes },
+                cpModelConfig: { fields: this.fields, searchMenuTypes },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -86,7 +86,7 @@ odoo.define('web.filter_menu_tests', function (require) {
                     <filter string="Foo" name="foo" domain="[['foo', '=', 'qsdf']]"/>
                 </search>`;
             const params = {
-                cpStoreConfig: { viewInfo: { arch }, searchMenuTypes },
+                cpModelConfig: { arch, searchMenuTypes },
                 cpProps: { fields: {}, searchMenuTypes },
                 search: function (searchQuery) {
                     const { domain } = searchQuery;
@@ -118,7 +118,7 @@ odoo.define('web.filter_menu_tests', function (require) {
             assert.expect(1);
 
             const params = {
-                cpStoreConfig: { viewInfo: { fields: this.fields }, searchMenuTypes },
+                cpModelConfig: { fields: this.fields, searchMenuTypes },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -144,7 +144,7 @@ odoo.define('web.filter_menu_tests', function (require) {
             const unpatchDate = patchDate(2020, 1, 5, 12, 20, 0);
 
             const params = {
-                cpStoreConfig: { viewInfo: { fields: this.fields }, searchMenuTypes },
+                cpModelConfig: { fields: this.fields, searchMenuTypes },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
             const controlPanel = await createControlPanel(params);
@@ -207,10 +207,11 @@ odoo.define('web.filter_menu_tests', function (require) {
                     <filter string="Date" name="date_field" date="date_field"/>
                 </search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes,
-                    actionContext: { search_default_date_field: 1 },
+                    context: { search_default_date_field: 1 },
                 },
                 cpProps: { fields: this.fields, searchMenuTypes },
                 search: function (searchQuery) {
@@ -291,10 +292,11 @@ odoo.define('web.filter_menu_tests', function (require) {
                     <filter string="Date" name="some_filter" date="date_field" default_period="last_month"/>
                 </search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes,
-                    actionContext: { search_default_some_filter: 1 },
+                    context: { search_default_some_filter: 1 },
                 },
                 cpProps: { fields: this.fields, searchMenuTypes },
             };
@@ -328,8 +330,9 @@ odoo.define('web.filter_menu_tests', function (require) {
                     <filter string="Filter" name="some_filter" domain="[]" context="{'coucou_1': 1}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes
                 },
                 cpProps: { fields: this.fields, searchMenuTypes },
@@ -358,8 +361,9 @@ odoo.define('web.filter_menu_tests', function (require) {
                     <filter string="Foo" name="gently_weeps" domain="${_.escape(xml_domain)}"/>
                 </search>`;
             const params = {
-                cpStoreConfig: {
-                    viewInfo: { arch, fields: this.fields },
+                cpModelConfig: {
+                    arch,
+                    fields: this.fields,
                     searchMenuTypes,
                 },
                 cpProps: { fields: this.fields, searchMenuTypes },
@@ -388,10 +392,11 @@ odoo.define('web.filter_menu_tests', function (require) {
                     <filter string="Date" name="date_field" date="date_field" default_period="last_month"/>
                 </search>`,
                 params = {
-                    cpStoreConfig: {
-                        viewInfo: { arch, fields: this.fields },
+                    cpModelConfig: {
+                        arch,
+                        fields: this.fields,
                         searchMenuTypes,
-                        actionContext: {
+                        context: {
                             search_default_date_field: true
                         }
                     },
@@ -416,10 +421,11 @@ odoo.define('web.filter_menu_tests', function (require) {
                     <filter string="Filter 2 GROUP 2" name="f2_g2" domain="[['foo', '=', 'f2_g2']]"/>
                 </search>`,
                 params = {
-                    cpStoreConfig: {
-                        viewInfo: { arch, fields: this.fields },
+                    cpModelConfig: {
+                        arch,
+                        fields: this.fields,
                         searchMenuTypes,
-                        actionContext: {
+                        context: {
                             search_default_f_1_g1: true,
                             search_default_f1_g2: true,
                             search_default_f2_g2: true,
@@ -474,8 +480,9 @@ odoo.define('web.filter_menu_tests', function (require) {
                     <filter string="11" name="coolName11" domain="[]"/>
                 </search>`,
                 params = {
-                    cpStoreConfig: {
-                        viewInfo: { arch, fields: this.fields },
+                    cpModelConfig: {
+                        arch,
+                        fields: this.fields,
                         searchMenuTypes,
                     },
                     cpProps: { fields: this.fields, searchMenuTypes },
