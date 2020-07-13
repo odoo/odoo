@@ -925,19 +925,19 @@ class HolidaysRequest(models.Model):
                 if holiday.leave_type_request_unit != 'day' or any(l.leave_type_request_unit == 'hour' for l in conflicting_leaves):
                     raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
 
+                target_states = {l.id: l.state for l in conflicting_leaves}
                 conflicting_leaves.action_refuse()
                 split_leaves_vals = []
                 for conflicting_leave in conflicting_leaves:
                     if conflicting_leave.leave_type_request_unit == 'half_day' and conflicting_leave.request_unit_half:
                         continue
 
-                    target_state = conflicting_leave.state
                     # Leaves in days
                     if conflicting_leave.date_from < holiday.date_from:
                         before_leave_vals = conflicting_leave.copy_data({
                             'date_from': conflicting_leave.date_from.date(),
                             'date_to': holiday.date_from.date() + timedelta(days=-1),
-                            'state': target_state,
+                            'state': target_states[conflicting_leave.id],
                         })[0]
                         before_leave = self.env['hr.leave'].new(before_leave_vals)
                         before_leave._onchange_request_parameters()
@@ -957,7 +957,7 @@ class HolidaysRequest(models.Model):
                         after_leave_vals = conflicting_leave.copy_data({
                             'date_from': holiday.date_to.date() + timedelta(days=1),
                             'date_to': conflicting_leave.date_to.date(),
-                            'state': target_state,
+                            'state': target_states[conflicting_leave.id],
                         })[0]
                         after_leave = self.env['hr.leave'].new(after_leave_vals)
                         after_leave._onchange_request_parameters()
