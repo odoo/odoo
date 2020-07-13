@@ -430,6 +430,52 @@ QUnit.test('mark channel as fetched and seen when a new message is loaded if com
         "Channel should have been mark as seen directly"
     );
 });
+
+QUnit.test('show message subject if thread is mailing channel', async function (assert) {
+    assert.expect(3);
+
+    this.data['mail.message'].records = [{
+        author_id: [7, "Demo"],
+        body: "<p>Test</p>",
+        channel_ids: [100],
+        date: "2019-04-20 11:00:00",
+        id: 100,
+        is_discussion: false,
+        is_notification: false,
+        message_type: 'comment',
+        model: 'mail.channel',
+        res_id: 20,
+        subject: "Salutations, voyageur",
+    }];
+    await this.start();
+    const thread = this.env.models['mail.thread'].create({
+        channel_type: 'channel',
+        id: 100,
+        mass_mailing: true,
+        model: 'mail.channel',
+        name: "General",
+        public: 'public',
+    });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
+    await this.createThreadViewerComponent(threadViewer);
+
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display a single message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_subject',
+        "should display subject of the message"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_subject').textContent,
+        "Subject: Salutations, voyageur",
+        "Subject of the message should be 'Salutations, voyageur'"
+    )
+});
+
 });
 });
 });
