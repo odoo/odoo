@@ -92,7 +92,7 @@ class ResourceMixin(models.AbstractModel):
                 for calendar_resource in calendar_resources:
                     result[calendar_resource.id] = calendar._get_days_data(intervals[calendar_resource.id], day_total[calendar_resource.id])
 
-        if len(resources) <= 1:
+        if len(self) <= 1:
             return result[resources.id]
         # convert "resource: result" into "employee: result"
         return {mapped_employees[r.id]: result[r.id] for r in resources} 
@@ -137,7 +137,7 @@ class ResourceMixin(models.AbstractModel):
                         day_total[calendar_resource.id]
                     )
 
-        if len(resources) <= 1:
+        if len(self) <= 1:
             return result[resources.id]
         # convert "resource: result" into "employee: result"
         return {mapped_employees[r.id]: result[r.id] for r in resources}

@@ -1606,8 +1606,8 @@ class Meeting(models.Model):
 
         meetings = super(Meeting, self).create(vals_list)
 
-        for i in range(len(meetings)):
-            meetings[i]._sync_activities(vals_list[i])
+        for meeting, vals in zip(meetings, vals_list):
+            meeting._sync_activities(vals)
 
         for meeting in meetings:
             final_date = meeting._get_recurrency_end_date()

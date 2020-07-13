@@ -342,9 +342,7 @@ class ResourceCalendar(models.Model):
         assert start_dt.tzinfo and end_dt.tzinfo
         combine = datetime.combine
 
-        resources_list = [self.env['resource.resource']]
-        if resources:
-            resources_list = [r for r in resources] + resources_list
+        resources_list = [r for r in resources] + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
         domain = domain if domain is not None else []
         domain = expression.AND([domain, [
@@ -421,9 +419,7 @@ class ResourceCalendar(models.Model):
         self.ensure_one()
 
         # for the computation, express all datetimes in UTC
-        resources_list = [self.env['resource.resource']]
-        if resources:
-            resources_list = [r for r in resources] + resources_list
+        resources_list = [r for r in resources] + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
         if domain is None:
             domain = [('time_type', '=', 'leave')]

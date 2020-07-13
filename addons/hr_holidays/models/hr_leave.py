@@ -490,15 +490,16 @@ class HolidaysRequest(models.Model):
 
     @api.constrains('date_from', 'date_to', 'state', 'employee_id')
     def _check_date(self):
-        employees = self.mapped('employee_id')
         domains = [[
             ('date_from', '<', holiday.date_to),
             ('date_to', '>', holiday.date_from),
             ('employee_id', '=', holiday.employee_id.id),
             ('id', '!=', holiday.id),
-            ('state', 'not in', ['cancel', 'refuse']),
         ] for holiday in self.filtered('employee_id')]
-        domain = expression.OR(domains)
+        domain = expression.AND([
+            [('state', 'not in', ['cancel', 'refuse'])],
+            expression.OR(domains)
+        ])
         if self.search_count(domain):
             raise ValidationError(_('You can not set 2 times off that overlaps on the same day for the same employee.'))
 
@@ -517,8 +518,9 @@ class HolidaysRequest(models.Model):
     def _check_date_state(self):
         if self.env.context.get('leave_skip_state_check'):
             return
-        if any(holiday.state in ['cancel', 'refuse', 'validate1', 'validate'] for holiday in self):
-            raise ValidationError(_("This modification is not allowed in the current state."))
+        for holiday in self:
+            if holiday.state in ['cancel', 'refuse', 'validate1', 'validate']:
+                raise ValidationError(_("This modification is not allowed in the current state."))
 
     def _get_number_of_days(self, date_from, date_to, employee_id):
         """ Returns a float equals to the timedelta between two dates given as string."""
@@ -637,7 +639,7 @@ class HolidaysRequest(models.Model):
     def create(self, vals_list):
         """ Override to avoid automatic logging of creation """
         if not self._context.get('leave_fast_create'):
-            leave_types = self.env['hr.leave.type'].browse([values.get('holiday_status_id') for values in vals_list])
+            leave_types = self.env['hr.leave.type'].browse([values.get('holiday_status_id') for values in vals_list if values.get('holiday_status_id')])
             mapped_validation_type = {leave_type.id: leave_type.validation_type for leave_type in leave_types}
 
             for values in vals_list:
@@ -796,9 +798,10 @@ class HolidaysRequest(models.Model):
             meeting_values = meeting_holidays._prepare_holidays_meeting_values()
             meetings = self.env['calendar.event'].with_context(
                 no_mail_to_attendees=True,
-                active_model=self._name).create(meeting_values)
-            for i in range(len(meetings)):
-                meeting_holidays[i].meeting_id = meetings[i]
+                active_model=self._name
+            ).create(meeting_values)
+            for holiday, meeting in zip(meeting_holidays, meetings):
+                holiday.meeting_id = meeting
 
     def _prepare_holidays_meeting_values(self):
         result = []
@@ -927,6 +930,7 @@ class HolidaysRequest(models.Model):
                 if holiday.leave_type_request_unit != 'day' or any(l.leave_type_request_unit == 'hour' for l in conflicting_leaves):
                     raise ValidationError(_('You can not have 2 leaves that overlaps on the same day.'))
 
+                # keep track of conflicting leaves states before refusal
                 target_states = {l.id: l.state for l in conflicting_leaves}
                 conflicting_leaves.action_refuse()
                 split_leaves_vals = []
