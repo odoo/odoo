@@ -560,7 +560,11 @@ class Meeting(models.Model):
             # define the correct hour/day asked by the user to repeat for recurrence.
             event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
             rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True, tzinfos={})
-        recurring_meetings = self.with_context(active_test=False).search([('recurrent_id', '=', self.id)])
+        recurring_meetings_ids = self.env.context.get('recurrent_siblings_cache', {}).get(self.id)
+        if recurring_meetings_ids is not None:
+            recurring_meetings = self.browse(recurring_meetings_ids)
+        else:
+            recurring_meetings = self.with_context(active_test=False).search([('recurrent_id', '=', self.id)])
 
         for meeting in recurring_meetings:
             date = todate(meeting.recurrent_id_date)
@@ -1022,9 +1026,17 @@ class Meeting(models.Model):
         if 'id' not in order_fields:
             order_fields.append('id')
 
+        recurrent_ids = [meeting.id for meeting in self if meeting.recurrency and meeting.rrule]
+
         result_data = []
         result = []
-        for meeting in self:
+
+        recurrent_siblings_cache = {i: [] for i in recurrent_ids} # create empty entries to avoid additional queries for missing entries
+        children_ids = super(Meeting, self)._search([('recurrent_id', 'in', recurrent_ids)])
+        for item in self.browse(children_ids).read(['recurrent_id']):
+            recurrent_siblings_cache[item['recurrent_id']].append(item['id'])
+
+        for meeting in self.with_context(recurrent_siblings_cache=recurrent_siblings_cache):
             if not meeting.recurrency or not meeting.rrule:
                 result.append(meeting.id)
                 result_data.append(meeting.get_search_fields(order_fields))
@@ -1521,7 +1533,7 @@ class Meeting(models.Model):
             if r['privacy'] == 'private':
                 for f in r.keys():
                     recurrent_fields = self._get_recurrent_fields()
-                    public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id_date', 'rrule']))
+                    public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id', 'recurrent_id_date', 'rrule']))
                     if f not in public_fields:
                         if isinstance(r[f], list):
                             r[f] = []
