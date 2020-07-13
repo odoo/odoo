@@ -441,15 +441,18 @@ QUnit.test('rendering with multiple partner followers', async function (assert) 
             id: 1,
             name: "Jean Michang",
             partner_id: 12,
-        },
-        {
+            res_id: 100,
+            res_model: 'res.partner',
+        }, {
             // simulate real return from RPC
             // (the presence of the key and the falsy value need to be handled correctly)
             channel_id: false,
             id: 2,
             name: "Eden Hazard",
             partner_id: 11,
-        }
+            res_id: 100,
+            res_model: 'res.partner',
+        },
     );
     const chatter = this.env.models['mail.chatter'].create({
         followerIds: [1, 2],
@@ -517,15 +520,18 @@ QUnit.test('rendering with multiple channel followers', async function (assert) 
             // simulate real return from RPC
             // (the presence of the key and the falsy value need to be handled correctly)
             partner_id: false,
-        },
-        {
+            res_id: 100,
+            res_model: 'res.partner',
+        }, {
             channel_id: 12,
             id: 2,
             name: "channel armstrong",
             // simulate real return from RPC
             // (the presence of the key and the falsy value need to be handled correctly)
             partner_id: false,
-        }
+            res_id: 100,
+            res_model: 'res.partner',
+        },
     );
     const chatter = this.env.models['mail.chatter'].create({
         followerIds: [1, 2],
