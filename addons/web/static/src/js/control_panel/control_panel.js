@@ -2,15 +2,15 @@ odoo.define('web.ControlPanel', function (require) {
     "use strict";
 
     const ActionMenus = require('web.ActionMenus');
-    const ControlPanelModel = require('web.ControlPanelModel');
     const ComparisonMenu = require('web.ComparisonMenu');
+    const ActionModel = require('web/static/src/js/views/action_model.js');
     const FavoriteMenu = require('web.FavoriteMenu');
     const FilterMenu = require('web.FilterMenu');
     const GroupByMenu = require('web.GroupByMenu');
     const patchMixin = require('web.patchMixin');
     const Pager = require('web.Pager');
     const SearchBar = require('web.SearchBar');
-    const { useModel } = require('web.model');
+    const { useModel } = require('web/static/src/js/model.js');
 
     const { Component, hooks } = owl;
     const { useRef, useSubEnv } = hooks;
@@ -105,14 +105,14 @@ odoo.define('web.ControlPanel', function (require) {
 
             useSubEnv({
                 action: this.props.action,
-                controlPanelModel: this.props.controlPanelModel,
+                searchModel: this.props.searchModel,
                 view: this.props.view,
             });
 
             // Connect to the model
             // TODO: move this in enterprise whenever possible
-            if (this.env.controlPanelModel) {
-                this.model = useModel('controlPanelModel');
+            if (this.env.searchModel) {
+                this.model = useModel('searchModel');
             }
 
             // Reference hooks
@@ -135,7 +135,7 @@ odoo.define('web.ControlPanel', function (require) {
         }
 
         async willUpdateProps(nextProps) {
-            // Note: action and controlPanelModel are not likely to change during
+            // Note: action and searchModel are not likely to change during
             // the lifespan of a ControlPanel instance, so we only need to update
             // the view information.
             if ('view' in nextProps) {
@@ -185,6 +185,7 @@ odoo.define('web.ControlPanel', function (require) {
             return formattedFields;
         }
     }
+    ControlPanel.modelExtension = "ControlPanel";
 
     ControlPanel.components = {
         SearchBar,
@@ -202,7 +203,7 @@ odoo.define('web.ControlPanel', function (require) {
     ControlPanel.props = {
         action: Object,
         breadcrumbs: Array,
-        controlPanelModel: ControlPanelModel,
+        searchModel: ActionModel,
         cp_content: { type: Object, optional: 1 },
         fields: Object,
         pager: { validate: p => typeof p === 'object' || p === null, optional: 1 },
@@ -214,7 +215,6 @@ odoo.define('web.ControlPanel', function (require) {
         withBreadcrumbs: Boolean,
         withSearchBar: Boolean,
     };
-
     ControlPanel.template = 'web.ControlPanel';
 
     return patchMixin(ControlPanel);

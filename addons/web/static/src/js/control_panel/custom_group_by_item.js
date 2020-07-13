@@ -2,7 +2,7 @@ odoo.define('web.CustomGroupByItem', function (require) {
     "use strict";
 
     const DropdownMenuItem = require('web.DropdownMenuItem');
-    const { useModel } = require('web.model');
+    const { useModel } = require('web/static/src/js/model.js');
 
     /**
      * Group by generator menu
@@ -20,7 +20,7 @@ odoo.define('web.CustomGroupByItem', function (require) {
             this.canBeOpened = true;
             this.state.fieldName = this.props.fields[0].name;
 
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
         }
 
         //---------------------------------------------------------------------
