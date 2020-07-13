@@ -127,16 +127,11 @@ class MailController(http.Controller):
         return werkzeug.utils.redirect(url)
 
     @http.route('/mail/read_followers', type='json', auth='user')
-    def read_followers(self, follower_ids):
+    def read_followers(self, res_model, res_id):
         request.env['mail.followers'].check_access_rights("read")
-        follower_recs = request.env['mail.followers'].sudo().browse(follower_ids)
-        res_ids = follower_recs.mapped('res_id')
-        res_models = set(follower_recs.mapped('res_model'))
-        if len(res_models) > 1:
-            raise AccessError(_("Can't read followers with different targeted model"))
-        res_model = res_models.pop()
         request.env[res_model].check_access_rights("read")
-        request.env[res_model].browse(res_ids).check_access_rule("read")
+        request.env[res_model].browse(res_id).check_access_rule("read")
+        follower_recs = request.env['mail.followers'].search([('res_model', '=', res_model), ('res_id', '=', res_id)])
 
         followers = []
         follower_id = None
