@@ -576,20 +576,14 @@ function factory(dependencies) {
                 this.update({ followers: [['unlink-all']] });
                 return;
             }
-            // FIXME Do that with only one RPC (see task-2243180)
-            const [{ message_follower_ids: followerIds }] = await this.async(() => this.env.services.rpc({
-                model: this.model,
-                method: 'read',
-                args: [this.id, ['message_follower_ids']],
+            const { followers } = await this.async(() => this.env.services.rpc({
+                route: '/mail/read_followers',
+                params: {
+                    res_id: this.id,
+                    res_model: this.model,
+                },
             }));
-            if (followerIds && followerIds.length > 0) {
-                const { followers } = await this.async(() => this.env.services.rpc({
-                    route: '/mail/read_followers',
-                    params: {
-                        follower_ids: followerIds,
-                        context: {}, // FIXME empty context to be overridden in session.js with 'allowed_company_ids' task-2243187
-                    }
-                }));
+            if (followers.length > 0) {
                 this.update({
                     followers: [['insert-and-replace', followers.map(data =>
                         this.env.models['mail.follower'].convertData(data))

@@ -163,6 +163,8 @@ QUnit.test('click on "add followers" button', async function (assert) {
         is_active: true,
         is_editable: true,
         name: "François Perusse",
+        res_id: 100,
+        res_model: 'res.partner',
     });
     await this.start({
         env: { bus },
@@ -279,6 +281,8 @@ QUnit.test('click on "add channels" button', async function (assert) {
         is_active: true,
         is_editable: true,
         name: "Supa channel",
+        res_id: 100,
+        res_model: 'res.partner',
     });
     await this.start({
         env: { bus },
