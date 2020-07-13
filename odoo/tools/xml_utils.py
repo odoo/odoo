@@ -20,7 +20,8 @@ class odoo_resolver(etree.Resolver):
 
     def resolve(self, url, id, context):
         """Search url in ``ir.attachment`` and return the resolved content."""
-        attachment = self.env['ir.attachment'].search([('name', '=', url)])
+        attachment = self.env['ir.attachment'].search([('name', '=', url),
+                                                       ('create_uid', '=', self.env.ref('base.user_root').id)], limit=1)
         if attachment:
             return self.resolve_string(base64.b64decode(attachment.datas), context)
 
@@ -42,7 +43,8 @@ def _check_with_xsd(tree_or_str, stream, env=None):
     if env:
         parser.resolvers.add(odoo_resolver(env))
         if isinstance(stream, str) and stream.endswith('.xsd'):
-            attachment = env['ir.attachment'].search([('name', '=', stream)])
+            attachment = env['ir.attachment'].search([('name', '=', stream),
+                                                      ('create_uid', '=', env.ref('base.user_root').id)], limit=1)
             if not attachment:
                 raise FileNotFoundError()
             stream = BytesIO(base64.b64decode(attachment.datas))
