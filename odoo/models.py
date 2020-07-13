@@ -1755,7 +1755,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
         return lazy_name_get(recs.with_user(name_get_uid))
 
     @api.model
-    def _add_missing_default_values(self, values):
+    def _add_missing_default_values(self, values, bad_names=None):
+        bad_names = bad_names or []
         # avoid overriding inherited values when parent is set
         avoid_models = {
             parent_model
@@ -1768,6 +1769,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
             name
             for name, field in self._fields.items()
             if name not in values
+            if name not in bad_names
             if not (field.inherited and field.related_field.model_name in avoid_models)
         }
 
@@ -3835,7 +3837,7 @@ Record ids: %(records)s
                 vals.setdefault('write_date', self.env.cr.now())
 
             # add missing defaults
-            vals = self._add_missing_default_values(vals)
+            vals = self._add_missing_default_values(vals, bad_names)
 
             # distribute fields into sets for various purposes
             data = {}
