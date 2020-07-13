@@ -2,8 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import time
 
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.exceptions import ValidationError
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
 CH_IBAN = 'CH15 3881 5158 3845 3843 7'
@@ -11,7 +10,7 @@ QR_IBAN = 'CH21 3080 8001 2345 6782 7'
 
 
 @tagged('post_install', '-at_install')
-class TestSwissQR(AccountingTestCase):
+class TestSwissQR(AccountTestInvoicingCommon):
 
     def setUp(self):
         super(TestSwissQR, self).setUp()
