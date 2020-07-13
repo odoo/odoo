@@ -25,6 +25,15 @@
                 <!-- add class to body tag -->
                 <script>document.body.className += " l10n_ch_qr";</script>
 
+                <!-- add default margin for header (matching A4 European margin) -->
+                <div class="header" id="header_custom_style"><style>
+                      #minimal_layout_report_headers .header {
+                          padding-top: 6mm;
+                          padding-left: 8mm;
+                          padding-right: 8mm;
+                      }
+                </style><script>document.head.appendChild(document.getElementById('header_custom_style'))</script></div>
+
                 <t t-set="formated_amount" t-value="'{:,.2f}'.format(o.amount_residual).replace(',','\xa0')"/>
 
                 <div class="swissqr_title">
