@@ -1951,7 +1951,14 @@ const SnippetOptionWidget = Widget.extend({
         const showUI = await this._computeVisibility();
         this.el.classList.toggle('d-none', !showUI);
 
-        return Promise.all(proms);
+        await Promise.all(proms);
+
+        // Hide rows which contains only hidden widgets
+        for (const rowEl of this.$el.find('we-row')) {
+            // TODO improve this, this is hackish to rely on DOM structure
+            // here. Rows should be handled as widgets or something like that.
+            rowEl.classList.toggle('d-none', $(rowEl).find('> div > .o_we_user_value_widget:not(.d-none)').length === 0);
+        }
     },
 
     //--------------------------------------------------------------------------
