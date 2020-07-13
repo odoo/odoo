@@ -3812,6 +3812,15 @@ Record ids: %(records)s
             if not(self.env.uid == SUPERUSER_ID and not self.pool.ready):
                 bad_names.update(LOG_ACCESS_COLUMNS)
 
+        if self._pre_compute:
+            # discard values from computed, readonly fields
+            bad_names.update(
+                name
+                for name, field in self._fields.items()
+                if field.compute and (field.readonly and not field.states)
+                if field.pre_compute
+            )
+
         # classify fields for each record
         data_list = []
         inversed_fields = set()
