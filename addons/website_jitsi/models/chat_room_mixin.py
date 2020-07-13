@@ -49,7 +49,7 @@ class ChatRoomMixin(models.AbstractModel):
         if self.chat_room_id:
             chat_room_id = self.chat_room_id.copy()
             default = dict(default or {}, chat_room_id=chat_room_id.id)
-        return super().copy(default)
+        return super(ChatRoomMixin, self).copy(default)
 
     def unlink(self):
         if self.chat_room_id:
