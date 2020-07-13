@@ -316,7 +316,10 @@ class MrpProduction(models.Model):
     def _compute_dates_planned(self):
         for production in self:
             if production.state != 'done':
+                old_date = production.date_planned_start
                 production.date_planned_start = max(production.mapped('move_raw_ids.date_expected') or [fields.Datetime.now()])
+                if production.date_planned_start != old_date and production.is_planned:
+                    production._plan_workorders(replan=True)
                 if production.move_finished_ids:
                     production.date_planned_finished = max(production.mapped('move_finished_ids.date_expected'))
 
