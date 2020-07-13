@@ -72,26 +72,18 @@ var SnippetEditor = Widget.extend({
         // Initialize move/clone/remove buttons
         if (this.isTargetMovable) {
             this.dropped = false;
-            const smoothScrollOptions = {
-                offsetElements: {
-                    $top: $('#top'),
-                    $left: $('#oe_snippets'),
-                },
+            const smoothScrollOptions = this.options.getScrollOptions({
                 jQueryDraggableOptions: {
-                    appendTo: this.$body,
-                    cursor: 'move',
                     cursorAt: {
                         left: 10,
                         top: 10
                     },
-                    greedy: true,
                     handle: '.o_move_handle',
                     helper: () => {
                         var $clone = this.$el.clone().css({width: '24px', height: '24px', border: 0});
                         $clone.appendTo(this.$body).removeClass('d-none');
                         return $clone;
                     },
-                    scroll: false,
                     start: this._onDragAndDropStart.bind(this),
                     stop: (...args) => {
                         // Delay our stop handler so that some summernote handlers
@@ -103,7 +95,7 @@ var SnippetEditor = Widget.extend({
                         }, 0);
                     },
                 },
-            };
+            });
             this.draggableComponent = new SmoothScrollOnDrag(this, this.$el, $('html'), smoothScrollOptions);
         } else {
             this.$('.o_overlay_move_options').addClass('d-none');
@@ -932,6 +924,8 @@ var SnippetsMenu = Widget.extend({
 
         this._addTabLoading(this.tabs.BLOCKS);
 
+        this.options.getScrollOptions = this._getScrollOptions.bind(this);
+
         // Fetch snippet templates and compute it
         defs.push(this._loadSnippetsTemplates().then(() => {
             return this._updateInvisibleDOM();
@@ -1737,6 +1731,25 @@ var SnippetsMenu = Widget.extend({
         });
     },
     /**
+     * @private
+     * @param {Object} [options={}]
+     * @returns {Object}
+     */
+    _getScrollOptions(options = {}) {
+        return Object.assign({}, options, {
+            offsetElements: Object.assign({
+                $top: $('#web_editor-top-edit'), // TODO should ideally be retrieved another way
+                $left: this.$el,
+            }, options.offsetElements),
+            jQueryDraggableOptions: Object.assign({
+                appendTo: this.$body,
+                cursor: 'move',
+                greedy: true,
+                scroll: false,
+            }, options.jQueryDraggableOptions),
+        });
+    },
+    /**
      * Creates a dropzone element and inserts it by replacing the given jQuery
      * location. This allows to add data on the dropzone depending on the hook
      * environment.
@@ -1766,16 +1779,9 @@ var SnippetsMenu = Widget.extend({
         var self = this;
         var $toInsert, dropped, $snippet;
 
-        const smoothScrollOptions = {
-            offsetElements: {
-                $top: $('#top'),
-                $left: $('#oe_snippets'),
-            },
+        const smoothScrollOptions = this._getScrollOptions({
             jQueryDraggableOptions: {
-                appendTo: this.$body,
-                cursor: 'move',
                 distance: 0,
-                greedy: true,
                 handle: '.oe_snippet_thumbnail',
                 helper: function () {
                     const dragSnip = this.cloneNode(true);
@@ -1784,7 +1790,6 @@ var SnippetsMenu = Widget.extend({
                     );
                     return dragSnip;
                 },
-                scroll: false,
                 start: function () {
                     dropped = false;
                     $snippet = $(this);
@@ -1882,7 +1887,7 @@ var SnippetsMenu = Widget.extend({
                     }
                 },
             },
-        };
+        });
         this.draggableComponent = new SmoothScrollOnDrag(this, $snippets, $('html'), smoothScrollOptions);
     },
     /**

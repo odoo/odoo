@@ -33,6 +33,19 @@ weSnippetEditor.Class.include({
     /**
      * @override
      */
+    _getScrollOptions(options = {}) {
+        const finalOptions = this._super(...arguments);
+        if (!options.offsetElements || !options.offsetElements.$top) {
+            const $header = $('#top');
+            if ($header.length) {
+                finalOptions.offsetElements.$top = $header;
+            }
+        }
+        return finalOptions;
+    },
+    /**
+     * @override
+     */
     _updateLeftPanelContent: function ({content, tab}) {
         this._super(...arguments);
         this.$('.o_we_customize_theme_btn').toggleClass('active', tab === this.tabs.THEME);

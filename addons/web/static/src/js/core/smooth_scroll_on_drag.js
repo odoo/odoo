@@ -21,25 +21,25 @@ const OffsetElementsHelper = Class.extend({
         this.offsetElements = offsetElements;
     },
     top: function () {
-        if (!this.offsetElements.$top) {
+        if (!this.offsetElements.$top || !this.offsetElements.$top.length) {
             return 0;
         }
         return this.offsetElements.$top.get(0).getBoundingClientRect().bottom;
     },
     right: function () {
-        if (!this.offsetElements.$right) {
+        if (!this.offsetElements.$right || !this.offsetElements.$right.length) {
             return 0;
         }
         return this.offsetElements.$right.get(0).getBoundingClientRect().left;
     },
     bottom: function () {
-        if (!this.offsetElements.$bottom) {
+        if (!this.offsetElements.$bottom || !this.offsetElements.$bottom.length) {
             return 0;
         }
         return this.offsetElements.$bottom.get(0).getBoundingClientRect().top;
     },
     left: function () {
-        if (!this.offsetElements.$left) {
+        if (!this.offsetElements.$left || !this.offsetElements.$left.length) {
             return 0;
         }
         return this.offsetElements.$left.get(0).getBoundingClientRect().right;
