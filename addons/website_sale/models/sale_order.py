@@ -38,7 +38,7 @@ class SaleOrder(models.Model):
     def _compute_cart_info(self):
         for order in self:
             order.cart_quantity = int(sum(order.mapped('website_order_line.product_uom_qty')))
-            order.only_services = all(l.product_id.type in ('service', 'digital') for l in order.website_order_line)
+            order.only_services = all(l.product_id.type in ('service') for l in order.website_order_line)
 
     @api.depends('website_id', 'date_order', 'order_line', 'state', 'partner_id')
     def _compute_abandoned_cart(self):

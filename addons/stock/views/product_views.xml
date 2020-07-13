@@ -103,9 +103,9 @@
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="before">
                     <group string="Operations" name="operations">
-                        <label for="route_ids" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                        <label for="route_ids" attrs="{'invisible': [('type', 'in', ['service'])]}"/>
                         <div>
-                            <field name="route_ids" class="mb-0" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                            <field name="route_ids" class="mb-0" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'in', ['service'])]}"/>
                             <button string="View Diagram" type="action" name="%(action_open_routes)d" icon="fa-arrow-right"
                                  attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                                  class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>
@@ -116,7 +116,7 @@
                 <xpath expr="//group[@name='group_lots_and_weight']" position="after">
                     <group string="Traceability" name="traceability" groups="stock.group_production_lot"
                            attrs="{'invisible': [('type', '=', 'consu')]}">
-                        <field name="tracking" widget="radio" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                        <field name="tracking" widget="radio" attrs="{'invisible': [('type', 'in', ['service'])]}"/>
                     </group>
                      <group string="Counterpart Locations" name="stock_property" groups="base.group_no_one">
                         <field name="property_stock_production"/>
