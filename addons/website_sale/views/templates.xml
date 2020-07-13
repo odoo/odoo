@@ -1041,7 +1041,9 @@
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect">/shop/checkout</t>
+                            </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div class="row">
@@ -1149,7 +1151,10 @@
                     </div>
                     <div class="row">
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="hide_coupon">True</t>
+                                <t t-set="redirect">/shop/address</t>
+                            </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div>
@@ -1445,7 +1450,7 @@
                         </tbody>
                     </table>
                     <t t-call="website_sale.total">
-                        <t t-set='redirect'>/shop/payment</t>
+                        <t t-set='redirect' t-value="redirect or '/shop/payment'"></t>
                     </t>
                 </div>
             </div>
