@@ -103,7 +103,7 @@ class Employee(models.Model):
     def _compute_remaining_leaves(self):
         remaining = self._get_remaining_leaves()
         for employee in self:
-            employee.remaining_leaves = remaining.get(employee.id, 0.0)
+            employee.remaining_leaves = round(remaining.get(employee.id, 0.0),2)
 
     @api.multi
     def _inverse_remaining_leaves(self):
