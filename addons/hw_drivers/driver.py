@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from threading import Thread
+from threading import Thread, Event
 
 from odoo.addons.hw_drivers.main import drivers, iot_devices
 
@@ -32,6 +32,7 @@ class Driver(Thread, metaclass=DriverMetaClass):
         self.device_type = ''
         self.device_manufacturer = ''
         self.data = {'value': ''}
+        self._stopped = Event()
 
     @classmethod
     def supported(cls, device):
@@ -48,4 +49,5 @@ class Driver(Thread, metaclass=DriverMetaClass):
         raise NotImplementedError()
 
     def disconnect(self):
+        self._stopped.set()
         del iot_devices[self.device_identifier]
