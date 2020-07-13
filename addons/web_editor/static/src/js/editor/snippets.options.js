@@ -2391,7 +2391,7 @@ const SnippetOptionWidget = Widget.extend({
             if (this.isDestroyed()) {
                 return;
             }
-            await new Promise(resolve => {
+            await new Promise(resolve => setTimeout(() => {
                 // Will update the UI of the correct widgets for all options
                 // related to the same $target/editor if necessary
                 this.trigger_up('snippet_option_update', {
@@ -2399,7 +2399,9 @@ const SnippetOptionWidget = Widget.extend({
                     previewMode: previewMode,
                     onSuccess: () => resolve(),
                 });
-            });
+            // Set timeout needed so that the user event which triggered the
+            // option can bubble first.
+            }));
         }});
 
         if (ev.data.isSimulatedEvent) {
