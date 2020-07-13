@@ -70,7 +70,7 @@ class DisplayDriver(Driver):
             event_manager.device_changed(self)
 
     def run(self):
-        while self.device_identifier != 'distant_display':
+        while self.device_identifier != 'distant_display' and not self._stopped.isSet():
             time.sleep(60)
             if self.url != 'http://localhost:8069/point_of_sale/display/' + self.device_identifier:
                 # Refresh the page every minute
