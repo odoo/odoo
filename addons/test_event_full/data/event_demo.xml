@@ -1,0 +1,63 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <record id="res_partner_location_demo" model="res.partner">
+        <field name="name">Online HeadQuarters</field>
+        <field name="is_company" eval="True"/>
+        <field name="street">Deboulonneur Street</field>
+        <field name="city">Brussels</field>
+        <field name="zip">1000</field>
+        <field name="country_id" ref="base.be"/>
+    </record>
+
+    <record id="event_test" model="event.event">
+        <field name="name">Online TestEvent</field>
+        <field name="date_tz">Europe/Brussels</field>
+        <field name="event_type_id" eval="False"/>
+        <field name="stage_id" ref="event.event_stage_booked"/>
+        <field name="is_published" eval="True"/>
+        <field name="user_id" ref="base.user_demo"/>
+        <field name="date_begin" eval="DateTime.now().strftime('%Y-%m-%d 05:00:00')"/>
+        <field name="date_end" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+        <field name="address_id" ref="res_partner_location_demo"/>
+        <field name="tag_ids" eval="[(4, ref('event.event_tag_category_3_tag_1'))]"/>
+        <field name="description" type="html">
+<div class="oe_structure">
+    <h5>The finest OpenWood furnitures are coming to your house in a brand new collection</h5>
+    <p>And this time, we go fully ONLINE! Meet us in our live streams from the confort of your house.</p>
+</div>
+        </field>
+        <field name="website_menu" eval="True"/>
+        <field name="website_track" eval="True"/>
+        <field name="menu_exhibitor" eval="True"/>
+    </record>
+    <record id="event_test_ticket_1" model="event.event.ticket">
+        <field name="name">Standard</field>
+        <field name="event_id" ref="test_event_full.event_test"/>
+        <field name="end_sale_date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+        <field name="product_id" ref="event_sale.product_product_event"/>
+        <field name="price">0</field>
+    </record>
+    <record id="event_test_ticket_2" model="event.event.ticket">
+        <field name="name">VIP</field>
+        <field name="event_id" ref="test_event_full.event_test"/>
+        <field name="end_sale_date" eval="(DateTime.now() + timedelta(days=2)).strftime('%Y-%m-%d 15:00:00')"/>
+        <field name="product_id" ref="event_sale.product_product_event"/>
+        <field name="seats_max">10</field>
+    </record>
+
+    <!-- TRACKS -->
+    <record id="event_test_track_1" model="event.track">
+        <field name="name">Main Gathering</field>
+        <field name="event_id" ref="test_event_full.event_test"/>
+        <field name="stage_id" ref="website_event_track.event_track_stage3"/>
+        <field name="date" eval="DateTime.now().strftime('%Y-%m-%d 06:00:00')"></field>
+        <field name="tag_ids" eval="[
+            (4, ref('website_event_track.event_track_tag1'))]"/>
+        <field name="is_published" eval="True"/>
+        <field name="duration">2</field>
+        <field name="user_id" ref="base.user_admin"/>
+        <field name="partner_id" ref="base.res_partner_12"/>
+    </record>
+
+</data></odoo>
