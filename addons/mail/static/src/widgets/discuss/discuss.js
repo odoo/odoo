@@ -49,7 +49,7 @@ const DiscussWidget = AbstractAction.extend({
         // control panel attributes
         this.action = action;
         this.actionManager = parent;
-        this.controlPanelModelConfig.modelName = 'mail.message';
+        this.searchModelConfig.modelName = 'mail.message';
         this.discuss = undefined;
         this.options = options;
 

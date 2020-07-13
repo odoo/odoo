@@ -16,7 +16,6 @@ var ActionMixin = require('web.ActionMixin');
 var ajax = require('web.ajax');
 var concurrency = require('web.concurrency');
 const { ComponentWrapper } = require('web.OwlCompatibility');
-const ControlPanel = require('web.ControlPanel');
 var mvc = require('web.mvc');
 var session = require('web.session');
 
@@ -25,7 +24,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     custom_events: _.extend({}, ActionMixin.custom_events, {
         navigation_move: '_onNavigationMove',
         open_record: '_onOpenRecord',
-        search_panel_domain_updated: '_onSearchPanelDomainUpdated',
         switch_view: '_onSwitchView',
     }),
     events: {
@@ -37,14 +35,13 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * @param {Object[]} params.actionViews
      * @param {string} params.activeActions
      * @param {string} params.bannerRoute
-     * @param {Array[]} params.controlPanelDomain
-     * @param {ControlPanelModel} [params.controlPanelModel]
-     * @param {Object} [params.controlPanelProps]
+     * @param {Object} [params.controlPanel]
      * @param {string} params.controllerID an id to ease the communication with
      *      upstream components
      * @param {string} params.displayName
      * @param {Object} params.initialState
      * @param {string} params.modelName
+     * @param {ActionModel} [params.searchModel]
      * @param {string} [params.searchPanel]
      * @param {string} params.viewType
      * @param {boolean} [params.withControlPanel]
@@ -64,18 +61,20 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         this.dp = new concurrency.DropPrevious();
 
         this.withControlPanel = params.withControlPanel;
+        this.withSearchPanel = params.withSearchPanel;
+        if (params.searchModel) {
+            this.searchModel = params.searchModel;
+        }
         if (this.withControlPanel) {
-            this.controlPanelProps = params.controlPanelProps;
-            this._controlPanelModel = params.controlPanelModel;
+            const { Component, props } = params.controlPanel;
+            this.ControlPanel = Component;
+            this.controlPanelProps = props;
         }
-
-        this.withSearchPanel = params.withSearchPanel && params.searchPanel;
-        // the following attributes are used when there is a searchPanel
         if (this.withSearchPanel) {
-            this._searchPanel = params.searchPanel;
+            const { Component, props } = params.searchPanel;
+            this.SearchPanel = Component;
+            this.searchPanelProps = props;
         }
-        this.controlPanelDomain = params.controlPanelDomain || [];
-        this.searchPanelDomain = this._searchPanel ? this._searchPanel.getDomain() : [];
     },
 
     /**
@@ -84,23 +83,23 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * @returns {Promise}
      */
     start: async function () {
-        if (this.withSearchPanel) {
-            this.$('.o_content')
-                .addClass('o_controller_with_searchpanel')
-                .prepend(this._searchPanel.$el);
-        }
         this.$el.addClass('o_view_controller');
-
         this.renderButtons();
         const promises = [this._super(...arguments)];
         if (this.withControlPanel) {
             this._updateControlPanelProps(this.initialState);
-            this._controlPanelWrapper = new ComponentWrapper(this, ControlPanel, this.controlPanelProps);
+            this._controlPanelWrapper = new ComponentWrapper(this, this.ControlPanel, this.controlPanelProps);
             this._controlPanelWrapper.env.bus.on('focus-view', this, () => this._giveFocus());
             promises.push(this._controlPanelWrapper.mount(this.el, { position: 'first-child' }));
         }
+        if (this.withSearchPanel) {
+            this._searchPanelWrapper = new ComponentWrapper(this, this.SearchPanel, this.searchPanelProps);
+            const content = this.el.querySelector(':scope .o_content');
+            content.classList.add('o_controller_with_searchpanel');
+            promises.push(this._searchPanelWrapper.mount(content, { position: 'first-child' }));
+        }
         await Promise.all(promises);
-        await this._update(this.initialState, { shouldUpdateControlPanel: false });
+        await this._update(this.initialState, { shouldUpdateSearchComponents: false });
         this.updateButtons();
     },
     /**
@@ -118,12 +117,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     on_attach_callback: function () {
         ActionMixin.on_attach_callback.call(this);
-        if (this.withSearchPanel) {
-            this._searchPanel.on_attach_callback();
-        }
+        this.searchModel.on('search', this, this._onSearch);
         if (this.withControlPanel) {
-            this._controlPanelModel.on('search', this, this._onSearch);
-            this._controlPanelModel.on('get-controller-query-params', this, this._onGetOwnedQueryParams);
+            this.searchModel.on('get-controller-query-params', this, this._onGetOwnedQueryParams);
         }
         if (!(this.renderer instanceof owl.Component)) {
             this.renderer.on_attach_callback();
@@ -134,9 +130,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     on_detach_callback: function () {
         ActionMixin.on_detach_callback.call(this);
+        this.searchModel.off('search', this);
         if (this.withControlPanel) {
-            this._controlPanelModel.off('search', this);
-            this._controlPanelModel.off('get-controller-query-params', this);
+            this.searchModel.off('get-controller-query-params', this);
         }
         if (!(this.renderer instanceof owl.Component)) {
             this.renderer.on_detach_callback();
@@ -177,20 +173,32 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     },
     /**
      * Export the state of the controller containing information that is shared
-     * between different controllers of a same action (like the current
-     * searchQuery of the controlPanel).
+     * between different controllers of a same action (like the current search
+     * model state or the states of some components).
      *
      * @returns {Object}
      */
-    exportState: function () {
-        var state = {};
-        if (this.withControlPanel) {
-            state.cpState = this._controlPanelModel.exportState();
-        }
+    exportState() {
+        const exported = {
+            searchModel: this.searchModel.exportState(),
+        };
         if (this.withSearchPanel) {
-            state.spState = this._searchPanel.exportState();
+            const searchPanel = this._searchPanelWrapper.componentRef.comp;
+            exported.searchPanel = searchPanel.exportState();
         }
-        return state;
+        return exported;
+    },
+    /**
+     * Parses and imports a previously exported state.
+     *
+     * @param {Object} state
+     */
+    importState(state) {
+        this.searchModel.importState(state.searchModel);
+        if (this.withSearchPanel) {
+            const searchPanel = this._searchPanelWrapper.componentRef.comp;
+            searchPanel.importState(state.searchPanel);
+        }
     },
     /**
      * The use of this method is discouraged.  It is still snakecased, because
@@ -207,40 +215,17 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     /**
      * Short helper method to reload the view
      *
-     * @param {Object} [params={}] This object will simply be given to the update
+     * @param {Object} [params={}]
+     * @param {Object} [params.controllerState={}]
      * @returns {Promise}
      */
     reload: async function (params = {}) {
-        const controllerState = params.controllerState || {};
-        const cpState = controllerState.cpState;
-        if (this.withControlPanel && cpState) {
-            this._controlPanelModel.importState(cpState);
-            const searchQuery = this._controlPanelModel.getQuery();
-            params = Object.assign({}, params, searchQuery);
+        if (params.controllerState) {
+            this.importState(params.controllerState);
+            await this.searchModel.load();
+            Object.assign(params, this.searchModel.get('query'));
         }
-        let postponeRendering = false;
-        if (this.withSearchPanel) {
-            if (params.domain) {
-                this.controlPanelDomain = params.domain;
-            }
-            if (controllerState.spState) {
-                this._searchPanel.importState(controllerState.spState);
-            } else {
-                const viewDomain = await this._getViewDomain();
-                await this._searchPanel.update({
-                    searchDomain: this.controlPanelDomain,
-                    viewDomain,
-                });
-                postponeRendering = !params.noRender;
-                params.noRender = true; // wait for searchpanel to be ready to render
-            }
-            this.searchPanelDomain = this._searchPanel.getDomain();
-            params.domain = this.controlPanelDomain.concat(this.searchPanelDomain);
-        }
-        await this.update(params, {});
-        if (postponeRendering) {
-            return this._updateRendererState(false);
-        }
+        return this.update(params, {});
     },
     /**
      * This is the main entry point for the controller.  Changes from the search
@@ -286,15 +271,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     _getPagingInfo: function (state) {
         return null;
-    },
-    /**
-     * Get the domain defined by the view. It is meant to be overridden.
-     *
-     * @private
-     * @returns {Promise<Array[]>}
-     */
-    _getViewDomain: async function () {
-        return [];
     },
     /**
      * Meant to be overriden to return a proper object.
@@ -409,7 +385,8 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * @private
      * @param {Object} state the state given by the model
      * @param {Object} [params={}]
-     * @param {Object} [params.shouldUpdateControlPanel]
+     * @param {Array} [params.breadcrumbs]
+     * @param {Object} [params.shouldUpdateSearchComponents]
      * @returns {Promise}
      */
     async _update(state, params) {
@@ -418,12 +395,17 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             this.renderButtons();
         }
         const promises = [this._renderBanner()];
-        if (this.withControlPanel && params.shouldUpdateControlPanel !== false) {
-            this._updateControlPanelProps(state);
-            if (params.breadcrumbs) {
-                this.controlPanelProps.breadcrumbs = params.breadcrumbs;
+        if (params.shouldUpdateSearchComponents !== false) {
+            if (this.withControlPanel) {
+                this._updateControlPanelProps(state);
+                if (params.breadcrumbs) {
+                    this.controlPanelProps.breadcrumbs = params.breadcrumbs;
+                }
+                promises.push(this.updateControlPanel());
             }
-            promises.push(this.updateControlPanel());
+            if (this.withSearchPanel) {
+                this._updateSearchPanel();
+            }
         }
         this._pushState();
         await Promise.all(promises);
@@ -475,6 +457,15 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             return this.renderer.update(state);
         }
         return this.renderer.updateState(state, params);
+    },
+    /**
+     * @private
+     * @param {Object} [newProps={}]
+     * @return {Promise}
+     */
+    async _updateSearchPanel(newProps) {
+        Object.assign(this.searchPanelProps, newProps);
+        await this._searchPanelWrapper.update(this.searchPanelProps);
     },
 
     //--------------------------------------------------------------------------
@@ -551,7 +542,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         switch (ev.data.direction) {
             case 'up':
                 ev.stopPropagation();
-                this._controlPanelModel.trigger('focus-control-panel');
+                this.searchModel.trigger('focus-control-panel');
                 break;
             case 'down':
                 ev.stopPropagation();
@@ -592,15 +583,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      */
     _onSearch: function (searchQuery) {
         this.reload(_.extend({ offset: 0, groupsOffset: 0 }, searchQuery));
-    },
-    /**
-     * @private
-     * @param {OdooEvent} ev
-     * @param {Array[]} ev.data.domain the current domain of the searchPanel
-     */
-    _onSearchPanelDomainUpdated: function (ev) {
-        this.searchPanelDomain = ev.data.domain;
-        this.reload({offset: 0});
     },
     /**
      * Intercepts the 'switch_view' event to add the controllerID into the data,

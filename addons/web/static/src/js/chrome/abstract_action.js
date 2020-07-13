@@ -9,8 +9,8 @@ odoo.define('web.AbstractAction', function (require) {
  */
 
 var ActionMixin = require('web.ActionMixin');
+const ActionModel = require('web/static/src/js/views/action_model.js');
 var ControlPanel = require('web.ControlPanel');
-var ControlPanelModel = require('web.ControlPanelModel');
 var Widget = require('web.Widget');
 const { ComponentWrapper } = require('web.OwlCompatibility');
 
@@ -35,7 +35,7 @@ var AbstractAction = Widget.extend(ActionMixin, {
      * For example, the Discuss application adds the following line in its
      * constructor::
      *
-     *      this.controlPanelModelConfig.modelName = 'mail.message';
+     *      this.searchModelConfig.modelName = 'mail.message';
      *
      * @type boolean
      */
@@ -76,12 +76,16 @@ var AbstractAction = Widget.extend(ActionMixin, {
         this._super(parent);
         this._title = action.display_name || action.name;
 
+        this.searchModelConfig = {
+            context: Object.assign({}, action.context),
+            domain: action.domain || [],
+            env: owl.Component.env,
+            searchMenuTypes: this.searchMenuTypes,
+        };
+        this.extensions = {};
         if (this.hasControlPanel) {
-            this.controlPanelModelConfig = {
+            this.extensions.ControlPanel = {
                 actionId: action.id,
-                actionContext: action.context || {},
-                actionDomain: action.domain || [],
-                env: owl.Component.env,
                 withSearchBar: this.withSearchBar,
             };
 
@@ -102,23 +106,36 @@ var AbstractAction = Widget.extend(ActionMixin, {
      * @override
      */
     willStart: async function () {
-        const proms = [this._super(...arguments)];
+        const superPromise = this._super(...arguments);
         if (this.hasControlPanel) {
             if (this.loadControlPanel) {
-                const { context, searchMenuTypes } = this.controlPanelProps;
-                const { modelName } = this.controlPanelModelConfig;
-                const options = { load_filters: searchMenuTypes.includes('favorite') };
-                const args = [modelName, context || {}, this.viewId, 'search', options];
-                const loadFieldViewPromise = this.loadFieldView(...args);
-                const {arch, fields, favoriteFilters } = await loadFieldViewPromise;
-                this.controlPanelModelConfig.viewInfo = {arch, fields, favoriteFilters };
+                const { context, modelName } = this.searchModelConfig;
+                const options = { load_filters: this.searchMenuTypes.includes('favorite') };
+                const { arch, fields, favoriteFilters } = await this.loadFieldView(
+                    modelName,
+                    context || {},
+                    this.viewId,
+                    'search',
+                    options
+                );
+                const archs = { search: arch };
+                const { ControlPanel: controlPanelInfo } = ActionModel.extractArchInfo(archs);
+                Object.assign(this.extensions.ControlPanel, {
+                    archNodes: controlPanelInfo.children,
+                    favoriteFilters,
+                    fields,
+                });
                 this.controlPanelProps.fields = fields;
             }
-            this._controlPanelModel = new ControlPanelModel(this.controlPanelModelConfig);
-            this.controlPanelProps.controlPanelModel = this._controlPanelModel;
-            proms.push(this._controlPanelModel.isReady);
         }
-        return Promise.all(proms);
+        this.searchModel = new ActionModel(this.extensions, this.searchModelConfig);
+        if (this.hasControlPanel) {
+            this.controlPanelProps.searchModel = this.searchModel;
+        }
+        return Promise.all([
+            superPromise,
+            this.searchModel.load(),
+        ]);
     },
     /**
      * @override
@@ -147,9 +164,9 @@ var AbstractAction = Widget.extend(ActionMixin, {
      */
     on_attach_callback: function () {
         ActionMixin.on_attach_callback.call(this);
+        this.searchModel.on('search', this, this._onSearch);
         if (this.hasControlPanel) {
-            this._controlPanelModel.on('search', this, this._onSearch);
-            this._controlPanelModel.on('get-controller-query-params', this, this._onGetOwnedQueryParams);
+            this.searchModel.on('get-controller-query-params', this, this._onGetOwnedQueryParams);
         }
     },
     /**
@@ -157,9 +174,9 @@ var AbstractAction = Widget.extend(ActionMixin, {
      */
     on_detach_callback: function () {
         ActionMixin.on_detach_callback.call(this);
+        this.searchModel.off('search', this);
         if (this.hasControlPanel) {
-            this._controlPanelModel.off('search', this);
-            this._controlPanelModel.off('get-controller-query-params', this);
+            this.searchModel.off('get-controller-query-params', this);
         }
     },
 

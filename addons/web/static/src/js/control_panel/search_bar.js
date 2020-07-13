@@ -4,7 +4,7 @@ odoo.define('web.SearchBar', function (require) {
     const Domain = require('web.Domain');
     const field_utils = require('web.field_utils');
     const { useAutofocus } = require('web.custom_hooks');
-    const { useModel } = require('web.model');
+    const { useModel } = require('web/static/src/js/model.js');
 
     const CHAR_FIELDS = ['char', 'html', 'many2many', 'many2one', 'one2many', 'text'];
     const { Component, hooks } = owl;
@@ -42,14 +42,14 @@ odoo.define('web.SearchBar', function (require) {
 
             this.focusOnUpdate = useAutofocus();
             this.inputRef = useRef('search-input');
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
             this.state = useState({
                 sources: [],
                 focusedItem: 0,
                 inputValue: "",
             });
 
-            this.autoCompleteSources = this.model.getFiltersOfType('field').map(
+            this.autoCompleteSources = this.model.get('filters', f => f.type === 'field').map(
                 filter => this._createSource(filter)
             );
             this.noResultItem = [null, this.env._t("(no result)")];
@@ -60,15 +60,15 @@ odoo.define('web.SearchBar', function (require) {
 
         mounted() {
             // 'search' will always patch the search bar, 'focus' will never.
-            this.env.controlPanelModel.on('search', this, this.focusOnUpdate);
-            this.env.controlPanelModel.on('focus-control-panel', this, () => {
+            this.env.searchModel.on('search', this, this.focusOnUpdate);
+            this.env.searchModel.on('focus-control-panel', this, () => {
                 this.inputRef.el.focus();
             });
         }
 
         willUnmount() {
-            this.env.controlPanelModel.off('search', this);
-            this.env.controlPanelModel.off('focus-control-panel', this);
+            this.env.searchModel.off('search', this);
+            this.env.searchModel.off('focus-control-panel', this);
         }
 
         //---------------------------------------------------------------------
@@ -376,9 +376,8 @@ odoo.define('web.SearchBar', function (require) {
                         this.state.focusedItem = this.state.sources.indexOf(currentItem.parent);
                         // Priority 3: Do nothing (navigation inside text).
                     } else if (ev.target.selectionStart === 0) {
-                        const facets = this.model.getFacets();
                         // Priority 4: navigate to rightmost facet.
-                        this._focusFacet(facets.length - 1);
+                        this._focusFacet(this.model.get("facets").length - 1);
                     }
                     break;
                 case 'ArrowRight':
@@ -408,7 +407,7 @@ odoo.define('web.SearchBar', function (require) {
                     break;
                 case 'Backspace':
                     if (!this.state.inputValue.length) {
-                        const facets = this.model.getFacets();
+                        const facets = this.model.get("facets");
                         if (facets.length) {
                             this._onFacetRemove(facets[facets.length - 1]);
                         }
