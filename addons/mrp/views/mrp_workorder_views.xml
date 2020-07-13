@@ -155,7 +155,11 @@
                             <field name="show_json_popover" invisible="1"/>
                             <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                         </div>
-                        <field name="duration_expected" widget="float_time"/>
+                        <label for="duration_expected"/>
+                        <div class="o_row">
+                            <field name="duration_expected" widget="float_time"/>
+                            <span>minutes</span>
+                        </div>
                     </group>
                 </group>
                 <notebook>
