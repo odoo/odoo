@@ -188,6 +188,23 @@ class TestDateRangeFunction(BaseCase):
         self.assertEqual(dates, expected)
 
 
+class TestFormatFloat(TransactionCase):
+    def test_01_format_float(self):
+        value = 1024.9299999
+        lang = self.env['res.lang']
+
+        lang._activate_lang('fr_FR')
+        lang._activate_lang('en_US')
+
+        self.assertEqual(misc.format_float(env=self.env, value=value, precision_rounding=0.01, uom_name='km', lang_code='fr_FR'), u'1\N{NO-BREAK SPACE}024,93\N{NO-BREAK SPACE}km')
+        self.assertEqual(misc.format_float(env=self.env, value=-1*value, precision_rounding=0.01, uom_name='km', lang_code='fr_FR'), u'-\N{ZERO WIDTH NO-BREAK SPACE}1\N{NO-BREAK SPACE}024,93\N{NO-BREAK SPACE}km')
+        self.assertEqual(misc.format_float(env=lang.with_context(lang='fr_FR').env, value=value), u'1\N{NO-BREAK SPACE}024,93')
+
+        self.assertEqual(misc.format_float(env=self.env, value=value, precision_rounding=0.05, uom_name='g', lang_code='en_US'), u'1,024.95\N{NO-BREAK SPACE}g')
+        self.assertEqual(misc.format_float(env=self.env, value=-1*value, precision_rounding=0.05, uom_name='g', lang_code='en_US'), u'-\N{ZERO WIDTH NO-BREAK SPACE}1,024.95\N{NO-BREAK SPACE}g')
+        self.assertEqual(misc.format_float(env=lang.with_context(lang='en_US').env, value=value), u'1,024.93')
+
+
 class TestFormatLangDate(TransactionCase):
     def test_00_accepted_types(self):
         self.env.user.tz = 'Europe/Brussels'

@@ -11,7 +11,7 @@ from lxml import etree
 import math
 
 from odoo.tools import html_escape as escape, posix_to_ldml, float_utils, format_date, format_duration, pycompat
-from odoo.tools.misc import get_lang
+from odoo.tools.misc import get_lang, format_float, format_amount
 
 import logging
 _logger = logging.getLogger(__name__)
@@ -164,27 +164,21 @@ class FloatConverter(models.AbstractModel):
 
     @api.model
     def value_to_html(self, value, options):
+        precision_digits = None
+        precision_rounding = None
         if 'decimal_precision' in options:
-            precision = self.env['decimal.precision'].precision_get(options['decimal_precision'])
-        else:
-            precision = options['precision']
+            precision_digits = self.env['decimal.precision'].precision_get(options['decimal_precision'])
+        elif 'precision_digits' in options:
+            precision_digits = options['precision_digits']
+        elif 'precision' in options:
+            precision_digits = options['precision']
+        elif 'precision_rounding' in options:
+            precision_rounding = options['precision_rounding']
 
-        if precision is None:
-            fmt = '%f'
-        else:
-            value = float_utils.float_round(value, precision_digits=precision)
-            fmt = '%.{precision}f'.format(precision=precision)
+        if precision_digits is not None:
+            precision_rounding = 10 ** -precision_digits
 
-        formatted = self.user_lang().format(fmt, value, grouping=True).replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
-
-        # %f does not strip trailing zeroes. %g does but its precision causes
-        # it to switch to scientific notation starting at a million *and* to
-        # strip decimals. So use %f and if no precision was specified manually
-        # strip trailing 0.
-        if precision is None:
-            formatted = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formatted)
-
-        return pycompat.to_text(formatted)
+        return pycompat.to_text(format_float(self.env, value, precision_rounding=precision_rounding))
 
     @api.model
     def record_to_html(self, record, field_name, options):
@@ -433,13 +427,6 @@ class MonetaryConverter(models.AbstractModel):
         if not isinstance(value, (int, float)):
             raise ValueError(_("The value send to monetary field is not a number."))
 
-        # lang.format mandates a sprintf-style format. These formats are non-
-        # minimal (they have a default fixed precision instead), and
-        # lang.format will not set one by default. currency.round will not
-        # provide one either. So we need to generate a precision value
-        # (integer > 0) from the currency's rounding (a float generally < 1.0).
-        fmt = "%.{0}f".format(display_currency.decimal_places)
-
         if options.get('from_currency'):
             date = options.get('date') or fields.Date.today()
             company_id = options.get('company_id')
@@ -449,17 +436,8 @@ class MonetaryConverter(models.AbstractModel):
                 company = self.env.company
             value = options['from_currency']._convert(value, display_currency, company, date)
 
-        lang = self.user_lang()
-        formatted_amount = lang.format(fmt, display_currency.round(value),
-                                grouping=True, monetary=True).replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
-
-        pre = post = u''
-        if display_currency.position == 'before':
-            pre = u'{symbol}\N{NO-BREAK SPACE}'.format(symbol=display_currency.symbol or '')
-        else:
-            post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=display_currency.symbol or '')
-
-        return u'{pre}<span class="oe_currency_value">{0}</span>{post}'.format(formatted_amount, pre=pre, post=post)
+        return format_amount(self.env, value, currency=display_currency, 
+            pattern=u'{pre}<span class="oe_currency_value">{0}</span>{post}')
 
     @api.model
     def record_to_html(self, record, field_name, options):

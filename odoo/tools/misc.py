@@ -11,6 +11,7 @@ import datetime
 import hmac as hmac_lib
 import hashlib
 import io
+import math
 import os
 import pickle as pickle_
 import re
@@ -48,6 +49,7 @@ from .cache import *
 from .config import config
 from .parse_version import parse_version
 from .which import which
+from .float_utils import float_round
 
 _logger = logging.getLogger(__name__)
 
@@ -1442,12 +1444,22 @@ def format_decimalized_amount(amount, currency=None):
     return "%s %s" % (formated_amount, currency.symbol or '')
 
 
-def format_amount(env, amount, currency, lang_code=False):
-    fmt = "%.{0}f".format(currency.decimal_places)
-    lang = get_lang(env, lang_code)
+def format_amount(env, amount, currency, lang_code=False, pattern=None):
+    '''Format Amount: used to display amount.
+        :param env: an environment.
+        :param float or integer amount: the amount to format.
+        :param Model currency: res.currency records.
+        :param lang_code: ISO (optional).
+        :param string parttner: like u'{pre}{0}{post}' (optional).
+        :return: amount formatted in the specified format.
+        :rtype: string
 
-    formatted_amount = lang.format(fmt, currency.round(amount), grouping=True, monetary=True)\
-        .replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
+        >>> format_float(env, 1024.9299999, 0.01, 'km', 'fr_FR')
+        1 024,93 km
+        >>> format_float(env, 20124.9399999, 0.05, 'g', 'en_US')
+        20,124.95 g
+    '''
+    formatted_amount = format_float(env, amount, precision_rounding=currency.rounding, lang_code=lang_code)
 
     pre = post = u''
     if currency.position == 'before':
@@ -1455,7 +1467,8 @@ def format_amount(env, amount, currency, lang_code=False):
     else:
         post = u'\N{NO-BREAK SPACE}{symbol}'.format(symbol=currency.symbol or '')
 
-    return u'{pre}{0}{post}'.format(formatted_amount, pre=pre, post=post)
+    pattern = pattern if pattern else u'{pre}{0}{post}'
+    return pattern.format(formatted_amount, pre=pre, post=post)
 
 
 def format_duration(value):
@@ -1471,6 +1484,45 @@ def format_duration(value):
         return '-%02d:%02d' % (hours, minutes)
     return '%02d:%02d' % (hours, minutes)
 
+
+def format_float(env, value, precision_rounding=None, uom_name=None, lang_code=False):
+    '''Format Float: used to display float.
+        :param env: an environment.
+        :param float or integer value: the value to format.
+        :param float precision_rounding: precision_rounding number between 0 to 1 (optional).
+        :param string uom_name: name of Uom (optional).
+        :param lang_code: ISO (optional).
+        :return: value formatted in the specified format.
+        :rtype: string
+
+        >>> format_float(env, 1024.9299999, 0.01, 'km', 'fr_FR')
+        1 024,93 km
+        >>> format_float(env, 20124.9399999, 0.05, 'g', 'en_US')
+        20,124.95 g
+    '''
+    if precision_rounding is None:
+        fmt = u'%f'
+    else:
+        dp = int(math.ceil(math.log10(1 / precision_rounding))) if 0 < precision_rounding < 1 else 0
+        fmt = u'%.{0}f'.format(dp)
+        value = float_round(value, precision_rounding=precision_rounding)
+
+    lang = get_lang(env, lang_code)
+    formated_value = lang.format(fmt, value, grouping=True, monetary=False)
+    
+    # Replace the '-' by a non-breakable hyphen.
+    formated_value = formated_value.replace(r' ', u'\N{NO-BREAK SPACE}').replace(r'-', u'-\N{ZERO WIDTH NO-BREAK SPACE}')
+
+    # %f does not strip trailing zeroes. %g does but its precision causes
+    # it to switch to scientific notation starting at a million *and* to
+    # strip decimals. So use %f and if no precision was specified manually
+    # strip trailing 0.
+    if precision_rounding is None:
+        formated_value = re.sub(r'(?:(0|\d+?)0+)$', r'\1', formated_value)
+
+    if uom_name:
+        return u'{0}\N{NO-BREAK SPACE}{unit}'.format(formated_value, unit=uom_name)
+    return formated_value
 
 def _consteq(str1, str2):
     """ Constant-time string comparison. Suitable to compare bytestrings of fixed,
