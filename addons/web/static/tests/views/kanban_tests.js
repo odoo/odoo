@@ -3874,6 +3874,73 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test('no content helper for grouped kanban with records', async function (assert) {
+        assert.expect(1);
+
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            debug: true,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="foo"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+            groupBy: ['product_id'],
+            mockRPC: function (route, args) {
+                if (route === '/web/dataset/call_kw/partner/web_read_group') {
+                    var result = {
+                        groups: [
+                            {__domain: [['product_id', '=', 3]], product_id_count: 0, product_id: [3, 'hello']},
+                        ],
+                    };
+                    return Promise.resolve(result);
+                }
+                return this._super(...arguments);
+            },
+            viewOptions: {
+                action: {
+                    help: "No content helper",
+                },
+            },
+        });
+
+        // await testUtils.dom.click(kanban.el.querySelector('.fa.fa-filter'));
+        // await testUtils.dom.click(kanban.el.querySelector('.o_add_custom_filter'));
+        // await testUtils.dom.click(kanban.el.querySelector('.o_apply_filter'));
+        await nextTick();
+        //await kanban.update({}, {reload: false});
+        // await nextTick();
+        await kanban.update({ domain: [['id', '=', 0]] });
+        // await nextTick();
+        var fooFieldProm = makeTestPromise();
+        //await kanban.update({ domain: [['id', '=', 0]] });
+        await kanban.update({groupBy: ['product_id']});
+
+        // await nextTick();
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_header_title .o_kanban_quick_add'));
+        await testUtils.fields.editInput(kanban.el.querySelector('.o_kanban_quick_create .o_input'), 'the originals');
+        await testUtils.dom.click(kanban.el.querySelector('button.o_kanban_add'));
+        fooFieldProm.resolve();
+        await nextTick();
+
+
+        //await kanban.reload({ domain: [['id', '<', 0]] });
+        // await kanban.reload({groupBy: ['product_id']});
+        // await testUtils.dom.click(kanban.el.querySelector('.o_kanban_quick_add'));
+        // await testUtils.fields.editInput(kanban.$('.o_kanban_quick_create .o_input'), 'the originals');
+        // await testUtils.dom.click(kanban.el.querySelector('.o_kanban_add'));
+
+        assert.isNotVisible(kanban.el.querySelector('.o_nocontent_help'),
+            "should not appear export button in listview");
+
+        kanban.destroy();
+    });
+
     QUnit.test('no nocontent helper is hidden when quick creating a column', async function (assert) {
         assert.expect(2);
 

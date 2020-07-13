@@ -217,7 +217,9 @@ var KanbanRenderer = BasicRenderer.extend({
             }
             return Promise.resolve(def).then(function () {
                 newColumn.$el.insertAfter(column.$el);
-                self._toggleNoContentHelper();
+                if (column.$el.find('.o_kanban_no_records').length) {
+                    self._toggleNoContentHelper();
+                }
                 // When a record has been quick created, the new column directly
                 // renders the quick create widget (to allow quick creating several
                 // records in a row). However, as we render this column in a
@@ -599,7 +601,10 @@ var KanbanRenderer = BasicRenderer.extend({
      * @private
      */
     _onCancelQuickCreate: function () {
-        this._toggleNoContentHelper();
+        if (!this.$el.find('.o_kanban_no_records').length ||
+            !this.$el.find('.o_kanban_record').length) {
+            this._toggleNoContentHelper();
+        }
     },
     /**
      * Closes the opened quick create widgets in columns
@@ -610,7 +615,9 @@ var KanbanRenderer = BasicRenderer.extend({
         if (this.state.groupedBy.length) {
             _.invoke(this.widgets, 'cancelQuickCreate');
         }
-        this._toggleNoContentHelper();
+        if (!this.$el.find('.o_kanban_no_records').length) {
+            this._toggleNoContentHelper();
+        }
     },
     /**
      * @private
