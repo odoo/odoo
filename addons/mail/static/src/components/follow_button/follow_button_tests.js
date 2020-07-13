@@ -99,6 +99,8 @@ QUnit.test('hover following button', async function (assert) {
         is_active: true,
         is_editable: true,
         partner_id: this.data.currentPartnerId,
+        res_id: 100,
+        res_model: 'res.partner',
     });
     await this.start();
     const thread = this.env.models['mail.thread'].create({
@@ -157,7 +159,7 @@ QUnit.test('hover following button', async function (assert) {
 });
 
 QUnit.test('click on "follow" button', async function (assert) {
-    assert.expect(8);
+    assert.expect(7);
 
     this.data['res.partner'].records.push({ id: 100, message_follower_ids: [1] });
     this.data['mail.followers'].records.push({
@@ -165,15 +167,15 @@ QUnit.test('click on "follow" button', async function (assert) {
         is_active: true,
         is_editable: true,
         partner_id: this.data.currentPartnerId,
+        res_id: 100,
+        res_model: 'res.partner',
     });
     await this.start({
         async mockRPC(route, args) {
-            if (route.includes('res.partner/read')) {
-                assert.step('rpc:read_follower_ids');
-            } else if (route.includes('message_subscribe')) {
+            if (route.includes('message_subscribe')) {
                 assert.step('rpc:message_subscribe');
             } else if (route.includes('mail/read_followers')) {
-                assert.step('rpc:read_followers_details');
+                assert.step('rpc:mail/read_followers');
             }
             return this._super(...arguments);
         },
@@ -199,8 +201,7 @@ QUnit.test('click on "follow" button', async function (assert) {
     });
     assert.verifySteps([
         'rpc:message_subscribe',
-        'rpc:read_follower_ids',
-        'rpc:read_followers_details',
+        'rpc:mail/read_followers',
     ]);
     assert.containsNone(
         document.body,
@@ -223,6 +224,8 @@ QUnit.test('click on "unfollow" button', async function (assert) {
         is_active: true,
         is_editable: true,
         partner_id: this.data.currentPartnerId,
+        res_id: 100,
+        res_model: 'res.partner',
     });
     await this.start({
         async mockRPC(route, args) {

@@ -96,8 +96,7 @@ MockServer.include({
             return this._mockRouteMailInitMessaging();
         }
         if (route === '/mail/read_followers') {
-            const follower_ids = args.follower_ids;
-            return this._mockRouteMailReadFollowers(follower_ids);
+            return this._mockRouteMailReadFollowers(args);
         }
         if (route === '/mail/read_subscription_data') {
             const follower_id = args.follower_id;
@@ -323,9 +322,10 @@ MockServer.include({
      * @param {integer[]} follower_ids
      * @return {Object} one key for list of followers and one for subtypes
      */
-    async _mockRouteMailReadFollowers(follower_ids) {
-        const ids = follower_ids; // list of followers IDs to read
-        const followers = this._getRecords('mail.followers', [['id', 'in', ids]]);
+    async _mockRouteMailReadFollowers(args) {
+        const res_id = args.res_id; // id of record to read the followers
+        const res_model = args.res_model; // model of record to read the followers
+        const followers = this._getRecords('mail.followers', [['res_id', '=', res_id], ['res_model', '=', res_model]]);
         const currentPartnerFollower = followers.find(follower => follower.id === this.currentPartnerId);
         const subtypes = currentPartnerFollower
             ? this._mockRouteMailReadSubscriptionData(currentPartnerFollower.id)
