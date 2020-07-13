@@ -1433,8 +1433,9 @@ class _String(Field):
 
         update_column = True
         update_trans = False
-        single_lang = len(records.env['res.lang'].get_installed()) <= 1
+        single_lang = True
         if self.translate:
+            single_lang = len(records.env['res.lang'].get_installed()) <= 1
             lang = records.env.lang or None  # used in _update_translations below
             if single_lang:
                 # a single language is installed
