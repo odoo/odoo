@@ -3849,11 +3849,7 @@ Record ids: %(records)s
                 field = self._fields.get(key)
                 if not field:
                     raise ValueError("Invalid field %r on model %r" % (key, self._name))
-                if field.compute and field.readonly and field.pre_compute and self._pre_compute:
-                    # If a value is given for a readonly compute
-                    # The pre-computation won't happen
-                    # Do not consider this given value for data_list
-                    # To ensure field is correctly pre-computed
+                if field.states and field.compute and field.pre_compute and self._pre_compute and field._is_protected(vals):
                     continue
                 if field.company_dependent:
                     irprop_def = self.env['ir.property']._get(key, self._name)
@@ -3873,7 +3869,7 @@ Record ids: %(records)s
                     inversed[key] = val
                     inversed_fields.add(field)
                 # protect non-readonly computed fields against (re)computation
-                if field.compute and not field.readonly:
+                if field.compute and not field._is_protected(vals):
                     protected.update(self.pool.field_computed.get(field, [field]))
 
             data_list.append(data)

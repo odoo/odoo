@@ -660,6 +660,15 @@ class Field(MetaField('DummyField', (object,), {})):
 
         return desc
 
+    def _is_protected(self, values=None):
+        if self.states and values:
+            state = values.get('state')
+            if state in self.states:
+                for attr,value in self.states.get(state):
+                    if attr == 'readonly':
+                        return value
+        return self.readonly
+
     # properties used by get_description()
     _description_store = property(attrgetter('store'))
     _description_manual = property(attrgetter('manual'))
