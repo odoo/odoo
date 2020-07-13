@@ -294,6 +294,15 @@ var ListRenderer = BasicRenderer.extend({
         };
     },
     /**
+     * Returns the jQuery node used to update the selection
+     *
+     * @private
+     * @return {jQuery}
+     */
+    _getSelectableRecordCheckboxes: function () {
+        return this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
+    },
+    /**
      * Adjacent buttons (in the arch) are displayed in a single column. This
      * function iterates over the arch's nodes and replaces "button" nodes by
      * "button_group" nodes, with a single "button_group" node for adjacent
@@ -1174,7 +1183,7 @@ var ListRenderer = BasicRenderer.extend({
     _updateSelection: function () {
         this.selection = [];
         var self = this;
-        var $inputs = this.$('tbody .o_list_record_selector input:visible:not(:disabled)');
+        var $inputs = this._getSelectableRecordCheckboxes();
         var allChecked = $inputs.length > 0;
         $inputs.each(function (index, input) {
             if (input.checked) {

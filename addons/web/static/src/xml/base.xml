@@ -162,7 +162,7 @@
             <i t-if="icon" t-att-class="icon"/>
             <span class="o_dropdown_title" t-esc="title"/>
             <i t-if="displayCaret" t-attf-class="o_dropdown_caret fa fa-caret-{{ state.open ? 'down' : 'right' }}"/>
-            <i t-elif="displayChevron" t-attf-class="fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
+            <i t-elif="displayChevron" t-attf-class="o_dropdown_chevron fa fa-chevron-{{ state.open ? 'down' : 'right' }} float-right mt4"/>
         </button>
         <ul t-if="state.open" t-attf-class="o_dropdown_menu dropdown-menu {{ dropdownMenuAlignClass }} show" role="menu"
             t-on-item-selected="_onItemSelected"
