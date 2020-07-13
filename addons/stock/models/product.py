@@ -512,10 +512,8 @@ class Product(models.Model):
         return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
 
     def action_product_forecast_report(self):
-        action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
-        action['domain'] = [
-            ('product_id', '=', self.id),
-        ]
+        self.ensure_one()
+        action = self.env.ref('stock.stock_replenishment_product_product_action').read()[0]
         return action
 
     @api.model
@@ -811,11 +809,8 @@ class ProductTemplate(models.Model):
         return action
 
     def action_product_tmpl_forecast_report(self):
-        action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
-        product_ids = self.with_context(active_test=False).product_variant_ids.filtered(lambda p: p.virtual_available != 0)
-        action['domain'] = [
-            ('product_id', 'in', product_ids.ids)
-        ]
+        self.ensure_one()
+        action = self.env.ref('stock.stock_replenishment_product_product_action').read()[0]
         return action
 
 class ProductCategory(models.Model):

@@ -1535,6 +1535,13 @@ class StockMove(models.Model):
                 else:
                     move.state = 'confirmed'
 
+    def _get_source_document(self):
+        """ Return the move's document, used by `report.stock.report_product_product_replenishment`
+        and must be overrided to add more document type in the report.
+        """
+        self.ensure_one()
+        return self.picking_id or False
+
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.move_orig_ids and any(m.state not in ('done', 'cancel') for m in self.move_orig_ids):
             result = set()
