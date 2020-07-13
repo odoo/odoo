@@ -178,6 +178,12 @@ class MrpProduction(models.Model):
             * Waiting: The material is not available to start the production.\n\
             The material availability is impacted by the manufacturing readiness\
             defined on the BoM.")
+    components_availability = fields.Char(compute='_compute_components_availability')
+    components_availability_state = fields.Selection([
+        ('available', 'Available'),
+        ('waiting', 'Should be available on time'),
+        ('late', 'Will not be available at time'),
+    ], compute='_compute_components_availability')
 
     move_raw_ids = fields.One2many(
         'stock.move', 'raw_material_production_id', 'Components',
@@ -269,6 +275,21 @@ class MrpProduction(models.Model):
                 else:
                     product_domain += [('id', 'in', production.bom_id.product_tmpl_id.product_variant_ids.ids)]
             production.allowed_product_ids = self.env['product.product'].search(product_domain)
+
+    @api.depends('move_raw_ids.availability_indication', 'move_raw_ids.availability_state')
+    def _compute_components_availability(self):
+        inactive_orders = self.filtered(lambda order: order.state in ['cancel', 'draft', 'done', 'to_close'])
+        inactive_orders.write({
+            'components_availability': '',
+            'components_availability_state': 'available'
+        })
+        active_orders = (self - inactive_orders)
+        for order in active_orders:
+            availability_state, availability = order.move_raw_ids._get_availability_vals()
+            order.write({
+                'components_availability': availability,
+                'components_availability_state': availability_state
+            })
 
     @api.depends('procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids')
     def _compute_mrp_production_child_count(self):
