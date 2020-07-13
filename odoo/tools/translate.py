@@ -1157,7 +1157,7 @@ def trans_load(cr, filename, lang, verbose=True, create_empty_translation=False,
                                    overwrite=overwrite)
     except IOError:
         if verbose:
-            _logger.error("couldn't read translation file %s", filename)
+            _logger.exception("couldn't read translation file %s", filename)
         return None
 
 
@@ -1219,10 +1219,10 @@ def trans_load_data(cr, fileobj, fileformat, lang,
         if verbose:
             _logger.info("translation file loaded successfully")
 
-    except IOError:
+    except IOError as io_error:
         iso_lang = get_iso_codes(lang)
         filename = '[lang: %s][format: %s]' % (iso_lang or 'new', fileformat)
-        _logger.exception("couldn't read translation file %s", filename)
+        _logger.exception("Couldn't read translation file %s. Here's what we got instead: %s", filename, io_error)
 
 
 def get_locales(lang=None):
