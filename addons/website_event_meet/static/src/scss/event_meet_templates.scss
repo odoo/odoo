@@ -1,0 +1,59 @@
+.o_wemeet_index {
+
+    /*
+     * COMMON
+     */
+
+    /*
+     * Meet Room PAGE
+     */
+
+    .o_wevent_online_page_container {
+
+        // Jitsi container
+        #o_wemeet_jitsi_iframe {
+            height: 85vh;
+        }
+    }
+}
+
+/*
+ * MEETING MODAL (JS / XML WIDGET)
+ */
+
+.o_wevent_create_meeting_room_modal .modal-dialog {
+    top: 25%;
+    max-width: 500px;
+    height: auto;
+}
+
+/* TDE FIXME: reorganize css cleanly */
+.o_wevent_meeting_room_is_pinned {
+    transition: 0.2s;
+
+    // the icon must be filled with white when the meeting room is not pinned
+    color: white;
+    -webkit-text-stroke: 1px $o-main-text-color;
+    -webkit-text-fill-color: transparent;
+
+    &.o_wevent_meeting_room_pinned {
+        // the icon must be filled with black when the meeting room is pinned
+        -webkit-text-fill-color: $o-main-text-color;
+    }
+}
+
+.o_wevent_meeting_room_corner_ribbon {
+    width: 200px;
+    background: #e43;
+    top: 25px;
+    left: -50px;
+    text-align: center;
+    line-height: 50px;
+    letter-spacing: 1px;
+    color: #f0f0f0;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    z-index: 1;
+    position: absolute;
+    opacity: 0.6;
+}
