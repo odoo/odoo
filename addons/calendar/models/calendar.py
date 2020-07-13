@@ -1573,6 +1573,9 @@ class Meeting(models.Model):
 
     @api.model_create_multi
     def create(self, vals_list):
+        defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id'])
+        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+        model_has_activity_ids = {}
         for values in vals_list:
             # FIXME: neverending recurring events
             if 'rrule' in values:
@@ -1587,13 +1590,16 @@ class Meeting(models.Model):
 
             # created from calendar: try to create an activity on the related record
             if not values.get('activity_ids'):
-                defaults = self.default_get(['activity_ids', 'res_model_id', 'res_id', 'user_id'])
                 res_model_id = values.get('res_model_id', defaults.get('res_model_id'))
                 res_id = values.get('res_id', defaults.get('res_id'))
                 user_id = values.get('user_id', defaults.get('user_id'))
                 if not defaults.get('activity_ids') and res_model_id and res_id:
-                    if hasattr(self.env[self.env['ir.model'].sudo().browse(res_model_id).model], 'activity_ids'):
-                        meeting_activity_type = self.env['mail.activity.type'].search([('category', '=', 'meeting')], limit=1)
+                    if res_model_id in model_has_activity_ids:
+                        has_activity_ids = model_has_activity_ids[res_model_id]
+                    else:
+                        has_activity_ids = hasattr(self.env[self.env['ir.model'].sudo().browse(res_model_id).model], 'activity_ids')
+                        model_has_activity_ids[res_model_id] = has_activity_ids
+                    if has_activity_ids:
                         if meeting_activity_type:
                             activity_vals = {
                                 'res_model_id': res_model_id,
