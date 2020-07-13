@@ -87,21 +87,17 @@ class ResourceMixin(models.AbstractModel):
         for record in self:
             mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
 
-        for calendar in mapped_resources:
-            calendar_resources = mapped_resources[calendar]
+        for calendar, calendar_resources in mapped_resources.items():
             day_total = calendar._get_day_total(from_datetime, to_datetime, calendar_resources)
 
             # actual hours per day
             if compute_leaves:
-                intervals = calendar._work_intervals(from_datetime, to_datetime, calendar_resources, domain)
+                intervals = calendar._work_intervals_batch(from_datetime, to_datetime, calendar_resources, domain)
             else:
-                intervals = calendar._attendance_intervals(from_datetime, to_datetime, calendar_resources)
+                intervals = calendar._attendance_intervals_batch(from_datetime, to_datetime, calendar_resources)
 
-            if len(calendar_resources) <= 1:
-                result[calendar_resources.id] = calendar._get_days_data(intervals, day_total)
-            else:
-                for calendar_resource in calendar_resources:
-                    result[calendar_resource.id] = calendar._get_days_data(intervals[calendar_resource.id], day_total[calendar_resource.id])
+            for calendar_resource in calendar_resources:
+                result[calendar_resource.id] = calendar._get_days_data(intervals[calendar_resource.id], day_total[calendar_resource.id])
 
         # convert "resource: result" into "employee: result"
         return {mapped_employees[r.id]: result[r.id] for r in resources} 
@@ -139,22 +135,18 @@ class ResourceMixin(models.AbstractModel):
         for record in self:
             mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
 
-        for calendar in mapped_resources:
-            calendar_resources = mapped_resources[calendar]
+        for calendar, calendar_resources in mapped_resources.items():
             day_total = calendar._get_day_total(from_datetime, to_datetime, calendar_resources)
 
             # compute actual hours per day
-            attendances = calendar._attendance_intervals(from_datetime, to_datetime, calendar_resources)
-            leaves = calendar._leave_intervals(from_datetime, to_datetime, calendar_resources, domain)
+            attendances = calendar._attendance_intervals_batch(from_datetime, to_datetime, calendar_resources)
+            leaves = calendar._leave_intervals_batch(from_datetime, to_datetime, calendar_resources, domain)
 
-            if len(calendar_resources) <= 1:
-                result[calendar_resources.id] = calendar._get_days_data(attendances & leaves, day_total)
-            else:
-                for calendar_resource in calendar_resources:
-                    result[calendar_resource.id] = calendar._get_days_data(
-                        attendances[calendar_resource.id] & leaves[calendar_resource.id],
-                        day_total[calendar_resource.id]
-                    )
+            for calendar_resource in calendar_resources:
+                result[calendar_resource.id] = calendar._get_days_data(
+                    attendances[calendar_resource.id] & leaves[calendar_resource.id],
+                    day_total[calendar_resource.id]
+                )
 
         # convert "resource: result" into "employee: result"
         return {mapped_employees[r.id]: result[r.id] for r in resources}
@@ -179,7 +171,7 @@ class ResourceMixin(models.AbstractModel):
         if not to_datetime.tzinfo:
             to_datetime = to_datetime.replace(tzinfo=utc)
 
-        intervals = calendar._work_intervals(from_datetime, to_datetime, resource, domain)
+        intervals = calendar._work_intervals_batch(from_datetime, to_datetime, resource, domain)[resource.id]
         result = defaultdict(float)
         for start, stop, meta in intervals:
             result[start.date()] += (stop - start).total_seconds() / 3600
@@ -205,8 +197,8 @@ class ResourceMixin(models.AbstractModel):
         if not to_datetime.tzinfo:
             to_datetime = to_datetime.replace(tzinfo=utc)
 
-        attendances = calendar._attendance_intervals(from_datetime, to_datetime, resource)
-        leaves = calendar._leave_intervals(from_datetime, to_datetime, resource, domain)
+        attendances = calendar._attendance_intervals_batch(from_datetime, to_datetime, resource)[resource.id]
+        leaves = calendar._leave_intervals_batch(from_datetime, to_datetime, resource, domain)[resource.id]
         result = []
         for start, stop, leave in (leaves & attendances):
             hours = (stop - start).total_seconds() / 3600

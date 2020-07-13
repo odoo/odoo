@@ -333,16 +333,24 @@ class ResourceCalendar(models.Model):
     # --------------------------------------------------
     # Computation API
     # --------------------------------------------------
+    # YTI TODO: Remove me in master
     def _attendance_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
+        if resource is None:
+            resource = self.env['resource.resource']
+        return self._attendance_intervals_batch(
+            start_dt, end_dt, resources=resource, domain=domain, tz=tz
+        )[resource.id]
+
+    def _attendance_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
         """ Return the attendance intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the resource's timezone.
         """
         self.ensure_one()
-        resources = self.env['resource.resource'] if (resource is None) else resource
+        resources = self.env['resource.resource'] if not resources else resources
         assert start_dt.tzinfo and end_dt.tzinfo
         combine = datetime.combine
 
-        resources_list = [r for r in resources] + [self.env['resource.resource']]
+        resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
         domain = domain if domain is not None else []
         domain = expression.AND([domain, [
@@ -356,7 +364,7 @@ class ResourceCalendar(models.Model):
         cache_deltas = defaultdict(dict)
         result = defaultdict(list)
         for attendance in self.env['resource.calendar.attendance'].search(domain):
-            for resource in (attendance.resource_id or resources_list):
+            for resource in resources_list:
                 # express all dates and times in specified tz or in the resource's timezone
                 tz = tz if tz else timezone((resource or self).tz)
                 if (tz, start_dt) in cache_dates:
@@ -405,21 +413,25 @@ class ResourceCalendar(models.Model):
                         dt1 = tz.localize(combine(day, float_to_time(hour_to)))
                         cache_deltas[(tz, day, hour_to)] = dt1
                     result[resource.id].append((max(start_dt, dt0), min(end_dt, dt1), attendance))
-
-        if len(resources) <= 1: # 1 resource or None
-            return Intervals(result[resources.id])
-        return {r.id: Intervals(result[r.id]) for r in resources}
+        return {r.id: Intervals(result[r.id]) for r in resources_list}
 
     def _leave_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
+        if resource is None:
+            resource = self.env['resource.resource']
+        return self._leave_intervals_batch(
+            start_dt, end_dt, resources=resource, domain=domain, tz=tz
+        )[resource.id]
+
+    def _leave_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
         """ Return the leave intervals in the given datetime range.
             The returned intervals are expressed in specified tz or in the calendar's timezone.
         """
-        resources = self.env['resource.resource'] if (resource is None) else resource
+        resources = self.env['resource.resource'] if not resources else resources
         assert start_dt.tzinfo and end_dt.tzinfo
         self.ensure_one()
 
         # for the computation, express all datetimes in UTC
-        resources_list = [r for r in resources] + [self.env['resource.resource']]
+        resources_list = list(resources) + [self.env['resource.resource']]
         resource_ids = [r.id for r in resources_list]
         if domain is None:
             domain = [('time_type', '=', 'leave')]
@@ -452,23 +464,26 @@ class ResourceCalendar(models.Model):
                 dt1 = string_to_datetime(leave.date_to).astimezone(tz)
                 result[resource.id].append((max(start, dt0), min(end, dt1), leave))
 
-        if len(resources) <= 1: # 1 resource or None
-            return Intervals(result[resources.id])
-        return {r.id: Intervals(result[r.id]) for r in resources}
+        return {r.id: Intervals(result[r.id]) for r in resources_list}
 
+    # YTI TODO: Remove me in master
     def _work_intervals(self, start_dt, end_dt, resource=None, domain=None, tz=None):
-        """ Return the effective work intervals between the given datetimes. """
         if resource is None:
+            resource = self.env['resource.resource']
+        return self._work_intervals_batch(
+            start_dt, end_dt, resources=resource, domain=domain, tz=tz
+        )[resource.id]
+
+    def _work_intervals_batch(self, start_dt, end_dt, resources=None, domain=None, tz=None):
+        """ Return the effective work intervals between the given datetimes. """
+        if not resources:
             resources = self.env['resource.resource']
             resources_list = [resources]
         else:
-            resources = resource
-            resources_list = [r for r in resources]
+            resources_list = list(resources)
 
-        attendance_intervals = self._attendance_intervals(start_dt, end_dt, resources, tz=tz)
-        leave_intervals = self._leave_intervals(start_dt, end_dt, resources, domain, tz=tz)
-        if len(resources) <= 1:
-            return attendance_intervals - leave_intervals
+        attendance_intervals = self._attendance_intervals_batch(start_dt, end_dt, resources, tz=tz)
+        leave_intervals = self._leave_intervals_batch(start_dt, end_dt, resources, domain, tz=tz)
         return {
             r.id: (attendance_intervals[r.id] - leave_intervals[r.id]) for r in resources_list
         }
@@ -502,18 +517,12 @@ class ResourceCalendar(models.Model):
         @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
         """
         self.ensure_one()
-        resources = self.env['resource.resource'] if (resource is None) else resource
+        resources = self.env['resource.resource'] if not resource else resource
         # total hours per day:  retrieve attendances with one extra day margin,
         # in order to compute the total hours on the first and last days
         from_full = from_datetime - timedelta(days=1)
         to_full = to_datetime + timedelta(days=1)
-        intervals = self._attendance_intervals(from_full, to_full, resource=resources)
-
-        if len(resources) <= 1:
-            day_total = defaultdict(float)
-            for start, stop, meta in intervals:
-                day_total[start.date()] += (stop - start).total_seconds() / 3600
-            return day_total
+        intervals = self._attendance_intervals_batch(from_full, to_full, resources=resources)
 
         result = defaultdict(lambda: defaultdict(float))
         for resource in resources:
@@ -543,9 +552,9 @@ class ResourceCalendar(models.Model):
             end_dt = end_dt.replace(tzinfo=utc)
 
         if compute_leaves:
-            intervals = self._work_intervals(start_dt, end_dt, domain=domain)
+            intervals = self._work_intervals_batch(start_dt, end_dt, domain=domain)[False]
         else:
-            intervals = self._attendance_intervals(start_dt, end_dt)
+            intervals = self._attendance_intervals_batch(start_dt, end_dt)[False]
 
         return sum(
             (stop - start).total_seconds() / 3600
@@ -572,9 +581,9 @@ class ResourceCalendar(models.Model):
 
         # actual hours per day
         if compute_leaves:
-            intervals = self._work_intervals(from_datetime, to_datetime, domain=domain)
+            intervals = self._work_intervals_batch(from_datetime, to_datetime, domain=domain)[False]
         else:
-            intervals = self._attendance_intervals(from_datetime, to_datetime)
+            intervals = self._attendance_intervals_batch(from_datetime, to_datetime)[False]
 
         return self._get_days_data(intervals, day_total)
 
@@ -800,7 +809,7 @@ class ResourceResource(models.Model):
         resource_mapping = {}
         for resource in self:
             work_intervals = sorted(
-                resource.calendar_id._work_intervals(start_datetime, end_datetime, resource),
+                resource.calendar_id._work_intervals_batch(start_datetime, end_datetime, resource)[resource.id],
                 key=lambda x: x[0]
             )
             if work_intervals:
@@ -821,9 +830,8 @@ class ResourceResource(models.Model):
         for resource in self:
             calendar_mapping[resource.calendar_id] |= resource
 
-        for calendar in calendar_mapping.keys():
-            resources = calendar_mapping[calendar]
-            resources_work_intervals = calendar._work_intervals(start_datetime, end_datetime, resources)
+        for calendar, resources in calendar_mapping.items():
+            resources_work_intervals = calendar._work_intervals_batch(start_datetime, end_datetime, resources)
             for resource in resources:
                 resource_work_intervals = resources_work_intervals[resource.id]
                 resource_work_intervals = [(start, stop) for start, stop, meta in resource_work_intervals]
