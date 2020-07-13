@@ -14,7 +14,7 @@ import psycopg2
 from odoo import models, fields
 from odoo.addons.base.tests.common import TransactionCaseWithUserDemo
 from odoo.exceptions import AccessError, UserError, ValidationError
-from odoo.tests import common
+from odoo.tests import common, tagged
 from odoo.tools import mute_logger, float_repr
 from odoo.tools.date_utils import add, subtract, start_of, end_of
 from odoo.tools.image import image_data_uri
@@ -286,10 +286,10 @@ class TestFields(TransactionCaseWithUserDemo):
         check_stored(discussion1)
 
         # switch message from discussion, and check again
-        
+
         # See YTI FIXME
         discussion1.invalidate_cache()
-        
+
         discussion2 = discussion1.copy({'name': 'Another discussion'})
         message2 = discussion1.messages[0]
         message2.discussion = discussion2
@@ -2867,6 +2867,7 @@ def update(model, *fnames):
     )
 
 
+@tagged('pre_compute')
 class TestComputeQueries(common.TransactionCase):
     """ Test the queries made by create() with computed fields. """
 
@@ -2875,24 +2876,24 @@ class TestComputeQueries(common.TransactionCase):
         model.create({})
 
         # no value, no default
-        with self.assertQueries([insert(model, 'foo'), update(model, 'bar')]):
+        with self.assertQueries([insert(model, 'foo', 'bar')]):
             record = model.create({'foo': 'Foo'})
         self.assertEqual(record.bar, 'Foo')
 
         # some value, no default
-        with self.assertQueries([insert(model, 'foo', 'bar'), update(model, 'bar')]):
+        with self.assertQueries([insert(model, 'foo', 'bar')]):
             record = model.create({'foo': 'Foo', 'bar': 'Bar'})
         self.assertEqual(record.bar, 'Foo')
 
         model = model.with_context(default_bar='Def')
 
         # no value, some default
-        with self.assertQueries([insert(model, 'foo', 'bar'), update(model, 'bar')]):
+        with self.assertQueries([insert(model, 'foo', 'bar')]):
             record = model.create({'foo': 'Foo'})
         self.assertEqual(record.bar, 'Foo')
 
         # some value, some default
-        with self.assertQueries([insert(model, 'foo', 'bar'), update(model, 'bar')]):
+        with self.assertQueries([insert(model, 'foo', 'bar')]):
             record = model.create({'foo': 'Foo', 'bar': 'Bar'})
         self.assertEqual(record.bar, 'Foo')
 
@@ -2901,7 +2902,7 @@ class TestComputeQueries(common.TransactionCase):
         model.create({})
 
         # no value, no default
-        with self.assertQueries([insert(model, 'foo'), update(model, 'bar')]):
+        with self.assertQueries([insert(model, 'foo', 'bar')]):
             record = model.create({'foo': 'Foo'})
         self.assertEqual(record.bar, 'Foo')
 
@@ -2927,7 +2928,7 @@ class TestComputeQueries(common.TransactionCase):
         model.create({})
 
         # no value, no default
-        with self.assertQueries([insert(model, 'foo'), update(model, 'bar')]):
+        with self.assertQueries([insert(model, 'foo', 'bar')]):
             record = model.create({'foo': 'Foo'})
         self.assertEqual(record.foo, 'Foo')
         self.assertEqual(record.bar, 'Foo')

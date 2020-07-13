@@ -383,6 +383,7 @@ class Related(models.Model):
 class ComputeReadonly(models.Model):
     _name = 'test_new_api.compute.readonly'
     _description = 'Model with a computed readonly field'
+    _pre_compute = True
 
     foo = fields.Char(default='')
     bar = fields.Char(compute='_compute_bar', store=True)
@@ -396,6 +397,7 @@ class ComputeReadonly(models.Model):
 class ComputeInverse(models.Model):
     _name = 'test_new_api.compute.inverse'
     _description = 'Model with a computed inversed field'
+    _pre_compute = True
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', inverse='_inverse_bar', store=True)
@@ -525,6 +527,7 @@ class ComputeCascade(models.Model):
 class ComputeReadWrite(models.Model):
     _name = 'test_new_api.compute.readwrite'
     _description = 'Model with a computed non-readonly field'
+    _pre_compute = True
 
     foo = fields.Char()
     bar = fields.Char(compute='_compute_bar', store=True, readonly=False)
