@@ -1,0 +1,17 @@
+<?xml version="1.0"?>
+<odoo><data>
+
+    <record id="event_event_view_form" model="ir.ui.view">
+        <field name="name">event.event.view.form.inherit.meet</field>
+        <field name="model">event.event</field>
+        <field name="inherit_id" ref="event.view_event_form"/>
+        <field name="arch" type="xml">
+            <div name="button_box" position="inside">
+                <button class="oe_stat_button" context="{'default_event_id': active_id, 'search_default_event_id': active_id}" icon="fa-comments-o" name="%(event_meeting_room_action)d" type="action">
+                    <field name="meeting_room_count" string="Rooms" widget="statinfo"/>
+                </button>
+            </div>
+        </field>
+    </record>
+
+</data></odoo>

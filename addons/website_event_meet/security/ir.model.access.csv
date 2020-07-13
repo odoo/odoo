@@ -1,0 +1,6 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+event_meeting_room_all,event_meet.event_meeting_room,model_event_meeting_room,,1,0,0,0
+event_meeting_room_user,event_meet.event_meeting_room,model_event_meeting_room,event.group_event_user,1,0,0,0
+event_meeting_room_manager,event_meet.event_meeting_room,model_event_meeting_room,event.group_event_manager,1,1,1,1
+access_chat_room_user,access_chat_room,website_jitsi.model_chat_room,event.group_event_user,1,0,0,0
+access_chat_room_system,access_chat_room,website_jitsi.model_chat_room,event.group_event_manager,1,1,1,1

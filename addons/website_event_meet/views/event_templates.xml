@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <template name="Meeting Rooms"  id="template_meeting_rooms">
+        <t t-call="website_event.layout">
+            <div class="oe_structure" id="oe_structure_website_event_location_1"/>
+            <section class="pt32 pb32">
+                <div class="container">
+                    <div class="row">
+                        <div class="mw-75 col-12 col-md-8">
+                            <h1 class="o_page_header mb-3 d-flex flex-row justify-content-between">
+                                <span>Join a room</span>
+                                <div class="o_dropdown_kanban dropdown">
+                                    <a aria-label="Dropdown menu" class="dropdown-toggle o-no-caret btn" data-display="static" data-toggle="dropdown" href="#" role="button" title="Dropdown menu">
+                                        <span t-esc="current_lang.name if current_lang else 'All Languages'"/> ▼</a>
+                                    <div class="dropdown-menu" role="menu">
+                                        <a class="dropdown-item" role="menuitem" t-attf-href="/event/#{slug(event)}/meeting_rooms">All Languages
+                                           </a>
+                                        <a class="dropdown-item" role="menuitem" t-as="language" t-attf-href="/event/#{slug(event)}/meeting_rooms?lang=#{language.id}" t-esc="language.name" t-foreach="available_languages"/>
+                                    </div>
+                                </div>
+                            </h1>
+                            <p>Choose a topic that interests you and start talking with the community.</p>
+                            <p>Don't forget to setup your camera and microphone.</p>
+                            <div class="d-flex flex-column justify-content-start align-items-start">
+                                <t t-as="meeting_room" t-call="website_event_meet.meeting_room_card" t-foreach="meeting_rooms">
+                                    <t t-set="meeting_room" t-value="meeting_room"/>
+                                    <t t-set="opened" t-value="int(meeting_room.id == open_room_id)"/>
+                                </t>
+                            </div>
+                        </div>
+                        <div class="w-25 d-none d-md-block col-md-4">
+                            <h1 class="o_page_header mb-3">Launch a new topic</h1>
+                            <p>Want to create your own discussion room ?</p>
+                            <p>Be sure you are ready to spend at least 10 minutes in the room if you want to initiate a new topic.</p>
+                            <button class="btn btn-primary o_wevent_create_room_button" t-att-data-event="event.id" t-att-data-default-lang="default_lang_code">Create a Room</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </t>
+    </template>
+    <template id="meeting_room_card">
+        <div t-if="is_event_manager or not meeting_room.room_is_full" t-att-data-meeting-room-id="meeting_room.id" t-att-data-open-room="opened" t-att-data-is-event-manager="int(is_event_manager)" t-attf-class="card o_wevent_meeting_room_card w-100 m-2 bg-light">
+            <div class="text-decoration-none w-100 h-100 p-4">
+                <div class="o_wevent_meeting_room_corner_ribbon" t-if="meeting_room.room_is_full">Full</div>
+                <button t-if="is_event_manager and meeting_room.room_is_full" class="btn btn-danger float-right o_wevent_meeting_room_duplicate ml-1" type="button">Duplicate</button>
+                <button t-if="is_event_manager" class="btn btn-danger float-right o_wevent_meeting_room_delete" type="button">Close</button>
+                <h3><t t-esc="meeting_room.name"/> <t t-if="is_event_manager and meeting_room.is_pinned" t-esc="'(pinned)'"/></h3>
+                <h5 t-esc="meeting_room.summary"/>
+                <h4 class="m-0 row text-primary">
+                    <b>&amp;#9900;&amp;nbsp;</b>
+                    <span class="o_wevent_participant_count">
+                        <t t-esc="meeting_room.room_participant_count"/>&amp;nbsp;</span>
+                    <t t-esc="meeting_room.target_audience or 'participant(s)'"/>
+                </h4>
+                <div class="d-flex flex-row justify-content-between mt-3">
+                    <a t-attf-href="/event/#{ slug(event) }/meeting_room/#{ slug(meeting_room) }"
+                       class="btn btn-primary">Join the room</a>
+                    <div class="d-inline border p-2 bg-secondary" t-esc="meeting_room.room_lang_id.name"/>
+                </div>
+            </div>
+        </div>
+    </template>
+</odoo>

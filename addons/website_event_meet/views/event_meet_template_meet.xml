@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<template id="event_meet_main" name="Event Meet">
+    <t t-set="no_header" t-value="option_widescreen"/>
+    <t t-set="no_footer" t-value="option_widescreen"/>
+    <t t-call="website_event.layout">
+        <div class="o_wemeet_index o_wemeet_index_bg">
+            <!-- Options -->
+            <t t-set="option_widescreen" t-value="option_widescreen or False"/>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wemeet_index_1" class="oe_structure"/>
+            <!-- Content -->
+            <div t-att-class="'o_wemeet_room_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
+                <div class="row mb-5 mx-0">
+                    <t t-call="website_event_meet.meeting_room_aside"/>
+                    <t t-call="website_event_meet.meeting_room_main"/>
+                </div>
+            </div>
+            <!-- Drag/Drop Area -->
+            <div id="oe_structure_wemeet_index_2" class="oe_structure"/>
+        </div>
+    </t>
+</template>
+
+<!-- ============================================================ -->
+<!-- CONTENT: MAIN TEMPLATES -->
+<!-- ============================================================ -->
+
+<template id="meeting_room_main" name="Meeting Room: Main Content">
+    <div t-att-class="'col-12 o_wemeet_room_main %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
+        <div class="bg-white pt-3 o_wemeet_room_main_room">
+            <div t-if="not meeting_room.event_id.is_ongoing" class="mx-3 mt-3 alert alert-warning">
+                Event <span t-esc="meeting_room.event_id.name" class="font-weight-bold"/>
+                <span t-if="meeting_room.event_id.start_today">
+                    starts in
+                    <span t-esc="meeting_room.event_id.start_remaining"
+                        t-options="{'widget': 'duration', 'digital': True, 'unit': 'minute', 'round': 'minute'}"/>
+                </span>
+                <span class="my-0" t-else="meeting_room.event_id.start_today">
+                    starts at
+                    <span t-field="meeting_room.event_id.with_context(tz=meeting_room.event_id.date_tz).date_begin"
+                        t-options="{'format': 'long'}"/>
+                </span>
+            </div>
+            <div class="mx-3">
+                <div class="d-flex flex-column mb-3">
+                    <div id="o_wemeet_jitsi_iframe"/>
+                    <div class="d-flex flex-row-reverse">
+                        <t t-call="website_jitsi.chat_room_join_button">
+                            <t t-set="_classes" t-value="'d-none'"/>
+                            <t t-set="room_name" t-value="meeting_room.name"/>
+                            <t t-set="chat_room_id" t-value="meeting_room.chat_room_id.id"/>
+                            <t t-set="auto_open" t-value="1"/>
+                            <t t-set="attach_to" t-value="'#o_wemeet_jitsi_iframe'"/>
+                            <t t-set="check_full" t-value="option_can_edit"/>
+                        </t>
+                    </div>
+                </div>
+                <span class="h5 mb-0">About <t t-esc="meeting_room.name"/></span>
+                <hr class="mt-2 pb-1 mb-1"/>
+                <div class="row mt32">
+                    <div class="col">
+                        <div class="d-flex align-items-top mb-3">
+                            <div class="d-flex flex-column">
+                                <div class="d-flex align-items-center">
+                                    <h4 t-field="meeting_room.name" class="mb4"/>
+                                </div>
+                                <span t-if="meeting_room.target_audience">
+                                    Audience: <span t-field="meeting_room.target_audience"/>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div t-field="meeting_room.summary" class="col-12 oe_no_empty"/>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<!-- ============================================================ -->
+<!-- ASIDE: CONTROL PANEL -->
+<!-- ============================================================ -->
+
+<template id="meeting_room_aside" name="Meeting Room: Aside">
+    <div t-att-class="'col-12 o_wemeet_room_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+        <div class="bg-white pt-3 o_wemeet_room_aside_room">
+            <div class="d-flex align-items-center justify-content-between mx-2">
+                <span class="h5 mb-0">Other Rooms</span>
+                <a href="#collapse_meet_room_aside" data-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wemeet_room_aside_collapse">
+                    <i class="fa fa-chevron-down d-lg-none"/>
+                </a>
+            </div>
+            <hr class="mt-2 pb-1 mb-1 mx-2 d-lg-block"/>
+            <ul id="collapse_meet_room_aside" class="list-unstyled mx-2 collapse d-lg-block">
+                <li t-foreach="meeting_rooms_other" t-as="meeting_room_other">
+                    <div class="d-flex mb-3">
+                        <!--Set lang flag here-->
+                        <!--<img class="mr-2"-->
+                            <!--style="max-width: 40px;"-->
+                            <!--t-att-src="website.image_url(meeting_room_other.room_lang_id.country_id, 'image')"-->
+                            <!--t-att-alt="sponsor_other.partner_id.country_id.name"/>-->
+                        <div class="flex-grow-1">
+                            <span class="d-flex align-items-top">
+                                <a t-attf-href="/event/#{ slug(event) }/meeting_room/#{ slug(meeting_room) }"><t t-esc="meeting_room_other.name"/></a>
+                            </span>
+                            <div class="d-flex justify-content-between">
+                                <small class="text-muted"><i class="fa fa-globe"/> <t t-esc="meeting_room_other.room_lang_id.name"/></small>
+                                <small class="text-muted">Audience: <t t-esc="meeting_room_other.target_audience"/></small>
+                            </div>
+                        </div>
+                    </div>
+                </li>
+            </ul>
+        </div>
+    </div>
+</template>
+
+</odoo>
