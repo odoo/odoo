@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from datetime import timedelta
+from datetime import datetime, timedelta
 
 from odoo import fields
 from odoo.tests import Form
@@ -258,6 +258,68 @@ class TestProcurement(TestMrpCommon):
         mo_form.save()
 
         self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=5), delta=timedelta(seconds=1), msg='date is not propagated')
+
+    def test_planning_update(self):
+        """ Test the delay propagation from a child bom to a source bom."""
+        finished = self.env['product.product'].create({
+            'name': 'finished',
+            'type': 'product',
+        })
+        warehouse = self.env['stock.warehouse'].search([], limit=1)
+        mto_route = warehouse.mto_pull_id.route_id
+        mto_route.active = True
+        inter = self.env['product.product'].create({
+            'name': 'inter',
+            'type': 'product',
+            'route_ids': [
+                (4, self.ref('mrp.route_warehouse0_manufacture')),
+                (4, mto_route.id)
+            ],
+        })
+        component = self.env['product.product'].create({
+            'name': 'component',
+            'type': 'product',
+        })
+        source_bom = self.env['mrp.bom'].create({
+            'product_id': finished.id,
+            'product_tmpl_id': finished.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': inter.id, 'product_qty': 1}),
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'source operation', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+            ],
+
+        })
+        child_bom = self.env['mrp.bom'].create({
+            'product_id': inter.id,
+            'product_tmpl_id': inter.product_tmpl_id.id,
+            'product_uom_id': self.uom_unit.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': component.id, 'product_qty': 1}),
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'child operation', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
+            ],
+        })
+        mo_form = Form(self.env['mrp.production'])
+        mo_form.product_id = finished
+        mo = mo_form.save()
+        mo.action_confirm()
+        self.assertEqual(mo.mrp_production_child_count, 1)
+        mo.button_plan()
+        old_wo_date = mo.workorder_ids.date_planned_start
+        child = mo.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids
+        child_form = Form(child)
+        child_form.date_planned_start = datetime.now() + timedelta(days=10)
+        child = child_form.save()
+        new_wo_date = mo.workorder_ids.date_planned_start
+        self.assertFalse(old_wo_date == new_wo_date)
 
     def test_finished_move_cancellation(self):
         """Check state of finished move on cancellation of raw moves. """
