@@ -153,7 +153,7 @@ class Repair(models.Model):
         self.amount_total = self.pricelist_id.currency_id.round(self.amount_untaxed + self.amount_tax)
 
     _sql_constraints = [
-        ('name', 'unique (name)', 'The name of the Repair Order must be unique!'),
+        ('name', 'unique (name, company_id)', 'The name of the Repair Order must be unique!'),
     ]
 
     @api.onchange('product_id')
