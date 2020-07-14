@@ -1001,7 +1001,7 @@ class AccountTestInvoicingCommon(SavepointCase):
         self.assertRecordValues(move, [expected_move_values])
 
 
-class TestAccountReconciliationCommon(AccountTestCommon):
+class TestAccountReconciliationCommon(AccountTestInvoicingCommon):
 
     """Tests for reconciliation (account.tax)
 
@@ -1010,22 +1010,11 @@ class TestAccountReconciliationCommon(AccountTestCommon):
     """
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAccountReconciliationCommon, cls).setUpClass()
-        cls.company = cls.env['res.company'].create({
-            'name': 'A test company',
-            'currency_id': cls.env.ref('base.EUR').id,
-        })
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.env.user.company_id = cls.company
-        cls.env.user.groups_id |= cls.env.ref('account.group_account_user')
-        # Generate minimal data for my new company
-        cls.create_accounting_minimal_data()
-
-        cls.acc_bank_stmt_model = cls.env['account.bank.statement']
-        cls.acc_bank_stmt_line_model = cls.env['account.bank.statement.line']
-        cls.res_currency_model = cls.registry('res.currency')
-        cls.res_currency_rate_model = cls.registry('res.currency.rate')
+        cls.company = cls.company_data['company']
+        cls.company.currency_id = cls.env.ref('base.EUR')
 
         cls.partner_agrolait = cls.env['res.partner'].create({
             'name': 'Deco Addict',
@@ -1036,10 +1025,8 @@ class TestAccountReconciliationCommon(AccountTestCommon):
         cls.currency_swiss_id = cls.env.ref("base.CHF").id
         cls.currency_usd_id = cls.env.ref("base.USD").id
         cls.currency_euro_id = cls.env.ref("base.EUR").id
-        # YTI FIXME Some of those lines should be useless now
-        cls.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", [cls.currency_euro_id, cls.company.id])
-        cls.account_rcv = cls.partner_agrolait.property_account_receivable_id or cls.env['account.account'].search([('user_type_id', '=', cls.env.ref('account.data_account_type_receivable').id)], limit=1)
-        cls.account_rsa = cls.partner_agrolait.property_account_payable_id or cls.env['account.account'].search([('user_type_id', '=', cls.env.ref('account.data_account_type_payable').id)], limit=1)
+        cls.account_rcv = cls.company_data['default_account_receivable']
+        cls.account_rsa = cls.company_data['default_account_payable']
         cls.product = cls.env['product.product'].create({
             'name': 'Product Product 4',
             'standard_price': 500.0,
@@ -1054,9 +1041,9 @@ class TestAccountReconciliationCommon(AccountTestCommon):
         cls.bank_journal_usd = cls.env['account.journal'].create({'name': 'Bank US', 'type': 'bank', 'code': 'BNK68', 'currency_id': cls.currency_usd_id})
         cls.account_usd = cls.bank_journal_usd.default_debit_account_id
 
-        cls.fx_journal = cls.env['res.users'].browse(cls.env.uid).company_id.currency_exchange_journal_id
-        cls.diff_income_account = cls.env['res.users'].browse(cls.env.uid).company_id.income_currency_exchange_account_id
-        cls.diff_expense_account = cls.env['res.users'].browse(cls.env.uid).company_id.expense_currency_exchange_account_id
+        cls.fx_journal = cls.company.currency_exchange_journal_id
+        cls.diff_income_account = cls.company.income_currency_exchange_account_id
+        cls.diff_expense_account = cls.company.expense_currency_exchange_account_id
 
         cls.inbound_payment_method = cls.env['account.payment.method'].create({
             'name': 'inbound',
@@ -1064,12 +1051,7 @@ class TestAccountReconciliationCommon(AccountTestCommon):
             'payment_type': 'inbound',
         })
 
-        cls.expense_account = cls.env['account.account'].create({
-            'name': 'EXP',
-            'code': 'EXP',
-            'user_type_id': cls.env.ref('account.data_account_type_expenses').id,
-            'company_id': cls.company.id,
-        })
+        cls.expense_account = cls.company_data['default_account_expense']
         # cash basis intermediary account
         cls.tax_waiting_account = cls.env['account.account'].create({
             'name': 'TAX_WAIT',
@@ -1095,23 +1077,13 @@ class TestAccountReconciliationCommon(AccountTestCommon):
 
 
         # Journals
-        cls.purchase_journal = cls.env['account.journal'].create({
-            'name': 'purchase',
-            'code': 'PURCH',
-            'type': 'purchase',
-            'default_credit_account_id': cls.a_expense.id,
-            'default_debit_account_id': cls.a_expense.id,
-        })
+        cls.purchase_journal = cls.company_data['default_journal_purchase']
         cls.cash_basis_journal = cls.env['account.journal'].create({
             'name': 'CABA',
             'code': 'CABA',
             'type': 'general',
         })
-        cls.general_journal = cls.env['account.journal'].create({
-            'name': 'general',
-            'code': 'GENE',
-            'type': 'general',
-        })
+        cls.general_journal = cls.company_data['default_journal_misc']
 
         # Tax Cash Basis
         cls.tax_cash_basis = cls.env['account.tax'].create({
@@ -1203,7 +1175,7 @@ class TestAccountReconciliationCommon(AccountTestCommon):
         )
 
     def make_payment(self, invoice_record, bank_journal, amount=0.0, amount_currency=0.0, currency_id=None, reconcile_param=[]):
-        bank_stmt = self.acc_bank_stmt_model.create({
+        bank_stmt = self.env['account.bank.statement'].create({
             'journal_id': bank_journal.id,
             'date': time.strftime('%Y') + '-07-15',
             'name': 'payment' + invoice_record.name,
