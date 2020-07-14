@@ -546,16 +546,16 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
      */
     _renderHeaderButtons: function (node) {
         var self = this;
-        var $buttons = $('<div>', {class: 'o_statusbar_buttons'});
+        var buttons = [];
         _.each(node.children, function (child) {
             if (child.tag === 'button') {
-                $buttons.append(self._renderHeaderButton(child));
+                buttons.push(self._renderHeaderButton(child));
             }
             if (child.tag === 'widget') {
-                $buttons.append(self._renderTagWidget(child));
+                buttons.push(self._renderTagWidget(child));
             }
         });
-        return $buttons;
+        return this._renderStatusbarButtons(buttons);
     },
     /**
      * @private
@@ -742,6 +742,16 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         this._handleAttributes($button, node);
         this._registerModifiers(node, this.state, $button);
         return $button;
+    },
+    /**
+     * @private
+     * @param {Array} buttons
+     * @return {jQueryElement}
+     */
+    _renderStatusbarButtons: function (buttons) {
+        var $statusbarButtons = $('<div>', {class: 'o_statusbar_buttons'});
+        buttons.forEach(button => $statusbarButtons.append(button));
+        return $statusbarButtons;
     },
     /**
      * @private
