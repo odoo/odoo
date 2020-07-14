@@ -111,11 +111,11 @@ class TestWebsiteSaleCheckoutAddress(TransactionCaseWithUserDemo):
     def setUp(self):
         super(TestWebsiteSaleCheckoutAddress, self).setUp()
         self.website = self.env.ref('website.default_website')
-        self.country_id = self.env['res.country'].search([], limit=1).id
+        self.country_id = self.env.ref('base.be').id
         self.WebsiteSaleController = WebsiteSale()
         self.default_address_values = {
             'name': 'a res.partner address', 'email': 'email@email.email', 'street': 'ooo',
-            'city': 'ooo', 'country_id': self.country_id, 'submitted': 1,
+            'city': 'ooo', 'zip': '1200', 'country_id': self.country_id, 'submitted': 1,
         }
 
     def _create_so(self, partner_id=None):

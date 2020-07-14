@@ -54,6 +54,7 @@
         <record id="ao" model="res.country">
             <field name="name">Angola</field>
             <field name="code">ao</field>
+            <field name='zip_required'>0</field>
             <field file="base/static/img/country_flags/ao.png" name="image" type="base64" />
             <field name="currency_id" ref="AOA" />
             <field eval="244" name="phone_code" />
@@ -67,6 +68,7 @@
         <record id="ar" model="res.country">
             <field name="name">Argentina</field>
             <field name="code">ar</field>
+            <field name='state_required'>1</field>
             <field file="base/static/img/country_flags/ar.png" name="image" type="base64" />
             <field name="currency_id" ref="ARS" />
             <field eval="54" name="phone_code" />
@@ -92,6 +94,7 @@
         <record id="au" model="res.country">
             <field name="name">Australia</field>
             <field name="code">au</field>
+            <field name='state_required'>1</field>
             <field file="base/static/img/country_flags/au.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="AUD" />
@@ -180,6 +183,7 @@
         <record id="bj" model="res.country">
             <field name="name">Benin</field>
             <field name="code">bj</field>
+            <field name='zip_required'>0</field>
             <field file="base/static/img/country_flags/bj.png" name="image" type="base64" />
             <field name="currency_id" ref="XOF" />
             <field eval="229" name="phone_code" />
@@ -263,6 +267,7 @@
         <record id="bz" model="res.country">
             <field name="name">Belize</field>
             <field name="code">bz</field>
+            <field name='zip_required'>0</field>
             <field file="base/static/img/country_flags/bz.png" name="image" type="base64" />
             <field name="currency_id" ref="BZD" />
             <field eval="501" name="phone_code" />
@@ -270,6 +275,7 @@
         <record id="ca" model="res.country">
             <field name="name">Canada</field>
             <field name="code">ca</field>
+            <field name='state_required'>1</field>
             <field file="base/static/img/country_flags/ca.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="CAD" />
@@ -682,6 +688,7 @@
         <record id="hk" model="res.country">
             <field name="name">Hong Kong</field>
             <field name="code">hk</field>
+            <field name='zip_required'>0</field>
             <field file="base/static/img/country_flags/hk.png" name="image" type="base64" />
             <field name="currency_id" ref="HKD" />
             <field eval="852" name="phone_code" />
@@ -726,6 +733,7 @@
         <record id="id" model="res.country">
             <field name="name">Indonesia</field>
             <field name="code">id</field>
+            <field name='state_required'>1</field>
             <field file="base/static/img/country_flags/id.png" name="image" type="base64" />
             <field name="currency_id" ref="IDR" />
             <field eval="62" name="phone_code" />
@@ -734,6 +742,7 @@
         <record id="ie" model="res.country">
             <field name="name">Ireland</field>
             <field name="code">ie</field>
+            <field name='zip_required'>0</field>
             <field file="base/static/img/country_flags/ie.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="353" name="phone_code" />
@@ -756,6 +765,7 @@
         <record id="in" model="res.country">
             <field name="name">India</field>
             <field name="code">in</field>
+            <field name='state_required'>1</field>
             <field file="base/static/img/country_flags/in.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(zip)s\n%(state_name)s %(state_code)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="INR" />
@@ -793,6 +803,7 @@
         <record id="it" model="res.country">
             <field name="name">Italy</field>
             <field name="code">it</field>
+            <field name='state_required'>1</field>
             <field file="base/static/img/country_flags/it.png" name="image" type="base64" />
             <field name="currency_id" ref="EUR" />
             <field eval="39" name="phone_code" />
@@ -822,6 +833,7 @@
         <record id="jp" model="res.country">
             <field name="name">Japan</field>
             <field name="code">jp</field>
+            <field name='state_required'>1</field>
             <field file="base/static/img/country_flags/jp.png" name="image" type="base64" />
             <field name="currency_id" ref="JPY" />
             <field name="address_format" eval="'%(zip)s\n%(state_name)s %(city)s\n%(street)s\n%(street2)s\n%(country_name)s'"/>
@@ -1065,6 +1077,7 @@
         <record id="mo" model="res.country">
             <field name="name">Macau</field>
             <field name="code">mo</field>
+            <field name='zip_required'>0</field>
             <field file="base/static/img/country_flags/mo.png" name="image" type="base64" />
             <field name="currency_id" ref="MOP" />
             <field eval="853" name="phone_code" />
@@ -1130,6 +1143,7 @@
         <record id="mx" model="res.country">
             <field name="name">Mexico</field>
             <field name="code">mx</field>
+            <field name='state_required'>1</field>
             <field file="base/static/img/country_flags/mx.png" name="image" type="base64" />
             <field name="currency_id" ref="MXN" />
             <field eval="52" name="phone_code" />
@@ -1681,6 +1695,7 @@
         <record id="us" model="res.country">
             <field name="name">United States</field>
             <field name="code">us</field>
+            <field name='state_required'>1</field>
             <field file="base/static/img/country_flags/us.png" name="image" type="base64" />
             <field eval="'%(street)s\n%(street2)s\n%(city)s %(state_code)s %(zip)s\n%(country_name)s'" name="address_format" />
             <field name="currency_id" ref="USD" />

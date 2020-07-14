@@ -555,8 +555,10 @@ class WebsiteSale(http.Controller):
         country = request.env['res.country']
         if data.get('country_id'):
             country = country.browse(int(data.get('country_id')))
-            if 'state_code' in country.get_address_fields() and country.state_ids:
+            if country.state_required:
                 required_fields += ['state_id']
+            if country.zip_required:
+                required_fields += ['zip']
 
         # error message for empty required fields
         for field_name in required_fields:
@@ -1118,7 +1120,9 @@ class WebsiteSale(http.Controller):
         return dict(
             fields=country.get_address_fields(),
             states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
-            phone_code=country.phone_code
+            phone_code=country.phone_code,
+            zip_required=country.zip_required,
+            state_required=country.state_required,
         )
 
     # --------------------------------------------------------------------------
