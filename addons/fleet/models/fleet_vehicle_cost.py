@@ -130,16 +130,6 @@ class FleetVehicleLogServices(models.Model):
     _rec_name = 'service_type_id'
     _description = 'Services for vehicles'
 
-    @api.model
-    def default_get(self, default_fields):
-        res = super(FleetVehicleLogServices, self).default_get(default_fields)
-        service = self.env.ref('fleet.type_service_service_8', raise_if_not_found=False)
-        res.update({
-            'date': fields.Date.context_today(self),
-            'service_type_id': service.id if service else None,
-        })
-        return res
-
     active = fields.Boolean(default=True)
     vehicle_id = fields.Many2one('fleet.vehicle', 'Vehicle', required=True, help='Vehicle concerned by this log')
     amount = fields.Monetary('Cost')
@@ -148,14 +138,17 @@ class FleetVehicleLogServices(models.Model):
     odometer = fields.Float(compute="_get_odometer", inverse='_set_odometer', string='Odometer Value',
         help='Odometer measure of the vehicle at the moment of this log')
     odometer_unit = fields.Selection(related='vehicle_id.odometer_unit', string="Unit", readonly=True)
-    date = fields.Date(help='Date when the cost has been executed')
+    date = fields.Date(help='Date when the cost has been executed', default=fields.Date.context_today)
     company_id = fields.Many2one('res.company', 'Company', default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id')
     purchaser_id = fields.Many2one('res.partner', string="Driver", compute='_compute_purchaser_id', readonly=False, store=True)
     inv_ref = fields.Char('Vendor Reference')
     vendor_id = fields.Many2one('res.partner', 'Vendor')
     notes = fields.Text()
-    service_type_id = fields.Many2one('fleet.service.type', 'Service Type', required=True)
+    service_type_id = fields.Many2one(
+        'fleet.service.type', 'Service Type', required=True,
+        default=lambda self: self.env.ref('fleet.type_service_service_8', raise_if_not_found=False),
+    )
     state = fields.Selection([
         ('todo', 'To Do'),
         ('running', 'Running'),

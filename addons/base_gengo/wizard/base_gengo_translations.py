@@ -28,23 +28,17 @@ class BaseGengoTranslations(models.TransientModel):
     _name = 'base.gengo.translations'
     _description = 'Base Gengo Translations'
 
-    @api.model
-    def default_get(self, fields):
-        res = super(BaseGengoTranslations, self).default_get(fields)
-        if 'authorize_credentials' in fields:
-            res['authorized_credentials'], gengo = self.gengo_authentication()
-        if 'lang_id' in fields:
-            res['lang_id'] = get_lang(self.env).id
-        return res
-
     sync_type = fields.Selection([
         ('send', 'Send New Terms'),
         ('receive', 'Receive Translation'),
         ('both', 'Both')
         ], "Sync Type", default='both', required=True)
-    lang_id = fields.Many2one('res.lang', 'Language', required=True)
+    lang_id = fields.Many2one(
+        'res.lang', 'Language', required=True,
+        default=lambda s: get_lang(s.env).id)
     sync_limit = fields.Integer("No. of terms to sync", default=20)
-    authorized_credentials = fields.Boolean('The private and public keys are valid')
+    authorized_credentials = fields.Boolean(
+        'The private and public keys are valid', default=lambda s: s.gengo_authentication()[0])
 
     def init(self):
         icp = self.env['ir.config_parameter'].sudo()
