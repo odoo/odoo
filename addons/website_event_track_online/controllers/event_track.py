@@ -1,6 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import json
+
 from werkzeug.exceptions import Forbidden, NotFound
 from datetime import timedelta
 import pytz
@@ -8,6 +10,9 @@ import pytz
 from odoo import exceptions, http, fields
 from odoo.addons.website_event_track.controllers.main import WebsiteEventTrackController
 from odoo.http import request
+from odoo.modules.module import get_module_resource
+from odoo.tools import ustr
+from odoo.tools.translate import _
 
 
 class EventTrackOnlineController(WebsiteEventTrackController):
@@ -225,3 +230,46 @@ class EventTrackOnlineController(WebsiteEventTrackController):
             result['visitor_uuid'] = visitor_sudo.access_token
 
         return result
+
+    @http.route('/event/manifest.webmanifest', type='http', auth='public', methods=['GET'], website=True, sitemap=False)
+    def webmanifest(self):
+        """ Returns a WebManifest describing the metadata associated with a web application.
+        Using this metadata, user agents can provide developers with means to create user 
+        experiences that are more comparable to that of a native application.
+        """
+        company = request.env.company
+        website = request.website
+        manifest = {
+            'name': _('%s Online Events') % company.name,
+            'short_name': company.name,
+            'description': _('%s Online Events') % company.name,
+            'scope': '/event',
+            'start_url': '/event',
+            'display': 'standalone',
+            'background_color': '#ffffff',
+            'theme_color': '#875A7B',
+        }
+        icon_sizes = ['192x192', '512x512']
+        manifest['icons'] = [{
+            'src': website.image_url(website, 'app_icon', size=size),
+            'sizes': size,
+            'type': 'image/png',
+        } for size in icon_sizes]
+        body = json.dumps(manifest, default=ustr)
+        response = request.make_response(body, [
+            ('Content-Type', 'application/manifest+json'),
+        ])
+        return response
+
+    @http.route('/event/service-worker.js', type='http', auth='public', methods=['GET'], website=True, sitemap=False)
+    def service_worker(self):
+        """ Returns a ServiceWorker javascript file scoped for website_event
+        """
+        sw_file = get_module_resource('website_event_track_online', 'static/src/js/service_worker.js')
+        with open(sw_file, 'rb') as fp:
+            body = fp.read()
+        response = request.make_response(body, [
+            ('Content-Type', 'text/javascript'),
+            ('Service-Worker-Allowed', '/event'),
+        ])
+        return response
