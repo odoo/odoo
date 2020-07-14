@@ -88,7 +88,7 @@ class ResourceMixin(models.AbstractModel):
             mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
 
         for calendar, calendar_resources in mapped_resources.items():
-            day_total = calendar._get_day_total(from_datetime, to_datetime, calendar_resources)
+            day_total = calendar._get_resources_day_total(from_datetime, to_datetime, calendar_resources)
 
             # actual hours per day
             if compute_leaves:
@@ -136,7 +136,7 @@ class ResourceMixin(models.AbstractModel):
             mapped_resources[calendar or record.resource_calendar_id] |= record.resource_id
 
         for calendar, calendar_resources in mapped_resources.items():
-            day_total = calendar._get_day_total(from_datetime, to_datetime, calendar_resources)
+            day_total = calendar._get_resources_day_total(from_datetime, to_datetime, calendar_resources)
 
             # compute actual hours per day
             attendances = calendar._attendance_intervals_batch(from_datetime, to_datetime, calendar_resources)

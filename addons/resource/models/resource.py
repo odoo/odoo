@@ -512,12 +512,19 @@ class ResourceCalendar(models.Model):
             'hours': sum(day_hours.values()),
         }
 
+    # YTI TODO: Remove me in master
     def _get_day_total(self, from_datetime, to_datetime, resource=None):
+        if resource is None:
+            resource = self.env['resource.resource']
+        return self._get_resources_day_total(from_datetime, to_datetime, resources=resource)[resource.id]
+
+    def _get_resources_day_total(self, from_datetime, to_datetime, resources=None):
         """
         @return dict with hours of attendance in each day between `from_datetime` and `to_datetime`
         """
         self.ensure_one()
-        resources = self.env['resource.resource'] if not resource else resource
+        resources = self.env['resource.resource'] if not resources else resources
+        resources_list = list(resources) + [self.env['resource.resource']]
         # total hours per day:  retrieve attendances with one extra day margin,
         # in order to compute the total hours on the first and last days
         from_full = from_datetime - timedelta(days=1)
@@ -525,7 +532,7 @@ class ResourceCalendar(models.Model):
         intervals = self._attendance_intervals_batch(from_full, to_full, resources=resources)
 
         result = defaultdict(lambda: defaultdict(float))
-        for resource in resources:
+        for resource in resources_list:
             day_total = result[resource.id]
             for start, stop, meta in intervals[resource.id]:
                 day_total[start.date()] += (stop - start).total_seconds() / 3600
@@ -577,7 +584,7 @@ class ResourceCalendar(models.Model):
         from_datetime, dummy = make_aware(from_datetime)
         to_datetime, dummy = make_aware(to_datetime)
 
-        day_total = self._get_day_total(from_datetime, to_datetime)
+        day_total = self._get_resources_day_total(from_datetime, to_datetime)[False]
 
         # actual hours per day
         if compute_leaves:
