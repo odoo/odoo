@@ -1,39 +1,41 @@
 # -*- coding: utf-8 -*-
 
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
-class StockMoveInvoice(AccountTestCommon):
+class StockMoveInvoice(AccountTestInvoicingCommon):
 
-    def setUp(self):
-        super(StockMoveInvoice, self).setUp()
-        self.ProductProduct = self.env['product.product']
-        self.SaleOrder = self.env['sale.order']
-        self.AccountJournal = self.env['account.journal']
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        self.partner_18 = self.env['res.partner'].create({'name': 'My Test Customer'})
-        self.pricelist_id = self.env.ref('product.list0')
-        self.product_11 = self.env['product.product'].create({'name': 'A product to deliver'})
-        self.product_cable_management_box = self.env['product.product'].create({
+        cls.ProductProduct = cls.env['product.product']
+        cls.SaleOrder = cls.env['sale.order']
+        cls.AccountJournal = cls.env['account.journal']
+
+        cls.partner_18 = cls.env['res.partner'].create({'name': 'My Test Customer'})
+        cls.pricelist_id = cls.env.ref('product.list0')
+        cls.product_11 = cls.env['product.product'].create({'name': 'A product to deliver'})
+        cls.product_cable_management_box = cls.env['product.product'].create({
             'name': 'Another product to deliver',
             'weight': 1.0,
             'invoice_policy': 'order',
         })
-        self.product_uom_unit = self.env.ref('uom.product_uom_unit')
-        self.product_delivery_normal = self.env['product.product'].create({
+        cls.product_uom_unit = cls.env.ref('uom.product_uom_unit')
+        cls.product_delivery_normal = cls.env['product.product'].create({
             'name': 'Normal Delivery Charges',
             'invoice_policy': 'order',
             'type': 'service',
             'list_price': 10.0,
-            'categ_id': self.env.ref('delivery.product_category_deliveries').id,
+            'categ_id': cls.env.ref('delivery.product_category_deliveries').id,
         })
-        self.normal_delivery = self.env['delivery.carrier'].create({
+        cls.normal_delivery = cls.env['delivery.carrier'].create({
             'name': 'Normal Delivery Charges',
             'fixed_price': 10,
             'delivery_type': 'fixed',
-            'product_id': self.product_delivery_normal.id,
+            'product_id': cls.product_delivery_normal.id,
         })
 
     def test_01_delivery_stock_move(self):
