@@ -622,7 +622,7 @@ QUnit.test('Missing Required Fields', async function (assert) {
             "action should be the one for missing fields"
         );
         assert.strictEqual(
-            payload.options.additional_context.letter_id,
+            payload.options.additional_context.default_letter_id,
             22, // should be the same as the id returned by search
             "action should have correct letter id"
         );
