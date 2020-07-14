@@ -1008,9 +1008,13 @@ behavior:
 
     Values are Python expressions. For each record, the expression is evaluated
     with the record's attributes as context values and if ``true``, the
-    corresponding style is applied to the row. Other context values are
-    ``uid`` (the id of the current user) and ``current_date`` (the current date
-    as a string of the form ``yyyy-MM-dd``).
+    corresponding style is applied to the row. Here are some of the other values
+    available in the context:
+
+    * ``uid``: the id of the current user,
+    * ``today``: the current local date as a string of the form ``YYYY-MM-DD``,
+    * ``now``: same as ``today`` with the addition of the current time.
+      This value is formatted as ``YYYY-MM-DD hh:mm:ss``.
 
     ``{$name}`` can be ``bf`` (``font-weight: bold``), ``it``
     (``font-style: italic``), or any `bootstrap contextual color
@@ -1479,7 +1483,7 @@ for editing and merging PO/POT files.
          | - pt_BR.po # Brazilian Portuguese translation
          | (...)
 
-.. tip:: 
+.. tip::
 
    By default Odoo's POT export only extracts labels inside XML files or
    inside field definitions in Python code, but any Python string can be
@@ -1531,7 +1535,7 @@ Printed reports
 ---------------
 
 Odoo uses a report engine based on :ref:`reference/qweb`,
-`Twitter Bootstrap`_ and Wkhtmltopdf_. 
+`Twitter Bootstrap`_ and Wkhtmltopdf_.
 
 A report is a combination two elements:
 
