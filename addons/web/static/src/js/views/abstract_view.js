@@ -163,12 +163,15 @@ var AbstractView = Factory.extend({
             res_ids: controllerState.resIds || params.ids || (currentId ? [currentId] : undefined),
         };
 
+        const useSampleModel = params.useSampleModel ||
+                                !!(this.arch.attrs.sample && JSON.parse(this.arch.attrs.sample));
+
         this.modelParams = {
             fields: this.fields,
             modelName: params.modelName,
-            useSampleModel: !!(this.arch.attrs.sample && JSON.parse(this.arch.attrs.sample))
+            useSampleModel,
         };
-        if (this.modelParams.useSampleModel) {
+        if (useSampleModel) {
             this.modelParams.SampleModel = this.config.Model;
         }
 
