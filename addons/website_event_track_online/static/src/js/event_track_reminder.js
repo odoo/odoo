@@ -38,11 +38,13 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
             this.reminderOn = $trackLink.data('reminderOn');
         }
 
+        var reminderOnValue = !this.reminderOn;
+
         this._rpc({
             route: '/event/track/toggle_reminder',
             params: {
                 track_id: $trackLink.data('trackId'),
-                set_reminder_on: !this.reminderOn
+                set_reminder_on: reminderOnValue,
             },
         }).then(function (result) {
             if (result.error && result.error === 'ignored') {
@@ -52,7 +54,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
                     message: _.str.sprintf(_t('Talk already in your Favorites')),
                 });
             } else {
-                self.reminderOn = result.reminderOn;
+                self.reminderOn = reminderOnValue;
                 var reminderText = self.reminderOn ? _t('Reminder On') : _t('Set Reminder');
                 self.$('.o_wetrack_js_reminder_text').text(reminderText);
                 self._updateDisplay();
