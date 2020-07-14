@@ -1078,9 +1078,8 @@ class Meeting(models.Model):
                         pile.append(arg)
                     else:
                         pile.append(True)
-                pile.reverse()
                 new_pile = []
-                for item in pile:
+                for item in pile[::-1]:
                     if not isinstance(item, basestring):
                         res = item
                     elif str(item) == str('&'):
@@ -1093,7 +1092,7 @@ class Meeting(models.Model):
                         res = first or second
                     new_pile.append(res)
 
-                if [True for item in new_pile if not item]:
+                if any(not item for item in new_pile):
                     continue
                 result_data.append(meeting.get_search_fields(order_fields, r_date=r_start_date))
 
