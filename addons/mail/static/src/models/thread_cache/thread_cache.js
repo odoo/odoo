@@ -96,6 +96,16 @@ function factory(dependencies) {
 
         /**
          * @private
+         */
+        _computeCheckedMessages() {
+            const messagesWithoutCheckbox = this.checkedMessages.filter(
+                message => !message.hasCheckbox
+            );
+            return [['unlink', messagesWithoutCheckbox]];
+        }
+
+        /**
+         * @private
          * @returns {mail.message[]}
          */
         _computeFetchedMessages() {
@@ -286,6 +296,11 @@ function factory(dependencies) {
 
     ThreadCache.fields = {
         checkedMessages: many2many('mail.message', {
+            compute: '_computeCheckedMessages',
+            dependencies: [
+                'checkedMessages',
+                'messagesCheckboxes',
+            ],
             inverse: 'checkedThreadCaches',
         }),
         /**
