@@ -1227,6 +1227,186 @@ QUnit.test('new pending moderation message posted by someone else when moderator
     );
 });
 
+QUnit.test('accept multiple moderation messages', async function (assert) {
+    assert.expect(5);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 20,
+                is_pinned: true,
+                moderation: true,
+                name: "general",
+            }],
+        },
+        is_moderator: true,
+        moderation_channel_ids: [20],
+        moderation_counter: 3,
+    });
+    this.data['mail.message'].records = [{
+        author_id: [2, "Someone"],
+        body: "<p>test</p>",
+        id: 100,
+        model: 'mail.channel',
+        moderation_status: 'pending_moderation',
+        need_moderation: true,
+        res_id: 20,
+    }, {
+        author_id: [2, "Someone"],
+        body: "<p>test 2</p>",
+        id: 101,
+        model: 'mail.channel',
+        moderation_status: 'pending_moderation',
+        need_moderation: true,
+        res_id: 20,
+    }, {
+        author_id: [2, "Someone"],
+        body: "<p>test 3</p>",
+        id: 102,
+        model: 'mail.channel',
+        moderation_status: 'pending_moderation',
+        need_moderation: true,
+        res_id: 20,
+    }];
+
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.box_moderation',
+            },
+        },
+    });
+
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        3,
+        "should initially display 3 messages"
+    );
+
+    await afterNextRender(() => {
+        document.querySelectorAll('.o_Message_checkbox')[0].click();
+        document.querySelectorAll('.o_Message_checkbox')[1].click();
+    });
+    assert.containsN(
+        document.body,
+        '.o_Message_checkbox:checked',
+        2,
+        "2 messages should have been checked after clicking on their respective checkbox"
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept'),
+        'o_hidden',
+        "global accept button should be displayed as two messages are selected"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept').click()
+    );
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        1,
+        "should display 1 message as the 2 others have been accepted"
+    );
+    assert.hasClass(
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept'),
+        'o_hidden',
+        "global accept button should no longer be displayed as messages have been unselected"
+    );
+});
+
+QUnit.test('accept multiple moderation messages after having accepted other messages', async function (assert) {
+    assert.expect(5);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 20,
+                is_pinned: true,
+                moderation: true,
+                name: "general",
+            }],
+        },
+        is_moderator: true,
+        moderation_channel_ids: [20],
+        moderation_counter: 3,
+    });
+    this.data['mail.message'].records = [{
+        author_id: [2, "Someone"],
+        body: "<p>test</p>",
+        id: 100,
+        model: 'mail.channel',
+        moderation_status: 'pending_moderation',
+        need_moderation: true,
+        res_id: 20,
+    }, {
+        author_id: [2, "Someone"],
+        body: "<p>test 2</p>",
+        id: 101,
+        model: 'mail.channel',
+        moderation_status: 'pending_moderation',
+        need_moderation: true,
+        res_id: 20,
+    }, {
+        author_id: [2, "Someone"],
+        body: "<p>test 3</p>",
+        id: 102,
+        model: 'mail.channel',
+        moderation_status: 'pending_moderation',
+        need_moderation: true,
+        res_id: 20,
+    }];
+
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.box_moderation',
+            },
+        },
+    });
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        3,
+        "should initially display 3 messages"
+    );
+    await afterNextRender(() => {
+        document.querySelectorAll('.o_Message_checkbox')[0].click();
+    });
+    await afterNextRender(() =>
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept').click()
+    );
+
+    await afterNextRender(() => document.querySelectorAll('.o_Message_checkbox')[0].click());
+    assert.containsOnce(
+        document.body,
+        '.o_Message_checkbox:checked',
+        "a message should have been checked after clicking on its checkbox"
+    );
+    assert.doesNotHaveClass(
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept'),
+        'o_hidden',
+        "global accept button should be displayed as a message is selected"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept').click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display only one message left after the two others has been accepted"
+    );
+    assert.hasClass(
+        document.querySelector('.o_widget_Discuss_controlPanelButtonModeration.o-accept'),
+        'o_hidden',
+        "global accept button should no longer be displayed as message has been unselected"
+    );
+});
+
 });
 });
 });
