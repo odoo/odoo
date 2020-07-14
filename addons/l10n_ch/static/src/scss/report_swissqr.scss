@@ -45,10 +45,10 @@ body.l10n_ch_qr {
 
     .swissqr {
         position: absolute;
-        height: 70mm;
-        width: 70mm;
-        top: 29.5mm;
-        left: 7mm;
+        height: 57.5mm;
+        width: 57.5mm;
+        top: 21mm;
+        left: 6mm;
     }
 
     .ch_cross {
@@ -56,8 +56,8 @@ body.l10n_ch_qr {
         background-color: white;
         height: 8.5mm;
         width: 8.5mm;
-        top: 60.25mm;
-        left: 37.75mm;
+        top: 45.5mm;
+        left: 30.5mm;
     }
 
     .swissqr_text {
@@ -90,26 +90,55 @@ body.l10n_ch_qr {
         max-width: 90mm;
     }
 
+    /* unused, kept for legacy if no XML update */
     .procedure_zone {
-        top: 15mm;
+        display: none;
     }
 
     .title_zone {
-        top: 5mm;
+        top: 7.5mm;
     }
 
     .indication_zone {
         top: 10mm;
     }
 
-    .amount_zone {
+    .receipt_amount_zone {
         position: absolute;
-        top: 106mm;
+        top: 78mm;
+
+        .column {
+            margin-right: 5mm;
+            float: left;
+        }
     }
 
-    .amount {
+   .receipt_acceptance_point_zone {
         position: absolute;
-        left: 41mm;
+        top: 98mm;
+        text-align: right;
+        width: 58mm;
+    }
+
+    .amount_zone {
+        position: absolute;
+        top: 85mm;
+
+        .column {
+            margin-right: 5mm;
+            float: left;
+        }
+    }
+
+    /* unused, kept for legacy if no XML update */
+    #indications_zone .amount_zone {
+        left: -76mm;
+    }
+
+    /* unused, kept for legacy if no XML update */
+    #indications_zone .amount {
+        position: absolute;
+        left: -47mm;
     }
 }
 
