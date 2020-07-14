@@ -1,6 +1,7 @@
 odoo.define('website.snippet.editor', function (require) {
 'use strict';
 
+const concurrency = require('web.concurrency');
 const {qweb, _t, _lt} = require('web.core');
 const Dialog = require('web.Dialog');
 const weSnippetEditor = require('web_editor.snippet.editor');
@@ -15,6 +16,7 @@ weSnippetEditor.Class.include({
         'click .o_we_customize_theme_btn': '_onThemeTabClick',
     }),
     custom_events: Object.assign({}, weSnippetEditor.Class.prototype.custom_events, {
+        'enabled_xml_ids_request': '_onEnabledXMLIDsRequest',
         'gmap_api_request': '_onGMapAPIRequest',
         'gmap_api_key_request': '_onGMapAPIKeyRequest',
     }),
@@ -163,6 +165,63 @@ weSnippetEditor.Class.include({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onEnabledXMLIDsRequest(ev) {
+        const xmlIDs = ev.data.xmlIDs;
+
+        // FIXME for some reason it works once and not performing any call anymore afterwards...
+
+        (async () => {
+            if (this._xmlIDsFetchingProm) {
+                // If another call to _onEnabledXMLIDsRequest is done while the
+                // RPC is already being performed... wait for it to be handled.
+                await this._xmlIDsFetchingProm;
+            }
+
+            // Register the xml IDs status that are to be retrieved
+            if (!this._xmlIDsQueue) {
+                this._xmlIDsNbCalls = 0;
+                this._xmlIDsQueue = [];
+            }
+            this._xmlIDsCall++;
+            this._xmlIDsQueue.push(...xmlIDs.filter(xmlID => !!xmlID));
+
+            // Let other potential call to _getEnabledXmlIDs be done...
+            if (!this._xmlIDsMutex) {
+                this._xmlIDsMutex = new concurrency.Mutex();
+            }
+            this._xmlIDsMutex.exec(() => concurrency.delay());
+            // ... and continue each call only once all of them have registered
+            // their xml ids.
+            await this._xmlIDsMutex.getUnlockedDef();
+
+            // Only for the first call make the rpc with all xml ids
+            if (!this._xmlIDsFetchingProm) {
+                this._xmlIDsFetchingProm = this._rpc({
+                    route: '/website/theme_customize_get',
+                    params: {
+                        'xml_ids': this._xmlIDsQueue,
+                    },
+                });
+            }
+
+            // Wait for the unique rpc result for each call
+            const enabledXmlIDs = await this._xmlIDsFetchingProm;
+
+            // Once the last call of the queue received the result, start
+            // accepting new calls to _onEnabledXMLIDsRequest
+            if (!--this._xmlIDsNbCalls) {
+                this._xmlIDsQueue = [];
+                this._xmlIDsFetchingProm = null;
+            }
+
+            // Filter back on asked xml ids for this call
+            ev.data.onSuccess(enabledXmlIDs.filter(xmlID => xmlIDs.includes(xmlID)));
+        })();
+    },
     /**
      * @private
      * @param {OdooEvent} ev

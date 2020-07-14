@@ -444,12 +444,7 @@ options.Class.include({
         switch (methodName) {
             case 'customizeWebsiteViews': {
                 const allXmlIDs = this._getXMLIDsFromPossibleValues(params.possibleValues);
-                const enabledXmlIDs = await this._rpc({
-                    route: '/website/theme_customize_get',
-                    params: {
-                        'xml_ids': allXmlIDs,
-                    },
-                });
+                const enabledXmlIDs = await this._getEnabledXmlIDs(allXmlIDs);
                 let mostXmlIDsStr = '';
                 let mostXmlIDsNb = 0;
                 for (const xmlIDsStr of params.possibleValues) {
@@ -554,6 +549,19 @@ options.Class.include({
                 'enable': enableXmlIDs,
                 'disable': disableXmlIDs,
             },
+        });
+    },
+    /**
+     * @private
+     * @param {string[]} xmlIDs
+     * @returns {Promise<string[]>}
+     */
+    async _getEnabledXmlIDs(xmlIDs) {
+        return new Promise(resolve => {
+            this.trigger_up('enabled_xml_ids_request', {
+                xmlIDs: xmlIDs,
+                onSuccess: resolve,
+            });
         });
     },
     /**
