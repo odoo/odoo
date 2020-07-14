@@ -1092,7 +1092,11 @@ function _clonePage(pageId) {
                     window.location.href = path;
                 }).guardedCatch(reject);
             },
-            cancel_callback: reject,
+            cancel_callback: () => {
+                reject();
+                //display inactive modal
+                self.$modal.removeClass('d-none');
+            }
         }).on('closed', null, reject);
     });
 }
