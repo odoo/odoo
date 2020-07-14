@@ -26,8 +26,8 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon, StockAccountTestC
             'uom_id': product_uom_unit_round_1.id,
         })
         product_landed_cost_3.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        product_landed_cost_3.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.o_expense
-        product_landed_cost_3.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.o_income
+        product_landed_cost_3.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.company_data['default_account_expense']
+        product_landed_cost_3.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.company_data['default_account_revenue']
 
         product_landed_cost_4 = self.env['product.product'].create({
             'name': "LC product 4",
@@ -35,21 +35,21 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon, StockAccountTestC
         })
         product_landed_cost_4.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         product_landed_cost_4.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        product_landed_cost_4.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.o_expense
-        product_landed_cost_4.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.o_income
+        product_landed_cost_4.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.company_data['default_account_expense']
+        product_landed_cost_4.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.company_data['default_account_revenue']
 
         picking_default_vals = self.env['stock.picking'].default_get(list(self.env['stock.picking'].fields_get()))
 
         # I create 2 pickings moving those products
         vals = dict(picking_default_vals, **{
             'name': 'LC_pick_3',
-            'picking_type_id': self.ref('stock.picking_type_in'),
+            'picking_type_id': self.warehouse.in_type_id.id,
             'move_lines': [(0, 0, {
                 'product_id': product_landed_cost_3.id,
                 'product_uom_qty': 13,
                 'product_uom': product_uom_unit_round_1.id,
                 'location_id': self.ref('stock.stock_location_customers'),
-                'location_dest_id': self.ref('stock.stock_location_stock'),
+                'location_dest_id': self.warehouse.lot_stock_id.id,
             })],
         })
         picking_landed_cost_3 = self.env['stock.picking'].new(vals)
@@ -61,13 +61,13 @@ class TestStockLandedCostsRounding(TestStockLandedCostsCommon, StockAccountTestC
 
         vals = dict(picking_default_vals, **{
             'name': 'LC_pick_4',
-            'picking_type_id': self.ref('stock.picking_type_in'),
+            'picking_type_id': self.warehouse.in_type_id.id,
             'move_lines': [(0, 0, {
                 'product_id': product_landed_cost_4.id,
                 'product_uom_qty': 1,
                 'product_uom': self.ref('uom.product_uom_dozen'),
                 'location_id': self.ref('stock.stock_location_customers'),
-                'location_dest_id': self.ref('stock.stock_location_stock'),
+                'location_dest_id': self.warehouse.lot_stock_id.id,
                 'price_unit': 17.00 / 12.00,
             })],
         })
