@@ -7,20 +7,21 @@ from odoo.tools import mute_logger
 
 class StripeCommon(PaymentAcquirerCommon):
 
-    def setUp(self):
-        super(StripeCommon, self).setUp()
-        self.stripe = self.env.ref('payment.payment_acquirer_stripe')
-        self.stripe.write({
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.stripe = cls.env.ref('payment.payment_acquirer_stripe')
+        cls.stripe.write({
             'stripe_secret_key': 'sk_test_KJtHgNwt2KS3xM7QJPr4O5E8',
             'stripe_publishable_key': 'pk_test_QSPnimmb4ZhtkEy3Uhdm4S6J',
             'state': 'test',
         })
-        self.token = self.env['payment.token'].create({
+        cls.token = cls.env['payment.token'].create({
             'name': 'Test Card',
-            'acquirer_id': self.stripe.id,
+            'acquirer_id': cls.stripe.id,
             'acquirer_ref': 'cus_G27S7FqQ2w3fuH',
             'stripe_payment_method': 'pm_1FW3DdAlCFm536g8eQoSCejY',
-            'partner_id': self.buyer.id,
+            'partner_id': cls.buyer.id,
             'verified': True,
         })
 
