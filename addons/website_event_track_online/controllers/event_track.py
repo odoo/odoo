@@ -4,10 +4,17 @@
 from werkzeug.exceptions import Forbidden, NotFound
 
 from odoo import exceptions, http
+from odoo.addons.website_event_track.controllers.main import WebsiteEventTrackController
 from odoo.http import request
 
 
-class WebsiteEventTrackController(http.Controller):
+class EventTrackOnlineController(WebsiteEventTrackController):
+
+    def _event_agenda_get_tracks(self, event):
+        tracks_sudo = event.sudo().track_ids
+        if not request.env.user.has_group('event.group_event_manager'):
+            tracks_sudo = tracks_sudo.filtered(lambda track: track.is_published or track.stage_id.is_accepted)
+        return tracks_sudo
 
     def _can_access_track(self, track_id):
         track = request.env['event.track'].browse(track_id).exists()

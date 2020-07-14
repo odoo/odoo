@@ -80,7 +80,8 @@ class WebsiteEventTrackController(http.Controller):
         event = event.with_context(tz=event.date_tz or 'UTC')
         local_tz = pytz.timezone(event.date_tz or 'UTC')
         days_tracks = collections.defaultdict(lambda: [])
-        for track in event.track_ids.sorted(lambda track: (bool(track.date), track.date, bool(track.location_id))):
+        event_track_ids = self._event_agenda_get_tracks(event)
+        for track in event_track_ids.sorted(lambda track: (bool(track.date), track.date, bool(track.location_id))):
             if not track.date:
                 continue
             date = fields.Datetime.from_string(track.date).replace(tzinfo=pytz.utc).astimezone(local_tz)
@@ -97,8 +98,12 @@ class WebsiteEventTrackController(http.Controller):
             'main_object': event,
             'days': days,
             'tracks_by_days': tracks_by_days,
-            'tag': tag
+            'tag': tag,
+            'user_event_manager': request.env.user.has_group('event.group_event_manager'),
         })
+
+    def _event_agenda_get_tracks(self, event):
+        return event.track_ids
 
     @http.route([
         '''/event/<model("event.event"):event>/track''',

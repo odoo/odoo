@@ -16,10 +16,12 @@
         'website_event_track',
     ],
     'data': [
+        'data/event_track_stage_data.xml',
         'security/ir.model.access.csv',
         'views/assets.xml',
         'views/event_sponsor_views.xml',
         'views/event_templates.xml',
+        'views/event_track_stage_views.xml',
         'views/event_track_templates_reminder.xml',
         'views/event_track_templates.xml',
         'views/event_track_views.xml',

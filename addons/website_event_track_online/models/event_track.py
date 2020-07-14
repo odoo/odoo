@@ -11,6 +11,8 @@ class Track(models.Model):
     _name = "event.track"
     _inherit = ['event.track']
 
+    # status management
+    is_accepted = fields.Boolean('Is Accepted', related='stage_id.is_accepted', readonly=True)
     # speaker
     partner_biography = fields.Html(
         string='Biography', compute='_compute_partner_biography',

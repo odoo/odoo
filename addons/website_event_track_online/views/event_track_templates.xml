@@ -37,4 +37,26 @@
     </xpath>
 </template>
 
+<!-- Pimp agenda based on accepted / published -->
+<template id="agenda"
+    name="Track Online: Agenda"
+    inherit_id="website_event_track.agenda">
+    <xpath expr="//t[@name='track_agenda_track_cell']" position="replace">
+        <t t-if="track" name="track_agenda_track_cell">
+            <t t-if="user_event_manager or track.is_published">
+                <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
+                    <span t-esc="track.name"/>
+                </a>
+            </t>
+            <t t-else="">
+                <span t-esc="track.name"/>
+            </t>
+            <div class="d-flex text-muted">
+                <small t-esc="track.partner_name or track.partner_id.name"/>
+                <span t-if="user_event_manager and not track.website_published" class=" ml-auto badge badge-danger">unpublished</span>
+            </div>
+        </t>
+    </xpath>
+</template>
+
 </odoo>
