@@ -96,7 +96,7 @@ class TestReconciliationExec(TestAccountReconciliationCommon):
         })
         invoice.post()
         # We create a bank statement with two lines of 1.00 USD each.
-        statement = self.acc_bank_stmt_model.create({
+        statement = self.env['account.bank.statement'].create({
             'journal_id': self.bank_journal_usd_id,
             'date': time.strftime('%Y-%m-%d'),
             'line_ids': [
