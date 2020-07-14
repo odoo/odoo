@@ -15,6 +15,16 @@
                     </p>
                 </group>
 
+                <!-- Added to ensure a correct default_get behavior
+
+                The wizard is always opened with default_pick_ids values in context,
+                which are used to generate the backorder_confirmation_line_ids.
+
+                To ensure default_pick_ids is correctly converted from the context
+                by default_get, the field has to be present in the view.
+                -->
+                <field name="pick_ids" invisible="1"/>
+
                 <field name="show_transfers" invisible="1"/>
                 <field name="backorder_confirmation_line_ids" nolabel="1" attrs="{'invisible': [('show_transfers', '=', False)]}">>
                     <tree create="0" delete="0" editable="top">
