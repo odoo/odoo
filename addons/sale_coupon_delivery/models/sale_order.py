@@ -42,6 +42,12 @@ class SaleOrder(models.Model):
         # Unit prices tax included
         return min(self.order_line.filtered(lambda x: not x.is_reward_line and not x.is_delivery and x.price_reduce > 0), key=lambda x: x['price_reduce'])
 
+    def _update_line_and_get_to_remove(self, lines, values, program):
+        # Check commit 6bb42904a03 for next if/else
+        if not (values['product_uom_qty'] and values['price_unit']) and program.reward_type != 'free_shipping':
+            return lines
+        return super()._update_line_and_get_to_remove(lines, values, program)
+
 class SalesOrderLine(models.Model):
     _inherit = "sale.order.line"
 
