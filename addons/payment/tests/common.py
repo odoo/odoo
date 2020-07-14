@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 
-from odoo.addons.account.tests.common import AccountTestCommon
 
+class PaymentAcquirerCommon(AccountTestInvoicingCommon):
 
-class PaymentAcquirerCommon(AccountTestCommon):
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-    def setUp(self):
-        super(PaymentAcquirerCommon, self).setUp()
-
-        self.currency_euro = self.env['res.currency'].search([('name', '=', 'EUR')], limit=1)
-        self.country_belgium = self.env['res.country'].search([('code', 'like', 'BE')], limit=1)
-        self.country_france = self.env['res.country'].search([('code', 'like', 'FR')], limit=1)
+        cls.currency_euro = cls.env.ref('base.EUR')
+        cls.country_belgium = cls.env.ref('base.be')
+        cls.country_france = cls.env.ref('base.fr')
 
         # dict partner values
-        self.buyer_values = {
+        cls.buyer_values = {
             'partner_name': 'Norbert Buyer',
             'partner_lang': 'en_US',
             'partner_email': 'norbert.buyer@example.com',
@@ -21,8 +21,8 @@ class PaymentAcquirerCommon(AccountTestCommon):
             'partner_phone': '0032 12 34 56 78',
             'partner_city': 'Sin City',
             'partner_zip': '1000',
-            'partner_country': self.env['res.country'].browse(self.country_belgium.id),
-            'partner_country_id': self.country_belgium.id,
+            'partner_country': cls.country_belgium,
+            'partner_country_id': cls.country_belgium.id,
             'partner_country_name': 'Belgium',
             'billing_partner_name': 'Norbert Buyer',
             'billing_partner_commercial_company_name': 'Big Company',
@@ -32,13 +32,13 @@ class PaymentAcquirerCommon(AccountTestCommon):
             'billing_partner_phone': '0032 12 34 56 78',
             'billing_partner_city': 'Sin City',
             'billing_partner_zip': '1000',
-            'billing_partner_country': self.env['res.country'].browse(self.country_belgium.id),
-            'billing_partner_country_id': self.country_belgium.id,
+            'billing_partner_country': cls.country_belgium,
+            'billing_partner_country_id': cls.country_belgium.id,
             'billing_partner_country_name': 'Belgium',
         }
 
         # test partner
-        self.buyer = self.env['res.partner'].create({
+        cls.buyer = cls.env['res.partner'].create({
             'name': 'Norbert Buyer',
             'lang': 'en_US',
             'email': 'norbert.buyer@example.com',
@@ -47,5 +47,5 @@ class PaymentAcquirerCommon(AccountTestCommon):
             'phone': '0032 12 34 56 78',
             'city': 'Sin City',
             'zip': '1000',
-            'country_id': self.country_belgium.id})
-        self.buyer_id = self.buyer.id
+            'country_id': cls.country_belgium.id})
+        cls.buyer_id = cls.buyer.id
