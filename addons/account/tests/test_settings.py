@@ -1,9 +1,10 @@
-from odoo.addons.account.tests.common import AccountTestCommon
+# -*- coding: utf-8 -*-
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestSettings(AccountTestCommon):
+class TestSettings(AccountTestInvoicingCommon):
 
     def test_switch_taxB2B_taxB2C(self):
         """
