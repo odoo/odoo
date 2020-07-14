@@ -636,8 +636,8 @@ class HolidaysRequest(models.Model):
     @api.model_create_multi
     def create(self, vals_list):
         """ Override to avoid automatic logging of creation """
-        for values in vals_list:
-            if not self._context.get('leave_fast_create'):
+        if not self._context.get('leave_fast_create'):
+            for values in vals_list:
                 employee_id = values.get('employee_id', False)
                 leave_type_id = values.get('holiday_status_id')
                 leave_type = self.env['hr.leave.type'].browse(leave_type_id)
@@ -800,8 +800,9 @@ class HolidaysRequest(models.Model):
 
     def _prepare_holidays_meeting_values(self):
         result = []
+        company_calendar = self.env.company.resource_calendar_id
         for holiday in self:
-            calendar = holiday.employee_id.resource_calendar_id or self.env.company.resource_calendar_id
+            calendar = holiday.employee_id.resource_calendar_id or company_calendar
             if holiday.leave_type_request_unit == 'hour':
                 meeting_name = _("%s on Time Off : %.2f hour(s)") % (holiday.employee_id.name or holiday.category_id.name, holiday.number_of_hours_display)
             else:

@@ -751,17 +751,18 @@ class ResourceResource(models.Model):
             if record.time_efficiency == 0:
                 raise ValidationError(_('The efficiency factor cannot be equal to 0.'))
 
-    @api.model
-    def create(self, values):
-        if values.get('company_id') and not values.get('calendar_id'):
-            values['calendar_id'] = self.env['res.company'].browse(values['company_id']).resource_calendar_id.id
-        if not values.get('tz'):
-            # retrieve timezone on user or calendar
-            tz = (self.env['res.users'].browse(values.get('user_id')).tz or
-                  self.env['resource.calendar'].browse(values.get('calendar_id')).tz)
-            if tz:
-                values['tz'] = tz
-        return super(ResourceResource, self).create(values)
+    @api.model_create_multi
+    def create(self, vals_list):
+        for values in vals_list:
+            if values.get('company_id') and not values.get('calendar_id'):
+                values['calendar_id'] = self.env['res.company'].browse(values['company_id']).resource_calendar_id.id
+            if not values.get('tz'):
+                # retrieve timezone on user or calendar
+                tz = (self.env['res.users'].browse(values.get('user_id')).tz or
+                      self.env['resource.calendar'].browse(values.get('calendar_id')).tz)
+                if tz:
+                    values['tz'] = tz
+        return super(ResourceResource, self).create(vals_list)
 
     @api.returns('self', lambda value: value.id)
     def copy(self, default=None):
