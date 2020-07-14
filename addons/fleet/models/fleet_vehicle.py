@@ -227,8 +227,8 @@ class FleetVehicle(models.Model):
                 future_driver.sudo().write({'plan_to_change_car': True})
 
         res = super(FleetVehicle, self).write(vals)
-        if 'active' in vals and not vals['active']:
-            self.mapped('log_contracts').write({'active': False})
+        if 'active' in vals:
+            self.with_context(active_test=False).mapped('log_contracts').write({'active': vals['active']})
         return res
 
     def _close_driver_history(self):
