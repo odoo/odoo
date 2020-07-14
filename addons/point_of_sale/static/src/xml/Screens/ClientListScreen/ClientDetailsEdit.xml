@@ -15,16 +15,6 @@
             </div>
             <input class="detail client-name" name="name" t-att-value="props.partner.name"
                    placeholder="Name" t-on-change="captureChange" />
-            <div class="edit-buttons">
-                <div class="button undo">
-                    <i class="fa fa-undo" t-on-click="trigger('cancel-edit')" role="img"
-                       aria-label="Undo" title="Undo" />
-                </div>
-                <div class="button save">
-                    <i class="fa fa-floppy-o" t-on-click="saveChanges" role="img" aria-label="Save"
-                       title="Save" />
-                </div>
-            </div>
             <div class="client-details-box clearfix">
                 <div class="client-details-left">
                     <div class="client-detail">
