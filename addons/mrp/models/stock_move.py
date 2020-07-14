@@ -317,6 +317,10 @@ class StockMove(models.Model):
                 vals['state'] = 'assigned'
         return vals
 
+    def _get_source_document(self):
+        res = super()._get_source_document()
+        return res or self.production_id or self.raw_material_production_id
+
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.production_id and self.production_id.state not in ('done', 'cancel'):
             return [(self.production_id, self.production_id.user_id, visited)]
