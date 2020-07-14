@@ -8,16 +8,11 @@ class HrPlanWizard(models.TransientModel):
     _name = 'hr.plan.wizard'
     _description = 'Plan Wizard'
 
-    @api.model
-    def default_get(self, fields_list):
-        res = super(HrPlanWizard, self).default_get(fields_list)
-        if (not fields_list or 'employee_id' in fields_list) and 'employee_id' not in res:
-            if self.env.context.get('active_id'):
-                res['employee_id'] = self.env.context['active_id']
-        return res
-
     plan_id = fields.Many2one('hr.plan', default=lambda self: self.env['hr.plan'].search([], limit=1))
-    employee_id = fields.Many2one('hr.employee', string='Employee', required=True)
+    employee_id = fields.Many2one(
+        'hr.employee', string='Employee', required=True,
+        default=lambda self: self.env.context.get('active_id', None),
+    )
 
     def action_launch(self):
         for activity_type in self.plan_id.plan_activity_type_ids:
