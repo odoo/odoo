@@ -52,50 +52,54 @@
                         </a>
                     </div>
 
-                    <div class="o_Activity_details" t-if="state.areDetailsVisible">
-                        <dl class="dl-horizontal">
-                            <t t-if="activity.type">
-                                <dt>Activity type</dt>
-                                <dd class="o_Activity_type">
-                                    <t t-esc="activity.type.displayName"/>
-                                </dd>
-                            </t>
-                            <t t-if="activity.creator">
-                                <dt>Created</dt>
-                                <dd class="o_Activity_detailsCreation">
-                                    <t t-esc="formattedCreateDatetime"/>
-                                    <img class="o_Activity_detailsUserAvatar o_Activity_detailsCreatorAvatar" t-attf-src="/web/image/res.users/{{ activity.creator.id }}/image_128" t-att-title="activity.creator.nameOrDisplayName()" t-att-alt="activity.creator.nameOrDisplayName()"/>
-                                    <span class="o_Activity_detailsCreator">
-                                        <t t-esc="activity.creator.nameOrDisplayName()"/>
+                    <t t-if="state.areDetailsVisible">
+                        <div class="o_Activity_details">
+                            <dl class="dl-horizontal">
+                                <t t-if="activity.type">
+                                    <dt>Activity type</dt>
+                                    <dd class="o_Activity_type">
+                                        <t t-esc="activity.type.displayName"/>
+                                    </dd>
+                                </t>
+                                <t t-if="activity.creator">
+                                    <dt>Created</dt>
+                                    <dd class="o_Activity_detailsCreation">
+                                        <t t-esc="formattedCreateDatetime"/>
+                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsCreatorAvatar" t-attf-src="/web/image/res.users/{{ activity.creator.id }}/image_128" t-att-title="activity.creator.nameOrDisplayName()" t-att-alt="activity.creator.nameOrDisplayName()"/>
+                                        <span class="o_Activity_detailsCreator">
+                                            <t t-esc="activity.creator.nameOrDisplayName()"/>
+                                        </span>
+                                    </dd>
+                                </t>
+                                <t t-if="activity.assignee">
+                                    <dt>Assigned to</dt>
+                                    <dd class="o_Activity_detailsAssignation">
+                                        <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-title="activity.assignee.nameOrDisplayName()" t-att-alt="activity.assignee.nameOrDisplayName()"/>
+                                        <t t-esc="activity.assignee.nameOrDisplayName()"/>
+                                    </dd>
+                                </t>
+                                <dt>Due on</dt>
+                                <dd class="o_Activity_detailsDueDate">
+                                    <span class="o_Activity_deadlineDateText"
+                                        t-att-class="{
+                                            'o-default': activity.state === 'default',
+                                            'o-overdue': activity.state === 'overdue',
+                                            'o-planned': activity.state === 'planned',
+                                            'o-today': activity.state === 'today',
+                                        }"
+                                    >
+                                        <t t-esc="formattedDeadlineDate"/>
                                     </span>
                                 </dd>
-                            </t>
-                            <t t-if="activity.assignee">
-                                <dt>Assigned to</dt>
-                                <dd class="o_Activity_detailsAssignation">
-                                    <img class="o_Activity_detailsUserAvatar o_Activity_detailsAssignationUserAvatar" t-attf-src="/web/image/res.users/{{ activity.assignee.id }}/image_128" t-att-title="activity.assignee.nameOrDisplayName()" t-att-alt="activity.assignee.nameOrDisplayName()"/>
-                                    <t t-esc="activity.assignee.nameOrDisplayName()"/>
-                                </dd>
-                            </t>
-                            <dt>Due on</dt>
-                            <dd class="o_Activity_detailsDueDate">
-                                <span class="o_Activity_deadlineDateText"
-                                    t-att-class="{
-                                        'o-default': activity.state === 'default',
-                                        'o-overdue': activity.state === 'overdue',
-                                        'o-planned': activity.state === 'planned',
-                                        'o-today': activity.state === 'today',
-                                    }"
-                                >
-                                    <t t-esc="formattedDeadlineDate"/>
-                                </span>
-                            </dd>
-                        </dl>
-                    </div>
+                            </dl>
+                        </div>
+                    </t>
 
-                    <div class="o_Activity_note" t-if="activity.note">
-                        <t t-raw="activity.note"/>
-                    </div>
+                    <t t-if="activity.note">
+                        <div class="o_Activity_note">
+                            <t t-raw="activity.note"/>
+                        </div>
+                    </t>
 
                     <t t-if="activity.mailTemplates.length > 0">
                         <div class="o_Activity_mailTemplates">
