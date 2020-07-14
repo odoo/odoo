@@ -13,8 +13,8 @@ odoo.define('web.ControlPanelModel', function (require) {
     const FAVORITE_PRIVATE_GROUP = 1;
     const FAVORITE_SHARED_GROUP = 2;
 
-    let filterId = 0;
-    let groupId = 0;
+    let filterId = 1;
+    let groupId = 1;
     let groupNumber = 0;
 
     /**
