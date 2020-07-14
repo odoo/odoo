@@ -52,7 +52,6 @@
         'static/src/xml/debug_manager.xml',
         'static/src/xml/Screens/ProductScreen/ProductScreen.xml',
         'static/src/xml/Screens/ClientListScreen/ClientLine.xml',
-        'static/src/xml/Screens/ClientListScreen/ClientDetails.xml',
         'static/src/xml/Screens/ClientListScreen/ClientDetailsEdit.xml',
         'static/src/xml/Screens/ClientListScreen/ClientListScreen.xml',
         'static/src/xml/Screens/OrderManagementScreen/ControlButtons/InvoiceButton.xml',

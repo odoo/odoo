@@ -29,6 +29,7 @@ odoo.define('web.web_client', function (require) {
         Registries.Component.freeze();
         await env.session.is_bound;
         env.qweb.addTemplates(env.session.owlTemplates);
+        env.bus = new owl.core.EventBus();
         await owl.utils.whenReady();
         await webClient.setElement(document.body);
         await webClient.start();
