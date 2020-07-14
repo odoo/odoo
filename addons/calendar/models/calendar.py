@@ -560,7 +560,7 @@ class Meeting(models.Model):
             # define the correct hour/day asked by the user to repeat for recurrence.
             event_date = event_date.astimezone(timezone)  # transform "+hh:mm" timezone
             rset1 = rrule.rrulestr(str(self.rrule), dtstart=event_date, forceset=True, tzinfos={})
-        recurring_meetings = self.search([('recurrent_id', '=', self.id), '|', ('active', '=', False), ('active', '=', True)])
+        recurring_meetings = self.with_context(active_test=False).search([('recurrent_id', '=', self.id)])
 
         for meeting in recurring_meetings:
             date = todate(meeting.recurrent_id_date)
