@@ -4053,7 +4053,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
     }, {
         id: 51,
         is_read: false,
-        mail_message_id: 1,
+        mail_message_id: 2,
         res_partner_id: 3,
     }];
     this.data.initMessaging.needaction_inbox_counter = 2;
@@ -4086,7 +4086,7 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
                 this.env.messaging.history.localId
             }"]
         `).classList.contains('o-active'),
-        "History mailbox should be active thread"
+        "history mailbox should be active thread"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Discuss_thread .o_MessageList_empty`).length,
@@ -4107,17 +4107,17 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
                 this.env.messaging.inbox.localId
             }"]
         `).classList.contains('o-active'),
-        "Inbox mailbox should be active thread"
+        "inbox mailbox should be active thread"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Discuss_thread .o_MessageList_empty`).length,
         0,
-        "Inbox mailbox should not be empty"
+        "inbox mailbox should not be empty"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Discuss_thread .o_MessageList_message`).length,
         2,
-        "Inbox mailbox should have 2 messages"
+        "inbox mailbox should have 2 messages"
     );
 
     await afterNextRender(() =>
@@ -4129,12 +4129,12 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
                 this.env.messaging.inbox.localId
             }"]
         `).classList.contains('o-active'),
-        "Inbox mailbox should still be active after mark as read"
+        "inbox mailbox should still be active after mark as read"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Discuss_thread .o_MessageList_empty`).length,
         1,
-        "Inbox mailbox should now be empty after mark as read"
+        "inbox mailbox should now be empty after mark as read"
     );
 
     await afterNextRender(() =>
@@ -4150,17 +4150,148 @@ QUnit.test('messages marked as read move to "History" mailbox', async function (
                 this.env.messaging.history.localId
             }"]
         `).classList.contains('o-active'),
-        "History mailbox should be active"
+        "history mailbox should be active"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Discuss_thread .o_MessageList_empty`).length,
         0,
-        "History mailbox should not be empty after mark as read"
+        "history mailbox should not be empty after mark as read"
     );
     assert.strictEqual(
         document.querySelectorAll(`.o_Discuss_thread .o_MessageList_message`).length,
         2,
-        "History mailbox should have 2 messages"
+        "history mailbox should have 2 messages"
+    );
+});
+
+QUnit.test('mark a single message as read should only move this message to "History" mailbox', async function (assert) {
+    assert.expect(9);
+
+    this.data['mail.message'].records = [{
+        author_id: [5, 'Demo User'],
+        body: '<p>test 1</p>',
+        id: 1,
+        needaction: true,
+        needaction_partner_ids: [3],
+    }, {
+        author_id: [6, 'Test User'],
+        body: '<p>test 2</p>',
+        id: 2,
+        needaction: true,
+        needaction_partner_ids: [3],
+    }];
+    this.data['mail.notification'].records = [{
+        id: 50,
+        is_read: false,
+        mail_message_id: 1,
+        res_partner_id: 3,
+    }, {
+        id: 51,
+        is_read: false,
+        mail_message_id: 2,
+        res_partner_id: 3,
+    }];
+    this.data.initMessaging.needaction_inbox_counter = 2;
+    await this.start({
+        discuss: {
+            params: {
+                default_active_id: 'mail.box_history',
+            },
+        },
+        env: {
+            session: {
+                name: 'Admin',
+                partner_display_name: 'Your Company, Admin',
+                partner_id: 3,
+                uid: 2,
+            },
+        },
+    });
+    assert.hasClass(
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.messaging.history.localId
+            }"]
+        `),
+        'o-active',
+        "history mailbox should initially be the active thread"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_MessageList_empty',
+        "history mailbox should initially be empty"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.messaging.inbox.localId
+            }"]
+        `).click()
+    );
+    assert.hasClass(
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.messaging.inbox.localId
+            }"]
+        `),
+        'o-active',
+        "inbox mailbox should be active thread after clicking on it"
+    );
+    assert.containsN(
+        document.body,
+        '.o_Message',
+        2,
+        "inbox mailbox should have 2 messages"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`
+            .o_Message[data-message-local-id="${
+                this.env.models['mail.message'].find(message => message.id === 1).localId
+            }"] .o_Message_commandMarkAsRead
+        `).click()
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "inbox mailbox should have one less message after clicking mark as read"
+    );
+    assert.containsOnce(
+        document.body,
+        `.o_Message[data-message-local-id="${
+            this.env.models['mail.message'].find(message => message.id === 2).localId
+        }"]`,
+        "message still in inbox should be the one not marked as read"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.messaging.history.localId
+            }"]
+        `).click()
+    );
+    assert.hasClass(
+        document.querySelector(`
+            .o_DiscussSidebar_item[data-thread-local-id="${
+                this.env.messaging.history.localId
+            }"]
+        `),
+        'o-active',
+        "history mailbox should be active after clicking on it"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "history mailbox should have only 1 message after mark as read"
+    );
+    assert.containsOnce(
+        document.body,
+        `.o_Message[data-message-local-id="${
+            this.env.models['mail.message'].find(message => message.id === 1).localId
+        }"]`,
+        "message moved in history should be the one marked as read"
     );
 });
 
