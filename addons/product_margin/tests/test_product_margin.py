@@ -1,26 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo import tools
-from odoo.addons.account.tests.common import AccountTestCommon
-from odoo.tests import Form
-from odoo.modules.module import get_resource_path
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged
 
 
-class TestProductMargin(AccountTestCommon):
-
-    def create_account_invoice(self, invoice_type, partner, product, quantity=0.0, price_unit=0.0):
-        """ Create an invoice as in a view by triggering its onchange methods"""
-
-        invoice_form = Form(self.env['account.move'].with_context(default_move_type=invoice_type))
-        invoice_form.partner_id = partner
-        with invoice_form.invoice_line_ids.new() as line:
-            line.product_id = product
-            line.quantity = quantity
-            line.price_unit = price_unit
-
-        invoice = invoice_form.save()
-        invoice.post()
+@tagged('post_install', '-at_install')
+class TestProductMargin(AccountTestInvoicingCommon):
 
     def test_product_margin(self):
         ''' In order to test the product_margin module '''
@@ -33,13 +18,29 @@ class TestProductMargin(AccountTestCommon):
             'list_price': 750.0,
         })
 
-        # Create supplier invoice and customer invoice to test product margin.
-        # Define supplier invoices
-        self.create_account_invoice('in_invoice', supplier, ipad, 10.0, 300.00)
-        self.create_account_invoice('in_invoice', supplier, ipad, 4.0, 450.00)
-        # Define Customer Invoices
-        self.create_account_invoice('out_invoice', customer, ipad, 20.0, 750.00)
-        self.create_account_invoice('out_invoice', customer, ipad, 10.0, 550.00)
+        invoices = self.env['account.move'].create([
+            {
+                'move_type': 'in_invoice',
+                'partner_id': supplier.id,
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 300.0})],
+            },
+            {
+                'move_type': 'in_invoice',
+                'partner_id': supplier.id,
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 4.0, 'price_unit': 450.0})],
+            },
+            {
+                'move_type': 'out_invoice',
+                'partner_id': customer.id,
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 20.0, 'price_unit': 750.0})],
+            },
+            {
+                'move_type': 'out_invoice',
+                'partner_id': customer.id,
+                'invoice_line_ids': [(0, 0, {'product_id': ipad.id, 'quantity': 10.0, 'price_unit': 550.0})],
+            },
+        ])
+        invoices.post()
 
         result = ipad._compute_product_margin_fields_values()
 
