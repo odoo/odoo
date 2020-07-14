@@ -70,6 +70,12 @@ class MailMail(models.Model):
         return new_mail
 
     @api.multi
+    def read(self, fields=None, load='_classic_read'):
+        if self.user_has_groups('base.group_system') and self.sudo().filtered(lambda m: not (m.res_id and m.model)):
+            self = self.sudo()
+        return super(MailMail, self).read(fields=fields, load=load)
+
+    @api.multi
     def write(self, vals):
         res = super(MailMail, self).write(vals)
         if vals.get('attachment_ids'):

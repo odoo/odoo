@@ -452,9 +452,11 @@ class Channel(models.Model):
                 'body_html': view.render({'channel': self, 'partner': partner}, engine='ir.qweb', minimal_qcontext=True),
                 'subject': _("Guidelines of channel %s") % self.name,
                 'email_from': partner.company_id.catchall or partner.company_id.email,
+                'author_id': self.create_uid.partner_id.id,
+                'partner_ids': [(4, partner.id)],
                 'recipient_ids': [(4, partner.id)]
             }
-            mail = self.env['mail.mail'].create(create_values)
+            mail = self.env['mail.mail'].sudo().create(create_values)
             mail.send()
         return True
 
