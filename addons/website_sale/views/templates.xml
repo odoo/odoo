@@ -1209,16 +1209,16 @@
                                     <h2 class="o_page_header mt8">Shipping Address </h2>
                                 </t>
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
-                                    <div class="alert alert-warning" role="alert">
+                                    <div class="alert alert-warning" role="alert" t-if="not only_services">
                                         <h4 class="alert-heading">Be aware!</h4>
-                                        <p t-if="not only_services" groups="sale.group_delivery_invoice_address">
+                                        <p  groups="sale.group_delivery_invoice_address">
                                             You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
                                             If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
                                         </p>
                                     </div>
                                 </t>
                                 <t t-if="error" t-foreach="error.get('error_message', [])" t-as="err">
-                                    <h4 class="text-danger" t-esc="err" />
+                                    <h5 class="text-danger" t-esc="err" />
                                 </t>
                                 <form action="/shop/address" method="post" class="checkout_autoformat">
                                     <div class="form-row">
