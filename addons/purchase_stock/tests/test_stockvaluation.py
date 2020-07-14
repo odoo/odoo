@@ -8,7 +8,7 @@ from unittest.mock import patch
 from odoo import fields
 from odoo.tests import Form
 from odoo.tests.common import TransactionCase, tagged
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
 
 
@@ -290,71 +290,73 @@ class TestStockValuation(TransactionCase):
 
 
 @tagged('post_install', '-at_install')
-class TestStockValuationWithCOA(AccountTestCommon):
-    def setUp(self):
-        super(TestStockValuationWithCOA, self).setUp()
-        self.supplier_location = self.env.ref('stock.stock_location_suppliers')
-        self.stock_location = self.env.ref('stock.stock_location_stock')
-        self.partner_id = self.env['res.partner'].create({'name': 'Wood Corner Partner'})
-        self.product1 = self.env['product.product'].create({'name': 'Large Desk'})
+class TestStockValuationWithCOA(AccountTestInvoicingCommon):
 
-        self.cat = self.env['product.category'].create({
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
+        cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
+        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.partner_id = cls.env['res.partner'].create({'name': 'Wood Corner Partner'})
+        cls.product1 = cls.env['product.product'].create({'name': 'Large Desk'})
+
+        cls.cat = cls.env['product.category'].create({
             'name': 'cat',
         })
-        self.product1 = self.env['product.product'].create({
+        cls.product1 = cls.env['product.product'].create({
             'name': 'product1',
             'type': 'product',
-            'categ_id': self.cat.id,
+            'categ_id': cls.cat.id,
         })
-        self.product1_copy = self.env['product.product'].create({
+        cls.product1_copy = cls.env['product.product'].create({
             'name': 'product1',
             'type': 'product',
-            'categ_id': self.cat.id,
+            'categ_id': cls.cat.id,
         })
 
-        Account = self.env['account.account']
-        self.usd_currency = self.env.ref('base.USD')
-        self.eur_currency = self.env.ref('base.EUR')
+        Account = cls.env['account.account']
+        cls.usd_currency = cls.env.ref('base.USD')
+        cls.eur_currency = cls.env.ref('base.EUR')
 
-        self.stock_input_account = Account.create({
+        cls.stock_input_account = Account.create({
             'name': 'Stock Input',
             'code': 'StockIn',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
             'reconcile': True,
         })
-        self.stock_output_account = Account.create({
+        cls.stock_output_account = Account.create({
             'name': 'Stock Output',
             'code': 'StockOut',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
             'reconcile': True,
         })
-        self.stock_valuation_account = Account.create({
+        cls.stock_valuation_account = Account.create({
             'name': 'Stock Valuation',
             'code': 'Stock Valuation',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
         })
-        self.price_diff_account = Account.create({
+        cls.price_diff_account = Account.create({
             'name': 'price diff account',
             'code': 'price diff account',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
+            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
         })
-        self.stock_journal = self.env['account.journal'].create({
+        cls.stock_journal = cls.env['account.journal'].create({
             'name': 'Stock Journal',
             'code': 'STJTEST',
             'type': 'general',
         })
-        self.product1.categ_id.write({
-            'property_stock_account_input_categ_id': self.stock_input_account.id,
-            'property_stock_account_output_categ_id': self.stock_output_account.id,
-            'property_stock_valuation_account_id': self.stock_valuation_account.id,
-            'property_stock_journal': self.stock_journal.id,
+        cls.product1.categ_id.write({
+            'property_stock_account_input_categ_id': cls.stock_input_account.id,
+            'property_stock_account_output_categ_id': cls.stock_output_account.id,
+            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
+            'property_stock_journal': cls.stock_journal.id,
         })
 
     def test_fifo_anglosaxon_return(self):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Receive 10@10 ; create the vendor bill
@@ -441,7 +443,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
         self.product1.product_tmpl_id.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
@@ -535,7 +536,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
         # SetUp product
         self.product1.product_tmpl_id.cost_method = 'average'
         self.product1.product_tmpl_id.valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'order'
         self.product1.product_tmpl_id.purchase_method = 'purchase'
 
         self.product1.property_account_creditor_price_difference = self.price_diff_account
@@ -625,7 +625,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
             'purchase_method': 'purchase',
             'property_account_creditor_price_difference': self.price_diff_account.id,
         })
-        self.product1.invoice_policy = 'order'
 
         # SetUp product Standard
         # should have bought at 60 USD
@@ -804,7 +803,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
             'standard_price': 60,
             'property_account_creditor_price_difference': self.price_diff_account.id
         })
-        product_avg.invoice_policy = 'order'
 
         # SetUp currency and rates
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
@@ -968,7 +966,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
             'standard_price': 0,
             'property_account_creditor_price_difference': self.price_diff_account.id
         })
-        product_avg.invoice_policy = 'order'
 
         # SetUp currency and rates
         self.cr.execute("UPDATE res_company SET currency_id = %s WHERE id = %s", (self.usd_currency.id, company.id))
@@ -1195,7 +1192,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
@@ -1242,7 +1238,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
@@ -1289,7 +1284,6 @@ class TestStockValuationWithCOA(AccountTestCommon):
         self.env.company.anglo_saxon_accounting = True
         self.product1.categ_id.property_cost_method = 'fifo'
         self.product1.categ_id.property_valuation = 'real_time'
-        self.product1.product_tmpl_id.invoice_policy = 'delivery'
         self.product1.property_account_creditor_price_difference = self.price_diff_account
 
         # Create PO
