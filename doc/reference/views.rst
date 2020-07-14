@@ -97,16 +97,20 @@ an impact on all view types.
 
   Disable/enable record duplication on the view through the **Action** dropdown.
 
-* ``decoration-$`` (``list`` & ``gantt``)
+* ``decoration-{$name}`` (``list`` & ``gantt``)
 
   Define a conditional display of a record in the style of a row's text based on the corresponding
   record's attributes.
 
   Values are Python expressions. For each record, the expression is evaluated
-  with the record's attributes as context values and, if ``true``, the
-  corresponding style is applied to the row. Other context values are
-  ``uid`` (the id of the current user) and ``current_date`` (the current date
-  as a string of the form ``YYYY-MM-DD``).
+  with the record's attributes as context values and if ``true``, the
+  corresponding style is applied to the row. Here are some of the other values
+  available in the context:
+
+  * ``uid``: the id of the current user,
+  * ``today``: the current local date as a string of the form ``YYYY-MM-DD``,
+  * ``now``: same as ``today`` with the addition of the current time.
+    This value is formatted as ``YYYY-MM-DD hh:mm:ss``.
 
   .. code-block:: xml
 
@@ -930,9 +934,13 @@ take the following attributes:
 
     Values are Python expressions. For each record, the expression is evaluated
     with the record's attributes as context values and if ``true``, the
-    corresponding style is applied to the row. Other context values are
-    ``uid`` (the id of the current user) and ``current_date`` (the current date
-    as a string of the form ``yyyy-MM-dd``).
+    corresponding style is applied to the row. Here are some of the other values
+    available in the context:
+
+    * ``uid``: the id of the current user,
+    * ``today``: the current local date as a string of the form ``YYYY-MM-DD``,
+    * ``now``: same as ``today`` with the addition of the current time.
+      This value is formatted as ``YYYY-MM-DD hh:mm:ss``.
 
     ``{$name}`` can be one of the following `bootstrap contextual color`_ (``danger``,
     ``info``, ``secondary``, ``success`` or ``warning``).
