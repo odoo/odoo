@@ -1206,16 +1206,21 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def default_get(self, fields_list):
-        """ default_get(fields) -> default_values
+        """ default_get(fields_list) -> default_values
 
         Return default values for the fields in ``fields_list``. Default
         values are determined by the context, user defaults, and the model
         itself.
 
-        :param fields_list: a list of field names
-        :return: a dictionary mapping each field name to its corresponding
-            default value, if it has one.
+        :param list fields_list: names of field whose default is requested
+        :return: a dictionary mapping field names to their corresponding default values,
+            if they have a default value.
+        :rtype: dict
 
+        .. note::
+
+            Unrequested defaults won't be considered, there is no need to return a
+            value for fields whose names are not in `fields_list`.
         """
         # trigger view init hook
         self.view_init(fields_list)

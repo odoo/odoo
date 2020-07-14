@@ -44,6 +44,8 @@ class AccrualAccountingWizard(models.TransientModel):
         if self.env.context.get('active_model') != 'account.move.line' or not self.env.context.get('active_ids'):
             raise UserError(_('This can only be used on journal items'))
         rec = super(AccrualAccountingWizard, self).default_get(fields)
+        if not set(fields) & set(['active_move_line_ids', 'company_id', 'account_type']):
+            return super().default_get(fields)
         active_move_line_ids = self.env['account.move.line'].browse(self.env.context['active_ids'])
         rec['active_move_line_ids'] = active_move_line_ids.ids
 

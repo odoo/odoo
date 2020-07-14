@@ -12,7 +12,8 @@ class WebsiteRobots(models.TransientModel):
     @api.model
     def default_get(self, fields):
         defaults = super(WebsiteRobots, self).default_get(fields)
-        defaults['content'] = self.env['website'].get_current_website().robots_txt
+        if 'content' in fields:
+            defaults['content'] = self.env['website'].get_current_website().robots_txt
         return defaults
 
     def action_save(self):

@@ -31,7 +31,8 @@ class BaseGengoTranslations(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super(BaseGengoTranslations, self).default_get(fields)
-        res['authorized_credentials'], gengo = self.gengo_authentication()
+        if 'authorize_credentials' in fields:
+            res['authorized_credentials'], gengo = self.gengo_authentication()
         if 'lang_id' in fields:
             res['lang_id'] = get_lang(self.env).id
         return res
