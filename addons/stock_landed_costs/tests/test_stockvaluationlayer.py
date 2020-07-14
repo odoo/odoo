@@ -10,6 +10,7 @@ from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 
 
 class TestStockValuationLCCommon(TestStockValuationCommon, StockAccountTestCommon):
+
     @classmethod
     def setUpClass(cls):
         super(TestStockValuationLCCommon, cls).setUpClass()
