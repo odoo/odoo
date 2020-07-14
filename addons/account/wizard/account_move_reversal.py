@@ -41,9 +41,12 @@ class AccountMoveReversal(models.TransientModel):
 
         if any(move.state != "posted" for move in move_ids):
             raise UserError(_('You can only reverse posted moves.'))
-        res['company_id'] = move_ids.company_id.id or self.env.company.id
-        res['move_ids'] = [(6, 0, move_ids.ids)]
-        res['refund_method'] = (len(move_ids) > 1 or move_ids.move_type == 'entry') and 'cancel' or 'refund'
+        if 'company_id' in fields:
+            res['company_id'] = move_ids.company_id.id or self.env.company.id
+        if 'move_ids' in fields:
+            res['move_ids'] = [(6, 0, move_ids.ids)]
+        if 'refund_method' in fields:
+            res['refund_method'] = (len(move_ids) > 1 or move_ids.move_type == 'entry') and 'cancel' or 'refund'
         return res
 
     @api.depends('move_ids')
