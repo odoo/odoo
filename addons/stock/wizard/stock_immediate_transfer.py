@@ -28,10 +28,13 @@ class StockImmediateTransfer(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
-        if 'immediate_transfer_line_ids' in fields:
-            if self.env.context.get('default_pick_ids'):
-                res['pick_ids'] = self.env.context['default_pick_ids']
-                res['immediate_transfer_line_ids'] = [(0, 0, {'to_immediate': True, 'picking_id': pick_id[1]}) for pick_id in res['pick_ids']]
+        if 'immediate_transfer_line_ids' in fields and res.get('pick_ids'):
+            res['immediate_transfer_line_ids'] = [
+                (0, 0, {'to_immediate': True, 'picking_id': pick_id})
+                for pick_id in res['pick_ids'][0][2]
+            ]
+            # default_get returns x2m values as [(6, 0, ids)]
+            # because of webclient limitations
         return res
 
     def process(self):

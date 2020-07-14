@@ -28,10 +28,13 @@ class StockBackorderConfirmation(models.TransientModel):
     @api.model
     def default_get(self, fields):
         res = super().default_get(fields)
-        if 'backorder_confirmation_line_ids' in fields:
-            if self.env.context.get('default_pick_ids'):
-                res['pick_ids'] = self.env.context['default_pick_ids']
-                res['backorder_confirmation_line_ids'] = [(0, 0, {'to_backorder': True, 'picking_id': pick_id[1]}) for pick_id in res['pick_ids']]
+        if 'backorder_confirmation_line_ids' in fields and res.get('pick_ids'):
+            res['backorder_confirmation_line_ids'] = [
+                (0, 0, {'to_backorder': True, 'picking_id': pick_id})
+                for pick_id in res['pick_ids'][0][2]
+            ]
+            # default_get returns x2m values as [(6, 0, ids)]
+            # because of webclient limitations
         return res
 
     def process(self):
