@@ -5,6 +5,7 @@
         <field name="model">choose.delivery.package</field>
         <field name="arch" type="xml">
             <form string="Package">
+                <field name="picking_id" invisible="1"/>
                 <group>
                     <field name="delivery_packaging_id"  domain="[('package_carrier_type', '=', context.get('current_package_carrier_type', 'none'))]"
                       context="{'form_view_ref':'delivery.product_packaging_delivery_form'}"/>
