@@ -1,18 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from datetime import datetime
-
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestRepair(AccountTestCommon):
+class TestRepair(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestRepair, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Partners
         cls.res_partner_1 = cls.env['res.partner'].create({'name': 'Wood Corner'})
@@ -33,25 +30,26 @@ class TestRepair(AccountTestCommon):
         })
 
         # Location
+        cls.stock_warehouse = cls.env['stock.warehouse'].search([('company_id', '=', cls.env.company.id)], limit=1)
         cls.stock_location_14 = cls.env['stock.location'].create({
             'name': 'Shelf 2',
-            'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,
+            'location_id': cls.stock_warehouse.lot_stock_id.id,
         })
 
         # Repair Orders
         cls.repair1 = cls.env['repair.order'].create({
             'address_id': cls.res_partner_address_1.id,
-            'guarantee_limit': datetime.today().strftime('%Y-%m-%d'),
+            'guarantee_limit': '2019-01-01',
             'invoice_method': 'none',
             'user_id': False,
             'product_id': cls.product_product_3.id,
             'product_uom': cls.env.ref('uom.product_uom_unit').id,
             'partner_invoice_id': cls.res_partner_address_1.id,
-            'location_id': cls.env.ref('stock.stock_location_stock').id,
+            'location_id': cls.stock_warehouse.lot_stock_id.id,
             'operations': [
                 (0, 0, {
                     'location_dest_id': cls.product_product_11.property_stock_production.id,
-                    'location_id': cls.env.ref('stock.stock_location_stock').id,
+                    'location_id': cls.stock_warehouse.lot_stock_id.id,
                     'name': cls.product_product_11.get_product_multiline_description_sale(),
                     'product_id': cls.product_product_11.id,
                     'product_uom': cls.env.ref('uom.product_uom_unit').id,
@@ -79,15 +77,15 @@ class TestRepair(AccountTestCommon):
             'product_id': cls.product_product_5.id,
             'product_uom': cls.env.ref('uom.product_uom_unit').id,
             'address_id': cls.res_partner_address_1.id,
-            'guarantee_limit': datetime.today().strftime('%Y-%m-%d'),
+            'guarantee_limit': '2019-01-01',
             'invoice_method': 'after_repair',
             'user_id': False,
             'partner_invoice_id': cls.res_partner_address_1.id,
-            'location_id': cls.env.ref('stock.stock_location_stock').id,
+            'location_id': cls.stock_warehouse.lot_stock_id.id,
             'operations': [
                 (0, 0, {
                     'location_dest_id': cls.product_product_12.property_stock_production.id,
-                    'location_id': cls.env.ref('stock.stock_location_stock').id,
+                    'location_id': cls.stock_warehouse.lot_stock_id.id,
                     'name': cls.product_product_12.get_product_multiline_description_sale(),
                     'price_unit': 50.0,
                     'product_id': cls.product_product_12.id,
@@ -115,7 +113,7 @@ class TestRepair(AccountTestCommon):
             'product_id': cls.product_product_6.id,
             'product_uom': cls.env.ref('uom.product_uom_unit').id,
             'address_id': cls.res_partner_address_1.id,
-            'guarantee_limit': datetime.today().strftime('%Y-%m-%d'),
+            'guarantee_limit': '2019-01-01',
             'invoice_method': 'b4repair',
             'user_id': False,
             'partner_invoice_id': cls.res_partner_address_1.id,
@@ -123,7 +121,7 @@ class TestRepair(AccountTestCommon):
             'operations': [
                 (0, 0, {
                     'location_dest_id': cls.product_product_13.property_stock_production.id,
-                    'location_id': cls.env.ref('stock.stock_location_stock').id,
+                    'location_id': cls.stock_warehouse.lot_stock_id.id,
                     'name': cls.product_product_13.get_product_multiline_description_sale(),
                     'price_unit': 50.0,
                     'product_id': cls.product_product_13.id,
@@ -147,17 +145,7 @@ class TestRepair(AccountTestCommon):
             'partner_id': cls.res_partner_12.id,
         })
 
-        cls.res_repair_user = cls.env['res.users'].create({
-            'name': 'Repair User',
-            'login': 'maru',
-            'email': 'repair_user@yourcompany.com',
-            'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_user').id])]})
-
-        cls.res_repair_manager = cls.env['res.users'].create({
-            'name': 'Repair Manager',
-            'login': 'marm',
-            'email': 'repair_manager@yourcompany.com',
-            'groups_id': [(6, 0, [cls.env.ref('stock.group_stock_manager').id])]})
+        cls.env.user.groups_id |= cls.env.ref('stock.group_stock_user')
 
     def _create_simple_repair_order(self, invoice_method):
         product_to_repair = self.product_product_5
@@ -166,10 +154,10 @@ class TestRepair(AccountTestCommon):
             'product_id': product_to_repair.id,
             'product_uom': product_to_repair.uom_id.id,
             'address_id': partner.id,
-            'guarantee_limit': datetime.today().strftime('%Y-%m-%d'),
+            'guarantee_limit': '2019-01-01',
             'invoice_method': invoice_method,
             'partner_invoice_id': partner.id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_id': self.stock_warehouse.lot_stock_id.id,
             'partner_id': self.res_partner_12.id
         })
 
@@ -183,7 +171,7 @@ class TestRepair(AccountTestCommon):
             'product_uom': product_to_add.uom_id.id,
             'price_unit': price_unit,
             'repair_id': repair_id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'location_id': self.stock_warehouse.lot_stock_id.id,
             'location_dest_id': product_to_add.property_stock_production.id,
             'company_id': self.env.company.id,
         })
@@ -204,7 +192,7 @@ class TestRepair(AccountTestCommon):
         repair = self._create_simple_repair_order('after_repair')
         self._create_simple_operation(repair_id=repair.id, qty=1.0, price_unit=50.0)
         # I confirm Repair order taking Invoice Method 'After Repair'.
-        repair.with_user(self.res_repair_user).action_repair_confirm()
+        repair.action_repair_confirm()
 
         # I check the state is in "Confirmed".
         self.assertEqual(repair.state, "confirmed", 'Repair order should be in "Confirmed" state.')
@@ -234,7 +222,7 @@ class TestRepair(AccountTestCommon):
     def test_01_repair_b4inv(self):
         repair = self._create_simple_repair_order('b4repair')
         # I confirm Repair order for Invoice Method 'Before Repair'.
-        repair.with_user(self.res_repair_user).action_repair_confirm()
+        repair.action_repair_confirm()
 
         # I click on "Create Invoice" button of this wizard to make invoice.
         repair.action_repair_invoice_create()
@@ -255,7 +243,7 @@ class TestRepair(AccountTestCommon):
         self.assertEqual(repair.amount_total, 26, "Amount_total should be 26")
 
         # I confirm Repair order for Invoice Method 'No Invoice'.
-        repair.with_user(self.res_repair_user).action_repair_confirm()
+        repair.action_repair_confirm()
 
         # I start the repairing process by clicking on "Start Repair" button for Invoice Method 'No Invoice'.
         repair.action_repair_start()
@@ -266,11 +254,11 @@ class TestRepair(AccountTestCommon):
         # Repairing process for product is in Done state and I end this process by clicking on "End Repair" button.
         repair.action_repair_end()
 
-        self.assertEqual(repair.move_id.location_id.id, self.env.ref('stock.stock_location_stock').id,
+        self.assertEqual(repair.move_id.location_id.id, self.stock_warehouse.lot_stock_id.id,
                          'Repaired product was taken in the wrong location')
-        self.assertEqual(repair.move_id.location_dest_id.id, self.env.ref('stock.stock_location_stock').id,
+        self.assertEqual(repair.move_id.location_dest_id.id, self.stock_warehouse.lot_stock_id.id,
                          'Repaired product went to the wrong location')
-        self.assertEqual(repair.operations.move_id.location_id.id, self.env.ref('stock.stock_location_stock').id,
+        self.assertEqual(repair.operations.move_id.location_id.id, self.stock_warehouse.lot_stock_id.id,
                          'Consumed product was taken in the wrong location')
         self.assertEqual(repair.operations.move_id.location_dest_id.id, self.product_product_5.property_stock_production.id,
                          'Consumed product went to the wrong location')
@@ -281,7 +269,7 @@ class TestRepair(AccountTestCommon):
 
     def test_repair_state(self):
         repair = self._create_simple_repair_order('b4repair')
-        repair.with_user(self.res_repair_user).action_repair_confirm()
+        repair.action_repair_confirm()
         repair.action_repair_invoice_create()
         repair.invoice_id.unlink()
         # Repair order state should be changed to 2binvoiced so that new invoice can be created
