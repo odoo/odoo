@@ -41,9 +41,12 @@ class MergePartnerAutomatic(models.TransientModel):
         res = super(MergePartnerAutomatic, self).default_get(fields)
         active_ids = self.env.context.get('active_ids')
         if self.env.context.get('active_model') == 'res.partner' and active_ids:
-            res['state'] = 'selection'
-            res['partner_ids'] = [(6, 0, active_ids)]
-            res['dst_partner_id'] = self._get_ordered_partner(active_ids)[-1].id
+            if 'state' in fields:
+                res['state'] = 'selection'
+            if 'partner_ids' in fields:
+                res['partner_ids'] = [(6, 0, active_ids)]
+            if 'dst_partner_id' in fields:
+                res['dst_partner_id'] = self._get_ordered_partner(active_ids)[-1].id
         return res
 
     # Group by

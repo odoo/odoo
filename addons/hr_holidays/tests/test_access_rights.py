@@ -208,7 +208,7 @@ class TestAcessRightsStates(TestHrHolidaysAccessRightsCommon):
     def test_holiday_user_draft_his_leave(self):
         """
             Should be able to draft his own leave
-            whatever the holidays_status_id
+            whatever the holiday_status_id
         """
         for i, status in enumerate(self.draft_status):
             values = {

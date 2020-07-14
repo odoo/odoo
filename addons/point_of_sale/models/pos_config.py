@@ -28,8 +28,8 @@ class AccountBankStmtCashWizard(models.Model):
     @api.model
     def default_get(self, fields):
         vals = super(AccountBankStmtCashWizard, self).default_get(fields)
-        if "is_a_template" in fields and self.env.context.get('default_is_a_template'):
-            vals['is_a_template'] = True
+        if 'cashbox_lines_ids' not in fields:
+            return vals
         config_id = self.env.context.get('default_pos_id')
         if config_id:
             config = self.env['pos.config'].browse(config_id)

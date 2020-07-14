@@ -98,21 +98,21 @@ class AccountTax(models.Model):
     ]
 
     @api.model
-    def default_get(self, vals):
+    def default_get(self, fields_list):
         # company_id is added so that we are sure to fetch a default value from it to use in repartition lines, below
-        rslt = super(AccountTax, self).default_get(vals + ['company_id'])
+        rslt = super(AccountTax, self).default_get(fields_list + ['company_id'])
 
         company_id = rslt.get('company_id')
         company = self.env['res.company'].browse(company_id)
 
-        if 'refund_repartition_line_ids' in vals:
+        if 'refund_repartition_line_ids' in fields_list:
             # We write on the related country_id field so that the field is recomputed. Without that, it will stay empty until we save the record.
             rslt['refund_repartition_line_ids'] = [
                 (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
                 (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
             ]
 
-        if 'invoice_repartition_line_ids' in vals:
+        if 'invoice_repartition_line_ids' in fields_list:
             # We write on the related country_id field so that the field is recomputed. Without that, it will stay empty until we save the record.
             rslt['invoice_repartition_line_ids'] = [
                 (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
