@@ -1710,6 +1710,8 @@ class Meeting(models.Model):
             res['id'] = calendar_id
             result.append(res)
 
+        recurrent_fields = self._get_recurrent_fields()
+        public_fields = set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id', 'recurrent_id_date', 'rrule'])
         for r in result:
             if r['user_id']:
                 user_id = type(r['user_id']) in (tuple, list) and r['user_id'][0] or r['user_id']
@@ -1718,8 +1720,6 @@ class Meeting(models.Model):
                     continue
             if r['privacy'] == 'private':
                 for f in r:
-                    recurrent_fields = self._get_recurrent_fields()
-                    public_fields = list(set(recurrent_fields + ['id', 'allday', 'start', 'stop', 'display_start', 'display_stop', 'duration', 'user_id', 'state', 'interval', 'count', 'recurrent_id', 'recurrent_id_date', 'rrule']))
                     if f not in public_fields:
                         if isinstance(r[f], list):
                             r[f] = []
