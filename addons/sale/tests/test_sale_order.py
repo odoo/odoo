@@ -129,6 +129,7 @@ class TestSaleOrder(TestSaleCommon):
     def test_sale_order_send_to_self(self):
         # when sender(logged in user) is also present in recipients of the mail composer,
         # user should receive mail.
+<<<<<<< HEAD
         sale_order = self.env['sale.order'].with_user(self.company_data['default_user_salesman']).create({
             'partner_id': self.company_data['default_user_salesman'].partner_id.id,
             'order_line': [[0, 0, {
@@ -136,6 +137,15 @@ class TestSaleOrder(TestSaleCommon):
                 'product_id': self.company_data['product_order_no'].id,
                 'product_uom_qty': 1,
                 'price_unit': self.company_data['product_order_no'].list_price,
+=======
+        sale_order = self.env['sale.order'].with_user(self.user_employee).create({
+            'partner_id': self.user_employee.partner_id.id,
+            'order_line': [[0, 0, {
+                'name': self.product_order.name,
+                'product_id': self.product_order.id,
+                'product_uom_qty': 1,
+                'price_unit': self.product_order.list_price,
+>>>>>>> 6c1796e4e1e... temp
             }]]
         })
         email_ctx = sale_order.action_quotation_send().get('context', {})
@@ -144,7 +154,11 @@ class TestSaleOrder(TestSaleCommon):
         # sent to to author or not (in case author is present in 'Recipients' of composer).
         mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id')).copy({'auto_delete': False})
         # send the mail with same user as customer
+<<<<<<< HEAD
         sale_order.with_context(**email_ctx).with_user(self.company_data['default_user_salesman']).message_post_with_template(mail_template.id)
+=======
+        sale_order.with_context(**email_ctx).with_user(self.user_employee).message_post_with_template(mail_template.id)
+>>>>>>> 6c1796e4e1e... temp
         self.assertTrue(sale_order.state == 'sent', 'Sale : state should be changed to sent')
         mail_message = sale_order.message_ids[0]
         self.assertEqual(mail_message.author_id, sale_order.partner_id, 'Sale: author should be same as customer')
