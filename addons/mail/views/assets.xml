@@ -218,6 +218,9 @@
             </xpath>
         </template>
 
+        <template id="assets_tests" name="Mail Assets Tests" inherit_id="web.assets_tests">
+        </template>
+
         <template id="tests_assets" name="mail_tests_assets" inherit_id="web.tests_assets">
             <xpath expr="." position="inside">
                 <script type="text/javascript" src="/mail/static/src/env/test_env.js"></script>
