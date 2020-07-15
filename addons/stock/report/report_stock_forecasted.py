@@ -4,7 +4,7 @@
 from collections import defaultdict
 
 from odoo import api, models
-from odoo.tools import float_is_zero, format_datetime
+from odoo.tools import float_is_zero, format_datetime, format_date
 
 
 class ReplenishmentReport(models.AbstractModel):
@@ -124,8 +124,12 @@ class ReplenishmentReport(models.AbstractModel):
             'uom_id': product.uom_id,
             'receipt_date': format_datetime(self.env, move_in.date_expected, timezone, 'medium') if move_in else False,
             'delivery_date': format_datetime(self.env, move_out.date_expected, timezone, 'medium') if move_out else False,
+            'receipt_date_short': format_date(self.env, move_in.date_expected) if move_in else False,
+            'delivery_date_short': format_date(self.env, move_out.date_expected) if move_out else False,
             'is_late': is_late,
             'quantity': quantity,
+            'move_out': move_out,
+            'move_in': move_in,
         }
 
     def _get_report_lines(self, product_template_ids, product_variant_ids, wh_location_ids):
