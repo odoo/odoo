@@ -70,5 +70,16 @@ odoo.define('point_of_sale.tour.Chrome', function (require) {
     // go next screen
     ReceiptScreen.do.clickNextOrder();
 
+    // Invoice an order
+    ProductScreen.exec.order('Whiteboard Pen', '5', '6');
+    ProductScreen.do.clickCustomerButton();
+    ProductScreen.do.clickCustomer('Nicole Ford');
+    ProductScreen.do.clickSetCustomer();
+    ProductScreen.do.clickPayButton();
+    PaymentScreen.do.clickPaymentMethod('Bank');
+    PaymentScreen.do.clickInvoiceButton();
+    PaymentScreen.do.clickValidate();
+    ReceiptScreen.check.isShown();
+
     Tour.register('ChromeTour', { test: true, url: '/pos/web' }, getSteps());
 });
