@@ -14,7 +14,7 @@ KanbanRecord.include({
      * @private
      */
     _openRecord: function () {
-        if (this.modelName === 'hr.employee' && this.$el.parents('.o_hr_employee_attendance_kanban').length) {
+        if (this.modelName === 'hr.employee.public' && this.$el.parents('.o_hr_employee_attendance_kanban').length) {
                                             // needed to diffentiate : check in/out kanban view of employees <-> standard employee kanban view
             var action = {
                 type: 'ir.actions.client',
