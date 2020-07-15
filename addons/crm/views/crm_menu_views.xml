@@ -11,6 +11,7 @@
         name="CRM"
         web_icon="crm,static/description/icon.png"
         groups="sales_team.group_sale_salesman,sales_team.group_sale_manager"
+        action="crm.action_your_pipeline"
         sequence="6"/>
 
     <!-- SALES (MAIN USER MENU) -->
@@ -23,11 +24,13 @@
         id="menu_crm_opportunities"
         name="My Pipeline"
         parent="crm_menu_sales"
+        action="crm.action_your_pipeline"
         sequence="1"/>
     <menuitem
         id="crm_lead_menu_my_activities"
         name="My Activities"
         parent="crm_menu_sales"
+        action="crm.crm_lead_action_my_activities"
         groups="sales_team.group_sale_manager"
         sequence="2"/>
 
@@ -35,7 +38,7 @@
         id="sales_team_menu_team_pipeline"
         name="Teams"
         parent="crm_menu_sales"
-        action="sales_team.crm_team_salesteams_pipelines_act"
+        action="crm.crm_team_salesteams_pipelines_act"
         groups="sales_team.group_sale_manager"
         sequence="4"/>
     <menuitem
@@ -50,6 +53,7 @@
         id="crm_menu_leads"
         name="Leads"
         parent="crm_menu_root"
+        action="crm.crm_lead_all_leads"
         groups="crm.group_use_lead"
         sequence="5"/>
 
@@ -64,13 +68,22 @@
         id="crm_opportunity_report_menu_lead"
         name="Leads"
         parent="crm_menu_report"
+        action="crm.crm_opportunity_report_action_lead"
         groups="crm.group_use_lead"
         sequence="1"/>
     <menuitem
-        id="crm_opportunity_report_menu" 
+        id="crm_opportunity_report_menu"
         name="Pipeline"
-        parent="crm_menu_report" 
+        parent="crm_menu_report"
+        action="crm.crm_opportunity_report_action"
         sequence="2"/>
+    <menuitem
+        id="crm_activity_report_menu"
+        name="Activities"
+        groups="sales_team.group_sale_manager"
+        parent="crm_menu_report"
+        action="crm_activity_report_action"
+        sequence="3"/>
 
     <!-- CONFIGURATION -->
     <menuitem
@@ -82,6 +95,7 @@
         id="crm_config_settings_menu"
         name="Settings"
         parent="crm_menu_config"
+        action="crm.crm_config_settings_action"
         groups="base.group_system"
         sequence="0"/>
     <menuitem
@@ -100,7 +114,7 @@
         id="crm_team_menu_config_activity_types"
         name="Activity Types"
         parent="crm_menu_config"
-        action="sales_team.mail_activity_type_action_config_sales"
+        action="crm.action_mail_activity_type"
         sequence="10"/>
     <menuitem
         id="menu_crm_config_lead"
@@ -112,6 +126,7 @@
         id="menu_crm_lead_stage_act"
         name="Stages"
         sequence="0"
+        action="crm.crm_stage_action"
         parent="menu_crm_config_lead"
         groups="base.group_no_one"/>
     <menuitem
@@ -124,6 +139,7 @@
         id="menu_crm_lost_reason"
         name="Lost Reasons"
         parent="menu_crm_config_lead"
+        action="crm.crm_lost_reason_action"
         sequence="6"/>
 
     <menuitem
