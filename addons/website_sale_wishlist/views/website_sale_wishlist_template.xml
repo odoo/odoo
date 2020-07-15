@@ -31,12 +31,19 @@
             </t>
         </xpath>
     </template>
-
     <template id="header" inherit_id="website.layout" name="Header Shop Wishlist Link">
-        <xpath expr="//header//ul[@id='top_menu']/li[contains(@t-attf-class, 'o_wsale_my_cart')]" position="after">
+        <xpath expr="//header//ul[@id='top_menu']" position="before">
+            <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
+            <t t-set='show_wishlist' t-value="true"/>
+        </xpath>
+    </template>
+    <template id="wishlist_button" name="wishlist button">
+
+    </template>
+    <template id="template_wishlist" inherit_id="website_sale.cart_header" name="Header Shop wishlist">
+        <xpath expr="//li[contains(@t-attf-class, 'o_wsale_my_cart')]" position="after">
             <t t-if="request.website.viewref('website_sale_wishlist.add_to_wishlist').active">
-                <t t-set='wishcount' t-value="len(request.env['product.wishlist'].current())"/>
-                <li class="nav-item o_wsale_my_wish" t-att-style="not wishcount and 'display:none;'">
+                <li class="nav-item o_wsale_my_wish" t-att-style="not (wishcount or show_wishlist) and 'display:none;'">
                     <a href="/shop/wishlist" class="nav-link">
                         <i class="fa fa-heart"/>
                         Wishlist <sup t-attf-class="my_wish_quantity o_animate_blink badge badge-primary"><t t-esc='wishcount'/></sup>
@@ -45,7 +52,11 @@
             </t>
         </xpath>
     </template>
-
+    <template id="show_wishlist" inherit_id="website_sale_wishlist.header" name="Hide">
+        <xpath expr="//t[@t-set='show_wishlist']" position="after">
+            <t t-set="show_wishlist" t-value="false"/>
+        </xpath>
+    </template>
     <template id="product_wishlist" name="Wishlist Page">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop Wishlist</t>

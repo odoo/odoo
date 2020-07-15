@@ -3,7 +3,7 @@
 
 <template id="submenu" name="Submenu">
     <t t-set="has_visible_submenu" t-value="(submenu.is_mega_menu and submenu.is_visible) or submenu.child_id.filtered(lambda menu: menu.is_visible)"/>
-    <li t-if="submenu.is_visible and not has_visible_submenu" t-attf-class="#{item_class or ''}">
+    <li t-if="submenu.is_visible and not has_visible_submenu" t-attf-class="#{item_class or ''} submenu_item">
         <a t-att-href="submenu.clean_url()"
             t-attf-class="#{link_class or ''} #{'active' if submenu.clean_url() and unslug_url(request.httprequest.path) == unslug_url(submenu.clean_url()) else ''}"
             role="menuitem"
@@ -12,7 +12,7 @@
             <span t-field="submenu.name"/>
         </a>
     </li>
-    <li t-if="has_visible_submenu" t-attf-class="#{item_class or ''} dropdown #{
+    <li t-if="has_visible_submenu" t-attf-class="#{item_class or ''} submenu_item dropdown #{
         (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         } #{submenu.is_mega_menu and 'position-static'}">
@@ -344,6 +344,47 @@
 </template>
 
 <!-- Header templates -->
+<template id="template_header_main" inherit_id="website.layout" name="Template Header Main" active="False">
+    <xpath expr="//header//ul[@id='top_menu']" position="after">
+        <div id="wrap" class="oe_structure oe_empty">
+            <section>
+                <div class="container">
+                    <p style="text-align: right;">
+                        <a href="" class="btn btn-primary">Call to Action</a>
+                    </p>
+                </div>
+            </section>
+        </div>
+    </xpath>
+    <xpath expr="//header/nav" position="after">
+        <div id="wrap" class="oe_structure oe_empty">
+            <section>
+                <div class="container">
+                    <div class="d-flex justify-content-between">
+                        <div id="wrap" class="oe_structure oe_empty">
+                            <section><span><p>A Cool Slogan for your Hot Website</p></span></section>
+                        </div>
+                        <div id="wrap" class="oe_structure oe_empty">
+                            <section><span class="o_force_ltr"><i class="fa fa-phone fa-fw mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span></section>
+                        </div>
+                        <div class="s_share text-left" data-name="Social Media">
+                            <h4 class="s_share_title d-none">Follow us</h4>
+                            <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                <i class="fa fa-facebook shadow-sm"/>
+                            </a>
+                            <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                <i class="fa fa-twitter shadow-sm"/>
+                            </a>
+                            <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                <i class="fa fa-linkedin shadow-sm"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
 <template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Hamburger" active="False">
     <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
         <attribute name="class" remove="navbar-expand-md" separator=" "/>
@@ -357,8 +398,60 @@
 </template>
 
 <template id="template_header_vertical" inherit_id="website.layout" name="Template Header Vertical" active="False">
-    <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
-        <attribute name="class" add="flex-md-column" separator=" "/>
+    <xpath expr="//header//ul[@id='top_menu']/t[@t-foreach='website.menu_id.child_id']" position="replace"/>
+    <xpath expr="//header//button[hasclass('navbar-toggler')]" position="replace"/>
+    <xpath expr="//header//div[@id='top_menu_collapse']" position="attributes">
+        <attribute name="class" remove="collapse" separator=" "/>
+    </xpath>
+    <xpath expr="//header/nav" position="after">
+        <nav class="navbar navbar-expand-md navbar-light flex-md-row">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_items">
+                <span class="navbar-toggler-icon o_not_editable"/>
+            </button>
+            <div id="top_menu_items" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav m-auto">
+                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                        <t t-call="website.submenu">
+                            <t t-set="item_class" t-value="'nav-item'"/>
+                            <t t-set="link_class" t-value="'nav-link'"/>
+                        </t>
+                    </t>
+                </ul>
+            </div>
+            <div id="wrap" class="oe_structure oe_empty">
+                <section>
+                    <div class="container">
+                        <p style="text-align: right;">
+                            <a href="" class="btn btn-primary">Call to Action</a>
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </nav>
+    </xpath>
+    <xpath expr="//header/nav" position="before">
+        <div id="wrap" class="oe_structure oe_empty">
+            <section>
+                <div class="container">
+                    <div class="d-flex justify-content-between">
+                        <div id="wrap" class="oe_structure oe_empty"><section><span class="o_force_ltr"><i class="fa fa-phone fa-fw mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span></section></div>
+                        <div id="wrap" class="oe_structure oe_empty"><section><span><p>A Cool Slogan for your Hot Website</p></span></section></div>
+                        <div class="s_share text-left" data-name="Social Media">
+                            <h4 class="s_share_title d-none">Follow us</h4>
+                            <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                <i class="fa fa-facebook shadow-sm"/>
+                            </a>
+                            <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                <i class="fa fa-twitter shadow-sm"/>
+                            </a>
+                            <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                <i class="fa fa-linkedin shadow-sm"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </xpath>
 </template>
 
@@ -387,6 +480,27 @@
         </li>
     </xpath>
     <xpath expr="//header//ul[@id='top_menu']/t[@t-foreach='website.menu_id.child_id']" position="after">
+        <li class="order-1 navbar-toggler">
+            <div id="wrap" class="oe_structure oe_empty">
+                <section>
+                    <div class="container">
+                        <i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span>
+                        <div class="s_share text-left" data-name="Social Media">
+                            <h4 class="s_share_title d-none">Follow us</h4>
+                            <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                <i class="fa fa-facebook shadow-sm"/>
+                            </a>
+                            <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                <i class="fa fa-twitter shadow-sm"/>
+                            </a>
+                            <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                <i class="fa fa-linkedin shadow-sm"/>
+                            </a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </li>
         <li class="o_offcanvas_logo_container order-last navbar-toggler py-4 order-1 mt-auto text-center border-0">
             <a href="/" class="o_offcanvas_logo text-center">My Website</a>
         </li>
