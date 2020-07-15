@@ -315,7 +315,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
         async _loadDemoData() {
             const { confirmed } = await this.showPopup('ConfirmPopup', {
-                title: this.env._t('Load Demo Data'),
+                title: this.env._t('You do not have any products'),
                 body: this.env._t(
                     'Would you like to load demo data?'
                 ),
