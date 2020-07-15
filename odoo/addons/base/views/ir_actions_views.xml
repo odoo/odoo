@@ -145,6 +145,7 @@
                     <field name="view_id"/>
                     <field name="domain"/>
                     <field name="context"/>
+                    <field name="xml_id"/>
                 </tree>
             </field>
         </record>
@@ -153,6 +154,7 @@
             <field name="model">ir.actions.act_window</field>
             <field name="arch" type="xml">
                 <form string="Open a Window">
+                <button name="get_unused_actions" type="object" string="Find unused actions" class="btn-primary"/>
                 <sheet>
                     <group>
                         <group name="main_details">

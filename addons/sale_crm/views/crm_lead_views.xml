@@ -32,7 +32,7 @@
             <field name="context">{'default_move_type': 'opportunity', 'default_user_id': uid}</field>
         </record>
 
-        <record id="sales_team.mail_activity_type_action_config_sales" model="ir.actions.act_window">
+        <record id="crm.action_mail_activity_type" model="ir.actions.act_window">
             <field name="domain">['|', ('res_model_id', '=', False), ('res_model_id.model', 'in', ['crm.lead', 'sale.order', 'res.partner', 'product.template', 'product.product'])]</field>
         </record>
 

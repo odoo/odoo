@@ -872,10 +872,6 @@ if record:
             <field name="act_window_id" ref="crm_lead_all_leads"/>
         </record>
 
-        <record id="crm_menu_leads" model="ir.ui.menu">
-            <field name="action" ref="crm.crm_lead_all_leads"/>
-        </record>
-
         <!-- My Activities Menu -->
         <record id="crm_lead_action_my_activities" model="ir.actions.act_window">
             <field name="name">My Activities</field>
@@ -998,13 +994,4 @@ if record:
             <field name="act_window_id" ref="crm_lead_action_pipeline"/>
         </record>
 
-        <record id="menu_crm_opportunities" model="ir.ui.menu">
-            <field name="action" ref="crm.action_your_pipeline"/>
-        </record>
-        <record id="crm_menu_root" model="ir.ui.menu">
-            <field name="action" ref="crm.action_your_pipeline"/>
-        </record>
-        <record id="crm_lead_menu_my_activities" model="ir.ui.menu">
-            <field name="action" ref="crm.crm_lead_action_my_activities"/>
-        </record>
 </odoo>

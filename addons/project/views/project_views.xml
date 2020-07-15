@@ -981,23 +981,23 @@
             <field name="search_view_id" ref="view_task_search_form"/>
         </record>
 
-        <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
+        <!-- <record id="action_view_task_overpassed_draft" model="ir.actions.act_window">
             <field name="name">Overpassed Tasks</field>
             <field name="res_model">project.task</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('is_closed', '=', False), ('date_deadline','&lt;',time.strftime('%Y-%m-%d'))]</field>
             <field name="filter" eval="True"/>
             <field name="search_view_id" ref="view_task_search_form"/>
-        </record>
+        </record> -->
 
         <!-- Opening task when double clicking on project -->
-        <record id="dblc_proj" model="ir.actions.act_window">
+        <!-- <record id="dblc_proj" model="ir.actions.act_window">
             <field name="res_model">project.task</field>
             <field name="name">Project's tasks</field>
             <field name="view_mode">tree,form,calendar,graph,kanban</field>
             <field name="domain">[('project_id', '=', active_id)]</field>
             <field name="context">{'project_id':active_id}</field>
-        </record>
+        </record> -->
 
         <!-- Menu item for project -->
         <menuitem id="menu_tasks_config" name="GTD" parent="menu_project_config" sequence="2"/>
@@ -1008,10 +1008,10 @@
         <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="10"/>
 
         <!-- User Form -->
-        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
+        <!-- <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
                     id="act_res_users_2_project_task_opened" name="Assigned Tasks"
                     res_model="project.task" view_mode="tree,form,calendar,graph"
-                    binding_model="res.users" binding_views="form"/>
+                    binding_model="res.users" binding_views="form"/> -->
 
         <!-- Tags -->
         <record model="ir.ui.view" id="project_tags_search_view">
