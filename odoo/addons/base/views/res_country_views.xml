@@ -54,13 +54,7 @@
             </field>
         </record>
 
-        <record id="action_country" model="ir.actions.act_window">
-            <field name="name">Countries</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.country</field>
-            <field name="help">Display and manage the list of all countries that can be assigned to your partner records. You can create or delete countries to make sure the ones you are working on will be maintained.</field>
-        </record>
-
+        <!-- Country groups -->
         <record id="view_country_group_tree" model="ir.ui.view">
             <field name="name">res.country.group.tree</field>
             <field name="model">res.country.group</field>
@@ -87,13 +81,6 @@
                     </sheet>
                 </form>
             </field>
-        </record>
-
-        <record id="action_country_group" model="ir.actions.act_window">
-            <field name="name">Country Group</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.country.group</field>
-            <field name="help">Display and manage the list of all countries group. You can create or delete country group to make sure the ones you are working on will be maintained.</field>
         </record>
 
         <!-- State -->
@@ -137,14 +124,6 @@
                     </group>
                 </search>
             </field>
-        </record>
-
-        <record id="action_country_state" model="ir.actions.act_window">
-            <field name="name">Fed. States</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">res.country.state</field>
-            <field name="view_id" ref="view_country_state_tree"/>
-            <field name="help">You can manage the different federal states you are working on from here. Each state is attached to one country.</field>
         </record>
 
     </data>
