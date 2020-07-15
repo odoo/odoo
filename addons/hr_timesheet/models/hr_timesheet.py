@@ -94,7 +94,7 @@ class AccountAnalyticLine(models.Model):
 
     def write(self, values):
         # If it's a basic user then check if the timesheet is his own.
-        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') and any(self.env.user.id != analytic_line.user_id.id for analytic_line in self):
+        if not (self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') or self.env.su) and any(self.env.user.id != analytic_line.user_id.id for analytic_line in self):
             raise AccessError(_("You cannot access timesheets that are not yours."))
 
         values = self._timesheet_preprocess(values)

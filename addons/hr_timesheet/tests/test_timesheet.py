@@ -267,10 +267,9 @@ class TestTimesheet(TestCommonTimesheet):
         })
         timesheets = timesheet_1 + timesheet_2
 
-        # increase unit_amount to trigger amount recomputation
         with self.assertRaises(AccessError):
-            # because the employee 1 is the sudo and he doesn't have the access right to update timesheet of employee 2
-            timesheets.sudo().write({
+            # should raise since employee 1 doesn't have the access rights to update employee's 2 timesheet
+            timesheets.with_user(self.empl_employee.user_id).write({
                 'unit_amount': 2,
             })
 
