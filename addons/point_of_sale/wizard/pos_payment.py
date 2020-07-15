@@ -49,12 +49,12 @@ class PosMakePayment(models.TransientModel):
         if not float_is_zero(init_data['amount'], precision_rounding=currency.rounding):
             order.add_payment({
                 'pos_order_id': order.id,
-                'amount': currency.round(init_data['amount']) if currency else init_data['amount'],
+                'amount': order._get_rounded_amount(init_data['amount']),
                 'name': init_data['payment_name'],
                 'payment_method_id': init_data['payment_method_id'][0],
             })
 
-        if float_is_zero(order.amount_total - order.amount_paid, precision_rounding=currency.rounding):
+        if order._is_pos_order_paid():
             order.action_pos_order_paid()
             return {'type': 'ir.actions.act_window_close'}
 
