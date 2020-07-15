@@ -154,10 +154,12 @@ def main(args):
                 pass
 
     if config["translate_out"]:
+        # TODO juc, deprecate me and do a new subcommand
         export_translation()
         sys.exit(0)
 
     if config["translate_in"]:
+        # TODO juc, this one too
         import_translation()
         sys.exit(0)
 

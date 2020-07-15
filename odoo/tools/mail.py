@@ -10,6 +10,7 @@ import re
 import socket
 import threading
 import time
+import warnings
 
 from email.utils import getaddresses
 from lxml import etree
@@ -467,6 +468,9 @@ def email_send(email_from, email_to, subject, body, email_cc=None, email_bcc=Non
                        the `Reply-To` header if `reply_to` is not provided
     :param email_to: a sequence of addresses to send the mail to.
     """
+    warnings.warn(
+        "The odoo.tools.mail.email_send() function is deprecated, please "
+        "use ir.mail_server.send_email() instead", DeprecationWarning)
 
     # If not cr, get cr from current thread database
     local_cr = None

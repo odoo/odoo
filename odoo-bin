@@ -1,8 +1,21 @@
 #!/usr/bin/env python3
+import warnings
+import sys
+import os.path
+import textwrap
 
-# set server timezone in UTC before time module imported
-__import__('os').environ['TZ'] = 'UTC'
-import odoo
+# Deprecation warnings are hidden by default
+warnings.warn("\n\n  %s\n" % "\n  ".join(textwrap.wrap(textwrap.dedent("""\
+    The Odoo module has been made module-executable. Executing Odoo
+    via the {odoobin} script is deprecated. Make sure Odoo is installed
+    in your python environment or change your current working directory
+    to {path} then start Odoo as a module: {exec} -m odoo
+    """.format(
+        odoobin=os.path.basename(__file__),
+        path=os.path.dirname(os.path.abspath(__file__)),
+        exec=sys.executable
+    )))),
+    DeprecationWarning,
+)
 
-if __name__ == "__main__":
-    odoo.cli.main()
+import odoo.__main__

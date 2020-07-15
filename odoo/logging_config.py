@@ -14,6 +14,7 @@ import warnings
 from . import release
 from . import sql_db
 from . import tools
+from . import loglevels
 
 _logger = logging.getLogger(__name__)
 
@@ -201,7 +202,7 @@ def init_logger():
         logging.getLogger().addHandler(postgresqlHandler)
 
     # Configure loggers levels
-    pseudo_config = PSEUDOCONFIG_MAPPER.get(tools.config['log_level'], [])
+    pseudo_config = loglevels.PSEUDOCONFIG_MAPPER.get(tools.config['log_level'], [])
 
     logconfig = tools.config['log_handler']
 
@@ -221,17 +222,6 @@ DEFAULT_LOG_CONFIGURATION = [
     'odoo.http.rpc.response:INFO',
     ':INFO',
 ]
-PSEUDOCONFIG_MAPPER = {
-    'debug_rpc_answer': ['odoo:DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc:DEBUG'],
-    'debug_rpc': ['odoo:DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc.request:DEBUG'],
-    'debug': ['odoo:DEBUG', 'odoo.sql_db:INFO'],
-    'debug_sql': ['odoo.sql_db:DEBUG'],
-    'info': [],
-    'runbot': ['odoo:RUNBOT', 'werkzeug:WARNING'],
-    'warn': ['odoo:WARNING', 'werkzeug:WARNING'],
-    'error': ['odoo:ERROR', 'werkzeug:ERROR'],
-    'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],
-}
 
 logging.RUNBOT = 25
 logging.addLevelName(logging.RUNBOT, "INFO") # displayed as info in log

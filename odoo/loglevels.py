@@ -10,6 +10,19 @@ LOG_WARNING = 'warn'
 LOG_ERROR = 'error'
 LOG_CRITICAL = 'critical'
 
+PSEUDOCONFIG_MAPPER = {
+    'debug_rpc_answer': ['odoo:DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc:DEBUG'],
+    'debug_rpc': ['odoo:DEBUG', 'odoo.sql_db:INFO', 'odoo.http.rpc.request:DEBUG'],
+    'debug': ['odoo:DEBUG', 'odoo.sql_db:INFO'],
+    'debug_sql': ['odoo.sql_db:DEBUG'],
+    'info': [],
+    'runbot': ['odoo:RUNBOT', 'werkzeug:WARNING'],
+    'warn': ['odoo:WARNING', 'werkzeug:WARNING'],
+    'warning': ['odoo:WARNING', 'werkzeug:WARNING'],
+    'error': ['odoo:ERROR', 'werkzeug:ERROR'],
+    'critical': ['odoo:CRITICAL', 'werkzeug:CRITICAL'],
+}
+
 # TODO get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are here until we refactor tools so that this module doesn't depends on tools.
 
