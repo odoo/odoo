@@ -36,6 +36,10 @@ odoo.define('point_of_sale.tour.PaymentScreenTourMethods', function (require) {
             ];
         }
 
+        clickInvoiceButton() {
+            return [{ content: 'click invoice button', trigger: '.payment-buttons .js_invoice' }];
+        }
+
         clickValidate() {
             return [
                 {

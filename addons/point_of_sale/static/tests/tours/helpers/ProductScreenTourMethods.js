@@ -86,6 +86,40 @@ odoo.define('point_of_sale.tour.ProductScreenTourMethods', function (require) {
                 },
             ];
         }
+
+        clickCustomerButton() {
+            return [
+                { content: 'click customer button', trigger: '.actionpad .button.set-customer' },
+                {
+                    content: 'customer screen is shown',
+                    trigger: '.pos-content .clientlist-screen',
+                    run: () => {},
+                },
+            ];
+        }
+
+        clickCustomer(name) {
+            return [
+                {
+                    content: `select customer '${name}'`,
+                    trigger: `.clientlist-screen .client-line td:contains("${name}")`,
+                },
+                {
+                    content: `client line '${name}' is highlighted`,
+                    trigger: `.clientlist-screen .client-line.highlight td:contains("${name}")`,
+                    run: () => {},
+                },
+            ];
+        }
+
+        clickSetCustomer() {
+            return [
+                {
+                    content: 'click set customer',
+                    trigger: '.clientlist-screen .button.next.highlight',
+                },
+            ];
+        }
     }
 
     class Check {

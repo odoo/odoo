@@ -421,7 +421,14 @@ class TestUi(TestPointOfSaleHttpCommon):
         self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ProductScreenTour', login="admin", step_delay=50)
         self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'PaymentScreenTour', login="admin", step_delay=50)
         self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ReceiptScreenTour', login="admin", step_delay=50)
-        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="admin", step_delay=50)
 
         for order in self.env['pos.order'].search([]):
             self.assertEqual(order.state, 'paid', "Validated order has payment of " + str(order.amount_paid) + " and total of " + str(order.amount_total))
+
+    def test_02_pos_with_invoiced(self):
+        self.main_pos_config.open_session_cb(check_coa=False)
+        self.start_tour("/pos/web?config_id=%d" % self.main_pos_config.id, 'ChromeTour', login="admin", step_delay=50)
+        n_invoiced = self.env['pos.order'].search_count([('state', '=', 'invoiced')])
+        n_paid = self.env['pos.order'].search_count([('state', '=', 'paid')])
+        self.assertEqual(n_invoiced, 1, 'There should be 1 invoiced order.')
+        self.assertEqual(n_paid, 2, 'There should be 2 paid order.')
