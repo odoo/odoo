@@ -344,7 +344,7 @@
 </template>
 
 <!-- Header templates -->
-<template id="template_header_main" inherit_id="website.layout" name="Template Header Main" active="False">
+<template id="template_header_main" inherit_id="website.layout" name="Template Header EDI 1" active="False">
     <xpath expr="//header//ul[@id='top_menu']" position="after">
         <div id="wrap" class="oe_structure oe_empty">
             <section>
@@ -380,6 +380,19 @@
                             </a>
                         </div>
                     </div>
+                </div>
+            </section>
+        </div>
+    </xpath>
+</template>
+<template id="template_header_edi_two" inherit_id="website.layout" name="Template EDI 2" active="False">
+    <xpath expr="//header//ul[@id='top_menu']" position="after">
+        <div id="wrap" class="oe_structure oe_empty">
+            <section>
+                <div class="container">
+                    <p style="text-align: right;">
+                        <a href="" class="btn btn-primary">Call to Action</a>
+                    </p>
                 </div>
             </section>
         </div>
