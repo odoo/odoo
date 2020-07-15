@@ -1473,6 +1473,22 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(new_move.quantity, 3)
         self.assertEqual(move.quantity, 2)
 
+    def test_41_new_one2many(self):
+        """ Check command on one2many field on new record. """
+        move = self.env['test_new_api.move'].create({})
+        line = self.env['test_new_api.move_line'].create({'move_id': move.id, 'quantity': 1})
+        move.flush()
+
+        new_move = move.new(origin=move)
+        new_line = line.new(origin=line)
+        self.assertEqual(new_move.line_ids, new_line)
+
+        # drop line, and create a new one
+        new_move.line_ids = [(2, new_line.id), (0, 0, {'quantity': 2})]
+        self.assertEqual(len(new_move.line_ids), 1)
+        self.assertFalse(new_move.line_ids.id)
+        self.assertEqual(new_move.line_ids.quantity, 2)
+
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_41_new_related(self):
         """ test the behavior of related fields starting on new records. """
