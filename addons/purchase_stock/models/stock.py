@@ -105,6 +105,10 @@ class StockMove(models.Model):
         rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
         return rslt
 
+    def _get_source_document(self):
+        res = super()._get_source_document()
+        return self.purchase_line_id.order_id or res
+
 
 class StockWarehouse(models.Model):
     _inherit = 'stock.warehouse'
