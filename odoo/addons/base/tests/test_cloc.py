@@ -1,4 +1,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+import sys
+
 from odoo.tools import cloc
 from odoo.tests.common import TransactionCase
 
@@ -85,6 +87,12 @@ class TestCloc(TransactionCase):
         py_count = cl.parse_py(PY_TEST_NO_RETURN)
         self.assertEqual(py_count, (2, 2))
         py_count = cl.parse_py(PY_TEST)
-        self.assertEqual(py_count, (8, 16))
+        if sys.version_info >= (3, 8, 0):
+            # Multi line str lineno return the begining of the str
+            # in python 3.8, it result in a different count for
+            # multi str used in expressions
+            self.assertEqual(py_count, (7, 16))
+        else:
+            self.assertEqual(py_count, (8, 16))
         js_count = cl.parse_js(JS_TEST)
         self.assertEqual(js_count, (10, 17))
