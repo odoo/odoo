@@ -83,6 +83,7 @@
         'static/src/xml/inventory_report.xml',
         'static/src/xml/inventory_lines.xml',
         'static/src/xml/popover_widget.xml',
+        'static/src/xml/forecast_widget.xml',
         'static/src/xml/report_stock_forecasted.xml',
         'static/src/xml/stock_orderpoint.xml',
         'static/src/xml/stock_traceability_report_backend.xml',
