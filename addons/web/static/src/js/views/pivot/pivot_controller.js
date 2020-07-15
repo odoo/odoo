@@ -116,9 +116,9 @@ odoo.define('web.PivotController', function (require) {
 
             });
             const noDataDisplayed = !state.hasData || !state.measures.length;
-            this.$buttons.find('.o_pivot_flip_button').prop('disabled', noDataDisplayed);
-            this.$buttons.find('.o_pivot_expand_button').prop('disabled', noDataDisplayed);
-            this.$buttons.find('.o_pivot_download').prop('disabled', noDataDisplayed);
+            this.$buttons.find('.o_pivot_flip_button').toggleClass('d-none', noDataDisplayed);
+            this.$buttons.find('.o_pivot_expand_button').toggleClass('d-none', noDataDisplayed);
+            this.$buttons.find('.o_pivot_download').toggleClass('d-none', noDataDisplayed);
         },
 
         //--------------------------------------------------------------------------
@@ -173,9 +173,7 @@ odoo.define('web.PivotController', function (require) {
             if ($target.parents('.o_pivot_measures_list').length) {
                 ev.preventDefault();
                 ev.stopPropagation();
-                const field = $target.data('field');
-                await this.model.toggleMeasure(field);
-                this.update({}, { reload: false });
+                this.update({ measure: $target.data('field') });
             }
             if ($target.hasClass('o_pivot_download')) {
                 this._downloadTable();

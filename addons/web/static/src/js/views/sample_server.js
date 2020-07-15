@@ -107,6 +107,8 @@ odoo.define('web.SampleServer', function (require) {
             switch (params.method || params.route) {
                 case '/web/dataset/search_read':
                     return this._mockSearchReadController(params);
+                case 'get_cohort_data':
+                    return this._mockGetCohortData(params);
                 case 'web_read_group':
                     return this._mockWebReadGroup(params);
                 case 'read_group':
@@ -141,7 +143,7 @@ odoo.define('web.SampleServer', function (require) {
         _aggregateFields(measures, records) {
             const values = {};
             for (const { fieldName, type } of measures) {
-                if (type === 'float' || type === 'integer') {
+                if (['float', 'integer', 'monetary'].includes(type)) {
                     if (records.length) {
                         let value = 0;
                         for (const record of records) {
@@ -320,7 +322,88 @@ odoo.define('web.SampleServer', function (require) {
         _getRandomSubRecordId() {
             return Math.floor(Math.random() * SampleServer.SUB_RECORDSET_SIZE) + 1;
         }
+        /**
+         * Mocks calls to the get_cohort_data method
+         * @private
+         * @param {Object} params
+         * @param {string} params.model
+         * @param {Object} params.kwargs
+         * @returns {Object}
+         */
+        _mockGetCohortData(params) {
+            const { model } = params;
+            const { date_start, interval, measure, mode, timeline } = params.kwargs;
 
+            const columns_avg = {};
+            const rows = [];
+            let initialChurnValue = 0;
+
+            const groups = this._mockReadGroup({ model, fields: [date_start], groupBy: [date_start + ':' + interval] });
+            const totalCount = groups.length;
+            let totalValue = 0;
+            for (const group of groups) {
+                const format = SampleServer.FORMATS[interval];
+                const displayFormat = SampleServer.DISPLAY_FORMATS[interval];
+                const date = moment(group[date_start + ':' + interval], format);
+                const now = moment();
+                let colStartDate = date.clone();
+                if (timeline === 'backward') {
+                    colStartDate = colStartDate.subtract(15, interval);
+                }
+
+                let value = measure === '__count__' ?
+                                this._getRandomInt(SampleServer.MAX_INTEGER) :
+                                this._generateFieldValue(model, measure);
+                value = value || 25;
+                totalValue += value;
+                let initialValue = value;
+                let max = value;
+
+                const columns = [];
+                for (let column = 0; column <= 15; column++) {
+                    if (!columns_avg[column]) {
+                        columns_avg[column] = { percentage: 0, count: 0 };
+                    }
+                    if (colStartDate.clone().add(column, interval) > now) {
+                        columns.push({ value: '-', churn_value: '-', percentage: '' });
+                        continue;
+                    }
+                    let colValue = 0;
+                    if (max > 0) {
+                        colValue =  Math.min(Math.round(Math.random() * max), max);
+                        max -= colValue;
+                    }
+                    if (timeline === 'backward' && column === 0) {
+                        initialValue = Math.min(Math.round(Math.random() * value), value);
+                        initialChurnValue = value - initialValue;
+                    }
+                    const previousValue = column === 0 ? initialValue : columns[column - 1].value;
+                    const remainingValue = previousValue - colValue;
+                    const previousChurnValue = column === 0 ? initialChurnValue : columns[column - 1].churn_value;
+                    const churn_value = colValue + previousChurnValue;
+                    let percentage = value ? parseFloat(remainingValue / value) : 0;
+                    if (mode === 'churn') {
+                        percentage = 1 - percentage;
+                    }
+                    percentage = Number((100 * percentage).toFixed(1));
+                    columns_avg[column].percentage += percentage;
+                    columns_avg[column].count += 1;
+                    columns.push({
+                        value: remainingValue,
+                        churn_value,
+                        percentage,
+                        period: column, // used as a t-key but we don't care about value itself
+                    });
+                }
+                const keepRow = columns.some(c => c.percentage !== '');
+                if (keepRow) {
+                    rows.push({ date: date.format(displayFormat), value, columns });
+                }
+            }
+            const avg_value = totalCount ? (totalValue / totalCount) : 0;
+            const avg = { avg_value, columns_avg };
+            return { rows, avg };
+        }
         /**
          * Mocks calls to the read method.
          * @private
@@ -384,9 +467,10 @@ odoo.define('web.SampleServer', function (require) {
             }
             for (const groupBySpec of groupBy) {
                 let [fieldName, interval] = groupBySpec.split(':');
+                interval = interval || 'month';
                 const { type, relation } = fields[fieldName];
                 if (type) {
-                    const gb = { fieldName, type, interval, relation };
+                    const gb = { fieldName, type, interval, relation, alias: groupBySpec };
                     normalizedGroupBys.push(gb);
                 }
             }
@@ -409,12 +493,12 @@ odoo.define('web.SampleServer', function (require) {
                 const [fieldName, aggregateFunction] = measureSpec.split(':');
                 const { type } = fields[fieldName];
                 if (!params.groupBy.includes(fieldName) && type &&
-                        (type !== 'many2one' || aggregateFunction !== 'count_distinct')) {
+                (type !== 'many2one' || aggregateFunction !== 'count_distinct')) {
                     measures.push({ fieldName, type });
                 }
             }
 
-            const result = [];
+            let result = [];
             for (const id in groups) {
                 const records = groups[id];
                 const group = { __domain: [] };
@@ -425,11 +509,21 @@ odoo.define('web.SampleServer', function (require) {
                 group[countKey] = records.length;
                 const firstElem = records[0];
                 for (const gb of normalizedGroupBys) {
-                    const { fieldName } = gb;
-                    group[fieldName] = this._formatValue(firstElem[fieldName], gb);
+                    const { alias, fieldName } = gb;
+                    group[alias] = this._formatValue(firstElem[fieldName], gb);
                 }
                 Object.assign(group, this._aggregateFields(measures, records));
                 result.push(group);
+            }
+            if (normalizedGroupBys.length > 0) {
+                const { alias, interval, type } = normalizedGroupBys[0];
+                result = utils.sortBy(result, (group) => {
+                    const val = group[alias];
+                    if (['date', 'datetime'].includes(type)) {
+                        return moment(val, SampleServer.FORMATS[interval]);
+                    }
+                    return val;
+                });
             }
             return result;
         }
@@ -614,11 +708,12 @@ odoo.define('web.SampleServer', function (require) {
 
     SampleServer.FORMATS = {
         day: 'YYYY-MM-DD',
-        week: 'ww YYYY',
+        week: '[W]ww YYYY',
         month: 'MMMM YYYY',
         quarter: '[Q]Q YYYY',
         year: 'Y',
     };
+    SampleServer.DISPLAY_FORMATS =  Object.assign({}, SampleServer.FORMATS, { 'day': 'DD MMM YYYY' });
 
     SampleServer.MAIN_RECORDSET_SIZE = 16;
     SampleServer.SUB_RECORDSET_SIZE = 5;
@@ -628,7 +723,7 @@ odoo.define('web.SampleServer', function (require) {
     SampleServer.MAX_INTEGER = 50;
     SampleServer.MAX_COLOR_INT = 7;
     SampleServer.MAX_MONETARY = 100000;
-    SampleServer.DATE_DELTA = 24 * 7; // in hours -> 7 days
+    SampleServer.DATE_DELTA = 24 * 60; // in hours -> 60 days
 
     SampleServer.SAMPLE_COUNTRIES = ["Belgium", "France", "Portugal", "Singapore", "Australia"];
     SampleServer.SAMPLE_PEOPLE = [

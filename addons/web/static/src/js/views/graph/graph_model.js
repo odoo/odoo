@@ -35,7 +35,7 @@ return AbstractModel.extend({
      * @returns {Object}
      */
     __get: function () {
-        return Object.assign({ isSample: this.isSampleModel }, this.chart);
+        return Object.assign({}, this.chart);
     },
     /**
      * Initial loading.
@@ -239,7 +239,7 @@ return AbstractModel.extend({
         rawData.forEach(function (dataPt){
             labels = getLabels(dataPt);
             var count = dataPt.__count || dataPt[self.chart.processedGroupBy[0]+'_count'] || 0;
-            var value = isCount ? count : dataPt[self.chart.measure];
+            var value = isCount ? count : dataPt[self.chart.measure] || 0; // aggregation result can be false?!
             if (value instanceof Array) {
                 // when a many2one field is used as a measure AND as a grouped
                 // field, bad things happen.  The server will only return the

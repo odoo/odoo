@@ -138,7 +138,6 @@ var GraphView = AbstractView.extend({
         this.loadParams.measure = measure || '__count__';
         this.loadParams.groupBys = groupBys;
         this.loadParams.fields = this.fields;
-        this.loadParams.comparisonDomain = params.comparisonDomain;
         this.loadParams.stacked = this.arch.attrs.stacked !== "False";
     },
 });

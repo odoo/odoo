@@ -10,6 +10,7 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dataComparisonUtils = require('web.dataComparisonUtils');
+const { qweb: OwlQweb } = require('web.env');
 var fieldUtils = require('web.field_utils');
 
 var _t = core._t;
@@ -54,7 +55,7 @@ var MAX_LEGEND_LENGTH = 4 * (Math.max(1, config.device.size_class));
 
 return AbstractRenderer.extend({
     className: "o_graph_renderer",
-    sampleDataTargets: ['.o_graph_renderer'],
+    sampleDataTargets: ['.o_graph_canvas_container'],
     /**
      * @override
      * @param {Widget} parent
@@ -763,9 +764,11 @@ return AbstractRenderer.extend({
         }
         var dataPoints = this._filterDataPoints();
         dataPoints = this._sortDataPoints(dataPoints);
-        if (!dataPoints.length && this.state.mode !== 'pie') {
-            this.$el.append(qweb.render('View.NoContentHelper'));
-        } else if (this.isInDOM) {
+        if (this.isInDOM) {
+            if (this.state.isSample && !this.isEmbedded) {
+                this._renderNoContentHelper();
+            }
+            // noContentHelp
             // only render the graph if the widget is already in the DOM (this
             // happens typically after an update), otherwise, it will be
             // rendered when the widget will be attached to the DOM (see
@@ -861,9 +864,9 @@ return AbstractRenderer.extend({
         }
 
         // center the points in the chart (without that code they are put on the left and the graph seems empty)
-        data.labels = data.labels.length > 1 ?
-            data.labels :
-            Array.prototype.concat.apply([], [[['']], data.labels, [['']]]);
+        if (data.labels.length === 1) {
+            data.labels = [[''], ...data.labels, ['']];
+        }
 
         // prepare options
         var options = this._prepareOptions(data.datasets.length);
@@ -875,6 +878,17 @@ return AbstractRenderer.extend({
             data: data,
             options: options,
         });
+    },
+    /**
+     * @private
+     */
+    _renderNoContentHelper: function () {
+        const templateName = this.noContentHelp ? "View.ActionHelper" : "View.NoContentHelper";
+        const template = document.createElement('template');
+        template.innerHTML = OwlQweb.renderToString(templateName, {
+            noContentHelp: this.noContentHelp,
+        });
+        this.el.append(template.content.firstChild);
     },
     /**
      * create pie chart
@@ -900,15 +914,6 @@ return AbstractRenderer.extend({
                 title: _t("Invalid data"),
                 description: _t("Pie chart cannot mix positive and negative numbers. " +
                     "Try to change your domain to only display positive results"),
-            }));
-            return;
-        }
-        if (allZero && !this.isEmbedded && this.state.origins.length === 1) {
-            this.$el.empty();
-            this.$el.append(qweb.render('View.NoContentHelper', {
-                title: _t("Invalid data"),
-                description: _t("Pie chart cannot display all zero numbers.. " +
-                    "Try to change your domain to display positive results"),
             }));
             return;
         }
