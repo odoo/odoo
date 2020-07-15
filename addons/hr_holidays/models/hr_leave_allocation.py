@@ -119,7 +119,6 @@ class HolidaysAllocation(models.Model):
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
     # accrual configuration
     accrual_plan_id = fields.Many2one('hr.accrual.plan', string='Accrual Plan', compute='_compute_accrual_plan', store=True, readonly=False)
-    allow_accrual_allocation = fields.Boolean(search="_search_allow_accrual_allocation", compute="_compute_allow_accrual_allocation")
     accrual_start_date = fields.Datetime('First Accrual Start Date', store=True, default=fields.Datetime.today)
     allocation_type = fields.Selection(
         [
@@ -161,11 +160,6 @@ class HolidaysAllocation(models.Model):
     ]
 
     @api.model
-    def _search_allow_accrual_allocation(self, operator, operand):
-        return self.env['ir.config_parameter'].sudo().get_param(
-            'hr_holidays.allow_accrual')
-
-    @api.model
     def _update_accrual(self):
         """
             Method called by the cron task in order to increment the number_of_days when
@@ -173,7 +167,7 @@ class HolidaysAllocation(models.Model):
         """
 
         # Get the current date to determine the start and end of the accrual period
-        today = datetime.combine(fields.Date.today(), time(0, 0, 0)) + relativedelta(years=3)
+        today = datetime.combine(fields.Date.today(), time(0, 0, 0))
 
         holidays = self.search(
             [('allocation_type', '=', 'accrual'), ('employee_id.active', '=', True), ('state', '=', 'validate'),
@@ -190,104 +184,27 @@ class HolidaysAllocation(models.Model):
                     continue
 
                 # Check the work entry type
-                if not holiday.holiday_status_id or not holiday.holiday_status_id.work_entry_type_id or not holiday.holiday_status_id.work_entry_type_id.leave_right:
+                if not holiday.holiday_status_id or not holiday.holiday_status_id.work_entry_type_id or not holiday.holiday_status_id.work_entry_type_id.property_leave_right:
                     continue
 
                 # Find which accrual plan line fits the employee
-                line = False
-                start_date = datetime.combine(holiday.employee_id._get_date_start_work(), time(0,0,0))
-                for accrual_line in holiday.accrual_plan_id.accrual_ids:
-                    if today > start_date + accrual_line._get_start_after_delta():
-                        if line:
-                            if (start_date + line._get_start_after_delta()) < (start_date + accrual_line._get_start_after_delta()):
-                                line = accrual_line
-                        else:
-                            line = accrual_line
+                line = holiday.accrual_plan_id._get_accrual_line(holiday.employee_id)
 
                 if line:
-                    # Find the start day of the next and previous periods
-                    next = False
-                    previous = False
-
-                    if line.frequency == 'daily':
-                        next = today + relativedelta(days=1)
-                        previous = today
-
-                    if line.frequency == 'weekly':
-                        days_ahead = 0 - int(today.strftime("%w"))
-                        if days_ahead <= 0:
-                            days_ahead += 7
-                        next = today + relativedelta(days=days_ahead)
-                        previous = next - relativedelta(days=7)
-
-                    if line.frequency == 'twice a month':
-                        if today.day < 15:
-                            next = today.replace(day=15)
-                            previous = today.replace(day=1)
-                        else:
-                            next = today.replace(day=1) + relativedelta(months=1)
-                            previous = today.replace(day=15)
-
-                    if line.frequency == 'monthly':
-                        next = today.replace(day=1) + relativedelta(months=1)
-                        previous = next - relativedelta(months=1)
-
-                    if line.frequency == 'twice a year':
-                        first_period = datetime(today.year, 1, 1)
-                        second_period = datetime(today.year, 7, 1)
-                        if today < first_period or today >= second_period:
-                            next = first_period.replace(year=today.year + 1)
-                            previous = second_period
-                        else :
-                            next = second_period
-                            previous = first_period
-
-                    if line.frequency == 'quarterly':
-                        period_1 = datetime(today.year, 1, 1)
-                        period_2 = datetime(today.year, 4, 1)
-                        period_3 = datetime(today.year, 7, 1)
-                        period_4 = datetime(today.year, 10, 1)
-                        if today >= period_4:
-                            next = period_1 + relativedelta(years=1)
-                            previous = period_4
-                        elif today >= period_3:
-                            next = period_4
-                            previous = period_3
-                        elif today >= period_2:
-                            next = period_3
-                            previous = period_2
-                        else :
-                            next = period_2
-                            previous = period_1
-
-                    if line.frequency == 'yearly':
-                        next = datetime(today.year, 1, 1)
-                        if today >= next:
-                            next += relativedelta(years=1)
-                        previous = next - relativedelta(years=1)
-
-                    if line.frequency == 'anniversary':
-                        next = datetime(today.year, int(start_date.month), int(start_date.day))
-                        if today >= next:
-                            next += relativedelta(years=1)
-                        previous = next - relativedelta(years=1)
-
-                    # Adapt the period if the employee has started his contract in it
-                    if previous < start_date and start_date < next:
-                        previous = start_date
+                    #Get the period based on frequency and start of period of the accrual line
+                    period = line._get_period(holiday.employee_id)
 
                     # Calculate the total of added hours for the period
-                    worked = holiday.employee_id._get_work_days_data(previous, next, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
-                    left = holiday.employee_id._get_leave_days_data(previous, next, domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+                    worked = holiday.employee_id._get_work_days_data(period["previous"], period["next"], domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
+                    left = holiday.employee_id._get_leave_days_data(period["previous"], period["next"], domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
                     prorata = worked / (left + worked) if worked else 0
                     added_hours = prorata * line.added_hours
 
                     #  Verify that the limit isn't passed
                     if line.maximum > 0:
+                        maximum = line.maximum
                         if line.maximum_type == 'days':
-                            maximum = line.maximum_type * (holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
-                        else :
-                            maximum = line.maximum
+                            maximum = maximum * (holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
 
                         if line.maximum_period == 'period':
                             if added_hours > maximum:
@@ -299,11 +216,12 @@ class HolidaysAllocation(models.Model):
                                 added_hours = maximum - actual_hours
                         else :
                             if line.maximum_period == 'days' :
-                                delta = (next - previous).days
+                                delta = (period["next"] - period["previous"]).days
                             elif line.maximum_period == 'weeks':
-                                delta = (next - previous).days / 7
+                                delta = (period["next"] - period["previous"]).days / 7
                             elif line.maximum_period == 'months':
-                                delta = (next - previous).months
+                                delta = (period["next"] - period["previous"]).months
+
                             if (added_hours / delta) > maximum:
                                 added_hours = maximum * delta
 
@@ -312,7 +230,7 @@ class HolidaysAllocation(models.Model):
 
                     # Increment the amount of days and update the day of the next call
                     values['number_of_days'] = holiday.number_of_days + added_days
-                    values['nextcall'] = next
+                    values['nextcall'] = period["next"]
                     holiday.write(values)
 
     @api.depends_context('uid')
@@ -487,19 +405,6 @@ class HolidaysAllocation(models.Model):
         for allocation in self:
             if allocation.allocation_type == 'accrual' and allocation.holiday_type == 'employee' and allocation.employee_id :
                 allocation.accrual_plan_id = allocation.employee_id.accrual_plan_id
-
-    #@api.onchange('accrual_plan_id')
-    #def _onchange_accrual_plan(self):
-    #    for allocation in self:
-    #        if allocation.holiday_type == 'employee' and allocation.employee_id :
-    #            allocation.employee_id.accrual_plan_id = allocation.accrual_plan_id
-
-    def _compute_allow_accrual_allocation(self):
-        allow_accrual = self.env['ir.config_parameter'].sudo().get_param(
-            'hr_holidays.allow_accrual')
-        for record in self:
-            record.allow_accrual_allocation = allow_accrual
-
 
     ####################################################
     # ORM Overrides methods

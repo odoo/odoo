@@ -6,4 +6,6 @@ from odoo import fields, models
 class ResConfigSettings(models.TransientModel):
     _inherit = 'res.config.settings'
 
-    allow_accrual = fields.Boolean(string="Accrual", config_parameter='hr_holidays.allow_accrual')
+    group_allow_accrual = fields.Boolean("Accrual",
+                                                implied_group='hr_holidays.group_allow_accrual')
+

@@ -186,8 +186,8 @@ class HrWorkEntryType(models.Model):
     active = fields.Boolean(
         'Active', default=True,
         help="If the active field is set to false, it will allow you to hide the work entry type without removing it.")
-    leave_right = fields.Boolean(
-        string="Keep Time Off Right", default=False,
+    property_leave_right = fields.Boolean(
+        string="Keep Time Off Right", default=False, company_dependent=True,
         help="Work entries counts for time off right for next year.")
 
     _sql_constraints = [
