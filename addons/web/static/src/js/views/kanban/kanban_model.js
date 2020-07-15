@@ -202,6 +202,7 @@ var KanbanModel = BasicModel.extend({
         } else {
             group.domain = group.domain.filter(domain =>
                             !domain.includes(group.progressBarValues.field, group.progressBarValues.activeFilter));
+            group.progressBarValues.activeFilter = false;
         }
         return this.reload(group.id);
     },
@@ -315,6 +316,16 @@ var KanbanModel = BasicModel.extend({
         var dataPoint = this._super.apply(this, arguments);
         if (params.progressBar) {
             dataPoint.progressBar = params.progressBar;
+        }
+        const oldGroup = _.find(this.localData, function (g) {
+            return g.res_id === dataPoint.res_id && g.value === dataPoint.value;
+        });
+        if (oldGroup && oldGroup.progressBarValues && oldGroup.progressBarValues.activeFilter) {
+            dataPoint.domain = oldGroup.domain;
+            dataPoint.progressBarValues = oldGroup.progressBarValues;
+            if (oldGroup.limit >= oldGroup.loadMoreOffset) {
+                oldGroup.loadMoreOffset = oldGroup.res_ids.length - oldGroup.limit
+            }
         }
         return dataPoint;
     },
