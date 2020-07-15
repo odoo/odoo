@@ -126,6 +126,31 @@ class TestSaleOrder(TestSaleCommon):
         self.assertEqual(invoice3.amount_total, 720.0, 'Sale: second invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything (including the upsel) should be "invoiced"')
 
+    def test_sale_order_send_to_self(self):
+        # when sender(logged in user) is also present in recipients of the mail composer,
+        # user should receive mail.
+        sale_order = self.env['sale.order'].with_user(self.company_data['default_user_salesman']).create({
+            'partner_id': self.company_data['default_user_salesman'].partner_id.id,
+            'order_line': [[0, 0, {
+                'name':  self.company_data['product_order_no'].name,
+                'product_id': self.company_data['product_order_no'].id,
+                'product_uom_qty': 1,
+                'price_unit': self.company_data['product_order_no'].list_price,
+            }]]
+        })
+        email_ctx = sale_order.action_quotation_send().get('context', {})
+        # We need to prevent auto mail deletion, and so we copy the template and send the mail with
+        # added configuration in copied template. It will allow us to check whether mail is being
+        # sent to to author or not (in case author is present in 'Recipients' of composer).
+        mail_template = self.env['mail.template'].browse(email_ctx.get('default_template_id')).copy({'auto_delete': False})
+        # send the mail with same user as customer
+        sale_order.with_context(**email_ctx).with_user(self.company_data['default_user_salesman']).message_post_with_template(mail_template.id)
+        self.assertTrue(sale_order.state == 'sent', 'Sale : state should be changed to sent')
+        mail_message = sale_order.message_ids[0]
+        self.assertEqual(mail_message.author_id, sale_order.partner_id, 'Sale: author should be same as customer')
+        self.assertEqual(mail_message.author_id, mail_message.partner_ids, 'Sale: author should be in composer recipients thanks to "partner_to" field set on template')
+        self.assertEqual(mail_message.partner_ids, mail_message.sudo().mail_ids.recipient_ids, 'Sale: author should receive mail due to presence in composer recipients')
+
     def test_sale_sequence(self):
         self.env['ir.sequence'].search([
             ('code', '=', 'sale.order'),
