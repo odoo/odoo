@@ -587,7 +587,6 @@ function factory(dependencies) {
                 args: [[this.id]],
                 kwargs: {
                     partner_ids: [this.env.messaging.currentPartner.id],
-                    context: {}, // FIXME empty context to be overridden in session.js with 'allowed_company_ids' task-2243187
                 },
             }));
             this.refreshFollowers();
