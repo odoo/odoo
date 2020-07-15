@@ -15,7 +15,8 @@ DEFAULT_EXCLUDE = [
     "__openerp__.py",
     "tests/**/*",
     "static/lib/**/*",
-    "static/tests/**/*"
+    "static/tests/**/*",
+    "migrations/**/*",
 ]
 
 STANDARD_MODULES = ['web', 'web_enterprise', 'website_animate', 'base']
