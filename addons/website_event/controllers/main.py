@@ -100,9 +100,11 @@ class WebsiteEventController(http.Controller):
             current_type = EventType.browse(int(searches['type']))
             domain_search["type"] = [("event_type_id", "=", int(searches["type"]))]
 
-        if searches["country"] != 'all':
+        if searches["country"] != 'all' and searches["country"] != 'online':
             current_country = request.env['res.country'].browse(int(searches['country']))
             domain_search["country"] = ['|', ("country_id", "=", int(searches["country"])), ("country_id", "=", False)]
+        elif searches["country"] == 'online':
+            domain_search["country"] = [("country_id", "=", False)]
 
         def dom_without(without):
             domain = []
