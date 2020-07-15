@@ -407,24 +407,6 @@
             </field>
         </record>
 
-        <record id="mrp_workcenter_kanban_action" model="ir.actions.act_window">
-            <field name="name">Work Centers Overview</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">mrp.workcenter</field>
-            <field name="view_mode">kanban,form</field>
-            <field name="view_id" ref="mrp_workcenter_kanban"/>
-            <field name="search_view_id" ref="view_mrp_workcenter_search"/>
-            <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Create a new work center
-              </p><p>
-                Manufacturing operations are processed at Work Centers. A Work Center can be composed of
-                workers and/or machines, they are used for costing, scheduling, capacity planning, etc.
-                The Work Centers are defined on the Routing's operations.
-              </p>
-            </field>
-        </record>
-
         <menuitem id="menu_view_resource_search_mrp"
             action="mrp_workcenter_action"
             groups="group_mrp_routings"
