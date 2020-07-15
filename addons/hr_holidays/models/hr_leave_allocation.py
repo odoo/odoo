@@ -118,7 +118,7 @@ class HolidaysAllocation(models.Model):
         'hr.employee.category', compute='_compute_from_holiday_type', store=True, string='Employee Tag', readonly=False,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
     # accrual configuration
-    accrual_plan_id = fields.Many2one('hr.accrual.plan', string='Accrual Plan', compute='_compute_accrual_plan', store=True, readonly=False)
+    accrual_plan_id = fields.Many2one('hr.accrual.plan', string='Accrual Plan', compute='_compute_accrual_plan', store=True, readonly=True)
     accrual_start_date = fields.Datetime('First Accrual Start Date', store=True, default=fields.Datetime.today)
     allocation_type = fields.Selection(
         [
@@ -127,22 +127,6 @@ class HolidaysAllocation(models.Model):
         ], string="Allocation Type", default="regular", required=True, readonly=True,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]})
     accrual_limit = fields.Integer('Balance limit', default=0, help="Maximum of allocation for accrual; 0 means no maximum.")
-    number_per_interval = fields.Float("Number of unit per interval", compute='_compute_from_holiday_status_id', store=True, readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
-    interval_number = fields.Integer("Number of unit between two intervals", compute='_compute_from_holiday_status_id', store=True, readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
-    unit_per_interval = fields.Selection([
-        ('hours', 'Hours'),
-        ('days', 'Days')
-        ], compute='_compute_from_holiday_status_id', store=True, string="Unit of time added at each interval", readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
-    interval_unit = fields.Selection([
-        ('days', 'Days'),
-        ('weeks', 'Weeks'),
-        ('months', 'Months'),
-        ('years', 'Years')
-        ], compute='_compute_from_holiday_status_id', store=True, string="Unit of time between two intervals", readonly=False,
-        states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
     nextcall = fields.Date("Date of the next accrual allocation", default=False, readonly=True)
     max_leaves = fields.Float(compute='_compute_leaves')
     leaves_taken = fields.Float(compute='_compute_leaves')
@@ -155,8 +139,6 @@ class HolidaysAllocation(models.Model):
          "(holiday_type='company' AND mode_company_id IS NOT NULL))",
          "The employee, department, company or employee category of this request is missing. Please make sure that your user login is linked to an employee."),
         ('duration_check', "CHECK ( number_of_days >= 0 )", "The number of days must be greater than 0."),
-        ('number_per_interval_check', "CHECK(number_per_interval > 0)", "The number per interval should be greater than 0"),
-        ('interval_number_check', "CHECK(interval_number > 0)", "The interval number should be greater than 0"),
     ]
 
     @api.model
@@ -277,6 +259,11 @@ class HolidaysAllocation(models.Model):
             else:
                 record.extra_days = record.number_of_days
 
+    @api.onchange('accrual_start_date')
+    def _onchange_accrual_start_date(self):
+        if self.allocation_type == "accrual" and self.accrual_start_date < datetime.today():
+            raise ValidationError(_("The first accrual start date must be today of after today"))
+
     @api.depends('number_of_days')
     def _compute_number_of_days_display(self):
         for allocation in self:
@@ -329,6 +316,7 @@ class HolidaysAllocation(models.Model):
             if allocation.holiday_type == 'employee':
                 if not allocation.employee_id:
                     allocation.employee_id = self.env.user.employee_id
+                    allocation.accrual_plan_id = allocation.employee_id.accrual_plan_id
                 allocation.mode_company_id = False
                 allocation.category_id = False
             if allocation.holiday_type == 'company':
@@ -345,6 +333,7 @@ class HolidaysAllocation(models.Model):
                 allocation.mode_company_id = False
             elif not allocation.employee_id and not allocation._origin.employee_id:
                 allocation.employee_id = self.env.context.get('default_employee_id') or self.env.user.employee_id
+                allocation.accrual_plan_id = allocation.employee_id.accrual_plan_id
 
     @api.depends('holiday_type', 'employee_id')
     def _compute_department_id(self):
@@ -375,33 +364,22 @@ class HolidaysAllocation(models.Model):
                 allocation.number_of_days = allocation.number_of_hours_display / (allocation.employee_id.sudo().resource_calendar_id.hours_per_day or HOURS_PER_DAY)
 
             # set default values
-            if not allocation.interval_number and not allocation._origin.interval_number:
-                allocation.interval_number = 1
-            if not allocation.number_per_interval and not allocation._origin.number_per_interval:
-                allocation.number_per_interval = 1
-            if not allocation.unit_per_interval and not allocation._origin.unit_per_interval:
-                allocation.unit_per_interval = 'hours'
-            if not allocation.interval_unit and not allocation._origin.interval_unit:
-                allocation.interval_unit = 'weeks'
-
+            if not allocation.number_of_days and not allocation._origin.number_of_days:
+                allocation.number_of_days = 1
             if allocation.holiday_status_id.validity_stop and allocation.date_to:
                 new_date_to = datetime.combine(allocation.holiday_status_id.validity_stop, time.max)
                 if new_date_to < allocation.date_to:
                     allocation.date_to = new_date_to
-
-            if allocation.allocation_type == 'accrual':
-                if allocation.holiday_status_id.request_unit == 'hour':
-                    allocation.unit_per_interval = 'hours'
-                else:
-                    allocation.unit_per_interval = 'days'
-            else:
-                allocation.interval_number = 1
-                allocation.interval_unit = 'weeks'
-                allocation.number_per_interval = 1
-                allocation.unit_per_interval = 'hours'
+                allocation.number_of_days = 0
 
     @api.depends('employee_id')
     def _compute_accrual_plan(self):
+        for allocation in self:
+            if allocation.allocation_type == 'accrual' and allocation.holiday_type == 'employee' and allocation.employee_id :
+                allocation.accrual_plan_id = allocation.employee_id.accrual_plan_id
+
+    @api.onchange('employee_id')
+    def _onchange_accrual_plan(self):
         for allocation in self:
             if allocation.allocation_type == 'accrual' and allocation.holiday_type == 'employee' and allocation.employee_id :
                 allocation.accrual_plan_id = allocation.employee_id.accrual_plan_id
@@ -500,10 +478,6 @@ class HolidaysAllocation(models.Model):
             'allocation_type': self.allocation_type,
             'date_from': self.date_from,
             'date_to': self.date_to,
-            'interval_unit': self.interval_unit,
-            'interval_number': self.interval_number,
-            'number_per_interval': self.number_per_interval,
-            'unit_per_interval': self.unit_per_interval,
         }
         return values
 
