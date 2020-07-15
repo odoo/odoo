@@ -45,6 +45,12 @@ class StockRule(models.Model):
                 date=schedule_date.date(),
                 uom_id=procurement.product_uom)
 
+            # Fall back on a supplier for which no price may be defined. Not ideal, but better than
+            # blocking the user.
+            supplier = supplier or procurement.product_id._prepare_sellers(False).filtered(
+                lambda s: not s.company_id or s.company_id == procurement.company_id
+            )[:1]
+
             if not supplier:
                 msg = _('There is no matching vendor price to generate the purchase order for product %s (no vendor defined, minimum quantity not reached, dates not valid, ...). Go on the product form and complete the list of vendors.') % (procurement.product_id.display_name)
                 raise UserError(msg)
