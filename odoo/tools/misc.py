@@ -1428,9 +1428,10 @@ def traverse_containers(val, type_):
     through standard containers (non-string mappings or sequences) *unless*
     they're selected by the type filter
     """
+    from odoo.models import BaseModel
     if isinstance(val, type_):
         yield val
-    elif isinstance(val, (str, bytes)):
+    elif isinstance(val, (str, bytes, BaseModel)):
         return
     elif isinstance(val, Mapping):
         for k, v in val.items():

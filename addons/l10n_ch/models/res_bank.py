@@ -211,7 +211,7 @@ class ResPartnerBank(models.Model):
             '1',                                                  # Coding Type
             self.sanitized_acc_number,                            # IBAN
             'K',                                                  # Creditor Address Type
-            (self.acc_holder_name or self.partner_id.name)[:71],  # Creditor Name
+            (self.acc_holder_name or self.partner_id.name)[:70],  # Creditor Name
             creditor_addr_1,                                      # Creditor Address Line 1
             creditor_addr_2,                                      # Creditor Address Line 2
             '',                                                   # Creditor Postal Code (empty, since we're using combined addres elements)
@@ -227,7 +227,7 @@ class ResPartnerBank(models.Model):
             '{:.2f}'.format(amount),                              # Amount
             currency_name,                                        # Currency
             'K',                                                  # Ultimate Debtor Address Type
-            debtor_partner.name[:71],                             # Ultimate Debtor Name
+            debtor_partner.name[:70],                             # Ultimate Debtor Name
             debtor_addr_1,                                        # Ultimate Debtor Address Line 1
             debtor_addr_2,                                        # Ultimate Debtor Address Line 2
             '',                                                   # Ultimate Debtor Postal Code (not to be provided for address type K)
