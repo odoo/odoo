@@ -32,15 +32,12 @@
             <field name="auto_delete" eval="True"/>
         </record>
 
-        <act_window name="Send receipt by email"
-            groups="account.group_account_invoice"
-            res_model="mail.compose.message"
-            binding_model="account.payment"
-            view_mode="form"
-            binding_views="form"
-            target="new"
-            id="account_send_payment_receipt_by_email_action"
-            context="{
+        <record id="account_send_payment_receipt_by_email_action" model="ir.actions.act_window">
+            <field name="name">Send receipt by email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{
                 'default_model': 'account.payment',
                 'mail_post_autofollow': True,
                 'default_composition_mode': 'comment',
@@ -49,17 +46,18 @@
                 'default_template_id': ref('account.mail_template_data_payment_receipt'),
                 'force_email': True,
                 'custom_layout': 'mail.mail_notification_light',
-            }"
-        />
+            }</field>
+            <field name="binding_model_id" ref="model_account_payment"/>
+            <field name="binding_view_types">form</field>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
+        </record>
 
-        <act_window name="Send receipts by email"
-            res_model="mail.compose.message"
-            binding_model="account.payment"
-            view_mode="form"
-            binding_views="list"
-            target="new"
-            id="account_send_payment_receipt_by_email_action_multi"
-            context="{
+        <record id="account_send_payment_receipt_by_email_action_multi" model="ir.actions.act_window">
+            <field name="name">Send receipts by email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{
                 'default_model': 'account.payment',
                 'mail_post_autofollow': True,
                 'default_composition_mode': 'mass_mail',
@@ -68,7 +66,9 @@
                 'default_template_id': ref('account.mail_template_data_payment_receipt'),
                 'force_email': True,
                 'custom_layout': 'mail.mail_notification_light',
-            }"
-        />
+            }</field>
+            <field name="binding_model_id" ref="model_account_payment"/>
+            <field name="binding_view_types">list</field>
+        </record>
     </data>
 </odoo>

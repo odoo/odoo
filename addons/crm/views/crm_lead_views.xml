@@ -297,12 +297,12 @@
         <!--
             crm.lead (as Lead) views
         -->
-        <act_window
-                id="act_crm_opportunity_calendar_event_new"
-                name="Meetings"
-                res_model="calendar.event"
-                view_mode="tree,form,calendar"
-                context="{'default_duration': 4.0, 'default_opportunity_id': active_id}"/>
+        <record id="act_crm_opportunity_calendar_event_new" model="ir.actions.act_window">
+            <field name="name">Meetings</field>
+            <field name="res_model">calendar.event</field>
+            <field name="view_mode">tree,form,calendar</field>
+            <field name="context">{'default_duration': 4.0, 'default_opportunity_id': active_id}</field>
+        </record>
 
         <record id="crm_case_tree_view_leads" model="ir.ui.view">
             <field name="name">crm.lead.tree.lead</field>
@@ -576,19 +576,19 @@
             </field>
         </record>
 
-        <act_window name="Send email"
-            res_model="mail.compose.message"
-            binding_model="crm.lead"
-            binding_views="list"
-            view_mode="form"
-            target="new"
-            id="crm_lead_act_window_compose"
-            context="{
+        <record id="crm_lead_act_window_compose" model="ir.actions.act_window">
+            <field name="name">Send email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{
                 'default_composition_mode': 'comment',
                 'default_use_template': True,
                 'default_template_id': ref('crm.email_template_opportunity_mail'),
-                }"
-        />
+                }</field>
+            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="binding_view_types">list</field>
+        </record>
 
         <!--
             crm.lead (as Opportunity) views
@@ -784,20 +784,20 @@
         <!--
             MASS MAILING
         -->
-        <act_window name="Send email"
-                res_model="mail.compose.message"
-                binding_model="crm.lead"
-                binding_views="list"
-                view_mode="form"
-                target="new"
-                id="crm.action_lead_mass_mail"
-                context="{
+        <record id="crm.action_lead_mass_mail" model="ir.actions.act_window">
+            <field name="name">Send email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{
                             'default_composition_mode': 'mass_mail',
                             'default_email_to':'{($object.email or \'\')|safe}',
                             'default_use_template': True,
                             'default_template_id': ref('crm.email_template_opportunity_mail'),
-                        }"
-        />
+                        }</field>
+            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="binding_view_types">list</field>
+        </record>
 
         <!--Update of email_template defined in crm_lead_data, to add ref_ir_act_window
             allowing to have a well formed email template (context action considered as set). -->

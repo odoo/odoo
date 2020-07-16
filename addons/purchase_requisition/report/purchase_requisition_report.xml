@@ -1,12 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <report 
-        string="Call for Tenders" 
-        id="action_report_purchase_requisitions" 
-        model="purchase.requisition" 
-        report_type="qweb-pdf"
-        name="purchase_requisition.report_purchaserequisitions" 
-        file="purchase_requisition.report.report_purchaserequisitions"
-        print_report_name="'Tender - %s' % (object.name)"
-    />
+    <record id="action_report_purchase_requisitions" model="ir.actions.report">
+        <field name="name">Call for Tenders</field>
+        <field name="model">purchase.requisition</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">purchase_requisition.report_purchaserequisitions</field>
+        <field name="report_file">purchase_requisition.report.report_purchaserequisitions</field>
+        <field name="print_report_name">'Tender - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_purchase_requisition"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>
