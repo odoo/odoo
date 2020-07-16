@@ -48,6 +48,20 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'email_cc',
     'website']
 
+PARTNER_FIELDS_TO_SYNC = [
+    'title',
+    'street',
+    'street2',
+    'city',
+    'state_id',
+    'country_id',
+    'phone',
+    'mobile',
+    'zip',
+    'function',
+    'website',
+]
+
 # Those values have been determined based on benchmark to minimise
 # computation time, number of transaction and transaction time.
 PLS_COMPUTE_BATCH_STEP = 50000  # odoo.models.PREFETCH_MAX = 1000 but larger cluster can speed up global computation
@@ -244,7 +258,7 @@ class Lead(models.Model):
     def _compute_partner_id_values(self):
         """ compute the new values when partner_id has changed """
         for lead in self:
-            lead.update(lead._preare_values_from_partner(lead.partner_id))
+            lead.update(lead._prepare_values_from_partner(lead.partner_id))
 
     @api.depends('phone', 'country_id.code')
     def _compute_phone_state(self):
@@ -339,29 +353,20 @@ class Lead(models.Model):
         if self.mobile:
             self.mobile = self.phone_format(self.mobile)
 
-    def _preare_values_from_partner(self, partner):
+    def _prepare_values_from_partner(self, partner):
         """ Get a dictionary with values coming from customer information to
         copy on a lead. Email_from and phone fields get the current lead
         values to avoid being reset if customer has no value for them. """
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
-        return {
-            'partner_name': partner_name,
-            'contact_name': partner.name if not partner.is_company else False,
-            'title': partner.title.id,
-            'street': partner.street,
-            'street2': partner.street2,
-            'city': partner.city,
-            'state_id': partner.state_id.id,
-            'country_id': partner.country_id.id,
+        values = {f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC}
+        values.update({
+            'partner_name': partner_name or self.partner_name,
+            'contact_name': False if partner.is_company else partner.name or self.contact_name,
             'email_from': partner.email or self.email_from,
-            'phone': partner.phone or self.phone,
-            'mobile': partner.mobile,
-            'zip': partner.zip,
-            'function': partner.function,
-            'website': partner.website,
-        }
+        })
+        return values
 
     # ------------------------------------------------------------
     # ORM
