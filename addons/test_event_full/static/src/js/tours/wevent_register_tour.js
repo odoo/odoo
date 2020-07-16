@@ -25,12 +25,22 @@ var initTourSteps = [{
     trigger: 'a[href*="/event"]:contains("Online Reveal"):first',
 }];
 
-var browseSessionsSteps = [{
-    content: 'Browse Sessions',
-    trigger: 'a:contains("Sessions")',
+var browseTalksSteps = [{
+    content: 'Browse Talks',
+    trigger: 'a:contains("Talks")',
 }, {
-    content: 'Go on "Main Gathering" talk',
-    trigger: 'a:contains("Main Gathering")',
+    content: 'Go on "What This Event Is All About" talk',
+    trigger: 'a:contains("What This Event Is All About")',
+}];
+
+var browseExhibitorsSteps = [{
+    content: 'Browse Talks',
+    trigger: 'a:contains("Exhibitors")',
+}];
+
+var browseMeetSteps = [{
+    content: 'Browse Meet',
+    trigger: 'a:contains("Community")',
 }];
 
 var registerSteps = [{
@@ -43,7 +53,9 @@ tour.register('wevent_register', {
     test: true
 }, [].concat(
         initTourSteps,
-        browseSessionsSteps,
+        browseTalksSteps,
+        browseExhibitorsSteps,
+        browseMeetSteps,
         registerSteps
     )
 );

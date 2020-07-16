@@ -168,6 +168,7 @@ class TestWEventCommon(HttpCaseWithUserDemo, HttpCaseWithUserPortal, EventDtPatc
                 })
             ],
             # activate menus
+            'website_menu': True,
             'website_track': True,
             'menu_exhibitor': True,
             'meeting_room_menu': True,
