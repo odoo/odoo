@@ -346,7 +346,7 @@
 <!-- Header templates -->
 <template id="template_header_main" inherit_id="website.layout" name="Template Header EDI 1" active="False">
     <xpath expr="//header//ul[@id='top_menu']" position="after">
-        <div id="wrap" class="oe_structure oe_empty">
+        <div class="oe_structure oe_empty">
             <section>
                 <div class="container">
                     <p style="text-align: right;">
@@ -357,27 +357,29 @@
         </div>
     </xpath>
     <xpath expr="//header/nav" position="after">
-        <div id="wrap" class="oe_structure oe_empty">
-            <section>
-                <div class="container">
-                    <div class="d-flex justify-content-between">
-                        <div id="wrap" class="oe_structure oe_empty">
-                            <section><span><p>A Cool Slogan for your Hot Website</p></span></section>
+        <div class="oe_structure oe_empty">
+            <section data-snippet="s_text_block" data-name="Text">
+                <div class="container s_allow_columns">
+                    <div class="row">
+                        <div class="o_colored_level col-lg-4">
+                            <p>A Cool Slogan for your Hot Website</p>
                         </div>
-                        <div id="wrap" class="oe_structure oe_empty">
-                            <section><span class="o_force_ltr"><i class="fa fa-phone fa-fw mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span></section>
+                        <div class="o_colored_level col-lg-4">
+                            <i class="fa fa-phone fa-fw mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a>
                         </div>
-                        <div class="s_share text-left" data-name="Social Media">
-                            <h4 class="s_share_title d-none">Follow us</h4>
-                            <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
-                                <i class="fa fa-facebook shadow-sm"/>
-                            </a>
-                            <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
-                                <i class="fa fa-twitter shadow-sm"/>
-                            </a>
-                            <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
-                                <i class="fa fa-linkedin shadow-sm"/>
-                            </a>
+                        <div class="o_colored_level col-lg-4">
+                            <div class="s_share text-left" data-name="Social Media">
+                                <h4 class="s_share_title d-none">Follow us</h4>
+                                <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                    <i class="fa fa-facebook shadow-sm"/>
+                                </a>
+                                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-twitter shadow-sm"/>
+                                </a>
+                                <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                    <i class="fa fa-linkedin shadow-sm"/>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -387,7 +389,7 @@
 </template>
 <template id="template_header_edi2" inherit_id="website.layout" name="Template EDI 2" active="False">
     <xpath expr="//header//ul[@id='top_menu']" position="after">
-        <div id="wrap" class="oe_structure oe_empty">
+        <div class="oe_structure oe_empty">
             <section>
                 <div class="container">
                     <p style="text-align: right;">
@@ -419,7 +421,7 @@
                     </t>
                 </ul>
             </div>
-            <div id="wrap" class="oe_structure oe_empty">
+            <div class="oe_structure oe_empty">
                 <section>
                     <div class="container">
                         <p style="text-align: right;">
@@ -431,7 +433,7 @@
         </nav>
     </xpath>
     <xpath expr="//header//a[hasclass('navbar-brand')]" position="after">
-        <div id="wrap" class="oe_structure oe_empty">
+        <div class="oe_structure oe_empty">
             <section>
                 <span><p>A Cool Slogan for your Hot Website</p></span>
             </section>
@@ -459,7 +461,7 @@
                     </t>
                 </ul>
             </div>
-            <div id="wrap" class="oe_structure oe_empty">
+            <div class="oe_structure oe_empty">
                 <section>
                     <div class="container">
                         <p style="text-align: right;">
@@ -471,23 +473,29 @@
         </nav>
     </xpath>
     <xpath expr="//header/nav" position="before">
-        <div id="wrap" class="oe_structure oe_empty">
-            <section>
-                <div class="container">
-                    <div class="d-flex justify-content-between">
-                        <div id="wrap" class="oe_structure oe_empty"><section><span><p>A Cool Slogan for your Hot Website</p></span></section></div>
-                        <div id="wrap" class="oe_structure oe_empty"><section><span class="o_force_ltr"><i class="fa fa-phone fa-fw mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span></section></div>
-                        <div class="s_share text-left" data-name="Social Media">
-                            <h4 class="s_share_title d-none">Follow us</h4>
-                            <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
-                                <i class="fa fa-facebook shadow-sm"/>
-                            </a>
-                            <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
-                                <i class="fa fa-twitter shadow-sm"/>
-                            </a>
-                            <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
-                                <i class="fa fa-linkedin shadow-sm"/>
-                            </a>
+        <div class="oe_structure oe_empty">
+            <section data-snippet="s_text_block" data-name="Text">
+                <div class="container s_allow_columns">
+                    <div class="row">
+                        <div class="o_colored_level col-lg-4">
+                            <p>A Cool Slogan for your Hot Website</p>
+                        </div>
+                        <div class="o_colored_level col-lg-4">
+                            <i class="fa fa-phone fa-fw mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a>
+                        </div>
+                        <div class="o_colored_level col-lg-4">
+                            <div class="s_share text-left" data-name="Social Media">
+                                <h4 class="s_share_title d-none">Follow us</h4>
+                                <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                    <i class="fa fa-facebook shadow-sm"/>
+                                </a>
+                                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-twitter shadow-sm"/>
+                                </a>
+                                <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                    <i class="fa fa-linkedin shadow-sm"/>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -523,7 +531,7 @@
                     </t>
                 </ul>
             </div>
-            <div id="wrap" class="oe_structure oe_empty">
+            <div class="oe_structure oe_empty">
                 <section>
                     <div class="container">
                         <p style="text-align: right;">
@@ -535,23 +543,29 @@
         </nav>
     </xpath>
     <xpath expr="//header/nav" position="before">
-        <div id="wrap" class="oe_structure oe_empty">
-            <section>
-                <div class="container">
-                    <div class="d-flex justify-content-between">
-                        <div id="wrap" class="oe_structure oe_empty"><section><span class="o_force_ltr"><i class="fa fa-phone fa-fw mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span></section></div>
-                        <div id="wrap" class="oe_structure oe_empty"><section><span><p>A Cool Slogan for your Hot Website</p></span></section></div>
-                        <div class="s_share text-left" data-name="Social Media">
-                            <h4 class="s_share_title d-none">Follow us</h4>
-                            <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
-                                <i class="fa fa-facebook shadow-sm"/>
-                            </a>
-                            <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
-                                <i class="fa fa-twitter shadow-sm"/>
-                            </a>
-                            <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
-                                <i class="fa fa-linkedin shadow-sm"/>
-                            </a>
+        <div class="oe_structure oe_empty">
+            <section data-snippet="s_text_block" data-name="Text">
+                <div class="container s_allow_columns">
+                    <div class="row">
+                        <div class="o_colored_level col-lg-4">
+                            <i class="fa fa-phone fa-fw mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a>
+                        </div>
+                        <div class="o_colored_level col-lg-4">
+                            <p>A Cool Slogan for your Hot Website</p>
+                        </div>
+                        <div class="o_colored_level col-lg-4">
+                            <div class="s_share text-left" data-name="Social Media">
+                                <h4 class="s_share_title d-none">Follow us</h4>
+                                <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                    <i class="fa fa-facebook shadow-sm"/>
+                                </a>
+                                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-twitter shadow-sm"/>
+                                </a>
+                                <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                    <i class="fa fa-linkedin shadow-sm"/>
+                                </a>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -596,25 +610,31 @@
     </xpath>
     <xpath expr="//header//ul[@id='top_menu']/t[@t-foreach='website.menu_id.child_id']" position="after">
         <li class="order-1 navbar-toggler">
-            <div id="wrap" class="oe_structure oe_empty">
-                <section>
-                    <div class="container">
-                        <i class="fa fa-phone fa-fw mr-2"/><span class="o_force_ltr"><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span>
-                        <div class="s_share text-left" data-name="Social Media">
-                            <h4 class="s_share_title d-none">Follow us</h4>
-                            <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
-                                <i class="fa fa-facebook shadow-sm"/>
-                            </a>
-                            <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
-                                <i class="fa fa-twitter shadow-sm"/>
-                            </a>
-                            <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
-                                <i class="fa fa-linkedin shadow-sm"/>
-                            </a>
+            <div class="oe_structure oe_empty">
+            <section data-snippet="s_text_block" data-name="Text">
+                <div class="container s_allow_columns">
+                    <div class="row">
+                        <div class="o_colored_level col-lg-4">
+                            <i class="fa fa-phone fa-fw mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a>
+                        </div>
+                        <div class="o_colored_level col-lg-4">
+                            <div class="s_share text-left" data-name="Social Media">
+                                <h4 class="s_share_title d-none">Follow us</h4>
+                                <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                    <i class="fa fa-facebook shadow-sm"/>
+                                </a>
+                                <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                    <i class="fa fa-twitter shadow-sm"/>
+                                </a>
+                                <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                    <i class="fa fa-linkedin shadow-sm"/>
+                                </a>
+                            </div>
                         </div>
                     </div>
-                </section>
-            </div>
+                </div>
+            </section>
+        </div>
         </li>
         <li class="o_offcanvas_logo_container order-last navbar-toggler py-4 order-1 mt-auto text-center border-0">
             <a href="/" class="o_offcanvas_logo text-center">My Website</a>
