@@ -535,3 +535,21 @@ class TestIrPropertyOptimizations(TransactionCase):
 
         with self.assertQueryCount(5):
             self.Bacon.create({'property_eggs': False})
+
+
+@tagged('mapped_perf')
+class TestMapped(TransactionCase):
+
+    def test_relational_mapped(self):
+        # create 1000 records with one line each
+        recs = self.env['test_performance.base'].create([
+            {'name': 'foo%d' % index, 'line_ids': [(0, 0, {'value': index})]}
+            for index in range(1000)
+        ])
+        recs.flush()
+        recs.invalidate_cache()
+
+        # expected same performance as recs.line_ids.mapped('value')
+        with self.assertQueryCount(3):
+            for rec in recs:
+                rec.line_ids.mapped('value')
