@@ -16,6 +16,7 @@
     ],
     'data': [
         'views/assets.xml',
+        'views/event_track_templates.xml',
         'views/event_track_templates_track.xml',
         'views/event_views.xml',
     ],

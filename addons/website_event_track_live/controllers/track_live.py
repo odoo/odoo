@@ -5,9 +5,12 @@ from odoo import http
 
 
 class WebsiteEventTrackLiveController(http.Controller):
+
     @http.route('/event/track/<model("event.track"):track>/get_track_suggestion', type='json', auth='public')
     def get_next_track_suggestion(self, track):
-        track_suggestion = track._get_next_track_suggestion()
+        track_suggestion = track._get_track_suggestions(
+            restrict_domain=['&', ('date_end', '>', self.date_end), ('youtube_video_url', '!=', False)],
+            limit=1)
         if track_suggestion:
             return {
                 'id': track_suggestion.id,

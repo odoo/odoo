@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+<!-- TRACK LIST: ADD REPLAY TAG FOR FINISHED TRACKS -->
+<template id="tracks_display_list" inherit_id="website_event_track_session.tracks_display_list">
+    <xpath expr="//li[hasclass('o_wesession_list_item')]//span[@t-elif='not track.is_track_done and not track.is_track_soon']" position="after">
+        <span t-elif="track.youtube_video_url">
+            <a t-att-href="track.website_url" class="badge badge-danger">Replay</a>
+        </span>
+    </xpath>
+</template>
+
+</odoo>
