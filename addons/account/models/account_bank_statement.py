@@ -307,14 +307,16 @@ class AccountBankStatement(models.Model):
                             raise UserError(_('Please go on the %s journal and define a Loss Account. This account will be used to record cash difference.', stmt.journal_id.name))
 
                         st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Loss)")
-                        self.env['account.bank.statement.line'].with_context(counterpart_account_id=stmt.journal_id.loss_account_id).create(st_line_vals)
+                        st_line_vals['counterpart_account_id'] = stmt.journal_id.loss_account_id.id
                     else:
                         # statement.difference > 0.0
                         if not stmt.journal_id.profit_account_id:
                             raise UserError(_('Please go on the %s journal and define a Profit Account. This account will be used to record cash difference.', stmt.journal_id.name))
 
                         st_line_vals['payment_ref'] = _("Cash difference observed during the counting (Profit)")
-                        self.env['account.bank.statement.line'].with_context(counterpart_account_id=stmt.journal_id.profit_account_id).create(st_line_vals)
+                        st_line_vals['counterpart_account_id'] = stmt.journal_id.profit_account_id.id
+                        
+                    self.env['account.bank.statement.line'].create(st_line_vals)
                 else:
                     balance_end_real = formatLang(self.env, stmt.balance_end_real, currency_obj=stmt.currency_id)
                     balance_end = formatLang(self.env, stmt.balance_end, currency_obj=stmt.currency_id)

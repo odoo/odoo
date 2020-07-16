@@ -277,6 +277,23 @@ class TestAccountBankStatement(TestAccountBankStatementCommon):
             'previous_statement_id': bnk2_1.id,
         }])
 
+    def test_cash_statement_with_difference(self):
+        ''' A cash statement always creates an additional line to store the cash difference towards the ending balance.
+        '''
+        statement = self.env['account.bank.statement'].create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.company_data['default_journal_cash'].id,
+            'balance_end_real': 100.0,
+        })
+
+        statement.button_post()
+
+        self.assertRecordValues(statement.line_ids, [{
+            'amount': 100.0,
+            'is_reconciled': True,
+        }])
+
 
 @tagged('post_install', '-at_install')
 class TestAccountBankStatementLine(TestAccountBankStatementCommon):
