@@ -86,8 +86,11 @@ class EventRegistration(models.Model):
     @api.depends('state')
     def _compute_date_closed(self):
         for registration in self:
-            if registration.state == 'done' and not registration.date_closed:
-                registration.date_closed = fields.Datetime.now()
+            if not registration.date_closed:
+                if registration.state == 'done':
+                    registration.date_closed = fields.Datetime.now()
+                else:
+                    registration.date_closed = False
 
     @api.constrains('event_id', 'state')
     def _check_seats_limit(self):
