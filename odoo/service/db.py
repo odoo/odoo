@@ -327,7 +327,7 @@ def exp_rename(old_name, new_name):
         cr.autocommit(True)     # avoid transaction block
         _drop_conn(cr, old_name)
         try:
-            cr.execute(sql.SQL('ALTER DATABASE {} RENAME TO {}').format(old_name, new_name))
+            cr.execute(sql.SQL('ALTER DATABASE {} RENAME TO {}').format(sql.Identifier(old_name), sql.Identifier(new_name)))
             _logger.info('RENAME DB: %s -> %s', old_name, new_name)
         except Exception as e:
             _logger.info('RENAME DB: %s -> %s failed:\n%s', old_name, new_name, e)
