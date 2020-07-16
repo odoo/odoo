@@ -1,10 +1,10 @@
 odoo.define('mrp.should_consume', function (require) {
 "use strict";
 
-var BasicFields = require('web.basic_fields');
-var FieldFloat = BasicFields.FieldFloat;
-var fieldRegistry = require('web.field_registry');
-var field_utils = require('web.field_utils');
+const BasicFields = require('web.basic_fields');
+const FieldFloat = BasicFields.FieldFloat;
+const fieldRegistry = require('web.field_registry');
+const field_utils = require('web.field_utils');
 
 /**
  * This widget is used to display alongside the total quantity to consume of a production order,
@@ -13,14 +13,14 @@ var field_utils = require('web.field_utils');
  * The production order is created to make 5 finished product and the quantity producing is set to 3.
  * The widget will be '3.000 / 5.000'.
  */
-var MrpShouldConsume = FieldFloat.extend({
+const MrpShouldConsume = FieldFloat.extend({
     /**
      * @override
      */
     init: function (parent, name, params) {
         this._super.apply(this, arguments);
         this.displayShouldConsume = !['done', 'draft', 'cancel'].includes(params.data.state);
-        let options = {'digits': [false, 3]};
+        const options = {'digits': [false, 3]};
         this.should_consume_qty = field_utils.format.float(params.data.should_consume_qty, false, options);
     },
 
@@ -29,16 +29,19 @@ var MrpShouldConsume = FieldFloat.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * Prefix the classic float field (this.$el) by a static value.
+     *
      * @private
-     * @param {Object} [el] jquery input element that will be surrounded by a new span
      * @param {float} [value] quantity to display before the input `el`
-     * @return {jquery element}
+     * @param {bool} [edit] whether the field will be editable or readonly
      */
-    _addShouldConsume: function (el, value) {
-        var $to_consume_container = $('<span class="o_should_consume"/>');
+    _addShouldConsume: function (value, edit=false) {
+        const $to_consume_container = $('<span class="o_should_consume"/>');
+        if (edit) {
+            $to_consume_container.addClass('o_row');
+        }
         $to_consume_container.text(value + ' / ');
-        $to_consume_container.append(el);
-        return $to_consume_container
+        this.setElement(this.$el.wrap($to_consume_container).parent());
     },
 
     /**
@@ -46,15 +49,15 @@ var MrpShouldConsume = FieldFloat.extend({
      * @override
      */
     _renderEdit: function () {
-        // Keep a reference to the input so $el can become something else
-        // without losing track of the actual input.
-        var def = this._super.apply(this, arguments);
         if (this.displayShouldConsume) {
-            var $container = this._addShouldConsume(this.$el.clone(), this.should_consume_qty);
-            $container.addClass('o_row');
-            this.$el = $container;
-        };
-        return def;
+            if (!this.$el.text().includes('/')) {
+                this.$input = this.$el;
+                this._addShouldConsume(this.should_consume_qty, true);
+            }
+            this._prepareInput(this.$input);
+        } else {
+            this._super.apply(this);
+        }
     },
     /**
      * Resets the content to the formated value in readonly mode.
@@ -63,12 +66,10 @@ var MrpShouldConsume = FieldFloat.extend({
      * @private
      */
     _renderReadonly: function () {
-        var def = this._super.apply(this, arguments);
+        this.$el.text(this._formatValue(this.value));
         if (this.displayShouldConsume) {
-            var $container = this._addShouldConsume(this.$el, this.should_consume_qty);
-            this.$el = $container;
-        };
-        return def;
+            this._addShouldConsume(this.should_consume_qty);
+        }
     },
 });
 
