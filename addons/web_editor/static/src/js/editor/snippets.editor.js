@@ -1094,12 +1094,15 @@ var SnippetsMenu = Widget.extend({
      * Updates the cover dimensions of the current snippet editor.
      */
     updateCurrentSnippetEditorOverlay: function () {
-        this.snippetEditors = _.filter(this.snippetEditors, function (snippetEditor) {
+        this.snippetEditors = this.snippetEditors.filter(snippetEditor => {
             if (snippetEditor.$target.closest('body').length) {
                 snippetEditor.cover();
                 return true;
             }
-            snippetEditor.destroy();
+            // Destroy options whose $target are not in the DOM anymore but
+            // only do it once all options executions are done.
+            this._mutex.exec(() => snippetEditor.destroy());
+            return false;
         });
     },
 
