@@ -202,7 +202,7 @@ publicWidget.registry.websiteForum = publicWidget.Widget.extend({
         }
 
         // Because the textarea is hidden, we add the red or green border to its container
-        if ($textarea[0].required) {
+        if ($textarea[0] && $textarea[0].required) {
             let $textareaContainer = $form.find('.o_wysiwyg_wrapper .note-editor.panel.panel-default');
             if (!textareaContent.length) {
                 $textareaContainer.addClass('border border-danger rounded-top');
