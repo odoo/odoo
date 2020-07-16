@@ -156,6 +156,9 @@ class WebsiteBlog(http.Controller):
 
         date_begin, date_end, state = opt.get('date_begin'), opt.get('date_end'), opt.get('state')
 
+        date_begin = date_begin and date_begin.replace("+", " ")
+        date_end = date_end and date_end.replace("+", " ")
+
         values = self._prepare_blog_values(blogs=blogs, blog=blog, date_begin=date_begin, date_end=date_end, tags=tag, state=state, page=page)
 
         # in case of a redirection need by `_prepare_blog_values` we follow it
