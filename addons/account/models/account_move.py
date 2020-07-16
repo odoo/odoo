@@ -1358,8 +1358,7 @@ class AccountMoveLine(models.Model):
                 vals['amount_currency'] = 0.0
             else:
                 ctx = {}
-                if 'date' in vals:
-                    ctx['date'] = vals['date']
+                ctx['date'] = vals.get('date') or vals.get('date_maturity') or fields.Date.today()
                 vals['amount_currency'] = account.company_id.currency_id.with_context(ctx).compute(amount, account.currency_id)
 
         if not ok:
