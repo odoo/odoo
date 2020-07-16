@@ -311,8 +311,9 @@ class AccountBankStatement(models.Model):
                         'amount': stmt.difference,
                         'payment_ref': _("Cash difference observed during the counting (%s)") % name,
                         'date': stmt.date,
+                        'counterpart_account_id': account.id,
                     }
-                    self.env['account.bank.statement.line'].with_context(counterpart_account_id=account.id).create(st_line_vals)
+                    self.env['account.bank.statement.line'].create(st_line_vals)
                 else:
                     balance_end_real = formatLang(self.env, stmt.balance_end_real, currency_obj=stmt.currency_id)
                     balance_end = formatLang(self.env, stmt.balance_end, currency_obj=stmt.currency_id)
