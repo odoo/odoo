@@ -53,7 +53,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
                 });
             } else {
                 self.reminderOn = result.reminderOn;
-                var reminderText = self.reminderOn ? _t('Reminder On') : _t('Set a Reminder');
+                var reminderText = self.reminderOn ? _t('Reminder On') : _t('Set Reminder');
                 self.$('.o_wetrack_js_reminder_text').text(reminderText);
                 self._updateDisplay();
                 var message = self.reminderOn ? _t('Talk added to your wishlist') : _t('Talk removed from your wishlist');
@@ -75,7 +75,7 @@ publicWidget.registry.websiteEventTrackReminder = publicWidget.Widget.extend({
             $trackLink.attr('title', _t('Reminder On'));
         } else {
             $trackLink.addClass('fa-bell-o').removeClass('fa-bell');
-            $trackLink.attr('title', _t('Set a reminder'));
+            $trackLink.attr('title', _t('Set Reminder'));
         }
     },
 

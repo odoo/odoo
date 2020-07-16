@@ -66,7 +66,9 @@ class Track(models.Model):
 
     # WISHLIST / VISITOR MANAGEMENT
 
-    @api.depends('event_track_visitor_ids.visitor_id', 'event_track_visitor_ids.partner_id')
+    @api.depends('wishlisted_by_default', 'event_track_visitor_ids.visitor_id',
+                 'event_track_visitor_ids.partner_id', 'event_track_visitor_ids.is_wishlisted',
+                 'event_track_visitor_ids.is_blacklisted')
     @api.depends_context('uid')
     def _compute_is_reminder_on(self):
         current_visitor = self.env['website.visitor']._get_visitor_from_request(force_create=False)
