@@ -1596,3 +1596,10 @@ def hmac(env, scope, message, hash_function=hashlib.sha256):
         message.encode(),
         hash_function,
     ).hexdigest()
+
+
+def escape_markdown(string):
+    """Escape strings to be displayed with a markdown widget."""
+    string = string.replace('*', r'\*')
+    string = string.replace('_', r'\_')
+    return string

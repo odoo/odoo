@@ -4484,6 +4484,33 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('groupby with name markdown', async function (assert) {
+        assert.expect(3);
+
+        _.each(this.data.res_currency.records, record => {
+            record.display_name = '__<b>' + record.display_name + '</b>__';
+        })
+
+        const list = await createView({
+            View: ListView,
+            model : 'foo',
+            data: this.data,
+            arch: `<tree expand="1">
+                       <field name="currency_id" widget="many2one_markdown"/>
+                       <groupby name="currency_id" group_markdown="1" no_count="1">
+                           <field name="position" invisible="1"/>
+                       </groupby>
+                   </tree>`,
+            groupBy: ['currency_id'],
+        })
+        assert.containsOnce(list, '.o_group_name:first i', 'should have parsed markdown');
+        assert.containsNone(list, '.o_group_name:first b', 'should not have parsed xml');
+
+        assert.containsOnce(list, '.o_many2one_markdown_cell:first', 'should have parsed markdown');
+
+        list.destroy();
+    })
+
     QUnit.test('list view, editable, without data', async function (assert) {
         assert.expect(12);
 

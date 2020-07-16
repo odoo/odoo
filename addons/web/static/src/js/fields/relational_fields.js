@@ -33,6 +33,7 @@ const { escape } = owl.utils;
 var _t = core._t;
 var _lt = core._lt;
 var qweb = core.qweb;
+var utils = require('web.utils');
 
 //------------------------------------------------------------------------------
 // Many2one widgets
@@ -960,6 +961,13 @@ var ListFieldMany2One = FieldMany2One.extend({
         } else {
             this.mustSetValue = true;
         }
+    },
+});
+
+var Many2oneMarkdown = FieldMany2One.extend({
+    _renderReadonly: function () {
+        this._super.apply(this, arguments);
+        utils.split_node_markdown(this.$el);
     },
 });
 
@@ -3371,6 +3379,7 @@ var FieldReference = FieldMany2One.extend({
 return {
     FieldMany2One: FieldMany2One,
     Many2oneBarcode: Many2oneBarcode,
+    Many2oneMarkdown: Many2oneMarkdown,
     KanbanFieldMany2One: KanbanFieldMany2One,
     ListFieldMany2One: ListFieldMany2One,
     Many2OneAvatar: Many2OneAvatar,

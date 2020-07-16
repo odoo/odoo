@@ -11,6 +11,8 @@
         <rng:element name="groupby">
             <rng:attribute name="name"/>
             <rng:optional><rng:attribute name="expand"/></rng:optional>
+            <rng:optional><rng:attribute name="group_markdown"/></rng:optional>
+            <rng:optional><rng:attribute name="no_count"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:ref name="field"/>
             </rng:zeroOrMore>

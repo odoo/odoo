@@ -82,6 +82,7 @@ registry
     .add('selection_badge', relational_fields.FieldSelectionBadge)
     .add('many2one', relational_fields.FieldMany2One)
     .add('many2one_barcode', relational_fields.Many2oneBarcode)
+    .add('many2one_markdown', relational_fields.Many2oneMarkdown)
     .add('list.many2one', relational_fields.ListFieldMany2One)
     .add('kanban.many2one', relational_fields.KanbanFieldMany2One)
     .add('many2one_avatar', relational_fields.Many2OneAvatar)

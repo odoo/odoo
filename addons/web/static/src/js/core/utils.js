@@ -977,6 +977,24 @@ var utils = {
             ['name', '=like', '%.assets\_%.js'],
         ];
     },
+
+    /*
+     *  Split the node into multiple elements according to its marked down text
+     *  Supported markdowns are
+     *   - ** to set to bold
+     *   - __ to set to italic
+     */
+    split_node_markdown: function(node) {
+        node.css('white-space', 'pre').css('font-weight', 'normal');
+        let html = node.html();
+        // format according to markdown
+        html = html.replace(/(\*\*)(.*?)\1/g, '<b>$2</b>');
+        html = html.replace(/(__)(.*?)\1/g, '<i>$2</i>');
+        // unescape the string
+        html = html.replace(/\\\*/g, '*');
+        html = html.replace(/\\\_/g, '_');
+        node.html(html);
+    },
 };
 
 return utils;

@@ -93,6 +93,7 @@ var ListView = BasicView.extend({
     _extractGroup: function (node) {
         var innerView = this.fields[node.attrs.name].views.groupby;
         this.groupbys[node.attrs.name] = this._processFieldsView(innerView, 'groupby');
+        _.extend(this.groupbys[node.attrs.name].arch.attrs, node.attrs);
     },
     /**
      * @override

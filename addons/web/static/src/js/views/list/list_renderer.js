@@ -697,13 +697,17 @@ var ListRenderer = BasicRenderer.extend({
 
         var name = group.value === undefined ? _t('Undefined') : group.value;
         var groupBy = this.state.groupedBy[groupLevel];
+        let groupAttrs = this.groupbys[groupBy] ? this.groupbys[groupBy].arch.attrs : {};
         if (group.fields[groupBy.split(':')[0]].type !== 'boolean') {
             name = name || _t('Undefined');
         }
         var $th = $('<th>')
             .addClass('o_group_name')
             .attr('tabindex', -1)
-            .text(name + ' (' + group.count + ')');
+            .text(name + (!groupAttrs.no_count ? (' (' + group.count + ')') : ''));
+        if (groupAttrs.group_markdown) {
+            utils.split_node_markdown($th);
+        }
         var $arrow = $('<span>')
             .css('padding-left', (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
