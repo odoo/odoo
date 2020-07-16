@@ -9,7 +9,10 @@
                 <field name="image_512" widget="image" class="oe_avatar"/>
             </xpath>
             <xpath expr="//h1//field[@name='partner_id']" position="replace">
-                <field name="name"/>
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only" string="Sponsor Name"/>
+                    <h1><field name="name"/></h1>
+                </div>
             </xpath>
             <xpath expr="//field[@name='event_id']" position="after">
                 <field name="partner_id"/>
