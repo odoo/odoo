@@ -6,11 +6,11 @@
         <field name="model">event.event</field>
         <field name="inherit_id" ref="event.view_event_form"/>
         <field name="arch" type="xml">
-            <div name="button_box" position="inside">
+            <button id="wetrack_stat_btn_sponsor" position="after">
                 <button class="oe_stat_button" context="{'default_event_id': active_id, 'search_default_event_id': active_id}" icon="fa-comments-o" name="%(event_meeting_room_action)d" type="action">
                     <field name="meeting_room_count" string="Rooms" widget="statinfo"/>
                 </button>
-            </div>
+            </button>
         </field>
     </record>
 

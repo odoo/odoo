@@ -41,7 +41,7 @@ class WebsiteEventMeetController(http.Controller):
             raise Forbidden()
 
         return request.render(
-            "website_event_meet.template_meeting_rooms",
+            "website_event_meet.event_meet",
             self._event_meeting_rooms_get_values(event, lang=lang, open_room_id=open_room_id)
         )
 

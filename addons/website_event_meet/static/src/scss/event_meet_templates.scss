@@ -4,58 +4,41 @@
      * COMMON
      */
 
-    // BG color
-    &.o_wemeet_index_bg {
-        @if (color('body') == $o-portal-default-body-bg) {
-            @extend .bg-200;
-        }
-    }
-
     /*
      * Meet Room PAGE
      */
 
-    .o_wemeet_room_container {
-        @include media-breakpoint-up(md) {
-            &:not(.container) {
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
-            }
-        }
+    .o_wevent_online_page_container {
 
-        // Main panel
-        .o_wemeet_room_main {
-
-            // Main panel: Meeting Room display
-            .o_wemeet_room_main_room {
-                border: 1px solid $border-color;
-
-                @include media-breakpoint-up(md) {
-                    border-top-width: 0;
-                }
-            }
-
-            // Jitsi container
-            #o_wemeet_jitsi_iframe {
-                height: 85vh;
-            }
-        }
-
-        // Left panel
-        .o_wemeet_room_aside {
-
-            // Left panel: other exhibitors
-            .o_wemeet_room_aside_room {
-                border: 1px solid $border-color;
-
-                @include media-breakpoint-up(md) {
-                    border-top-width: 0;
-                }
-
-                .o_wemeet_room_aside_collapse.collapsed {
-                    transform: rotate(90deg);
-                }
-            }
+        // Jitsi container
+        #o_wemeet_jitsi_iframe {
+            height: 85vh;
         }
     }
+}
+
+/*
+ * MEETING MODAL (JS / XML WIDGET)
+ */
+
+.o_wevent_create_meeting_room_modal .modal-dialog {
+    top: 25%;
+    max-width: 500px;
+    height: auto;
+}
+
+.o_wevent_meeting_room_corner_ribbon {
+    width: 200px;
+    background: #e43;
+    top: 25px;
+    left: -50px;
+    text-align: center;
+    line-height: 50px;
+    letter-spacing: 1px;
+    color: #f0f0f0;
+    transform: rotate(-45deg);
+    -webkit-transform: rotate(-45deg);
+    z-index: 1;
+    position: absolute;
+    opacity: 0.7;
 }
