@@ -678,9 +678,6 @@ class ProductProduct(models.Model):
 
         See `_is_combination_possible` for more information.
 
-        This will always exclude variants for templates that have `no_variant`
-        attributes because the variant itself will not be the full combination.
-
         :param parent_combination: combination from which `self` is an
             optional or accessory product.
         :type parent_combination: recordset `product.template.attribute.value`
@@ -689,7 +686,7 @@ class ProductProduct(models.Model):
         :rtype: bool
         """
         self.ensure_one()
-        return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination)
+        return self.product_tmpl_id._is_combination_possible(self.product_template_attribute_value_ids, parent_combination=parent_combination, ignore_no_variant=True)
 
     def toggle_active(self):
         """ Archiving related product.template if there is only one active product.product """
