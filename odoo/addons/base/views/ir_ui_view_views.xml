@@ -134,12 +134,14 @@
             </field>
         </record>
 
-        <act_window id="reset_view_arch_wizard_action"
-            name="Compare/Reset"
-            binding_model="ir.ui.view" binding_views="form,list"
-            res_model="reset.view.arch.wizard"
-            view_mode="form"
-            target="new"/>
+        <record id="reset_view_arch_wizard_action" model="ir.actions.act_window">
+            <field name="name">Compare/Reset</field>
+            <field name="res_model">reset.view.arch.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_ir_ui_view"/>
+            <field name="binding_view_types">form,list</field>
+        </record>
 
         <!-- View customizations -->
         <record id="view_view_custom_form" model="ir.ui.view">

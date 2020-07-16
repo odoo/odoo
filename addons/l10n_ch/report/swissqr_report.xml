@@ -2,16 +2,16 @@
 <odoo>
     <data>
 
-        <report id="l10n_ch_qr_report"
-            model="account.move"
-            report_type="qweb-pdf"
-            string="QR-bill"
-            name="l10n_ch.qr_report_main"
-            file="l10n_ch.qr_report_main"
-            attachment="'QR-bill-' + object.name + '.pdf'"
-            menu="False"
-            print_report_name="'QR-bill-%s' % object.name"
-            paperformat="l10n_ch.paperformat_euro_no_margin"/>
+        <record id="l10n_ch_qr_report" model="ir.actions.report">
+            <field name="name">QR-bill</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ch.qr_report_main</field>
+            <field name="report_file">l10n_ch.qr_report_main</field>
+            <field name="print_report_name">'QR-bill-%s' % object.name</field>
+            <field name="paperformat_id" ref="l10n_ch.paperformat_euro_no_margin"/>
+            <field name="attachment">'QR-bill-' + object.name + '.pdf'</field>
+        </record>
 
         <template id="assets_common_qr" inherit_id="web.report_assets_common">
             <xpath expr="." position="inside">

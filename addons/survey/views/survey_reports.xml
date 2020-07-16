@@ -2,15 +2,16 @@
 <odoo>
     <data>
         <!-- QWeb Reports -->
-        <report
-            id="certification_report"
-            model="survey.user_input"
-            string="Certifications"
-            report_type="qweb-pdf"
-            name="survey.certification_report_view"
-            file="survey.certification_report_view"
-            attachment="'certification.pdf'"
-            print_report_name="'Certification - %s' % (object.survey_id.display_name)"
-        />
+        <record id="certification_report" model="ir.actions.report">
+            <field name="name">Certifications</field>
+            <field name="model">survey.user_input</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">survey.certification_report_view</field>
+            <field name="report_file">survey.certification_report_view</field>
+            <field name="print_report_name">'Certification - %s' % (object.survey_id.display_name)</field>
+            <field name="attachment">'certification.pdf'</field>
+            <field name="binding_model_id" ref="model_survey_user_input"/>
+            <field name="binding_type">report</field>
+        </record>
     </data>
 </odoo>

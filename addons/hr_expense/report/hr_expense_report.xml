@@ -101,14 +101,15 @@
         </t>
     </template>
 
-    <report
-        id="action_report_hr_expense_sheet"
-        string="Expenses Report"
-        model="hr.expense.sheet"
-        report_type="qweb-pdf"
-        name="hr_expense.report_expense_sheet"
-        file="hr_expense.report_expense_sheet"
-        print_report_name="'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))"
-    />
+    <record id="action_report_hr_expense_sheet" model="ir.actions.report">
+        <field name="name">Expenses Report</field>
+        <field name="model">hr.expense.sheet</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr_expense.report_expense_sheet</field>
+        <field name="report_file">hr_expense.report_expense_sheet</field>
+        <field name="print_report_name">'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', ''))</field>
+        <field name="binding_model_id" ref="model_hr_expense_sheet"/>
+        <field name="binding_type">report</field>
+    </record>
 
 </odoo>

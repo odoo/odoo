@@ -27,11 +27,13 @@
                 </tree>
             </field>
         </record>
-        <act_window id="change_password_wizard_action"
-            name="Change Password"
-            binding_model="res.users"
-            res_model="change.password.wizard"
-            view_mode="form" target="new"/>
+        <record id="change_password_wizard_action" model="ir.actions.act_window">
+            <field name="name">Change Password</field>
+            <field name="res_model">change.password.wizard</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="base.model_res_users"/>
+        </record>
 
         <!-- res.groups -->
         <record id="view_groups_search" model="ir.ui.view">

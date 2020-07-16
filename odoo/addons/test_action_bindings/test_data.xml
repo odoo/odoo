@@ -1,24 +1,24 @@
 <odoo>
     <!-- bind to all views -->
-    <act_window
-        id="act1"
-        name="Action 1"
-        res_model="tab.a"
-        binding_model="tab.a"
-        binding_views=""/>
+    <record id="act1" model="ir.actions.act_window">
+        <field name="name">Action 1</field>
+        <field name="res_model">tab.a</field>
+        <field name="binding_model_id" ref="model_tab_a"/>
+        <field name="binding_view_types"></field>
+    </record>
     <!-- bind to form views -->
-    <act_window
-        id="act2"
-        name="Action 2"
-        res_model="tab.a"
-        binding_model="tab.a"
-        binding_views="form"/>
+    <record id="act2" model="ir.actions.act_window">
+        <field name="name">Action 2</field>
+        <field name="res_model">tab.a</field>
+        <field name="binding_model_id" ref="model_tab_a"/>
+        <field name="binding_view_types">form</field>
+    </record>
     <!-- bind to default views (list, form) -->
-    <act_window
-        id="act3"
-        name="Action 3"
-        res_model="tab.a"
-        binding_model="tab.a"/>
+    <record id="act3" model="ir.actions.act_window">
+        <field name="name">Action 3</field>
+        <field name="res_model">tab.a</field>
+        <field name="binding_model_id" ref="model_tab_a"/>
+    </record>
 
     <record id="r1" model="ir.actions.act_window">
         <field name="name">Record 1</field>

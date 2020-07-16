@@ -20,13 +20,14 @@
             </field>
         </record>
 
-        <act_window name="Create invoices"
-            res_model="repair.order.make_invoice"
-            binding_model="repair.order"
-            binding_views="list"
-            view_mode="form"
-            target="new"
-            id="act_repair_invoice"/>
+        <record id="act_repair_invoice" model="ir.actions.act_window">
+            <field name="name">Create invoices</field>
+            <field name="res_model">repair.order.make_invoice</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_repair_order"/>
+            <field name="binding_view_types">list</field>
+        </record>
 
     </data>
 </odoo>

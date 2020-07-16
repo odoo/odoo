@@ -24,12 +24,13 @@
         </field>
     </record>
 
-    <act_window id="stock_picking_to_batch_action_stock_picking"
-        name="Add to batch"
-        res_model="stock.picking.to.batch"
-        binding_model="stock.picking"
-        binding_views="list"
-        view_mode="form" target="new"
-    />
+    <record id="stock_picking_to_batch_action_stock_picking" model="ir.actions.act_window">
+        <field name="name">Add to batch</field>
+        <field name="res_model">stock.picking.to.batch</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+        <field name="binding_model_id" ref="model_stock_picking"/>
+        <field name="binding_view_types">list</field>
+    </record>
 
 </odoo>
