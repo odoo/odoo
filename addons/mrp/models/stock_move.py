@@ -199,7 +199,7 @@ class StockMove(models.Model):
         for move in self:
             mo = move.raw_material_production_id
             if not mo:
-                move.qty_summary = 0
+                move.should_consume_qty = 0
                 continue
             move.should_consume_qty = mo.product_uom_id._compute_quantity((mo.qty_producing - mo.qty_produced) * move.unit_factor, mo.product_uom_id, rounding_method='HALF-UP')
 
