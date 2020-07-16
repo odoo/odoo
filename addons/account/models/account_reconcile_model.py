@@ -38,7 +38,7 @@ class AccountReconcileModelLine(models.Model):
     company_id = fields.Many2one(related='model_id.company_id', store=True, default=lambda self: self.env.company)
     sequence = fields.Integer(required=True, default=10)
     account_id = fields.Many2one('account.account', string='Account', ondelete='cascade',
-        domain="[('deprecated', '=', False), ('company_id', '=', company_id)]",
+        domain="[('deprecated', '=', False), ('company_id', '=', company_id), ('is_off_balance', '=', False)]",
         required=True, check_company=True)
     journal_id = fields.Many2one('account.journal', string='Journal', ondelete='cascade',
         domain="[('type', '=', 'general'), ('company_id', '=', company_id)]",

@@ -14,8 +14,10 @@ class TaxAdjustments(models.TransientModel):
     reason = fields.Char(string='Justification', required=True)
     journal_id = fields.Many2one('account.journal', string='Journal', required=True, default=_get_default_journal, domain=[('type', '=', 'general')])
     date = fields.Date(required=True, default=fields.Date.context_today)
-    debit_account_id = fields.Many2one('account.account', string='Debit account', required=True, domain=[('deprecated', '=', False)])
-    credit_account_id = fields.Many2one('account.account', string='Credit account', required=True, domain=[('deprecated', '=', False)])
+    debit_account_id = fields.Many2one('account.account', string='Debit account', required=True,
+                                       domain="[('deprecated', '=', False), ('is_off_balance', '=', False)]")
+    credit_account_id = fields.Many2one('account.account', string='Credit account', required=True,
+                                        domain="[('deprecated', '=', False), ('is_off_balance', '=', False)]")
     amount = fields.Monetary(currency_field='company_currency_id', required=True)
     adjustment_type = fields.Selection([('debit', 'Applied on debit journal item'), ('credit', 'Applied on credit journal item')], string="Adjustment Type", required=True)
     tax_report_line_id = fields.Many2one(string="Report Line", comodel_name='account.tax.report.line', required=True, help="The report line to make an adjustment for.")
