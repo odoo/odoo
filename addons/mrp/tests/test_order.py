@@ -634,6 +634,38 @@ class TestMrpOrder(TestMrpCommon):
         mo.button_mark_done()
         self.assertEqual(mo.state, 'done')
 
+    def test_consumption_flexible_2(self):
+        """ Checks the constraints of a strict BOM only apply to the product of the BoM. """
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        mo, bom, p_final, p1, p2 = self.generate_mo(consumption='flexible', qty_final=1)
+        self.assertEqual(len(mo), 1, 'MO should have been created')
+
+        self.env['stock.quant']._update_available_quantity(p1, self.stock_location, 100)
+        self.env['stock.quant']._update_available_quantity(p2, self.stock_location, 5)
+        add_product = self.env['product.product'].create({
+            'name': 'additional',
+            'type': 'product',
+        })
+        mo.action_assign()
+
+        mo_form = Form(mo)
+
+        # try adding another line for a bom product to increase the quantity
+        mo_form.qty_producing = 1
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = p1
+        with mo_form.move_raw_ids.new() as line:
+            line.product_id = add_product
+        mo = mo_form.save()
+        details_operation_form = Form(mo.move_raw_ids[-1], view=self.env.ref('stock.view_stock_move_operations'))
+        with details_operation_form.move_line_ids.new() as ml:
+            ml.qty_done = 1
+        details_operation_form.save()
+
+        # Won't accept to be done, instead return a wizard
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+
     def test_product_produce_9(self):
         """ Checks the production wizard contains lines even for untracked products. """
         serial = self.env['product.product'].create({

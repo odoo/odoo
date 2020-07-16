@@ -1170,7 +1170,8 @@ class MrpProduction(models.Model):
             done_qty_by_product = defaultdict(float)
             for move in order.move_raw_ids:
                 qty_done = move.product_uom._compute_quantity(move.quantity_done, move.product_id.uom_id)
-                if move.product_id not in expected_qty_by_product:
+                rounding = move.product_id.uom_id.rounding
+                if not (move.product_id in expected_qty_by_product or float_is_zero(qty_done, precision_rounding=rounding)):
                     issues.append((order, move.product_id, qty_done, 0.0))
                     continue
                 done_qty_by_product[move.product_id] += qty_done
