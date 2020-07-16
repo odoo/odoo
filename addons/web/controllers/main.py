@@ -1635,7 +1635,7 @@ class ReportController(http.Controller):
                 ('QR', o.name, 200, 200)"/>
 
         :param type: Accepted types: 'Codabar', 'Code11', 'Code128', 'EAN13', 'EAN8', 'Extended39',
-        'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'Standard39', 'Standard93',
+        'Extended93', 'FIM', 'I2of5', 'MSI', 'POSTNET', 'QR', 'QR_quiet', 'Standard39', 'Standard93',
         'UPCA', 'USPS_4State'
         :param humanreadable: Accepted values: 0 (default) or 1. 1 will insert the readable value
         at the bottom of the output image
