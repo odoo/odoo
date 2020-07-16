@@ -259,3 +259,26 @@
 .o_Composer_toolButtonSeparator {
     border-left: 1px solid lighten(gray('400'), 5%);
 }
+
+.o_ChatWindow {
+    .o_Composer {
+        background-color: white;
+
+        .o_Composer_coreMain {
+            display: block;
+            border-bottom: 1px solid lighten(gray('400'), 5%);
+        }
+
+        .o_Composer_buttons {
+            .o_Composer_toolButtons {
+                .o_Composer_toolButtonSeparator {
+                    display: none;
+                }
+                border: none;
+            }
+
+            position: relative;
+            float: right;
+        }
+    }
+}
