@@ -4323,13 +4323,13 @@ QUnit.module('basic_fields', {
 
         await testUtils.form.clickCreate(form);
         testUtils.dom.openDatepicker(form.$('.o_datepicker'));
-        $.each($('.day:last-child(),.day:nth-child(2)'), function (index, value) {
+        $.each($('.day:last-child,.day:nth-child(2)'), function (index, value) {
             assert.hasClass(value, 'disabled', 'first and last days must be disabled');
         });
         // the assertions below could be replaced by a single hasClass classic on the jQuery set using the idea
         // All not <=> not Exists. But we want to be sure that the set is non empty. We don't have an helper
         // function for that.
-        $.each($('.day:not(:last-child()):not(:nth-child(2))'), function (index, value) {
+        $.each($('.day:not(:last-child):not(:nth-child(2))'), function (index, value) {
             assert.doesNotHaveClass(value, 'disabled', 'other days must stay clickable');
         });
         form.destroy();
