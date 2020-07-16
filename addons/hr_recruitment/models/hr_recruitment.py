@@ -421,7 +421,11 @@ class Applicant(models.Model):
             new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
             if new_partner:
                 if new_partner.create_date.date() == fields.Date.today():
-                    new_partner.type = 'private'
+                    new_partner.write({
+                        'type': 'private',
+                        'phone': self.partner_phone,
+                        'mobile': self.partner_mobile,
+                    })
                 self.search([
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
