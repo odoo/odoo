@@ -101,6 +101,21 @@
             <t t-call="website_sale.cart_header"/>
         </xpath>
     </template>
+    <template id="template_header_edi4" inherit_id="website.template_header_edi4" name="Header Shop My Cart Link">
+        <xpath expr="//header//ul[@id='top_menu']/li" position="before">
+            <t t-call="website_sale.cart_header"/>
+        </xpath>
+    </template>
+    <template id="template_header_edi3" inherit_id="website.template_header_edi3" name="Header Shop My Cart Link">
+        <xpath expr="//header//ul[@id='top_menu']/li" position="before">
+            <t t-call="website_sale.cart_header"/>
+        </xpath>
+    </template>
+    <template id="template_header_edi2" inherit_id="website.template_header_edi2" name="Header Shop My Cart Link">
+        <xpath expr="//header//ul[@id='top_menu']/li" position="before">
+            <t t-call="website_sale.cart_header"/>
+        </xpath>
+    </template>
 
     <template id="show_search" inherit_id="website_sale.header" name="Hide">
         <xpath expr="//t[@t-set='show_product_search']" position="after">

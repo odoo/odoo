@@ -190,6 +190,9 @@ class Theme(models.AbstractModel):
 
         # Reinitialize header templates
         self.disable_view('website.template_header_main')
+        self.disable_view('website.template_header_edi2')
+        self.disable_view('website.template_header_edi3')
+        self.disable_view('website.template_header_edi4')
         self.disable_view('website.template_header_hamburger')
         self.disable_view('website.template_header_vertical')
         self.disable_view('website.option_header_hamburger_center_logo')

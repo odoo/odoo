@@ -385,7 +385,7 @@
         </div>
     </xpath>
 </template>
-<template id="template_header_edi_two" inherit_id="website.layout" name="Template EDI 2" active="False">
+<template id="template_header_edi2" inherit_id="website.layout" name="Template EDI 2" active="False">
     <xpath expr="//header//ul[@id='top_menu']" position="after">
         <div id="wrap" class="oe_structure oe_empty">
             <section>
@@ -398,15 +398,101 @@
         </div>
     </xpath>
 </template>
-<template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Hamburger" active="False">
-    <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
-        <attribute name="class" remove="navbar-expand-md" separator=" "/>
+<template id="template_header_edi3" inherit_id="website.layout" name="Template Header edi3" active="False">
+    <xpath expr="//header//ul[@id='top_menu']/t[@t-foreach='website.menu_id.child_id']" position="replace"/>
+    <xpath expr="//header//button[hasclass('navbar-toggler')]" position="replace"/>
+    <xpath expr="//header//div[@id='top_menu_collapse']" position="attributes">
+        <attribute name="class" remove="collapse" separator=" "/>
     </xpath>
-    <xpath expr="//header//button[hasclass('navbar-toggler')]" position="replace">
-        <div class="o_navbar_toggler_container">$0</div>
+    <xpath expr="//header/nav" position="after">
+        <nav class="navbar navbar-expand-md navbar-light flex-md-row">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_items">
+                <span class="navbar-toggler-icon o_not_editable"/>
+            </button>
+            <div id="top_menu_items" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav m-auto">
+                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                        <t t-call="website.submenu">
+                            <t t-set="item_class" t-value="'nav-item'"/>
+                            <t t-set="link_class" t-value="'nav-link'"/>
+                        </t>
+                    </t>
+                </ul>
+            </div>
+            <div id="wrap" class="oe_structure oe_empty">
+                <section>
+                    <div class="container">
+                        <p style="text-align: right;">
+                            <a href="" class="btn btn-primary">Call to Action</a>
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </nav>
     </xpath>
-    <xpath expr="//header//ul[@id='top_menu']" position="attributes">
-        <attribute name="class" separator=" " remove="text-right"/>
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="after">
+        <div id="wrap" class="oe_structure oe_empty">
+            <section>
+                <span><p>A Cool Slogan for your Hot Website</p></span>
+            </section>
+        </div>
+    </xpath>
+</template>
+<template id="template_header_edi4" inherit_id="website.layout" name="Template Header edi4" active="False">
+    <xpath expr="//header//ul[@id='top_menu']/t[@t-foreach='website.menu_id.child_id']" position="replace"/>
+    <xpath expr="//header//button[hasclass('navbar-toggler')]" position="replace"/>
+    <xpath expr="//header//div[@id='top_menu_collapse']" position="attributes">
+        <attribute name="class" remove="collapse" separator=" "/>
+    </xpath>
+    <xpath expr="//header/nav" position="after">
+        <nav class="navbar navbar-expand-md navbar-light flex-md-row">
+            <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_items">
+                <span class="navbar-toggler-icon o_not_editable"/>
+            </button>
+            <div id="top_menu_items" class="collapse navbar-collapse">
+                <ul class="nav navbar-nav">
+                    <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                        <t t-call="website.submenu">
+                            <t t-set="item_class" t-value="'nav-item'"/>
+                            <t t-set="link_class" t-value="'nav-link'"/>
+                        </t>
+                    </t>
+                </ul>
+            </div>
+            <div id="wrap" class="oe_structure oe_empty">
+                <section>
+                    <div class="container">
+                        <p style="text-align: right;">
+                            <a href="" class="btn btn-primary">Call to Action</a>
+                        </p>
+                    </div>
+                </section>
+            </div>
+        </nav>
+    </xpath>
+    <xpath expr="//header/nav" position="before">
+        <div id="wrap" class="oe_structure oe_empty">
+            <section>
+                <div class="container">
+                    <div class="d-flex justify-content-between">
+                        <div id="wrap" class="oe_structure oe_empty"><section><span><p>A Cool Slogan for your Hot Website</p></span></section></div>
+                        <div id="wrap" class="oe_structure oe_empty"><section><span class="o_force_ltr"><i class="fa fa-phone fa-fw mr-2"/><a href="tel:1 (650) 691-3277">1 (650) 691-3277</a></span></section></div>
+                        <div class="s_share text-left" data-name="Social Media">
+                            <h4 class="s_share_title d-none">Follow us</h4>
+                            <a href="/website/social/facebook" class="s_share_facebook" target="_blank">
+                                <i class="fa fa-facebook shadow-sm"/>
+                            </a>
+                            <a href="/website/social/twitter" class="s_share_twitter" target="_blank">
+                                <i class="fa fa-twitter shadow-sm"/>
+                            </a>
+                            <a href="/website/social/linkedin" class="s_share_linkedin" target="_blank">
+                                <i class="fa fa-linkedin shadow-sm"/>
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
     </xpath>
 </template>
 
@@ -415,6 +501,12 @@
     <xpath expr="//header//button[hasclass('navbar-toggler')]" position="replace"/>
     <xpath expr="//header//div[@id='top_menu_collapse']" position="attributes">
         <attribute name="class" remove="collapse" separator=" "/>
+    </xpath>
+    <xpath expr="//header//div[@id='top_menu_container']" position="attributes">
+        <attribute name="class" add="d-flex" separator=" "/>
+    </xpath>
+    <xpath expr="//header//a[hasclass('navbar-brand')]" position="attributes">
+        <attribute name="class" add="flex-grow-2 d-flex justify-content-center" separator=" "/>
     </xpath>
     <xpath expr="//header/nav" position="after">
         <nav class="navbar navbar-expand-md navbar-light flex-md-row">
@@ -467,7 +559,17 @@
         </div>
     </xpath>
 </template>
-
+<template id="template_header_hamburger" inherit_id="website.layout" name="Template Header Hamburger" active="False">
+    <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
+        <attribute name="class" remove="navbar-expand-md" separator=" "/>
+    </xpath>
+    <xpath expr="//header//button[hasclass('navbar-toggler')]" position="replace">
+        <div class="o_navbar_toggler_container">$0</div>
+    </xpath>
+    <xpath expr="//header//ul[@id='top_menu']" position="attributes">
+        <attribute name="class" separator=" " remove="text-right"/>
+    </xpath>
+</template>
 <template id="template_header_sidebar" inherit_id="website.layout" name="Template Header Sidebar" active="False">
     <xpath expr="//header//nav[hasclass('navbar')]" position="attributes">
         <attribute name="class" remove="navbar-expand-md" add="navbar-expand-lg" separator=" "/>
