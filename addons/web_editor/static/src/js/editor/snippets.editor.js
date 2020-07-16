@@ -303,6 +303,10 @@ var SnippetEditor = Widget.extend({
      * @override
      */
     destroy: function () {
+        // Before actually destroying a snippet editor, notify the parent
+        // about it so that it can update its list of alived snippet editors.
+        this.trigger_up('snippet_editor_destroyed');
+
         this._super(...arguments);
         if (this.draggableComponent) {
             this.draggableComponent.unsetDraggable();
@@ -991,6 +995,7 @@ var SnippetsMenu = Widget.extend({
         'go_to_parent': '_onGoToParent',
         'remove_snippet': '_onRemoveSnippet',
         'snippet_edition_request': '_onSnippetEditionRequest',
+        'snippet_editor_destroyed': '_onSnippetEditorDestroyed',
         'snippet_removed': '_onSnippetRemoved',
         'snippet_cloned': '_onSnippetCloned',
         'snippet_option_visibility_update': '_onSnippetOptionVisibilityUpdate',
@@ -1263,16 +1268,15 @@ var SnippetsMenu = Widget.extend({
      * Updates the cover dimensions of the current snippet editor.
      */
     updateCurrentSnippetEditorOverlay: function () {
-        this.snippetEditors = this.snippetEditors.filter(snippetEditor => {
+        for (const snippetEditor of this.snippetEditors) {
             if (snippetEditor.$target.closest('body').length) {
                 snippetEditor.cover();
-                return true;
+                continue;
             }
             // Destroy options whose $target are not in the DOM anymore but
             // only do it once all options executions are done.
             this._mutex.exec(() => snippetEditor.destroy());
-            return false;
-        });
+        }
     },
 
     //--------------------------------------------------------------------------
@@ -2393,6 +2397,15 @@ var SnippetsMenu = Widget.extend({
      */
     _onSnippetEditionRequest: function (ev) {
         this._mutex.exec(ev.data.exec);
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onSnippetEditorDestroyed(ev) {
+        ev.stopPropagation();
+        const index = this.snippetEditors.indexOf(ev.target);
+        this.snippetEditors.splice(index, 1);
     },
     /**
      * @private
