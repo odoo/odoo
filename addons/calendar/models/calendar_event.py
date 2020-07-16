@@ -325,7 +325,7 @@ class Meeting(models.Model):
         # its recomputation. To avoid this we manually mark the field as computed.
         duration_field = self._fields['duration']
         self.env.remove_to_compute(duration_field, self)
-        for event in self.filtered('duration'):
+        for event in self:
             # Round the duration (in hours) to the minute to avoid weird situations where the event
             # stops at 4:19:59, later displayed as 4:19.
             event.stop = event.start + timedelta(minutes=round((event.duration or 1.0) * 60))
@@ -356,7 +356,7 @@ class Meeting(models.Model):
     @api.constrains('start', 'stop', 'start_date', 'stop_date')
     def _check_closing_date(self):
         for meeting in self:
-            if meeting.start and meeting.stop and meeting.stop < meeting.start:
+            if not meeting.allday and meeting.start and meeting.stop and meeting.stop < meeting.start:
                 raise ValidationError(
                     _('The ending date and time cannot be earlier than the starting date and time.') + '\n' +
                     _("Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'",
@@ -365,7 +365,7 @@ class Meeting(models.Model):
                       end_datetime=meeting.stop
                     )
                 )
-            if meeting.start_date and meeting.stop_date and meeting.stop_date < meeting.start_date:
+            if meeting.allday and meeting.start_date and meeting.stop_date and meeting.stop_date < meeting.start_date:
                 raise ValidationError(
                     _('The ending date cannot be earlier than the starting date.') + '\n' +
                     _("Meeting '%(name)s' starts '%(start_datetime)s' and ends '%(end_datetime)s'",
