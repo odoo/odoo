@@ -44,25 +44,25 @@
                                     <group string="Accounting information">
                                         <field name="default_account_type" invisible="1"/>
                                         <!-- Bank -->
-                                        <field name="default_account_id" options="{'no_create': True}" string="Bank Account"
+                                        <field name="default_account_id" string="Bank Account"
                                                attrs="{'required': [('id', '!=', False)], 'invisible': [('type', '!=', 'bank')]}"
                                                groups="account.group_account_readonly"/>
                                         <!-- Cash -->
-                                        <field name="default_account_id" options="{'no_create': True}" string="Cash Account"
+                                        <field name="default_account_id" string="Cash Account"
                                                attrs="{'required': [('id', '!=', False)], 'invisible': [('type', '!=', 'cash')]}"
                                                groups="account.group_account_readonly"/>
 
-                                        <field name="suspense_account_id" options="{'no_create': True}"
-                                               attrs="{'required': [('id', '!=', False), ('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
+                                        <field name="suspense_account_id"
+                                               attrs="{'required': [('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
                                                groups="account.group_account_readonly"/>
-                                        <field name="profit_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
-                                        <field name="loss_account_id" options="{'no_create': True}" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
+                                        <field name="profit_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
+                                        <field name="loss_account_id" attrs="{'invisible': [('type', '!=', 'cash')]}"/>
                                         <!-- Sales -->
-                                        <field name="default_account_id" options="{'no_create': True}" string="Default Income Account"
+                                        <field name="default_account_id" string="Default Income Account"
                                                attrs="{'required': [('id', '!=', False)], 'invisible': [('type', '!=', 'sale')]}"
                                                groups="account.group_account_readonly"/>
                                         <!-- Purchase -->
-                                        <field name="default_account_id" options="{'no_create': True}" string="Default Expense Account"
+                                        <field name="default_account_id" string="Default Expense Account"
                                                attrs="{'required': [('id', '!=', False)], 'invisible': [('type', '!=', 'purchase')]}"
                                                groups="account.group_account_readonly"/>
                                         <field name="refund_sequence" attrs="{'invisible': [('type', 'not in', ['sale', 'purchase'])]}"/>
@@ -79,14 +79,14 @@
                             <page name="journal_entries" string="Payments Configuration" attrs="{'invisible': [('type', 'in', ['sale', 'purchase', 'general'])]}">
                                 <group>
                                     <group string="Incoming Payments">
-                                        <field name="payment_debit_account_id" options="{'no_create': True}"
+                                        <field name="payment_debit_account_id"
                                                attrs="{'required': [('id', '!=', False), ('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
                                                groups="account.group_account_readonly"/>
                                         <field name="inbound_payment_method_ids" string="Methods" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'not in', ['bank', 'cash'])]}"/>
                                     </group>
                                     <group string="Outgoing Payments">
                                         <field name="id" invisible="1"/>
-                                        <field name="payment_credit_account_id" options="{'no_create': True}"
+                                        <field name="payment_credit_account_id"
                                                attrs="{'required': [('id', '!=', False), ('type', 'in', ('bank', 'cash'))], 'invisible': [('type', 'not in', ('bank', 'cash'))]}"
                                                groups="account.group_account_readonly"/>
                                         <field name="currency_id" options="{'no_create': True}" groups="base.group_multi_currency"/>
