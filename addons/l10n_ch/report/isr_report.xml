@@ -16,17 +16,17 @@
         </record>
 
         <!--Report containing an ISR corrresponding to an invoice.-->
-        <report id="l10n_ch_isr_report"
-            model="account.move"
-            report_type="qweb-pdf"
-            string="ISR"
-            name="l10n_ch.isr_report_main"
-            file="l10n_ch.isr_report_main"
-            attachment_use="True"
-            attachment="'ISR-' + object.name + '.pdf'"
-            menu="False"
-            print_report_name="'ISR-%s' % object.name"
-            paperformat="paperformat_euro_no_margin"/>
+        <record id="l10n_ch_isr_report" model="ir.actions.report">
+            <field name="name">ISR</field>
+            <field name="model">account.move</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">l10n_ch.isr_report_main</field>
+            <field name="report_file">l10n_ch.isr_report_main</field>
+            <field name="print_report_name">'ISR-%s' % object.name</field>
+            <field name="paperformat_id" ref="paperformat_euro_no_margin"/>
+            <field name="attachment">'ISR-' + object.name + '.pdf'</field>
+            <field name="attachment_use">True</field>
+        </record>
         <!--No additional condition in report name on invoice state or type as this
             report is only available to be printed for out invoices after
             'draft' state, if the fields required by the ISR have been set.-->

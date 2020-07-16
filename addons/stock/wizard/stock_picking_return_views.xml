@@ -1,8 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
-    <act_window name="Reverse Transfer" id="act_stock_return_picking"
-        res_model="stock.return.picking"
-        view_mode="form" target="new"/>
+    <record id="act_stock_return_picking" model="ir.actions.act_window">
+        <field name="name">Reverse Transfer</field>
+        <field name="res_model">stock.return.picking</field>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
 
     <record id="view_stock_return_picking_form" model="ir.ui.view">
         <field name="name">Return lines</field>

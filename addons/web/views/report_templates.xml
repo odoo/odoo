@@ -560,16 +560,22 @@
         </t>
     </template>
 
-    <report id="action_report_internalpreview"
-        model="res.company"
-        name="web.preview_internalreport"
-        file="web.preview_internalreport"
-        string="Preview Internal Report"
-        report_type="qweb-pdf"/>
-    <report id="action_report_externalpreview"
-        model="res.company"
-        name="web.preview_externalreport"
-        file="web.preview_externalreport"
-        string="Preview External Report"
-        report_type="qweb-pdf"/>
+    <record id="action_report_internalpreview" model="ir.actions.report">
+        <field name="name">Preview Internal Report</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">web.preview_internalreport</field>
+        <field name="report_file">web.preview_internalreport</field>
+        <field name="binding_model_id" ref="model_res_company"/>
+        <field name="binding_type">report</field>
+    </record>
+    <record id="action_report_externalpreview" model="ir.actions.report">
+        <field name="name">Preview External Report</field>
+        <field name="model">res.company</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">web.preview_externalreport</field>
+        <field name="report_file">web.preview_externalreport</field>
+        <field name="binding_model_id" ref="model_res_company"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>

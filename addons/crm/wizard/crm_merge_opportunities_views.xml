@@ -33,13 +33,13 @@
             </field>
         </record>
 
-        <act_window
-            id="action_merge_opportunities"
-            name="Merge"
-            res_model="crm.merge.opportunity"
-            binding_model="crm.lead"
-            binding_views="list"
-            view_mode="form"
-            target="new" />
+        <record id="action_merge_opportunities" model="ir.actions.act_window">
+            <field name="name">Merge</field>
+            <field name="res_model">crm.merge.opportunity</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="binding_view_types">list</field>
+        </record>
 
 </odoo>

@@ -701,14 +701,13 @@
             </field>
         </record>
 
-        <act_window
-            id="portal_share_action"
-            name="Share"
-            res_model="portal.share"
-            binding_model="project.task"
-            view_mode="form"
-            target="new"
-        />
+        <record id="portal_share_action" model="ir.actions.act_window">
+            <field name="name">Share</field>
+            <field name="res_model">portal.share</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="binding_model_id" ref="model_project_task"/>
+        </record>
 
         <record id="unlink_project_action" model="ir.actions.server">
             <field name="name">Delete</field>
@@ -1008,10 +1007,14 @@
         <menuitem action="open_view_project_all_config" id="menu_projects_config" name="Projects" parent="menu_project_config" sequence="10"/>
 
         <!-- User Form -->
-        <act_window context="{'search_default_user_id': [active_id], 'default_user_id': active_id}"
-                    id="act_res_users_2_project_task_opened" name="Assigned Tasks"
-                    res_model="project.task" view_mode="tree,form,calendar,graph"
-                    binding_model="res.users" binding_views="form"/>
+        <record id="act_res_users_2_project_task_opened" model="ir.actions.act_window">
+            <field name="name">Assigned Tasks</field>
+            <field name="res_model">project.task</field>
+            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="context">{'search_default_user_id': [active_id], 'default_user_id': active_id}</field>
+            <field name="binding_model_id" ref="base.model_res_users"/>
+            <field name="binding_view_types">form</field>
+        </record>
 
         <!-- Tags -->
         <record model="ir.ui.view" id="project_tags_search_view">

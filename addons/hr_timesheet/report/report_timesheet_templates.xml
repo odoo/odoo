@@ -70,11 +70,13 @@
         </t>
     </template>
 
-    <report id="timesheet_report"
-            model="account.analytic.line"
-            string="Timesheet Entries"
-            report_type="qweb-pdf"
-            name="hr_timesheet.report_timesheet"
-            file="report_timesheet"
-    />
+    <record id="timesheet_report" model="ir.actions.report">
+        <field name="name">Timesheet Entries</field>
+        <field name="model">account.analytic.line</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">hr_timesheet.report_timesheet</field>
+        <field name="report_file">report_timesheet</field>
+        <field name="binding_model_id" ref="model_account_analytic_line"/>
+        <field name="binding_type">report</field>
+    </record>
 </odoo>

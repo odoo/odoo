@@ -1148,11 +1148,11 @@
 
         <!-- account.move.line (Journal Items) -->
 
-        <act_window
-            id="action_move_line_select"
-            name="Journal Items"
-            context="{'search_default_account_id': [active_id]}"
-            res_model="account.move.line"/>
+        <record id="action_move_line_select" model="ir.actions.act_window">
+            <field name="name">Journal Items</field>
+            <field name="res_model">account.move.line</field>
+            <field name="context">{'search_default_account_id': [active_id]}</field>
+        </record>
 
         <record id="action_accrual_entry" model="ir.actions.server">
             <field name="name">Create Accrual Entries</field>

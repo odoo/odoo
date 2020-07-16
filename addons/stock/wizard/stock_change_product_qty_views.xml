@@ -24,10 +24,11 @@
             </field>
         </record>
 
-        <act_window id="action_change_product_quantity"
-                    name="Change Product Quantity"
-                    res_model="stock.change.product.qty"
-                    view_mode="form"
-                    target="new"/>
+        <record id="action_change_product_quantity" model="ir.actions.act_window">
+            <field name="name">Change Product Quantity</field>
+            <field name="res_model">stock.change.product.qty</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
     </data>
 </odoo>
