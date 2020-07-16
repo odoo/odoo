@@ -53,6 +53,12 @@
                 <xpath expr="//field[@name='order_line']/tree/field[@name='analytic_tag_ids']" position="after">
                     <field name="route_id" groups="stock.group_adv_location" options="{'no_create': True}" optional="hide"/>
                 </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="attributes">
+                    <attribute name="attrs">{'column_invisible': [('parent.state', 'not in', ['cancel', 'done'])]}</attribute>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree/field[@name='qty_delivered']" position="after">
+                    <field name="json_forecast" string="Delivered" widget="forecast_widget" attrs="{'column_invisible': [('parent.state', 'in', ['cancel', 'done'])]}"/>
+                </xpath>
            </field>
         </record>
 
