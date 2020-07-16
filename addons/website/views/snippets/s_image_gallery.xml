@@ -73,18 +73,18 @@
                 <t t-set="apply_to" t-valuef="img"/>
                 <t t-set="so_rounded_no_dependencies" t-value="true"/>
             </t>
-            <we-divider/>
-            <we-button data-add-images="true" data-no-preview="true">Add images<i class="fa fa-fw fa-plus ml-auto"/></we-button>
-            <we-button data-remove-all-images="true" data-no-preview="true">Remove all images<i class="fa fa-fw fa-minus ml-auto"/></we-button>
+            <we-row string="Images">
+                <we-button data-add-images="true" data-no-preview="true">Add</we-button>
+                <we-button data-remove-all-images="true" data-no-preview="true">Remove all</we-button>
+            </we-row>
         </div>
         <div data-js="gallery_img" data-selector=".s_image_gallery img">
-            <div data-no-preview="true">
-                <we-title>Re-order</we-title>
-                <we-button data-position="first">Move to first</we-button>
-                <we-button data-position="prev">Move to previous</we-button>
-                <we-button data-position="next">Move to next</we-button>
-                <we-button data-position="last">Move to last</we-button>
-            </div>
+            <we-row string="Re-order" data-no-preview="true">
+                <we-button title="Move to first" data-position="first"><i class="fa fa-fw fa-angle-double-left"/></we-button>
+                <we-button title="Move to previous" data-position="prev"><i class="fa fa-fw fa-angle-left"/></we-button>
+                <we-button title="Move to next" data-position="next"><i class="fa fa-fw fa-angle-right"/></we-button>
+                <we-button title="Move to last" data-position="last"><i class="fa fa-fw fa-angle-double-right"/></we-button>
+            </we-row>
         </div>
     </xpath>
 </template>
