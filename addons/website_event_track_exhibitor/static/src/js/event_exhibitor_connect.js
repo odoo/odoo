@@ -106,6 +106,7 @@ publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
         return this._super(...arguments).then(function () {
             self.eventIsOngoing = self.$el.data('eventIsOngoing') || false;
             self.sponsorIsOngoing = self.$el.data('sponsorIsOngoing') || false;
+            self.isParticipating = self.$el.data('isParticipating') || false;
             self.$el.on('click', self._onConnectClick.bind(self));
         });
     },
@@ -126,6 +127,8 @@ publicWidget.registry.eventExhibitorConnect = publicWidget.Widget.extend({
 
         if (this.eventIsOngoing && ! this.sponsorIsOngoing) {
             return this._openClosedDialog();
+        } else if (!this.eventIsOngoing && !this.isParticipating) {
+            document.location = this.$el.data('registerUrl');
         } else {
             document.location = this.$el.data('sponsorUrl');
         }

@@ -14,13 +14,6 @@
         opacity: 0.8;
     }
 
-    // BG color
-    &.o_wesponsor_index_bg {
-        @if (color('body') == $o-portal-default-body-bg) {
-            @extend .bg-200;
-        }
-    }
-
     /*
      * MAIN PAGE: LIST
      */
@@ -88,47 +81,11 @@
      * EXHIBITOR PAGE
      */
 
-    .o_wesponsor_exhibitor_container {
-        @include media-breakpoint-up(md) {
-            &:not(.container) {
-                padding-left: 0.5rem;
-                padding-right: 0.5rem;
-            }
-        }
+    .o_wevent_online_page_container {
 
-        // Main panel
-        .o_wesponsor_exhibitor_main {
-
-            // Main panel: exhibitor display
-            .o_wesponsor_exhibitor_main_exhibitor {
-                border: 1px solid $border-color;
-
-                @include media-breakpoint-up(md) {
-                    border-top-width: 0;
-                }
-            }
-
-            // Jitsi container
-            #o_wsponsor_jitsi_iframe {
-                height: 400px;
-            }
-        }
-
-        // Left panel
-        .o_wesponsor_exhibitor_aside {
-
-            // Left panel: other exhibitors
-            .o_wesponsor_exhibitor_aside_exhibitors {
-                border: 1px solid $border-color;
-
-                @include media-breakpoint-up(md) {
-                    border-top-width: 0;
-                }
-
-                .o_wesponsor_exhibitor_aside_collapse.collapsed {
-                    transform: rotate(90deg);
-                }
-            }
+        // Jitsi container
+        #o_wsponsor_jitsi_iframe {
+            height: 85vh;
         }
     }
 }

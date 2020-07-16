@@ -9,7 +9,7 @@
 
 <template id="event_exhibitors" name="Event Exhibitors">
     <t t-call="website_event.layout">
-        <div class="o_wesponsor_index o_wesponsor_index_bg">
+        <div class="o_wevent_online o_wevent_online_bg o_wesponsor_index">
             <!-- Topbar -->
             <t t-call="website_event_track_exhibitor.exhibitors_topbar"/>
             <!-- Drag/Drop Area -->
@@ -19,7 +19,7 @@
                 <div class="row">
                     <t t-call="website_event_track_exhibitor.exhibitors_search"/>
                 </div>
-                <div class="row my-3">
+                <div class="row mt-3">
                     <t t-call="website_event_track_exhibitor.exhibitors_main"/>
                 </div>
             </div>
@@ -162,9 +162,11 @@
                 </small>
 
                 <div t-att-data-sponsor-url="sponsor.website_url" class="o_wesponsor_js_connect"
-                    t-att-data-sponsor-id="sponsor.id"
-                    t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
-                    t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours">
+                     t-attf-data-register-url="/event/#{slug(event)}/register"
+                     t-att-data-is-participating="event.is_participating"
+                     t-att-data-sponsor-id="sponsor.id"
+                     t-att-data-event-is-ongoing="sponsor.event_id.is_ongoing"
+                     t-att-data-sponsor-is-ongoing="sponsor.is_in_opening_hours">
                     <div t-if="sponsor_image_url" class="card-img-top position-static o_wesponsor_bg_image"
                         t-attf-style="padding-top: 50%; background-image: url(#{sponsor_image_url});">
                         <div class="o_wesponsor_connect_button">
