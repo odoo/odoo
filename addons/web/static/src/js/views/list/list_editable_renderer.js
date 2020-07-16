@@ -1332,6 +1332,12 @@ ListRenderer.include({
      */
     _squeezeTable: function () {
         const table = this.el.getElementsByTagName('table')[0];
+
+        // Toggle a className used to remove style that could interfer with the ideal width
+        // computation algorithm (e.g. prevent text fields from being wrapped during the
+        // computation, to prevent them from being completely crushed)
+        table.classList.add('o_list_computing_widths');
+
         const thead = table.getElementsByTagName('thead')[0];
         const thElements = [...thead.getElementsByTagName('th')];
         const columnWidths = thElements.map(th => th.offsetWidth);
@@ -1378,6 +1384,9 @@ ListRenderer.include({
 
             totalWidth = getTotalWidth();
         }
+
+        // We are no longer computing widths, so restore the normal style
+        table.classList.remove('o_list_computing_widths');
 
         return columnWidths;
     },
