@@ -8,7 +8,10 @@ from collections import defaultdict
 
 from odoo import api, fields, models, _
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
+from odoo.tools.float_utils import float_repr
+from odoo.tools.misc import format_date
 from odoo.exceptions import UserError
+
 
 _logger = logging.getLogger(__name__)
 
@@ -267,6 +270,7 @@ class SaleOrderLine(models.Model):
     qty_to_deliver = fields.Float(compute='_compute_qty_to_deliver')
     is_mto = fields.Boolean(compute='_compute_is_mto')
     display_qty_widget = fields.Boolean(compute='_compute_qty_to_deliver')
+    json_forecast = fields.Char('JSON data for the forecast widget', compute='_compute_json_forecast')
 
     @api.depends('product_id', 'product_uom_qty', 'qty_delivered', 'state')
     def _compute_qty_to_deliver(self):
@@ -353,6 +357,35 @@ class SaleOrderLine(models.Model):
                 line.is_mto = True
             else:
                 line.is_mto = False
+
+    @api.depends('move_ids', 'order_id.expected_date', 'qty_delivered')
+    def _compute_json_forecast(self):
+        self.json_forecast = False
+        if not any(self._ids):
+            # onchange
+            return
+        # compute
+        precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
+        for so_line in self:
+            if any(so_line.move_ids.filtered(lambda move: move.state in ['done'])):
+                qty_delivered = float_repr(so_line.qty_delivered, precision)
+                so_line.json_forecast = json.dumps({'reservedAvailability': qty_delivered})
+            else:
+                # For waiting deliveries, take the info from the report line.
+                delivery = so_line.move_ids.picking_id.filtered(lambda picking: picking.state in ['confirmed', 'waiting'])
+                if delivery.exists():
+                    moves_to_process = so_line.move_ids.filtered(lambda move: move.id in delivery.move_lines.ids and move.state not in ['cancel', 'done'])
+                    if moves_to_process.exists():
+                        so_line.json_forecast = moves_to_process[0].json_forecast
+                else:
+                    # For assigned deliveries, take the delivery's date.
+                    delivery = so_line.move_ids.picking_id.filtered(lambda picking: picking.state == 'assigned')
+                    if delivery.exists():
+                        date_expected = delivery.scheduled_date
+                        so_line.json_forecast = json.dumps({
+                            'expectedDate': format_date(self.env, date_expected),
+                            'isLate': date_expected > so_line.order_id.expected_date,
+                        })
 
     @api.depends('product_id')
     def _compute_qty_delivered_method(self):
