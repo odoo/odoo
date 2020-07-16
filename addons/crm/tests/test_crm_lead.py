@@ -23,13 +23,31 @@ class TestCRMLead(TestCrmCommon):
 
         # update to a partner, should udpate address
         lead.write({'partner_id': self.contact_1.id})
-        # self.assertEqual(lead.partner_name, self.contact_company_1.name)
-        # self.assertEqual(lead.contact_name, self.contact_1.name)
-        # self.assertEqual(lead.email_from, self.contact_1.email)
-        # self.assertEqual(lead.street, self.contact_1.street)
-        # self.assertEqual(lead.city, self.contact_1.city)
-        # self.assertEqual(lead.zip, self.contact_1.zip)
-        # self.assertEqual(lead.country_id, self.contact_1.country_id)
+        self.assertEqual(lead.partner_name, self.contact_company_1.name)
+        self.assertEqual(lead.contact_name, self.contact_1.name)
+        self.assertEqual(lead.email_from, self.contact_1.email)
+        self.assertEqual(lead.street, self.contact_1.street)
+        self.assertEqual(lead.city, self.contact_1.city)
+        self.assertEqual(lead.zip, self.contact_1.zip)
+        self.assertEqual(lead.country_id, self.contact_1.country_id)
+
+    def test_crm_lead_creation_no_partner(self):
+        belgium = self.env.ref('base.be')
+        lead_data = {
+            'name': 'Test',
+            'country_id': belgium.id,
+            'email_from': 'test@odoo.com',
+            'phone': '04584579646',
+        }
+        lead = self.env['crm.lead'].new(lead_data)
+        # get the street should not trigger cache miss
+        lead.street
+        # Create the lead and the write partner_id = False
+        # Country should remain
+        lead = self.env['crm.lead'].create(lead_data)
+        self.assertEqual(lead.country_id, belgium, "Country should be set on the lead")
+        lead.partner_id = False
+        self.assertEqual(lead.country_id, belgium, "Country should still be set on the lead")
 
     @users('user_sales_manager')
     def test_crm_lead_partner_sync(self):
