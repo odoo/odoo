@@ -182,9 +182,8 @@ QUnit.module('hr', {}, function () {
                 if (args.method === 'read') {
                     assert.step(`read ${args.model} ${args.args[0]}`);
                 }
-                if (args.method === 'xmlid_to_res_id') {
-                    assert.step(`xmlid_to_res_id ${args.kwargs.xmlid}`);
-                    return Promise.resolve(2);
+                if (args.method === 'get_odoobot_channel') {
+                    assert.step('fetch odoobot ID');
                 }
                 return this._super(...arguments);
             },
@@ -201,7 +200,7 @@ QUnit.module('hr', {}, function () {
         assert.verifySteps([
             'read foo 1',
             'read hr.employee 11',
-            'xmlid_to_res_id base.partner_root', // get odoobot ID to open odoobot chat window
+            'fetch odoobot ID', // get odoobot ID to open odoobot chat window
         ]);
 
         form.destroy();

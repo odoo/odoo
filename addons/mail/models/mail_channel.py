@@ -386,45 +386,15 @@ class Channel(models.Model):
             })
         return message
 
-    def message_comment(self, *,
-                       partner_ids=False, parent_id=False, model=False, res_id=False,
-                       author_id=None, email_from=None, body='', subject=False, **kwargs):
-        """ Post a new message as a comment(Discussion) in an existing thread
-        Returns new mail.message ID """
-        if self:
-            self.ensure_one()
-        # split message additional values from notify additional values
-        msg_kwargs = dict((key, val) for key, val in kwargs.items() if key in self.env['mail.message']._fields)
-        notif_kwargs = dict((key, val) for key, val in kwargs.items() if key not in msg_kwargs)
-
-        author_id, email_from = self._message_compute_author(author_id, email_from, raise_exception=True)
-        partner_ids = set(partner_ids or [])
-
-        if not (model and res_id):  # both value should be set or none should be set (record)
-            model = False
-            res_id = False
-
-        MailThread = self.env['mail.thread']
-        values = {
-            'author_id': author_id,
-            'email_from': email_from,
-            'model': self._name if self else False,
-            'res_id': self.id if self else False,
-            'body': body,
-            'subject': subject or False,
-            'message_type': 'comment',
-            'parent_id': parent_id,
-            'subtype_id': self.env['ir.model.data'].xmlid_to_res_id('mail.mt_comment'),
-            'partner_ids': partner_ids,
-            'record_name': self.display_name,
-            'add_sign': True,
-            'reply_to': email_from,
-            'message_id': tools.generate_tracking_message_id('message-notify'),
-        }
-        values.update(msg_kwargs)
-        new_message = MailThread._message_create(values)
-        MailThread._notify_thread(new_message, values, **notif_kwargs)
-        return new_message
+    @api.model
+    def get_odoobot_channel(self):
+        # Get odoobot id and post a new message as a comment
+        odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
+        channel_info = self.channel_get([odoobot_id])
+        channel = self.browse(channel_info['id'])
+        message = _("<i>Hey there! :) <br/> Chat with any other user simply by clicking on his avatar.</i>")
+        channel.message_post(body=message, author_id=odoobot_id, message_type="comment", subtype_xmlid="mail.mt_comment")
+        return odoobot_id
 
     def _alias_check_contact(self, message, message_dict, alias):
         if alias.alias_contact == 'followers' and self.ids:

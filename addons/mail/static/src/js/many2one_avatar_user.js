@@ -93,19 +93,6 @@ odoo.define('mail.Many2OneAvatarUser', function (require) {
             }
             return this.partnerIds[key];
         },
-        /**
-         * Return partner id of the OdooBot.
-         *
-         * @returns {Promise<integer|false>}
-         */
-        async _getOdooBotPartnerId() {
-            const params = {
-                model: 'ir.model.data',
-                method: 'xmlid_to_res_id',
-                kwargs: {xmlid: 'base.partner_root'},
-            };
-            return await this._rpc(params);
-        },
 
         //----------------------------------------------------------------------
         // Handlers
@@ -125,37 +112,24 @@ odoo.define('mail.Many2OneAvatarUser', function (require) {
             if (this.field.relation !== 'res.users' || this.value.res_id !== session.uid) {
                 partnerId = await this._resIdToPartnerId(this.value.res_id);
             }
-            // if clicked on self or partnerId fetched is same as session.partnerId then open OdooBot
-            if (this.value.res_id === session.uid || partnerId === session.partner_id) {
-                partnerId = await this._getOdooBotPartnerId();
-            }
-
             if (partnerId && partnerId !== session.partner_id) {
                 const env = Component.env;
                 const partner = env.models['mail.partner'].insert({
                     id: partnerId,
                 });
-                const channelId = await partner.openChat();
-                if (this.value.res_id === session.uid) {
-                    let postData = {
-                        attachment_ids: [],
-                        author_id: partnerId,
-                        body: '<i>Hey there! :) <br/> Chat with any other user simply by clicking on his avatar.</i>',
-                        message_type: 'comment',
-                        reply_to: partnerId,
-                        res_id: partnerId,
-                        channel_ids: [channelId],
-                        moderation_status: 'accepted'
-                    };
-                    this._rpc({
-                        model: "mail.channel",
-                        method: 'message_comment',
-                        args: [channelId],
-                        kwargs: postData
-                    });
-                }
+                partner.openChat();
             } else {
-                this._displayWarning(partnerId);
+                // if clicked on self or partnerId fetched is same as session.partnerId then open OdooBot
+                if (this.value.res_id === session.uid || partnerId === session.partner_id) {
+                    const odooBotId = await this._rpc({
+                        model: 'mail.channel',
+                        method: 'get_odoobot_channel',
+                    });
+                    const partner = Component.env.models['mail.partner'].insert({ id: odooBotId });
+                    partner.openChat();
+                } else {
+                    this._displayWarning(partnerId);
+                }
             }
         }
     });
