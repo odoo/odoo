@@ -243,7 +243,7 @@ class MailComposer(models.TransientModel):
                         batch_mails_sudo |= self.env['mail.mail'].sudo().create(mail_values)
                     else:
                         post_params = dict(
-                            message_type=wizard.message_type,
+                            message_type=wizard.message_type.no_test(),
                             subtype_id=subtype_id,
                             email_layout_xmlid=notif_layout,
                             add_sign=not bool(wizard.template_id),

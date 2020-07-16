@@ -232,8 +232,8 @@ class MrpProduction(models.Model):
     priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
                                 readonly=True, states={'draft': [('readonly', False)]}, default='1')
     is_locked = fields.Boolean('Is Locked', default=_get_default_is_locked, copy=False)
-    is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned")
-    is_partially_planned = fields.Boolean('One operation is Planned', compute="_compute_is_planned")
+    is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned", search='_search_planned')
+    is_partially_planned = fields.Boolean('One operation is Planned', compute="_compute_is_planned", search='_search_partially_planned')
 
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
@@ -301,14 +301,40 @@ class MrpProduction(models.Model):
         if self.date_planned_finished:
             self.move_finished_ids.write({'date_expected': self.date_planned_finished})
 
+    def _search_planned(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        value = value if operator == '=' else not value
+        operator = 'inselect' if value else 'not inselect'
+        query = """
+              SELECT wo.production_id
+                FROM mrp_workorder wo
+            GROUP BY wo.production_id
+              HAVING bool_and(wo.date_planned_start IS NOT NULL AND wo.date_planned_finished IS NOT NULL)
+        """
+        return [('id', operator, (query, []))]
+
+    def _search_partially_planned(self, operator, value):
+        if operator not in ['=', '!='] or not isinstance(value, bool):
+            raise UserError(_('Operation not supported'))
+        value = value if operator == '=' else not value
+        operator = 'inselect' if value else 'not inselect'
+        query = """
+              SELECT wo.production_id
+                FROM mrp_workorder wo
+                JOIN mrp_production prod ON wo.production_id = prod.id
+               WHERE prod.state != 'draft'
+            GROUP BY wo.production_id
+              HAVING bool_or(wo.date_planned_start IS NOT NULL AND wo.date_planned_finished IS NOT NULL)
+        """
+        return [('id', operator, (query, []))]
+
     def _compute_is_planned(self):
+        planned_ids = self.search([('id', 'in', self.ids), ('is_planned', '=', True)])
+        partially_planned_ids = self.search([('id', 'in', self.ids), ('is_partially_planned', '=', True)])
         for production in self:
-            if production.workorder_ids:
-                production.is_planned = all(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids)
-                production.is_partially_planned = any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids if production.state != 'draft')
-            else:
-                production.is_planned = False
-                production.is_partially_planned = False
+            production.is_planned = production in planned_ids
+            production.is_partially_planned = production in partially_planned_ids
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):

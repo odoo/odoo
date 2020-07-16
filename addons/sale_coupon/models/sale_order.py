@@ -293,24 +293,19 @@ class SaleOrder(models.Model):
                     self.write({'order_line': [(0, False, value) for value in self._get_reward_line_values(program)]})
                 order.no_code_promo_program_ids |= program
 
+    @api.model
+    def _update_line_and_get_to_remove(self, lines, values, program):
+        '''Update the lines and return them if they should be deleted'''
+        # Remove reward line if price or qty equal to 0
+        if values['product_uom_qty'] and values['price_unit']:
+            lines.write(values)
+        else:
+            values.update(price_unit=0.0)
+            lines.write(values)
+        return self.env['sale.order.line']
+
     def _update_existing_reward_lines(self):
         '''Update values for already applied rewards'''
-        def update_line(order, lines, values):
-            '''Update the lines and return them if they should be deleted'''
-            lines_to_remove = self.env['sale.order.line']
-            # Check commit 6bb42904a03 for next if/else
-            # Remove reward line if price or qty equal to 0
-            if values['product_uom_qty'] and values['price_unit']:
-                lines.write(values)
-            else:
-                if program.reward_type != 'free_shipping':
-                    # Can't remove the lines directly as we might be in a recordset loop
-                    lines_to_remove += lines
-                else:
-                    values.update(price_unit=0.0)
-                    lines.write(values)
-            return lines_to_remove
-
         self.ensure_one()
         order = self
         applied_programs = order._get_applied_programs_with_rewards_on_current_order()
@@ -331,7 +326,7 @@ class SaleOrder(models.Model):
                             value_found = True
                             # Working on Case 3.
                             lines_to_remove -= line
-                            lines_to_remove += update_line(order, line, value)
+                            lines_to_remove += order._update_line_and_get_to_remove(line, value, program)
                             continue
                     # Case 2.
                     if not value_found:
@@ -339,7 +334,7 @@ class SaleOrder(models.Model):
                 # Case 3.
                 lines_to_remove.unlink()
             else:
-                update_line(order, lines, values[0]).unlink()
+                order._update_line_and_get_to_remove(lines, values[0], program).unlink()
 
     def _remove_invalid_reward_lines(self):
         """ Find programs & coupons that are not applicable anymore.

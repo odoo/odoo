@@ -423,9 +423,6 @@ class AccountBankStatement(models.Model):
 
     def button_reopen(self):
         ''' Move the bank statements back to the 'open' state. '''
-        if any(statement.state == 'draft' for statement in self):
-            raise UserError(_("Only validated statements can be reset to new."))
-
         self.write({'state': 'open'})
         self.line_ids.move_id.button_draft()
         self.line_ids.button_undo_reconciliation()

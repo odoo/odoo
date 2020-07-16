@@ -133,10 +133,9 @@ class RecurrenceRule(models.Model):
             else:
                 end = ''
 
-            if recurrence.rrule_type == 'weeky':
+            if recurrence.rrule_type == 'weekly':
                 weekdays = recurrence._get_week_days()
-                weekday_fields = (self._fields[weekday_to_field(w)] for w in weekdays)
-                on = _("on %s,") % ", ".join([field.string for field in weekday_fields])
+                on = _("on %s,") % ", ".join(self._fields[str(w).lower()].string for w in weekdays)
             elif recurrence.rrule_type == 'monthly':
                 if recurrence.month_by == 'day':
                     weekday_label = dict(BYDAY_SELECTION)[recurrence.byday]
