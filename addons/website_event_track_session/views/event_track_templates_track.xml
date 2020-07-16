@@ -3,13 +3,14 @@
 
 <template id="event_track_main" name="Event Exhibitor">
     <t t-call="website_event.layout">
-        <div class="o_wesession_index o_wesession_index_bg">
+        <div class="o_wevent_online o_wevent_online_bg o_wesession_index">
             <!-- Options -->
             <t t-set="option_widescreen" t-value="option_widescreen or False"/>
+            <t t-set="option_tracks_wishlist" t-value="request.website.viewref('website_event_track_session.session_topbar_wishlist').active"/>
             <!-- Drag/Drop Area -->
             <div id="oe_structure_wesession_track_index_1" class="oe_structure"/>
             <!-- Content -->
-            <div t-att-class="'o_wesession_track_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
+            <div t-att-class="'o_wevent_online_page_container %s' % ('container pb-3' if not option_widescreen else 'pb-3')">
                 <div class="row mx-0 mb-5">
                     <t t-call="website_event_track_session.event_track_aside"/>
                     <t t-call="website_event_track_session.event_track_content"/>
@@ -26,8 +27,7 @@
 <!-- ============================================================ -->
 
 <template id="event_track_content" name="Track: Main Description">
-    <div name="o_wesession_track_main"
-        t-att-class="'col-12 o_wesession_track_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
+    <div t-att-class="'col-12 o_wevent_online_page_main o_wesession_track_main bg-white p-0 %s' % ('col-md-9 col-lg-10' if option_widescreen else 'col-md-8 col-lg-9')">
         <!-- LIVE INFORMATIONS -->
         <div t-if="not track.event_id.is_ongoing" class="pt-3">
             <div class="mx-3 alert alert-warning">
@@ -53,7 +53,7 @@
         </div>
         <!-- TRACK DESCRIPTION -->
         <div class="mx-3 pt-3 o_wesession_track_main_description">
-            <div class="d-flex justify-content-between">
+            <div t-if="option_tracks_wishlist" class="d-flex justify-content-between">
                 <span class="h4" t-esc="track.name"/>
                 <t t-call="website_event_track_online.track_widget_reminder"/>
             </div>
@@ -106,8 +106,8 @@
 <!-- ============================================================ -->
 
 <template id="event_track_aside" name="Track: Aside">
-    <div t-att-class="'col-12 o_wesession_track_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
-        <div class="bg-white pt-3 o_wesession_track_aside_tracks">
+    <div t-att-class="'col-12 pl-0 o_wevent_online_page_aside o_wesession_track_aside %s' % ('col-md-3 col-lg-2' if option_widescreen else 'col-md-4 col-lg-3')">
+        <div class="bg-white pt-3 o_wevent_online_page_aside_content">
             <div class="mx-2" t-if="track.website_cta">
                 <t t-set="cta_coundown" t-value="bool(track.website_cta_start_remaining)"/>
                 <div t-if="cta_coundown" class="text-center w-100 btn btn-primary d-none">
@@ -136,7 +136,7 @@
                         </a>
                     </li>
                 </ul>
-                <a href="#collapse_track_aside" data-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wesession_track_aside_collapse">
+                <a href="#collapse_track_aside" data-toggle="collapse" class="d-lg-none p-2 text-decoration-none o_wevent_online_page_aside_collapse">
                     <i class="fa fa-chevron-down d-lg-none"/>
                 </a>
             </div>

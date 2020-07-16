@@ -2,9 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
+from random import randint
 from pytz import utc
 
 from odoo import api, fields, models
+from odoo.osv import expression
 
 
 class EventTrack(models.Model):
@@ -79,3 +81,51 @@ class EventTrack(models.Model):
                 track.website_cta_start_remaining = int(td.total_seconds())
             else:
                 track.website_cta_start_remaining = 0
+
+    def _get_track_suggestions(self, restrict_domain=None, limit=None):
+        """ Returns the next tracks suggested after going to the current one
+        given by self. Tracks always belong to the same event.
+
+        Heuristic is
+
+          * live first;
+          * then ordered by start date, finished being sent to the end;
+          * wishlisted (manually or by default);
+          * tag matching with current track;
+          * location matching with current track;
+          * finally a random to have an "equivalent wave" randomly given;
+
+        :param restrict_domain: an additional domain to restrict candidates;
+        :param limit: number of tracks to return;
+        """
+        self.ensure_one()
+
+        base_domain = [
+            '&',
+            ('event_id', '=', self.event_id.id),
+            ('id', '!=', self.id),
+        ]
+        if restrict_domain:
+            base_domain = expression.AND([
+                base_domain,
+                restrict_domain
+            ])
+
+        track_candidates = self.search(base_domain, limit=None, order='date asc')
+        if not track_candidates:
+            return track_candidates
+
+        track_candidates = track_candidates.sorted(
+            lambda track:
+                (track.is_track_live,
+                 track.track_start_remaining > 0,
+                 -1 * track.track_start_remaining,
+                 track.is_reminder_on,
+                 not track.wishlisted_by_default,
+                 len(track.tag_ids & self.tag_ids),
+                 track.location_id == self.location_id,
+                 randint(0, 20),
+                ), reverse=True
+        )
+
+        return track_candidates[:limit]

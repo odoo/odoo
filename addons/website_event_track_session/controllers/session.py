@@ -2,9 +2,10 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from ast import literal_eval
+from pytz import timezone, utc
 from werkzeug.exceptions import Forbidden, NotFound
 
-from odoo import exceptions, http
+from odoo import exceptions, fields, http
 from odoo.addons.website_event_track.controllers.main import WebsiteEventTrackController
 from odoo.http import request
 from odoo.osv import expression
@@ -14,6 +15,9 @@ from odoo.tools import is_html_empty
 class WebsiteEventSessionController(WebsiteEventTrackController):
 
     def _get_event_tracks_base_domain(self, event):
+        """ Base domain for displaying tracks. Restrict to accepted tracks for
+        people not managing events. Unpublished tracks may be displayed for teasing
+        purpose. """
         search_domain_base = [
             ('event_id', '=', event.id),
         ]
@@ -30,6 +34,15 @@ class WebsiteEventSessionController(WebsiteEventTrackController):
         '''/event/<model("event.event"):event>/track/tag/<model("event.track.tag"):tag>'''
     ], type='http', auth="public", website=True, sitemap=False)
     def event_tracks(self, event, tag=None, **searches):
+        """ Main route
+
+        :param event: event whose tracks are about to be displayed;
+        :param tag: deprecated: search for a specific tag
+        :param searches: frontend search dict, containing
+
+          * 'search': search string;
+          * 'tags': list of tag IDs for filtering;
+        """
         if not event.can_access_from_current_website():
             raise NotFound()
 
@@ -72,15 +85,26 @@ class WebsiteEventSessionController(WebsiteEventTrackController):
                 *search_domain_items
             ])
 
-        # fetch data to display
+        # fetch data to display with TZ set for both event and tracks
+        now_tz = utc.localize(fields.Datetime.now().replace(microsecond=0), is_dst=False).astimezone(timezone(event.date_tz))
+        today_tz = now_tz.date()
         event = event.with_context(tz=event.date_tz or 'UTC')
-        tracks_sudo = request.env['event.track'].sudo().search(search_domain, order='date asc')
+        tracks_sudo = event.env['event.track'].sudo().search(search_domain, order='date asc')
         tag_categories = request.env['event.track.tag.category'].sudo().search([])
 
-        # organize categories for display: live, soon, ...
+        # organize categories for display: live, soon and day-based
+        date_begin_tz_all = list(set(
+            dt.date()
+            for dt in self._get_dt_in_event_tz(tracks_sudo.mapped('date'), event)
+        ))
+        date_begin_tz_all.sort(key=lambda date: (date < today_tz, date), reverse=False)
         tracks_sudo_live = tracks_sudo.filtered(lambda track: track.is_published and track.is_track_live)
         tracks_sudo_soon = tracks_sudo.filtered(lambda track: track.is_published and not track.is_track_live and track.is_track_soon)
-        tracks_sudo = tracks_sudo.sorted(lambda track: track.is_track_done)
+        tracks_by_day = []
+        for display_date in date_begin_tz_all:
+            matching_track = tracks_sudo.filtered(lambda track: self._get_dt_in_event_tz([track.date], event)[0].date() == display_date)
+            sorted_tracks = matching_track.sorted(lambda track: track.is_track_done)
+            tracks_by_day.append((display_date, sorted_tracks))
 
         # return rendering values
         return {
@@ -89,6 +113,7 @@ class WebsiteEventSessionController(WebsiteEventTrackController):
             'main_object': event,
             # tracks display information
             'tracks': tracks_sudo,
+            'tracks_by_day': tracks_by_day,
             'tracks_live': tracks_sudo_live,
             'tracks_soon': tracks_sudo_soon,
             # search information
@@ -103,10 +128,11 @@ class WebsiteEventSessionController(WebsiteEventTrackController):
         }
 
     # ------------------------------------------------------------
-    # FRONTEND FORM
+    # PAGE VIEW
     # ------------------------------------------------------------
 
-    @http.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'], type='http', auth="public", website=True, sitemap=False)
+    @http.route(['/event/<model("event.event"):event>/track/<model("event.track"):track>'],
+                 type='http', auth="public", website=True, sitemap=False)
     def event_track(self, event, track, **options):
         if not event.can_access_from_current_website():
             raise NotFound()
@@ -115,7 +141,6 @@ class WebsiteEventSessionController(WebsiteEventTrackController):
             track.check_access_rule('read')
         except exceptions.AccessError:
             raise Forbidden()
-        track = track.sudo()
 
         return request.render(
             "website_event_track_session.event_track_main",
@@ -123,13 +148,15 @@ class WebsiteEventSessionController(WebsiteEventTrackController):
         )
 
     def _event_track_get_values(self, event, track, **options):
+        track = track.sudo()
+
         # search for tracks list
         search_domain_base = self._get_event_tracks_base_domain(event)
         search_domain_base = expression.AND([
             search_domain_base,
             ['&', ('is_published', '=', True), ('id', '!=', track.id)]
         ])
-        tracks_other = request.env['event.track'].sudo().search(search_domain_base)
+        tracks_other = track._get_track_suggestions()
 
         option_widescreen = options.get('widescreen', False)
         option_widescreen = bool(option_widescreen) if option_widescreen != '0' else False
@@ -162,3 +189,10 @@ class WebsiteEventSessionController(WebsiteEventTrackController):
             # perform a search to filter on existing / valid tags implicitly
             tags = request.env['event.track.tag'].sudo().search([('id', 'in', tag_ids)])
         return tags
+
+    def _get_dt_in_event_tz(self, datetimes, event):
+        tz_name = event.date_tz
+        return [
+            utc.localize(dt, is_dst=False).astimezone(timezone(tz_name))
+            for dt in datetimes
+        ]
