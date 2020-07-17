@@ -3,17 +3,10 @@
 
 # /odoo/__init__.py is automatically executed first
 import odoo.config
+import odoo.cli
 
-entrypoints = {}
-def subcommand(func):
-    entrypoints[func.__name__.rstrip('_')] = func
-    return func
-
-
-@subcommand
-def server():
-    pass
-
-
+entrypoints = {
+    'server': odoo.cli.server.main,
+}
 
 entrypoints[odoo.config.subcommand]()

@@ -4,40 +4,140 @@
 import argparse
 import collections
 import contextlib
+import distutils.util
+import itertools
+import functools
 import operator
 import os
 import pathlib
+import tempfile
+import textwrap
 import warnings
-from distutils.util import strtobool
 from getpass import getuser
-from textwrap import dedent
+
 
 try:
+    from odoo import appdirs
     from odoo import release
     from odoo.loglevels import PSEUDOCONFIG_MAPPER as loglevelmap
 except ImportError:
-    release = __import__("collections").namedtuple("release", ["description", "version"])("desc of odoo", "master")
-    loglevelmap = {
-        'debug_rpc_answer': 0, 'debug_rpc': 0, 'debug': 0, 'debug_sql': 0,
-        'info': 0, 'runbot': 0, 'warn': 0, 'warning': 0, 'error': 0, 'critical': 0,
-    }
-
-# def assert_(test, value):
-#     if test:
-#         return value
-#     raise 
-# {metaoption.dest: partial(test, partial(operator.contains, metaoption.choices)) for ... in ... if hasattr(metaoption, 'choices')}
+    # TODO @juc Don't merge me with that crap
+    import appdirs
+    import release
+    from loglevels import PSEUDOCONFIG_MAPPER as loglevelmap
 
 
-store_true = {'type': strtobool, 'action': 'store_const', 'const': 'True', 'default': 'False'}
-store_false = {'type': strtobool, 'action': 'store_const', 'const': 'False', 'default': 'True'}
-DELETED = object()
+opttypemap = {}     # map every option to a type-like function, is
+                    # automatically updated for every option
 
-def fullpath(path):
+envoptmap = {}      # map environment variable to option, is 
+                    # automatically updated for every envvar= options
+
+ctxopt_stack = []   # stack of temporary user-defined sources controlled
+                    # by a context manager, are injected as 1st sources.
+
+srcoptmap = {       # all configuration sources
+    "custom": {},   # user-defined
+    "cli": {},      # argparse
+    "environ": {},  # os.getenv
+    "file": {},     # configparser [common] section
+    "default": {},  # source-hardcoded
+}
+
+chainmap = collections.ChainMap(  # exposition order, top first
+    # temporary sources are placed here, see __enter__ and __exit__
+    srcoptmap["custom"],
+    srcoptmap["cli"],
+    # additionnal config file sections are placed here, see expose_file_section
+    srcoptmap["file"],
+    srcoptmap["environ"],
+    srcoptmap["default"],
+)
+
+DELETED = object()  # placed in the custom-config when an option is
+                    # removed, used to raise a KeyError uppon access.
+
+
+class Alias:
+    def __init__(self, alias):
+        self.aliased_option = alias
+    def __repr__(self):
+        return self.aliased_option
+
+
+def strtobool(rawopt: str):
+    """
+    Convert a bool or a case-insensitive string representation of truth
+    to its corresponding bool.
+    
+    True values are True, 'y', 'yes', 't', 'true', 'on', and '1'.
+    False values are False, 'n', 'no', 'f', 'false', 'off', and '0'.
+
+    Raises ValueError if 'rawopt' is anything else.
+    """
+    if type(rawopt) is bool:
+        return rawopt
+    return distutils.util.strtobool(rawopt)
+
+
+def assert_in(rawopt, choices):
+    if opt not in choices:
+        raise SystemExit(f"{opt}: not a valid option, pick from %s" % ", ".join(choices))
+    return opt
+
+
+def add(*args, dest, action='store', default=None, envvar=None, **kwargs):
+    """
+    Wrapper around add_argument, carefully map every option to a type,
+    save the default value in the default source dictionnary and provide
+    a new `envvar` optional kwarg-only to feed the environ source
+    dictionnary.
+    """
+    # feed the {option: type} map
+    choices = kwargs.get('choices')
+    if choices:
+        opttypemap[dest] = functools.partial(assert_in, choices=choices)
+    else:
+        switch_case = {
+            'store_true': lambda: strtobool,
+            'store_false': lambda: strtobool,
+            'store_const': lambda: type(kwargs['const']),
+            'append_const': lambda: type(kwargs['const']),
+        }.get(action, lambda: kwargs['type'])
+        opttypemap[dest] = switch_case()
+
+    # feed default source 
+    if action in ('store_true', 'store_false'):
+        srcoptmap['default'][dest] = action == 'store_true'
+    else:
+        srcoptmap['default'][dest] = default
+
+    # feed the {envvar: option} map
+    if envvar:
+        envoptmap[envvar] = dest
+
+    return add.wrapped(*args, dest=dest, action=action, default=None, **kwargs)
+
+
+def comma(cast: callable):
+    """
+    Backward compatibility layer with old single argument comma-separated
+    list of values. Returns a list of `cast` converted values.
+    """
+    return lambda rawopt: list(map(cast, rawopt.split(',')))
+
+
+def fullpath(path: str):
     return pathlib.Path(path).expanduser().resolve()
 
 
-def _check_file_access(rawopt, mode):
+def _check_file_access(rawopt: str, mode: int):
+    """
+    Verify `rawopt` is a `mode` accessible file, the fullpath is returned.
+
+    `mode` is an operating-system mode bitfield. Can be os.F_OK to test
+    existence, or the inclusive-OR of os.R_OK, os.W_OK, and os.X_OK.
+    """
     path = fullpath(rawopt)
     if path.is_file() and not os.access(path, mode):
         pairs = [(os.R_OK, 'read'), (os.W_OK, 'write'), (os.X_OK, 'exec')]
@@ -45,31 +145,56 @@ def _check_file_access(rawopt, mode):
         raise SystemExit(f'{path}: requires {missing} permissions')
     if mode == os.W_OK and not os.access(path.parent, os.W_OK):
         raise SystemExit(f'{path.parent}: requires write permission')
+    if not path.is_file():
+        raise SystemExit(f'{path}: not found')
     return path
 
 
-def coma(cast):
-    return lambda rawopt: list(map(cast, rawopt.split(',')))
+def _check_dir_access(rawopt, mode):
+    """
+    Verify `rawopt` is a `mode` accessible file, the fullpath is returned.
 
-
-def check_dir_access(rawopt, mode):
+    `mode` is an operating-system mode bitfield. Can be os.F_OK to test
+    existence, or the inclusive-OR of os.R_OK, os.W_OK, and os.X_OK.
+    """
+    mode = modes.get(mode, mode)
     path = fullpath(rawopt)
     if not path.is_dir():
         raise SystemExit(f"{path}: no such directory")
     if not os.access(path, mode):
         pairs = [(os.R_OK, 'read'), (os.W_OK, 'write'), (os.X_OK, 'exec')]
-        missing = ", ".join(perm for bit, perm in pairs if bit & mode)
-        raise SystemExit(f"{path}: requires {missing} permissions")
+        missing = "".join(perm for bit, perm in pairs if bit & mode)
+        raise SystemExit(f"{path}: requires {missing} permission(s)")
     return path
 
 
-def checkfile(mode):
-    mode = {'r': os.R_OK, 'w': os.W_OK, 'x': os.X_OK}.get(mode, mode)
-    return partial(_check_file_access, mode=mode)
+def checkfile(mode: int):
+    """
+    Ensure the given file will be `mode` accessible.
+
+    `mode` is an operating-system mode bitfield or single-char alias. Can
+    be os.F_OK to test existence, or the inclusive-OR of os.R_OK, os.W_OK,
+    and os.X_OK. Aliases are 'e': F_OK, 'r': R_OK, 'w': W_OK, 'x': X_OK.
+    """
+    mode = {'e': os.F_OK, 'r': os.R_OK, 'w': os.W_OK, 'x': os.X_OK}.get(mode, mode)
+    return functools.partial(_check_file_access, mode=mode)
+
+
+def checkdir(mode: int):
+    """
+    Ensure the given directory will be `mode` accessible.
+
+    `mode` is an operating-system mode bitfield or single-char alias. Can
+    be os.F_OK to test existence, or the inclusive-OR of os.R_OK, os.W_OK,
+    and os.X_OK. Aliases are 'e': F_OK, 'r': R_OK, 'w': W_OK, 'x': X_OK.
+    """
+    mode = {'e': os.F_OK, 'r': os.R_OK, 'w': os.W_OK, 'x': os.X_OK}.get(mode, mode)
+    return functools.partial(_check_dir_access, mode=mode)
 
 
 def addons_path(rawopt):
-    path = check_dir_access(rawopt, os.R_OK | os.X_OK)
+    """ Ensure `rawopt` is a valid addons path, the fullpath is returned """
+    path = _check_dir_access(rawopt, os.R_OK | os.X_OK)
     if not next(path.glob('*/__manifest__.py'), None):
         olds = path.glob('*/__openerp__.py')
         if not olds:
@@ -83,7 +208,8 @@ def addons_path(rawopt):
 
 
 def upgrade_path(rawopt):
-    path = check_dir_access(rawopt, os.R_OK | os.X_OK)
+    """ Ensure `rawopt` is a valid upgrade path, the fullpath is returned """
+    path = _check_dir_access(rawopt, os.R_OK | os.X_OK)
     if not any(path.glob(f'*/*/{x}-*.py') for x in ["pre", "post", "end"]):
         if path.joinpath('migrations').is_dir():  # for colleagues
             raise SystemExit(f"{rawopt}: is not a valid upgrade path, looks like you forgot the migrations folder")
@@ -91,14 +217,38 @@ def upgrade_path(rawopt):
     return path
 
 
-def data_dir(rawopt):
-    datadir = check_dir_access(rawopt, os.R_OK | os.W_OK | os.X_OK)
+def get_default_datadir():
+    if pathlib.Path('~').expanduser().is_dir():
+        func = appdirs.user_data_dir
+    elif sys.platform in ['win32', 'darwin']:
+        func = appdirs.site_data_dir
+    else:
+        func = lambda **kwarg: "/var/lib/%s" % kwarg['appname'].lower()
+    # No "version" kwarg as session and filestore paths are shared against series
+    return fullpath(func(appname=release.product_name, appauthor=release.author))
 
+
+def get_odoorc():
+    if os.name == 'nt':
+        return fullpath(sys.argv[0]).parent().joinpath('odoo.conf')
+    return pathlib.Path.home().joinpath('.odoorc')
+
+
+
+def data_dir(rawopt):
+    datadir = _check_dir_access(rawopt, os.R_OK | os.W_OK | os.X_OK)
+
+
+def ensure_data_dir(datadir):
+    """
+    Ensure the `datadir` is a valid data dir, the addons, sessions, and
+    filestore are automatically created if missing.
+    """
     ad = datadir.joinpath('addons')
     if not ad.exists():
         ad.mkdir(mode=0o700)
     elif os.access(ad, os.R_OK | os.W_OK | os.X_OK):
-        raise
+        raise SystemExit(f"{ad}: requires rwx access")
     adr = ad.joinpath(release.series)
     if not adr.exists():
         # try to make +rx placeholder dir, will need manual +w to activate it
@@ -111,19 +261,21 @@ def data_dir(rawopt):
     if not sd.exists():
         sd.mkdir(mode=0o700)
     elif not os.access(sd, os.R_OK | os.W_OK | os.X_OK):
-        raise
+        raise SystemExit(f"{sd}: requires rwx access")
 
     fd = datadir.joinpath('filestore')
     if not fd.exists():
         fd.mkdir(mode=0o700)
     elif not os.access(fd, os.R_OK | os.W_OK | os.X_OK):
-        raise
-
-    return datadir
+        raise SystemExit(f"{fd}: requires rwx access")
 
 
 def pg_utils_path(rawopt):
-    path = check_dir_access(rawopt, os.X_OK)
+    """
+    Ensure `rawopt` is path which contains PostgreSQL system utilities,
+    the fullpath is returned.
+    """
+    path = _check_dir_access(rawopt, os.X_OK)
     pg_utils = {'psql', 'pg_dump', 'pg_restore'}
     if not any(file.stem in pg_utils for file in path.iterdir()):
         raise
@@ -137,7 +289,32 @@ def osv_memory_age_limit(rawopt):
     return float(rawopt)
 
 
-main_parser = argparse.ArgumentParser(description=dedent("""\
+def i18n_input_file(rawopt):
+    """ Ensure `rawopt` is a valid translation file, the fullpath is returned """
+    path = _check_file_access(rawopt, 'r')
+    formats = {'.csv', '.po'}
+    if not path.suffixes or path.suffixes[-1].lower() not in formats:
+        raise SystemExit(f"{rawopt}: is not a valid translation file, allowed formats are %s" % ", ".join(formats))
+    return path
+
+
+def i18n_output_file(rawopt):
+    """ Ensure `rawopt` is a valid translation file, the fullpath is returned """
+    path = _check_file_access(rawopt, 'w')
+    formats = {'.csv', '.po', '.tgz'}
+    if not path.suffixes or path.suffixes[-1].lower() not in formats:
+        raise SystemExit(f"{rawopt}: is not a valid translation file, allowed formats are %s" % ", ".join(formats))
+    return path
+
+
+
+########################################################################
+#                                                                      #
+#                       COMMAND LINE INTERFACE                         #
+#                                                                      #
+########################################################################
+
+main_parser = argparse.ArgumentParser(description=textwrap.dedent("""\
     Odoo Command-Line Interface
 
     See online documentation at: 
@@ -145,218 +322,237 @@ main_parser = argparse.ArgumentParser(description=dedent("""\
     """))
 subparsers = main_parser.add_subparsers()
 
-
 #
 # Common, bootstraping required options
 #
-add = main_parser.add_argument
-add('-V', '--version', action='version', version=f"{release.description} {release.version}")
-add('--addons-path', dest='addons_path', type=coma(addons_path), action="append", nargs='*', metavar='DIRPATH', help="specify additional addons paths")
-add('--upgrade-path', dest='upgrade_path', type=upgrade_path, nargs=1, metavar='DIRPATH', help="specify an additional upgrade path.")
-add('-D', '--data-dir', dest='data_dir', type=data_dir, nargs=1, help="")
-add('--log-level', dest='log_level', type=str, nargs=1, metavar="LEVEL", choices=loglevelmap.keys(), "specify the level of the logging")
-add('--logfile', dest='logfile', type=str, nargs=1, metavar="FILEPATH", help="file where the server log will be stored")
-add('--syslog', dest='syslog', **store_true, help="Send the log to the syslog server")
-add('--log-handler', dest='log_handler', action='append', default=[':INFO'], metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+common_parser = argparse.ArgumentParser()
+add.wrapped = main_parser.add_argument
+main_parser.add_argument('-V', '--version', action='version', version=f"{release.description} {release.version}")
+add('--addons-path', dest='addons_path', default=[pathlib.Path(__file__).parent.joinpath('addons').resolve()], type=comma(addons_path), action="append", metavar='DIRPATH', help="specify additional addons paths")
+add('--upgrade-path', dest='upgrade_path', default=pathlib.Path(__file__).parent.joinpath('addons', 'base', 'maintenance', 'migrations').resolve(), type=upgrade_path, metavar='DIRPATH', help="specify an additional upgrade path.")
+add('-D', '--data-dir', dest='data_dir', type=data_dir, default=get_default_datadir(), help="Directory where to store Odoo data")
+add('--log-level', dest='log_level', type=str, default='info', metavar="LEVEL", choices=loglevelmap.keys(), help="specify the level of the logging")
+add('--logfile', dest='logfile', type=checkfile('w'), default=None, metavar="FILEPATH", help="file where the server log will be stored")
+add('--syslog', dest='syslog', action='store_true', help="Send the log to the syslog server")
+add('--log-handler', dest='log_handler', action='append', type=str, default=[':INFO'], metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
 
 
-#
-# Advanced logging options
-#
-logging_parser = argparse.ArgumentParser()
-add = logging_parser.add_argument
-add('--log-request', dest='log_handler', action='append_const', const='odoo.http.rpc.request:DEBUG', help=argparse.SUPPRESS)
-add('--log-response', dest='log_handler', action='append_const', const='odoo.http.rpc.response:DEBUG', help=argparse.SUPPRESS)
-add('--log-web', dest='log_handler', action='append_const', const='odoo.http:DEBUG', help=argparse.SUPPRESS)
-add('--log-sql', dest='log_handler', action='append_const', const='odoo.sql_db:DEBUG', help=argparse.SUPPRESS)
-add('--log-db', dest='log_db', **store_true, help="Enable database logs record")
-add('--log-db-level', dest='log_level', type=str, nargs=1, metavar="LEVEL", default='warning', choices=loglevelmap.keys(), "specify the level of the database logging")
+########################################################################
+#                                                                      #
+#                          SERVER SUBCOMMAND                           #
+#                                                                      #
+########################################################################
+server_parser = subparsers.add_parser('server')
 
 #
-# Configuration file options
+# Common
 #
-config_parser = argparse.ArgumentParser()
-add = logging_parser.add_argument
-if os.name == 'nt':
-    odoorc = pathlib.Path(sys.argv[0]).resolve().parent().joinpath('odoo.conf')
-else:
-    odoorc = pathlib.Path.home().joinpath('.odoorc')
-add('-c', '--config', dest='config', type=argparse.FileType('r'), nargs=1, metavar="FILEPATH", default=odoorc, help="specify alternate config file name")
-add('-s', '--save', dest='save', type=checkfile('w'), nargs='?', metavar="FILEPATH", default=None, const=odoorc, help="save parsed config in PATH")
-
-#
-# Database options
-#
-database_parser = argparse.ArgumentParser()
-add = database_parser.add_argument
-add('-d', '--database', dest='db_name', type=str, nargs=1, metavar="DBNAME", help='database name to connect to (default: "%s")' % os.getenv('PGDATABASE', getuser()))
-add('-r', '--db_user', dest='db_user', type=str, nargs=1, metavar="USERNAME", help='database user to connect as (default: "%s")' % getuser())
-add('-w', '--db_password', dest='db_password', type=str, nargs=1, metavar="PWD", help='password to be used if the database demands password authentication. Using this argument is a security risk, see the "The Password File" section in the PostgreSQL documentation for alternatives.')
-add('--db_host', dest='db_host', type=str, nargs=1, metavar="HOSTNAME", help='database server host or socket directory (default: "%s")' % os.geten('PGHOST', 'local socket'))
-add('--db_port', dest='db_port', type=str, nargs=1, metavar="PORT", help='database server port (default: %d)' % os.getenv('PGPORT', 5432))
-add('--db_sslmode', dest='db_sslmode', type=str, nargs=1, metavar="METHOD", default='prefer', choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'], help="determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server")
-add('--pg_path', dest='pg_path', type=pg_utils_path, nargs=1, metavar="DIRPATH", default=None, help="postgres utilities directory")
-add('--db-template', dest='db_template', type=str, nargs=1, metavar="DBNAME", default='template0', help="custom database template to create a new database")
-add('--unaccent', dest="unaccent", **store_true, help="Try to enable the unaccent extension when creating new databases")
-
-#
-# ORM
-#
-orm_parser = argparse.ArgumentParser()
-add = orm_parser.add_argument
-add('--transient-age-limit', dest='transient_age_limit', type=float, nargs=1, metavar="HOUR", default=1.0, help="Time in hours records created with a TransientModel (mosly wizard) are kept in the database.")
-add('--osv-memory-age-limit', dest='transient_age_limit', type=osv_memory_age_limit, nargs=1, help=argparse.SUPPRESS)
-
-#
-# I18N
-#
-i18n_parser = argparse.ArgumentParser()
-add = i18n_parser.add_argument
-add('--load-language', dest='load_language', type=coma(str), nargs='*', metavar='LANGCODE', default=None, help="specifies the languages for the translations you want to be loaded")
-'-l', '--language'
-'--i18n-export'
-'--i18n-import'
-'--i18n-overwrite'
-'--modules'
-
-#
-# Security
-#
-'--no-database-list'
-
-#
-# Developers
-#
-'--dev'
-'--shell-interface'
-
-#
-# Misc
-#
-'--stop-after-init'
-'--geoip-db'
-
-#
-# Server stuff
-#
-'--pidfile'
-
-#
-# Database loading stuff
-#
-'-i', '--init'
-'-u', '--update'
-'--without-demo'
+add.wrapped = server_parser.add_argument_group("Common").add_argument
+add('-c', '--config', dest='config', type=checkfile('r'), metavar="FILEPATH", default=get_odoorc(), help="specify alternate config file name")
+add('-s', '--save', dest='save', type=checkfile('w'), nargs='?', metavar="FILEPATH", default=None, const=get_odoorc(), help="save parsed config in PATH")
+add('-i', '--init', dest='init', type=comma(str), action='append', default=[], help='install one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d')
+add('-u', '--update', dest='update', type=comma(str), action='append', default=[], help='update one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d.')
+add('--without-demo', dest='without_demo', action='store_true', help='disable loading demo data for modules to be installed (comma-separated or repeated option, use "all" for all modules), requires -d and -i.')
 #'-P', '--import-partial'
-'--load'
+add('--load', dest='server_wide_modules', type=comma(str), action='append', default=['base', 'web'], metavar='MODULE', help="framework modules to load once for all databases (comma-separated or repeated option)")
+add('--pidfile', dest='pidfile', type=checkfile('w'), default=None, metavar='FILEPATH', help="file where the server pid will be stored")
 
 #
-# HTTP options
+# HTTP
 #
-'--http-interface'
-'-p', '--http-port'
-'--no-http'
-'--proxy-mode'
-
-#
-# xmlrpc options
-#
-'--xmlrpc-interface'
-'--xmlrpc-port'
-'--no-xmlrpc'
-
-#
-# web options
-#
-'--db-filter'
-
-#
-# testing options
-#
-'--test-file'
-'--test-enable'
-'--test-tags'
-'--screencasts'
-'--screenshots'
-
-#
-# smtp options
-#
-'--email-from'
-'--smtp'
-'--smtp-port'
-'--smtp-ssl'
-'--smtp-user'
-'--smtp-password'
+add.wrapped = server_parser.add_argument_group("HTTP Service Configuration").add_argument
+add('--http-interface', dest='http_interface', type=str, default='', metavar='INTERFACE', help="Listen interface address for HTTP services. Keep empty to listen on all interfaces (0.0.0.0)")
+add('-p', '--http-port', dest='http_port', type=int, default=8069, metavar='PORT', help="Listen port for the main HTTP service")
+add('--longpolling-port', dest='longpolling_port', type=int, default=8072, metavar='PORT', help="Listen port for the longpolling HTTP service")
+add('--no-http', dest='http_enable', action='store_false', help="Disable the HTTP and Longpolling services entirely")
+add('--proxy-mode', dest='proxy_mode', action='store_true', help="Activate reverse proxy WSGI wrappers (headers rewriting) Only enable this when running behind a trusted web proxy!")
 
 #
 # CRON
 #
-'--max-cron-threads'
-'--limit-time-real-cron'
-
-#
-# Longpolling options
-#
-'--longpolling-port'
-
-#
-# Workers
-#
-'--workers'
+add.wrapped = server_parser.add_argument_group("CRON Service Configuration").add_argument
+add('--max-cron-threads', dest='max_cron_threads', type=int, default=2, metavar='#THREAD', help="Maximum number of threads processing concurrently cron jobs.")
+add('--limit-time-real-cron', dest='limit_time_real_cron', type=int, default=Alias('limit_time_real'), metavar="#SECONDS", help="Maximum allowed Real time per cron job. (default: --limit-time-real). Set to 0 for no limit.")
 
 
 #
-# Limits
+# Web
 #
-'--db_maxconn'
-'--limit-memory-soft'
-'--limit-memory-hard'
-'--limit-time-cpu'
-'--limit-time-real'
-'--limit-request'
-
-#
-# Server subcommand
-#
-server_parser = subparsers.add_parser('server', parents=[main_parser, logging_parser, config_parser])
+add.wrapped = server_parser.add_argument_group("Web interface Configuration").add_argument
+add('--db-filter', dest='dbfilter', type=str, default='', metavar='REGEXP', help="Regular expressions for filtering available databases for Web UI. The expression can use %d (domain) and %h (host) placeholders.")
 
 
-ctxopt_stack = []
-srcoptmap = {
-    "custom": {},
-    "cli": {},
-    "http": {},
-    "cron": {},
-    "environ": {},
-    "file": {},
-    "default": {},
-}
-chainmap = collections.ChainMap(
-    srcoptmap["custom"],
-    srcoptmap["cli"],
-    srcoptmap["file"],
-    srcoptmap["default"],
-)
+#
+# Testing
+#
+add.wrapped = server_parser.add_argument_group("Testing Configuration").add_argument
+add('--test-file', dest='test_file', type=checkfile('r'), default=None, metavar='FILEPATH', help="Launch a python test file.")
+add('--test-enable', dest='test_enable', action='store_true', help="Enable unit tests while installing or upgrading a module.")
+add('--test-tags', dest='test_tags', type=comma(str), action='append', default=[], help=textwrap.dedent("""\
+    Comma-separated or repeated option list of spec to filter which tests to execute. Enable unit tests if set.
+    A filter spec has the format: [-][tag][/module][:class][.method]
+    The '-' specifies if we want to include or exclude tests matching this spec.
+    The tag will match tags added on a class with a @tagged decorator. By default tag value is 'standard' when not
+    given on include mode. '*' will match all tags. Tag will also match module name (deprecated, use /module)
+    The module, class, and method will respectively match the module name, test class name and test method name.
+    examples: :TestClass.test_func,/test_module,external"""))
+add('--screencasts', dest='screencasts', type=checkdir('w'), default=fullpath(tempfile.gettempdir()).joinpath('odoo_tests'), metavar='DIRPATH', help="Screencasts will go in DIR/<db_name>/screencasts.")
+add('--screenshots', dest='screenshots', type=checkdir('w'), default=fullpath(tempfile.gettempdir()).joinpath('odoo_tests'), metavar='DIRPATH', help="Screenshots will go in DIR/<db_name>/screenshots.")
+
+#
+# Advanced logging options
+#
+add.wrapped = server_parser.add_argument_group("Logging Configuration").add_argument
+add('--log-request', dest='log_handler', action='append_const', const='odoo.http.rpc.request:DEBUG')
+add('--log-response', dest='log_handler', action='append_const', const='odoo.http.rpc.response:DEBUG')
+add('--log-web', dest='log_handler', action='append_const', const='odoo.http:DEBUG')
+add('--log-sql', dest='log_handler', action='append_const', const='odoo.sql_db:DEBUG')
+add('--log-db', dest='log_db', action='store_true', help="Enable database logs record")
+add('--log-db-level', dest='log_db_level', metavar="LEVEL", default='warning', choices=loglevelmap.keys(), help="specify the level of the database logging")
+
+#
+# SMTP options
+#
+add.wrapped = server_parser.add_argument_group("SMTP Configuration").add_argument
+add('--email-from', dest='email_from', type=str, default=None, metavar="EMAIL", help="specify the SMTP email address for sending email")
+add('--smtp', dest='smtp_server', type=str, default='localhost', metavar="HOST", help="specify the SMTP server for sending email")
+add('--smtp-port', dest='smtp_port', type=int, default=25, metavar="PORT", help="specify the SMTP port")
+add('--smtp-ssl', dest='smtp_ssl', action='store_true', help="if passed, SMTP connections will be encrypted with SSL (STARTTLS)")
+add('--smtp-user', dest='smtp_user', type=str, default=None, help="specify the SMTP username for sending email")
+add('--smtp-password', dest='smtp_password', type=str, default=None, help="specify the SMTP password for sending email")
+
+#
+# Database options
+#
+add.wrapped = server_parser.add_argument_group("Database related options").add_argument
+add('-d', '--database', dest='db_name', type=str, default=getuser(), envvar="PGDATABASE", metavar="DBNAME", help="database name to connect to")
+add('-r', '--db_user', dest='db_user', type=str, default=getuser(), envvar="PGUSER", metavar="USERNAME", help="database user to connect as")
+add('-w', '--db_password', dest='db_password', type=str, default=None, envvar="PGPASSWORD", metavar="PWD", help='password to be used if the database demands password authentication. Using this argument is a security risk, see the "The Password File" section in the PostgreSQL documentation for alternatives.')
+add('--db_host', dest='db_host', type=str, default=None, envvar="PGHOST", metavar="HOSTNAME", help="database server host or socket directory")
+add('--db_port', dest='db_port', type=str, default=None, envvar="PGPORT", metavar="PORT", help="database server port")
+add('--db_sslmode', dest='db_sslmode', metavar="METHOD", default='prefer', choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'], help="determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server")
+add('--pg_path', dest='pg_path', type=pg_utils_path, metavar="DIRPATH", default=None, help="postgres utilities directory")
+add('--db-template', dest='db_template', type=str, metavar="DBNAME", default='template0', help="custom database template to create a new database")
+add('--db_maxconn', dest='db_maxconn', type=int, metavar="#CONN", default=64, help="specify the maximum number of physical connections to PostgreSQL")
+add('--unaccent', dest="unaccent", action='store_true', help="Try to enable the unaccent extension when creating new databases")
+
+#
+# ORM
+#
+add.wrapped = server_parser.add_argument_group("ORM").add_argument
+add('--transient-age-limit', dest='transient_age_limit', type=float, metavar="HOUR", default=1.0, help="Time in hours records created with a TransientModel (mosly wizard) are kept in the database.")
+add('--osv-memory-age-limit', dest='transient_age_limit', type=osv_memory_age_limit, help=argparse.SUPPRESS)
+
+#
+# I18N
+#
+add.wrapped = server_parser.add_argument_group("Internationalization").add_argument
+add('--load-language', dest='load_language', type=comma(str), metavar='LANGCODE', default=None, help="specifies the languages for the translations you want to be loaded")
+add('-l', '--language', dest='language', type=str, metavar='LANGCODE', default=None, help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
+add('--i18n-export', dest='translate_out', type=i18n_output_file, metavar='FILEPATH', default=None, help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit. The '-l' option is required")
+add('--i18n-import', dest='tranlate_in', type=i18n_input_file, metavar='FILEPATH', default=None, help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
+add('--i18n-overwrite', dest='overwrite_existing_translations', action='store_true', help="overwrites existing translation terms on updating a module or importing a CSV or a PO file. Use with -u/--update or --i18n-import.")
+add('--modules', dest="translate_modules", type=comma(str), default=None, help="specify modules to export. Use in combination with --i18n-export")
+
+#
+# Security
+#
+add.wrapped = server_parser.add_argument_group("Security-related options").add_argument
+add('--no-database-list', dest='list_db', action='store_false', help="Disable the ability to obtain or view the list of databases. Also disable access to the database manager and selector, so be sure to set a proper --database parameter first.")
+
+#
+# Developers
+#
+add.wrapped = server_parser.add_argument_group("Developers").add_argument
+add('--dev', dest='dev_mode', action='append', type=comma(str), default=[], choices=['all', 'pudb', 'wdb', 'ipdb', 'pdb', 'reload', 'qweb', 'werkzeug', 'xml'], help="Enable developer mode")
+add('--shell-interface', dest='shell_interface', default='python', choices=['ipython', 'ptpython', 'bpython', 'python'], help="Specify a preferred REPL to use in shell mode")
+
+#
+# Misc
+#
+add.wrapped = server_parser.add_argument_group("Misc").add_argument
+add('--stop-after-init', dest='stop_after_init', action='store_true', help="stop the server after its initialization")
+add('--geoip-db', dest='geoip_database', type=checkfile('r'), default=pathlib.Path('/usr/share/GeoIP/GeoLite2-City.mmdb'), help="Absolute path to the GeoIP database file.")
+
+
+if os.name == 'posix':
+    #
+    # Workers
+    #
+    add.wrapped = server_parser.add_argument_group("Multiprocessing options").add_argument
+    add('--workers', dest='workers', type=int, metavar='#WORKER', default=0, help="Specify the number of workers, 0 disable prefork mode.")
+
+    #
+    # Limits
+    #
+    add('--limit-memory-soft', dest='limit_memory_soft', default=2048 * 1024 * 1024, metavar="BYTES", type=int, help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 2048MiB).")
+    add('--limit-memory-hard', dest='limit_memory_hard', default=2560 * 1024 * 1024, metavar="BYTES", type=int, help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory allocation will fail (default 2560MiB).")
+    add('--limit-time-cpu', dest='limit_time_cpu', default=60, metavar="SECONDS", type=int, help="Maximum allowed CPU time per request (default 60).")
+    add('--limit-time-real', dest='limit_time_real', default=120, metavar="SECONDS", type=int, help="Maximum allowed Real time per request (default 120).")
+    add('--limit-request', dest='limit_request', default=8192, metavar="#REQUEST", type=int, help="Maximum number of request to be processed per worker (default 8192).")
+
+
+from pprint import pprint
+options = main_parser.parse_args()
+for opt, val in vars(options).items():
+    if val is None:
+        continue
+
+    while (type(val) in (list, tuple)
+           and any(type(elem) in (list, tuple) for elem in val)):
+        val = list(itertools.chain.from_iterable(val))
+
+    srcoptmap['cli'][opt] = val
+
+pprint(chainmap)
+exit()
+
 
 class configmanager(collections.abc.MutableMapping):
     def parse_load(self, configpath=None):
-        # clear all previously loaded options except
-        # the defaults as there is no way they change
-        for src, opt in srcoptmap.items():
-            if src == 'default':
+        # clear all previously loaded options
+        for source, options in srcoptmap.items():
+            if source != 'default':
+                options.clear()
+
+        # reload environment
+        for envvar, opt in envoptmap.items():
+            val = os.getenv(envvar)
+            if val:
+                srcoptmap['environ'][opt] = val
+
+        # reload command line
+        options = main_parser.parse_args()
+        for opt, val in vars(cli_options).items():
+            if val is None:
                 continue
-            opt.clear()
 
-        # reload all sources
-        srcoptmap["cli"].update({} if islib else cli.parse_args())
-        srcoptmap["file"].update(parse_file(configpath or chainmap["config"]))
+            while (type(val) in (list, tuple)
+                   and any(type(elem) in (list, tuple) for elem in val)):
+                val = list(itertools.chain.from_iterable(val))
 
-    def prioritize(self, source):
-        options = srcoptmap[source]
-        with contextlib.suppress(IndexError):
-            chainmap.maps.pop(chainmap.maps.index(options))
-        chainmap.maps.insert(1, options)
+            srcoptmap['cli'][opt] = val
+
+        # reload configuration file
+        for section, options in parse_file(configpath or chainmap['config']):
+            srcoptmap[section].update(options)
+
+        # post processing
+        ensure_data_dir(chainmap['data_dir'])
+
+    def expose_file_section(self, section):
+        """
+        Exposes the [`section`] of the configuration file just before
+        the [common] options.
+        """
+        if not section.startswith('file_'):
+            section = 'file_' + section
+
+        source = srcoptmap[section]
+        if source not in chainmap.maps:
+            file_index = chainmap.maps.index('file')
+            chainmap.maps.insert(source, file_index)
+
 
     def save(self, configpath=None):
         if configpath is None:
@@ -372,13 +568,15 @@ class configmanager(collections.abc.MutableMapping):
         val = chainmap[option]
         if val is DELETED:
             raise KeyError(f"{option} has been removed")
+        elif type(val) is Alias:
+            return self[val.aliased_option]
         return val
 
     def __setitem__(self, option, value):
-        chainmap[option] = value
+        srcoptmap["custom"][option] = opttypemap[option](value)
 
     def __delitem__(self, option):
-        chainmap[option] = DELETED
+        srcoptmap["custom"] = DELETED
 
     def __iter__(self):
         return iter(chainmap)
@@ -394,480 +592,7 @@ class configmanager(collections.abc.MutableMapping):
         return ctxopts
 
     def __exit__ (self, type, value, tb):
-        ctxopts = ctxopts_stack.pop()
-        chainmap.maps.remove(ctxopts)
+        ctxopts_stack.pop()
+        del chainmap.maps[0]
 
 config = configmanager()  # singleton
-
-
-
-# TODO: destination variables, grouping of options, etc.
-def main():
-    # ------------- #
-    #  Main parser  #
-    # ------------- #
-    main_parser = argparse.ArgumentParser(
-        prog='ocli', description='Odoo Command-Line Interface'
-    )
-    main_parser.add_argument(
-        '-v', '--version', action='store_true',
-        help="show version information about Odoo and the Odoo CLI"
-    )
-    # ----------------- #
-    #  Logging options  #
-    # ----------------- #
-    logging_parser = argparse.ArgumentParser(add_help=False)
-    logging_parser.add_argument(
-        '--logfile', nargs=1, metavar='PATH', type=str,
-        help="path to where the log file should be saved"
-    )
-    logging_parser.add_argument(
-        '--syslog', action='store_true',
-        help="save odoo logs as system logs"
-    )
-    logging_parser.add_argument(
-        '--log-level', nargs=1, metavar='EXPR', type=str,
-        help="which type of logs to display to stdin"
-    )
-    # ---------------- #
-    #  Common options  #
-    # ---------------- #
-    common_parser = argparse.ArgumentParser(add_help=False)
-    common_parser.add_argument(
-        '--addons-path', nargs='+', metavar='PATH',
-        type=str,
-        help="space-separated list of paths to check for addons"
-    )
-    common_parser.add_argument(
-        '--data-dir', nargs=1, metavar='PATH', type=str,
-        help="path to a directory where odoo-generated files should be stored"
-    )
-    # ------------ #
-    #  Subparsers  #
-    # ------------ #
-    top_level_subparsers = main_parser.add_subparsers(help='sub-command help')
-    dbname_parser = argparse.ArgumentParser(add_help=False)
-    dbname_parser.add_argument(
-        'dbname', nargs=1, type=str, metavar='DATABASE',
-        help="name of the database"
-    )
-    # ------------- #
-    #  DB creation  #
-    # ------------- #
-    create_parser = top_level_subparsers.add_parser(
-        'create',
-        help="create odoo databases",
-        parents=[dbname_parser, logging_parser, common_parser]
-    )
-    create_parser.add_argument(
-        '-d', '--demo', action='store_true',
-        help="if specified demo data will be installed in the database"
-    )
-    create_parser.add_argument(
-        '-l', '--launch', action='store_true',
-        help="if specified, the db will be launched after it is created"
-    )
-    # ---------------- #
-    #  DB duplication  #
-    # ---------------- #
-    dupe_parser = top_level_subparsers.add_parser(
-        'duplicate',
-        help="duplicate odoo databases",
-    )
-    dupe_parser.add_argument(
-        'source', nargs=1, type=str, metavar='SOURCE',
-        help="name of the source database"
-    )
-    dupe_parser.add_argument(
-        'destination', nargs=1, type=str, metavar='DESTINATION',
-        help="name of the destination database"
-    )
-    # --------- #
-    #  DB dump  #
-    # --------- #
-    dump_parser = top_level_subparsers.add_parser(
-        'dump',
-        help="dump odoo databases",
-        parents=[dbname_parser, logging_parser]
-    )
-    dump_parser.add_argument(
-        'path', nargs='?', type=str, metavar='PATH',
-        help="path where the dump should be stored"
-    )
-    dump_parser.add_argument(
-        '-f', '--format', choices=['gzip', 'raw', 'sql'],
-        help="one of three available formats for the dump file"
-    )
-    # Defaults
-    dump_parser.set_defaults(path='.', format='gzip')
-    # ------------ #
-    #  DB restore  #
-    # ------------ #
-    restore_parser = top_level_subparsers.add_parser(
-        'restore',
-        help="restore odoo databases",
-        parents=[dbname_parser, logging_parser]
-    )
-    restore_parser.add_argument(
-        'path', nargs='?', type=str, metavar='PATH',
-        help="path of the dump to restore"
-    )
-    restore_parser.add_argument(
-        '--dbuuid', type=str, help="dbuuid of the db to restore"
-    )
-    restore_parser.set_defaults(path='.')
-    # -------------- #
-    #  Cron Process  #
-    # -------------- #
-    cron_parser = top_level_subparsers.add_parser(
-        'cron',
-        help="launch a cron server for running all of the databases' cron jobs"
-    )
-    cron_parser.add_argument(
-        '-w', '--workers', nargs=1,
-        help="amount of workers to assign to this cron server (default: 2)"
-    )
-    cron_parser.add_argument(
-        '--pid-file', nargs=1, type=str, metavar='PATH',
-        help="file where the pid of the cron server will be stored"
-    )
-    # TODO: not one, but different --limit-* commands, maybe make a parser
-    # and inherit in subparsers
-    # ------------ #
-    #  Migrations  #
-    # ------------ #
-    migration_parser = top_level_subparsers.add_parser(
-        'migrate',
-        help="migrate the specified odoo database",
-        parents=[dbname_parser, logging_parser]
-    )
-    migration_parser.add_argument(
-        'path', nargs=1, type=str, metavar='PATH',
-        help="path to the migration scripts for the specified database"
-    )
-    # --------- #
-    #  Imports  #
-    # --------- #
-    import_parser = top_level_subparsers.add_parser(
-        'import',
-        help="import csv data into odoo",
-        parents=[dbname_parser, logging_parser, common_parser]
-    )
-    import_parser.add_argument(
-        'path', nargs=1, type=str, metavar='PATH',
-        help="path to the csv file to import into the odoo database"
-    )
-    import_parser.add_argument(
-        # In master, this argument takes a file where intermediate states are
-        # stored, IMO it'd be best to save this to /tmp since the user is
-        # likely to retry the import immediately after crashing, no need
-        # to litter the user's file system
-        '-p', '--import-partial', action='store_true',
-        help="import in incremental steps, primarily used to import big "
-        "amounts of data"
-    )
-    # --------------------- #
-    #  Module installation  #
-    # --------------------- #
-    install_parser = top_level_subparsers.add_parser(
-        'install',
-        help="install odoo modules",
-        parents=[dbname_parser, logging_parser, common_parser]
-    )
-    install_parser.add_argument(
-        'modules', nargs='+', metavar='MODULE', type=str,
-        help="space-separated list of modules to be installed"
-    )
-    # ---------------- #
-    #  Module updates  #
-    # ---------------- #
-    update_parser = top_level_subparsers.add_parser(
-        'update',
-        help="update odoo modules",
-        parents=[dbname_parser, logging_parser, common_parser]
-    )
-    update_parser.add_argument(
-        'modules', nargs='+', metavar='MODULE', type=str,
-        help="space-separated list of modules to be updated"
-    )
-    # --------------------------- #
-    #  Standalone test execution  #
-    # --------------------------- #
-    test_parser = top_level_subparsers.add_parser(
-        'test', help="execute specific unit tests",
-        parents=[logging_parser, common_parser]
-    )
-    test_parser.add_argument(
-        # Equivalent of +tag
-        'tag', nargs='*', type=str, metavar='TAG',
-        help="only run tests with the specified tags"
-    )
-    test_parser.add_argument(
-        # Print the test results in a more user-friendly format, current format
-        # is hard to read (but is still okay for the runbot I guess...)
-        '--pretty-print', action='store_true',
-        help="print the test results in a human-readable format"
-    )
-    test_parser.add_argument(
-        # Equivalent of -tag
-        '-e', '--exclude', nargs='+', type=str, metavar='TAG',
-        help="exclude tests with these tags when running the tests suite"
-    )
-    test_parser.add_argument(
-        # Stop execution of the tests at the first failure, this could be
-        # extremely useful at reducing runbot time and also makes sense,
-        # if I'm debugging my code I don't need to see 50 failures, I can just
-        # see one and fix as I go
-        '-ff', '--fail-fast', action='store_true',
-        help="terminate the test execution upon first failure"
-    )
-    test_parser.add_argument(
-        '-s', '--save', metavar='PATH', type=str,
-        help="save the test results to the specified file"
-    )
-    # -------------- #
-    #  Translations  #
-    # -------------- #
-    translation_parser = top_level_subparsers.add_parser(
-        'translate', help="tools for handling translations in odoo",
-        parents=[dbname_parser, logging_parser, common_parser]
-    )
-    translation_subparsers = translation_parser.add_subparsers(
-        help='translation toolset help'
-    )
-    # Load subcommand
-    t_load_parser = translation_subparsers.add_parser(
-        'load', help="load a translation into the specified database"
-    )
-    t_load_parser.add_argument(
-        'language', nargs=1, type=str, metavar='LANG',
-        help="language to be loaded"
-    )
-    # Import subcommand
-    t_import_parser = translation_subparsers.add_parser(
-        'import', help="import translations"
-    )
-    t_import_parser.add_argument(
-        'language', nargs=1, type=str, metavar='LANG',
-        help="language for which translations will be imported"
-    )
-    t_import_parser.add_argument(
-        'infile', nargs=1, type=str, metavar='PATH',
-        help="path to the PO/CSV file containing the translations"
-    )
-    t_import_parser.add_argument(
-        '-o', '--overwrite', action='store_true',
-        help="if specified, translations in the database will be overwritten "
-        "for those found in the input file"
-    )
-    # Export subcommand
-    t_export_parser = translation_subparsers.add_parser(
-        'export', help="export translations"
-    )
-    t_export_parser.add_argument(
-        'language', nargs=1, type=str, metavar='LANG',
-        help="language for which translations will be exported"
-    )
-    t_export_parser.add_argument(
-        'outfile', nargs=1, type=str, metavar='PATH',
-        help="path to where the exported records will be stored"
-    )
-    t_export_parser.add_argument(
-        '-t', '--template', action='store_true', help="???"
-    )
-    # ------- #
-    #  Serve  #
-    # ------- #
-    serve_parser = top_level_subparsers.add_parser(
-        'serve',
-        parents=[common_parser, logging_parser],
-        help="launch an odoo server"
-    )
-    serve_parser.add_argument(
-        '-i', '--init', nargs='+', type=str, metavar='MODULE',
-        help="space-separated list of modules to install during server launch"
-    )
-    serve_parser.add_argument(
-        '-u', '--update', nargs='+', type=str, metavar='MODULE',
-        help="space-separated list of modules to update during server launch"
-    )
-    serve_parser.add_argument(
-        '-l', '--load', nargs='+', type=str, metavar='MODULE',
-        help="space-separated list of server-wide modules"
-    )
-    serve_parser.add_argument(
-        '--interface-address', nargs=1, type=str, metavar='ADDRESS',
-        help="IPv4 address for the HTTP/XMLRPC interface"
-    )
-    serve_parser.add_argument(
-        '-m', '--proxy-mode', action='store_true',
-        help="something something reverse proxy"
-    )
-    serve_parser.add_argument(
-        '-p', '--port', nargs=1, type=int, metavar='PORT',
-        help="HTTP port for the server"
-    )
-    serve_parser.add_argument(
-        '--longpolling-port', nargs=1, type=int, metavar='PORT',
-        help="longpolling port for the server"
-    )
-    serve_parser.add_argument(
-        '-d', '--database', nargs=1, type=str, metavar='DATABASE',
-        help="database to select or create if it doesn't exist"
-    )
-    serve_parser.add_argument(
-        '--db-filter', nargs=1, type=str, metavar='REGEX',
-        help="databases to make available"
-    )
-    serve_parser.add_argument(
-        '-n', '--no-database-list', action='store_true',
-        help="don't show list of databases through Web UI"
-    )
-    serve_parser.add_argument(
-        '--dev', nargs='+',
-        choices=[
-            # TODO: Re-parse this later on and remove duplicates
-            'pudb', 'wdb', 'ipdb', 'pdb', 'all', 'reload', 'qweb',
-            'werkzeug', 'xml'
-        ],
-        help="enable developer mode"
-    )
-    serve_parser.add_argument(
-        '--without-demo', nargs='+', type=str, metavar='MODULE',
-        help="disable loading demo data for modules to be installed"
-    )
-    serve_parser.add_argument(
-        '--pid-file', nargs=1, metavar='PATH', type=str,
-        help="file where the server pid will be stored"
-    )
-    # Advanced options
-    serve_parser.add_argument(
-        '--limit-virt-count', nargs=1, type=int, metavar='RECORDS',
-        help="Force a limit on the maximum number of records kept in the "
-        "virtual osv_memory tables. The default is False, which means no "
-        "count-based limit."
-    )
-    serve_parser.add_argument(
-        '--limit-virt-age', nargs=1, type=float, metavar='HOURS',
-        help="Force a limit on the maximum age of records kept in the "
-        "virtual osv_memory tables. This is a decimal value expressed in "
-        "hours, the default is 1 hours."
-    )
-    serve_parser.add_argument(
-        '--max-cron-threads', nargs=1, type=int, metavar='THREADS',
-        help="Maximum number of threads processing concurrently cron jobs "
-        "(default 2)."
-    )
-    # Multi-processing, POSIX only
-    if os.name == 'posix':
-        serve_parser.add_argument(
-            '--workers', nargs=1, type=int, metavar='WORKERS',
-            help="Specify the number of workers, 0 to disable prefork mode."
-        )
-        # Different limits
-        serve_parser.add_argument(
-            '--limit-memory-soft', nargs=1, type=str, metavar='BYTES',
-            help="Maximum allowed virtual memory per worker, when reached the "
-            "worker will be reset after the current request (default 2GiB)"
-        )
-        serve_parser.add_argument(
-            '--limit-memory-hard', nargs=1, type=str, metavar='BYTES',
-            help="Maximum allowed virtual memory per worker, when reached, "
-            "memory allocation will fail (default 2.5GiB)"
-        )
-        serve_parser.add_argument(
-            '--limit-time-cpu', nargs=1, type=int, metavar='SECONDS',
-            help="Maximum allowed CPU time per request in seconds (default 60)"
-        )
-        serve_parser.add_argument(
-            '--limit-time-real', nargs=1, type=int, metavar='SECONDS',
-            help="Maximum allowed real time per request in seconds "
-            "(default 120)"
-        )
-        serve_parser.add_argument(
-            '--limit-time-real-cron', nargs=1, type=int, metavar='SECONDS',
-            help="Maximum allowed real time per cron job in seconds "
-            "(default --limit-time-real), set to 0 for no limit"
-        )
-        serve_parser.add_argument(
-            '--limit-request', nargs=1, type=int, metavar='REQUESTS',
-            help="Maximum number of request to be processed per worker "
-            "(default 8192)"
-        )
-    # --------------- #
-    #  Configuration  #
-    # --------------- #
-    config_parser = top_level_subparsers.add_parser(
-        'config',
-        help="set up your Odoo configuration"
-    )
-    config_parser.add_argument(
-        'setting', nargs=1, type=str, metavar='SETTING',
-        help="setting to modify"
-    )
-    # Just to avoid any shenanigans
-    ex_group = config_parser.add_mutually_exclusive_group()
-    ex_group.add_argument(
-        'new_val', nargs='?', type=str, metavar='VALUE', default=None,
-        help="new value for the specified setting"
-    )
-    ex_group.add_argument(
-        '-e', '--edit', action='store_true',
-        help="open the settings file with the preferred text editor"
-    )
-    # ------------ #
-    #  Deployment  #
-    # ------------ #
-    deploy_parser = top_level_subparsers.add_parser(
-        'deploy',
-        help="deploy a module on an Odoo instance"
-    )
-    deploy_parser.add_argument(
-        'path', nargs=1, type=str, metavar='PATH',
-        help="path of the module to be deployed"
-    )
-    deploy_parser.add_argument(
-        'url', nargs='?', metavar='URL',
-        help="url of the server",
-        default="http://localhost:8069"
-    )
-    # ---------- #
-    #  Scaffold  #
-    # ---------- #
-    scaffold_parser = top_level_subparsers.add_parser(
-        'scaffold',
-        help="create an empty module following a template"
-    )
-    scaffold_parser.add_argument(
-        'name', nargs=1, type=str, metavar='NAME',
-        help="name of the module to create"
-    )
-    scaffold_parser.add_argument(
-        'dest', nargs='?', type=str, metavar='PATH', default='.',
-        help="directory where the newly-created module will be stored "
-        "(default is current working directory)"
-    )
-    scaffold_parser.add_argument(
-        '-t', '--template', nargs=1, type=str, metavar='PATH',
-        help="provide a template for the module to be generated"
-    )
-    # ----------------- #
-    #  Shell Interface  #
-    # ----------------- #
-    shell_parser = top_level_subparsers.add_parser(
-        'shell',
-        help="activate the shell interface for the specified database",
-        parents=[common_parser, logging_parser]
-    )
-    shell_parser.add_argument(
-        '-d', '--database', type=str, metavar='DATABASE',
-        help="a database to run the shell on, creates a new one by default"
-    )
-    shell_parser.add_argument(
-        '-r', '--repl', choices=['python', 'ipython', 'ptpython'],
-        metavar='REPL', help="the repl to be used for the shell session"
-    )
-
-    # Parse them args
-    parsed = main_parser.parse_args()
-    print(parsed)

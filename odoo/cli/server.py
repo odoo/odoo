@@ -123,7 +123,6 @@ def import_translation():
 
 def main(args):
     check_root_user()
-    odoo.tools.config.parse_config(args)
     check_postgres_user()
     report_configuration()
 
@@ -135,23 +134,22 @@ def main(args):
     csv.field_size_limit(500 * 1024 * 1024)
 
     preload = []
-    if config['db_name']:
-        preload = config['db_name'].split(',')
-        for db_name in preload:
-            try:
-                odoo.service.db._create_empty_database(db_name)
-                config['init']['base'] = True
-            except ProgrammingError as err:
-                if err.pgcode == errorcodes.INSUFFICIENT_PRIVILEGE:
-                    # We use an INFO loglevel on purpose in order to avoid
-                    # reporting unnecessary warnings on build environment
-                    # using restricted database access.
-                    _logger.info("Could not determine if database %s exists, "
-                                 "skipping auto-creation: %s", db_name, err)
-                else:
-                    raise err
-            except odoo.service.db.DatabaseExists:
-                pass
+    db_name = config.get('db_name')
+    if db_name:
+        try:
+            odoo.service.db._create_empty_database(db_name)
+            config['init']['base'] = True
+        except ProgrammingError as err:
+            if err.pgcode == errorcodes.INSUFFICIENT_PRIVILEGE:
+                # We use an INFO loglevel on purpose in order to avoid
+                # reporting unnecessary warnings on build environment
+                # using restricted database access.
+                _logger.info("Could not determine if database %s exists, "
+                             "skipping auto-creation: %s", db_name, err)
+            else:
+                raise err
+        except odoo.service.db.DatabaseExists:
+            pass
 
     if config["translate_out"]:
         # TODO juc, deprecate me and do a new subcommand
