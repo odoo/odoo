@@ -224,14 +224,12 @@
             itemscope="itemscope" itemtype="http://schema.org/Event">
             <div class="h-100 row no-gutters">
                 <header class="overflow-hidden bg-secondary col-12 rounded-top">
-                    <t t-set="track_image_url" t-value="track.website_image_url"/>
-
                     <small t-if="not track.is_published" class="o_wesession_track_card_header_badge bg-danger">
                         <i class="fa fa-ban mr-2"/>Unpublished
                     </small>
 
-                    <div t-if="track.image" class="card-img-top"
-                        t-attf-style="padding-top: 50%; background-image: url(#{track_image_url}); background-size: cover; background-position:center">
+                    <div t-if="track.website_image_url" class="card-img-top"
+                        t-attf-style="padding-top: 50%; background-image: url(#{track.website_image_url}); background-size: cover; background-position:center">
                         <span t-if="option_tracks_wishlist" class="position-absolute h3 mt-2" style="right: 0; top: 0;">
                             <t t-call="website_event_track_online.track_widget_reminder">
                                 <t t-set="reminder_light" t-value="True"/>
