@@ -286,7 +286,7 @@ function factory(dependencies) {
             );
             let amount = 0;
             for (const chatWindow of allHiddenWithThread) {
-                if (chatWindow.thread.message_unread_counter > 0) {
+                if (chatWindow.thread.localMessageUnreadCounter > 0) {
                     amount++;
                 }
             }
@@ -393,7 +393,7 @@ function factory(dependencies) {
             related: 'allOrderedHidden.thread',
         }),
         allOrderedHiddenThreadMessageUnreadCounter: attr({
-            related: 'allOrderedHiddenThread.message_unread_counter',
+            related: 'allOrderedHiddenThread.localMessageUnreadCounter',
         }),
         allOrderedVisible: one2many('mail.chat_window', {
             compute: '_computeAllOrderedVisible',
