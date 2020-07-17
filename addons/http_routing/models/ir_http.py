@@ -16,7 +16,7 @@ except ImportError:
     slugify_lib = None
 
 import odoo
-from odoo import api, models, registry, exceptions
+from odoo import api, models, registry, exceptions, tools
 from odoo.addons.base.models.ir_http import RequestUID, ModelConverter
 from odoo.addons.base.models.qweb import QWebException
 from odoo.http import request
@@ -30,7 +30,6 @@ _logger = logging.getLogger(__name__)
 # global resolver (GeoIP API is thread-safe, for multithreaded workers)
 # This avoids blowing up open files limit
 odoo._geoip_resolver = None
-
 
 # ------------------------------------------------------------
 # Slug API
@@ -186,24 +185,17 @@ def url_for(url_from, lang_code=None, no_rewrite=False):
     if not getattr(request.env['ir.http'], '_rewrite_len', {}).get(routing):
         no_rewrite = True
 
-    # avoid useless check for 1 char URL '/', '#', ... and absolute URL
-    if not no_rewrite and url_from and (len(url_from) > 1 or not url_from.startswith('http')):
-        path, _, qs = url_from.partition('?')
-        req = request.httprequest
-        router = req.app.get_db_router(request.db).bind('')
-        try:
-            _ = router.match(path, method='POST')
-        except werkzeug.exceptions.MethodNotAllowed as e:
-            _ = router.match(path, method='GET')
-        except werkzeug.routing.RequestRedirect as e:
-            # remove query string from current env
-            new_url = e.new_url.split('?')[0]
-            # remove scheme and add query_string from url_from
-            new_url = new_url[7:] + (qs and '?%s' % qs or '')
-        except werkzeug.exceptions.NotFound as e:
-            new_url = url_from
-        except Exception as e:
-            raise e
+    path, _, qs = (url_from or '').partition('?')
+
+    if (not no_rewrite and path and (
+            len(path) > 1
+            and path.startswith('/')
+            and '/static/' not in path
+            and not path.startswith('/web/')
+    )):
+        new_url = request.env['ir.http'].url_rewrite(path)
+        new_url = new_url and qs and new_url + '?%s' % qs
+
 
     return url_lang(new_url or url_from, lang_code=lang_code)
 
@@ -661,3 +653,22 @@ class IrHttp(models.AbstractModel):
                 code, html = 418, env['ir.ui.view']._render_template('http_routing.http_error', values)
 
         return werkzeug.wrappers.Response(html, status=code, content_type='text/html;charset=utf-8')
+
+    @api.model
+    @tools.ormcache('path')
+    def url_rewrite(self, path):
+        new_url = False
+        req = request.httprequest
+        router = req.app.get_db_router(request.db).bind('')
+        try:
+            _ = router.match(path, method='POST')
+        except werkzeug.exceptions.MethodNotAllowed as e:
+            _ = router.match(path, method='GET')
+        except werkzeug.routing.RequestRedirect as e:
+            new_url = e.new_url[7:]  # remove scheme
+        except werkzeug.exceptions.NotFound as e:
+            new_url = path
+        except Exception as e:
+            raise e
+
+        return new_url or path
