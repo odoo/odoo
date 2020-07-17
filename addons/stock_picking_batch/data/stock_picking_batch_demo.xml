@@ -3,12 +3,10 @@
 
     <!-- Add batch picking -->
     <record id="stock_picking_batch_dry_1" model="stock.picking.batch">
-        <field name="state">in_progress</field>
         <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="company_id" ref="base.main_company"/>
     </record>
     <record id="stock_picking_batch_freeze_1" model="stock.picking.batch">
-        <field name="state">in_progress</field>
         <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="company_id" ref="base.main_company"/>
     </record>
@@ -65,7 +63,6 @@
     </record>
     <record id="Picking_B" model="stock.picking">
         <field name="move_type">one</field>
-        <field name="state">assigned</field>
         <field name="priority">1</field>
         <field name="user_id" eval="False"/>
         <field name="picking_type_id" ref="stock.picking_type_internal"/>
@@ -76,7 +73,6 @@
     </record>
     <record id="Picking_C" model="stock.picking">
         <field name="move_type">one</field>
-        <field name="state">assigned</field>
         <field name="priority">1</field>
         <field name="user_id" eval="False"/>
         <field name="picking_type_id" ref="stock.picking_type_internal"/>
@@ -128,19 +124,18 @@
         <field name="product_id" ref="product.consu_delivery_03"/>
     </record>
 
-    <!-- Confirm Pickings -->
-    <function model="stock.picking" name="action_confirm">
-        <value eval="[
-            ref('stock_picking_batch.Picking_A'),
-            ref('stock_picking_batch.Picking_B'),
-            ref('stock_picking_batch.Picking_C')]"/>
+    <!-- Confirm Batch Pickings -->
+    <function model="stock.picking.batch" name="action_confirm">
+        <value eval="ref('stock_picking_batch_dry_1')"/>
     </function>
-
-    <!-- Check Availability Pickings -->
-    <function model="stock.picking" name="action_assign">
-        <value eval="[
-            ref('stock_picking_batch.Picking_A'),
-            ref('stock_picking_batch.Picking_B'),
-            ref('stock_picking_batch.Picking_C')]"/>
+    <function model="stock.picking.batch" name="action_confirm">
+        <value eval="ref('stock_picking_batch_freeze_1')"/>
+    </function>
+    <!-- Check Availability -->
+    <function model="stock.picking.batch" name="action_assign">
+        <value eval="ref('stock_picking_batch_dry_1')"/>
+    </function>
+    <function model="stock.picking.batch" name="action_assign">
+        <value eval="ref('stock_picking_batch_freeze_1')"/>
     </function>
 </odoo>
