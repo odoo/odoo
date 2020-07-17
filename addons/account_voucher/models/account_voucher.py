@@ -461,7 +461,7 @@ class AccountVoucherLine(models.Model):
             taxes = self.tax_ids.compute_all(self.price_unit, self.voucher_id.currency_id, self.quantity, product=self.product_id, partner=self.voucher_id.partner_id)
             self.price_subtotal = taxes['total_excluded']
 
-    @api.onchange('product_id', 'voucher_id', 'price_unit', 'company_id')
+    @api.onchange('product_id', 'voucher_id', 'company_id')
     def _onchange_line_details(self):
         if not self.voucher_id or not self.product_id or not self.voucher_id.partner_id:
             return
@@ -485,7 +485,7 @@ class AccountVoucherLine(models.Model):
     def product_id_change(self, product_id, partner_id=False, price_unit=False, company_id=None, currency_id=None, type=None):
         # TDE note: mix of old and new onchange badly written in 9, multi but does not use record set
         context = self._context
-        company_id = company_id if company_id is not None else context.get('company_id', False)
+        company_id = company_id if company_id and company_id is not None else context.get('company_id', self.env.user.company_id.id)
         company = self.env['res.company'].browse(company_id)
         currency = self.env['res.currency'].browse(currency_id)
         if not partner_id:
