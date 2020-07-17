@@ -13,6 +13,9 @@ class Track(models.Model):
         help="Configure this URL so that event attendees can see your Track in video!")
     youtube_video_id = fields.Char('Youtube video ID', compute='_compute_youtube_video_id',
         help="Extracted from the video URL and used to infer various links (embed/thumbnail/...)")
+    is_youtube_replay = fields.Boolean('Is Youtube Replay',
+        help="Check this option if the video is already available on Youtube to avoid showing 'Direct' options (Chat, ...)")
+    is_youtube_chat_available = fields.Boolean('Is Chat Available', compute='_compute_is_youtube_chat_available')
 
     @api.depends('youtube_video_url')
     def _compute_youtube_video_id(self):
@@ -25,3 +28,15 @@ class Track(models.Model):
 
             if not track.youtube_video_id:
                 track.youtube_video_id = False
+
+    @api.depends('youtube_video_id', 'is_youtube_replay', 'date_end', 'is_track_done')
+    def _compute_website_image_url(self):
+        youtube_thumbnail_tracks = self.filtered(lambda track: not track.image and track.youtube_video_id)
+        super(Track, self - youtube_thumbnail_tracks)._compute_website_image_url()
+        for track in youtube_thumbnail_tracks:
+            track.website_image_url = f'https://img.youtube.com/vi/{track.youtube_video_id}/maxresdefault.jpg'
+
+    @api.depends('youtube_video_url', 'is_youtube_replay', 'date', 'date_end', 'is_track_upcoming', 'is_track_live')
+    def _compute_is_youtube_chat_available(self):
+        for track in self:
+            track.is_youtube_chat_available = track.youtube_video_url and not track.is_youtube_replay and (track.is_track_soon or track.is_track_live)

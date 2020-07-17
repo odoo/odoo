@@ -15,7 +15,7 @@ class WebsiteEventTrackLiveController(http.Controller):
             return {
                 'id': track_suggestion.id,
                 'name': track_suggestion.name,
-                'has_image': bool(track_suggestion.image),
+                'website_image_url': track_suggestion.website_image_url,
                 'youtube_video_id': track_suggestion.youtube_video_id,
                 'website_url': track_suggestion.website_url
             }

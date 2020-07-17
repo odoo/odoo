@@ -15,12 +15,7 @@ publicWidget.registry.websiteEventTrackSuggestion = publicWidget.Widget.extend({
 
         this.name = options.name;
         this.trackUrl = options.website_url;
-        if (options.has_image) {
-            this.imageSrc = `/web/image/event.track/${options.id}/image`;
-        } else {
-            // TODO awa: apprently it's 'maxresdefault_live' for live streams, test it
-            this.imageSrc = `https://img.youtube.com/vi/${options.youtube_video_id}/maxresdefault.jpg`;
-        }
+        this.imageSrc = options.website_image_url;
     },
 
     start: function () {
