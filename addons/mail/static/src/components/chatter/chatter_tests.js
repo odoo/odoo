@@ -340,6 +340,32 @@ QUnit.test('composer show/hide on log note/send message', async function (assert
     );
 });
 
+QUnit.test('should not display user notification messages in chatter', async function (assert) {
+    assert.expect(1);
+
+    this.data['mail.message'].records = [{
+        author_id: [7, "Demo"],
+        body: "<p>User notification</p>",
+        date: "2019-04-20 11:00:00",
+        id: 102,
+        message_type: 'user_notification',
+        model: 'res.partner',
+        res_id: 100,
+    }];
+    await this.start();
+    const chatter = this.env.models['mail.chatter'].create({
+        threadId: 100,
+        threadModel: 'res.partner',
+    });
+    await this.createChatterComponent({ chatter });
+
+    assert.containsNone(
+        document.body,
+        '.o_Message',
+        "should display no messages"
+    );
+});
+
 });
 });
 });
