@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 # decorator makes wrappers that have the same API as their wrapped function
-from collections import defaultdict
+from collections import Counter, defaultdict
 from decorator import decorator
 from inspect import signature
 import logging
@@ -207,10 +207,7 @@ def log_ormcache_stats(sig=None, frame=None):
     for dbname, reg in sorted(Registry.registries.d.items()):
         # set logger prefix to dbname
         me.dbname = dbname
-        entries = defaultdict(int)
-        # beware: we use .keys() on purpose here (reg.cache is not a real dict)
-        for key in reg.cache.keys():
-            entries[key[:2]] += 1
+        entries = Counter(k[:2] for k in reg.cache.d)
         # show entries sorted by model name, method name
         for key in sorted(entries, key=lambda key: (key[0], key[1].__name__)):
             model, method = key
