@@ -33,14 +33,3 @@ class BaseImportModule(models.TransientModel):
             'type': 'ir.actions.act_window',
             'context': context,
         }
-
-    def action_module_open(self):
-        self.ensure_one()
-        return {
-            'domain': [('name', 'in', self.env.context.get('module_name', []))],
-            'name': 'Modules',
-            'view_mode': 'tree,form',
-            'res_model': 'ir.module.module',
-            'view_id': False,
-            'type': 'ir.actions.act_window',
-        }

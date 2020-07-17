@@ -34,6 +34,25 @@
         <field name="act_window_id" ref="action_contacts"/>
     </record>
 
+    <record id="action_country" model="ir.actions.act_window">
+        <field name="name">Countries</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.country</field>
+        <field name="help">Display and manage the list of all countries that can be assigned to your partner records. You can create or delete countries to make sure the ones you are working on will be maintained.</field>
+    </record>
+    <record id="action_country_group" model="ir.actions.act_window">
+        <field name="name">Country Group</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.country.group</field>
+        <field name="help">Display and manage the list of all countries group. You can create or delete country group to make sure the ones you are working on will be maintained.</field>
+    </record>
+    <record id="action_country_state" model="ir.actions.act_window">
+        <field name="name">Fed. States</field>
+        <field name="type">ir.actions.act_window</field>
+        <field name="res_model">res.country.state</field>
+        <field name="view_id" ref="base.view_country_state_tree"/>
+        <field name="help">You can manage the different federal states you are working on from here. Each state is attached to one country.</field>
+    </record>
 
     <menuitem name="Contacts"
         id="menu_contacts"
@@ -71,16 +90,18 @@
         parent="res_partner_menu_config" sequence="5"/>
 
     <menuitem id="menu_country_partner"
-        action="base.action_country" parent="menu_localisation"
+        action="action_country"
+        parent="menu_localisation"
         sequence="1"/>
 
     <menuitem id="menu_country_group"
-        action="base.action_country_group"
-        name="Country Group" parent="menu_localisation"
+        action="action_country_group"
+        name="Country Group"
+        parent="menu_localisation"
         sequence="3"/>
 
     <menuitem id="menu_country_state_partner"
-        action="base.action_country_state"
+        action="action_country_state"
         parent="menu_localisation"
         sequence="2"/>
 
@@ -98,4 +119,5 @@
         action="base.action_res_partner_bank_account_form"
         parent="menu_config_bank_accounts"
         sequence="2"/>
+
 </odoo>
