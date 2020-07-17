@@ -10,7 +10,11 @@ class MassMailing(models.Model):
     _inherit = 'mailing.mailing'
 
     sale_quotation_count = fields.Integer('Quotation Count', groups='sales_team.group_sale_salesman', compute='_compute_sale_quotation_count')
-    sale_invoiced_amount = fields.Integer('Invoiced Amount', groups='sales_team.group_sale_salesman', compute='_compute_sale_invoiced_amount')
+    currency_id = fields.Many2one('res.currency', string='Company Currency', compute='_compute_sale_invoiced_amount')
+    sale_invoiced_amount = fields.Monetary(
+        'Invoiced Amount', groups='sales_team.group_sale_salesman',
+        compute='_compute_sale_invoiced_amount', currency_field='currency_id'
+    )
 
     @api.depends('mailing_domain')
     def _compute_sale_quotation_count(self):
@@ -21,6 +25,7 @@ class MassMailing(models.Model):
     @api.depends('mailing_domain')
     def _compute_sale_invoiced_amount(self):
         for mass_mailing in self:
+            mass_mailing.currency_id = self.env.company.currency_id
             if self.user_has_groups('sales_team.group_sale_salesman') and self.user_has_groups('account.group_account_invoice'):
                 domain = mass_mailing._get_sale_utm_domain() + [('state', 'not in', ['draft', 'cancel'])]
                 moves = self.env['account.move'].search_read(domain, ['amount_untaxed'])
