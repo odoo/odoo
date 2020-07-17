@@ -17,7 +17,7 @@ class StockPicking(models.Model):
     def create(self, vals):
         res = super().create(vals)
         if vals.get('batch_id'):
-            self.batch_id._sanity_check()
+            res.batch_id._sanity_check()
         return res
 
     def write(self, vals):
