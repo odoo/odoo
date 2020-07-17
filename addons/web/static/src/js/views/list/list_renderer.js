@@ -705,7 +705,7 @@ var ListRenderer = BasicRenderer.extend({
             .attr('tabindex', -1)
             .text(name + ' (' + group.count + ')');
         var $arrow = $('<span>')
-            .css('padding-left', (groupLevel * 20) + 'px')
+            .css('padding-left', 2 + (groupLevel * 20) + 'px')
             .css('padding-right', '5px')
             .addClass('fa');
         if (group.count > 0) {

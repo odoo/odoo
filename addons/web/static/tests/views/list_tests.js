@@ -4910,7 +4910,7 @@ QUnit.module('Views', {
         assert.containsN(list, '.o_group_name .fa-caret-right', 2,
             "the carret of closed groups should be right");
         assert.strictEqual(list.$('.o_group_name:first span').css('padding-left'),
-            '0px', "groups of level 1 should have a 0px padding-left");
+            '2px', "groups of level 1 should have a 2px padding-left");
         assert.strictEqual(list.$('.o_group_header:first td:last').text(), '16',
             "group aggregates are correctly displayed");
 
@@ -4932,7 +4932,7 @@ QUnit.module('Views', {
         assert.strictEqual($openGroup.find('.o_group_name:nth(2)').text(), 'blip (2)',
             "group should have correct name and count");
         assert.strictEqual($openGroup.find('.o_group_name:nth(2) span').css('padding-left'),
-            '20px', "groups of level 2 should have a 20px padding-left");
+            '22px', "groups of level 2 should have a 22px padding-left");
         assert.strictEqual($openGroup.find('.o_group_header:nth(2) td:last').text(), '-11',
             "inner group aggregates are correctly displayed");
 
