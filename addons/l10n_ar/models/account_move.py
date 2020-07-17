@@ -213,16 +213,6 @@ class AccountMove(models.Model):
                     [('l10n_ar_letter', '=', self.l10n_latam_document_type_id.l10n_ar_letter)]).ids)
         return where_string, param
 
-    def _get_name_invoice_report(self, report_xml_id):
-        self.ensure_one()
-        if self.l10n_latam_use_documents and self.company_id.country_id.code == 'AR':
-            custom_report = {
-                'account.report_invoice_document_with_payments': 'l10n_ar.report_invoice_document_with_payments',
-                'account.report_invoice_document': 'l10n_ar.report_invoice_document',
-            }
-            return custom_report.get(report_xml_id) or report_xml_id
-        return super()._get_name_invoice_report(report_xml_id)
-
     def _l10n_ar_get_amounts(self, company_currency=False):
         """ Method used to prepare data to present amounts and taxes related amounts when creating an
         electronic invoice for argentinian and the txt files for digital VAT books. Only take into account the argentinian taxes """
@@ -279,3 +269,9 @@ class AccountMove(models.Model):
             res += [{'Id': '3', 'BaseImp': vat_base_0, 'Importe': 0.0}]
 
         return res if res else []
+
+    def _get_name_invoice_report(self):
+        self.ensure_one()
+        if self.l10n_latam_use_documents and self.company_id.country_id.code == 'AR':
+            return 'l10n_ar.report_invoice_document'
+        return super()._get_name_invoice_report()
