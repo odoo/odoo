@@ -216,7 +216,7 @@ function factory(dependencies) {
              * @returns {integer}
              */
             const _getNextIndex = index => {
-                const directionOffset = reverse ? -1 : 1;
+                const directionOffset = reverse ? 1 : -1;
                 let nextIndex = index + directionOffset;
                 if (nextIndex > orderedVisible.length - 1) {
                     nextIndex = 0;
@@ -261,6 +261,21 @@ function factory(dependencies) {
             this.threadViewer.addComponentHint('home-menu-shown');
         }
 
+        /**
+         * @private
+         * @returns {integer|undefined}
+         */
+        _computeVisibleIndex() {
+            if (!this.manager) {
+                return undefined;
+            }
+            const visible = this.manager.visual.visible;
+            const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
+            if (index === -1) {
+                return undefined;
+            }
+            return index;
+        }
     }
 
     ChatWindow.fields = {
@@ -336,6 +351,19 @@ function factory(dependencies) {
         }),
         threadViewer: one2one('mail.thread_viewer', {
             inverse: 'chatWindow',
+        }),
+        /**
+         * This field handle the "order" (index) of the visible chatWindow inside the UI.
+         *
+         * Using LTR, the right-most chat window has index 0, and the number is incrementing from right to left.
+         * Using RTL, the left-most chat window has index 0, and the number is incrementing from left to right.
+         */
+        visibleIndex: attr({
+            compute: '_computeVisibleIndex',
+            dependencies: [
+                'manager',
+                'managerVisual',
+            ],
         }),
         visibleOffset: attr({
             compute: '_computeVisibleOffset',

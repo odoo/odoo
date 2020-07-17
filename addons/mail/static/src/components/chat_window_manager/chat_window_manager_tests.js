@@ -1464,6 +1464,116 @@ QUnit.test('chat window: switch on TAB', async function (assert) {
     );
 });
 
+QUnit.test('chat window: TAB cycle with 3 open chat windows', async function (assert) {
+    /**
+     * InnerWith computation uses following info:
+     * ([mocked] global window width: @see `mail/static/src/utils/test_utils.js:start()` method)
+     * (others: @see mail/static/src/models/chat_window_manager/chat_window_manager.js:visual)
+     *
+     * - chat window width: 325px
+     * - start/end/between gap width: 10px/10px/5px
+     * - hidden menu width: 200px
+     * - global width: 1920px
+     *
+     * Enough space for 3 visible chat windows:
+     *  10 + 325 + 5 + 325 + 5 + 325 + 10 = 1000 < 1920
+     */
+    assert.expect(6);
+
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [{
+                channel_type: 'channel',
+                id: 1,
+                is_minimized: true,
+                is_pinned: true,
+                name: "channel1",
+                state: 'open',
+            }, {
+                channel_type: 'channel',
+                id: 2,
+                is_minimized: true,
+                is_pinned: true,
+                name: "channel2",
+                state: 'open',
+            }, {
+                channel_type: 'channel',
+                id: 3,
+                is_minimized: true,
+                is_pinned: true,
+                name: "channel3",
+                state: 'open',
+            }],
+        },
+    });
+    await this.start({
+        env: {
+            browser: {
+                innerWidth: 1920,
+            },
+        },
+    });
+    assert.containsN(
+        document.body,
+        '.o_ChatWindow .o_ComposerTextInput_textarea',
+        3,
+        "initialy, 3 chat windows should be present"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ChatWindow.o-folded',
+        "all 3 chat windows should be open"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInput_textarea").focus();
+    });
+    assert.strictEqual(
+        document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInput_textarea"),
+        document.activeElement,
+        "The chatWindow with visible-index 2 should have the focus"
+    );
+
+    await afterNextRender(() =>
+        triggerEvent(
+            document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInput_textarea"),
+            'keydown',
+            { key: 'Tab' },
+        )
+    );
+    assert.strictEqual(
+        document.querySelector(".o_ChatWindow[data-visible-index='1'] .o_ComposerTextInput_textarea"),
+        document.activeElement,
+        "after pressing tab on the chatWindow with visible-index 2, the chatWindow with visible-index 1 should have focus"
+    );
+
+    await afterNextRender(() =>
+        triggerEvent(
+            document.querySelector(".o_ChatWindow[data-visible-index='1'] .o_ComposerTextInput_textarea"),
+            'keydown',
+            { key: 'Tab' },
+        )
+    );
+    assert.strictEqual(
+        document.querySelector(".o_ChatWindow[data-visible-index='0'] .o_ComposerTextInput_textarea"),
+        document.activeElement,
+        "after pressing tab on the chat window with visible-index 1, the chatWindow with visible-index 0 should have focus"
+    );
+
+    await afterNextRender(() =>
+        triggerEvent(
+            document.querySelector(".o_ChatWindow[data-visible-index='0'] .o_ComposerTextInput_textarea"),
+            'keydown',
+            { key: 'Tab' },
+        )
+    );
+    assert.strictEqual(
+        document.querySelector(".o_ChatWindow[data-visible-index='2'] .o_ComposerTextInput_textarea"),
+        document.activeElement,
+        "the chatWindow with visible-index 2 should have the focus after pressing tab on the chatWindow with visible-index 0"
+    );
+});
+
 QUnit.test('chat window with a thread: keep scroll position in message list on folded', async function (assert) {
     assert.expect(3);
 
