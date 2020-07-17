@@ -374,7 +374,7 @@ class ProductTemplate(models.Model):
     def _compute_website_url(self):
         super(ProductTemplate, self)._compute_website_url()
         for product in self:
-            product.website_url = "/shop/product/%s" % slug(product)
+            product.website_url = "/shop/%s" % slug(product)
 
     # ---------------------------------------------------------
     # Rating Mixin API

@@ -16,7 +16,6 @@ from odoo.exceptions import ValidationError
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
-
 _logger = logging.getLogger(__name__)
 
 
@@ -303,7 +302,7 @@ class WebsiteSale(http.Controller):
             values['main_object'] = category
         return request.render("website_sale.products", values)
 
-    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
+    @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
     def product(self, product, category='', search='', **kwargs):
         if not product.can_access_from_current_website():
             raise NotFound()

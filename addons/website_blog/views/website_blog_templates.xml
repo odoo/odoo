@@ -128,7 +128,7 @@ list of filtered posts (by date or tag).
                             </t>
                             <t t-else="first_post">
                                 <div t-if="not date and not tag" class="h4 mb-3 bg-o-color-3 px-2 rounded-sm d-inline-block mr-auto">Latest</div>
-                                <a t-attf-href="/blog/#{slug(first_post.blog_id)}/post/#{slug(first_post)}"
+                                <a t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}"
                                    t-field="first_post.name" class="h1 d-block" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
                                 <div t-field="first_post.subtitle" class="h4" placeholder="Subtitle"/>
 
@@ -139,7 +139,7 @@ list of filtered posts (by date or tag).
                                 </div>
                                 <div t-field="first_post.teaser" class="mb-4 lead"  placeholder=""/>
                                 <div>
-                                    <a t-attf-href="/blog/#{slug(first_post.blog_id)}/post/#{slug(first_post)}" class="btn btn-primary">Read more</a>
+                                    <a t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}" class="btn btn-primary">Read more</a>
                                 </div>
                             </t>
                         </div>
@@ -163,7 +163,7 @@ list of filtered posts (by date or tag).
             <div class="container position-relative h-100 d-flex flex-column justify-content-around">
                 <div t-attf-class="o_wblog_post_title #{'js_tweet' if opt_blog_post_select_to_tweet else ''} #{'js_comment' if opt_blog_post_select_to_comment else ''}">
                     <div t-if="not date and not tag and not blog" class="h4 bg-o-color-3 px-2 d-inline-block rounded-sm">Latest</div>
-                    <a t-if="not blog and first_post" t-attf-href="/blog/#{slug(first_post.blog_id)}/post/#{slug(first_post)}" t-att-title="first_post.name" class="text-white text-decoration-none">
+                    <a t-if="not blog and first_post" t-attf-href="/blog/#{slug(first_post.blog_id)}/#{slug(first_post)}" t-att-title="first_post.name" class="text-white text-decoration-none">
                         <div t-field="first_post.name" id="o_wblog_post_name" t-att-data-blog-id="first_post.id" placeholder="Blog Post Title"/>
                         <div t-field="first_post.subtitle" id="o_wblog_post_subtitle"  placeholder="Subtitle"/>
                     </a>
@@ -382,7 +382,7 @@ list of filtered posts (by date or tag).
             <div t-attf-class="mx-auto #{readableClass}">
                 <div id="o_wblog_post_comments" t-attf-class="pt-4 o_container_small">
                     <div groups="base.group_public" class="small mb-4">
-                        <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/post/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
+                        <a t-attf-href="/web/login?redirect=/blog/{{slug(blog_post.blog_id)}}/{{slug(blog_post)}}#discussion" class="btn btn-sm btn-primary"><b>Sign in</b></a> to leave a comment
                     </div>
                     <t t-call="portal.message_thread">
                         <t t-set="object" t-value="blog_post"/>
@@ -414,12 +414,12 @@ list of filtered posts (by date or tag).
                         <div class="d-flex text-right py-4">
                             <div class="flex-grow-1 pr-3">
                                 <span class="bg-o-color-3 h6 d-inline-block py-1 px-2 rounded-sm">Read Next</span>
-                                <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post)" t-att-title="'Read next' + next_post.name">
+                                <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name">
                                     <div t-field="next_post.name" id="o_wblog_post_name" t-att-data-blog-id="next_post.id" placeholder="Blog Post Title" class="h2"/>
                                     <div t-field="next_post.subtitle" id="o_wblog_post_subtitle" placeholder="Subtitle" class="lead"/>
                                 </a>
                             </div>
-                            <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="w-25">
+                            <a t-att-href="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post)" t-att-title="'Read next' + next_post.name" class="w-25">
                                 <t t-call="website.record_cover">
                                     <t t-set="_record" t-value="next_post"/>
                                     <t t-set="additionnal_classes" t-value="'rounded shadow-sm overflow-hidden h-100'"/>
@@ -439,7 +439,7 @@ list of filtered posts (by date or tag).
 
                         <a id="o_wblog_next_post_info" class="d-none"
                            t-att-data-size="_cp.get('resize_class')"
-                           t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/post/' + slug(next_post) + '?anim'"/>
+                           t-att-data-url="'/blog/' + slug(next_post.blog_id) + '/' + slug(next_post) + '?anim'"/>
 
                         <t t-set="next_cover_is_full" t-value="bool({'o_full_screen_height', 'cover_full'}.intersection(_cp.get('resize_class', '').split(' ')))"/>
                         <t t-set="next_cover_is_auto" t-value="'cover_auto' in _cp.get('resize_class', '')"/>
@@ -520,7 +520,7 @@ list of filtered posts (by date or tag).
 <template id="blog_post_template_new_post">
     <p>A new post <t t-esc="post.name" /> has been published on the <t t-esc="object.name" /> blog. Click here to access the blog :</p>
     <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
-        <a t-attf-href="/blog/#{slug(object)}/post/#{slug(post)}"
+        <a t-attf-href="/blog/#{slug(object)}/#{slug(post)}"
             style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">
             Access post
         </a>

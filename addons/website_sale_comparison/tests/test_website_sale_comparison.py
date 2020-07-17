@@ -118,7 +118,7 @@ class TestUi(odoo.tests.HttpCase):
     def test_02_attribute_multiple_lines(self):
         # Case product page with "Product attributes table" disabled (website_sale standard case)
         self.env['website'].viewref('website_sale_comparison.product_attributes_body').active = False
-        res = self.url_open('/shop/product/%d' % self.template_margaux.id)
+        res = self.url_open('/shop/%d' % self.template_margaux.id)
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
 
@@ -128,7 +128,7 @@ class TestUi(odoo.tests.HttpCase):
 
         # Case product page with "Product attributes table" enabled
         self.env['website'].viewref('website_sale_comparison.product_attributes_body').active = True
-        res = self.url_open('/shop/product/%d' % self.template_margaux.id)
+        res = self.url_open('/shop/%d' % self.template_margaux.id)
         self.assertEqual(res.status_code, 200)
         root = etree.fromstring(res.content, etree.HTMLParser())
 
