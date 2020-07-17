@@ -71,7 +71,7 @@
                                 </li>
                             </ul>
                             </p>
-                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}"/>
+                            <field name="company_id" groups="base.group_multi_company" options="{'no_create': True, 'no_open': True}"/>
                         </group>
                     </group>
                     <notebook>
@@ -151,10 +151,10 @@
                     <field name="product_tmpl_id"/>
                     <field name="code" optional="show"/>
                     <field name="type"/>
-                    <field name="product_id" groups="product.group_product_variant" optional="show"/>
+                    <field name="product_id" groups="product.group_product_variant" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
-                    <field name="product_qty" optional="show"/>
-                    <field name="product_uom_id" groups="uom.group_uom" optional="show" string="Unit of Measure"/>
+                    <field name="product_qty" optional="hide"/>
+                    <field name="product_uom_id" groups="uom.group_uom" optional="hide" string="Unit of Measure"/>
                 </tree>
             </field>
         </record>
