@@ -253,6 +253,12 @@ class MrpProduction(models.Model):
     mrp_production_source_count = fields.Integer("Number of source MO", compute='_compute_mrp_production_source_count')
     mrp_production_backorder_count = fields.Integer("Count of linked backorder", compute='_compute_mrp_production_backorder')
     show_lock = fields.Boolean('Show Lock/unlock buttons', compute='_compute_show_lock')
+    components_availability = fields.Char(
+        string="Component Availability", compute='_compute_components_availability')
+    components_availability_state = fields.Selection([
+        ('available', 'Available'),
+        ('expected', 'Expected'),
+        ('late', 'Late')], compute='_compute_components_availability')
 
     @api.depends('product_id', 'bom_id', 'company_id')
     def _compute_allowed_product_ids(self):
@@ -284,6 +290,27 @@ class MrpProduction(models.Model):
     def _compute_mrp_production_backorder(self):
         for production in self:
             production.mrp_production_backorder_count = len(production.procurement_group_id.mrp_production_ids)
+
+    @api.depends('move_raw_ids', 'state')
+    def _compute_components_availability(self):
+        self.components_availability = False
+        self.components_availability_state = 'available'
+        productions = self.filtered(lambda mo: mo.state not in ['cancel', 'draft', 'done'])
+        for production in productions:
+            forecast_data = []
+            for move in production.move_raw_ids:
+                forecast_data.append(json.loads(move.json_forecast))
+            production.components_availability = 'Available'
+            forecast_data.sort(key=lambda line: (
+                line.get('sortingDate', ''),
+            ), reverse=True)
+            if forecast_data[0].get('sortingDate', False):
+                production.components_availability = _('Exp %s', forecast_data[0]['expectedDate'])
+                production.components_availability_state = 'late' if forecast_data[0]['isLate'] else 'expected'
+            elif any(not data.get('reservedAvailability', False) for data in forecast_data):
+                production.components_availability = 'Not Available'
+                production.components_availability_state = 'late'
+
 
     @api.depends('move_raw_ids.date_expected', 'move_finished_ids.date_expected')
     def _compute_dates_planned(self):
