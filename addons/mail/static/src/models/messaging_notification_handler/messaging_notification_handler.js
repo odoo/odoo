@@ -104,7 +104,6 @@ function factory(dependencies) {
          */
         async _handleNotificationChannel(channelId, data) {
             const {
-                id,
                 info,
                 is_typing,
                 last_message_id,
@@ -113,13 +112,11 @@ function factory(dependencies) {
             switch (info) {
                 case 'channel_fetched':
                     return this._handleNotificationChannelFetched(channelId, {
-                        id,
                         last_message_id,
                         partner_id,
                     });
                 case 'channel_seen':
                     return this._handleNotificationChannelSeen(channelId, {
-                        id,
                         last_message_id,
                         partner_id,
                     });
@@ -137,12 +134,10 @@ function factory(dependencies) {
          * @private
          * @param {integer} channelId
          * @param {Object} param1
-         * @param {integer} param1.id
          * @param {integer} param1.last_message_id
          * @param {integer} param1.partner_id
          */
         async _handleNotificationChannelFetched(channelId, {
-            id,
             last_message_id,
             partner_id,
         }) {
@@ -159,14 +154,12 @@ function factory(dependencies) {
                 // disabled on `channel` channels for performance reasons
                 return;
             }
+            this.env.models['mail.thread_partner_seen_info'].insert({
+                channelId: channel.id,
+                lastFetchedMessage: [['insert', { id: last_message_id }]],
+                partnerId: partner_id,
+            });
             channel.update({
-                partnerSeenInfos: [['insert',
-                    {
-                        lastFetchedMessage: [['insert', {id: last_message_id}]],
-                        id,
-                        partner: [['insert', {id: partner_id}]],
-                    }
-                ]],
                 messageSeenIndicators: [['insert',
                     {
                         id: this.env.models['mail.message_seen_indicator'].computeId(last_message_id, channel.id),
@@ -279,26 +272,21 @@ function factory(dependencies) {
             if (!wasChannelExisting) {
                 return;
             }
-            channel.update({
-                message_unread_counter: channel.message_unread_counter + 1,
-            });
             // manually force recompute of counter
             this.messaging.messagingMenu.update();
         }
 
         /**
-         * Called when a channel has been seen, and the server responses with the
+         * Called when a channel has been seen, and the server responds with the
          * last message seen. Useful in order to track last message seen.
          *
          * @private
          * @param {integer} channelId
          * @param {Object} param1
-         * @param {integer} param1.id
          * @param {integer} param1.last_message_id
          * @param {integer} param1.partner_id
          */
         async _handleNotificationChannelSeen(channelId, {
-            id,
             last_message_id,
             partner_id,
         }) {
@@ -311,38 +299,40 @@ function factory(dependencies) {
                 // knowledge of the channel
                 return;
             }
-            if (channel.channel_type === 'channel') {
-                // disabled on `channel` channels for performance reasons
-                return;
-            }
             const lastMessage = this.env.models['mail.message'].insert({id: last_message_id});
-            const updateData = {
-                partnerSeenInfos: [['insert',
-                    {
-                        id,
-                        lastFetchedMessage: [['link', lastMessage]],
-                        lastSeenMessage: [['link', lastMessage]],
-                        partner: [['insert', {id: partner_id}]],
-                    }],
-                ],
-                messageSeenIndicators: [['insert',
-                    {
-                        id: this.env.models['mail.message_seen_indicator'].computeId(last_message_id, channel.id),
-                        message: [['link', lastMessage]],
-                    }
-                ]],
-            };
+            // restrict computation of seen indicator for "non-channel" channels
+            // for performance reasons
+            const shouldComputeSeenIndicators = channel.channel_type !== 'channel';
+            const updateData = {};
+            if (shouldComputeSeenIndicators) {
+                this.env.models['mail.thread_partner_seen_info'].insert({
+                    channelId: channel.id,
+                    lastSeenMessage: [['link', lastMessage]],
+                    partnerId: partner_id,
+                });
+                Object.assign(updateData, {
+                    // FIXME should no longer use computeId (task-2335647)
+                    messageSeenIndicators: [['insert',
+                        {
+                            id: this.env.models['mail.message_seen_indicator'].computeId(last_message_id, channel.id),
+                            message: [['link', lastMessage]],
+                        },
+                    ]],
+                });
+            }
             if (this.env.messaging.currentPartner.id === partner_id) {
                 Object.assign(updateData, {
-                    message_unread_counter: 0,
-                    seen_message_id: last_message_id,
+                    lastSeenByCurrentPartnerMessageId: last_message_id,
+                    pendingSeenMessageId: undefined,
                 });
             }
             channel.update(updateData);
-            // FIXME force the computing of thread values (cf task-2261221)
-            this.env.models['mail.thread'].computeLastCurrentPartnerMessageSeenByEveryone(channel);
-            // FIXME force the computing of message values (cf task-2261221)
-            this.env.models['mail.message_seen_indicator'].recomputeSeenValues(channel);
+            if (shouldComputeSeenIndicators) {
+                // FIXME force the computing of thread values (cf task-2261221)
+                this.env.models['mail.thread'].computeLastCurrentPartnerMessageSeenByEveryone(channel);
+                // FIXME force the computing of message values (cf task-2261221)
+                this.env.models['mail.message_seen_indicator'].recomputeSeenValues(channel);
+            }
             // manually force recompute of counter
             this.messaging.messagingMenu.update();
         }
@@ -420,6 +410,11 @@ function factory(dependencies) {
                 this.env.bus.trigger('activity_updated', data);
             } else if (type === 'author') {
                 return this._handleNotificationPartnerAuthor(data);
+            } else if (info === 'channel_seen') {
+                return this._handleNotificationChannelSeen(data.channel_id, {
+                    last_message_id: data.last_message_id,
+                    partner_id: this.env.messaging.currentPartner.id,
+                });
             } else if (type === 'deletion') {
                 return this._handleNotificationPartnerDeletion(data);
             } else if (type === 'message_notification_update') {

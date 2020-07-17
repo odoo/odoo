@@ -543,14 +543,14 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         id: 11,
         partnerSeenInfos: [['create', [
             {
-                id: this.env.session.partner_id,
+                channelId: 11,
                 lastFetchedMessage: [['insert', { id: 100 }]],
-                partner: [['insert', { id: this.env.messaging.currentPartner.id }]],
+                partnerId: this.env.messaging.currentPartner.id,
             },
             {
-                id: 100,
+                channelId: 11,
                 lastFetchedMessage: [['insert', { id: 100 }]],
-                partner: [['link', author]],
+                partnerId: author.id,
             },
         ]]],
         model: 'mail.channel',
@@ -614,14 +614,14 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     thread.update({
        partnerSeenInfos: [['create', [
             {
-                id: currentPartner.id,
+                channelId: 11,
                 lastSeenMessage: [['link', lastSeenMessage]],
-                partner: [['link', currentPartner]],
+                partnerId: this.env.messaging.currentPartner.id,
             },
             {
-                id: 100,
+                channelId: 11,
                 lastSeenMessage: [['link', lastSeenMessage]],
-                partner: [['insert', { id: 100 }]],
+                partnerId: 100,
             },
         ]]],
     });
@@ -658,15 +658,15 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         id: 11,
         partnerSeenInfos: [['create', [
             {
-                id: currentPartner.id,
+                channelId: 11,
                 lastSeenMessage: [['insert', { id: 100 }]],
-                partner: [['link', currentPartner]],
+                partnerId: this.env.messaging.currentPartner.id,
             },
             {
-                id: 100,
-                partner: [['insert', { id: 100 }]],
+                channelId: 11,
                 lastFetchedMessage: [['insert', { id: 100 }]],
                 lastSeenMessage: [['insert', { id: 99 }]],
+                partnerId: 100,
             },
         ]]],
         messageSeenIndicators: [['insert', {
@@ -957,11 +957,12 @@ QUnit.test('open chat with author on avatar click should be disabled when curren
         id: 10,
     });
     const thread = await correspondent.getChat();
-    const threadView = this.env.models['mail.thread_view'].create({
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        hasThreadView: true,
         thread: [['link', thread]],
     });
     await this.createMessageComponent(message, {
-        threadViewLocalId: threadView.localId,
+        threadViewLocalId: threadViewer.threadView.localId,
     });
     assert.containsOnce(
         document.body,

@@ -41,7 +41,17 @@ QUnit.module('thread_preview_tests.js', {
 });
 
 QUnit.test('mark as read', async function (assert) {
-    assert.expect(4);
+    assert.expect(8);
+    this.data['mail.channel'].records.push({
+        id: 11,
+        message_unread_counter: 1,
+    });
+    this.data['mail.message'].records.push({
+        channel_ids: [11],
+        id: 100,
+        model: 'mail.channel',
+        res_id: 11,
+    });
 
     await this.start({
         hasChatWindow: true,
@@ -52,16 +62,20 @@ QUnit.test('mark as read', async function (assert) {
             return this._super(...arguments);
         },
     });
-    const thread = this.env.models['mail.thread'].create({
+    const thread = this.env.models['mail.thread'].findFromIdentifyingData({
         id: 11,
-        message_unread_counter: 1,
         model: 'mail.channel',
     });
     await this.createThreadPreviewComponent({ threadLocalId: thread.localId });
     assert.containsOnce(
         document.body,
         '.o_ThreadPreview_markAsRead',
-        "should have 1 mark as read button"
+        "should have the mark as read button"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ThreadPreview_counter',
+        "should have an unread counter"
     );
 
     await afterNextRender(() =>
@@ -70,6 +84,21 @@ QUnit.test('mark as read', async function (assert) {
     assert.verifySteps(
         ['channel_seen'],
         "should have marked the thread as seen"
+    );
+    assert.hasClass(
+        document.querySelector('.o_ThreadPreview'),
+        'o-muted',
+        "should be muted once marked as read"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ThreadPreview_markAsRead',
+        "should no longer have the mark as read button"
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ThreadPreview_counter',
+        "should no longer have an unread counter"
     );
     assert.containsNone(
         document.body,
