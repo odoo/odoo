@@ -7,7 +7,7 @@
     <xpath expr="//div[@id='oe_structure_website_event_track_tracks_1']" position="before">
         <div class="o_wevent_online o_wevent_online_bg o_wesession_index">
             <!-- Options -->
-            <t t-set="option_tracks_wishlist" t-value="request.website.viewref('website_event_track_session.session_topbar_wishlist').active"/>
+            <t t-set="option_tracks_wishlist" t-value="not event.is_done and request.website.viewref('website_event_track_session.session_topbar_wishlist').active"/>
             <!-- Topbar -->
             <t t-call="website_event_track_session.session_topbar"/>
             <!-- Drag/Drop Area -->
