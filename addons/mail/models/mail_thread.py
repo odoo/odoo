@@ -2147,7 +2147,7 @@ class MailThread(models.AbstractModel):
                 for channel in channels.filtered(lambda c: c.email_send):
                     users = channel.channel_partner_ids.mapped('user_ids')
                     for user in users.filtered(lambda u: u.notification_type == 'email'):
-                        channel.with_user(user).channel_seen()
+                        channel.with_user(user).channel_seen(message.id)
 
         if bus_notifications:
             self.env['bus.bus'].sudo().sendmany(bus_notifications)

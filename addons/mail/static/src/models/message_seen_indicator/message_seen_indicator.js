@@ -13,6 +13,8 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * FIXME replace by using messageId & channelId as identifying fields (task-2335647)
+         * 
          * @static
          * @param {mail.message|integer} message
          * @param {mail.thread|integer} thread
@@ -192,6 +194,12 @@ function factory(dependencies) {
             }
             const otherPartnersThatHaveFetched = this.thread.partnerSeenInfos
                 .filter(partnerSeenInfo =>
+                    /**
+                     * Relation may not be set yet immediately
+                     * @see mail.thread_partner_seen_info:partnerId field
+                     * FIXME task-2278551
+                     */
+                    partnerSeenInfo.partner &&
                     partnerSeenInfo.partner !== this.message.author &&
                     partnerSeenInfo.lastFetchedMessage &&
                     partnerSeenInfo.lastFetchedMessage.id >= this.message.id
@@ -216,6 +224,12 @@ function factory(dependencies) {
             }
             const otherPartnersThatHaveSeen = this.thread.partnerSeenInfos
                 .filter(partnerSeenInfo =>
+                    /**
+                     * Relation may not be set yet immediately
+                     * @see mail.thread_partner_seen_info:partnerId field
+                     * FIXME task-2278551
+                     */
+                    partnerSeenInfo.partner &&
                     partnerSeenInfo.partner !== this.message.author &&
                     partnerSeenInfo.lastSeenMessage &&
                     partnerSeenInfo.lastSeenMessage.id >= this.message.id)

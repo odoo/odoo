@@ -171,7 +171,9 @@ MockServer.include({
             return;
         }
         if (args.model === 'mail.channel' && args.method === 'channel_seen') {
-            return;
+            const channel_ids = args.args[0];
+            const last_message_id = args.args[1] || args.kwargs.last_message_id;
+            return this._mockMailChannelChannelSeen(channel_ids, last_message_id);
         }
         if (args.model === 'mail.channel' && args.method === 'channel_set_custom_name') {
             const channel_id = args.args[0] || args.kwargs.channel_id;
@@ -287,7 +289,7 @@ MockServer.include({
         let email_from;
         if (user_id) {
             const author = this._getRecords('res.users', [['id', '=', user_id]])[0];
-            author_id = author.id;
+            author_id = author.partner_id;
             email_from = `${author.display_name} <${author.email}>`;
         } else {
             author_id = false;
@@ -697,10 +699,14 @@ MockServer.include({
         return channels.map(channel => {
             const members = channel.members.map(partnerId => partnerInfos[partnerId]);
             const messages = this._getRecords('mail.message', [
-                ['res_id', '=', channel.id],
-                ['model', '=', 'mail.channel'],
-                ['message_type', '!=', 'user_notification'],
+                ['channel_ids', 'in', [channel.id]],
             ]);
+            const lastMessageId = messages.reduce((lastMessageId, message) => {
+                if (!lastMessageId || message.id > lastMessageId) {
+                    return message.id;
+                }
+                return lastMessageId;
+            }, undefined);
             const messageNeedactionCounter = this._getRecords('mail.notification', [
                 ['res_partner_id', '=', this.currentPartnerId],
                 ['is_read', '=', false],
@@ -708,6 +714,7 @@ MockServer.include({
             ]).length;
             return Object.assign({}, channel, {
                 info: extra_info,
+                last_message_id: lastMessageId,
                 members,
                 message_needaction_counter: messageNeedactionCounter,
             });
@@ -743,6 +750,53 @@ MockServer.include({
         const notification = [[false, 'res.partner', this.currentPartnerId], channelInfo];
         this._widget.call('bus_service', 'trigger', 'notification', [notification]);
         return channelInfo;
+    },
+    /**
+     * Simulates the `channel_seen` method of `mail.channel`.
+     *
+     * @private
+     * @param integer[] ids
+     * @param {integer} last_message_id
+     */
+    async _mockMailChannelChannelSeen(ids, last_message_id) {
+        // Update record
+        const channel_id = ids[0];
+        if (!channel_id) {
+            throw new Error('Should only be one channel in channel_seen mock params');
+        }
+        const messagesBeforeGivenLastMessage = this._getRecords('mail.message', [
+            ['channel_ids', 'in', [channel_id]],
+            ['id', '<=', last_message_id]
+        ]);
+        if (!messagesBeforeGivenLastMessage || messagesBeforeGivenLastMessage.length === 0) {
+            return;
+        }
+        const channel = this._getRecords('mail.channel', [['id', '=', channel_id]])[0];
+        if (!channel) {
+            return;
+        }
+        if (channel.seen_message_id && channel.seen_message_id >= last_message_id) {
+            return;
+        }
+        this._mockWrite('mail.channel', [[channel.id], {
+            fetched_message_id: last_message_id,
+            seen_message_id: last_message_id,
+        }]);
+
+        // Send notification
+        const payload = {
+            channel_id,
+            info: 'channel_seen',
+            last_message_id,
+            partner_id: this.currentPartnerId,
+        };
+        let notification;
+        if (channel.channel_type === 'chat') {
+            notification = [[false, 'mail.channel', channel_id], payload];
+        } else {
+            notification = [[false, 'res.partner', this.currentPartnerId], payload];
+        }
+        this._widget.call('bus_service', 'trigger', 'notification', [notification]);
     },
     /**
      * Simulates `channel_set_custom_name` on `mail.channel`.

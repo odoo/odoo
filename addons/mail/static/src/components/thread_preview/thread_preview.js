@@ -108,7 +108,9 @@ class ThreadPreview extends Component {
      * @param {MouseEvent} ev
      */
     _onClickMarkAsRead(ev) {
-        this.thread.markAsSeen();
+        if (this.thread.lastMessage) {
+            this.thread.markAsSeen(this.thread.lastMessage.id);
+        }
     }
 
 }

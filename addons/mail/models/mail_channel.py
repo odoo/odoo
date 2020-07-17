@@ -4,7 +4,6 @@
 import base64
 import logging
 import re
-
 from uuid import uuid4
 
 from odoo import _, api, fields, models, modules, tools
@@ -547,6 +546,8 @@ class Channel(models.Model):
         addPreview = self._context.get('isMobile', False)
         if addPreview:
             channel_previews = {channel_preview['id']: channel_preview for channel_preview in self.channel_fetch_preview()}
+        else:
+            channel_last_message_ids = dict((r['id'], r['message_id']) for r in self._channel_last_message_ids())
 
         for channel in self:
             info = {
@@ -570,7 +571,11 @@ class Channel(models.Model):
             if addPreview:
                 if channel in channel_previews:
                     info['last_message'] = channel_previews[channel]
-
+                    info['last_message_id'] = channel_previews[channel]['last_message']['id']
+                else:
+                    info['last_message_id'] = False
+            else:
+                info['last_message_id'] = channel_last_message_ids.get(channel.id, False)
             # listeners of the channel
             channel_partners = all_partner_channel.filtered(lambda pc: channel.id == pc.channel_id.id)
 
@@ -724,30 +729,48 @@ class Channel(models.Model):
         if channel_partners:
             channel_partners.write({'is_pinned': pinned})
 
-    def channel_seen(self):
+    def channel_seen(self, last_message_id=None):
+        """
+        Mark channel as seen by updating seen message id of the current logged partner
+        :param last_message_id: the id of the message to be marked as seen, last message of the
+        thread by default. This param SHOULD be required, the default behaviour is DEPRECATED and
+        kept only for compatibility reasons.
+        """
         self.ensure_one()
-        if self.channel_message_ids.ids:
-            last_message_id = self.channel_message_ids.ids[0] # zero is the index of the last message
-            channel_partner = self.env['mail.channel.partner'].search([('channel_id', 'in', self.ids), ('partner_id', '=', self.env.user.partner_id.id)], limit=1)
-            if channel_partner.seen_message_id.id == last_message_id:
-                # last message seen by user is already up-to-date
-                return
-            channel_partner.write({
-                'seen_message_id': last_message_id,
-                'fetched_message_id': last_message_id,
-            })
-            data = {
-                'id': channel_partner.id,
-                'info': 'channel_seen',
-                'last_message_id': last_message_id,
-                'partner_id': self.env.user.partner_id.id,
-            }
-            if self.channel_type == 'chat':
-                self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
-            else:
-                data['channel_id'] = self.id
-                self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), data)
-            return last_message_id
+        domain = [('channel_ids', 'in', self.ids)]
+        if last_message_id:
+            domain = expression.AND([domain, [('id', '<=', last_message_id)]])
+        last_message = self.env['mail.message'].search(domain, order="id DESC", limit=1)
+        if not last_message:
+            return
+
+        channel_partner_domain = expression.AND([
+            [('channel_id', 'in', self.ids)],
+            [('partner_id', '=', self.env.user.partner_id.id)],
+            expression.OR([
+                [('seen_message_id', '=', False)],
+                [('seen_message_id', '<', last_message.id)]
+            ])
+        ])
+        channel_partner = self.env['mail.channel.partner'].search(channel_partner_domain, limit=1)
+        if not channel_partner:
+            return
+        channel_partner.write({
+            'fetched_message_id': last_message.id,
+            'seen_message_id': last_message.id,
+        })
+
+        data = {
+            'info': 'channel_seen',
+            'last_message_id': last_message.id,
+            'partner_id': self.env.user.partner_id.id,
+        }
+        if self.channel_type == 'chat':
+            self.env['bus.bus'].sendmany([[(self._cr.dbname, 'mail.channel', self.id), data]])
+        else:
+            data['channel_id'] = self.id
+            self.env['bus.bus'].sendone((self._cr.dbname, 'res.partner', self.env.user.partner_id.id), data)
+        return last_message.id
 
     def channel_fetched(self):
         """ Broadcast the channel_fetched notification to channel members
@@ -929,19 +952,27 @@ class Channel(models.Model):
         """ Return the last message of the given channels """
         if not self:
             return []
-        self._cr.execute("""
-            SELECT mail_channel_id AS id, MAX(mail_message_id) AS message_id
-            FROM mail_message_mail_channel_rel
-            WHERE mail_channel_id IN %s
-            GROUP BY mail_channel_id
-            """, (tuple(self.ids),))
-        channels_preview = dict((r['message_id'], r) for r in self._cr.dictfetchall())
+        channels_last_message_ids = self._channel_last_message_ids()
+        channels_preview = dict((r['message_id'], r) for r in channels_last_message_ids)
         last_messages = self.env['mail.message'].browse(channels_preview).message_format()
         for message in last_messages:
             channel = channels_preview[message['id']]
             del(channel['message_id'])
             channel['last_message'] = message
         return list(channels_preview.values())
+
+    def _channel_last_message_ids(self):
+        """ Return the last message of the given channels."""
+        if not self:
+            return []
+        self.flush()
+        self.env.cr.execute("""
+            SELECT mail_channel_id AS id, MAX(mail_message_id) AS message_id
+            FROM mail_message_mail_channel_rel
+            WHERE mail_channel_id IN %s
+            GROUP BY mail_channel_id
+            """, (tuple(self.ids),))
+        return self.env.cr.dictfetchall()
 
     #------------------------------------------------------
     # Commands

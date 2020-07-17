@@ -155,11 +155,6 @@ MockServer.include({
                 }
                 // add the anonymous or partner name
                 channelInfo.livechat_visitor = this._mockMailChannel_ChannelGetLivechatVisitorInfo([channel.id]);
-                const messages = this._getRecords('mail.message', [['channel_ids', 'in', channel.id]]);
-                const last_msg = messages.sort((m1, m2) => m1.id > m2.id ? -1 : 1)[0];
-                if (last_msg) {
-                    channelInfo.last_message_id = last_msg.id;
-                }
             }
         }
         return channelInfos;
