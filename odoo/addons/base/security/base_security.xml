@@ -147,21 +147,27 @@
             <field name="model_id" ref="model_res_company"/>
             <field eval="False" name="global"/>
             <field name="groups" eval="[(6, 0, [ref('base.group_portal')])]"/>
-            <field name="domain_force">[('id','child_of',[user.company_id.id])]</field>
+            <!-- Substituido domain original para resolver o Multi-Compay
+                 <field name="domain_force">[('id','child_of',[user.company_id.id])]</field> -->
+            <field name="domain_force">[('id','in',user.company_ids.ids)]</field>
         </record>
         <record id="res_company_rule_employee" model="ir.rule">
             <field name="name">company rule employee</field>
             <field name="model_id" ref="model_res_company"/>
             <field eval="False" name="global"/>
             <field name="groups" eval="[(6, 0, [ref('base.group_user')])]"/>
-            <field name="domain_force">[('id','child_of',[user.company_id.id])]</field>
+            <!-- Substituido domain original para resolver o Multi-Compay
+                 <field name="domain_force">[('id','child_of',[user.company_id.id])]</field> -->
+            <field name="domain_force">[('id','in',user.company_ids.ids)]</field>
         </record>
         <record id="res_company_rule_public" model="ir.rule">
             <field name="name">company rule public</field>
             <field name="model_id" ref="model_res_company"/>
             <field eval="False" name="global"/>
             <field name="groups" eval="[(6, 0, [ref('base.group_public')])]"/>
-            <field name="domain_force">[('id','child_of',[user.company_id.id])]</field>
+            <!-- Substituido domain original para resolver o Multi-Compay
+                 <field name="domain_force">[('id','child_of',[user.company_id.id])]</field> -->
+            <field name="domain_force">[('id','in',user.company_ids.ids)]</field>
         </record>
         <record id="res_company_rule_erp_manager" model="ir.rule">
             <field name="name">company rule erp manager</field>
