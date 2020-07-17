@@ -234,7 +234,13 @@ function factory(dependencies) {
             } else if (thread === this.env.messaging.moderation) {
                 return domain.concat([['need_moderation', '=', true]]);
             } else {
-                return domain.concat([['model', '=', thread.model], ['res_id', '=', thread.id]]);
+                // Avoid to load user_notification as these messages are not
+                // meant to be shown on chatters.
+                return domain.concat([
+                    ['message_type', '!=', 'user_notification'],
+                    ['model', '=', thread.model],
+                    ['res_id', '=', thread.id],
+                ]);
             }
         }
 
