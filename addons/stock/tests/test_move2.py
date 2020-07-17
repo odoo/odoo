@@ -905,6 +905,43 @@ class TestSinglePicking(TestStockCommon):
         self.assertEquals(delivery_order.state, 'done')
         self.assertEquals(delivery_order.move_lines[1].state, 'cancel')
 
+    def test_picking_partner(self):
+        """Check that a user that have access to multiple companies (A and B for instance) with
+        company B as default company, can be the partner of a picking in company A. To reproduce the
+        work case, the following steps can be followed :
+
+        In a multi company configuration.
+        - Give Marc Demo access to both companies (A and B);
+        - Set as default company, the company B;
+        - As company A, create a picking with Marc Demo as Delivery Addresse;
+        - Mark as Todo;
+        - The picking must have the status of Done.
+
+        opw-2289806
+        """
+        company_test = self.env['res.company'].create({
+            'name': 'Company B',
+        })
+        partner = self.env['res.partner'].create({
+            'name': 'Test User',
+            'company_id': self.env.company.id,
+            })
+        self.env['res.users'].create({
+            'login': "test_user",
+            'name': "Test User",
+            'company_ids': [(6, 0, [self.env.company.id, company_test.id])],
+            'company_id': company_test.id,
+            'partner_id': partner.id,
+        })
+        # The company_id of the partner is changed when the user is created.
+        picking_cust = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+            'partner_id': partner.id,
+        })
+        picking_cust.action_done()
+
     def test_extra_move_1(self):
         """ Check the good behavior of creating an extra move in a delivery order. This usecase
         simulates the delivery of 2 item while the initial stock move had to move 1 and there's
