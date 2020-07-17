@@ -1488,8 +1488,8 @@ class AccountTax(models.Model):
             rslt['base_tags'] = self.env['account.move.line']._revert_signed_tags(base_tags).ids
 
             for tax_result in rslt['taxes']:
-                tax_tags = self.env['account.account.tag'].browse(tax_result['tag_ids'][0][2])
-                tax_result['tag_ids'] = [(6, False, self.env['account.move.line']._revert_signed_tags(tax_tags).ids)]
+                tax_tags = self.env['account.account.tag'].browse(tax_result['tag_ids'])
+                tax_result['tag_ids'] = self.env['account.move.line']._revert_signed_tags(tax_tags).ids
 
         return rslt
 
