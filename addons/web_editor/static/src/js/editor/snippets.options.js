@@ -700,11 +700,19 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    getValue(methodName) {
-        let activeWidget = this._userValueWidgets.find(widget => widget.isPreviewed());
+    getMethodsParams(methodName) {
+        const params = this._super(...arguments);
+        const activeWidget = this._getActiveSubWidget();
         if (!activeWidget) {
-            activeWidget = this._userValueWidgets.find(widget => widget.isActive());
+            return params;
         }
+        return Object.assign(activeWidget.getMethodsParams(...arguments), params);
+    },
+    /**
+     * @override
+     */
+    getValue(methodName) {
+        const activeWidget = this._getActiveSubWidget();
         if (activeWidget) {
             return activeWidget.getActiveValue(methodName);
         }
@@ -732,6 +740,22 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
             }
         }
         this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @returns {UserValueWidget|undefined}
+     */
+    _getActiveSubWidget() {
+        const previewedWidget = this._userValueWidgets.find(widget => widget.isPreviewed());
+        if (previewedWidget) {
+            return previewedWidget;
+        }
+        return this._userValueWidgets.find(widget => widget.isActive());
     },
 });
 
