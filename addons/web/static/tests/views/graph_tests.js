@@ -337,7 +337,28 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
-    QUnit.test('no content helper (bar chart)', async function (assert) {
+    QUnit.test('no no content helper (line chart)', async function (assert) {
+        assert.expect(2);
+        this.data.foo.records = [];
+
+        var graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: '<graph type="line">' +
+                        '<field name="product_id"/>' +
+                '</graph>',
+        });
+
+        assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
+                    "should not contain a div with a canvas element");
+        assert.containsNone(graph, 'div.o_view_nocontent',
+            "should not display the no content helper");
+
+        graph.destroy();
+    });
+
+    QUnit.test('no no content helper (bar chart)', async function (assert) {
         assert.expect(2);
         this.data.foo.records = [];
 
@@ -352,13 +373,13 @@ QUnit.module('Views', {
 
         assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
                     "should not contain a div with a canvas element");
-        assert.containsOnce(graph, 'div.o_view_nocontent',
-            "should display the no content helper");
+        assert.containsNone(graph, 'div.o_view_nocontent',
+            "should not display the no content helper");
 
         graph.destroy();
     });
 
-    QUnit.test('no content helper (pie chart)', async function (assert) {
+    QUnit.test('no no content helper (pie chart)', async function (assert) {
         assert.expect(2);
         this.data.foo.records =  [];
 
@@ -373,8 +394,8 @@ QUnit.module('Views', {
 
         assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
             "should not contain a div with a canvas element");
-        assert.containsOnce(graph, 'div.o_view_nocontent',
-            "should display the no content helper");
+        assert.containsNone(graph, 'div.o_view_nocontent',
+            "should not display the no content helper");
 
         graph.destroy();
     });
@@ -412,7 +433,7 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
-    QUnit.test('no content helper after update', async function (assert) {
+    QUnit.test('no no content helper after update', async function (assert) {
         assert.expect(4);
 
         var graph = await createView({
@@ -432,8 +453,8 @@ QUnit.module('Views', {
         await testUtils.graph.reload(graph, {domain: [['product_id', '=', 4]]});
         assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
                     "should not contain a div with a canvas element");
-        assert.containsOnce(graph, 'div.o_view_nocontent',
-            "should display the no content helper");
+        assert.containsNone(graph, 'div.o_view_nocontent',
+            "should not display the no content helper");
         graph.destroy();
     });
 
