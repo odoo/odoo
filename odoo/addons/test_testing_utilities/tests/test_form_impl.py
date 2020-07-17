@@ -667,6 +667,32 @@ class TestNestedO2M(TransactionCase):
         form.qty_producing = 2
         form.save()
 
+    def test_remove(self):
+        """ onchanges can remove o2m records which haven't been loaded yet due
+        to lazy loading of o2ms. The removal information should still be
+        retained, otherwise due to the stateful update system we end up
+        retaining records we don't even know exist.
+        """
+        # create structure with sub-sub-children
+        r = self.env['o2m_changes_parent'].create({
+            'name': "A",
+            'line_ids': [
+                (0, 0, {
+                    'name': 'line 1',
+                    'v': 42,
+                    'line_ids': [(0, 0, {'v': 1, 'vv': 1})],
+                })
+            ]
+        })
+
+        with Form(r) as f:
+            f.name = 'B'
+
+        self.assertEqual(len(r.line_ids), 1)
+        self.assertEqual(len(r.line_ids.line_ids), 1)
+        self.assertEqual(r.line_ids.line_ids.v, 0)
+        self.assertEqual(r.line_ids.line_ids.vv, 0)
+
 class TestEdition(TransactionCase):
     """ These use the context manager form as we don't need the record
     post-save (we already have it) and it's easier to see what bits act on
