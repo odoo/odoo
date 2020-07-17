@@ -58,16 +58,16 @@ class AccountMove(models.Model):
     def _onchange_partner_id(self):
         """ If Vendor Bill and Vendor OCR is set, add it. """
         if self.partner_id and self.move_type == 'in_invoice' and self.partner_id.l10n_se_default_vendor_payment_ref:
-            self.invoice_payment_ref = self.partner_id.l10n_se_default_vendor_payment_ref
+            self.payment_reference = self.partner_id.l10n_se_default_vendor_payment_ref
         return super(AccountMove, self)._onchange_partner_id()
 
-    @api.onchange('invoice_payment_ref')
-    def _onchange_invoice_payment_ref(self):
+    @api.onchange('payment_reference')
+    def _onchange_payment_reference(self):
         """ If Vendor Bill and Payment Reference is changed check validation. """
         if self.partner_id and self.move_type == 'in_invoice' and self.partner_id.l10n_se_check_vendor_ocr:
-            reference = self.invoice_payment_ref
+            reference = self.payment_reference
             try:
                 luhn.validate(reference)
             except: 
                 return {'warning': {'title': _('Warning'), 'message': _('Vendor require OCR Number as payment reference. Payment reference isn\'t a valid OCR Number.')}}
-        return super(AccountMove, self)._onchange_invoice_payment_ref()
+        return super(AccountMove, self)._onchange_payment_reference()
