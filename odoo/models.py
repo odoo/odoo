@@ -899,7 +899,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
             This method is used when exporting data via client menu
         """
-        if not (self.env.user._is_admin() or self.env.user.has_group('base.group_allow_export')):
+        if not (self.env.is_admin() or self.env.user.has_group('base.group_allow_export')):
             raise UserError(_("You don't have the rights to export data. Please contact an Administrator."))
         fields_to_export = [fix_import_export_id_paths(f) for f in fields_to_export]
         return {'datas': self._export_rows(fields_to_export)}
