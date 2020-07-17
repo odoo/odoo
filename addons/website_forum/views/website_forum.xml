@@ -102,7 +102,7 @@
                                     <t t-if="is_edit">
                                         <t t-set="target" t-value="post.parent_id if is_answer else post"/>
                                         <li class="breadcrumb-item text-truncate" style="max-width:150px">
-                                            <a t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(target)}" title="Back to Question">
+                                            <a t-attf-href="/forum/#{ slug(forum) }/#{ slug(target)}" title="Back to Question">
                                                 <t t-esc="target.name"/>
                                             </a>
                                         </li>
@@ -249,7 +249,7 @@
                 data-toggle="tooltip"
                 class="fa fa-star o_wforum_gold"/>
 
-            <a t-attf-href="/forum/#{slug(question.forum_id)}/question/#{slug(question)}#{answer and ('/#answer-%s' % answer.id)}"
+            <a t-attf-href="/forum/#{slug(question.forum_id)}/#{slug(question)}#{answer and ('/#answer-%s' % answer.id)}"
                 t-attf-title="Read: #{question.name}"
                 class="text-reset"
                 t-esc="question.name"/>
@@ -288,7 +288,7 @@
         </div>
         <div>
             <span class="mx-1 d-none d-sm-inline">&amp;nbsp;|</span>
-            <a t-if="question.child_count" class="font-weight-bold" t-attf-href="/forum/#{ slug(question.forum_id) }/question/#{ slug(question) }">
+            <a t-if="question.child_count" class="font-weight-bold" t-attf-href="/forum/#{ slug(question.forum_id) }/#{ slug(question) }">
                 <t t-esc="question.child_count"/>
                 <t t-if="question.child_count == 1">Answer</t>
                 <t t-else="">Answers</t>
@@ -347,7 +347,7 @@
 <template id="moderation_display_post_answer">
     <div class="clearfix">
         <div class="question-name">
-            <a style="font-size: 15px;" t-attf-href="/forum/#{ slug(answer.forum_id) }/question/#{ answer.parent_id.id }/#answer-#{ answer.id }" t-esc="answer.parent_id.name"/>
+            <a style="font-size: 15px;" t-attf-href="/forum/#{ slug(answer.forum_id) }/#{ answer.parent_id.id }/#answer-#{ answer.id }" t-esc="answer.parent_id.name"/>
             <b>[Answer]</b>
             <span t-if="not answer.active and answer.state=='offensive'"><b> [Offensive]</b></span>
             <span t-if="not answer.active and answer.state=='offensive' and answer.closed_reason_id"><b> [<t t-esc="answer.closed_reason_id.name[0].upper() + answer.closed_reason_id.name[1:]"/>]</b></span>
@@ -493,7 +493,7 @@
 <template id="forum_post_options">
     <div class="row">
         <div t-attf-class="#{last_post_class}">
-            <div t-if="is_view_active('website_forum.opt_last_post') and forum.post_ids" class="text-truncate">Last Post: <a t-attf-href="/forum/#{slug(forum)}/question/#{slug(forum.last_post_id)}"><t t-esc="forum.last_post_id.name"/></a></div>
+            <div t-if="is_view_active('website_forum.opt_last_post') and forum.post_ids" class="text-truncate">Last Post: <a t-attf-href="/forum/#{slug(forum)}/#{slug(forum.last_post_id)}"><t t-esc="forum.last_post_id.name"/></a></div>
         </div>
         <div t-attf-class="#{nb_post_class}">
             <div t-if="is_view_active('website_forum.opt_post_count')">Posts: <strong><t t-esc="forum.total_posts"/></strong></div>
@@ -930,7 +930,7 @@
             </div>
             <div class="mb-4">
                 <button type="submit" class="btn btn-primary o_wforum_submit_post">Save Changes</button>
-                <a class="btn btn-secondary" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(post)}">
+                <a class="btn btn-secondary" title="Back to Question" t-attf-href="/forum/#{ slug(forum) }/#{ slug(post)}">
                     Discard
                 </a>
             </div>
@@ -972,7 +972,7 @@
                     <t t-if="not offensive">Close post</t>
                 </button>
                 <span class="text-muted mx-3">or</span>
-                <a role="button" class="btn btn-light border" t-attf-href="/forum/#{ slug(forum) }/question/#{ slug(question) }">Discard</a>
+                <a role="button" class="btn btn-light border" t-attf-href="/forum/#{ slug(forum) }/#{ slug(question) }">Discard</a>
             </div>
         </form>
     </t>
@@ -1709,7 +1709,7 @@
 <template id="forum_post_template_new_answer">
     <p>A new answer on <t t-esc="object.name"/> has been posted. Click here to access the post :</p>
     <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
-        <a t-attf-href="/forum/#{slug(object.forum_id)}/question/#{slug(object)}"
+        <a t-attf-href="/forum/#{slug(object.forum_id)}/#{slug(object)}"
             style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer; background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">
             See post
         </a>
@@ -1719,7 +1719,7 @@
 <template id="forum_post_template_new_question">
     <p>A new question <b t-esc="object.name" /> on <t t-esc="object.forum_id.name"/> has been posted. Click here to access the question :</p>
     <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
-        <a t-attf-href="/forum/#{slug(object.forum_id)}/question/#{slug(object)}"
+        <a t-attf-href="/forum/#{slug(object.forum_id)}/#{slug(object)}"
             style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">
             See question
         </a>
@@ -1729,7 +1729,7 @@
 <template id="forum_post_template_validation">
     <p>A new question <b t-esc="object.name" /> on <t t-esc="object.forum_id.name"/> has been posted and require your validation. Click here to access the question :</p>
     <p style="margin-left: 30px; margin-top: 10 px; margin-bottom: 10px;">
-        <a t-attf-href="/forum/#{slug(object.forum_id)}/question/#{slug(object)}"
+        <a t-attf-href="/forum/#{slug(object.forum_id)}/#{slug(object)}"
             style="padding: 5px 10px; font-size: 12px; line-height: 18px; color: #FFFFFF; border-color:#875A7B; text-decoration: none; display: inline-block; margin-bottom: 0px; font-weight: 400; text-align: center; vertical-align: middle; cursor: pointer;background-color: #875A7B; border: 1px solid #875A7B; border-radius:3px">
             Validate question
         </a>

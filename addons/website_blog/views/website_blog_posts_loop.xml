@@ -109,7 +109,7 @@ according to the enabled options.
                                 <t t-call="website_blog.post_info"></t>
                             </div>
                             <div t-else="" class="mt-3">
-                                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}" class="btn btn-primary">
+                                <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="btn btn-primary">
                                     Read more <i class="fa fa-chevron-right ml-2"/>
                                 </a>
                             </div>
@@ -141,7 +141,7 @@ according to the enabled options.
 
 <!-- ======   Sub-Template: Posts list : Posts Heading  =================== -->
 <template id="post_heading">
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}"
+    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}"
        t-field="blog_post.name"
        t-attf-class="d-block text-reset text-decoration-none o_blog_post_title my-0 #{'h3' if opt_blog_list_view else ('h5' if opt_blog_readable else 'h6')}">
        Untitled Post
@@ -174,7 +174,7 @@ according to the enabled options.
     <t t-if="opt_blog_cards_design and not opt_blog_list_view" t-set="classes" t-value="'card-img-top mb-2'"/>
     <t t-if="not opt_blog_cards_design and opt_blog_list_view" t-set="classes" t-value="'o_wblog_post_cover_nocard'"/>
 
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}"
+    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}"
        t-attf-class="text-decoration-none d-block #{classes or 'mb-2'}"
        t-att-style="not blog_post.website_published and 'opacity:0.6;'">
 
@@ -192,7 +192,7 @@ according to the enabled options.
 
 <!-- ======   Sub-Template: Posts list : Posts Teaser + Tags  ============= -->
 <template id="post_teaser">
-    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}" class="text-reset text-decoration-none">
+    <a t-attf-href="/blog/#{slug(blog_post.blog_id)}/#{slug(blog_post)}" class="text-reset text-decoration-none">
         <div t-if="opt_blog_list_view" t-field="blog_post.teaser" class="mt-2 o_wblog_read_text"/>
         <div t-else="" t-field="blog_post.teaser" t-attf-class="mt-2 #{opt_blog_readable and 'o_wblog_normalize_font'}"/>
     </a>
