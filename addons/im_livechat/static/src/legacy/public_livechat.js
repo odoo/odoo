@@ -177,21 +177,22 @@ var LivechatButton = Widget.extend({
      * @param {Array} notification
      */
     _handleNotification: function (notification) {
-        if (this._livechat && (notification[0] === this._livechat.getUUID())) {
-            if (notification[1]._type === 'history_command') { // history request
-                var cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
-                var history = cookie ? JSON.parse(cookie) : [];
+        const [livechatUUID, notificationData] = notification;
+        if (this._livechat && (livechatUUID === this._livechat.getUUID())) {
+            if (notificationData._type === 'history_command') { // history request
+                const cookie = utils.get_cookie(LIVECHAT_COOKIE_HISTORY);
+                const history = cookie ? JSON.parse(cookie) : [];
                 session.rpc('/im_livechat/history', {
                     pid: this._livechat.getOperatorPID()[0],
                     channel_uuid: this._livechat.getUUID(),
                     page_history: history,
                 });
-            } else { // normal message
+            } else if ('body' in notificationData) { // normal message
                 // If message from notif is already in chatter messages, stop handling
-                if (this._messages.some(message => message.getID() === notification[1].id)) {
+                if (this._messages.some(message => message.getID() === notificationData.id)) {
                     return;
                 }
-                this._addMessage(notification[1]);
+                this._addMessage(notificationData);
                 this._renderMessages();
                 if (this._chatWindow.isFolded() || !this._chatWindow.isAtBottom()) {
                     this._livechat.incrementUnreadCounter();
