@@ -3,7 +3,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import RedirectWarning, UserError, ValidationError, AccessError
 from odoo.tools import float_is_zero, float_repr, float_compare, date_utils, email_split, email_escape_char, email_re
-from odoo.tools.misc import formatLang, format_date, get_lang
+from odoo.tools.misc import formatLang, format_date, get_lang, escape_markdown
 
 from datetime import date, timedelta
 from itertools import groupby
@@ -1795,11 +1795,11 @@ class AccountMove(models.Model):
         result = []
         for move in self:
             if self._context.get('name_groupby'):
-                name = '**%s**, %s' % (format_date(self.env, move.date), move._get_move_display_name())
+                name = '**%s**, %s' % (format_date(self.env, move.date), escape_markdown(move._get_move_display_name()))
                 if move.ref:
-                    name += '     (%s)' % move.ref
+                    name += '     (%s)' % escape_markdown(move.ref)
                 if move.partner_id.name:
-                    name += ' - %s' % move.partner_id.name
+                    name += ' - %s' % escape_markdown(move.partner_id.name)
             else:
                 name = move._get_move_display_name(show_ref=True)
             result.append((move.id, name))
