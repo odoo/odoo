@@ -99,10 +99,10 @@ class NotificationList extends Component {
         // thread notifications
         const threadNotifications = threads
             .sort((t1, t2) => {
-                if (t1.message_unread_counter > 0 && t2.message_unread_counter === 0) {
+                if (t1.localMessageUnreadCounter > 0 && t2.localMessageUnreadCounter === 0) {
                     return -1;
                 }
-                if (t1.message_unread_counter === 0 && t2.message_unread_counter > 0) {
+                if (t1.localMessageUnreadCounter === 0 && t2.localMessageUnreadCounter > 0) {
                     return 1;
                 }
                 if (t1.lastMessage && t2.lastMessage) {

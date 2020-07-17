@@ -513,9 +513,8 @@ QUnit.test('sidebar: channel rendering with needaction counter', async function 
     this.data['mail.channel'].records.push({ id: 20 });
     // expected needaction message
     this.data['mail.message'].records.push({
+        channel_ids: [20], // link message to channel
         id: 100, // random unique id, useful to link notification
-        model: 'mail.channel', // value to link message to channel
-        res_id: 20, // id of related channel
     });
     // expected needaction notification
     this.data['mail.notification'].records.push({
@@ -1744,9 +1743,23 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     // AKU TODO: thread specific test
     assert.expect(6);
 
+    // Needed partner & user to allow simulation of message reception
+    this.data['res.partner'].records.push({
+        id: 11,
+        name: "Foreigner partner",
+    });
+    this.data['res.users'].records.push({
+        id: 42,
+        name: "Foreigner user",
+        partner_id: 11,
+    });
     // channel expected to be rendered, with a random unique id that will be
     // referenced in the test and the seen_message_id value set to last message
-    this.data['mail.channel'].records.push({ id: 20, seen_message_id: 125 });
+    this.data['mail.channel'].records.push({
+        id: 20,
+        seen_message_id: 125,
+        uuid: 'randomuuid',
+    });
     for (let i = 1; i <= 25; i++) {
         this.data['mail.message'].records.push({
             channel_ids: [20],
@@ -1777,17 +1790,18 @@ QUnit.test('new messages separator [REQUIRE FOCUS]', async function (assert) {
     document.querySelector(`.o_Discuss_thread .o_ThreadView_messageList`).scrollTop = 0;
     // composer is focused by default, we remove that focus
     document.querySelector('.o_ComposerTextInput_textarea').blur();
-    // simulate receiving a new message
-    const data = {
-        channel_ids: [20],
-        id: 126,
-        model: 'mail.channel',
-        res_id: 20,
-    };
-    await afterNextRender(() => {
-        const notifications = [[['my-db', 'mail.channel', 20], data]];
-        this.widget.call('bus_service', 'trigger', 'notification', notifications);
-    });
+    // simulate receiving a message
+    await afterNextRender(async () => this.env.services.rpc({
+        route: '/mail/chat_post',
+        params: {
+            context: {
+                mockedUserId: 42,
+            },
+            uuid: 'randomuuid',
+            message_content: "hu",
+        },
+    }));
+
     assert.containsN(
         document.body,
         '.o_MessageList_message',
@@ -2413,21 +2427,19 @@ QUnit.test('inbox: mark all messages as read', async function (assert) {
     this.data['mail.message'].records.push(
         // first expected message
         {
+            channel_ids: [20], // link message to channel
             id: 100, // random unique id, useful to link notification
-            model: 'mail.channel', // value to link message to channel
             // needaction needs to be set here for message_fetch domain, because
             // mocked models don't have computed fields
             needaction: true,
-            res_id: 20, // id of related channel
         },
         // second expected message
         {
+            channel_ids: [20], // link message to channel
             id: 101, // random unique id, useful to link notification
-            model: 'mail.channel', // value to link message to channel
             // needaction needs to be set here for message_fetch domain, because
             // mocked models don't have computed fields
             needaction: true,
-            res_id: 20, // id of related channel
         }
     );
     this.data['mail.notification'].records.push(

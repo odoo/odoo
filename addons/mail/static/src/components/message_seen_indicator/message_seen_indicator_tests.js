@@ -51,13 +51,13 @@ QUnit.test('rendering when just one has received the message', async function (a
         model: 'mail.channel',
         partnerSeenInfos: [['create', [
             {
-                id: 10,
-                partner: [['create', { id: 10 }]],
-                lastFetchedMessage: [['insert', { id: 100 }]]
+                channelId: 1000,
+                lastFetchedMessage: [['insert', { id: 100 }]],
+                partnerId: 10,
             },
             {
-                id: 100,
-                partner: [['create', { id: 100 }]],
+                channelId: 1000,
+                partnerId: 100,
             },
         ]]],
         messageSeenIndicators: [['insert', {
@@ -98,14 +98,14 @@ QUnit.test('rendering when everyone have received the message', async function (
         model: 'mail.channel',
         partnerSeenInfos: [['create', [
             {
-                id: 10,
-                partner: [['create', { id: 10 }]],
+                channelId: 1000,
                 lastFetchedMessage: [['insert', { id: 100 }]],
+                partnerId: 10,
             },
             {
-                id: 100,
-                partner: [['create', { id: 100 }]],
+                channelId: 1000,
                 lastFetchedMessage: [['insert', { id: 99 }]],
+                partnerId: 100,
             },
         ]]],
         messageSeenIndicators: [['insert', {
@@ -146,15 +146,15 @@ QUnit.test('rendering when just one has seen the message', async function (asser
         model: 'mail.channel',
         partnerSeenInfos: [['create', [
             {
-                id: 10,
-                partner: [['create', { id: 10 }]],
+                channelId: 1000,
                 lastFetchedMessage: [['insert', { id: 100 }]],
                 lastSeenMessage: [['insert', { id: 100 }]],
+                partnerId: 10,
             },
             {
-                id: 100,
-                partner: [['create', { id: 100 }]],
+                channelId: 1000,
                 lastFetchedMessage: [['insert', { id: 99 }]],
+                partnerId: 100,
             },
         ]]],
         messageSeenIndicators: [['insert', {
@@ -196,14 +196,14 @@ QUnit.test('rendering when just one has seen & received the message', async func
         model: 'mail.channel',
         partnerSeenInfos: [['create', [
             {
-                id: 10,
-                partner: [['create', { id: 10 }]],
+                channelId: 1000,
                 lastFetchedMessage: [['insert', { id: 100 }]],
                 lastSeenMessage: [['insert', { id: 100 }]],
+                partnerId: 10,
             },
             {
-                id: 100,
-                partner: [['create', { id: 100 }]],
+                channelId: 1000,
+                partnerId: 100,
             },
         ]]],
         messageSeenIndicators: [['insert', {
@@ -245,16 +245,16 @@ QUnit.test('rendering when just everyone has seen the message', async function (
         model: 'mail.channel',
         partnerSeenInfos: [['create', [
             {
-                id: 10,
-                partner: [['create', { id: 10 }]],
+                channelId: 1000,
                 lastFetchedMessage: [['insert', { id: 100 }]],
                 lastSeenMessage: [['insert', { id: 100 }]],
+                partnerId: 10,
             },
             {
-                id: 100,
-                partner: [['create', { id: 100 }]],
+                channelId: 1000,
                 lastFetchedMessage: [['insert', { id: 100 }]],
                 lastSeenMessage: [['insert', { id: 100 }]],
+                partnerId: 100,
             },
         ]]],
         messageSeenIndicators: [['insert', {

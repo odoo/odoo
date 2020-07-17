@@ -6,7 +6,7 @@
             t-att-class="{
                 'o-active': thread and discuss.thread === thread,
                 'o-starred-box': thread and thread === env.messaging.starred,
-                'o-unread': thread and thread.message_unread_counter > 0,
+                'o-unread': thread and thread.localMessageUnreadCounter > 0,
             }" t-on-click="_onClick" t-att-data-thread-local-id="thread ? thread.localId : undefined" t-att-data-thread-name="thread ? thread.displayName : undefined"
         >
             <t t-if="thread">
@@ -25,7 +25,7 @@
                     </div>
                 </t>
                 <t t-else="">
-                    <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name" t-att-class="{ 'o-item-unread': thread.message_unread_counter > 0 }">
+                    <div class="o_DiscussSidebarItem_item o_DiscussSidebarItem_name" t-att-class="{ 'o-item-unread': thread.localMessageUnreadCounter > 0 }">
                         <t t-esc="thread.displayName"/>
                     </div>
                     <t t-if="thread.mass_mailing">
@@ -45,7 +45,7 @@
                             <div class="o_DiscussSidebarItem_command o_DiscussSidebarItem_commandRename fa fa-cog" t-on-click="_onClickRename" title="Rename conversation" role="img"/>
                         </t>
                         <t t-if="hasUnpin()">
-                            <t t-if="!thread.message_unread_counter">
+                            <t t-if="!thread.localMessageUnreadCounter">
                                 <div class="fa fa-times o_DiscussSidebarItem_command o_DiscussSidebarItem_commandUnpin" t-on-click="_onClickUnpin" title="Unpin conversation" role="img"/>
                             </t>
                         </t>

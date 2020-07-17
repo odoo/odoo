@@ -132,7 +132,9 @@ function factory(dependencies) {
          * @return {Object}
          */
         static convertData(data) {
-            const data2 = {};
+            const data2 = {
+                messagesAsServerChannel: [],
+            };
             if ('model' in data) {
                 data2.model = data.model;
             }
@@ -168,6 +170,14 @@ function factory(dependencies) {
                     data2.isServerPinned = true;
                 }
             }
+            if ('last_message' in data && data.last_message) {
+                data2.messagesAsServerChannel.push(['insert', { id: data.last_message.id }]);
+                data2.serverLastMessageId = data.last_message.id;
+            }
+            if ('last_message_id' in data && data.last_message_id) {
+                data2.messagesAsServerChannel.push(['insert', { id: data.last_message_id }]);
+                data2.serverLastMessageId = data.last_message_id;
+            }
             if ('mass_mailing' in data) {
                 data2.mass_mailing = data.mass_mailing;
             }
@@ -178,7 +188,7 @@ function factory(dependencies) {
                 data2.message_needaction_counter = data.message_needaction_counter;
             }
             if ('message_unread_counter' in data) {
-                data2.message_unread_counter = data.message_unread_counter;
+                data2.serverMessageUnreadCounter = data.message_unread_counter;
             }
             if ('name' in data) {
                 data2.name = data.name;
@@ -187,7 +197,7 @@ function factory(dependencies) {
                 data2.public = data.public;
             }
             if ('seen_message_id' in data) {
-                data2.seen_message_id = data.seen_message_id;
+                data2.lastSeenByCurrentPartnerMessageId = data.seen_message_id;
             }
             if ('uuid' in data) {
                 data2.uuid = data.uuid;
@@ -212,18 +222,18 @@ function factory(dependencies) {
                     data2.partnerSeenInfos = [
                         ['insert-and-replace',
                             data.seen_partners_info.map(
-                                ({ fetched_message_id, id, partner_id, seen_message_id}) => {
+                                ({ fetched_message_id, partner_id, seen_message_id }) => {
                                     return {
-                                        id,
-                                        lastFetchedMessage: [seen_message_id ? ['insert', {id: seen_message_id}] : ['unlink-all']],
-                                        lastSeenMessage: [fetched_message_id ? ['insert', {id: fetched_message_id}] : ['unlink-all']],
-                                        partner: [['insert', {id: partner_id}]],
+                                        channelId: data2.id,
+                                        lastFetchedMessage: [fetched_message_id ? ['insert', { id: fetched_message_id }] : ['unlink-all']],
+                                        lastSeenMessage: [seen_message_id ? ['insert', { id: seen_message_id }] : ['unlink-all']],
+                                        partnerId: partner_id,
                                     };
                                 })
                         ]
                     ];
                     if (data.id || this.id) {
-                        const messageIds = data.seen_partners_info.reduce((currentSet, { fetched_message_id, seen_message_id}) => {
+                        const messageIds = data.seen_partners_info.reduce((currentSet, { fetched_message_id, seen_message_id }) => {
                             if (fetched_message_id) {
                                 currentSet.add(fetched_message_id);
                             }
@@ -238,7 +248,7 @@ function factory(dependencies) {
                                     [...messageIds].map(messageId => {
                                        return {
                                            id: this.env.models['mail.message_seen_indicator'].computeId(messageId, data.id || this.id),
-                                           message: [['insert', {id: messageId}]],
+                                           message: [['insert', { id: messageId }]],
                                        };
                                     })
                                 ]
@@ -295,6 +305,26 @@ function factory(dependencies) {
             // manually force recompute of counter
             this.env.messaging.messagingMenu.update();
             return channels;
+        }
+
+
+        /**
+         * Performs the `channel_seen` RPC on `mail.channel`.
+         *
+         * @static
+         * @param {Object} param0
+         * @param {integer[]} param0.ids list of id of channels
+         * @param {integer[]} param0.lastMessageId
+         */
+        static async performRpcChannelSeen({ ids, lastMessageId }) {
+            return this.env.services.rpc({
+                model: 'mail.channel',
+                method: 'channel_seen',
+                args: [ids],
+                kwargs: {
+                    last_message_id: lastMessageId,
+                },
+            }, { shadow: true });
         }
 
         /**
@@ -464,20 +494,24 @@ function factory(dependencies) {
 
         /**
          * Mark the specified conversation as read/seen.
+         *
+         * @param {integer} messageId the message to be considered as last seen
          */
-        async markAsSeen() {
-            if (this.message_unread_counter === 0) {
+        async markAsSeen(messageId) {
+            if (this.model !== 'mail.channel') {
                 return;
             }
-            if (this.model === 'mail.channel') {
-                const seen_message_id = await this.async(() => this.env.services.rpc({
-                    model: 'mail.channel',
-                    method: 'channel_seen',
-                    args: [[this.id]]
-                }, { shadow: true }));
-                this.update({ seen_message_id });
+            if (this.pendingSeenMessageId && messageId <= this.pendingSeenMessageId) {
+                return;
             }
-            this.update({ message_unread_counter: 0 });
+            if (
+                this.lastSeenByCurrentPartnerMessageId &&
+                messageId <= this.lastSeenByCurrentPartnerMessageId
+            ) {
+                return;
+            }
+            this.update({ pendingSeenMessageId: messageId });
+            return this.env.models['mail.thread'].performRpcChannelSeen({ ids: [this.id], lastMessageId: messageId });
         }
 
         /**
@@ -960,6 +994,43 @@ function factory(dependencies) {
 
         /**
          * @private
+         * @returns {integer}
+         */
+        _computeLocalMessageUnreadCounter() {
+            // the only situations where serverMessageUnreadCounter can/have to be
+            // trusted are:
+            // - we have no last message (and then no messages at all)
+            // - the message it used to compute is the last message we know
+            if (this.orderedMessages.length === 0) {
+                return this.serverMessageUnreadCounter;
+            }
+            // from here serverLastMessageId is not undefined because
+            // orderedMessages contain at least one message.
+            if (!this.lastSeenByCurrentPartnerMessageId) {
+                return this.serverMessageUnreadCounter;
+            }
+            const firstMessage = this.orderedMessages[0];
+            // if the lastSeenByCurrentPartnerMessageId is not known (not fetched), then we
+            // need to rely on server value to determine the amount of unread
+            // messages until the last message it knew when computing the
+            // serverMessageUnreadCounter
+            if (this.lastSeenByCurrentPartnerMessageId < firstMessage.id) {
+                const fetchedNotSeenMessages = this.orderedMessages.filter(message =>
+                    message.id > this.serverLastMessageId
+                );
+                return this.serverMessageUnreadCounter + fetchedNotSeenMessages.length;
+            }
+            // lastSeenByCurrentPartnerMessageId is a known message,
+            // then we can forget serverMessageUnreadCounter
+            const maxId = Math.max(this.serverLastMessageId, this.lastSeenByCurrentPartnerMessageId);
+            return this.orderedMessages.reduce(
+                (acc, message) => acc + (message.id > maxId ? 1 : 0),
+                0
+            );
+        }
+
+        /**
+         * @private
          * @returns {mail.messaging}
          */
         _computeMessaging() {
@@ -1355,6 +1426,32 @@ function factory(dependencies) {
             compute: '_computeLastNeedactionMessage',
             dependencies: ['needactionMessages'],
         }),
+        /**
+         * Last seen message id of the channel by current partner.
+         *
+         * If there is a pending seen message id change, it is immediately applied
+         * on the interface to avoid a feeling of unresponsiveness. Otherwise the
+         * last known message id of the server is used.
+         *
+         * Also, it needs to be kept as an id because it's considered like a "date" and could stay
+         * even if corresponding message is deleted. It is basically used to know which
+         * messages are before or after it.
+         */
+        lastSeenByCurrentPartnerMessageId: attr(),
+        /**
+         * Local value of message unread counter, that means it is based on initial server value and
+         * updated with interface updates.
+         */
+        localMessageUnreadCounter: attr({
+            compute: '_computeLocalMessageUnreadCounter',
+            dependencies: [
+                'lastMessage',
+                'lastSeenByCurrentPartnerMessageId',
+                'orderedMessages',
+                'serverLastMessageId',
+                'serverMessageUnreadCounter',
+            ],
+        }),
         mainCache: one2one('mail.thread_cache', {
             compute: '_computeMainCache',
         }),
@@ -1365,9 +1462,6 @@ function factory(dependencies) {
             inverse: 'memberThreads',
         }),
         message_needaction_counter: attr({
-            default: 0,
-        }),
-        message_unread_counter: attr({
             default: 0,
         }),
         /**
@@ -1457,8 +1551,13 @@ function factory(dependencies) {
          * interface and to notify the server of the new state.
          */
         pendingFoldState: attr(),
+        /**
+         * Determine if there is a pending seen message change, which is a change
+         * of seen message requested by the client but not yet confirmed by the
+         * server.
+         */
+        pendingSeenMessageId: attr(),
         public: attr(),
-        seen_message_id: attr(),
         /**
          * Determine the last fold state known by the server, which is the fold
          * state displayed after initialization or when the last pending
@@ -1470,6 +1569,29 @@ function factory(dependencies) {
          */
         serverFoldState: attr({
             default: 'closed',
+        }),
+        /**
+         * Last message id considered by the server.
+         *
+         * Useful to compute localMessageUnreadCounter field.
+         *
+         * @see localMessageUnreadCounter
+         */
+        serverLastMessageId: attr({
+            default: 0,
+        }),
+        /**
+         * Message unread counter coming from server.
+         *
+         * Value of this field is unreliable, due to dynamic nature of
+         * messaging. So likely outdated/unsync with server. Should use
+         * localMessageUnreadCounter instead, which smartly guess the actual
+         * message unread counter at all time.
+         *
+         * @see localMessageUnreadCounter
+         */
+        serverMessageUnreadCounter: attr({
+            default: 0,
         }),
         /**
          * Members that are currently typing something in the composer of this
