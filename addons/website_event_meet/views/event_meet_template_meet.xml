@@ -39,7 +39,7 @@
             <span class="my-0" t-else="meeting_room.event_id.start_today">
                 starts at
                 <span t-field="meeting_room.event_id.with_context(tz=meeting_room.event_id.date_tz).date_begin"
-                    t-options="{'format': 'long'}"/>
+                    t-options="{'format': 'medium'}"/>
             </span>
         </div>
         <div class="mx-3">
