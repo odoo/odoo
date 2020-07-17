@@ -22,7 +22,11 @@
                     <field name="bom_id" readonly="1" optional="hide"/>
                     <field name="origin" optional="show"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
-                    <field name="reservation_state" optional="show"/>
+                    <field name="reservation_state" invisible="1"/>
+                    <field name="components_availability_state" invisible="1"/>
+                    <field name="components_availability" optional="show"
+                        decoration-danger="components_availability_state == 'late'"
+                        decoration-warning="components_availability_state == 'expected'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
