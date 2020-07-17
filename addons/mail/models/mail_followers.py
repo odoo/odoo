@@ -100,44 +100,43 @@ class Followers(models.Model):
           user groups of partner (void as irrelevant if channel ID),
         """
         if records and subtype_id:
+            if pids:
+                pids_query = "UNION SELECT id as partner_id, NULL as channel_id, FALSE as internal FROM (SELECT UNNEST(%s)) as tmp_partners(id)"
+            if cids:
+                cids_query = "UNION SELECT NULL as partner_id, id as channel_id, FALSE as internal FROM (SELECT UNNEST(%s)) as tmp_channels(id)"
             query = """
 WITH sub_followers AS (
-    SELECT fol.id, fol.partner_id, fol.channel_id, subtype.internal
+    SELECT fol.partner_id, fol.channel_id, subtype.internal
     FROM mail_followers fol
-        RIGHT JOIN mail_followers_mail_message_subtype_rel subrel
-        ON subrel.mail_followers_id = fol.id
-        RIGHT JOIN mail_message_subtype subtype
-        ON subtype.id = subrel.mail_message_subtype_id
+        JOIN mail_followers_mail_message_subtype_rel subrel ON subrel.mail_followers_id = fol.id
+        JOIN mail_message_subtype subtype ON subtype.id = subrel.mail_message_subtype_id
     WHERE subrel.mail_message_subtype_id = %%s AND fol.res_model = %%s AND fol.res_id IN %%s
+    %s
+    %s
 )
 SELECT partner.id as pid, NULL AS cid,
         partner.active as active, partner.partner_share as pshare, NULL as ctype,
         users.notification_type AS notif, array_agg(groups.id) AS groups
-    FROM res_partner partner
+  FROM res_partner partner
     LEFT JOIN res_users users ON users.partner_id = partner.id AND users.active
     LEFT JOIN res_groups_users_rel groups_rel ON groups_rel.uid = users.id
     LEFT JOIN res_groups groups ON groups.id = groups_rel.gid
-    WHERE EXISTS (
-        SELECT partner_id FROM sub_followers
-        WHERE sub_followers.channel_id IS NULL
-            AND sub_followers.partner_id = partner.id
-            AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE)
-    ) %s
+    JOIN sub_followers ON (sub_followers.partner_id = partner.id
+                          AND sub_followers.channel_id IS NULL
+                          AND (coalesce(sub_followers.internal, false) <> TRUE OR coalesce(partner.partner_share, false) <> TRUE))
     GROUP BY partner.id, users.notification_type
 UNION
 SELECT NULL AS pid, channel.id AS cid,
         TRUE as active, NULL AS pshare, channel.channel_type AS ctype,
         CASE WHEN channel.email_send = TRUE THEN 'email' ELSE 'inbox' END AS notif, NULL AS groups
     FROM mail_channel channel
-    WHERE EXISTS (
-        SELECT channel_id FROM sub_followers WHERE partner_id IS NULL AND sub_followers.channel_id = channel.id
-    ) %s
-""" % ('OR partner.id IN %s' if pids else '', 'OR channel.id IN %s' if cids else '')
+    JOIN sub_followers ON sub_followers.channel_id = channel.id AND partner_id IS NULL
+""" % (pids_query if pids else '', cids_query if cids else '')
             params = [subtype_id, records._name, tuple(records.ids)]
             if pids:
-                params.append(tuple(pids))
+                params.append(list(pids))
             if cids:
-                params.append(tuple(cids))
+                params.append(list(cids))
             self.env.cr.execute(query, tuple(params))
             res = self.env.cr.fetchall()
         elif pids or cids:
