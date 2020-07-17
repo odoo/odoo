@@ -299,3 +299,11 @@ WHERE sub.user_id IN %%s""" % {
         """
         self.ensure_one()
         return []
+
+
+class ResUsersLog(models.Model):
+    _inherit = 'res.users.log'
+
+    def init(self):
+        self._cr.execute("CREATE INDEX IF NOT EXISTS res_users_log_create_uid_date_idx ON res_users_log(create_uid,create_date)")
+        super().init()
