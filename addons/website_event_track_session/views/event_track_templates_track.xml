@@ -40,7 +40,7 @@
                 <span class="my-0" t-else="track.event_id.start_today">
                     starts at
                     <span t-field="track.event_id.with_context(tz=track.event_id.date_tz).date_begin"
-                        t-options="{'format': 'long'}"/>
+                        t-options="{'format': 'medium'}"/>
                 </span>
             </div>
         </div>
