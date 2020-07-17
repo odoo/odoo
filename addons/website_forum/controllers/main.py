@@ -14,6 +14,7 @@ from odoo import http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
+
 from odoo.http import request
 
 _logger = logging.getLogger(__name__)
@@ -220,7 +221,7 @@ class WebsiteForum(WebsiteProfile):
         except IOError:
             return False
 
-    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
+    @http.route(['''/forum/<model("forum.forum"):forum>/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
                 type='http', auth="public", website=True, sitemap=True)
     def question(self, forum, question, **post):
         if not forum.active:
@@ -236,7 +237,7 @@ class WebsiteForum(WebsiteProfile):
             raise werkzeug.exceptions.NotFound()
 
         if question.parent_id:
-            redirect_url = "/forum/%s/question/%s" % (slug(forum), slug(question.parent_id))
+            redirect_url = "/forum/%s/%s" % (slug(forum), slug(question.parent_id))
             return werkzeug.utils.redirect(redirect_url, 301)
         filters = 'question'
         values = self._prepare_user_values(forum=forum, searches=post)
@@ -297,17 +298,17 @@ class WebsiteForum(WebsiteProfile):
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/reopen', type='http', auth="user", methods=['POST'], website=True)
     def question_reopen(self, forum, question, **kwarg):
         question.reopen()
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return werkzeug.utils.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/delete', type='http', auth="user", methods=['POST'], website=True)
     def question_delete(self, forum, question, **kwarg):
         question.active = False
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return werkzeug.utils.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/question/<model("forum.post"):question>/undelete', type='http', auth="user", methods=['POST'], website=True)
     def question_undelete(self, forum, question, **kwarg):
         question.active = True
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return werkzeug.utils.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     # Post
     # --------------------------------------------------
@@ -341,7 +342,7 @@ class WebsiteForum(WebsiteProfile):
             'parent_id': post_parent and post_parent.id or False,
             'tag_ids': post_tag_ids
         })
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), post_parent and slug(post_parent) or new_question.id))
+        return werkzeug.utils.redirect("/forum/%s/%s" % (slug(forum), post_parent and slug(post_parent) or new_question.id))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment', type='http', auth="user", methods=['POST'], website=True)
     def post_comment(self, forum, post, **kwargs):
@@ -353,7 +354,7 @@ class WebsiteForum(WebsiteProfile):
                 body=body,
                 message_type='comment',
                 subtype_xmlid='mail.mt_comment')
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return werkzeug.utils.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/toggle_correct', type='json', auth="public", website=True)
     def post_toggle_correct(self, forum, post, **kwargs):
@@ -372,7 +373,7 @@ class WebsiteForum(WebsiteProfile):
         question = post.parent_id
         post.unlink()
         if question:
-            werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+            werkzeug.utils.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
         return werkzeug.utils.redirect("/forum/%s" % slug(forum))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/edit', type='http', auth="user", website=True)
@@ -407,7 +408,7 @@ class WebsiteForum(WebsiteProfile):
         vals['tag_ids'] = forum._tag_to_write_vals(kwargs.get('post_tags', ''))
         post.write(vals)
         question = post.parent_id if post.parent_id else post
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return werkzeug.utils.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     #  JSON utilities
     # --------------------------------------------------
@@ -536,9 +537,9 @@ class WebsiteForum(WebsiteProfile):
         post.mark_as_offensive(reason_id=int(kwargs.get('reason_id', False)))
         url = ''
         if post.parent_id:
-            url = "/forum/%s/question/%s/#answer-%s" % (slug(forum), post.parent_id.id, post.id)
+            url = "/forum/%s/%s/#answer-%s" % (slug(forum), post.parent_id.id, post.id)
         else:
-            url = "/forum/%s/question/%s" % (slug(forum), slug(post))
+            url = "/forum/%s/%s" % (slug(forum), slug(post))
         return werkzeug.utils.redirect(url)
 
     # User
@@ -566,7 +567,7 @@ class WebsiteForum(WebsiteProfile):
             elif post.get('forum_id'):
                 forums = request.env['forum.forum'].browse(int(post['forum_id']))
                 values.update({
-                    'edit_button_url_param': 'forum_id=%s' %  str(post['forum_id']),
+                    'edit_button_url_param': 'forum_id=%s' % str(post['forum_id']),
                     'forum_filtered': forums.name,
                 })
             else:
@@ -678,7 +679,7 @@ class WebsiteForum(WebsiteProfile):
         if not post:
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
         question = post.parent_id if post.parent_id else post
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return werkzeug.utils.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/convert_to_comment', type='http', auth="user", methods=['POST'], website=True)
     def convert_answer_to_comment(self, forum, post, **kwarg):
@@ -686,7 +687,7 @@ class WebsiteForum(WebsiteProfile):
         new_msg = post.convert_answer_to_comment()
         if not new_msg:
             return werkzeug.utils.redirect("/forum/%s" % slug(forum))
-        return werkzeug.utils.redirect("/forum/%s/question/%s" % (slug(forum), slug(question)))
+        return werkzeug.utils.redirect("/forum/%s/%s" % (slug(forum), slug(question)))
 
     @http.route('/forum/<model("forum.forum"):forum>/post/<model("forum.post"):post>/comment/<model("mail.message"):comment>/delete', type='json', auth="user", website=True)
     def delete_comment(self, forum, post, comment, **kwarg):

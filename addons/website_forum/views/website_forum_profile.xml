@@ -142,12 +142,12 @@
                     <span t-field="activity.date" t-options='{"format": "short"}' class="mr-2"/>
                     <t t-set="post" t-value="posts[activity.res_id]"/>
                     <span t-if="post[1]">
-                        <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/question/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">
+                        <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/#{ slug(post[0]) }#answer-#{ str(post[1].id) }">
                             <span t-esc="post[0].name"/>
                         </a>
                     </span>
                     <span t-if="not post[1]">
-                        <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/question/#{ slug(post[0]) }">
+                        <a t-attf-href="/forum/#{ slug(post[0].forum_id) }/#{ slug(post[0]) }">
                             <span t-esc="post[0].name"/>
                         </a>
                     </span>
@@ -165,10 +165,10 @@
             <span t-if="vote.vote == '1'" class="fa fa-thumbs-up text-success" style="margin-left:30px" role="img" aria-label="Positive vote" title="Positive vote"/>
             <span t-if="vote.vote == '-1'" class="fa fa-thumbs-down text-warning" style="margin-left:30px" role="img" aria-label="Negative vote" title="Negative vote"/>
             <t t-if="vote.post_id.parent_id">
-                <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/question/#{ vote.post_id.parent_id.id }/#answer-#{ vote.post_id.id }" t-esc="vote.post_id.parent_id.name" style="margin-left:10px"/>
+                <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/#{ vote.post_id.parent_id.id }/#answer-#{ vote.post_id.id }" t-esc="vote.post_id.parent_id.name" style="margin-left:10px"/>
             </t>
             <t t-if="not vote.post_id.parent_id">
-                <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/question/#{ vote.post_id.id }" style=" color:black;margin-left:10px" t-esc="vote.post_id.name"/>
+                <a t-attf-href="/forum/#{ slug(vote.post_id.forum_id) }/#{ vote.post_id.id }" style=" color:black;margin-left:10px" t-esc="vote.post_id.name"/>
             </t>
         </div>
         <div class="mb16" t-if="not vote_post">

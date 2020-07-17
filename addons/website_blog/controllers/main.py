@@ -190,7 +190,7 @@ class WebsiteBlog(http.Controller):
         return r
 
     @http.route([
-        '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
+        '''/blog/<model("blog.blog"):blog>/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
     ], type='http', auth="public", website=True, sitemap=True)
     def blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
         """ Prepare all values to display the blog.
@@ -221,7 +221,7 @@ class WebsiteBlog(http.Controller):
         blog_url = QueryURL('', ['blog', 'tag'], blog=blog_post.blog_id, tag=tag, date_begin=date_begin, date_end=date_end)
 
         if not blog_post.blog_id.id == blog.id:
-            return request.redirect("/blog/%s/post/%s" % (slug(blog_post.blog_id), slug(blog_post)), code=301)
+            return request.redirect("/blog/%s/%s" % (slug(blog_post.blog_id), slug(blog_post)), code=301)
 
         tags = request.env['blog.tag'].search([])
 
@@ -271,7 +271,7 @@ class WebsiteBlog(http.Controller):
             })
         return response
 
-    @http.route('/blog/<int:blog_id>/post/new', type='http', auth="public", website=True)
+    @http.route('/blog/<int:blog_id>/post/new', type='http', auth="user", website=True)
     def blog_post_create(self, blog_id, **post):
         # Use sudo so this line prevents both editor and admin to access blog from another website
         # as browse() will return the record even if forbidden by security rules but editor won't
@@ -283,9 +283,9 @@ class WebsiteBlog(http.Controller):
             'blog_id': blog_id,
             'is_published': False,
         })
-        return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
+        return werkzeug.utils.redirect("/blog/%s/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
-    @http.route('/blog/post_duplicate', type='http', auth="public", website=True, methods=['POST'])
+    @http.route('/blog/post_duplicate', type='http', auth="user", website=True, methods=['POST'])
     def blog_post_copy(self, blog_post_id, **post):
         """ Duplicate a blog.
 
@@ -294,7 +294,7 @@ class WebsiteBlog(http.Controller):
         :return redirect to the new blog created
         """
         new_blog_post = request.env['blog.post'].with_context(mail_create_nosubscribe=True).browse(int(blog_post_id)).copy()
-        return werkzeug.utils.redirect("/blog/%s/post/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
+        return werkzeug.utils.redirect("/blog/%s/%s?enable_editor=1" % (slug(new_blog_post.blog_id), slug(new_blog_post)))
 
     @http.route(['/blog/render_latest_posts'], type='json', auth='public', website=True)
     def render_latest_posts(self, template, domain, limit=None, order='published_date desc'):

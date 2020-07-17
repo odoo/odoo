@@ -860,7 +860,7 @@ class Post(models.Model):
         self.ensure_one()
         return {
             'type': 'ir.actions.act_url',
-            'url': '/forum/%s/question/%s' % (self.forum_id.id, self.id),
+            'url': '/forum/%s/%s' % (self.forum_id.id, self.id),
             'target': 'self',
             'target_type': 'public',
             'res_id': self.id,
@@ -907,7 +907,7 @@ class Post(models.Model):
         return super(Post, self)._notify_record_by_inbox(message, recipients_data, msg_vals=msg_vals, **kwargs)
 
     def _compute_website_url(self):
-        return '/forum/{forum}/question/{post}{anchor}'.format(
+        return '/forum/{forum}/{post}{anchor}'.format(
             forum=slug(self.forum_id),
             post=slug(self),
             anchor=self.parent_id and '#answer_%d' % self.id or ''

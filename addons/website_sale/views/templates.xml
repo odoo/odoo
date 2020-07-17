@@ -461,7 +461,7 @@
         </xpath>
     </template>
 
-    <!-- /shop/product product page -->
+    <!-- /shop/product page -->
     <template id="product_edit_options" inherit_id="website.user_navbar" name="Edit Product Options">
         <xpath expr="//li[@id='edit-page-menu']" position="after">
             <t t-if="main_object._name == 'product.template'" t-set="action" t-value="'website_sale.product_template_action_website'" />
