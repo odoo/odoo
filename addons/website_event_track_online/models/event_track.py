@@ -17,6 +17,7 @@ class Track(models.Model):
     partner_biography = fields.Html(
         string='Biography', compute='_compute_partner_biography',
         readonly=False, store=True)
+    image = fields.Image(max_width=1024, max_height=1024)
     website_image_url = fields.Char(
         string='Image URL', max_width=256, max_height=256,
         compute='_compute_website_image_url', compute_sudo=True, store=False)
@@ -58,7 +59,7 @@ class Track(models.Model):
     def _compute_website_image_url(self):
         for track in self:
             if track.image:
-                track.website_image_url = self.env['website'].image_url(track, 'image', size=256)
+                track.website_image_url = self.env['website'].image_url(track, 'image', size=1024)
             elif track.partner_id.image_256:
                 track.website_image_url = self.env['website'].image_url(track.partner_id, 'image_256', size=256)
             else:
