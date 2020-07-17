@@ -116,6 +116,11 @@
             <t t-call="website_sale.cart_header"/>
         </xpath>
     </template>
+    <template id="template_header_hamburger" inherit_id="website.template_header_hamburger" name="Header Shop My Cart Link">
+        <xpath expr="//header//div[hasclass('o_navbar_toggler_container')]" position="before">
+            <t t-call="website_sale.cart_header"/>
+        </xpath>
+    </template>
 
     <template id="show_search" inherit_id="website_sale.header" name="Hide">
         <xpath expr="//t[@t-set='show_product_search']" position="after">
