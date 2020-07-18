@@ -48,7 +48,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
@@ -56,6 +56,8 @@ msgid ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
 msgstr ""
+"<b><i class=\"fa fa-clock-o\"/>\n"
+"                                        Pre</b>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -99,7 +101,7 @@ msgstr ""
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "<b>Workshop Room</b> - Mainly for developers."
-msgstr ""
+msgstr "<b>Pracovná miestnosť</b> - hlavne pre vývojárov."
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -123,6 +125,8 @@ msgid ""
 "<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
 "title=\"Confirm Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-check\" role=\"img\" aria-label=\"Confirm button\" "
+"title=\"Confirm Registration\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -130,6 +134,8 @@ msgid ""
 "<i class=\"fa fa-info-circle mr-2\"></i>This event and all the conferences "
 "are in <b>English</b>!"
 msgstr ""
+"<i class=\"fa fa-info-circle mr-2\"></i>Táto udalosť a všetky konferencie sa"
+" konajú v<b>angličtine</b>!"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -137,6 +143,8 @@ msgid ""
 "<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Attended button\" "
 "title=\"Attended the Event\"/>"
 msgstr ""
+"<i class=\"fa fa-level-down\" role=\"img\" aria-label=\"Attended button\" "
+"title=\"Attended the Event\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_form
@@ -144,6 +152,8 @@ msgid ""
 "<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
 "title=\"Arrow\"/>"
 msgstr ""
+"<i class=\"fa fa-long-arrow-right mx-2\" aria-label=\"Arrow icon\" "
+"title=\"Arrow\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_registration_view_kanban
@@ -151,6 +161,8 @@ msgid ""
 "<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
 "title=\"Cancel Registration\"/>"
 msgstr ""
+"<i class=\"fa fa-times\" role=\"img\" aria-label=\"Cancel button\" "
+"title=\"Cancel Registration\"/>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -165,6 +177,9 @@ msgid ""
 "                                        to\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                        do\n"
+"                                    </span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -172,6 +187,8 @@ msgid ""
 "<span class=\"badge badge-secondary o_wevent_badge float-"
 "right\">SPEAKER</span>"
 msgstr ""
+"<span class=\"badge badge-secondary o_wevent_badge float-"
+"right\">REČNÍK</span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.res_config_settings_view_form
@@ -188,6 +205,8 @@ msgid ""
 "<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
 " Registration Limit. Are you sure you want to confirm it?</span>"
 msgstr ""
+"<span class=\"o_form_label\">Varovanie: Táto udalosť nedosiahla svoj "
+"minimálny registračný limit. Naozaj to chcete potvrdiť?</span>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_subscription
@@ -649,6 +668,7 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
+"Naozaj chcete zrušiť túto udalosť? Zrušia sa aj všetci prepojení účastníci."
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -886,7 +906,7 @@ msgstr "Potvrdené"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Confirmed attendees"
-msgstr "Potvrdený účastníci"
+msgstr "Potvrdení účastníci"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_search
@@ -967,7 +987,7 @@ msgstr ""
 #. module: event
 #: model:event.event,subtitle:event.event_4
 msgid "Discover how to grow a sustainable business with our experts."
-msgstr ""
+msgstr "Objavte, ako rozšíriť udržateľný obchod s našimi odborníkmi."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_confirm__display_name
@@ -1044,7 +1064,7 @@ msgstr "Udalosť"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Automatizované zasielanie udalostí"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
@@ -1219,7 +1239,7 @@ msgstr "Očakávané"
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_kanban
 msgid "Expected attendees"
-msgstr "Očakávaný návštevníci"
+msgstr "Očakávaní návštevníci"
 
 #. module: event
 #: model:event.event,subtitle:event.event_3
@@ -1491,7 +1511,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:event.field_event_event__address_id
 #: model_terms:ir.ui.view,arch_db:event.view_event_type_form
 msgid "Location"
-msgstr "Umiestnenie"
+msgstr "Miesto (adresa)"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
@@ -1529,7 +1549,7 @@ msgstr "Poštové plánovače"
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Plánovanie pošty v kategórii udalosti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -1573,6 +1593,7 @@ msgstr ""
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
 msgstr ""
+"Maximálny počet účastníkov by mal byť vyšší ako minimálny počet účastníkov."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
@@ -1721,14 +1742,14 @@ msgstr ""
 msgid ""
 "Online events like webinars do not require a specific location\n"
 "                                            and are hosted online."
-msgstr ""
+msgstr "Udalosti online, ako sú webové semináre, nevyžadujú konkrétnu adresu."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__is_online
 msgid ""
 "Online events like webinars do not require a specific location and are "
 "hosted online."
-msgstr ""
+msgstr "Udalosti online, ako sú webové semináre, nevyžadujú konkrétnu adresu."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1781,7 +1802,7 @@ msgstr "Projektový menežment, Ľudské zdroje, Spravovanie zmlúv."
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "Purchase, Sales &amp; Purchase management, Financial accounting."
-msgstr "Nákup, Predaj &amp; Nákupný menežment, Finančné účtovníctvo."
+msgstr "Nákup, Predaj & Nákup, Účtovníctvo."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_registration__origin
@@ -1966,7 +1987,7 @@ msgstr "Zdrojový dokument"
 #. module: event
 #: model:event.type,name:event.event_type_5
 msgid "Sport"
-msgstr ""
+msgstr "Šport"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__date_begin
@@ -2021,6 +2042,8 @@ msgid ""
 "There are already attendees who attended this event. Please reset it to "
 "draft if you want to cancel this event."
 msgstr ""
+"Už sa na nich zúčastnili účastníci. Ak chcete túto udalosť zrušiť, obnovte "
+"ju v koncepte."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -2228,30 +2251,30 @@ msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "events@odoo.com"
-msgstr ""
+msgstr "events@odoo.com"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "events@yourcompany.com"
-msgstr ""
+msgstr "eventy@vasafirma.com"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr "v %d dňoch"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "next month"
-msgstr ""
+msgstr "budúci mesiac"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "next week"
-msgstr ""
+msgstr "budúci týždeň"
 
 #. module: event
 #: code:addons/event/models/event.py:0
@@ -2263,10 +2286,10 @@ msgstr ""
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "today"
-msgstr ""
+msgstr "dnes"
 
 #. module: event
 #: code:addons/event/models/event.py:0
 #, python-format
 msgid "tomorrow"
-msgstr ""
+msgstr "zajtra"
