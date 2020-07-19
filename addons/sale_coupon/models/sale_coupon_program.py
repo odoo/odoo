@@ -207,7 +207,8 @@ class SaleCouponProgram(models.Model):
             lines = order.order_line.filtered(lambda line:
                 program.reward_type == 'discount' and
                 (line.product_id == program.discount_line_product_id or
-                line.product_id == program.reward_id.discount_line_product_id
+                line.product_id == program.reward_id.discount_line_product_id or
+                (program.program_type == 'promotion_program' and line.is_reward_line)
             ))
             untaxed_amount = order_amount['amount_untaxed'] - sum([line.price_subtotal for line in lines])
             tax_amount = order_amount['amount_tax'] - sum([line.price_tax for line in lines])

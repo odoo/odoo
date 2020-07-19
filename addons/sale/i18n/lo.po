@@ -4,11 +4,11 @@
 # 
 # Translators:
 # ki dvd <soutsakhone.d@gmail.com>, 2020
-# Phoxaysy Sengchanthanouvong <phoxaysy@gmail.com>, 2020
 # ສີສຸວັນ ສັງບົວບຸລົມ <sisouvan@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Amkha VAYAPHATH <amkha.nazou@gmail.com>, 2020
 # Alounyadeth Srithirath <snapter.root@gmail.com>, 2020
+# Phoxaysy Sengchanthanouvong <phoxaysy@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Alounyadeth Srithirath <snapter.root@gmail.com>, 2020\n"
+"Last-Translator: Phoxaysy Sengchanthanouvong <phoxaysy@gmail.com>, 2020\n"
 "Language-Team: Lao (https://www.transifex.com/odoo/teams/41243/lo/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -32,13 +32,13 @@ msgstr "# ຂອງລາຍການ"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_payment_transaction__sale_order_ids_nbr
 msgid "# of Sales Orders"
-msgstr ""
+msgstr "# ຂອງໃບສັ່ງຊື້"
 
 #. module: sale
 #: model:mail.template,report_name:sale.email_template_edi_sale
 #: model:mail.template,report_name:sale.mail_template_sale_confirmation
 msgid "${(object.name or '').replace('/','_')}"
-msgstr ""
+msgstr "${(object.name or '').replace('/','_')}"
 
 #. module: sale
 #: model:mail.template,subject:sale.mail_template_sale_confirmation
@@ -46,6 +46,8 @@ msgid ""
 "${object.company_id.name} ${(object.get_portal_last_transaction().state == "
 "'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${(object.get_portal_last_transaction().state == "
+"'pending') and 'Pending Order' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model:mail.template,subject:sale.email_template_edi_sale
@@ -53,6 +55,8 @@ msgid ""
 "${object.company_id.name} ${object.state in ('draft', 'sent') and "
 "'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 msgstr ""
+"${object.company_id.name} ${object.state in ('draft', 'sent') and "
+"'Quotation' or 'Order'} (Ref ${object.name or 'n/a' })"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -64,7 +68,7 @@ msgstr "&amp;nbsp;"
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "&amp;nbsp;<span>on</span>&amp;nbsp;"
-msgstr ""
+msgstr "&amp;nbsp;<span>ໃນ</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -548,7 +552,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content_totals_table
 msgid "<strong>Total</strong>"
-msgstr "<strong>ພະນັກງານຂາຍ:</strong>"
+msgstr "<strong>ລວມທັງໝົດ:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -879,13 +883,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 #: model_terms:ir.ui.view,arch_db:sale.view_sale_advance_payment_inv
 msgid "Cancel"
-msgstr "ຍົກເລີອກ"
+msgstr "ຍົກເລີກ"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__cancel
 #: model:ir.model.fields.selection,name:sale.selection__sale_report__state__cancel
 msgid "Cancelled"
-msgstr "ຍົກເລີກ"
+msgstr "ຖືກຍົກເລີກແລ້ວ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -929,7 +933,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Close"
-msgstr "ອັດ"
+msgstr "ປິດອອກ"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_quotation_onboarding_state__closed
@@ -1026,7 +1030,7 @@ msgstr ""
 #: model:ir.model,name:sale.model_res_partner
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Contact"
-msgstr "ທີ່ຕິດຕໍ່່"
+msgstr "ຂໍ້ມູນຕິດຕໍ່ພົວພັນ"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order_line__product_uom_category_id
@@ -1085,7 +1089,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_uid
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__create_uid
 msgid "Created by"
-msgstr "ສ້າງ ໂດຍ"
+msgstr "ສ້າງໂດຍ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__create_date
@@ -1093,7 +1097,7 @@ msgstr "ສ້າງ ໂດຍ"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__create_date
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__create_date
 msgid "Created on"
-msgstr "ສ້າງ ເມື່ອ"
+msgstr "ສ້າງເມື່ອ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__create_date
@@ -1118,7 +1122,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__currency_id
 #: model:ir.model.fields,field_description:sale.field_utm_campaign__currency_id
 msgid "Currency"
-msgstr "ເງິນຕາ"
+msgstr "ສະກຸນເງິນ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__currency_rate
@@ -1153,7 +1157,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 msgid "Customer"
-msgstr "ຄຸ່ຄ້າ"
+msgstr "ລູກຄ້າ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__auth_signup_uninvited
@@ -1386,7 +1390,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__display_name
 #: model:ir.model.fields,field_description:sale.field_sale_report__display_name
 msgid "Display Name"
-msgstr "ຊື່ທີ່ສະແດງອອກ"
+msgstr "ຊື່ເຕັມ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute__display_type
@@ -1401,7 +1405,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_sample_quotation_state__done
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_quotation_onboarding_state__done
 msgid "Done"
-msgstr "ຈົບເເລັວ"
+msgstr "ສໍາເລັດເເລ້ວ"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -1519,7 +1523,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_product_search
 msgid "Extended Filters"
-msgstr "ຕົວກັ່ນຕອງທີ່ຂະຫຍາຍອອກ"
+msgstr "ເງື່ອນໄຂກັ່ນຕອງເສີມ"
 
 #. module: sale
 #. openerp-web
@@ -1638,7 +1642,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_line_filter
 msgid "Group By"
-msgstr "ຈັດກຸ່ມ ໂດຍ"
+msgstr "ຈັດໝວດຂໍ້ມູນຕາມ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__html_color
@@ -1969,7 +1973,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard____last_update
 #: model:ir.model.fields,field_description:sale.field_sale_report____last_update
 msgid "Last Modified on"
-msgstr "ແກ້ໄຂລ້າສຸດ ເມື່ອ"
+msgstr "ແກ້ໄຂລ້າສຸດເມື່ອ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__write_uid
@@ -1978,7 +1982,7 @@ msgstr "ແກ້ໄຂລ້າສຸດ ເມື່ອ"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_uid
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__write_uid
 msgid "Last Updated by"
-msgstr "ປັບປຸງລ້າສຸດ ໂດຍ"
+msgstr "ປັບປຸງລ້າສຸດໂດຍ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_attribute_custom_value__write_date
@@ -1987,7 +1991,7 @@ msgstr "ປັບປຸງລ້າສຸດ ໂດຍ"
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__write_date
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__write_date
 msgid "Last Updated on"
-msgstr "ປັບປຸງລ້າສຸດ ເມື່ອ"
+msgstr "ປັບປຸງລ້າສຸດເມື່ອ"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2493,7 +2497,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
 msgid "Partner"
-msgstr "ຄຸ່ຄ້າ"
+msgstr "ຄູ່ຄ້າ/ລູກຄ້າ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__country_id
@@ -2637,12 +2641,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Print"
-msgstr "ພິມ"
+msgstr "ພິມອອກ"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr ""
+msgstr "ອອກໃບຮັບເງິນແຈ້ງເບື້ອງຕົ້ນ"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales

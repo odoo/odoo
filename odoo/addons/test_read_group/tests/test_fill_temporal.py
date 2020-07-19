@@ -531,6 +531,50 @@ class TestFillTemporal(common.TransactionCase):
 
         self.assertEqual(groups, expected)
 
+    def test_quarter_with_timezones(self):
+        """Test quarter with timezones.
+
+        We group year by quarter and check that it is consistent with timezone.
+        """
+        self.Model.create({'datetime': '2016-01-01 03:30:00', 'value': 2})
+        self.Model.create({'datetime': '2016-12-30 22:30:00', 'value': 3})
+
+        expected = [{
+            '__domain': ['&',
+                ('datetime', '>=', '2015-12-31 17:00:00'),
+                ('datetime', '<', '2016-03-31 16:00:00')],
+            'datetime:quarter': 'Q1 2016',
+            'datetime_count': 1,
+            'value': 2
+        }, {
+            '__domain': ['&',
+                       ('datetime', '>=', '2016-03-31 16:00:00'),
+                       ('datetime', '<', '2016-06-30 16:00:00')],
+            'datetime:quarter': 'Q2 2016',
+            'datetime_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&',
+                       ('datetime', '>=', '2016-06-30 16:00:00'),
+                       ('datetime', '<', '2016-09-30 17:00:00')],
+            'datetime:quarter': 'Q3 2016',
+            'datetime_count': 0,
+            'value': False
+        }, {
+            '__domain': ['&',
+                       ('datetime', '>=', '2016-09-30 17:00:00'),
+                       ('datetime', '<', '2016-12-31 17:00:00')],
+            'datetime:quarter': 'Q4 2016',
+            'datetime_count': 1,
+            'value': 3
+        }]
+
+        model_fill = self.Model.with_context(tz='Asia/Hovd', fill_temporal=True)
+        groups = model_fill.read_group([], fields=['datetime', 'value'],
+                                       groupby=['datetime:quarter'])
+
+        self.assertEqual(groups, expected)
+
     def test_egde_fx_tz(self):
         """We test if different edge effect by using a different timezone from the user context
 

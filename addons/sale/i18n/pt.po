@@ -8,14 +8,14 @@
 # José Gomes <jg@opencloud.pro>, 2019
 # Catarina Rocha <cr@opencloud.pro>, 2019
 # 425fe09b3064b9f906f637fff94056ae_a00ea56 <0fa3588fa89906bfcb3a354600956e0e_308047>, 2019
-# Marcelo Pereira <marcelo.pereira@arxi.pt>, 2019
 # Martin Trigaux, 2019
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2019
 # Pedro Castro Silva <pedrocs@exo.pt>, 2019
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2019
-# Nuno Silva <nuno.silva@arxi.pt>, 2020
 # Tiago Santos <tiago.santos@arxi.pt>, 2020
+# Nuno Silva <nuno.silva@arxi.pt>, 2020
+# Marcelo Pereira <marcelo.pereira@arxi.pt>, 2020
 # Manuela Silva <manuelarodsilva@gmail.com>, 2020
 # 
 msgid ""
@@ -405,6 +405,8 @@ msgid ""
 "<span class=\"d-none d-md-inline\">Sales Order #</span>\n"
 "                            <span class=\"d-block d-md-none\">Ref.</span>"
 msgstr ""
+"<span class=\"d-none d-md-inline\">Ordens de Venda #</span>\n"
+"                            <span class=\"d-block d-md-none\">Ref.</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -601,13 +603,13 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "Deve ser especificado um diário para a instituição %s."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "É necessário um método de pagamento para criar uma transação."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -1155,7 +1157,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
-msgstr ""
+msgstr "Cartão de Crédito (via Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1628,7 +1630,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
 msgid "Free sign up"
-msgstr ""
+msgstr "Registo Livre"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_account_invoice_report_salesteam
@@ -2355,7 +2357,7 @@ msgstr "Número de mensagens não lidas"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2b
 msgid "On invitation"
-msgstr ""
+msgstr "Por convite"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.act_res_partner_2_sale_order
@@ -2546,7 +2548,7 @@ msgstr "Outra Informação"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__other
 msgid "Other payment acquirer"
-msgstr ""
+msgstr "Outra instituição de pagamentos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
@@ -2577,7 +2579,7 @@ msgstr "Pagar e Confirmar"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay &amp; Confirm"
-msgstr ""
+msgstr "Pagar &amp; Confirmar"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
@@ -2594,7 +2596,7 @@ msgstr "Pagar com"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__other
 msgid "Pay with another payment acquirer"
-msgstr ""
+msgstr "Pague com outra instituição  de pagamentos"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
@@ -2605,12 +2607,12 @@ msgstr ""
 #. module: sale
 #: model:ir.model,name:sale.model_payment_acquirer
 msgid "Payment Acquirer"
-msgstr "Acquirer de Pagamentos"
+msgstr "Instituição de Pagamentos"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Payment Acquirers"
-msgstr "Intermediários de Pagamento"
+msgstr "Instituições de Pagamentos"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__manual_post_msg
@@ -2661,7 +2663,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL de Acesso Portal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
@@ -3565,17 +3567,17 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__stripe
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Código Plublicável Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Cópdigo Secreto Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_subtotal

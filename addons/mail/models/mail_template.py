@@ -491,9 +491,14 @@ class MailTemplate(models.Model):
                 _logger.warning('QWeb template %s not found when sending template %s. Sending without layouting.' % (notif_layout, self.name))
             else:
                 record = self.env[self.model].browse(res_id)
+                lang = self._render_template(self.lang, self.model, res_id)
+                model = self.env['ir.model']._get(record._name)
+                if lang:
+                    template = template.with_context(lang=lang)
+                    model = model.with_context(lang=lang)
                 template_ctx = {
                     'message': self.env['mail.message'].sudo().new(dict(body=values['body_html'], record_name=record.display_name)),
-                    'model_description': self.env['ir.model']._get(record._name).display_name,
+                    'model_description': model.display_name,
                     'company': 'company_id' in record and record['company_id'] or self.env.company,
                     'record': record,
                 }

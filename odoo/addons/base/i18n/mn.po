@@ -13,10 +13,10 @@
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019
 # baaska sh <sh.baaskash@gmail.com>, 2020
 # Bayarkhuu Bataa, 2020
-# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Minj P <pminj322@gmail.com>, 2020
 # Батболд <batbold.ts@gmail.com>, 2020
+# Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-06-25 09:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Батболд <batbold.ts@gmail.com>, 2020\n"
+"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -23889,6 +23889,10 @@ msgid ""
 "%(multi_company_warning)s\n"
 "(Records: %(example_records)s, User: %(user_id)s)"
 msgstr ""
+"Таны хийж буй үйлдэл (\"%(operation)s\" on \"%(document_kind)s\" (%(document_model)s)) дараах хандалтын дүрмийн улмаас хязгаарлагдлаа:\n"
+"%(rules_list)s\n"
+"%(multi_company_warning)s\n"
+"(Бичлэг: %(example_records)s, Хэрэглэгч: %(user_id)s)"
 
 #. module: base
 #: code:addons/models.py:0
@@ -23902,6 +23906,13 @@ msgid ""
 "Fields:\n"
 "%(fields_list)s"
 msgstr ""
+"Таны хийж буй үйлдэл нууцлалын хязгаарлалтын улмаас хэрэгжих боломжгүйд хүрлээ.\n"
+"\n"
+"Баримтын төрөл: %(document_kind)s (%(document_model)s)\n"
+"Үйлдэл: %(operation)s\n"
+"Хэрэглэгч: %(user)s\n"
+"Талбарууд:\n"
+"%(fields_list)s"
 
 #. module: base
 #: code:addons/base/models/ir_rule.py:0
@@ -23911,6 +23922,9 @@ msgid ""
 "\n"
 "(Document type: \"%(document_kind)s\" (%(document_model)s), Operation: %(operation)s)"
 msgstr ""
+"Таны хийж буй үйлдэл нууцлал хязгаарлалтын улмаас хэрэгжих боломжгүйд хүрлээ. Системийн удирдлага, тохиргоо хариуцагч руу хандана уу.\n"
+"\n"
+"(Баримтын төрөл: \"%(document_kind)s\" (%(document_model)s), Үйлдэл: %(operation)s)"
 
 #. module: base
 #: model:ir.model.constraint,message:base.constraint_res_currency_rounding_gt_zero

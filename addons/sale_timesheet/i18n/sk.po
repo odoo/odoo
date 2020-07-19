@@ -9,6 +9,7 @@
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
 # Martin Trigaux, 2019
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,7 +42,7 @@ msgid ""
 msgstr ""
 "\n"
 "                <p class=\"o_view_nocontent_smiling_face\">\n"
-"                    Záznam časového rozvrhu\n"
+"                    Záznam pracovného výkazu\n"
 "                </p><p>\n"
 "                    Môžete registrovať a sledovať vaše pracovné hodiny podľa projektu každý deň.\n"
 "                    Každý časový záznam registrovaný na projekte sa stane nákladom a môže byť, ak je potrebné,\n"
@@ -55,8 +56,8 @@ msgid ""
 "* At Project Rate: All timesheets on the project will be billed at the same rate\n"
 "* At Employee Rate: Timesheets will be billed at a rate defined at employee level"
 msgstr ""
-"* V sadzbe projektu: všetky časové rozvrhy v projekte budú účtované v rovnakej sadzbe\n"
-"* V sadzbe zamestnanca: časové rozvrhy budú účtované v sadzbe definovanej na zamestnanca"
+"* V sadzbe projektu: všetky pracovné výkazy v projekte budú účtované v rovnakej sadzbe\n"
+"* V sadzbe zamestnanca: pracovné výkazy budú účtované v sadzbe definovanej na zamestnanca"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -103,7 +104,7 @@ msgid ""
 " from an expense or a vendor bill."
 msgstr ""
 "Fakturovateľný projekt by mal byť prepojený s položkou zákazky odberateľa, "
-"ktorá nepochádza z výdavkov alebo z faktúry dodávateľa."
+"ktorá nepochádza z výdavkov alebo z dokladu dodávateľa."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_sale_order_line__qty_delivered_method
@@ -117,7 +118,7 @@ msgstr ""
 "Na základe konfigurácie produktu, dodané množstvo môže byť automaticky vypočítane podľa mechanizmu :\n"
 "  - Ručne: množstvo sa nastavuje ručne v položke\n"
 "  - Analyticky z výdavkov: množstvo je súčet z vykázaných výdavkov\n"
-"  - Časový rozvrh: množstvo je suma hodín zaznamenaných na úlohe priradenej tejto položke\n"
+"  - Pracovné výkazy: množstvo je suma hodín zaznamenaných na úlohe priradenej tejto položke\n"
 "  - Pohyby skladu: množstvo udávajú potvrdené výdaje\n"
 
 #. module: sale_timesheet
@@ -374,7 +375,7 @@ msgstr "Zákazník objednávky"
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__display_name
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_sale_line_employee_map__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__visible_project
@@ -403,7 +404,7 @@ msgstr "Zamestnanec"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_create_sale_order_line__employee_id
 msgid "Employee that has timesheets on the project."
-msgstr "Zamestnanec ktorý má časové rozvrhy na projekte"
+msgstr "Zamestnanec, ktorý má pracovné výkazy na projekte"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_line_employee_ids
@@ -512,7 +513,7 @@ msgstr "Faktúra"
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_account_analytic_line__timesheet_invoice_id
 msgid "Invoice created from the timesheet"
-msgstr "Faktúra vytvorená z časového rozvrhu"
+msgstr "Faktúra vytvorená z pracovných výkazov"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -601,7 +602,7 @@ msgid ""
 "Create a task and track hours: Create a task on the sales order validation and track the work hours."
 msgstr ""
 "Ručné zadanie množstiev na objednávke: Faktúra založená na ručnom zadaní množstva, bez tvorby analytického účtovania.\n"
-"Časový rozvrh podľa kontraktu: Faktúra založená na sledovaných hodinách príslušného časového rozvrhu.\n"
+"Pracovný výkaz podľa kontraktu: Faktúra založená na sledovaných hodinách príslušného pracovného výkazu.\n"
 "Vytvor úlohu a sledovanie hodín: Vytvor úlohu na objednávke a sleduj pracovné hodiny."
 
 #. module: sale_timesheet
@@ -700,12 +701,12 @@ msgstr "Nepripravené"
 #. module: sale_timesheet
 #: model:project.task,legend_blocked:sale_timesheet.project_task_internal
 msgid "Not validated"
-msgstr "Neoverené"
+msgstr "Nepotvrdené"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_account_move__timesheet_count
 msgid "Number of timesheets"
-msgstr "Počet časových rozvrhov"
+msgstr "Počet pracovných výkazov"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_product_product__service_tracking
@@ -759,7 +760,7 @@ msgid ""
 "timesheets on tasks."
 msgstr ""
 "Produkt položky zákazky odberateľa. Musí to byť služba fakturovaná na "
-"základe časového rozvrhu úloh."
+"základe pracovného výkazu úloh."
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.product_template_action_default_services
@@ -964,6 +965,10 @@ msgid ""
 "Mapping' of the project, the timesheet entry will be linked to this sales "
 "order item."
 msgstr ""
+"Položka zákazky odberateľa, s ktorou je úloha spojená. Ak bude použitý "
+"zamestnanecký pracovný výkaz a ak sa tento zamestnanec nenachádza v projekte"
+" „Zamestnanec / položka zákazky odberateľa“ projektu, potom položka "
+"pracovného výkazu bude prepojená s touto položkou zákazky odberateľa."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_order_id
@@ -1089,7 +1094,7 @@ msgid ""
 "The Sales Order cannot be created because you did not enter some employees that entered timesheets on this project. Please list all the relevant employees before creating the Sales Order.\n"
 "Missing employee(s): %s"
 msgstr ""
-"Zákazku odberateľa nie je možné vytvoriť, pretože ste nevložili niektorých zamestnancov, ktorí na tento projekt zadali pracovné listy. Pred vytvorením zákazky odberateľa uveďte prosím všetkých relevantných zamestnancov.\n"
+"Zákazku odberateľa nie je možné vytvoriť, pretože ste nevložili niektorých zamestnancov, ktorí na tento projekt zadali pracovné výkazy. Pred vytvorením zákazky odberateľa uveďte prosím všetkých relevantných zamestnancov.\n"
 "Chýbajúci zamestnanec: %s"
 
 #. module: sale_timesheet
@@ -1140,7 +1145,7 @@ msgid ""
 "The sales order cannot be created because some timesheets of this project "
 "are already linked to another sales order."
 msgstr ""
-"Zákazku odberateľa nie je možné vytvoriť, pretože niektoré časové plány "
+"Zákazku odberateľa nie je možné vytvoriť, pretože niektoré pracovné výkazy "
 "tohto projektu sú už prepojené s inou zákazkou odberateľa."
 
 #. module: sale_timesheet
@@ -1190,7 +1195,7 @@ msgid ""
 " the task, nor on the project. Please define one to save your timesheet "
 "line."
 msgstr ""
-"Tento riadok časového rozvrhu nie je možné fakturovať: na úlohe, ani na "
+"Túto položku pracovného výkazu nie je možné fakturovať: na úlohe, ani na "
 "projekte nie je definovaná žiadna položka objednávky. Definujte jednu, aby "
 "ste uložili riadok časového rozvrhu."
 
@@ -1200,8 +1205,8 @@ msgid ""
 "This will set the unit of measure used to encode timesheet. This will simply provide tools\n"
 "        and widgets to help the encoding. All reporting will still be expressed in hours (default value)."
 msgstr ""
-"To nastaví mernú jednotku použitú na kódovanie časového rozvrhu. To jednoducho poskytne nástroje\n"
-"        a pomôcky na pomoc s kódovaním. Všetky reporty budú stále vyjadrené v hodinách (predvolená hodnota)."
+"To nastaví mernú jednotku použitú na kódovanie pracovného výkazu. To jednoducho poskytne nástroje\n"
+"        a prepojenia na pomoc s kódovaním. Všetky reporty budú stále vyjadrené v hodinách (predvolená hodnota)."
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
@@ -1219,17 +1224,17 @@ msgstr ""
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_plan_pivot
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_view_pivot_revenue
 msgid "Timesheet"
-msgstr "Časový rozvrh"
+msgstr "Pracovné výkazy"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_cost
 msgid "Timesheet Cost"
-msgstr "Cena časového rozvrhu"
+msgstr "Náklady pracovného výkazu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_encode_uom_id
 msgid "Timesheet Encoding Unit"
-msgstr "Kódová jednotka časového rozvrhu"
+msgstr "Pracovný výkaz jednotky programovania"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_total_duration
@@ -1239,22 +1244,22 @@ msgstr ""
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__timesheet_unit_amount
 msgid "Timesheet Unit Amount"
-msgstr "Merná jednotka časového rozvrhu"
+msgstr "Merná jednotka pracovného výkazu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_count
 msgid "Timesheet activities"
-msgstr "Aktivity časových rozvrhov"
+msgstr "Aktivity pracovného výkazu"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__timesheet_ids
 msgid "Timesheet activities associated to this sale"
-msgstr "Aktivity časového rozvrhu spojené s týmto predajom"
+msgstr "Aktivity pracovného výkazu spojené s týmto predajom"
 
 #. module: sale_timesheet
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 msgid "Timesheet costs"
-msgstr "Náklady časového rozvrhu"
+msgstr "Náklady pracovného výkazu"
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/account_move.py:0
@@ -1267,7 +1272,7 @@ msgstr "Náklady časového rozvrhu"
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.timesheet_plan
 #, python-format
 msgid "Timesheets"
-msgstr "Časové rozvrhy"
+msgstr "Pracovné výkazy"
 
 #. module: sale_timesheet
 #: model:ir.actions.act_window,name:sale_timesheet.timesheet_action_billing_report
@@ -1278,17 +1283,17 @@ msgstr ""
 #: code:addons/sale_timesheet/models/project.py:0
 #, python-format
 msgid "Timesheets of %s"
-msgstr "Časové rozvrhy %s"
+msgstr "Pracovné výkazy %s"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_type__timesheet
 msgid "Timesheets on project (one fare per SO/Project)"
-msgstr "Časové rozvrhy na projekte (jeden zákazník na objednávku / projekt)"
+msgstr "Pracovné výkazy na projekte (jeden zákazník na objednávku / projekt)"
 
 #. module: sale_timesheet
 #: model:ir.model.fields.selection,name:sale_timesheet.selection__product_template__service_policy__delivered_timesheet
 msgid "Timesheets on tasks"
-msgstr "Časové rozvrhy na úlohách"
+msgstr "Pracovné výkazy na úlohách"
 
 #. module: sale_timesheet
 #: model:project.task.type,name:sale_timesheet.project_from_sale_order_1_to_do
@@ -1343,7 +1348,7 @@ msgstr "Jednotková cena položky objednávky"
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
 #: model:product.template,uom_name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Units"
-msgstr "ks"
+msgstr "Položky"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
@@ -1394,7 +1399,7 @@ msgid ""
 "You can not modify already invoiced timesheets (linked to a Sales order "
 "items invoiced on Time and material)."
 msgstr ""
-"Nemôžete upravovať už fakturované časové rozvrhy (prepojené s položkami "
+"Nemôžete upravovať už fakturované pracovné výkazy (prepojené s položkami "
 "zákazky odberateľa fakturované v položke čas a materiál)."
 
 #. module: sale_timesheet

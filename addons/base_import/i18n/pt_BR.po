@@ -13,6 +13,7 @@
 # danimaribeiro <danimaribeiro@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Fernando Colus <fcolus1@gmail.com>, 2020
+# Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Fernando Colus <fcolus1@gmail.com>, 2020\n"
+"Last-Translator: Hildeberto Abreu Magalhães <hildeberto@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,7 +48,7 @@ msgstr ""
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "%d records were successfully imported"
-msgstr ""
+msgstr "%d registros importados com sucesso"
 
 #. module: base_import
 #. openerp-web
@@ -77,6 +78,10 @@ msgid ""
 " transient. If the issue still occurs, try to split the file rather than "
 "import it at once."
 msgstr ""
+"Um problema desconhecido ocorreu durante a importação (possivelmente conexão"
+" perdida, limite de dados ou de memória excedido). Por favor, tente "
+"novamente no caso do problema ser transitório. Se o problema continuar "
+"ocorrendo, tente dividir o arquivo ao invés de importá-lo de uma única vez."
 
 #. module: base_import
 #: model:ir.model,name:base_import.model_base
@@ -91,7 +96,7 @@ msgstr "Importação Base"
 #. module: base_import
 #: model:ir.model,name:base_import.model_base_import_mapping
 msgid "Base Import Mapping"
-msgstr ""
+msgstr "Mapeamento da Importação Base"
 
 #. module: base_import
 #. openerp-web
@@ -131,12 +136,12 @@ msgstr "A coluna %s contém valores incorretos (valor: %s)"
 #: code:addons/base_import/models/base_import.py:0
 #, python-format
 msgid "Column %s contains incorrect values. Error in line %d: %s"
-msgstr ""
+msgstr "Coluna %s contém valores incorretos. Erro na linha %d: %s"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_mapping__column_name
 msgid "Column Name"
-msgstr ""
+msgstr "Nome da Coluna"
 
 #. module: base_import
 #. openerp-web
@@ -153,13 +158,15 @@ msgid ""
 "Could not retrieve URL: %(url)s [%(field_name)s: L%(line_number)d]: "
 "%(error)s"
 msgstr ""
+"Não foi possível recuperar a URL: %(url)s [%(field_name)s: "
+"L%(line_number)d]: %(error)s"
 
 #. module: base_import
 #. openerp-web
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Create if doesn't exist"
-msgstr ""
+msgstr "Cria se não existir"
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_import__create_uid
@@ -212,6 +219,9 @@ msgid ""
 "Note that the value in the column will be used as the new record's 'name', "
 "and assumes this is sufficient to create the record."
 msgstr ""
+"Cria novos registros se eles não forem encontrados (ao invés de falhar a "
+"importação). Note que o valor na coluna será usado como o 'nome' do novo "
+"registro, assumindo que seja suficiente para criá-lo."
 
 #. module: base_import
 #: model:ir.model.fields,field_description:base_import.field_base_import_tests_models_complex__currency_id
@@ -238,7 +248,7 @@ msgstr "Formato da Data"
 #: code:addons/base_import/static/src/js/import_action.js:0
 #, python-format
 msgid "Datetime Format:"
-msgstr ""
+msgstr "Format Data/Hora:"
 
 #. module: base_import
 #. openerp-web
@@ -379,7 +389,7 @@ msgstr ""
 #: code:addons/base_import/static/src/xml/base_import.xml:0
 #, python-format
 msgid "Formatting Options…"
-msgstr ""
+msgstr "Opções de Formatação..."
 
 #. module: base_import
 #: code:addons/base_import/models/base_import.py:0

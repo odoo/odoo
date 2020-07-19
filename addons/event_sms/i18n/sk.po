@@ -29,6 +29,10 @@ msgid ""
 "${object.event_id.name} event is starting ${object.get_date_range_str()}. We"
 " confirm your registration and hope to meet you there."
 msgstr ""
+"$ {object.event_id.organizer_id.name alebo object.event_id.company_id.name "
+"alebo user.env.company.name}: Sme radi, že vám pripomíname, že udalosť $ "
+"{object.event_id.name} sa začína $ {object. get_date_range_str ()}. "
+"Potvrdzujeme vašu registráciu a dúfame, že sa tam stretneme."
 
 #. module: event_sms
 #: model:sms.template,body:event_sms.sms_template_data_event_registration
@@ -37,11 +41,14 @@ msgid ""
 "user.env.company.name}: We are happy to confirm your registration for the "
 "${object.event_id.name} event."
 msgstr ""
+"$ {object.event_id.organizer_id.name alebo object.event_id.company_id.name "
+"alebo user.env.company.name}: Sme radi, že môžme potvrdiť vašu registráciu "
+"pre udalosť $ {object.event_id.name}."
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Automatizované zasielanie udalostí"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_registration
@@ -51,17 +58,17 @@ msgstr "Registrácia udalosti"
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_registration
 msgid "Event: Registration"
-msgstr ""
+msgstr "Udalosť: Registrácia"
 
 #. module: event_sms
 #: model:sms.template,name:event_sms.sms_template_data_event_reminder
 msgid "Event: Reminder"
-msgstr ""
+msgstr "Udalosť: Pripomenutie"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Plánovanie pošty v kategórii udalosti"
 
 #. module: event_sms
 #: model:ir.model,name:event_sms.model_event_mail_registration
@@ -72,13 +79,13 @@ msgstr "Registrácia Mail Scheduler"
 #: model:ir.model.fields.selection,name:event_sms.selection__event_mail__notification_type__sms
 #: model:ir.model.fields.selection,name:event_sms.selection__event_type_mail__notification_type__sms
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__sms_template_id
 #: model:ir.model.fields,field_description:event_sms.field_event_type_mail__sms_template_id
 msgid "SMS Template"
-msgstr ""
+msgstr "SMS šablóna"
 
 #. module: event_sms
 #: model:ir.model.fields,field_description:event_sms.field_event_mail__notification_type
@@ -91,4 +98,4 @@ msgstr "Poslať"
 #: model:ir.model.fields,help:event_sms.field_event_type_mail__sms_template_id
 msgid ""
 "This field contains the template of the SMS that will be automatically sent"
-msgstr ""
+msgstr "Toto pole obsahuje šablónu SMS, ktorá bude automaticky odoslaná"

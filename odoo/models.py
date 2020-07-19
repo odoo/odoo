@@ -2069,6 +2069,8 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                     if gb['tz_convert']:
                         tzinfo = range_start.tzinfo
                         range_start = range_start.astimezone(pytz.utc)
+                        # take into account possible hour change between start and end
+                        range_end = tzinfo.localize(range_end.replace(tzinfo=None))
                         range_end = range_end.astimezone(pytz.utc)
 
                     range_start = range_start.strftime(fmt)
@@ -2597,6 +2599,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
                 if field.ondelete.lower() not in ('cascade', 'restrict'):
                     field.ondelete = 'cascade'
                 self._inherits[field.comodel_name] = field.name
+                self.pool[field.comodel_name]._inherits_children.add(self._name)
 
     @api.model
     def _prepare_setup(self):

@@ -4,22 +4,36 @@
 import re
 
 from odoo import api, fields, models, _
+from odoo.exceptions import ValidationError
 from odoo.tools.misc import mod10r
 
 import werkzeug.urls
 
+ISR_SUBSCRIPTION_CODE = {'CHF': '01', 'EUR': '03'}
+CLEARING = "09000"
+_re_postal = re.compile('^[0-9]{2}-[0-9]{1,6}-[0-9]$')
+
+
 def _is_l10n_ch_postal(account_ref):
-    """ Returns True iff the string account_ref is a valid postal account number,
+    """ Returns True if the string account_ref is a valid postal account number,
     i.e. it only contains ciphers and is last cipher is the result of a recursive
     modulo 10 operation ran over the rest of it. Shorten form with - is also accepted.
     """
-    if re.match('^[0-9]{2}-[0-9]{1,6}-[0-9]$', account_ref or ''):
+    if _re_postal.match(account_ref or ''):
         ref_subparts = account_ref.split('-')
-        account_ref = ref_subparts[0] + ref_subparts[1].rjust(6,'0') + ref_subparts[2]
+        account_ref = ref_subparts[0] + ref_subparts[1].rjust(6, '0') + ref_subparts[2]
 
     if re.match('\d+$', account_ref or ''):
         account_ref_without_check = account_ref[:-1]
         return mod10r(account_ref_without_check) == account_ref
+    return False
+
+def _is_l10n_ch_isr_issuer(account_ref, currency_code):
+    """ Returns True if the string account_ref is a valid a valid ISR issuer
+    An ISR issuer is postal account number that starts by 01 (CHF) or 03 (EUR),
+    """
+    if (account_ref or '').startswith(ISR_SUBSCRIPTION_CODE[currency_code]):
+        return _is_l10n_ch_postal(account_ref)
     return False
 
 
@@ -34,6 +48,38 @@ class ResPartnerBank(models.Model):
     l10n_ch_isr_subscription_chf = fields.Char(string='CHF ISR Subscription Number', help='The subscription number provided by the bank or Postfinance to identify the bank, used to generate ISR in CHF. eg. 01-162-8')
     l10n_ch_isr_subscription_eur = fields.Char(string='EUR ISR Subscription Number', help='The subscription number provided by the bank or Postfinance to identify the bank, used to generate ISR in EUR. eg. 03-162-5')
     l10n_ch_show_subscription = fields.Boolean(compute='_compute_l10n_ch_show_subscription', default=lambda self: self.env.company.country_id.code == 'CH')
+
+    def _is_isr_issuer(self):
+        return (_is_l10n_ch_isr_issuer(self.l10n_ch_postal, 'CHF')
+                or _is_l10n_ch_isr_issuer(self.l10n_ch_postal, 'EUR'))
+
+    @api.constrains("l10n_ch_postal", "partner_id")
+    def _check_postal_num(self):
+        """Validate postal number format"""
+        for rec in self:
+            if rec.l10n_ch_postal and not _is_l10n_ch_postal(self.l10n_ch_postal):
+                # l10n_ch_postal is used for the purpose of Client Number on your own accounts, so don't do the check there
+                if rec.partner_id and not rec.partner_id.ref_company_ids:
+                    raise ValidationError(
+                        _("The postal number {} is not valid.\n"
+                          "It must be a valid postal number format. eg. 10-8060-7").format(rec.l10n_ch_postal))
+        return True
+
+    @api.constrains("l10n_ch_isr_subscription_chf", "l10n_ch_isr_subscription_eur")
+    def _check_subscription_num(self):
+        """Validate ISR subscription number format
+        Subscription number can only starts with 01 or 03
+        """
+        for rec in self:
+            for currency in ["CHF", "EUR"]:
+                subscrip = rec.l10n_ch_isr_subscription_chf if currency == "CHF" else rec.l10n_ch_isr_subscription_eur
+                if subscrip and not _is_l10n_ch_isr_issuer(subscrip, currency):
+                    example = "01-162-8" if currency == "CHF" else "03-162-5"
+                    raise ValidationError(
+                        _("The ISR subcription {} for {} number is not valid.\n"
+                          "It must starts with {} and we a valid postal number format. eg. {}"
+                          ).format(subscrip, currency, ISR_SUBSCRIPTION_CODE[currency], example))
+        return True
 
     @api.depends('partner_id', 'company_id')
     def _compute_l10n_ch_show_subscription(self):
@@ -83,19 +129,45 @@ class ResPartnerBank(models.Model):
                 self.l10n_ch_postal = self.acc_number.split(" ")[0]
             else:
                 self.l10n_ch_postal = self.acc_number
-                if self.partner_id:
-                    self.acc_number = self.acc_number + '  ' + self.partner_id.name
+                # In case of ISR issuer, this number is not
+                # unique and we fill acc_number with partner
+                # name to give proper information to the user
+                if self.partner_id and self.acc_number[:2] in ["01", "03"]:
+                    self.acc_number = ("{} {}").format(self.acc_number, self.partner_id.name)
+
+    @api.model
+    def _is_postfinance_iban(self, iban):
+        """Postfinance IBAN have format
+        CHXX 0900 0XXX XXXX XXXX K
+        Where 09000 is the clearing number
+        """
+        return iban.startswith('CH') and iban[4:9] == CLEARING
+
+    @api.model
+    def _pretty_postal_num(self, number):
+        """format a postal account number or an ISR subscription number
+        as per specifications with '-' separators.
+        eg. 010001628 -> 01-162-8
+        """
+        if re.match('^[0-9]{2}-[0-9]{1,6}-[0-9]$', number or ''):
+            return number
+        currency_code = number[:2]
+        middle_part = number[2:-1]
+        trailing_cipher = number[-1]
+        middle_part = middle_part.lstrip("0")
+        return currency_code + '-' + middle_part + '-' + trailing_cipher
 
     @api.model
     def _retrieve_l10n_ch_postal(self, iban):
-        """ Reads a swiss postal account number from a an IBAN and returns it as
+        """Reads a swiss postal account number from a an IBAN and returns it as
         a string. Returns None if no valid postal account number was found, or
-        the given iban was not from Switzerland.
+        the given iban was not from Swiss Postfinance.
+
+        CH09 0900 0000 1000 8060 7 -> 10-8060-7
         """
-        if iban[:2] == 'CH':
-            #the IBAN corresponds to a swiss account
-            if _is_l10n_ch_postal(iban[-12:]):
-                return iban[-12:]
+        if self._is_postfinance_iban(iban):
+            # the IBAN corresponds to a swiss account
+            return self._pretty_postal_num(iban[-9:])
         return None
 
     def find_number(self, s):
@@ -139,7 +211,7 @@ class ResPartnerBank(models.Model):
             '1',                                                  # Coding Type
             self.sanitized_acc_number,                            # IBAN
             'K',                                                  # Creditor Address Type
-            (self.acc_holder_name or self.partner_id.name)[:71],  # Creditor Name
+            (self.acc_holder_name or self.partner_id.name)[:70],  # Creditor Name
             creditor_addr_1,                                      # Creditor Address Line 1
             creditor_addr_2,                                      # Creditor Address Line 2
             '',                                                   # Creditor Postal Code (empty, since we're using combined addres elements)
@@ -155,7 +227,7 @@ class ResPartnerBank(models.Model):
             '{:.2f}'.format(amount),                              # Amount
             currency_name,                                        # Currency
             'K',                                                  # Ultimate Debtor Address Type
-            debtor_partner.name[:71],                             # Ultimate Debtor Name
+            debtor_partner.name[:70],                             # Ultimate Debtor Name
             debtor_addr_1,                                        # Ultimate Debtor Address Line 1
             debtor_addr_2,                                        # Ultimate Debtor Address Line 2
             '',                                                   # Ultimate Debtor Postal Code (not to be provided for address type K)

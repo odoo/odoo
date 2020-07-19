@@ -1621,7 +1621,7 @@ msgstr "Követők (Partnerek)"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable sale order line"
-msgstr ""
+msgstr "Tiltott értékek a nem számlázható értékesítési rendelési soron"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_config_settings__auth_signup_uninvited__b2c
@@ -1669,7 +1669,7 @@ msgstr "Számla automatikus létrehozása az online fizetés megerősítésekor.
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Get warnings in orders for products or customers"
-msgstr ""
+msgstr "Figyelmeztetések megjelenítése a termékek vagy ügyfelek rendeléseiben"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1691,7 +1691,7 @@ msgstr "Csoportosítás"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_template_attribute_value__html_color
 msgid "HTML Color Index"
-msgstr ""
+msgstr "HTML színjegyzék"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__has_down_payments
@@ -1752,6 +1752,8 @@ msgid ""
 "If the sale is locked, you can not modify it anymore. However, you will "
 "still be able to invoice or deliver."
 msgstr ""
+"Ha az értékesítés zárolva van, akkor többé nem lehet módosítani. Azonban "
+"továbbra is lehet számlázni vagy kiszállítani."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -1803,13 +1805,13 @@ msgstr "Érvénytelen aláírás."
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Érvénytelen token! Token szolgáltató %s != %s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Érvénytelen token! Token partner %s != %s"
 
 #. module: sale
 #: code:addons/sale/models/account_invoice.py:0
@@ -1937,7 +1939,7 @@ msgstr "Számlázási szabály"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__invoiced_target
 msgid "Invoicing Target"
-msgstr ""
+msgstr "Számlázási cél"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -1976,6 +1978,8 @@ msgstr ""
 msgid ""
 "Is true if the sales order line comes from an expense or a vendor bills"
 msgstr ""
+"Igaz, ha az értékesítési rendelés sor egy kiadásból vagy egy beszállítói "
+"számlából származik"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -1984,12 +1988,15 @@ msgid ""
 "It is forbidden to modify the following fields in a locked order:\n"
 "%s"
 msgstr ""
+"Tilos módosítani a következő mezőket egy zárolt rendelésben:\n"
+"%s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "It is not allowed to confirm an order in the following states: %s"
 msgstr ""
+"Nem engedélyezett a rendelések megerősítése a következő állapotokban: %s"
 
 #. module: sale
 #: model:ir.model,name:sale.model_account_move
@@ -2052,6 +2059,8 @@ msgstr "Átfutási idő"
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr ""
+"Engedje meg az ügyfeleinek a bejelentkezést a dokumentumaik megtekintése "
+"érdekében"
 
 #. module: sale
 #. openerp-web
@@ -2061,6 +2070,8 @@ msgid ""
 "Let's create a new quotation.<br/><i>Note that colored buttons usually point"
 " to the next logical actions.</i>"
 msgstr ""
+"Hozzunk létre egy új árajánlatot. <br/><i> Figyelje meg, hogy a színes "
+"gombok általában a következő logikai akciókra mutatnak. </i>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting
@@ -2071,7 +2082,7 @@ msgstr "Zárolás"
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_auto_done_setting
 #: model:res.groups,name:sale.group_auto_done_setting
 msgid "Lock Confirmed Sales"
-msgstr ""
+msgstr "Megerősített értékesítések zárolása"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_order__state__done
@@ -2185,7 +2196,7 @@ msgstr "Szállított mennyiség frissítésének módszere"
 #. module: sale
 #: model:ir.model.constraint,message:sale.constraint_sale_order_line_accountable_required_fields
 msgid "Missing required fields on accountable sale order line."
-msgstr ""
+msgstr "Hiányzó kötelező mezők a számlázható értékesítési rendelés soron."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -2253,12 +2264,12 @@ msgstr "Nincs üzenet"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "No longer edit orders once confirmed"
-msgstr ""
+msgstr "A rendelések nem szerkeszthetőek a megerősítés után"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_to_invoice
 msgid "No orders to invoice found"
-msgstr ""
+msgstr "Nem találhatóak számlázandó rendelések"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_orders_upselling
@@ -2323,12 +2334,12 @@ msgstr "Kézbesítési hibával rendelkező üzenetek száma"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__quotations_count
 msgid "Number of quotations to invoice"
-msgstr ""
+msgstr "Számlázandó árajánlatok száma"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_crm_team__sales_to_invoice_count
 msgid "Number of sales to invoice"
-msgstr ""
+msgstr "Számlázandó értékesítések száma"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_unread_counter
@@ -2364,6 +2375,8 @@ msgstr ""
 #, python-format
 msgid "Once your quotation is ready, you can save, print or send it by email."
 msgstr ""
+"Amint készen van az árajánlata, elmentheti, kinyomtathatja, vagy elküldheti "
+"e-mailben."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__portal_confirmation_pay
@@ -2426,7 +2439,7 @@ msgstr "Rendelés #"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr ""
+msgstr "Rendelés száma"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2476,12 +2489,12 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Order signed by %s"
-msgstr ""
+msgstr "A rendelést aláírta: %s"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_team_salesteams_view_kanban
 msgid "Order to Invoice"
-msgstr ""
+msgstr "Számlázandó rendelés"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -2539,7 +2552,7 @@ msgstr ""
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
 msgid "PRO-FORMA Invoice"
-msgstr ""
+msgstr "Pro forma számla"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__partner_id
@@ -2555,12 +2568,12 @@ msgstr "Partner ország"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Fizetés & megerősítés"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Pay &amp; Confirm"
-msgstr ""
+msgstr "Fizetés &amp; megerősítés"
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
@@ -2608,7 +2621,7 @@ msgstr "Fizetési módszer"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__reference
 msgid "Payment Ref."
-msgstr ""
+msgstr "Fizetési hiv."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__payment_term_id
@@ -2654,7 +2667,7 @@ msgstr "Ár csökkentés"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxexcl
 msgid "Price Reduce Tax excl"
-msgstr ""
+msgstr "Árcsökkentés adó nélkül"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce_taxinc
@@ -2693,7 +2706,7 @@ msgstr "Nyomtatás"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_proforma_sales
 msgid "Pro-Forma Invoice"
-msgstr ""
+msgstr "Pro forma számla"
 
 #. module: sale
 #: model:res.groups,name:sale.group_proforma_sales
@@ -2720,7 +2733,7 @@ msgstr "Terméktulajdonság"
 #. module: sale
 #: model:ir.model,name:sale.model_product_attribute_custom_value
 msgid "Product Attribute Custom Value"
-msgstr ""
+msgstr "Egyéni terméktulajdonság érték"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2779,7 +2792,7 @@ msgstr "Termékek"
 #. module: sale
 #: model:ir.model,name:sale.model_report_sale_report_saleproforma
 msgid "Proforma Report"
-msgstr ""
+msgstr "Pro forma riport"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_line_tree
@@ -2809,7 +2822,7 @@ msgstr "Menny. számlázandó"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quantities to invoice from sales orders"
-msgstr ""
+msgstr "Számlázandó mennyiségek a rendelési sorokból"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_qty
@@ -2874,6 +2887,8 @@ msgstr "Árajánlat elküldve"
 #: model:ir.model.constraint,message:sale.constraint_res_company_check_quotation_validity_days
 msgid "Quotation Validity is required and must be greater than 0."
 msgstr ""
+"Kötelező megadni az árajánlat érvényességét, és nagyobbnak kell lennie mint "
+"0."
 
 #. module: sale
 #: model:mail.message.subtype,description:sale.mt_order_confirmed
@@ -2913,7 +2928,7 @@ msgstr "Árajánlatok"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Quotations &amp; Orders"
-msgstr ""
+msgstr "Árajánlatok &amp; rendelések"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_order_report_quotation_salesteam
@@ -2928,7 +2943,7 @@ msgstr "Árajánlatok és eladások"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_attribute__display_type__radio
 msgid "Radio"
-msgstr ""
+msgstr "Rádió"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__expense_policy
@@ -2964,7 +2979,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Reject This Quotation"
-msgstr ""
+msgstr "Ezen árajánlat visszautasítása"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__remaining_validity_days
@@ -2987,7 +3002,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online payment to confirm orders"
-msgstr ""
+msgstr "Online fizetés kérése a rendelések megerősítéséhez"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__require_payment
@@ -2999,13 +3014,13 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Request an online signature to confirm orders"
-msgstr ""
+msgstr "Online aláírás kérése a rendelések megerősítéséhez"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Requested date is too soon."
-msgstr ""
+msgstr "A kért dátum túl korai."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_user_id
@@ -3046,12 +3061,12 @@ msgstr "Vevői rendelés"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Értékesítési rendelések száma"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
 msgid "Sale Order Warnings"
-msgstr ""
+msgstr "Értékesítési rendelési figyelmeztetések"
 
 #. module: sale
 #. openerp-web
@@ -3073,7 +3088,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sale Warnings"
-msgstr ""
+msgstr "Értékesítési figyelmeztetések"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_onboarding_payment_method
@@ -3217,7 +3232,7 @@ msgstr "Értékesítési csapatok"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_warn
 msgid "Sales Warnings"
-msgstr ""
+msgstr "Értékesítési figyelmeztetések"
 
 #. module: sale
 #: model:ir.model,name:sale.model_report_all_channels_sales
@@ -3233,7 +3248,7 @@ msgstr "Értékesítési ár"
 #: code:addons/sale/models/sales_team.py:0
 #, python-format
 msgid "Sales: Untaxed Total"
-msgstr ""
+msgstr "Értékesítés: összes adózatlan"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_report_all_channels_sales__user_id
@@ -3250,7 +3265,7 @@ msgstr "Értékesítő"
 #: code:addons/sale/models/res_company.py:0
 #, python-format
 msgid "Sample Order Line"
-msgstr ""
+msgstr "Minta rendelési sor"
 
 #. module: sale
 #: code:addons/sale/models/res_company.py:0
@@ -3294,7 +3309,7 @@ msgstr "Kiválasztás"
 #: code:addons/sale/static/src/js/tours/sale.js:0
 #, python-format
 msgid "Select a product, or create a new one on the fly."
-msgstr ""
+msgstr "Válasszon ki egy terméket, vagy hozzon létre egy újat menet közben."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3323,12 +3338,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "Termékek eladása és vásárlása eltérő mértékegységekben"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell products by multiple of unit # per package"
-msgstr ""
+msgstr "Termékek eladása a csomagonkénti egységszám többszöröseként"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3338,7 +3353,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Send PRO-FORMA Invoice"
-msgstr ""
+msgstr "Pro forma számla küldése"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3348,7 +3363,7 @@ msgstr "Küldjön termékspecifikus e-mail üzenetet a számla jóváhagyásakor
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send a quotation to test the customer portal."
-msgstr ""
+msgstr "Árajánlat küldése az ügyfélportál tesztelése érdekében."
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_open_sale_onboarding_sample_quotation
@@ -3363,7 +3378,7 @@ msgstr "Küldés e-mailben"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_onboarding_sample_quotation_step
 msgid "Send sample"
-msgstr ""
+msgstr "Minta küldése"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3381,7 +3396,7 @@ msgstr "Sorszám"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Set a default validity on your quotations"
-msgstr ""
+msgstr "Az árajánlatok alapértelmezett érvényességének beállítása"
 
 #. module: sale
 #. openerp-web
@@ -3451,7 +3466,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__digital_signature
 msgid "Sign online"
-msgstr ""
+msgstr "Online aláírás"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
@@ -3468,7 +3483,7 @@ msgstr "Az aláírás hiányzik."
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__signature
 msgid "Signature received through the portal."
-msgstr ""
+msgstr "A portálon keresztül fogadott aláírás."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__signed_by
@@ -3553,7 +3568,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__stripe
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__stripe_publishable_key
@@ -3604,6 +3619,8 @@ msgid ""
 "Tell us why you are refusing this quotation, this will help us improve our "
 "services."
 msgstr ""
+"Mondja el, miért utasította vissza ezt az árajánlatot. Ezzel segítené a "
+"szolgáltatásunk fejlesztését."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content

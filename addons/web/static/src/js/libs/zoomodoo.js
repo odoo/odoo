@@ -84,8 +84,8 @@ ZoomOdoo.prototype._init = function () {
         this.$flyout = $('<div class="zoomodoo-flyout" />');
 
         var $attach = this.$target;
-        if (this.opts.attach !== undefined && this.$target.parents(this.opts.attach).length) {
-            $attach = this.$target.parents(this.opts.attach);
+        if (this.opts.attach !== undefined && this.$target.closest(this.opts.attach).length) {
+            $attach = this.$target.closest(this.opts.attach);
         }
         $attach.parent().on('mousemove.zoomodoo touchmove.zoomodoo', $.proxy(this._onMove, this));
         $attach.parent().on('mouseleave.zoomodoo touchend.zoomodoo', $.proxy(this._onLeave, this));
@@ -120,8 +120,8 @@ ZoomOdoo.prototype.show = function (e, testMouseOver) {
     }
 
     var $attach = this.$target;
-    if (this.opts.attach !== undefined && this.$target.parents(this.opts.attach).length) {
-        $attach = this.$target.parents(this.opts.attach);
+    if (this.opts.attach !== undefined && this.$target.closest(this.opts.attach).length) {
+        $attach = this.$target.closest(this.opts.attach);
     }
 
     // Prevents having multiple zoom flyouts
@@ -131,6 +131,19 @@ ZoomOdoo.prototype.show = function (e, testMouseOver) {
 
     if (this.opts.attachToTarget) {
         this.opts.beforeAttach.call(this);
+
+        // Be sure that the flyout is at top 0, left 0 to ensure correct computation
+        // e.g. employees kanban on dashboard
+        this.$flyout.css('position', 'fixed');
+        var flyoutOffset = this.$flyout.offset();
+        if (flyoutOffset.left > 0) {
+            var flyoutLeft = parseFloat(this.$flyout.css('left').replace('px',''));
+            this.$flyout.css('left', flyoutLeft - flyoutOffset.left + 'px');
+        }
+        if (flyoutOffset.top > 0) {
+            var flyoutTop = parseFloat(this.$flyout.css('top').replace('px',''));
+            this.$flyout.css('top', flyoutTop - flyoutOffset.top + 'px');
+        }
 
         if(this.$zoom.height() < this.$flyout.height()) {
              this.$flyout.css('height', this.$zoom.height() + 'px');
@@ -166,6 +179,11 @@ ZoomOdoo.prototype.show = function (e, testMouseOver) {
         }
 
         this.$flyout.css('transform', 'translate3d(' + left + 'px, ' + top + 'px, 0px)');
+    } else {
+        // Computing flyout max-width depending to the available space on the right to avoid overflow-x issues
+        // e.g. width too high so a right zoomed element is not visible (need to scroll on x axis)
+        var rightAvailableSpace = document.body.clientWidth - this.$flyout[0].getBoundingClientRect().left;
+        this.$flyout.css('max-width', rightAvailableSpace);
     }
 
     w1 = this.$target.width();
@@ -291,7 +309,7 @@ ZoomOdoo.prototype._move = function (e) {
     var xl = Math.ceil(pl * rw);
 
     // Close if outside
-    if (xl < 0 || xt < 0 || xl > dw || xt > dh || lx > (offset.left + this.$target.width())) {
+    if (!this.opts.attachToTarget && (xl < 0 || xt < 0 || xl > dw || xt > dh || lx > (offset.left + this.$target.width()))) {
         this.hide();
     } else {
         var top = xt * -1;
