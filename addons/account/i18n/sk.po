@@ -13,6 +13,7 @@
 # Matus Krnac <matus.krnac@gmail.com>, 2019
 # Jan Prokop, 2020
 # Adam Levrinc <adam.levrinc@26house.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:33+0000\n"
 "PO-Revision-Date: 2018-08-24 09:14+0000\n"
-"Last-Translator: Adam Levrinc <adam.levrinc@26house.com>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1067,7 +1068,7 @@ msgstr "Šablóna dane účtu"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_taxcloud
 msgid "Account TaxCloud"
-msgstr ""
+msgstr "Účet daneCloud"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_chart_template_seacrh
@@ -2055,7 +2056,7 @@ msgstr "Auto-dokončenie"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_invoice__vendor_bill_id
 msgid "Auto-complete from a past bill."
-msgstr ""
+msgstr "Automatické doplnenie z predchádzajúcich dokladov"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.invoice_supplier_form
@@ -2251,7 +2252,7 @@ msgstr "Predvoľba pohybu bankového vyúčtovania"
 #: model:ir.model.fields,field_description:account.field_res_company__account_bank_reconciliation_start
 #: model:ir.model.fields,field_description:account.field_res_config_settings__account_bank_reconciliation_start
 msgid "Bank Reconciliation Threshold"
-msgstr ""
+msgstr "Prah bankového vyrovnania"
 
 #. module: account
 #: model:ir.model,name:account.model_account_bank_statement
@@ -5000,7 +5001,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:63
 #, python-format
 msgid "Go to bank statement(s)"
-msgstr ""
+msgstr "Prejdite na výpisy z účtu"
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:758
@@ -5417,7 +5418,7 @@ msgstr "Automatický import bankových výpisov"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Import your bank statements in CAMT.053"
-msgstr ""
+msgstr "Importujte svoje bankové výpisy v CAMT.053"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -6904,7 +6905,7 @@ msgstr ""
 #. module: account
 #: selection:account.cash.rounding,strategy:0
 msgid "Modify tax amount"
-msgstr ""
+msgstr "Zmena výšky dane"
 
 #. module: account
 #: selection:account.invoice.refund,filter_refund:0
@@ -8943,7 +8944,7 @@ msgstr "Vyhľadať šablónu účtovnej osnovy"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_filter
 msgid "Search Fiscal Positions"
-msgstr ""
+msgstr "Vyhľadajte fiškálne pozície"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
@@ -9419,7 +9420,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_bank_data_state
 msgid "State of the onboarding bank data step"
-msgstr ""
+msgstr "Stav kroku údajov o vstupnej banke"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__account_setup_coa_state
@@ -10325,6 +10326,9 @@ msgid ""
 "expense (Cost of Goods Sold account) is recognized at the customer invoice "
 "validation."
 msgstr ""
+"Výdavky sa účtujú pri overení dokladu dodávateľa, s výnimkou anglosaského "
+"účtovníctva s trvalým ocenením zásob. V takom prípade sa náklady (účet "
+"Náklady na predaj tovaru) zaúčtujú pri potvrdení faktúry pre zákazníka."
 
 #. module: account
 #: code:addons/account/models/account_invoice.py:921
@@ -11368,6 +11372,7 @@ msgstr "Použiť hromadné platby"
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Use budgets to compare actual with expected revenues and costs"
 msgstr ""
+"Použite rozpočty na porovnanie skutočných a očakávaných príjmov a nákladov"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -12039,6 +12044,8 @@ msgid ""
 "You cannot register payments for vendor bills and supplier refunds at the "
 "same time."
 msgstr ""
+"Nemôžete zaregistrovať platby za faktúry dodávateľa a vrátené platby "
+"dodávateľa súčasne."
 
 #. module: account
 #: code:addons/account/models/account.py:644
