@@ -13,8 +13,8 @@
 # Ejner Sønniksen <ejner@vkdata.dk>, 2019
 # Hans Henrik Gabelgaard <hhg@gabelgaard.org>, 2019
 # Per Rasmussen <perhgrasmussen@gmail.com>, 2019
-# Sanne Kristensen <sanne@vkdata.dk>, 2019
 # JonathanStein <jstein@image.dk>, 2020
+# Sanne Kristensen <sanne@vkdata.dk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-11-14 07:34+0000\n"
 "PO-Revision-Date: 2018-08-24 09:21+0000\n"
-"Last-Translator: JonathanStein <jstein@image.dk>, 2020\n"
+"Last-Translator: Sanne Kristensen <sanne@vkdata.dk>, 2020\n"
 "Language-Team: Danish (https://www.transifex.com/odoo/teams/41243/da/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -48,7 +48,7 @@ msgstr "3D Secure HTML"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Beløb:</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -58,7 +58,7 @@ msgstr "<b>Kommunikation: </b>"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>Reference:</b>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1528,7 +1528,7 @@ msgstr "Reference"
 #. module: payment
 #: sql_constraint:payment.transaction:0
 msgid "Reference must be unique!"
-msgstr ""
+msgstr "Reference skal være unik!"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_transaction__acquirer_reference
@@ -1543,7 +1543,7 @@ msgstr "Obligatoriske felter ikke udfyldt"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__return_url
 msgid "Return URL after payment"
-msgstr ""
+msgstr "Returner URL efter betaling"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__registration_view_template_id
@@ -1616,7 +1616,7 @@ msgstr "Serverfejl"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Server error:"
-msgstr ""
+msgstr "Serverfejl"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
@@ -1740,7 +1740,7 @@ msgstr ""
 #: code:addons/payment/models/payment_acquirer.py:685
 #, python-format
 msgid "The transaction %s with %s for %s has been cancelled."
-msgstr ""
+msgstr "Denne overførsel %s med %s til %s er blevet annulleret."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:679
@@ -1749,12 +1749,14 @@ msgid ""
 "The transaction %s with %s for %s has been confirmed. The related payment is"
 " posted: %s"
 msgstr ""
+"Denne overførsel %s med %s til %s er returneret som mislykket med følgende "
+"fejlmeddelelse: %s"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:675
 #, python-format
 msgid "The transaction %s with %s for %s is pending."
-msgstr ""
+msgstr "Denne transaktion %s med %s til %s står som afventer."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon__image
@@ -1801,7 +1803,7 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:117
 #, python-format
 msgid "This transaction has been cancelled."
-msgstr ""
+msgstr "Denne overførsel er annulleret."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_invoice__transaction_ids
@@ -1824,7 +1826,7 @@ msgstr "Type"
 #: code:addons/payment/static/src/xml/payment_processing.xml:138
 #, python-format
 msgid "Unable to contact the Odoo server."
-msgstr ""
+msgstr "Kan ikke kontakte Odoo-serveren."
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__qr_code
@@ -1872,13 +1874,13 @@ msgstr "Ugyldig transaktion"
 #: code:addons/payment/static/src/xml/payment_processing.xml:87
 #, python-format
 msgid "Waiting for payment"
-msgstr ""
+msgstr "Afventer betaling"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:666
 #, python-format
 msgid "Waiting for payment confirmation..."
-msgstr ""
+msgstr "Afventer bekræftelse af betaling"
 
 #. module: payment
 #. openerp-web
@@ -1921,7 +1923,7 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:176
 #, python-format
 msgid "We are not able to redirect you to the payment form."
-msgstr ""
+msgstr "Vi kan ikke omdirigere dig til betalingsformularen."
 
 #. module: payment
 #. openerp-web
@@ -1942,14 +1944,14 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:99
 #, python-format
 msgid "We are waiting for the payment acquirer to confirm the payment."
-msgstr ""
+msgstr "Vi venter på, at betalingsudbyderen bekræfter betalingen."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:191
 #, python-format
 msgid "We're unable to process your payment."
-msgstr ""
+msgstr "Vi kan ikke behandle din betaling."
 
 #. module: payment
 #: model:payment.acquirer,name:payment.payment_acquirer_transfer
@@ -1962,34 +1964,34 @@ msgstr "Bankoverførsel"
 #: code:addons/payment/static/src/xml/payment_processing.xml:59
 #, python-format
 msgid "You can click here to be redirected to the confirmation page."
-msgstr ""
+msgstr "Du kan klikke her for at blive omdirigeret til bekræftelsessiden."
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:135
 #, python-format
 msgid "You have to set a journal for your payment acquirer %s."
-msgstr ""
+msgstr "Du skal opsætte en journal på din betalingsudbyder %s."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:131
 #, python-format
 msgid "You should receive an email confirming your payment in a few minutes."
-msgstr ""
+msgstr "Du skal modtage en e-mail, der bekræfter din betaling om få minutter."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:77
 #, python-format
 msgid "You will be notified when the payment is confirmed."
-msgstr ""
+msgstr "Du får besked, når betalingen er bekræftet."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:58
 #, python-format
 msgid "You will be notified when the payment is fully confirmed."
-msgstr ""
+msgstr "Du får besked, når betalingen er fuldt ud bekræftet."
 
 #. module: payment
 #: model_terms:payment.acquirer,pre_msg:payment.payment_acquirer_stripe
@@ -2063,14 +2065,14 @@ msgstr ""
 #: code:addons/payment/static/src/xml/payment_processing.xml:39
 #, python-format
 msgid "Your order has been processed."
-msgstr ""
+msgstr "Din ordre er gennemført."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/xml/payment_processing.xml:36
 #, python-format
 msgid "Your order is being processed, please wait ..."
-msgstr ""
+msgstr "Din ordre behandles, vent venligst ..."
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
@@ -2082,7 +2084,7 @@ msgstr "Din betaling er blevet godkendt."
 #: code:addons/payment/static/src/xml/payment_processing.xml:76
 #, python-format
 msgid "Your payment has been received but need to be confirmed manually."
-msgstr ""
+msgstr "Din betaling er modtaget, men skal bekræftes manuelt."
 
 #. module: payment
 #. openerp-web

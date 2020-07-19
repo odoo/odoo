@@ -40,7 +40,7 @@ msgstr "%s (kópia)"
 #: model_terms:ir.ui.view,arch_db:event.event_event_report_template_badge
 #: model_terms:ir.ui.view,arch_db:event.event_registration_report_template_badge
 msgid "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
-msgstr ""
+msgstr "( <i class=\"fa fa-clock-o\" aria-label=\"Period\" role=\"img\" title=\"Period\"/>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -67,6 +67,8 @@ msgid ""
 "<b><i class=\"fa fa-clock-o\"/>\n"
 "                                        To</b>"
 msgstr ""
+"<b><i class=\"fa fa-clock-o\"/>\n"
+"                                        Pre</b>"
 
 #. module: event
 #: model:mail.template,body_html:event.event_registration_mail_template_badge
@@ -121,6 +123,9 @@ msgid ""
 "                                        to\n"
 "                                    </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('seats_availability', '=', 'unlimited')]}\" class=\"oe_read_only\">\n"
+"                                        do\n"
+"                                    </span>"
 
 #. module: event
 #: model_terms:ir.ui.view,arch_db:event.view_event_confirm
@@ -128,6 +133,8 @@ msgid ""
 "<span class=\"o_form_label\">Warning: This Event has not reached its Minimum"
 " Registration Limit. Are you sure you want to confirm it?</span>"
 msgstr ""
+"<span class=\"o_form_label\">Varovanie: Táto udalosť nedosiahla svoj "
+"minimálny registračný limit. Naozaj to chcete potvrdiť?</span>"
 
 #. module: event
 #: model_terms:event.event,description:event.event_2
@@ -594,6 +601,7 @@ msgid ""
 "Are you sure you want to cancel this event? All the linked attendees will be"
 " cancelled as well."
 msgstr ""
+"Naozaj chcete zrušiť túto udalosť? Zrušia sa aj všetci prepojení účastníci."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_attachment_count
@@ -954,7 +962,7 @@ msgstr "Udalosť"
 #. module: event
 #: model:ir.model,name:event.model_event_mail
 msgid "Event Automated Mailing"
-msgstr ""
+msgstr "Automatizované zasielanie udalostí"
 
 #. module: event
 #: model:ir.actions.report,name:event.report_event_event_badge
@@ -1369,7 +1377,7 @@ msgstr "Poštové plánovače"
 #. module: event
 #: model:ir.model,name:event.model_event_type_mail
 msgid "Mail Scheduling on Event Category"
-msgstr ""
+msgstr "Plánovanie pošty v kategórii udalosti"
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_mail_registration__mail_sent
@@ -1418,6 +1426,7 @@ msgstr ""
 msgid ""
 "Maximum attendees number should be greater than minimum attendees number."
 msgstr ""
+"Maximálny počet účastníkov by mal byť vyšší ako minimálny počet účastníkov."
 
 #. module: event
 #: model:ir.model.fields,field_description:event.field_event_event__message_has_error
@@ -1538,14 +1547,14 @@ msgstr ""
 msgid ""
 "Online events like webinars do not require a specific location\n"
 "                                            and are hosted online."
-msgstr ""
+msgstr "Udalosti online, ako sú webové semináre, nevyžadujú konkrétnu adresu."
 
 #. module: event
 #: model:ir.model.fields,help:event.field_event_type__is_online
 msgid ""
 "Online events like webinars do not require a specific location and are "
 "hosted online."
-msgstr ""
+msgstr "Udalosti online, ako sú webové semináre, nevyžadujú konkrétnu adresu."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1801,6 +1810,8 @@ msgid ""
 "There are already attendees who attended this event. Please reset it to "
 "draft if you want to cancel this event."
 msgstr ""
+"Už sa na nich zúčastnili účastníci. Ak chcete túto udalosť zrušiť, obnovte "
+"ju v koncepte."
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
@@ -1970,30 +1981,30 @@ msgstr "badge_of_${(object.event_id.name or '').replace('/','_')}"
 #. module: event
 #: model_terms:event.event,description:event.event_2
 msgid "events@odoo.com"
-msgstr ""
+msgstr "events@odoo.com"
 
 #. module: event
 #: model_terms:event.event,description:event.event_0
 msgid "events@yourcompany.com"
-msgstr ""
+msgstr "eventy@vasafirma.com"
 
 #. module: event
 #: code:addons/event/models/event.py:526
 #, python-format
 msgid "in %d days"
-msgstr ""
+msgstr "v %d dňoch"
 
 #. module: event
 #: code:addons/event/models/event.py:530
 #, python-format
 msgid "next month"
-msgstr ""
+msgstr "budúci mesiac"
 
 #. module: event
 #: code:addons/event/models/event.py:528
 #, python-format
 msgid "next week"
-msgstr ""
+msgstr "budúci týždeň"
 
 #. module: event
 #: code:addons/event/models/event.py:532
@@ -2005,10 +2016,10 @@ msgstr ""
 #: code:addons/event/models/event.py:522
 #, python-format
 msgid "today"
-msgstr ""
+msgstr "dnes"
 
 #. module: event
 #: code:addons/event/models/event.py:524
 #, python-format
 msgid "tomorrow"
-msgstr ""
+msgstr "zajtra"
