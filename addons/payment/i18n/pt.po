@@ -3,12 +3,13 @@
 # * payment
 # 
 # Translators:
-# Manuela Silva <inactive+h_manuela_rodsilva@transifex.com>, 2018
+# 425fe09b3064b9f906f637fff94056ae_a00ea56 <0fa3588fa89906bfcb3a354600956e0e_308047>, 2018
 # Ricardo Martins <ricardo.nbs.martins@gmail.com>, 2018
 # Martin Trigaux, 2018
 # Daniel C Santos <dcs@thinkopensolutions.pt>, 2018
 # Nuno Silva <nuno.silva@arxi.pt>, 2019
 # Reinaldo Ramos <reinaldo.ramos@arxi.pt>, 2019
+# Marcelo Pereira <marcelo.pereira@arxi.pt>, 2020
 # Manuela Silva <manuelarodsilva@gmail.com>, 2020
 # 
 msgid ""
@@ -38,12 +39,12 @@ msgstr "3D Secure HTML"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "<b>Amount:</b>"
-msgstr ""
+msgstr "<b>Valor:</b>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "<b>Reference:</b>"
-msgstr ""
+msgstr "<b>Referência:</b>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.confirm
@@ -67,7 +68,7 @@ msgstr ""
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-lock\"> Pay</i>"
-msgstr ""
+msgstr "<i class=\"fa fa-lock\"> Pagar</i>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
@@ -77,13 +78,13 @@ msgstr "<i class=\"fa fa-plus-circle\"> Adicionar novo cartão</i>"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_tokens_list
 msgid "<i class=\"fa fa-trash\"/> Delete"
-msgstr ""
+msgstr "<i class=\"fa fa-trash\"/> Remover"
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:122
 #, python-format
 msgid "<i>Cancel,</i> Your payment has been cancelled."
-msgstr ""
+msgstr "<i>Anulação</i> O seu pagamento foi cancelado."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:118
@@ -92,6 +93,8 @@ msgid ""
 "<i>Done,</i> Your online payment has been successfully processed. Thank you "
 "for your order."
 msgstr ""
+"Concluído,</i> O seu pagamento online foi processado corretamente. Obrigado "
+"pela sua encomenda."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:126
@@ -101,6 +104,10 @@ msgid ""
 " The order has been confirmed but will not be paid. Do not hesitate to "
 "contact us if you have any questions on the status of your order."
 msgstr ""
+"<i>Erro,</i> Por favor tenha em atenção que ocorreu um erro durante a "
+"transação. A encomenda foi confirmada mas não será marcada como paga. Não "
+"hesite em contactar-nos caso tenha alguma dúvida em relação ao estado da sua"
+" encomenda."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:114
@@ -109,13 +116,15 @@ msgid ""
 "<i>Pending,</i> Your online payment has been successfully processed. But "
 "your order is not validated yet."
 msgstr ""
+"<i>Pendente,</i> O seu pagamento online foi processado corretamente. Mas a "
+"sua encomenda ainda não foi validada."
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:350
 #, python-format
 msgid "<p>This card is currently linked to the following records:<p/>"
-msgstr ""
+msgstr "<p>Este cartão está ligado atualmente aos seguintes registos:<p/>"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_form
@@ -160,6 +169,8 @@ msgid ""
 "<span><i>Done,</i> Your online payment has been successfully processed. "
 "Thank you for your order.</span>"
 msgstr ""
+"<span><i>Concluído,</i> O seu pagamento online foi processado corretamente. "
+"Obrigado pela sua encomenda</span>"
 
 #. module: payment
 #: model:payment.acquirer,error_msg:payment.payment_acquirer_adyen
@@ -178,6 +189,10 @@ msgid ""
 "hesitate to contact us if you have any questions on the status of your "
 "order.</span>"
 msgstr ""
+"<span><i>Erro,</i> Por favor tenha em atenção que ocorreu um erro durante a "
+"transação. A encomenda foi confirmada, mas não será marcada como paga. Não "
+"hesite em contactar-nos caso tenha alguma dúvida sobre o estado da sua "
+"encomenda. </span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_adyen
@@ -193,6 +208,8 @@ msgid ""
 "<span><i>Pending,</i> Your online payment has been successfully processed. "
 "But your order is not validated yet.</span>"
 msgstr ""
+"<span><i>Pendente,</i> O seu pagamento online foi processado corretamente. "
+"Mas a sua encomenda ainda não foi validada.</span>"
 
 #. module: payment
 #: model:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
@@ -200,6 +217,7 @@ msgid ""
 "<span><i>Pending</i>... The order will be validated after the "
 "payment.</span>"
 msgstr ""
+"<span><i>Pendente</i>... A encomenda será validade após o pagamento.</span>"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_id
@@ -209,27 +227,27 @@ msgstr "Comprador"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_id
 msgid "Acquirer Account"
-msgstr ""
+msgstr "Conta de Instituição"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token_acquirer_ref
 msgid "Acquirer Ref."
-msgstr ""
+msgstr "Ref. da Instituição"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_acquirer_reference
 msgid "Acquirer Reference"
-msgstr ""
+msgstr "Referência da Instituição"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_icon_acquirer_ids
 msgid "Acquirers"
-msgstr ""
+msgstr "Instituições"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.payment_icon_form_view
 msgid "Acquirers list"
-msgstr ""
+msgstr "Lista de Instituições"
 
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.acquirer_kanban
@@ -697,7 +715,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_icon_acquirer_ids
 msgid "List of Acquirers supporting this payment icon."
-msgstr ""
+msgstr "Lista de Instituições que suportam este ícone de pagamento."
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer_website_published
@@ -718,7 +736,7 @@ msgstr "Gira os seus métodos de pagamento"
 #. module: payment
 #: selection:payment.acquirer,provider:0
 msgid "Manual Configuration"
-msgstr ""
+msgstr "Configuração Manual"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_image_medium
@@ -807,7 +825,7 @@ msgstr "Nunca"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "No payment acquirer found."
-msgstr ""
+msgstr "Não foi encontrado nenhum método de pagamento."
 
 #. module: payment
 #. openerp-web
@@ -1008,7 +1026,7 @@ msgstr "Telefone"
 #. module: payment
 #: model:ir.ui.view,arch_db:payment.pay
 msgid "Please configure a payment acquirer."
-msgstr ""
+msgstr "Por favor, configure uma instituição de pagamentos."
 
 #. module: payment
 #. openerp-web
@@ -1070,7 +1088,7 @@ msgstr "Publicado"
 #. module: payment
 #: selection:payment.acquirer,payment_flow:0
 msgid "Redirection to the acquirer website"
-msgstr ""
+msgstr "Redireção para o <i>site</i> da Web da instituição"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction_reference
@@ -1197,7 +1215,7 @@ msgstr "Estado"
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 #: selection:payment.acquirer,provider:0
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_payment_icon_ids
@@ -1355,14 +1373,14 @@ msgstr ""
 #: code:addons/payment/static/src/js/payment_form.js:174
 #, python-format
 msgid "We are not able to redirect you to the payment form."
-msgstr ""
+msgstr "Não foi possível redirecioná-lo para o formulário de pagamento. "
 
 #. module: payment
 #. openerp-web
 #: code:addons/payment/static/src/js/payment_form.js:180
 #, python-format
 msgid "We are not able to redirect you to the payment form. "
-msgstr ""
+msgstr "Não foi possível redirecioná-lo para o formulário de pagamento. "
 
 #. module: payment
 #. openerp-web
