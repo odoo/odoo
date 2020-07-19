@@ -8,7 +8,7 @@ from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountTestCommon):
+class TestStockLandedCosts(TestStockLandedCostsCommon):
 
     def test_stock_landed_costs(self):
         # In order to test the landed costs feature of stock,
@@ -22,8 +22,8 @@ class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountTestCommon):
             'volume': 1,
         })
         product_landed_cost_1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.o_expense
-        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.o_income
+        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.company_data['default_account_expense']
+        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.company_data['default_account_revenue']
 
         product_landed_cost_2 = self.env['product.product'].create({
             'name': "LC product 2",
@@ -31,8 +31,8 @@ class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountTestCommon):
             'volume': 1.5,
         })
         product_landed_cost_2.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.o_expense
-        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.o_income
+        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.company_data['default_account_expense']
+        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.company_data['default_account_revenue']
 
         self.assertEqual(product_landed_cost_1.value_svl, 0)
         self.assertEqual(product_landed_cost_1.quantity_svl, 0)
@@ -44,12 +44,12 @@ class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountTestCommon):
         # I create 2 picking moving those products
         vals = dict(picking_default_vals, **{
             'name': 'LC_pick_1',
-            'picking_type_id': self.ref('stock.picking_type_out'),
+            'picking_type_id': self.warehouse.out_type_id.id,
             'move_lines': [(0, 0, {
                 'product_id': product_landed_cost_1.id,
                 'product_uom_qty': 5,
                 'product_uom': self.ref('uom.product_uom_unit'),
-                'location_id': self.ref('stock.stock_location_stock'),
+                'location_id': self.warehouse.lot_stock_id.id,
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
         })
@@ -69,12 +69,12 @@ class TestStockLandedCosts(TestStockLandedCostsCommon, StockAccountTestCommon):
 
         vals = dict(picking_default_vals, **{
             'name': 'LC_pick_2',
-            'picking_type_id': self.ref('stock.picking_type_out'),
+            'picking_type_id': self.warehouse.out_type_id.id,
             'move_lines': [(0, 0, {
                 'product_id': product_landed_cost_2.id,
                 'product_uom_qty': 10,
                 'product_uom': self.ref('uom.product_uom_unit'),
-                'location_id': self.ref('stock.stock_location_stock'),
+                'location_id': self.warehouse.lot_stock_id.id,
                 'location_dest_id': self.ref('stock.stock_location_customers'),
             })],
         })

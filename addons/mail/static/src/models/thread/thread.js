@@ -547,8 +547,9 @@ function factory(dependencies) {
         openExpanded() {
             const discuss = this.env.messaging.discuss;
             if (['mail.channel', 'mail.box'].includes(this.model)) {
+                discuss.threadViewer.update({ thread: [['replace', this]] });
                 this.env.bus.trigger('do-action', {
-                    action: 'mail.action_new_discuss',
+                    action: 'mail.action_discuss',
                     options: {
                         clear_breadcrumbs: false,
                         active_id: discuss.threadToActiveId(this),
@@ -808,6 +809,19 @@ function factory(dependencies) {
          */
         _computeFoldState() {
             return this.pendingFoldState || this.serverFoldState;
+        }
+
+        /**
+         * @private
+         */
+        _computeHasSeenIndicators() {
+            if (this.model !== 'mail.channel') {
+                return false;
+            }
+            if (this.mass_mailing) {
+                return false;
+            }
+            return ['chat', 'livechat'].includes(this.channel_type);
         }
 
         /**
@@ -1247,6 +1261,19 @@ function factory(dependencies) {
         }),
         group_based_subscription: attr({
             default: false,
+        }),
+        /**
+         * Determine whether this thread has the seen indicators (V and VV)
+         * enabled or not.
+         */
+        hasSeenIndicators: attr({
+            compute: '_computeHasSeenIndicators',
+            default: false,
+            dependencies: [
+                'channel_type',
+                'mass_mailing',
+                'model',
+            ],
         }),
         id: attr(),
         isCurrentPartnerFollowing: attr({

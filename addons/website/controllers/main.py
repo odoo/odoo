@@ -19,7 +19,7 @@ import odoo
 from odoo import http, models, fields, _
 from odoo.http import request
 from odoo.tools import OrderedSet
-from odoo.addons.http_routing.models.ir_http import slug, _guess_mimetype
+from odoo.addons.http_routing.models.ir_http import slug, slugify, _guess_mimetype
 from odoo.addons.web.controllers.main import Binary
 from odoo.addons.portal.controllers.portal import pager as portal_pager
 from odoo.addons.portal.controllers.web import Home
@@ -391,8 +391,14 @@ class Website(Home):
         fields = ['website_meta_title', 'website_meta_description', 'website_meta_keywords', 'website_meta_og_img']
         if res_model == 'website.page':
             fields.extend(['website_indexed', 'website_id'])
-        res = request.env[res_model].browse(res_id).read(fields)[0]
+
+        record = request.env[res_model].browse(res_id)
+        res = record._read_format(fields)[0]
         res['has_social_default_image'] = request.website.has_social_default_image
+
+        if res_model not in ('website.page', 'ir.ui.view') and 'seo_name' in record:  # allow custom slugify
+            res['seo_name_default'] = slugify(record.display_name)  # default slug, if seo_name become empty
+            res['seo_name'] = record.seo_name and slugify(record.seo_name) or ''
         return res
 
     @http.route(['/google<string(length=16):key>.html'], type='http', auth="public", website=True, sitemap=False)

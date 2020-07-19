@@ -120,9 +120,9 @@ options.registry.CoverProperties.include({
         this._coverFullOriginalLabel = this._coverFullOriginalLabel || $coverFull.text();
         this._coverMidOriginalLabel = this._coverMidOriginalLabel || $coverMid.text();
         this._coverAutoOriginalLabel = this._coverAutoOriginalLabel || $coverAuto.text();
-        $coverFull.text(isRegularCover ? _t("Large") : this._coverFullOriginalLabel);
-        $coverMid.text(isRegularCover ? _t("Medium") : this._coverMidOriginalLabel);
-        $coverAuto.text(isRegularCover ? _t("Tiny") : this._coverAutoOriginalLabel);
+        $coverFull.children('div').text(isRegularCover ? _t("Large") : this._coverFullOriginalLabel);
+        $coverMid.children('div').text(isRegularCover ? _t("Medium") : this._coverMidOriginalLabel);
+        $coverAuto.children('div').text(isRegularCover ? _t("Tiny") : this._coverAutoOriginalLabel);
     },
 });
 });

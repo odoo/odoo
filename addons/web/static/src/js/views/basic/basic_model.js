@@ -88,6 +88,7 @@ var concurrency = require('web.concurrency');
 var Context = require('web.Context');
 var core = require('web.core');
 var Domain = require('web.Domain');
+const pyUtils = require('web.py_utils');
 var session = require('web.session');
 var utils = require('web.utils');
 var viewUtils = require('web.viewUtils');
@@ -1632,6 +1633,12 @@ var BasicModel = AbstractModel.extend({
                 args: [data.display_name],
                 context: this._getContext(record, {fieldName: fieldName, viewType: options.viewType}),
             });
+            // Check if a record is really created. Models without defined
+            // _rec_name cannot create record based on name_create.
+            if (!result) {
+                record._changes[fieldName] = false;
+                return Promise.resolve();
+            }
             data = {id: result[0], display_name: result[1]};
         }
 
@@ -3690,19 +3697,27 @@ var BasicModel = AbstractModel.extend({
         }
         // Uses "current_company_id" because "company_id" would conflict with all the company_id fields
         // in general, the actual "company_id" field of the form should be used for m2o domains, not this fallback
+        let current_company_id;
         if (session.user_context.allowed_company_ids) {
-            var current_company = session.user_context.allowed_company_ids[0];
+            current_company_id = session.user_context.allowed_company_ids[0];
         } else {
-            var current_company = session.user_companies ? session.user_companies.current_company[0] : false;
+            current_company_id = session.user_companies ?
+                session.user_companies.current_company[0] :
+                false;
         }
-        return _.extend({
-            active_id: evalContext.id || false,
-            active_ids: evalContext.id ? [evalContext.id] : [],
-            active_model: element.model,
-            current_date: moment().format('YYYY-MM-DD'),
-            id: evalContext.id || false,
-            current_company_id: current_company,
-        }, session.user_context, element.context, evalContext);
+        return Object.assign(
+            {
+                active_id: evalContext.id || false,
+                active_ids: evalContext.id ? [evalContext.id] : [],
+                active_model: element.model,
+                current_company_id,
+                id: evalContext.id || false,
+            },
+            pyUtils.context(),
+            session.user_context,
+            element.context,
+            evalContext,
+        );
     },
     /**
      * Returns the list of field names of the given element according to its

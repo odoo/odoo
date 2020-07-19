@@ -1229,6 +1229,52 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('edit field in editable field without editing the row', async function (assert) {
+        // some widgets are editable in readonly (e.g. priority, boolean_toggle...) and they
+        // thus don't require the row to be switched in edition to be edited
+        assert.expect(13);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="bar" widget="boolean_toggle"/>
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === 'write') {
+                    assert.step('write: ' + args.args[1].bar);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        // toggle the boolean value of the first row without editing the row
+        assert.ok(list.$('.o_data_row:first .o_boolean_toggle input')[0].checked);
+        assert.containsNone(list, '.o_selected_row');
+        await testUtils.dom.click(list.$('.o_data_row:first .o_boolean_toggle'));
+        assert.notOk(list.$('.o_data_row:first .o_boolean_toggle input')[0].checked);
+        assert.containsNone(list, '.o_selected_row');
+        assert.verifySteps(['write: false']);
+
+        // toggle the boolean value after switching the row in edition
+        assert.containsNone(list, '.o_selected_row');
+        await testUtils.dom.click(list.$('.o_data_row .o_data_cell:first'));
+        assert.containsOnce(list, '.o_selected_row');
+        await testUtils.dom.click(list.$('.o_selected_row .o_boolean_toggle'));
+        assert.containsOnce(list, '.o_selected_row');
+        assert.verifySteps([]);
+
+        // save
+        await testUtils.dom.click(list.$('.o_list_button_save'));
+        assert.containsNone(list, '.o_selected_row');
+        assert.verifySteps(['write: true']);
+
+        list.destroy();
+    });
+
     QUnit.test('basic operations for editable list renderer', async function (assert) {
         assert.expect(2);
 
@@ -2721,6 +2767,38 @@ QUnit.module('Views', {
         list.destroy();
     });
 
+    QUnit.test('list view with data: text columns are not crushed', async function (assert) {
+        assert.expect(2);
+
+        const longText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ' +
+            'eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim ' +
+            'veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo ' +
+            'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum ' +
+            'dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, ' +
+            'sunt in culpa qui officia deserunt mollit anim id est laborum';
+        this.data.foo.records[0].foo = longText;
+        this.data.foo.records[0].text = longText;
+        this.data.foo.records[1].foo = "short text";
+        this.data.foo.records[1].text = "short text";
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/><field name="text"/></tree>',
+        });
+
+        const fooWidth = list.$('th[data-name="foo"]')[0].offsetWidth;
+        const textWidth = list.$('th[data-name="text"]')[0].offsetWidth;
+        assert.strictEqual(fooWidth, textWidth, "both columns should have been given the same width");
+
+        const firstRowHeight = list.$('.o_data_row:nth(0)')[0].offsetHeight;
+        const secondRowHeight = list.$('.o_data_row:nth(1)')[0].offsetHeight;
+        assert.ok(firstRowHeight > secondRowHeight,
+            "in the first row, the (long) text field should be properly displayed on several lines");
+
+        list.destroy();
+    });
+
     QUnit.test("button in a list view with a default relative width", async function (assert) {
         assert.expect(1);
 
@@ -2738,6 +2816,42 @@ QUnit.module('Views', {
         assert.strictEqual(list.el.querySelector('.o_data_cell button').style.width, "",
             "width attribute should not change the CSS style");
 
+        list.destroy();
+    });
+
+    QUnit.test("button columns in a list view don't have a max width", async function (assert) {
+        assert.expect(2);
+
+        testUtils.mock.patch(ListRenderer, {
+            RESIZE_DELAY: 0,
+        });
+
+        // set a long foo value s.t. the column can be squeezed
+        this.data.foo.records[0].foo = 'Lorem ipsum dolor sit amet';
+        const list = await createView({
+            arch: `
+                <tree>
+                    <field name="foo"/>
+                    <button name="b1" string="Do This"/>
+                    <button name="b2" string="Do That"/>
+                    <button name="b3" string="Or Rather Do Something Else"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        // simulate a window resize (buttons column width should not be squeezed)
+        list.$el.width('300px');
+        core.bus.trigger('resize');
+        await testUtils.nextTick();
+
+        assert.strictEqual(list.$('th:nth(1)').css('max-width'), '92px',
+            "max-width should be set on column foo to the minimum column width (92px)");
+        assert.strictEqual(list.$('th:nth(2)').css('max-width'), '100%',
+            "no max-width should be harcoded on the buttons column");
+
+        testUtils.mock.unpatch(ListRenderer);
         list.destroy();
     });
 
@@ -4604,12 +4718,12 @@ QUnit.module('Views', {
             },
         });
 
-        assert.containsN(list, '.o_list_button', 4,
+        assert.containsN(list, 'tbody .o_list_button', 4,
             "there should be one button per row");
-        assert.containsOnce(list, '.o_list_button:first .o_icon_button .fa.fa-car',
+        assert.containsOnce(list, 'tbody .o_list_button:first .o_icon_button .fa.fa-car',
             'buttons should have correct icon');
 
-        await testUtils.dom.click(list.$('.o_list_button:first > button'));
+        await testUtils.dom.click(list.$('tbody .o_list_button:first > button'));
         assert.verifySteps(['/web/dataset/search_read', '/web/dataset/search_read'],
             "should have reloaded the view (after the action is complete)");
         list.destroy();
@@ -10237,6 +10351,95 @@ QUnit.module('Views', {
         assert.containsNone(list, '.o_data_cell .custom-checkbox input:checked');
 
         list.destroy();
+    });
+
+    QUnit.test("Date in evaluation context works with date field", async function (assert) {
+        assert.expect(11);
+
+        const dateRegex = /^\d{4}-\d{2}-\d{2}$/;
+        const unpatchDate = testUtils.mock.patchDate(1997, 0, 9, 12, 0, 0);
+        testUtils.mock.patch(BasicModel, {
+            _getEvalContext() {
+                const evalContext = this._super(...arguments);
+                assert.ok(dateRegex.test(evalContext.today));
+                assert.strictEqual(evalContext.current_date, evalContext.today);
+                return evalContext;
+            },
+        });
+
+        this.data.foo.fields.birthday = { string: "Birthday", type: 'date' };
+        this.data.foo.records[0].birthday = "1997-01-08";
+        this.data.foo.records[1].birthday = "1997-01-09";
+        this.data.foo.records[2].birthday = "1997-01-10";
+
+        const list = await createView({
+            arch: `
+                <tree>
+                    <field name="birthday" decoration-danger="birthday > today"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.containsOnce(list, ".o_data_row .text-danger");
+
+        list.destroy();
+        unpatchDate();
+        testUtils.mock.unpatch(BasicModel);
+    });
+
+    QUnit.test("Datetime in evaluation context works with datetime field", async function (assert) {
+        assert.expect(6);
+
+        const datetimeRegex = /^\d{4}-\d{2}-\d{2} \d{2}:\d{2}:\d{2}$/;
+        const unpatchDate = testUtils.mock.patchDate(1997, 0, 9, 12, 0, 0);
+        testUtils.mock.patch(BasicModel, {
+            _getEvalContext() {
+                const evalContext = this._super(...arguments);
+                assert.ok(datetimeRegex.test(evalContext.now));
+                return evalContext;
+            },
+        });
+
+        /**
+         * Returns "1997-01-DD HH:MM:00" with D, H and M holding current UTC values
+         * from patched date + (deltaMinutes) minutes.
+         * This is done to allow testing from any timezone since UTC values are
+         * calculated with the offset of the current browser.
+         */
+        function dateStringDelta(deltaMinutes) {
+            const d = new Date(Date.now() + 1000 * 60 * deltaMinutes);
+            return `1997-01-${
+                String(d.getUTCDate()).padStart(2, '0')
+            } ${
+                String(d.getUTCHours()).padStart(2, '0')
+            }:${
+                String(d.getUTCMinutes()).padStart(2, '0')
+            }:00`;
+        }
+
+        // "datetime" field may collide with "datetime" object in context
+        this.data.foo.fields.birthday = { string: "Birthday", type: 'datetime' };
+        this.data.foo.records[0].birthday = dateStringDelta(-30);
+        this.data.foo.records[1].birthday = dateStringDelta(0);
+        this.data.foo.records[2].birthday = dateStringDelta(+30);
+
+        const list = await createView({
+            arch: `
+                <tree>
+                    <field name="birthday" decoration-danger="birthday > now"/>
+                </tree>`,
+            data: this.data,
+            model: 'foo',
+            View: ListView,
+        });
+
+        assert.containsOnce(list, ".o_data_row .text-danger");
+
+        list.destroy();
+        unpatchDate();
+        testUtils.mock.unpatch(BasicModel);
     });
 });
 

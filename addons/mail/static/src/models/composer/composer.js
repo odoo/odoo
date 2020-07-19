@@ -4,6 +4,7 @@ odoo.define('mail/static/src/models/composer/composer.js', function (require) {
 const emojis = require('mail.emojis');
 const { registerNewModel } = require('mail/static/src/model/model_core.js');
 const { attr, many2many, many2one, one2one } = require('mail/static/src/model/model_field.js');
+const mailUtils = require('mail.utils');
 
 const {
     addLink,
@@ -82,6 +83,43 @@ function factory(dependencies) {
         }
 
         /**
+         * Open the full composer modal.
+         */
+        async openFullComposer() {
+            const attachmentIds = this.attachments.map(attachment => attachment.res_id);
+
+            const context = {
+                default_attachment_ids: attachmentIds,
+                default_body: mailUtils.escapeAndCompactTextContent(this.textInputContent),
+                default_is_log: this.isLog,
+                default_model: this.thread.model,
+                /* FIXME would need to use suggested_partners here task-2280157 */
+                // default_partner_ids: partnerIds,
+                default_res_id: this.thread.id,
+                mail_post_autofollow: true,
+            };
+
+            const action = {
+                type: 'ir.actions.act_window',
+                res_model: 'mail.compose.message',
+                view_mode: 'form',
+                views: [[false, 'form']],
+                target: 'new',
+                context: context,
+            };
+            const options = {
+                on_close: () => {
+                    if (!this.constructor.get(this)) {
+                        return;
+                    }
+                    this._reset();
+                    this.thread.loadNewMessages();
+                },
+            };
+            await this.env.bus.trigger('do-action', { action, options });
+        }
+
+        /**
          * Post a message in provided composer's thread based on current composer fields values.
          */
         async postMessage() {
@@ -104,6 +142,9 @@ function factory(dependencies) {
                 partner_ids: this.mentionedPartners.map(partner => partner.id),
                 message_type: 'comment',
             };
+            if (this.subjectContent) {
+                postData.subject = this.subjectContent;
+            }
             let messageId;
             if (thread.model === 'mail.channel') {
                 const command = this._getCommandFromText(body);
@@ -440,7 +481,8 @@ function factory(dependencies) {
             this.update({
                 attachments: [['unlink-all']],
                 mentionedPartners: [['unlink-all']],
-                textInputContent: '',
+                subjectContent: "",
+                textInputContent: "",
                 textInputCursorStart: 0,
                 textInputCursorEnd: 0,
             });
@@ -544,6 +586,12 @@ function factory(dependencies) {
         mentionedPartners: many2many('mail.partner', {
             compute: '_computeMentionedPartners',
             dependencies: ['textInputContent'],
+        }),
+        /**
+         * Composer subject input content.
+         */
+        subjectContent: attr({
+            default: "",
         }),
         textInputContent: attr({
             default: "",

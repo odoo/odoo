@@ -530,12 +530,20 @@ function factory(dependencies) {
             // 1. move messages from inbox to history
             // AKU TODO: flag other caches to invalidate
             // task-2171873
-            inboxMailbox.messages.map(message => {
-                message.update({
-                    isNeedaction: false,
-                    isHistory: true,
-                });
-            });
+            for (const message_id of message_ids) {
+                // We need to ignore all not yet known messages because we don't want them
+                // to be shown partially as they would be linked directly to mainCache
+                // Furthermore, server should not send back all message_ids marked as read
+                // but something like last read message_id or something like that.
+                // (just imagine you mark 1000 messages as read ... )
+                const message = this.env.models['mail.message'].find(m => m.id === message_id);
+                if (message) {
+                    message.update({
+                        isNeedaction: false,
+                        isHistory: true,
+                    });
+                }
+            }
 
             // 2. remove "needaction" from channels
             let channels;

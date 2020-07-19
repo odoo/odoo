@@ -344,9 +344,10 @@ Object.assign(ComposerTextInput, {
         hasSendOnEnterEnabled: true,
     },
     props: {
+        composerLocalId: String,
         hasMentionSuggestionsBelowPosition: Boolean,
         hasSendOnEnterEnabled: Boolean,
-        composerLocalId: String,
+        isCompact: Boolean,
     },
     template: 'mail.ComposerTextInput',
 });

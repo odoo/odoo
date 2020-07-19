@@ -49,21 +49,34 @@
                         </t>
                     </div>
                 </t>
+                <t t-if="composer.thread and composer.thread.model === 'mail.channel' and composer.thread.mass_mailing">
+                    <div class="o_Composer_subject">
+                        <input class="o_Composer_subjectInput" type="text" placeholder="Subject" t-on-input="_onInputSubject" t-ref="subject"/>
+                    </div>
+                </t>
                 <t t-if="props.hasCurrentPartnerAvatar">
                     <div class="o_Composer_sidebarMain">
                         <img class="o_Composer_currentPartnerAvatar rounded-circle" t-att-src="currentPartnerAvatar" alt=""/>
                     </div>
                 </t>
-                <div class="o_Composer_coreMain" t-att-class="{ 'o-composer-is-compact': props.isCompact }">
+                <div
+                    class="o_Composer_coreMain"
+                    t-att-class="{
+                        'o-composer-is-compact': props.isCompact,
+                        'o-composer-is-extended': composer.thread and composer.thread.mass_mailing,
+                    }"
+                >
                     <TextInput
                         class="o_Composer_textInput"
                         t-att-class="{
                             'o-composer-is-compact': props.isCompact,
                             'o_Composer_textInput-mobile': env.messaging.device.isMobile,
+                            'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                         }"
                         composerLocalId="composer.localId"
                         hasMentionSuggestionsBelowPosition="props.hasMentionSuggestionsBelowPosition"
                         hasSendOnEnterEnabled="props.hasTextInputSendOnEnterEnabled"
+                        isCompact="props.isCompact"
                         t-on-o-keydown-enter="_onTextInputKeydownEnter"
                         t-on-paste="_onPasteTextInput"
                         t-ref="textInput"
@@ -137,7 +150,9 @@
                     t-att-class="{
                         'fa': env.messaging.device.isMobile,
                         'fa-paper-plane-o': env.messaging.device.isMobile,
+                        'o-last': env.messaging.device.isMobile or !props.hasDiscardButton,
                         'o-composer-is-compact': props.isCompact,
+                        'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar,
                     }"
                     t-att-disabled="(!composer.textInputContent and composer.attachments.length === 0) ? 'disabled' : ''"
                     type="button"
@@ -147,7 +162,7 @@
                 </button>
             </t>
             <t t-if="!env.messaging.device.isMobile and props.hasDiscardButton">
-                <button class="o_Composer_actionButton o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': props.isCompact }" type="button" t-on-click="_onClickDiscard">
+                <button class="o_Composer_actionButton o-last o_Composer_button o_Composer_buttonDiscard btn btn-secondary" t-att-class="{ 'o-composer-is-compact': props.isCompact, 'o-has-current-partner-avatar': props.hasCurrentPartnerAvatar }" type="button" t-on-click="_onClickDiscard">
                     Discard
                 </button>
             </t>

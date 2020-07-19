@@ -34,9 +34,7 @@ const SNIPPETS_TEMPLATE = `
     <h2 id="snippets_menu">Add blocks</h2>
     <div id="o_scroll">
         <div id="snippet_structure" class="o_panel">
-            <div class="o_panel_header">
-                <i class="fa fa-th-large"/> First Panel
-            </div>
+            <div class="o_panel_header">First Panel</div>
             <div class="o_panel_body">
                 <div name="Separator" data-oe-type="snippet" data-oe-thumbnail="/website/static/src/img/snippets_thumbs/s_separator.png">
                     <div class="s_hr pt32 pb32">
@@ -68,7 +66,7 @@ const SNIPPETS_TEMPLATE = `
         <div data-selector=".test_option_all">
             <we-colorpicker string="Background Color" data-select-style="true" data-css-property="background-color" data-color-prefix="bg-"/>
         </div>
-        <div data-js="background" data-selector=".test_option_all">
+        <div data-js="BackgroundImage" data-selector=".test_option_all">
             <we-button data-choose-image="true" data-no-preview="true">
                 <i class="fa fa-picture-o"/> Background Image
             </we-button>
@@ -271,13 +269,13 @@ function wysiwygData(data) {
                 description: '',
                 mimetype: 'image/png',
                 checksum: false,
-                url: '/web_editor/static/src/img/transparent.png',
+                url: '/web/static/src/img/transparent.png',
                 type: 'url',
                 res_id: 0,
                 res_model: false,
                 public: true,
                 access_token: false,
-                image_src: '/web_editor/static/src/img/transparent.png',
+                image_src: '/web/static/src/img/transparent.png',
                 image_width: 256,
                 image_height: 256,
             }],

@@ -1,6 +1,7 @@
 odoo.define('web.web_client', function (require) {
     'use strict';
 
+    const AbstractService = require('web.AbstractService');
     const env = require('web.env');
     const WebClient = require('web.AbstractWebClient');
     const Chrome = require('point_of_sale.Chrome');
@@ -31,12 +32,14 @@ odoo.define('web.web_client', function (require) {
         await owl.utils.whenReady();
         await webClient.setElement(document.body);
         await webClient.start();
+        webClient.isStarted = true;
         const chrome = new (Registries.Component.get(Chrome))(null, { webClient });
         await chrome.mount(document.querySelector('.o_action_manager'));
         await chrome.start();
         configureGui({ component: chrome });
     }
 
+    AbstractService.prototype.deployServices(env);
     const webClient = new WebClient();
     startPosApp(webClient);
     return webClient;

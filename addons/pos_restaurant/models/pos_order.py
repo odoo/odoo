@@ -189,3 +189,8 @@ class PosOrder(models.Model):
         order_fields['customer_count'] = ui_order.get('customer_count', 0)
         order_fields['multiprint_resume'] = ui_order.get('multiprint_resume', False)
         return order_fields
+
+    def _export_for_ui(self, order):
+        result = super(PosOrder, self)._export_for_ui(order)
+        result['table_id'] = order.table_id.id
+        return result

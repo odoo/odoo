@@ -10,6 +10,9 @@ class Partner(models.Model):
 
     website_tag_ids = fields.Many2many('res.partner.tag', 'res_partner_res_partner_tag_rel', 'partner_id', 'tag_id', string='Website tags')
 
+    def get_backend_menu_id(self):
+        return self.env.ref('contacts.menu_contacts').id
+
 
 class Tags(models.Model):
 

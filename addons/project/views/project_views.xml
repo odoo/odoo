@@ -64,7 +64,7 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Click <i>Create</i> to start a new task.
+                    Click <i>Create</i> to start a new task
                 </p><p>
                     To get things done, use activities and status on tasks.<br/>
                     Chat in real time or by email to collaborate efficiently.
@@ -79,7 +79,7 @@
             <field name="search_view_id" ref="project.view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Click <i>Create</i> to start a new task.
+                    Click <i>Create</i> to start a new task
                 </p><p>
                     To get things done, use activities and status on tasks.<br/>
                     Chat in real time or by email to collaborate efficiently.
@@ -296,12 +296,10 @@
                                         <label for="alias_enabled" class="font-weight-bold" string="Create tasks by sending an email to"/>
                                         <field name="alias_enabled"/>
                                         <span attrs="{'invisible': [('alias_enabled', '=', False)]}">
-                                            <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_enabled', '=', True)]}" />
-                                            @
-                                            <field name="alias_domain" class="oe_inline" readonly="1" />
+                                            <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_enabled', '=', True)]}"/>@<field name="alias_domain" class="oe_inline" readonly="1" />
                                         </span>
                                     </div>
-                                    <field name="alias_contact" class="oe_inline oe_edit_only" string="Accept Emails From" attrs="{'invisible': ['|', ('alias_domain', '=', False), ('alias_enabled', '=', False)]}"/>    
+                                    <field name="alias_contact" class="oe_inline oe_edit_only" string="Accept Emails From" attrs="{'invisible': ['|', ('alias_domain', '=', False), ('alias_enabled', '=', False)]}"/>
                                 </group>
                                 <group>
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
@@ -514,7 +512,7 @@
                                                 </span>
                                             </div>
                                             <div t-if="record.alias_name.value and record.alias_domain.value">
-                                                <span><i class="fa fa-envelope" role="img" aria-label="Domain Alias" title="Domain Alias"></i> <t t-esc="record.alias_id.value"/></span>
+                                                <span><i class="fa fa-envelope" role="img" aria-label="Domain Alias" title="Domain Alias"></i> <a t-att-href="'mailto:' + record.alias_id.value" title="Send an email"><t t-esc="record.alias_id.value"/></a></span>
                                             </div>
                                             <div t-if="record.rating_active.raw_value" class="mt8 text-primary" title="Percentage of happy ratings over the past 30 days." groups="project.group_project_rating">
                                                 <b>

@@ -19,7 +19,14 @@
     padding: 10px;
     max-height: 200px;
     resize: none;
-    border-radius: 10px 0 0 10px;
+    border-radius: $o-mail-rounded-rectangle-border-radius-lg;
     border: none;
-    overflow: auto
+    overflow: auto;
+
+    // When composer is compact, textarea should not be rounded on the right as
+    // buttons are glued to it
+    &.o-composer-is-compact {
+        border-top-right-radius: 0;
+        border-bottom-right-radius: 0;
+    }
 }

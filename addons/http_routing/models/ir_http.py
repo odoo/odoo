@@ -92,7 +92,7 @@ def slug(value):
         if not value.id:
             raise ValueError("Cannot slug non-existent record %s" % value)
         # [(id, name)] = value.name_get()
-        identifier, name = value.id, value.display_name
+        identifier, name = value.id, getattr(value, 'seo_name', False) or value.display_name
     else:
         # assume name_search result tuple
         identifier, name = value

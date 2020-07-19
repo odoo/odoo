@@ -15,7 +15,6 @@ const {
     isEventHandled,
     markEventHandled,
 } = require('mail/static/src/utils/utils.js');
-const mailUtils = require('mail.utils');
 
 const { Component } = owl;
 const { useRef } = owl.hooks;
@@ -52,12 +51,20 @@ class Composer extends Component {
          * Reference of the text input component.
          */
         this._textInputRef = useRef('textInput');
-
+        /**
+         * Reference of the subject input. Useful to set content.
+         */
+        this._subjectRef = useRef('subject');
         this._onClickCaptureGlobal = this._onClickCaptureGlobal.bind(this);
     }
 
     mounted() {
         document.addEventListener('click', this._onClickCaptureGlobal, true);
+        this._update();
+    }
+
+    patched() {
+        this._update();
     }
 
     willUnmount() {
@@ -178,6 +185,15 @@ class Composer extends Component {
         this.trigger('o-message-posted');
     }
 
+    /**
+     * @private
+     */
+    _update() {
+        if (this._subjectRef.el) {
+            this._subjectRef.el.value = this.composer.subjectContent;
+        }
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
@@ -210,33 +226,8 @@ class Composer extends Component {
      *
      * @private
      */
-    async _onClickFullComposer() {
-        const attachmentIds = this.composer.attachments.map(attachment => attachment.res_id);
-
-        const context = {
-            // default_parent_id: this.id,
-            default_body: mailUtils.escapeAndCompactTextContent(this.composer.textInputContent),
-            default_attachment_ids: attachmentIds,
-            // default_partner_ids: partnerIds,
-            default_is_log: this.composer.isLog,
-            mail_post_autofollow: true,
-        };
-
-        // if (this.context.default_model && this.context.default_res_id) {
-        //     context.default_model = this.context.default_model;
-        //     context.default_res_id = this.context.default_res_id;
-        // }
-
-        const action = {
-            type: 'ir.actions.act_window',
-            res_model: 'mail.compose.message',
-            view_mode: 'form',
-            views: [[false, 'form']],
-            target: 'new',
-            context: context,
-        };
-        await this.env.bus.trigger('do-action', { action });
-        this.trigger('o-full-composer-opened');
+    _onClickFullComposer() {
+        this.composer.openFullComposer();
     }
 
     /**
@@ -289,6 +280,13 @@ class Composer extends Component {
         this._textInputRef.comp.saveStateInStore();
         this.composer.insertIntoTextInput(ev.detail.unicode);
         this.composer.focus();
+    }
+
+    /**
+     * @private
+     */
+    _onInputSubject() {
+        this.composer.update({ subjectContent: this._subjectRef.el.value });
     }
 
     /**

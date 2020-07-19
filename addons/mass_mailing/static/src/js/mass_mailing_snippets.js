@@ -127,7 +127,7 @@ options.registry.mass_mailing_table_item = options.Class.extend({
 
 // Adding compatibility for the outlook compliance of mailings.
 // Commit of such compatibility : a14f89c8663c9cafecb1cc26918055e023ecbe42
-options.registry.background = options.registry.background.extend({
+options.registry.BackgroundImage = options.registry.BackgroundImage.extend({
     start: function () {
         this._super();
         if (this.snippets && this.snippets.split('.')[0] === "mass_mailing") {

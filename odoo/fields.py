@@ -1018,8 +1018,12 @@ class Field(MetaField('DummyField', (object,), {})):
         # retrieve values in cache, and fetch missing ones
         vals = records.env.cache.get_until_miss(records, self)
         while len(vals) < len(records):
-            # trigger prefetching on remaining records, and continue retrieval
-            remaining = records[len(vals):]
+            # It is important to construct a 'remaining' recordset with the
+            # _prefetch_ids of the original recordset, in order to prefetch as
+            # many records as possible. If not done this way, scenarios such as
+            # [rec.line_ids.mapped('name') for rec in recs] would generate one
+            # query per record in `recs`!
+            remaining = records._browse(records.env, records[len(vals):]._ids, records._prefetch_ids)
             self.__get__(first(remaining), type(remaining))
             vals += records.env.cache.get_until_miss(remaining, self)
 
@@ -2638,9 +2642,13 @@ class Many2one(_Relational):
         """ Remove `records` from the cached values of the inverse fields of `self`. """
         cache = records.env.cache
         record_ids = set(records._ids)
+
+        # align(id) returns a NewId if records are new, a real id otherwise
+        align = (lambda id_: id_) if all(record_ids) else (lambda id_: id_ and NewId(id_))
+
         for invf in records._field_inverses[self]:
             corecords = records.env[self.comodel_name].browse(
-                id_ for id_ in cache.get_values(records, self)
+                align(id_) for id_ in cache.get_values(records, self)
             )
             for corecord in corecords:
                 ids0 = cache.get(corecord, invf, None)

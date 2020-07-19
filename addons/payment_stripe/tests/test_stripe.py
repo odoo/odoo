@@ -7,26 +7,31 @@ from odoo.tools import mute_logger
 
 class StripeCommon(PaymentAcquirerCommon):
 
-    def setUp(self):
-        super(StripeCommon, self).setUp()
-        self.stripe = self.env.ref('payment.payment_acquirer_stripe')
-        self.stripe.write({
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.stripe = cls.env.ref('payment.payment_acquirer_stripe')
+        cls.stripe.write({
             'stripe_secret_key': 'sk_test_KJtHgNwt2KS3xM7QJPr4O5E8',
             'stripe_publishable_key': 'pk_test_QSPnimmb4ZhtkEy3Uhdm4S6J',
             'state': 'test',
         })
-        self.token = self.env['payment.token'].create({
+        cls.token = cls.env['payment.token'].create({
             'name': 'Test Card',
-            'acquirer_id': self.stripe.id,
+            'acquirer_id': cls.stripe.id,
             'acquirer_ref': 'cus_G27S7FqQ2w3fuH',
             'stripe_payment_method': 'pm_1FW3DdAlCFm536g8eQoSCejY',
-            'partner_id': self.buyer.id,
+            'partner_id': cls.buyer.id,
             'verified': True,
         })
 
 
 @odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
 class StripeTest(StripeCommon):
+
+    def run(self, result=None):
+        with mute_logger('odoo.addons.payment.models.payment_acquirer', 'odoo.addons.payment_stripe.models.payment'):
+            StripeCommon.run(self, result)
 
     def test_10_stripe_s2s(self):
         self.assertEqual(self.stripe.state, 'test', 'test without test environment')
@@ -76,3 +81,29 @@ class StripeTest(StripeCommon):
         tx.form_feedback(stripe_post_data, 'stripe')
         self.assertEqual(tx.state, 'done', 'Stripe: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, stripe_post_data.get('id'), 'Stripe: validation did not update tx id')
+
+    def test_add_available_payment_method_types(self):
+        tx_values = {
+            'billing_partner_country': self.env.ref('base.be'),
+            'currency': self.env.ref('base.EUR'),
+            'type': 'form'
+        }
+        stripe_session_data = {}
+
+        self.stripe._add_available_payment_method_types(stripe_session_data, tx_values)
+
+        actual = {pmt for key, pmt in stripe_session_data.items() if key.startswith('payment_method_types')}
+        self.assertEqual({'card', 'bancontact'}, actual)
+
+    def test_add_available_payment_method_types_recurrent(self):
+        tx_values = {
+            'billing_partner_country': self.env.ref('base.be'),
+            'currency': self.env.ref('base.EUR'),
+            'type': 'form_save'
+        }
+        stripe_session_data = {}
+
+        self.stripe._add_available_payment_method_types(stripe_session_data, tx_values)
+
+        actual = {pmt for key, pmt in stripe_session_data.items() if key.startswith('payment_method_types')}
+        self.assertEqual({'card'}, actual)

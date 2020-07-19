@@ -241,29 +241,41 @@ $o-theme-generic-color-palettes: (
 //------------------------------------------------------------------------------
 
 $o-base-website-values-palette: (
-    'logo-height': null, // Default to navbar height (see portal)
-    'header-font-size': null, // Default to BS (normal font-size)
     'font-size-base': 1rem, // Need a set value as the value is used in bootstrap_overridden files
-    'link-underline': 'hover', // 'never' / 'hover' / 'always'
-    'font-number': 1,
-    'headings-font-number': 1,
-    'navbar-font-number': 1,
-    'buttons-font-number': 1,
-    'color-palettes-number': null, // Default to the individual variables for each color palette type
     'google-fonts': null,
+
+    'color-palettes-number': null, // Default to the individual variables for each color palette type
+
     'btn-primary-outline': false,
     'btn-secondary-outline': false,
+    'link-underline': 'hover', // 'never' / 'hover' / 'always'
+
+    // A key from the $o-theme-font-configs map (null = default to the first key)
+    'font': null,
+    'headings-font': null,
+    'navbar-font': null,
+    'buttons-font': null,
+
     'header-template': 'logo_menu',
+    'header-font-size': null, // Default to BS (normal font-size)
+    'logo-height': null, // Default to navbar height (see portal)
+
     'footer-template': 'products_contacts_about_us',
     'footer-effect': null, // null / 'slideout_slide_hover' / 'slideout_shadow'
+);
+$o-font-aliases-to-keys: (
+    'base': 'font',
+    'headings': 'headings-font',
+    'navbar': 'navbar-font',
+    'buttons': 'buttons-font',
 );
 $o-website-values-palettes: (
     (
         'header-font-size': 1rem,
         'font-size-base': 0.875rem,
-        'headings-font-number': 7,
-        'navbar-font-number': 7,
-        'buttons-font-number': 7,
+        'headings-font': 'Gothic A1',
+        'navbar-font': 'Gothic A1',
+        'buttons-font': 'Gothic A1',
     ),
 ) !default;
 $o-website-values-palette-number: 1 !default;
@@ -285,35 +297,45 @@ $o-theme-h4-font-size-multiplier: 1.5 !default;
 $o-theme-h5-font-size-multiplier: 1.25 !default;
 $o-theme-h6-font-size-multiplier: 1 !default;
 
-$o-theme-fonts: (
-    ('Roboto', sans-serif),
-    ('Open Sans', sans-serif),
-    ('Source Sans Pro', sans-serif),
-    ('Raleway', sans-serif),
-    ('Noto Serif', serif),
-    ('Arvo', Times, serif),
-    ('Gothic A1', sans-serif),
+// Map:
+// <font-name>: (
+//     'family': <css font family list>,
+//     'url': <related part of google fonts URL>,
+//     'properties' (optional): (
+//         <font-alias>: (
+//             <website-value-key>: <value>,
+//             ...,
+//         ),
+//         ...,
+//     )
+// )
+$o-theme-font-configs: (
+    'Roboto': (
+        'family': ('Roboto', sans-serif),
+        'url': 'Roboto:300,300i,400,400i,700,700i',
+    ),
+    'Open Sans': (
+        'family': ('Open Sans', sans-serif),
+        'url': 'Open+Sans:300,300i,400,400i,700,700i',
+    ),
+    'Source Sans Pro': (
+        'family': ('Source Sans Pro', sans-serif),
+        'url': 'Source+Sans+Pro:300,300i,400,400i,700,700i',
+    ),
+    'Raleway': (
+        'family': ('Raleway', sans-serif),
+        'url': 'Raleway:300,300i,400,400i,700,700i',
+    ),
+    'Noto Serif': (
+        'family': ('Noto Serif', serif),
+        'url': 'Noto+Serif:300,300i,400,400i,700,700i',
+    ),
+    'Arvo': (
+        'family': ('Arvo', Times, serif),
+        'url': 'Arvo:300,300i,400,400i,700,700i',
+    ),
+    'Gothic A1': (
+        'family': ('Gothic A1', sans-serif),
+        'url': 'Gothic+A1:300,300i,500,500i,700,700i',
+    ),
 ) !default;
-$o-theme-font-urls: (
-    'Roboto:300,300i,400,400i,700,700i',
-    'Open+Sans:300,300i,400,400i,700,700i',
-    'Source+Sans+Pro:300,300i,400,400i,700,700i',
-    'Raleway:300,300i,400,400i,700,700i',
-    'Noto+Serif:300,300i,400,400i,700,700i',
-    'Arvo:300,300i,400,400i,700,700i',
-    'Gothic+A1:300,300i,500,500i,700,700i',
-) !default;
-$o-theme-font-names: (
-    'Roboto',
-    'Open Sans',
-    'Source Sans Pro',
-    'Raleway',
-    'Noto Serif',
-    'Arvo',
-    'Gothic A1',
-) !default;
-
-// TODO improve this: we should not have multiple lists regarding fonts but
-// instead a unique map: 'name' -> 'config', with config containing the font
-// properties configuration + basic info (url, font-family).
-$o-theme-font-configs: () !default;

@@ -57,7 +57,7 @@ class AccountFrFec(models.TransientModel):
         WHERE
             am.date < %s
             AND am.company_id = %s
-            AND aat.include_initial_balance = 'f'
+            AND aat.include_initial_balance IS NOT TRUE
             AND (aml.debit != 0 OR aml.credit != 0)
         '''
         # For official report: only use posted entries

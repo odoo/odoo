@@ -322,7 +322,7 @@ class TestFields(TransactionCaseWithUserDemo):
 
     def test_11_stored_protected(self):
         """ test protection against recomputation """
-        model = self.env['test_new_api.compute.protected']
+        model = self.env['test_new_api.compute.readonly']
         field = model._fields['bar']
 
         record = model.create({'foo': 'unprotected #1'})
@@ -1472,6 +1472,22 @@ class TestFields(TransactionCaseWithUserDemo):
         self.assertEqual(new_line.move_id, move)
         self.assertEqual(new_move.quantity, 3)
         self.assertEqual(move.quantity, 2)
+
+    def test_41_new_one2many(self):
+        """ Check command on one2many field on new record. """
+        move = self.env['test_new_api.move'].create({})
+        line = self.env['test_new_api.move_line'].create({'move_id': move.id, 'quantity': 1})
+        move.flush()
+
+        new_move = move.new(origin=move)
+        new_line = line.new(origin=line)
+        self.assertEqual(new_move.line_ids, new_line)
+
+        # drop line, and create a new one
+        new_move.line_ids = [(2, new_line.id), (0, 0, {'quantity': 2})]
+        self.assertEqual(len(new_move.line_ids), 1)
+        self.assertFalse(new_move.line_ids.id)
+        self.assertEqual(new_move.line_ids.quantity, 2)
 
     @mute_logger('odoo.addons.base.models.ir_model')
     def test_41_new_related(self):
@@ -2826,3 +2842,108 @@ class TestSelectionOndeleteAdvanced(common.TransactionCase):
 
         with self.assertRaises(ValueError):
             self.registry.setup_models(self.env.cr)
+
+
+def insert(model, *fnames):
+    """ Return the expected query string to INSERT the given columns. """
+    columns = ['create_uid', 'create_date', 'write_uid', 'write_date'] + sorted(fnames)
+    return 'INSERT INTO "{}" ("id", {}) VALUES (nextval(%s), {}) RETURNING id'.format(
+        model._table,
+        ", ".join('"{}"'.format(column) for column in columns),
+        ", ".join('%s' for column in columns),
+    )
+
+
+def update(model, *fnames):
+    """ Return the expected query string to UPDATE the given columns. """
+    columns = sorted(fnames) + ['write_uid', 'write_date']
+    return 'UPDATE "{}" SET {} WHERE id IN %s'.format(
+        model._table,
+        ", ".join('"{}" = %s'.format(column) for column in columns),
+    )
+
+
+class TestComputeQueries(common.TransactionCase):
+    """ Test the queries made by create() with computed fields. """
+
+    def test_compute_readonly(self):
+        model = self.env['test_new_api.compute.readonly']
+        model.create({})
+
+        # no value, no default
+        with self.assertQueries([insert(model, 'foo'), update(model, 'bar')]):
+            record = model.create({'foo': 'Foo'})
+        self.assertEqual(record.bar, 'Foo')
+
+        # some value, no default
+        with self.assertQueries([insert(model, 'foo', 'bar'), update(model, 'bar')]):
+            record = model.create({'foo': 'Foo', 'bar': 'Bar'})
+        self.assertEqual(record.bar, 'Foo')
+
+        model = model.with_context(default_bar='Def')
+
+        # no value, some default
+        with self.assertQueries([insert(model, 'foo', 'bar'), update(model, 'bar')]):
+            record = model.create({'foo': 'Foo'})
+        self.assertEqual(record.bar, 'Foo')
+
+        # some value, some default
+        with self.assertQueries([insert(model, 'foo', 'bar'), update(model, 'bar')]):
+            record = model.create({'foo': 'Foo', 'bar': 'Bar'})
+        self.assertEqual(record.bar, 'Foo')
+
+    def test_compute_readwrite(self):
+        model = self.env['test_new_api.compute.readwrite']
+        model.create({})
+
+        # no value, no default
+        with self.assertQueries([insert(model, 'foo'), update(model, 'bar')]):
+            record = model.create({'foo': 'Foo'})
+        self.assertEqual(record.bar, 'Foo')
+
+        # some value, no default
+        with self.assertQueries([insert(model, 'foo', 'bar')]):
+            record = model.create({'foo': 'Foo', 'bar': 'Bar'})
+        self.assertEqual(record.bar, 'Bar')
+
+        model = model.with_context(default_bar='Def')
+
+        # no value, some default
+        with self.assertQueries([insert(model, 'foo', 'bar')]):
+            record = model.create({'foo': 'Foo'})
+        self.assertEqual(record.bar, 'Def')
+
+        # some value, some default
+        with self.assertQueries([insert(model, 'foo', 'bar')]):
+            record = model.create({'foo': 'Foo', 'bar': 'Bar'})
+        self.assertEqual(record.bar, 'Bar')
+
+    def test_compute_inverse(self):
+        model = self.env['test_new_api.compute.inverse']
+        model.create({})
+
+        # no value, no default
+        with self.assertQueries([insert(model, 'foo'), update(model, 'bar')]):
+            record = model.create({'foo': 'Foo'})
+        self.assertEqual(record.foo, 'Foo')
+        self.assertEqual(record.bar, 'Foo')
+
+        # some value, no default
+        with self.assertQueries([insert(model, 'foo', 'bar'), update(model, 'foo')]):
+            record = model.create({'foo': 'Foo', 'bar': 'Bar'})
+        self.assertEqual(record.foo, 'Bar')
+        self.assertEqual(record.bar, 'Bar')
+
+        model = model.with_context(default_bar='Def')
+
+        # no value, some default
+        with self.assertQueries([insert(model, 'foo', 'bar'), update(model, 'foo')]):
+            record = model.create({'foo': 'Foo'})
+        self.assertEqual(record.foo, 'Def')
+        self.assertEqual(record.bar, 'Def')
+
+        # some value, some default
+        with self.assertQueries([insert(model, 'foo', 'bar'), update(model, 'foo')]):
+            record = model.create({'foo': 'Foo', 'bar': 'Bar'})
+        self.assertEqual(record.foo, 'Bar')
+        self.assertEqual(record.bar, 'Bar')

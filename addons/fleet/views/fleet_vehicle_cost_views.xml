@@ -72,16 +72,17 @@
                 default_order="expiration_date"
                 sample="1">
                 <field name="active" invisible="1"/>
-                <field name="name" />
+                <field name="name" class="font-weight-bold" />
                 <field name="start_date" />
-                <field name="expiration_date" />
+                <field name="expiration_date" widget="remaining_days"/>
                 <field name="days_left" invisible="1"/>
-                <field name="vehicle_id" />
+                <field name="vehicle_id" widget="many2one_avatar" />
                 <field name="insurer_id" />
                 <field name="purchaser_id"/>
-                <field name="cost_generated"/>
+                <field name="cost_generated" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
                 <field name="cost_frequency"/>
-                <field name="state" />
+                <field name="state" widget="badge" decoration-info="state == 'open'" decoration-danger="state == 'expired'" />
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
         </field>
@@ -99,7 +100,7 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div>
                                 <strong>
-                                    <field name="vehicle_id"/>
+                                    <field name="vehicle_id" widget="res_partner_many2one"/>
                                     <span class="float-right badge badge-secondary">
                                         <field name="state"/>
                                     </span>
@@ -109,7 +110,7 @@
                                 <field name="start_date"/> - <field name="expiration_date"/>
                             </div>
                             <div>
-                                <field name="insurer_id"/>
+                                <field name="insurer_id" widget="res_partner_many2one"/>
                             </div>
                         </div>
                     </t>
@@ -248,13 +249,14 @@
                 <field name="date" readonly="1" />
                 <field name="description" />
                 <field name="service_type_id" />
-                <field name="vehicle_id" readonly="1" />
-                <field name="purchaser_id" readonly="1"/>
+                <field name="vehicle_id" readonly="1" widget="many2one_avatar" />
+                <field name="purchaser_id" readonly="1" widget="many2one_avatar"/>
                 <field name="vendor_id" optional="show" />
                 <field name="inv_ref" invisible="1" />
                 <field name="notes" optional="show" />
-                <field name="state" readonly="1" />
-                <field name="amount" sum="Total"/>
+                <field name="amount" sum="Total" widget="monetary"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="state" readonly="1" widget="badge" decoration-success="state == 'done'" decoration-warning="state == 'todo'"  decoration-info="state == 'running'" />
             </tree>
         </field>
     </record>
@@ -270,15 +272,15 @@
                         <div t-attf-class="oe_kanban_global_click">
                             <div>
                                 <strong>
-                                    <field name="vehicle_id"/>
+                                    <field name="vehicle_id" widget="res_partner_many2one"/>
                                     <span class="float-right"><field name="date"/></span>
                                 </strong>
                             </div>
                             <div>
-                                <field name="purchaser_id"/>
+                                <field name="purchaser_id" widget="res_partner_many2one"/>
                             </div>
                             <div>
-                                <span><field name="vendor_id"/></span>
+                                <span><field name="vendor_id" widget="res_partner_many2one"/></span>
                                 <span class="float-right"><field name="amount" widget="monetary"/></span>
                             </div>
                         </div>

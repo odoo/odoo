@@ -241,9 +241,10 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             overwrite = odoo.tools.config["overwrite_existing_translations"]
             module.with_context(overwrite=overwrite)._update_translations()
 
-            if package.name is not None:
-                registry._init_modules.add(package.name)
+        if package.name is not None:
+            registry._init_modules.add(package.name)
 
+        if needs_update:
             if new_install:
                 post_init = package.info.get('post_init_hook')
                 if post_init:
@@ -258,15 +259,20 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             # (separately in their own transaction)
             cr.commit()
 
-            if tools.config.options['test_enable']:
-                report.record_result(load_test(idref, mode))
-                # Python tests
-                env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
-                report.record_result(odoo.modules.module.run_unit_tests(module_name))
-                # tests may have reset the environment
-                env = api.Environment(cr, SUPERUSER_ID, {})
-                module = env['ir.module.module'].browse(module_id)
+        updating = tools.config.options['init'] or tools.config.options['update']
+        if tools.config.options['test_enable'] and (needs_update or not updating):
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            if not needs_update:
+                registry.setup_models(cr)
+            report.record_result(load_test(idref, mode))
+            # Python tests
+            env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
+            report.record_result(odoo.modules.module.run_unit_tests(module_name))
+            # tests may have reset the environment
+            env = api.Environment(cr, SUPERUSER_ID, {})
+            module = env['ir.module.module'].browse(module_id)
 
+        if needs_update:
             processed_modules.append(package.name)
 
             ver = adapt_version(package.data['version'])
@@ -280,9 +286,6 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                 if hasattr(package, kind):
                     delattr(package, kind)
             module.flush()
-
-        if package.name is not None:
-            registry._init_modules.add(package.name)
 
         _logger.log(module_log_level, "Module %s loaded in %.2fs, %s queries (+%s extra)",
                     module_name,

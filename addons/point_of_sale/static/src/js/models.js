@@ -36,6 +36,7 @@ exports.PosModel = Backbone.Model.extend({
         var  self = this;
         this.flush_mutex = new Mutex();                   // used to make sure the orders are sent to the server once at time
 
+        this.env = this.get('env');
         this.rpc = this.get('rpc');
         this.session = this.get('session');
         this.do_action = this.get('do_action');
@@ -1241,6 +1242,29 @@ exports.PosModel = Backbone.Model.extend({
         }
     },
 
+    /**
+     * Directly calls the requested service, instead of triggering a
+     * 'call_service' event up, which wouldn't work as services have no parent
+     *
+     * @param {OdooEvent} ev
+     */
+    _trigger_up: function (ev) {
+        if (ev.is_stopped()) {
+            return;
+        }
+        const payload = ev.data;
+        if (ev.name === 'call_service') {
+            let args = payload.args || [];
+            if (payload.service === 'ajax' && payload.method === 'rpc') {
+                // ajax service uses an extra 'target' argument for rpc
+                args = args.concat(ev.target);
+            }
+            const service = this.env.services[payload.service];
+            const result = service[payload.method].apply(service, args);
+            payload.callback(result);
+        }
+    },
+
     electronic_payment_interfaces: {},
 
     format_currency: function(amount, precision) {
@@ -2288,10 +2312,12 @@ exports.Paymentline = Backbone.Model.extend({
     init_from_JSON: function(json){
         this.amount = json.amount;
         this.payment_method = this.pos.payment_methods_by_id[json.payment_method_id];
+        this.name = this.payment_method.name;
         this.payment_status = json.payment_status;
         this.ticket = json.ticket;
         this.card_type = json.card_type;
         this.transaction_id = json.transaction_id;
+        this.is_change = json.is_change;
     },
     //sets the amount of money on this payment line
     set_amount: function(value){
@@ -2367,7 +2393,8 @@ exports.Paymentline = Backbone.Model.extend({
         return {
             cid: this.cid,
             amount: this.get_amount(),
-            payment_method: this.payment_method.name,
+            name: this.name,
+            ticket: this.ticket,
         };
     },
 });
@@ -2386,7 +2413,7 @@ exports.Order = Backbone.Model.extend({
         var self = this;
         options  = options || {};
 
-        this.init_locked    = true;
+        this.locked         = false;
         this.pos            = options.pos;
         this.selected_orderline   = undefined;
         this.selected_paymentline = undefined;
@@ -2429,13 +2456,12 @@ exports.Order = Backbone.Model.extend({
             this.paymentlines.on('remove', this.pos.send_current_order_to_customer_facing_display, this.pos);
         }
 
-        this.init_locked = false;
         this.save_to_db();
 
         return this;
     },
     save_to_db: function(){
-        if (!this.temporary && !this.init_locked) {
+        if (!this.temporary && !this.locked) {
             this.pos.db.save_unpaid_order(this);
         }
     },
@@ -2512,6 +2538,14 @@ exports.Order = Backbone.Model.extend({
                 this.select_paymentline(newpaymentline);
             }
         }
+
+        // Tag this order as 'locked' if it is already paid.
+        this.locked = ['paid', 'done', 'invoiced'].includes(json.state);
+        this.state = json.state;
+        this.amount_return = json.amount_return;
+        this.account_move = json.account_move;
+        this.backendId = json.id;
+        this.isFromClosedSession = json.is_session_closed;
     },
     export_as_JSON: function() {
         var orderLines, paymentLines;
@@ -2528,7 +2562,7 @@ exports.Order = Backbone.Model.extend({
             amount_paid: this.get_total_paid() - this.get_change(),
             amount_total: this.get_total_with_tax(),
             amount_tax: this.get_total_tax(),
-            amount_return: this.get_change(),
+            amount_return: this.amount_return ? this.amount_return : this.get_change(),
             lines: orderLines,
             statement_ids: paymentLines,
             pos_session_id: this.pos_session_id,
@@ -2556,10 +2590,16 @@ exports.Order = Backbone.Model.extend({
             orderlines.push(orderline.export_for_printing());
         });
 
-        var paymentlines = [];
-        this.paymentlines.each(function(paymentline){
-            paymentlines.push(paymentline.export_for_printing());
-        });
+        // If order is locked (paid), the 'change' is saved as negative payment,
+        // and is flagged with is_change = true. A receipt that is printed first
+        // time doesn't show this negative payment so we filter it out.
+        var paymentlines = this.paymentlines.models
+            .filter(function (paymentline) {
+                return !paymentline.is_change;
+            })
+            .map(function (paymentline) {
+                return paymentline.export_for_printing();
+            });
         var client  = this.get('client');
         var cashier = this.pos.get_cashier();
         var company = this.pos.company;
@@ -2595,7 +2635,7 @@ exports.Order = Backbone.Model.extend({
             total_discount: this.get_total_discount(),
             rounding_applied: this.get_rounding_applied(),
             tax_details: this.get_tax_details(),
-            change: this.get_change(),
+            change: this.locked ? this.amount_return : this.get_change(),
             name : this.get_name(),
             client: client ? client : null ,
             invoice_id: null,   //TODO

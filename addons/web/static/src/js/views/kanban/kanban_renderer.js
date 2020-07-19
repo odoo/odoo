@@ -362,7 +362,7 @@ var KanbanRenderer = BasicRenderer.extend({
             this.$el.sortable({
                 axis: 'x',
                 items: '> .o_kanban_group',
-                handle: '.o_kanban_header_title',
+                handle: '.o_column_title',
                 cursor: 'move',
                 revert: 150,
                 delay: 100,

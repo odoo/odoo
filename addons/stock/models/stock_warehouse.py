@@ -4,10 +4,21 @@
 import logging
 from collections import namedtuple
 
-from odoo import _, api, fields, models
+from odoo import _, _lt, api, fields, models
 from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
+
+
+ROUTE_NAMES = {
+    'one_step': _lt('Receive in 1 step (stock)'),
+    'two_steps': _lt('Receive in 2 steps (input + stock)'),
+    'three_steps': _lt('Receive in 3 steps (input + quality + stock)'),
+    'crossdock': _lt('Cross-Dock'),
+    'ship_only': _lt('Deliver in 1 step (ship)'),
+    'pick_ship': _lt('Deliver in 2 steps (pick + ship)'),
+    'pick_pack_ship': _lt('Deliver in 3 steps (pick + pack + ship)'),
+}
 
 
 class Warehouse(models.Model):
@@ -686,11 +697,7 @@ class Warehouse(models.Model):
         return customer_loc, supplier_loc
 
     def _get_route_name(self, route_type):
-        names = {'one_step': _('Receive in 1 step (stock)'), 'two_steps': _('Receive in 2 steps (input + stock)'),
-                 'three_steps': _('Receive in 3 steps (input + quality + stock)'), 'crossdock': _('Cross-Dock'),
-                 'ship_only': _('Deliver in 1 step (ship)'), 'pick_ship': _('Deliver in 2 steps (pick + ship)'),
-                 'pick_pack_ship': _('Deliver in 3 steps (pick + pack + ship)')}
-        return names[route_type]
+        return str(ROUTE_NAMES[route_type])
 
     def get_rules_dict(self):
         """ Define the rules source/destination locations, picking_type and

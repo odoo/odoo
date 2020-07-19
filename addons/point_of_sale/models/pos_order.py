@@ -177,6 +177,7 @@ class PosOrder(models.Model):
                 'amount': -pos_order['amount_return'],
                 'payment_date': fields.Date.context_today(self),
                 'payment_method_id': cash_payment_method.id,
+                'is_change': True,
             }
             order.add_payment(return_payment_vals)
 
@@ -252,7 +253,6 @@ class PosOrder(models.Model):
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice')
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
-
 
     @api.depends('account_move')
     def _compute_is_invoiced(self):
@@ -572,6 +572,48 @@ class PosOrder(models.Model):
         orders.sudo().unlink()
         return orders.ids
 
+    @api.model
+    def search_paid_order_ids(self, config_id, domain, limit, offset):
+        """Search for 'paid' orders that satisfy the given domain, limit and offset."""
+        default_domain = ['&', ('config_id', '=', config_id), '!', '|', ('state', '=', 'draft'), ('state', '=', 'cancelled')]
+        real_domain = AND([domain, default_domain])
+        ids = self.search(AND([domain, default_domain]), limit=limit, offset=offset).ids
+        totalCount = self.search_count(real_domain)
+        return {'ids': ids, 'totalCount': totalCount}
+
+    def _export_for_ui(self, order):
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
+        return {
+            'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
+            'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
+            'name': order.pos_reference,
+            'uid': order.pos_reference[6:],
+            'amount_paid': order.amount_paid,
+            'amount_total': order.amount_total,
+            'amount_tax': order.amount_tax,
+            'amount_return': order.amount_return,
+            'pos_session_id': order.session_id.id,
+            'is_session_closed': order.session_id.state == 'closed',
+            'pricelist_id': order.pricelist_id.id,
+            'partner_id': order.partner_id.id,
+            'user_id': order.user_id.id,
+            'sequence_number': order.sequence_number,
+            'creation_date': order.date_order.astimezone(timezone),
+            'fiscal_position_id': order.fiscal_position_id.id,
+            'to_invoice': order.to_invoice,
+            'state': order.state,
+            'account_move': order.account_move.id,
+            'id': order.id,
+        }
+
+    def export_for_ui(self):
+        """ Returns a list of dict with each item having similar signature as the return of
+            `export_as_JSON` of models.Order. This is useful for back-and-forth communication
+            between the pos frontend and backend.
+        """
+        return self.mapped(self._export_for_ui) if self else []
+
+
 class PosOrderLine(models.Model):
     _name = "pos.order.line"
     _description = "Point of Sale Order Lines"
@@ -702,6 +744,22 @@ class PosOrderLine(models.Model):
         for line in self:
             line.tax_ids_after_fiscal_position = line.order_id.fiscal_position_id.map_tax(line.tax_ids, line.product_id, line.order_id.partner_id)
 
+    def _export_for_ui(self, orderline):
+        return {
+            'qty': orderline.qty,
+            'price_unit': orderline.price_unit,
+            'price_subtotal': orderline.price_subtotal,
+            'price_subtotal_incl': orderline.price_subtotal_incl,
+            'product_id': orderline.product_id.id,
+            'discount': orderline.discount,
+            'tax_ids': [[6, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
+            'id': orderline.id,
+            'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
+        }
+
+    def export_for_ui(self):
+        return self.mapped(self._export_for_ui) if self else []
+
 
 class PosOrderLineLot(models.Model):
     _name = "pos.pack.operation.lot"
@@ -713,6 +771,13 @@ class PosOrderLineLot(models.Model):
     lot_name = fields.Char('Lot Name')
     product_id = fields.Many2one('product.product', related='pos_order_line_id.product_id', readonly=False)
 
+    def _export_for_ui(self, lot):
+        return {
+            'lot_name': lot.lot_name,
+        }
+
+    def export_for_ui(self):
+        return self.mapped(self._export_for_ui) if self else []
 
 class ReportSaleDetails(models.AbstractModel):
 

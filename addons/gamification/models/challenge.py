@@ -251,7 +251,7 @@ class Challenge(models.Model):
                          AND gg.user_id = ru.id
                          AND ru.id = log.create_uid
                          AND gg.write_date < log.create_date
-                         AND gg.closed IS false
+                         AND gg.closed IS NOT TRUE
                          AND gc.id IN %s
                          AND (gg.state = 'inprogress'
                               OR (gg.state = 'reached'

@@ -184,6 +184,11 @@ function factory(dependencies) {
          */
         replyToMessage(message) {
             this.update({ replyingToMessage: [['link', message]] });
+            // avoid to reply to a note by a message and vice-versa.
+            // subject to change later by allowing subtype choice.
+            this.replyingToMessageOriginThreadComposer.update({
+                isLog: !message.is_discussion && !message.is_notification
+            });
             this.replyingToMessageOriginThreadComposer.focus();
         }
 

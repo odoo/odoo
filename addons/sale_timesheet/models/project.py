@@ -50,11 +50,12 @@ class Project(models.Model):
         ('timesheet_product_required_if_billable_and_timesheets', """
             CHECK(
                 (allow_billable = 't' AND allow_timesheets = 't' AND timesheet_product_id IS NOT NULL)
-                OR (allow_billable = 'f')
-                OR (allow_timesheets = 'f')
+                OR (allow_billable IS NOT TRUE)
+                OR (allow_timesheets IS NOT TRUE)
                 OR (allow_billable IS NULL)
                 OR (allow_timesheets IS NULL)
             )""", 'The timesheet product is required when the task can be billed and timesheets are allowed.'),
+
     ]
 
     @api.depends('billable_type', 'allow_billable', 'sale_order_id', 'partner_id')

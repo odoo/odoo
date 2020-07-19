@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="OrderDetails" owl="1">
+        <div class="order-container">
+            <div t-ref="scrollable" class="order-scroller touch-scrollable">
+                <div class="order">
+                    <t t-if="!props.order">
+                        <div class="order-empty">
+                            <i class="fa fa-shopping-cart" role="img" aria-label="Shopping cart"
+                               title="Shopping cart" />
+                            <h1>Select an order</h1>
+                        </div>
+                    </t>
+                    <t t-elif="orderlines.length === 0">
+                        <div class="order-empty">
+                            <i class="fa fa-shopping-cart" role="img" aria-label="Shopping cart"
+                               title="Shopping cart" />
+                            <h1>Order is empty</h1>
+                        </div>
+                    </t>
+                    <t t-else="">
+                        <ul class="orderlines">
+                            <t t-foreach="orderlines" t-as="orderline" t-key="orderline.id">
+                                <OrderlineDetails line="orderline" />
+                            </t>
+                        </ul>
+                        <OrderSummary total="total" tax="tax" />
+                    </t>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>

@@ -2,20 +2,12 @@
 /// This file regroups the website design rules.
 ///
 
-$-seen: ();
-$-font-numbers: (
-    o-website-value('font-number'),
-    o-website-value('headings-font-number'),
-    o-website-value('navbar-font-number'),
-    o-website-value('buttons-font-number'),
-);
-@each $-number in $-font-numbers {
-    @if index($-seen, $-number) == null {
-        $-seen: append($-seen, $-number);
-        $-theme-font: nth($o-theme-font-urls, $-number);
-        @if $-theme-font {
-            @import url("https://fonts.googleapis.com/css?family=#{unquote($-theme-font)}&display=swap");
-        }
+$-seen-urls: ();
+@each $alias, $key in $o-font-aliases-to-keys {
+    $-url: o-get-font-info($alias, 'url');
+    @if $-url and index($-seen-urls, $-url) == null {
+        $-seen-urls: append($-seen-urls, $-url);
+        @import url("https://fonts.googleapis.com/css?family=#{unquote($-url)}&display=swap");
     }
 }
 
@@ -25,38 +17,45 @@ $-font-numbers: (
     // customized by themes, the user or anything else (so there is no file to
     // parse to get them). Those will be printed here as CSS variables.
 
-    --support-13-0-color-system: #{$o-support-13-0-color-system};
-    --has-customized-13-0-color-system: #{$o-has-customized-13-0-color-system};
+    @include print-variable('support-13-0-color-system', $o-support-13-0-color-system);
+    @include print-variable('has-customized-13-0-color-system', $o-has-customized-13-0-color-system);
 
     // 1) Handle default values
-    --header-font-size: #{$font-size-base};
+    @include print-variable('header-font-size', $font-size-base);
 
     // 2) The values in the $theme-colors map are already printed by Bootstrap.
 
     // 3) The values in the $colors map are also printed by Bootstrap.
 
     // 4) The Odoo values map, $o-website-values, must be printed.
-    @each $key, $value in o-map-omit($o-website-values) {
-        --#{$key}: #{$value};
+    @each $key, $value in $o-website-values {
+        @include print-variable($key, $value);
     }
 
     // 5) Use final value used by the theme
-    --body: #{$body-bg};
+    @include print-variable('body', $body-bg);
 
-    --logo-height: #{$o-theme-navbar-logo-height};
-    --fixed-logo-height: #{$o-theme-navbar-fixed-logo-height};
-    --number-of-fonts: #{length($o-theme-fonts)};
+    @include print-variable('logo-height', $o-theme-navbar-logo-height);
+    @include print-variable('fixed-logo-height', $o-theme-navbar-fixed-logo-height);
 
-    --number-of-color-palettes: #{length($o-color-palettes) - 1}; // -1 since the last one is the user customized one
-    --color-palettes-number: #{$o-original-color-palette-number};
-    --has-customized-colors: #{$o-has-customized-colors};
+    $-font-names: map-keys($o-theme-font-configs);
+    @include print-variable('number-of-fonts', length($-font-names));
+    $i: 1;
+    @each $font-name in $-font-names {
+        @include print-variable('font-number-#{$i}', $font-name);
+        $i: $i + 1;
+    }
+
+    @include print-variable('number-of-color-palettes', length($o-color-palettes) - 1); // -1 since the last one is the user customized one
+    @include print-variable('color-palettes-number', $o-original-color-palette-number);
+    @include print-variable('has-customized-colors', $o-has-customized-colors);
 
     // 6) Get list of colorpalette custom colors
     $custom-colors: ();
     @each $key, $value in $o-color-palette {
         $custom-colors: append($custom-colors, $key);
     }
-    --custom-colors: #{$custom-colors};
+    @include print-variable('custom-colors', $custom-colors);
 }
 
 #wrapwrap {

@@ -126,8 +126,17 @@ class MessageList extends Component {
                 case 'change-of-thread-cache':
                     this._adjustFromChangeOfThreadCache(hint);
                     break;
+                case 'chat-window-unfolded':
+                    this._adjustFromChatWindowUnfolded(hint);
+                    break;
                 case 'current-partner-just-posted-message':
                     this._adjustFromCurrentPartnerJustPostedMessage(hint);
+                    break;
+                case 'home-menu-hidden':
+                    this._adjustFromHomeMenuHidden(hint);
+                    break;
+                case 'home-menu-shown':
+                    this._adjustFromHomeMenuShown(hint);
                     break;
                 case 'more-messages-loaded':
                     this._adjustFromMoreMessagesLoaded(hint);
@@ -320,9 +329,9 @@ class MessageList extends Component {
         }
         let isProcessed = false;
         if (threadCache.messages.length > 0) {
-            if (this.threadViewer.threadCacheInitialPosition !== undefined) {
+            if (this.threadViewer.threadCacheInitialScrollPosition !== undefined) {
                 if (this.props.hasScrollAdjust) {
-                    this.el.scrollTop = this.threadViewer.threadCacheInitialPosition;
+                    this.el.scrollTop = this.threadViewer.threadCacheInitialScrollPosition;
                 }
                 isProcessed = true;
             } else {
@@ -345,11 +354,21 @@ class MessageList extends Component {
     /**
      * @private
      * @param {Object} hint
-     * @param {integer} hint.messageId
+     */
+    _adjustFromChatWindowUnfolded(hint) {
+        this._adjustScrollFromModel();
+        this.threadViewer.markComponentHintProcessed(hint);
+    }
+
+    /**
+     * @private
+     * @param {Object} hint
+     * @param {Object} hint.data
+     * @param {integer} hint.data.messageId
      */
     async _adjustFromCurrentPartnerJustPostedMessage(hint) {
         const threadCache = this.threadViewer.threadCache;
-        const { messageId } = hint;
+        const { messageId } = hint.data;
         if (threadCache.isLoaded) {
             const threadCacheMessageIds = threadCache.messages.map(message => message.id);
             if (threadCacheMessageIds.includes(messageId) && this.messageRefFromId(messageId)) {
@@ -359,6 +378,24 @@ class MessageList extends Component {
                 this.threadViewer.markComponentHintProcessed(hint);
             }
         }
+    }
+
+    /**
+     * @private
+     * @param {Object} hint
+     */
+    _adjustFromHomeMenuHidden(hint) {
+        this._adjustScrollFromModel();
+        this.threadViewer.markComponentHintProcessed(hint);
+    }
+
+    /**
+     * @private
+     * @param {Object} hint
+     */
+    _adjustFromHomeMenuShown(hint) {
+        this._adjustScrollFromModel();
+        this.threadViewer.markComponentHintProcessed(hint);
     }
 
     /**
@@ -375,6 +412,18 @@ class MessageList extends Component {
             this.el.scrollTop = this.el.scrollHeight - scrollHeight + scrollTop;
         }
         this.threadViewer.markComponentHintProcessed(hint);
+    }
+
+    /**
+     * @private
+     */
+    _adjustScrollFromModel() {
+        if (
+            this.threadViewer.threadCacheInitialScrollPosition !== undefined &&
+            this.props.hasScrollAdjust
+        ) {
+            this.el.scrollTop = this.threadViewer.threadCacheInitialScrollPosition;
+        }
     }
 
     /**

@@ -605,7 +605,7 @@ class StockQuant(models.Model):
         ctx = dict(self.env.context or {})
         ctx.pop('group_by', None)
         action = {
-            'name': _('Update Quantity'),
+            'name': _('Stock On Hand'),
             'view_type': 'tree',
             'view_mode': 'list',
             'res_model': 'stock.quant',
@@ -711,6 +711,11 @@ class QuantPackage(models.Model):
             ])
             move_line_to_modify.write({'package_id': False})
             package.mapped('quant_ids').sudo().write({'package_id': False})
+
+        # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
+        # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
+        self.env['stock.quant']._merge_quants()
+        self.env['stock.quant']._unlink_zero_quants()
 
     def action_view_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read()[0]

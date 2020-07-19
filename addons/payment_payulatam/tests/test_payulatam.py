@@ -9,10 +9,11 @@ from odoo.tests import tagged
 
 class PayUlatamCommon(PaymentAcquirerCommon):
 
-    def setUp(self):
-        super(PayUlatamCommon, self).setUp()
-        self.payulatam = self.env.ref('payment.payment_acquirer_payulatam')
-        self.payulatam.write({
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.payulatam = cls.env.ref('payment.payment_acquirer_payulatam')
+        cls.payulatam.write({
             'payulatam_account_id': 'dummy',
             'payulatam_merchant_id': 'dummy',
             'payulatam_api_key': 'dummy',

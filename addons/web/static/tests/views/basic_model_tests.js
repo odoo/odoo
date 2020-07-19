@@ -2037,8 +2037,9 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('has a proper evaluation context', async function (assert) {
-            assert.expect(1);
+            assert.expect(6);
 
+            const unpatchDate = testUtils.mock.patchDate(1997, 0, 9, 12, 0, 0);
             this.params.fieldNames = Object.keys(this.data.partner.fields);
             this.params.res_id = 1;
 
@@ -2048,8 +2049,24 @@ odoo.define('web.basic_model_tests', function (require) {
             });
 
             var resultID = await model.load(this.params);
-            var record = model.get(resultID);
-            assert.deepEqual(record.evalContext, {
+            const { evalContext } = model.get(resultID);
+            assert.strictEqual(typeof evalContext.datetime, "object");
+            assert.strictEqual(typeof evalContext.relativedelta, "object");
+            assert.strictEqual(typeof evalContext.time, "object");
+            assert.strictEqual(typeof evalContext.context_today, "function");
+            assert.strictEqual(typeof evalContext.tz_offset, "function");
+            const blackListedKeys = [
+                "time",
+                "datetime",
+                "relativedelta",
+                "context_today",
+                "tz_offset",
+            ];
+            // Remove uncomparable values from the evaluation context
+            for (const key of blackListedKeys) {
+                delete evalContext[key];
+            }
+            assert.deepEqual(evalContext, {
                 active: true,
                 active_id: 1,
                 active_ids: [1],
@@ -2058,6 +2075,8 @@ odoo.define('web.basic_model_tests', function (require) {
                 category: [12],
                 current_company_id: false,
                 current_date: moment().format('YYYY-MM-DD'),
+                today: moment().format('YYYY-MM-DD'),
+                now: moment().utc().format('YYYY-MM-DD HH:mm:ss'),
                 date: "2017-01-25",
                 display_name: "first partner",
                 foo: "blip",
@@ -2070,6 +2089,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 x_active: true,
             }, "should use the proper eval context");
             model.destroy();
+            unpatchDate();
         });
 
         QUnit.test('x2manys in contexts and domains are correctly evaluated', async function (assert) {

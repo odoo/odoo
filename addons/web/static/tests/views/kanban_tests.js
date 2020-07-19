@@ -3346,8 +3346,8 @@ QUnit.module('Views', {
 
         // test column drag and drop having an 'Undefined' column
         await testUtils.dom.dragAndDrop(
-            kanban.$('.o_kanban_header_title:first'),
-            kanban.$('.o_kanban_header_title:last'), {position: 'right'}
+            kanban.$('.o_column_title:first'),
+            kanban.$('.o_column_title:last'), {position: 'right'}
         );
         assert.strictEqual(resequencedIDs, undefined,
             "resequencing require at least 2 not Undefined columns");
@@ -3356,14 +3356,14 @@ QUnit.module('Views', {
         await testUtils.dom.click(kanban.$('.o_column_quick_create button.o_kanban_add'));
         var newColumnID = kanban.$('.o_kanban_group:last').data('id');
         await testUtils.dom.dragAndDrop(
-            kanban.$('.o_kanban_header_title:first'),
-            kanban.$('.o_kanban_header_title:last'), {position: 'right'}
+            kanban.$('.o_column_title:first'),
+            kanban.$('.o_column_title:last'), {position: 'right'}
         );
         assert.deepEqual([3, newColumnID], resequencedIDs,
             "moving the Undefined column should not affect order of other columns");
         await testUtils.dom.dragAndDrop(
-            kanban.$('.o_kanban_header_title:first'),
-            kanban.$('.o_kanban_header_title:nth(1)'), {position: 'right'}
+            kanban.$('.o_column_title:first'),
+            kanban.$('.o_column_title:nth(1)'), {position: 'right'}
         );
         await nextTick(); // wait for resequence after drag and drop
         assert.deepEqual([newColumnID, 3], resequencedIDs,
@@ -4495,6 +4495,48 @@ QUnit.module('Views', {
         assert.hasClass(kanban, 'o_view_sample_data');
         assert.containsN(kanban, '.o_kanban_group', 3);
         assert.ok(kanban.$('.o_kanban_record').length > 0, 'should contain sample records');
+
+        kanban.destroy();
+    });
+
+    QUnit.test('empty grouped kanban with sample data: cannot fold a column', async function (assert) {
+        // folding a column in grouped kanban with sample data is disabled, for the sake of simplicity
+        assert.expect(5);
+
+        const kanban = await createView({
+            arch: `
+                <kanban sample="1">
+                    <field name="product_id"/>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            data: this.data,
+            groupBy: ['product_id'],
+            model: 'partner',
+            View: KanbanView,
+            async mockRPC(route, { kwargs, method }) {
+                const result = await this._super(...arguments);
+                if (method === 'web_read_group') {
+                    // override read_group to return a single, empty group
+                    result.groups = result.groups.slice(0, 1);
+                    result.groups[0][`${kwargs.groupby[0]}_count`] = 0;
+                    result.length = 1;
+                }
+                return result;
+            },
+        });
+
+        assert.hasClass(kanban, 'o_view_sample_data');
+        assert.containsOnce(kanban, '.o_kanban_group');
+        assert.ok(kanban.$('.o_kanban_record').length > 0, 'should contain sample records');
+
+        await testUtils.dom.click(kanban.el.querySelector('.o_kanban_config > a'));
+
+        assert.hasClass(kanban.el.querySelector('.o_kanban_config .o_kanban_toggle_fold'), 'o_sample_data_disabled');
+        assert.hasClass(kanban.el.querySelector('.o_kanban_config .o_kanban_toggle_fold'), 'disabled');
 
         kanban.destroy();
     });
@@ -6712,6 +6754,29 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
         await testUtils.dom.click(kanban.$('.o_field_image').first());
+
+        kanban.destroy();
+    });
+
+    QUnit.test('kanban view with boolean field', async function (assert) {
+        assert.expect(2);
+
+        const kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <kanban>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div><field name="bar"/></div>
+                        </t>
+                    </templates>
+                </kanban>`,
+        });
+
+        assert.containsN(kanban, '.o_kanban_record:contains(True)', 3);
+        assert.containsOnce(kanban, '.o_kanban_record:contains(False)');
 
         kanban.destroy();
     });

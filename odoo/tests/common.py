@@ -381,7 +381,7 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
             return self._assertRaises(exception, **kwargs)
 
     @contextmanager
-    def assertQueries(self, expected):
+    def assertQueries(self, expected, flush=True):
         """ Check the queries made by the current cursor. ``expected`` is a list
         of strings representing the expected queries being made. Query strings
         are matched against each other, ignoring case and whitespaces.
@@ -396,9 +396,16 @@ class BaseCase(TreeCase, MetaCase('DummyCase', (object,), {})):
         def get_unaccent_wrapper(cr):
             return lambda x: x
 
+        if flush:
+            self.env.user.flush()
+            self.env.cr.precommit()
+
         with patch('odoo.sql_db.Cursor.execute', execute):
             with patch('odoo.osv.expression.get_unaccent_wrapper', get_unaccent_wrapper):
                 yield actual_queries
+                if flush:
+                    self.env.user.flush()
+                    self.env.cr.precommit()
 
         self.assertEqual(
             len(actual_queries), len(expected),
@@ -1402,7 +1409,7 @@ class HttpCase(TransactionCase):
         `browser_js` can be passed as keyword arguments."""
         step_delay = ', %s' % step_delay if step_delay else ''
         code = kwargs.pop('code', "odoo.startTour('%s'%s)" % (tour_name, step_delay))
-        ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours.%s.ready" % tour_name)
+        ready = kwargs.pop('ready', "odoo.__DEBUG__.services['web_tour.tour'].tours['%s'].ready" % tour_name)
         res = self.browser_js(url_path=url_path, code=code, ready=ready, **kwargs)
         # some tests read the result after the tour, and as  the tour does not
         # use this environment's cache, invalidate it to fetch the data from the

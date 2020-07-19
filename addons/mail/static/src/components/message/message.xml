@@ -49,7 +49,7 @@
                                 />
                             </t>
                         </div>
-                        <t t-if="message.isCurrentPartnerAuthor and threadViewer and threadViewer.thread">
+                        <t t-if="message.isCurrentPartnerAuthor and threadViewer and threadViewer.thread and threadViewer.thread.hasSeenIndicators">
                             <MessageSeenIndicator class="o_Message_seenIndicator o-message-squashed" messageLocalId="message.localId" threadLocalId="threadViewer.thread.localId"/>
                         </t>
                     </t>
@@ -180,6 +180,9 @@
                             </ul>
                         </t>
                     </div>
+                    <t t-if="message.subject and threadViewer and threadViewer.thread and (threadViewer.thread.mass_mailing or [env.messaging.inbox, env.messaging.history].includes(threadViewer.thread))">
+                        <p class="o_Message_subject">Subject: <t t-esc="message.subject"/></p>
+                    </t>
                     <t t-if="message.attachments and message.attachments.length > 0">
                         <div class="o_Message_footer">
                             <!-- TODO XDU This does not allow to preview all attachments at once, find somethind else -->

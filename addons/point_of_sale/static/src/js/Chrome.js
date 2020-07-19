@@ -1,7 +1,7 @@
 odoo.define('point_of_sale.Chrome', function(require) {
     'use strict';
 
-    const { useState, useRef } = owl.hooks;
+    const { useState, useRef, useContext } = owl.hooks;
     const { debounce } = owl.utils;
     const { loadCSS } = require('web.ajax');
     const { useListener } = require('web.custom_hooks');
@@ -11,6 +11,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
     const NumberBuffer = require('point_of_sale.NumberBuffer');
     const PopupControllerMixin = require('point_of_sale.PopupControllerMixin');
     const Registries = require('point_of_sale.Registries');
+    const IndependentToOrderScreen = require('point_of_sale.IndependentToOrderScreen');
+    const contexts = require('point_of_sale.PosContext');
 
     // This is kind of a trick.
     // We get a reference to the whole exports so that
@@ -33,6 +35,8 @@ odoo.define('point_of_sale.Chrome', function(require) {
             useListener('play-sound', this._onPlaySound);
             useListener('set-sync-status', this._onSetSyncStatus);
             NumberBuffer.activate();
+
+            this.chromeContext = useContext(contexts.chrome);
 
             this.state = useState({
                 uiState: 'LOADING', // 'LOADING' | 'READY' | 'CLOSING'
@@ -115,6 +119,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 // We can then test PosModel independently from Chrome by supplying
                 // mocked version of these default attributes.
                 const posModelDefaultAttributes = {
+                    env: this.env,
                     rpc: this.rpc.bind(this),
                     session: this.env.session,
                     do_action: this.props.webClient.do_action.bind(this.props.webClient),
@@ -137,10 +142,13 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 if (_.isEmpty(this.env.pos.db.product_by_category_id)) {
                     this._loadDemoData();
                 }
-                this.env.pos.push_orders(); // push order in the background, no need to await
-                // Allow using the app even if not all the images are loaded.
-                // Basically, preload the images in the background.
-                setTimeout(() => this._preloadImages());
+                setTimeout(() => {
+                    // push order in the background, no need to await
+                    this.env.pos.push_orders();
+                    // Allow using the app even if not all the images are loaded.
+                    // Basically, preload the images in the background.
+                    this._preloadImages();
+                });
             } catch (error) {
                 let title = 'Unknown Error',
                     body;
@@ -201,14 +209,21 @@ odoo.define('point_of_sale.Chrome', function(require) {
         __closeTempScreen() {
             this.tempScreen.isShown = false;
         }
-        __showScreen({ detail: { name, props } }) {
+        __showScreen({ detail: { name, props = {} } }) {
+            const component = this.constructor.components[name];
             // 1. Set the information of the screen to display.
             this.mainScreen.name = name;
-            this.mainScreen.component = this.constructor.components[name];
-            this.mainScreenProps = props || {};
-            // 2. Save the screen to the order.
+            this.mainScreen.component = component;
+            this.mainScreenProps = props;
+
+            // 2. Set some options
+            this.chromeContext.showOrderSelector = !component.hideOrderSelector;
+
+            // 3. Save the screen to the order.
             //  - This screen is shown when the order is selected.
-            this._setScreenData(name, props);
+            if (!(component.prototype instanceof IndependentToOrderScreen)) {
+                this._setScreenData(name, props);
+            }
         }
         /**
          * Set the latest screen to the current order. This is done so that
@@ -314,7 +329,7 @@ odoo.define('point_of_sale.Chrome', function(require) {
 
         async _loadDemoData() {
             const { confirmed } = await this.showPopup('ConfirmPopup', {
-                title: this.env._t('Load Demo Data'),
+                title: this.env._t('You do not have any products'),
                 body: this.env._t(
                     'Would you like to load demo data?'
                 ),
@@ -356,7 +371,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 this.state.uiState.hasBigScrollBars = true;
             }
 
-            this._disableRubberbanding();
             this._disableBackspaceBack();
             this._replaceCrashmanager();
         }
@@ -380,38 +394,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                 },
             });
         }
-        _disableRubberbanding() {
-            var self = this;
-
-            document.body.addEventListener('touchstart', function (event) {
-                self.previous_touch_y_coordinate = event.touches[0].clientY;
-            });
-
-            // prevent the pos body from being scrollable.
-            document.body.addEventListener('touchmove', function (event) {
-                var node = event.target;
-                var current_touch_y_coordinate = event.touches[0].clientY;
-                var scrolling_down;
-
-                if (current_touch_y_coordinate < self.previous_touch_y_coordinate) {
-                    scrolling_down = true;
-                } else {
-                    scrolling_down = false;
-                }
-
-                while (node) {
-                    if (
-                        node.classList &&
-                        node.classList.contains('touch-scrollable') &&
-                        self._scrollable(node, scrolling_down)
-                    ) {
-                        return;
-                    }
-                    node = node.parentNode;
-                }
-                event.preventDefault();
-            });
-        }
         // prevent backspace from performing a 'back' navigation
         _disableBackspaceBack() {
             $(document).on('keydown', function (e) {
@@ -419,21 +401,6 @@ odoo.define('point_of_sale.Chrome', function(require) {
                     e.preventDefault();
                 }
             });
-        }
-        _scrollable(element, scrolling_down) {
-            var $element = $(element);
-            var scrollable = true;
-
-            if (!scrolling_down && $element.scrollTop() <= 0) {
-                scrollable = false;
-            } else if (
-                scrolling_down &&
-                $element.scrollTop() + $element.height() >= element.scrollHeight
-            ) {
-                scrollable = false;
-            }
-
-            return scrollable;
         }
     }
     Chrome.template = 'Chrome';

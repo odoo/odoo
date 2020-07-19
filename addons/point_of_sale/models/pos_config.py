@@ -201,7 +201,7 @@ class PosConfig(models.Model):
     module_pos_discount = fields.Boolean("Global Discounts")
     module_pos_loyalty = fields.Boolean("Loyalty Program")
     module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
-    module_pos_reprint = fields.Boolean(string="Reprint Receipt")
+    manage_orders = fields.Boolean(string="Manage Orders")
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")
@@ -217,6 +217,7 @@ class PosConfig(models.Model):
     cash_rounding = fields.Boolean(string="Cash Rounding")
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
     has_active_session = fields.Boolean(compute='_compute_current_session')
+    show_allow_invoicing_alert = fields.Boolean(compute="_compute_show_allow_invoicing_alert")
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
@@ -259,6 +260,14 @@ class PosConfig(models.Model):
             pos_config.has_active_session = opened_sessions and True or False
             pos_config.current_session_id = session and session[0].id or False
             pos_config.current_session_state = session and session[0].state or False
+
+    @api.depends('module_account', 'manage_orders')
+    def _compute_show_allow_invoicing_alert(self):
+        for pos_config in self:
+            if not pos_config.manage_orders:
+                pos_config.show_allow_invoicing_alert = False
+            else:
+                pos_config.show_allow_invoicing_alert = not pos_config.module_account
 
     @api.depends('session_ids')
     def _compute_last_session(self):

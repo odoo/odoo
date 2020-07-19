@@ -71,8 +71,8 @@ options.registry.InnerChart = options.Class.extend({
         // prevent the columns from becoming too small.
         this.tableEl.classList.toggle('o_we_matrix_five_col', this.tableEl.querySelectorAll('tr:first-child th').length > 5);
 
-        this.backSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Background Color") : _t("Dataset Background Color");
-        this.borderSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Border Color") : _t("Dataset Border Color");
+        this.backSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Color") : _t("Dataset Color");
+        this.borderSelectEl.querySelector('we-title').textContent = this._isPieChart() ? _t("Data Border") : _t("Dataset Border");
 
         // Dataset/Cell color
         this.tableEl.querySelectorAll('input').forEach(el => el.style.border = '');

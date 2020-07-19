@@ -33,7 +33,8 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
         linkButton.classList.add('o_we_redirect_to', 'fa', 'fa-fw', 'fa-external-link');
         linkButton.title = _t("Redirect to URL in a new tab");
         this.containerEl.appendChild(linkButton);
-        $(this.inputEl).addClass('text-left');
+        this.el.classList.add('o_we_large_input');
+        this.inputEl.classList.add('text-left');
         wUtils.autocompleteWithPages(this, $(this.inputEl));
     },
 
@@ -77,21 +78,22 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
      */
     start: async function () {
         const style = window.getComputedStyle(document.documentElement);
-        this.nbFonts = parseInt(style.getPropertyValue('--number-of-fonts'));
+        const nbFonts = parseInt(style.getPropertyValue('--number-of-fonts'));
         const googleFontsProperty = style.getPropertyValue('--google-fonts').trim();
         this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
+        this.googleFonts = this.googleFonts.map(font => font.substring(1, font.length - 1)); // Unquote
 
         await this._super(...arguments);
 
         const fontEls = [];
         const methodName = this.el.dataset.methodName || 'customizeWebsiteVariable';
         const variable = this.el.dataset.variable;
-        _.times(this.nbFonts, fontNb => {
+        _.times(nbFonts, fontNb => {
             const realFontNb = fontNb + 1;
             const fontEl = document.createElement('we-button');
             fontEl.classList.add(`o_we_option_font_${realFontNb}`);
             fontEl.dataset.variable = variable;
-            fontEl.dataset[methodName] = realFontNb;
+            fontEl.dataset[methodName] = style.getPropertyValue(`--font-number-${realFontNb}`).trim();
             fontEl.dataset.font = realFontNb;
             fontEls.push(fontEl);
             this.menuEl.appendChild(fontEl);
@@ -154,10 +156,8 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                         }
                         const font = m[1].replace(/\+/g, ' ');
                         this.googleFonts.push(font);
-                        const values = {};
-                        values[variable] = this.nbFonts + 1;
                         this.trigger_up('google_fonts_custo_request', {
-                            values: values,
+                            values: {[variable]: `'${font}'`},
                             googleFonts: this.googleFonts,
                         });
                     },
@@ -187,27 +187,20 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             return;
         }
 
-        const nbBaseFonts = this.nbFonts - this.googleFonts.length;
-
         // Remove Google font
         const googleFontIndex = parseInt(ev.target.dataset.fontIndex);
+        const googleFont = this.googleFonts[googleFontIndex];
         this.googleFonts.splice(googleFontIndex, 1);
 
         // Adapt font variable indexes to the removal
         const values = {};
         const style = window.getComputedStyle(document.documentElement);
         _.each(FontFamilyPickerUserValueWidget.prototype.fontVariables, variable => {
-            const value = parseInt(style.getPropertyValue('--' + variable));
-            const googleFontValue = nbBaseFonts + 1 + googleFontIndex;
-            if (value === googleFontValue) {
+            const value = style.getPropertyValue(`--${variable}`).trim();
+            if (value.substring(1, value.length - 1) === googleFont) {
                 // If an element is using the google font being removed, reset
-                // it to the first base font.
-                values[variable] = 1;
-            } else if (value > googleFontValue) {
-                // If an element is using a google font whose index is higher
-                // than the one of the font being removed, that index must be
-                // lowered by 1 so that the font is unchanged.
-                values[variable] = value - 1;
+                // it to the theme default.
+                values[variable] = 'null';
             }
         });
 
@@ -518,19 +511,7 @@ options.Class.include({
     },
 });
 
-options.registry.BackgroundOptimize.include({
-    /**
-     * @override
-     */
-    _computeVisibility() {
-        if (this.$target.hasClass('o_background_video')) {
-            return false;
-        }
-        return this._super(...arguments);
-    },
-});
-
-options.registry.background.include({
+options.registry.BackgroundImage.include({
     background: async function (previewMode, widgetValue, params) {
         if (previewMode === 'reset' && this.videoSrc) {
             return this._setBgVideo(false, this.videoSrc);
@@ -598,6 +579,45 @@ options.registry.background.include({
     },
 });
 
+options.registry.BackgroundOptimize.include({
+    /**
+     * @override
+     */
+    _computeVisibility() {
+        if (this.$target.hasClass('o_background_video')) {
+            return false;
+        }
+        return this._super(...arguments);
+    },
+});
+
+options.registry.SwitchTheme = options.Class.extend({
+    isTopOption: true,
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * @see this.selectClass for parameters
+     */
+    switchTheme: async function (previewMode, widgetValue, params) {
+        const save = await new Promise(resolve => {
+            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
+                confirm_callback: () => resolve(true),
+                cancel_callback: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
+        }
+        this.trigger_up('request_save', {
+            reload: false,
+            onSuccess: () => window.location.href = '/web#action=website.theme_install_kanban_action',
+        });
+    },
+});
+
 options.registry.Theme = options.Class.extend({
     events: {
         'click .o_color_combinations_edition we-toggler': '_onCCTogglerClick',
@@ -658,6 +678,14 @@ options.registry.Theme = options.Class.extend({
         }
 
         await this._reloadBundles();
+    },
+    async enableImagepicker(previewMode, widgetValue, params) {
+        if (widgetValue) {
+            // TODO improve: here we make a hack so that a hidden imagepicker
+            // widget opens...
+            const widget = this._requestUserValueWidgets(widgetValue)[0];
+            widget.$el.click();
+        }
     },
     /**
      * @see this.selectClass for parameters
@@ -733,24 +761,6 @@ options.registry.Theme = options.Class.extend({
             dialog.open();
         });
     },
-    /**
-     * @see this.selectClass for parameters
-     */
-    switchTheme: async function (previewMode, widgetValue, params) {
-        const save = await new Promise(resolve => {
-            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
-                confirm_callback: () => resolve(true),
-                cancel_callback: () => resolve(false),
-            });
-        });
-        if (!save) {
-            return;
-        }
-        this.trigger_up('request_save', {
-            reload: false,
-            onSuccess: () => window.location.href = '/web#action=website.theme_install_kanban_action',
-        });
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -784,6 +794,15 @@ options.registry.Theme = options.Class.extend({
             const bgURL = $('#wrapwrap').css('background-image');
             const srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
             return bgURL && bgURL.replace(srcValueWrapper, '') || '';
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'body_bg_image_opt') {
+            return false;
         }
         return this._super(...arguments);
     },
@@ -860,7 +879,6 @@ options.registry.Theme = options.Class.extend({
             const togglerEl = document.createElement('we-toggler');
             togglerEl.classList.add('pt-0', 'pb-0', 'pl-0');
             const divEl = document.createElement('div');
-            divEl.classList.add('o_we_cc_preview_container');
             const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
             ccPreviewEl.classList.add('p-1', 'text-center', `o_cc${i}`);
             divEl.appendChild(ccPreviewEl);
@@ -1366,7 +1384,7 @@ options.registry.parallax = options.Class.extend({
      */
     onFocus: function () {
         this.trigger_up('option_update', {
-            optionNames: ['background', 'BackgroundPosition'],
+            optionNames: ['BackgroundImage', 'BackgroundPosition'],
             name: 'target',
             data: this.$target.find('> .s_parallax_bg'),
         });
@@ -1896,6 +1914,15 @@ options.registry.Box = options.Class.extend({
         }
         return this._super(...arguments);
     },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'fake_inset_shadow_opt') {
+            return false;
+        }
+        return this._super(...arguments);
+    },
 });
 
 options.registry.CookiesBar = options.registry.SnippetPopup.extend({
@@ -1993,6 +2020,7 @@ options.registry.CoverProperties = options.Class.extend({
             this.$target.removeClass('o_record_has_cover');
         } else {
             this.$image.css('background-image', `url('${widgetValue}')`);
+            this.$target.addClass('o_record_has_cover');
             const $defaultSizeBtn = this.$el.find('.o_record_cover_opt_size_default');
             $defaultSizeBtn.click();
             $defaultSizeBtn.closest('we-select').click();
@@ -2057,10 +2085,8 @@ options.registry.CoverProperties = options.Class.extend({
      * @override
      */
     _computeWidgetVisibility: function (widgetName, params) {
-        const hasCover = this.$target.hasClass('o_record_has_cover');
         if (params.coverOptName) {
-            var notAllowed = (this.$target.data(`use_${params.coverOptName}`) !== 'True');
-            return (hasCover && !notAllowed);
+            return this.$target.data(`use_${params.coverOptName}`) === 'True';
         }
         return this._super(...arguments);
     },

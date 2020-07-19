@@ -11,6 +11,7 @@ from collections.abc import Mapping
 from operator import itemgetter
 
 import dateutil
+from psycopg2 import sql
 
 from odoo import api, fields, models, tools, _
 from odoo.exceptions import AccessError, UserError, ValidationError
@@ -203,7 +204,7 @@ class IrModel(models.Model):
         for model in self:
             records = self.env[model.model]
             if not records._abstract:
-                cr.execute('SELECT COUNT(*) FROM "%s"' % records._table)
+                cr.execute(sql.SQL('SELECT COUNT(*) FROM {}').format(sql.Identifier(records._table)))
                 model.count = cr.fetchone()[0]
 
     @api.constrains('model')
@@ -233,7 +234,7 @@ class IrModel(models.Model):
                     raise ValidationError(_("Unable to order by %s: fields used for ordering must be present on the model and stored.", field))
 
     _sql_constraints = [
-        ('obj_name_uniq', 'unique (model)', 'Each model must be unique!'),
+        ('obj_name_uniq', 'unique (model)', 'Each model must have a unique name.'),
     ]
 
     def _get(self, name):
@@ -266,9 +267,9 @@ class IrModel(models.Model):
                 table = current_model._table
                 kind = tools.table_kind(self._cr, table)
                 if kind == 'v':
-                    self._cr.execute('DROP VIEW "%s"' % table)
+                    self._cr.execute(sql.SQL('DROP VIEW {}').format(sql.Identifier(table)))
                 elif kind == 'r':
-                    self._cr.execute('DROP TABLE "%s" CASCADE' % table)
+                    self._cr.execute(sql.SQL('DROP TABLE {} CASCADE').format(sql.Identifier(table)))
                     # discard all translations for this model
                     self._cr.execute("""
                         DELETE FROM ir_translation
@@ -383,7 +384,7 @@ class IrModel(models.Model):
             ids = upsert(self.env.cr, self._table, cols, rows, ['model'])
             for row, id_ in zip(rows, ids):
                 model_ids[row[0]] = id_
-            self.pool.post_init(mark_modified, self.browse(ids), cols)
+            self.pool.post_init(mark_modified, self.browse(ids), cols[1:])
 
         # update their XML id
         module = self._context.get('module')
@@ -713,8 +714,8 @@ class IrModelFields(models.Model):
                 # TODO: Refactor this brol in master
                 if is_model and tools.column_exists(self._cr, model._table, field.name) and \
                         tools.table_kind(self._cr, model._table) == 'r':
-                    self._cr.execute('ALTER TABLE "%s" DROP COLUMN "%s" CASCADE' % (
-                        model._table, field.name,
+                    self._cr.execute(sql.SQL('ALTER TABLE {} DROP COLUMN {} CASCADE').format(
+                        sql.Identifier(model._table), sql.Identifier(field.name),
                     ))
                 if field.state == 'manual' and field.ttype == 'many2many':
                     rel_name = field.relation_table or (is_model and model._fields[field.name].relation)
@@ -735,7 +736,7 @@ class IrModelFields(models.Model):
                              (tuple(tables_to_drop), tuple(self.ids)))
             tables_to_keep = set(row[0] for row in self._cr.fetchall())
             for rel_name in tables_to_drop - tables_to_keep:
-                self._cr.execute('DROP TABLE "%s"' % rel_name)
+                self._cr.execute(sql.SQL('DROP TABLE {}').format(sql.Identifier(rel_name)))
 
         return True
 
@@ -937,9 +938,18 @@ class IrModelFields(models.Model):
             # rename column in database, and its corresponding index if present
             table, oldname, newname, index, stored = column_rename
             if stored:
-                self._cr.execute('ALTER TABLE "%s" RENAME COLUMN "%s" TO "%s"' % (table, oldname, newname))
+                self._cr.execute(
+                    sql.SQL('ALTER TABLE {} RENAME COLUMN {} TO {}').format(
+                        sql.Identifier(table),
+                        sql.Identifier(oldname),
+                        sql.Identifier(newname)
+                    ))
                 if index:
-                    self._cr.execute('ALTER INDEX "%s_%s_index" RENAME TO "%s_%s_index"' % (table, oldname, table, newname))
+                    self._cr.execute(
+                        sql.SQL('ALTER INDEX {} RENAME TO {}').format(
+                            sql.Identifier(f'{table}_{oldname}_index'),
+                            sql.Identifier(f'{table}_{newname}_index'),
+                        ))
 
         if column_rename or patched_models:
             # setup models, this will reload all manual fields in registry
@@ -1032,7 +1042,7 @@ class IrModelFields(models.Model):
             ids = upsert(cr, self._table, cols, rows, ['model', 'name'])
             for row, id_ in zip(rows, ids):
                 field_ids[row[:2]] = id_
-            self.pool.post_init(mark_modified, self.browse(ids), cols)
+            self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
 
         # update their XML id
         module = self._context.get('module')
@@ -1208,7 +1218,7 @@ class IrModelSelection(models.Model):
         rows = [key + val for key, val in expected.items() if existing.get(key) != val]
         if rows:
             ids = upsert(cr, self._table, cols, rows, ['field_id', 'value'])
-            self.pool.post_init(mark_modified, self.browse(ids), cols)
+            self.pool.post_init(mark_modified, self.browse(ids), cols[2:])
 
         # update their XML ids
         module = self._context.get('module')
@@ -1450,7 +1460,11 @@ class IrModelConstraint(models.Model):
                                     WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
                                  ('f', name, table))
                 if self._cr.fetchone():
-                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (table, name),)
+                    self._cr.execute(
+                        sql.SQL('ALTER TABLE {} DROP CONSTRAINT {}').format(
+                            sql.Identifier(table),
+                            sql.Identifier(name)
+                        ))
                     _logger.info('Dropped FK CONSTRAINT %s@%s', name, data.model.model)
 
             if typ == 'u':
@@ -1459,7 +1473,8 @@ class IrModelConstraint(models.Model):
                                     WHERE cs.contype=%s and cs.conname=%s and cl.relname=%s""",
                                  ('u', name, table))
                 if self._cr.fetchone():
-                    self._cr.execute('ALTER TABLE "%s" DROP CONSTRAINT "%s"' % (table, name),)
+                    self._cr.execute(sql.SQL('ALTER TABLE {} DROP CONSTRAINT {}').format(
+                        sql.Identifier(table), sql.Identifier(name)))
                     _logger.info('Dropped CONSTRAINT %s@%s', name, data.model.model)
 
         self.unlink()
@@ -1581,7 +1596,7 @@ class IrModelRelation(models.Model):
 
         # drop m2m relation tables
         for table in to_drop:
-            self._cr.execute('DROP TABLE "%s" CASCADE' % table,)
+            self._cr.execute(sql.SQL('DROP TABLE {} CASCADE').format(sql.Identifier(table)))
             _logger.info('Dropped table %s', table)
 
     def _reflect_relation(self, model, table, module):

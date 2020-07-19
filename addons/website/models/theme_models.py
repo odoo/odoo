@@ -167,10 +167,10 @@ class Theme(models.AbstractModel):
         self.env['web_editor.assets'].make_scss_customization(
             '/website/static/src/scss/options/user_values.scss',
             {
-                'font-number': 'null',
-                'headings-font-number': 'null',
-                'navbar-font-number': 'null',
-                'buttons-font-number': 'null',
+                'font': 'null',
+                'headings-font': 'null',
+                'navbar-font': 'null',
+                'buttons-font': 'null',
                 'color-palettes-number': 'null',
                 'header-template': 'null',
                 'footer-template': 'null',

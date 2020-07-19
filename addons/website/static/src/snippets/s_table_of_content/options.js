@@ -11,7 +11,6 @@ options.registry.TableOfContent = options.Class.extend({
         this.targetedElements = 'h1, h2';
         const $headings = this.$target.find(this.targetedElements);
         if ($headings.length > 0) {
-            this.isAnimateScrolling = this.$target.find(this.targetedElements)[0].dataset.anchor === 'true' ? true : false;
             this._generateNav();
         }
         // Generate the navbar if the content changes
@@ -26,22 +25,6 @@ options.registry.TableOfContent = options.Class.extend({
      */
     onClone: function () {
         this._generateNav();
-    },
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * Animate (or not) scrolling.
-     *
-     * @see this.selectClass for parameters
-     */
-    animateScrolling: function (previewMode, widgetValue, params) {
-        const $headings = this.$target.find(this.targetedElements);
-        const anchorValue = widgetValue ? 'true' : '0';
-        _.each($headings, el => el.dataset.anchor = anchorValue);
-        this.isAnimateScrolling = !!widgetValue;
     },
 
     //--------------------------------------------------------------------------
@@ -63,25 +46,9 @@ options.registry.TableOfContent = options.Class.extend({
                     .text($el.text())
                     .appendTo($nav);
             $el.attr('id', id);
-            $el[0].dataset.anchor = this.isAnimateScrolling === true ? 'true' : '0';
+            $el[0].dataset.anchor = 'true';
         });
         $nav.find('a:first').addClass('active');
-    },
-    /**
-     * @override
-     */
-    _computeWidgetState: function (methodName, params) {
-        switch (methodName) {
-            case 'animateScrolling': {
-                const $headings = this.$target.find(this.targetedElements);
-                if ($headings.length > 0) {
-                    return $headings[0].dataset.anchor === 'true' ? 'true' : '0';
-                } else {
-                    return 'true';
-                }
-            }
-        }
-        return this._super(...arguments);
     },
 });
 

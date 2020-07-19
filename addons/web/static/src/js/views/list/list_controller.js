@@ -58,13 +58,15 @@ var ListController = BasicController.extend({
         this.fieldChangedPrevented = false;
         this.isPageSelected = false; // true iff all records of the page are selected
         this.isDomainSelected = false; // true iff the user selected all records matching the domain
-        session.user_has_group('base.group_allow_export').then(has_group => {
-            this.isExportEnable = has_group;
+        this.isExportEnable = false;
+    },
+
+    willStart() {
+        const sup = this._super(...arguments);
+        const acl = session.user_has_group('base.group_allow_export').then(hasGroup => {
+            this.isExportEnable = hasGroup;
         });
-        Object.defineProperty(this, 'mode', {
-            get: () => this.renderer.isEditable() ? 'edit' : 'readonly',
-            set: () => {},
-        });
+        return Promise.all([sup, acl]);
     },
 
     //--------------------------------------------------------------------------
@@ -519,6 +521,7 @@ var ListController = BasicController.extend({
      */
     _setMode: function (mode, recordID) {
         if ((recordID || this.handle) !== this.handle) {
+            this.mode = mode;
             this.updateButtons(mode);
             return this.renderer.setRowMode(recordID, mode);
         } else {

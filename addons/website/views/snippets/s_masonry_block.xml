@@ -35,16 +35,6 @@
     </section>
 </template>
 
-<!-- Options -->
-<template id="s_masonry_block_options" inherit_id="website.snippet_options">
-    <xpath expr="//div[@data-js='background']" position="attributes">
-        <attribute name="data-selector" separator="," add=".s_masonry_block .row > *"/>
-    </xpath>
-    <xpath expr="//div[@data-js='BackgroundPosition']" position="attributes">
-        <attribute name="data-selector" separator="," add=".s_masonry_block .row > *"/>
-    </xpath>
-</template>
-
 <!-- Assets -->
 <template id="_assets_snippet_s_masonry_block_css_000_variables" inherit_id="website._assets_primary_variables" active="False">
     <xpath expr="//link[last()]" position="after">

@@ -176,7 +176,7 @@ const ColorPaletteWidget = Widget.extend({
             },
         });
         this.style.getPropertyValue(`--custom-colors`).trim().split(' ').forEach(v => {
-            const color = this.style.getPropertyValue(`--${v}`).trim();
+            const color = this.style.getPropertyValue(`--${v.substring(1, v.length - 1)}`).trim();
             if (ColorpickerWidget.isCSSColor(color)) {
                 this._addCustomColor(existingColors, color);
             }

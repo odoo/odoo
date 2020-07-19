@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
-from odoo import fields
+from freezegun import freeze_time
+
 from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
@@ -35,7 +36,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         cls.invoice_line_3.move_id.name = "RBILL/2019/09/0013" # Without demo data, avoid to match with the first invoice
         cls.invoice_line_4 = cls._create_invoice_line(1000, cls.partner_2, 'in_invoice')
 
-        current_assets_account = cls.env['account.account'].search([
+        cls.current_assets_account = cls.env['account.account'].search([
             ('user_type_id', '=', cls.env.ref('account.data_account_type_current_assets').id),
             ('company_id', '=', cls.company.id)], limit=1)
 
@@ -55,7 +56,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             })
 
         cls.rule_1 = cls.rule_0.copy()
-        cls.rule_1.write({'line_ids': [(0, 0, {'account_id': current_assets_account.id})]})
+        cls.rule_1.write({'line_ids': [(0, 0, {'account_id': cls.current_assets_account.id})]})
         cls.rule_1.match_partner = True
         cls.rule_1.match_partner_ids |= cls.partner_1 + cls.partner_2
         cls.rule_2 = cls.env['account.reconcile.model'].create({
@@ -63,7 +64,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'rule_type': 'writeoff_suggestion',
             'match_partner': True,
             'match_partner_ids': [],
-            'line_ids': [(0, 0, {'account_id': current_assets_account.id})],
+            'line_ids': [(0, 0, {'account_id': cls.current_assets_account.id})],
         })
 
         invoice_number = cls.invoice_line_1.move_id.name
@@ -104,6 +105,12 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'name': '21%',
             'type_tax_use': 'purchase',
             'amount': 21,
+        })
+
+        cls.tax12 = cls.env['account.tax'].create({
+            'name': '12%',
+            'type_tax_use': 'purchase',
+            'amount': 12,
         })
 
     @classmethod
@@ -356,8 +363,14 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
             'auto_reconcile': True,
             'rule_type': 'writeoff_suggestion',
             'line_ids': [(1, self.rule_1.line_ids.id, {
+                'amount': 50,
                 'force_tax_included': True,
                 'tax_ids': [(6, 0, self.tax21.ids)],
+            }), (0, 0, {
+                'amount': 100,
+                'force_tax_included': False,
+                'tax_ids': [(6, 0, self.tax12.ids)],
+                'account_id': self.current_assets_account.id,
             })]
         })
 
@@ -376,8 +389,11 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
         # Check first line has been well reconciled.
         self.assertRecordValues(self.bank_line_1.line_ids, [
             {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 121.0, 'tax_ids': [], 'tax_line_id': False},
-            {'partner_id': self.partner_1.id, 'debit': 100.0, 'credit': 0.0, 'tax_ids': [self.tax21.id], 'tax_line_id': False},
-            {'partner_id': self.partner_1.id, 'debit': 21.0, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': self.tax21.id},
+            {'partner_id': self.partner_1.id, 'debit': 0.0, 'credit': 7.26, 'tax_ids': [], 'tax_line_id': False},
+            {'partner_id': self.partner_1.id, 'debit': 50.0, 'credit': 0.0, 'tax_ids': [self.tax21.id], 'tax_line_id': False},
+            {'partner_id': self.partner_1.id, 'debit': 10.5, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': self.tax21.id},
+            {'partner_id': self.partner_1.id, 'debit': 60.5, 'credit': 0.0, 'tax_ids': [self.tax12.id], 'tax_line_id': False},
+            {'partner_id': self.partner_1.id, 'debit': 7.26, 'credit': 0.0, 'tax_ids': [], 'tax_line_id': self.tax12.id},
         ])
 
     def test_reverted_move_matching(self):
@@ -610,7 +626,7 @@ class TestReconciliationMatchingRules(AccountTestInvoicingCommon):
 
         self.env['account.reconcile.model'].flush()
 
-        with self.mocked_today('2017-01-01'):
+        with freeze_time('2017-01-01'):
             self._check_statement_matching(matching_rule, {
                 statement_line.id: {'aml_ids': (move_line_1 + move_line_2).ids, 'model': matching_rule}
             }, statements=statement)
