@@ -9,3 +9,7 @@ class ResConfigSettings(models.TransientModel):
 
     group_attendance_use_pin = fields.Boolean(string='Employee PIN',
         implied_group="hr_attendance.group_hr_attendance_use_pin")
+    count_attendance_extra_hours = fields.Boolean(string="Count Extra Hours",
+        related="company_id.count_attendance_extra_hours", readonly=False)
+    extra_hours_start_date = fields.Datetime(string="Extra Hours Starting Date",
+        related="company_id.extra_hours_start_date", readonly=False)

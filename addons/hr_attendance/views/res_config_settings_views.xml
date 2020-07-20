@@ -5,9 +5,9 @@
         <field name="model">res.config.settings</field>
         <field name="priority" eval="80"/>
         <field name="inherit_id" ref="base.res_config_settings_view_form"/>
-            <field name="arch" type="xml">
-                <xpath expr="//div[hasclass('settings')]" position="inside">
-                    <div class="app_settings_block" data-string="Attendances" string="Attendances" data-key="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
+        <field name="arch" type="xml">
+            <xpath expr="//div[hasclass('settings')]" position="inside">
+                <div class="app_settings_block" data-string="Attendances" string="Attendances" data-key="hr_attendance" groups="hr_attendance.group_hr_attendance_manager">
                     <h2>Check-In/Out</h2>
                     <div class="row mt16 o_settings_container" name="pincode_setting_container">
                         <div class="col-12 col-lg-6 o_setting_box" title="Set PIN codes in the employee detail form (in HR Settings tab).">
@@ -18,6 +18,24 @@
                                 <span class="o_form_label">Employee PIN</span>
                                 <div class="text-muted">
                                     Use PIN codes to check in in Kiosk Mode
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="app_settings_block">
+                    <h2>Extra Hours</h2>
+                    <div class="row mt16 o_settings_container" name="extra_hours_settings">
+                        <div class="col-12 col-lg-6 o_setting_box" title="Activate the count of employees' extra hours.">
+                            <div class="o_setting_left_pane">
+                                <field name="count_attendance_extra_hours"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Count of Extra Hours</span>
+                                <div class="mt16" attrs="{'invisible': [('count_attendance_extra_hours', '=', False)],
+                                                          'required': [('count_attendance_extra_hours', '=', True)]}">
+                                    Start from
+                                    <field name="extra_hours_start_date"/>
                                 </div>
                             </div>
                         </div>

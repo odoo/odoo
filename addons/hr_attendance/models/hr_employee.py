@@ -13,7 +13,6 @@ class HrEmployeeBase(models.AbstractModel):
     _inherit = "hr.employee.base"
 
     attendance_ids = fields.One2many('hr.attendance', 'employee_id', help='list of attendances for the employee')
-    first_attendance_id = fields.Many2one('hr.attendance', compute='_compute_first_attendance_id')
     last_attendance_id = fields.Many2one('hr.attendance', compute='_compute_last_attendance_id', store=True)
     last_check_in = fields.Datetime(related='last_attendance_id.check_in', store=True)
     last_check_out = fields.Datetime(related='last_attendance_id.check_out', store=True)
@@ -26,8 +25,9 @@ class HrEmployeeBase(models.AbstractModel):
     def _compute_extra_hours(self):
         for employee in self:
             extra_hours = 0.0
-            if employee.attendance_ids:
-                date_start = pytz.utc.localize(employee.first_attendance_id.check_in) if not employee.first_attendance_id.check_in.tzinfo else employee.first_attendance_id.check_in
+            if employee.company_id.count_attendance_extra_hours and employee.attendance_ids:
+                start_date = employee.company_id.extra_hours_start_date
+                date_start = pytz.utc.localize(start_date) if not start_date.tzinfo else start_date
                 date_end = pytz.utc.localize(datetime.now()) if not datetime.now().tzinfo else datetime.now()
                 work_intervals = employee.resource_calendar_id._work_intervals(date_start, date_end, resource=employee.resource_id)
                 daily_planned_hours = defaultdict(float)
@@ -47,9 +47,7 @@ class HrEmployeeBase(models.AbstractModel):
                 for day, planned_hours in daily_planned_hours.items():
                     if day not in daily_worked_hours.keys():
                         extra_hours -= planned_hours
-                employee.extra_hours = extra_hours
-            else:
-                employee.extra_hours = extra_hours
+            employee.extra_hours = extra_hours
 
     @api.depends('user_id.im_status', 'attendance_state')
     def _compute_presence_state(self):
@@ -117,12 +115,6 @@ class HrEmployeeBase(models.AbstractModel):
                 delta = (attendance.check_out or now) - max(attendance.check_in, start_naive)
                 worked_hours += delta.total_seconds() / 3600.0
             employee.hours_today = worked_hours
-
-    def _compute_first_attendance_id(self):
-        for employee in self:
-            employee.first_attendance_id = self.env['hr.attendance'].search([
-                ('employee_id', '=', employee.id)
-            ], order="check_in asc", limit=1)
 
     @api.depends('attendance_ids')
     def _compute_last_attendance_id(self):
