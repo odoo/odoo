@@ -224,23 +224,42 @@
         </rng:element>
     </rng:define>
 
+    <rng:define name="menuitem_attrs">
+        <rng:attribute name="id" />
+        <rng:optional><rng:attribute name="name"/></rng:optional>
+        <rng:optional>
+            <rng:attribute name="sequence">
+                <rng:data type="int"/>
+            </rng:attribute>
+        </rng:optional>
+        <rng:optional><rng:attribute name="groups"/></rng:optional>
+        <rng:optional><rng:attribute name="active"/></rng:optional>
+        <rng:optional>
+            <!-- menu can't have both children and action -->
+            <rng:choice>
+                <rng:attribute name="action"/>
+                <rng:oneOrMore>
+                    <rng:ref name="submenuitem"/>
+                </rng:oneOrMore>
+            </rng:choice>
+        </rng:optional>
+    </rng:define>
     <rng:define name="menuitem">
         <rng:element name="menuitem">
-            <!-- TODO: id should probably be mandatory -->
-            <rng:optional> <rng:attribute name="id" /></rng:optional>
-            <rng:optional> <rng:attribute name="name"/></rng:optional>
-            <rng:optional> <rng:attribute name="parent"/> </rng:optional>
-            <rng:optional> <rng:attribute name="action"/> </rng:optional>
-            <rng:optional> <rng:attribute name="sequence"/> </rng:optional>
-            <rng:optional> <rng:attribute name="groups"/> </rng:optional>
-            <rng:optional> <rng:attribute name="active"/> </rng:optional>
-            <!-- TODO: remove icon stuff -->
-            <rng:optional> <rng:attribute name="icon"/> </rng:optional>
-            <rng:optional> <rng:attribute name="web_icon"/> </rng:optional>
-            <rng:optional> <rng:attribute name="web_icon_hover"/> </rng:optional>
-            <!-- string doesn't seem used anywhere -->
-            <rng:optional> <rng:attribute name="string"/> </rng:optional>
-            <rng:empty />
+            <rng:ref name="menuitem_attrs"/>
+            <rng:optional>
+                <rng:choice>
+                    <!-- can't have submenus with icons -->
+                    <rng:attribute name="parent"/>
+                    <rng:attribute name="web_icon"/>
+                </rng:choice>
+            </rng:optional>
+        </rng:element>
+    </rng:define>
+    <!-- menuitem except no parent (is implicit) or web_icon attributes -->
+    <rng:define name="submenuitem">
+        <rng:element name="menuitem">
+            <rng:ref name="menuitem_attrs"/>
         </rng:element>
     </rng:define>
 
