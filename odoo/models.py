@@ -260,16 +260,27 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
     __slots__ = ['env', '_ids', '_prefetch_ids']
 
     _auto = False
-    """Whether a database table should be created (default: ``True``).
+    """Whether a database table should be created.
     If set to ``False``, override :meth:`~odoo.models.BaseModel.init`
     to create the database table.
+
+    Automatically defaults to `True` for :class:`Model` and
+    :class:`TransientModel`, `False` for :class:`AbstractModel`.
 
     .. tip:: To create a model without any table, inherit
             from :class:`~odoo.models.AbstractModel`.
     """
-    _register = False           #: not visible in ORM registry
-    _abstract = True            #: whether model is abstract
-    _transient = False          #: whether model is transient
+    _register = False           #: registry visibility
+    _abstract = True
+    """ Whether the model is *abstract*.
+
+    .. seealso:: :class:`AbstractModel`
+    """
+    _transient = False
+    """ Whether the model is *transient*.
+
+    .. seealso:: :class:`TransientModel`
+    """
 
     _name = None                #: the model name (in dot-notation, module namespace)
     _description = None         #: the model's informal name

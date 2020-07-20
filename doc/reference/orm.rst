@@ -50,11 +50,20 @@ value::
 .. autoclass:: odoo.models.BaseModel()
 
     .. autoattribute:: _auto
+    .. attribute:: _log_access
+
+        Whether the ORM should automatically generate and update the
+        :ref:`reference/fields/automatic/log_access`.
+
+        Defaults to whatever value was set for :attr:`~._auto`.
+
     .. autoattribute:: _table
     .. autoattribute:: _sequence
     .. autoattribute:: _sql_constraints
 
     .. autoattribute:: _register
+    .. autoattribute:: _abstract
+    .. autoattribute:: _transient
 
     .. autoattribute:: _name
     .. autoattribute:: _description
@@ -70,14 +79,6 @@ value::
     .. autoattribute:: _parent_name
     .. autoattribute:: _parent_store
 
-    .. autoattribute:: _abstract
-
-    .. seealso:: :class:`odoo.models.AbstractModel`
-
-    .. autoattribute:: _transient
-
-    .. seealso:: :class:`odoo.models.TransientModel`
-
     .. autoattribute:: _date_name
     .. autoattribute:: _fold_name
 
@@ -91,10 +92,18 @@ Model
 
 .. autoclass:: odoo.models.Model()
 
+      .. autoattribute:: _auto
+      .. autoattribute:: _abstract
+      .. autoattribute:: _transient
+
 TransientModel
 --------------
 
 .. autoclass:: odoo.models.TransientModel()
+
+      .. autoattribute:: _auto
+      .. autoattribute:: _abstract
+      .. autoattribute:: _transient
 
 .. _reference/fields:
 .. _reference/orm/fields:
@@ -328,8 +337,6 @@ dependencies are modified.
 Automatic fields
 ----------------
 
-.. Documented
-
 .. attribute:: id
 
     Identifier :class:`field <odoo.fields.Field>`
@@ -338,23 +345,39 @@ Automatic fields
 
     Raise an Error otherwise.
 
-.. todo:: _log_access info
+.. _reference/fields/automatic/log_access:
+
+Access Log fields
+'''''''''''''''''
+
+These fields are automatically set and updated if
+:attr:`~odoo.models.BaseModel._log_access` is enabled. It can be
+disabled to avoid creating or updating those fields on tables for which they are
+not useful.
+
+By default, :attr:`~odoo.models.BaseModel._log_access` is set to the same value
+as :attr:`~odoo.models.BaseModel._auto`
 
 .. attribute:: create_date
 
-    :class:`~odoo.fields.Datetime`
+    Stores when the record was created, :class:`~odoo.fields.Datetime`
 
 .. attribute:: create_uid
 
-    :class:`~odoo.fields.Many2one`
+    Stores *who* created the record, :class:`~odoo.fields.Many2one` to a
+    ``res.users``.
 
 .. attribute:: write_date
 
-    :class:`~odoo.fields.Datetime`
+    Stores when the record was last updated, :class:`~odoo.fields.Datetime`
 
 .. attribute:: write_uid
 
-    :class:`~odoo.fields.Many2one`
+    Stores who last updated the record, :class:`~odoo.fields.Many2one` to a
+    ``res.users``.
+
+.. warning:: :attr:`~odoo.models.BaseModel._log_access` *must* be enabled on
+             :class:`~odoo.models.TransientModel`.
 
 .. _reference/orm/fields/reserved:
 

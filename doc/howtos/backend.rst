@@ -1775,8 +1775,8 @@ Examples can be easily adapted from XML-RPC to JSON-RPC.
     * http://pythonhosted.org/OdooRPC
     * https://github.com/abhishek-jaiswal/php-openerp-lib
 
-.. [#autofields] it is possible to :attr:`disable the automatic creation of some
-                 fields <odoo.models.Model._log_access>`
+.. [#autofields] it is possible to :ref:`disable the automatic creation of some
+                 fields <reference/fields/automatic/log_access>`
 .. [#rawsql] writing raw SQL queries is possible, but requires care as it
              bypasses all Odoo authentication and security mechanisms.
 
