@@ -165,7 +165,7 @@
     </template>
 
     <template id="external_layout_background">
-        <div class="header">
+        <div class="header" t-att-style="report_header_style">
             <div class="o_background_header">
             <div class="float-right">
                 <h3 class="mt0 text-right" t-field="company.report_header"/>
@@ -207,7 +207,7 @@
     </template>
 
     <template id="external_layout_boxed">
-        <div class="header">
+        <div class="header" t-att-style="report_header_style">
             <div class="o_boxed_header">
             <div class="row mb8">
                 <div class="col-6">
@@ -246,7 +246,7 @@
     </template>
 
     <template id="external_layout_clean">
-        <div class="header">
+        <div class="header" t-att-style="report_header_style">
             <div class="o_clean_header">
             <div class="row">
                 <div class="col-6">
@@ -292,7 +292,7 @@
     </template>
 
     <template id="external_layout_standard">
-        <div class="header">
+        <div class="header" t-att-style="report_header_style">
             <div class="row">
                 <div class="col-3 mb4">
                     <img t-if="company.logo" t-att-src="image_data_uri(company.logo)" style="max-height: 45px;" alt="Logo"/>
