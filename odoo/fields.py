@@ -3082,6 +3082,11 @@ class One2many(_RelationalMulti):
         if self.store:
             inverse = self.inverse_name
 
+            # make sure self's inverse is in cache
+            inverse_field = comodel._fields[inverse]
+            for record in records:
+                cache.update(record[self.name], inverse_field, itertools.repeat(record.id))
+
             for recs, commands in records_commands_list:
                 for command in commands:
                     if command[0] == 0:
