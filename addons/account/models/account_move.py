@@ -3467,7 +3467,7 @@ class AccountMoveLine(models.Model):
         ''' Recompute 'tax_ids' based on 'account_id'.
         /!\ Don't remove existing taxes if there is no explicit taxes set on the account.
         '''
-        if not self.display_type and (self.account_id.tax_ids or not self.tax_ids):
+        if not self.display_type and self.account_id.tax_ids:
             taxes = self._get_computed_taxes()
 
             if taxes and self.move_id.fiscal_position_id:

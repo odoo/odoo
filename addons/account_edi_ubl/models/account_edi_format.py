@@ -153,4 +153,10 @@ class AccountEdiFormat(models.Model):
                         if tax:
                             invoice_line_form.tax_ids.add(tax)
 
+            self._force_tax_values(invoice_form, tree,
+                                   tax_group_node='cac:TaxTotal/cac:TaxSubtotal',
+                                   percent_node='cbc:Percent',
+                                   value_node='cbc:TaxAmount',
+                                   namespaces=namespaces)
+
         return invoice_form.save()
