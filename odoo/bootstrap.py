@@ -15,9 +15,8 @@ def boot():
     _enable_warnings()
 
     # phase 2, configuration loading and exposure
-    from . import conf
-    conf.load()
-    conf.expose()
+    from . import config as config_module
+    config_module.config.reload()
 
     # phase 3, dynamic library configuration
     if conf.subcommand == 'gevent':
@@ -60,7 +59,7 @@ def _enable_warnings():
 
 def _force_utc():
     """ libc UTC hack, make sure everything runs in UTC. """
-    import os
+    import os, time
     os.environ['TZ'] = 'UTC' # Set the timezone
     if hasattr(time, 'tzset'):
         time.tzset()
@@ -76,7 +75,7 @@ def _fix_pypdf2():
     try:
         import zlib
 
-        def __decompress(data):
+        def _decompress(data):
             zobj = zlib.decompressobj()
             return zobj.decompress(data)
 

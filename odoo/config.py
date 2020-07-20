@@ -3,6 +3,7 @@
 
 import argparse
 import collections
+import configparser
 import contextlib
 import distutils.util
 import itertools
@@ -13,6 +14,7 @@ import pathlib
 import tempfile
 import textwrap
 import warnings
+from collections.abc import Iterable
 from getpass import getuser
 
 
@@ -58,9 +60,9 @@ DELETED = object()  # placed in the custom-config when an option is
                     # removed, used to raise a KeyError uppon access.
 
 
-class Alias:
-    def __init__(self, alias):
-        self.aliased_option = alias
+class DeprecatedAlias:
+    def __init__(self, aliased_option):
+        self.aliased_option = aliased_option
     def __repr__(self):
         return self.aliased_option
 
@@ -86,7 +88,7 @@ def assert_in(rawopt, choices):
     return opt
 
 
-def add(*args, dest, action='store', default=None, envvar=None, **kwargs):
+def add(group, *args, dest, action='store', default=None, envvar=None, **kwargs):
     """
     Wrapper around add_argument, carefully map every option to a type,
     save the default value in the default source dictionnary and provide
@@ -116,7 +118,7 @@ def add(*args, dest, action='store', default=None, envvar=None, **kwargs):
     if envvar:
         envoptmap[envvar] = dest
 
-    return add.wrapped(*args, dest=dest, action=action, default=None, **kwargs)
+    return group.add_argument(*args, dest=dest, action=action, default=None, **kwargs)
 
 
 def comma(cast: callable):
@@ -125,6 +127,15 @@ def comma(cast: callable):
     list of values. Returns a list of `cast` converted values.
     """
     return lambda rawopt: list(map(cast, rawopt.split(',')))
+
+
+def flatten(it):
+    """ Chain all iterables into a single one """
+    for e in it:
+        if type(e) != str and isinstance(e, collections.abc.Iterable):
+            yield from flatten(e)
+        else:
+            yield e
 
 
 def fullpath(path: str):
@@ -247,7 +258,7 @@ def ensure_data_dir(datadir):
     ad = datadir.joinpath('addons')
     if not ad.exists():
         ad.mkdir(mode=0o700)
-    elif os.access(ad, os.R_OK | os.W_OK | os.X_OK):
+    elif not os.access(ad, os.R_OK | os.W_OK | os.X_OK):
         raise SystemExit(f"{ad}: requires rwx access")
     adr = ad.joinpath(release.series)
     if not adr.exists():
@@ -282,13 +293,6 @@ def pg_utils_path(rawopt):
     return path
 
 
-def osv_memory_age_limit(rawopt):
-    msg = ("The osv-memory-age-limit is a deprecated alias to "
-           "the transient-age-limit option, please use the latter")
-    warnings.warn(msg, DeprecationWarning)
-    return float(rawopt)
-
-
 def i18n_input_file(rawopt):
     """ Ensure `rawopt` is a valid translation file, the fullpath is returned """
     path = _check_file_access(rawopt, 'r')
@@ -314,27 +318,20 @@ def i18n_output_file(rawopt):
 #                                                                      #
 ########################################################################
 
-main_parser = argparse.ArgumentParser(description=textwrap.dedent("""\
-    Odoo Command-Line Interface
-
-    See online documentation at: 
-    https://www.odoo.com/documentation/master/reference/ocli.html
-    """))
-subparsers = main_parser.add_subparsers()
-
-#
-# Common, bootstraping required options
-#
-common_parser = argparse.ArgumentParser()
-add.wrapped = main_parser.add_argument
+main_parser = argparse.ArgumentParser(description="See online documentation at: https://www.odoo.com/documentation/master/reference/ocli.html")
 main_parser.add_argument('-V', '--version', action='version', version=f"{release.description} {release.version}")
-add('--addons-path', dest='addons_path', default=[pathlib.Path(__file__).parent.joinpath('addons').resolve()], type=comma(addons_path), action="append", metavar='DIRPATH', help="specify additional addons paths")
-add('--upgrade-path', dest='upgrade_path', default=pathlib.Path(__file__).parent.joinpath('addons', 'base', 'maintenance', 'migrations').resolve(), type=upgrade_path, metavar='DIRPATH', help="specify an additional upgrade path.")
-add('-D', '--data-dir', dest='data_dir', type=data_dir, default=get_default_datadir(), help="Directory where to store Odoo data")
-add('--log-level', dest='log_level', type=str, default='info', metavar="LEVEL", choices=loglevelmap.keys(), help="specify the level of the logging")
-add('--logfile', dest='logfile', type=checkfile('w'), default=None, metavar="FILEPATH", help="file where the server log will be stored")
-add('--syslog', dest='syslog', action='store_true', help="Send the log to the syslog server")
-add('--log-handler', dest='log_handler', action='append', type=str, default=[':INFO'], metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+subparsers = main_parser.add_subparsers(dest='subcommand')
+
+#
+# Bootstraping required options
+#
+add(main_parser, '--addons-path', dest='addons_path', default=[pathlib.Path(__file__).parent.joinpath('addons').resolve()], type=comma(addons_path), action="append", metavar='DIRPATH', help="specify additional addons paths")
+add(main_parser, '--upgrade-path', dest='upgrade_path', default=pathlib.Path(__file__).parent.joinpath('addons', 'base', 'maintenance', 'migrations').resolve(), type=upgrade_path, metavar='DIRPATH', help="specify an additional upgrade path.")
+add(main_parser, '-D', '--data-dir', dest='data_dir', type=data_dir, default=get_default_datadir(), help="Directory where to store Odoo data")
+add(main_parser, '--log-level', dest='log_level', type=str, default='info', metavar="LEVEL", choices=loglevelmap.keys(), help="specify the level of the logging")
+add(main_parser, '--logfile', dest='logfile', type=checkfile('w'), default=None, metavar="FILEPATH", help="file where the server log will be stored")
+add(main_parser, '--syslog', dest='syslog', action='store_true', help="Send the log to the syslog server")
+add(main_parser, '--log-handler', dest='log_handler', action='append', type=str, default=[':INFO'], metavar="PREFIX:LEVEL", help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
 
 
 ########################################################################
@@ -342,53 +339,53 @@ add('--log-handler', dest='log_handler', action='append', type=str, default=[':I
 #                          SERVER SUBCOMMAND                           #
 #                                                                      #
 ########################################################################
-server_parser = subparsers.add_parser('server')
+server_parser = argparse.ArgumentParser(add_help=False)
 
 #
 # Common
 #
-add.wrapped = server_parser.add_argument_group("Common").add_argument
-add('-c', '--config', dest='config', type=checkfile('r'), metavar="FILEPATH", default=get_odoorc(), help="specify alternate config file name")
-add('-s', '--save', dest='save', type=checkfile('w'), nargs='?', metavar="FILEPATH", default=None, const=get_odoorc(), help="save parsed config in PATH")
-add('-i', '--init', dest='init', type=comma(str), action='append', default=[], help='install one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d')
-add('-u', '--update', dest='update', type=comma(str), action='append', default=[], help='update one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d.')
-add('--without-demo', dest='without_demo', action='store_true', help='disable loading demo data for modules to be installed (comma-separated or repeated option, use "all" for all modules), requires -d and -i.')
-#'-P', '--import-partial'
-add('--load', dest='server_wide_modules', type=comma(str), action='append', default=['base', 'web'], metavar='MODULE', help="framework modules to load once for all databases (comma-separated or repeated option)")
-add('--pidfile', dest='pidfile', type=checkfile('w'), default=None, metavar='FILEPATH', help="file where the server pid will be stored")
+server_common = server_parser.add_argument_group("Common")
+add(server_common, '-c', '--config', dest='config', type=checkfile('r'), metavar="FILEPATH", default=get_odoorc(), help="specify alternate config file name")
+add(server_common, '-s', '--save', dest='save', type=checkfile('w'), nargs='?', metavar="FILEPATH", default=None, const=get_odoorc(), help="save parsed config in PATH")
+add(server_common, '-i', '--init', dest='init', type=comma(str), action='append', default=[], help='install one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d')
+add(server_common, '-u', '--update', dest='update', type=comma(str), action='append', default=[], help='update one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d.')
+add(server_common, '--without-demo', dest='without_demo', action='store_true', help='disable loading demo data for modules to be installed (comma-separated or repeated option, use "all" for all modules), requires -d and -i.')
+#'-P', '--import-, partial'
+add(server_common, '--load', dest='server_wide_modules', type=comma(str), action='append', default=['base', 'web'], metavar='MODULE', help="framework modules to load once for all databases (comma-separated or repeated option)")
+add(server_common, '--pidfile', dest='pidfile', type=checkfile('w'), default=None, metavar='FILEPATH', help="file where the server pid will be stored")
 
 #
 # HTTP
 #
-add.wrapped = server_parser.add_argument_group("HTTP Service Configuration").add_argument
-add('--http-interface', dest='http_interface', type=str, default='', metavar='INTERFACE', help="Listen interface address for HTTP services. Keep empty to listen on all interfaces (0.0.0.0)")
-add('-p', '--http-port', dest='http_port', type=int, default=8069, metavar='PORT', help="Listen port for the main HTTP service")
-add('--longpolling-port', dest='longpolling_port', type=int, default=8072, metavar='PORT', help="Listen port for the longpolling HTTP service")
-add('--no-http', dest='http_enable', action='store_false', help="Disable the HTTP and Longpolling services entirely")
-add('--proxy-mode', dest='proxy_mode', action='store_true', help="Activate reverse proxy WSGI wrappers (headers rewriting) Only enable this when running behind a trusted web proxy!")
+server_http = server_parser.add_argument_group("HTTP Service Configuration")
+add(server_http, '--http-interface', dest='http_interface', type=str, default='', metavar='INTERFACE', help="Listen interface address for HTTP services. Keep empty to listen on all interfaces (0.0.0.0)")
+add(server_http, '-p', '--http-port', dest='http_port', type=int, default=8069, metavar='PORT', help="Listen port for the main HTTP service")
+add(server_http, '--longpolling-port', dest='longpolling_port', type=int, default=8072, metavar='PORT', help="Listen port for the longpolling HTTP service")
+add(server_http, '--no-http', dest='http_enable', action='store_false', help="Disable the HTTP and Longpolling services entirely")
+add(server_http, '--proxy-mode', dest='proxy_mode', action='store_true', help="Activate reverse proxy WSGI wrappers (headers rewriting) Only enable this when running behind a trusted web proxy!")
 
 #
 # CRON
 #
-add.wrapped = server_parser.add_argument_group("CRON Service Configuration").add_argument
-add('--max-cron-threads', dest='max_cron_threads', type=int, default=2, metavar='#THREAD', help="Maximum number of threads processing concurrently cron jobs.")
-add('--limit-time-real-cron', dest='limit_time_real_cron', type=int, default=Alias('limit_time_real'), metavar="#SECONDS", help="Maximum allowed Real time per cron job. (default: --limit-time-real). Set to 0 for no limit.")
+server_cron = server_parser.add_argument_group("CRON Service Configuration")
+add(server_cron, '--max-cron-threads', dest='max_cron_threads', type=int, default=2, metavar='#THREAD', help="Maximum number of threads processing concurrently cron jobs.")
+add(server_cron, '--limit-time-real-cron', dest='limit_time_real_cron', type=int, default=DeprecatedAlias('limit_time_real'), metavar="#SECONDS", help="Maximum allowed Real time per cron job. (default: --limit-time-real). Set to 0 for no limit.")
 
 
 #
 # Web
 #
-add.wrapped = server_parser.add_argument_group("Web interface Configuration").add_argument
-add('--db-filter', dest='dbfilter', type=str, default='', metavar='REGEXP', help="Regular expressions for filtering available databases for Web UI. The expression can use %d (domain) and %h (host) placeholders.")
+server_web = server_parser.add_argument_group("Web interface Configuration")
+add(server_web, '--db-filter', dest='dbfilter', type=str, default='', metavar='REGEXP', help="Regular expressions for filtering available databases for Web UI. The expression can use %%d (domain) and %%h (host) placeholders.")
 
 
 #
 # Testing
 #
-add.wrapped = server_parser.add_argument_group("Testing Configuration").add_argument
-add('--test-file', dest='test_file', type=checkfile('r'), default=None, metavar='FILEPATH', help="Launch a python test file.")
-add('--test-enable', dest='test_enable', action='store_true', help="Enable unit tests while installing or upgrading a module.")
-add('--test-tags', dest='test_tags', type=comma(str), action='append', default=[], help=textwrap.dedent("""\
+server_test = server_parser.add_argument_group("Testing Configuration")
+add(server_test, '--test-file', dest='test_file', type=checkfile('r'), default=None, metavar='FILEPATH', help="Launch a python test file.")
+add(server_test, '--test-enable', dest='test_enable', action='store_true', help="Enable unit tests while installing or upgrading a module.")
+add(server_test, '--test-tags', dest='test_tags', type=comma(str), action='append', default=[], help=textwrap.dedent("""\
     Comma-separated or repeated option list of spec to filter which tests to execute. Enable unit tests if set.
     A filter spec has the format: [-][tag][/module][:class][.method]
     The '-' specifies if we want to include or exclude tests matching this spec.
@@ -396,154 +393,188 @@ add('--test-tags', dest='test_tags', type=comma(str), action='append', default=[
     given on include mode. '*' will match all tags. Tag will also match module name (deprecated, use /module)
     The module, class, and method will respectively match the module name, test class name and test method name.
     examples: :TestClass.test_func,/test_module,external"""))
-add('--screencasts', dest='screencasts', type=checkdir('w'), default=fullpath(tempfile.gettempdir()).joinpath('odoo_tests'), metavar='DIRPATH', help="Screencasts will go in DIR/<db_name>/screencasts.")
-add('--screenshots', dest='screenshots', type=checkdir('w'), default=fullpath(tempfile.gettempdir()).joinpath('odoo_tests'), metavar='DIRPATH', help="Screenshots will go in DIR/<db_name>/screenshots.")
+add(server_test, '--screencasts', dest='screencasts', type=checkdir('w'), default=fullpath(tempfile.gettempdir()).joinpath('odoo_tests'), metavar='DIRPATH', help="Screencasts will go in DIR/<db_name>/screencasts.")
+add(server_test, '--screenshots', dest='screenshots', type=checkdir('w'), default=fullpath(tempfile.gettempdir()).joinpath('odoo_tests'), metavar='DIRPATH', help="Screenshots will go in DIR/<db_name>/screenshots.")
 
 #
 # Advanced logging options
 #
-add.wrapped = server_parser.add_argument_group("Logging Configuration").add_argument
-add('--log-request', dest='log_handler', action='append_const', const='odoo.http.rpc.request:DEBUG')
-add('--log-response', dest='log_handler', action='append_const', const='odoo.http.rpc.response:DEBUG')
-add('--log-web', dest='log_handler', action='append_const', const='odoo.http:DEBUG')
-add('--log-sql', dest='log_handler', action='append_const', const='odoo.sql_db:DEBUG')
-add('--log-db', dest='log_db', action='store_true', help="Enable database logs record")
-add('--log-db-level', dest='log_db_level', metavar="LEVEL", default='warning', choices=loglevelmap.keys(), help="specify the level of the database logging")
+server_logging = server_parser.add_argument_group("Logging Configuration")
+add(server_logging, '--log-request', dest='log_handler', action='append_const', const='odoo.http.rpc.request:DEBUG')
+add(server_logging, '--log-response', dest='log_handler', action='append_const', const='odoo.http.rpc.response:DEBUG')
+add(server_logging, '--log-web', dest='log_handler', action='append_const', const='odoo.http:DEBUG')
+add(server_logging, '--log-sql', dest='log_handler', action='append_const', const='odoo.sql_db:DEBUG')
+add(server_logging, '--log-db', dest='log_db', action='store_true', help="Enable database logs record")
+add(server_logging, '--log-db-level', dest='log_db_level', metavar="LEVEL", default='warning', choices=loglevelmap.keys(), help="specify the level of the database logging")
 
 #
 # SMTP options
 #
-add.wrapped = server_parser.add_argument_group("SMTP Configuration").add_argument
-add('--email-from', dest='email_from', type=str, default=None, metavar="EMAIL", help="specify the SMTP email address for sending email")
-add('--smtp', dest='smtp_server', type=str, default='localhost', metavar="HOST", help="specify the SMTP server for sending email")
-add('--smtp-port', dest='smtp_port', type=int, default=25, metavar="PORT", help="specify the SMTP port")
-add('--smtp-ssl', dest='smtp_ssl', action='store_true', help="if passed, SMTP connections will be encrypted with SSL (STARTTLS)")
-add('--smtp-user', dest='smtp_user', type=str, default=None, help="specify the SMTP username for sending email")
-add('--smtp-password', dest='smtp_password', type=str, default=None, help="specify the SMTP password for sending email")
+server_smtp = server_parser.add_argument_group("SMTP Configuration")
+add(server_smtp, '--email-from', dest='email_from', type=str, default=None, metavar="EMAIL", help="specify the SMTP email address for sending email")
+add(server_smtp, '--smtp', dest='smtp_server', type=str, default='localhost', metavar="HOST", help="specify the SMTP server for sending email")
+add(server_smtp, '--smtp-port', dest='smtp_port', type=int, default=25, metavar="PORT", help="specify the SMTP port")
+add(server_smtp, '--smtp-ssl', dest='smtp_ssl', action='store_true', help="if passed, SMTP connections will be encrypted with SSL (STARTTLS)")
+add(server_smtp, '--smtp-user', dest='smtp_user', type=str, default=None, help="specify the SMTP username for sending email")
+add(server_smtp, '--smtp-password', dest='smtp_password', type=str, default=None, help="specify the SMTP password for sending email")
 
 #
 # Database options
 #
-add.wrapped = server_parser.add_argument_group("Database related options").add_argument
-add('-d', '--database', dest='db_name', type=str, default=getuser(), envvar="PGDATABASE", metavar="DBNAME", help="database name to connect to")
-add('-r', '--db_user', dest='db_user', type=str, default=getuser(), envvar="PGUSER", metavar="USERNAME", help="database user to connect as")
-add('-w', '--db_password', dest='db_password', type=str, default=None, envvar="PGPASSWORD", metavar="PWD", help='password to be used if the database demands password authentication. Using this argument is a security risk, see the "The Password File" section in the PostgreSQL documentation for alternatives.')
-add('--db_host', dest='db_host', type=str, default=None, envvar="PGHOST", metavar="HOSTNAME", help="database server host or socket directory")
-add('--db_port', dest='db_port', type=str, default=None, envvar="PGPORT", metavar="PORT", help="database server port")
-add('--db_sslmode', dest='db_sslmode', metavar="METHOD", default='prefer', choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'], help="determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server")
-add('--pg_path', dest='pg_path', type=pg_utils_path, metavar="DIRPATH", default=None, help="postgres utilities directory")
-add('--db-template', dest='db_template', type=str, metavar="DBNAME", default='template0', help="custom database template to create a new database")
-add('--db_maxconn', dest='db_maxconn', type=int, metavar="#CONN", default=64, help="specify the maximum number of physical connections to PostgreSQL")
-add('--unaccent', dest="unaccent", action='store_true', help="Try to enable the unaccent extension when creating new databases")
+server_db = server_parser.add_argument_group("Database related options")
+add(server_db, '-d', '--database', dest='db_name', type=str, default=None, envvar="PGDATABASE", metavar="DBNAME", help="database name to connect to")
+add(server_db, '-r', '--db_user', dest='db_user', type=str, default=None, envvar="PGUSER", metavar="USERNAME", help="database user to connect as")
+add(server_db, '-w', '--db_password', dest='db_password', type=str, default=None, envvar="PGPASSWORD", metavar="PWD", help='password to be used if the database demands password authentication. Using this argument is a security risk, see the "The Password File" section in the PostgreSQL documentation for alternatives.')
+add(server_db, '--db_host', dest='db_host', type=str, default=None, envvar="PGHOST", metavar="HOSTNAME", help="database server host or socket directory")
+add(server_db, '--db_port', dest='db_port', type=str, default=None, envvar="PGPORT", metavar="PORT", help="database server port")
+add(server_db, '--db_sslmode', dest='db_sslmode', metavar="METHOD", default='prefer', choices=['disable', 'allow', 'prefer', 'require', 'verify-ca', 'verify-full'], help="determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server")
+add(server_db, '--pg_path', dest='pg_path', type=pg_utils_path, metavar="DIRPATH", default=None, help="postgres utilities directory")
+add(server_db, '--db-template', dest='db_template', type=str, metavar="DBNAME", default='template0', help="custom database template to create a new database")
+add(server_db, '--db_maxconn', dest='db_maxconn', type=int, metavar="#CONN", default=64, help="specify the maximum number of physical connections to PostgreSQL")
+add(server_db, '--unaccent', dest="unaccent", action='store_true', help="Try to enable the unaccent extension when creating new databases")
 
 #
 # ORM
 #
-add.wrapped = server_parser.add_argument_group("ORM").add_argument
-add('--transient-age-limit', dest='transient_age_limit', type=float, metavar="HOUR", default=1.0, help="Time in hours records created with a TransientModel (mosly wizard) are kept in the database.")
-add('--osv-memory-age-limit', dest='transient_age_limit', type=osv_memory_age_limit, help=argparse.SUPPRESS)
+server_orm = server_parser.add_argument_group("ORM")
+add(server_orm, '--transient-age-limit', dest='transient_age_limit', type=float, metavar="HOUR", default=1.0, help="Time in hours records created with a TransientModel (mosly wizard) are kept in the database.")
+add(server_orm, '--osv-memory-age-limit', dest='osv_memory_age_limit', type=float, default=DeprecatedAlias('transient_age_limit'), help=argparse.SUPPRESS)
 
 #
 # I18N
 #
-add.wrapped = server_parser.add_argument_group("Internationalization").add_argument
-add('--load-language', dest='load_language', type=comma(str), metavar='LANGCODE', default=None, help="specifies the languages for the translations you want to be loaded")
-add('-l', '--language', dest='language', type=str, metavar='LANGCODE', default=None, help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
-add('--i18n-export', dest='translate_out', type=i18n_output_file, metavar='FILEPATH', default=None, help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit. The '-l' option is required")
-add('--i18n-import', dest='tranlate_in', type=i18n_input_file, metavar='FILEPATH', default=None, help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
-add('--i18n-overwrite', dest='overwrite_existing_translations', action='store_true', help="overwrites existing translation terms on updating a module or importing a CSV or a PO file. Use with -u/--update or --i18n-import.")
-add('--modules', dest="translate_modules", type=comma(str), default=None, help="specify modules to export. Use in combination with --i18n-export")
+server_i18n = server_parser.add_argument_group("Internationalization")
+add(server_i18n, '--load-language', dest='load_language', type=comma(str), metavar='LANGCODE', default=None, help="specifies the languages for the translations you want to be loaded")
+add(server_i18n, '-l', '--language', dest='language', type=str, metavar='LANGCODE', default=None, help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
+add(server_i18n, '--i18n-export', dest='translate_out', type=i18n_output_file, metavar='FILEPATH', default=None, help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit. The '-l' option is required")
+add(server_i18n, '--i18n-import', dest='tranlate_in', type=i18n_input_file, metavar='FILEPATH', default=None, help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
+add(server_i18n, '--i18n-overwrite', dest='overwrite_existing_translations', action='store_true', help="overwrites existing translation terms on updating a module or importing a CSV or a PO file. Use with -u/--update or --i18n-import.")
+add(server_i18n, '--modules', dest="translate_modules", type=comma(str), default=None, help="specify modules to export. Use in combination with --i18n-export")
 
 #
 # Security
 #
-add.wrapped = server_parser.add_argument_group("Security-related options").add_argument
-add('--no-database-list', dest='list_db', action='store_false', help="Disable the ability to obtain or view the list of databases. Also disable access to the database manager and selector, so be sure to set a proper --database parameter first.")
+server_security = server_parser.add_argument_group("Security-related options")
+add(server_security, '--no-database-list', dest='list_db', action='store_false', help="Disable the ability to obtain or view the list of databases. Also disable access to the database manager and selector, so be sure to set a proper --database parameter first.")
 
 #
 # Developers
 #
-add.wrapped = server_parser.add_argument_group("Developers").add_argument
-add('--dev', dest='dev_mode', action='append', type=comma(str), default=[], choices=['all', 'pudb', 'wdb', 'ipdb', 'pdb', 'reload', 'qweb', 'werkzeug', 'xml'], help="Enable developer mode")
-add('--shell-interface', dest='shell_interface', default='python', choices=['ipython', 'ptpython', 'bpython', 'python'], help="Specify a preferred REPL to use in shell mode")
+server_dev = server_parser.add_argument_group("Developers")
+add(server_dev, '--dev', dest='dev_mode', action='append', type=comma(str), default=[], choices=['all', 'pudb', 'wdb', 'ipdb', 'pdb', 'reload', 'qweb', 'werkzeug', 'xml'], help="Enable developer mode")
+add(server_dev, '--shell-interface', dest='shell_interface', default='python', choices=['ipython', 'ptpython', 'bpython', 'python'], help="Specify a preferred REPL to use in shell mode")
 
 #
 # Misc
 #
-add.wrapped = server_parser.add_argument_group("Misc").add_argument
-add('--stop-after-init', dest='stop_after_init', action='store_true', help="stop the server after its initialization")
-add('--geoip-db', dest='geoip_database', type=checkfile('r'), default=pathlib.Path('/usr/share/GeoIP/GeoLite2-City.mmdb'), help="Absolute path to the GeoIP database file.")
+server_misc = server_parser.add_argument_group("Misc")
+add(server_misc, '--stop-after-init', dest='stop_after_init', action='store_true', help="stop the server after its initialization")
+add(server_misc, '--geoip-db', dest='geoip_database', type=checkfile('r'), default=pathlib.Path('/usr/share/GeoIP/GeoLite2-City.mmdb'), help="Absolute path to the GeoIP database file.")
 
 
 if os.name == 'posix':
     #
-    # Workers
+    # Workers & Limits
     #
-    add.wrapped = server_parser.add_argument_group("Multiprocessing options").add_argument
-    add('--workers', dest='workers', type=int, metavar='#WORKER', default=0, help="Specify the number of workers, 0 disable prefork mode.")
+    server_multi = server_parser.add_argument_group("Multiprocessing options")
+    add(server_multi, '--workers', dest='workers', type=int, metavar='#WORKER', default=0, help="Specify the number of workers, 0 disable prefork mode.")
+    add(server_multi, '--limit-memory-soft', dest='limit_memory_soft', default=2048 * 1024 * 1024, metavar="BYTES", type=int, help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 2048MiB).")
+    add(server_multi, '--limit-memory-hard', dest='limit_memory_hard', default=2560 * 1024 * 1024, metavar="BYTES", type=int, help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory allocation will fail (default 2560MiB).")
+    add(server_multi, '--limit-time-cpu', dest='limit_time_cpu', default=60, metavar="SECONDS", type=int, help="Maximum allowed CPU time per request (default 60).")
+    add(server_multi, '--limit-time-real', dest='limit_time_real', default=120, metavar="SECONDS", type=int, help="Maximum allowed Real time per request (default 120).")
+    add(server_multi, '--limit-request', dest='limit_request', default=8192, metavar="#REQUEST", type=int, help="Maximum number of request to be processed per worker (default 8192).")
 
-    #
-    # Limits
-    #
-    add('--limit-memory-soft', dest='limit_memory_soft', default=2048 * 1024 * 1024, metavar="BYTES", type=int, help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 2048MiB).")
-    add('--limit-memory-hard', dest='limit_memory_hard', default=2560 * 1024 * 1024, metavar="BYTES", type=int, help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory allocation will fail (default 2560MiB).")
-    add('--limit-time-cpu', dest='limit_time_cpu', default=60, metavar="SECONDS", type=int, help="Maximum allowed CPU time per request (default 60).")
-    add('--limit-time-real', dest='limit_time_real', default=120, metavar="SECONDS", type=int, help="Maximum allowed Real time per request (default 120).")
-    add('--limit-request', dest='limit_request', default=8192, metavar="#REQUEST", type=int, help="Maximum number of request to be processed per worker (default 8192).")
+subparsers.add_parser('server', parents=[server_parser])
 
 
-from pprint import pprint
-options = main_parser.parse_args()
-for opt, val in vars(options).items():
-    if val is None:
-        continue
+########################################################################
+#                                                                      #
+#                         POPULATE SUBCOMMAND                          #
+#                                                                      #
+########################################################################
 
-    while (type(val) in (list, tuple)
-           and any(type(elem) in (list, tuple) for elem in val)):
-        val = list(itertools.chain.from_iterable(val))
-
-    srcoptmap['cli'][opt] = val
-
-pprint(chainmap)
-exit()
+populate_parser = argparse.ArgumentParser(add_help=False)
+populate_conf = populate_parser.add_argument_group('Populate Configuration')
+add(populate_conf, '--size', dest='population_size', type=str, default='small', choices=['small', 'medium', 'large'], help="Populate database with auto-generated data")
+add(populate_conf, '--models', action='append', dest='populate_models', type=comma(str), metavar='MODEL OR PATTERN', help="List of model (comma separated or repeated option) or pattern")
+subparsers.add_parser('populate', parents=[server_parser, populate_parser])
 
 
-class configmanager(collections.abc.MutableMapping):
-    def parse_load(self, configpath=None):
+
+class Config(collections.abc.MutableMapping):
+    """
+    The configuration is loaded from several sources namely, the source
+    hardcoded defaults, the command line, the configuration file and the
+    environment variables and exposed in that order in a ChainMap. 
+
+    The command-line subcommand is loaded too but not yet executed.
+
+    Setting config options places the option with its value in a custom
+    dictionnary on top of the chainmap.
+
+    Using a contextmanager, options can be temporary override for
+    testing purpose.
+    """
+    def __init__(self):
+        self.subcommand = None
+
+    def _load_environ(self):
+        options = srcoptmap['environ']
+        for envvar, opt in envoptmap.items():
+            val = os.getenv(envvar)
+            if val:
+                options[opt] = opttypemap[opt](val)
+
+
+    def _load_cli(self):
+        options = srcoptmap['cli']
+        cli_options = vars(main_parser.parse_args())
+        self.subcommand = cli_options.pop("subcommand", "server")
+        for opt, val in cli_options.items():
+            if val is None:
+                continue
+            # flatten lists, this is caused by action='append', type=comma(...)
+            if type(val) != str and isinstance(val, Iterable):
+                val = list(flatten(val))
+
+            options[opt] = val  # already casted by argparse
+            
+
+    def _load_file(self, configpath):
+        try:
+            if configpath.stat().st_mode & 0o777 != 0o600:
+                warnings.warn(f"{configpath}: Wrong permissions, should be user-only read/write (0600)")
+            p.read([configpath])
+        except (FileNotFoundError, IOError):
+            warnings.warn(f"{configpath}: Could not read configuration file")
+        else:
+            for sec in p.sections():
+                options = srcoptmap['file' if sec == 'options' else 'file_' + sec]
+                for opt, val in p.items(sec):
+                    options[opt] = opttypemap[opt](val)
+
+    def reload(self, configpath=None):
         # clear all previously loaded options
         for source, options in srcoptmap.items():
             if source != 'default':
                 options.clear()
 
-        # reload environment
-        for envvar, opt in envoptmap.items():
-            val = os.getenv(envvar)
-            if val:
-                srcoptmap['environ'][opt] = val
-
-        # reload command line
-        options = main_parser.parse_args()
-        for opt, val in vars(cli_options).items():
-            if val is None:
-                continue
-
-            while (type(val) in (list, tuple)
-                   and any(type(elem) in (list, tuple) for elem in val)):
-                val = list(itertools.chain.from_iterable(val))
-
-            srcoptmap['cli'][opt] = val
-
-        # reload configuration file
-        for section, options in parse_file(configpath or chainmap['config']):
-            srcoptmap[section].update(options)
+        # reload sources
+        self._load_environ()
+        self._load_cli()
+        self._load_file(pathlib.Path(configpath) if configpath else chainmap['config'])
 
         # post processing
         ensure_data_dir(chainmap['data_dir'])
 
+        from pprint import pprint
+        pprint(chainmap)
+        exit()
+
     def expose_file_section(self, section):
         """
         Exposes the [`section`] of the configuration file just before
-        the [common] options.
+        the file [options] section.
         """
         if not section.startswith('file_'):
             section = 'file_' + section
@@ -553,27 +584,72 @@ class configmanager(collections.abc.MutableMapping):
             file_index = chainmap.maps.index('file')
             chainmap.maps.insert(source, file_index)
 
-
     def save(self, configpath=None):
+        """
+        Export the currently exposed configuration with additionnal
+        sections
+        """
+        p = configparser.RawConfigParser()
+
+        # default section, export currently exposed configuration
+        p.add_section('options')
+        for opt, val in self.items():
+            if type(val) != str and isinstance(val, collections.abc.Iterable):
+                p.set('options', opt, ",".join(val))
+            else:
+                p.set('options', opt, str(val))
+
+        # other sections, rewrite them as-is
+        for source, options in srcoptmap.items():
+            if not source.startswith('file_'):
+                continue
+            section = source[5:]
+            p.add_section(section)
+            for opt, val in options.items():
+                if type(val) != str and isinstance(val, collections.abc.Iterable):
+                    p.set(section, opt, ",".join(val))
+                else:
+                    p.set(section, opt, str(val))
+
+        # ensure file exists and write on disk
         if configpath is None:
             configpath = chainmap["config"]
-        pass
+        if not configpath.exists():
+            configpath.parent.mkdir(mode=0o755, parents=True)
+            configpath.touch(mode=0o600)
+        with configpath.open('w') as fd:
+            p.write(fd)
 
-    def pop(self, option):
-        val = self[options]
-        del self[options]
+
+    def pop(self, option, *default):
+        val = self.get(option, default[0]) if default else self[option]
+        del self[option]
         return val
+
+    def __contains__(self, option):
+        try:
+            self[option]
+        except KeyError:
+            return False
+        return True
 
     def __getitem__(self, option):
         val = chainmap[option]
         if val is DELETED:
             raise KeyError(f"{option} has been removed")
-        elif type(val) is Alias:
+        elif type(val) is DeprecatedAlias:
+            warnings.warn(
+                f"The {option} is a deprecated alias to {val.aliased_option}, "
+                "please use the latter. The option may be overridable via a "
+                "dedication section in the configuration file.",
+                DeprecationWarning)
             return self[val.aliased_option]
         return val
 
     def __setitem__(self, option, value):
-        srcoptmap["custom"][option] = opttypemap[option](value)
+        if type(value) is str:
+            value = opttypemap[option](value)
+        srcoptmap["custom"][option] = value
 
     def __delitem__(self, option):
         srcoptmap["custom"] = DELETED
@@ -592,7 +668,7 @@ class configmanager(collections.abc.MutableMapping):
         return ctxopts
 
     def __exit__ (self, type, value, tb):
-        ctxopts_stack.pop()
-        del chainmap.maps[0]
+        ctxopt = ctxopts_stack.pop()
+        del chainmap.maps[chainmap.maps.index(ctxopt)]
 
-config = configmanager()  # singleton
+config = Config()  # singleton
