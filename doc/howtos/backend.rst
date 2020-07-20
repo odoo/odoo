@@ -875,7 +875,7 @@ float, string), or a function taking a recordset and returning a value::
 
         .. note::
 
-            Odoo has built-in rules making fields with an ``active`` field set
+            Odoo has built-in rules making records with an ``active`` field set
             to ``False`` invisible.
 
 Onchange
@@ -1491,7 +1491,7 @@ for editing and merging PO/POT files.
         #. Generate the missing terms (:menuselection:`Settings -->
            Translations --> Application Terms --> Generate Missing Terms`)
         #. Create a template translation file by exporting (
-           :menuselection:`Settings --> Translations -> Import/Export
+           :menuselection:`Settings --> Translations --> Import/Export
            --> Export Translation`) without specifying a language, save in
            ``openacademy/i18n/``
         #. Create a translation file by exporting (
