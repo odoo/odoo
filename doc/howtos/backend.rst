@@ -275,6 +275,8 @@ be declared in the ``'data'`` list (always loaded) or in the ``'demo'`` list
     :ref:`odoo-bin -u openacademy <reference/cmdline>` to save the changes
     to your database.
 
+.. _howtos/module/actions:
+
 Actions and Menus
 -----------------
 
@@ -374,6 +376,8 @@ lists all the fields to display in the table (each field as a column):
         <field name="name"/>
         <field name="inventor_id"/>
     </tree>
+
+.. _howtos/module/views/form:
 
 Form views
 ----------
@@ -1353,6 +1357,8 @@ the same convention as the method :meth:`~odoo.models.Model.write` of the ORM.
 
         .. patch::
 
+.. _howto/module/wizard:
+
 Wizards
 =======
 
@@ -1389,27 +1395,33 @@ session, or for a list of sessions at once.
 Launching wizards
 -----------------
 
-Wizards are launched by ``ir.actions.act_window`` records, with the field
-``target`` set to the value ``new``. The latter opens the wizard view into a
-popup window. The action may be triggered by a menu item.
+Wizards are simply :ref:`window actions <howtos/module/actions>` with a ``target``
+field set to the value ``new``, which opens the view
+(usually :ref:`a form <howtos/module/views/form>`) in a separate dialog. The
+action may be triggered via a menu item, but is more generally triggered by a
+button.
 
-There is another way to launch the wizard: using an ``ir.actions.act_window``
-record like above, but with an extra field ``binding_model_id`` that specifies in the
-context of which model the action is available. The wizard will appear in the
-contextual actions of the model, above the main view. Because of some internal
-hooks in the ORM, such an action is declared in XML with the tag ``act_window``.
+An other way to launch wizards is through the :menuselection:`Action` menu of
+a tree or form view. This is done through the ``binding_model_id`` field of the
+action. Setting this field will make the action appear on the views of the model
+the action is "bound" to.
 
 .. code:: xml
 
-    <act_window id="launch_the_wizard"
-                name="Launch the Wizard"
-                binding_model="context.model.name"
-                res_model="wizard.model.name"
-                view_mode="form"
-                target="new"/>
+    <record id="launch_the_wizard" model="ir.actions.act_window">
+        <field name="name">Launch the Wizard</field>
+        <field name="model">wizard.model.name</field>
+        <field name="view_mode">form</field>
+        <field name="target">new<field>
+        <field name="binding_model_id" ref="model_context_model_ref"/>
+    </record>
 
-Wizards use regular views and their buttons may use the attribute
-``special="cancel"`` to close the wizard window without saving.
+.. tip::
+
+    While wizards use regular views and buttons, normally clicking any button in
+    a form would first save the form then close the dialog. Because this is
+    often undesirable in wizards, a special attribute ``special="cancel"`` is
+    available which immediately closes the wizard without saving the form.
 
 .. exercise:: Launch the wizard
 
@@ -1523,24 +1535,35 @@ Odoo uses a report engine based on :ref:`reference/qweb`,
 
 A report is a combination two elements:
 
-* an ``ir.actions.report``, for which a ``<report>`` shortcut element is
-  provided, it sets up various basic parameters for the report (default
-  type, whether the report should be saved to the database after generation,…)
-
+* an ``ir.actions.report`` which configures various basic parameters for the
+  report (default type, whether the report should be saved to the database
+  after generation,…)
 
   .. code-block:: xml
 
-      <report
-          id="account_invoices"
-          model="account.invoice"
-          string="Invoices"
-          report_type="qweb-pdf"
-          name="account.report_invoice"
-          file="account.report_invoice"
-          attachment_use="True"
-          attachment="(object.state in ('open','paid')) and
-              ('INV'+(object.number or '').replace('/','')+'.pdf')"
-      />
+      <record id="account_invoices" model="ir.actions.report">
+          <field name="name">Invoices</field>
+          <field name="model">account.invoice</field>
+          <field name="report_type">qweb-pdf</field>
+          <field name="report_name">account.report_invoice</field>
+          <field name="report_file">account.report_invoice</field>
+          <field name="attachment_use" eval="True"/>
+          <field name="attachment">(object.state in ('open','paid')) and
+              ('INV'+(object.number or '').replace('/','')+'.pdf')</field>
+          <field name="binding_model_id" ref="model_account_invoice"/>
+          <field name="binding_type">report</field>
+      </record>
+
+  .. tip::
+
+      Because it largerly a standard action, as with :ref:`howto/module/wizard`
+      it is generally useful to add the report as a *contextual item* on the
+      tree and / or form views of the model being reported on via the
+      ``binding_model_id`` field.
+
+      Here we are also using ``binding_type`` in order for the report to be in
+      the *report* contextual menu rather than the *action* one. There is no
+      technical difference but putting elements in the right place helps users.
 
 * A standard :ref:`QWeb view <reference/views/qweb>` for the actual report:
 
@@ -1556,13 +1579,13 @@ A report is a combination two elements:
         </t>
     </t>
 
-    the standard rendering context provides a number of elements, the most
-    important being:
+  the standard rendering context provides a number of elements, the most
+  important being:
 
-    ``docs``
-        the records for which the report is printed
-    ``user``
-        the user printing the report
+  ``docs``
+      the records for which the report is printed
+  ``user``
+      the user printing the report
 
 Because reports are standard web pages, they are available through a URL and
 output parameters can be manipulated through this URL, for instance the HTML
