@@ -29,7 +29,8 @@
             </t>
             <t t-if="widget.options['display_composer']">
                 <div class="media">
-                    <img alt="Avatar" class="o_portal_chatter_avatar" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/image_128/50x50"/>
+                    <img alt="Avatar" class="o_portal_chatter_avatar" t-attf-src="/web/image/res.partner/#{widget.options['partner_id']}/image_128/50x50"
+                         t-if="!widget.options['is_user_public'] or !widget.options['token']"/>
                     <div class="media-body">
                         <form class="o_portal_chatter_composer_form" t-attf-action="/mail/chatter_post" method="POST">
                             <input type="hidden" name="csrf_token" t-att-value="widget.options['csrf_token']"/>
