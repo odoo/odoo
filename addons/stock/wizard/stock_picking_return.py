@@ -179,7 +179,7 @@ class ReturnPicking(models.TransientModel):
             'search_default_assigned': False,
             'search_default_confirmed': False,
             'search_default_ready': False,
-            'search_default_late': False,
+            'search_default_planning_issues': False,
             'search_default_available': False,
         })
         return {

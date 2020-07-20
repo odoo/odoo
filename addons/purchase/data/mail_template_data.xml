@@ -85,6 +85,8 @@
         is expected for 
         % if object.date_planned:
             <strong>${format_date(object.date_planned)}</strong>.
+        % else:
+            <strong>undefined</strong>.
         % endif
         Could you please confirm it will be delivered on time?
     </p>
