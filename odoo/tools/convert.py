@@ -419,7 +419,7 @@ form: module.record_id""" % (xml_id,)
         data = dict(xml_id=xid, values=res, noupdate=self.noupdate)
         self.env['ir.actions.act_window']._load_records([data], self.mode == 'update')
 
-    def _tag_menuitem(self, rec):
+    def _tag_menuitem(self, rec, parent=None):
         rec_id = rec.attrib["id"]
         self._test_xml_id(rec_id)
 
@@ -433,11 +433,12 @@ form: module.record_id""" % (xml_id,)
         if rec.get('sequence'):
             values['sequence'] = int(rec.get('sequence'))
 
-        if rec.get('parent'):
+        if parent is not None:
+            values['parent_id'] = parent
+        elif rec.get('parent'):
             values['parent_id'] = self.id_get(rec.attrib['parent'])
-        else:
-            if rec.get('web_icon'):
-                values['web_icon'] = rec.attrib['web_icon']
+        elif rec.get('web_icon'):
+            values['web_icon'] = rec.attrib['web_icon']
 
 
         if rec.get('name'):
@@ -475,7 +476,9 @@ form: module.record_id""" % (xml_id,)
             'values': values,
             'noupdate': self.noupdate,
         }
-        self.env['ir.ui.menu']._load_records([data], self.mode == 'update')
+        menu = self.env['ir.ui.menu']._load_records([data], self.mode == 'update')
+        for child in rec.iterchildren('menuitem'):
+            self._tag_menuitem(child, parent=menu.id)
 
     def _tag_record(self, rec):
         rec_model = rec.get("model")
