@@ -879,6 +879,7 @@ system. Available semantic components are:
   its ``nolabel`` attribute is set, the field's label isn't automatically
   displayed alongside its value. The ``label`` component is the manual alternative
   of displaying the label of a field. Possible attributes are:
+
   ``for`` (mandatory)
     the reference to the field associated with the label. Can be either the name
     of a field, or its id (``id`` attribute set on the ``field``). When there are
