@@ -342,24 +342,19 @@ const GPSPicker = InputUserValueWidget.extend({
     },
 });
 
-const SelectionListUserValueWidget = SelectUserValueWidget.extend({
-    tagName: 'we-selection-list',
-    xmlDependencies: ['/website/static/src/xml/website.editor.xml'],
+const EditableListValueWidget = UserValueWidget.extend({
     events: {
-        'click .o_we_edit_entity_btn': '_onEditEntities',
-        'click .o_we_save_entity_btn': '_onSaveEntities',
+        'click .o_we_save_entity_btn': '_onStartEditingEntities',
+        'click .o_we_edit_entity_btn': '_onSaveEntities',
         'click .o_we_new_entity_btn': '_onConfirmNewEntity',
-        'click .o_we_remove_entity_btn': '_onRemoveFromList',
-        '[data-name="we_new_entity_input_opt"] change': '_onNewEntityNameChange',
     },
 
     /**
      * @override
      */
     async willStart() {
-        this.values = ['tag', 'field', 'whatever'];
-        this.selected = ['tag', 'field'];
-        this.entityName = 'extrafield';
+        this.values = [];
+        this.listTitle = 'extra field list';
         this.isEditing = false;
         await this._super(...arguments);
     },
@@ -368,44 +363,60 @@ const SelectionListUserValueWidget = SelectUserValueWidget.extend({
      * @override
      */
     async start() {
+        this.entityListHeader = document.createElement('we-row');
+        this.entityListHeader.setAttribute('String', this.listTitle);
+        this.savebtn = document.createElement('we-button');
+        this.savebtn.classList.add('o_we_save_entity_btn', 'fa', 'fa-save');
+        this.savebtn.setAttribute('data-name', 'save_entity_opt');
+        this.entityListHeader.appendChild(this.savebtn);
+        this.editbtn = document.createElement('we-button');
+        this.editbtn.classList.add('o_we_edit_entity_btn', 'fa', 'fa-pencil');
+        this.savebtn.setAttribute('data-name', 'edit_entity_opt');
+        this.entityListHeader.append(this.editbtn);
+
+        this.entityList = document.createElement('div');
+        this.entityList.classList.add('o_we_entity_list');
+        
+        this.entitySelectMenu = document.createElement('we-select');
+        this.entitySelectMenu.setAttribute('String', 'Existing');
+
+        this.newEntityForm = document.createElement('we-row');
+        this.newEntityInput = document.createElement('we-input');
+        this.newEntityBtn = document.createElement('span');
+        this.newEntityBtn.classList.add('o_we_new_entity_btn', 'fa', 'fa-plus');
+        this.newEntityForm.appendChild(this.newEntityInput);
+        this.newEntityForm.appendChild(this.newEntityBtn);
+
+        this.containerEl.appendChild(this.entityListHeader);
+        this.containerEl.appendChild(this.entitySelectMenu);
+        this.containerEl.appendChild(this.newEntityForm);
+
+        console.log($(containerEl.length));
+
         await this._super(...arguments);
-        this.containerEl.classList.add('d-block');
-        this._renderWidget();
     },
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    async updateUI() {
+        if (this.rerender) {
+            this.rerender = false;
+            await this._rerenderXML();
+            return;
+        }
+        return this._super(...arguments);
+    },
+
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
-    
-    _renderWidget: function () {
-        $(this.containerEl).empty();
-        const $selectionListInterface = qweb.render('website.selectionListUI', {
-            entityName: this.entityName,
-        });
 
-        $(this.containerEl).append($selectionListInterface);
-
-        this.selected.forEach(val => {
-            const $selectItem = qweb.render('website.selectItem', {
-                name: val,
-                isEditing: this.isEditing,
-            });
-            this.$(this.containerEl).find(`.o_we_selectable_${this.entityName}_list`).append($selectItem);
-        });
-
-        this.values.forEach(val => {
-            if (!this.selected.includes(val)) {
-                return;
-            }
-            const $listItem = qweb.render('website.ListItem', {
-                name: val,
-                isEditing: this.isEditing,
-            });
-            $(this.containerEl).find(`.o_we_${this.entityName}_list`).append($listItem);
-        });
+    _notifyChanges: function (ev) {
+        //send values list
     },
 
     //--------------------------------------------------------------------------
@@ -414,44 +425,29 @@ const SelectionListUserValueWidget = SelectUserValueWidget.extend({
 
     /**
      */
-    _onEditEntities(ev) {
+    _onStartEditingEntities(ev) {
         this.isEditing = true;
-        console.log('hey');
-        this._renderWidget();
+        this.rerender = true;
     },
     /**
      */
     _onSaveEntities(ev) {
         this.isEditing = false;
-        this._renderWidget();
+        this.rerender = true;
     },
     /**
      */
     _onConfirmNewEntity(ev) {
         this.values.push(this.newEntityName);
-        this.selected.push(this.newentityName);
         this.newEntityName = '';
         this.rerender = true;
-    },
-    _onNewEntityNameChange(ev) {
-        this.newEntityName = ev.target.value();
-    }, 
-    _onAddEntity(ev) {
-        const entity = '';
-        this.selected.push(entity);
-    },
-    _onRemoveFromList(ev) {
-        const deletedName = ev.target.dataset.name; 
-        const index = this.selected.indexOf(deletedName);
-        this.selected = _.without(this.selected, deletedName);
-        this._renderWidget();
     },
 });
 
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
-options.userValueWidgetsRegistry['we-selection-list'] = SelectionListUserValueWidget;
+options.userValueWidgetsRegistry['we-editable-list'] = EditableListValueWidget;
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 
@@ -2500,6 +2496,6 @@ options.registry.ScrollButton = options.Class.extend({
 return {
     UrlPickerUserValueWidget: UrlPickerUserValueWidget,
     FontFamilyPickerUserValueWidget: FontFamilyPickerUserValueWidget,
-    SelectionListUserValueWidget: SelectionListUserValueWidget,
+    EditableListValueWidget: EditableListValueWidget,
 };
 });

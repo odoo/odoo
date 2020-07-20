@@ -46,4 +46,13 @@
     <span t-attf-class="o_wsale_color_preview #{colorClasses} ml-1" t-attf-style="background-color: #{textColor} !important;"></span>
 </we-button>
 
+<we-button t-name="website_sale.extraFieldSelectItem" class="pt-1" t-att-data-add-extra-field="field.id" data-no-preview="true">
+    <t t-raw="field.field_description"/>
+</we-button>
+
+<we-row t-name="website_sale.extraFieldListItem" t-attf-class="pt-1 mr-1 #{!isEditing and 'o_we_inline_tag' or ''}">
+    <we-button t-esc="field.field_description" class="o_we_tag"/>
+    <we-button t-if="isEditing" class="fa fa-minus" t-att-data-remove-extra-field="field.id" data-no-preview="true"/>
+</we-row>
+
 </templates>

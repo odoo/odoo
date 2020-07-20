@@ -137,6 +137,34 @@
         </div>
     </div>
 
+    <t t-name="website.selectItem">
+        <we-button t-esc="name" />
+    </t>
+
+    <t t-name="website.ListItem">
+        <div class="o_we_list_item_wrapper">
+            <span t-raw="name" class="o_we_list_item"/>
+            <we-button t-if="isEditing" class="fa fa-minus o_we_remove_entity_btn" t-att-data-name="name"/>
+        </div>
+    </t>
+
+    <t t-name="website.selectionListUI">
+            <div class="d-flex">
+                <we-title t-esc="entityName" />
+                <span t-if="isEditing" class="fa fa-save ml-1 o_we_save_entity_btn" title="Save"/>
+                <span t-else="" class="fa fa-pencil ml-1 o_we_edit_entity_btn" title="Edit"/>
+            </div>
+
+            <div t-attf-class="o_we_#{entityName}_list"/>
+
+            <we-select t-if="isEditing" string="Existing" t-attf-class="o_we_selectable_#{entityName}_list" data-no-preview="true"/>
+
+            <div t-if="isEditing" class="d-flex">
+                <we-input placeholder="Name"/>
+                <we-button title="Confirm" class="fa fa-plus .o_we_new_entity_btn"/>
+            </div>
+    </t>
+
     <!-- Theme - custom code -->
     <div t-name="website.custom_code_dialog_content">
         <div class="mb-2" t-esc="contentText"/>

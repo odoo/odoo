@@ -33,6 +33,7 @@
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_validate.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_recently_viewed.js"></script>
             <script type="text/javascript" src="/website_sale/static/src/js/website_sale_tracking.js"></script>
+            <script type="text/javascript" src="/website_sale/static/src/js/website_sale_extra_fields.js"></script>
         </xpath>
     </template>
 
@@ -1793,9 +1794,9 @@
     </record>
 
     <template id="ecom_show_extra_fields" inherit_id="website_sale.product" active="False" customize_show="True" name="Show Extra Fields">
-        <xpath expr="//t[@t-call='website_sale.product_custom_text']" position="after">
+        <xpath expr="//div[@id='product_details']" position="inside">
             <hr/>
-            <p class="text-muted">
+            <p class="text-muted" id="o_wsale_product_extra_fields">
                 <t t-foreach='website.ecommerce_field_ids' t-as='field' t-if='product[field.name]'>
                     <b><t t-esc='field.label'/>: </b>
                     <t t-if='field.field_id.ttype != "binary"'>
