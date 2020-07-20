@@ -13,20 +13,22 @@ Index: addons/openacademy/__manifest__.py
      ],
      # only loaded in demonstration mode
      'demo': [
-Index: addons/openacademy/reports.xml
+Index: foo/openacademy/reports.xml
 ===================================================================
---- /dev/null	1970-01-01 00:00:00.000000000 +0000
-+++ addons/openacademy/reports.xml	2014-08-29 08:41:12.663540061 +0200
-@@ -0,0 +1,30 @@
+--- /dev/null
++++ foo/openacademy/reports.xml
+@@ -0,0 +1,32 @@
 +<odoo>
 +
-+    <report
-+        id="report_session"
-+        model="openacademy.session"
-+        string="Session Report"
-+        name="openacademy.report_session_view"
-+        file="openacademy.report_session"
-+        report_type="qweb-pdf" />
++    <record id="report_session" model="ir.actions.report">
++        <field name="name">Session Report</field>
++        <field name="model">openacademy.session</field>
++        <field name="report_type">qweb-pdf</field>
++        <field name="report_name">openacademy.report_session_view</field>
++        <field name="report_file">openacademy.report_session</field>
++        <field name="binding_model_id" ref="model_openacademy_session"/>
++        <field name="binding_type">report</field>
++    </record>
 +
 +    <template id="report_session_view">
 +        <t t-call="web.html_container">
