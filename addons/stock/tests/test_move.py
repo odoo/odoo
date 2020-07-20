@@ -4019,8 +4019,9 @@ class StockMove(TransactionCase):
         self.assertEqual(move1.state, 'assigned')
 
     def test_change_product_type(self):
-        """ Changing type of an existing product will raise a user error if some move
-        are reserved.
+        """ Changing type of an existing product will raise a user error if
+            - some move are reserved
+            - switching from a stockable product when qty_available is not zero
         """
         self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, 10)
         move1 = self.env['stock.move'].create({
@@ -4038,6 +4039,11 @@ class StockMove(TransactionCase):
         with self.assertRaises(UserError):
             self.product1.type = 'consu'
         move1._action_cancel()
+
+        with self.assertRaises(UserError):
+            self.product1.type = 'consu'
+
+        self.env['stock.quant']._update_available_quantity(self.product1, self.stock_location, -10)
         self.product1.type = 'consu'
 
         move2 = self.env['stock.move'].create({
