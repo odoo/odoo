@@ -224,6 +224,7 @@ class CustomerPortal(CustomerPortal):
                 'signed_on': fields.Datetime.now(),
                 'signature': signature,
             })
+            request.env.cr.commit()
         except (TypeError, binascii.Error) as e:
             return {'error': _('Invalid signature data.')}
 
