@@ -57,6 +57,7 @@ class AccountInvoiceTax(models.TransientModel):
         # set amount in the new created tax line
         line_with_tax = move_id.line_ids.filtered(lambda x: x.tax_line_id == self.tax_id)
         line_with_tax.write(self._get_amount_updated_values())
+        move_id._onchange_invoice_line_ids()
 
     def remove_tax(self):
         """ Remove the given taxes to all the invoice line of the current invoice """
@@ -65,3 +66,4 @@ class AccountInvoiceTax(models.TransientModel):
         move_id.line_ids -= line_with_tax
         move_id.invoice_line_ids.write({'tax_ids': [(3, self.tax_id.id)]})
         move_id._recompute_dynamic_lines(recompute_tax_base_amount=True)
+        move_id._onchange_invoice_line_ids()
