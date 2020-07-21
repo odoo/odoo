@@ -24,16 +24,16 @@ class HrPlanWizard(models.TransientModel):
             responsible = activity_type.get_responsible_id(self.employee_id)
 
             if self.env['hr.employee'].with_user(responsible).check_access_rights('read', raise_exception=False):
-                activity = self.env['mail.activity'].create({
+                date_deadline = self.env['mail.activity']._calculate_date_deadline(activity_type.activity_type_id)
+                self.env['mail.activity'].create({
                     'res_id': self.employee_id.id,
                     'res_model_id': self.env['ir.model']._get('hr.employee').id,
                     'summary': activity_type.summary,
                     'note': activity_type.note,
                     'activity_type_id': activity_type.activity_type_id.id,
                     'user_id': responsible.id,
+                    'date_deadline': date_deadline,
                 })
-                activity._onchange_activity_type_id()
-                activity.user_id = responsible.id
 
         return {
             'type': 'ir.actions.act_window',

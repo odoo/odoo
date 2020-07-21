@@ -130,9 +130,15 @@ class ReportAgedPartnerBalance(models.AbstractModel):
                     ORDER BY COALESCE(l.date_maturity, l.date)'''
             cr.execute(query, args_list)
             partners_amount = {}
-            aml_ids = cr.fetchall()
-            aml_ids = aml_ids and [x[0] for x in aml_ids] or []
-            for line in self.env['account.move.line'].browse(aml_ids).with_context(prefetch_fields=False):
+            aml_ids = [x[0] for x in cr.fetchall()]
+            # prefetch the fields that will be used; this avoid cache misses,
+            # which look up the cache to determine the records to read, and has
+            # quadratic complexity when the number of records is large...
+            move_lines = self.env['account.move.line'].browse(aml_ids)
+            move_lines._read(['partner_id', 'company_id', 'balance', 'matched_debit_ids', 'matched_credit_ids'])
+            move_lines.matched_debit_ids._read(['max_date', 'company_id', 'amount'])
+            move_lines.matched_credit_ids._read(['max_date', 'company_id', 'amount'])
+            for line in move_lines:
                 partner_id = line.partner_id.id or False
                 if partner_id not in partners_amount:
                     partners_amount[partner_id] = 0.0

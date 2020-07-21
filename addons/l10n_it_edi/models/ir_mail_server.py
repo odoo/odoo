@@ -344,8 +344,8 @@ class FetchmailServer(models.Model):
             if not elements:
                 continue
             for element in elements:
-                text = " ".join(element.text.split())
-                if text:
+                if element.text:
+                    text = " ".join(element.text.split())
                     output_str += "<li>%s: %s</li>" % (element.tag, text)
         return output_str + "</ul>"
 

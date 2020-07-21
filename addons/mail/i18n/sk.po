@@ -315,7 +315,7 @@ msgstr ""
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">vybrané záznamy</span>\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">aktuálne vyhľadávanie</span>.\n"
 "                            </span>\n"
-"                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">sledovateľov dokumentu a</span>"
+"                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Oodberatelia dokumentu a</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -390,7 +390,7 @@ msgid ""
 "note. Followers won't receive any email notification."
 msgstr ""
 "<strong>Interná komunikácia</strong>: odpoveď vytvorí internú poznámku. "
-"Sledovatelia nedostanú žiadne emailové upozornenie."
+"Odberatelia nedostanú žiadne emailové upozornenie."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -644,13 +644,13 @@ msgstr "Pridaj čiernu listinu mailov"
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #, python-format
 msgid "Add Followers"
-msgstr "Pridať Nasledovníkov"
+msgstr "Pridať odberateľov"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:0
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
-msgstr "Pridávanie sledovateľov je možné len v modeli mailových vláken"
+msgstr "Pridávanie odberateľov je možné len v modeli mailových vláken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__add_sign
@@ -1861,7 +1861,7 @@ msgstr "Dokument"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr "Sledujúci dokument"
+msgstr "Dokument odberateľov"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model_id
@@ -1932,7 +1932,7 @@ msgstr "Rozbaľovacie menu"
 #: code:addons/mail/static/src/xml/followers.xml:0
 #, python-format
 msgid "Dropdown menu - Followers"
-msgstr "Rozbaľovacie menu - nasledovníci"
+msgstr "Rozbaľovacie menu - odberatelia"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -2704,8 +2704,8 @@ msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
 msgstr ""
-"Pokiaľ zaškrtnuté, partneri budú prijímať varovanie emailom kde sú pridaný "
-"ako sledovanie dokumentov."
+"Pokiaľ zaškrtnuté, partneri budú prijímať upozornenie emailom, kde sú "
+"pridaní v dokumente odberateľov."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__user_signature
@@ -3197,14 +3197,14 @@ msgstr "Nahrávanie..."
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Log"
-msgstr "Protokol"
+msgstr "Pridať"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:0
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr "Pridať poznámku. Sledujúci nebudú notifikovaní."
+msgstr "Pridať poznámku. Odberatelia nebudú notifikovaní."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -3426,7 +3426,7 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
-"Členovia týchto skupín budú automaticky pridaný ako sledujúci. Vprípade "
+"Členovia týchto skupín budú automaticky pridaný ako odberatelia. Vprípade "
 "potreby budú schopní spravovať ich odberanie manuálne."
 
 #. module: mail
@@ -4084,12 +4084,12 @@ msgstr "Notifikácie"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify
 msgid "Notify followers"
-msgstr "Notifikovať sledujúcich"
+msgstr "Notifikovať odberateľov"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr "Notifikovať sledujúcich dokumentu (len pri hromadých správach)"
+msgstr "Notifikovať odberateľov dokumentu (len pri hromadých správach)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -6553,7 +6553,7 @@ msgstr "napr. Prediskutovať návrh"
 #: code:addons/mail/static/src/js/followers.js:0
 #, python-format
 msgid "followers"
-msgstr "sledujúci"
+msgstr "Odberatelia"
 
 #. module: mail
 #. openerp-web
@@ -6703,7 +6703,7 @@ msgstr "obmedzené na členov kanála"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "restricted to followers"
-msgstr "obmedzené na sledovateľov"
+msgstr "obmedzené na odberateľov"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0
