@@ -227,7 +227,7 @@ parameters passed when using the ``new`` operator::
     my_object.say_hello();
     // print "hello Bob" in the console
 
-It is also possible to create subclasses from existing (used-defined) classes
+It is also possible to create subclasses from existing (user-defined) classes
 by calling :func:`~odoo.web.Class.extend` on the parent class, as is done
 to subclass :class:`~odoo.web.Class`::
 
