@@ -9,6 +9,9 @@
             <group states="init" position="inside">
                 <field name="website_ids" widget="many2many_checkboxes" groups="website.group_multi_website"/>
             </group>
+            <xpath expr="//button[@special='cancel']" position="replace">
+                <button special="cancel" class="btn-secondary"><span>Cancel</span></button>
+            </xpath>
         </field>
     </record>
 

@@ -579,6 +579,10 @@ var FormController = BasicController.extend({
                 }).on("closed", null, resolve);
             });
         } else if (attrs.special === 'cancel') {
+            if (ev.data.record.context.params && ev.data.record.context.params.url_return) {
+                var url = ev.data.record.context.params.url_return.replace(/\[lang\]/g, ev.data.record.context.lang);
+                window.location.replace(url);
+            }
             def = this._callButtonAction(attrs, ev.data.record);
         } else if (!attrs.special || attrs.special === 'save') {
             // save the record but don't switch to readonly mode
