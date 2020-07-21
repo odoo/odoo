@@ -1529,7 +1529,7 @@ Exercises
     :samp:`<img src="data:{mime_type};base64,{base64_image_data}"/>`
 
     The ``PetToysList`` widget should be displayed on the home page on the
-    right of the ``MessageOfTheDay`` widget. You will need to make some layout
+    left of the ``MessageOfTheDay`` widget. You will need to make some layout
     with CSS to achieve this.
 
     .. only:: solutions
