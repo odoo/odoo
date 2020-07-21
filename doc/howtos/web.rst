@@ -228,7 +228,7 @@ parameters passed when using the ``new`` operator::
     // print "hello Bob" in the console
 
 It is also possible to create subclasses from existing (user-defined) classes
-by calling :func:`~odoo.web.Class.extend` on the parent class, as is done
+by calling :func:`~odoo.web.Class.extend` on the parent class, as it is done
 to subclass :class:`~odoo.web.Class`::
 
     var MySpanishClass = MyClass.extend({
