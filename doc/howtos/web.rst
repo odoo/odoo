@@ -839,7 +839,7 @@ Exercise
     Create a widget whose constructor takes two parameters aside from
     ``parent``: ``product_names`` and ``color``.
 
-    * ``product_names`` should an array of strings, each one the name of a
+    * ``product_names`` should an array of strings, each one being the name of a
       product
     * ``color`` is a string containing a color in CSS color format (ie:
       ``#000000`` for black).
