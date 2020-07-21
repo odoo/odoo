@@ -79,7 +79,7 @@ class QueryTestCase(BaseCase):
         tmp_cat_cmp_par = query.join(tmp_cat_cmp, 'partner_id', 'res_partner', 'id', 'partner_id')
         self.assertEqual(tmp_cat_cmp_par, 'product_product__product_tmpl_id__product_category_id__56d55687')
         tmp_cat_stm_par = query.join(tmp_cat_stm, 'partner_id', 'res_partner', 'id', 'partner_id')
-        self.assertEqual(tmp_cat_stm_par, 'product_product__product_tmpl_id__product_category_id__9_363fdd')
+        self.assertEqual(tmp_cat_stm_par, 'product_product__product_tmpl_id__product_category_id__00363fdd')
 
     def test_table_expression(self):
         query = Query(None, 'foo')
