@@ -78,8 +78,8 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
      */
     start: async function () {
         const style = window.getComputedStyle(document.documentElement);
-        const nbFonts = parseInt(style.getPropertyValue('--number-of-fonts'));
-        const googleFontsProperty = style.getPropertyValue('--google-fonts').trim();
+        const nbFonts = parseInt(weUtils.getCSSVariableValue('number-of-fonts', style));
+        const googleFontsProperty = weUtils.getCSSVariableValue('google-fonts', style);
         this.googleFonts = googleFontsProperty ? googleFontsProperty.split(/\s*,\s*/g) : [];
         this.googleFonts = this.googleFonts.map(font => font.substring(1, font.length - 1)); // Unquote
 
@@ -93,7 +93,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
             const fontEl = document.createElement('we-button');
             fontEl.classList.add(`o_we_option_font_${realFontNb}`);
             fontEl.dataset.variable = variable;
-            fontEl.dataset[methodName] = style.getPropertyValue(`--font-number-${realFontNb}`).trim();
+            fontEl.dataset[methodName] = weUtils.getCSSVariableValue(`font-number-${realFontNb}`, style);
             fontEl.dataset.font = realFontNb;
             fontEls.push(fontEl);
             this.menuEl.appendChild(fontEl);
@@ -196,7 +196,7 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
         const values = {};
         const style = window.getComputedStyle(document.documentElement);
         _.each(FontFamilyPickerUserValueWidget.prototype.fontVariables, variable => {
-            const value = style.getPropertyValue(`--${variable}`).trim();
+            const value = weUtils.getCSSVariableValue(variable, style);
             if (value.substring(1, value.length - 1) === googleFont) {
                 // If an element is using the google font being removed, reset
                 // it to the theme default.
@@ -303,11 +303,10 @@ options.Class.include({
                 return mostXmlIDsStr; // Need to return the exact same string as in possibleValues
             }
             case 'customizeWebsiteVariable': {
-                const style = window.getComputedStyle(document.documentElement);
-                return style.getPropertyValue('--' + params.variable).trim();
+                return weUtils.getCSSVariableValue(params.variable);
             }
             case 'customizeWebsiteColor': {
-                return this._getCSSColorFromName(params.color);
+                return weUtils.getCSSVariableValue(params.color);
             }
         }
         return this._super(...arguments);
@@ -391,16 +390,6 @@ options.Class.include({
                 'disable': disableXmlIDs,
             },
         });
-    },
-    /**
-     * @private
-     * @param {string} colorName
-     * @returns {string}
-     */
-    _getCSSColorFromName: function (colorName) {
-        const style = window.getComputedStyle(document.documentElement);
-        const color = style.getPropertyValue('--' + colorName).trim();
-        return ColorpickerWidget.normalizeCSSColor(color);
     },
     /**
      * @private
@@ -632,8 +621,8 @@ options.registry.Theme = options.Class.extend({
     start: async function () {
         // Checks for support of the old color system
         const style = window.getComputedStyle(document.documentElement);
-        const supportOldColorSystem = style.getPropertyValue('--support-13-0-color-system').trim() === 'true';
-        const hasCustomizedOldColorSystem = style.getPropertyValue('--has-customized-13-0-color-system').trim() === 'true';
+        const supportOldColorSystem = weUtils.getCSSVariableValue('support-13-0-color-system', style) === 'true';
+        const hasCustomizedOldColorSystem = weUtils.getCSSVariableValue('has-customized-13-0-color-system', style) === 'true';
         this._showOldColorSystemWarning = supportOldColorSystem && hasCustomizedOldColorSystem;
 
         return this._super(...arguments);
@@ -777,8 +766,7 @@ options.registry.Theme = options.Class.extend({
         for (const widget of widgets) {
             if (widget.getMethodsNames().includes('customizeWebsiteVariable')
                     && widget.getMethodsParams('customizeWebsiteVariable').variable === 'color-palettes-number') {
-                const style = window.getComputedStyle(document.documentElement);
-                const hasCustomizedColors = style.getPropertyValue('--has-customized-colors').trim();
+                const hasCustomizedColors = weUtils.getCSSVariableValue('has-customized-colors');
                 if (hasCustomizedColors && hasCustomizedColors !== 'false') {
                     return _t("Changing the color palette will reset all your color customizations, are you sure you want to proceed?");
                 }
@@ -859,7 +847,7 @@ options.registry.Theme = options.Class.extend({
     async _renderCustomXML(uiFragment) {
         const paletteSelectorEl = uiFragment.querySelector('[data-variable="color-palettes-number"]');
         const style = window.getComputedStyle(document.documentElement);
-        const nbPalettes = parseInt(style.getPropertyValue('--number-of-color-palettes'));
+        const nbPalettes = parseInt(weUtils.getCSSVariableValue('number-of-color-palettes', style));
         for (let i = 1; i <= nbPalettes; i++) {
             const btnEl = document.createElement('we-button');
             btnEl.classList.add('o_palette_color_preview_button');
@@ -867,7 +855,7 @@ options.registry.Theme = options.Class.extend({
             for (let c = 1; c <= 5; c++) {
                 const colorPreviewEl = document.createElement('span');
                 colorPreviewEl.classList.add('o_palette_color_preview');
-                const color = style.getPropertyValue(`--o-palette-${i}-o-color-${c}`).trim();
+                const color = weUtils.getCSSVariableValue(`o-palette-${i}-o-color-${c}`, style);
                 colorPreviewEl.style.backgroundColor = color;
                 btnEl.appendChild(colorPreviewEl);
             }
