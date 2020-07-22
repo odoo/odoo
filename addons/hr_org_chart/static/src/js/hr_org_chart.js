@@ -15,6 +15,52 @@ odoo.define('web.OrgChart', function (require) {
             });
             this.trigger('do-action', {action: action});
         }
+
+        /**
+         * Redirect to the sub employee form view.
+         *
+         * @private
+         * @param {MouseEvent} event
+         * @returns {Promise} action loaded
+         */
+        async _onEmployeeSubRedirect(event) {
+            const employeeID = $(event.currentTarget).data('employee-id');
+            const type = $(event.currentTarget).data('type') || 'direct';
+            if (employeeID) {
+                const data = await this._getSubordinatesData(employeeID, type);
+                const domain = [['id', 'in', data]];
+                let action = await this.env.services.rpc({
+                    model: 'hr.employee',
+                    method: 'get_formview_action',
+                    args: [employeeID],
+                });
+                action = Object.assign(action, {
+                    'view_mode': 'kanban,list,form',
+                    'views':  [[false, 'kanban'], [false, 'list'], [false, 'form']],
+                    'domain': domain,
+                });
+                this.trigger('do-action', {action: action});
+            }
+        }
+
+        /**
+         * Get subordonates of an employee through a rpc call.
+         *
+         * @private
+         * @param {integer} employee_id
+         * @returns {Promise}
+         */
+        async _getSubordinatesData(employeeID, type) {
+            const sunbordinates = await this.env.services.rpc({
+                route: '/hr/get_subordinates',
+                params: {
+                    employee_id: employeeID,
+                    subordinates_type: type,
+                    context: session.user_context,
+                },
+            });
+            return sunbordinates;
+        }
     }
     EmployeeChart.template = "hr_org_chart_employee";
 
