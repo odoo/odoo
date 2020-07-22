@@ -115,7 +115,7 @@ const ColorPaletteWidget = Widget.extend({
             }
             this.colorNames.push(colorName);
             if (!isCCName && !elem.classList.contains('d-none')) {
-                const color = ColorpickerWidget.normalizeCSSColor(this.style.getPropertyValue('--' + colorName).trim());
+                const color = weUtils.getCSSVariableValue(colorName, this.style);
                 this.colorToColorNames[color] = colorName;
             }
         });
@@ -125,7 +125,7 @@ const ColorPaletteWidget = Widget.extend({
         if (this.options.selectedColor) {
             let selectedColor = this.options.selectedColor;
             if (compatibilityColorNames.includes(selectedColor)) {
-                selectedColor = this.style.getPropertyValue('--' + selectedColor).trim() || selectedColor;
+                selectedColor = weUtils.getCSSVariableValue(selectedColor, this.style) || selectedColor;
             }
             selectedColor = ColorpickerWidget.normalizeCSSColor(selectedColor);
             if (selectedColor !== 'rgba(0, 0, 0, 0)') {
@@ -138,7 +138,7 @@ const ColorPaletteWidget = Widget.extend({
         // Colorpicker
         let defaultColor = this.selectedColor;
         if (defaultColor && !ColorpickerWidget.isCSSColor(defaultColor)) {
-            defaultColor = ColorpickerWidget.normalizeCSSColor(this.style.getPropertyValue('--' + defaultColor).trim());
+            defaultColor = weUtils.getCSSVariableValue(defaultColor, this.style);
         }
         this.colorPicker = new ColorpickerWidget(this, {
             defaultColor: defaultColor,
@@ -175,8 +175,8 @@ const ColorPaletteWidget = Widget.extend({
                 });
             },
         });
-        this.style.getPropertyValue(`--custom-colors`).trim().split(' ').forEach(v => {
-            const color = this.style.getPropertyValue(`--${v.substring(1, v.length - 1)}`).trim();
+        weUtils.getCSSVariableValue('custom-colors', this.style).split(' ').forEach(v => {
+            const color = weUtils.getCSSVariableValue(v.substring(1, v.length - 1), this.style);
             if (ColorpickerWidget.isCSSColor(color)) {
                 this._addCustomColor(existingColors, color);
             }
@@ -201,7 +201,7 @@ const ColorPaletteWidget = Widget.extend({
             return;
         }
         if (!ColorpickerWidget.isCSSColor(color)) {
-            color = this.style.getPropertyValue('--' + color).trim();
+            color = weUtils.getCSSVariableValue(color, this.style);
         }
         const normColor = ColorpickerWidget.normalizeCSSColor(color);
         if (!existingColors.has(normColor)) {

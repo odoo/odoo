@@ -4,6 +4,7 @@ odoo.define('website.s_countdown', function (require) {
 const {ColorpickerWidget} = require('web.Colorpicker');
 const core = require('web.core');
 const publicWidget = require('web.public.widget');
+const weUtils = require('web_editor.utils');
 
 const qweb = core.qweb;
 const _t = core._t;
@@ -75,8 +76,7 @@ const CountdownWidget = publicWidget.Widget.extend({
         if (ColorpickerWidget.isCSSColor(color)) {
             return color;
         }
-        const style = window.getComputedStyle(document.documentElement);
-        return style.getPropertyValue('--' + color).trim();
+        return weUtils.getCSSVariableValue(color);
     },
     /**
      * Gets the time difference in seconds between now and countdown due date.

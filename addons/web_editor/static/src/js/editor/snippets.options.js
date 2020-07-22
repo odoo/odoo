@@ -1198,9 +1198,7 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             const cssCompatible = this.options.dataAttributes.hasOwnProperty('cssCompatible');
             if ((useCssColor || cssCompatible) && !ColorpickerWidget.isCSSColor(value)) {
                 if (useCssColor) {
-                    const style = window.getComputedStyle(document.documentElement);
-                    value = style.getPropertyValue(`--${value}`).trim();
-                    value = ColorpickerWidget.normalizeCSSColor(value);
+                    value = weUtils.getCSSVariableValue(value);
                 } else {
                     value = `var(--${value})`;
                 }
@@ -1840,8 +1838,7 @@ const SnippetOptionWidget = Widget.extend({
         // At this point, the widget value is either a property/color name or
         // an actual css property value. If it is a property/color name, we will
         // apply a css variable as style value.
-        const htmlStyle = window.getComputedStyle(document.documentElement);
-        const htmlPropValue = htmlStyle.getPropertyValue('--' + widgetValue);
+        const htmlPropValue = weUtils.getCSSVariableValue(widgetValue);
         if (htmlPropValue) {
             widgetValue = `var(--${widgetValue})`;
         }
@@ -2999,9 +2996,7 @@ const ImageHandlerOption = SnippetOptionWidget.extend({
      */
     _normalizeColor(color) {
         if (!ColorpickerWidget.isCSSColor(color)) {
-            const style = window.getComputedStyle(document.documentElement);
-            color = style.getPropertyValue('--' + color).trim();
-            color = ColorpickerWidget.normalizeCSSColor(color);
+            color = weUtils.getCSSVariableValue(color);
         }
         return color;
     },
