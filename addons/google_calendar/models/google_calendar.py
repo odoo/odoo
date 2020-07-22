@@ -912,7 +912,7 @@ class GoogleCalendar(models.AbstractModel):
         headers = {'Content-type': 'application/json'}
         url = "/calendar/v3/calendars/%s/events/%s" % ('primary', instance_id)
         status, content, ask_time = self.env['google.service']._do_request(url, params, headers, type='GET')
-        return content.get('sequence', 0)
+        return content.get('sequence', 0) if isinstance(content, dict) else 0
 
     #################################
     ##  MANAGE CONNEXION TO GMAIL  ##
