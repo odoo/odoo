@@ -65,5 +65,4 @@ class AccountInvoiceTax(models.TransientModel):
         line_with_tax = move_id.line_ids.filtered(lambda x: x.tax_line_id == self.tax_id)
         move_id.line_ids -= line_with_tax
         move_id.invoice_line_ids.write({'tax_ids': [(3, self.tax_id.id)]})
-        move_id._recompute_dynamic_lines(recompute_tax_base_amount=True)
         move_id._onchange_invoice_line_ids()
