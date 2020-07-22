@@ -762,11 +762,7 @@ return AbstractRenderer.extend({
         }
         var dataPoints = this._filterDataPoints();
         dataPoints = this._sortDataPoints(dataPoints);
-        if (!dataPoints.length && this.state.mode !== 'pie') {
-            while (this.el.firstChild) {
-                this.el.removeChild(this.el.firstChild);
-            }
-        } else if (this.isInDOM) {
+        if (dataPoints.length && this.isInDOM) {
             // only render the graph if the widget is already in the DOM (this
             // happens typically after an update), otherwise, it will be
             // rendered when the widget will be attached to the DOM (see
@@ -895,10 +891,9 @@ return AbstractRenderer.extend({
             someNegative = someNegative || (datapt.value < 0);
             allZero = allZero && (datapt.value === 0);
         });
+
         if ((someNegative && !allNegative) || (allZero && !this.isEmbedded && this.state.origins.length === 1)) {
-            while (this.el.firstChild) {
-                this.el.removeChild(this.el.firstChild);
-            }
+            this.$el.empty();
             return;
         }
 

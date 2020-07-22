@@ -337,69 +337,6 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
-    QUnit.test('no no content helper (line chart)', async function (assert) {
-        assert.expect(2);
-        this.data.foo.records = [];
-
-        var graph = await createView({
-            View: GraphView,
-            model: "foo",
-            data: this.data,
-            arch: '<graph type="line">' +
-                        '<field name="product_id"/>' +
-                '</graph>',
-        });
-
-        assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
-                    "should not contain a div with a canvas element");
-        assert.containsNone(graph, 'div.o_view_nocontent',
-            "should not display the no content helper");
-
-        graph.destroy();
-    });
-
-    QUnit.test('no no content helper (bar chart)', async function (assert) {
-        assert.expect(2);
-        this.data.foo.records = [];
-
-        var graph = await createView({
-            View: GraphView,
-            model: "foo",
-            data: this.data,
-            arch: '<graph string="Gloups">' +
-                        '<field name="product_id"/>' +
-                '</graph>',
-        });
-
-        assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
-                    "should not contain a div with a canvas element");
-        assert.containsNone(graph, 'div.o_view_nocontent',
-            "should not display the no content helper");
-
-        graph.destroy();
-    });
-
-    QUnit.test('no no content helper (pie chart)', async function (assert) {
-        assert.expect(2);
-        this.data.foo.records =  [];
-
-        var graph = await createView({
-            View: GraphView,
-            model: "foo",
-            data: this.data,
-            arch: '<graph type="pie">' +
-                        '<field name="product_id"/>' +
-                '</graph>',
-        });
-
-        assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
-            "should not contain a div with a canvas element");
-        assert.containsNone(graph, 'div.o_view_nocontent',
-            "should not display the no content helper");
-
-        graph.destroy();
-    });
-
     QUnit.test('render pie chart in comparison mode', async function (assert) {
         assert.expect(2);
 
@@ -430,31 +367,6 @@ QUnit.module('Views', {
         assert.checkLegend(graph, 'No data');
 
         unpatchDate();
-        graph.destroy();
-    });
-
-    QUnit.test('no no content helper after update', async function (assert) {
-        assert.expect(4);
-
-        var graph = await createView({
-            View: GraphView,
-            model: "foo",
-            data: this.data,
-            arch: '<graph string="Gloups">' +
-                        '<field name="product_id"/>' +
-                '</graph>',
-        });
-
-        assert.containsOnce(graph, 'div.o_graph_canvas_container canvas',
-                    "should contain a div with a canvas element");
-        assert.containsNone(graph, 'div.o_view_nocontent',
-            "should not display the no content helper");
-
-        await testUtils.graph.reload(graph, {domain: [['product_id', '=', 4]]});
-        assert.containsNone(graph, 'div.o_graph_canvas_container canvas',
-                    "should not contain a div with a canvas element");
-        assert.containsNone(graph, 'div.o_view_nocontent',
-            "should not display the no content helper");
         graph.destroy();
     });
 
@@ -1411,10 +1323,10 @@ QUnit.module('Views', {
                 for await (var combination of graphGenerator(combinations)) {
                     // we can check particular combinations here
                     if (combination.toString() in self.combinationsToCheck) {
-                        if (self.combinationsToCheck[combination].errorMessage) {
+                        if (self.combinationsToCheck[combination].noContent) {
                             assert.strictEqual(
-                                graph.$('.o_nocontent_help p').eq(1).text().trim(),
-                                self.combinationsToCheck[combination].errorMessage
+                                graph.$('.o_graph_renderer').text().trim(),
+                                ""
                             );
                         } else {
                             assert.checkLabels(graph, self.combinationsToCheck[combination].labels);
@@ -1817,8 +1729,7 @@ QUnit.module('Views', {
             await this.testCombinations(combinations, assert);
 
             this.combinationsToCheck['previous_period,this_year,quarter'] = {
-                errorMessage: 'Pie chart cannot mix positive and negative numbers. ' +
-                                'Try to change your domain to only display positive results'
+                noContent: true
             };
             await this.setMode('pie');
             await this.testCombinations(combinations, assert);
