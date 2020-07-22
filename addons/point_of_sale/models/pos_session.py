@@ -1025,9 +1025,14 @@ class PosSession(models.Model):
         sessions = self.search([('start_at', '<=', (fields.datetime.now() - timedelta(days=7))), ('state', '!=', 'closed')])
         for session in sessions:
             if self.env['mail.activity'].search_count([('res_id', '=', session.id), ('res_model', '=', 'pos.session')]) == 0:
-                session.activity_schedule('point_of_sale.mail_activity_old_session',
-                        user_id=session.user_id.id, note=_("Your PoS Session is open since ") + fields.Date.to_string(session.start_at)
-                        + _(", we advise you to close it and to create a new one."))
+                session.activity_schedule(
+                    'point_of_sale.mail_activity_old_session',
+                    user_id=session.user_id.id,
+                    note=_(
+                        "Your PoS Session is open since %(date)s, we advise you to close it and to create a new one.",
+                        date=session.start_at,
+                    )
+                )
 
     def _warning_balance_closing(self):
         self.ensure_one()

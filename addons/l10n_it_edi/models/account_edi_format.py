@@ -375,9 +375,9 @@ class AccountEdiFormat(models.Model):
                                     discount["seq"] = invoice_line_form.sequence + 1
 
                                     if total_discount_amount < 0:
-                                        discount["name"] = _('DISCOUNT: ') + invoice_line_form.name
+                                        discount["name"] = _('DISCOUNT: %s', invoice_line_form.name)
                                     else:
-                                        discount["name"] = _('EXTRA CHARGE: ') + invoice_line_form.name
+                                        discount["name"] = _('EXTRA CHARGE: %s', invoice_line_form.name)
                                     discount["amount"] = total_discount_amount
                                     discount["tax"] = []
                                     for tax in invoice_line_form.tax_ids:

@@ -1295,9 +1295,9 @@ class AccountMove(models.Model):
             vendor_display_name = move.partner_id.display_name
             if not vendor_display_name:
                 if move.invoice_source_email:
-                    vendor_display_name = _('@From: ') + move.invoice_source_email
+                    vendor_display_name = _('@From: %(email)s', email=move.invoice_source_email)
                 else:
-                    vendor_display_name = _('#Created by: %s') % (move.sudo().create_uid.name or self.env.user.name)
+                    vendor_display_name = _('#Created by: %s', move.sudo().create_uid.name or self.env.user.name)
             move.invoice_partner_display_name = vendor_display_name
 
     def _compute_payments_widget_to_reconcile_info(self):
