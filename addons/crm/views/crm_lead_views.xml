@@ -401,6 +401,7 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
+<<<<<<< HEAD
                         <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}" string='Organization / Contact'/>
                         <field name="name" placeholder="e.g. Product Pricing" />
                         <field name="email_from" string="Email" />
@@ -410,6 +411,11 @@
                             <field name="planned_revenue" class="oe_inline mr-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
                         </div>
+=======
+                        <field name="name" string="Name"/>
+                        <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}"/>
+                        <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+>>>>>>> b2d0ae438a3... temp
                         <field name="company_currency" invisible="1"/>
                         <field name="company_id" invisible="1"/>
                         <field name="partner_name" invisible="1"/>
