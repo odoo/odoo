@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-def boot():
+
+def boot(aslib=True):
     # only boot once
     if getattr(boot, "called", False):
         return
@@ -16,12 +17,16 @@ def boot():
 
     # phase 2, configuration loading and exposure
     from . import config as config_module
-    config_module.config.reload()
+    config_module.load_environ()
+    if not aslib:
+        config_module.load_cli()
+    config_module.load_file()
+    config_module.ensure_data_dir(config_module.config['data_dir'])
 
     # phase 3, dynamic library configuration
-    if conf.subcommand == 'gevent':
+    if not aslib and conf.subcommand == 'gevent':
         _use_cooperative_networking()
-    _configure_logging()
+    _configure_logging(aslib=aslib)
 
     # phase 4, addons_path and upgrade_path namespaces setup
     from . import addons, upgrade

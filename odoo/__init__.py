@@ -10,6 +10,8 @@ __path__ = [
     for path in __import__("pkgutil").extend_path(__path__, __name__)
 ]
 
+import pdb; pdb.set_trace()
+exit()
 
 #----------------------------------------------------------
 # Effective booting

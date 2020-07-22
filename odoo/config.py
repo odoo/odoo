@@ -29,32 +29,20 @@ except ImportError:
     from loglevels import PSEUDOCONFIG_MAPPER as loglevelmap
 
 
+subcommand = None   # subcommand extracted from cli
+
 opttypemap = {}     # map every option to a type-like function, is
                     # automatically updated for every option
 
 envoptmap = {}      # map environment variable to option, is 
                     # automatically updated for every envvar= options
 
-ctxopt_stack = []   # stack of temporary user-defined sources controlled
-                    # by a context manager, are injected as 1st sources.
-
 srcoptmap = {       # all configuration sources
-    "custom": {},   # user-defined
     "cli": {},      # argparse
     "environ": {},  # os.getenv
     "file": {},     # configparser [common] section
     "default": {},  # source-hardcoded
 }
-
-chainmap = collections.ChainMap(  # exposition order, top first
-    # temporary sources are placed here, see __enter__ and __exit__
-    srcoptmap["custom"],
-    srcoptmap["cli"],
-    # additionnal config file sections are placed here, see expose_file_section
-    srcoptmap["file"],
-    srcoptmap["environ"],
-    srcoptmap["default"],
-)
 
 DELETED = object()  # placed in the custom-config when an option is
                     # removed, used to raise a KeyError uppon access.
@@ -86,6 +74,15 @@ def assert_in(rawopt, choices):
     if opt not in choices:
         raise SystemExit(f"{opt}: not a valid option, pick from %s" % ", ".join(choices))
     return opt
+
+
+def flatten(it):
+    """ Chain all iterables into a single one """
+    for e in it:
+        if type(e) != str and isinstance(e, collections.abc.Iterable):
+            yield from flatten(e)
+        else:
+            yield e
 
 
 def add(group, *args, dest, action='store', default=None, envvar=None, **kwargs):
@@ -121,21 +118,20 @@ def add(group, *args, dest, action='store', default=None, envvar=None, **kwargs)
     return group.add_argument(*args, dest=dest, action=action, default=None, **kwargs)
 
 
+########################################################################
+#                                                                      #
+#                        TYPE-LIKE FUNCTIONS                           #
+#           all sanity checks and type conversions goes here           #
+#                                                                      #
+########################################################################
+
+
 def comma(cast: callable):
     """
     Backward compatibility layer with old single argument comma-separated
     list of values. Returns a list of `cast` converted values.
     """
     return lambda rawopt: list(map(cast, rawopt.split(',')))
-
-
-def flatten(it):
-    """ Chain all iterables into a single one """
-    for e in it:
-        if type(e) != str and isinstance(e, collections.abc.Iterable):
-            yield from flatten(e)
-        else:
-            yield e
 
 
 def fullpath(path: str):
@@ -245,7 +241,6 @@ def get_odoorc():
     return pathlib.Path.home().joinpath('.odoorc')
 
 
-
 def data_dir(rawopt):
     datadir = _check_dir_access(rawopt, os.R_OK | os.W_OK | os.X_OK)
 
@@ -315,6 +310,7 @@ def i18n_output_file(rawopt):
 ########################################################################
 #                                                                      #
 #                       COMMAND LINE INTERFACE                         #
+#        all option specs are extracted from the argparse parser       #
 #                                                                      #
 ########################################################################
 
@@ -484,6 +480,7 @@ if os.name == 'posix':
     add(server_multi, '--limit-time-real', dest='limit_time_real', default=120, metavar="SECONDS", type=int, help="Maximum allowed Real time per request (default 120).")
     add(server_multi, '--limit-request', dest='limit_request', default=8192, metavar="#REQUEST", type=int, help="Maximum number of request to be processed per worker (default 8192).")
 
+
 subparsers.add_parser('server', parents=[server_parser])
 
 
@@ -501,75 +498,75 @@ subparsers.add_parser('populate', parents=[server_parser, populate_parser])
 
 
 
-class Config(collections.abc.MutableMapping):
-    """
-    The configuration is loaded from several sources namely, the source
-    hardcoded defaults, the command line, the configuration file and the
-    environment variables and exposed in that order in a ChainMap. 
+########################################################################
+########################################################################
+########################################################################
 
-    The command-line subcommand is loaded too but not yet executed.
 
-    Setting config options places the option with its value in a custom
-    dictionnary on top of the chainmap.
+def load_environ(self):
+    options = srcoptmap['environ']
+    options.clear()
+    for envvar, opt in envoptmap.items():
+        val = os.getenv(envvar)
+        if val:
+            options[opt] = opttypemap[opt](val)
 
-    Using a contextmanager, options can be temporary override for
-    testing purpose.
-    """
-    def __init__(self):
-        self.subcommand = None
 
-    def _load_environ(self):
-        options = srcoptmap['environ']
-        for envvar, opt in envoptmap.items():
-            val = os.getenv(envvar)
-            if val:
+def load_cli(self):
+    global subcommand
+    options = srcoptmap['cli']
+    options.clear()
+    cli_options = vars(main_parser.parse_args())
+    subcommand = cli_options.pop("subcommand", "server")
+    for opt, val in cli_options.items():
+        if val is None:
+            continue
+        # flatten lists, this is caused by action='append', type=comma(...)
+        if type(val) != str and isinstance(val, Iterable):
+            val = list(flatten(val))
+
+        options[opt] = val  # already casted by argparse
+        
+
+def load_file(self):
+    configpath = config['config']
+    try:
+        if configpath.stat().st_mode & 0o777 != 0o600:
+            warnings.warn(f"{configpath}: Wrong permissions, should be user-only read/write (0600)")
+        p.read([configpath])
+    except (FileNotFoundError, IOError):
+        warnings.warn(f"{configpath}: Could not read configuration file")
+        return
+
+    for sec in p.sections():
+        options = srcoptmap['file' if sec == 'options' else 'file_' + sec]
+        options.clear()
+        for opt, val in p.items(sec):
                 options[opt] = opttypemap[opt](val)
 
 
-    def _load_cli(self):
-        options = srcoptmap['cli']
-        cli_options = vars(main_parser.parse_args())
-        self.subcommand = cli_options.pop("subcommand", "server")
-        for opt, val in cli_options.items():
-            if val is None:
-                continue
-            # flatten lists, this is caused by action='append', type=comma(...)
-            if type(val) != str and isinstance(val, Iterable):
-                val = list(flatten(val))
+class Config(collections.abc.MutableMapping):
+    def __init__(self, tempopts_chain=None, useropts=None, sectopts=None):
+        self._tempopts_chain = ChainMap(*(tempopts_chain or []))
+        self._useropts = useropts or {}
+        self._sectopts = sectopts or {}
+        self._chainmap = Chainmap(
+            self._tempopts_chain,
+            self._useropts,
+            srcoptmap["cli"],
+            self._sectopts,
+            srcoptmap["file"],
+            srcoptmap["environ"],
+            srcoptmap["default"],
+        )
+        self.subcommand = subcommand
 
-            options[opt] = val  # already casted by argparse
-            
-
-    def _load_file(self, configpath):
-        try:
-            if configpath.stat().st_mode & 0o777 != 0o600:
-                warnings.warn(f"{configpath}: Wrong permissions, should be user-only read/write (0600)")
-            p.read([configpath])
-        except (FileNotFoundError, IOError):
-            warnings.warn(f"{configpath}: Could not read configuration file")
-        else:
-            for sec in p.sections():
-                options = srcoptmap['file' if sec == 'options' else 'file_' + sec]
-                for opt, val in p.items(sec):
-                    options[opt] = opttypemap[opt](val)
-
-    def reload(self, configpath=None):
-        # clear all previously loaded options
-        for source, options in srcoptmap.items():
-            if source != 'default':
-                options.clear()
-
-        # reload sources
-        self._load_environ()
-        self._load_cli()
-        self._load_file(pathlib.Path(configpath) if configpath else chainmap['config'])
-
-        # post processing
-        ensure_data_dir(chainmap['data_dir'])
-
-        from pprint import pprint
-        pprint(chainmap)
-        exit()
+    def copy(self):
+        return type(self)(
+            [tempopts.copy() for tempopts_chain in self._tempopts_chain.maps],
+            self._useropts.copy(),
+            self._sectopts.copy(),
+        )
 
     def expose_file_section(self, section):
         """
@@ -578,11 +575,8 @@ class Config(collections.abc.MutableMapping):
         """
         if not section.startswith('file_'):
             section = 'file_' + section
-
-        source = srcoptmap[section]
-        if source not in chainmap.maps:
-            file_index = chainmap.maps.index('file')
-            chainmap.maps.insert(source, file_index)
+        self._sectopts.clear()
+        self._sectopts.update(srcoptmap[section])
 
     def save(self, configpath=None):
         """
@@ -620,7 +614,6 @@ class Config(collections.abc.MutableMapping):
         with configpath.open('w') as fd:
             p.write(fd)
 
-
     def pop(self, option, *default):
         val = self.get(option, default[0]) if default else self[option]
         del self[option]
@@ -634,7 +627,7 @@ class Config(collections.abc.MutableMapping):
         return True
 
     def __getitem__(self, option):
-        val = chainmap[option]
+        val = self._chainmap[option]
         if val is DELETED:
             raise KeyError(f"{option} has been removed")
         elif type(val) is DeprecatedAlias:
@@ -649,26 +642,26 @@ class Config(collections.abc.MutableMapping):
     def __setitem__(self, option, value):
         if type(value) is str:
             value = opttypemap[option](value)
-        srcoptmap["custom"][option] = value
+        self._useropts[option] = value
 
     def __delitem__(self, option):
-        srcoptmap["custom"] = DELETED
+        self._useropts[option] = DELETED
 
     def __iter__(self):
-        return iter(chainmap)
+        return iter(self._chainmap)
 
     def __len__(self):
-        return len(chainmap)
+        return len(self._chainmap)
 
-    def __enter__(self, ctxopts=None):
-        if ctxopts is None:
-            ctxopts = {}
-        ctxopts_stack.append(ctxopts)
-        chainmap.insert(0, ctxopts)
-        return ctxopts
+    def __enter__(self, tempopts=None):
+        if tempopts is None:
+            tempopts = {}
+
+        self._tempopts_chain.maps.insert(0, tempopts)
+        return tempopts
 
     def __exit__ (self, type, value, tb):
-        ctxopt = ctxopts_stack.pop()
-        del chainmap.maps[chainmap.maps.index(ctxopt)]
+        del self._tempopts_chain.maps[0]
 
-config = Config()  # singleton
+
+config = Config()
