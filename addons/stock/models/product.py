@@ -391,7 +391,10 @@ class Product(models.Model):
     def view_header_get(self, view_id, view_type):
         res = super(Product, self).view_header_get(view_id, view_type)
         if not res and self._context.get('active_id') and self._context.get('active_model') == 'stock.location':
-            res = '%s%s' % (_('Products: '), self.env['stock.location'].browse(self._context['active_id']).name)
+            return _(
+                'Products: %(location)s',
+                location=self.env['stock.location'].browse(self._context['active_id']).name,
+            )
         return res
 
     @api.model

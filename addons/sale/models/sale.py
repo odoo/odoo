@@ -1229,12 +1229,15 @@ class SaleOrderLine(models.Model):
             order_lines = self.filtered(lambda x: x.order_id == order)
             msg = "<b>" + _("The ordered quantity has been updated.") + "</b><ul>"
             for line in order_lines:
-                msg += "<li> %s:" % (line.product_id.display_name,)
-                msg += "<br/>" + _("Ordered Quantity") + ": %s -> %s <br/>" % (
-                line.product_uom_qty, float(values['product_uom_qty']),)
+                msg += "<li> %s: <br/>" % line.product_id.display_name
+                msg += _(
+                    "Ordered Quantity: %(old_qty)s -> %(new_qty)s",
+                    old_qty=line.product_uom_qty,
+                    new_qty=values["product_uom_qty"]
+                ) + "<br/>"
                 if line.product_id.type in ('consu', 'product'):
-                    msg += _("Delivered Quantity") + ": %s <br/>" % (line.qty_delivered,)
-                msg += _("Invoiced Quantity") + ": %s <br/>" % (line.qty_invoiced,)
+                    msg += _("Delivered Quantity: %s", line.qty_delivered) + "<br/>"
+                msg += _("Invoiced Quantity: %s", line.qty_invoiced) + "<br/>"
             msg += "</ul>"
             order.message_post(body=msg)
 

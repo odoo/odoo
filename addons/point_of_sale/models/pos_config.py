@@ -461,9 +461,9 @@ class PosConfig(models.Model):
         for config in self:
             last_session = self.env['pos.session'].search([('config_id', '=', config.id)], limit=1)
             if (not last_session) or (last_session.state == 'closed'):
-                result.append((config.id, config.name + ' (' + _('not used') + ')'))
-                continue
-            result.append((config.id, config.name + ' (' + last_session.user_id.name + ')'))
+                result.append((config.id, _("%(pos_name)s (not used)", pos_name=config.name)))
+            else:
+                result.append((config.id, "%s (%s)" % (config.name, last_session.user_id.name)))
         return result
 
     @api.model

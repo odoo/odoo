@@ -501,7 +501,7 @@ class MrpWorkorder(models.Model):
         timeline.create({
             'workorder_id': self.id,
             'workcenter_id': self.workcenter_id.id,
-            'description': _('Time Tracking: ') + self.env.user.name,
+            'description': _('Time Tracking: %(user)s', user=self.env.user.name),
             'loss_id': loss_id[0].id,
             'date_start': datetime.now(),
             'user_id': self.env.user.id,  # FIXME sle: can be inconsistent with company_id

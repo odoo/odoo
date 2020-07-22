@@ -548,10 +548,12 @@ class ProductProduct(models.Model):
 
     @api.model
     def view_header_get(self, view_id, view_type):
-        res = super(ProductProduct, self).view_header_get(view_id, view_type)
         if self._context.get('categ_id'):
-            return _('Products: ') + self.env['product.category'].browse(self._context['categ_id']).name
-        return res
+            return _(
+                'Products: %(category)s',
+                category=self.env['product.category'].browse(self.env.context['categ_id']).name,
+            )
+        return super().view_header_get(view_id, view_type)
 
     def open_pricelist_rules(self):
         self.ensure_one()

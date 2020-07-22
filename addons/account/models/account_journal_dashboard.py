@@ -524,7 +524,11 @@ class account_journal(models.Model):
         action['context'] = ctx
         if ctx.get('use_domain', False):
             action['domain'] = isinstance(ctx['use_domain'], list) and ctx['use_domain'] or ['|', ('journal_id', '=', self.id), ('journal_id', '=', False)]
-            action['name'] += ' for journal ' + self.name
+            action['name'] = _(
+                "%(action)s for journal %(journal)s",
+                action=action["name"],
+                journal=self.name,
+            )
         return action
 
     def create_bank_statement(self):

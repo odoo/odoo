@@ -28,7 +28,7 @@ class SaleOrder(models.Model):
         delivery_line = self.order_line.filtered(lambda x: x.is_delivery)
         taxes = self.fiscal_position_id.map_tax(delivery_line.product_id.taxes_id)
         return {
-            'name': _("Discount: ") + program.name,
+            'name': _("Discount: %s", program.name),
             'product_id': program.discount_line_product_id.id,
             'price_unit': delivery_line and - delivery_line.price_unit or 0.0,
             'product_uom_qty': 1.0,
