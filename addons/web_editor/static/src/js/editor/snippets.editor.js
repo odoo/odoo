@@ -1610,13 +1610,6 @@ var SnippetsMenu = Widget.extend({
                     $snippet.find('[data-oe-thumbnail]').data('oeThumbnail'),
                     name
                 ));
-                if (isCustomSnippet) {
-                    const btn = document.createElement('we-button');
-                    btn.dataset.snippetId = $snippet.data('oeSnippetId');
-                    btn.classList.add('o_delete_btn', 'fa', 'fa-trash');
-                    $thumbnail.prepend(btn);
-                    $thumbnail.prepend($('<div class="o_image_ribbon"/>'));
-                }
                 $snippet.prepend($thumbnail);
 
                 // Create the install button (t-install feature) if necessary
@@ -1628,6 +1621,15 @@ var SnippetsMenu = Widget.extend({
                         type: 'button',
                         text: _t("Install"),
                     }));
+                }
+
+                // Create the delete button for custom snippets
+                if (isCustomSnippet) {
+                    const btnEl = document.createElement('we-button');
+                    btnEl.dataset.snippetId = $snippet.data('oeSnippetId');
+                    btnEl.classList.add('o_delete_btn', 'fa', 'fa-trash');
+                    $snippet.append($('<div class="o_image_ribbon"/>'));
+                    $snippet.append(btnEl);
                 }
             })
             .not('[data-module-id]');
