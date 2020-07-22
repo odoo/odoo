@@ -88,3 +88,9 @@ class AccountMoveLine(models.Model):
             if rec and not record.exclude_from_invoice_tab:
                 record.analytic_account_id = rec.analytic_id
                 record.analytic_tag_ids = rec.analytic_tag_ids
+
+    def _copy_data_extend_business_fields(self, values):
+        # OVERRIDE to copy the 'analytic_account_id' if set
+        super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
+        if self.analytic_account_id:
+            values['analytic_account_id'] = self.analytic_account_id.id
