@@ -114,3 +114,9 @@ class AccountMove(models.Model):
             where_string += " AND l10n_latam_document_type_id = %(l10n_latam_document_type_id)s "
             param['l10n_latam_document_type_id'] = self.l10n_latam_document_type_id.id or 0
         return where_string, param
+
+    def _get_name_invoice_report(self):
+        self.ensure_one()
+        if self.l10n_latam_use_documents and self.company_id.country_id.code == 'CL':
+            return 'l10n_cl.report_invoice_document'
+        return super()._get_name_invoice_report()
