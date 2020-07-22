@@ -600,12 +600,12 @@ class QWeb(object):
                         ast.Compare(
                             left=ast.Name(id='content', ctx=ast.Load()),
                             ops=[ast.IsNot()],
-                            comparators=[ast.Name(id='None', ctx=ast.Load())]
+                            comparators=[ast.Constant(None)]
                         ),
                         ast.Compare(
                             left=ast.Name(id='content', ctx=ast.Load()),
                             ops=[ast.IsNot()],
-                            comparators=[ast.Name(id='False', ctx=ast.Load())]
+                            comparators=[ast.Constant(False)]
                         )
                     ]
                 ),
@@ -1233,7 +1233,7 @@ class QWeb(object):
                         keywords=[], starargs=None, kwargs=None
                     ),
                     self._compile_expr0(expression),
-                    ast.Name(id='None', ctx=ast.Load()),
+                    ast.Constant(None),
                 ], ctx=ast.Load())
             )
         ]
@@ -1550,7 +1550,7 @@ class QWeb(object):
                     if isinstance(key, str):
                         keys.append(ast.Str(s=key))
                     elif key is None:
-                        keys.append(ast.Name(id='None', ctx=ast.Load()))
+                        keys.append(ast.Constant(None))
                     values.append(ast.Str(s=value))
 
                 # {'nsmap': {None: 'xmlns def'}}
