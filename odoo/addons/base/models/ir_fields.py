@@ -439,6 +439,13 @@ class IrFieldsConverter(models.AbstractModel):
 
     @api.model
     def _str_to_one2many(self, model, field, records):
+        name_create_enabled_fields = self._context.get('name_create_enabled_fields') or {}
+        prefix = field.name + '/'
+        relative_name_create_enabled_fields = {
+            k[len(prefix):]: v
+            for k, v in name_create_enabled_fields.items()
+            if k.startswith(prefix)
+        }
         commands = []
         warnings = []
 
@@ -457,7 +464,7 @@ class IrFieldsConverter(models.AbstractModel):
                 raise e
             warnings.append(e)
 
-        convert = self.for_model(self.env[field.comodel_name])
+        convert = self.with_context(name_create_enabled_fields=relative_name_create_enabled_fields).for_model(self.env[field.comodel_name])
 
         for record in records:
             id = None
