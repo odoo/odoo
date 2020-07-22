@@ -63,3 +63,37 @@ class AccountAnalyticDefault(models.Model):
                 res = rec
                 best_index = index
         return res
+<<<<<<< HEAD:addons/account/models/account_analytic_default.py
+=======
+
+
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    # Overload of fields defined in account
+    analytic_account_id = fields.Many2one(compute="_compute_analytic_account", store=True, readonly=False)
+    analytic_tag_ids = fields.Many2many(compute="_compute_analytic_account", store=True, readonly=False)
+
+    @api.depends('product_id', 'account_id', 'partner_id', 'date_maturity')
+    def _compute_analytic_account(self):
+        for record in self:
+            record.analytic_account_id = (record._origin or record).analytic_account_id
+            record.analytic_tag_ids = (record._origin or record).analytic_tag_ids
+            rec = self.env['account.analytic.default'].account_get(
+                product_id=record.product_id.id,
+                partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
+                account_id=record.account_id.id,
+                user_id=record.env.uid,
+                date=record.date_maturity,
+                company_id=record.move_id.company_id.id
+            )
+            if rec and not record.exclude_from_invoice_tab:
+                record.analytic_account_id = rec.analytic_id
+                record.analytic_tag_ids = rec.analytic_tag_ids
+
+    def _copy_data_extend_business_fields(self, values):
+        # OVERRIDE to copy the 'analytic_account_id' if set
+        super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
+        if self.analytic_account_id:
+            values['analytic_account_id'] = self.analytic_account_id.id
+>>>>>>> 12203741335... temp:addons/account_analytic_default/models/account_analytic_default.py
