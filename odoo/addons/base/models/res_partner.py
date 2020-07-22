@@ -890,11 +890,12 @@ class Partner(models.Model):
 
     @api.model
     def view_header_get(self, view_id, view_type):
-        res = super(Partner, self).view_header_get(view_id, view_type)
-        if res: return res
-        if not self._context.get('category_id'):
-            return False
-        return _('Partners: ') + self.env['res.partner.category'].browse(self._context['category_id']).name
+        if self.env.context.get('category_id'):
+            return  _(
+                'Partners: %(category)s',
+                category=self.env['res.partner.category'].browse(self.env.context['category_id']).name,
+            )
+        return super().view_header_get(view_id, view_type)
 
     @api.model
     @api.returns('self')
