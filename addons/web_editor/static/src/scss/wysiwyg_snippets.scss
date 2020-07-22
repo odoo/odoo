@@ -62,7 +62,7 @@ body.editor_enable.editor_has_snippets {
         transition: transform 0.3s, box-shadow 0.3s;
     }
 
-    > :not(.oe_snippet_thumbnail) {
+    > .oe_snippet_body {
         display: none !important;
     }
 
@@ -213,10 +213,9 @@ body.editor_enable.editor_has_snippets {
                 }
             }
         }
-        #snippet_custom .oe_snippet .oe_snippet_thumbnail {
+        #snippet_custom .oe_snippet {
             .o_delete_btn {
                 @include o-position-absolute(0, 0);
-                z-index: 1;
                 display: none;
                 width: 25px;
                 height: 25px;
@@ -232,8 +231,7 @@ body.editor_enable.editor_has_snippets {
                 display: flex;
             }
             .o_image_ribbon {
-                position: absolute;
-                z-index: 1;
+                @include o-position-absolute($top: 0, $left: 0);
                 width: 0;
                 height: 0;
                 border-right: 20px solid transparent;
