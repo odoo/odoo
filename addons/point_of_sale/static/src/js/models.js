@@ -2323,7 +2323,7 @@ exports.Paymentline = Backbone.Model.extend({
     set_amount: function(value){
         this.order.assert_editable();
         this.amount = round_di(parseFloat(value) || 0, this.pos.currency.decimals);
-        if (this.pos.iface_customer_facing_display) this.pos.send_current_order_to_customer_facing_display();
+        if (this.pos.config.iface_customer_facing_display) this.pos.send_current_order_to_customer_facing_display();
         this.trigger('change',this);
     },
     // returns the amount of money on this paymentline
