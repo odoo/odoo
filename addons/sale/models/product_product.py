@@ -9,15 +9,24 @@ class ProductProduct(models.Model):
 
     @api.multi
     def _sales_count(self):
-        r = {}
+        if not self.user_has_groups('sales_team.group_sale_salesman'):
+            return
         domain = [
             ('state', 'in', ['sale', 'done']),
             ('product_id', 'in', self.ids),
         ]
-        for group in self.env['sale.report'].read_group(domain, ['product_id', 'product_uom_qty'], ['product_id']):
-            r[group['product_id'][0]] = group['product_uom_qty']
-        for product in self:
-            product.sales_count = r.get(product.id, 0)
-        return r
+        self.update({'sales_count': 0})
+        uom = self.env['product.uom']
+        for group in self.env['sale.order.line'].read_group(
+                domain, ['product_id', 'product_uom', 'product_uom_qty'],
+                ['product_id', 'product_uom'], lazy=False):
+            product = self.browse(group['product_id'][0])
+            uom = uom.browse(group['product_uom'][0])
+            if uom != product.uom_id:
+                group['product_uom_qty'] = uom._compute_quantity(
+                    group['product_uom_qty'], product.uom_id)
+            product['sales_count'] += group['product_uom_qty']
 
     sales_count = fields.Integer(compute='_sales_count', string='# Sales')
+
+
