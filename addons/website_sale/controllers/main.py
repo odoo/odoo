@@ -13,10 +13,10 @@ from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.exceptions import ValidationError
+from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
-
 _logger = logging.getLogger(__name__)
 
 
@@ -303,12 +303,17 @@ class WebsiteSale(http.Controller):
             values['main_object'] = category
         return request.render("website_sale.products", values)
 
-    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
+    @http.route(['/shop/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=True)
     def product(self, product, category='', search='', **kwargs):
         if not product.can_access_from_current_website():
             raise NotFound()
 
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
+
+    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
+    def old_product(self, product, category='', search='', **kwargs):
+        # Compatibility pre-v14
+        return request.redirect(_build_url_w_params("/shop/%s" % slug(product), request.params), code=301)
 
     def _prepare_product_values(self, product, category, search, **kwargs):
         add_qty = int(kwargs.get('add_qty', 1))
@@ -550,8 +555,10 @@ class WebsiteSale(http.Controller):
         country = request.env['res.country']
         if data.get('country_id'):
             country = country.browse(int(data.get('country_id')))
-            if 'state_code' in country.get_address_fields() and country.state_ids:
+            if country.state_required:
                 required_fields += ['state_id']
+            if country.zip_required:
+                required_fields += ['zip']
 
         # error message for empty required fields
         for field_name in required_fields:
@@ -1113,7 +1120,9 @@ class WebsiteSale(http.Controller):
         return dict(
             fields=country.get_address_fields(),
             states=[(st.id, st.name, st.code) for st in country.get_website_sale_states(mode=mode)],
-            phone_code=country.phone_code
+            phone_code=country.phone_code,
+            zip_required=country.zip_required,
+            state_required=country.state_required,
         )
 
     # --------------------------------------------------------------------------

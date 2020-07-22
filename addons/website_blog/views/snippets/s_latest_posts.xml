@@ -17,7 +17,7 @@
 <!-- List layout -->
 <template id="s_latest_posts_list_template">
     <div t-foreach="posts" t-as="p" class="d-flex col-12 mt-3 s_latest_posts_post">
-        <a class="s_latest_posts_post_cover flex-grow-0 flex-shrink-0 align-self-baseline position-relative" t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}" t-att-title="'Read' + p.name">
+        <a class="s_latest_posts_post_cover flex-grow-0 flex-shrink-0 align-self-baseline position-relative" t-attf-href="/blog/#{p.blog_id.id}/#{p.id}" t-att-title="'Read' + p.name">
             <t t-call="website.record_cover">
                 <t t-set="_record" t-value="p"/>
                 <t t-set="additionnal_classes" t-value="'w-100 h-100 bg-200 position-absolute'"/>
@@ -28,7 +28,7 @@
             </t>
         </a>
         <div class="pl-2">
-            <a class="" t-att-title="'Read' + p.name" t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}">
+            <a class="" t-att-title="'Read' + p.name" t-attf-href="/blog/#{p.blog_id.id}/#{p.id}">
                 <div class="s_latest_posts_post_title mb-1" t-field="p.name"/>
             </a>
             <div class="s_latest_posts_post_subtitle mb-1 d-none d-sm-block" t-field="p.subtitle"/>
@@ -38,7 +38,7 @@
 <!-- Big picture layout -->
 <template id="s_latest_posts_big_picture_template">
     <figure t-foreach="posts" t-as="p" class="col-md-6 col-lg-4 my-3 s_latest_posts_post">
-        <a class="s_latest_posts_post_cover position-relative d-flex flex-column shadow-sm overflow-hidden rounded text-decoration-none" t-attf-href="/blog/#{p.blog_id.id}/post/#{p.id}">
+        <a class="s_latest_posts_post_cover position-relative d-flex flex-column shadow-sm overflow-hidden rounded text-decoration-none" t-attf-href="/blog/#{p.blog_id.id}/#{p.id}">
             <t t-call="website.record_cover">
                 <t t-set="_record" t-value="p"/>
                 <t t-set="use_filters" t-value="True"/>
@@ -60,10 +60,10 @@
 <template id="s_latest_posts_horizontal_template">
     <figure t-foreach="posts" t-as="p" class="post s_latest_posts_post col-md-6 col-lg-4">
         <figcaption>
-            <h4 class="mb0"><a t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)"><t t-esc="p.name"/></a></h4>
+            <h4 class="mb0"><a t-att-href="'/blog/%s/%s' % (p.blog_id.id, p.id)"><t t-esc="p.name"/></a></h4>
             <h5 class="mt0 mb4" t-field="p.write_date" t-options='{"format": "dd/MM"}' />
         </figcaption>
-        <a t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)">
+        <a t-att-href="'/blog/%s/%s' % (p.blog_id.id, p.id)">
             <t t-call="website.record_cover">
                 <t t-set="_record" t-value="p"/>
                 <t t-set="additionnal_classes" t-value="'loading_container thumb'"/>
@@ -75,14 +75,14 @@
 <template id="s_latest_posts_card_template">
     <div t-foreach="posts" t-as="p" class="col-md-6 col-lg-4 s_latest_posts_post pb32">
         <div class="card">
-            <a class="s_latest_posts_post_cover" t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)">
+            <a class="s_latest_posts_post_cover" t-att-href="'/blog/%s/%s' % (p.blog_id.id, p.id)">
                 <t t-call="website.record_cover">
                     <t t-set="_record" t-value="p"/>
                     <t t-set="additionnal_classes" t-value="'loading_container thumb'"/>
                 </t>
             </a>
             <div class="card-body">
-                <a t-att-href="'/blog/%s/post/%s' % (p.blog_id.id, p.id)"><h4 class="mb-0"><t t-esc="p.name"/></h4></a>
+                <a t-att-href="'/blog/%s/%s' % (p.blog_id.id, p.id)"><h4 class="mb-0"><t t-esc="p.name"/></h4></a>
             </div>
             <div class="card-footer d-flex justify-content-between">
                 <span class="text-muted mb-0" t-field="p.write_date" t-options='{"format": "MMM d, yyyy"}' />

@@ -138,7 +138,7 @@
         <field name="name">stock.picking.batch.tree</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <tree string="Stock Batch Transfer" multi_edit="1">
+            <tree string="Stock Batch Transfer" multi_edit="1" sample="1">
                 <field name="name" decoration-bf="1"/>
                 <field name="user_id" widget="many2one_avatar_user"/>
                 <field name="company_id" groups="base.group_multi_company"/>
@@ -151,7 +151,7 @@
         <field name="name">stock.picking.batch.kanban</field>
         <field name="model">stock.picking.batch</field>
         <field name="arch" type="xml">
-            <kanban class="o_kanban_mobile">
+            <kanban class="o_kanban_mobile" sample="1">
                 <field name="name"/>
                 <field name="user_id"/>
                 <field name="state"/>

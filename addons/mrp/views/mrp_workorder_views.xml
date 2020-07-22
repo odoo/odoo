@@ -113,6 +113,10 @@
         <field name="priority" eval="10"/>
         <field name="inherit_id" ref="mrp.mrp_production_workorder_tree_editable_view"/>
         <field name="arch" type="xml">
+            <xpath expr="//tree" position="attributes">
+                <attribute name="create">0</attribute>
+                <attribute name="sample">1</attribute>
+            </xpath>
             <field name="workcenter_id" position="after">
                 <field name="production_id"/>
             </field>
@@ -155,7 +159,11 @@
                             <field name="show_json_popover" invisible="1"/>
                             <field name="json_popover" widget="mrp_workorder_popover" class="oe_inline mx-2" attrs="{'invisible': [('show_json_popover', '=', False)]}"/>
                         </div>
-                        <field name="duration_expected" widget="float_time"/>
+                        <label for="duration_expected"/>
+                        <div class="o_row">
+                            <field name="duration_expected" widget="float_time"/>
+                            <span>minutes</span>
+                        </div>
                     </group>
                 </group>
                 <notebook>
@@ -254,7 +262,7 @@
         <field name="name">mrp.production.work.order.calendar</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id" event_limit="5" delete="0">
+            <calendar date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" color="workcenter_id" event_limit="5" delete="0" create="0">
                 <field name="workcenter_id" filters="1"/>
                 <field name="production_id"/>
                 <field name="state"/>
@@ -361,7 +369,7 @@
         <field name="name">mrp.production.work.order.kanban</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <kanban class="oe_background_grey o_kanban_dashboard o_mrp_workorder_kanban" create="0">
+            <kanban class="oe_background_grey o_kanban_dashboard o_mrp_workorder_kanban" create="0" sample="1">
                 <field name="name"/>
                 <field name="production_id"/>
                 <field name="state" readonly="1"/>
@@ -469,10 +477,11 @@
         <field name="context">{'search_default_ready': True, 'search_default_progress': True, 'search_default_pending': True}</field>
         <field name="help" type="html">
           <p class="o_view_nocontent_smiling_face">
-            Plan a Manufacturing Order
+            No work orders to do!
           </p><p>
-            Work orders correspond to the different operations, taking place at specific workcenters, which are performed to manufacture a product. Those can be defined in a routing that will be assigned to a bill of material.
-            </p>
+            Work orders are operations to do as part of a manufacturing order.
+            Operations are defined in the bill of materials or added in the manufacturing order directly.
+          </p>
         </field>
     </record>
 

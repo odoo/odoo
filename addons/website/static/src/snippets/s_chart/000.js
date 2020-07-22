@@ -2,6 +2,7 @@ odoo.define('website.s_chart', function (require) {
 'use strict';
 
 const publicWidget = require('web.public.widget');
+const weUtils = require('web_editor.utils');
 
 const ChartWidget = publicWidget.Widget.extend({
     selector: '.s_chart',
@@ -131,7 +132,7 @@ const ChartWidget = publicWidget.Widget.extend({
         if (!color) {
             return 'transparent';
         }
-        return this.style.getPropertyValue(`--${color}`).trim() || color;
+        return weUtils.getCSSVariableValue(color, this.style) || color;
     },
 });
 
