@@ -97,7 +97,7 @@ class Event(models.Model):
             if event.menu_id and not event.website_menu:
                 event.menu_id.unlink()
             elif event.website_menu and not event.menu_id:
-                root_menu = self.env['website.menu'].create({'name': event.name, 'website_id': event.website_id.id})
+                root_menu = self.env['website.menu'].sudo().create({'name': event.name, 'website_id': event.website_id.id})
                 event.menu_id = root_menu
                 for sequence, (name, url, xml_id) in enumerate(event._get_menu_entries()):
                     event._create_menu(sequence, name, url, xml_id)
@@ -105,9 +105,9 @@ class Event(models.Model):
     def _create_menu(self, sequence, name, url, xml_id):
         if not url:
             self.env['ir.ui.view'].search([('name', '=', name + ' ' + self.name)]).unlink()
-            newpath = self.env['website'].new_page(name + ' ' + self.name, template=xml_id, ispage=False)['url']
+            newpath = self.env['website'].sudo().new_page(name + ' ' + self.name, template=xml_id, ispage=False)['url']
             url = "/event/" + slug(self) + "/page/" + newpath[1:]
-        menu = self.env['website.menu'].create({
+        menu = self.env['website.menu'].sudo().create({
             'name': name,
             'url': url,
             'parent_id': self.menu_id.id,
