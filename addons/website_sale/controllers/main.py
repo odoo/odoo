@@ -568,8 +568,9 @@ class WebsiteSale(http.Controller):
             partner_dummy = Partner.new(self._get_vat_validation_fields(data))
             try:
                 partner_dummy.check_vat()
-            except ValidationError:
+            except ValidationError as exception:
                 error["vat"] = 'error'
+                error_message.append(exception.name)
 
         if [err for err in error.values() if err == 'missing']:
             error_message.append(_('Some required fields are empty.'))
