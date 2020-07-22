@@ -23,6 +23,13 @@ class AccountInvoiceLine(models.Model):
             fields=['product_id'],
         )
 
+        # For a saleperson, also get sold products
+        if self.env.user.has_group("sales_team.group_sale_salesman"):
+            purchases += self.env['sale.order.line'].sudo().search_read(
+                domain=[('order_id.user_id', '=', self.env.user.id)],
+                fields=['product_id'],
+            )
+
         # I only want product_ids, but search_read insists in giving me a list of
         # (product_id: <id>, name: <product code> <template_name> <attributes>)
         return [line['product_id'][0] for line in purchases]
