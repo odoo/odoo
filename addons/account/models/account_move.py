@@ -2240,11 +2240,13 @@ class AccountMove(models.Model):
 
         # Create the invoice.
         values = {
+            'name': '/',  # we have to give the name otherwise it will be set to the mail's subject
             'invoice_source_email': from_mail_addresses[0],
             'partner_id': partners and partners[0].id or False,
         }
         move_ctx = self.with_context(default_move_type=custom_values['move_type'], default_journal_id=custom_values['journal_id'])
         move = super(AccountMove, move_ctx).message_new(msg_dict, custom_values=values)
+        move._compute_name()  # because the name is given, we need to recompute in case it is the first invoice of the journal
 
         # Assign followers.
         all_followers_ids = set(partner.id for partner in followers + senders + partners if is_internal_partner(partner))
