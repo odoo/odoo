@@ -497,6 +497,19 @@ attributes:
     A field that can be aggregated.  This field will be used to compute the values
     for each cell.  If not set, the cohort view will count the number of occurrences.
 
+``<field>`` (optional)
+  allows to specify a particular field in order to manage it from the available measures, it's
+  main use is for hiding a field from the selectable measures:
+    * ``name`` (required)
+      the name of the field to use in the view.
+    * ``string`` (optional)
+      the name that would be used to display the field in the cohort view, overrides the
+      default python String attribute of the field.
+    * ``invisible`` (optional)
+      if true, the field will not appear either in the active measures nor in the selectable
+      measures (useful for fields that do not make sense aggregated, such as fields in different 
+      units, e.g. € and $).
+
 .. _reference/views/dashboard:
 
 Dashboard
@@ -1108,6 +1121,10 @@ following attributes:
 
 ``title`` (optional)
   string displayed on the top of the graph.
+
+``invisible`` (optional)
+  if true, the field will not appear either in the active measures nor in the
+  selectable measures.
 
 ``type``
   indicates whether the field should be used as a grouping criteria or as an

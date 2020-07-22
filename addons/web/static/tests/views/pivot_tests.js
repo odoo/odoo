@@ -192,7 +192,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('pivot rendering with invisible attribute on field', async function (assert) {
-        assert.expect(2);
+        assert.expect(3);
         // when invisible, a field should neither be an active measure,
         // nor be a selectable measure.
         _.extend(this.data.partner.fields, {
@@ -214,6 +214,9 @@ QUnit.module('Views', {
         assert.containsOnce(pivot, '.o_pivot_measure_row');
         // there should be only one measure besides count, as the other one is invisible
         assert.containsN(pivot, '.o_cp_bottom_left .dropdown-item', 2);
+        // the invisible field souldn't be in the groupable fields neither
+        await testUtils.dom.click(pivot.$('.o_pivot_header_cell_closed:first'));
+        assert.containsNone(pivot, '.o_pivot_field_menu a[data-field="foo2"]');
 
         pivot.destroy();
     });
