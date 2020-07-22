@@ -180,7 +180,16 @@
             <field name="arch" type="xml">
                 <form string="Events">
                     <header>
+<<<<<<< HEAD
                         <field name="stage_id" widget="statusbar" options="{'clickable': '1'}"/>
+=======
+                        <button string="Confirm Event" name="button_confirm" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button string="Finish Event" name="button_done" states="confirm" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button string="Set To Draft" name="button_draft" states="cancel,done" type="object" groups="base.group_user"/>
+                        <button string="Cancel Event" name="button_cancel" type="object" groups="base.group_user" attrs="{'invisible': ['|', ('seats_expected', '!=', 0), ('state', 'not in', ['draft', 'confirm'])]}"/>
+                        <button string="Cancel Event" name="button_cancel" type="object" groups="base.group_user" confirm="Are you sure you want to cancel this event? All the linked attendees will be cancelled as well." attrs="{'invisible': ['|', ('seats_expected', '=', 0), ('state', 'not in', ['draft', 'confirm'])]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirm,done"/>
+>>>>>>> 3f148a6feb8... temp
                     </header>
                     <sheet>
                         <div class="oe_button_box" name="button_box" groups="base.group_user">
