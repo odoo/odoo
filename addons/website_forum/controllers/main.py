@@ -14,6 +14,7 @@ from odoo import http, tools, _
 from odoo.addons.http_routing.models.ir_http import slug
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.addons.website_profile.controllers.main import WebsiteProfile
+from odoo.addons.portal.controllers.portal import _build_url_w_params
 
 from odoo.http import request
 
@@ -220,6 +221,12 @@ class WebsiteForum(WebsiteProfile):
             return arch.find(".//title").text
         except IOError:
             return False
+
+    @http.route(['''/forum/<model("forum.forum"):forum>/question/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
+                type='http', auth="public", website=True, sitemap=False)
+    def old_question(self, forum, question, **post):
+        # Compatibility pre-v14
+        return request.redirect(_build_url_w_params("/forum/%s/question/%s" % (slug(forum), slug(question)), request.params), code=301)
 
     @http.route(['''/forum/<model("forum.forum"):forum>/<model("forum.post", "[('forum_id','=',forum.id),('parent_id','=',False),('can_view', '=', True)]"):question>'''],
                 type='http', auth="public", website=True, sitemap=True)

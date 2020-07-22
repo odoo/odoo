@@ -13,6 +13,7 @@ from odoo.addons.payment.controllers.portal import PaymentProcessing
 from odoo.addons.website.controllers.main import QueryURL
 from odoo.addons.website.models.ir_http import sitemap_qs2dom
 from odoo.exceptions import ValidationError
+from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.addons.website.controllers.main import Website
 from odoo.addons.website_form.controllers.main import WebsiteForm
 from odoo.osv import expression
@@ -308,6 +309,11 @@ class WebsiteSale(http.Controller):
             raise NotFound()
 
         return request.render("website_sale.product", self._prepare_product_values(product, category, search, **kwargs))
+
+    @http.route(['/shop/product/<model("product.template"):product>'], type='http', auth="public", website=True, sitemap=False)
+    def old_product(self, product, category='', search='', **kwargs):
+        # Compatibility pre-v14
+        return request.redirect(_build_url_w_params("/shop/%s" % slug(product), request.params), code=301)
 
     def _prepare_product_values(self, product, category, search, **kwargs):
         add_qty = int(kwargs.get('add_qty', 1))

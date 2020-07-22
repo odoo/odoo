@@ -10,6 +10,7 @@ from collections import OrderedDict
 from odoo import http, fields
 from odoo.addons.http_routing.models.ir_http import slug, unslug
 from odoo.addons.website.controllers.main import QueryURL
+from odoo.addons.portal.controllers.portal import _build_url_w_params
 from odoo.http import request
 from odoo.osv import expression
 from odoo.tools import html2plaintext
@@ -188,6 +189,13 @@ class WebsiteBlog(http.Controller):
         v['html2plaintext'] = html2plaintext
         r = request.render("website_blog.blog_feed", v, headers=[('Content-Type', 'application/atom+xml')])
         return r
+
+    @http.route([
+        '''/blog/<model("blog.blog"):blog>/post/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
+    ], type='http', auth="public", website=True, sitemap=False)
+    def old_blog_post(self, blog, blog_post, tag_id=None, page=1, enable_editor=None, **post):
+        # Compatibility pre-v14
+        return request.redirect(_build_url_w_params("/blog/%s/post/%s" % (slug(blog), slug(blog_post)), request.params), code=301)
 
     @http.route([
         '''/blog/<model("blog.blog"):blog>/<model("blog.post", "[('blog_id','=',blog.id)]"):blog_post>''',
