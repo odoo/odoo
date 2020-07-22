@@ -299,7 +299,7 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="name"/>
+                        <field name="name" string="Name"/>
                         <field name="partner_id" widget="res_partner_many2one" domain="[('customer', '=', True)]" context="{'search_default_customer': 1, 'show_vat': True}"/>
                         <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                         <field name="company_currency" invisible="1"/>
