@@ -4,6 +4,7 @@ odoo.define('website.s_chart_options', function (require) {
 var core = require('web.core');
 const {ColorpickerWidget} = require('web.Colorpicker');
 var options = require('web_editor.snippets.options');
+const weUtils = require('web_editor.utils');
 
 var _t = core._t;
 
@@ -81,7 +82,7 @@ options.registry.InnerChart = options.Class.extend({
             const color = el.dataset.backgroundColor || el.dataset.borderColor;
             if (color) {
                 el.style.border = '2px solid';
-                el.style.borderColor = ColorpickerWidget.isCSSColor(color) ? color : this.style.getPropertyValue(`--${color}`).trim();
+                el.style.borderColor = ColorpickerWidget.isCSSColor(color) ? color : weUtils.getCSSVariableValue(color, this.style);
             }
         });
     },
@@ -368,7 +369,7 @@ options.registry.InnerChart = options.Class.extend({
             }
         });
         customColors = customColors.filter((el, i, array) => {
-            return !this.style.getPropertyValue(`--${el}`) && array.indexOf(el) === i && el !== ''; // unique non class not transparent
+            return !weUtils.getCSSVariableValue(el, this.style) && array.indexOf(el) === i && el !== ''; // unique non class not transparent
         });
         ev.data.onSuccess(customColors);
     },
