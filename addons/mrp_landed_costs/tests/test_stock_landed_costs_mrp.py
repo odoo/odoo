@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.tests import tagged, Form
 
-from odoo.tests import Form
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 
-
-class TestStockLandedCostsMrp(StockAccountTestCommon):
+@tagged('post_install', '-at_install')
+class TestStockLandedCostsMrp(AccountTestCommon):
 
     @classmethod
     def setUpClass(cls):

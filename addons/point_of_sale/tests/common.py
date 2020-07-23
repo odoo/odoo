@@ -2,12 +2,13 @@
 from random import randint
 
 from odoo import fields, tools
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests.common import SavepointCase, Form
-from odoo.tools import float_is_zero
+from odoo.tests import tagged
 
 
-class TestPointOfSaleCommon(StockAccountTestCommon):
+@tagged('post_install', '-at_install')
+class TestPointOfSaleCommon(AccountTestCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -146,7 +147,8 @@ class TestPointOfSaleCommon(StockAccountTestCommon):
         (invoice_rep_lines | refund_rep_lines).write({'account_id': cls.a_expense.id})
 
 
-class TestPoSCommon(StockAccountTestCommon):
+@tagged('post_install', '-at_install')
+class TestPoSCommon(AccountTestCommon):
     """ Set common values for different special test cases.
 
     The idea is to set up common values here for the tests

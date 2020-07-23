@@ -3,11 +3,12 @@
 import time
 
 from .common import PurchaseTestCommon
-from odoo.tests.common import Form
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
+from odoo.tests import tagged, Form
+from odoo.addons.account.tests.common import AccountTestCommon
 
 
-class TestFifoReturns(PurchaseTestCommon, StockAccountTestCommon):
+@tagged('-at_install', 'post_install')
+class TestFifoReturns(PurchaseTestCommon, AccountTestCommon):
 
     def test_fifo_returns(self):
         """Test to create product and purchase order to test the FIFO returns of the product"""
