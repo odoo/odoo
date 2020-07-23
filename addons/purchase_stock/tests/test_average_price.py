@@ -4,11 +4,12 @@
 import time
 
 from .common import PurchaseTestCommon
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
-from odoo.tests import Form
+from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.tests import tagged, Form
 
 
-class TestAveragePrice(PurchaseTestCommon, StockAccountTestCommon):
+@tagged('-at_install', 'post_install')
+class TestAveragePrice(PurchaseTestCommon, AccountTestCommon):
 
     def test_00_average_price(self):
         """ Testcase for average price computation"""

@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 

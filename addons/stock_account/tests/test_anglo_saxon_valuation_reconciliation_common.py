@@ -1,11 +1,12 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
+from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.tests import tagged
 from odoo import fields
 
-class ValuationReconciliationTestCommon(StockAccountTestCommon):
+
+@tagged('-at_install', 'post_install')
+class ValuationReconciliationTestCommon(AccountTestCommon):
     """ Base class for tests checking interim accounts reconciliation works
     in anglosaxon accounting. It sets up everything we need in the tests, and is
     extended in both sale_stock and purchase modules to run the 'true' tests.

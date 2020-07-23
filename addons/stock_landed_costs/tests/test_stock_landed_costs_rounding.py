@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
+from odoo.addons.account.tests.common import AccountTestCommon
 from odoo.tests import tagged
 
 
 @tagged('post_install', '-at_install')
-class TestStockLandedCostsRounding(TestStockLandedCostsCommon, StockAccountTestCommon):
+class TestStockLandedCostsRounding(TestStockLandedCostsCommon, AccountTestCommon):
 
     def test_stock_landed_costs_rounding(self):
         # In order to test the rounding in landed costs feature of stock, I create 2 landed cost
