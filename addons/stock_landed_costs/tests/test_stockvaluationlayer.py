@@ -6,10 +6,10 @@
 from odoo.tests import Form, tagged
 from odoo.addons.stock_account.tests.test_stockvaluationlayer import TestStockValuationCommon
 from odoo.addons.stock_account.tests.test_stockvaluation import _create_accounting_data
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
+from odoo.addons.account.tests.common import AccountTestCommon
 
 
-class TestStockValuationLCCommon(TestStockValuationCommon, StockAccountTestCommon):
+class TestStockValuationLCCommon(TestStockValuationCommon, AccountTestCommon):
 
     @classmethod
     def setUpClass(cls):
@@ -78,6 +78,7 @@ class TestStockValuationLCCommon(TestStockValuationCommon, StockAccountTestCommo
         return lc
 
 
+@tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFO(TestStockValuationLCCommon):
     def setUp(self):
         super(TestStockValuationLCFIFO, self).setUp()
@@ -193,6 +194,7 @@ class TestStockValuationLCFIFO(TestStockValuationLCCommon):
         self.assertEqual(move2.stock_valuation_layer_ids.value, -115)
 
 
+@tagged('-at_install', 'post_install')
 class TestStockValuationLCAVCO(TestStockValuationLCCommon):
     def setUp(self):
         super(TestStockValuationLCAVCO, self).setUp()
@@ -235,6 +237,7 @@ class TestStockValuationLCAVCO(TestStockValuationLCCommon):
         self.assertEqual(self.product1.quantity_svl, 19)
 
 
+@tagged('-at_install', 'post_install')
 class TestStockValuationLCFIFOVB(TestStockValuationLCCommon):
     @classmethod
     def setUpClass(cls):

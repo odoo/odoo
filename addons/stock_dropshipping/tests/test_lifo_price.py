@@ -2,12 +2,12 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo import fields, tools
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
-from odoo.modules.module import get_module_resource
-from odoo.tests import common, Form
+from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.tests import tagged, common, Form
 
 
-class TestLifoPrice(StockAccountTestCommon):
+@tagged('-at_install', 'post_install')
+class TestLifoPrice(AccountTestCommon):
 
     def test_lifoprice(self):
 
