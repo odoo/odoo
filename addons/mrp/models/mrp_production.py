@@ -229,8 +229,7 @@ class MrpProduction(models.Model):
     scrap_ids = fields.One2many('stock.scrap', 'production_id', 'Scraps')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
     is_locked = fields.Boolean('Is Locked', default=_get_default_is_locked, copy=False)
-    is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned")
-    is_partially_planned = fields.Boolean('One operation is Planned', compute="_compute_is_planned")
+    is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned", store=True)
 
     show_final_lots = fields.Boolean('Show Final Lots', compute='_compute_show_lots')
     production_location_id = fields.Many2one('stock.location', "Production Location", compute="_compute_production_location", store=True)
@@ -317,14 +316,13 @@ class MrpProduction(models.Model):
         for production in self:
             (self.move_raw_ids | self.move_finished_ids).date_deadline = production.date_deadline
 
+    @api.depends("workorder_ids")
     def _compute_is_planned(self):
         for production in self:
             if production.workorder_ids:
-                production.is_planned = all(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids)
-                production.is_partially_planned = any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids if production.state != 'draft')
+                production.is_planned = any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids)
             else:
                 production.is_planned = False
-                production.is_partially_planned = False
 
     @api.depends('move_raw_ids.delay_alert_date')
     def _compute_delay_alert_date(self):
@@ -490,7 +488,7 @@ class MrpProduction(models.Model):
             any_quantity_done = any(m.quantity_done > 0 for m in order.move_raw_ids)
 
             order.unreserve_visible = not any_quantity_done and already_reserved
-            order.reserve_visible = (order.is_planned or order.state in ('confirmed', 'progress', 'to_close')) and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
+            order.reserve_visible = order.state in ('confirmed', 'progress', 'to_close') and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
 
     @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done')
     def _get_produced_qty(self):
@@ -699,7 +697,7 @@ class MrpProduction(models.Model):
             if 'date_planned_start' in vals and not self.env.context.get('force_date', False):
                 if production.state in ['done', 'cancel']:
                     raise UserError(_('You cannot move a manufacturing order once it is cancelled or done.'))
-                if production.is_partially_planned:
+                if any(wo.date_planned_start and wo.date_planned_finished for wo in production.workorder_ids):
                     raise UserError(_('You cannot move a manufacturing order once it has a planned workorder, move related workorder(s) instead.'))
             if vals.get('date_planned_start'):
                 production.move_raw_ids.write({'date': production.date_planned_start})
