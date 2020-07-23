@@ -33,6 +33,8 @@ def load_data(cr, idref, mode, kind, package, report):
     noupdate is False, unless it is demo data or it is csv data in
     init mode.
 
+    :returns: Whether a file was loaded
+    :rtype: bool
     """
 
     def _get_files_of_kind(kind):
@@ -57,6 +59,7 @@ def load_data(cr, idref, mode, kind, package, report):
                     )
         return files
 
+    filename = None
     try:
         if kind in ('demo', 'test'):
             threading.currentThread().testing = True
@@ -70,6 +73,7 @@ def load_data(cr, idref, mode, kind, package, report):
         if kind in ('demo', 'test'):
             threading.currentThread().testing = False
 
+    return bool(filename)
 
 def load_demo(cr, package, idref, mode, report=None):
     """
@@ -130,8 +134,8 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
     def load_test(idref, mode):
         cr.execute("SAVEPOINT load_test_data_file")
         try:
-            load_data(cr, idref, mode, 'test', package, report)
-            return True
+            # return `None` if `load_data` didn't load any file
+            return load_data(cr, idref, mode, 'test', package, report) or None
         except Exception:
             _test_logger.exception(
                 'module %s: an exception occurred in a test', package.name)
