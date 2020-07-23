@@ -5,6 +5,7 @@ import argparse
 import collections
 import configparser
 import contextlib
+import dataclasses
 import distutils.util
 import itertools
 import functools
@@ -16,6 +17,7 @@ import textwrap
 import warnings
 from collections.abc import Iterable
 from getpass import getuser
+from typing import Any, Callable, Optional
 
 
 try:
@@ -44,8 +46,73 @@ srcoptmap = {       # all configuration sources
     "default": {},  # source-hardcoded
 }
 
-DELETED = object()  # placed in the custom-config when an option is
+DELETED = object()  # placed in the user-config when an option is
                     # removed, used to raise a KeyError uppon access.
+
+"""
+
+one option may be reused across subcommands
+
+bootstrap required options
+subcommand specific options
+
+configfile common section
+configfile additionnal sections
+
+la sous-commande est critique
+
+
+"""
+
+
+optspecmap = {}
+commandmap = {}
+
+
+@dataclasses.dataclass(frozen=True)
+class Command:
+    name: str
+    section: Optional[str] = None,
+    options: List[OptionSpec] = dataclasses.Field(default_factory=list)
+
+    def __post_init__(self):
+        commandmap[self.name] = self
+
+
+@dataclasses.dataclass(frozen=True)
+class Group:
+    name: str
+    command: Command
+    options: List[OptionSpec] = dataclasses.Field(default_factory=list)
+
+
+@dataclasses.dataclass(frozen=True)
+class OptionSpec:
+    command: Command
+    group: str
+    name: str
+    short_flag: Optionnal[str] = None
+    long_flag: Optionnal[str] = None
+    action: str = "store"
+    type : Callable[[str], Any] = str
+    rtype : Callable[[Any], str] = str
+    default: Any = None
+    envvar: Optional[str] = None
+    metavar: Optional[str] = None
+    const: Any = None
+    help: Optional[str] = None
+
+    def __post_init__(self):
+        optspecmap[self.option] = self
+        self.command.options.append(self)
+        self.group.options.append(self)
+        if not self.long_flag:
+            self.long_flag = "--%s" % self.name.replace('_', '-')
+
+
+
+server = Command("server", "options")
+OptionSpec(server, )
 
 
 class DeprecatedAlias:
@@ -322,7 +389,7 @@ subparsers = main_parser.add_subparsers(dest='subcommand')
 # Bootstraping required options
 #
 add(main_parser, '--addons-path', dest='addons_path', default=[pathlib.Path(__file__).parent.joinpath('addons').resolve()], type=comma(addons_path), action="append", metavar='DIRPATH', help="specify additional addons paths")
-add(main_parser, '--upgrade-path', dest='upgrade_path', default=pathlib.Path(__file__).parent.joinpath('addons', 'base', 'maintenance', 'migrations').resolve(), type=upgrade_path, metavar='DIRPATH', help="specify an additional upgrade path.")
+add(main_parser, '--upgrade-path', dest='upgrade_path', default=pathlib.Path(__file__).parent.joinpath('addons','base','maintenance','migrations').resolve(), type=upgrade_path, metavar='DIRPATH', help="specify an additional upgrade path.")
 add(main_parser, '-D', '--data-dir', dest='data_dir', type=data_dir, default=get_default_datadir(), help="Directory where to store Odoo data")
 add(main_parser, '--log-level', dest='log_level', type=str, default='info', metavar="LEVEL", choices=loglevelmap.keys(), help="specify the level of the logging")
 add(main_parser, '--logfile', dest='logfile', type=checkfile('w'), default=None, metavar="FILEPATH", help="file where the server log will be stored")
@@ -347,7 +414,7 @@ add(server_common, '-i', '--init', dest='init', type=comma(str), action='append'
 add(server_common, '-u', '--update', dest='update', type=comma(str), action='append', default=[], help='update one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d.')
 add(server_common, '--without-demo', dest='without_demo', action='store_true', help='disable loading demo data for modules to be installed (comma-separated or repeated option, use "all" for all modules), requires -d and -i.')
 #'-P', '--import-, partial'
-add(server_common, '--load', dest='server_wide_modules', type=comma(str), action='append', default=['base', 'web'], metavar='MODULE', help="framework modules to load once for all databases (comma-separated or repeated option)")
+add(server_common, '--load', dest='server_wide_modules', type=comma(str), action='append', default=['base','web'], metavar='MODULE', help="framework modules to load once for all databases (comma-separated or repeated option)")
 add(server_common, '--pidfile', dest='pidfile', type=checkfile('w'), default=None, metavar='FILEPATH', help="file where the server pid will be stored")
 
 #
@@ -373,7 +440,6 @@ add(server_cron, '--limit-time-real-cron', dest='limit_time_real_cron', type=int
 #
 server_web = server_parser.add_argument_group("Web interface Configuration")
 add(server_web, '--db-filter', dest='dbfilter', type=str, default='', metavar='REGEXP', help="Regular expressions for filtering available databases for Web UI. The expression can use %%d (domain) and %%h (host) placeholders.")
-
 
 #
 # Testing
@@ -474,8 +540,8 @@ if os.name == 'posix':
     #
     server_multi = server_parser.add_argument_group("Multiprocessing options")
     add(server_multi, '--workers', dest='workers', type=int, metavar='#WORKER', default=0, help="Specify the number of workers, 0 disable prefork mode.")
-    add(server_multi, '--limit-memory-soft', dest='limit_memory_soft', default=2048 * 1024 * 1024, metavar="BYTES", type=int, help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 2048MiB).")
-    add(server_multi, '--limit-memory-hard', dest='limit_memory_hard', default=2560 * 1024 * 1024, metavar="BYTES", type=int, help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory allocation will fail (default 2560MiB).")
+    add(server_multi, '--limit-memory-soft', dest='limit_memory_soft', default=2048*1024*1024, metavar="BYTES", type=int, help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 2048MiB).")
+    add(server_multi, '--limit-memory-hard', dest='limit_memory_hard', default=2560*1024*1024, metavar="BYTES", type=int, help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory allocation will fail (default 2560MiB).")
     add(server_multi, '--limit-time-cpu', dest='limit_time_cpu', default=60, metavar="SECONDS", type=int, help="Maximum allowed CPU time per request (default 60).")
     add(server_multi, '--limit-time-real', dest='limit_time_real', default=120, metavar="SECONDS", type=int, help="Maximum allowed Real time per request (default 120).")
     add(server_multi, '--limit-request', dest='limit_request', default=8192, metavar="#REQUEST", type=int, help="Maximum number of request to be processed per worker (default 8192).")
