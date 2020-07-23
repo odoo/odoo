@@ -703,9 +703,9 @@ odoo.define('web.ControlPanelModel', function (require) {
                         filter.invisible = true;
 
                         var preFilterFieldName = null;
-                        if (preFilter.tag == 'filter' && preFilter.attrs.date) {
+                        if (preFilter.tag === 'filter' && preFilter.attrs.date) {
                             preFilterFieldName = preFilter.attrs.date;
-                        } else if (preFilter.tag == 'groupBy') {
+                        } else if (preFilter.tag === 'groupBy') {
                             preFilterFieldName = preFilter.attrs.fieldName;
                         }
                         if (preFilterFieldName && !this.fields[preFilterFieldName]) {
@@ -815,14 +815,11 @@ odoo.define('web.ControlPanelModel', function (require) {
                     }
                 } catch (e) { }
             }
-            if (this.searchDefaults.hasOwnProperty(child.attrs.name)) {
+            if (child.attrs.name in this.searchDefaults) {
                 child.attrs.isDefault = true;
                 let value = this.searchDefaults[child.attrs.name];
                 if (child.tag === 'field') {
-                    if (value instanceof Array) {
-                        value = value[0];
-                    }
-                    child.attrs.defaultAutocompleteValue = { value, operator: '=' };
+                    child.attrs.defaultValue = Array.isArray(value) ? value[0] : value;
                 } else if (child.tag === 'groupBy') {
                     child.attrs.defaultRank = typeof value === 'number' ? value : 100;
                 }
@@ -887,8 +884,23 @@ odoo.define('web.ControlPanelModel', function (require) {
                         filter.context = attrs.context;
                     }
                     if (filter.isDefault) {
+                        let operator = filter.operator;
+                        if (!operator) {
+                            const type = attrs.widget || filter.fieldType;
+                            // Note: many2one as a default filter will have a
+                            // numeric value instead of a string => we want "="
+                            // instead of "ilike".
+                            if (["char", "html", "many2many", "one2many", "text"].includes(type)) {
+                                operator = "ilike";
+                            } else {
+                                operator = "=";
+                            }
+                        }
                         filter.defaultRank = -10;
-                        filter.defaultAutocompleteValue = attrs.defaultAutocompleteValue;
+                        filter.defaultAutocompleteValue = {
+                            operator,
+                            value: attrs.defaultValue,
+                        };
                     }
                     if (attrs.widget) { // FIXME: drop support in master
                         filter.widget = attrs.widget;
@@ -1697,7 +1709,7 @@ odoo.define('web.ControlPanelModel', function (require) {
             this.withSearchBar = 'withSearchBar' in config ? config.withSearchBar : true;
             this.searchMenuTypes = config.searchMenuTypes || [];
 
-            this.searchDefaults = [];
+            this.searchDefaults = {};
             for (const key in this.actionContext) {
                 const match = /^search_default_(.*)$/.exec(key);
                 if (match) {
