@@ -79,7 +79,7 @@ class AccountJournal(models.Model):
              "transactions will be reconciled with entries on the Outstanding Payments Account instead of the "
              "payable account.")
     suspense_account_id = fields.Many2one('account.account', string='Bank Suspense Account',
-        ondelete='restrict', readonly=False, store=True, require=True,
+        ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
         domain=[('deprecated', '=', False), ('reconcile', '=', True)],
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
