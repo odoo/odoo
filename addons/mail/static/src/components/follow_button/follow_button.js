@@ -26,6 +26,18 @@ class FollowButton extends Component {
         });
     }
 
+    mounted() {
+        this.keynavToken = this.env.services.keyboard_navigation.register(keystroke => {
+            if (keystroke.shiftKey && keystroke.key === "F") {
+                this.el.querySelector('.o_FollowButton_follow, .o_FollowButton_unfollow').click();
+            }
+        });
+    }
+
+    willUnmount() {
+        this.env.services.keyboard_navigation.unregister(this.keynavToken);
+    }
+
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------

@@ -8,6 +8,7 @@ const components = {
 const useStore = require('mail/static/src/component_hooks/use_store/use_store.js');
 
 const { Component } = owl;
+const { useRef } = owl.hooks;
 
 class ChatterTopbar extends Component {
 
@@ -27,6 +28,16 @@ class ChatterTopbar extends Component {
                 threadAttachmentsAmount: threadAttachments.length,
             };
         });
+        this.logNoteBtn = useRef('logNoteBtn');
+        this.scheduleActivityBtn = useRef('scheduleActivityBtn');
+    }
+
+    mounted() {
+        this.keynavToken = this.env.services.keyboard_navigation.register(this._onKeyNav.bind(this));
+    }
+
+    willUnmount() {
+        this.env.services.keyboard_navigation.unregister(this.keynavToken);
     }
 
     //--------------------------------------------------------------------------
@@ -121,6 +132,22 @@ class ChatterTopbar extends Component {
         }
     }
 
+    /**
+     * @private
+     * @param {Object} keystroke
+     * @param {string} key
+     * @param {boolean} shiftKey
+     */
+    _onKeyNav(keystroke) {
+        if (keystroke.shiftKey) {
+            if (keystroke.key === "A" && this.scheduleActivityBtn.el) {
+                this.scheduleActivityBtn.el.click();
+            }
+            if (keystroke.key === "N" && this.logNoteBtn.el) {
+                this.logNoteBtn.el.click();
+            }
+        }
+    }
 }
 
 Object.assign(ChatterTopbar, {

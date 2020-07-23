@@ -19,6 +19,7 @@
                         </button>
                         <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonLogNote"
                             type="button"
+                            t-ref="logNoteBtn"
                             t-att-class="{
                                 'o-active': chatter.isComposerVisible and chatter.composer and chatter.composer.isLog,
                                 'o-bordered': chatter.hasExternalBorder,
@@ -30,7 +31,7 @@
                         </button>
                     </t>
                     <t t-if="chatter.hasActivities">
-                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-att-disabled="chatter.isDisabled" t-on-click="_onClickScheduleActivity">
+                        <button class="btn btn-link o_ChatterTopbar_button o_ChatterTopbar_buttonScheduleActivity" type="button" t-ref="scheduleActivityBtn" t-att-disabled="chatter.isDisabled" t-on-click="_onClickScheduleActivity">
                             <i class="fa fa-clock-o"/>
                             Schedule activity
                         </button>
