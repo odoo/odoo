@@ -67,6 +67,11 @@
             <rng:optional><rng:attribute name="expand"/></rng:optional>
             <rng:zeroOrMore>
                 <rng:choice>
+                    <rng:element name="header">
+                        <rng:zeroOrMore>
+                            <rng:ref name="button"/>
+                        </rng:zeroOrMore>
+                    </rng:element>
                     <rng:ref name="control"/>
                     <rng:ref name="field"/>
                     <rng:ref name="separator"/>

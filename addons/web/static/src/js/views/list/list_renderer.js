@@ -366,7 +366,7 @@ var ListRenderer = BasicRenderer.extend({
             },
         });
         _.each(this.arch.children, function (c) {
-            if (c.tag !== 'control' && c.tag !== 'groupby') {
+            if (c.tag !== 'control' && c.tag !== 'groupby' && c.tag !== 'header') {
                 var reject = c.attrs.modifiers.column_invisible;
                 // If there is an evaluated domain for the field we override the node
                 // attribute to have the evaluated modifier value.

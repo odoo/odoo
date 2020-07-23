@@ -45,9 +45,13 @@ var ListView = BasicView.extend({
         var expandGroups = !!JSON.parse(pyUtils.py_eval(this.arch.attrs.expand || "0", {'context': pyevalContext}));
 
         this.groupbys = {};
+        this.headerButtons = [];
         this.arch.children.forEach(function (child) {
             if (child.tag === 'groupby') {
                 self._extractGroup(child);
+            }
+            if (child.tag === 'header') {
+                self._extractHeaderButtons(child);
             }
         });
 
@@ -59,6 +63,7 @@ var ListView = BasicView.extend({
         this.controllerParams.activeActions.export_xlsx = this.arch.attrs.export_xlsx ? !!JSON.parse(this.arch.attrs.export_xlsx): true;
         this.controllerParams.editable = editable;
         this.controllerParams.hasActionMenus = params.hasActionMenus;
+        this.controllerParams.headerButtons = this.headerButtons;
         this.controllerParams.toolbarActions = viewInfo.toolbar;
         this.controllerParams.mode = 'readonly';
         this.controllerParams.selectedRecords = selectedRecords;
@@ -93,6 +98,20 @@ var ListView = BasicView.extend({
     _extractGroup: function (node) {
         var innerView = this.fields[node.attrs.name].views.groupby;
         this.groupbys[node.attrs.name] = this._processFieldsView(innerView, 'groupby');
+    },
+    /**
+     * Extracts action buttons definitions from the <header> node of the list
+     * view definition
+     *
+     * @private
+     * @param {Object} node
+     */
+    _extractHeaderButtons(node) {
+        node.children.forEach(child => {
+            if (child.tag === 'button' && !child.attrs.modifiers.invisible) {
+                this.headerButtons.push(child);
+            }
+        });
     },
     /**
      * @override

@@ -284,12 +284,14 @@ var MockServer = Class.extend({
                 }
                 modifiers.invisible.push(["state", "not in", states.split(",")]);
             }
+
+            const inListHeader = inTreeView && node.closest('header');
             _.each(modifiersNames, function (a) {
                 var mod = node.getAttribute(a);
                 if (mod) {
                     var pyevalContext = window.py.dict.fromJSON(context || {});
                     var v = pyUtils.py_eval(mod, {context: pyevalContext}) ? true: false;
-                    if (inTreeView && a === 'invisible') {
+                    if (inTreeView && !inListHeader && a === 'invisible') {
                         modifiers.column_invisible = v;
                     } else if (v || !(a in modifiers) || !_.isArray(modifiers[a])) {
                         modifiers[a] = v;
