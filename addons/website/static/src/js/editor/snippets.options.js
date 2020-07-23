@@ -149,10 +149,15 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
                     classes: 'btn-primary',
                     click: () => {
                         const inputEl = dialog.el.querySelector('.o_input_google_font');
-                        const m = inputEl.value.match(/\bfamily=([\w+]+)/);
+                        // if font page link (what is expected)
+                        let m = inputEl.value.match(/\bspecimen\/([\w+]+)/);
                         if (!m) {
-                            inputEl.classList.add('is-invalid');
-                            return;
+                            // if embed code (so that it works anyway if the user put the embed code instead of the page link)
+                            m = inputEl.value.match(/\bfamily=([\w+]+)/);
+                            if (!m) {
+                                inputEl.classList.add('is-invalid');
+                                return;
+                            }
                         }
                         const font = m[1].replace(/\+/g, ' ');
                         this.googleFonts.push(font);
