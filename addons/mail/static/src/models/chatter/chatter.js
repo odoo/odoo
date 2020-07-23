@@ -166,7 +166,7 @@ function factory(dependencies) {
                 }
             }
 
-            if (previous.activityIds.join(',') !== this.activityIds.join(',')) {
+            if (this.activityIds.length > 0 && (previous.activityIds.join(',') !== this.activityIds.join(','))) {
                 this.refreshActivities();
             }
             if (
