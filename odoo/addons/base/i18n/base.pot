@@ -6,8 +6,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server saas~13.3\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-06-25 11:22+0000\n"
-"PO-Revision-Date: 2020-06-25 11:22+0000\n"
+"POT-Creation-Date: 2020-08-04 08:57+0000\n"
+"PO-Revision-Date: 2020-08-04 08:57+0000\n"
 "Last-Translator: \n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -1141,7 +1141,7 @@ msgid ""
 "Setup\n"
 "-----\n"
 "\n"
-"- *Configuration > Journals*\n"
+"- *Account > Configuration > invoicing > Journals*\n"
 "\n"
 "    If needed, create new journal or choose an existing journal with **Type**\n"
 "    set to *“Bank”*.\n"
@@ -1150,28 +1150,9 @@ msgid ""
 "\n"
 "    On the **Bank Account** tab, enter the **Account Number**.\n"
 "\n"
-"- *Configuration > Bank Accounts*\n"
-"\n"
-"    Account will show up in list as the journal name.\n"
-"\n"
-"    Editing will show the **Account Number**.  This is important as it is used by\n"
-"    the ABA process.\n"
-"\n"
-"    **Bank** is optional.\n"
-"\n"
-"- *Sales > Configuration > Bank Accounts > Bank Accounts*\n"
-"\n"
-"    Account will show up in list as the account number.\n"
-"\n"
-"    **ABA Payments** - Set to *“Account for Making ABA Payments”*.\n"
+"    On the same tab, ensure the ABA transfer information is set up.\n"
 "\n"
 "    **BSB** - Required, 6 digits, and will be auto formatted.\n"
-"\n"
-"    **Account Holder** - Optional.\n"
-"\n"
-"    **Account / Payee Name** - Required.  Generally not validated by the banks\n"
-"    on ABA file transfers, and may show up on the payee bank statement against\n"
-"    the payment.\n"
 "\n"
 "    **Financial Institution Code** - Required (provided by bank or can be found\n"
 "    on Google).  It is three uppercase 3 characters.\n"
@@ -1180,30 +1161,42 @@ msgid ""
 "    may reject the ABA file if the Supplying User Name is not as expected.  It\n"
 "    cannot be longer than 26 characters.\n"
 "\n"
-"    **Identification Number (APCA)** - User Identification number is bank\n"
+"    **APCA Identification Number** - User Identification number is bank\n"
 "    allocated.  It is 6 digits.\n"
 "\n"
 "    **Include Self Balancing Transaction** - Some institutions require that the\n"
 "    last be a self balancing transaction which is used as a verification.\n"
 "\n"
+"- *Accounting > Configuration > Payments > Bank Accounts*\n"
+"\n"
+"    Account will show up in list as the journal name.\n"
+"\n"
+"    Editing will show the **Account Number**.  This is important as it is used by\n"
+"    the ABA process.\n"
+"\n"
+"    **Bank** is optional.\n"
+"\n"
+"- *Contacts > Configuration > Bank Accounts > Bank Accounts*\n"
+"\n"
+"    Paying account will show up in list as the account number.\n"
+"\n"
+"    **Account Holder Name** - Can be entered here, if Required.  Generally not\n"
+"    validated by the banks on ABA file transfers, but may show up on the payee\n"
+"    bank statement against the payment.\n"
+"\n"
 "- Vendor bank accounts can be set up in the same place, however, it is\n"
 "  generally easier to set them up from the partner from for the Vendor.\n"
 "\n"
-"- *Accounting > Purchases > Vendors*\n"
+"- *Accounting > Vendors > Vendors*\n"
 "\n"
-"    On **Sales & Purchases** tab, click on *\"Bank account(s)\"* from where a\n"
+"    On **Accounting** tab, click on *\"View accounts detail\"* from where a\n"
 "    vendor bank account can be created or edited.\n"
 "\n"
-"    **Account Number** - Required.\n"
-"\n"
-"    **ABA Payments** - Set to *“Allow ABA Payments to this Account”*.\n"
+"    **Account Number** - Required, must be less than 9 digits.\n"
 "\n"
 "    **BSB** - Required, 6 digits, and will be auto formatted.\n"
 "\n"
-"    **Account Holder** - Optional.\n"
-"\n"
-"    **Account / Payee Name** - Required.  Generally not validated by the\n"
-"    banks.\n"
+"    **Account Holder Name** - Optional.\n"
 "\n"
 "Use\n"
 "---\n"
@@ -1217,18 +1210,22 @@ msgid ""
 "    Select **ABA Credit Transfer** radio button.\n"
 "\n"
 "    If the vendor has multiple bank account, you may need to select the\n"
-"    correct **Recipient Bank Account**.\n"
+"    correct **Recipient Bank Account**.  Or if paying a vendor bill, it may\n"
+"    need the correct bank account associated with it.\n"
 "\n"
 "    Enter payment amount, etc.\n"
 "\n"
-"- *Purchases > Payments*\n"
+"- *Vendors > Payments*\n"
 "\n"
 "    After payment(s) are confirmed, they will show up in the payments list.\n"
 "\n"
 "    Using filters, or sorting, select the payments to be included.  Under\n"
-"    *Actions* choose *Download ABA Payment*.  A pop up appears with the ABA\n"
-"    file from which you can click on the file to download locally.  This\n"
-"    file can then be uploaded to the bank.\n"
+"    *Actions* choose *Create batch payment*.\n"
+"\n"
+"- *Vendors > Batch Payments*\n"
+"\n"
+"    When validating a batch payment, the ABA file will be generated.  It can\n"
+"    be regenerated.  This file can then be uploaded to the bank.\n"
 msgstr ""
 
 #. module: base
@@ -5331,6 +5328,14 @@ msgid ""
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,description:base.module_test_event_full
+msgid ""
+"\n"
+"This module will test the main event flows of Odoo, both frontend and backend.\n"
+"It installs sale capabilities, front-end flow, eCommerce, questions, ...\n"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,description:base.module_test_main_flows
 msgid ""
 "\n"
@@ -8709,6 +8714,31 @@ msgid "Bridge module for project and enterprise"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_event_twitter_wall
+msgid "Bridge module to configure a twitter wall on your event"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_event_social
+msgid "Bridge module to push notifications to event attendees"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_event_online
+msgid "Bridge module to support Online Events"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_event_track_online
+msgid "Bridge module to support Online Events Tracks"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_event_track_live_quiz
+msgid "Bridge module to support quiz features during \"live\" tracks. "
+msgstr ""
+
+#. module: base
 #: model:res.country,name:base.io
 msgid "British Indian Ocean Territory"
 msgstr ""
@@ -9636,6 +9666,11 @@ msgid "Configuration Wizards"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_twitter_wall
+msgid "Configure a Twitter Wall on your Event"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_partner_commission
 msgid "Configure resellers commissions on subscription sale"
 msgstr ""
@@ -9976,6 +10011,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:base.field_ir_model_relation__create_date
 #: model:ir.model.fields,field_description:base.field_res_users__create_date
 msgid "Create Date"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,description:base.module_website_jitsi
+#: model:ir.module.module,summary:base.module_website_jitsi
+msgid "Create Jitsi room on website."
 msgstr ""
 
 #. module: base
@@ -11740,9 +11781,44 @@ msgid "Event Barcode scan in Mobile"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_track_exhibitor
+msgid "Event Exhibitors"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_track_session
+msgid "Event Live Sessions"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_meet
+msgid "Event Meeting / Rooms"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_event_track_session
+msgid "Event: live session on tracks"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_event_meet
+msgid "Event: meeting and chat rooms"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_event_track_exhibitor
+msgid "Event: upgrade sponsors to exhibitors"
+msgstr ""
+
+#. module: base
 #: model:ir.module.category,name:base.module_category_marketing_events
 #: model:ir.module.module,shortdesc:base.module_website_event
 msgid "Events"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_online
+msgid "Events Online"
 msgstr ""
 
 #. module: base
@@ -14082,6 +14158,12 @@ msgid "Inactive Users"
 msgstr ""
 
 #. module: base
+#: code:addons/models.py:0
+#, python-format
+msgid "Incompatible companies on records:"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_model_fields__index
 msgid "Indexed"
 msgstr ""
@@ -15502,6 +15584,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_currency_rate_live
 msgid "Live Currency Exchange Rate"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_track_live
+msgid "Live Event Tracks"
 msgstr ""
 
 #. module: base
@@ -19926,6 +20013,11 @@ msgid "Purchase orders, tenders and agreements"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_track_social
+msgid "Push notification to track listeners"
+msgstr ""
+
+#. module: base
 #: model:ir.model.fields,field_description:base.field_ir_actions_server__code
 #: model:ir.model.fields,field_description:base.field_ir_cron__code
 #: model_terms:ir.ui.view,arch_db:base.view_server_action_form
@@ -20014,6 +20106,31 @@ msgstr ""
 #: model:ir.module.module,description:base.module_website_event_questions
 #: model:ir.module.module,shortdesc:base.module_website_event_questions
 msgid "Questions on Events"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_meet_quiz
+msgid "Quiz and Meet on community"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_event_meet_quiz
+msgid "Quiz and Meet on community route"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_track_live_quiz
+msgid "Quiz on Live Event Tracks"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_track_quiz
+msgid "Quizzes on Tracks"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_event_track_quiz
+msgid "Quizzes on tracks"
 msgstr ""
 
 #. module: base
@@ -21057,6 +21174,11 @@ msgid "Schedule employees' meetings"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_social
+msgid "Schedule push notifications on attendees"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_project_timesheet_holidays
 msgid "Schedule timesheet when on time off"
 msgstr ""
@@ -21309,6 +21431,13 @@ msgstr ""
 #: model:ir.module.module,description:base.module_social_push_notifications
 #: model:ir.module.module,summary:base.module_social_push_notifications
 msgid "Send live notifications to your web visitors"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,summary:base.module_website_event_track_social
+msgid ""
+"Send reminder push notifications to event attendees based on wishlisted "
+"tracks."
 msgstr ""
 
 #. module: base
@@ -22187,6 +22316,11 @@ msgid "Supplementary arguments"
 msgstr ""
 
 #. module: base
+#: model:ir.module.module,summary:base.module_website_event_track_live
+msgid "Support live tracks: streaming, participation, youtube"
+msgstr ""
+
+#. module: base
 #: model:ir.module.module,summary:base.module_quality_control_picking_batch
 msgid "Support of quality control into batch transfers"
 msgstr ""
@@ -22479,6 +22613,11 @@ msgstr ""
 #. module: base
 #: model_terms:ir.ui.view,arch_db:base.ir_mail_server_form
 msgid "Test Connection"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_test_event_full
+msgid "Test Full Event Flow"
 msgstr ""
 
 #. module: base
@@ -23546,6 +23685,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,summary:base.module_hr_recruitment
 msgid "Track your recruitment pipeline"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_event_track_online
+msgid "Tracks Online"
 msgstr ""
 
 #. module: base
@@ -24819,6 +24963,11 @@ msgstr ""
 #. module: base
 #: model:ir.module.module,shortdesc:base.module_website_helpdesk_livechat
 msgid "Website IM Livechat Helpdesk"
+msgstr ""
+
+#. module: base
+#: model:ir.module.module,shortdesc:base.module_website_jitsi
+msgid "Website Jitsi"
 msgstr ""
 
 #. module: base
