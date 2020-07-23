@@ -591,6 +591,30 @@
         </record>
 
         <!--
+            MASS MAILING
+        -->
+        <record id="crm.action_lead_mass_mail" model="ir.actions.act_window">
+            <field name="name">Send email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context">{
+                            'default_composition_mode': 'mass_mail',
+                            'default_email_to':'{($object.email or \'\')|safe}',
+                            'default_use_template': True,
+                            'default_template_id': ref('crm.email_template_opportunity_mail'),
+                        }</field>
+            <field name="binding_model_id" ref="model_crm_lead"/>
+            <field name="binding_view_types">list</field>
+        </record>
+
+        <!--Update of email_template defined in crm_lead_data, to add ref_ir_act_window
+            allowing to have a well formed email template (context action considered as set). -->
+        <record id="email_template_opportunity_mail" model="mail.template">
+            <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
+        </record>
+
+        <!--
             crm.lead (as Opportunity) views
         -->
 
@@ -641,6 +665,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//tree" position="attributes">
                     <attribute name="default_order">activity_date_deadline_my</attribute>
+                </xpath>
+                <xpath expr="//tree" position="inside">
+                    <header>
+                        <button name="%(crm.action_lead_mass_mail)d" type="action" string="Email" />
+                    </header>
                 </xpath>
                 <field name="user_id" position="attributes">
                     <attribute name="optional">hide</attribute>
@@ -779,30 +808,6 @@
                     </group>
                 </search>
             </field>
-        </record>
-
-        <!--
-            MASS MAILING
-        -->
-        <record id="crm.action_lead_mass_mail" model="ir.actions.act_window">
-            <field name="name">Send email</field>
-            <field name="res_model">mail.compose.message</field>
-            <field name="view_mode">form</field>
-            <field name="target">new</field>
-            <field name="context">{
-                            'default_composition_mode': 'mass_mail',
-                            'default_email_to':'{($object.email or \'\')|safe}',
-                            'default_use_template': True,
-                            'default_template_id': ref('crm.email_template_opportunity_mail'),
-                        }</field>
-            <field name="binding_model_id" ref="model_crm_lead"/>
-            <field name="binding_view_types">list</field>
-        </record>
-
-        <!--Update of email_template defined in crm_lead_data, to add ref_ir_act_window
-            allowing to have a well formed email template (context action considered as set). -->
-        <record id="email_template_opportunity_mail" model="mail.template">
-            <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
         </record>
 
         <!--

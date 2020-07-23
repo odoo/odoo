@@ -39,6 +39,9 @@
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
                 <tree string="Expenses" multi_edit="1" js_class="hr_expense_tree_dashboard_upload" sample="1">
+                    <header>
+                        <button name="action_submit_expenses" type="object" string="Create Report"/>
+                    </header>
                     <field name="attachment_number" invisible="True"/>
                     <field name="date" optional="show"/>
                     <field name="accounting_date" optional="hide" groups="account.group_account_invoice,account.group_account_readonly"/>

@@ -32,6 +32,9 @@
         <field name="model">crm.lead</field>
         <field name="inherit_id" ref="crm.crm_lead_view_list_activities"/>
         <field name="arch" type="xml">
+            <xpath expr="//header" position="inside">
+                <button name="%(crm_sms.crm_lead_act_window_sms_composer_single)d" type="action" string="SMS" />
+            </xpath>
             <xpath expr="//button[@name='%(crm.crm_lead_act_window_compose)d']" position="after">
                 <button name="%(crm_sms.crm_lead_act_window_sms_composer_multi)d" type="action" string="SMS" icon="fa-comments" />
             </xpath>
