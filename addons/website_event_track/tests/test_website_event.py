@@ -1,15 +1,20 @@
+# -*- coding: utf-8 -*-
+# Part of Odoo. See LICENSE file for full copyright and licensing details.
+
 from datetime import datetime, timedelta
 
 from odoo import fields
-from odoo.addons.website_event.tests.test_event_website import TestEventWebsiteHelper
+from odoo.addons.website_event.tests.common import TestWebsiteEventCommon
+from odoo.tests.common import users
 
 
-class TestEventWebsiteTrack(TestEventWebsiteHelper):
+class TestEventWebsiteTrack(TestWebsiteEventCommon):
 
     def _get_menus(self):
         return super(TestEventWebsiteTrack, self)._get_menus() | set(['Talks', 'Agenda', 'Talk Proposals'])
 
-    def test_create_menu1(self):
+    @users('user_eventmanager')
+    def test_create_menu(self):
         event = self.env['event.event'].create({
             'name': 'TestEvent',
             'date_begin': fields.Datetime.to_string(datetime.today() + timedelta(days=1)),
@@ -25,11 +30,13 @@ class TestEventWebsiteTrack(TestEventWebsiteHelper):
 
         self._assert_website_menus(event)
 
-    def test_write_menu1(self):
-        self.assertFalse(self.event_0.menu_id)
-        self.event_0.write({
+    @users('user_eventmanager')
+    def test_write_menu(self):
+        event = self.env['event.event'].browse(self.event_0.id)
+        self.assertFalse(event.menu_id)
+        event.write({
             'website_menu': True,
             'website_track': True,
             'website_track_proposal': True,
         })
-        self._assert_website_menus(self.event_0)
+        self._assert_website_menus(event)
