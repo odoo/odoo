@@ -518,6 +518,150 @@ class TestAccountBankStatementLine(TestAccountBankStatementCommon):
             {'debit': 0.0,      'credit': 80.0,     'amount_currency': 0.0,         'currency_id': False},
         )
 
+    def test_zero_amount_journal_curr_1_statement_curr_2(self):
+        self.bank_journal_2.currency_id = self.currency_1
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_2.id,
+                    'amount': 0.0,
+                    'amount_currency': 10.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 10.0,        'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': -10.0,       'currency_id': self.currency_2.id},
+        ])
+
+    def test_zero_amount_currency_journal_curr_1_statement_curr_2(self):
+        self.bank_journal_2.currency_id = self.currency_1
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_2.id,
+                    'amount': 10.0,
+                    'amount_currency': 0.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 10.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 10.0,     'amount_currency': 0.0,         'currency_id': self.currency_2.id},
+        ])
+
+    def test_zero_amount_journal_curr_2_statement_curr_1(self):
+        self.bank_journal_2.currency_id = self.currency_2
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_1.id,
+                    'amount': 0.0,
+                    'amount_currency': 10.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 10.0,     'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 10.0,     'amount_currency': 0.0,         'currency_id': False},
+        ])
+
+    def test_zero_amount_currency_journal_curr_2_statement_curr_1(self):
+        self.bank_journal_2.currency_id = self.currency_2
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_1.id,
+                    'amount': 10.0,
+                    'amount_currency': 0.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 10.0,        'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': False},
+        ])
+
+    def test_zero_amount_journal_curr_2_statement_curr_3(self):
+        self.bank_journal_2.currency_id = self.currency_2
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_3.id,
+                    'amount': 0.0,
+                    'amount_currency': 10.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': 0.0,         'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 0.0,      'amount_currency': -10.0,       'currency_id': self.currency_3.id},
+        ])
+
+    def test_zero_amount_currency_journal_curr_2_statement_curr_3(self):
+        self.bank_journal_2.currency_id = self.currency_2
+
+        statement = self.env['account.bank.statement'].with_context(skip_check_amounts_currencies=True).create({
+            'name': 'test_statement',
+            'date': '2019-01-01',
+            'journal_id': self.bank_journal_2.id,
+            'line_ids': [
+                (0, 0, {
+                    'date': '2019-01-01',
+                    'payment_ref': 'line_1',
+                    'partner_id': self.partner_a.id,
+                    'foreign_currency_id': self.currency_3.id,
+                    'amount': 10.0,
+                    'amount_currency': 0.0,
+                }),
+            ],
+        })
+
+        self.assertRecordValues(statement.line_ids.move_id.line_ids, [
+            {'debit': 5.0,      'credit': 0.0,      'amount_currency': 10.0,        'currency_id': self.currency_2.id},
+            {'debit': 0.0,      'credit': 5.0,      'amount_currency': 0.0,         'currency_id': self.currency_3.id},
+        ])
+
     def test_constraints(self):
         def assertStatementLineConstraint(statement_vals, statement_line_vals):
             with self.assertRaises(Exception), self.cr.savepoint():
