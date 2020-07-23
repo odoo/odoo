@@ -6,14 +6,12 @@ odoo.define('web.OrgChart', function (require) {
     const session = require('web.session');
 
     class EmployeeChart extends owl.Component {
+        constructor(parent, props) {
+            super(...arguments);
+            this.parent = parent;
+        }
         async _onEmployeeRedirect(event) {
-            const employeeID = $(event.currentTarget).data('employee-id');
-            const action = await this.env.services.rpc({
-                model: 'hr.employee',
-                method: 'get_formview_action',
-                args: [employeeID],
-            });
-            this.trigger('do-action', {action: action});
+            this.parent._onEmployeeRedirect(...arguments);
         }
 
         /**
@@ -24,23 +22,7 @@ odoo.define('web.OrgChart', function (require) {
          * @returns {Promise} action loaded
          */
         async _onEmployeeSubRedirect(event) {
-            const employeeID = $(event.currentTarget).data('employee-id');
-            const type = $(event.currentTarget).data('type') || 'direct';
-            if (employeeID) {
-                const data = await this._getSubordinatesData(employeeID, type);
-                const domain = [['id', 'in', data]];
-                let action = await this.env.services.rpc({
-                    model: 'hr.employee',
-                    method: 'get_formview_action',
-                    args: [employeeID],
-                });
-                action = Object.assign(action, {
-                    'view_mode': 'kanban,list,form',
-                    'views':  [[false, 'kanban'], [false, 'list'], [false, 'form']],
-                    'domain': domain,
-                });
-                this.trigger('do-action', {action: action});
-            }
+            this.parent._onEmployeeSubRedirect(...arguments);
         }
 
         /**
@@ -51,15 +33,7 @@ odoo.define('web.OrgChart', function (require) {
          * @returns {Promise}
          */
         async _getSubordinatesData(employeeID, type) {
-            const sunbordinates = await this.env.services.rpc({
-                route: '/hr/get_subordinates',
-                params: {
-                    employee_id: employeeID,
-                    subordinates_type: type,
-                    context: session.user_context,
-                },
-            });
-            return sunbordinates;
+            return await this.parent._getSubordinatesData(...arguments);
         }
     }
     EmployeeChart.template = "hr_org_chart_employee";

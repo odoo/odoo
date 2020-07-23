@@ -1,6 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <templates id="template" xml:space="preserve">
 
+<!-- Note: Need to create EmployeeChart subcomponent as this template renders Popover
+so main component should wait to finish mounting of all subcomponents, so here
+we need to create EmployeeChart as subcomponent to properly render main component -->
 <t t-name="hr_org_chart_employee" owl="1">
     <t t-set="employee" t-value="props.employee"/>
     <div t-attf-class="o_org_chart_entry o_org_chart_entry_{{props.employee_type}} media">
@@ -23,7 +26,6 @@
 
         <div class="media-body">
             <t t-if="employee.indirect_sub_count &gt; 0">
-                <!-- <Popover position="'left'" class="popover-body"> -->
                 <Popover position="'left'">
                     <t t-set-slot="opened">
                         <t t-call="hr_orgchart_emp_popover"/>
@@ -76,19 +78,11 @@
         </t>
 
         <t t-foreach="orgData.managers" t-as="employee" t-key="employee.id">
-            <!-- <t t-debug="pdb"/> -->
             <t t-set="emp_count" t-value="emp_count + 1"/>
-            <!-- <t t-call="hr_org_chart_employee">
-                <t t-set="employee_type" t-value="'manager'"/>
-            </t> -->
             <EmployeeChart employee_type="'manager'" employee="employee" orgData="orgData"/>
         </t>
     </div>
 
-    <!-- <t t-if="orgData.children.length || orgData.managers.length" t-call="hr_org_chart_employee">
-        <t t-set="employee_type" t-value="'self'"/>
-        <t t-set="employee" t-value="orgData.self"/>
-    </t> -->
     <t t-if="orgData.children.length || orgData.managers.length">
         <EmployeeChart employee_type="'self'" employee="orgData.self" orgData="orgData"/>
     </t>
@@ -105,9 +99,6 @@
         <t t-foreach="orgData.children" t-as="employee" t-key="employee.id">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-if="emp_count &lt; 20">
-                <!-- <t t-call="hr_org_chart_employee">
-                    <t t-set="employee_type" t-value="'sub'"/>
-                </t> -->
                 <EmployeeChart employee_type="'sub'" employee="employee" orgData="orgData"/>
             </t>
         </t>
