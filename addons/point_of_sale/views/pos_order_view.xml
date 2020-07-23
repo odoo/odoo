@@ -45,7 +45,7 @@
                     <page string="Products" name="products">
                         <field name="lines" colspan="4" nolabel="1">
                             <tree string="Order lines" editable="bottom">
-                                <field name="product_id"/>
+                                <field name="full_product_name"/>
                                 <field name="pack_lot_ids" widget="many2many_tags" groups="stock.group_production_lot"/>
                                 <field name="qty"/>
                                 <field name="product_uom_id" string="UoM" groups="uom.group_uom"/>
@@ -58,7 +58,7 @@
                             </tree>
                             <form string="Order lines">
                                 <group col="4">
-                                    <field name="product_id"/>
+                                    <field name="full_product_name"/>
                                     <field name="qty"/>
                                     <field name="discount" widget="monetary"/>
                                     <field name="price_unit" widget="monetary"/>
