@@ -402,6 +402,11 @@
                       banner_route="/account/account_invoice_onboarding"
                       js_class="account_tree"
                       sample="1">
+                    <header>
+                        <button name="action_register_payment" type="object" string="Register Payment"
+                            groups="account.group_account_user"
+                            invisible="context.get('default_move_type') not in ('out_invoice', 'out_refund', 'out_receipt', 'in_invoice', 'in_refund','in_receipt')"/>
+                    </header>
                     <field name="name" decoration-bf="1"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="invoice_source_email" invisible="1"/>
