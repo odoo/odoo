@@ -48,6 +48,22 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'email_cc',
     'website']
 
+<<<<<<< HEAD
+=======
+PARTNER_FIELDS_TO_SYNC = [
+    'title',
+    'street',
+    'street2',
+    'city',
+    'state_id',
+    'country_id',
+    'mobile',
+    'zip',
+    'function',
+    'website',
+]
+
+>>>>>>> 8233fb31e96... temp
 # Those values have been determined based on benchmark to minimise
 # computation time, number of transaction and transaction time.
 PLS_COMPUTE_BATCH_STEP = 50000  # odoo.models.PREFETCH_MAX = 1000 but larger cluster can speed up global computation
@@ -421,6 +437,7 @@ class Lead(models.Model):
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
+<<<<<<< HEAD
 
         return {
             'partner_name': partner_name,
@@ -436,6 +453,18 @@ class Lead(models.Model):
             'function': partner.function,
             'website': partner.website,
         }
+=======
+        contact_name = False if partner.is_company else partner.name
+
+        values = {f: partner[f] if partner else self[f] for f in PARTNER_FIELDS_TO_SYNC}
+        values.update({
+            'partner_name': partner_name if partner else self.partner_name,
+            'contact_name': contact_name if partner else self.contact_name,
+            'email_from': partner.email or self.email_from,
+            'phone': partner.phone or self.phone,
+        })
+        return values
+>>>>>>> 8233fb31e96... temp
 
     # ------------------------------------------------------------
     # ORM
