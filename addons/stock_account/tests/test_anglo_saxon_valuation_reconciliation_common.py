@@ -1,19 +1,85 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged
 from odoo import fields
 
 
 @tagged('-at_install', 'post_install')
-class ValuationReconciliationTestCommon(AccountTestCommon):
+class ValuationReconciliationTestCommon(AccountTestInvoicingCommon):
     """ Base class for tests checking interim accounts reconciliation works
     in anglosaxon accounting. It sets up everything we need in the tests, and is
     extended in both sale_stock and purchase modules to run the 'true' tests.
     """
 
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
+        cls.stock_account_product_categ = cls.env['product.category'].create({
+            'name': 'Test category',
+            'property_valuation': 'real_time',
+            'property_cost_method': 'fifo',
+            'property_stock_valuation_account_id': cls.company_data['default_account_stock_valuation'].id,
+            'property_stock_account_input_categ_id': cls.company_data['default_account_stock_in'].id,
+            'property_stock_account_output_categ_id': cls.company_data['default_account_stock_out'].id,
+        })
+
+        uom_unit = cls.env.ref('uom.product_uom_unit')
+
+        cls.test_product_order = cls.env['product.product'].create({
+            'name': "Test product template invoiced on order",
+            'standard_price': 42.0,
+            'type': 'product',
+            'categ_id': cls.stock_account_product_categ.id,
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        })
+        cls.test_product_delivery = cls.env['product.product'].create({
+            'name': 'Test product template invoiced on delivery',
+            'standard_price': 42.0,
+            'type': 'product',
+            'categ_id': cls.stock_account_product_categ.id,
+            'uom_id': uom_unit.id,
+            'uom_po_id': uom_unit.id,
+        })
+
+    @classmethod
+    def setup_company_data(cls, company_name, chart_template=None, **kwargs):
+        company_data = super().setup_company_data(company_name, chart_template=chart_template, **kwargs)
+
+        # Create stock config.
+        company_data.update({
+            'default_account_stock_in': cls.env['account.account'].create({
+                'name': 'default_account_stock_in',
+                'code': 'STOCKIN',
+                'reconcile': True,
+                'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+                'company_id': company_data['company'].id,
+            }),
+            'default_account_stock_out': cls.env['account.account'].create({
+                'name': 'default_account_stock_out',
+                'code': 'STOCKOUT',
+                'reconcile': True,
+                'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+                'company_id': company_data['company'].id,
+            }),
+            'default_account_stock_valuation': cls.env['account.account'].create({
+                'name': 'default_account_stock_valuation',
+                'code': 'STOCKVAL',
+                'reconcile': True,
+                'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
+                'company_id': company_data['company'].id,
+            }),
+            'default_warehouse': cls.env['stock.warehouse'].search(
+                [('company_id', '=', company_data['company'].id)],
+                limit=1,
+            ),
+        })
+        return company_data
+
     def check_reconciliation(self, invoice, picking, full_reconcile=True, operation='purchase'):
-        interim_account_id = operation == 'purchase' and self.input_account.id or self.output_account.id
+        interim_account_id = self.company_data['default_account_stock_in'].id if operation == 'purchase' else self.company_data['default_account_stock_out'].id
         invoice_line = invoice.line_ids.filtered(lambda line: line.account_id.id == interim_account_id)
 
         stock_moves = picking.move_lines
@@ -51,97 +117,3 @@ class ValuationReconciliationTestCommon(AccountTestCommon):
         pickings.mapped('move_lines.account_move_ids').write({'name': '/', 'state': 'draft'})
         pickings.mapped('move_lines.account_move_ids').write({'date': date})
         pickings.move_lines.account_move_ids.post()
-
-    def _create_product_category(self):
-        return self.env['product.category'].create({
-            'name': 'Test category',
-            'property_valuation': 'real_time',
-            'property_cost_method': 'fifo',
-            'property_stock_valuation_account_id': self.valuation_account.id,
-            'property_stock_account_input_categ_id': self.input_account.id,
-            'property_stock_account_output_categ_id': self.output_account.id,
-        })
-
-    def setUp(self):
-        super(ValuationReconciliationTestCommon, self).setUp()
-
-        self.company = self.env.company
-        self.company.anglo_saxon_accounting = True
-        self.currency_one = self.company.currency_id
-        currency_two_name = 'USD' if self.currency_one.name != 'USD' else 'EUR'
-        self.currency_two = self.env['res.currency'].search([('name', '=', currency_two_name)])
-
-        self.input_account = self.env['account.account'].create({
-            'name': 'Test stock in',
-            'code': 'stock_account_TEST_42',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
-            'reconcile': True,
-            'company_id': self.company.id,
-        })
-
-        self.output_account = self.env['account.account'].create({
-            'name': 'Test stock out',
-            'code': 'stock_account_TEST_43',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
-            'reconcile': True,
-            'company_id': self.company.id,
-        })
-
-        self.valuation_account = self.env['account.account'].create({
-            'name': 'Test stock valuation',
-            'code': 'stock_account_TEST_44',
-            'user_type_id': self.env.ref('account.data_account_type_current_assets').id,
-            'reconcile': True,
-            'company_id': self.company.id,
-        })
-
-
-        self.test_product_category = self._create_product_category()
-
-        uom = self.env['uom.uom'].search([], limit=1)
-        test_product_delivery_inv_template = self.env['product.template'].create({
-            'name': 'Test product template invoiced on delivery',
-            'type': 'product',
-            'categ_id': self.test_product_category.id,
-            'uom_id': uom.id,
-            'uom_po_id': uom.id,
-        })
-        test_product_order_inv_template = self.env['product.template'].create({
-            'name': 'Test product template invoiced on order',
-            'type': 'product',
-            'categ_id': self.test_product_category.id,
-            'uom_id': uom.id,
-            'uom_po_id': uom.id,
-        })
-
-        self.test_product_order = test_product_order_inv_template.product_variant_id
-        self.test_product_order.write({
-            'name': 'The chocolate moose - order',
-            'standard_price': 42.0,
-        })
-
-        self.test_product_delivery = test_product_delivery_inv_template.product_variant_id
-        self.test_product_delivery.write({
-            'name': 'The chocolate moose - delivery',
-            'standard_price': 42.0,
-        })
-
-        self.test_partner = self.env['res.partner'].create({
-            'name': 'Ruben Rybnik',
-        })
-
-        self.product_price_unit = 66.0
-
-        # We delete the currency rate defined in demo data for USD on June 6th.
-        # This is mandatory to ensure consistency of the data generated by the test,
-        # as stock pickings created from a PO are by design always created for
-        # the current date (there is no way forcing this), meaning that they
-        # always use today's exchange rate for their valuation.
-        # Despite the fact we rewrite the date of the valuation moves artificially,
-        # we cannot correct the debit and credit values, since the anglosaxon
-        # entries get automatically reconciled (and you cannot modify a reconciled entry).
-        # So, we have to make sure that "today"'s rate will always be the last rate we
-        # created in order to ensure complete control of the test.
-        rateUSDbis = self.env.ref('base.rateUSDbis', raise_if_not_found=False)
-        if rateUSDbis:
-            rateUSDbis.unlink()
