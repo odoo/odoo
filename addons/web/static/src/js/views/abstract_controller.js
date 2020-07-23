@@ -128,6 +128,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         if (!(this.renderer instanceof owl.Component)) {
             this.renderer.on_attach_callback();
         }
+        this._keynavToken = this.call('keyboard_navigation', 'register', this._onKeyNav.bind(this));
     },
     /**
      * Called each time the controller is detached from the DOM.
@@ -141,6 +142,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         if (!(this.renderer instanceof owl.Component)) {
             this.renderer.on_detach_callback();
         }
+        this.call('keyboard_navigation', 'unregister', this._keynavToken);
     },
 
     //--------------------------------------------------------------------------
@@ -538,6 +540,47 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
             }, {
                 additional_context: _.extend({}, data.context)
             });
+        }
+    },
+    /**
+     * Executed at each keystroke. Override to implement keyboard navigation
+     * logic.
+     * @private
+     * @param {Object} keystroke
+     * @param {boolean} secondLvl
+     * TODO
+     */
+    _onKeyNav(keystroke, secondLvl) {
+        let btn;
+        switch (keystroke.key) {
+            case "BACKSPACE":
+                btn = this.$('.breadcrumb .breadcrumb-item > a:last').get(0);
+                break;
+            case "V":
+                return true;
+        }
+        // FIXME: probably move this to another handler (alongside "V")
+        if (secondLvl) {
+            switch (keystroke.key) {
+                case "L":
+                    btn = this.$('.o_cp_switch_buttons .o_switch_view.o_list').get(0);
+                    break;
+                case "K":
+                    btn = this.$('.o_cp_switch_buttons .o_switch_view.o_kanban').get(0);
+                    break;
+                case "G":
+                    btn = this.$('.o_cp_switch_buttons .o_switch_view.o_graph').get(0);
+                    break;
+                case "P":
+                    btn = this.$('.o_cp_switch_buttons .o_switch_view.o_pivot').get(0);
+                    break;
+                case "C":
+                    btn = this.$('.o_cp_switch_buttons .o_switch_view.o_calendar').get(0);
+                    break;
+            }
+        }
+        if (btn) {
+            btn.click(); // native click function honors 'disable' attribute
         }
     },
     /**

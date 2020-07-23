@@ -78,8 +78,6 @@ var Menu = Widget.extend({
             });
         });
 
-
-
         return Promise.all([this._super.apply(this, arguments), appsMenuProm, systrayMenuProm]);
     },
     change_menu_section: function (primary_menu_id) {
