@@ -575,12 +575,11 @@ class OdooTestRunner(object):
         return result
 
 current_test = None
-
 def run_unit_tests(module_name, position='at_install'):
     """
     :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
-              if any of them failed.
-    :rtype: bool
+              if any of them failed, ``None`` if no tests were ran.
+    :rtype: bool | None
     """
     global current_test
     # avoid dependency hell
@@ -590,7 +589,7 @@ def run_unit_tests(module_name, position='at_install'):
     threading.currentThread().testing = True
     config_tags = TagsSelector(tools.config['test_tags'])
     position_tag = TagsSelector(position)
-    r = True
+    ran_tests = failures = False
     for m in mods:
         tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
         suite = OdooSuite(t for t in tests if position_tag.check(t) and config_tags.check(t))
@@ -604,13 +603,19 @@ def run_unit_tests(module_name, position='at_install'):
             if time.time() - t0 > 5:
                 log_level = logging.RUNBOT
             _logger.log(log_level, "%s ran %s tests in %.2fs, %s queries", m.__name__, result.testsRun, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+            ran_tests = True
             if not result.wasSuccessful():
-                r = False
+                failures = True
                 _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))
 
     current_test = None
     threading.currentThread().testing = False
-    return r
+
+    if failures:
+        return False
+    if ran_tests:
+        return True
+    return None
 
 def unwrap_suite(test):
     """
