@@ -51,7 +51,7 @@ class AccountMove(models.Model):
         last_invoice = previous_invoices[-1] if len(previous_invoices) else None
 
         # Get the incoming and outgoing sml between self.invoice_date and the previous invoice (if any).
-        self_datetime = max(self.invoice_line_ids.mapped('write_date')) if self.invoice_line_ids else None
+        self_datetime = max(self.invoice_line_ids.filtered(lambda l: l.write_date).mapped('write_date')) if self.invoice_line_ids else None
         last_invoice_datetime = max(last_invoice.invoice_line_ids.mapped('write_date')) if last_invoice else None
 
         def _filter_incoming_sml(ml):
