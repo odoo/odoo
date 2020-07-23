@@ -587,11 +587,11 @@ class AccountBankStatementLine(models.Model):
             'name': self.payment_ref,
             'move_id': self.move_id.id,
             'partner_id': self.partner_id.id,
-            'currency_id': currency_id if amount_currency else False,
+            'currency_id': currency_id,
             'account_id': journal.default_debit_account_id.id if balance >= 0 else journal.default_credit_account_id.id,
             'debit': balance > 0 and balance or 0.0,
             'credit': balance < 0 and -balance or 0.0,
-            'amount_currency': amount_currency if currency_id else False,
+            'amount_currency': amount_currency,
         }
 
     @api.model
@@ -772,7 +772,7 @@ class AccountBankStatementLine(models.Model):
             'name': counterpart_vals.get('name', move_line.name if move_line else ''),
             'move_id': self.move_id.id,
             'partner_id': self.partner_id.id,
-            'currency_id': currency_id if amount_currency else False,
+            'currency_id': currency_id,
             'account_id': counterpart_vals.get('account_id', move_line.account_id.id if move_line else False),
             'debit': balance if balance > 0 else 0.0,
             'credit': -balance if balance < 0 else 0.0,
