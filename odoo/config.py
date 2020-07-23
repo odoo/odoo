@@ -33,10 +33,11 @@ except ImportError:
 
 subcommand = None   # subcommand extracted from cli
 
-optspecmap = {}     # option name to option spec map
-commandmap = {}     # command name to command object map
+optionmap = {}      # option name to option object map
+groupmap = {}       # group title to group object map
+commandmap = {}     # subcommand name to command object map
 
-srcoptmap = {       # all configuration sources
+sourcemap = {       # all configuration sources
     "cli": {},      # argparse
     "environ": {},  # os.getenv
     "file": {},     # configparser [common] section
@@ -54,6 +55,14 @@ class DeprecatedAlias:
         return self.aliased_option
 
 
+########################################################################
+#                                                                      #
+#                        TYPE-LIKE FUNCTIONS                           #
+#           all sanity checks and type conversions goes here           #
+#                                                                      #
+########################################################################
+
+
 def strtobool(rawopt: str):
     """
     Convert a bool or a case-insensitive string representation of truth
@@ -69,10 +78,13 @@ def strtobool(rawopt: str):
     return distutils.util.strtobool(rawopt)
 
 
-def assert_in(rawopt, choices):
-    if opt not in choices:
-        raise SystemExit(f"{opt}: not a valid option, pick from %s" % ", ".join(choices))
-    return opt
+def choices(selection: list, cast: callable=str):
+    def assert_in(rawopt):
+        opt = cast(rawopt)
+        if opt not in choices:
+            raise SystemExit(f"{opt}: not a valid option, pick from %s" % ", ".join(choices))
+        return opt
+    return assert_in
 
 
 def flatten(it):
@@ -82,47 +94,6 @@ def flatten(it):
             yield from flatten(e)
         else:
             yield e
-
-
-def add(group, *args, dest, action='store', default=None, envvar=None, **kwargs):
-    """
-    Wrapper around add_argument, carefully map every option to a type,
-    save the default value in the default source dictionnary and provide
-    a new `envvar` optional kwarg-only to feed the environ source
-    dictionnary.
-    """
-    # feed the {option: type} map
-    choices = kwargs.get('choices')
-    if choices:
-        opttypemap[dest] = functools.partial(assert_in, choices=choices)
-    else:
-        switch_case = {
-            'store_true': lambda: strtobool,
-            'store_false': lambda: strtobool,
-            'store_const': lambda: type(kwargs['const']),
-            'append_const': lambda: type(kwargs['const']),
-        }.get(action, lambda: kwargs['type'])
-        opttypemap[dest] = switch_case()
-
-    # feed default source 
-    if action in ('store_true', 'store_false'):
-        srcoptmap['default'][dest] = action == 'store_true'
-    else:
-        srcoptmap['default'][dest] = default
-
-    # feed the {envvar: option} map
-    if envvar:
-        envoptmap[envvar] = dest
-
-    return group.add_argument(*args, dest=dest, action=action, default=None, **kwargs)
-
-
-########################################################################
-#                                                                      #
-#                        TYPE-LIKE FUNCTIONS                           #
-#           all sanity checks and type conversions goes here           #
-#                                                                      #
-########################################################################
 
 
 def comma(cast: callable):
@@ -308,29 +279,15 @@ def i18n_output_file(rawopt):
 
 ########################################################################
 #                                                                      #
-#                       COMMAND LINE INTERFACE                         #
-#        all option specs are extracted from the argparse parser       #
+#                               OPTIONS                                #
 #                                                                      #
 ########################################################################
 
-
 @dataclasses.dataclass(frozen=True)
-class Command:
+class Option:
     name: str
-    section: str
-    options: List[OptionSpec]  # common, non-group related, options
-    groups : List[Group]
-
-@dataclasses.dataclass(frozen=True)
-class Group:
-    name: str
-    options: List[OptionSpec]
-
-@dataclasses.dataclass(frozen=True)
-class OptionSpec:
-    name: str
-    short_flag: Optionnal[str] = None
-    long_flag: Optionnal[str] = None
+    shortopt: Optionnal[str] = None
+    longopt: Optionnal[str] = None
     action: str = "store"
     type : Callable[[str], Any] = str
     rtype : Callable[[Any], str] = str
@@ -341,83 +298,39 @@ class OptionSpec:
     help: Optional[str] = None
 
     def __post_init__(self):
-        optspecmap[self.name] = self
+        if self.action not in ['append_const']:
+            optionmap.setdefault(self.name, self)
 
+Option('addons_path', longopt="--addons-path", type=comma(addons_path), rtype=','.join, action='append', default=[pathlib.Path(__file__).parent.joinpath('addons').resolve()], envvar=None, metavar='DIRPATH', help="specify additional addons paths")
+Option('upgrade_path', longopt="--upgrade-path", type=upgrade_path, rtype=str, action='store', default=pathlib.Path(__file__).parent.joinpath('addons','base','maintenance','migrations').resolve(), envvar=None, metavar='DIRPATH', help="specify an additional upgrade path.")
+Option('data_dir', shortopt="-D", longopt="--data-dir", type=data_dir, rtype=str, action='store', default=get_default_datadir(), envvar=None, metavar=None, help="Directory where to store Odoo data")
+Option('log_level', longopt="--log-level", type=choices(loglevelmap.keys()), rtype=str, action='store', default='info', envvar=None, metavar='LEVEL', help="specify the level of the logging")
+Option('logfile', longopt="--logfile", type=checkfile('w'), rtype=str, action='store', default=None, envvar=None, metavar='FILEPATH', help="file where the server log will be stored")
+Option('syslog', longopt="--syslog", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Send the log to the syslog server")
+Option('log_handler', longopt="--log-handler", type=str, rtype=str, action='append', default=[':INFO'], envvar=None, metavar=None, help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
+Option('config', shortopt="-c", longopt="--config", type=checkfile('r'), rtype=str, action='store', default=get_odoorc(), envvar=None, metavar='FILEPATH', help="specify alternate config file name")
+Option('save', shortopt="-s", longopt="--save", type=checkfile('w'), rtype=str, action='store', default=None, const=get_odoorc(), envvar=None, metavar='FILEPATH', help="save parsed config in PATH")
 
-common_cmd = Command(
-    name='',
-    section='options',
-    options=[
-        optspecmap['addons_path'],
-        optspecmap['upgrade_path'],
-        optspecmap['data_dir'],
-        optspecmap['log_level'],
-        optspecmap['logfile'],
-        optspecmap['syslog'],
-        optspecmap['log_handler'],
-        optspecmap['config'],
-        optspecmap['save'],
-    ],
-)
-server_cmd = Command(
-    name='server',
-    section='options',
-    options=[
-    ],
-    groups=[
-        Group('Common options', [
-            optspecmap['init'],
-            optspecmap['update'],
-            optspecmap['without_demo'],
-            optspecmap['server_wide_modules'],
-            optspecmap['pidfile'],
-        ]),
-        Group('HTTP Service Configuration')
-        Group('CRON Service Configuration')
-        Group('Web interface Configuration')
-        Group('Testing Configuration')
-        Group('Logging Configuration')
-        Group('SMTP Configuration')
-        Group('Database related options')
-        Group('ORM Configuration')
-        Group('Internationalisation options')
-        Group('Security-related options')
-        Group('Misc options')
-        Group('Multiprocessing options')
-    ])
-populate_cmd = Command('populate', 'populate')
+Option('init', shortopt="-i", longopt="--init", type=comma(str), rtype=','.join, action='append', default=[], envvar=None, metavar=None, help='install one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d')
+Option('update', shortopt="-u", longopt="--update", type=comma(str), rtype=','.join, action='append', default=[], envvar=None, metavar=None, help='update one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d.')
+Option('without_demo', longopt="--without-demo", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help='disable loading demo data for modules to be installed (comma-separated or repeated option, use "all" for all modules), requires -d and -i.')
+Option('server_wide_modules', longopt="--load", type=comma(str), rtype=','.join, action='append', default=['base','web'], envvar=None, metavar='MODULE', help="framework modules to load once for all databases (comma-separated or repeated option)")
+Option('pidfile', longopt="--pidfile", type=checkfile('w'), rtype=str, action='store', default=None, envvar=None, metavar='FILEPATH', help="file where the server pid will be stored")
 
+Option('http_interface', longopt="--http-interface", type=str, rtype=str, action='store', default='', envvar=None, metavar='INTERFACE', help="Listen interface address for HTTP services. Keep empty to listen on all interfaces (0.0.0.0)")
+Option('http_port', shortopt="-p", longopt="--http-port", type=int, rtype=str, action='store', default=8069, envvar=None, metavar='PORT', help="Listen port for the main HTTP service")
+Option('longpolling_port', longopt="--longpolling-port", type=int, rtype=str, action='store', default=8072, envvar=None, metavar='PORT', help="Listen port for the longpolling HTTP service")
+Option('http_enable', longopt="--no-http", type=str, rtype=str, action='store_false', default=None, envvar=None, metavar=None, help="Disable the HTTP and Longpolling services entirely")
+Option('proxy_mode', longopt="--proxy-mode", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Activate reverse proxy WSGI wrappers (headers rewriting) Only enable this when running behind a trusted web proxy!")
 
-OptionSpec('addons_path', long_flag="--addons-path", type=comma(addons_path), rtype=','.join, action='append', default=[pathlib.Path(__file__).parent.joinpath('addons').resolve()], envvar=None, metavar='DIRPATH', help="specify additional addons paths")
-OptionSpec('upgrade_path', long_flag="--upgrade-path", type=upgrade_path, rtype=str, action='store', default=pathlib.Path(__file__).parent.joinpath('addons','base','maintenance','migrations').resolve(), envvar=None, metavar='DIRPATH', help="specify an additional upgrade path.")
-OptionSpec('data_dir', short_flag="-D", long_flag="--data-dir", type=data_dir, rtype=str, action='store', default=get_default_datadir(), envvar=None, metavar=None, help="Directory where to store Odoo data")
-OptionSpec('log_level', long_flag="--log-level", type=str, rtype=str, action='store', default='info', envvar=None, metavar='LEVEL', help="specify the level of the logging")
-OptionSpec('logfile', long_flag="--logfile", type=checkfile('w'), rtype=str, action='store', default=None, envvar=None, metavar='FILEPATH', help="file where the server log will be stored")
-OptionSpec('syslog', long_flag="--syslog", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Send the log to the syslog server")
-OptionSpec('log_handler', long_flag="--log-handler", type=str, rtype=str, action='append', default=[':INFO'], envvar=None, metavar=None, help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
-OptionSpec('config', short_flag="-c", long_flag="--config", type=checkfile('r'), rtype=str, action='store', default=get_odoorc(), envvar=None, metavar='FILEPATH', help="specify alternate config file name")
-OptionSpec('save', short_flag="-s", long_flag="--save", type=checkfile('w'), rtype=str, action='store', default=None, const=get_odoorc(), envvar=None, metavar='FILEPATH', help="save parsed config in PATH")
+Option('max_cron_threads', longopt="--max-cron-threads", type=int, rtype=str, action='store', default=2, envvar=None, metavar=None, help="Maximum number of threads processing concurrently cron jobs.")
+Option('limit_time_real_cron', longopt="--limit-time-real-cron", type=int, rtype=str, action='store', default=DeprecatedAlias('limit_time_real'), envvar=None, metavar=None, help="Maximum allowed Real time per cron job. (default: --limit-time-real). Set to 0 for no limit.")
 
-OptionSpec('init', short_flag="-i", long_flag="--init", type=comma(str), rtype=','.join, action='append', default=[], envvar=None, metavar=None, help='install one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d')
-OptionSpec('update', short_flag="-u", long_flag="--update", type=comma(str), rtype=','.join, action='append', default=[], envvar=None, metavar=None, help='update one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d.')
-OptionSpec('without_demo', long_flag="--without-demo", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help='disable loading demo data for modules to be installed (comma-separated or repeated option, use "all" for all modules), requires -d and -i.')
-OptionSpec('server_wide_modules', long_flag="--load", type=comma(str), rtype=','.join, action='append', default=['base','web'], envvar=None, metavar='MODULE', help="framework modules to load once for all databases (comma-separated or repeated option)")
-OptionSpec('pidfile', long_flag="--pidfile", type=checkfile('w'), rtype=str, action='store', default=None, envvar=None, metavar='FILEPATH', help="file where the server pid will be stored")
+Option('dbfilter', longopt="--db-filter", type=str, rtype=str, action='store', default='', envvar=None, metavar='REGEXP', help="Regular expressions for filtering available databases for Web UI. The expression can use %%d (domain) and %%h (host) placeholders.")
 
-OptionSpec('http_interface', long_flag="--http-interface", type=str, rtype=str, action='store', default='', envvar=None, metavar='INTERFACE', help="Listen interface address for HTTP services. Keep empty to listen on all interfaces (0.0.0.0)")
-OptionSpec('http_port', short_flag="-p", long_flag="--http-port", type=int, rtype=str, action='store', default=8069, envvar=None, metavar='PORT', help="Listen port for the main HTTP service")
-OptionSpec('longpolling_port', long_flag="--longpolling-port", type=int, rtype=str, action='store', default=8072, envvar=None, metavar='PORT', help="Listen port for the longpolling HTTP service")
-OptionSpec('http_enable', long_flag="--no-http", type=str, rtype=str, action='store_false', default=None, envvar=None, metavar=None, help="Disable the HTTP and Longpolling services entirely")
-OptionSpec('proxy_mode', long_flag="--proxy-mode", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Activate reverse proxy WSGI wrappers (headers rewriting) Only enable this when running behind a trusted web proxy!")
-
-OptionSpec('max_cron_threads', long_flag="--max-cron-threads", type=int, rtype=str, action='store', default=2, envvar=None, metavar=None, help="Maximum number of threads processing concurrently cron jobs.")
-OptionSpec('limit_time_real_cron', long_flag="--limit-time-real-cron", type=int, rtype=str, action='store', default=DeprecatedAlias('limit_time_real'), envvar=None, metavar=None, help="Maximum allowed Real time per cron job. (default: --limit-time-real). Set to 0 for no limit.")
-
-OptionSpec('dbfilter', long_flag="--db-filter", type=str, rtype=str, action='store', default='', envvar=None, metavar='REGEXP', help="Regular expressions for filtering available databases for Web UI. The expression can use %%d (domain) and %%h (host) placeholders.")
-
-OptionSpec('test_file', long_flag="--test-file", type=checkfile('r'), rtype=str, action='store', default=None, envvar=None, metavar='FILEPATH', help="Launch a python test file.")
-OptionSpec('test_enable', long_flag="--test-enable", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Enable unit tests while installing or upgrading a module.")
-OptionSpec('test_tags', long_flag="--test-tags", type=comma(str), rtype=','.join, action='append', default=[], envvar=None, metavar=None, help=textwrap.dedent("""\
+Option('test_file', longopt="--test-file", type=checkfile('r'), rtype=str, action='store', default=None, envvar=None, metavar='FILEPATH', help="Launch a python test file.")
+Option('test_enable', longopt="--test-enable", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Enable unit tests while installing or upgrading a module.")
+Option('test_tags', longopt="--test-tags", type=comma(str), rtype=','.join, action='append', default=[], envvar=None, metavar=None, help=textwrap.dedent("""\
     Comma-separated or repeated option list of spec to filter which tests to execute. Enable unit tests if set.
     A filter spec has the format: [-][tag][/module][:class][.method]
     The '-' specifies if we want to include or exclude tests matching this spec.
@@ -425,68 +338,251 @@ OptionSpec('test_tags', long_flag="--test-tags", type=comma(str), rtype=','.join
     given on include mode. '*' will match all tags. Tag will also match module name (deprecated, use /module)
     The module, class, and method will respectively match the module name, test class name and test method name.
     examples: :TestClass.test_func,/test_module,external"""))
-OptionSpec('screencasts', long_flag="--screencasts", type=checkdir('w'), rtype=str, action='store', default=fullpath(tempfile.gettempdir()).joinpath('odoo_tests'), envvar=None, metavar='DIRPATH', help="Screencasts will go in DIR/<db_name>/screencasts.")
-OptionSpec('screenshots', long_flag="--screenshots", type=checkdir('w'), rtype=str, action='store', default=fullpath(tempfile.gettempdir()).joinpath('odoo_tests'), envvar=None, metavar='DIRPATH', help="Screenshots will go in DIR/<db_name>/screenshots.")
+Option('screencasts', longopt="--screencasts", type=checkdir('w'), rtype=str, action='store', default=fullpath(tempfile.gettempdir()).joinpath('odoo_tests'), envvar=None, metavar='DIRPATH', help="Screencasts will go in DIR/<db_name>/screencasts.")
+Option('screenshots', longopt="--screenshots", type=checkdir('w'), rtype=str, action='store', default=fullpath(tempfile.gettempdir()).joinpath('odoo_tests'), envvar=None, metavar='DIRPATH', help="Screenshots will go in DIR/<db_name>/screenshots.")
 
-OptionSpec('log_handler', long_flag="--log-request", type=str, rtype=str, action='append_const', default=None, envvar=None, metavar=None, help=
-OptionSpec('log_handler', long_flag="--log-response", type=str, rtype=str, action='append_const', default=None, envvar=None, metavar=None, help=
-OptionSpec('log_handler', long_flag="--log-web", type=str, rtype=str, action='append_const', default=None, envvar=None, metavar=None, help=
-OptionSpec('log_handler', long_flag="--log-sql", type=str, rtype=str, action='append_const', default=None, envvar=None, metavar=None, help=
-OptionSpec('log_db', long_flag="--log-db", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Enable database logs record")
-OptionSpec('log_db_level', long_flag="--log-db-level", type=str, rtype=str, action='store', default='warning', envvar=None, metavar='LEVEL', help="specify the level of the database logging")
+Option('log_handler', longopt="--log-request", type=str, rtype=str, action='append_const', const='odoo.http.rpc.request:DEBUG', default=None, envvar=None, metavar=None, help="shortcut for --log-handler=odoo.http.rpc.request:DEBUG")
+Option('log_handler', longopt="--log-response", type=str, rtype=str, action='append_const', const='odoo.http.rpc.response:DEBUG', default=None, envvar=None, metavar=None, help="shortcut for --log-handler=odoo.http.rpc.response:DEBUG")
+Option('log_handler', longopt="--log-web", type=str, rtype=str, action='append_const', const='odoo.http:DEBUG', default=None, envvar=None, metavar=None, help="shortcut for --log-handler=odoo.http:DEBUG")
+Option('log_handler', longopt="--log-sql", type=str, rtype=str, action='append_const', const='odoo.sql_db:DEBUG', default=None, envvar=None, metavar=None, help="shortcut for --log-handler=odoo.sql_db:DEBUG")
+Option('log_db', longopt="--log-db", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Enable database logs record")
+Option('log_db_level', longopt="--log-db-level", type=choices(loglevelmap.keys()), rtype=str, action='store', default='warning', envvar=None, metavar='LEVEL', help="specify the level of the database logging")
 
-OptionSpec('email_from', long_flag="--email-from", type=str, rtype=str, action='store', default=None, envvar=None, metavar='EMAIL', help="specify the SMTP email address for sending email")
-OptionSpec('smtp_server', long_flag="--smtp", type=str, rtype=str, action='store', default='localhost', envvar=None, metavar='HOST', help="specify the SMTP server for sending email")
-OptionSpec('smtp_port', long_flag="--smtp-port", type=int, rtype=str, action='store', default=25, envvar=None, metavar='PORT', help="specify the SMTP port")
-OptionSpec('smtp_ssl', long_flag="--smtp-ssl", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="if passed, SMTP connections will be encrypted with SSL (STARTTLS)")
-OptionSpec('smtp_user', long_flag="--smtp-user", type=str, rtype=str, action='store', default=None, envvar=None, metavar=None, help="specify the SMTP username for sending email")
-OptionSpec('smtp_password', long_flag="--smtp-password", type=str, rtype=str, action='store', default=None, envvar=None, metavar=None, help="specify the SMTP password for sending email")
+Option('email_from', longopt="--email-from", type=str, rtype=str, action='store', default=None, envvar=None, metavar='EMAIL', help="specify the SMTP email address for sending email")
+Option('smtp_server', longopt="--smtp", type=str, rtype=str, action='store', default='localhost', envvar=None, metavar='HOST', help="specify the SMTP server for sending email")
+Option('smtp_port', longopt="--smtp-port", type=int, rtype=str, action='store', default=25, envvar=None, metavar='PORT', help="specify the SMTP port")
+Option('smtp_ssl', longopt="--smtp-ssl", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="if passed, SMTP connections will be encrypted with SSL (STARTTLS)")
+Option('smtp_user', longopt="--smtp-user", type=str, rtype=str, action='store', default=None, envvar=None, metavar=None, help="specify the SMTP username for sending email")
+Option('smtp_password', longopt="--smtp-password", type=str, rtype=str, action='store', default=None, envvar=None, metavar=None, help="specify the SMTP password for sending email")
 
-OptionSpec('db_name', short_flag="-d", long_flag="--database", type=str, rtype=str, action='store', default=None, envvar='PGDATABASE', metavar='DBNAME', help="database name to connect to")
-OptionSpec('db_user', short_flag="-r", long_flag="--db_user", type=str, rtype=str, action='store', default=None, envvar='PGUSER', metavar='USERNAME', help="database user to connect as")
-OptionSpec('db_password', short_flag="-w", long_flag="--db_password", type=str, rtype=str, action='store', default=None, envvar='PGPASSWORD', metavar='PWD', help='password to be used if the database demands password authentication. Using this argument is a security risk, see the "The Password File" section in the PostgreSQL documentation for alternatives.')
-OptionSpec('db_host', long_flag="--db_host", type=str, rtype=str, action='store', default=None, envvar='PGHOST', metavar='HOSTNAME', help="database server host or socket directory")
-OptionSpec('db_port', long_flag="--db_port", type=str, rtype=str, action='store', default=None, envvar='PGPORT', metavar='PORT', help="database server port")
-OptionSpec('db_sslmode', long_flag="--db_sslmode", type=str, rtype=str, action='store', default='prefer', envvar=None, metavar='METHOD', help="determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server")
-OptionSpec('pg_path', long_flag="--pg_path", type=pg_utils_path, rtype=str, action='store', default=None, envvar=None, metavar='DIRPATH', help="postgres utilities directory")
-OptionSpec('db_template', long_flag="--db-template", type=str, rtype=str, action='store', default='template0', envvar=None, metavar='DBNAME', help="custom database template to create a new database")
-OptionSpec('db_maxconn', long_flag="--db_maxconn", type=int, rtype=str, action='store', default=64, envvar=None, metavar=None, help="specify the maximum number of physical connections to PostgreSQL")
-OptionSpec('unaccent', long_flag="--unaccent", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Try to enable the unaccent extension when creating new databases")
+Option('db_name', shortopt="-d", longopt="--database", type=str, rtype=str, action='store', default=None, envvar='PGDATABASE', metavar='DBNAME', help="database name to connect to")
+Option('db_user', shortopt="-r", longopt="--db_user", type=str, rtype=str, action='store', default=None, envvar='PGUSER', metavar='USERNAME', help="database user to connect as")
+Option('db_password', shortopt="-w", longopt="--db_password", type=str, rtype=str, action='store', default=None, envvar='PGPASSWORD', metavar='PWD', help='password to be used if the database demands password authentication. Using this argument is a security risk, see the "The Password File" section in the PostgreSQL documentation for alternatives.')
+Option('db_host', longopt="--db_host", type=str, rtype=str, action='store', default=None, envvar='PGHOST', metavar='HOSTNAME', help="database server host or socket directory")
+Option('db_port', longopt="--db_port", type=str, rtype=str, action='store', default=None, envvar='PGPORT', metavar='PORT', help="database server port")
+Option('db_sslmode', longopt="--db_sslmode", type=str, rtype=str, action='store', default='prefer', envvar=None, metavar='METHOD', help="determines whether or with what priority a secure SSL TCP/IP connection will be negotiated with the server")
+Option('pg_path', longopt="--pg_path", type=pg_utils_path, rtype=str, action='store', default=None, envvar=None, metavar='DIRPATH', help="postgres utilities directory")
+Option('db_template', longopt="--db-template", type=str, rtype=str, action='store', default='template0', envvar=None, metavar='DBNAME', help="custom database template to create a new database")
+Option('db_maxconn', longopt="--db_maxconn", type=int, rtype=str, action='store', default=64, envvar=None, metavar=None, help="specify the maximum number of physical connections to PostgreSQL")
+Option('unaccent', longopt="--unaccent", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Try to enable the unaccent extension when creating new databases")
 
-OptionSpec('transient_age_limit', long_flag="--transient-age-limit", type=float, rtype=str, action='store', default=1.0, envvar=None, metavar='HOUR', help="Time in hours records created with a TransientModel (mosly wizard) are kept in the database.")
-OptionSpec('osv_memory_age_limit', long_flag="--osv-memory-age-limit", type=float, rtype=str, action='store', default=DeprecatedAlias('transient_age_limit'), envvar=None, metavar=None, help=argparse.SUPPRESS)
+Option('transient_age_limit', longopt="--transient-age-limit", type=float, rtype=str, action='store', default=1.0, envvar=None, metavar='HOUR', help="Time in hours records created with a TransientModel (mosly wizard) are kept in the database.")
+Option('osv_memory_age_limit', longopt="--osv-memory-age-limit", type=float, rtype=str, action='store', default=DeprecatedAlias('transient_age_limit'), envvar=None, metavar=None, help=argparse.SUPPRESS)
 
-OptionSpec('load_language', long_flag="--load-language", type=comma(str), rtype=','.join, action='store', default=None, envvar=None, metavar='LANGCODE', help="specifies the languages for the translations you want to be loaded")
-OptionSpec('language', short_flag="-l", long_flag="--language", type=str, rtype=str, action='store', default=None, envvar=None, metavar='LANGCODE', help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
-OptionSpec('translate_out', long_flag="--i18n-export", type=i18n_output_file, rtype=str, action='store', default=None, envvar=None, metavar='FILEPATH', help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit. The '-l' option is required")
-OptionSpec('tranlate_in', long_flag="--i18n-import", type=i18n_input_file, rtype=str, action='store', default=None, envvar=None, metavar='FILEPATH', help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
-OptionSpec('overwrite_existing_translations', long_flag="--i18n-overwrite", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="overwrites existing translation terms on updating a module or importing a CSV or a PO file. Use with -u/--update or --i18n-import.")
-OptionSpec('translate_modules', long_flag="--modules", type=comma(str), rtype=','.join, action='store', default=None, envvar=None, metavar=None, help="specify modules to export. Use in combination with --i18n-export")
+Option('load_language', longopt="--load-language", type=comma(str), rtype=','.join, action='store', default=None, envvar=None, metavar='LANGCODE', help="specifies the languages for the translations you want to be loaded")
+Option('language', shortopt="-l", longopt="--language", type=str, rtype=str, action='store', default=None, envvar=None, metavar='LANGCODE', help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
+Option('translate_out', longopt="--i18n-export", type=i18n_output_file, rtype=str, action='store', default=None, envvar=None, metavar='FILEPATH', help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit. The '-l' option is required")
+Option('tranlate_in', longopt="--i18n-import", type=i18n_input_file, rtype=str, action='store', default=None, envvar=None, metavar='FILEPATH', help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
+Option('overwrite_existing_translations', longopt="--i18n-overwrite", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="overwrites existing translation terms on updating a module or importing a CSV or a PO file. Use with -u/--update or --i18n-import.")
+Option('translate_modules', longopt="--modules", type=comma(str), rtype=','.join, action='store', default=None, envvar=None, metavar=None, help="specify modules to export. Use in combination with --i18n-export")
 
-OptionSpec('list_db', long_flag="--no-database-list", type=str, rtype=str, action='store_false', default=None, envvar=None, metavar=None, help="Disable the ability to obtain or view the list of databases. Also disable access to the database manager and selector, so be sure to set a proper --database parameter first.")
+Option('list_db', longopt="--no-database-list", type=str, rtype=str, action='store_false', default=None, envvar=None, metavar=None, help="Disable the ability to obtain or view the list of databases. Also disable access to the database manager and selector, so be sure to set a proper --database parameter first.")
 
-OptionSpec('dev_mode', long_flag="--dev", type=comma(str), rtype=','.join, action='append', default=[], envvar=None, metavar=None, help="Enable developer mode")
-OptionSpec('shell_interface', long_flag="--shell-interface", type=str, rtype=str, action='store', default='python', envvar=None, metavar=None, help="Specify a preferred REPL to use in shell mode")
-OptionSpec('stop_after_init', long_flag="--stop-after-init", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="stop the server after its initialization")
-OptionSpec('geoip_database', long_flag="--geoip-db", type=checkfile('r'), rtype=str, action='store', default=pathlib.Path('/usr/share/GeoIP/GeoLite2-City.mmdb'), envvar=None, metavar=None, help="Absolute path to the GeoIP database file.")
+Option('dev_mode', longopt="--dev", type=comma(choices(['all', 'pudb', 'wdb', 'ipdb', 'pdb', 'reload', 'qweb', 'werkzeug', 'xml'])), rtype=','.join, action='append', default=[], envvar=None, metavar=None, help="Enable developer mode")
+Option('shell_interface', longopt="--shell-interface", type=str, rtype=str, action='store', default='python', envvar=None, metavar=None, help="Specify a preferred REPL to use in shell mode")
+Option('stop_after_init', longopt="--stop-after-init", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="stop the server after its initialization")
+Option('geoip_database', longopt="--geoip-db", type=checkfile('r'), rtype=str, action='store', default=pathlib.Path('/usr/share/GeoIP/GeoLite2-City.mmdb'), envvar=None, metavar=None, help="Absolute path to the GeoIP database file.")
 
-OptionSpec('workers', long_flag="--workers", type=int, rtype=str, action='store', default=0, envvar=None, metavar=None, help="Specify the number of workers, 0 disable prefork mode.")
-OptionSpec('limit_memory_soft', long_flag="--limit-memory-soft", type=int, rtype=str, action='store', default=2048*1024*1024, envvar=None, metavar='BYTES', help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 2048MiB).")
-OptionSpec('limit_memory_hard', long_flag="--limit-memory-hard", type=int, rtype=str, action='store', default=2560*1024*1024, envvar=None, metavar='BYTES', help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory allocation will fail (default 2560MiB).")
-OptionSpec('limit_time_cpu', long_flag="--limit-time-cpu", type=int, rtype=str, action='store', default=60, envvar=None, metavar='SECONDS', help="Maximum allowed CPU time per request (default 60).")
-OptionSpec('limit_time_real', long_flag="--limit-time-real", type=int, rtype=str, action='store', default=120, envvar=None, metavar='SECONDS', help="Maximum allowed Real time per request (default 120).")
-OptionSpec('limit_request', long_flag="--limit-request", type=int, rtype=str, action='store', default=8192, envvar=None, metavar=None, help="Maximum number of request to be processed per worker (default 8192).")
+Option('workers', longopt="--workers", type=int, rtype=str, action='store', default=0, envvar=None, metavar=None, help="Specify the number of workers, 0 disable prefork mode.")
+Option('limit_memory_soft', longopt="--limit-memory-soft", type=int, rtype=str, action='store', default=2048*1024*1024, envvar=None, metavar='BYTES', help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 2048MiB).")
+Option('limit_memory_hard', longopt="--limit-memory-hard", type=int, rtype=str, action='store', default=2560*1024*1024, envvar=None, metavar='BYTES', help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory allocation will fail (default 2560MiB).")
+Option('limit_time_cpu', longopt="--limit-time-cpu", type=int, rtype=str, action='store', default=60, envvar=None, metavar='SECONDS', help="Maximum allowed CPU time per request (default 60).")
+Option('limit_time_real', longopt="--limit-time-real", type=int, rtype=str, action='store', default=120, envvar=None, metavar='SECONDS', help="Maximum allowed Real time per request (default 120).")
+Option('limit_request', longopt="--limit-request", type=int, rtype=str, action='store', default=8192, envvar=None, metavar=None, help="Maximum number of request to be processed per worker (default 8192).")
 
-OptionSpec('population_size', long_flag="--size", type=str, rtype=str, action='store', default='small', envvar=None, metavar=None, help="Populate database with auto-generated data")
-OptionSpec('populate_models', long_flag="--models", type=comma(str), rtype=','.join, action='append', default=None, envvar=None, metavar='MODEL OR PATTERN', help="List of model (comma separated or repeated option) or pattern")
+Option('population_size', longopt="--size", type=str, rtype=str, action='store', default='small', envvar=None, metavar=None, help="Populate database with auto-generated data")
+Option('populate_models', longopt="--models", type=comma(str), rtype=','.join, action='append', default=None, envvar=None, metavar='MODEL OR PATTERN', help="List of model (comma separated or repeated option) or pattern")
 
 
-server = Command("server", "options")
+########################################################################
+#                                                                      #
+#                                GROUPS                                #
+#                                                                      #
+########################################################################
 
-main_parser = argparse.ArgumentParser(description="See online documentation at: https://www.odoo.com/documentation/master/reference/ocli.html")
-main_parser.add_argument('-V', '--version', action='version', version=f"{release.description} {release.version}")
-subparsers = main_parser.add_subparsers(dest='subcommand')
+@dataclasses.dataclass(frozen=True)
+class Group:
+    title: str
+    options: List[Option]
 
+    def __post_init__(self):
+        groupmap[self.title] = self
+
+
+Group('Common options', [
+    optionmap['init'],
+    optionmap['update'],
+    optionmap['without_demo'],
+    optionmap['server_wide_modules'],
+    optionmap['pidfile'],
+])
+
+Group('HTTP Service Configuration', [
+    optionmap['http_interface'],
+    optionmap['http_port'],
+    optionmap['longpolling_port'],
+    optionmap['http_enable'],
+    optionmap['proxy_mode'],
+])
+
+Group('CRON Service Configuration', [
+    optionmap['max_cron_threads'],
+    optionmap['limit_time_real_cron'],
+])
+
+Group('Web interface Configuration', [
+    optionmap['dbfilter'],
+])
+
+Group('Testing Configuration', [
+    optionmap['test_file'],
+    optionmap['test_enable'],
+    optionmap['test_tags'],
+    optionmap['screencasts'],
+    optionmap['screenshots'],
+])
+
+Group('Logging Configuration', [
+    optionmap['log_handler'],
+    optionmap['log_handler'],
+    optionmap['log_handler'],
+    optionmap['log_handler'],
+    optionmap['log_db'],
+    optionmap['log_db_level'],
+])
+
+Group('SMTP Configuration', [
+    optionmap['email_from'],
+    optionmap['smtp_server'],
+    optionmap['smtp_port'],
+    optionmap['smtp_ssl'],
+    optionmap['smtp_user'],
+    optionmap['smtp_password'],
+])
+
+Group('Database related options', [
+    optionmap['db_name'],
+    optionmap['db_user'],
+    optionmap['db_password'],
+    optionmap['db_host'],
+    optionmap['db_port'],
+    optionmap['db_sslmode'],
+    optionmap['pg_path'],
+    optionmap['db_template'],
+    optionmap['db_maxconn'],
+    optionmap['unaccent'],
+])
+
+Group('ORM Configuration', [
+    optionmap['transient_age_limit'],
+    optionmap['osv_memory_age_limit'],
+])
+
+Group('Internationalisation options', [
+    optionmap['load_language'],
+    optionmap['language'],
+    optionmap['translate_out'],
+    optionmap['tranlate_in'],
+    optionmap['overwrite_existing_translations'],
+    optionmap['translate_modules'],
+])
+
+Group('Security-related options', [
+    optionmap['list_db'],
+])
+
+Group('Misc options', [
+    optionmap['dev_mode'],
+    optionmap['shell_interface'],
+    optionmap['stop_after_init'],
+    optionmap['geoip_database'],
+])
+
+Group('Multiprocessing options', [
+    optionmap['workers'],
+    optionmap['limit_memory_soft'],
+    optionmap['limit_memory_hard'],
+    optionmap['limit_time_cpu'],
+    optionmap['limit_time_real'],
+    optionmap['limit_request'],
+])
+
+Group('Populate options', [
+    optionmap['population_size'],
+    optionmap['populate_models'],
+])
+
+
+########################################################################
+#                                                                      #
+#                              COMMANDS                                #
+#                                                                      #
+########################################################################
+
+
+@dataclasses.dataclass(frozen=True)
+class Command:
+    name: str
+    section: str
+    options: List[Option]  # non-group related options
+    groups : List[Group]
+
+    def __post_init__(self):
+        commandmap[self.name] = self
+
+Command(
+    name='',
+    section='options',
+    options=[
+        optionmap['addons_path'],
+        optionmap['upgrade_path'],
+        optionmap['data_dir'],
+        optionmap['log_level'],
+        optionmap['logfile'],
+        optionmap['syslog'],
+        optionmap['log_handler'],
+        optionmap['config'],
+        optionmap['save'],
+     ])
+
+Command(
+    name='server',
+    section='options',
+    groups=[
+        groupmap['Common options'],
+        groupmap['HTTP Service Configuration'],
+        groupmap['CRON Service Configuration'],
+        groupmap['Web interface Configuration'],
+        groupmap['Testing Configuration'],
+        groupmap['Logging Configuration'],
+        groupmap['SMTP Configuration'],
+        groupmap['Database related options'],
+        groupmap['ORM Configuration'],
+        groupmap['Internationalisation options'],
+        groupmap['Security-related options'],
+        groupmap['Misc options'],
+        groupmap['Multiprocessing options'],
+    ])
+
+Command(
+    name='populate',
+    section='populate',
+    groups=[
+        groupmap['Common options'],
+        groupmap['HTTP Service Configuration'],
+        groupmap['CRON Service Configuration'],
+        groupmap['Web interface Configuration'],
+        groupmap['Testing Configuration'],
+        groupmap['Logging Configuration'],
+        groupmap['SMTP Configuration'],
+        groupmap['Database related options'],
+        groupmap['ORM Configuration'],
+        groupmap['Internationalisation options'],
+        groupmap['Security-related options'],
+        groupmap['Misc options'],
+        groupmap['Multiprocessing options'],
+        groupmap['Populate options'],
+    ])
 
 
 
@@ -496,29 +592,61 @@ subparsers = main_parser.add_subparsers(dest='subcommand')
 
 
 def load_environ(self):
-    options = srcoptmap['environ']
+    options = sourcemap['environ']
     options.clear()
-    for envvar, opt in envoptmap.items():
-        val = os.getenv(envvar)
-        if val:
-            options[opt] = opttypemap[opt](val)
+
+    for option in optionmap.values():
+        if option.envvar:
+            val = os.getenv(option.envvar)
+            if val:
+                options[opt] = opttypemap[opt](val)
 
 
 def load_cli(self):
     global subcommand
-    options = srcoptmap['cli']
+
+    def to_argparse(option):
+        return (
+            [opt for opt in (option.shortopt, option.longopt) if opt],
+            {
+                'dest': option.name,
+                'action': option.action,
+                'help': option.help
+                'metavar': option.metavar
+                **{'const': o.const for o in (option,) if o.const},
+            }
+        )
+
+    main_parser = argparse.ArgumentParser()
+    for args, kwargs in map(to_argparse, commandmap[''].options):
+        main_parser.add_argument(*args, **kwargs)
+
+    subparsers = main_parser.add_subparsers(dest='subcommand')
+    for command in commandmap.values():
+        parser = argparse.ArgumentParser()
+
+        for args, kwargs in map(to_argparse, command.options):
+            parser.add_argument(*args, **kwargs)
+
+        for group in command.groups:
+            group = parser.add_argument_group(group.title)
+            for args, kwargs, in map(to_argparse, group.options)
+                group.add_argument(*args, **kwargs)
+
+        subparsers.add_parser(parser)
+
+    options = sourcemap['cli']
     options.clear()
     cli_options = vars(main_parser.parse_args())
-    subcommand = cli_options.pop("subcommand", "server")
+    subcommand = cli_options.pop('subcommand', 'server')
     for opt, val in cli_options.items():
         if val is None:
-            continue
-        # flatten lists, this is caused by action='append', type=comma(...)
-        if type(val) != str and isinstance(val, Iterable):
-            val = list(flatten(val))
+            pass
+        elif type(val) != str and isinstance(val, Iterable):
+            options[opt] = list(flatten(map(options[opt].type, val)))
+        else:
+            options[opt] = option[opt].type(val)
 
-        options[opt] = val  # already casted by argparse
-        
 
 def load_file(self):
     configpath = config['config']
@@ -531,7 +659,7 @@ def load_file(self):
         return
 
     for sec in p.sections():
-        options = srcoptmap['file' if sec == 'options' else 'file_' + sec]
+        options = optionmap['file' if sec == 'options' else 'file_' + sec]
         options.clear()
         for opt, val in p.items(sec):
                 options[opt] = opttypemap[opt](val)
@@ -545,11 +673,11 @@ class Config(collections.abc.MutableMapping):
         self._chainmap = Chainmap(
             self._tempopts_chain,
             self._useropts,
-            srcoptmap["cli"],
+            optionmap["cli"],
             self._sectopts,
-            srcoptmap["file"],
-            srcoptmap["environ"],
-            srcoptmap["default"],
+            optionmap["file"],
+            optionmap["environ"],
+            optionmap["default"],
         )
         self.subcommand = subcommand
 
@@ -568,7 +696,7 @@ class Config(collections.abc.MutableMapping):
         if not section.startswith('file_'):
             section = 'file_' + section
         self._sectopts.clear()
-        self._sectopts.update(srcoptmap[section])
+        self._sectopts.update(optionmap[section])
 
     def save(self, configpath=None):
         """
@@ -586,7 +714,7 @@ class Config(collections.abc.MutableMapping):
                 p.set('options', opt, str(val))
 
         # other sections, rewrite them as-is
-        for source, options in srcoptmap.items():
+        for source, options in optionmap.items():
             if not source.startswith('file_'):
                 continue
             section = source[5:]
