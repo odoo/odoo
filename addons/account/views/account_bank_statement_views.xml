@@ -128,7 +128,10 @@
                             attrs="{'invisible':['|', '|', ('all_lines_reconciled', '=', False), ('line_ids','=',[]), ('state', '!=', 'posted')]}"/>
                     <button string="Reset to New"
                             name="button_reopen" type="object"
-                            attrs="{'invisible': [('state', '=', 'open')]}"/>
+                            attrs="{'invisible': [('state', '!=', 'posted')]}"/>
+                    <button string="Reset to Processing"
+                            name="button_reprocess" type="object"
+                            attrs="{'invisible': [('state', '!=', 'confirm')]}"/>
                     <button name="%(action_cash_box_out)d" string="Take Money In/Out" type="action" class="oe_highlight" attrs="{'invisible': [('journal_type','!=','cash')]}"/>
                     <field name="state" widget="statusbar" statusbar_visible="open,posted,confirm"/>
                 </header>
@@ -215,7 +218,7 @@
 
                                     <!-- Buttons -->
                                     <button name="button_undo_reconciliation" type="object"
-                                            attrs="{'invisible': [('is_reconciled', '=', False)]}"
+                                            attrs="{'invisible': [('is_reconciled', '=', False)], 'column_invisible': [('parent.state', '!=', 'posted')]}"
                                             string="Revert reconciliation" icon="fa-undo"/>
                                 </tree>
                             </field>

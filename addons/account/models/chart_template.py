@@ -1116,8 +1116,26 @@ class AccountReconcileModelTemplate(models.Model):
     auto_reconcile = fields.Boolean(string='Auto-validate',
         help='Validate the statement line automatically (reconciliation based on your rule).')
     to_check = fields.Boolean(string='To Check', default=False, help='This matching rule is used when the user is not certain of all the informations of the counterpart.')
+    matching_order = fields.Selection(
+        selection=[
+            ('old_first', 'Oldest first'),
+            ('new_first', 'Newest first'),
+        ]
+    )
 
     # ===== Conditions =====
+    match_text_location_label = fields.Boolean(
+        default=True,
+        help="Search in the Statement's Label to find the Invoice/Payment's reference",
+    )
+    match_text_location_note = fields.Boolean(
+        default=False,
+        help="Search in the Statement's Note to find the Invoice/Payment's reference",
+    )
+    match_text_location_reference = fields.Boolean(
+        default=False,
+        help="Search in the Statement's Reference to find the Invoice/Payment's reference",
+    )
     match_journal_ids = fields.Many2many('account.journal', string='Journals',
         domain="[('type', 'in', ('bank', 'cash'))]",
         help='The reconciliation model will only be available from the selected journals.')

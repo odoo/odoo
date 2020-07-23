@@ -59,6 +59,7 @@
             <field name="model">account.reconcile.model</field>
             <field name="arch" type="xml">
                 <form string="Operation Templates">
+                    <field name="active" invisible="1"/>
                     <sheet>
                         <div class="oe_button_box" name="button_box">
                             <button type="object" name="action_reconcile_stat"
@@ -79,6 +80,7 @@
                                 <field name="auto_reconcile" attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}"/>
                                 <field name="to_check" attrs="{'invisible': [('rule_type', '!=', 'writeoff_button')]}"/>
                                 <field name="past_months_limit" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
+                                <field name="matching_order" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
                             </group>
                         </group>
                         <group string="Conditions on Bank Statement Line">
@@ -123,16 +125,16 @@
                                            attrs="{'invisible': [('match_transaction_type', '=', False)], 'required': [('match_transaction_type', '!=', False)]}"/>
                                 </div>
                                 <field name="match_same_currency" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}"/>
-                                <label for="match_total_amount"
-                                       attrs="{'invisible': ['|', ('rule_type', '!=', 'invoice_matching'), ('match_partner', '=', False)]}"/>
-                                <div attrs="{'invisible': ['|', ('rule_type', '!=', 'invoice_matching'), ('match_partner', '=', False)]}">
+                                <label for="match_total_amount"/>
+                                <div>
                                     <field name="match_total_amount" class="oe_inline"/>
                                     <field name="match_total_amount_param" class="oe_inline"
                                            attrs="{'invisible': [('match_total_amount', '=', False)]}"/>
                                     <span class="o_form_label oe_inline"
                                           attrs="{'invisible': [('match_total_amount', '=', False)]}">%</span>
-                                    <div class="text-muted" attrs="{'invisible': ['|', ('rule_type', '!=', 'invoice_matching'), ('match_total_amount', '=', False)]}">
-                                    This parameter will be bypassed in case of a statement line communication matching exactly existing entries</div>
+                                    <div class="text-muted" attrs="{'invisible': [('match_total_amount', '=', False)]}">
+                                        This parameter will be bypassed in case of a statement line communication matching exactly existing entries
+                                    </div>
                                 </div>
                             </group>
                             <group attrs="{'invisible': [('rule_type', '=', 'writeoff_button')]}">
@@ -152,6 +154,20 @@
                                        widget="many2many_tags"
                                        attrs="{'invisible': [('match_partner', '=', False)]}"/>
                             </group>
+                            <group attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}">
+                                <label for="match_text_location_label" string="Match Invoice/bill with"/>
+                                <div>
+                                    <span class="o_form_label" style="width: 2% !important">   </span>
+                                    <label for="match_text_location_label" string="Label"/>
+                                    <field name="match_text_location_label"/>
+                                    <span class="o_form_label" style="width: 2% !important">   </span>
+                                    <label for="match_text_location_note" string="Note"/>
+                                    <field name="match_text_location_note"/>
+                                    <span class="o_form_label" style="width: 2% !important">   </span>
+                                    <label for="match_text_location_reference" string="Reference"/>
+                                    <field name="match_text_location_reference"/>
+                                </div>
+                            </group>
                         </group>
                         <group string="Counterpart Values"
                                attrs="{'invisible': [('rule_type', '=', 'invoice_matching'), '|', ('match_total_amount', '=', False), '&amp;', ('match_total_amount', '=', True), ('match_total_amount_param', '=', 100.0)]}">
@@ -166,7 +182,7 @@
                                     <field name="journal_id" attrs="{'column_invisible': [('parent.rule_type', '!=', 'writeoff_button')]}"/>
                                     <field name="amount_string"/>
                                     <field name="tax_ids" widget="many2many_tags"/>
-                                    <field name="analytic_account_id" groups="analytic.group_analytic_tags"/>
+                                    <field name="analytic_account_id" groups="analytic.group_analytic_accounting"/>
                                     <field name="analytic_tag_ids" groups="analytic.group_analytic_tags" widget="many2many_tags"/>
                                     <field name="show_force_tax_included" invisible="1"/>
                                     <field name="force_tax_included" attrs="{'invisible': [('show_force_tax_included', '=', False)]}" widget="boolean_toggle"/>
@@ -176,7 +192,7 @@
                            </field>
                        </group>
 
-                       <group string="Partner Mapping" attrs="{'invisible': [('rule_type', '!=', 'invoice_matching')]}">
+                       <group string="Partner Mapping" attrs="{'invisible': [('rule_type', 'not in', ('invoice_matching', 'writeoff_suggestion'))]}">
                            <field name="partner_mapping_line_ids" nolabel="1">
                                <tree editable="bottom">
                                    <field name="payment_ref_regex" attrs="{'required': [('narration_regex', '=', False)]}"/>
@@ -199,6 +215,8 @@
                         <filter string="With tax" name="withtax" domain="[('line_ids.tax_ids', '!=', False)]"/>
                         <filter string="Auto Reconcile" name="auto_reconcile" domain="[('auto_reconcile', '=', True)]"/>
                         <field name="rule_type"/>
+                        <separator/>
+                        <filter name="inactive" string="Archived" domain="[('active', '=', False)]"/>
                 </search>
             </field>
         </record>
