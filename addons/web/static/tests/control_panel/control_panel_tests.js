@@ -18,6 +18,75 @@ odoo.define('web.control_panel_tests', function (require) {
         }
     }, function () {
 
+        QUnit.test('default field operator', async function (assert) {
+            assert.expect(2);
+
+            const fields = {
+                foo_op: { string: "Foo Op", type: "char", store: true, sortable: true, searchable: true },
+                foo: { string: "Foo", type: "char", store: true, sortable: true, searchable: true },
+                bar_op: { string: "Bar Op", type: "many2one", relation: 'partner', searchable: true },
+                bar: { string: "Bar", type: "many2one", relation: 'partner', searchable: true },
+                selec: { string: "Selec", type: "selection", selection: [['red', "Red"], ['black', "Black"]] },
+            };
+            const arch = `
+                <search>
+                    <field name="bar"/>
+                    <field name="bar_op" operator="child_of"/>
+                    <field name="foo"/>
+                    <field name="foo_op" operator="="/>
+                    <field name="selec"/>
+                </search>
+            `;
+            const searchMenuTypes = [];
+            const params = {
+                cpStoreConfig: {
+                    viewInfo: { arch, fields },
+                    actionContext: {
+                        show_filterC: true,
+                        search_default_bar: 10,
+                        search_default_bar_op: 10,
+                        search_default_foo: "foo",
+                        search_default_foo_op: "foo_op",
+                        search_default_selec: 'red',
+                    },
+                    searchMenuTypes,
+                },
+                cpProps: { fields, searchMenuTypes },
+                env: {
+                    session: {
+                        async rpc() {
+                            return [[10, "Deco Addict"]];
+                        },
+                    },
+                },
+            };
+            const controlPanel = await createControlPanel(params);
+
+            assert.deepEqual(
+                cpHelpers.getFacetTexts(controlPanel).map(t => t.replace(/\s/g, "")),
+                [
+                    "BarDecoAddict",
+                    "BarOpDecoAddict",
+                    "Foofoo",
+                    "FooOpfoo_op",
+                    "SelecRed"
+                ]
+            );
+            assert.deepEqual(
+                controlPanel.getQuery().domain,
+                [
+                    "&", "&", "&", "&",
+                    ["bar", "=", 10],
+                    ["bar_op", "child_of", 10],
+                    ["foo", "ilike", "foo"],
+                    ["foo_op", "=", "foo_op"],
+                    ["selec", "=", "red"],
+                ]
+            );
+
+            controlPanel.destroy();
+        });
+
         QUnit.module('Keyboard navigation');
 
         QUnit.test('remove a facet with backspace', async function (assert) {
@@ -176,7 +245,7 @@ odoo.define('web.control_panel_tests', function (require) {
         QUnit.test('groupby menu is not rendered if searchMenuTypes does not have groupBy', async function (assert) {
             assert.expect(2);
 
-            const arch =  `<search/>`;
+            const arch = `<search/>`;
             const searchMenuTypes = ['filter'];
             const params = {
                 cpStoreConfig: {
@@ -192,7 +261,5 @@ odoo.define('web.control_panel_tests', function (require) {
 
             controlPanel.destroy();
         });
-
-
     });
 });
