@@ -627,7 +627,7 @@ class AccountBankStatementLine(models.Model):
         journal = statement.journal_id
         company_currency = journal.company_id.currency_id
         journal_currency = journal.currency_id if journal.currency_id != company_currency else False
-        statement_line_rate = self.amount_currency / (self.amount or 1.0)
+        statement_line_rate = (self.amount_currency / self.amount) if self.amount else 0.0
 
         balance_to_reconcile = counterpart_vals.pop('balance', None)
         amount_residual = -counterpart_vals.pop('amount_residual', move_line.amount_residual if move_line else 0.0) \
@@ -657,7 +657,8 @@ class AccountBankStatementLine(models.Model):
                     # use the foreign currency set on the statement line.
 
                     amount_currency = amount_residual_currency
-                    balance = journal_currency._convert(amount_currency / statement_line_rate, company_currency, journal.company_id, self.date)
+                    balance_journal_currency = (amount_currency / statement_line_rate) if statement_line_rate else 0.0
+                    balance = journal_currency._convert(balance_journal_currency, company_currency, journal.company_id, self.date)
 
                 elif currency_id == journal_currency.id and self.foreign_currency_id == company_currency:
 
@@ -699,7 +700,7 @@ class AccountBankStatementLine(models.Model):
 
                 if currency_id == self.foreign_currency_id.id:
                     amount_currency = amount_residual_currency
-                    balance = amount_currency / statement_line_rate
+                    balance = amount_currency / statement_line_rate if statement_line_rate else 0.0
                 else:
                     balance = amount_residual
                     amount_currency = balance * statement_line_rate
