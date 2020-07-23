@@ -49,6 +49,26 @@ class TestCRMLead(TestCrmCommon):
         lead.partner_id = False
         self.assertEqual(lead.country_id, belgium, "Country should still be set on the lead")
 
+    def test_crm_lead_creation_partner_no_info(self):
+        belgium = self.env.ref('base.be')
+        empty_partner = self.env['res.partner'].create({
+            'name': 'Empty partner',
+            'is_company': True
+        })
+        lead_data = {
+            'name': 'Test',
+            'country_id': belgium.id,
+            'email_from': 'test@odoo.com',
+            'phone': '04584579646',
+        }
+        lead = self.env['crm.lead'].create(lead_data)
+        lead.partner_id = empty_partner
+        self.assertEqual(bool(lead.country_id), False, "Country should be empty")
+        self.assertEqual(lead.contact_name, False, "Contact name should be empty")
+        self.assertEqual(lead.email_from, lead_data['email_from'], "Email From should keep its initial value")
+        self.assertEqual(lead.phone, lead_data['phone'], "Phone should keep its initial value")
+        self.assertEqual(lead.partner_name, empty_partner.name, "Partner name should be set as contact is a company")
+
     @users('user_sales_manager')
     def test_crm_lead_partner_sync(self):
         lead, partner = self.lead_1.with_user(self.env.user), self.contact_2
