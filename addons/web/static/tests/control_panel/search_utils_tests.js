@@ -159,7 +159,7 @@ odoo.define('web.search_utils_tests', function (require) {
             const unpatchDate = patchDate(2020, 0, 1, 12, 0, 0);
             const referenceMoment = moment().utc();
             assert.deepEqual(
-                constructDateDomain(referenceMoment, 'date_field', 'date', ['this_month', 'first_quarter', 'this_year'], 'previous_period'),
+                constructDateDomain(referenceMoment, 'date_field', 'date', ['this_month', 'first_quarter', 'this_year'], { comparisonOptionId: 'previous_period' }),
                 {
                     domain: "[" +
                                 `"|", "|", ` +
@@ -171,7 +171,7 @@ odoo.define('web.search_utils_tests', function (require) {
                 }
             );
             assert.deepEqual(
-                constructDateDomain(referenceMoment, 'date_field', 'date', ['second_quarter', 'this_year', 'last_year'], 'previous_period'),
+                constructDateDomain(referenceMoment, 'date_field', 'date', ['second_quarter', 'this_year', 'last_year'], { comparisonOptionId: 'previous_period' }),
                 {
                     domain: "[" +
                                 `"|", ` +
@@ -182,7 +182,7 @@ odoo.define('web.search_utils_tests', function (require) {
                 }
             );
             assert.deepEqual(
-                constructDateDomain(referenceMoment, 'date_field', 'date', ['this_year', 'antepenultimate_year', 'this_month', 'antepenultimate_month'], 'previous_period'),
+                constructDateDomain(referenceMoment, 'date_field', 'date', ['this_year', 'antepenultimate_year', 'this_month', 'antepenultimate_month'], { comparisonOptionId: 'previous_period' }),
                 {
                     domain: "[" +
                                 `"|", "|", "|", ` +
@@ -195,7 +195,7 @@ odoo.define('web.search_utils_tests', function (require) {
                 }
             );
             assert.deepEqual(
-                constructDateDomain(referenceMoment, 'date_field', 'date', ['this_year', 'last_year'], 'previous_period'),
+                constructDateDomain(referenceMoment, 'date_field', 'date', ['this_year', 'last_year'], { comparisonOptionId: 'previous_period' }),
                 {
                     domain: "[" +
                                 `"|", ` +
@@ -206,7 +206,7 @@ odoo.define('web.search_utils_tests', function (require) {
                 }
             );
             assert.deepEqual(
-                constructDateDomain(referenceMoment, 'date_field', 'date', ['second_quarter', 'third_quarter', 'last_year'], 'previous_period'),
+                constructDateDomain(referenceMoment, 'date_field', 'date', ['second_quarter', 'third_quarter', 'last_year'], { comparisonOptionId: 'previous_period' }),
                 {
                     domain: "[" +
                                 `"|", ` +
@@ -224,7 +224,7 @@ odoo.define('web.search_utils_tests', function (require) {
             const unpatchDate = patchDate(2020, 5, 1, 13, 0, 0);
             const referenceMoment = moment().utc();
             assert.deepEqual(
-                constructDateDomain(referenceMoment, 'date_field', 'datetime', ['this_month', 'first_quarter', 'this_year'], 'previous_year'),
+                constructDateDomain(referenceMoment, 'date_field', 'datetime', ['this_month', 'first_quarter', 'this_year'], { comparisonOptionId: 'previous_year' }),
                 {
                     domain: "[" +
                                 `"|", ` +
@@ -235,7 +235,7 @@ odoo.define('web.search_utils_tests', function (require) {
                 }
             );
             assert.deepEqual(
-                constructDateDomain(referenceMoment, 'date_field', 'datetime', ['second_quarter', 'this_year', 'last_year'], 'previous_year'),
+                constructDateDomain(referenceMoment, 'date_field', 'datetime', ['second_quarter', 'this_year', 'last_year'], { comparisonOptionId: 'previous_year' }),
                 {
                     domain: "[" +
                                 `"|", ` +
@@ -246,7 +246,7 @@ odoo.define('web.search_utils_tests', function (require) {
                 }
             );
             assert.deepEqual(
-                constructDateDomain(referenceMoment, 'date_field', 'datetime', ['this_year', 'antepenultimate_year', 'this_month', 'antepenultimate_month'], 'previous_year'),
+                constructDateDomain(referenceMoment, 'date_field', 'datetime', ['this_year', 'antepenultimate_year', 'this_month', 'antepenultimate_month'], { comparisonOptionId: 'previous_year' }),
                 {
                     domain: "[" +
                                 `"|", "|", "|", ` +
@@ -331,6 +331,33 @@ odoo.define('web.search_utils_tests', function (require) {
             unpatchDate();
             testUtils.mock.unpatch(_t.database.db);
             testUtils.mock.unpatch(_t.database.parameters);
+        });
+        QUnit.test("Construct domain with custom options", async function (assert) {
+            assert.expect(1);
+
+            const unpatchDate = patchDate(2020, 5, 1, 13, 0, 0);
+            const referenceMoment = moment().locale('en');
+
+            const options = {
+                year_0: {
+                    id: 'year_0', groupNumber: 2, format: 'YYYY',
+                    addParam: {}, granularity: 'year',
+                },
+                january :  {
+                    id: 'january', groupNumber: 1, format: 'MMMM',
+                    setParam: { month: 0 }, granularity: 'month',
+                }
+            };
+            assert.deepEqual(
+                constructDateDomain(referenceMoment, 'date_field', 'date', ['year_0', 'january'], { periodOptions: options }),
+                {
+                    domain: `["&", ["date_field", ">=", "2020-01-01"], ["date_field", "<=", "2020-01-31"]]`,
+                    description: "January 2020",
+                },
+                "Custom options should be used"
+            );
+
+            unpatchDate();
         });
     });
 });

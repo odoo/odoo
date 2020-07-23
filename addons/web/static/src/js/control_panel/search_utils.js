@@ -194,7 +194,9 @@ odoo.define('web.searchUtils', function (require) {
      * @param {string} fieldName
      * @param {string} fieldType
      * @param {string[]} selectedOptionIds
-     * @param {string} [comparisonOptionId]
+     * @param {Object} [options]
+     * @param {string} [options.comparisonOptionId]
+     * @param {Object} [options.periodOptions]
      * @returns {{ domain: string, description: string }}
      */
     function constructDateDomain(
@@ -202,17 +204,18 @@ odoo.define('web.searchUtils', function (require) {
         fieldName,
         fieldType,
         selectedOptionIds,
-        comparisonOptionId
+        options = {},
     ) {
         let addParam;
         let selectedOptions;
-        if (comparisonOptionId) {
+        if (options.comparisonOptionId) {
             [addParam, selectedOptions] = getComparisonParams(
                 referenceMoment,
                 selectedOptionIds,
-                comparisonOptionId);
+                options.comparisonOptionId,
+                options.periodOptions || PERIOD_OPTIONS);
         } else {
-            selectedOptions = getSelectedOptions(referenceMoment, selectedOptionIds);
+            selectedOptions = getSelectedOptions(referenceMoment, selectedOptionIds, options.periodOptions || PERIOD_OPTIONS);
         }
 
         const yearOptions = selectedOptions.year;
@@ -329,11 +332,12 @@ odoo.define('web.searchUtils', function (require) {
      * @param {moment} referenceMoment
      * @param {string{}} selectedOptionIds
      * @param {string} comparisonOptionId
+     * @param {Object} periodOptions
      * @returns {Object[]}
      */
-    function getComparisonParams(referenceMoment, selectedOptionIds, comparisonOptionId) {
+    function getComparisonParams(referenceMoment, selectedOptionIds, comparisonOptionId, periodOptions) {
         const comparisonOption = COMPARISON_OPTIONS[comparisonOptionId];
-        const selectedOptions = getSelectedOptions(referenceMoment, selectedOptionIds);
+        const selectedOptions = getSelectedOptions(referenceMoment, selectedOptionIds, periodOptions);
         let addParam = comparisonOption.addParam;
         if (addParam) {
             return [addParam, selectedOptions];
@@ -453,12 +457,13 @@ odoo.define('web.searchUtils', function (require) {
      * partitioned by granularity.
      * @param {moment} referenceMoment
      * @param {string[]} selectedOptionIds
-     * @param {Object}
+     * @param {Object} periodOptions
+     * @returns {Object}
      */
-    function getSelectedOptions(referenceMoment, selectedOptionIds) {
+    function getSelectedOptions(referenceMoment, selectedOptionIds, periodOptions) {
         const selectedOptions = { year: [] };
         for (const optionId of selectedOptionIds) {
-            const option = PERIOD_OPTIONS[optionId];
+            const option = periodOptions[optionId];
             const setParam = getSetParam(option, referenceMoment);
             const granularity = option.granularity;
             if (!selectedOptions[granularity]) {

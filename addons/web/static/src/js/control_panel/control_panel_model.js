@@ -636,7 +636,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                 domain: comparisonRange,
                 description: comparisonRangeDescription,
             } = constructDateDomain(
-                this.referenceMoment, fieldName, fieldType, selectedOptionIds, comparisonOptionId
+                this.referenceMoment, fieldName, fieldType, selectedOptionIds, { comparisonOptionId }
             );
 
             return {
