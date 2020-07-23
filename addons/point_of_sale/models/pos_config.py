@@ -202,6 +202,7 @@ class PosConfig(models.Model):
     module_pos_loyalty = fields.Boolean("Loyalty Program")
     module_pos_mercury = fields.Boolean(string="Integrated Card Payments")
     manage_orders = fields.Boolean(string="Manage Orders")
+    product_configurator = fields.Boolean(string="Product Configurator")
     is_posbox = fields.Boolean("PosBox")
     is_header_or_footer = fields.Boolean("Header & Footer")
     module_pos_hr = fields.Boolean(help="Show employee login screen")

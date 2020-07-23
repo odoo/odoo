@@ -2504,6 +2504,13 @@ td {
     left: 50%;
     transform: translate(-50%, -50%);
 }
+
+.pos .modal-dialog .popup-lg{
+    max-width: 80%;
+    max-height: 600px;
+    height: auto;
+}
+
 .pos .modal-dialog .popup-confirm{
     height: 250px;
 }
@@ -2524,6 +2531,12 @@ td {
     margin: 16px;
     margin-top: 20px;
 }
+
+.pos .popup-lg .body {
+    max-height: 400px;
+    overflow-y: auto;
+}
+
 .pos .popup .body.traceback {
     height: 238px;
     overflow: auto;
@@ -2536,9 +2549,6 @@ td {
             user-select: text;
 }
 .pos .popup .footer{
-    position:absolute;
-    bottom:0;
-    left:0;
     width:100%;
     height:60px;
     border-top: solid 1px rgba(60,60,60,0.1);
@@ -3023,4 +3033,114 @@ td {
 
 .order-receipt .title {
     font-size: large;
+}
+
+/* ********* Product Configurator Popup ********* */
+
+.pos .product_configurator_attributes {
+    text-align: left;
+    margin: 1em;
+}
+
+.pos .product_configurator_attributes .attribute {
+    margin-bottom: 1em;
+    display: inline-block;
+    width: 45%;
+    padding-left: 0.5em;
+    vertical-align: top;
+}
+
+@media screen and (max-width: 768px) {
+    .pos .product_configurator_attributes .attribute {
+        width: 95%;
+    }
+}
+
+.pos .product_configurator_attributes .attribute_name {
+    margin-bottom: 0.5em;
+    font-weight: bold;
+}
+
+.pos .product_configurator_attributes input {
+    min-height: 0;
+    width: auto;
+}
+
+/** Radio attribute **/
+
+.pos .product_configurator_attributes .configurator_radio {
+    line-height: 1.5;
+}
+
+.pos .product_configurator_attributes .configurator_radio input[type='radio'] {
+    box-shadow: none;
+    margin-right: 0.5em;
+}
+
+.pos .product_configurator_attributes .configurator_radio .radio_attribute_label {
+    font-weight: normal;
+    display: inline-block;
+    width: 80%;
+}
+
+.pos .product_configurator_attributes .configurator_radio .price_extra {
+    margin-left: 0.5em;
+    padding: 0.2em 0.4em;
+    border-radius: 10rem;
+    color: #FFFFFF;
+    background-color: #6c757d;
+}
+
+.pos .product_configurator_attributes .configurator_radio .custom_value {
+    margin: 0.3em 1.3em;
+}
+
+/** Selector attribute **/
+
+.pos .product_configurator_attributes .configurator_select {
+    cursor: pointer;
+    background-color: transparent;
+    width: 90%;
+    padding: 0.5em;
+    color: #666666;
+    font-size: 18px;
+    margin-bottom: 0.5em;
+}
+
+/** Color attribute **/
+
+.pos .product_configurator_attributes ul.color_attribute_list {
+    margin-left: 0;
+}
+
+.pos .product_configurator_attributes li.color_attribute_list_item:before {
+    content: '';
+}
+
+.pos .product_configurator_attributes li.color_attribute_list_item {
+    margin-bottom: 0.5em;
+    text-indent: 0;
+    display: inline-block;
+}
+
+.pos .product_configurator_attributes .color_attribute_list_item:not(:last-child) {
+    margin-right: 1rem;
+}
+
+.pos .product_configurator_attributes .configurator_color {
+    display: inline-block;
+    border: 1px solid #999999;
+}
+
+.pos .product_configurator_attributes .configurator_color.active {
+    border: 3px ridge #66ee66;
+}
+
+.pos .product_configurator_attributes .configurator_color input {
+    margin: 20px;
+    opacity: 0;
+}
+
+.pos .product_configurator_attributes .configurator_color.active input {
+    margin: 18px;
 }

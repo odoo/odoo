@@ -59,7 +59,24 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 this.env.pos.add_new_order();
             }
             const product = event.detail;
-            let draftPackLotLines, weight, packLotLinesToEdit;
+            let price_extra = 0.0;
+            let draftPackLotLines, weight, description, packLotLinesToEdit;
+
+            if (this.env.pos.config.product_configurator && _.some(product.attribute_line_ids, (id) => id in this.env.pos.attributes_by_ptal_id)) {
+                let attributes = _.map(product.attribute_line_ids, (id) => this.env.pos.attributes_by_ptal_id[id])
+                                  .filter((attr) => attr !== undefined);
+                let { confirmed, payload } = await this.showPopup('ProductConfiguratorPopup', {
+                    product: product,
+                    attributes: attributes,
+                });
+
+                if (confirmed) {
+                    description = payload.selected_attributes.join(', ');
+                    price_extra += payload.price_extra;
+                } else {
+                    return;
+                }
+            }
 
             // Gather lot information if required.
             if (['serial', 'lot'].includes(product.tracking)) {
@@ -119,6 +136,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
             // Add the product after having the extra information.
             this.currentOrder.add_product(product, {
                 draftPackLotLines,
+                description: description,
+                price_extra: price_extra,
                 quantity: weight,
             });
 

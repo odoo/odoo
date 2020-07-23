@@ -93,7 +93,7 @@
                     <div t-attf-style="background-image:url(#{orderline.product.image_base64})" />
                 </div>
                 <div>
-                    <t t-esc="orderline.product.display_name" />
+                    <t t-esc="orderline.get_full_product_name()" />
                 </div>
                 <div>
                     <t t-esc="orderline.get_quantity_str()" />

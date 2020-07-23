@@ -4,7 +4,7 @@
     <t t-name="Orderline" owl="1">
         <li t-on-click="selectLine" class="orderline" t-att-class="addedClasses">
             <span class="product-name">
-                <t t-esc="props.line.get_product().display_name"/>
+                <t t-esc="props.line.get_full_product_name()"/>
                 <span> </span>
                 <t t-if="props.line.get_product().tracking!=='none'">
                     <t t-if="props.line.has_valid_product_lot()">
