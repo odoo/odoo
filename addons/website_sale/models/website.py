@@ -135,7 +135,7 @@ class Website(models.Model):
         isocountry = req and req.session.geoip and req.session.geoip.get('country_code') or False
         partner = self.env.user.partner_id
         last_order_pl = partner.last_website_so_id.pricelist_id
-        partner_pl = partner.with_user(self.env.user).property_product_pricelist
+        partner_pl = partner.property_product_pricelist
         pricelists = website._get_pl_partner_order(isocountry, show_visible,
                                                    website.user_id.sudo().partner_id.property_product_pricelist.id,
                                                    req and req.session.get('website_sale_current_pl') or None,
