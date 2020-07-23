@@ -418,8 +418,10 @@ class PosSession(models.Model):
                     # Combine stock lines
                     order_pickings = self.env['stock.picking'].search([
                         '|',
-                        ('origin', '=', order.name),
-                        ('id', '=', order.picking_id.id)
+                        ('id', '=', order.picking_id.id),
+                        '&',
+                        ('origin', '=', order.picking_id.origin),
+                        ('scheduled_date', '=', order.picking_id.scheduled_date)
                     ])
                     stock_moves = self.env['stock.move'].search([
                         ('picking_id', 'in', order_pickings.ids),
@@ -609,10 +611,16 @@ class PosSession(models.Model):
 
         # reconcile stock output lines
         orders_to_invoice = self.order_ids.filtered(lambda order: not order.is_invoiced)
-        stock_moves = (
-            orders_to_invoice.mapped('picking_id') +
-            self.env['stock.picking'].search([('origin', 'in', orders_to_invoice.mapped('name'))])
-        ).mapped('move_lines')
+        order_pickings = self.env['stock.picking']
+        for order in orders_to_invoice:
+            order_pickings += self.env['stock.picking'].search([
+            '|',
+            ('id', '=', order.picking_id.id),
+            '&',
+            ('origin', '=', order.picking_id.origin),
+            ('scheduled_date', '=', order.picking_id.scheduled_date)
+        ])
+        stock_moves = order_pickings.mapped('move_lines')
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
             ( stock_output_lines[account_id].filtered(lambda aml: not aml.reconciled)
