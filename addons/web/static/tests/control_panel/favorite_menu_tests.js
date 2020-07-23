@@ -371,7 +371,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
                 search: function (searchQuery) {
                     const { domain, groupBy, timeRanges } = searchQuery;
                     if (firstSearch) {
-                        assert.deepEqual(domain, [['foo', '=', 'a']]);
+                        assert.deepEqual(domain, [['foo', 'ilike', 'a']]);
                         assert.deepEqual(groupBy, ['date_field:month']);
                         assert.deepEqual(timeRanges, {
                             comparisonId: "previous_period",
@@ -399,7 +399,7 @@ odoo.define('web.favorite_menu_tests', function (require) {
             const { domain, groupBy, timeRanges } = controlPanel.getQuery();
             assert.deepEqual(domain, [
                 "&",
-                ["foo", "=", "a"],
+                ["foo", "ilike", "a"],
                 "&",
                 ["date_field", ">=", "2019-01-01"],
                 ["date_field", "<=", "2019-12-31"]

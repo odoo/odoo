@@ -163,7 +163,7 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
             this.searchMenuTypes = this.config.searchMenuTypes || [];
             this.favoriteFilters = this.config.favoriteFilters || [];
             this.fields = this.config.fields || {};
-            this.searchDefaults = [];
+            this.searchDefaults = {};
             for (const key in this.actionContext) {
                 const match = /^search_default_(.*)$/.exec(key);
                 if (match) {
@@ -747,6 +747,21 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                         // and others are passive (require input(s) to become determined)
                         // What is the right place to process the attrs?
                     };
+                    if (preFilter.attrs && JSON.parse(preFilter.attrs.modifiers || '{}').invisible) {
+                        filter.invisible = true;
+                        let preFilterFieldName = null;
+                        if (preFilter.tag === 'filter' && preFilter.attrs.date) {
+                            preFilterFieldName = preFilter.attrs.date;
+                        } else if (preFilter.tag === 'groupBy') {
+                            preFilterFieldName = preFilter.attrs.fieldName;
+                        }
+                        if (preFilterFieldName && !this.fields[preFilterFieldName]) {
+                            // In some case when a field is limited to specific groups
+                            // on the model, we need to ensure to discard related filter
+                            // as it may still be present in the view (in 'invisible' state)
+                            return;
+                        }
+                    }
                     if (filter.type === 'filter' || filter.type === 'groupBy') {
                         filter.groupNumber = groupNumber;
                     }
@@ -838,14 +853,11 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                     }
                 } catch (e) { }
             }
-            if (this.searchDefaults.hasOwnProperty(child.attrs.name)) {
+            if (child.attrs.name in this.searchDefaults) {
                 child.attrs.isDefault = true;
                 let value = this.searchDefaults[child.attrs.name];
                 if (child.tag === 'field') {
-                    if (value instanceof Array) {
-                        value = value[0];
-                    }
-                    child.attrs.defaultAutocompleteValue = { value, operator: '=' };
+                    child.attrs.defaultValue = Array.isArray(value) ? value[0] : value;
                 } else if (child.tag === 'groupBy') {
                     child.attrs.defaultRank = typeof value === 'number' ? value : 100;
                 }
@@ -865,9 +877,6 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                 filter.isDefault = attrs.isDefault;
             }
             filter.description = attrs.string || attrs.help || attrs.name || attrs.domain || 'Ω';
-            if (JSON.parse(attrs.modifiers || '{}').invisible) {
-                filter.invisible = true;
-            }
             switch (filter.type) {
                 case 'filter':
                     if (attrs.context) {
@@ -913,8 +922,23 @@ odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", 
                         filter.context = attrs.context;
                     }
                     if (filter.isDefault) {
+                        let operator = filter.operator;
+                        if (!operator) {
+                            const type = attrs.widget || filter.fieldType;
+                            // Note: many2one as a default filter will have a
+                            // numeric value instead of a string => we want "="
+                            // instead of "ilike".
+                            if (["char", "html", "many2many", "one2many", "text"].includes(type)) {
+                                operator = "ilike";
+                            } else {
+                                operator = "=";
+                            }
+                        }
                         filter.defaultRank = -10;
-                        filter.defaultAutocompleteValue = attrs.defaultAutocompleteValue;
+                        filter.defaultAutocompleteValue = {
+                            operator,
+                            value: attrs.defaultValue,
+                        };
                     }
                     break;
                 }
