@@ -111,6 +111,7 @@
         'static/src/xml/Popups/NumberPopup.xml',
         'static/src/xml/Popups/OfflineErrorPopup.xml',
         'static/src/xml/Popups/OrderImportPopup.xml',
+        'static/src/xml/Popups/ProductConfiguratorPopup.xml',
         'static/src/xml/Screens/ProductScreen/ControlButtons/SetPricelistButton.xml',
         'static/src/xml/Screens/ProductScreen/ControlButtons/SetFiscalPositionButton.xml',
         'static/src/xml/ChromeWidgets/ClientScreenButton.xml',

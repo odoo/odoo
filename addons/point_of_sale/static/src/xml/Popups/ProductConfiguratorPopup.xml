@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="ProductConfiguratorPopup" owl="1">
+        <div role="dialog" class="modal-dialog">
+            <div class="popup popup-text popup-lg product-configurator-popup">
+                <header class="title">
+                    <t t-esc="props.product.display_name" />
+                </header>
+
+                <main class="body product_configurator_attributes col-lg-4 col-md-6 col-sm-12">
+                    <div t-foreach="props.attributes" t-as="attribute" class="attribute">
+                        <div class="attribute_name" t-esc="attribute.name"/>
+                        <RadioProductAttribute t-if="attribute.display_type === 'radio'" attribute="attribute"/>
+                        <SelectProductAttribute t-elif="attribute.display_type === 'select'" attribute="attribute"/>
+                        <ColorProductAttribute t-elif="attribute.display_type === 'color'" attribute="attribute"/>
+                    </div>
+                </main>
+
+                <footer class="footer">
+                    <div class="button highlight confirm" t-on-click="confirm">
+                        Add
+                    </div>
+                    <div class="button cancel" t-on-click="cancel">
+                        Cancel
+                    </div>
+                </footer>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="RadioProductAttribute" owl="1">
+        <div class="configurator_radio">
+            <div t-foreach="values" t-as="value">
+                <input type="radio" t-model="state.selected_value" t-att-name="attribute.id"
+                    t-attf-id="{{ attribute.id }}_{{ value.id }}" t-att-value="value.id"/>
+
+                <label t-attf-for="{{ attribute.id }}_{{ value.id }}">
+                    <div class="radio_attribute_label">
+                        <t t-esc="value.name"/>
+                        <span t-if="value.price_extra" class="price_extra">
+                            + <t t-esc="env.pos.format_currency(value.price_extra)"/>
+                        </span>
+                    </div>
+
+                    <t t-if="value.id == state.selected_value &amp;&amp; value.is_custom">
+                        <input class="custom_value" type="text" t-model="state.custom_value"/>
+                    </t>
+                </label>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="SelectProductAttribute" owl="1">
+        <div>
+            <t t-set="is_custom" t-value="false"/>
+
+            <select class="configurator_select" t-model="state.selected_value">
+                <option t-foreach="values" t-as="value" t-att-value="value.id">
+                    <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
+                    <t t-esc="value.name"/>
+                    <t t-if="value.price_extra">
+                        + <t t-esc="env.pos.format_currency(value.price_extra)"/>
+                    </t>
+                </option>
+            </select>
+
+            <input class="custom_value" t-if="is_custom" type="text" t-model="state.custom_value"/>
+        </div>
+    </t>
+
+    <t t-name="ColorProductAttribute" owl="1">
+        <div>
+            <t t-set="is_custom" t-value="false"/>
+
+            <ul class="color_attribute_list">
+                <li t-foreach="values" t-as="value" class="color_attribute_list_item">
+                    <t t-set="is_custom" t-value="is_custom || (value.is_custom &amp;&amp; value.id == state.selected_value)"/>
+                    <label t-attf-class="configurator_color {{ value.id == state.selected_value ? 'active' : '' }}"
+                        t-attf-style="background-color: {{ value.html_color }};" t-att-data-color="value.name">
+                        <input type="radio" t-model="state.selected_value" t-att-value="value.id" t-att-name="attribute.id"/>
+                    </label>
+                </li>
+            </ul>
+
+            <input class="custom_value" t-if="is_custom" type="text" t-model="state.custom_value"/>
+        </div>
+    </t>
+
+</templates>
