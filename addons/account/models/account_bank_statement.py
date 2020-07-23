@@ -434,6 +434,13 @@ class AccountBankStatement(models.Model):
         self.line_ids.move_id.button_draft()
         self.line_ids.button_undo_reconciliation()
 
+    def button_reprocess(self):
+        """Move the bank statements back to the 'posted' state."""
+        if any(statement.state != 'confirm' for statement in self):
+            raise UserError(_("Only Validated statements can be reset to new."))
+
+        self.write({'state': 'posted', 'date_done': False})
+
     def button_journal_entries(self):
         return {
             'name': _('Journal Entries'),
