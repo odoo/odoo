@@ -36,7 +36,8 @@ class Sponsor(models.Model):
     @api.depends('partner_id')
     def _compute_url(self):
         for sponsor in self:
-            sponsor.url = sponsor.partner_id.website
+            if sponsor.partner_id.website or not sponsor.url:
+                sponsor.url = sponsor.partner_id.website
 
     def _message_get_suggested_recipients(self):
         recipients = super(Sponsor, self)._message_get_suggested_recipients()
