@@ -18,7 +18,6 @@ var config = require('web.config');
 var WarningDialog = require('web.CrashManager').WarningDialog;
 var data_manager = require('web.data_manager');
 var dom = require('web.dom');
-var KeyboardNavigationMixin = require('web.KeyboardNavigationMixin');
 var Loading = require('web.Loading');
 var RainbowMan = require('web.RainbowMan');
 var session = require('web.session');
@@ -29,9 +28,8 @@ const env = require('web.env');
 
 var _t = core._t;
 
-var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
+var AbstractWebClient = Widget.extend({
     dependencies: ['notification'],
-    events: _.extend({}, KeyboardNavigationMixin.events),
     custom_events: {
         call_service: '_onCallService',
         clear_uncommitted_changes: function (e) {
@@ -95,7 +93,6 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         odoo.isReady = false;
         this.client_options = {};
         this._super(parent);
-        KeyboardNavigationMixin.init.call(this);
         this.origin = undefined;
         this._current_state = null;
         this.menu_dp = new concurrency.DropPrevious();
@@ -108,7 +105,6 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
      * @override
      */
     start: function () {
-        KeyboardNavigationMixin.start.call(this);
         var self = this;
 
         // we add the o_touch_device css class to allow CSS to target touch
@@ -160,13 +156,6 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
                 }
             });
     },
-    /**
-     * @override
-     */
-    destroy: function () {
-        KeyboardNavigationMixin.destroy.call(this);
-        return this._super(...arguments);
-    },
     bind_events: function () {
         var self = this;
         $('.oe_systray').show();
@@ -204,7 +193,73 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         });
         core.bus.on('connection_lost', this, this._onConnectionLost);
         core.bus.on('connection_restored', this, this._onConnectionRestored);
+
+        this.call('keyboard_navigation', 'register', keystroke => {
+            if (keystroke.key === 'ALT') {
+                if (this._areAccessKeyVisible) {
+                    this._hideAccessKeyOverlays();
+                } else {
+                    // Add accesskeys on navbar items
+                    this.$('.o_menu_sections > li > a').each((number, item) => {
+                        item.accessKey = number + 1;
+                    });
+                    this._showAccessKeyOverlays();
+                }
+            } else if (keystroke.key === 'ESCAPE') {
+                if (['INPUT', 'TEXTAREA'].includes(document.activeElement.tagName)) { // FIXME
+                    document.activeElement.blur();
+                }
+            } else if (/[a-z0-9]/i.test(keystroke.key) && !keystroke.shiftKey && !keystroke.ctrlKey) {
+                const accesskey = keystroke.key.toLowerCase(); // FIXME: produces lower case instead?
+                const btn = this.$(`[accesskey=${accesskey}]:visible`).get(0);
+                if (btn) {
+                    btn.click(); // native click function honors 'disable' attribute
+                }
+            }
+        });
     },
+
+
+    /**
+     * @private
+     */
+    _showAccessKeyOverlays: function () {
+        this._areAccessKeyVisible = true;
+        var accesskeyElements = $(document).find('[accesskey]').filter(':visible');
+        _.each(accesskeyElements, function (elem) {
+            var overlay = $(_.str.sprintf("<div class='o_web_accesskey_overlay'>%s</div>", $(elem).attr('accesskey').toUpperCase()));
+
+            var $overlayParent;
+            if (elem.tagName.toUpperCase() === "INPUT") {
+                // special case for the search input that has an access key
+                // defined. We cannot set the overlay on the input itself,
+                // only on its parent.
+                $overlayParent = $(elem).parent();
+            } else {
+                $overlayParent = $(elem);
+            }
+
+            if ($overlayParent.css('position') !== 'absolute') {
+                $overlayParent.css('position', 'relative');
+            }
+            overlay.appendTo($overlayParent);
+        });
+    },
+    /**
+     * hides the overlay that shows the access keys.
+     *
+     * @private
+     * @param $parent {jQueryElemen} the parent of the DOM element to which shorcuts overlay have been added
+     * @return {undefined|jQuery}
+     */
+    _hideAccessKeyOverlays: function () {
+        this._areAccessKeyVisible = false;
+        var overlays = this.$el.find('.o_web_accesskey_overlay');
+        if (overlays.length) {
+            return overlays.remove();
+        }
+    },
+
     set_action_manager: function () {
         var self = this;
         this.action_manager = new ActionManager(this, session.user_context);
