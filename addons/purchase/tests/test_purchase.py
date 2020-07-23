@@ -1,27 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged, Form
+from odoo import fields
+
 
 from datetime import timedelta
 
-from odoo import fields
-from odoo.tests.common import SavepointCase
-from odoo.tests import Form
 
-
-class TestPurchase(SavepointCase):
-    @classmethod
-    def setUpClass(cls):
-        super(TestPurchase, cls).setUpClass()
-        cls.product_consu = cls.env['product.product'].create({
-            'name': 'Product A',
-            'type': 'consu',
-        })
-        cls.product_consu2 = cls.env['product.product'].create({
-            'name': 'Product B',
-            'type': 'consu',
-        })
-        cls.vendor = cls.env['res.partner'].create({'name': 'vendor1', 'email': 'vendor1@test.com'})
-        cls.uom_unit = cls.env.ref('uom.product_uom_unit')
+@tagged('-at_install', 'post_install')
+class TestPurchase(AccountTestInvoicingCommon):
 
     def test_date_planned(self):
         """Set a date planned on 2 PO lines. Check that the PO date_planned is the earliest PO line date
@@ -29,13 +17,13 @@ class TestPurchase(SavepointCase):
         this earlier date.
         """
         po = Form(self.env['purchase.order'])
-        po.partner_id = self.vendor
+        po.partner_id = self.partner_a
         with po.order_line.new() as po_line:
-            po_line.product_id = self.product_consu
+            po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
         with po.order_line.new() as po_line:
-            po_line.product_id = self.product_consu2
+            po_line.product_id = self.product_b
             po_line.product_qty = 10
             po_line.price_unit = 200
         po = po.save()
@@ -66,7 +54,7 @@ class TestPurchase(SavepointCase):
             'use_date_range': True, 'prefix': 'PO/%(range_year)s/',
         })
         vals = {
-            'partner_id': self.vendor.id,
+            'partner_id': self.partner_a.id,
             'company_id': company.id,
             'currency_id': company.currency_id.id,
             'date_order': '2019-01-01',
@@ -86,13 +74,13 @@ class TestPurchase(SavepointCase):
         partner.
         """
         po = Form(self.env['purchase.order'])
-        po.partner_id = self.vendor
+        po.partner_id = self.partner_a
         with po.order_line.new() as po_line:
-            po_line.product_id = self.product_consu
+            po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
         with po.order_line.new() as po_line:
-            po_line.product_id = self.product_consu2
+            po_line.product_id = self.product_b
             po_line.product_qty = 10
             po_line.price_unit = 200
         # set to send reminder today
@@ -120,13 +108,13 @@ class TestPurchase(SavepointCase):
         """Set to send reminder tomorrow, check if no reminder can be send.
         """
         po = Form(self.env['purchase.order'])
-        po.partner_id = self.vendor
+        po.partner_id = self.partner_a
         with po.order_line.new() as po_line:
-            po_line.product_id = self.product_consu
+            po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
         with po.order_line.new() as po_line:
-            po_line.product_id = self.product_consu2
+            po_line.product_id = self.product_b
             po_line.product_qty = 10
             po_line.price_unit = 200
         # set to send reminder tomorrow
@@ -147,14 +135,14 @@ class TestPurchase(SavepointCase):
 
     def test_update_date_planned(self):
         po = Form(self.env['purchase.order'])
-        po.partner_id = self.vendor
+        po.partner_id = self.partner_a
         with po.order_line.new() as po_line:
-            po_line.product_id = self.product_consu
+            po_line.product_id = self.product_a
             po_line.product_qty = 1
             po_line.price_unit = 100
             po_line.date_planned = '2020-06-06 00:00:00'
         with po.order_line.new() as po_line:
-            po_line.product_id = self.product_consu2
+            po_line.product_id = self.product_b
             po_line.product_qty = 10
             po_line.price_unit = 200
             po_line.date_planned = '2020-06-06 00:00:00'
@@ -170,15 +158,15 @@ class TestPurchase(SavepointCase):
             ('res_id', '=', po.id),
         ])
         self.assertTrue(activity)
-        self.assertEqual(
+        self.assertIn(
+            '<p> partner_a modified receipt dates for the following products:</p><p> \xa0 - product_a from 2020-06-06 to %s </p>' % fields.Date.today(),
             activity.note,
-            '<p> vendor1 modified receipt dates for the following products:</p><p> \xa0 - Product A from 2020-06-06 to %s </p>' % fields.Date.today()
         )
 
         # update second line
         po._update_date_planned_for_lines([(po.order_line[1], fields.Datetime.today())])
         self.assertEqual(po.order_line[1].date_planned, fields.Datetime.today())
-        self.assertEqual(
+        self.assertIn(
+            '<p> partner_a modified receipt dates for the following products:</p><p> \xa0 - product_a from 2020-06-06 to %s </p><p> \xa0 - product_b from 2020-06-06 to %s </p>' % (fields.Date.today(), fields.Date.today()),
             activity.note,
-            '<p> vendor1 modified receipt dates for the following products:</p><p> \xa0 - Product A from 2020-06-06 to %s </p><p> \xa0 - Product B from 2020-06-06 to %s </p>' % (fields.Date.today(), fields.Date.today())
         )
