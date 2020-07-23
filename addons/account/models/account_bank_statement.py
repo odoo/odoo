@@ -657,8 +657,10 @@ class AccountBankStatementLine(models.Model):
                     # use the foreign currency set on the statement line.
 
                     amount_currency = amount_residual_currency
-                    balance_journal_currency = (amount_currency / statement_line_rate) if statement_line_rate else 0.0
-                    balance = journal_currency._convert(balance_journal_currency, company_currency, journal.company_id, self.date)
+                    if statement_line_rate:
+                        balance = journal_currency._convert(amount_currency / statement_line_rate, company_currency, journal.company_id, self.date)
+                    else:
+                        balance = amount_residual
 
                 elif currency_id == journal_currency.id and self.foreign_currency_id == company_currency:
 
@@ -666,10 +668,15 @@ class AccountBankStatementLine(models.Model):
                     # There is also a foreign currency set on the statement line that is the same as the company one.
                     # Then, the journal item to create will use the company's currency.
 
-                    amount_currency = amount_residual_currency
-                    balance = amount_currency * statement_line_rate
-                    currency_id = False
-                    amount_currency = 0.0
+                    if statement_line_rate:
+                        amount_currency = amount_residual_currency
+                        balance = amount_currency * statement_line_rate
+                        currency_id = False
+                        amount_currency = 0.0
+                    else:
+                        balance = amount_residual
+                        currency_id = False
+                        amount_currency = 0.0
 
                 elif currency_id == journal_currency.id and self.foreign_currency_id != company_currency:
 
@@ -677,20 +684,30 @@ class AccountBankStatementLine(models.Model):
                     # There is also a foreign currency set on the statement line.
                     # The residual amount will be convert to the foreign currency set on the statement line.
 
-                    amount_currency = amount_residual_currency
-                    balance = journal_currency._convert(amount_currency, company_currency, journal.company_id, self.date)
-                    amount_currency *= statement_line_rate
-                    currency_id = self.foreign_currency_id.id
+                    if statement_line_rate:
+                        journal_amount_currency = amount_residual_currency
+                        balance = journal_currency._convert(journal_amount_currency, company_currency, journal.company_id, self.date)
+                        amount_currency = journal_amount_currency * statement_line_rate
+                        currency_id = self.foreign_currency_id.id
+                    else:
+                        amount_currency = amount_residual_currency
+                        balance = amount_residual
+                        currency_id = self.foreign_currency_id.id
 
                 else:
 
                     # Whatever the currency set on the journal item passed as parameter, the counterpart line
                     # will be expressed in the foreign currency set on the statement line.
 
-                    balance = amount_residual
-                    amount_currency = company_currency._convert(balance, journal_currency, journal.company_id, self.date)
-                    amount_currency *= statement_line_rate
-                    currency_id = self.foreign_currency_id.id
+                    if statement_line_rate:
+                        balance = amount_residual
+                        journal_amount_currency = company_currency._convert(balance, journal_currency, journal.company_id, self.date)
+                        amount_currency = journal_amount_currency * statement_line_rate
+                        currency_id = self.foreign_currency_id.id
+                    else:
+                        amount_currency = amount_residual_currency
+                        balance = amount_residual
+                        currency_id = self.foreign_currency_id.id
 
             elif self.foreign_currency_id and not journal_currency:
 
@@ -698,12 +715,17 @@ class AccountBankStatementLine(models.Model):
                 # In that case, the 'amount' set on the statement line is expressed in the company's currency
                 # and is used as conversion rate between the company's currency and the foreign currency.
 
-                if currency_id == self.foreign_currency_id.id:
-                    amount_currency = amount_residual_currency
-                    balance = amount_currency / statement_line_rate if statement_line_rate else 0.0
+                if statement_line_rate:
+                    if currency_id == self.foreign_currency_id.id:
+                        amount_currency = amount_residual_currency
+                        balance = amount_currency / statement_line_rate
+                    else:
+                        balance = amount_residual
+                        amount_currency = balance * statement_line_rate
+                        currency_id = self.foreign_currency_id.id
                 else:
                     balance = amount_residual
-                    amount_currency = balance * statement_line_rate
+                    amount_currency = amount_residual_currency
                     currency_id = self.foreign_currency_id.id
 
             elif not self.foreign_currency_id and journal_currency:
@@ -740,9 +762,12 @@ class AccountBankStatementLine(models.Model):
 
                 if self.foreign_currency_id == company_currency:
                     amount_currency = 0.0
+                elif statement_line_rate:
+                    journal_amount_currency = company_currency._convert(balance, journal_currency, journal.company_id, self.date)
+                    amount_currency = journal_amount_currency * statement_line_rate
+                    currency_id = self.foreign_currency_id.id
                 else:
-                    amount_currency = company_currency._convert(balance, journal_currency, journal.company_id, self.date)
-                    amount_currency *= statement_line_rate
+                    amount_currency = amount_residual_currency
                     currency_id = self.foreign_currency_id.id
 
             elif self.foreign_currency_id and not journal_currency:
@@ -750,8 +775,11 @@ class AccountBankStatementLine(models.Model):
                 # Different currencies set on the company and the statement line.
                 # Record the counterpart line using the foreign currency.
 
-                amount_currency = balance * statement_line_rate
                 currency_id = self.foreign_currency_id.id
+                if statement_line_rate:
+                    amount_currency = balance * statement_line_rate
+                else:
+                    amount_currency = amount_residual_currency
 
             elif not self.foreign_currency_id and journal_currency:
 
@@ -800,9 +828,18 @@ class AccountBankStatementLine(models.Model):
         counterpart_vals = {
             'name': self.payment_ref,
             'account_id': counterpart_account_id,
+            'amount_residual': liquidity_line_vals['debit'] - liquidity_line_vals['credit'],
         }
 
-        if liquidity_line_vals['currency_id']:
+        if self.foreign_currency_id and self.foreign_currency_id != self.company_currency_id:
+            # Ensure the counterpart will have exactly the same amount in foreign currency as the amount set in the
+            # statement line to avoid some rounding issues when making a currency conversion.
+
+            counterpart_vals.update({
+                'currency_id': self.foreign_currency_id.id,
+                'amount_residual_currency': self.amount_currency,
+            })
+        elif liquidity_line_vals['currency_id']:
             # Ensure the counterpart will have a balance exactly equals to the amount in journal currency.
             # This avoid some rounding issues when the currency rate between two currencies is not symmetrical.
             # E.g:
@@ -811,10 +848,8 @@ class AccountBankStatementLine(models.Model):
 
             counterpart_vals.update({
                 'currency_id': liquidity_line_vals['currency_id'],
-                'balance': -liquidity_line_vals['amount_currency'],
+                'amount_residual_currency': liquidity_line_vals['amount_currency'],
             })
-        else:
-            counterpart_vals['balance'] = liquidity_line_vals['credit'] - liquidity_line_vals['debit']
 
         counterpart_line_vals = self._prepare_counterpart_move_line_vals(counterpart_vals)
         return [liquidity_line_vals, counterpart_line_vals]
@@ -861,6 +896,9 @@ class AccountBankStatementLine(models.Model):
     @api.constrains('amount', 'amount_currency', 'currency_id', 'foreign_currency_id', 'journal_id')
     def _check_amounts_currencies(self):
         ''' Ensure the consistency the specified amounts and the currencies. '''
+        if self._context.get('skip_check_amounts_currencies'):
+            return
+
         for st_line in self:
             if st_line.journal_id != st_line.statement_id.journal_id:
                 raise ValidationError(_('The journal of a statement line must always be the same as the bank statement one.'))
