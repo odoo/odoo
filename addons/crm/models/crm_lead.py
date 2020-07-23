@@ -55,7 +55,6 @@ PARTNER_FIELDS_TO_SYNC = [
     'city',
     'state_id',
     'country_id',
-    'phone',
     'mobile',
     'zip',
     'function',
@@ -360,11 +359,14 @@ class Lead(models.Model):
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
-        values = {f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC}
+        contact_name = False if partner.is_company else partner.name
+
+        values = {f: partner[f] if partner else self[f] for f in PARTNER_FIELDS_TO_SYNC}
         values.update({
-            'partner_name': partner_name or self.partner_name,
-            'contact_name': False if partner.is_company else partner.name or self.contact_name,
+            'partner_name': partner_name if partner else self.partner_name,
+            'contact_name': contact_name if partner else self.contact_name,
             'email_from': partner.email or self.email_from,
+            'phone': partner.phone or self.phone,
         })
         return values
 
