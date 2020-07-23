@@ -614,7 +614,11 @@ class MrpWorkorder(models.Model):
 
     def action_cancel(self):
         self.leave_id.unlink()
-        return self.write({'state': 'cancel'})
+        return self.write({
+            'state': 'cancel',
+            'date_planned_start': False,
+            'date_planned_finished': False,
+        })
 
     def action_replan(self):
         """Replan a work order.
