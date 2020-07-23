@@ -272,6 +272,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         programs = self.env['sale.coupon.program'].search([
             ('promo_code_usage', '=', 'no_code_needed'),
+            '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
         ])._filter_programs_from_common_rules(self)
         return programs
 
