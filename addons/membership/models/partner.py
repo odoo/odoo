@@ -109,8 +109,9 @@ class Partner(models.Model):
                 res[partner.id] = 'free' if partner.free_member else 'canceled'
                 continue
             if partner.membership_stop and today > partner.membership_stop:
-                res[partner.id] = 'free' if partner.free_member else 'old'
-                continue
+                if partner.free_member:
+                    res[partner.id] = 'free' 
+                    continue
             if partner.associate_member:
                 res_state = partner.associate_member._membership_state()
                 res[partner.id] = res_state[partner.associate_member.id]
@@ -141,6 +142,13 @@ class Partner(models.Model):
                         """
                         if s == 0:
                             break
+                    else:
+                        if mline.account_invoice_line.invoice_id.partner_id == partner:
+                            mstate = mline.account_invoice_line.invoice_id.state
+                            if mstate == 'paid':
+                                s = 5
+                            else:
+                                s = 6
                 if s == 4:
                     for mline in partner.member_lines:
                         if (mline.date_from or date.min) < today and (mline.date_to or date.min) < today and (mline.date_from or date.min) <= (mline.date_to or date.min) and mline.account_invoice_line and mline.account_invoice_line.invoice_id.state == 'paid':
