@@ -951,8 +951,10 @@ will yield:
     :language: text
     :lines: 13
 
-.. note:: it will also yield the various :ref:`automatic fields
-          <reference/fields/automatic>` unless they've been disabled
+.. note::
+
+    It will also yield the various :ref:`automatic fields
+    <reference/fields/automatic>` unless they've been disabled
 
 Delegation
 ----------
@@ -990,6 +992,12 @@ and it's possible to write directly on the delegated field:
 
 .. warning:: when using delegation inheritance, methods are *not* inherited,
              only fields
+
+.. warning::
+
+    * `_inherits` is more or less implemented, avoid it if you can;
+    * chained `_inherits` is essentially not implemented, we cannot guarantee anything on the final behavior.
+
 
 Fields Incremental Definition
 -----------------------------
