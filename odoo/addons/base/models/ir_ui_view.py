@@ -75,7 +75,8 @@ def transfer_node_to_modifiers(node, modifiers, context=None, current_node_path=
     for a in ('invisible', 'readonly', 'required'):
         if node.get(a):
             v = bool(safe_eval(node.get(a), {'context': context or {}}))
-            if 'tree' in (current_node_path or ()) and a == 'invisible':
+            node_path = current_node_path or ()
+            if 'tree' in node_path and 'header' not in node_path and a == 'invisible':
                 # Invisible in a tree view has a specific meaning, make it a
                 # new key in the modifiers attribute.
                 modifiers['column_invisible'] = v
@@ -1191,7 +1192,7 @@ actual arch.
                 self.handle_view_error(msg)
 
     def _validate_tag_tree(self, node, name_manager, node_info):
-        allowed_tags = ('field', 'button', 'control', 'groupby', 'widget')
+        allowed_tags = ('field', 'button', 'control', 'groupby', 'widget', 'header')
         for child in node.iterchildren(tag=etree.Element):
             if child.tag not in allowed_tags and not isinstance(child, etree._Comment):
                 msg = _(

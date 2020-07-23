@@ -263,31 +263,17 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      * @returns {Promise}
      */
     _callButtonAction: function (attrs, record) {
-        var self = this;
-        var def = new Promise(function (resolve, reject) {
-            var reload = function () {
-                return self.isDestroyed() ? Promise.resolve() : self.reload();
-            };
-            record = record || self.model.get(self.handle);
-
-            self.trigger_up('execute_action', {
-                action_data: _.extend({}, attrs, {
-                    context: record.getContext({additionalContext: attrs.context || {}}),
-                }),
-                env: {
-                    context: record.getContext(),
-                    currentID: record.data.id,
-                    model: record.model,
-                    resIDs: record.res_ids,
-                },
-                on_success: resolve,
-                on_fail: function () {
-                    self.update({}, { reload: false }).then(reject).guardedCatch(reject);
-                },
-                on_closed: reload,
-            });
+        record = record || this.model.get(this.handle);
+        const actionData = Object.assign({}, attrs, {
+            context: record.getContext({additionalContext: attrs.context || {}})
         });
-        return this.alive(def);
+        const recordData = {
+            context: record.getContext(),
+            currentID: record.data.id,
+            model: record.model,
+            resIDs: record.res_ids,
+        };
+        return this._executeButtonAction(actionData, recordData);
     },
     /**
      * Called by the field manager mixin to confirm that a change just occured
@@ -408,6 +394,39 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         if (this.$buttons) {
             this.$buttons.find('button').removeAttr('disabled');
         }
+    },
+    /**
+     * Executes the action associated with a button
+     *
+     * @private
+     * @param {Object} actionData: the descriptor of the action
+     * @param {string} actionData.type: the button's action's type, accepts "object" or "action"
+     * @param {string} actionData.name: the button's action's name
+     *    either the model method's name for type "object"
+     *    or the action's id in database, or xml_id
+     * @param {string} actionData.context: the action's execution context
+     *
+     * @param {Object} recordData: basic information on the current record(s)
+     * @param {number[]} recordData.resIDs: record ids:
+     *     - on which an object method applies
+     *     - that will be used as active_ids to load an action
+     * @param {string} recordData.model: model name
+     * @param {Object} recordData.context: the records' context, will be used to load
+     *     the action, and merged into actionData.context at execution time
+     *
+     * @returns {Promise}
+     */
+    async _executeButtonAction(actionData, recordData) {
+        const prom = new Promise((resolve, reject) => {
+            this.trigger_up('execute_action', {
+                action_data: actionData,
+                env: recordData,
+                on_closed: () => this.isDestroyed() ? Promise.resolve() : this.reload(),
+                on_success: resolve,
+                on_fail: () => this.update({}, { reload: false }).then(reject).guardedCatch(reject)
+            });
+        });
+        return this.alive(prom);
     },
     /**
      * Override to add the current record ID (currentId) and the list of ids
