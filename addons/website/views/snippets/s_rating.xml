@@ -50,11 +50,17 @@
                 <span>/</span>
                 <we-input data-total-icons-number="true" data-step="1"/>
             </we-row>
-            <we-select string="Size" data-apply-to=".s_rating_icons">
-                <we-button data-select-class="">Small</we-button>
-                <we-button data-select-class="fa-2x">Medium</we-button>
-                <we-button data-select-class="fa-3x">Big</we-button>
-            </we-select>
+            <we-button-group string="Size" data-apply-to=".s_rating_icons">
+                <we-button data-select-class=""
+                           title="Small"
+                           data-img="/website/static/src/img/snippets_options/size_small.svg"/>
+                <we-button data-select-class="fa-2x"
+                           title="Medium"
+                           data-img="/website/static/src/img/snippets_options/size_medium.svg"/>
+                <we-button data-select-class="fa-3x"
+                           title="Large"
+                           data-img="/website/static/src/img/snippets_options/size_large.svg"/>
+            </we-button-group>
             <we-checkbox string="Display Inline" data-select-class="s_rating_inline" data-no-preview="true"/>
         </div>
     </xpath>
