@@ -4138,7 +4138,7 @@ var BasicModel = AbstractModel.extend({
             params.position
         );
 
-        if (overrideDefaultFields) {
+        if (overrideDefaultFields && overrideDefaultFields.field) {
             result[overrideDefaultFields.field] = overrideDefaultFields.value;
         }
 
