@@ -158,11 +158,17 @@
 </template>
 
 <template id="snippet_options_shadow_widgets">
-    <we-select string="Shadow" data-no-preview="true" data-shadow-class="shadow">
+    <we-button-group string="Shadow" data-shadow-class="shadow">
         <we-button data-set-shadow="">None</we-button>
-        <we-button data-set-shadow="outset" data-name="shadow_active_opt">Outset</we-button>
-        <we-button data-set-shadow="inset" data-name="shadow_inset_opt">Inset</we-button>
-    </we-select>
+        <we-button data-set-shadow="outset"
+                   data-img="/website/static/src/img/snippets_options/shadow_out.svg"
+                   data-name="shadow_active_opt"
+                   title="Outset"/>
+        <we-button data-set-shadow="inset"
+                   data-img="/website/static/src/img/snippets_options/shadow_in.svg"
+                   data-name="shadow_inset_opt"
+                   title="Inset"/>
+    </we-button-group>
     <we-multi data-css-property="box-shadow" data-dependencies="shadow_active_opt, shadow_inset_opt">
         <we-colorpicker string="⌙ Color" data-select-style="" data-css-compatible=""/>
         <we-row string="⌙ Offset (X, Y)">
