@@ -2397,6 +2397,24 @@ class AccountMove(models.Model):
         partial = self.env['account.partial.reconcile'].browse(partial_id)
         return partial.unlink()
 
+    @api.model
+    def setting_upload_bill_wizard(self):
+        """ Called by the 'First Bill' button of the setup bar."""
+        self.env.company.sudo().set_onboarding_step_done('account_setup_bill_state')
+
+        new_wizard = self.env['account.tour.upload.bill'].create({})
+        view_id = self.env.ref('account.account_tour_upload_bill').id
+
+        return {
+            'type': 'ir.actions.act_window',
+            'name': _('Import your first bill'),
+            'view_mode': 'form',
+            'res_model': 'account.tour.upload.bill',
+            'target': 'new',
+            'res_id': new_wizard.id,
+            'views': [[view_id, 'form']],
+        }
+
     def button_draft(self):
         AccountMoveLine = self.env['account.move.line']
         excluded_move_ids = []
