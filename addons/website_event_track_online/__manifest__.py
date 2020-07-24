@@ -27,6 +27,7 @@
         'views/event_track_stage_views.xml',
         'views/event_track_templates_reminder.xml',
         'views/event_track_templates.xml',
+        'views/event_track_templates_agenda.xml',
         'views/event_track_templates_reminder.xml',
         'views/event_track_views.xml',
         'views/event_track_tag_views.xml',
