@@ -1,15 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.tests import tagged, Form
 
 import time
 
-from .common import PurchaseTestCommon
-from odoo.addons.account.tests.common import AccountTestCommon
-from odoo.tests import tagged, Form
-
 
 @tagged('-at_install', 'post_install')
-class TestAveragePrice(PurchaseTestCommon, AccountTestCommon):
+class TestAveragePrice(ValuationReconciliationTestCommon):
 
     def test_00_average_price(self):
         """ Testcase for average price computation"""
@@ -23,7 +21,7 @@ class TestAveragePrice(PurchaseTestCommon, AccountTestCommon):
             'default_code': 'AVG',
             'name': 'Average Ice Cream',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_1').id,
+            'categ_id': self.stock_account_product_categ.id,
             'list_price': 100.0,
             'standard_price': 60.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
@@ -32,9 +30,6 @@ class TestAveragePrice(PurchaseTestCommon, AccountTestCommon):
             'description': 'FIFO Ice Cream',
         })
         product_cable_management_box.categ_id.property_cost_method = 'average'
-        product_cable_management_box.categ_id.property_valuation = 'real_time'
-        product_cable_management_box.categ_id.property_stock_account_input_categ_id = self.o_expense
-        product_cable_management_box.categ_id.property_stock_account_output_categ_id = self.o_income
 
         # I create a draft Purchase Order for first incoming shipment for 10 pieces at 60€
         purchase_order_1 = self.env['purchase.order'].create({
@@ -89,15 +84,15 @@ class TestAveragePrice(PurchaseTestCommon, AccountTestCommon):
 
         # Create picking to send some goods
         outgoing_shipment = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
                 'name': 'outgoing_shipment_avg_move',
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
-                'location_id':  self.env.ref('stock.stock_location_stock').id,
+                'location_id':  self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id})]
             })
 
