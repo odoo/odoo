@@ -688,10 +688,18 @@
     <!--  Vertical Alignment -->
     <div id="row_valign_snippet_option" data-selector=".s_text_image, .s_image_text, .s_three_columns" data-target=".row">
         <we-button-group string="Vert. Alignment" title="Vertical Alignment">
-            <we-button title="Top" data-select-class="align-items-start"><i class="fa fa-fw fa-long-arrow-up"/></we-button>
-            <we-button title="Middle" data-select-class="align-items-center"><i class="fa fa-fw fa-circle"/></we-button>
-            <we-button title="Bottom" data-select-class="align-items-end"><i class="fa fa-fw fa-long-arrow-down"/></we-button>
-            <we-button title="Equal height" data-select-class="align-items-stretch"><i class="fa fa-fw fa-arrows-v"/></we-button>
+            <we-button title="Align Top"
+                       data-select-class="align-items-start"
+                       data-img="/website/static/src/img/snippets_options/align_top.svg"/>
+            <we-button title="Align Middle"
+                       data-select-class="align-items-center"
+                       data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
+            <we-button title="Align Bottom"
+                       data-select-class="align-items-end"
+                       data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
+            <we-button title="Stretch to Equal Height"
+                       data-select-class="align-items-stretch"
+                       data-img="/website/static/src/img/snippets_options/align_stretch.svg"/>
         </we-button-group>
     </div>
 
