@@ -961,7 +961,7 @@ class Task(models.Model):
         self.write({'user_id': self.env.user.id})
 
     def _get_all_subtasks(self):
-        children = self.mapped('child_ids')
+        children = self.mapped('child_ids').filtered(lambda children: children.active)
         if not children:
             return self.env['project.task']
         return children + children._get_all_subtasks()
