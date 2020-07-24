@@ -291,10 +291,10 @@ class TestPoSOtherCurrencyConfig(TestPoSCommon):
         self.assertAlmostEqual(sales_line.amount_currency, -24.5)
 
         receivable_line_cash = session_account_move.line_ids.filtered(lambda line: self.pos_receivable_account == line.account_id and self.cash_pm.name in line.name)
-        self.assertAlmostEqual(receivable_line_cash.balance, 52.44)
-        self.assertAlmostEqual(receivable_line_cash.amount_currency, 26.22)
+        self.assertAlmostEqual(receivable_line_cash.balance, 52.43)
+        self.assertAlmostEqual(receivable_line_cash.amount_currency, 26.215)
 
         tax_line = session_account_move.line_ids.filtered(lambda line: line.account_id == self.tax_received_account)
-        self.assertAlmostEqual(tax_line.balance, -3.44)
-        self.assertAlmostEqual(tax_line.amount_currency, -1.72)
+        self.assertAlmostEqual(tax_line.balance, -3.43)
+        self.assertAlmostEqual(tax_line.amount_currency, -1.715)
         self.assertAlmostEqual(tax_line.tax_base_amount, 49, msg="Value should be in company's currency.")
