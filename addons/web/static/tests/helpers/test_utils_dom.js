@@ -291,6 +291,47 @@ odoo.define('web.test_utils_dom', function (require) {
     }
 
     /**
+     * Helper method to retrieve a distinct item from a collection of elements defined
+     * by the given "selector" string. It can either be the index of the item or its
+     * inner text.
+     * @param {Element} el
+     * @param {string} selector
+     * @param {number | string} [elFinder=0]
+     * @returns {Element | null}
+     */
+    function findItem(el, selector, elFinder = 0) {
+        const elements = [...getNode(el).querySelectorAll(selector)];
+        if (!elements.length) {
+            throw new Error(`No element found with selector "${selector}".`);
+        }
+        switch (typeof elFinder) {
+            case "number": {
+                const match = elements[elFinder];
+                if (!match) {
+                    throw new Error(
+                        `No element with selector "${selector}" at index ${elFinder}.`
+                    );
+                }
+                return match;
+            }
+            case "string": {
+                const match = elements.find(
+                    (el) => el.innerText.trim().toLowerCase() === elFinder.toLowerCase()
+                );
+                if (!match) {
+                    throw new Error(
+                        `No element with selector "${selector}" containing "${elFinder}".
+                    `);
+                }
+                return match;
+            }
+            default: throw new Error(
+                `Invalid provided element finder: must be a number|string|function.`
+            );
+        }
+    }
+
+    /**
      * Helper function used to extract an HTML EventTarget element from a given
      * target. The extracted element will depend on the target type:
      * - Component|Widget -> el
@@ -497,6 +538,7 @@ odoo.define('web.test_utils_dom', function (require) {
         clickFirst,
         clickLast,
         dragAndDrop,
+        findItem,
         getNode,
         openDatepicker,
         returnAfterNextAnimationFrame,

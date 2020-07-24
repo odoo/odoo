@@ -7,7 +7,7 @@ odoo.define('web.CustomFilterItem', function (require) {
     const { FIELD_OPERATORS, FIELD_TYPES } = require('web.searchUtils');
     const field_utils = require('web.field_utils');
     const patchMixin = require('web.patchMixin');
-    const { useModel } = require('web.model');
+    const { useModel } = require('web/static/src/js/model.js');
 
     /**
      * Filter generator menu
@@ -46,7 +46,7 @@ odoo.define('web.CustomFilterItem', function (require) {
         constructor() {
             super(...arguments);
 
-            this.model = useModel('controlPanelModel');
+            this.model = useModel('searchModel');
 
             this.canBeOpened = true;
             this.state.conditions = [];
