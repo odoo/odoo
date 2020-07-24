@@ -476,7 +476,7 @@ class PosOrder(models.Model):
             if picking_type:
                 message = _("This transfer has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
                 picking_vals = {
-                    'origin': order.name,
+                    'origin': '%s - %s' % (order.session_id.name, order.name),
                     'partner_id': address.get('delivery', False),
                     'user_id': False,
                     'date_done': order.date_order,

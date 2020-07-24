@@ -418,7 +418,7 @@ class PosSession(models.Model):
                     # Combine stock lines
                     order_pickings = self.env['stock.picking'].search([
                         '|',
-                        ('origin', '=', order.name),
+                        ('origin', '=', '%s - %s' % (self.name, order.name)),
                         ('id', '=', order.picking_id.id)
                     ])
                     stock_moves = self.env['stock.move'].search([
@@ -611,7 +611,7 @@ class PosSession(models.Model):
         orders_to_invoice = self.order_ids.filtered(lambda order: not order.is_invoiced)
         stock_moves = (
             orders_to_invoice.mapped('picking_id') +
-            self.env['stock.picking'].search([('origin', 'in', orders_to_invoice.mapped('name'))])
+            self.env['stock.picking'].search([('origin', 'in', orders_to_invoice.mapped(lambda o: '%s - %s' % (self.name, o.name)))])
         ).mapped('move_lines')
         stock_account_move_lines = self.env['account.move'].search([('stock_move_id', 'in', stock_moves.ids)]).mapped('line_ids')
         for account_id in stock_output_lines:
