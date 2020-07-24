@@ -59,19 +59,6 @@ header {
 }
 .navbar {
     margin-bottom: 0;
-
-    ul.nav > li {
-        &.divider {
-            display: none;
-            margin: $nav-link-padding-y ($nav-link-padding-x * 0.5);
-            border-right: 1px solid;
-            opacity: 0.25;
-        }
-
-        &.active + .divider {
-            visibility: hidden;
-        }
-    }
     .nav.navbar-nav.float-right {
         @include media-breakpoint-down(sm) {
             float: none!important;

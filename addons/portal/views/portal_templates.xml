@@ -15,19 +15,13 @@
                         <span class="navbar-toggler-icon o_not_editable"/>
                     </button>
                     <div class="collapse navbar-collapse" id="top_menu_collapse">
-                        <!-- FIXME We want menu to open to the right by default (except cases handled in JS) -->
                         <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
-                            <li class="nav-item divider" t-ignore="true" t-if="not user_id._is_public()"/>
-                            <li class="nav-item dropdown" t-ignore="true" t-if="not user_id._is_public()">
-                                <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">
-                                    <b>
-                                        <span t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
-                                    </b>
-                                </a>
-                                <div class="dropdown-menu js_usermenu" role="menu">
-                                    <a id="o_logout" class="dropdown-item" t-attf-href="/web/session/logout?redirect=/" role="menuitem">Logout</a>
-                                </div>
-                            </li>
+                            <t t-call="portal.user_dropdown">
+                                <t t-set="_user_name" t-value="true"/>
+                                <t t-set="_item_class" t-value="'nav-item dropdown'"/>
+                                <t t-set="_link_class" t-value="'nav-link'"/>
+                                <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-right'"/>
+                            </t>
                         </ul>
                     </div>
                 </div>
@@ -69,6 +63,21 @@
                 </t>
             </div>
         </div>
+    </template>
+
+    <template id="user_dropdown" name="Portal User Dropdown">
+        <t t-set="is_connected" t-value="not user_id._is_public()"/>
+        <li t-if="is_connected" t-attf-class="#{_item_class}">
+            <a href="#" role="button" data-toggle="dropdown" t-attf-class="dropdown-toggle #{_link_class}">
+                <img t-if="_avatar" t-att-src="image_data_uri(user_id.image_256)" t-attf-class="rounded-circle #{_avatar_class}" width="24" height="24" alt="" loading="eager"/>
+                <i t-if="_icon" t-attf-class="fa fa-1x fa-fw fa-user-circle-o #{_icon_class}"/>
+                <span t-if="_user_name" t-attf-class="#{_user_name_class}" t-esc="user_id.name[:23] + '...' if user_id.name and len(user_id.name) &gt; 25 else user_id.name"/>
+            </a>
+            <div t-attf-class="dropdown-menu js_usermenu #{_dropdown_menu_class}" role="menu">
+                <div id="o_logout_divider" class="dropdown-divider"/>
+                <a t-attf-href="/web/session/logout?redirect=/" role="menuitem" id="o_logout" class="dropdown-item">Logout</a>
+            </div>
+        </li>
     </template>
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
@@ -525,8 +534,8 @@
         </ul>
     </template>
 
-    <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.frontend_layout">
-        <xpath expr="//a[@id='o_logout']" position="before">
+    <template id="my_account_link" name="Link to frontend portal" inherit_id="portal.user_dropdown">
+        <xpath expr="//*[@id='o_logout_divider']" position="before">
             <a href="/my/home" role="menuitem" class="dropdown-item">My Account</a>
         </xpath>
     </template>
