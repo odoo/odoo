@@ -1067,7 +1067,7 @@ class Task(models.Model):
     # If depth == 3, return children to third generation
     # If depth <= 0, return all children without depth limit
     def _get_all_subtasks(self, depth=0):
-        children = self.mapped('child_ids')
+        children = self.mapped('child_ids').filtered(lambda children: children.active)
         if not children:
             return self.env['project.task']
         if depth == 1:
