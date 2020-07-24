@@ -156,12 +156,11 @@ class AccountMove(models.Model):
             street = ', '.join([x for x in (move.partner_id.street, move.partner_id.street2) if x])
 
             invoice_npwp = '000000000000000'
-            if not move.partner_id.vat:
-                if move.partner_id.vat and len(move.partner_id.vat) >= 12:
-                    invoice_npwp = move.partner_id.vat
-                elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
-                    invoice_npwp = move.partner_id.l10n_id_nik
-                invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
+            if move.partner_id.vat and len(move.partner_id.vat) >= 12:
+                invoice_npwp = move.partner_id.vat
+            elif (not move.partner_id.vat or len(move.partner_id.vat) < 12) and move.partner_id.l10n_id_nik:
+                invoice_npwp = move.partner_id.l10n_id_nik
+            invoice_npwp = invoice_npwp.replace('.', '').replace('-', '')
 
             # Here all fields or columns based on eTax Invoice Third Party
             eTax['KD_JENIS_TRANSAKSI'] = move.l10n_id_tax_number[0:2] or 0
