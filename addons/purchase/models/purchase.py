@@ -461,6 +461,7 @@ class PurchaseOrder(models.Model):
             if order.invoice_status != 'to invoice':
                 continue
 
+            order = order.with_company(order.company_id)
             pending_section = None
             # Invoice values.
             invoice_vals = order._prepare_invoice()
@@ -519,7 +520,6 @@ class PurchaseOrder(models.Model):
         """Prepare the dict of values to create the new invoice for a purchase order.
         """
         self.ensure_one()
-        self = self.with_company(self.company_id)
         move_type = self._context.get('default_move_type', 'in_invoice')
         journal = self.env['account.move'].with_context(default_move_type=move_type)._get_default_journal()
         if not journal:
