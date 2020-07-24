@@ -98,7 +98,7 @@ class CommaSeparated(collections.UserList):
 
     @staticmethod
     def formatter(rcast: callable):
-        return lambda opt: ",".join(map(rcast, opt))
+        return lambda comma_separated: ",".join(map(rcast, comma_separated))
 
 
 
@@ -617,7 +617,6 @@ Command(
     ])
 
 
-
 ########################################################################
 ########################################################################
 ########################################################################
@@ -643,10 +642,10 @@ def load_environ():
 def load_cli():
     global subcommand
 
-    def to_argparse(option):
-        return (
-            [opt for opt in (option.shortopt, option.longopt) if opt],
-            {
+    def add_options(parser, options):
+        for option in options:
+            args = [opt for opt in (option.shortopt, option.longopt) if opt]
+            kwargs = {
                 'dest': option.name,
                 'action': option.action,
                 'help': option.help,
@@ -654,37 +653,24 @@ def load_cli():
                 **{'metavar': o.metavar for o in (option,) if o.metavar},
                 **{'const': o.const for o in (option,) if o.const},
             }
-        )
-
-    main_parser = argparse.ArgumentParser()
-    commands = iter(commandmap.values())
-
-    # First command is the root command with common options
-    for args, kwargs in map(to_argparse, next(commands).options):
-        try:
-            main_parser.add_argument(*args, **kwargs)
-        except Exception as exc:
-            raise Exception(f"{args} {kwargs}") from exc
-
-    # Later commands are subcommands with dedicated options
-    subparsers = main_parser.add_subparsers(dest='subcommand')
-    for command in commands:
-        parser = subparsers.add_parser(command.name)
-
-        for args, kwargs in map(to_argparse, command.options):
             try:
                 parser.add_argument(*args, **kwargs)
             except Exception as exc:
                 raise Exception(f"{args} {kwargs}") from exc
+        
+
+    # Build the CLI
+    main_parser = argparse.ArgumentParser()
+    subparsers = main_parser.add_subparsers(dest='subcommand')
+    for command in commandmap.values():
+        parser = subparsers.add_parser(command.name) if command.name else main_parser
+        add_options(parser, command.options)
 
         for group in command.groups:
             groupcli = parser.add_argument_group(group.title)
-            for args, kwargs, in map(to_argparse, group.options):
-                try:
-                    groupcli.add_argument(*args, **kwargs)
-                except Exception as exc:
-                    raise Exception(f"{args} {kwargs}") from exc
+            add_options(parser, group.options)
 
+    # Process parsed args
     options = sourcemap['cli']
     options.clear()
     cli_options = vars(main_parser.parse_args())
@@ -804,7 +790,7 @@ class Config(collections.abc.MutableMapping):
         val = self._chainmap[option]
         if val is DELETED:
             raise KeyError(f"{option} has been removed")
-        elif type(val) is DeprecatedAlias:
+        elif insintance(val, DeprecatedAlias):
             warnings.warn(
                 f"The {option} is a deprecated alias to {val.aliased_option}, "
                 "please use the latter. The option may be overridable via a "
@@ -827,19 +813,19 @@ class Config(collections.abc.MutableMapping):
     def __len__(self):
         return len(self._chainmap)
 
-    def __enter__(self, tempopts=None):
+    @contextlib.contextmanager
+    def __call__(self, tempopts=None):
         if tempopts is None:
             tempopts = {}
-
         self._tempopts_chain.maps.insert(0, tempopts)
-        return tempopts
-
-    def __exit__ (self, type, value, tb):
-        del self._tempopts_chain.maps[0]
-
+        try:
+            yield tempopts
+        finally:
+            self._tempopts_chain.maps.remove[tempopts]
 
     @property
     def addons_data_dir(self):
+        warnings.warn('moved to')
         return self['data_dir'].joinpath('addons')
 
     @property
