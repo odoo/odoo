@@ -2210,7 +2210,7 @@ var BasicModel = AbstractModel.extend({
      */
     _buildOnchangeSpecs: function (record, viewType) {
         var hasOnchange = false;
-        var specs = {};
+        const onchangeSpec = {};
         var fieldsInfo = record.fieldsInfo[viewType || record.viewType];
         generateSpecs(fieldsInfo, record.fields);
 
@@ -2222,7 +2222,7 @@ var BasicModel = AbstractModel.extend({
                 var field = fields[name];
                 var fieldInfo = fieldsInfo[name];
                 var key = prefix + name;
-                specs[key] = (field.onChange) || "";
+                onchangeSpec[key] = (field.onChange) || "";
                 if (field.onChange) {
                     hasOnchange = true;
                 }
@@ -2233,7 +2233,7 @@ var BasicModel = AbstractModel.extend({
                 }
             });
         }
-        return hasOnchange ? specs : false;
+        return { hasOnchange , onchangeSpec };
     },
     /**
      * Ensures that dataPoint ids are always synchronized between the main and
@@ -4103,7 +4103,6 @@ var BasicModel = AbstractModel.extend({
         var fields = params.fields;
         var fieldsInfo = params.fieldsInfo;
         var fieldNames = Object.keys(fieldsInfo[targetView]);
-        var fields_key = _.without(fieldNames, '__last_update');
 
         // Fields that are present in the originating view, that need to be initialized
         // Hence preventing their value to crash when getting back to the originating view
@@ -4127,7 +4126,7 @@ var BasicModel = AbstractModel.extend({
         });
 
         // Default values will be provided by the very first onchange (below).
-        var result = {}
+        const result = {};
 
         // We want to overwrite the default value of the handle field (if any),
         // in order for new lines to be added at the correct position.
@@ -4156,7 +4155,8 @@ var BasicModel = AbstractModel.extend({
                         }
                         resolve();
                     };
-                    self._performOnChange(record, [])
+                    // this one will make python apply default_get
+                    self._performOnChange(record, null)
                     .then(always).guardedCatch(always);
                 });
                 return def;
@@ -4229,9 +4229,25 @@ var BasicModel = AbstractModel.extend({
      */
     _performOnChange: function (record, fields, viewType) {
         var self = this;
-        var onchangeSpec = this._buildOnchangeSpecs(record, viewType);
-        if (fields && !onchangeSpec) {
+        const firstOnChange = !fields || !fields.length;
+        fields = fields || [];
+
+        // In python, The first onchange will fillup the record with default values
+        // we need to send every field name known to us.
+        let { hasOnchange , onchangeSpec } = this._buildOnchangeSpecs(record, viewType);
+        if (!firstOnChange && !hasOnchange) {
             return Promise.resolve();
+        }
+        // Because default_get will be called in python, certain specific
+        // fields are not supposed to be computed at this time, and usually
+        // are computed at proper create/write, i.e. some Magic Fields
+        const noDefault = ['__last_update'];
+        if (firstOnChange) {
+            onchangeSpec = Object.fromEntries(
+                Object.entries(onchangeSpec).filter(([dotName]) =>
+                    !noDefault.some(fname => dotName.includes(fname))
+                )
+            );
         }
         var idList = record.data.id ? [record.data.id] : [];
         var options = {
@@ -4245,7 +4261,7 @@ var BasicModel = AbstractModel.extend({
         var context = this._getContext(record, options);
         var currentData = this._generateOnChangeData(record, {
             changesOnly: false,
-            firstOnChange: fields.length === 0,
+            firstOnChange,
         });
 
         return self._rpc({
