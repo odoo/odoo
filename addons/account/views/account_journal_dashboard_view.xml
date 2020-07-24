@@ -37,8 +37,8 @@
                                 <div class="o_primary">
                                     <a type="object" name="open_action"><field name="name"/></a>
                                 </div>
-                                <div class="o_secondary" t-att-title="dashboard.title">
-                                    <field name="type"/>
+                                <div class="o_secondary" t-att-title="dashboard.title" t-if="alias_id != ''">
+                                    <field name="alias_id"/>
                                 </div>
                             </div>
                             <div class="o_kanban_manage_button_section">
@@ -348,7 +348,7 @@
     </record>
 
     <record id="open_account_journal_dashboard_kanban" model="ir.actions.act_window">
-        <field name="name">Accounting Overview</field>
+        <field name="name">Accounting Dashboard</field>
         <field name="res_model">account.journal</field>
         <field name="view_mode">kanban,form</field>
         <field name="view_id" ref="account_journal_dashboard_kanban_view"/>
