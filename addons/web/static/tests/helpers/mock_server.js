@@ -1196,28 +1196,35 @@ var MockServer = Class.extend({
         }
         const firstOnChange = !fields || !fields.length;
         const result = {};
+        let defaults;
         if (firstOnChange) {
-            const defaultingFields = Object.keys(onChangeSpec).reduce((acc, fname) => {
+            const fieldsFromView = Object.keys(onChangeSpec).reduce((acc, fname) => {
                     fname = fname.split('.', 1)[0];
-                    if (!acc.includes(fname) && !(fname in currentData)) {
+                    if (!acc.includes(fname)) {
                         acc.push(fname);
                     }
                     return acc;
                 }, []);
-            Object.assign(result, this._mockDefaultGet(model, [defaultingFields], kwargs));
+            const defaultingFields = fieldsFromView.filter(fname => !(fname in currentData));
+            defaults = this._mockDefaultGet(model, [defaultingFields], kwargs);
+            // It is the new semantics: no field in arguments means we are in
+            // a default_get + onchange situation
+            fields = fieldsFromView;
         }
-        _.each(fields, function (field) {
+        Object.assign(currentData, defaults);
+        fields.forEach(field => {
             if (field in onchanges) {
-                var changes = _.clone(currentData);
+                const changes = Object.assign({}, currentData);
                 onchanges[field](changes);
-                _.each(changes, function (value, key) {
+                Object.entries(changes).forEach(([key, value]) => {
                     if (currentData[key] !== value) {
                         result[key] = value;
                     }
                 });
             }
         });
-        return {value: result};
+
+        return {value: Object.assign({}, defaults || {}, result) };
     },
     /**
      * Simulate a 'read' operation.
