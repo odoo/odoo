@@ -7,7 +7,7 @@ import re
 import shutil
 
 import odoo
-from odoo.tools.config import config
+from odoo.config import config
 
 VERSION = 1
 DEFAULT_EXCLUDE = [

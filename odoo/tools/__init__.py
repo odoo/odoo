@@ -3,11 +3,9 @@
 
 from . import pycompat
 from . import win32
-from . import appdirs
 from . import osutil
 from . import pdf
 from . import cloc
-from .config import config
 from .misc import *
 from .translate import *
 from .image import *

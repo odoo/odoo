@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-def boot(aslib=True):
-    # only boot once
-    if getattr(boot, "called", False):
+def warmup():
+    # only warmup once
+    if getattr(warmup, "called", False):
         return
-    boot.called = True
+    warmup.called = True
 
     _ensure_version()
 
@@ -17,21 +17,20 @@ def boot(aslib=True):
 
     # phase 2, configuration loading and exposure
     from . import config as config_module
+    config_module.load_default()
     config_module.load_environ()
-    if not aslib:
-        config_module.load_cli()
+    config_module.load_cli()
     config_module.load_file()
     config_module.ensure_data_dir(config_module.config['data_dir'])
 
-    # phase 3, dynamic library configuration
-    if not aslib and conf.subcommand == 'gevent':
-        _use_cooperative_networking()
-    _configure_logging(aslib=aslib)
+    print()
+    for option in config_module.optionmap:
+        print(option, ":", " -> ".join(map(repr, (config_module.sourcemap[src].get(option, None) for src in ['cli', 'file', 'environ', 'default']))))
+    print()        
 
-    # phase 4, addons_path and upgrade_path namespaces setup
-    from . import addons, upgrade
-    from . import modules
-    modules.initialize_sys_path()
+    # phase 3, dynamic library configuration
+    if config_module.subcommand == 'gevent':
+        _use_cooperative_networking()
 
 
 def _ensure_version():
@@ -112,8 +111,3 @@ def _use_cooperative_networking():
                 raise psycopg2.OperationalError(
                     "Bad result from poll: %r" % state)
     psycopg2.extensions.set_wait_callback(gevent_wait_callback)
-
-
-def _configure_logging():
-    from . import netsvc
-    netsvc.init_logger()

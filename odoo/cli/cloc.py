@@ -5,8 +5,9 @@ import os
 import sys
 import textwrap
 
-from odoo.tools import cloc, config
 from . import Command
+from odoo import config
+from odoo.tools import cloc
 
 class Cloc(Command):
     """\

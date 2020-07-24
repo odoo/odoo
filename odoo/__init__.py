@@ -10,21 +10,6 @@ __path__ = [
     for path in __import__("pkgutil").extend_path(__path__, __name__)
 ]
 
-import pdb; pdb.set_trace()
-exit()
-
-#----------------------------------------------------------
-# Effective booting
-# librares configuration, cli/config loading, environment setup
-#----------------------------------------------------------
-__import__("importlib").import_module("odoo.bootstrap").boot()
-
-
-#----------------------------------------------------------
-# Aliases
-#----------------------------------------------------------
-from odoo.tools.translate import _, _lt
-from odoo.config import config
 
 # The hard-coded super-user id (a.k.a. administrator, or root user).
 SUPERUSER_ID = 1
@@ -39,3 +24,46 @@ def registry(database_name=None):
         import threading
         database_name = threading.currentThread().dbname
     return modules.registry.Registry(database_name)
+
+#----------------------------------------------------------
+# Standard library tweeks and odoo configuration
+#----------------------------------------------------------
+__import__('importlib').import_module('odoo.bootstrap').warmup()
+
+#----------------------------------------------------------
+# Namespaces
+#----------------------------------------------------------
+from . import addons
+from . import upgrade
+
+#----------------------------------------------------------
+# Imports
+#----------------------------------------------------------
+from . import conf
+from . import loglevels
+from . import modules
+from . import logging_config
+from . import osv
+from . import release
+from . import service
+from . import sql_db
+from . import tools
+
+#----------------------------------------------------------
+# Model classes, fields, api decorators, and translations
+#----------------------------------------------------------
+from . import models
+from . import fields
+from . import api
+from odoo.tools.translate import _, _lt
+
+#----------------------------------------------------------
+# Other imports, which may require stuff from above
+#----------------------------------------------------------
+from . import cli
+from . import http
+
+#----------------------------------------------------------
+# Initialize the namespaces
+#----------------------------------------------------------
+modules.initialize_sys_path()

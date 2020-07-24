@@ -124,20 +124,6 @@ def init_logger():
         return record
     logging.setLogRecordFactory(record_factory)
 
-    # enable deprecation warnings (disabled by default)
-    warnings.filterwarnings('default', category=DeprecationWarning)
-    # ignore deprecation warnings from invalid escape (there's a ton and it's
-    # pretty likely a super low-value signal)
-    warnings.filterwarnings('ignore', r'^invalid escape sequence \\.', category=DeprecationWarning)
-    # ignore a bunch of warnings we can't really fix ourselves
-    for module in [
-        'setuptools.depends',# older setuptools version using imp
-        'zeep.loader',# zeep using defusedxml.lxml
-        'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
-        'xlrd/xlsx',# xlrd mischecks iter() on trees or something so calls deprecated getiterator() instead of iter()
-    ]:
-        warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
-
     from .tools.translate import resetlocale
     resetlocale()
 
@@ -187,6 +173,7 @@ def init_logger():
         perf_filter = PerfFilter()
     handler.setFormatter(formatter)
     logging.getLogger().addHandler(handler)
+    logging.getLogger('odoo').removeHandler(null_handler)
     logging.getLogger('werkzeug').addFilter(perf_filter)
 
     if tools.config['log_db']:
@@ -230,3 +217,6 @@ logging.captureWarnings(True)
 def runbot(self, message, *args, **kws):
     self.log(logging.RUNBOT, message, *args, **kws)
 logging.Logger.runbot = runbot
+
+null_handler = logging.NullHandler()
+logging.Logger('odoo').addHandler(null_handler)
