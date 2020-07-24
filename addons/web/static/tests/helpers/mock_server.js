@@ -1188,20 +1188,26 @@ var MockServer = Class.extend({
      * @param {string|string[]} args a list of field names, or just a field name
      * @returns {Object}
      */
-    _mockOnchange: function (model, args) {
+    _mockOnchange: function (model, [idList, currentData, fields, onChangeSpec], kwargs={}) {
         var onchanges = this.data[model].onchanges || {};
-        var record = args[1];
-        var fields = args[2];
-        if (!(fields instanceof Array)) {
+
+        if (fields && !(fields instanceof Array)) {
             fields = [fields];
         }
-        var result = {};
+        const firstOnChange = !fields || !fields.length;
+        const result = {};
+        if (firstOnChange) {
+            const defaultingFields = Object.keys(onChangeSpec)
+                .map(fname => fname.split('.', 1))
+                .filter(fname => !(fname in currentData));
+            Object.assign(result, this._mockDefaultGet(model, [defaultingFields], kwargs));
+        }
         _.each(fields, function (field) {
             if (field in onchanges) {
-                var changes = _.clone(record);
+                var changes = _.clone(currentData);
                 onchanges[field](changes);
                 _.each(changes, function (value, key) {
-                    if (record[key] !== value) {
+                    if (currentData[key] !== value) {
                         result[key] = value;
                     }
                 });
