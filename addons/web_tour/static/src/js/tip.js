@@ -156,6 +156,9 @@ var Tip = Widget.extend({
      * @param {boolean} [forceReposition=false]
      */
     _updatePosition: function (forceReposition = false) {
+        if (this.info.hidden) {
+            return;
+        }
         let halfHeight = 0;
         if (this.initialPosition === 'right' || this.initialPosition === 'left') {
             halfHeight = this.$anchor.innerHeight() / 2;
