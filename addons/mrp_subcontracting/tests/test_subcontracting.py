@@ -569,6 +569,35 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         mo = self.env['mrp.production'].search([('bom_id', '=', self.bom.id)])
         self.assertEqual(len(mo), 1)
 
+    def test_flow_11(self):
+        """ Subcontracting order and its picking should not be cancelled and merged
+            product qty if propgate_cancel is false
+        """
+        resupply_sub_on_order_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
+        (self.comp1 + self.comp2).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
+
+        picking_form = Form(self.env['stock.picking'])
+        picking_form.picking_type_id = self.env.ref('stock.picking_type_in')
+        picking_form.partner_id = self.subcontractor_partner1
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 5
+        picking_receipt = picking_form.save()
+
+        with picking_form.move_ids_without_package.new() as move:
+            move.product_id = self.finished
+            move.product_uom_qty = 5
+        picking_form.save()
+
+        picking_receipt.move_lines.propagate_cancel = False
+        picking_receipt.action_confirm()
+
+        subcontracting_mo = picking_receipt.move_lines.move_orig_ids.mapped('production_id')
+        self.assertEqual(subcontracting_mo.mapped('picking_ids')[0].state, 'confirmed')
+        self.assertEqual(subcontracting_mo.mapped('picking_ids')[1].state, 'confirmed')
+        self.assertEqual(subcontracting_mo[0].product_qty, 5.0)
+        self.assertEqual(subcontracting_mo[1].product_qty, 5.0)
+
 
 class TestSubcontractingTracking(TransactionCase):
     def setUp(self):

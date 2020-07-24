@@ -55,7 +55,7 @@ class StockMove(models.Model):
             if self.env.context.get('cancel_backorder') is False:
                 return super(StockMove, self).write(values)
             self.filtered(lambda m: m.is_subcontract and
-            m.state not in ['draft', 'cancel', 'done'])._update_subcontract_order_qty(values['product_uom_qty'])
+            m.state not in ['draft', 'cancel', 'done'] and m.propagate_cancel)._update_subcontract_order_qty(values['product_uom_qty'])
         return super(StockMove, self).write(values)
 
     def action_show_details(self):
@@ -95,7 +95,7 @@ class StockMove(models.Model):
 
     def _action_cancel(self):
         for move in self:
-            if move.is_subcontract:
+            if move.is_subcontract and move.propagate_cancel:
                 move.move_orig_ids.production_id._action_cancel()
         return super()._action_cancel()
 
