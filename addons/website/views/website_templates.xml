@@ -134,13 +134,7 @@
     <xpath expr="//header//ul[@id='top_menu']" position="attributes">
         <attribute name="class" separator=" " add="o_menu_loading" remove="text-right ml-auto"/>
     </xpath>
-    <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="attributes">
-        <attribute name="t-if">website.user_id != user_id</attribute>
-    </xpath>
-    <xpath expr="//header//ul[@id='top_menu']/li[hasclass('dropdown')]" position="attributes">
-        <attribute name="t-if">website.user_id != user_id</attribute>
-    </xpath>
-    <xpath expr="//header//ul[@id='top_menu']/li[hasclass('divider')]" position="before">
+    <xpath expr="//header//ul[@id='top_menu']/t[@t-call='portal.user_dropdown']" position="before">
         <t t-foreach="website.menu_id.child_id" t-as="submenu">
             <t t-call="website.submenu">
                 <t t-set="item_class" t-value="'nav-item'"/>
@@ -204,6 +198,16 @@
     </xpath>
     <xpath expr="//body" position="inside">
         <t t-raw="website.custom_code_footer"/>
+    </xpath>
+</template>
+
+<template id="user_dropdown" inherit_id="portal.user_dropdown">
+    <xpath expr="//t[@t-set='is_connected']" position="replace">
+        <t t-set="is_connected" t-value="False"/>
+        <t t-if="website">
+            <t t-set="is_connected" t-value="website.user_id != user_id"/>
+        </t>
+        <t t-else="">$0</t>
     </xpath>
 </template>
 
