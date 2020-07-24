@@ -88,7 +88,7 @@ class WebsiteProfile(http.Controller):
             status, headers, image_base64 = request.env['ir.http'].binary_content(
                 model='res.users', id=user_id, field=field,
                 default_mimetype='image/png')
-        if status == 301:
+        if status in [301, 302]:
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if status == 304:
             return werkzeug.wrappers.Response(status=304)

@@ -466,7 +466,7 @@ class IrHttp(models.AbstractModel):
     def _response_by_status(self, status, headers, content):
         if status == 304:
             return werkzeug.wrappers.Response(status=status, headers=headers)
-        elif status == 301:
-            return werkzeug.utils.redirect(content, code=301)
+        elif status in [301, 302]:
+            return werkzeug.utils.redirect(content, code=status)
         elif status != 200:
             return request.not_found()

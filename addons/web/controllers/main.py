@@ -1453,7 +1453,7 @@ class Binary(http.Controller):
             status, headers, image_base64, model='ir.attachment', id=None,
             field='datas', download=None, width=0, height=0, crop=False,
             quality=0, placeholder='placeholder.png'):
-        if status in [301, 304] or (status != 200 and download):
+        if status in [301, 302, 304] or (status != 200 and download):
             return request.env['ir.http']._response_by_status(status, headers, image_base64)
         if not image_base64:
             if placeholder is None and model in request.env:
