@@ -15,6 +15,7 @@
         'website_event_track_quiz',
     ],
     'data': [
+        'views/event_meet_templates.xml',
     ],
     'demo': [
     ],
