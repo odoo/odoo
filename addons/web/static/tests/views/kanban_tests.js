@@ -5962,6 +5962,45 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test("progressbar should load tasks as kanban limit", async function (assert) {
+        assert.expect(4);
+
+        this.data.partner.records = this.data.partner.records.concat([
+            {id: 6, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==', salary: 1750, currency_id: 1},
+            {id: 7, bar: true, foo: "yop", int_field: 10, qux: 0.4, product_id: 3, state: "abc", category_ids: [], 'image': 'R0lGODlhAQABAAD/ACwAAAAAAQABAAACAA==', salary: 1750, currency_id: 1},
+        ]);
+        var kanban = await createView({
+            View: KanbanView,
+            model: 'partner',
+            data: this.data,
+            domain: [['bar', '=', true]],
+            arch:
+                `<kanban limit="2">
+                    <progressbar field="foo" colors=\'{"yop": "success", "gnap": "warning", "blip": "danger"}\'/>
+                    <templates><t t-name="kanban-box">
+                        <div>
+                            <field name="id"/>
+                            <field name="foo"/>
+                        </div>
+                    </t></templates>
+                </kanban>`,
+            groupBy: ['bar'],
+        });
+
+        assert.strictEqual(kanban.$('.o_kanban_record').length, 2, "There should be 2 Kanban");
+        assert.strictEqual(kanban.$('.o_kanban_record span:contains("yop")').length, 1, "There should be 1 Kanban for Yop");
+
+        await testUtils.dom.click(kanban.$('.bg-success-full'));
+
+        assert.strictEqual(kanban.$('.oe_kanban_card_success').length, 2, "There should be 2 kanban for success");
+
+        await testUtils.dom.click(kanban.$('.o_kanban_load_more'));
+
+        assert.strictEqual(kanban.$('.oe_kanban_card_success').length, 3, "After load more there should be 3 kanban for success");
+
+        kanban.destroy();
+    });
+
     QUnit.test('keep adding quickcreate in first column after a record from this column was moved', async function (assert) {
         assert.expect(2);
 
