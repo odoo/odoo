@@ -37,7 +37,7 @@ class AccountMove(models.Model):
             return
 
         # Copy data from PO
-        invoice_vals = self.purchase_id._prepare_invoice()
+        invoice_vals = self.purchase_id.with_company(self.purchase_id.company_id)._prepare_invoice()
         self.update(invoice_vals)
 
         # Copy purchase lines.
