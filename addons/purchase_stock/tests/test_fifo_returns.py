@@ -2,13 +2,12 @@
 
 import time
 
-from .common import PurchaseTestCommon
 from odoo.tests import tagged, Form
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 
 
 @tagged('-at_install', 'post_install')
-class TestFifoReturns(PurchaseTestCommon, AccountTestCommon):
+class TestFifoReturns(ValuationReconciliationTestCommon):
 
     def test_fifo_returns(self):
         """Test to create product and purchase order to test the FIFO returns of the product"""
@@ -21,16 +20,12 @@ class TestFifoReturns(PurchaseTestCommon, AccountTestCommon):
             'default_code': 'FIFORET',
             'name': 'FIFO Ice Cream',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_1').id,
+            'categ_id': self.stock_account_product_categ.id,
             'standard_price': 0.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
             'uom_po_id': self.env.ref('uom.product_uom_kgm').id,
             'description': 'FIFO Ice Cream',
         })
-        product_fiforet_icecream.categ_id.property_cost_method = 'fifo'
-        product_fiforet_icecream.categ_id.property_valuation = 'real_time'
-        product_fiforet_icecream.categ_id.property_stock_account_input_categ_id = self.o_expense
-        product_fiforet_icecream.categ_id.property_stock_account_output_categ_id = self.o_income
 
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
