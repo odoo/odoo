@@ -426,6 +426,169 @@ QUnit.test('chatter should become enabled when creation done', async function (a
     );
 });
 
+QUnit.test('read more/less links are not duplicated when switching from read to edit mode', async function (assert) {
+    assert.expect(5);
+
+    this.data['mail.message'].records = [{
+        author_id: [100, "Someone"],
+        // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
+        body: `
+            <div>
+                Dear Joel Willis,<br>
+                Thank you for your enquiry.<br>
+                If you have any questions, please let us know.
+                <br><br>
+                Thank you,<br>
+                <span data-o-mail-quote="1">-- <br data-o-mail-quote="1">
+                    System
+                </span>
+            </div>
+        `,
+        id: 1000,
+        model: 'res.partner',
+        res_id: 1,
+    }];
+    this.data['res.partner'].records = [{
+        display_name: "first partner",
+        id: 1,
+    }];
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        res_id: 1,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Chatter',
+        "there should be a chatter"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "there should be a message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_readMoreLess',
+        "there should be only one read more"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector('.o_form_button_edit').click();
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message_readMoreLess',
+        "there should still be only one read more after switching to edit mode"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector('.o_form_button_cancel').click();
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message_readMoreLess',
+        "there should still be only one read more after switching back to read mode"
+    );
+});
+
+QUnit.test('read more links becomes read less after being clicked', async function (assert) {
+    assert.expect(6);
+
+    this.data['mail.message'].records = [{
+        author_id: [100, "Someone"],
+        // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
+        body: `
+            <div>
+                Dear Joel Willis,<br>
+                Thank you for your enquiry.<br>
+                If you have any questions, please let us know.
+                <br><br>
+                Thank you,<br>
+                <span data-o-mail-quote="1">-- <br data-o-mail-quote="1">
+                    System
+                </span>
+            </div>
+        `,
+        id: 1000,
+        model: 'res.partner',
+        res_id: 1,
+    }];
+    this.data['res.partner'].records = [{
+        display_name: "first partner",
+        id: 1,
+    }];
+    await this.createView({
+        data: this.data,
+        hasView: true,
+        // View params
+        View: FormView,
+        model: 'res.partner',
+        res_id: 1,
+        arch: `
+            <form string="Partners">
+                <sheet>
+                    <field name="name"/>
+                </sheet>
+                <div class="oe_chatter">
+                    <field name="message_ids"/>
+                </div>
+            </form>
+        `,
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Chatter',
+        "there should be a chatter"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "there should be a message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_readMoreLess',
+        "there should be a read more"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        'read more',
+        "read more/less link should contain 'read more' as text"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector('.o_form_button_edit').click();
+    });
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        'read more',
+        "read more/less link should contain 'read more' as text"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector('.o_Message_readMoreLess').click();
+    });
+    assert.strictEqual(
+        document.querySelector('.o_Message_readMoreLess').textContent,
+        'read less',
+        "read more/less link should contain 'read less' as text after it has been clicked"
+    );
+});
+
 QUnit.test('Form view not scrolled when switching record', async function (assert) {
     assert.expect(6);
 

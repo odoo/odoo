@@ -104,6 +104,12 @@ class Message extends Component {
     _constructor() {}
 
     mounted() {
+        // Remove all readmore before if any before reinsert them with _insertReadMoreLess.
+        // This is needed because _insertReadMoreLess is working with direct DOM mutations
+        // which are not sync with Owl.
+        for (const el of [...this._contentRef.el.querySelectorAll(':scope .o_Message_readMoreLess')]) {
+            el.remove();
+        }
         this._insertReadMoreLess($(this._contentRef.el));
         this._update();
     }
@@ -309,6 +315,8 @@ class Message extends Component {
      * Those text nodes need to be wrapped in a span (toggle functionality).
      * All consecutive elements are joined in one 'read more/read less'.
      *
+     * FIXME This method should be rewritten (task-2308951)
+     *
      * @private
      * @param {jQuery} $element
      */
@@ -362,7 +370,7 @@ class Message extends Component {
         for (const group of groups) {
             // Insert link just before the first node
             const $readMoreLess = $('<a>', {
-                class: 'o_Message_readMore',
+                class: 'o_Message_readMoreLess',
                 href: '#',
                 text: READ_MORE,
             }).insertBefore(group[0]);
