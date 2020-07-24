@@ -49,13 +49,6 @@ class TestLandedCosts(TestStockLandedCostsCommon):
             'picking_id': self.picking_out.id,
             'location_id': self.warehouse.lot_stock_id.id,
             'location_dest_id': self.customer_location_id})
-        self.stock_input_account, self.stock_output_account, self.stock_valuation_account, self.expense_account, self.stock_journal = _create_accounting_data(self.env)
-        self.categ_all.write({
-            'property_stock_account_input_categ_id': self.stock_input_account.id,
-            'property_stock_account_output_categ_id': self.stock_output_account.id,
-            'property_stock_valuation_account_id': self.stock_valuation_account.id,
-            'property_stock_journal': self.stock_journal.id,
-        })
 
     def test_00_landed_costs_on_incoming_shipment(self):
         """ Test landed cost on incoming shipment """
@@ -334,7 +327,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         # Check SVL and AML
         svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_lines.id)])
         self.assertAlmostEqual(svl.value, 455)
-        aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)])
+        aml = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_valuation'].id)])
         self.assertAlmostEqual(aml.debit, 455)
 
         # Create and validate LC
@@ -357,7 +350,7 @@ class TestLandedCostsWithPurchaseAndInv(TestStockValuationLCCommon):
         self.assertAlmostEqual(lc.valuation_adjustment_lines.final_cost, 554)
         svl = self.env['stock.valuation.layer'].search([('stock_move_id', '=', receipt.move_lines.id)], order='id desc', limit=1)
         self.assertAlmostEqual(svl.value, 99)
-        aml = self.env['account.move.line'].search([('account_id', '=', self.stock_valuation_account.id)], order='id desc', limit=1)
+        aml = self.env['account.move.line'].search([('account_id', '=', self.company_data['default_account_stock_valuation'].id)], order='id desc', limit=1)
         self.assertAlmostEqual(aml.debit, 99)
 
         # Create an invoice with the same price
