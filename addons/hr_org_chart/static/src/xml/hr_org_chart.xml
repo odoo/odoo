@@ -7,7 +7,7 @@ we need to create EmployeeChart as subcomponent to properly render main componen
 <t t-name="hr_org_chart_employee" owl="1">
     <t t-set="employee" t-value="props.employee"/>
     <div t-attf-class="o_org_chart_entry o_org_chart_entry_{{props.employee_type}} media">
-        <t t-set="is_self" t-value="employee.id == props.orgData.view_employee_id"/>
+        <t t-set="is_self" t-value="employee.id == props.view_employee_id"/>
 
         <div class="o_media_left">
             <!-- NOTE: Since by the default on not squared images odoo add white borders,
@@ -42,7 +42,10 @@ we need to create EmployeeChart as subcomponent to properly render main componen
                 </Popover>
             </t>
             <t t-if="!is_self">
-                <a t-att-href="employee.link" class="o_employee_redirect" t-on-click.prevent="_onEmployeeRedirect" t-att-data-employee-id="employee.id">
+                <a t-att-href="employee.link"
+                    class="o_employee_redirect"
+                    t-on-click.prevent="_onEmployeeRedirect"
+                    t-att-data-employee-id="employee.id">
                     <h5 class="o_media_heading"><b><t t-esc="employee.name"/></b></h5>
                     <strong><t t-esc="employee.job_title"/></strong>
                 </a>
@@ -69,22 +72,22 @@ we need to create EmployeeChart as subcomponent to properly render main componen
             <div class="o_org_chart_entry o_org_chart_more media">
                 <div class="o_media_left">
                     <a class="text-center o_employee_more_managers"
-                            t-on-click.prevent="_onEmployeeMoreManager"
-                            t-att-data-employee-id="orgData.managers[0].id">
+                        t-on-click.prevent="_onEmployeeMoreManager"
+                        t-att-data-employee-id="orgData.managers[0].id">
                         <i class="fa fa-angle-double-up" role="img" aria-label="More managers" title="More managers"/>
                     </a>
                 </div>
             </div>
         </t>
 
-        <t t-foreach="orgData.managers" t-as="employee" t-key="employee.id">
+        <t t-foreach="orgData.managers" t-as="employee" t-key="emp_count">
             <t t-set="emp_count" t-value="emp_count + 1"/>
-            <EmployeeChart employee_type="'manager'" employee="employee" orgData="orgData"/>
+            <EmployeeChart employee_type="'manager'" employee="employee" view_employee_id="orgData.view_employee_id"/>
         </t>
     </div>
 
     <t t-if="orgData.children.length || orgData.managers.length">
-        <EmployeeChart employee_type="'self'" employee="orgData.self" orgData="orgData"/>
+        <EmployeeChart employee_type="'self'" employee="orgData.self" view_employee_id="orgData.view_employee_id"/>
     </t>
 
     <t t-if="!orgData.children.length &amp;&amp; !orgData.managers.length">
@@ -99,7 +102,7 @@ we need to create EmployeeChart as subcomponent to properly render main componen
         <t t-foreach="orgData.children" t-as="employee" t-key="employee.id">
             <t t-set="emp_count" t-value="emp_count + 1"/>
             <t t-if="emp_count &lt; 20">
-                <EmployeeChart employee_type="'sub'" employee="employee" orgData="orgData"/>
+                <EmployeeChart employee_type="'sub'" employee="employee" view_employee_id="orgData.view_employee_id"/>
             </t>
         </t>
 

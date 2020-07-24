@@ -112,7 +112,7 @@ odoo.define('web.OrgChart', function (require) {
 
         _onEmployeeMoreManager(event) {
             event.preventDefault();
-            this.employee = event.currentTarget.data('employee-id');
+            this.employee = parseInt(event.currentTarget.getAttribute('data-employee-id'));
         }
         /**
          * Redirect to the employee form view.
@@ -122,7 +122,7 @@ odoo.define('web.OrgChart', function (require) {
          * @returns {Promise} action loaded
          */
         async _onEmployeeRedirect(event) {
-            const employeeID = $(event.currentTarget).data('employee-id');
+            const employeeID = parseInt(event.currentTarget.getAttribute('data-employee-id'));
             const action = await this.env.services.rpc({
                 model: 'hr.employee',
                 method: 'get_formview_action',
@@ -138,8 +138,8 @@ odoo.define('web.OrgChart', function (require) {
          * @returns {Promise} action loaded
          */
         async _onEmployeeSubRedirect(event) {
-            const employeeID = $(event.currentTarget).data('employee-id');
-            const type = $(event.currentTarget).data('type') || 'direct';
+            const employeeID = parseInt(event.currentTarget.getAttribute('data-employee-id'));
+            const type = event.currentTarget.getAttribute('data-type') || 'direct';
             if (employeeID) {
                 const data = await this._getSubordinatesData(employeeID, type);
                 const domain = [['id', 'in', data]];
