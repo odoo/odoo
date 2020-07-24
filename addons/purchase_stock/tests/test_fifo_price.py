@@ -1,14 +1,13 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-import time
-
-from .common import PurchaseTestCommon
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import tagged, Form
+
+import time
 
 
 @tagged('-at_install', 'post_install')
-class TestFifoPrice(PurchaseTestCommon, AccountTestCommon):
+class TestFifoPrice(ValuationReconciliationTestCommon):
 
     def test_00_test_fifo(self):
         """ Test product cost price with fifo removal strategy."""
@@ -22,7 +21,7 @@ class TestFifoPrice(PurchaseTestCommon, AccountTestCommon):
             'default_code': 'FIFO',
             'name': 'FIFO Ice Cream',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_1').id,
+            'categ_id': self.stock_account_product_categ.id,
             'list_price': 100.0,
             'standard_price': 70.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
@@ -30,10 +29,6 @@ class TestFifoPrice(PurchaseTestCommon, AccountTestCommon):
             'supplier_taxes_id': [],
             'description': 'FIFO Ice Cream',
         })
-        product_cable_management_box.categ_id.property_cost_method = 'fifo'
-        product_cable_management_box.categ_id.property_valuation = 'real_time'
-        product_cable_management_box.categ_id.property_stock_account_input_categ_id = self.o_expense
-        product_cable_management_box.categ_id.property_stock_account_output_categ_id = self.o_income
 
         # I create a draft Purchase Order for first in move for 10 kg at 50 euro
         purchase_order_1 = self.env['purchase.order'].create({
@@ -90,17 +85,17 @@ class TestFifoPrice(PurchaseTestCommon, AccountTestCommon):
 
         # Let us send some goods
         outgoing_shipment = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 20.0,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
-                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-                'picking_type_id': self.env.ref('stock.picking_type_out').id})]
+                'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
             })
 
         # I assign this outgoing shipment
@@ -115,17 +110,17 @@ class TestFifoPrice(PurchaseTestCommon, AccountTestCommon):
 
         # Do a delivery of an extra 500 g (delivery order)
         outgoing_shipment_uom = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 500.0,
                 'product_uom': self.env.ref('uom.product_uom_gram').id,
-                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-                'picking_type_id': self.env.ref('stock.picking_type_out').id})]
+                'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
             })
 
         # I assign this outgoing shipment
@@ -175,17 +170,17 @@ class TestFifoPrice(PurchaseTestCommon, AccountTestCommon):
 
         # Create delivery order of 49.5 kg
         outgoing_shipment_cur = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 49.5,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
-                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-                'picking_type_id': self.env.ref('stock.picking_type_out').id})]
+                'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
         })
 
         # I assign this outgoing shipment
@@ -197,17 +192,17 @@ class TestFifoPrice(PurchaseTestCommon, AccountTestCommon):
 
         # Do a delivery of an extra 10 kg
         outgoing_shipment_ret = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
                 'name': product_cable_management_box.name,
                 'product_id': product_cable_management_box.id,
                 'product_uom_qty': 10,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
-                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-                'picking_type_id': self.env.ref('stock.picking_type_out').id})]
+                'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
             })
 
         # I assign this outgoing shipment
@@ -223,7 +218,7 @@ class TestFifoPrice(PurchaseTestCommon, AccountTestCommon):
             'default_code': 'NEG',
             'name': 'FIFO Negative',
             'type': 'product',
-            'categ_id': self.env.ref('product.product_category_1').id,
+            'categ_id': self.stock_account_product_categ.id,
             'list_price': 100.0,
             'standard_price': 70.0,
             'uom_id': self.env.ref('uom.product_uom_kgm').id,
@@ -231,24 +226,20 @@ class TestFifoPrice(PurchaseTestCommon, AccountTestCommon):
             'supplier_taxes_id': [],
             'description': 'FIFO Ice Cream',
         })
-        product_fifo_negative.categ_id.property_cost_method = 'fifo'
-        product_fifo_negative.categ_id.property_valuation = 'real_time'
-        product_fifo_negative.categ_id.property_stock_account_input_categ_id = self.o_expense
-        product_fifo_negative.categ_id.property_stock_account_output_categ_id = self.o_income
 
         # Create outpicking.create delivery order of 100 kg.
         outgoing_shipment_neg = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
                 'name': product_fifo_negative.name,
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 100,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
-                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-                'picking_type_id': self.env.ref('stock.picking_type_out').id})]
+                'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
         })
 
         # Process the delivery of the first outgoing shipment
@@ -264,17 +255,17 @@ class TestFifoPrice(PurchaseTestCommon, AccountTestCommon):
 
         # Let create another out shipment of 400 kg
         outgoing_shipment_neg2 = self.env['stock.picking'].create({
-            'picking_type_id': self.env.ref('stock.picking_type_out').id,
-            'location_id': self.env.ref('stock.stock_location_stock').id,
+            'picking_type_id': self.company_data['default_warehouse'].out_type_id.id,
+            'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
             'location_dest_id': self.env.ref('stock.stock_location_customers').id,
             'move_lines': [(0, 0, {
                 'name': product_fifo_negative.name,
                 'product_id': product_fifo_negative.id,
                 'product_uom_qty': 400,
                 'product_uom': self.env.ref('uom.product_uom_kgm').id,
-                'location_id': self.env.ref('stock.stock_location_stock').id,
+                'location_id': self.company_data['default_warehouse'].lot_stock_id.id,
                 'location_dest_id': self.env.ref('stock.stock_location_customers').id,
-                'picking_type_id': self.env.ref('stock.picking_type_out').id})]
+                'picking_type_id': self.company_data['default_warehouse'].out_type_id.id})]
         })
 
         # Process the delivery of the outgoing shipments
