@@ -533,8 +533,7 @@ class SaleOrder(models.Model):
         a clean extension chain).
         """
         self.ensure_one()
-        self = self.with_company(self.company_id)
-        journal = self.env['account.move'].with_company(self.company_id).with_context(default_move_type='out_invoice')._get_default_journal()
+        journal = self.env['account.move'].with_context(default_move_type='out_invoice')._get_default_journal()
         if not journal:
             raise UserError(_('Please define an accounting sales journal for the company %s (%s).') % (self.company_id.name, self.company_id.id))
 
@@ -631,8 +630,9 @@ Reason(s) of this behavior could be:
         invoice_vals_list = []
         invoice_item_sequence = 0
         for order in self:
+            order = order.with_company(order.company_id)
             current_section_vals = None
-            down_payments = self.env['sale.order.line']
+            down_payments = order.env['sale.order.line']
 
             # Invoice values.
             invoice_vals = order._prepare_invoice()
@@ -660,7 +660,7 @@ Reason(s) of this behavior could be:
             # If down payments are present in SO, group them under common section
             if down_payments:
                 invoice_item_sequence += 1
-                down_payments_section = self._prepare_down_payment_section_line(sequence=invoice_item_sequence)
+                down_payments_section = order._prepare_down_payment_section_line(sequence=invoice_item_sequence)
                 invoice_lines_vals.append(down_payments_section)
                 for down_payment in down_payments:
                     invoice_item_sequence += 1
