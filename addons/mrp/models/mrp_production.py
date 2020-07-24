@@ -1395,13 +1395,15 @@ class MrpProduction(models.Model):
                 })
             else:
                 for move in production.move_raw_ids | production.move_finished_ids:
-                    new_move = self.env['stock.move'].browse(move._split(move.product_uom_qty - move.unit_factor * production.qty_producing))
-                    if move.raw_material_production_id:
-                        new_move.raw_material_production_id = backorder_mo.id
-                    else:
-                        new_move.production_id = backorder_mo.id
-                    (move | new_move)._do_unreserve()
-                    (move | new_move)._action_assign()
+                    if not move.additional:
+                        qty_to_split = move.product_uom_qty - move.unit_factor * production.qty_producing
+                        new_move = self.env['stock.move'].browse(move._split(qty_to_split))
+                        if move.raw_material_production_id:
+                            new_move.raw_material_production_id = backorder_mo.id
+                        else:
+                            new_move.production_id = backorder_mo.id
+                        (move | new_move)._do_unreserve()
+                        (move | new_move)._action_assign()
             backorders |= backorder_mo
             for wo in backorder_mo.workorder_ids:
                 wo.qty_produced = 0
