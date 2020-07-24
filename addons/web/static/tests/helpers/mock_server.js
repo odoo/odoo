@@ -1197,9 +1197,13 @@ var MockServer = Class.extend({
         const firstOnChange = !fields || !fields.length;
         const result = {};
         if (firstOnChange) {
-            const defaultingFields = Object.keys(onChangeSpec)
-                .map(fname => fname.split('.', 1))
-                .filter(fname => !(fname in currentData));
+            const defaultingFields = Object.keys(onChangeSpec).reduce((acc, fname) => {
+                    fname = fname.split('.', 1)[0];
+                    if (!acc.includes(fname) && !(fname in currentData)) {
+                        acc.push(fname);
+                    }
+                    return acc;
+                }, []);
             Object.assign(result, this._mockDefaultGet(model, [defaultingFields], kwargs));
         }
         _.each(fields, function (field) {
