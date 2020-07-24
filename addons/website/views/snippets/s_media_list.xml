@@ -59,24 +59,66 @@
             <t t-call="website.snippet_options_shadow_widgets"/>
         </div>
         <div data-selector=".s_media_list_item" data-target="> .row">
-            <we-button-group string="Image Position">
-                <we-button title="Left" data-select-class=""><i class="fa fa-fw fa-align-left"/></we-button>
-                <we-button title="Right" data-select-class="flex-row-reverse"><i class="fa fa-fw fa-align-right"/></we-button>
-            </we-button-group>
-            <!-- Don't use the standard Vert. Alignement option to not suggest
-                 Equal Height, which is useless for this snippet -->
-            <we-button-group string="Vert. Alignment" title="Vertical Alignment">
-                <we-button title="Top" data-select-class="align-items-start"><i class="fa fa-fw fa-long-arrow-up"/></we-button>
-                <we-button title="Middle" data-select-class="align-items-center"><i class="fa fa-fw fa-circle"/></we-button>
-                <we-button title="Bottom" data-select-class="align-items-end"><i class="fa fa-fw fa-long-arrow-down"/></we-button>
+            <we-button-group string="Layout">
+                <we-button title="Left"
+                           data-name="media_left_opt"
+                           data-select-class=""
+                           data-img="/website/static/src/img/snippets_options/image_left.svg"/>
+                <we-button title="Right"
+                           data-select-class="flex-row-reverse"
+                           data-img="/website/static/src/img/snippets_options/image_right.svg"/>
             </we-button-group>
         </div>
         <div data-js="MediaItemLayout" data-selector=".s_media_list_item">
-            <we-select string="Layout">
-                <we-button data-layout="6">1/2 - 1/2</we-button>
-                <we-button data-layout="4">1/3 - 2/3</we-button>
-                <we-button data-layout="3">1/4 - 3/4</we-button>
-            </we-select>
+            <we-button-group string="Image Size" data-dependencies="media_left_opt">
+                <we-button data-layout="3"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_4.svg"
+                           title="1/4 - 3/4"/>
+                <we-button data-layout="4"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_3.svg"
+                           title="1/3 - 2/3"/>
+                <we-button data-layout="6"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_2.svg"
+                           title="1/2 - 1/2"/>
+            </we-button-group>
+            <we-button-group string="Image Size" data-dependencies="!media_left_opt">
+                <we-button data-layout="3"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_4_right.svg"
+                           title="1/4 - 3/4"/>
+                <we-button data-layout="4"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_3_right.svg"
+                           title="1/3 - 2/3"/>
+                <we-button data-layout="6"
+                           data-img="/website/static/src/img/snippets_options/media_layout_1_2_right.svg"
+                           title="1/2 - 1/2"/>
+            </we-button-group>
+        </div>
+
+        <div data-selector=".s_media_list_item" data-target="> .row">
+            <!-- Don't use the standard Vert. Alignement option to not suggest
+                 Equal Height, which is useless for this snippet. -->
+            <we-button-group string="Text Position" title="Text Position" data-dependencies="media_left_opt">
+                <we-button title="Align Top"
+                           data-select-class="align-items-start"
+                           data-img="/website/static/src/img/snippets_options/align_top_right.svg"/>
+                <we-button title="Align Middle"
+                           data-select-class="align-items-center"
+                           data-img="/website/static/src/img/snippets_options/align_middle_right.svg"/>
+                <we-button title="Align Bottom"
+                           data-select-class="align-items-end"
+                           data-img="/website/static/src/img/snippets_options/align_bottom_right.svg"/>
+            </we-button-group>
+            <we-button-group string="Text Position" title="Text Position" data-dependencies="!media_left_opt">
+                <we-button title="Align Top"
+                           data-select-class="align-items-start"
+                           data-img="/website/static/src/img/snippets_options/align_top.svg"/>
+                <we-button title="Align Middle"
+                           data-select-class="align-items-center"
+                           data-img="/website/static/src/img/snippets_options/align_middle.svg"/>
+                <we-button title="Align Bottom"
+                           data-select-class="align-items-end"
+                           data-img="/website/static/src/img/snippets_options/align_bottom.svg"/>
+            </we-button-group>
         </div>
     </xpath>
 </template>
