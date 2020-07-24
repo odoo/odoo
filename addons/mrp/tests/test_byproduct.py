@@ -83,3 +83,36 @@ class TestMrpByProduct(common.TransactionCase):
 
         # I see that stock moves of External Hard Disk including Headset USB are done now.
         self.assertFalse(any(move.state != 'done' for move in moves), 'Moves are not done!')
+
+    def test_change_product(self):
+        """ Create a production order for a specific product with a BoM. Then change the BoM and the finished product for
+        other ones and check the finished product of the first mo did not became a byproduct of the second one."""
+        # Create BOM for product A with product B as component
+        bom_product_a = self.MrpBom.create({
+            'product_tmpl_id': self.product_a.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'product_uom_id': self.uom_unit_id,
+            'bom_line_ids': [(0, 0, {'product_id': self.product_b.id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
+            })
+
+        bom_product_a_2 = self.MrpBom.create({
+            'product_tmpl_id': self.product_b.product_tmpl_id.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'product_uom_id': self.uom_unit_id,
+            'bom_line_ids': [(0, 0, {'product_id': self.product_c_id, 'product_uom_id': self.uom_unit_id, 'product_qty': 2})],
+            })
+        # Create production order for product A
+        # -------------------------------------
+
+        mnf_product_a_form = Form(self.env['mrp.production'])
+        mnf_product_a_form.product_id = self.product_a
+        mnf_product_a_form.bom_id = bom_product_a
+        mnf_product_a_form.product_qty = 1.0
+        mnf_product_a = mnf_product_a_form.save()
+        mnf_product_a_form = Form(mnf_product_a)
+        mnf_product_a_form.bom_id = bom_product_a_2
+        mnf_product_a = mnf_product_a_form.save()
+        self.assertEqual(mnf_product_a.move_raw_ids.product_id.id, self.product_c_id)
+        self.assertFalse(mnf_product_a.move_byproduct_ids)
