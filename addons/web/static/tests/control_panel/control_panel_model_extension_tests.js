@@ -1,17 +1,31 @@
-odoo.define('web.control_panel_model_tests', function (require) {
+odoo.define("web/static/tests/control_panel/control_panel_model_extension_tests.js", function (require) {
     "use strict";
 
-    const ControlPanelModel = require('web.ControlPanelModel');
+    const ActionModel = require("web/static/src/js/views/action_model.js");
     const makeTestEnvironment = require('web.test_env');
 
-    function createControlPanelModel(config = {}, env, rpc) {
-        return new ControlPanelModel(Object.assign(
-            { env: makeTestEnvironment(env, rpc) },
-            config
-        ));
+    function createModel(params = {}) {
+        const archs = (params.arch && { search: params.arch, }) || {};
+        const { ControlPanel: controlPanelInfo, } = ActionModel.extractArchInfo(archs);
+        const extensions = {
+            ControlPanel: {
+                context: params.context,
+                archNodes: controlPanelInfo.children,
+                dynamicFilters: params.dynamicFilters,
+                favoriteFilters: params.favoriteFilters,
+                env: makeTestEnvironment(),
+                fields: params.fields,
+            },
+        };
+        const model = new ActionModel(extensions);
+        return model;
     }
     function sanitizeFilters(model) {
-        return Object.values(model.state.filters).map(filter => {
+        const cpme = model.extensions[0].find(
+            (ext) => ext.constructor.name === "ControlPanelModelExtension"
+        );
+        const filters = Object.values(cpme.state.filters);
+        return filters.map(filter => {
             const copy = Object.assign({}, filter);
             delete copy.groupId;
             delete copy.groupNumber;
@@ -20,7 +34,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
         });
     }
 
-    QUnit.module('ControlPanelModel', {
+    QUnit.module('ControlPanelModelExtension', {
         beforeEach() {
             this.fields = {
                 display_name: { string: "Displayed name", type: 'char' },
@@ -33,21 +47,20 @@ odoo.define('web.control_panel_model_tests', function (require) {
     }, function () {
         QUnit.module('Arch parsing');
 
-        QUnit.test('empty arch', function (assert) {
+        QUnit.test('empty arch', async function (assert) {
             assert.expect(1);
-
-            const model = createControlPanelModel();
+            const model = createModel();
             assert.deepEqual(sanitizeFilters(model), []);
         });
 
-        QUnit.test('one field tag', function (assert) {
+        QUnit.test('one field tag', async function (assert) {
             assert.expect(1);
             const arch = `
                 <search>
                     <field name="bar"/>
                 </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields } });
+            const model = createModel({ arch, fields, });
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     description: "Bar",
@@ -58,18 +71,18 @@ odoo.define('web.control_panel_model_tests', function (require) {
             ]);
         });
 
-        QUnit.test('one separator tag', function (assert) {
+        QUnit.test('one separator tag', async function (assert) {
             assert.expect(1);
             const arch = `
-            <search>
-                <separator/>
-            </search>`;
+                <search>
+                    <separator/>
+                </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields } });
+            const model = createModel({ arch, fields, });
             assert.deepEqual(sanitizeFilters(model), []);
         });
 
-        QUnit.test('one separator tag and one field tag', function (assert) {
+        QUnit.test('one separator tag and one field tag', async function (assert) {
             assert.expect(1);
             const arch = `
                 <search>
@@ -77,7 +90,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     <field name="bar"/>
                 </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields } });
+            const model = createModel({ arch, fields, });
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     description: "Bar",
@@ -88,14 +101,14 @@ odoo.define('web.control_panel_model_tests', function (require) {
             ]);
         });
 
-        QUnit.test('one filter tag', function (assert) {
+        QUnit.test('one filter tag', async function (assert) {
             assert.expect(1);
             const arch = `
                 <search>
                     <filter name="filter" string="Hello" domain="[]"/>
                 </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields } });
+            const model = createModel({ arch, fields, });
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     description: "Hello",
@@ -105,15 +118,15 @@ odoo.define('web.control_panel_model_tests', function (require) {
             ]);
         });
 
-        QUnit.test('one filter tag with date attribute', function (assert) {
+        QUnit.test('one filter tag with date attribute', async function (assert) {
             assert.expect(1);
             const arch = `
                 <search>
                     <filter name="date_filter" string="Date" date="date_field"/>
                 </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields } });
-            const dateFilterId = Object.values(model.state.filters)[0].id;
+            const model = createModel({ arch, fields, });
+            const dateFilterId = Object.values(model.get('filters'))[0].id;
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     defaultOptionId: "this_month",
@@ -139,14 +152,14 @@ odoo.define('web.control_panel_model_tests', function (require) {
             ]);
         });
 
-        QUnit.test('one groupBy tag', function (assert) {
+        QUnit.test('one groupBy tag', async function (assert) {
             assert.expect(1);
             const arch = `
                 <search>
                     <filter name="groupby" string="Hi" context="{ 'group_by': 'date_field:day'}"/>
                 </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields } });
+            const model = createModel({ arch, fields, });
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     defaultOptionId: "day",
@@ -159,7 +172,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
             ]);
         });
 
-        QUnit.test('two filter tags', function (assert) {
+        QUnit.test('two filter tags', async function (assert) {
             assert.expect(1);
             const arch = `
                 <search>
@@ -167,7 +180,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     <filter name="filter_2" string="Hello Two" domain="[('bar', '=', 3)]"/>
                 </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields } });
+            const model = createModel({ arch, fields, });
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     description: "Hello One",
@@ -182,7 +195,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
             ]);
         });
 
-        QUnit.test('two filter tags separated by a separator', function (assert) {
+        QUnit.test('two filter tags separated by a separator', async function (assert) {
             assert.expect(1);
             const arch = `
                 <search>
@@ -191,7 +204,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     <filter name="filter_2" string="Hello Two" domain="[('bar', '=', 3)]"/>
                 </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields } });
+            const model = createModel({ arch, fields, });
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     description: "Hello One",
@@ -206,7 +219,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
             ]);
         });
 
-        QUnit.test('one filter tag and one field', function (assert) {
+        QUnit.test('one filter tag and one field', async function (assert) {
             assert.expect(1);
             const arch = `
                 <search>
@@ -214,7 +227,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     <field name="bar"/>
                 </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields } });
+            const model = createModel({ arch, fields, });
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     description: "Hello",
@@ -230,7 +243,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
             ]);
         });
 
-        QUnit.test('two field tags', function (assert) {
+        QUnit.test('two field tags', async function (assert) {
             assert.expect(1);
             const arch = `
                 <search>
@@ -238,7 +251,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     <field name="bar"/>
                 </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields } });
+            const model = createModel({ arch, fields, });
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     description: "Foo",
@@ -270,7 +283,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
                 domain: "[('user_id', '=', uid)]",
             }];
 
-            const model = createControlPanelModel({ viewInfo: { favoriteFilters } });
+            const model = createModel({ favoriteFilters });
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     context: {},
@@ -303,7 +316,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
                 domain: [['id', 'in', [1, 3, 4]]]
             }];
 
-            const model = createControlPanelModel({ dynamicFilters });
+            const model = createModel({ dynamicFilters });
             assert.deepEqual(sanitizeFilters(model), [
                 {
                     description: 'Quick search',
@@ -318,7 +331,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
         QUnit.test('falsy search defaults are not activated', async function (assert) {
             assert.expect(1);
 
-            const actionContext = {
+            const context = {
                 search_default_filter: false,
                 search_default_bar: 0,
                 search_default_groupby: 2,
@@ -330,7 +343,7 @@ odoo.define('web.control_panel_model_tests', function (require) {
                     <field name="bar"/>
                 </search>`;
             const fields = this.fields;
-            const model = createControlPanelModel({ viewInfo: { arch, fields }, actionContext });
+            const model = createModel({ arch, fields, context });
             // only the truthy filter 'groupby' has isDefault true
             assert.deepEqual(sanitizeFilters(model), [
                 {
@@ -356,72 +369,5 @@ odoo.define('web.control_panel_model_tests', function (require) {
 
         });
 
-        QUnit.test('search default field many2one with filter domain', async function (assert) {
-            assert.expect(3);
-
-            const actionContext = {
-                search_default_bar: 20,
-            };
-            const arch = `
-                <search>
-                    <field name="bar" string="Partner" filter_domain="[('bar', 'ilike', self)]"/>
-                </search>`;
-            const fields = this.fields;
-            const model = createControlPanelModel(
-                { viewInfo: { arch, fields }, actionContext }, {},
-                async function mockRPC(route, params) {
-                    assert.deepEqual(params, {
-                        args: [20],
-                        kwargs: {},
-                        method: "name_get",
-                        model: "partner",
-                    });
-                    return [[20, "Gandalf"]];
-                }
-            );
-
-            // Labels not fetched: self = undefined
-            assert.throws(() => model.getQuery());
-
-            await model.isReady;
-
-            // Labels fetched: domain should be ready
-            assert.deepEqual(model.getQuery().domain, [["bar", "ilike", "Gandalf"]]);
-        });
-
-        QUnit.test('search default field many2one with filter domain and default favorite', async function (assert) {
-            assert.expect(2);
-
-            const actionContext = {
-                search_default_bar: 20,
-            };
-            const arch = `
-                <search>
-                    <field name="bar" string="Partner" filter_domain="[('bar', 'ilike', self)]"/>
-                </search>`;
-            const favoriteFilters = [{
-                domain: "[('user_id', '=', uid)]",
-                id: 5,
-                is_default: true,
-                name: 'Sorted filter',
-                user_id: [2, "Mitchell Admin"],
-            }];
-            const fields = this.fields;
-            const model = createControlPanelModel(
-                { viewInfo: { arch, favoriteFilters, fields }, actionContext },
-                { session: { user_context: { uid: 2 } } },
-                async function mockRPC() {
-                    throw new Error("There should be no name_get");
-                }
-            );
-
-            // Labels not fetched, but favorite overrides search_default
-            assert.deepEqual(model.getQuery().domain, [["user_id", "=", 2]]);
-
-            await model.isReady;
-
-            // domain should be the same
-            assert.deepEqual(model.getQuery().domain, [["user_id", "=", 2]]);
-        });
     });
 });

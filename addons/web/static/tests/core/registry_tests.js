@@ -70,7 +70,21 @@ QUnit.module('core', {}, function () {
         assert.deepEqual(registry.values(), ['bar', 'foo', 'qux']);
     });
 
+    QUnit.test("predicate prevents invalid values", function (assert) {
+        assert.expect(5);
+
+        const predicate = value => typeof value === "number";
+        const registry = new Registry(null, predicate);
+        registry.onAdd((key) => assert.step(key));
+
+        assert.ok(registry.add("age", 23));
+        assert.throws(
+            () => registry.add("name", "Fred"),
+            new Error(`Value of key "name" does not pass the addition predicate.`)
+        );
+        assert.deepEqual(registry.entries(), { age: 23 });
+        assert.verifySteps(["age"]);
+    });
 });
 
 });
-

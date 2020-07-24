@@ -148,8 +148,11 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === 'web_read_group') {
                     assert.deepEqual(args.kwargs, {
-                        context: {},
-                        domain: [["display_name", "like", "a"], "&", ["display_name", "ilike", "piou"], ["foo", "ilike", "piou"]],
+                        context: {
+                            search_default_foo: "piou",
+                            search_default_groupby_bar: true,
+                        },
+                        domain: ["&", ["display_name", "like", "a"], "&", ["display_name", "ilike", "piou"], ["foo", "ilike", "piou"]],
                         fields: ["display_name", "foo", "bar"],
                         groupby: ["bar"],
                         orderby: '',
@@ -160,8 +163,12 @@ QUnit.module('Views', {
                 if (search === 0 && route === '/web/dataset/search_read') {
                     search++;
                     assert.deepEqual(args, {
-                        context: {'bin_size': true},  // not part of the test, may change
-                        domain: [["display_name", "like", "a"], "&", ["display_name", "ilike", "piou"], ["foo", "ilike", "piou"]],
+                        context: {
+                            search_default_foo: "piou",
+                            search_default_groupby_bar: true,
+                            bin_size: true
+                        },  // not part of the test, may change
+                        domain: ["&", ["display_name", "like", "a"], "&", ["display_name", "ilike", "piou"], ["foo", "ilike", "piou"]],
                         fields: ["display_name", "foo"],
                         model: "partner",
                         limit: 80,
@@ -169,7 +176,11 @@ QUnit.module('Views', {
                     }, "should search with the complete domain (domain + search)");
                 } else if (search === 1 && route === '/web/dataset/search_read') {
                     assert.deepEqual(args, {
-                        context: {'bin_size': true},  // not part of the test, may change
+                        context: {
+                            search_default_foo: "piou",
+                            search_default_groupby_bar: true,
+                            bin_size: true
+                        },  // not part of the test, may change
                         domain: [["display_name", "like", "a"]],
                         fields: ["display_name", "foo"],
                         model: "partner",

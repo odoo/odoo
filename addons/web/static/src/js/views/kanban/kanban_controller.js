@@ -101,7 +101,7 @@ var KanbanController = BasicController.extend({
      */
     _addQuickCreate(groupId) {
         this._removeSampleData(async () => {
-            await this.update({ shouldUpdateControlPanel: false }, { reload: false });
+            await this.update({ shouldUpdateSearchComponents: false }, { reload: false });
             return this.renderer.addQuickCreate(groupId);
         });
     },

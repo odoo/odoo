@@ -1,17 +1,17 @@
-odoo.define('web.ControlPanelModel', function (require) {
+odoo.define("web/static/src/js/control_panel/control_panel_model_extension.js", function (require) {
     "use strict";
 
+    const ActionModel = require("web/static/src/js/views/action_model.js");
     const Domain = require('web.Domain');
-    const { Model } = require('web.model');
-    const { parseArch } = require('web.viewUtils');
     const pyUtils = require('web.py_utils');
 
-    const { DEFAULT_INTERVAL, DEFAULT_PERIOD, FACET_ICONS,
+    const { DEFAULT_INTERVAL, DEFAULT_PERIOD,
         getComparisonOptions, getIntervalOptions, getPeriodOptions,
         constructDateDomain, rankInterval, yearSelected } = require('web.searchUtils');
 
     const FAVORITE_PRIVATE_GROUP = 1;
     const FAVORITE_SHARED_GROUP = 2;
+    const DISABLE_FAVORITE = "search_disable_custom_filters";
 
     let filterId = 1;
     let groupId = 1;
@@ -140,53 +140,99 @@ odoo.define('web.ControlPanelModel', function (require) {
      * The query elements indicates what are the active filters and 'how' they are active.
      * The key groupId has been added for simplicity. It could have been removed from query elements
      * since the information is available on the corresponding filters.
-     * @extends Model
+     * @extends ActionModel.Extension
      */
-    class ControlPanelModel extends Model {
+    class ControlPanelModelExtension extends ActionModel.Extension {
         /**
          * @param {Object} config
          * @param {(string|number)} config.actionId
          * @param {Object} config.env
          * @param {string} config.modelName
-         * @param {Object} [config.importedState]
-         * @param {Array[]} [config.actionDomain=[]]
-         * @param {Object} [config.actionContext={}]
+         * @param {Object} [config.context={}]
+         * @param {Object[]} [config.archNodes=[]]
          * @param {Object[]} [config.dynamicFilters=[]]
          * @param {string[]} [config.searchMenuTypes=[]]
-         * @param {Object} [config.viewInfo={}]
+         * @param {Object} [config.favoriteFilters={}]
+         * @param {Object} [config.fields={}]
          * @param {boolean} [config.withSearchBar=true]
-         *
          */
-        constructor(config) {
-            super();
+        constructor() {
+            super(...arguments);
 
-            this._setProperties(config);
-
-            if (this.withSearchBar) {
-                if (config.importedState) {
-                    this.importState(config.importedState);
-                } else {
-                    this._prepareInitialState();
+            this.actionContext = Object.assign({}, this.config.context);
+            this.searchMenuTypes = this.config.searchMenuTypes || [];
+            this.favoriteFilters = this.config.favoriteFilters || [];
+            this.fields = this.config.fields || {};
+            this.searchDefaults = [];
+            for (const key in this.actionContext) {
+                const match = /^search_default_(.*)$/.exec(key);
+                if (match) {
+                    const val = this.actionContext[key];
+                    if (val) {
+                        this.searchDefaults[match[1]] = val;
+                    }
+                    delete this.actionContext[key];
                 }
             }
+            this.labelPromises = [];
 
-            this.isReady = Promise.all(this.labelPromises);
-        }
-
-        //---------------------------------------------------------------------
-        // Getters
-        //---------------------------------------------------------------------
-
-        /**
-         * @returns {(Object | undefined)}
-         */
-        get activeComparison() {
-            return this.state.query.find(queryElem => queryElem.type === 'comparison');
+            this.referenceMoment = moment();
+            this.optionGenerators = getPeriodOptions(this.referenceMoment);
+            this.intervalOptions = getIntervalOptions();
+            this.comparisonOptions = getComparisonOptions();
         }
 
         //---------------------------------------------------------------------
         // Public
         //---------------------------------------------------------------------
+
+        /**
+         * @override
+         * @returns {any}
+         */
+        get(property, ...args) {
+            switch (property) {
+                case "context": return this.getContext();
+                case "domain": return this.getDomain();
+                case "facets": return this._getFacets();
+                case "filters": return this._getFilters(...args);
+                case "groupBy": return this.getGroupBy();
+                case "orderedBy": return this.getOrderedBy();
+                case "timeRanges": return this.getTimeRanges();
+            }
+        }
+
+        /**
+         * @override
+         */
+        async load() {
+            await Promise.all(this.labelPromises);
+        }
+
+        /**
+         * @override
+         */
+        prepareState() {
+            Object.assign(this.state, {
+                filters: {},
+                query: [],
+            });
+            if (this.config.withSearchBar !== false) {
+                this._addFilters();
+                this._activateDefaultFilters();
+            }
+        }
+
+        //---------------------------------------------------------------------
+        // Actions / Getters
+        //---------------------------------------------------------------------
+
+        /**
+         * @returns {Object | undefined}
+         */
+        get activeComparison() {
+            return this.state.query.find(queryElem => queryElem.type === 'comparison');
+        }
 
         /**
          * Activate a filter of type 'field' with given filterId with
@@ -321,116 +367,58 @@ odoo.define('web.ControlPanelModel', function (require) {
         }
 
         /**
-         * Return the state of the control panel model (the filters and the
-         * current query). This state can then be used in an other control panel
-         * model (with same key modelName). See importedState.
          * @returns {Object}
          */
-        exportState() {
-            return JSON.parse(JSON.stringify(this.state));
-        }
-
-        /**
-         * Called by search bar to render the facets
-         * @returns {Object[]}
-         */
-        getFacets() {
-            const accept = type => {
-                if (['groupBy', 'comparison'].includes(type) && !this.searchMenuTypes.includes(type)) {
-                    return false;
-                }
-                return true;
-            };
-
+        getContext() {
             const groups = this._getGroups();
-            const facets = [];
-            for (const group of groups) {
-                const { activities, type, id } = group;
-                if (accept(type)) {
-                    const facet = {
-                        groupId: id,
-                        separator: type === 'groupBy' ? ">" : this.env._t("or"),
-                        values: this._getFacetDescriptions(activities, type),
-                    };
-                    const icon = FACET_ICONS[type];
-                    if (icon) {
-                        facet.icon = icon;
-                    } else {
-                        facet.title = activities[0].filter.description;
-                    }
-                    facets.push(facet);
-                }
-            }
-            return facets;
+            return this._getContext(groups);
         }
 
         /**
-         * Return an array containing enriched copies of the filters of the provided type.
-         * @param {string} type
-         * @returns {Object[]}
+         * @returns {Array[]}
          */
-        getFiltersOfType(type) {
-            const filters = Object.values(this.state.filters).reduce(
-                (filters, filter) => {
-                    if (filter.type === type && !filter.invisible) {
-                        const filterQueryElements = this.state.query.filter(
-                            queryElem => queryElem.filterId === filter.id
-                        );
-                        const enrichedFilter = this._enrichFilterCopy(filter, filterQueryElements);
-                        if (enrichedFilter) {
-                            filters.push(enrichedFilter);
-                        }
-                    }
-                    return filters;
-                },
-                []
-            );
-            if (type === 'favorite') {
-                filters.sort((f1, f2) => f1.groupNumber - f2.groupNumber);
+        getDomain() {
+            const groups = this._getGroups();
+            const userContext = this.env.session.user_context;
+            try {
+                return Domain.prototype.stringToArray(this._getDomain(groups), userContext);
+            } catch (err) {
+                throw new Error(
+                    `${this.env._t("Control panel model extension failed to evaluate domain")}:/n${JSON.stringify(err)}`
+                );
             }
-            return filters;
         }
 
         /**
-         * Principal objects used by controllers/models to fetch data.
-         * @returns {Object} An object called search query with keys domain, groupBy,
-         *      context, orderedBy, and (optionally) timeRanges.
+         * @returns {string[]}
          */
-        getQuery() {
+        getGroupBy() {
+            const groups = this._getGroups();
+            return this._getGroupBy(groups);
+        }
+
+        /**
+         * @returns {string[]}
+         */
+        getOrderedBy() {
+            const groups = this._getGroups();
+            return this._getOrderedBy(groups);
+        }
+
+        /**
+         * @returns {Object}
+         */
+        getTimeRanges() {
             const requireEvaluation = true;
-            const groups = this._getGroups();
-            const query = {
-                context: this._getContext(groups),
-                domain: this._getDomain(groups, requireEvaluation),
-                orderedBy: this._getOrderedBy(groups)
-            };
-            if (this.searchMenuTypes.includes('groupBy')) {
-                const groupBy = this._getGroupBy(groups);
-                query.groupBy = groupBy;
-            } else {
-                query.groupBy = [];
-            }
-            if (this.searchMenuTypes.includes('comparison')) {
-                const timeRanges = this._getTimeRanges(requireEvaluation);
-                query.timeRanges = timeRanges || {};
-            }
-            return query;
+            return this._getTimeRanges(requireEvaluation);
         }
 
         /**
-         * Allow to reuse the state of a previous control panel model with same modelName.
-         * This is mainly used when switching views.
-         * @param {Object} state
+         * Used to call dispatch and trigger a 'search'.
          */
-        importState(state) {
-            Object.assign(this.state, state);
+        search() {
+            /* ... */
         }
-
-        /**
-         * This function won't do anything: its purpose is to call the dispatch
-         * method to trigger a 'search' event + reload the components.
-         */
-        search() { }
 
         /**
          * Activate/Deactivate a filter of type 'comparison' with provided id.
@@ -514,27 +502,6 @@ odoo.define('web.ControlPanelModel', function (require) {
             }
         }
 
-        /**
-         * TODO: the way it is done could be improved, but the actual state of the
-         * searchView doesn't allow to do much better.
-         *
-         * Update the domain of the search view by adding and/or removing filters.
-         * @param {Object[]} newFilters list of filters to add, described by
-         *   objects with keys domain (the domain as an Array), description (the text
-         *   to display in the facet) and type with value 'filter'.
-         * @param {number[]} filtersToRemove list of filter ids to remove
-         *   (previously added ones)
-         * @returns {number[]} list of added filter ids (to pass as filtersToRemove
-         *   for a further call to this function)
-         */
-        updateFilters(newFilters, filtersToRemove) {
-            const newFilterIdS = this.createNewFilters(newFilters);
-            this.state.query = this.state.query.filter(
-                queryElem => !filtersToRemove.includes(queryElem.filterId)
-            );
-            return newFilterIdS;
-        }
-
         //---------------------------------------------------------------------
         // Private
         //---------------------------------------------------------------------
@@ -573,9 +540,10 @@ odoo.define('web.ControlPanelModel', function (require) {
         /**
          * This function populates the 'filters' object at initialization.
          * The filters come from:
-         *     - config.viewInfo.arch (types 'comparison', 'filter', 'groupBy', 'field'),
+         *     - config.archNodes (types 'comparison', 'filter', 'groupBy', 'field'),
          *     - config.dynamicFilters (type 'filter'),
-         *     - config.viewInfo.favoriteFilters (type 'favorite'),
+         *     - config.favoriteFilters (type 'favorite'),
+         *     - code itself (type 'timeRange')
          * @private
          */
         _addFilters() {
@@ -610,12 +578,12 @@ odoo.define('web.ControlPanelModel', function (require) {
          * Returns the active comparison timeRanges object.
          * @private
          * @param {Object} comparisonFilter
-         * @returns {Object | undefined}
+         * @returns {Object | null}
          */
         _computeTimeRanges(comparisonFilter) {
             const { filterId } = this.activeComparison;
             if (filterId !== comparisonFilter.id) {
-                return;
+                return null;
             }
             const { dateFilterId, comparisonOptionId } = comparisonFilter;
             const {
@@ -674,11 +642,12 @@ odoo.define('web.ControlPanelModel', function (require) {
         }
 
         /**
-         * Add filters of type 'filter' determined by the key array this.dynamicFilters.
+         * Add filters of type 'filter' determined by the key array dynamicFilters.
          * @private
          */
         _createGroupOfDynamicFilters() {
-            const pregroup = this.dynamicFilters.map(filter => {
+            const dynamicFilters = this.config.dynamicFilters || [];
+            const pregroup = dynamicFilters.map(filter => {
                 return {
                     description: filter.description,
                     domain: JSON.stringify(filter.domain),
@@ -690,14 +659,17 @@ odoo.define('web.ControlPanelModel', function (require) {
         }
 
         /**
-         * Add filters of type 'favorite' determined by array this.favoriteFilters.
+         * Add filters of type 'favorite' determined by the array this.favoriteFilters.
          * @private
          */
         _createGroupOfFavorites() {
+            const activateFavorite = DISABLE_FAVORITE in this.actionContext ?
+                !this.actionContext[DISABLE_FAVORITE] :
+                true;
             this.favoriteFilters.forEach(irFilter => {
                 const favorite = this._irFilterToFavorite(irFilter);
                 this._createGroupOfFilters([favorite]);
-                if (this.activateDefaultFavorite && favorite.isDefault) {
+                if (activateFavorite && favorite.isDefault) {
                     this.defaultFavoriteId = favorite.id;
                 }
             });
@@ -733,10 +705,7 @@ odoo.define('web.ControlPanelModel', function (require) {
          * @private
          */
         _createGroupOfFiltersFromArch() {
-            const children = this.parsedArch.children.filter(
-                child => child instanceof Object && child.tag !== 'searchpanel'
-            );
-            const preFilters = children.reduce(
+            const preFilters = this.config.archNodes.reduce(
                 (preFilters, child) => {
                     if (child.tag === 'group') {
                         return [...preFilters, ...child.children.map(c => this._evalArchChild(c))];
@@ -778,22 +747,6 @@ odoo.define('web.ControlPanelModel', function (require) {
                         // and others are passive (require input(s) to become determined)
                         // What is the right place to process the attrs?
                     };
-                    if (preFilter.attrs && JSON.parse(preFilter.attrs.modifiers || '{}').invisible) {
-                        filter.invisible = true;
-
-                        var preFilterFieldName = null;
-                        if (preFilter.tag == 'filter' && preFilter.attrs.date) {
-                            preFilterFieldName = preFilter.attrs.date;
-                        } else if (preFilter.tag == 'groupBy') {
-                            preFilterFieldName = preFilter.attrs.fieldName;
-                        }
-                        if (preFilterFieldName && !this.fields[preFilterFieldName]) {
-                            // In some case when a field is limited to specific groups
-                            // on the model, we need to ensure to discard related filter
-                            // as it may still be present in the view (in 'invisible' state)
-                            return;
-                        }
-                    }
                     if (filter.type === 'filter' || filter.type === 'groupBy') {
                         filter.groupNumber = groupNumber;
                     }
@@ -806,7 +759,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                 this._createGroupOfFilters(pregroupOfGroupBys);
             }
             const dateFilters = Object.values(this.state.filters).filter(
-                (filter) =>  filter.isDateFilter
+                (filter) => filter.isDateFilter
             );
             if (dateFilters.length) {
                 this._createGroupOfComparisons(dateFilters);
@@ -814,26 +767,14 @@ odoo.define('web.ControlPanelModel', function (require) {
         }
 
         /**
-         * The parent of the control panel (an action or a controller) is not
-         * necessarily a component. So we need to notify it through a
-         * mechanism different from __notifyComponents. Here we use the fact
-         * that the controlPanelModel is an (owl) EventBus to communicate with
-         * the parent.
-         * @private
-         */
-        _dispatch() {
-            this.trigger('search', this.getQuery());
-        }
-
-        /**
-         * Returns undefined or a copy of the provided filter with additional information
+         * Returns null or a copy of the provided filter with additional information
          * used only outside of the control panel model, like in search bar or in the
-         * various menus. The value undefined is returned if the filter should not appear
+         * various menus. The value null is returned if the filter should not appear
          * for some reason.
          * @private
          * @param {Object} filter
          * @param {Object[]} filterQueryElements
-         * @returns {Object|undefined}
+         * @returns {Object | null}
          */
         _enrichFilterCopy(filter, filterQueryElements) {
             const isActive = Boolean(filterQueryElements.length);
@@ -854,7 +795,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                         queryElem => queryElem.filterId === dateFilterId
                     );
                     if (!dateFilterIsActive) {
-                        return;
+                        return null;
                     }
                     break;
                 }
@@ -924,6 +865,9 @@ odoo.define('web.ControlPanelModel', function (require) {
                 filter.isDefault = attrs.isDefault;
             }
             filter.description = attrs.string || attrs.help || attrs.name || attrs.domain || 'Ω';
+            if (JSON.parse(attrs.modifiers || '{}').invisible) {
+                filter.invisible = true;
+            }
             switch (filter.type) {
                 case 'filter':
                     if (attrs.context) {
@@ -972,7 +916,7 @@ odoo.define('web.ControlPanelModel', function (require) {
                         filter.defaultRank = -10;
                         filter.defaultAutocompleteValue = attrs.defaultAutocompleteValue;
                     }
-                    if (attrs.widget) { // FIXME: drop support in master
+                    if (attrs.widget) {
                         filter.widget = attrs.widget;
                     }
                     break;
@@ -993,8 +937,8 @@ odoo.define('web.ControlPanelModel', function (require) {
          */
         _favoriteToIrFilter(favorite) {
             const irFilter = {
-                action_id: this.actionId,
-                model_id: this.modelName,
+                action_id: this.config.actionId,
+                model_id: this.config.modelName,
             };
 
             // ir.filter fields
@@ -1069,7 +1013,7 @@ odoo.define('web.ControlPanelModel', function (require) {
          * @private
          * @returns {Object}
          */
-        _getContext(groups, withActionContext = true) {
+        _getContext(groups) {
             const types = ['filter', 'favorite', 'field'];
             const contexts = groups.reduce(
                 (contexts, group) => {
@@ -1080,9 +1024,6 @@ odoo.define('web.ControlPanelModel', function (require) {
                 },
                 []
             );
-            if (withActionContext) {
-                contexts.unshift(this.actionContext);
-            }
             const evaluationContext = this.env.session.user_context;
             try {
                 return pyUtils.eval('contexts', contexts, evaluationContext);
@@ -1118,35 +1059,97 @@ odoo.define('web.ControlPanelModel', function (require) {
          * of type 'filter', 'favorite', and 'field'.
          * @private
          * @param {Object[]} groups
-         * @param {boolean} [evaluation=true]
          * @returns {string}
          */
-        _getDomain(groups, evaluation = true) {
+        _getDomain(groups) {
             const types = ['filter', 'favorite', 'field'];
-            const domains = groups.reduce(
-                (domains, group) => {
-                    if (types.includes(group.type)) {
-                        domains.push(this._getGroupDomain(group));
-                    }
-                    return domains;
-                },
-                []
-            );
-            let filterDomain = pyUtils.assembleDomains(domains, 'AND');
+            const domains = [];
+            for (const group of groups) {
+                if (types.includes(group.type)) {
+                    domains.push(this._getGroupDomain(group));
+                }
+            }
+            return pyUtils.assembleDomains(domains, 'AND');
+        }
 
-            if (evaluation) {
-                const userContext = this.env.session.user_context;
-                try {
-                    return pyUtils.eval('domains', [this.actionDomain, filterDomain], userContext);
-                } catch (err) {
-                    throw new Error(
-                        this.env._t("Failed to evaluate search domain") + ":\n" +
-                        JSON.stringify(err)
-                    );
+        /**
+         * Get the filter description to use in the search bar as a facet.
+         * @private
+         * @param {Object} activity
+         * @param {Object} activity.filter
+         * @param {Object[]} activity.filterQueryElements
+         * @returns {string}
+         */
+        _getFacetDescriptions(activities, type) {
+            const facetDescriptions = [];
+            if (type === 'field') {
+                for (const queryElem of activities[0].filterQueryElements) {
+                    facetDescriptions.push(queryElem.label);
+                }
+            } else if (type === 'groupBy') {
+                for (const { filter, filterQueryElements } of activities) {
+                    if (filter.hasOptions) {
+                        for (const queryElem of filterQueryElements) {
+                            const option = this.intervalOptions.find(
+                                o => o.id === queryElem.optionId
+                            );
+                            facetDescriptions.push(filter.description + ': ' + option.description);
+                        }
+                    } else {
+                        facetDescriptions.push(filter.description);
+                    }
                 }
             } else {
-                return filterDomain;
+                let facetDescription;
+                for (const { filter, filterQueryElements } of activities) {
+                    // filter, favorite and comparison
+                    facetDescription = filter.description;
+                    if (filter.isDateFilter) {
+                        const description = this._getDateFilterDomain(
+                            filter, filterQueryElements, 'description'
+                        );
+                        facetDescription += `: ${description}`;
+                    }
+                    facetDescriptions.push(facetDescription);
+                }
             }
+            return facetDescriptions;
+        }
+
+        /**
+         * @returns {Object[]}
+         */
+        _getFacets() {
+            const facets = this._getGroups().map(({ activities, type, id }) => {
+                const values = this._getFacetDescriptions(activities, type);
+                const title = activities[0].filter.description;
+                return { groupId: id, title, type, values };
+            });
+            return facets;
+        }
+
+        /**
+         * Return an array containing enriched copies of the filters of the provided type.
+         * @param {Function} predicate
+         * @returns {Object[]}
+         */
+        _getFilters(predicate) {
+            const filters = [];
+            Object.values(this.state.filters).forEach(filter => {
+                if ((!predicate || predicate(filter)) && !filter.invisible) {
+                    const filterQueryElements = this.state.query.filter(
+                        queryElem => queryElem.filterId === filter.id
+                    );
+                    const enrichedFilter = this._enrichFilterCopy(filter, filterQueryElements);
+                    if (enrichedFilter) {
+                        filters.push(enrichedFilter);
+                    }
+                }
+            });
+            if (filters.some(f => f.type === 'favorite')) {
+                filters.sort((f1, f2) => f1.groupNumber - f2.groupNumber);
+            }
+            return filters;
         }
 
         /**
@@ -1359,6 +1362,36 @@ odoo.define('web.ControlPanelModel', function (require) {
         }
 
         /**
+         * Returns the last timeRanges object found in the query.
+         * TimeRanges objects can be associated with filters of type 'favorite'
+         * or 'comparison'.
+         * @private
+         * @param {boolean} [evaluation=false]
+         * @returns {Object | null}
+         */
+        _getTimeRanges(evaluation) {
+            let timeRanges;
+            for (const queryElem of this.state.query.slice().reverse()) {
+                const filter = this.state.filters[queryElem.filterId];
+                if (filter.type === 'comparison') {
+                    timeRanges = this._computeTimeRanges(filter);
+                    break;
+                } else if (filter.type === 'favorite' && filter.comparison) {
+                    timeRanges = filter.comparison;
+                    break;
+                }
+            }
+            if (timeRanges) {
+                if (evaluation) {
+                    timeRanges.range = Domain.prototype.stringToArray(timeRanges.range);
+                    timeRanges.comparisonRange = Domain.prototype.stringToArray(timeRanges.comparisonRange);
+                }
+                return timeRanges;
+            }
+            return null;
+        }
+
+        /**
          * Returns a filter of type 'favorite' starting from an ir_filter comming from db.
          * @private
          * @param {Object} irFilter
@@ -1496,8 +1529,10 @@ odoo.define('web.ControlPanelModel', function (require) {
             } else if (fieldType === 'many2one') {
                 const updateLabel = label => {
                     const queryElem = this.state.query.find(({ filterId }) => filterId === id);
-                    queryElem.label = label;
-                    defaultAutocompleteValue.label = label;
+                    if (queryElem) {
+                        queryElem.label = label;
+                        defaultAutocompleteValue.label = label;
+                    }
                 };
                 const promise = this.env.services.rpc({
                     args: [defaultAutocompleteValue.value],
@@ -1514,14 +1549,6 @@ odoo.define('web.ControlPanelModel', function (require) {
         }
 
         /**
-         * @private
-         */
-        _prepareInitialState() {
-            this._addFilters();
-            this._activateDefaultFilters();
-        }
-
-        /**
          * Compute the search Query and save it as an ir_filter in db.
          * No evaluation of domains is done in order to keep them dynamic.
          * If the operation is successful, a new filter of type 'favorite' is
@@ -1535,17 +1562,13 @@ odoo.define('web.ControlPanelModel', function (require) {
 
             const userContext = this.env.session.user_context;
             let controllerQueryParams;
-            this.trigger(
-                'get-controller-query-params',
-                p => {
-                    controllerQueryParams = p;
-                }
-            );
+            this.config.trigger("get-controller-query-params", params => {
+                controllerQueryParams = params;
+            });
             controllerQueryParams = controllerQueryParams || {};
             controllerQueryParams.context = controllerQueryParams.context || {};
 
-            const withoutActiveContext = false;
-            const queryContext = this._getContext(groups, withoutActiveContext);
+            const queryContext = this._getContext(groups);
             const context = pyUtils.eval(
                 'contexts',
                 [userContext, controllerQueryParams.context, queryContext]
@@ -1555,7 +1578,7 @@ odoo.define('web.ControlPanelModel', function (require) {
             }
 
             const requireEvaluation = false;
-            const domain = this._getDomain(groups, requireEvaluation);
+            const domain = this._getDomain(groups);
             const groupBys = this._getGroupBy(groups);
             const timeRanges = this._getTimeRanges(requireEvaluation);
             const orderedBy = controllerQueryParams.orderedBy ?
@@ -1585,128 +1608,30 @@ odoo.define('web.ControlPanelModel', function (require) {
             return preFilter;
         }
 
-        /**
-         * Get the filter description to use in the search bar as a facet.
-         * @private
-         * @param {Object} activity
-         * @param {Object} activity.filter
-         * @param {Object[]} activity.filterQueryElements
-         * @returns {string}
-         */
-        _getFacetDescriptions(activities, type) {
-            const facetDescriptions = [];
-            if (type === 'field') {
-                for (const queryElem of activities[0].filterQueryElements) {
-                    facetDescriptions.push(queryElem.label);
-                }
-            } else if (type === 'groupBy') {
-                for (const { filter, filterQueryElements } of activities) {
-                    if (filter.hasOptions) {
-                        for (const queryElem of filterQueryElements) {
-                            const option = this.intervalOptions.find(
-                                o => o.id === queryElem.optionId
-                            );
-                            facetDescriptions.push(filter.description + ': ' + option.description);
-                        }
-                    } else {
-                        facetDescriptions.push(filter.description);
-                    }
-                }
-            } else {
-                let facetDescription;
-                for (const { filter, filterQueryElements } of activities) {
-                    // filter, favorite and comparison
-                    facetDescription = filter.description;
-                    if (filter.isDateFilter) {
-                        const description = this._getDateFilterDomain(
-                            filter, filterQueryElements, 'description'
-                        );
-                        facetDescription += `: ${description}`;
-                    }
-                    facetDescriptions.push(facetDescription);
-                }
-            }
-            return facetDescriptions;
-        }
+        //---------------------------------------------------------------------
+        // Static
+        //---------------------------------------------------------------------
 
         /**
-         * Returns the last timeRanges object found in the query.
-         * TimeRanges objects can be associated with filters of type 'favorite'
-         * or 'comparison'.
-         * @private
-         * @param {boolean} [evaluation=false]
-         * @returns {(Object|undefined)}
+         * @override
+         * @returns {{ attrs: Object, children: Object[] }}
          */
-        _getTimeRanges(evaluation) {
-            let timeRanges;
-            for (const queryElem of this.state.query.slice().reverse()) {
-                const filter = this.state.filters[queryElem.filterId];
-                if (filter.type === 'comparison') {
-                    timeRanges = this._computeTimeRanges(filter);
-                    break;
-                } else if (filter.type === 'favorite' && filter.comparison) {
-                    timeRanges = filter.comparison;
-                    break;
-                }
-            }
-            if (timeRanges) {
-                if (evaluation) {
-                    timeRanges.range = Domain.prototype.stringToArray(timeRanges.range);
-                    timeRanges.comparisonRange = Domain.prototype.stringToArray(timeRanges.comparisonRange);
-                }
-                return timeRanges;
-            }
-        }
-
-        /**
-         * Using the constructor parameter object config, set most of the properties
-         * of the control panel model.
-         * @private
-         * @param {Object} config
-         */
-        _setProperties(config) {
-            this.state = {
-                filters: {},
-                query: [],
+        static extractArchInfo(archs) {
+            const { attrs, children } = archs.search;
+            const controlPanelInfo = {
+                attrs,
+                children: [],
             };
-            this.env = config.env;
-            this.modelName = config.modelName;
-            this.actionDomain = config.actionDomain || [];
-            this.actionContext = config.actionContext || {};
-            this.actionId = config.actionId;
-            this.withSearchBar = 'withSearchBar' in config ? config.withSearchBar : true;
-            this.searchMenuTypes = config.searchMenuTypes || [];
-
-            this.searchDefaults = [];
-            for (const key in this.actionContext) {
-                const match = /^search_default_(.*)$/.exec(key);
-                if (match) {
-                    const val = this.actionContext[key];
-                    if (val) {
-                        this.searchDefaults[match[1]] = val;
-                    }
-                    delete this.actionContext[key];
+            for (const child of children) {
+                if (child.tag !== "searchpanel") {
+                    controlPanelInfo.children.push(child);
                 }
             }
-            this.labelPromises = [];
-
-            const viewInfo = config.viewInfo || {};
-
-            this.parsedArch = parseArch(viewInfo.arch || '<search/>');
-            this.fields = viewInfo.fields || {};
-            this.favoriteFilters = viewInfo.favoriteFilters || [];
-            this.activateDefaultFavorite = 'search_disable_custom_filters' in this.actionContext ?
-                !this.actionContext.search_disable_custom_filters :
-                true;
-
-            this.dynamicFilters = config.dynamicFilters || [];
-
-            this.referenceMoment = moment();
-            this.optionGenerators = getPeriodOptions(this.referenceMoment);
-            this.intervalOptions = getIntervalOptions();
-            this.comparisonOptions = getComparisonOptions();
+            return controlPanelInfo;
         }
     }
 
-    return ControlPanelModel;
+    ActionModel.registry.add("ControlPanel", ControlPanelModelExtension, 10);
+
+    return ControlPanelModelExtension;
 });

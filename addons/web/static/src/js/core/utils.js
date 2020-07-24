@@ -572,6 +572,31 @@ var utils = {
         return new Array(size - str.length + 1).join('0') + str;
     },
     /**
+     * @param {any[]} arr
+     * @param {Function} fn
+     * @returns {any[]}
+     */
+    partitionBy(arr, fn) {
+        let lastGroup = false;
+        let lastValue;
+        return arr.reduce((acc, cur) => {
+            let curVal = fn(cur);
+            if (lastGroup) {
+                if (curVal === lastValue) {
+                    lastGroup.push(cur);
+                } else {
+                    lastGroup = false;
+                }
+            }
+            if (!lastGroup) {
+                lastGroup = [cur];
+                acc.push(lastGroup);
+            }
+            lastValue = curVal;
+            return acc;
+        }, []);
+    },
+    /**
      * Patch a class and return a function that remove the patch
      * when called.
      *

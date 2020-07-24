@@ -1,15 +1,16 @@
-odoo.define('web.search_panel_tests', function (require) {
+odoo.define("web/static/tests/views/search_panel_tests.js", function (require) {
 "use strict";
 
-var AbstractStorageService = require('web.AbstractStorageService');
-var FormView = require('web.FormView');
-var KanbanView = require('web.KanbanView');
-var RamStorage = require('web.RamStorage');
-var testUtils = require('web.test_utils');
+const AbstractStorageService = require('web.AbstractStorageService');
+const FormView = require('web.FormView');
+const KanbanView = require('web.KanbanView');
+const RamStorage = require('web.RamStorage');
+const testUtils = require('web.test_utils');
+const SearchPanel = require("web/static/src/js/views/search_panel.js");
 
 const cpHelpers = testUtils.controlPanel;
-var createActionManager = testUtils.createActionManager;
-var createView = testUtils.createView;
+const createActionManager = testUtils.createActionManager;
+const createView = testUtils.createView;
 
 /**
  * Return the list of counters displayed in the search panel (if any).
@@ -412,8 +413,8 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             '[["bar","=",true]]',
-            '[["bar","=",true],["company_id","child_of",3]]',
-            '[["bar","=",true],["company_id","child_of",5]]',
+            '["&",["bar","=",true],["company_id","child_of",3]]',
+            '["&",["bar","=",true],["company_id","child_of",5]]',
             '[["bar","=",true]]',
         ]);
 
@@ -490,11 +491,12 @@ QUnit.module('Views', {
 
         var Storage = RamStorage.extend({
             getItem: function (key) {
-                assert.step('getItem ' + key);
-                return this._super(...arguments) || 3; // default: 'asustek'
+                assert.step(`getItem ${key}`);
+                const item = this._super(...arguments);
+                return item || 3; // default: 'asustek'
             },
             setItem: function (key, value) {
-                assert.step('setItem ' + key + ' to ' + value);
+                assert.step(`setItem ${key} to ${value}`);
                 this._super(...arguments);
             },
         });
@@ -522,11 +524,11 @@ QUnit.module('Views', {
                 </kanban>`,
             archs: {
                 'partner,false,search': `
-                    <seasrch>
+                    <search>
                         <searchpanel>
                             <field name="company_id" enable_counters="1"/>
                         </searchpanel>
-                    </seasrch>`,
+                    </search>`,
             },
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
@@ -713,15 +715,30 @@ QUnit.module('Views', {
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 3);
 
         // select 'asustek'
-        await testUtils.dom.click(kanban.$('.o_search_panel_category_value[data-id=3] header'));
+        await testUtils.dom.click(
+            [
+                ...kanban.el.querySelectorAll('.o_search_panel_category_value header .o_search_panel_label_title')
+            ]
+            .filter(el => el.innerText === 'asustek')
+        );
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
         // select 'abc'
-        await testUtils.dom.click(kanban.$('.o_search_panel_category_value[data-id=abc] header'));
+        await testUtils.dom.click(
+            [
+                ...kanban.el.querySelectorAll('.o_search_panel_category_value header .o_search_panel_label_title')
+            ]
+            .filter(el => el.innerText === 'ABC')
+        );
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // select 'ghi'
-        await testUtils.dom.click(kanban.$('.o_search_panel_category_value[data-id=ghi] header'));
+        await testUtils.dom.click(
+            [
+                ...kanban.el.querySelectorAll('.o_search_panel_category_value header .o_search_panel_label_title')
+            ]
+            .filter(el => el.innerText === 'GHI')
+        );
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // select 'All' in first category (company_id)
@@ -734,10 +751,10 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             '[["bar","=",true]]',
-            '[["bar","=",true],["company_id","child_of",3]]',
-            '[["bar","=",true],["company_id","child_of",3],["state","=","abc"]]',
-            '[["bar","=",true],["company_id","child_of",3],["state","=","ghi"]]',
-            '[["bar","=",true],["state","=","ghi"]]',
+            '["&",["bar","=",true],["company_id","child_of",3]]',
+            '["&",["bar","=",true],"&",["company_id","child_of",3],["state","=","abc"]]',
+            '["&",["bar","=",true],"&",["company_id","child_of",3],["state","=","ghi"]]',
+            '["&",["bar","=",true],["state","=","ghi"]]',
             '[["bar","=",true]]',
         ]);
 
@@ -1080,8 +1097,8 @@ QUnit.module('Views', {
 
         assert.verifySteps([
             '[["bar","=",true]]',
-            '[["bar","=",true],["company_id","child_of",3]]',
-            '[["bar","=",true],["company_id","child_of",5]]',
+            '["&",["bar","=",true],["company_id","child_of",3]]',
+            '["&",["bar","=",true],["company_id","child_of",5]]',
         ]);
 
         kanban.destroy();
@@ -1136,7 +1153,7 @@ QUnit.module('Views', {
 
         // 'All' should still be selected, and there should still be 4 records
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
-        assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
+        assert.containsOnce(kanban, '.o_search_panel_category_value:nth(1) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
         // select 'ghi' (delay the reload)
@@ -1146,7 +1163,7 @@ QUnit.module('Views', {
 
         // 'All' should still be selected, and there should still be 4 records
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
-        assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
+        assert.containsOnce(kanban, '.o_search_panel_category_value:nth(3) .active');
         assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
         // unlock ghi search
@@ -1195,6 +1212,7 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,search': `
                     <search>
+                        <filter name="Filter" domain="[('id', '=', 1)]"/>
                         <searchpanel>
                             <field name="company_id" select="multi" enable_counters="1"/>
                         </searchpanel>
@@ -1206,7 +1224,8 @@ QUnit.module('Views', {
 
         // trigger a reload and delay the get_filter
         def = testUtils.makeTestPromise();
-        kanban.reload({domain: [['id', '=', 1]]});
+        await cpHelpers.toggleFilterMenu(kanban);
+        await cpHelpers.toggleMenuItem(kanban, 0);
         await testUtils.nextTick();
 
         assert.containsN(kanban, '.o_kanban_view .o_kanban_record:not(.o_kanban_ghost)', 4);
@@ -1311,13 +1330,13 @@ QUnit.module('Views', {
             '[["bar","=",true]]',
             // 'asustek' checked
             '[]',
-            '[["bar","=",true],["company_id","in",[3]]]',
+            '["&",["bar","=",true],["company_id","in",[3]]]',
             // 'asustek' and 'agrolait' checked
             '[]',
-            '[["bar","=",true],["company_id","in",[3,5]]]',
+            '["&",["bar","=",true],["company_id","in",[3,5]]]',
             // 'agrolait' checked
             '[]',
-            '[["bar","=",true],["company_id","in",[5]]]',
+            '["&",["bar","=",true],["company_id","in",[5]]]',
             // nothing checked
             '[]',
             '[["bar","=",true]]',
@@ -1418,13 +1437,13 @@ QUnit.module('Views', {
             '[["bar","=",true]]',
             // 'asustek' checked
             '[]',
-            '[["bar","=",true],["state","in",["abc"]]]',
+            '["&",["bar","=",true],["state","in",["abc"]]]',
             // 'asustek' and 'agrolait' checked
             '[]',
-            '[["bar","=",true],["state","in",["abc","def"]]]',
+            '["&",["bar","=",true],["state","in",["abc","def"]]]',
             // 'agrolait' checked
             '[]',
-            '[["bar","=",true],["state","in",["def"]]]',
+            '["&",["bar","=",true],["state","in",["def"]]]',
             // nothing checked
             '[]',
             '[["bar","=",true]]',
@@ -1458,6 +1477,7 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,search': `
                     <search>
+                        <filter name="Filter" domain="[('id', '&lt;', 5)]"/>
                         <searchpanel>
                             <field name="state" expand="1"/>
                             <field name="company_id" select="multi" enable_counters="1" expand="1"/>
@@ -1483,7 +1503,8 @@ QUnit.module('Views', {
         ]);
 
         // reload with another domain, so the filters should be reloaded
-        await kanban.reload({domain: [['id', '<', 5]]});
+        await cpHelpers.toggleFilterMenu(kanban);
+        await cpHelpers.toggleMenuItem(kanban, 0);
 
         assert.verifySteps([
             'search_panel_select_multi_range',
@@ -1526,6 +1547,7 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,search': `
                     <search>
+                        <filter name="domain" domain="[('id', '&lt;', 5)]"/>
                         <searchpanel>
                             <field name="category_id" expand="1"/>
                             <field name="company_id" select="multi" enable_counters="1" expand="1"/>
@@ -1551,7 +1573,8 @@ QUnit.module('Views', {
         ]);
 
         // reload with another domain, so the filters should be reloaded
-        await kanban.reload({domain: [['id', '<', 5]]});
+        await cpHelpers.toggleFilterMenu(kanban);
+        await cpHelpers.toggleMenuItem(kanban, 0);
 
         assert.verifySteps([
             'search_panel_select_multi_range',
@@ -1597,6 +1620,7 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,search': `
                     <search>
+                        <filter name="Filter" domain="[('id', '&lt;', 3)]"/>
                         <searchpanel>
                             <field name="state" enable_counters="1" expand="1"/>
                             <field name="company_id" expand="1"/>
@@ -1637,8 +1661,9 @@ QUnit.module('Views', {
             [  "All", "ABC1", "DEF1", "GHI2", "All", "asustek", "agrolait"]
         );
 
-        // reload with another domain, so the category 'state' should be reloaded
-        await kanban.reload({domain: [['id', '<', 3]]});
+        // reload with another domain, so the categories 'state' and 'company_id' should be reloaded
+        await cpHelpers.toggleFilterMenu(kanban);
+        await cpHelpers.toggleMenuItem(kanban, 0);
 
         assert.verifySteps([
             'search_panel_select_range',
@@ -1700,6 +1725,7 @@ QUnit.module('Views', {
             archs: {
                 'partner,false,search': `
                     <search>
+                        <filter name="Filter" domain="[('id', '&lt;', 3)]"/>
                         <searchpanel>
                             <field name="state" expand="1"/>
                         </searchpanel>
@@ -1738,7 +1764,8 @@ QUnit.module('Views', {
         );
 
         // reload with another domain, so the category 'state' should be reloaded
-        await kanban.reload({domain: [['id', '<', 3]]});
+        await cpHelpers.toggleFilterMenu(kanban);
+        await cpHelpers.toggleMenuItem(kanban, 0);
 
         assert.verifySteps([
             '/web/dataset/search_read',
@@ -1884,16 +1911,16 @@ QUnit.module('Views', {
             '[["bar","=",true]]',
             // 'asustek' checked
             '[]',
-            '[["bar","=",true],["company_id","in",[3]]]',
+            '["&",["bar","=",true],["company_id","in",[3]]]',
             // 'asustek' and 'agrolait' checked
             '[]',
-            '[["bar","=",true],["company_id","in",[3]],["company_id","in",[5]]]',
+            '["&",["bar","=",true],"&",["company_id","in",[3]],["company_id","in",[5]]]',
             // 'asustek', 'agrolait' and 'camptocamp' checked
             '[]',
-            '[["bar","=",true],["company_id","in",[3]],["company_id","in",[5,11]]]',
+            '["&",["bar","=",true],"&",["company_id","in",[3]],["company_id","in",[5,11]]]',
             // 'asustek' checked
             '[]',
-            '[["bar","=",true],["company_id","in",[3]]]',
+            '["&",["bar","=",true],["company_id","in",[3]]]',
         ]);
 
         kanban.destroy();
@@ -2038,6 +2065,7 @@ QUnit.module('Views', {
         assert.expect(4);
 
         var expectedDomain = [
+            "&",
             ['company_id', 'in', [5]],
             ['state', 'in', ['abc', 'ghi']],
         ];
@@ -2548,6 +2576,9 @@ QUnit.module('Views', {
     QUnit.test('scroll position is kept when switching between controllers', async function (assert) {
         assert.expect(6);
 
+        const originalDebounce = SearchPanel.scrollDebounce;
+        SearchPanel.scrollDebounce = 0;
+
         for (var i = 10; i < 20; i++) {
             this.data.category.records.push({id: i, name: "Cat " + i});
         }
@@ -2560,24 +2591,30 @@ QUnit.module('Views', {
         });
         actionManager.$el.css('max-height', 300);
 
+        async function scroll(top) {
+            actionManager.el.querySelector(".o_search_panel").scrollTop = top;
+            await testUtils.nextTick();
+        }
+
         await actionManager.doAction(1);
 
         assert.containsOnce(actionManager, '.o_content .o_kanban_view');
         assert.strictEqual(actionManager.$('.o_search_panel').scrollTop(), 0);
 
         // simulate a scroll in the search panel and switch into list
-        actionManager.$('.o_search_panel').scrollTop(50);
+        await scroll(50);
         await cpHelpers.switchView(actionManager, 'list');
         assert.containsOnce(actionManager, '.o_content .o_list_view');
         assert.strictEqual(actionManager.$('.o_search_panel').scrollTop(), 50);
 
         // simulate another scroll and switch back to kanban
-        actionManager.$('.o_search_panel').scrollTop(30);
+        await scroll(30);
         await cpHelpers.switchView(actionManager, 'kanban');
         assert.containsOnce(actionManager, '.o_content .o_kanban_view');
         assert.strictEqual(actionManager.$('.o_search_panel').scrollTop(), 30);
 
         actionManager.destroy();
+        SearchPanel.scrollDebounce = originalDebounce;
     });
 
     QUnit.test('search panel is not instantiated in dialogs', async function (assert) {
@@ -3949,7 +3986,7 @@ QUnit.module('Views', {
 
         assert.containsOnce(kanban, '.o_search_panel_section');
         assert.containsOnce(kanban, '.o_search_panel_section_header');
-        assert.strictEqual(kanban.el.querySelector('.o_search_panel_section_header').innerText, " COMPANY");
+        assert.strictEqual(kanban.el.querySelector('.o_search_panel_section_header').innerText, "COMPANY");
         assert.containsOnce(kanban, 'section div.alert.alert-warning');
         assert.strictEqual(kanban.el.querySelector('section div.alert.alert-warning').innerText, "Too many items to display.");
         assert.containsNone(kanban, '.o_search_panel_category_value');
@@ -3987,7 +4024,7 @@ QUnit.module('Views', {
 
         assert.containsOnce(kanban, '.o_search_panel_section');
         assert.containsOnce(kanban, '.o_search_panel_section_header');
-        assert.strictEqual(kanban.el.querySelector('.o_search_panel_section_header').innerText, " COMPANY");
+        assert.strictEqual(kanban.el.querySelector('.o_search_panel_section_header').innerText, "COMPANY");
         assert.containsOnce(kanban, 'section div.alert.alert-warning');
         assert.strictEqual(kanban.el.querySelector('section div.alert.alert-warning').innerText, "Too many items to display.");
         assert.containsNone(kanban, '.o_search_panel_filter_value');
