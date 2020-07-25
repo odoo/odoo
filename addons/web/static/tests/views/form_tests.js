@@ -580,10 +580,11 @@ QUnit.module('Views', {
             res_id: 1,
         });
 
-        assert.containsOnce(form, 'label.o_invisible_modifier:contains(Foo)');
-        assert.containsOnce(form, 'span.o_invisible_modifier:contains(yop)');
-        assert.containsOnce(form, '.o_field_widget.o_invisible_modifier:contains(0.4)');
-        assert.hasClass(form.$('.o_field_widget[name=p]'), 'o_invisible_modifier');
+        assert.containsNone(form, 'label:contains(Foo)');
+        assert.containsNone(form, '.o_field_widget[name=foo]');
+        assert.containsNone(form, '.o_field_widget[name=qux]');
+        assert.containsNone(form, '.o_field_widget[name=p]');
+
         form.destroy();
     });
 
@@ -679,7 +680,7 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
         }).then(function (form) {
-            assert.hasClass(form.$('.o_field_widget[name="int_field"]'), 'o_invisible_modifier');
+            assert.containsNone(form, '.o_field_widget[name="int_field"]');
             form.destroy();
             delete fieldRegistry.map.asyncwidget;
             done();
@@ -4985,10 +4986,10 @@ QUnit.module('Views', {
             res_id: 2,
         });
 
-        assert.strictEqual(form.$('.oe_button_box').children().length, 9,
-            "button box should contain nine children");
+        assert.strictEqual(form.$('.oe_button_box').children().length, 1,
+            "button box should contain only one child");
         assert.hasClass(form.$('.oe_button_box'), 'o_not_full',
-            "the buttonbox should not be full (only 1 visible child)");
+            "the buttonbox should not be full");
 
         form.destroy();
     });

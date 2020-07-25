@@ -23,12 +23,13 @@ odoo.define('web.AbstractView', function (require) {
  * in most case discarded.
  */
 
+const ActionModel = require("web/static/src/js/views/action_model.js");
 var AbstractModel = require('web.AbstractModel');
 var AbstractRenderer = require('web.AbstractRenderer');
 var AbstractController = require('web.AbstractController');
-const ControlPanelModel = require('web.ControlPanelModel');
+const ControlPanel = require('web.ControlPanel');
+const SearchPanel = require("web/static/src/js/views/search_panel.js");
 var mvc = require('web.mvc');
-var SearchPanel = require('web.SearchPanel');
 var viewUtils = require('web.viewUtils');
 
 const { Component } = owl;
@@ -60,7 +61,8 @@ var AbstractView = Factory.extend({
         Model: AbstractModel,
         Renderer: AbstractRenderer,
         Controller: AbstractController,
-        SearchPanel: SearchPanel,
+        ControlPanel,
+        SearchPanel,
     }),
 
     /**
@@ -116,10 +118,6 @@ var AbstractView = Factory.extend({
         this.arch = this.fieldsView.arch;
         this.fields = this.fieldsView.viewFields;
         this.userContext = params.userContext || {};
-        this.withControlPanel = this.withControlPanel && params.withControlPanel;
-        const searchPanelDisabled = 'search_panel' in params.context && !params.search_panel;
-        this.withSearchPanel = this.withSearchPanel && this.multi_record &&
-                               params.withSearchPanel && !searchPanelDisabled;
 
         // the boolean parameter 'isEmbedded' determines if the view should be
         // considered as a subview. For now this is only used by the graph
@@ -147,8 +145,6 @@ var AbstractView = Factory.extend({
             isEmbedded: isEmbedded,
             modelName: params.modelName,
             viewType: this.viewType,
-            withControlPanel: this.withControlPanel,
-            withSearchPanel: this.withSearchPanel,
         };
 
         var controllerState = params.controllerState || {};
@@ -183,49 +179,32 @@ var AbstractView = Factory.extend({
             this._updateMVCParams(params.searchQuery);
         }
 
-        if (this.withControlPanel) {
-            this.controlPanelModelConfig = {
-                env: Component.env,
-                actionId: action.id,
-                actionContext: Object.assign({}, this.loadParams.context || {}),
-                actionDomain: this.loadParams.domain || [],
-                modelName: params.modelName,
-                // control initialization
-                activateDefaultFavorite: params.activateDefaultFavorite,
-                dynamicFilters: params.dynamicFilters,
-                viewInfo: params.controlPanelFieldsView,
-                withSearchBar: params.withSearchBar,
-                // used to avoid timeRanges in query
-                searchMenuTypes: params.searchMenuTypes,
-                // avoid work to initialize
-                importedState: controllerState.cpState,
-            };
+        this.withControlPanel = this.withControlPanel && params.withControlPanel;
+        this.withSearchPanel = this.withSearchPanel &&
+            this.multi_record && params.withSearchPanel &&
+            !('search_panel' in params.context && !params.search_panel);
 
-            const controlPanelModel = new ControlPanelModel(this.controlPanelModelConfig);
-
-            const controlPanelProps = {
-                action,
-                breadcrumbs: params.breadcrumbs,
-                controlPanelModel,
-                fields: this.fields,
-                searchMenuTypes: params.searchMenuTypes,
-                view: this.fieldsView,
-                views: action.views && action.views.filter(v => v.multiRecord === this.multi_record),
-                withBreadcrumbs: params.withBreadcrumbs,
-                withSearchBar: params.withSearchBar,
-            };
-            this.controllerParams.controlPanelModel = controlPanelModel;
-            this.controllerParams.controlPanelProps = controlPanelProps;
+        const searchModelParams = Object.assign({}, params, { action });
+        if (this.withControlPanel || this.withSearchPanel) {
+            const { arch, fields, favoriteFilters } = params.controlPanelFieldsView || {};
+            const archInfo = ActionModel.extractArchInfo({ search: arch }, this.viewType);
+            const controlPanelInfo = archInfo[this.config.ControlPanel.modelExtension];
+            const searchPanelInfo = archInfo[this.config.SearchPanel.modelExtension];
+            this.withSearchPanel = this.withSearchPanel && Boolean(searchPanelInfo);
+            Object.assign(searchModelParams, {
+                fields,
+                favoriteFilters,
+                controlPanelInfo,
+                searchPanelInfo,
+            });
         }
-
-        if (this.withSearchPanel) {
-            this.searchPanelParams = {
-                arch: (params.controlPanelFieldsView || {}).arch,
-                defaultNoFilter: params.searchPanelDefaultNoFilter,
-                fields: this.fields,
-                model: this.loadParams.modelName,
-                state: controllerState.spState,
-            };
+        const searchModel = this._createSearchModel(searchModelParams);
+        this.controllerParams.searchModel = searchModel;
+        if (this.controllerParams.controlPanel) {
+            this.controllerParams.controlPanel.props.searchModel = searchModel;
+        }
+        if (this.controllerParams.searchPanel) {
+            this.controllerParams.searchPanel.props.searchModel = searchModel;
         }
     },
 
@@ -234,33 +213,106 @@ var AbstractView = Factory.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @param {Object} params
+     * @param {Object} extraExtensions
+     * @returns {ActionModel}
+     */
+    _createSearchModel: function (params, extraExtensions) {
+        // Search model + common config
+        const { fields, favoriteFilters, controlPanelInfo, searchPanelInfo } = params;
+        const extensions = Object.assign({}, extraExtensions);
+        const importedState = params.controllerState || {};
+
+        // Control panel params
+        if (this.withControlPanel) {
+            // Control panel (Model)
+            const ControlPanelComponent = this.config.ControlPanel;
+            extensions[ControlPanelComponent.modelExtension] = {
+                actionId: params.action.id,
+                // control initialization
+                activateDefaultFavorite: params.activateDefaultFavorite,
+                archNodes: controlPanelInfo.children,
+                dynamicFilters: params.dynamicFilters,
+                favoriteFilters,
+                withSearchBar: params.withSearchBar,
+            };
+            this.controllerParams.withControlPanel = true;
+            // Control panel (Component)
+            const controlPanelProps = {
+                action: params.action,
+                breadcrumbs: params.breadcrumbs,
+                fields: this.fields,
+                searchMenuTypes: params.searchMenuTypes,
+                view: this.fieldsView,
+                views: params.action.views && params.action.views.filter(
+                    v => v.multiRecord === this.multi_record
+                ),
+                withBreadcrumbs: params.withBreadcrumbs,
+                withSearchBar: params.withSearchBar,
+            };
+            this.controllerParams.controlPanel = {
+                Component: ControlPanelComponent,
+                props: controlPanelProps,
+            };
+        }
+
+        // Search panel params
+        if (this.withSearchPanel) {
+            // Search panel (Model)
+            const SearchPanelComponent = this.config.SearchPanel;
+            const defaultValues = {};
+            Object.keys(this.loadParams.context).forEach((key) => {
+                let match = /^searchpanel_default_(.*)$/.exec(key);
+                if (match) {
+                    defaultValues[match[1]] = this.loadParams.context[key];
+                }
+            });
+            extensions[SearchPanelComponent.modelExtension] = {
+                archNodes: searchPanelInfo.children,
+                defaultNoFilter: params.searchPanelDefaultNoFilter,
+                defaultValues,
+            };
+            this.controllerParams.withSearchPanel = true;
+            this.rendererParams.withSearchPanel = true;
+            // Search panel (Component)
+            const searchPanelProps = {
+                importedState: importedState.searchPanel,
+            };
+            if (searchPanelInfo.attrs.class) {
+                searchPanelProps.className = searchPanelInfo.attrs.class;
+            }
+            this.controllerParams.searchPanel = {
+                Component: SearchPanelComponent,
+                props: searchPanelProps,
+            };
+        }
+
+        const searchModel = new ActionModel(extensions, {
+            env: Component.env,
+            modelName: params.modelName,
+            context: Object.assign({}, this.loadParams.context),
+            domain: this.loadParams.domain || [],
+            importedState: importedState.searchModel,
+            searchMenuTypes: params.searchMenuTypes,
+            searchQuery: params.searchQuery,
+            fields,
+        });
+
+        return searchModel;
+    },
+
+    /**
      * @override
      */
-    getController: async function (parent) {
+    getController: async function () {
         const _super = this._super.bind(this);
-        if (this.withControlPanel) {
-            await this.controllerParams.controlPanelModel.isReady;
-            const query = this.controllerParams.controlPanelModel.getQuery();
-            this._updateMVCParams(query);
-        }
-        let searchPanel = false;
-        if (this.withSearchPanel) {
-            const spProto = this.config.SearchPanel.prototype;
-            const { arch, fields } = this.searchPanelParams;
-            const searchPanelParams = spProto.computeSearchPanelParams(arch, fields, this.viewType);
-            if (searchPanelParams.sections) {
-                this.searchPanelParams.sections = searchPanelParams.sections;
-                this.rendererParams.withSearchPanel = true;
-                searchPanel = await this._createSearchPanel(parent, searchPanelParams);
-            }
-        }
+        await this.controllerParams.searchModel.load();
+        const query = this.controllerParams.searchModel.get('query');
+        this._updateMVCParams(query);
         // get the parent of the model if it already exists, as _super will
         // set the new controller as parent, which we don't want
         const modelParent = this.model && this.model.getParent();
         const controller = await _super(...arguments);
-        if (searchPanel) {
-            searchPanel.setParent(controller);
-        }
         if (modelParent) {
             // if we already add a model, restore its parent
             this.model.setParent(modelParent);
@@ -292,36 +344,6 @@ var AbstractView = Factory.extend({
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @private
-     * @param {Widget} parent
-     * @returns {Promise<SearchPanel>} resolved when the searchPanel is ready
-     */
-    _createSearchPanel: async function (parent, params) {
-        var defaultValues = {};
-        Object.keys(this.loadParams.context).forEach((key) => {
-            let match = /^searchpanel_default_(.*)$/.exec(key);
-            if (match) {
-                defaultValues[match[1]] = this.loadParams.context[key];
-            }
-        });
-        var controlPanelDomain = this.loadParams.domain;
-        const viewDomain = await this._getViewDomain(parent);
-        var spParams = _.extend({}, this.searchPanelParams, {
-            defaultValues: defaultValues,
-            searchDomain: controlPanelDomain,
-            viewDomain,
-            classes: params.classes || [],
-        });
-        var searchPanel = new this.config.SearchPanel(parent, spParams);
-        this.controllerParams.searchPanel = searchPanel;
-        this.controllerParams.controlPanelDomain = controlPanelDomain;
-        await searchPanel.appendTo(document.createDocumentFragment());
-
-        var searchPanelDomain = searchPanel.getDomain();
-        this.loadParams.domain = controlPanelDomain.concat(searchPanelDomain);
-        return searchPanel;
-    },
     /**
      * @private
      * @param {Object} [action]
@@ -362,17 +384,6 @@ var AbstractView = Factory.extend({
             withSearchBar: inline ? false : this.withSearchBar,
             withSearchPanel: this.withSearchPanel,
         };
-    },
-    /**
-     * Get the domain defined by the view. It is meant to be overridden. The parent
-     * is provided in case some subcomponents need to be retrieved.
-     *
-     * @private
-     * @param {Object} parent
-     * @returns {Promise<Array[]>}
-     */
-    _getViewDomain: async function (parent) {
-        return [];
     },
     /**
      * Processes a fieldsView. In particular, parses its arch.

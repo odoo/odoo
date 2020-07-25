@@ -62,7 +62,7 @@
                             class="o_group_by_menu"
                             fields="fields"
                         />
-                        <ComparisonMenu t-if="props.searchMenuTypes.includes('comparison') and model.getFiltersOfType('comparison').length"
+                        <ComparisonMenu t-if="props.searchMenuTypes.includes('comparison') and model.get('filters', f => f.type === 'comparison').length"
                             class="o_comparison_menu"
                         />
                         <FavoriteMenu t-if="props.searchMenuTypes.includes('favorite')"
@@ -555,15 +555,15 @@
 
 <t t-name="web.SearchBar" owl="1">
     <div class="o_searchview_input_container">
-        <div t-foreach="model.getFacets()" t-as="facet" t-key="facet_index"
+        <div t-foreach="model.get('facets')" t-as="facet" t-key="facet_index"
             tabindex="0"
             class="o_searchview_facet"
             role="img"
             aria-label="search"
             t-on-keydown="_onFacetKeydown(facet, facet_index)"
             >
-            <span t-if="facet.title" class="o_searchview_facet_label" t-esc="facet.title"/>
-            <span t-else="" t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
+            <span t-if="facet.icon" t-attf-class="o_searchview_facet_label {{ facet.icon }}"/>
+            <span t-else="" class="o_searchview_facet_label" t-esc="facet.title"/>
             <div class="o_facet_values">
                 <t t-foreach="facet.values" t-as="facetValue" t-key="facetValue_index">
                     <span t-if="!facetValue_first" class="o_facet_values_sep" t-esc="facet.separator"/>

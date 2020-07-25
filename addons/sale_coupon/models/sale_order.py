@@ -132,7 +132,7 @@ class SaleOrder(models.Model):
     def _get_reward_values_discount(self, program):
         if program.discount_type == 'fixed_amount':
             return [{
-                'name': _("Discount: ") + program.name,
+                'name': _("Discount: %s", program.name),
                 'product_id': program.discount_line_product_id.id,
                 'price_unit': - self._get_reward_values_discount_fixed_amount(program),
                 'product_uom_qty': 1.0,
@@ -150,7 +150,7 @@ class SaleOrder(models.Model):
                     taxes = self.fiscal_position_id.map_tax(line.tax_id)
 
                     reward_dict[line.tax_id] = {
-                        'name': _("Discount: ") + program.name,
+                        'name': _("Discount: %s", program.name),
                         'product_id': program.discount_line_product_id.id,
                         'price_unit': - discount_line_amount,
                         'product_uom_qty': 1.0,
@@ -174,14 +174,12 @@ class SaleOrder(models.Model):
                     else:
                         taxes = self.fiscal_position_id.map_tax(line.tax_id)
 
-                        tax_name = ""
-                        if len(taxes) == 1:
-                            tax_name = " - " + _("On product with following tax: ") + ', '.join(taxes.mapped('name'))
-                        elif len(taxes) > 1:
-                            tax_name = " - " + _("On product with following taxes: ") + ', '.join(taxes.mapped('name'))
-
                         reward_dict[line.tax_id] = {
-                            'name': _("Discount: ") + program.name + tax_name,
+                            'name': _(
+                                "Discount: %(program)s - On product with following taxes: %(taxes)s",
+                                program=program.name,
+                                taxes=", ".join(taxes.mapped('name')),
+                            ),
                             'product_id': program.discount_line_product_id.id,
                             'price_unit': - discount_line_amount,
                             'product_uom_qty': 1.0,

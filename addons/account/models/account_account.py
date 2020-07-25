@@ -305,6 +305,8 @@ class AccountAccount(models.Model):
         """If we're creating a new account through a many2one, there are chances that we typed the account code
         instead of its name. In that case, switch both fields values.
         """
+        if 'name' not in default_fields and 'code' not in default_fields:
+            return super().default_get(default_fields)
         default_name = self._context.get('default_name')
         default_code = self._context.get('default_code')
         if default_name and not default_code:

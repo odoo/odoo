@@ -20,12 +20,12 @@ QUnit.module('message_tests.js', {
     beforeEach() {
         utilsBeforeEach(this);
 
-        this.createMessageComponent = async message => {
+        this.createMessageComponent = async (message, otherProps) => {
             const MessageComponent = components.Message;
             MessageComponent.env = this.env;
-            this.component = new MessageComponent(null, {
+            this.component = new MessageComponent(null, Object.assign({
                 messageLocalId: message.localId,
-            });
+            }, otherProps));
             delete MessageComponent.env;
             await this.component.mount(this.widget.el);
         };
@@ -57,6 +57,12 @@ QUnit.test('Notification Sent', async function (assert) {
     assert.expect(9);
 
     await this.start();
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'sms',
@@ -66,8 +72,11 @@ QUnit.test('Notification Sent', async function (assert) {
             notification_type: 'sms',
             partner: [['insert', { id: 12, name: "Someone" }]],
         }]],
+        originThread: [['link', threadViewer.thread]]
     });
-    await this.createMessageComponent(message);
+    await this.createMessageComponent(message, {
+        threadViewerLocalId: threadViewer.localId
+    });
 
     assert.containsOnce(
         document.body,
@@ -139,6 +148,12 @@ QUnit.test('Notification Error', async function (assert) {
     });
 
     await this.start({ env: { bus } });
+    const threadViewer = this.env.models['mail.thread_viewer'].create({
+        thread: [['create', {
+            id: 11,
+            model: 'mail.channel',
+        }]],
+    });
     const message = this.env.models['mail.message'].create({
         id: 10,
         message_type: 'sms',
@@ -147,8 +162,11 @@ QUnit.test('Notification Error', async function (assert) {
             notification_status: 'exception',
             notification_type: 'sms',
         }]],
+        originThread: [['link', threadViewer.thread]]
     });
-    await this.createMessageComponent(message);
+    await this.createMessageComponent(message, {
+        threadViewerLocalId: threadViewer.localId
+    });
 
     assert.containsOnce(
         document.body,

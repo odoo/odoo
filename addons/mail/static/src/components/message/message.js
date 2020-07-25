@@ -169,24 +169,6 @@ class Message extends Component {
     }
 
     /**
-     * Determine whether the message origin thread is the same as the context
-     * of displaying this message. In other word, if the enclosing thread
-     * component of this message component is linked to the origin thread of
-     * this message, then the origin is the same.
-     *
-     * @returns {boolean}
-     */
-    get hasDifferentOriginThread() {
-        if (!this.threadViewer) {
-            return false;
-        }
-        if (!this.message.originThread) {
-            return false;
-        }
-        return this.message.originThread !== this.threadViewer.thread;
-    }
-
-    /**
      * @returns {mail.attachment[]}
      */
     get imageAttachments() {

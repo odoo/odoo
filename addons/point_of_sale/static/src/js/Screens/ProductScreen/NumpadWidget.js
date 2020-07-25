@@ -28,8 +28,14 @@ odoo.define('point_of_sale.NumpadWidget', function(require) {
             const cashier = this.env.pos.get('cashier') || this.env.pos.get_cashier();
             return !this.env.pos.config.restrict_price_control || cashier.role == 'manager';
         }
+        get hasManualDiscount() {
+            return this.env.pos.config.manual_discount;
+        }
         changeMode(mode) {
             if (!this.hasPriceControlRights && mode === 'price') {
+                return;
+            }
+            if (!this.hasManualDiscount && mode === 'discount') {
                 return;
             }
             this.state.mode = mode;

@@ -85,9 +85,9 @@ class AccountAnalyticLine(models.Model):
 
     @api.model
     def view_header_get(self, view_id, view_type):
-        context = (self._context or {})
-        header = False
-        if context.get('account_id', False):
-            analytic_account = self.env['account.analytic.account'].search([('id', '=', context['account_id'])], limit=1)
-            header = _('Entries: ') + (analytic_account.name or '')
-        return header
+        if self.env.context.get('account_id'):
+            return _(
+                "Entries: %(account)s",
+                account=self.env['account.analytic.account'].browse(self.env.context['account_id']).name
+            )
+        return super().view_header_get(view_id, view_type)

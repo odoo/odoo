@@ -40,6 +40,11 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         this.idsForLabels = {};
         this.lastActivatedFieldIndex = -1;
         this.alertFields = {};
+        // The form renderer doesn't render invsible fields (invisible="1") by
+        // default, to speed up the rendering. However, we sometimes have to
+        // display them (e.g. in Studio, in "show invisible" mode). This flag
+        // allows to disable this optimization.
+        this.renderInvisible = false;
     },
     /**
      * @override
@@ -499,6 +504,17 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
         return [2, 2, 2, 4][config.device.size_class] || 7;
     },
     /**
+     * Do not render a field widget if it is always invisible.
+     *
+     * @override
+     */
+    _renderFieldWidget(node) {
+        if (!this.renderInvisible && node.attrs.modifiers.invisible === true) {
+            return $();
+        }
+        return this._super(...arguments);
+    },
+    /**
      * @private
      * @param {Object} node
      * @returns {jQueryElement}
@@ -546,16 +562,16 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
      */
     _renderHeaderButtons: function (node) {
         var self = this;
-        var $buttons = $('<div>', {class: 'o_statusbar_buttons'});
+        var buttons = [];
         _.each(node.children, function (child) {
             if (child.tag === 'button') {
-                $buttons.append(self._renderHeaderButton(child));
+                buttons.push(self._renderHeaderButton(child));
             }
             if (child.tag === 'widget') {
-                $buttons.append(self._renderTagWidget(child));
+                buttons.push(self._renderTagWidget(child));
             }
         });
-        return $buttons;
+        return this._renderStatusbarButtons(buttons);
     },
     /**
      * @private
@@ -745,6 +761,16 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
     },
     /**
      * @private
+     * @param {Array} buttons
+     * @return {jQueryElement}
+     */
+    _renderStatusbarButtons: function (buttons) {
+        var $statusbarButtons = $('<div>', {class: 'o_statusbar_buttons'});
+        buttons.forEach(button => $statusbarButtons.append(button));
+        return $statusbarButtons;
+    },
+    /**
+     * @private
      * @param {Object} page
      * @param {string} page_id
      * @returns {jQueryElement}
@@ -851,6 +877,11 @@ var FormRenderer = BasicRenderer.extend(WidgetAdapterMixin, {
      * @returns {jQueryElement}
      */
     _renderTagLabel: function (node) {
+        if (!this.renderInvisible && node.tag === 'field' &&
+            node.attrs.modifiers.invisible === true) {
+            // skip rendering of invisible fields/labels
+            return $();
+        }
         var self = this;
         var text;
         let fieldName;

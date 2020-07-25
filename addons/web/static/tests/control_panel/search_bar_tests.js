@@ -1,7 +1,8 @@
 odoo.define('web.search_bar_tests', function (require) {
     "use strict";
 
-    const { Model } = require('web.model');
+    const { Model } = require('web/static/src/js/model.js');
+    const Registry = require("web.Registry");
     const SearchBar = require('web.SearchBar');
     const testUtils = require('web.test_utils');
 
@@ -173,22 +174,30 @@ odoo.define('web.search_bar_tests', function (require) {
             assert.expect(9);
 
             const fields = this.data.partner.fields;
-            class MockedControlPanelModel extends Model {
-                getFacets() {
-                    return [];
-                }
-                getFiltersOfType() {
-                    return Object.keys(fields).map((fname, index) => Object.assign({
-                        description: fields[fname].string,
-                        fieldName: fname,
-                        fieldType: fields[fname].type,
-                        id: index,
-                    }, fields[fname]));
+
+            class TestModelExtension extends Model.Extension {
+                get(property) {
+                    switch (property) {
+                        case 'facets':
+                            return [];
+                        case 'filters':
+                            return Object.keys(fields).map((fname, index) => Object.assign({
+                                description: fields[fname].string,
+                                fieldName: fname,
+                                fieldType: fields[fname].type,
+                                id: index,
+                            }, fields[fname]));
+                        default:
+                            break;
+                    }
                 }
             }
+            class MockedModel extends Model { }
+            MockedModel.registry = new Registry({ Test: TestModelExtension, });
+            const searchModel = new MockedModel({ Test: {} });
             const searchBar = await createComponent(SearchBar, {
                 data: this.data,
-                env: { controlPanelModel: new MockedControlPanelModel() },
+                env: { searchModel },
                 props: { fields },
             });
             const input = searchBar.el.querySelector('.o_searchview_input');
@@ -477,7 +486,7 @@ odoo.define('web.search_bar_tests', function (require) {
             const searchInput = actionManager.el.querySelector('.o_searchview_input');
             searchInput.value = "ABC";
             await testUtils.dom.triggerEvent(searchInput, 'input',
-                    { inputType: 'insertFromPaste' });
+                { inputType: 'insertFromPaste' });
             await testUtils.nextTick();
             assert.containsOnce(actionManager, '.o_searchview_autocomplete',
                 "should display autocomplete dropdown menu on paste in search view");

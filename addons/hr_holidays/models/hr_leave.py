@@ -73,11 +73,15 @@ class HolidaysRequest(models.Model):
         defaults = super(HolidaysRequest, self).default_get(fields_list)
         defaults = self._default_get_request_parameters(defaults)
 
-        LeaveType = self.env['hr.leave.type'].with_context(employee_id=defaults.get('employee_id'), default_date_from=defaults.get('date_from', fields.Datetime.now()))
-        lt = LeaveType.search([('valid', '=', True)], limit=1)
+        if 'holiday_status_id' in fields_list and not defaults.get('holiday_status_id'):
+            lt = self.env['hr.leave.type'].search([('valid', '=', True)], limit=1)
 
-        defaults['holiday_status_id'] = lt.id if lt else defaults.get('holiday_status_id')
-        defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
+            if lt:
+                defaults['holiday_status_id'] = lt.id
+
+        if 'state' in fields_list and not defaults.get('state'):
+            lt = self.env['hr.leave.type'].browse(defaults.get('holiday_status_id'))
+            defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
         return defaults
 
     def _default_get_request_parameters(self, values):

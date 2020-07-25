@@ -1206,16 +1206,21 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
 
     @api.model
     def default_get(self, fields_list):
-        """ default_get(fields) -> default_values
+        """ default_get(fields_list) -> default_values
 
         Return default values for the fields in ``fields_list``. Default
         values are determined by the context, user defaults, and the model
         itself.
 
-        :param fields_list: a list of field names
-        :return: a dictionary mapping each field name to its corresponding
-            default value, if it has one.
+        :param list fields_list: names of field whose default is requested
+        :return: a dictionary mapping field names to their corresponding default values,
+            if they have a default value.
+        :rtype: dict
 
+        .. note::
+
+            Unrequested defaults won't be considered, there is no need to return a
+            value for fields whose names are not in `fields_list`.
         """
         # trigger view init hook
         self.view_init(fields_list)
@@ -3206,8 +3211,7 @@ Fields:
         if not (regular_fields or property_fields):
             return
 
-        inconsistent_fields = set()
-        inconsistent_recs = self.browse()
+        inconsistencies = []
         for record in self:
             company = record.company_id if record._name != 'res.company' else record
             # The first part of the check verifies that all records linked via relation fields are compatible
@@ -3217,11 +3221,9 @@ Fields:
                 # Special case with `res.users` since an user can belong to multiple companies.
                 if corecord._name == 'res.users' and corecord.company_ids:
                     if not (company <= corecord.company_ids):
-                        inconsistent_fields.add(name)
-                        inconsistent_recs |= record
+                        inconsistencies.append((record, name, corecord))
                 elif not (corecord.company_id <= company):
-                    inconsistent_fields.add(name)
-                    inconsistent_recs |= record
+                    inconsistencies.append((record, name, corecord))
             # The second part of the check (for property / company-dependent fields) verifies that the records
             # linked via those relation fields are compatible with the company that owns the property value, i.e.
             # the company for which the value is being assigned, i.e:
@@ -3232,24 +3234,28 @@ Fields:
                 corecord = record.sudo()[name]
                 if corecord._name == 'res.users' and corecord.company_ids:
                     if not (company <= corecord.company_ids):
-                        inconsistent_fields.add(name)
-                        inconsistent_recs |= record
+                        inconsistencies.append((record, name, corecord))
                 elif not (corecord.company_id <= company):
-                    inconsistent_fields.add(name)
-                    inconsistent_recs |= record
+                    inconsistencies.append((record, name, corecord))
 
-        if inconsistent_fields:
-            message = _("""Some records are incompatible with the company of the %(document_descr)s.
-
-Incompatibilities:
-Fields: %(fields)s
-Record ids: %(records)s
-""")
-            raise UserError(message % {
-                'document_descr': self.env['ir.model']._get(self._name).name,
-                'fields': ', '.join(sorted(inconsistent_fields)),
-                'records': ', '.join([str(a) for a in inconsistent_recs.ids[:6]]),
-            })
+        if inconsistencies:
+            lines = [_("Incompatible companies on records:")]
+            company_msg = _("- Record is company %(company)r and %(field)r (%(fname)s: %(values)s) belongs to another company.")
+            record_msg = _("- %(record)r belongs to company %(company)r and %(field)r (%(fname)s: %(values)s) belongs to another company.")
+            for record, name, corecords in inconsistencies[:5]:
+                if record._name == 'res.company':
+                    msg, company = company_msg, record
+                else:
+                    msg, company = record_msg, record.company_id
+                field = self.env['ir.model.fields']._get(self._name, name)
+                lines.append(msg % {
+                    'record': record.display_name,
+                    'company': company.display_name,
+                    'field': field.field_description,
+                    'fname': field.name,
+                    'values': ", ".join(repr(rec.display_name) for rec in corecords),
+                })
+            raise UserError("\n".join(lines))
 
     @api.model
     def check_access_rights(self, operation, raise_exception=True):
@@ -4148,7 +4154,10 @@ Record ids: %(records)s
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
-            raise UserError(_('Invalid "order" specified. A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)'))
+            raise UserError(_(
+                'Invalid "order" specified (%s). A valid "order" specification is a comma-separated list of valid field names (optionally followed by asc/desc for the direction)',
+                word,
+            ))
         return True
 
     @api.model

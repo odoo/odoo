@@ -9,21 +9,24 @@ class ChooseDeliveryPackage(models.TransientModel):
     _name = 'choose.delivery.package'
     _description = 'Delivery Package Selection Wizard'
 
-    def _default_shipping_weight(self):
-        picking = self.env['stock.picking'].browse(self.env.context.get('default_picking_id'))
-        move_line_ids = picking.move_line_ids.filtered(lambda m:
-            float_compare(m.qty_done, 0.0, precision_rounding=m.product_uom_id.rounding) > 0
-            and not m.result_package_id
-        )
-        total_weight = 0.0
-        for ml in move_line_ids:
-            qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
-            total_weight += qty * ml.product_id.weight
-        return total_weight
+    def default_get(self, fields_list):
+        defaults = super().default_get(fields_list)
+        if 'shipping_weight' in fields_list:
+            picking = self.env['stock.picking'].browse(defaults.get('picking_id'))
+            move_line_ids = picking.move_line_ids.filtered(lambda m:
+                float_compare(m.qty_done, 0.0, precision_rounding=m.product_uom_id.rounding) > 0
+                and not m.result_package_id
+            )
+            total_weight = 0.0
+            for ml in move_line_ids:
+                qty = ml.product_uom_id._compute_quantity(ml.qty_done, ml.product_id.uom_id)
+                total_weight += qty * ml.product_id.weight
+            defaults['shipping_weight'] = total_weight
+        return defaults
 
     picking_id = fields.Many2one('stock.picking', 'Picking')
     delivery_packaging_id = fields.Many2one('product.packaging', 'Delivery Packaging', check_company=True)
-    shipping_weight = fields.Float('Shipping Weight', default=_default_shipping_weight)
+    shipping_weight = fields.Float('Shipping Weight')
     weight_uom_name = fields.Char(string='Weight unit of measure label', compute='_compute_weight_uom_name')
     company_id = fields.Many2one(related='picking_id.company_id')
 

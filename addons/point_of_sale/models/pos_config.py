@@ -28,8 +28,8 @@ class AccountBankStmtCashWizard(models.Model):
     @api.model
     def default_get(self, fields):
         vals = super(AccountBankStmtCashWizard, self).default_get(fields)
-        if "is_a_template" in fields and self.env.context.get('default_is_a_template'):
-            vals['is_a_template'] = True
+        if 'cashbox_lines_ids' not in fields:
+            return vals
         config_id = self.env.context.get('default_pos_id')
         if config_id:
             config = self.env['pos.config'].browse(config_id)
@@ -218,6 +218,7 @@ class PosConfig(models.Model):
     only_round_cash_method = fields.Boolean(string="Only apply rounding on cash")
     has_active_session = fields.Boolean(compute='_compute_current_session')
     show_allow_invoicing_alert = fields.Boolean(compute="_compute_show_allow_invoicing_alert")
+    manual_discount = fields.Boolean(string="Manual Discounts", default=True)
 
     @api.depends('use_pricelist', 'available_pricelist_ids')
     def _compute_allowed_pricelist_ids(self):
@@ -460,9 +461,9 @@ class PosConfig(models.Model):
         for config in self:
             last_session = self.env['pos.session'].search([('config_id', '=', config.id)], limit=1)
             if (not last_session) or (last_session.state == 'closed'):
-                result.append((config.id, config.name + ' (' + _('not used') + ')'))
-                continue
-            result.append((config.id, config.name + ' (' + last_session.user_id.name + ')'))
+                result.append((config.id, _("%(pos_name)s (not used)", pos_name=config.name)))
+            else:
+                result.append((config.id, "%s (%s)" % (config.name, last_session.user_id.name)))
         return result
 
     @api.model
@@ -634,7 +635,7 @@ class PosConfig(models.Model):
     def setup_defaults(self, company):
         """Extend this method to customize the existing pos.config of the company during the installation
         of a localisation.
-        
+
         :param self pos.config: pos.config records present in the company during the installation of localisation.
         :param company res.company: the single company where the pos.config defaults will be setup.
         """

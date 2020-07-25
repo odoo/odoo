@@ -148,7 +148,6 @@ def get_module_path(module, downloaded=False, display_warning=True):
     path if nothing else is found.
 
     """
-    initialize_sys_path()
     for adp in odoo.addons.__path__:
         files = [opj(adp, module, manifest) for manifest in MANIFEST_NAMES] +\
                 [opj(adp, module + '.zip')]
@@ -364,7 +363,6 @@ def load_openerp_module(module_name):
     if module_name in loaded:
         return
 
-    initialize_sys_path()
     try:
         __import__('odoo.addons.' + module_name)
 
@@ -404,7 +402,6 @@ def get_modules():
         ]
 
     plist = []
-    initialize_sys_path()
     for ad in odoo.addons.__path__:
         plist.extend(listdir(ad))
     return list(set(plist))

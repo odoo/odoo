@@ -93,6 +93,7 @@ odoo.define('point_of_sale.tests.ProductScreen', function (require) {
         // set dummy values in pos.config and pos.get('cashier')
         pos.config = {
             restrict_price_control: false,
+            manual_discount: true
         };
         pos.set('cashier', { role: 'manager' });
 
