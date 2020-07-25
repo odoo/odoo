@@ -2720,10 +2720,10 @@ class AccountMoveLine(models.Model):
         accounts = self.product_id.product_tmpl_id.get_product_accounts(fiscal_pos=fiscal_position)
         if self.move_id.is_sale_document(include_receipts=True):
             # Out invoice.
-            return accounts['income']
+            return accounts['income'] or self.account_id
         elif self.move_id.is_purchase_document(include_receipts=True):
             # In invoice.
-            return accounts['expense']
+            return accounts['expense'] or self.account_id
 
     def _get_computed_taxes(self):
         self.ensure_one()

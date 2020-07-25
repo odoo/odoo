@@ -101,3 +101,13 @@ class AccountMove(models.Model):
     def post(self):
         self._check_document_types_post()
         super().post()
+
+    def _get_name_invoice_report(self, report_xml_id):
+        self.ensure_one()
+        if self.l10n_latam_use_documents and self.company_id.country_id.code == 'CL':
+            custom_report = {
+                'account.report_invoice_document_with_payments': 'l10n_cl.report_invoice_document_with_payments',
+                'account.report_invoice_document': 'l10n_cl.report_invoice_document',
+            }
+            return custom_report.get(report_xml_id) or report_xml_id
+        return super()._get_name_invoice_report(report_xml_id)

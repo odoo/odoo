@@ -109,7 +109,7 @@ Master Data:
         'demo/mono_demo.xml',
         'demo/respinsc_demo.xml',
         'demo/res_partner_demo.xml',
-        'demo/account_tax_template_demo.xml',
+        'demo/account_tax_demo.xml',
         'demo/product_product_demo.xml',
         'demo/account_customer_invoice_demo.xml',
         'demo/account_customer_refund_demo.xml',

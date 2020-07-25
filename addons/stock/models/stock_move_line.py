@@ -243,6 +243,7 @@ class StockMoveLine(models.Model):
             ('location_dest_id', 'stock.location'),
             ('lot_id', 'stock.production.lot'),
             ('package_id', 'stock.quant.package'),
+            ('result_package_id', 'stock.quant.package'),
             ('owner_id', 'res.partner')
         ]
         updates = {}
