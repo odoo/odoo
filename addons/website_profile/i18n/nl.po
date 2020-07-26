@@ -5,15 +5,15 @@
 # Translators:
 # Martin Trigaux, 2019
 # Erwin van der Ploeg <erwin@odooexperts.nl>, 2019
-# Yenthe Van Ginneken <yenthespam@gmail.com>, 2019
+# Yenthe Van Ginneken <yenthespam@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~12.5\n"
+"Project-Id-Version: Odoo Server saas~13.2\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-08-26 08:17+0000\n"
-"PO-Revision-Date: 2019-08-26 09:16+0000\n"
-"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2019\n"
+"POT-Creation-Date: 2020-02-13 07:25+0000\n"
+"PO-Revision-Date: 2019-03-20 15:01+0000\n"
+"Last-Translator: Yenthe Van Ginneken <yenthespam@gmail.com>, 2020\n"
 "Language-Team: Dutch (https://www.transifex.com/odoo/teams/41243/nl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -51,19 +51,14 @@ msgid ". Try another search."
 msgstr ". Probeer een andere zoekopdracht."
 
 #. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
-msgid "40%"
-msgstr "40%"
+#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
+msgid "<i class=\"fa fa-arrow-right mr-1\"/>All Badges"
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/> Alle badges"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "<i class=\"fa fa-arrow-right mr-1\"/>Check all available badges"
-msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Controleer alle beschikbare badges"
-
-#. module: website_profile
-#: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "<i class=\"fa fa-arrow-right\"/> Check available badges"
-msgstr "<i class=\"fa fa-arrow-right\"/>Controleer beschikbare badges"
+msgid "<i class=\"fa fa-arrow-right\"/> All Badges"
+msgstr "<i class=\"fa fa-arrow-right\"/> Alle badges"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -174,6 +169,11 @@ msgid ""
 msgstr ""
 "<span id=\"email_validated_message\">Proficiat! Uw e-mailadres is zojuist "
 "gevalideerd.</span>"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "<strong class=\"form-group text-white mr-2\">Rank by :</strong>"
+msgstr ""
 
 #. module: website_profile
 #: model:mail.template,body_html:website_profile.validation_email
@@ -371,6 +371,12 @@ msgid "All Users"
 msgstr "Alle gebruikers"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "All time"
+msgstr "Alle tijden"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "Badges"
@@ -380,12 +386,9 @@ msgstr "Badges"
 #: model_terms:ir.ui.view,arch_db:website_profile.badge_content
 msgid ""
 "Besides gaining reputation with your questions and answers,\n"
-"                    you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
-"                    appear on your profile page, and your posts."
+"                        you receive badges for being especially helpful.<br class=\"d-none d-lg-inline-block\"/>Badges\n"
+"                        appear on your profile page, and your posts."
 msgstr ""
-"Naast het behalen van reputatie met uw vragen en antwoorden,\n"
-"krijgt u badges voor uw hulp. <br class=\"d-none d-lg-inline-block\"/>Badges\n"
-"verschijnen op uw profiel pagina en uw berichten."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
@@ -395,12 +398,17 @@ msgstr "Biografie"
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Clear"
-msgstr "Zichtbaar"
+msgstr "Wissen"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
+msgid "Click here to send a verification email."
+msgstr "Klik hier om een verificatie e-mail te sturen."
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.email_validation_banner
 msgid "Close"
-msgstr "Sluiten"
+msgstr "Afsluiten"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
@@ -410,12 +418,12 @@ msgstr "Land..."
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Edit"
-msgstr "Wijzig"
+msgstr "Bewerken"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_edit_content
 msgid "Edit Profile"
-msgstr "Wijzig profiel"
+msgstr "Profiel bewerken"
 
 #. module: website_profile
 #: model:ir.model,name:website_profile.model_gamification_badge
@@ -458,9 +466,14 @@ msgid "Mobile sub-nav"
 msgstr "Mobiele sub-nav"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "Monthly"
+msgstr "Maandelijks"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_content
 msgid "More info"
-msgstr "Meer info"
+msgstr "Meer informatie"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
@@ -474,8 +487,8 @@ msgstr "Volgende rank:"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.user_badges
-msgid "No badge yet"
-msgstr "Nog geen badge"
+msgid "No badges yet!"
+msgstr "Nog geen badges!"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.users_page_content
@@ -522,9 +535,19 @@ msgid "Search users"
 msgstr "Zoek gebruikers"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "This month"
+msgstr "Deze maand"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.private_profile
 msgid "This profile is private!"
 msgstr "Dit profiel is privé!"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.users_page_header
+msgid "This week"
+msgstr "Deze week"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
@@ -553,11 +576,22 @@ msgid "Website"
 msgstr "Website"
 
 #. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "Weekly"
+msgstr "Wekelijks"
+
+#. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
 msgid "When you finish a course or reach milestones, you're awarded badges."
 msgstr ""
 "Wanneer u een opleiding af hebt of een mijlpaal hebt bereikt wordt u beloond"
 " met badges."
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+#: model_terms:ir.ui.view,arch_db:website_profile.top3_user_card
+msgid "XP"
+msgstr "XP"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
@@ -574,6 +608,11 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_profile.user_profile_sub_nav
 msgid "breadcrumb"
 msgstr "kruimelpad"
+
+#. module: website_profile
+#: model_terms:ir.ui.view,arch_db:website_profile.all_user_card
+msgid "gain"
+msgstr "winst"
 
 #. module: website_profile
 #: model_terms:ir.ui.view,arch_db:website_profile.rank_badge_main
