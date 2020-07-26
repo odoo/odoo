@@ -743,6 +743,12 @@ msgid "Available Products"
 msgstr "Prodotti disponibili"
 
 #. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
@@ -5007,7 +5013,7 @@ msgstr "Reso"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_return_picking__location_id
 msgid "Return Location"
-msgstr "Ubicazione di restituzione"
+msgstr "Ubicazione di reso"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_return_picking
@@ -5493,7 +5499,7 @@ msgstr "Ubicazione di Provenienza"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.message_body
 msgid "Source Location:"
-msgstr "Ubicazione di origine"
+msgstr "Ubicazione di origine:"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__package_id
