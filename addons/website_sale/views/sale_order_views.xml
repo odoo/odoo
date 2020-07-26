@@ -107,25 +107,6 @@
         </field>
     </record>
 
-    <record id="action_abandoned_orders_ecommerce" model="ir.actions.act_window">
-        <field name="name">Abandoned Carts</field>
-        <field name="res_model">sale.order</field>
-        <field name="view_mode">tree,form,kanban,activity</field>
-        <field name="domain">[('is_abandoned_cart', '=', True)]</field>
-        <field name="context" eval="{'show_sale': True, 'create': False, 'search_default_recovery_email' : 1}"/>
-        <field name="search_view_id" ref="view_sales_order_filter_ecommerce"/>
-        <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-                No abandoned carts found
-            </p><p>
-                You'll find here all the carts abandoned by your visitors.
-                If they completed their address, you should send them a recovery email!
-            </p><p>
-                The time to mark a cart as abandoned can be changed in the settings.
-            </p>
-        </field>
-    </record>
-
     <record id="sale_order_action_to_invoice" model="ir.actions.act_window">
         <field name="name">Orders To Invoice</field>
         <field name="res_model">sale.order</field>
