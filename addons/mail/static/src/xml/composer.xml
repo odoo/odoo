@@ -12,7 +12,7 @@
                     <textarea class="o_input o_composer_text_field" tabindex="2" placeholder="Write something..."/>
                     <div class="o_chatter_composer_tools">
                         <button tabindex="4" class="btn btn-secondary fa fa-smile-o o_composer_button_emoji" type="button" data-toggle="popover" title="Emojis" aria-label="Emojis"/>
-                        <button tabindex="5" class="btn btn-secondary fa fa-paperclip o_composer_button_add_attachment" type="button" aria-label="Add attachment" title="Add attachment"/>
+                        <button t-if="!widget.options.thread or widget.options.thread.getType() !== 'livechat'" tabindex="5" class="btn btn-secondary fa fa-paperclip o_composer_button_add_attachment" type="button" aria-label="Add attachment" title="Add attachment"/>
                         <button t-if="widget.options.isMobile" tabindex="3" class="btn btn-secondary fa fa-paper-plane-o o_composer_button_send" type="button" title="Send" aria-label="Send"/>
                     </div>
                 </div>
