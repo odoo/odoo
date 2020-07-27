@@ -24,6 +24,7 @@ import time
 from psycopg2 import ProgrammingError, errorcodes
 
 import odoo
+from odoo import config
 
 from . import Command
 
@@ -45,7 +46,6 @@ def check_postgres_user():
 
     This function assumes the configuration has been initialized.
     """
-    config = odoo.tools.config
     if (config['db_user'] or os.environ.get('PGUSER')) == 'postgres':
         sys.stderr.write("Using the database user 'postgres' is a security risk, aborting.")
         sys.exit(1)
@@ -55,7 +55,6 @@ def report_configuration():
 
     This function assumes the configuration has been initialized.
     """
-    config = odoo.tools.config
     _logger.info("Odoo version %s", __version__)
     if os.path.isfile(config.rcfile):
         _logger.info("Using configuration file at " + config.rcfile)
@@ -68,7 +67,6 @@ def report_configuration():
     _logger.info('database: %s@%s:%s', user, host, port)
 
 def rm_pid_file(main_pid):
-    config = odoo.tools.config
     if config['pidfile'] and main_pid == os.getpid():
         try:
             os.unlink(config['pidfile'])
@@ -80,15 +78,13 @@ def setup_pid_file():
 
     This function assumes the configuration has been initialized.
     """
-    config = odoo.tools.config
-    if not odoo.evented and config['pidfile']:
+    if config.subcommand != 'gevent' and config['pidfile']:
         pid = os.getpid()
         with open(config['pidfile'], 'w') as fd:
             fd.write(str(pid))
         atexit.register(rm_pid_file, pid)
 
 def export_translation():
-    config = odoo.tools.config
     dbname = config['db_name']
 
     if config["language"]:
@@ -110,7 +106,6 @@ def export_translation():
     _logger.info('translation file written successfully')
 
 def import_translation():
-    config = odoo.tools.config
     overwrite = config["overwrite_existing_translations"]
     dbname = config['db_name']
 
@@ -121,12 +116,10 @@ def import_translation():
                 cr, config["translate_in"], config["language"], overwrite=overwrite,
             )
 
-def main(args):
+def main():
     check_root_user()
     check_postgres_user()
     report_configuration()
-
-    config = odoo.tools.config
 
     # the default limit for CSV fields in the module is 128KiB, which is not
     # quite sufficient to import images to store in attachment. 500MiB is a

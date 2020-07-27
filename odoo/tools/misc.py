@@ -40,12 +40,12 @@ from lxml import etree
 
 import odoo
 import odoo.addons
+from odoo import config
 # get_encodings, ustr and exception_to_unicode were originally from tools.misc.
 # There are moved to loglevels until we refactor tools.
 from odoo.loglevels import get_encodings, ustr, exception_to_unicode     # noqa
 from . import pycompat
 from .cache import *
-from .config import config
 from .parse_version import parse_version
 from .which import which
 

@@ -146,12 +146,13 @@ def test_scripts(args):
 if __name__ == '__main__':
     args = parse_args()
 
-    # handle paths option
-    if args.addons_path:
-        odoo.tools.config['addons_path'] = ','.join([args.addons_path, odoo.tools.config['addons_path']])
-        odoo.modules.module.initialize_sys_path()
+    import odoo
+    odoo.bootstrap(var(args))
 
-    init_logger()
+    import odoo.logging_config
+    odoo.logging_config.init_logger()
+
+
     logging.getLogger('odoo.modules.loading').setLevel(logging.CRITICAL)
     logging.getLogger('odoo.sql_db').setLevel(logging.CRITICAL)
 

@@ -11,10 +11,11 @@ import threading
 import time
 import warnings
 
-from . import release
-from . import sql_db
-from . import tools
-from . import loglevels
+from odoo import release
+from odoo import sql_db
+from odoo import tools
+from odoo import loglevels
+from odoo import config
 
 _logger = logging.getLogger(__name__)
 
@@ -32,7 +33,7 @@ class PostgreSQLHandler(logging.Handler):
     def emit(self, record):
         ct = threading.current_thread()
         ct_db = getattr(ct, 'dbname', None)
-        dbname = tools.config['log_db'] if tools.config['log_db'] and tools.config['log_db'] != '%d' else ct_db
+        dbname = config['log_db'] if config['log_db'] and config['log_db'] != '%d' else ct_db
         if not dbname:
             return
         with tools.ignore(Exception), tools.mute_logger('odoo.sql_db'), sql_db.db_connect(dbname, allow_uri=True).cursor() as cr:
@@ -132,7 +133,7 @@ def init_logger():
     # Normal Handler on stderr
     handler = logging.StreamHandler()
 
-    if tools.config['syslog']:
+    if config['syslog']:
         # SysLog Handler
         if os.name == 'nt':
             handler = logging.handlers.NTEventLogHandler("%s %s" % (release.description, release.version))
@@ -143,9 +144,9 @@ def init_logger():
         format = '%s %s' % (release.description, release.version) \
                 + ':%(dbname)s:%(levelname)s:%(name)s:%(message)s'
 
-    elif tools.config['logfile']:
+    elif config['logfile']:
         # LogFile Handler
-        logf = tools.config['logfile']
+        logf = config['logfile']
         try:
             # We check we have the right location for the log files
             dirname = os.path.dirname(logf)
@@ -176,7 +177,7 @@ def init_logger():
     logging.getLogger('odoo').removeHandler(null_handler)
     logging.getLogger('werkzeug').addFilter(perf_filter)
 
-    if tools.config['log_db']:
+    if config['log_db']:
         db_levels = {
             'debug': logging.DEBUG,
             'info': logging.INFO,
@@ -185,13 +186,13 @@ def init_logger():
             'critical': logging.CRITICAL,
         }
         postgresqlHandler = PostgreSQLHandler()
-        postgresqlHandler.setLevel(int(db_levels.get(tools.config['log_db_level'], tools.config['log_db_level'])))
+        postgresqlHandler.setLevel(int(db_levels.get(config['log_db_level'], config['log_db_level'])))
         logging.getLogger().addHandler(postgresqlHandler)
 
     # Configure loggers levels
-    pseudo_config = loglevels.PSEUDOCONFIG_MAPPER.get(tools.config['log_level'], [])
+    pseudo_config = loglevels.PSEUDOCONFIG_MAPPER.get(config['log_level'], [])
 
-    logconfig = tools.config['log_handler']
+    logconfig = config['log_handler']
 
     logging_configurations = DEFAULT_LOG_CONFIGURATION + pseudo_config + logconfig
     for logconfig_item in logging_configurations:

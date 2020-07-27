@@ -52,11 +52,11 @@ except ImportError:
     setproctitle = lambda x: None
 
 import odoo
+from odoo import config
 from odoo.modules import get_modules
 from odoo.modules.module import run_unit_tests, get_test_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
-from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
 
 _logger = logging.getLogger(__name__)

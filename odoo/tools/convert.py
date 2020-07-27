@@ -20,8 +20,8 @@ except ImportError:
     jingtrang = None
 
 import odoo
+from odoo import config
 from . import assertion_report, pycompat
-from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
 from odoo import SUPERUSER_ID, api

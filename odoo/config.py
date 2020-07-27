@@ -19,29 +19,20 @@ from collections.abc import Iterable
 from getpass import getuser
 from typing import Any, Callable, Optional, List
 
+from odoo import appdirs
+from odoo import release
+from odoo.loglevels import PSEUDOCONFIG_MAPPER as loglevelmap
 
-try:
-    from odoo import appdirs
-    from odoo import release
-    from odoo.loglevels import PSEUDOCONFIG_MAPPER as loglevelmap
-except ImportError:
-    # TODO @juc Don't merge me with that crap
-    import appdirs
-    import release
-    from loglevels import PSEUDOCONFIG_MAPPER as loglevelmap
-
-
-subcommand = None   # subcommand extracted from cli
 
 optionmap = {}      # option name to option object map
 groupmap = {}       # group title to group object map
 commandmap = {}     # subcommand name to command object map
 
 sourcemap = {       # all configuration sources
-    "cli": {},      # argparse
-    "environ": {},  # os.getenv
-    "file": {},     # configparser [common] section
-    "default": {},  # source-hardcoded
+    'cli': {},      # argparse
+    'environ': {},  # os.getenv
+    'file': {},     # configparser [common] section
+    'default': {},  # source-hardcoded
 }
 
 DELETED = object()  # placed in the user-config when an option is
@@ -73,8 +64,8 @@ class CommaSeparated(collections.UserList):
         attr = getattr(self.comma, key, None)
         if attr is not None:
             warnings.warn(
-                f"The previously comma-separated options should "
-                "now be used as a list.", DeprecationWarning)
+                "The option should now be used as a list.",
+                DeprecationWarning, stacklevel=2)
             return attr
         raise AttributeError(f"type object {super(self).__name__} has no attribute '{key}'")
 
@@ -407,7 +398,7 @@ Option('osv_memory_age_limit', longopt="--osv-memory-age-limit", type=float, rty
 Option('load_language', longopt="--load-language", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='store', default=CommaSeparated(), envvar=None, metavar="LANGCODE", help="specifies the languages for the translations you want to be loaded")
 Option('language', shortopt="-l", longopt="--language", type=str, rtype=str, action='store', default=None, envvar=None, metavar="LANGCODE", help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
 Option('translate_out', longopt="--i18n-export", type=i18n_output_file, rtype=str, action='store', default=None, envvar=None, metavar="FILEPATH", help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit. The '-l' option is required")
-Option('tranlate_in', longopt="--i18n-import", type=i18n_input_file, rtype=str, action='store', default=None, envvar=None, metavar="FILEPATH", help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
+Option('translate_in', longopt="--i18n-import", type=i18n_input_file, rtype=str, action='store', default=None, envvar=None, metavar="FILEPATH", help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
 Option('overwrite_existing_translations', longopt="--i18n-overwrite", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="overwrites existing translation terms on updating a module or importing a CSV or a PO file. Use with -u/--update or --i18n-import.")
 Option('translate_modules', longopt="--modules", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='store', default=CommaSeparated(), envvar=None, metavar=None, help="specify modules to export. Use in combination with --i18n-export")
 
@@ -514,7 +505,7 @@ Group('Internationalisation options', [
     optionmap['load_language'],
     optionmap['language'],
     optionmap['translate_out'],
-    optionmap['tranlate_in'],
+    optionmap['translate_in'],
     optionmap['overwrite_existing_translations'],
     optionmap['translate_modules'],
 ])
@@ -639,9 +630,7 @@ def load_environ():
                 options[opt] = opttypemap[opt](val)
 
 
-def load_cli():
-    global subcommand
-
+def load_cli(argv):
     def add_options(parser, options):
         for option in options:
             args = [opt for opt in (option.shortopt, option.longopt) if opt]
@@ -673,9 +662,9 @@ def load_cli():
     # Process parsed args
     options = sourcemap['cli']
     options.clear()
-    cli_options = vars(main_parser.parse_args())
+    cli_options = vars(main_parser.parse_args(argv))
 
-    subcommand = cli_options.pop('subcommand', 'server')
+    Config.subcommand = cli_options.pop('subcommand', 'server')
     for opt, val in cli_options.items():
         if val is None:
             pass
@@ -692,6 +681,7 @@ def load_file():
     configpath = config['config']
     try:
         if configpath.stat().st_mode & 0o777 != 0o600:
+            warnings.warn("Running as user 'root' is a security risk.")
             warnings.warn(f"{configpath}: Wrong permissions, should be user-only read/write (0600)")
         p.read([configpath])
     except (FileNotFoundError, IOError):
@@ -706,32 +696,34 @@ def load_file():
 
 
 class Config(collections.abc.MutableMapping):
-    def __init__(self, tempopts_chain=None, useropts=None, sectopts=None):
-        self._tempopts_chain = collections.ChainMap(*(tempopts_chain or []))
-        self._useropts = useropts or {}
+    subcommand = None
+
+    def __init__(self, userchain=None, sectopts=None):
+        self._userchain = userchain or collections.ChainMap({})
         self._sectopts = sectopts or {}
         self._chainmap = collections.ChainMap(
-            self._tempopts_chain,
-            self._useropts,
+            self._userchain,
             sourcemap["cli"],
             self._sectopts,
             sourcemap["file"],
             sourcemap["environ"],
             sourcemap["default"],
         )
-        self.subcommand = subcommand
 
     def copy(self):
         return type(self)(
-            [tempopts.copy() for tempopts_chain in self._tempopts_chain.maps],
-            self._useropts.copy(),
+            collections.ChainMap([
+                useropts.copy()
+                for useropts
+                in self._userchain.maps
+            ]),
             self._sectopts.copy(),
         )
 
     def expose_file_section(self, section):
         """
-        Exposes the [`section`] of the configuration file just before
-        the file [options] section.
+        Load the `section` from the configfile and expose it priority to
+        the default configfile section
         """
         if not section.startswith('file_'):
             section = 'file_' + section
@@ -741,7 +733,7 @@ class Config(collections.abc.MutableMapping):
     def save(self, configpath=None):
         """
         Export the currently exposed configuration with additionnal
-        sections
+        sections to a file
         """
         p = configparser.RawConfigParser()
 
@@ -774,12 +766,8 @@ class Config(collections.abc.MutableMapping):
         with configpath.open('w') as fd:
             p.write(fd)
 
-    def pop(self, option, *default):
-        val = self.get(option, default[0]) if default else self[option]
-        del self[option]
-        return val
-
     def __contains__(self, option):
+        """ True if option exists and wasn't removed, False otherwise """
         try:
             self[option]
         except KeyError:
@@ -787,10 +775,15 @@ class Config(collections.abc.MutableMapping):
         return True
 
     def __getitem__(self, option):
+        """
+        Return the corresponding option value automatically following
+        option aliases. A KeyError exception is raised for missing or
+        removed options.
+        """
         val = self._chainmap[option]
         if val is DELETED:
             raise KeyError(f"{option} has been removed")
-        elif insintance(val, DeprecatedAlias):
+        elif isinstance(val, DeprecatedAlias):
             warnings.warn(
                 f"The {option} is a deprecated alias to {val.aliased_option}, "
                 "please use the latter. The option may be overridable via a "
@@ -800,12 +793,19 @@ class Config(collections.abc.MutableMapping):
         return val
 
     def __setitem__(self, option, value):
+        """
+        Set the corresponding option value in the top-most chained user
+        dictionnary.
+        """
         if type(value) is str:
             value = opttypemap[option](value)
-        self._useropts[option] = value
+        setattr(super(), option, value)
 
     def __delitem__(self, option):
-        self._useropts[option] = DELETED
+        """
+        Mark the corresponding option as removed to prevent subsequent use
+        """
+        setattr(super(), option, DELETED)
 
     def __iter__(self):
         return iter(self._chainmap)
@@ -815,17 +815,29 @@ class Config(collections.abc.MutableMapping):
 
     @contextlib.contextmanager
     def __call__(self, tempopts=None):
+        """
+        Temporary override the current configuration with provided
+        options or a clean dictionnary. The previous configuration is
+        restored upon leaving the context.
+        """
         if tempopts is None:
             tempopts = {}
-        self._tempopts_chain.maps.insert(0, tempopts)
+        self._userchain.maps.insert(0, tempopts)
         try:
-            yield tempopts
+            yield self
         finally:
-            self._tempopts_chain.maps.remove[tempopts]
+            self._userchain.maps.remove[tempopts]
+
+    @property
+    def rcfile(self):
+        return get_odoorc()
+
+    @property
+    def evented(self):
+        return type(self).subcommand == 'gevent'
 
     @property
     def addons_data_dir(self):
-        warnings.warn('moved to')
         return self['data_dir'].joinpath('addons')
 
     @property

@@ -4,7 +4,7 @@ import warnings
 warnings.warn(
     "The configuration have been moved from odoo.tools.config to "
     "odoo.config. Please import the later.",
-    DeprecationWarning,
+    DeprecationWarning, stacklevel=2,
 )
 
 from odoo.config import config

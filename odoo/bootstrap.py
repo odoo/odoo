@@ -2,11 +2,11 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 
-def warmup():
-    # only warmup once
-    if getattr(warmup, "called", False):
+def setup(argv=None):
+    # only setup once
+    if getattr(setup, "called", False):
         return
-    warmup.called = True
+    setup.called = True
 
     _ensure_version()
 
@@ -19,24 +19,72 @@ def warmup():
     from . import config as config_module
     config_module.load_default()
     config_module.load_environ()
-    config_module.load_cli()
+    if argv:
+        config_module.load_cli(argv)
     config_module.load_file()
     config_module.ensure_data_dir(config_module.config['data_dir'])
 
-    print()
-    for option in config_module.optionmap:
-        print(option, ":", " -> ".join(map(repr, (config_module.sourcemap[src].get(option, None) for src in ['cli', 'file', 'environ', 'default']))))
-    print()        
-
     # phase 3, dynamic library configuration
-    if config_module.subcommand == 'gevent':
+    if config_module.config.evented:
         _use_cooperative_networking()
+
+    # phase 4, import all odoo libraries and setup dynamic namespaces
+    _setup_import_system()
+
+
+def _setup_import_system():
+    import importlib
+    import odoo
+
+    # odoo.addons = addons
+
+    #----------------------------------------------------------
+    # Configuration
+    #----------------------------------------------------------
+    import odoo.config as config_mod
+    odoo.config = config_mod.config
+
+    #----------------------------------------------------------
+    # Namespaces
+    #----------------------------------------------------------
+    import odoo.addons
+    import odoo.upgrade
+    import odoo.modules
+    odoo.modules.initialize_sys_path()
+
+    #----------------------------------------------------------
+    # Imports
+    #----------------------------------------------------------
+    import odoo.conf
+    import odoo.loglevels
+    import odoo.logging_config
+    import odoo.osv
+    import odoo.release
+    import odoo.service
+    import odoo.sql_db
+    import odoo.tools
+
+    #----------------------------------------------------------
+    # Model classes, fields, api decorators, and translations
+    #----------------------------------------------------------
+    import odoo.models
+    import odoo.fields
+    import odoo.api
+    from odoo.tools.translate import _, _lt
+    odoo._ = _
+    odoo._lt = _lt
+
+    #----------------------------------------------------------
+    # Other imports, which may require stuff from above
+    #----------------------------------------------------------
+    import odoo.cli
+    import odoo.http
 
 
 def _ensure_version():
     """ Ensure a minimal viable python interpreter is used. """
     import sys
-    if sys.version_info < (3, 6):
+    if sys.version_info < (3, 7):
         raise OSError("Outdated python version detected, Odoo requires Python >= 3.6 to run.")
 
 
@@ -57,6 +105,8 @@ def _enable_warnings():
         'zeep.loader',# zeep using defusedxml.lxml
         'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
         'xlrd/xlsx',# xlrd mischecks iter() on trees or something so calls deprecated getiterator() instead of iter()
+        'babel.localedata',# babel importing ABC from collections
+        'werkzeug.datastructures'#werkzeug importing ABC from collections
     ]:
         warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 
@@ -89,6 +139,15 @@ def _fix_pypdf2():
 
 
 def _use_cooperative_networking():
+    """
+    Patch socket, threading and signal libraries to automatically enable
+    NO_WAIT like options. This prevent recv/send like calls to block the
+    entire thread thus allow multi concurrent transmitions and code
+    execution. Thanks to gevent, the user-code can continue to use those
+    library like if they were still blocking so no further modification
+    is required. Used by the longpolling dedicated process when the Odoo
+    server is ran in multi-worker mode.
+    """
     import gevent.monkey
     import psycopg2
     from gevent.socket import wait_read, wait_write
