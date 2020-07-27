@@ -407,7 +407,7 @@ class MrpAbstractWorkorderLine(models.AbstractModel):
             # in different lots,
             # we create different component_move_lines to record which one was used
             # on which lot of finished product
-            if float_compare(new_quantity_done, ml.product_uom_qty, precision_rounding=rounding) >= 0:
+            if float_compare(ml.product_uom_id._compute_quantity(new_quantity_done, ml.product_id.uom_id), ml.product_qty, precision_rounding=rounding) >= 0:
                 ml.write({
                     'qty_done': new_quantity_done,
                     'lot_produced_ids': self._get_produced_lots(),
