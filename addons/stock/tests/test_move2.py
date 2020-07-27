@@ -5,7 +5,7 @@ from odoo.addons.stock.tests.common import TestStockCommon
 from odoo.exceptions import UserError
 from odoo import api, registry
 from odoo.tests.common import TransactionCase
-
+from odoo.tools import float_is_zero
 
 class TestPickShip(TestStockCommon):
     def create_pick_ship(self):
@@ -1982,6 +1982,194 @@ class TestStockUOM(TestStockCommon):
         self.assertEqual(len(back_order_in), 1.00, 'There should be one back order created')
         self.assertEqual(back_order_in.move_lines.product_qty, 91640.00, 'There should be one back order created')
 
+    def test_move_product_with_different_uom(self):
+        """ Product defined in g with 0.01 rounding
+        Decimal Accuracy (DA) 3 digits.
+        Quantity on hand: 149.88g
+        Picking of 1kg
+        kg has 0.0001 rounding
+        Due to conversions, we may end up reserving 150g
+        (more than the quantity in stock), we check that
+        we reserve less than the quantity in stock
+        """
+        precision = self.env.ref('product.decimal_product_uom')
+        precision.write({
+            'digits': 3
+        })
+        precision_rounding = 10**(-precision.digits)
+
+        self.uom_kg.rounding = 0.0001
+        self.uom_gm.rounding = 0.01
+
+        product_G = self.env['product.product'].create({
+            'name': 'Product G',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'uom_id': self.uom_gm.id,
+            'uom_po_id': self.uom_gm.id,
+        })
+
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+        self.env['stock.quant']._update_available_quantity(product_G, stock_location, 149.88)
+        self.assertEqual(len(product_G.stock_quant_ids), 1, 'One quant should exist for the product.')
+        quant = product_G.stock_quant_ids
+
+        # transfer 1kg of product_G
+        picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'partner_id': self.partner_delta_id,
+            'picking_type_id': self.env.ref('stock.picking_type_out').id,
+        })
+
+        move = self.env['stock.move'].create({
+            'name': 'test_reserve_product_G',
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'picking_id': picking.id,
+            'product_id': product_G.id,
+            'product_uom': self.uom_kg.id,
+            'product_uom_qty': 1,
+        })
+
+        self.assertEqual(move.product_uom.id, self.uom_kg.id)
+        self.assertEqual(move.product_uom_qty, 1.0)
+
+        picking.action_confirm()
+        picking.action_assign()
+
+        self.assertEqual(product_G.uom_id.rounding, 0.01)
+        self.assertEqual(move.product_uom.rounding, 0.0001)
+
+        self.assertEqual(len(picking.move_line_ids), 1, 'One move line should exist for the picking.')
+        move_line = picking.move_line_ids
+
+        # check that we do not reserve more (in the same UOM) than the quantity in stock
+        self.assertTrue(move_line.product_qty <= quant.quantity)
+        # check that we reserve the same quantity in the ml and the quant
+        self.assertTrue(float_is_zero(move_line.product_qty - quant.reserved_quantity, precision_rounding=precision_rounding))
+
+    def test_update_product_move_line_with_different_uom(self):
+        """ Check that when the move line and corresponding
+        product have different UOM with possibly conflicting
+        precisions, we do not reserve more than the quantity
+        in stock. Similar initial configuration as
+        test_move_product_with_different_uom.
+        """
+        precision = self.env.ref('product.decimal_product_uom')
+        precision.write({
+            'digits': 3
+        })
+        precision_rounding = 10**(-precision.digits)
+
+        self.uom_kg.rounding = 0.0001
+        self.uom_gm.rounding = 0.01
+
+        product_LtDA = self.env['product.product'].create({
+            'name': 'Product Less than DA',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'uom_id': self.uom_gm.id,
+            'uom_po_id': self.uom_gm.id,
+        })
+
+        product_GtDA = self.env['product.product'].create({
+            'name': 'Product Greater than DA',
+            'type': 'product',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'uom_id': self.uom_gm.id,
+            'uom_po_id': self.uom_gm.id,
+        })
+
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+
+        # quantity in hand converted to kg is not more precise than the DA
+        self.env['stock.quant']._update_available_quantity(product_LtDA, stock_location, 149)
+        # quantity in hand converted to kg is more precise than the DA
+        self.env['stock.quant']._update_available_quantity(product_GtDA, stock_location, 149.88)
+
+        self.assertEqual(len(product_LtDA.stock_quant_ids), 1, 'One quant should exist for the product.')
+        self.assertEqual(len(product_GtDA.stock_quant_ids), 1, 'One quant should exist for the product.')
+        quant_LtDA = product_LtDA.stock_quant_ids
+        quant_GtDA = product_GtDA.stock_quant_ids
+
+        # create 2 moves of 1kg
+        move_LtDA = self.env['stock.move'].create({
+            'name': 'test_reserve_product_LtDA',
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'product_id': product_LtDA.id,
+            'product_uom': self.uom_kg.id,
+            'product_uom_qty': 1,
+        })
+
+        move_GtDA = self.env['stock.move'].create({
+            'name': 'test_reserve_product_GtDA',
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'product_id': product_GtDA.id,
+            'product_uom': self.uom_kg.id,
+            'product_uom_qty': 1,
+        })
+
+        self.assertEqual(move_LtDA.state, 'draft')
+        self.assertEqual(move_GtDA.state, 'draft')
+        move_LtDA._action_confirm()
+        move_GtDA._action_confirm()
+        self.assertEqual(move_LtDA.state, 'confirmed')
+        self.assertEqual(move_GtDA.state, 'confirmed')
+        # check availability, less than initial demand
+        move_LtDA._action_assign()
+        move_GtDA._action_assign()
+        self.assertEqual(move_LtDA.state, 'partially_available')
+        self.assertEqual(move_GtDA.state, 'partially_available')
+        # the initial demand is 1kg
+        self.assertEqual(move_LtDA.product_uom.id, self.uom_kg.id)
+        self.assertEqual(move_GtDA.product_uom.id, self.uom_kg.id)
+        self.assertEqual(move_LtDA.product_uom_qty, 1.0)
+        self.assertEqual(move_GtDA.product_uom_qty, 1.0)
+        # one move line is created
+        self.assertEqual(len(move_LtDA.move_line_ids), 1)
+        self.assertEqual(len(move_GtDA.move_line_ids), 1)
+
+        # increase quantity by 0.14988 kg (more precise than DA)
+        self.env['stock.quant']._update_available_quantity(product_LtDA, stock_location, 149.88)
+        self.env['stock.quant']._update_available_quantity(product_GtDA, stock_location, 149.88)
+
+        # _update_reserved_quantity is called on a move only in _action_assign
+        move_LtDA._action_assign()
+        move_GtDA._action_assign()
+
+        # as the move line for LtDA and its corresponding quant can be
+        # in different UOMs, a new move line can be created
+        # from _update_reserved_quantity
+        move_lines_LtDA = self.env["stock.move.line"].search([
+        ('product_id', '=', quant_LtDA.product_id.id),
+        ('location_id', '=', quant_LtDA.location_id.id),
+        ('lot_id', '=', quant_LtDA.lot_id.id),
+        ('package_id', '=', quant_LtDA.package_id.id),
+        ('owner_id', '=', quant_LtDA.owner_id.id),
+        ('product_qty', '!=', 0)
+        ])
+        reserved_on_move_lines_LtDA = sum(move_lines_LtDA.mapped('product_qty'))
+
+        move_lines_GtDA = self.env["stock.move.line"].search([
+        ('product_id', '=', quant_GtDA.product_id.id),
+        ('location_id', '=', quant_GtDA.location_id.id),
+        ('lot_id', '=', quant_GtDA.lot_id.id),
+        ('package_id', '=', quant_GtDA.package_id.id),
+        ('owner_id', '=', quant_GtDA.owner_id.id),
+        ('product_qty', '!=', 0)
+        ])
+        reserved_on_move_lines_GtDA = sum(move_lines_GtDA.mapped('product_qty'))
+
+        # check that we do not reserve more (in the same UOM) than the quantity in stock
+        self.assertTrue(reserved_on_move_lines_LtDA <= quant_LtDA.quantity)
+        self.assertTrue(reserved_on_move_lines_GtDA <= quant_GtDA.quantity)
+
+        # check that we reserve the same quantity in the ml and the quant
+        self.assertTrue(float_is_zero(reserved_on_move_lines_LtDA - quant_LtDA.reserved_quantity, precision_rounding=precision_rounding))
+        self.assertTrue(float_is_zero(reserved_on_move_lines_GtDA - quant_GtDA.reserved_quantity, precision_rounding=precision_rounding))
 
 class TestRoutes(TransactionCase):
     def test_pick_ship_1(self):
