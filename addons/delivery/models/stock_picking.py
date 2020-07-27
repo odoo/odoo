@@ -105,7 +105,7 @@ class StockPicking(models.Model):
         self.ensure_one()
         try:
             return json.loads(self.carrier_tracking_url)
-        except ValueError:
+        except (ValueError, TypeError):
             return False
 
     @api.depends('move_lines', 'move_ids_without_package')
