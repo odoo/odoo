@@ -339,9 +339,17 @@ var BasicModel = AbstractModel.extend({
             record.data[fieldName] = null;
             var dp;
             if (field.type === 'many2one' && values[fieldName]) {
+                const fValue = values[fieldName];
+                const data = {};
+                if (Array.isArray(fValue)) {
+                    data.id = fValue[0];
+                    data.display_name = fValue[1];
+                } else {
+                    data.id = fValue;
+                }
                 dp = this._makeDataPoint({
                     context: record.context,
-                    data: {id: values[fieldName]},
+                    data,
                     modelName: field.relation,
                     parentID: record.id,
                 });
@@ -4096,9 +4104,7 @@ var BasicModel = AbstractModel.extend({
      * @param {string} params.viewType the key in fieldsInfo of the fields to load
      * @returns {Promise<string>} resolves to the id for the created resource
      */
-    _makeDefaultRecord: function (modelName, params) {
-        var self = this;
-
+    async _makeDefaultRecord(modelName, params) {
         var targetView = params.viewType;
         var fields = params.fields;
         var fieldsInfo = params.fieldsInfo;
@@ -4115,7 +4121,7 @@ var BasicModel = AbstractModel.extend({
             fields = _.defaults({}, fields, parentRecord.fields);
         }
 
-        var record = self._makeDataPoint({
+        const record = this._makeDataPoint({
             modelName: modelName,
             fields: fields,
             fieldsInfo: fieldsInfo,
@@ -4133,7 +4139,7 @@ var BasicModel = AbstractModel.extend({
         // -> This is a rare case where the defaul_get from the server
         //    will be ignored by the view for a certain field (usually "sequence").
 
-        var overrideDefaultFields = self._computeOverrideDefaultFields(
+        const overrideDefaultFields = this._computeOverrideDefaultFields(
             params.parentID,
             params.position
         );
@@ -4142,38 +4148,21 @@ var BasicModel = AbstractModel.extend({
             result[overrideDefaultFields.field] = overrideDefaultFields.value;
         }
 
-        return self.applyDefaultValues(record.id, result, {fieldNames: fieldNames})
-            .then(function () {
-                var def = new Promise(function (resolve, reject) {
-                    var always = function () {
-                        if (record._warning) {
-                            if (params.allowWarning) {
-                                delete record._warning;
-                            } else {
-                                reject();
-                            }
-                        }
-                        resolve();
-                    };
-                    // this one will make python apply default_get
-                    self._performOnChange(record, null)
-                    .then(always).guardedCatch(always);
-                });
-                return def;
-            })
-            .then(function () {
-                return self._fetchRelationalData(record);
-            })
-            .then(function () {
-                return self._postprocess(record);
-            })
-            .then(function () {
-                // save initial changes, so they can be restored later,
-                // if we need to discard.
-                self.save(record.id, {savePoint: true});
-
-                return record.id;
-            });
+        try {
+            await this._performOnChange(record, null);
+        } finally {
+            if (record._warning) {
+                if (params.allowWarning) {
+                    delete record._warning;
+                } else {
+                    throw new Error();
+                }
+            }
+        }
+        await this._fetchRelationalData(record);
+        await this._postprocess(record);
+        this.save(record.id, {savePoint: true});
+        return record.id;
     },
     /**
      * parse the server values to javascript framwork
@@ -4227,7 +4216,7 @@ var BasicModel = AbstractModel.extend({
      *   main viewType from the record
      * @returns {Promise}
      */
-    _performOnChange: function (record, fields, viewType) {
+    _performOnChange: async function (record, fields, viewType) {
         var self = this;
         const firstOnChange = !fields || !fields.length;
         fields = fields || [];
@@ -4236,7 +4225,7 @@ var BasicModel = AbstractModel.extend({
         // we need to send every field name known to us.
         let { hasOnchange , onchangeSpec } = this._buildOnchangeSpecs(record, viewType);
         if (!firstOnChange && !hasOnchange) {
-            return Promise.resolve();
+            return;
         }
         // Because default_get will be called in python, certain specific
         // fields are not supposed to be computed at this time, and usually
@@ -4264,31 +4253,34 @@ var BasicModel = AbstractModel.extend({
             firstOnChange,
         });
 
-        return self._rpc({
-                model: record.model,
-                method: 'onchange',
-                args: [idList, currentData, fields, onchangeSpec],
-                context: context,
-            })
-            .then(function (result) {
-                if (!record._changes) {
-                    // if the _changes key does not exist anymore, it means that
-                    // it was removed by discarding the changes after the rpc
-                    // to onchange. So, in that case, the proper response is to
-                    // ignore the onchange.
-                    return;
-                }
-                if (result.warning) {
-                    self.trigger_up('warning', result.warning);
-                    record._warning = true;
-                }
-                if (result.domain) {
-                    record._domains = _.extend(record._domains, result.domain);
-                }
-                return self._applyOnChange(result.value, record).then(function () {
-                    return result;
-                });
-            });
+        const result = await self._rpc({
+            model: record.model,
+            method: 'onchange',
+            args: [idList, currentData, fields, onchangeSpec],
+            context: context,
+        });
+        if (firstOnChange) {
+            const fieldNames = Object.keys(record.fieldsInfo[record.viewType]);
+            await this.applyDefaultValues(record.id, result.value, { fieldNames });
+        }
+        if (!record._changes) {
+            // if the _changes key does not exist anymore, it means that
+            // it was removed by discarding the changes after the rpc
+            // to onchange. So, in that case, the proper response is to
+            // ignore the onchange.
+            return;
+        }
+        if (result.warning) {
+            self.trigger_up('warning', result.warning);
+            record._warning = true;
+        }
+        if (result.domain) {
+            record._domains = _.extend(record._domains, result.domain);
+        }
+        if (!firstOnChange) {
+            await self._applyOnChange(result.value, record);
+        }
+        return result;
     },
     /**
      * This function accumulates RPC requests done in the same call stack, and
@@ -4503,14 +4495,22 @@ var BasicModel = AbstractModel.extend({
                         var fieldType = field.type;
                         var rec;
                         if (fieldType === 'many2one') {
+                            const fValue = r._changes[fieldName];
+                            const data = {};
+                            if (Array.isArray(fValue)) {
+                                data.id = fValue[0];
+                                data.display_name = fValue[1];
+                            } else {
+                                data.id = fValue;
+                                many2ones[fieldName] = true;
+                            }
                             rec = self._makeDataPoint({
                                 context: r.context,
                                 modelName: field.relation,
-                                data: {id: r._changes[fieldName]},
+                                data,
                                 parentID: r.id,
                             });
                             r._changes[fieldName] = rec.id;
-                            many2ones[fieldName] = true;
                         } else if (fieldType === 'reference') {
                             var reference = r._changes[fieldName].split(',');
                             rec = self._makeDataPoint({

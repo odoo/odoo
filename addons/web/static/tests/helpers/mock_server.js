@@ -1234,6 +1234,7 @@ var MockServer = Class.extend({
         const firstOnChange = !fields || !fields.length;
         const result = {};
         let defaults;
+        let nullValues;
         if (firstOnChange) {
             const fieldsFromView = Object.keys(onChangeSpec).reduce((acc, fname) => {
                     fname = fname.split('.', 1)[0];
@@ -1247,11 +1248,15 @@ var MockServer = Class.extend({
             // It is the new semantics: no field in arguments means we are in
             // a default_get + onchange situation
             fields = fieldsFromView;
+            nullValues = {};
+            fields.filter(fName => !Object.keys(defaults).includes(fName)).forEach(fName => {
+                nullValues[fName] = false;
+            });
         }
         Object.assign(currentData, defaults);
         fields.forEach(field => {
             if (field in onchanges) {
-                const changes = Object.assign({}, currentData);
+                const changes = Object.assign({}, nullValues, currentData);
                 onchanges[field](changes);
                 Object.entries(changes).forEach(([key, value]) => {
                     if (currentData[key] !== value) {
@@ -1261,7 +1266,7 @@ var MockServer = Class.extend({
             }
         });
 
-        return {value: this._convertToOnChange(model, Object.assign({}, defaults || {}, result)) };
+        return {value: this._convertToOnChange(model, Object.assign({}, defaults, result)) };
     },
     /**
      * Simulate a 'read' operation.

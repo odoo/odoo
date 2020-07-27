@@ -1369,7 +1369,7 @@ odoo.define('web.basic_model_tests', function (require) {
             model.destroy();
         });
 
-        QUnit.skip('default_get on x2many may return a list of ids', async function (assert) {
+        QUnit.test('default_get on x2many may return a list of ids', async function (assert) {
             assert.expect(1);
 
             this.data.partner.fields.category.default = [12, 14];
