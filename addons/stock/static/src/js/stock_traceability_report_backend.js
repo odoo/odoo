@@ -10,6 +10,7 @@ var ReportWidget = require('stock.ReportWidget');
 var framework = require('web.framework');
 var crash_manager = require('web.crash_manager');
 
+var _t = core._t;
 var QWeb = core.qweb;
 
 var stock_report_generic = Widget.extend(ControlPanelMixin, {
@@ -39,7 +40,7 @@ var stock_report_generic = Widget.extend(ControlPanelMixin, {
         def.then(function () {
             self.report_widget.$el.html(self.html);
             if(self.given_context['ttype'] == 'downstream'){
-                self.report_widget.$el.find('.o_report_heading').html('<h1>Downstream Traceability</h1>');
+                self.report_widget.$el.find('.o_report_heading').html(_t('<h1>Downstream Traceability</h1>'));
             }
         });
     },
