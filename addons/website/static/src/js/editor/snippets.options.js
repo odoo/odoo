@@ -766,6 +766,18 @@ options.registry.Theme = options.Class.extend({
     //--------------------------------------------------------------------------
 
     /**
+     * @see this.selectClass for parameters
+     */
+    async configureApiKey(previewMode, widgetValue, params) {
+        return new Promise(resolve => {
+            this.trigger_up('gmap_api_key_request', {
+                editableMode: true,
+                reconfigure: true,
+                onSuccess: () => resolve(),
+            });
+        });
+    },
+    /**
      * @todo use scss customization instead (like for user colors)
      * @see this.selectClass for parameters
      */
