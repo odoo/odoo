@@ -913,7 +913,8 @@ class PaymentTransaction(models.Model):
 
         import re
         ref = '%s-%s' % (prefix, suffix)
-        return re.sub(r'(-1)+$', '-1', ref)
+        # return re.sub(r'(-1)+$', '-1', ref)
+        return ref
 
     def action_view_invoices(self):
         action = {
