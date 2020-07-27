@@ -22,7 +22,7 @@ class Repair(models.Model):
 
     name = fields.Char(
         'Repair Reference',
-        default=lambda self: self.env['ir.sequence'].next_by_code('repair.order'),
+        default='/',
         copy=False, required=True,
         states={'confirmed': [('readonly', True)]})
     product_id = fields.Many2one(
@@ -202,6 +202,12 @@ class Repair(models.Model):
             if order.state == 'cancel' and order.invoice_id and order.invoice_id.posted_before:
                 raise UserError(_('You can not delete a repair order which is linked to an invoice which has been posted once.'))
         return super().unlink()
+
+    @api.model
+    def create(self, vals):
+        if vals.get('name', '/') == '/':
+            vals['name'] = self.env['ir.sequence'].next_by_code('repair.order') or '/'
+        return super(Repair, self).create(vals)
 
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
