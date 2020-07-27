@@ -21,6 +21,7 @@ class Team(models.Model):
     # statistics about leads / opportunities / both
     lead_unassigned_count = fields.Integer(
         string='# Unassigned Leads', compute='_compute_lead_unassigned_count')
+    # VFE TODO move to enterprise
     lead_all_assigned_month_count = fields.Integer(
         string='# Leads/Opps assigned this month', compute='_compute_lead_all_assigned_month_count',
         help="Number of leads and opportunities assigned this last month.")
