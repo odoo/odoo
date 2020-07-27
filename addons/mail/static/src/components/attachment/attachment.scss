@@ -50,7 +50,13 @@
 }
 
 .o_Attachment_details {
+    display: flex;
+    flex-flow: column;
+    justify-content: center;
     min-width: 0; /* This allows the text ellipsis in the flex element */
+    /* prevent hover delete button & attachment image to be too close to the text */
+    padding-left : map-get($spacers, 1);
+    padding-right : map-get($spacers, 1);
 }
 
 .o_Attachment_filename {
@@ -60,6 +66,7 @@
 }
 
 .o_Attachment_image {
+    flex-shrink: 0;
     margin: 3px;
 
     &.o-details-overlay {

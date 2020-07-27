@@ -127,6 +127,7 @@
                         <t t-if="composer.attachments.length > 0">
                             <AttachmentList
                                 class="o_Composer_attachmentList"
+                                t-att-class="{ 'o-composer-is-compact': props.isCompact }"
                                 areAttachmentsEditable="true"
                                 attachmentsDetailsMode="props.attachmentsDetailsMode"
                                 attachmentLocalIds="composer.attachments.map(attachment => attachment.localId)"

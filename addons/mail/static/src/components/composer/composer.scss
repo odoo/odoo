@@ -36,13 +36,18 @@
 
 .o_Composer_attachmentList {
     flex: 1 1 auto;
+
+    &.o-composer-is-compact {
+        max-height: 100px;
+    }
 }
 
 .o_Composer_buttons {
     display: flex;
     align-items: stretch;
+    align-self: stretch;
     flex: 0 0 auto;
-    height: 41px; // match minimal-height of input, including border width
+    min-height: 41px; // match minimal-height of input, including border width
 
     &:not(.o-composer-is-compact) {
         border: 0;
@@ -50,14 +55,11 @@
         padding: 0 10px;
         width: 100%;
     }
-
-    &.o-mobile {
-        height: 51px; // mobile padding
-    }
 }
 
 .o_Composer_coreFooter {
     grid-area: core-footer;
+    overflow-x: hidden;
 
     &:not(.o-composer-is-compact) {
         margin-left: 0;
@@ -235,6 +237,7 @@
     border: 0; // overrides bootstrap btn
     background-color: white; // overrides bootstrap btn-light
     color: gray('600'); // overrides bootstrap btn-light
+    border-radius: 50%;
 
     &.o-open {
         background-color: gray('200');
