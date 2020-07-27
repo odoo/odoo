@@ -3,15 +3,15 @@
 
 from odoo.exceptions import AccessError
 from odoo.addons.sale_purchase.tests.common import TestCommonSalePurchaseNoChart
+from odoo.tests import tagged
 
 
+@tagged('-at_install', 'post_install')
 class TestAccessRights(TestCommonSalePurchaseNoChart):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAccessRights, cls).setUpClass()
-
-        cls.setUpServicePurchaseProducts()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # Create a users
         group_sale_user = cls.env.ref('sales_team.group_sale_salesman')
@@ -34,7 +34,7 @@ class TestAccessRights(TestCommonSalePurchaseNoChart):
         SaleOrder = self.env['sale.order'].with_context(tracking_disable=True)
 
         sale_order = SaleOrder.with_user(self.user_salesperson).create({
-            'partner_id': self.partner_customer_usd.id,
+            'partner_id': self.partner_a.id,
             'user_id': self.user_salesperson.id
         })
 

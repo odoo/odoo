@@ -10,19 +10,6 @@ class TestValuationReconciliation(ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
-        
-        cls.env['product.pricelist'].create([
-            {
-                'name': "Public Pricelist Company 1",
-                'sequence': 1,
-                'company_id': cls.company_data['company'].id,
-            },
-            {
-                'name': "Public Pricelist Company 2",
-                'sequence': 1,
-                'company_id': cls.company_data_2['company'].id,
-            },
-        ])
 
         # Set the invoice_policy to delivery to have an accurate COGS entry.
         cls.test_product_delivery.invoice_policy = 'delivery'
