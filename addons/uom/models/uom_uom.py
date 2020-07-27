@@ -93,6 +93,21 @@ class UoM(models.Model):
             if uom_data['uom_count'] > 1:
                 raise ValidationError(_("UoM category %s should only have one reference unit of measure.") % (self.env['uom.category'].browse(uom_data['category_id']).name,))
 
+    @api.onchange('rounding')
+    def _onchange_rounding(self):
+        precision = self.env.ref('product.decimal_product_uom').digits
+        if self.rounding < 1.0 / 10.0**precision:
+            warning = {
+                    'title': _('Warning!'),
+                    'message':  _(
+                        "This rounding precision is higher than the Decimal Accuracy"
+                        " (%s digits).\nThis may cause inconsistencies in reservations.\n"
+                         "Please set a precision between %s and 1.")
+                         %(str(precision), str(1.0 / 10.0**precision))
+                    ,
+                }
+            return {'warning': warning}
+
     @api.model_create_multi
     def create(self, vals_list):
         for values in vals_list:
