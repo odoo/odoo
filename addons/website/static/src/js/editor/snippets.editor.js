@@ -1,15 +1,22 @@
 odoo.define('website.snippet.editor', function (require) {
 'use strict';
 
-const {_t} = require('web.core');
+const {qweb, _t} = require('web.core');
+const Dialog = require('web.Dialog');
 const weSnippetEditor = require('web_editor.snippet.editor');
 const wSnippetOptions = require('website.editor.snippets.options');
 
 const FontFamilyPickerUserValueWidget = wSnippetOptions.FontFamilyPickerUserValueWidget;
 
 weSnippetEditor.Class.include({
+    xmlDependencies: (weSnippetEditor.Class.prototype.xmlDependencies || [])
+        .concat(['/website/static/src/xml/website.editor.xml']),
     events: _.extend({}, weSnippetEditor.Class.prototype.events, {
         'click .o_we_customize_theme_btn': '_onThemeTabClick',
+    }),
+    custom_events: Object.assign({}, weSnippetEditor.Class.prototype.custom_events, {
+        'gmap_api_request': '_onGMapAPIRequest',
+        'gmap_api_key_request': '_onGMapAPIKeyRequest',
     }),
     tabs: _.extend({}, weSnippetEditor.Class.prototype.tabs, {
         THEME: 'theme',
@@ -32,6 +39,55 @@ weSnippetEditor.Class.include({
         return this._super(...arguments);
     },
     /**
+     * Depending of the demand, reconfigure they gmap key or configure it
+     * if not already defined.
+     *
+     * @private
+     * @param {boolean} [reconfigure=false]
+     * @param {boolean} [onlyIfUndefined=false]
+     */
+    async _configureGMapAPI({reconfigure, onlyIfUndefined}) {
+        const apiKey = await new Promise(resolve => {
+            this.getParent().trigger_up('gmap_api_key_request', {
+                onSuccess: key => resolve(key),
+            });
+        });
+        if (!reconfigure && (apiKey || !onlyIfUndefined)) {
+            return false;
+        }
+        let websiteId;
+        this.trigger_up('context_get', {
+            callback: ctx => websiteId = ctx['website_id'],
+        });
+        return new Promise(resolve => {
+            let invalidated = false;
+            const dialog = new Dialog(this, {
+                size: 'medium',
+                title: _t("Google Map API Key"),
+                buttons: [
+                    {text: _t("Save"), classes: 'btn-primary', close: true, click: async () => {
+                        const newAPIKey = dialog.$('#api_key_input').val() || false;
+                        await this._rpc({
+                            model: 'website',
+                            method: 'write',
+                            args: [
+                                [websiteId],
+                                {google_maps_api_key: newAPIKey},
+                            ],
+                        });
+                        invalidated = true;
+                    }},
+                    {text: _t("Cancel"), close: true}
+                ],
+                $content: $(qweb.render('website.s_google_map_modal', {
+                    apiKey: apiKey,
+                })),
+            });
+            dialog.on('closed', this, () => resolve(invalidated));
+            dialog.open();
+        });
+    },
+    /**
      * @override
      */
     _getScrollOptions(options = {}) {
@@ -45,6 +101,23 @@ weSnippetEditor.Class.include({
         return finalOptions;
     },
     /**
+     * @private
+     * @param {OdooEvent} ev
+     * @param {string} gmapRequestEventName
+     */
+    async _handleGMapRequest(ev, gmapRequestEventName) {
+        ev.stopPropagation();
+        const reconfigured = await this._configureGMapAPI({
+            reconfigure: ev.data.reconfigure,
+            onlyIfUndefined: ev.data.configureIfNecessary,
+        });
+        this.getParent().trigger_up(gmapRequestEventName, {
+            refetch: reconfigured,
+            editableMode: true,
+            onSuccess: key => ev.data.onSuccess(key),
+        });
+    },
+    /**
      * @override
      */
     _updateLeftPanelContent: function ({content, tab}) {
@@ -56,6 +129,20 @@ weSnippetEditor.Class.include({
     // Handlers
     //--------------------------------------------------------------------------
 
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGMapAPIRequest(ev) {
+        this._handleGMapRequest(ev, 'gmap_api_request');
+    },
+    /**
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onGMapAPIKeyRequest(ev) {
+        this._handleGMapRequest(ev, 'gmap_api_key_request');
+    },
     /**
      * @private
      */

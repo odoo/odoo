@@ -211,8 +211,133 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     },
 });
 
+const GPSPicker = InputUserValueWidget.extend({
+    events: { // Explicitely not consider all InputUserValueWidget events
+        'blur input': '_onInputBlur',
+    },
+
+    /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this._gmapCacheGPSToPlace = {};
+    },
+    /**
+     * @override
+     */
+    async willStart() {
+        await this._super(...arguments);
+        this._gmapLoaded = await new Promise(resolve => {
+            this.trigger_up('gmap_api_request', {
+                editableMode: true,
+                configureIfNecessary: true,
+                onSuccess: key => resolve(!!key),
+            });
+        });
+        if (!this._gmapLoaded) {
+            this.trigger_up('user_value_widget_critical');
+            return;
+        }
+    },
+    /**
+     * @override
+     */
+    async start() {
+        await this._super(...arguments);
+        this.el.classList.add('o_we_large_input');
+        if (!this._gmapLoaded) {
+            return;
+        }
+
+        this._gmapAutocomplete = new google.maps.places.Autocomplete(this.inputEl, {types: ['geocode']});
+        google.maps.event.addListener(this._gmapAutocomplete, 'place_changed', this._onPlaceChanged.bind(this));
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    getMethodsParams: function (methodName) {
+        return Object.assign({gmapPlace: this._gmapPlace || {}}, this._super(...arguments));
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _updateUI: async function () {
+        await this._super(...arguments);
+
+        await new Promise(resolve => {
+            const gps = this._value;
+            if (this._gmapCacheGPSToPlace[gps]) {
+                this._gmapPlace = this._gmapCacheGPSToPlace[gps];
+                resolve();
+                return;
+            }
+            const service = new google.maps.places.PlacesService(document.createElement('div'));
+            const p = gps.substring(1).slice(0, -1).split(',');
+            const location = new google.maps.LatLng(p[0] || 0, p[1] || 0);
+            service.nearbySearch({
+                // Do a 'nearbySearch' followed by 'getDetails' to avoid using
+                // GMap Geocoder which the user may not have enabled... but
+                // ideally Geocoder should be used to get the exact location at
+                // those coordinates and to limit billing query count.
+                location: location,
+                radius: 1,
+            }, (results, status) => {
+                const GMAP_CRITICAL_ERRORS = [google.maps.places.PlacesServiceStatus.REQUEST_DENIED, google.maps.places.PlacesServiceStatus.UNKNOWN_ERROR];
+                if (status === google.maps.places.PlacesServiceStatus.OK) {
+                    service.getDetails({
+                        placeId: results[0].place_id,
+                        fields: ['geometry', 'formatted_address'],
+                    }, (place, status) => {
+                        resolve();
+                        if (status === google.maps.places.PlacesServiceStatus.OK) {
+                            this._gmapCacheGPSToPlace[gps] = place;
+                            this._gmapPlace = place;
+                        } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
+                            this.trigger_up('user_value_widget_critical');
+                        }
+                    });
+                } else if (GMAP_CRITICAL_ERRORS.includes(status)) {
+                    resolve();
+                    this.trigger_up('user_value_widget_critical');
+                }
+            });
+        });
+        this.inputEl.value = this._gmapPlace.formatted_address;
+    },
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @private
+     * @param {Event} ev
+     */
+    _onPlaceChanged(ev) {
+        const gmapPlace = this._gmapAutocomplete.getPlace();
+        if (gmapPlace && gmapPlace.geometry) {
+            this._gmapPlace = gmapPlace;
+            const location = this._gmapPlace.geometry.location;
+            this._value = `(${location.lat()},${location.lng()})`;
+            this._gmapCacheGPSToPlace[this._value] = gmapPlace;
+            this._onUserValueChange(ev);
+        }
+    },
+});
+
 options.userValueWidgetsRegistry['we-urlpicker'] = UrlPickerUserValueWidget;
 options.userValueWidgetsRegistry['we-fontfamilypicker'] = FontFamilyPickerUserValueWidget;
+options.userValueWidgetsRegistry['we-gpspicker'] = GPSPicker;
 
 //::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 

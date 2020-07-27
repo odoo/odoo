@@ -5,9 +5,8 @@ $s-google-map-desc-hover-bg: theme-color('primary') !default;
 $s-google-map-desc-hover-alpha: 0.55 !default;
 
 .s_google_map {
-    height: 100%;
-    min-height: 100px;
     position: relative;
+    min-height: 100px;
 
     .map_container {
         @include o-position-absolute(0, 0, 0, 0);
@@ -16,8 +15,8 @@ $s-google-map-desc-hover-alpha: 0.55 !default;
         @include o-position-absolute(auto, 0, 0, 0);
         z-index: 99;
         padding: 0 1em;
-        background: rgba($s-google-map-desc-bg , $s-google-map-desc-alpha);
-        color: color-yiq(rgba($s-google-map-desc-bg , $s-google-map-desc-alpha));
+        background: rgba($s-google-map-desc-bg, $s-google-map-desc-alpha);
+        color: color-yiq(rgba($s-google-map-desc-bg, $s-google-map-desc-alpha));
         transition: background-color 250ms ease;
 
         font {
@@ -39,16 +38,5 @@ $s-google-map-desc-hover-alpha: 0.55 !default;
         background: $s-google-map-desc-hover-bg;
         background: rgba($s-google-map-desc-hover-bg, $s-google-map-desc-hover-alpha);
         color: color-yiq(rgba($s-google-map-desc-hover-bg, $s-google-map-desc-hover-alpha));
-    }
-}
-
-#mapModal {
-    z-index: 3000;
-}
-.pac-container { // google map autosuggestion
-    z-index: 3001;
-
-    &:after {
-        display: none;
     }
 }
