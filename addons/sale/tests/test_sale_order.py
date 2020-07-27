@@ -1,75 +1,61 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-import odoo
 from odoo.exceptions import UserError, AccessError
-from odoo.tests import Form
+from odoo.tests import Form, tagged
 from odoo.tools import float_compare
 
-from .test_sale_common import TestCommonSaleNoChart
+from .common import TestSaleCommon
 
 
-class TestSaleOrder(TestCommonSaleNoChart):
+@tagged('post_install', '-at_install')
+class TestSaleOrder(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleOrder, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         SaleOrder = cls.env['sale.order'].with_context(tracking_disable=True)
 
-        # set up users
-        cls.setUpUsers()
-        group_salemanager = cls.env.ref('sales_team.group_sale_manager')
-        group_salesman = cls.env.ref('sales_team.group_sale_salesman')
-        group_employee = cls.env.ref('base.group_user')
-        cls.user_manager.write({'groups_id': [(6, 0, [group_salemanager.id, group_employee.id])]})
-        cls.user_employee.write({'groups_id': [(6, 0, [group_salesman.id, group_employee.id])]})
-
-        # set up accounts and products and journals
-        cls.setUpAdditionalAccounts()
-        cls.setUpClassicProducts()
-        cls.setUpAccountJournal()
-
         # create a generic Sale Order with all classical products and empty pricelist
         cls.sale_order = SaleOrder.create({
-            'partner_id': cls.partner_customer_usd.id,
-            'partner_invoice_id': cls.partner_customer_usd.id,
-            'partner_shipping_id': cls.partner_customer_usd.id,
-            'pricelist_id': cls.pricelist_usd.id,
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
+            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
         cls.sol_product_order = cls.env['sale.order.line'].create({
-            'name': cls.product_order.name,
-            'product_id': cls.product_order.id,
+            'name': cls.company_data['product_order_no'].name,
+            'product_id': cls.company_data['product_order_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.product_order.uom_id.id,
-            'price_unit': cls.product_order.list_price,
+            'product_uom': cls.company_data['product_order_no'].uom_id.id,
+            'price_unit': cls.company_data['product_order_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_deliver = cls.env['sale.order.line'].create({
-            'name': cls.service_deliver.name,
-            'product_id': cls.service_deliver.id,
+            'name': cls.company_data['product_service_delivery'].name,
+            'product_id': cls.company_data['product_service_delivery'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.service_deliver.uom_id.id,
-            'price_unit': cls.service_deliver.list_price,
+            'product_uom': cls.company_data['product_service_delivery'].uom_id.id,
+            'price_unit': cls.company_data['product_service_delivery'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_serv_order = cls.env['sale.order.line'].create({
-            'name': cls.service_order.name,
-            'product_id': cls.service_order.id,
+            'name': cls.company_data['product_service_order'].name,
+            'product_id': cls.company_data['product_service_order'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.service_order.uom_id.id,
-            'price_unit': cls.service_order.list_price,
+            'product_uom': cls.company_data['product_service_order'].uom_id.id,
+            'price_unit': cls.company_data['product_service_order'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
         cls.sol_product_deliver = cls.env['sale.order.line'].create({
-            'name': cls.product_deliver.name,
-            'product_id': cls.product_deliver.id,
+            'name': cls.company_data['product_delivery_no'].name,
+            'product_id': cls.company_data['product_delivery_no'].id,
             'product_uom_qty': 2,
-            'product_uom': cls.product_deliver.uom_id.id,
-            'price_unit': cls.product_deliver.list_price,
+            'product_uom': cls.company_data['product_delivery_no'].uom_id.id,
+            'price_unit': cls.company_data['product_delivery_no'].list_price,
             'order_id': cls.sale_order.id,
             'tax_id': False,
         })
@@ -81,7 +67,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # DBO TODO: validate invoice and register payments
         self.sale_order.order_line.read(['name', 'price_unit', 'product_uom_qty', 'price_total'])
 
-        self.assertEqual(self.sale_order.amount_total, sum([2 * p.list_price for p in self.product_map.values()]), 'Sale: total amount is wrong')
+        self.assertEqual(self.sale_order.amount_total, 1240.0, 'Sale: total amount is wrong')
         self.sale_order.order_line._compute_product_updatable()
         self.assertTrue(self.sale_order.order_line[0].product_updatable)
         # send quotation
@@ -100,7 +86,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # create invoice: only 'invoice on order' products are invoiced
         invoice = self.sale_order._create_invoices()
         self.assertEqual(len(invoice.invoice_line_ids), 2, 'Sale: invoice is missing lines')
-        self.assertEqual(invoice.amount_total, sum([2 * p.list_price if p.invoice_policy == 'order' else 0 for p in self.product_map.values()]), 'Sale: invoice total amount is wrong')
+        self.assertEqual(invoice.amount_total, 740.0, 'Sale: invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'no', 'Sale: SO status after invoicing should be "nothing to invoice"')
         self.assertTrue(len(self.sale_order.invoice_ids) == 1, 'Sale: invoice is missing')
         self.sale_order.order_line._compute_product_updatable()
@@ -112,7 +98,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
         self.assertTrue(self.sale_order.invoice_status == 'to invoice', 'Sale: SO status after delivery should be "to invoice"')
         invoice2 = self.sale_order._create_invoices()
         self.assertEqual(len(invoice2.invoice_line_ids), 2, 'Sale: second invoice is missing lines')
-        self.assertEqual(invoice2.amount_total, sum([2 * p.list_price if p.invoice_policy == 'delivery' else 0 for p in self.product_map.values()]), 'Sale: second invoice total amount is wrong')
+        self.assertEqual(invoice2.amount_total, 500.0, 'Sale: second invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything should be "invoiced"')
         self.assertTrue(len(self.sale_order.invoice_ids) == 2, 'Sale: invoice is missing')
 
@@ -137,7 +123,7 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         invoice3 = self.sale_order._create_invoices()
         self.assertEqual(len(invoice3.invoice_line_ids), 1, 'Sale: third invoice is missing lines')
-        self.assertEqual(invoice3.amount_total, 8 * self.product_map['serv_order'].list_price, 'Sale: second invoice total amount is wrong')
+        self.assertEqual(invoice3.amount_total, 720.0, 'Sale: second invoice total amount is wrong')
         self.assertTrue(self.sale_order.invoice_status == 'invoiced', 'Sale: SO status after invoicing everything (including the upsel) should be "invoiced"')
 
     def test_sale_sequence(self):
@@ -159,8 +145,8 @@ class TestSaleOrder(TestCommonSaleNoChart):
         # SO in state 'draft' can be deleted
         so_copy = self.sale_order.copy()
         with self.assertRaises(AccessError):
-            so_copy.with_user(self.user_employee).unlink()
-        self.assertTrue(so_copy.with_user(self.user_manager).unlink(), 'Sale: deleting a quotation should be possible')
+            so_copy.with_user(self.company_data['default_user_employee']).unlink()
+        self.assertTrue(so_copy.unlink(), 'Sale: deleting a quotation should be possible')
 
         # SO in state 'cancel' can be deleted
         so_copy = self.sale_order.copy()
@@ -169,25 +155,22 @@ class TestSaleOrder(TestCommonSaleNoChart):
         so_copy.action_cancel()
         self.assertTrue(so_copy.state == 'cancel', 'Sale: SO should be in state "cancel"')
         with self.assertRaises(AccessError):
-            so_copy.with_user(self.user_employee).unlink()
-        self.assertTrue(so_copy.with_user(self.user_manager).unlink(), 'Sale: deleting a cancelled SO should be possible')
+            so_copy.with_user(self.company_data['default_user_employee']).unlink()
+        self.assertTrue(so_copy.unlink(), 'Sale: deleting a cancelled SO should be possible')
 
         # SO in state 'sale' or 'done' cannot be deleted
         self.sale_order.action_confirm()
         self.assertTrue(self.sale_order.state == 'sale', 'Sale: SO should be in state "sale"')
         with self.assertRaises(UserError):
-            self.sale_order.with_user(self.user_manager).unlink()
+            self.sale_order.unlink()
 
         self.sale_order.action_done()
         self.assertTrue(self.sale_order.state == 'done', 'Sale: SO should be in state "done"')
         with self.assertRaises(UserError):
-            self.sale_order.with_user(self.user_manager).unlink()
+            self.sale_order.unlink()
 
     def test_cost_invoicing(self):
         """ Test confirming a vendor invoice to reinvoice cost on the so """
-        # force the pricelist to have the same currency as the company
-        self.pricelist_usd.currency_id = self.env.ref('base.main_company').currency_id
-
         serv_cost = self.env['product.product'].create({
             'name': "Ordered at cost",
             'standard_price': 160,
@@ -198,19 +181,19 @@ class TestSaleOrder(TestCommonSaleNoChart):
             'default_code': 'PROD_COST',
             'service_type': 'manual',
         })
-        prod_gap = self.service_order
+        prod_gap = self.company_data['product_service_order']
         so = self.env['sale.order'].create({
-            'partner_id': self.partner_customer_usd.id,
-            'partner_invoice_id': self.partner_customer_usd.id,
-            'partner_shipping_id': self.partner_customer_usd.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
             'order_line': [(0, 0, {'name': prod_gap.name, 'product_id': prod_gap.id, 'product_uom_qty': 2, 'product_uom': prod_gap.uom_id.id, 'price_unit': prod_gap.list_price})],
-            'pricelist_id': self.pricelist_usd.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so.action_confirm()
         so._create_analytic_account()
 
         inv = self.env['account.move'].with_context(default_move_type='in_invoice').create({
-            'partner_id': self.partner_customer_usd.id,
+            'partner_id': self.partner_a.id,
             'invoice_line_ids': [
                 (0, 0, {
                     'name': serv_cost.name,
@@ -268,66 +251,32 @@ class TestSaleOrder(TestCommonSaleNoChart):
         """Check that only taxes of the right company are applied on the lines."""
 
         # Preparing test Data
-        company_1 = self.env.ref('base.main_company')
-        company_2 = self.env['res.company'].create({
-            'name': 'company 2',
-            'parent_id': company_1.id,
-        })
-
-        user_demo = self.env['res.users'].create({
-            'login': 'zizizmyuser',
-            'password': 'zizizmyuser',
-            'email': 'test@test.com',
-            'partner_id': self.env['res.partner'].create({'name': 'Zizizmypartner'}).id,
-            'company_ids': [(6, False, [company_1.id])],
-            'company_id': company_1.id,
-            'groups_id': [(6, 0, [
-                self.env.ref('base.group_user').id,
-                self.env.ref('base.group_partner_manager').id,
-                self.env.ref('sales_team.group_sale_manager').id])]})
-
-        user_demo.company_ids = (company_1 | company_2).ids
-        so_partner = self.env['res.partner'].create({'name': 'SO Partner'})
-        so_partner.write({
-            'property_account_position_id': False,
-        })
-
-        tax_company_1 = self.env['account.tax'].create({
-            'name': 'T1',
-            'amount': 90,
-            'company_id': company_1.id,
-        })
-
-        tax_company_2 = self.env['account.tax'].create({
-            'name': 'T2',
-            'amount': 90,
-            'company_id': company_2.id,
-        })
-
         product_shared = self.env['product.template'].create({
             'name': 'shared product',
             'invoice_policy': 'order',
-            'taxes_id': [(6, False, [tax_company_1.id, tax_company_2.id])],
-            'property_account_income_id': self.account_receivable.id,
+            'taxes_id': [(6, False, (self.company_data['default_tax_sale'] + self.company_data_2['default_tax_sale']).ids)],
+            'property_account_income_id': self.company_data['default_account_revenue'].id,
         })
 
-        so_1 = self.env['sale.order'].with_user(user_demo.id).create({
+        so_1 = self.env['sale.order'].with_user(self.company_data['default_user_salesman']).create({
             'partner_id': self.env['res.partner'].create({'name': 'A partner'}).id,
-            'company_id': company_1.id,
+            'company_id': self.company_data['company'].id,
         })
         so_1.write({
             'order_line': [(0, False, {'product_id': product_shared.product_variant_id.id, 'order_id': so_1.id})],
         })
 
-        self.assertEqual(set(so_1.order_line.tax_id.ids), set([tax_company_1.id]),
+        self.assertEqual(so_1.order_line.tax_id, self.company_data['default_tax_sale'],
             'Only taxes from the right company are put by default')
         so_1.action_confirm()
         # i'm not interested in groups/acls, but in the multi-company flow only
         # the sudo is there for that and does not impact the invoice that gets created
         # the goal here is to invoice in company 1 (because the order is in company 1) while being
         # 'mainly' in company 2 (through the context), the invoice should be in company 1
-        inv=so_1.sudo().with_context(allowed_company_ids=[company_2.id, company_1.id])._create_invoices()
-        self.assertEqual(inv.company_id, company_1, 'invoices should be created in the company of the SO, not the main company of the context')
+        inv=so_1.sudo()\
+            .with_context(allowed_company_ids=(self.company_data['company'] + self.company_data_2['company']).ids)\
+            ._create_invoices()
+        self.assertEqual(inv.company_id, self.company_data['company'], 'invoices should be created in the company of the SO, not the main company of the context')
 
     def test_group_invoice(self):
         """ Test that invoicing multiple sales order for the same customer works. """

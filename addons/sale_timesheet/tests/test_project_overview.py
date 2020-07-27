@@ -3,8 +3,10 @@
 
 from odoo.addons.sale_timesheet.tests.test_reporting import TestReporting
 from odoo.tools import float_compare
+from odoo.tests import tagged
 
 
+@tagged('-at_install', 'post_install')
 class TestSaleProject(TestReporting):
 
     def test_project_overview_by_project(self):

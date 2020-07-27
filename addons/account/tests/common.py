@@ -354,103 +354,6 @@ class AccountTestNoChartCommon(SavepointCaseWithUserDemo):
             }).id,
         })
         cls.env.user.company_id.currency_exchange_journal_id = cls.exchange_journal0
-
-    @classmethod
-    def setUpAdditionalAccounts(cls):
-        """ Set up some addionnal accounts: expenses, revenue, ... """
-        user_type_income = cls.env.ref('account.data_account_type_direct_costs')
-        cls.account_income = cls.env['account.account'].create({
-            'code': 'NC1112', 'name':
-            'Sale - Test Account',
-            'user_type_id': user_type_income.id
-        })
-        user_type_expense = cls.env.ref('account.data_account_type_expenses')
-        cls.account_expense = cls.env['account.account'].create({
-            'code': 'NC1113',
-            'name': 'HR Expense - Test Purchase Account',
-            'user_type_id': user_type_expense.id
-        })
-        user_type_revenue = cls.env.ref('account.data_account_type_revenue')
-        cls.account_revenue = cls.env['account.account'].create({
-            'code': 'NC1114',
-            'name': 'Sales - Test Sales Account',
-            'user_type_id': user_type_revenue.id,
-            'reconcile': True
-        })
-
-    @classmethod
-    def setUpAccountJournal(cls):
-        """ Set up some journals: sale, purchase, ... """
-        cls.journal_purchase = cls.env['account.journal'].create({
-            'name': 'Purchase Journal - Test',
-            'code': 'AJ-PURC',
-            'type': 'purchase',
-            'company_id': cls.env.user.company_id.id,
-            'default_debit_account_id': cls.account_expense.id,
-            'default_credit_account_id': cls.account_expense.id,
-        })
-        cls.journal_sale = cls.env['account.journal'].create({
-            'name': 'Sale Journal - Test',
-            'code': 'AJ-SALE',
-            'type': 'sale',
-            'company_id': cls.env.user.company_id.id,
-            'default_debit_account_id': cls.account_income.id,
-            'default_credit_account_id': cls.account_income.id,
-        })
-        cls.journal_general = cls.env['account.journal'].create({
-            'name': 'General Journal - Test',
-            'code': 'AJ-GENERAL',
-            'type': 'general',
-            'company_id': cls.env.user.company_id.id,
-        })
-        cls.journal_bank = cls.env['account.journal'].create({
-            'name': 'Bank Journal - Test',
-            'code': 'AJ-BANK',
-            'type': 'bank',
-            'company_id': cls.env.user.company_id.id,
-        })
-
-    @classmethod
-    def setUpUsers(cls):
-        """ Create 2 users: an employee and a manager. Both will have correct account configured
-            on their partner. Others access rigths should be given in extending test suites set up.
-        """
-        group_employee = cls.env.ref('base.group_user')
-        Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True})
-        cls.user_employee = Users.create({
-            'name': 'Tyrion Lannister Employee',
-            'login': 'tyrion',
-            'email': 'tyrion@example.com',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [group_employee.id])],
-        })
-        cls.user_manager = Users.create({
-            'name': 'Daenerys Targaryen Manager',
-            'login': 'daenerys',
-            'email': 'daenerys@example.com',
-            'notification_type': 'email',
-            'groups_id': [(6, 0, [group_employee.id])],
-        })
-        account_values = {
-            'property_account_payable_id': cls.account_payable.id,
-            'property_account_receivable_id': cls.account_receivable.id,
-        }
-        cls.user_manager.partner_id.write(account_values)
-        cls.user_employee.partner_id.write(account_values)
-
-class AccountTestNoChartCommonMultiCompany(AccountTestNoChartCommon):
-    """ Some tests required to be executed at module installation, and not 'post install', like moslty
-        of accounting tests, since a chart of account is required
-        This test setup class provides data for test suite to make business flow working without a chart
-        of account installed in a multi-company environment.
-        The class provide some helpers methods to create particular document types. Each test suite extending
-        this method can call thoses method to set up their testing environment in their own `setUpClass` method.
-    """
-
-    @classmethod
-    def setUpClass(cls):
-        """ This method set up the minimal requried part of chart of account """
-        super(AccountTestNoChartCommonMultiCompany, cls).setUpClass()
         cls.company_B = cls.env['res.company'].create({'name': 'Company B'})
 
         # To speed up test, create object without mail tracking
@@ -509,7 +412,25 @@ class AccountTestNoChartCommonMultiCompany(AccountTestNoChartCommon):
     @classmethod
     def setUpAdditionalAccounts(cls):
         """ Set up some addionnal accounts: expenses, revenue, ... """
-        super(AccountTestNoChartCommonMultiCompany, cls).setUpAdditionalAccounts()
+        user_type_income = cls.env.ref('account.data_account_type_direct_costs')
+        cls.account_income = cls.env['account.account'].create({
+            'code': 'NC1112', 'name':
+            'Sale - Test Account',
+            'user_type_id': user_type_income.id
+        })
+        user_type_expense = cls.env.ref('account.data_account_type_expenses')
+        cls.account_expense = cls.env['account.account'].create({
+            'code': 'NC1113',
+            'name': 'HR Expense - Test Purchase Account',
+            'user_type_id': user_type_expense.id
+        })
+        user_type_revenue = cls.env.ref('account.data_account_type_revenue')
+        cls.account_revenue = cls.env['account.account'].create({
+            'code': 'NC1114',
+            'name': 'Sales - Test Sales Account',
+            'user_type_id': user_type_revenue.id,
+            'reconcile': True
+        })
         user_type_income = cls.env.ref('account.data_account_type_direct_costs')
         cls.account_income_company_B = cls.env['account.account'].create({
             'code': 'NC1112',
@@ -536,7 +457,34 @@ class AccountTestNoChartCommonMultiCompany(AccountTestNoChartCommon):
     @classmethod
     def setUpAccountJournal(cls):
         """ Set up some journals: sale, purchase, ... """
-        super(AccountTestNoChartCommonMultiCompany, cls).setUpAccountJournal()
+        cls.journal_purchase = cls.env['account.journal'].create({
+            'name': 'Purchase Journal - Test',
+            'code': 'AJ-PURC',
+            'type': 'purchase',
+            'company_id': cls.env.user.company_id.id,
+            'default_debit_account_id': cls.account_expense.id,
+            'default_credit_account_id': cls.account_expense.id,
+        })
+        cls.journal_sale = cls.env['account.journal'].create({
+            'name': 'Sale Journal - Test',
+            'code': 'AJ-SALE',
+            'type': 'sale',
+            'company_id': cls.env.user.company_id.id,
+            'default_debit_account_id': cls.account_income.id,
+            'default_credit_account_id': cls.account_income.id,
+        })
+        cls.journal_general = cls.env['account.journal'].create({
+            'name': 'General Journal - Test',
+            'code': 'AJ-GENERAL',
+            'type': 'general',
+            'company_id': cls.env.user.company_id.id,
+        })
+        cls.journal_bank = cls.env['account.journal'].create({
+            'name': 'Bank Journal - Test',
+            'code': 'AJ-BANK',
+            'type': 'bank',
+            'company_id': cls.env.user.company_id.id,
+        })
         cls.journal_purchase_company_B = cls.env['account.journal'].create({
             'name': 'Purchase Journal Company B - Test',
             'code': 'AJ-PURC',
@@ -562,12 +510,31 @@ class AccountTestNoChartCommonMultiCompany(AccountTestNoChartCommon):
 
     @classmethod
     def setUpUsers(cls):
-        """ Create 2 users for each company: an employee and a manager. Both will have correct account configured
+        """ Create 2 users: an employee and a manager. Both will have correct account configured
             on their partner. Others access rigths should be given in extending test suites set up.
         """
-        super(AccountTestNoChartCommonMultiCompany, cls).setUpUsers()
         group_employee = cls.env.ref('base.group_user')
         Users = cls.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True})
+        cls.user_employee = Users.create({
+            'name': 'Tyrion Lannister Employee',
+            'login': 'tyrion',
+            'email': 'tyrion@example.com',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [group_employee.id])],
+        })
+        cls.user_manager = Users.create({
+            'name': 'Daenerys Targaryen Manager',
+            'login': 'daenerys',
+            'email': 'daenerys@example.com',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [group_employee.id])],
+        })
+        account_values = {
+            'property_account_payable_id': cls.account_payable.id,
+            'property_account_receivable_id': cls.account_receivable.id,
+        }
+        cls.user_manager.partner_id.write(account_values)
+        cls.user_employee.partner_id.write(account_values)
         cls.user_employee_company_B = Users.create({
             'name': 'Gregor Clegane Employee',
             'login': 'gregor',
