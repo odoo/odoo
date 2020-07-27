@@ -911,7 +911,9 @@ class PaymentTransaction(models.Model):
             # Start a new indexing from 1
             suffix = '1'
 
-        return '%s-%s' % (prefix, suffix)
+        import re
+        ref = '%s-%s' % (prefix, suffix)
+        return re.sub(r'(-1)+$', '-1', ref)
 
     def action_view_invoices(self):
         action = {
