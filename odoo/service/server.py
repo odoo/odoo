@@ -53,11 +53,11 @@ except ImportError:
 
 import odoo
 from odoo.modules import get_modules
-from odoo.modules.module import run_unit_tests, get_test_modules
 from odoo.modules.registry import Registry
 from odoo.release import nt_service_name
 from odoo.tools import config
 from odoo.tools import stripped_sys_argv, dumpstacks, log_ormcache_stats
+from ..tests import loader, runner
 
 _logger = logging.getLogger(__name__)
 
@@ -1171,14 +1171,14 @@ def load_test_file_py(registry, test_file):
     try:
         test_path, _ = os.path.splitext(os.path.abspath(test_file))
         for mod in [m for m in get_modules() if '/%s/' % m in test_file]:
-            for mod_mod in get_test_modules(mod):
+            for mod_mod in loader.get_test_modules(mod):
                 mod_path, _ = os.path.splitext(getattr(mod_mod, '__file__', ''))
                 if test_path == mod_path:
-                    tests = odoo.modules.module.unwrap_suite(
+                    tests = loader.unwrap_suite(
                         unittest.TestLoader().loadTestsFromModule(mod_mod))
                     suite = OdooSuite(tests)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                    result = odoo.modules.module.OdooTestRunner().run(suite)
+                    result = runner.OdooTestRunner().run(suite)
                     success = result.wasSuccessful()
                     if hasattr(registry._assertion_report,'report_result'):
                         registry._assertion_report.report_result(success)
@@ -1219,7 +1219,7 @@ def preload_registries(dbnames):
                 _logger.info("Starting post tests")
                 with odoo.api.Environment.manage():
                     for module_name in module_names:
-                        result = run_unit_tests(module_name, position='post_install')
+                        result = loader.run_unit_tests(module_name, position='post_install')
                         registry._assertion_report.record_result(result)
                 _logger.info("All post-tested in %.2fs, %s queries",
                              time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
