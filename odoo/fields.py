@@ -2158,7 +2158,7 @@ class Selection(Field):
                 if isinstance(selection, list):
                     if (
                         values is not None
-                        and values != [kv[0] for kv in selection]
+                        and any([kv[0] not in values for kv in selection])
                     ):
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
                     values = [kv[0] for kv in selection]
