@@ -5916,7 +5916,10 @@ QUnit.module('Views', {
         assert.strictEqual(initialCount, 3,
             "Initial count should be Three");
         await testUtils.dom.click($secondGroup.find('.bg-success-full'));
-        var lastCount = parseInt($secondGroup.find('.o_kanban_counter_side').text());
+
+        // we are updating column with new column on progress bar click, so need to find counter from kanban
+        // group instead of already stored variable
+        var lastCount = parseInt(kanban.$('.o_kanban_group:eq(1) .o_kanban_counter_side').text());
         assert.strictEqual(lastCount, 1,
             "kanban counters should vary according to what subgroup is selected");
 
