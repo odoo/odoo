@@ -1267,8 +1267,6 @@ Possible children of the view element are:
        * kanban-specific CSS
        * kanban structures/widgets (vignette, details, ...)
 
-If you need to extend the Kanban view, see :js:class::`the JS API <KanbanRecord>`.
-
 .. _reference/views/list:
 
 List
