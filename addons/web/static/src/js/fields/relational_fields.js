@@ -27,7 +27,7 @@ var KanbanRecord = require('web.KanbanRecord');
 var KanbanRenderer = require('web.KanbanRenderer');
 var ListRenderer = require('web.ListRenderer');
 const { ComponentWrapper, WidgetAdapterMixin } = require('web.OwlCompatibility');
-const { sprintf } = require("web.utils");
+const { sprintf, toBoolElse } = require("web.utils");
 
 const { escape } = owl.utils;
 var _t = core._t;
@@ -1365,6 +1365,7 @@ var FieldX2Many = AbstractField.extend(WidgetAdapterMixin, {
                 addCreateLine: this._hasCreateLine(),
                 addTrashIcon: this._hasTrashIcon(),
                 isMany2Many: this.isMany2Many,
+                no_open: this.isReadonly && toBoolElse(arch.attrs.no_open || '', false),
                 columnInvisibleFields: this.currentColInvisibleFields,
             });
         }

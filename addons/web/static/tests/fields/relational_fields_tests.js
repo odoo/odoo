@@ -441,6 +441,29 @@ QUnit.module('relational_fields', {
         form.destroy();
     });
 
+    QUnit.test('prevent the dialog in readonly x2many tree view with option no_open True', async function (assert) {
+        assert.expect(2);
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<sheet>' +
+                        '<field name="turtles">' +
+                            '<tree editable="bottom" no_open="True">' +
+                                '<field name="turtle_foo"/>' +
+                            '</tree>' +
+                        '</field>' +
+                    '</sheet>' +
+                 '</form>',
+            res_id: 1,
+        });
+        assert.containsOnce(form, '.o_data_row:contains("blip")', "There should be one record in x2many list view")
+        await testUtils.dom.click(form.$('.o_data_row:first'));
+        assert.strictEqual($('.modal-dialog').length, 0, "There is should be no dialog open on click of readonly list row");
+        form.destroy();
+    });
+
     QUnit.test('delete a record while adding another one in a multipage', async function (assert) {
         // in a many2one with at least 2 pages, add a new line. Delete the line above it.
         // (the onchange makes it so that the virtualID is inserted in the middle of the currentResIDs.)
