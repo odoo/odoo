@@ -1113,6 +1113,8 @@ class MrpProduction(models.Model):
         """
         self.ensure_one()
 
+        if not self.workorder_ids:
+            return
         # Schedule all work orders (new ones and those already created)
         qty_to_produce = max(self.product_qty - self.qty_produced, 0)
         qty_to_produce = self.product_uom_id._compute_quantity(qty_to_produce, self.product_id.uom_id)
