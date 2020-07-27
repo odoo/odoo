@@ -1,12 +1,7 @@
 odoo.define('website.s_google_map', function (require) {
 'use strict';
 
-const ajax = require('web.ajax');
-const {_t} = require('web.core');
 const publicWidget = require('web.public.widget');
-
-let googleScriptLoadedResolve = null;
-const googleScriptLoaded = new Promise(resolve => googleScriptLoadedResolve = resolve);
 
 publicWidget.registry.GoogleMap = publicWidget.Widget.extend({
     selector: '.s_google_map',
@@ -31,42 +26,12 @@ publicWidget.registry.GoogleMap = publicWidget.Widget.extend({
         await this._super(...arguments);
 
         if (typeof google !== 'object' || typeof google.maps !== 'object') {
-            if (!publicWidget.registry.GoogleMap.isScriptLoading) {
-                publicWidget.registry.GoogleMap.isScriptLoading = true;
-                const self = this;
-                window.odoo_s_google_map_redraw_all = function odoo_s_google_map_redraw_all() {
-                    for (const map of $('section.s_google_map')) {
-                        self.trigger_up('widgets_start_request', {
-                            editableMode: self.editableMode,
-                            $target: $(map),
-                        });
-                    }
-                    publicWidget.registry.GoogleMap.isScriptLoading = false;
-                    googleScriptLoadedResolve();
-                };
-
-                const data = await this._rpc({
-                    route: '/website/google_maps_api_key',
+            await new Promise(resolve => {
+                this.trigger_up('gmap_api_request', {
+                    editableMode: this.editableMode,
+                    onSuccess: () => resolve(),
                 });
-
-                const key = JSON.parse(data).google_maps_api_key;
-                if (!key) {
-                    publicWidget.registry.GoogleMap.isScriptLoading = false;
-                    if (this.editableMode) {
-                        this.$loadingWarning = $('<div/>', {
-                            class: 'alert alert-warning alert-link',
-                        }).append($('<a/>', {
-                            href: "#",
-                            text: _t("Cannot load google map, check your configuration !"),
-                        })).click(function (e) {
-                            window.location.href = "/web#action=website.action_website_configuration";
-                        });
-                        this.$('.map_container').append(this.$loadingWarning);
-                    }
-                    return;
-                }
-                await ajax.loadJS(`https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=places&callback=odoo_s_google_map_redraw_all&key=${key}`);
-            }
+            });
             // The animation will be restarted for all maps as soon as the
             // google map script has been executed.
             return;
@@ -127,25 +92,5 @@ publicWidget.registry.GoogleMap = publicWidget.Widget.extend({
             map.setMapTypeId('map_style');
         }
     },
-    /**
-     * @override
-     */
-    destroy() {
-        this._super(...arguments);
-        if (this.$loadingWarning) {
-            this.$loadingWarning.remove();
-        }
-    },
 });
-
-// This allows to save if the google maps script is already loading or not.
-// This script cannot be loaded 2 times, so if we have 2 snippets in the same
-// page we don't want to load the script 2 times.
-// And we cannot put the script in an asset because we don't want to load it
-// on each page, but only on pages with a google maps snippet...
-publicWidget.registry.GoogleMap.prototype.isScriptLoading = false;
-
-return {
-    googleScriptLoaded: googleScriptLoaded,
-};
 });

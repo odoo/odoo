@@ -1601,6 +1601,7 @@ const SnippetOptionWidget = Widget.extend({
     tagName: 'we-customizeblock-option',
     custom_events: {
         'user_value_update': '_onUserValueUpdate',
+        'user_value_widget_critical': '_onUserValueWidgetCritical',
     },
     /**
      * Indicates if the option should be displayed in the button group at the
@@ -2545,6 +2546,14 @@ const SnippetOptionWidget = Widget.extend({
                 reloadEditor: true,
             });
         }
+    },
+    /**
+     * @private
+     */
+    _onUserValueWidgetCritical() {
+        this.trigger_up('remove_snippet', {
+            $snippet: this.$target,
+        });
     },
 });
 const registry = {};
