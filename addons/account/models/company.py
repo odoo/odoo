@@ -452,6 +452,7 @@ class ResCompany(models.Model):
                         "\nPlease go to Configuration > Journals.")
                 raise RedirectWarning(msg, action.id, _("Go to the journal configuration"))
 
+            account = journal.default_credit_account_id or account
             sample_invoice = self.env['account.move'].with_context(default_type='out_invoice', default_journal_id=journal.id).create({
                 'invoice_payment_ref': _('Sample invoice'),
                 'partner_id': partner.id,
