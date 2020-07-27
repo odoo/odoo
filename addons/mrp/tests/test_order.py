@@ -736,3 +736,109 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).mapped('quantity_done')), 200)
         self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id == p2).mapped('quantity_done')), 200)
         self.assertEqual(sum(mo.move_finished_ids.mapped('quantity_done')), 100)
+
+    def test_product_produce_7(self):
+        """ Check that for products tracked by lots,
+        with component product UOM different from UOM used in the BOM,
+        we do not create a new move line due to extra reserved quantity
+        caused by decimal rounding conversions.
+        """
+
+        # the overall decimal accuracy is set to 3 digits
+        precision = self.env.ref('product.decimal_product_uom')
+        precision.write({
+            'digits': 3
+        })
+
+        # define L and ml, L has rounding .001 but ml has rounding .01
+        # when producing e.g. 187.5ml, it will be rounded to .188L
+        categ_test = self.env['product.uom.categ'].create({'name': 'Volume Test'})
+
+        uom_L = self.env['product.uom'].create({
+            'name': 'Test Liters',
+            'category_id': categ_test.id,
+            'uom_type': 'reference',
+            'rounding': 0.001
+        })
+
+        uom_ml = self.env['product.uom'].create({
+            'name': 'Test ml',
+            'category_id': categ_test.id,
+            'uom_type': 'smaller',
+            'rounding': 0.01,
+            'factor_inv': 0.001,
+        })
+
+        # create a product component and the final product using the component
+        product_comp = self.env['product.product'].create({
+            'name': 'Product Component',
+            'type': 'product',
+            'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'uom_id': uom_L.id,
+            'uom_po_id': uom_L.id,
+        })
+
+        product_final = self.env['product.product'].create({
+            'name': 'Product Final',
+            'type': 'product',
+            'tracking': 'lot',
+            'categ_id': self.env.ref('product.product_category_all').id,
+            'uom_id': uom_L.id,
+            'uom_po_id': uom_L.id,
+        })
+
+        # the products are tracked by lot, so we go through _generate_consumed_move_line
+        lot_final = self.env['stock.production.lot'].create({
+            'name': 'Lot Final',
+            'product_id': product_final.id,
+        })
+
+        lot_comp = self.env['stock.production.lot'].create({
+            'name': 'Lot Component',
+            'product_id': product_comp.id,
+        })
+
+        # update the quantity on hand for Component, in a lot
+        self.stock_location = self.env.ref('stock.stock_location_stock')
+        self.env['stock.quant']._update_available_quantity(product_comp, self.stock_location, 1, lot_id=lot_comp)
+
+        # create a BOM for Final, using Component
+        test_bom = self.env['mrp.bom'].create({
+            'product_id': product_final.id,
+            'product_tmpl_id': product_final.product_tmpl_id.id,
+            'product_uom_id': uom_L.id,
+            'product_qty': 1.0,
+            'type': 'normal',
+            'bom_line_ids': [(0, 0, {
+                'product_id': product_comp.id,
+                'product_qty': 375.00,
+                'product_uom_id': uom_ml.id
+            })],
+        })
+
+        # create a MO for this BOM
+        mo_product_final = self.env['mrp.production'].create({
+            'product_id': product_final.id,
+            'product_qty': 0.5,
+            'product_uom_id': uom_L.id,
+            'bom_id': test_bom.id,
+        })
+        mo_product_final.action_assign()
+        self.assertEqual(mo_product_final.availability, 'assigned')
+
+        # produce
+        context = {"active_ids": [mo_product_final.id], "active_id": mo_product_final.id}
+        product_final_produce = self.env['mrp.product.produce'].with_context(context).create({
+            'product_qty': 0.5,
+            'lot_id': lot_final.id,
+            })
+        for produce_line in product_final_produce.produce_line_ids:
+            produce_line.qty_done = produce_line.qty_to_consume
+        product_final_produce.do_produce()
+
+        # check that in _generate_consumed_move_line,
+        # we do not create an extra move line because
+        # of a conversion 187.5ml = 0.188L
+        # thus creating an extra line with 'product_uom_qty': 0.5
+        self.assertEqual(len(mo_product_final.move_raw_ids.move_line_ids), 1, 'One move line should exist for the MO.')
