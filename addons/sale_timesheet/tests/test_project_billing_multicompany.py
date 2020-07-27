@@ -1,15 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetMultiCompanyNoChart
+from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
+from odoo.tests import tagged
 
-class TestProjectBillingMulticompany(TestCommonSaleTimesheetMultiCompanyNoChart):
+
+@tagged('-at_install', 'post_install')
+class TestProjectBillingMulticompany(TestCommonSaleTimesheet):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestProjectBillingMulticompany, cls).setUpClass()
-
-        cls.setUpServiceProducts()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         Project = cls.env['project.project'].with_context(tracking_disable=True)
         cls.project_non_billable = Project.create({
@@ -20,11 +21,11 @@ class TestProjectBillingMulticompany(TestCommonSaleTimesheetMultiCompanyNoChart)
         })
 
     def test_makeBillable_multiCompany(self):
-        wizard = self.env['project.create.sale.order'].with_context(allowed_company_ids=[self.company_B.id, self.env.company.id], company_id=self.company_B.id, active_id=self.project_non_billable.id, active_model='project.project').create({
+        wizard = self.env['project.create.sale.order'].with_context(allowed_company_ids=[self.company_data_2['company'].id, self.env.company.id], company_id=self.company_data_2['company'].id, active_id=self.project_non_billable.id, active_model='project.project').create({
             'product_id': self.product_delivery_timesheet3.id,  # product creates new Timesheet in new Project
             'price_unit': self.product_delivery_timesheet3.list_price,
             'billable_type': 'project_rate',
-            'partner_id': self.partner_customer_usd.id,
+            'partner_id': self.partner_a.id,
         })
 
         action = wizard.action_create_sale_order()

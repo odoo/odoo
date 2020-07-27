@@ -2,32 +2,31 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from datetime import datetime, timedelta
 
-from odoo.addons.sale.tests.test_sale_common import TestSaleCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
+from odoo.addons.sale.tests.common import TestSaleCommon
 from odoo.exceptions import UserError
 from odoo.tests import Form, tagged
 
 
 @tagged('post_install', '-at_install')
-class TestSaleStock(TestSaleCommon):
+class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
     def _get_new_sale_order(self, amount=10.0):
         """ Creates and returns a sale order with one default order line.
 
         :param float amount: quantity of product for the order line (10 by default)
         """
-        partner = self.partner
-        product = self.products['prod_del']
         sale_order_vals = {
-            'partner_id': partner.id,
-            'partner_invoice_id': partner.id,
-            'partner_shipping_id': partner.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
             'order_line': [(0, 0, {
-                'name': product.name,
-                'product_id': product.id,
+                'name': self.company_data['product_delivery_no'].name,
+                'product_id': self.company_data['product_delivery_no'].id,
                 'product_uom_qty': amount,
-                'product_uom': product.uom_id.id,
-                'price_unit': product.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
+                'product_uom': self.company_data['product_delivery_no'].uom_id.id,
+                'price_unit': self.company_data['product_delivery_no'].list_price})],
+            'pricelist_id': self.company_data['default_pricelist'].id,
         }
         sale_order = self.env['sale.order'].create(sale_order_vals)
         return sale_order
@@ -37,13 +36,24 @@ class TestSaleStock(TestSaleCommon):
         Test SO's changes when playing around with stock moves, quants, pack operations, pickings
         and whatever other model there is in stock with "invoice on delivery" products
         """
-        inv_obj = self.env['account.move']
         self.so = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'partner_invoice_id': self.partner.id,
-            'partner_shipping_id': self.partner.id,
-            'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for p in self.products.values()],
-            'pricelist_id': self.env.ref('product.list0').id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [
+                (0, 0, {
+                    'name': p.name,
+                    'product_id': p.id,
+                    'product_uom_qty': 2,
+                    'product_uom': p.uom_id.id,
+                    'price_unit': p.list_price,
+                }) for p in (
+                    self.company_data['product_order_no'],
+                    self.company_data['product_service_delivery'],
+                    self.company_data['product_service_order'],
+                    self.company_data['product_delivery_no'],
+                )],
+            'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
         })
 
@@ -105,11 +115,22 @@ class TestSaleStock(TestSaleCommon):
         """
         # let's cheat and put all our products to "invoice on order"
         self.so = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
-            'partner_invoice_id': self.partner.id,
-            'partner_shipping_id': self.partner.id,
-            'order_line': [(0, 0, {'name': p.name, 'product_id': p.id, 'product_uom_qty': 2, 'product_uom': p.uom_id.id, 'price_unit': p.list_price}) for p in self.products.values()],
-            'pricelist_id': self.env.ref('product.list0').id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'order_line': [(0, 0, {
+                'name': p.name,
+                'product_id': p.id,
+                'product_uom_qty': 2,
+                'product_uom': p.uom_id.id,
+                'price_unit': p.list_price,
+                }) for p in (
+                    self.company_data['product_order_no'],
+                    self.company_data['product_service_delivery'],
+                    self.company_data['product_service_order'],
+                    self.company_data['product_delivery_no'],
+                )],
+            'pricelist_id': self.company_data['default_pricelist'].id,
             'picking_policy': 'direct',
         })
         for sol in self.so.order_line:
@@ -158,18 +179,18 @@ class TestSaleStock(TestSaleCommon):
         of the picking. Check that a refund invoice is well generated.
         """
         # intial so
-        self.product = self.products['prod_del']
+        self.product = self.company_data['product_delivery_no']
         so_vals = {
-            'partner_id': self.partner.id,
-            'partner_invoice_id': self.partner.id,
-            'partner_shipping_id': self.partner.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
             'order_line': [(0, 0, {
                 'name': self.product.name,
                 'product_id': self.product.id,
                 'product_uom_qty': 5.0,
                 'product_uom': self.product.uom_id.id,
                 'price_unit': self.product.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
         }
         self.so = self.env['sale.order'].create(so_vals)
 
@@ -229,18 +250,18 @@ class TestSaleStock(TestSaleCommon):
         the SO is set on 'done', the SO should be fully invoiced.
         """
         # intial so
-        self.product = self.products['prod_del']
+        self.product = self.company_data['product_delivery_no']
         so_vals = {
-            'partner_id': self.partner.id,
-            'partner_invoice_id': self.partner.id,
-            'partner_shipping_id': self.partner.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
             'order_line': [(0, 0, {
                 'name': self.product.name,
                 'product_id': self.product.id,
                 'product_uom_qty': 5.0,
                 'product_uom': self.product.uom_id.id,
                 'price_unit': self.product.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
         }
         self.so = self.env['sale.order'].create(so_vals)
 
@@ -278,13 +299,13 @@ class TestSaleStock(TestSaleCommon):
         the new move lines.
         """
         # sell two products
-        item1 = self.products['prod_order']  # consumable
+        item1 = self.company_data['product_order_no']  # consumable
         item1.type = 'consu'
-        item2 = self.products['prod_del']    # storable
+        item2 = self.company_data['product_delivery_no']    # storable
         item2.type = 'product'    # storable
 
         self.so = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
+            'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
                 (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
@@ -347,14 +368,14 @@ class TestSaleStock(TestSaleCommon):
         is successful.
         """
         # sell two products
-        item1 = self.products['prod_order']  # consumable
+        item1 = self.company_data['product_order_no']  # consumable
         item1.type = 'consu'  # consumable
-        item2 = self.products['prod_del']    # storable
+        item2 = self.company_data['product_delivery_no']    # storable
         item2.type = 'product'    # storable
 
-        self.env['stock.quant']._update_available_quantity(item2, self.env.ref('stock.stock_location_stock'), 2)
+        self.env['stock.quant']._update_available_quantity(item2, self.company_data['default_warehouse'].lot_stock_id, 2)
         self.so = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
+            'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
                 (0, 0, {'name': item2.name, 'product_id': item2.id, 'product_uom_qty': 1, 'product_uom': item2.uom_id.id, 'price_unit': item2.list_price}),
@@ -384,8 +405,8 @@ class TestSaleStock(TestSaleCommon):
         partner, confirm it again: the second delivery order should have
         the new partner.
         """
-        item1 = self.products['prod_order']
-        partner1 = self.partner.id
+        item1 = self.company_data['product_order_no']
+        partner1 = self.partner_a.id
         partner2 = self.env['res.partner'].create({'name': 'Another Test Partner'})
         so1 = self.env['sale.order'].create({
             'partner_id': partner1,
@@ -419,13 +440,13 @@ class TestSaleStock(TestSaleCommon):
         """
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
-        item1 = self.products['prod_order']
+        item1 = self.company_data['product_order_no']
 
         self.assertEqual(item1.uom_id.id, uom_unit.id)
 
         # sell a dozen
         so1 = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
+            'partner_id': self.partner_a.id,
             'order_line': [(0, 0, {
                 'name': item1.name,
                 'product_id': item1.id,
@@ -496,13 +517,13 @@ class TestSaleStock(TestSaleCommon):
         """
         uom_unit = self.env.ref('uom.product_uom_unit')
         uom_dozen = self.env.ref('uom.product_uom_dozen')
-        item1 = self.products['prod_order']
+        item1 = self.company_data['product_order_no']
 
         self.assertEqual(item1.uom_id.id, uom_unit.id)
 
         # sell a dozen
         so1 = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
+            'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
                     'name': item1.name,
@@ -573,10 +594,10 @@ class TestSaleStock(TestSaleCommon):
         self.env['stock.picking.type'].search([('code', '=', 'incoming')]).write({'code': 'internal'})
 
         # Sell and deliver 10 units
-        item1 = self.products['prod_order']
+        item1 = self.company_data['product_order_no']
         uom_unit = self.env.ref('uom.product_uom_unit')
         so1 = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
+            'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
                     'name': item1.name,
@@ -629,19 +650,21 @@ class TestSaleStock(TestSaleCommon):
         """ create a sale order in warehouse1, change to warehouse2 and check the
         available quantities on sale order lines are well updated """
         # sell two products
-        item1 = self.products['prod_order']
+        item1 = self.company_data['product_order_no']
         item1.type = 'product'
-        warehouse1 = self.env.ref('stock.warehouse0')
+
+        warehouse1 = self.company_data['default_warehouse']
         self.env['stock.quant']._update_available_quantity(item1, warehouse1.lot_stock_id, 10)
         self.env['stock.quant']._update_reserved_quantity(item1, warehouse1.lot_stock_id, 3)
+
         warehouse2 = self.env['stock.warehouse'].create({
-            'partner_id': self.env.ref('base.main_partner').id,
+            'partner_id': self.partner_a.id,
             'name': 'Zizizatestwarehouse',
             'code': 'Test',
         })
         self.env['stock.quant']._update_available_quantity(item1, warehouse2.lot_stock_id, 5)
         so = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
+            'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 1, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
             ],
@@ -666,11 +689,11 @@ class TestSaleStock(TestSaleCommon):
     def test_10_qty_available(self):
         """create a sale order containing three times the same product. The
         quantity available should be different for the 3 lines"""
-        item1 = self.products['prod_order']
+        item1 = self.company_data['product_order_no']
         item1.type = 'product'
-        self.env['stock.quant']._update_available_quantity(item1, self.env.ref('stock.stock_location_stock'), 10)
+        self.env['stock.quant']._update_available_quantity(item1, self.company_data['default_warehouse'].lot_stock_id, 10)
         so = self.env['sale.order'].create({
-            'partner_id': self.partner.id,
+            'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
                 (0, 0, {'name': item1.name, 'product_id': item1.id, 'product_uom_qty': 5, 'product_uom': item1.uom_id.id, 'price_unit': item1.list_price}),
@@ -753,8 +776,8 @@ class TestSaleStock(TestSaleCommon):
         Create two invoices: one for 3 quantity and one for 2 quantity
         Then cancel Sale order, it won't raise any warning, it should be cancelled.
         """
-        partner = self.partner
-        product = self.products['prod_del']
+        partner = self.partner_a
+        product = self.company_data['product_delivery_no']
         so_vals = {
             'partner_id': partner.id,
             'partner_invoice_id': partner.id,
@@ -765,7 +788,7 @@ class TestSaleStock(TestSaleCommon):
                 'product_uom_qty': 5.0,
                 'product_uom': product.uom_id.id,
                 'price_unit': product.list_price})],
-            'pricelist_id': self.env.ref('product.list0').id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
         }
         so = self.env['sale.order'].create(so_vals)
 

@@ -62,7 +62,6 @@ class TestPurchaseOrderReport(AccountTestInvoicingCommon):
             ('company_id', '=', self.company_data['company'].id),
         ])
 
-        # Check that repost should show 6 unit of product
         self.assertEqual(res_product2.qty_ordered, 1.0, 'No conversion needed since product_b is already a dozen')
         # report should show in company currency (amount/rate) = (200/2)
         self.assertEqual(res_product2.price_total, 100.0, 'Currency conversion is not working')

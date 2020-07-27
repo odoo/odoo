@@ -1,13 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from datetime import timedelta
 from odoo import fields
 from odoo.tests import common, tagged
 
 
 @tagged('post_install', '-at_install')
-class TestSaleExpectedDate(common.TransactionCase):
+class TestSaleExpectedDate(ValuationReconciliationTestCommon):
 
     def test_sale_order_expected_date(self):
         """ Test expected date and effective date of Sales Orders """
@@ -32,9 +33,10 @@ class TestSaleExpectedDate(common.TransactionCase):
             'uom_id': 1,
         })
 
-        self.env['stock.quant']._update_available_quantity(product_A, self.env.ref('stock.stock_location_stock'), 10)
-        self.env['stock.quant']._update_available_quantity(product_B, self.env.ref('stock.stock_location_stock'), 10)
-        self.env['stock.quant']._update_available_quantity(product_C, self.env.ref('stock.stock_location_stock'), 10)
+        self.env['stock.quant']._update_available_quantity(product_A, self.company_data['default_warehouse'].lot_stock_id, 10)
+        self.env['stock.quant']._update_available_quantity(product_B, self.company_data['default_warehouse'].lot_stock_id, 10)
+        self.env['stock.quant']._update_available_quantity(product_C, self.company_data['default_warehouse'].lot_stock_id, 10)
+
         sale_order = self.env['sale.order'].create({
             'partner_id': self.env['res.partner'].create({'name': 'A Customer'}).id,
             'picking_policy': 'direct',

@@ -5,10 +5,12 @@ from datetime import date, timedelta
 from odoo.fields import Date
 from odoo.tools import float_is_zero
 from odoo.exceptions import UserError
-from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetNoChart
+from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
+from odoo.tests import tagged
 
 
-class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
+@tagged('-at_install', 'post_install')
+class TestSaleTimesheet(TestCommonSaleTimesheet):
     """ This test suite provide tests for the 3 main flows of selling services:
             - Selling services based on ordered quantities
             - Selling timesheet based on delivered quantities
@@ -16,15 +18,6 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         For that, we check the task/project created, the invoiced amounts, the delivered
         quantities changes,  ...
     """
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestSaleTimesheet, cls).setUpClass()
-        # set up
-        cls.setUpEmployees()
-        cls.setUpServiceProducts()
-        cls.setUpAdditionalAccounts()
-        cls.setUpAccountJournal()
 
     def test_timesheet_order(self):
         """ Test timesheet invoicing with 'invoice on order' timetracked products
@@ -36,10 +29,10 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         """
         # create SO and confirm it
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner_customer_usd.id,
-            'partner_invoice_id': self.partner_customer_usd.id,
-            'partner_shipping_id': self.partner_customer_usd.id,
-            'pricelist_id': self.pricelist_usd.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line_ordered_project_only = self.env['sale.order.line'].create({
             'name': self.product_order_timesheet4.name,
@@ -173,12 +166,11 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
                 6. add new SO line (delivered service)
         """
         # create SO and confirm it
-        self.env['res.currency.rate'].search([]).unlink()
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner_customer_usd.id,
-            'partner_invoice_id': self.partner_customer_usd.id,
-            'partner_shipping_id': self.partner_customer_usd.id,
-            'pricelist_id': self.pricelist_usd.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line_deliver_global_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet2.name,
@@ -309,10 +301,10 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         """
         # create SO and confirm it
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner_customer_usd.id,
-            'partner_invoice_id': self.partner_customer_usd.id,
-            'partner_shipping_id': self.partner_customer_usd.id,
-            'pricelist_id': self.pricelist_usd.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line_manual_global_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_manual2.name,
@@ -396,10 +388,10 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
         """
         today = Date.context_today(self.env.user)
         sale_order = self.env['sale.order'].create({
-            'partner_id': self.partner_customer_usd.id,
-            'partner_invoice_id': self.partner_customer_usd.id,
-            'partner_shipping_id': self.partner_customer_usd.id,
-            'pricelist_id': self.pricelist_usd.id,
+            'partner_id': self.partner_a.id,
+            'partner_invoice_id': self.partner_a.id,
+            'partner_shipping_id': self.partner_a.id,
+            'pricelist_id': self.company_data['default_pricelist'].id,
         })
         so_line_deliver_global_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet2.name,
@@ -469,7 +461,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             'active_model': 'sale.order',
             'active_ids': [sale_order.id],
             'active_id': sale_order.id,
-            'default_journal_id': self.journal_sale.id
+            'default_journal_id': self.company_data['default_journal_sale'].id
         }
 
         # invoice SO
@@ -530,7 +522,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
 
         task = Task.with_context(default_project_id=self.project_global.id).create({
             'name': 'first task',
-            'partner_id': self.partner_customer_usd.id,
+            'partner_id': self.partner_a.id,
             'planned_hours': 10,
         })
 
@@ -569,7 +561,7 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             'active_model': 'sale.order',
             'active_ids': [sale_order.id],
             'active_id': sale_order.id,
-            'default_journal_id': self.journal_sale.id
+            'default_journal_id': self.company_data['default_journal_sale'].id
         }
         wizard = self.env['sale.advance.payment.inv'].with_context(self.context).create({
             'advance_payment_method': 'delivered',

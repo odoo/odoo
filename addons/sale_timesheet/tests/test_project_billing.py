@@ -1,19 +1,18 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
+from odoo.tests import tagged
 
-from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetNoChart
-from odoo.exceptions import UserError
 
-
-class TestProjectBilling(TestCommonSaleTimesheetNoChart):
+@tagged('post_install', '-at_install')
+class TestProjectBilling(TestCommonSaleTimesheet):
     """ This test suite provide checks for miscellaneous small things. """
 
     @classmethod
-    def setUpClass(cls):
-        super(TestProjectBilling, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+        
         # set up
-        cls.setUpServiceProducts()
-        cls.setUpEmployees()
         cls.employee_tde = cls.env['hr.employee'].create({
             'name': 'Employee TDE',
             'timesheet_cost': 42,
@@ -22,17 +21,17 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
         cls.partner_2 = cls.env['res.partner'].create({
             'name': 'Customer from the South',
             'email': 'customer.usd@south.com',
-            'property_account_payable_id': cls.account_payable.id,
-            'property_account_receivable_id': cls.account_receivable.id,
+            'property_account_payable_id': cls.company_data['default_account_payable'].id,
+            'property_account_receivable_id': cls.company_data['default_account_receivable'].id,
         })
 
         # Sale Order 1, no project/task created, used to timesheet at employee rate
         SaleOrder = cls.env['sale.order'].with_context(tracking_disable=True)
         SaleOrderLine = cls.env['sale.order.line'].with_context(tracking_disable=True)
         cls.sale_order_1 = SaleOrder.create({
-            'partner_id': cls.partner_customer_usd.id,
-            'partner_invoice_id': cls.partner_customer_usd.id,
-            'partner_shipping_id': cls.partner_customer_usd.id,
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
         })
 
         cls.so1_line_order_no_task = SaleOrderLine.create({
@@ -247,7 +246,7 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
         # create a task
         task = Task.with_context(default_project_id=self.project_employee_rate.id).create({
             'name': 'first task',
-            'partner_id': self.partner_customer_usd.id,
+            'partner_id': self.partner_a.id,
         })
 
         self.assertEqual(task.billable_type, 'employee_rate', "Task in project 'employee rate' should be billed at employee rate")
@@ -310,7 +309,7 @@ class TestProjectBilling(TestCommonSaleTimesheetNoChart):
         # create a second task in employee rate project
         task2 = Task.with_context(default_project_id=self.project_employee_rate.id).create({
             'name': 'first task',
-            'partner_id': self.partner_customer_usd.id,
+            'partner_id': self.partner_a.id,
             'sale_line_id': False
         })
 
