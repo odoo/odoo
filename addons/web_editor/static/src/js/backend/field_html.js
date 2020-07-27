@@ -252,7 +252,7 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
             dataPointID: this.dataPointID,
             changes: _.object([this.fieldNameAttachment], [{
                 operation: 'ADD_M2M',
-                ids: attachments
+                ids: attachments.data,
             }])
         });
     },
