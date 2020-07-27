@@ -239,7 +239,7 @@ class StockMove(models.Model):
             qty_to_add -= quantity_to_process
 
             new_quantity_done = (ml.qty_done + quantity_to_process)
-            if float_compare(new_quantity_done, ml.product_uom_qty, precision_rounding=rounding) >= 0:
+            if float_compare(ml.product_uom_id._compute_quantity(new_quantity_done, ml.product_id.uom_id), ml.product_qty, precision_rounding=rounding) >= 0:
                 ml.write({'qty_done': new_quantity_done, 'lot_produced_id': final_lot.id})
             else:
                 new_qty_reserved = ml.product_uom_qty - new_quantity_done
