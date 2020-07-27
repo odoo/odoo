@@ -458,6 +458,11 @@ var FileWidget = SearchableMediaWidget.extend({
             this.$media.css(style);
         }
 
+        if (this.options.onUpload) {
+            // We consider that when selecting an image it is as if we upload it in the html content.
+            this.options.onUpload(img);
+        }
+
         // Remove image modification attributes
         removeOnImageChangeAttrs.forEach(attr => {
             delete this.media.dataset[attr];
