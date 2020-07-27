@@ -16,10 +16,8 @@ import odoo.modules.db
 import odoo.modules.graph
 import odoo.modules.migration
 import odoo.modules.registry
-import odoo.tools as tools
-
-from odoo import api, SUPERUSER_ID
-from odoo.modules.module import adapt_version, initialize_sys_path, load_openerp_module
+from .. import SUPERUSER_ID, api, tools
+from .module import adapt_version, initialize_sys_path, load_openerp_module
 
 _logger = logging.getLogger(__name__)
 _test_logger = logging.getLogger('odoo.tests')
@@ -271,7 +269,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             report.record_result(load_test(idref, mode))
             # Python tests
             env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
-            report.record_result(odoo.modules.module.run_unit_tests(module_name))
+            report.record_result(odoo.tests.loader.run_unit_tests(module_name))
             # tests may have reset the environment
             env = api.Environment(cr, SUPERUSER_ID, {})
             module = env['ir.module.module'].browse(module_id)
