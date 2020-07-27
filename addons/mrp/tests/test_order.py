@@ -1312,3 +1312,22 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(mo.move_finished_ids.state, 'done')
         self.assertEqual(mo.move_finished_ids.quantity_done, 1)
         self.assertEqual(component.qty_available, 13)
+
+    def test_copy(self):
+        """ Check that copying a done production, create all the stock moves"""
+        mo, bom, p_final, p1, p2 = self.generate_mo(qty_final=1, qty_base_1=1, qty_base_2=1)
+        mo.action_confirm()
+        mo_form = Form(mo)
+        mo_form.qty_producing = 1
+        mo = mo_form.save()
+        mo.button_mark_done()
+        self.assertEqual(mo.state, 'done')
+        mo_copy = mo.copy()
+        self.assertTrue(mo_copy.move_raw_ids)
+        self.assertTrue(mo_copy.move_finished_ids)
+        mo_copy.action_confirm()
+        mo_form = Form(mo_copy)
+        mo_form.qty_producing = 1
+        mo_copy = mo_form.save()
+        mo_copy.button_mark_done()
+        self.assertEqual(mo_copy.state, 'done')
