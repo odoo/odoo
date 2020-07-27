@@ -259,6 +259,63 @@ class TestMrpOrder(TestMrpCommon):
         self.assertEqual(sum(mo.move_raw_ids.filtered(lambda m: m.product_id == p1).mapped('quantity_done')), 20)
         self.assertEqual(sum(mo.move_finished_ids.mapped('quantity_done')), 5)
 
+    def test_update_quantity_3(self):
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_6.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
+                (0, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
+            ],
+            'operation_ids': [
+                (0, 0, {'name': 'Gift Wrap Maching', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 15, 'sequence': 1}),
+            ]
+        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = bom
+        production_form.product_qty = 1
+        production_form.product_uom_id = self.product_6.uom_id
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 90)
+        mo_form = Form(production)
+        mo_form.product_qty = 3
+        production = mo_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 165)
+
+    def test_update_quantity_4(self):
+        bom = self.env['mrp.bom'].create({
+            'product_id': self.product_6.id,
+            'product_tmpl_id': self.product_6.product_tmpl_id.id,
+            'product_qty': 1,
+            'product_uom_id': self.product_6.uom_id.id,
+            'type': 'normal',
+            'bom_line_ids': [
+                (0, 0, {'product_id': self.product_2.id, 'product_qty': 2.03}),
+                (0, 0, {'product_id': self.product_8.id, 'product_qty': 4.16})
+            ],
+        })
+        production_form = Form(self.env['mrp.production'])
+        production_form.product_id = self.product_6
+        production_form.bom_id = bom
+        production_form.product_qty = 1
+        production_form.product_uom_id = self.product_6.uom_id
+        production = production_form.save()
+        production_form = Form(production)
+        with production_form.workorder_ids.new() as wo:
+            wo.name = 'OP1'
+            wo.workcenter_id = self.workcenter_1
+            wo.duration_expected = 40
+        production = production_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 40)
+        mo_form = Form(production)
+        mo_form.product_qty = 3
+        production = mo_form.save()
+        self.assertEqual(production.workorder_ids.duration_expected, 90)
+
     def test_rounding(self):
         """ Checks we round up when bringing goods to produce and round half-up when producing.
         This implementation allows to implement an efficiency notion (see rev 347f140fe63612ee05e).

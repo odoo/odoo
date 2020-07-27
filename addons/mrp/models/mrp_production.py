@@ -574,7 +574,10 @@ class MrpProduction(models.Model):
     def _onchange_product_qty(self):
         for workorder in self.workorder_ids:
             workorder.product_uom_id = self.product_uom_id
-            workorder.duration_expected = workorder._get_duration_expected()
+            if self._origin.product_qty:
+                workorder.duration_expected = workorder._get_duration_expected(ratio=self.product_qty / self._origin.product_qty)
+            else:
+                workorder.duration_expected = workorder._get_duration_expected()
             if workorder.date_planned_start and workorder.duration_expected:
                 workorder.date_planned_finished = workorder.date_planned_start + relativedelta(minutes=workorder.duration_expected)
 

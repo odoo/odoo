@@ -78,7 +78,7 @@ class ChangeProductionQty(models.TransientModel):
 
             for wo in production.workorder_ids:
                 operation = wo.operation_id
-                wo._onchange_expected_duration()
+                wo.duration_expected = wo._get_duration_expected(ratio=new_production_qty / old_production_qty)
                 quantity = wo.qty_production - wo.qty_produced
                 if production.product_id.tracking == 'serial':
                     quantity = 1.0 if not float_is_zero(quantity, precision_digits=precision) else 0.0
