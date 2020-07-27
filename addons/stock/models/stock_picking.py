@@ -371,6 +371,12 @@ class Picking(models.Model):
     immediate_transfer = fields.Boolean(default=False)
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
+    products_availability = fields.Char(
+        string="Product Availability", compute='_compute_products_availability')
+    products_availability_state = fields.Selection([
+        ('available', 'Available'),
+        ('expected', 'Expected'),
+        ('late', 'Late')], compute='_compute_products_availability')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -386,6 +392,25 @@ class Picking(models.Model):
         delay_alert_date_data = {data['picking_id'][0]: data['delay_alert_date'] for data in delay_alert_date_data}
         for picking in self:
             picking.delay_alert_date = delay_alert_date_data.get(picking.id, False)
+
+    @api.depends('move_lines', 'state')
+    def _compute_products_availability(self):
+        self.products_availability = False
+        self.products_availability_state = 'available'
+        pickings = self.filtered(lambda picking: picking.state not in ['cancel', 'draft', 'done'] and picking.picking_type_code == 'outgoing')
+        for picking in pickings:
+            forecast_data = []
+            for move in picking.move_lines:
+                if move.json_forecast:
+                    forecast_data.append(json.loads(move.json_forecast))
+            picking.products_availability = 'Available'
+            forecast_data.sort(key=lambda line: line.get('sortingDate', ''), reverse=True)
+            if len(forecast_data) > 0 and forecast_data[0].get('sortingDate', False):
+                picking.products_availability = _('Exp %s', forecast_data[0]['expectedDate'])
+                picking.products_availability_state = 'late' if forecast_data[0]['isLate'] else 'expected'
+            elif any(not data.get('reservedAvailability', False) for data in forecast_data):
+                picking.products_availability = 'Not Available'
+                picking.products_availability_state = 'late'
 
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
