@@ -454,7 +454,8 @@ var KanbanModel = BasicModel.extend({
         while (element) {
             if (element.progressBar) {
                 return def.then(function (data) {
-                    element = self.localData[recordID];
+                    const progressbar_element = self.localData[recordID];
+                    element.domain = progressbar_element.domain;
                     return self._load(element, {
                         keepEmptyGroups: true,
                         onlyGroups: true,
