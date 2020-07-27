@@ -135,3 +135,12 @@ we-collapse {
     border-width: 4px;
     border-bottom: none !important;
 }
+
+.pac-container { // google map autosuggestion
+    z-index: $zindex-modal-backdrop; // > $o-we-zindex
+    min-width: 400px;
+
+    &:after {
+        display: none;
+    }
+}
