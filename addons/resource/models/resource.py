@@ -773,7 +773,6 @@ class ResourceCalendarAttendance(models.Model):
         ('1', 'Second'),
         ('0', 'First')
         ], 'Week Number', default=False)
-    two_weeks_calendar = fields.Boolean("Calendar in 2 weeks mode", related='calendar_id.two_weeks_calendar')
     display_type = fields.Selection([
         ('line_section', "Section")], default=False, help="Technical field for UX purpose.")
     sequence = fields.Integer(default=10,
