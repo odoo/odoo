@@ -199,6 +199,10 @@
                     <field name="partner_id" optional="show"/>
                     <field name="signature" string="Signed" optional="hide" widget="boolean" groups="stock.group_stock_sign_delivery"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
+                    <field name="products_availability_state" invisible="1"/>
+                    <field name="products_availability" optional="show"
+                        decoration-danger="products_availability_state == 'late'"
+                        decoration-warning="products_availability_state == 'expected'"/>
                     <field name="date" invisible="1"/>
                     <field name="scheduled_date" optional="show" decoration-danger="scheduled_date &lt; current_date and state not in ('done', 'cancel')"/>
                     <field name="origin" optional="show"/>
