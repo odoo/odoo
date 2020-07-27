@@ -371,6 +371,8 @@ class PosConfig(models.Model):
     @api.onchange('iface_print_via_proxy')
     def _onchange_iface_print_via_proxy(self):
         self.iface_print_auto = self.iface_print_via_proxy
+        if not self.iface_print_via_proxy:
+            self.iface_cashdrawer = False
 
     @api.onchange('module_account')
     def _onchange_module_account(self):
