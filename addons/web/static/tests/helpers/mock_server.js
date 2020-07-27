@@ -175,6 +175,43 @@ var MockServer = Class.extend({
         }
     },
     /**
+     * Converts an Object representing a record to actual return Object
+     * of the python `onchange` method.
+     * Specifically, it applies `name_get` on many2one's
+     * and transforms raw id list in orm command lists for x2many's.
+     * For x2m fields that adds or update records (ORM commands 0 and 1),
+     * it is recursive.
+     *
+     * @private
+     * @param {string} model: the model's name
+     * @param {Object} values: an object representing a record
+     * @returns {Object}
+     */
+    _convertToOnChange(model, values) {
+        Object.entries(values).forEach(([fname, val]) => {
+            const field = this.data[model].fields[fname];
+            if (field.type === 'many2one' && typeof val === 'number') {
+                // implicit name_get
+                const m2oRecord = this.data[field.relation].records.find(r => r.id === val);
+                values[fname] = [val, m2oRecord.display_name];
+            } else if (field.type === 'one2many' || field.type === 'many2many') {
+                // TESTS ONLY
+                // one2many_ids = [1,2,3] is a simpler way to express it than orm commands
+                const isCommandList = val.length && Array.isArray(val[0]);
+                if (!isCommandList) {
+                    values[fname] = [[6, false, val]];
+                } else {
+                    val.forEach(cmd => {
+                        if (cmd[0] === 0 || cmd[0] === 1) {
+                            cmd[2] = this._convertToOnChange(field.relation, cmd[2]);
+                        }
+                    });
+                }
+            }
+        });
+        return values;
+    },
+    /**
      * helper to evaluate a domain for given field values.
      * Currently, this is only a wrapper of the Domain.compute function in
      * "web.Domain".
@@ -1224,7 +1261,7 @@ var MockServer = Class.extend({
             }
         });
 
-        return {value: Object.assign({}, defaults || {}, result) };
+        return {value: this._convertToOnChange(model, Object.assign({}, defaults || {}, result)) };
     },
     /**
      * Simulate a 'read' operation.

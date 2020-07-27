@@ -751,7 +751,7 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('can make a default_record with default relational values', async function (assert) {
-            assert.expect(7);
+            assert.expect(6);
 
             this.data.partner.fields.product_id.default = 37;
             this.data.partner.fields.product_ids.default = [
@@ -800,8 +800,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.deepEqual(record.data.category.res_ids, [12, 14],
                 "m2m default should be [12, 14]");
 
-            assert.verifySteps(['onchange', 'name_get'],
-                "there should be onchange and name_get");
+            assert.verifySteps(['onchange'], "there should be 1 onchange that has done name_get under the hood");
 
             model.destroy();
         });
@@ -867,7 +866,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 "should have fetched correct name");
             assert.strictEqual(record.data.other_product_id.data.display_name, "xpad",
                 "should have fetched correct name");
-            assert.strictEqual(rpcCount, 2, "should have done 2 rpcs: default_get and 1 name_get");
+            assert.strictEqual(rpcCount, 1, "should have done 1 rpcs: onchange");
             model.destroy();
         });
 
@@ -1397,7 +1396,7 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('default_get: fetch many2one with default (empty & not) inside x2manys', async function (assert) {
-            assert.expect(4);
+            assert.expect(3);
 
             this.data.partner.fields.o2m = {
                 string: "O2M", type: 'one2many', relation: 'partner', default: [
@@ -1411,12 +1410,6 @@ odoo.define('web.basic_model_tests', function (require) {
             var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
-                mockRPC: function (route, args) {
-                    if (args.method === 'name_get' && args.model === 'partner_type') {
-                        assert.deepEqual(args.args, [[12]], "should name_get on category 12");
-                    }
-                    return this._super(route, args);
-                },
             });
 
             var params = {
