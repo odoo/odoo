@@ -528,6 +528,11 @@ class DurationConverter(models.AbstractModel):
                 description=_("Formatting: long, short, narrow (not used for digital)"),
                 default_value='long'
             ),
+            add_direction=dict(
+                type="boolean",
+                string=_("Add direction"),
+                description=_("Add directional information (not used for digital)")
+            ),
         )
         return options
 
@@ -566,7 +571,12 @@ class DurationConverter(models.AbstractModel):
             if not v:
                 continue
             section = babel.dates.format_timedelta(
-                v*secs_per_unit, format=options.get('format', 'long'), threshold=1, locale=locale)
+                v*secs_per_unit,
+                granularity=round_to,
+                add_direction=options.get('add_direction'),
+                format=options.get('format', 'long'),
+                threshold=1,
+                locale=locale)
             if section:
                 sections.append(section)
 
