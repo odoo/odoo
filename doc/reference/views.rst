@@ -871,10 +871,10 @@ Generic structure
 .. code-block:: xml
 
   <form>
+    <header>
+      <field name="state" widget="statusbar"/>
+    </header>
     <sheet>
-      <header>
-        <field name="state"  widget="statusbar"/>
-      </header>
       <div class="oe_button_box">
         <BUTTONS/>
       </div>
