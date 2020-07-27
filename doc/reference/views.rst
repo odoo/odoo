@@ -411,37 +411,6 @@ calendar view are:
     you can add a filter and save the result in the defined model, the
     filter is added in the sidebar
 
-``templates``
-  defines the :ref:`reference/qweb` template ``calendar-box``. Cards definition
-  may be split into multiple templates for clarity which will be rendered once
-  for each record.
-
-  The kanban view uses mostly-standard :ref:`javascript qweb
-  <reference/qweb/javascript>` and provides the following context variables:
-
-  ``widget``
-    the current :js:class:`KanbanRecord`, can be used to fetch some
-    meta-information. These methods are also available directly in the
-    template context and don't need to be accessed via ``widget``
-    ``getColor`` to convert in a color integer
-    ``getAvatars`` to convert in an avatar image
-    ``displayFields`` list of not invisible fields
-  ``record``
-    an object with all the requested fields as its attributes. Each field has
-    two attributes ``value`` and ``raw_value``
-  ``event``
-    the calendar event object
-  ``format``
-    format method to convert values into a readable string with the user
-    parameters
-  ``fields``
-    definition of all model fields
-    parameters
-  ``user_context``
-    self-explanatory
-  ``read_only_mode``
-    self-explanatory
-
 .. _reference/views/cohort:
 
 Cohort
@@ -908,10 +877,10 @@ Generic structure
 .. code-block:: xml
 
   <form>
+    <header>
+      <field name="state" widget="statusbar"/>
+    </header>
     <sheet>
-      <header>
-        <field name="state"  widget="statusbar"/>
-      </header>
       <div class="oe_button_box">
         <BUTTONS/>
       </div>
@@ -1297,8 +1266,6 @@ Possible children of the view element are:
 
        * kanban-specific CSS
        * kanban structures/widgets (vignette, details, ...)
-
-If you need to extend the Kanban view, see :js:class::`the JS API <KanbanRecord>`.
 
 .. _reference/views/list:
 
