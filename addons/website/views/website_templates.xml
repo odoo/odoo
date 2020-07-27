@@ -1035,11 +1035,22 @@ Sitemap: <t t-esc="url_root"/>sitemap.xml
             <span class="fa fa-map-marker fa-fw mt16" role="img" aria-label="Address" title="Address"/> <a t-att-href="res_company.google_map_link()" target="_BLANK"> Google Maps</a>
         </t>
     </address>
-    <t t-if="res_company.google_map_img()">
-        <a t-att-href="res_company.google_map_link()" target="_BLANK">
-           <img class="img-fluid" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
-        </a>
-    </t>
+</template>
+
+<template id="company_description_google_map" inherit_id="website.company_description" name="Google map" customize_show="True">
+    <xpath expr="//address" position="after">
+        <t t-if="res_company.google_map_img()">
+            <a t-att-href="res_company.google_map_link()" target="_BLANK">
+                <img class="img-fluid" t-att-src="res_company.google_map_img()" alt="Google Maps"/>
+            </a>
+        </t>
+        <t t-elif="editable">
+            <div class="alert alert-warning">
+                <i class="fa fa-plus-circle"/>
+                The Google map option is enabled but <a href="/web#action=website.action_website_configuration">not properly configured</a>.
+            </div>
+        </t>
+    </xpath>
 </template>
 
 <template id="website_search_box" name="Website Searchbox">
