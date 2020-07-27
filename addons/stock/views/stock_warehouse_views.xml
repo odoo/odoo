@@ -34,10 +34,8 @@
                                         <field name="reception_steps" widget='radio'/>
                                         <field name="delivery_steps" widget='radio'/>
                                     </group>
-                                    <field name="show_resupply" invisible="1"/>
-                                    <group name="group_resupply" string="Resupply" attrs="{'invisible': [('show_resupply', '!=', True)]}">
-                                        <field name="warehouse_count" invisible="1"/>
-                                        <field name="resupply_wh_ids" attrs="{'invisible': [('show_resupply', '!=', True)]}" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
+                                    <group name="group_resupply" string="Resupply" groups="stock.group_stock_multi_warehouses">
+                                        <field name="resupply_wh_ids" domain="[('id', '!=', id)]" widget='many2many_checkboxes'/>
                                     </group>
                                 </group>
                             </page>
