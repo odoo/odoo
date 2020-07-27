@@ -5524,9 +5524,11 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
 
-        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
-        assert.hasClass(kanban.$('.o_kanban_group:last'), 'o_kanban_group_show_muted');
-        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "1");
+        // we are re-rendering the column on progress bar click, so it will not add animated class,
+        // if the column does not have any records in it.
+        assert.doesNotHaveClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
+        assert.doesNotHaveClass(kanban.$('.o_kanban_group:last'), 'o_kanban_group_show_muted');
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "0");
 
         kanban.destroy();
     });
@@ -5559,8 +5561,8 @@ QUnit.module('Views', {
 
         await testUtils.dom.click(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'));
 
-        assert.hasClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
-        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "15");
+        assert.doesNotHaveClass(kanban.$('.o_kanban_counter_progress:last .progress-bar[data-filter="__false"]'), 'progress-bar-animated');
+        assert.strictEqual(kanban.$('.o_kanban_counter:last .o_kanban_counter_side').text(), "0");
 
         kanban.destroy();
     });

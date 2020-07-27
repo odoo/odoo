@@ -397,7 +397,6 @@ var KanbanController = BasicController.extend({
         const dbID = await this.model.loadActiveFilter(columnID, filter);
         const data = this.model.get(dbID);
         this.renderer.updateColumn(dbID, data);
-        ev.data.callback();
     },
     /**
      * @private
