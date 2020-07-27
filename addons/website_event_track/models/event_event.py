@@ -68,7 +68,7 @@ class Event(models.Model):
             elif event.website_track_proposal and not event.website_track:
                 event.website_track = True
 
-    @api.depends('event_type_id', 'website_track')
+    @api.depends('event_type_id', 'event_type_id.website_track_proposal', 'website_track')
     def _compute_website_track_proposal(self):
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
