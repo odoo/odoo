@@ -1843,19 +1843,12 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('list in form: default_get with x2many create', async function (assert) {
-            assert.expect(5);
+            assert.expect(4);
 
             this.data.partner.fields.timmy.default = [[0, 0, { display_name: 'brandon is the new timmy', name: 'brandon' }]];
             var displayName = 'brandon is the new timmy';
             this.data.partner.onchanges.timmy = function (obj) {
-                assert.deepEqual(
-                    obj.timmy,
-                    [
-                        [6, false, []],
-                        [0, obj.timmy[1][1], { display_name: displayName, name: 'brandon' }]
-                    ],
-                    "should have properly created the x2many command list");
-                obj.int_field = obj.timmy.length;
+                obj.int_field = obj.timmy.length + 100;
             };
 
             var form = await createView({
@@ -1875,7 +1868,7 @@ QUnit.module('fields', {}, function () {
                 mockRPC: function (route, args) {
                     if (args.method === 'create') {
                         assert.deepEqual(args.args[0], {
-                            int_field: 2,
+                            int_field: 101,
                             timmy: [
                                 [6, false, []],
                                 [0, args.args[0].timmy[1][1], { display_name: displayName, name: 'brandon' }],
@@ -1888,7 +1881,7 @@ QUnit.module('fields', {}, function () {
 
             assert.strictEqual($('td.o_data_cell:first').text(), 'brandon is the new timmy',
                 "should have created the new record in the m2m with the correct name");
-            assert.strictEqual($('input.o_field_integer').val(), '2',
+            assert.strictEqual($('input.o_field_integer').val(), '101',
                 "should have called and executed the onchange properly");
 
             // edit the subrecord and save

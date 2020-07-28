@@ -1802,8 +1802,12 @@ var BasicModel = AbstractModel.extend({
                             }
                             rec = self._makeDataPoint(params);
                             // this is necessary so the fields are initialized
+                            rec._changes = {};
                             rec.getFieldNames().forEach(fieldName => {
                                 rec.data[fieldName] = null;
+                                if (!(fieldName in command[2]) {
+                                    // inject rawChanges here wssomehaoxw
+                                }
                             });
                             list._cache[rec.res_id] = rec.id;
                         }
@@ -4399,6 +4403,7 @@ var BasicModel = AbstractModel.extend({
         var viewType = view ? view.type : fieldInfo.viewType;
 
         // remove default_* keys from parent context to avoid issue of same field name in x2m
+        // LPE fixme: copy this in applyOnChange
         var parentContext = _.omit(record.context, function (val, key) {
             return _.str.startsWith(key, 'default_');
         });
