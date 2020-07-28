@@ -394,6 +394,7 @@ class PosSession(models.Model):
         sales = defaultdict(amounts)
         taxes = defaultdict(tax_amounts)
         stock_expense = defaultdict(amounts)
+        stock_return = defaultdict(amounts)
         stock_output = defaultdict(amounts)
         rounding_difference = {'amount': 0.0, 'amount_converted': 0.0}
         # Track the receivable lines of the invoiced orders' account moves for reconciliation
@@ -469,7 +470,10 @@ class PosSession(models.Model):
                         out_key = move.product_id.categ_id.property_stock_account_output_categ_id
                         amount = -sum(move.sudo().stock_valuation_layer_ids.mapped('value'))
                         stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
-                        stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
+                        if move.location_id.usage == 'customer':
+                            stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
+                        else:
+                            stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date, force_company_currency=True)
 
                 if self.config_id.cash_rounding:
                     diff = order.amount_paid - order.amount_total
@@ -491,7 +495,10 @@ class PosSession(models.Model):
                     out_key = move.product_id.categ_id.property_stock_account_output_categ_id
                     amount = -sum(move.stock_valuation_layer_ids.mapped('value'))
                     stock_expense[exp_key] = self._update_amounts(stock_expense[exp_key], {'amount': amount}, move.picking_id.date)
-                    stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
+                    if move.location_id.usage == 'customer':
+                        stock_return[out_key] = self._update_amounts(stock_return[out_key], {'amount': amount}, move.picking_id.date)
+                    else:
+                        stock_output[out_key] = self._update_amounts(stock_output[out_key], {'amount': amount}, move.picking_id.date)
         MoveLine = self.env['account.move.line'].with_context(check_move_validity=False)
 
         data.update({
@@ -503,6 +510,7 @@ class PosSession(models.Model):
             'split_receivables_cash':              split_receivables_cash,
             'combine_receivables_cash':            combine_receivables_cash,
             'invoice_receivables':                 invoice_receivables,
+            'stock_return':                        stock_return,
             'stock_output':                        stock_output,
             'order_account_move_receivable_lines': order_account_move_receivable_lines,
             'rounding_difference':                 rounding_difference,
@@ -620,11 +628,14 @@ class PosSession(models.Model):
         # they are reconciled with output lines in the stock.move's account.move.line
         MoveLine = data.get('MoveLine')
         stock_output = data.get('stock_output')
+        stock_return = data.get('stock_return')
 
         stock_output_vals = defaultdict(list)
         stock_output_lines = {}
-        for output_account, amounts in stock_output.items():
-            stock_output_vals[output_account].append(self._get_stock_output_vals(output_account, amounts['amount'], amounts['amount_converted']))
+        for stock_moves in [stock_output, stock_return]:
+            for account, amounts in stock_moves.items():
+                stock_output_vals[account].append(self._get_stock_output_vals(account, amounts['amount'], amounts['amount_converted']))
+
         for output_account, vals in stock_output_vals.items():
             stock_output_lines[output_account] = MoveLine.create(vals)
 
