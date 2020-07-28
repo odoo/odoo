@@ -1,5 +1,6 @@
 # -*- coding: utf-8 -*-
 import ast
+import sys
 import logging
 import os.path
 import re
@@ -383,6 +384,14 @@ class QWeb(object):
         """ Load a given template. """
         return template
 
+    @staticmethod
+    def constant(constant):
+        if sys.version_info >= (3, 8):
+            return ast.Constant(constant)
+        else:
+            return ast.Name(id=str(constant), ctx=ast.Load())
+
+
     # public method for template dynamic values
 
     def format(self, value, formating, *args, **kwargs):
@@ -600,12 +609,12 @@ class QWeb(object):
                         ast.Compare(
                             left=ast.Name(id='content', ctx=ast.Load()),
                             ops=[ast.IsNot()],
-                            comparators=[ast.Name(id='None', ctx=ast.Load())]
+                            comparators=[self.constant(None)]
                         ),
                         ast.Compare(
                             left=ast.Name(id='content', ctx=ast.Load()),
                             ops=[ast.IsNot()],
-                            comparators=[ast.Name(id='False', ctx=ast.Load())]
+                            comparators=[self.constant(False)]
                         )
                     ]
                 ),
@@ -1233,7 +1242,7 @@ class QWeb(object):
                         keywords=[], starargs=None, kwargs=None
                     ),
                     self._compile_expr0(expression),
-                    ast.Name(id='None', ctx=ast.Load()),
+                    self.constant(None),
                 ], ctx=ast.Load())
             )
         ]
@@ -1550,7 +1559,7 @@ class QWeb(object):
                     if isinstance(key, str):
                         keys.append(ast.Str(s=key))
                     elif key is None:
-                        keys.append(ast.Name(id='None', ctx=ast.Load()))
+                        keys.append(self.constant(None))
                     values.append(ast.Str(s=value))
 
                 # {'nsmap': {None: 'xmlns def'}}
