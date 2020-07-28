@@ -14,7 +14,7 @@ class TestQweb(TransactionCaseWithUserDemo):
     def _load(self, module, *args):
         tools.convert_file(self.cr, 'website',
                            get_module_resource(module, *args),
-                           {}, 'init', False, 'test', self.registry._assertion_report)
+                           {}, 'init', False, 'test')
 
     def test_qweb_cdn(self):
         self._load('website', 'tests', 'template_qweb_test.xml')
