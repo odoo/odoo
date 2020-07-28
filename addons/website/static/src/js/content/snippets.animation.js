@@ -867,7 +867,7 @@ registry.socialShare = publicWidget.Widget.extend({
         var socialNetworks = {
             'facebook': 'https://www.facebook.com/sharer/sharer.php?u=' + url,
             'twitter': 'https://twitter.com/intent/tweet?original_referer=' + url + '&text=' + encodeURIComponent(title + hashtags + ' - ') + url,
-            'linkedin': 'https://www.linkedin.com/shareArticle?mini=true&url=' + url + '&title=' + encodeURIComponent(title),
+            'linkedin': 'https://www.linkedin.com/sharing/share-offsite/?url=' + url,
         };
         if (!_.contains(_.keys(socialNetworks), social)) {
             return;
