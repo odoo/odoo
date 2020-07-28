@@ -224,9 +224,7 @@ QUnit.module('relational_fields', {
         assert.strictEqual(form.$('.o_field_widget[name=trululu] input').val(), 'first record');
         assert.strictEqual(form.$('.o_field_widget[name=product_id] input').val(), 'xphone');
         assert.verifySteps([
-            'default_get on partner',
             'onchange on partner',
-            'name_get on product',
         ]);
 
         form.destroy();
@@ -530,9 +528,9 @@ QUnit.module('relational_fields', {
         assert.verifySteps([
             'read partner',
             'read turtle',
-            'default_get turtle',
+            'onchange turtle',
             'onchange partner',
-            'default_get turtle',
+            'onchange turtle',
             'onchange partner',
         ]);
         form.destroy();
