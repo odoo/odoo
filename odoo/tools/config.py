@@ -1,10 +1,15 @@
 #odoo.loggers.handlers. -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 import warnings
-warnings.warn(
-    "The configuration have been moved from odoo.tools.config to "
-    "odoo.config. Please import the later.",
-    DeprecationWarning, stacklevel=2,
-)
+import odoo
+from .func import lazy
 
-from odoo.config import config
+
+@lazy
+def config():
+    warnings.warn(
+        "The configuration have been moved from odoo.tools.config to "
+        "odoo.config. Please import the later.",
+        DeprecationWarning, stacklevel=2,
+    )
+    return odoo.config

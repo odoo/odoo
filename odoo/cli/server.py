@@ -56,8 +56,8 @@ def report_configuration():
     This function assumes the configuration has been initialized.
     """
     _logger.info("Odoo version %s", __version__)
-    if os.path.isfile(config.rcfile):
-        _logger.info("Using configuration file at " + config.rcfile)
+    if os.path.isfile(config['config']):
+        _logger.info("Using configuration file at " + config['config'])
     _logger.info('addons paths: %s', odoo.addons.__path__)
     if config.get('upgrade_path'):
         _logger.info('upgrade path: %s', config['upgrade_path'])

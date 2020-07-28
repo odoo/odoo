@@ -1231,7 +1231,7 @@ def start(preload=None, stop=False):
     load_server_wide_modules()
     odoo.service.wsgi_server._patch_xmlrpc_marshaller()
 
-    if odoo.evented:
+    if config.evented:
         server = GeventServer(odoo.service.wsgi_server.application)
     elif config['workers']:
         if config['test_enable'] or config['test_file']:

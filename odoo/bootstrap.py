@@ -85,7 +85,7 @@ def _ensure_version():
     """ Ensure a minimal viable python interpreter is used. """
     import sys
     if sys.version_info < (3, 7):
-        raise OSError("Outdated python version detected, Odoo requires Python >= 3.6 to run.")
+        raise OSError("Outdated python version detected %s.%s, Odoo requires Python >= 3.7 to run." % sys.version_info[:2])
 
 
 def _enable_warnings():

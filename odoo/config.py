@@ -15,6 +15,7 @@ import pathlib
 import tempfile
 import textwrap
 import warnings
+import sys
 from collections.abc import Iterable
 from getpass import getuser
 from typing import Any, Callable, Optional, List
@@ -33,10 +34,15 @@ sourcemap = {       # all configuration sources
     'environ': {},  # os.getenv
     'file': {},     # configparser [common] section
     'default': {},  # source-hardcoded
+    'readonly': {}, # non-configurable options
 }
 
 DELETED = object()  # placed in the user-config when an option is
                     # removed, used to raise a KeyError uppon access.
+
+
+def die(message):
+    raise SystemExit(f'Error: {message}\nCould not load configuration. Aborting.')
 
 
 class DeprecatedAlias:
@@ -92,7 +98,6 @@ class CommaSeparated(collections.UserList):
         return lambda comma_separated: ",".join(map(rcast, comma_separated))
 
 
-
 def strtobool(rawopt: str):
     """
     Convert a bool or a case-insensitive string representation of truth
@@ -112,7 +117,7 @@ def choices(selection: list, cast: callable=str):
     def assert_in(rawopt):
         opt = cast(rawopt)
         if opt not in choices:
-            raise SystemExit(f"{opt}: not a valid option, pick from %s" % ", ".join(choices))
+            die(f"{opt}, not a valid option, pick from %s" % ", ".join(choices))
         return opt
     return assert_in
 
@@ -143,11 +148,11 @@ def _check_file_access(rawopt: str, mode: int):
     if path.is_file() and not os.access(path, mode):
         pairs = [(os.R_OK, 'read'), (os.W_OK, 'write'), (os.X_OK, 'exec')]
         missing = ", ".join(perm for bit, perm in pairs if bit & mode)
-        raise SystemExit(f'{path}: requires {missing} permissions')
+        die(f'{path}, file requires {missing} permissions')
     if mode == os.W_OK and not os.access(path.parent, os.W_OK):
-        raise SystemExit(f'{path.parent}: requires write permission')
+        die(f'{path.parent}, file requires write permission')
     if not path.is_file():
-        raise SystemExit(f'{path}: not found')
+        die(f'{path}, no such file')
     return path
 
 
@@ -158,14 +163,13 @@ def _check_dir_access(rawopt, mode):
     `mode` is an operating-system mode bitfield. Can be os.F_OK to test
     existence, or the inclusive-OR of os.R_OK, os.W_OK, and os.X_OK.
     """
-    mode = modes.get(mode, mode)
     path = fullpath(rawopt)
     if not path.is_dir():
-        raise SystemExit(f"{path}: no such directory")
+        die(f"{path}, no such directory")
     if not os.access(path, mode):
         pairs = [(os.R_OK, 'read'), (os.W_OK, 'write'), (os.X_OK, 'exec')]
         missing = "".join(perm for bit, perm in pairs if bit & mode)
-        raise SystemExit(f"{path}: requires {missing} permission(s)")
+        die(f"{path}, directory requires {missing} permission(s)")
     return path
 
 
@@ -199,7 +203,7 @@ def addons_path(rawopt):
     if not next(path.glob('*/__manifest__.py'), None):
         olds = path.glob('*/__openerp__.py')
         if not olds:
-            raise SystemExit(f'{rawopt}: not a valid addons path')
+            die(f'{rawopt}, not a valid addons path')
         warnings.warn(
             'Using "__openerp__.py" as module manifest is deprecated, '
             'please renome them as "__manifest__.py". Affected '
@@ -213,8 +217,8 @@ def upgrade_path(rawopt):
     path = _check_dir_access(rawopt, os.R_OK | os.X_OK)
     if not any(path.glob(f'*/*/{x}-*.py') for x in ["pre", "post", "end"]):
         if path.joinpath('migrations').is_dir():  # for colleagues
-            raise SystemExit(f"{rawopt}: is not a valid upgrade path, looks like you forgot the migrations folder")
-        raise SystemExit(f"{rawopt}: is not a valid upgrade path")
+            die(f"{rawopt}, is not a valid upgrade path, looks like you forgot the migrations folder")
+        die(f"{rawopt}, is not a valid upgrade path")
     return path
 
 
@@ -248,7 +252,7 @@ def ensure_data_dir(datadir):
     if not ad.exists():
         ad.mkdir(mode=0o700)
     elif not os.access(ad, os.R_OK | os.W_OK | os.X_OK):
-        raise SystemExit(f"{ad}: requires rwx access")
+        die(f"{ad}, requires rwx access")
     adr = ad.joinpath(release.series)
     if not adr.exists():
         # try to make +rx placeholder dir, will need manual +w to activate it
@@ -261,13 +265,13 @@ def ensure_data_dir(datadir):
     if not sd.exists():
         sd.mkdir(mode=0o700)
     elif not os.access(sd, os.R_OK | os.W_OK | os.X_OK):
-        raise SystemExit(f"{sd}: requires rwx access")
+        die(f"{sd}, requires rwx access")
 
     fd = datadir.joinpath('filestore')
     if not fd.exists():
         fd.mkdir(mode=0o700)
     elif not os.access(fd, os.R_OK | os.W_OK | os.X_OK):
-        raise SystemExit(f"{fd}: requires rwx access")
+        die(f"{fd}, requires rwx access")
 
 
 def pg_utils_path(rawopt):
@@ -287,7 +291,7 @@ def i18n_input_file(rawopt):
     path = _check_file_access(rawopt, 'r')
     formats = {'.csv', '.po'}
     if not path.suffixes or path.suffixes[-1].lower() not in formats:
-        raise SystemExit(f"{rawopt}: is not a valid translation file, allowed formats are %s" % ", ".join(formats))
+        die(f"{rawopt}, is not a valid translation file, allowed formats are %s" % ", ".join(formats))
     return path
 
 
@@ -296,7 +300,7 @@ def i18n_output_file(rawopt):
     path = _check_file_access(rawopt, 'w')
     formats = {'.csv', '.po', '.tgz'}
     if not path.suffixes or path.suffixes[-1].lower() not in formats:
-        raise SystemExit(f"{rawopt}: is not a valid translation file, allowed formats are %s" % ", ".join(formats))
+        die(f"{rawopt}, is not a valid translation file, allowed formats are %s" % ", ".join(formats))
     return path
 
 
@@ -309,35 +313,39 @@ def i18n_output_file(rawopt):
 
 @dataclasses.dataclass(frozen=True)
 class Option:
-    name: str
-    shortopt: Optional[str] = None
-    longopt: Optional[str] = None
-    action: str = "store"
-    type : Callable[[str], Any] = str
-    rtype : Callable[[Any], str] = str
-    default: Any = None
-    envvar: Optional[str] = None
-    metavar: Optional[str] = None
-    const: Any = None
-    nargs: Optional[int] = None
-    help: Optional[str] = None
+    name: str                            # python-side option name
+    type : Callable[[str], Any]          # source -> python converting function
+    rtype : Callable[[Any], str] = str   # python -> config file converting function
+
+    default: Any = None                  # default, last-resort, option value
+    file: bool = True                    # should the option be read from/save to the config file
+    cli: bool = True                     # should the option be read from the cli
+    envvar: Optional[str] = None         # environment variable to load the option from
+
+    shortopt: Optional[str] = None       # argparse's -o
+    longopt: Optional[str] = None        # argparse's --option
+    action: str = "store"                # argparse's action
+    metavar: Optional[str] = None        # argparse's metavar
+    const: Any = None                    # argparse's const
+    nargs: Optional[int] = None          # argparse's nargs
+    help: Optional[str] = None           # argparse's help
 
     def __post_init__(self):
         optionmap.setdefault(self.name, self)
 
 Option('addons_path', longopt="--addons-path", type=CommaSeparated.parser(addons_path), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated([pathlib.Path(__file__).parent.joinpath('addons').resolve()]), envvar=None, metavar="DIRPATH", help="specify additional addons paths")
-Option('upgrade_path', longopt="--upgrade-path", type=CommaSeparated.parser(upgrade_path), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated([pathlib.Path(__file__).parent.joinpath('addons','base','maintenance','migrations').resolve()]), envvar=None, metavar="DIRPATH", help="specify an additional upgrade path.")
+Option('upgrade_path', longopt="--upgrade-path", type=CommaSeparated.parser(upgrade_path), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, metavar="DIRPATH", help="specify an additional upgrade path.")
 Option('data_dir', shortopt="-D", longopt="--data-dir", type=data_dir, rtype=str, action='store', default=get_default_datadir(), envvar=None, metavar=None, help="Directory where to store Odoo data")
 Option('log_level', longopt="--log-level", type=choices(loglevelmap.keys()), rtype=str, action='store', default='info', envvar=None, metavar="LEVEL", help="specify the level of the logging")
 Option('logfile', longopt="--logfile", type=checkfile('w'), rtype=str, action='store', default=None, envvar=None, metavar="FILEPATH", help="file where the server log will be stored")
-Option('syslog', longopt="--syslog", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Send the log to the syslog server")
+Option('syslog', longopt="--syslog", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Send the log to the syslog server")
 Option('log_handler', longopt="--log-handler", type=str, rtype=str, action='append', default=[':INFO'], envvar=None, metavar=None, help='setup a handler at LEVEL for a given PREFIX. An empty PREFIX indicates the root logger. This option can be repeated. Example: "odoo.orm:DEBUG" or "werkzeug:CRITICAL" (default: ":INFO")')
-Option('config', shortopt="-c", longopt="--config", type=checkfile('r'), rtype=str, action='store', default=get_odoorc(), envvar=None, metavar="FILEPATH", help="specify alternate config file name")
-Option('save', shortopt="-s", longopt="--save", type=checkfile('w'), rtype=str, action='store', nargs='?', default=None, const=get_odoorc(), envvar=None, metavar="FILEPATH", help="save parsed config in PATH")
+Option('config', shortopt="-c", longopt="--config", type=checkfile('r'), rtype=str, action='store', default=get_odoorc(), envvar=None, metavar="FILEPATH", file=False, help="specify alternate config file name")
+Option('save', shortopt="-s", longopt="--save", type=checkfile('w'), rtype=str, action='store', nargs='?', default=None, const=get_odoorc(), envvar=None, file=False, metavar="FILEPATH", help="save parsed config in PATH")
 
-Option('init', shortopt="-i", longopt="--init", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, metavar=None, help='install one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d')
-Option('update', shortopt="-u", longopt="--update", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, metavar=None, help='update one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d.')
-Option('without_demo', longopt="--without-demo", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help='disable loading demo data for modules to be installed (comma-separated or repeated option, use "all" for all modules), requires -d and -i.')
+Option('init', shortopt="-i", longopt="--init", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, file=False, metavar=None, help='install one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d')
+Option('update', shortopt="-u", longopt="--update", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, file=False, metavar=None, help='update one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d.')
+Option('without_demo', longopt="--without-demo", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help='disable loading demo data for modules to be installed (comma-separated or repeated option, use "all" for all modules), requires -d and -i.')
 Option('server_wide_modules', longopt="--load", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(['base','web']), envvar=None, metavar="MODULE", help="framework modules to load once for all databases (comma-separated or repeated option)")
 Option('pidfile', longopt="--pidfile", type=checkfile('w'), rtype=str, action='store', default=None, envvar=None, metavar="FILEPATH", help="file where the server pid will be stored")
 
@@ -345,7 +353,7 @@ Option('http_interface', longopt="--http-interface", type=str, rtype=str, action
 Option('http_port', shortopt="-p", longopt="--http-port", type=int, rtype=str, action='store', default=8069, envvar=None, metavar="PORT", help="Listen port for the main HTTP service")
 Option('longpolling_port', longopt="--longpolling-port", type=int, rtype=str, action='store', default=8072, envvar=None, metavar="PORT", help="Listen port for the longpolling HTTP service")
 Option('http_enable', longopt="--no-http", type=str, rtype=str, action='store_false', default=None, envvar=None, metavar=None, help="Disable the HTTP and Longpolling services entirely")
-Option('proxy_mode', longopt="--proxy-mode", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Activate reverse proxy WSGI wrappers (headers rewriting) Only enable this when running behind a trusted web proxy!")
+Option('proxy_mode', longopt="--proxy-mode", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Activate reverse proxy WSGI wrappers (headers rewriting) Only enable this when running behind a trusted web proxy!")
 
 Option('max_cron_threads', longopt="--max-cron-threads", type=int, rtype=str, action='store', default=2, envvar=None, metavar=None, help="Maximum number of threads processing concurrently cron jobs.")
 Option('limit_time_real_cron', longopt="--limit-time-real-cron", type=int, rtype=str, action='store', default=DeprecatedAlias('limit_time_real'), envvar=None, metavar=None, help="Maximum allowed Real time per cron job. (default: --limit-time-real). Set to 0 for no limit.")
@@ -353,7 +361,7 @@ Option('limit_time_real_cron', longopt="--limit-time-real-cron", type=int, rtype
 Option('dbfilter', longopt="--db-filter", type=str, rtype=str, action='store', default='', envvar=None, metavar="REGEXP", help="Regular expressions for filtering available databases for Web UI. The expression can use %%d (domain) and %%h (host) placeholders.")
 
 Option('test_file', longopt="--test-file", type=checkfile('r'), rtype=str, action='store', default=None, envvar=None, metavar="FILEPATH", help="Launch a python test file.")
-Option('test_enable', longopt="--test-enable", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Enable unit tests while installing or upgrading a module.")
+Option('test_enable', longopt="--test-enable", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Enable unit tests while installing or upgrading a module.")
 Option('test_tags', longopt="--test-tags", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, metavar=None, help=textwrap.dedent("""\
     Comma-separated or repeated option list of spec to filter which tests to execute. Enable unit tests if set.
     A filter spec has the format: [-][tag][/module][:class][.method]
@@ -371,13 +379,13 @@ _loghandlers = [
     Option('log_handler', longopt="--log-web", type=str, rtype=str, action='append_const', const='odoo.http:DEBUG', default=None, envvar=None, metavar=None, help="shortcut for --log-handler=odoo.http:DEBUG"),
     Option('log_handler', longopt="--log-sql", type=str, rtype=str, action='append_const', const='odoo.sql_db:DEBUG', default=None, envvar=None, metavar=None, help="shortcut for --log-handler=odoo.sql_db:DEBUG"),
 ]
-Option('log_db', longopt="--log-db", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Enable database logs record")
+Option('log_db', longopt="--log-db", type=str, rtype=strtobool, action='store_true', default=None, envvar=None, metavar=None, help="Enable database logs record")
 Option('log_db_level', longopt="--log-db-level", type=choices(loglevelmap.keys()), rtype=str, action='store', default='warning', envvar=None, metavar="LEVEL", help="specify the level of the database logging")
 
 Option('email_from', longopt="--email-from", type=str, rtype=str, action='store', default=None, envvar=None, metavar="EMAIL", help="specify the SMTP email address for sending email")
 Option('smtp_server', longopt="--smtp", type=str, rtype=str, action='store', default='localhost', envvar=None, metavar="HOST", help="specify the SMTP server for sending email")
 Option('smtp_port', longopt="--smtp-port", type=int, rtype=str, action='store', default=25, envvar=None, metavar="PORT", help="specify the SMTP port")
-Option('smtp_ssl', longopt="--smtp-ssl", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="if passed, SMTP connections will be encrypted with SSL (STARTTLS)")
+Option('smtp_ssl', longopt="--smtp-ssl", type=str, rtype=strtobool, action='store_true', default=None, envvar=None, metavar=None, help="if passed, SMTP connections will be encrypted with SSL (STARTTLS)")
 Option('smtp_user', longopt="--smtp-user", type=str, rtype=str, action='store', default=None, envvar=None, metavar=None, help="specify the SMTP username for sending email")
 Option('smtp_password', longopt="--smtp-password", type=str, rtype=str, action='store', default=None, envvar=None, metavar=None, help="specify the SMTP password for sending email")
 
@@ -390,23 +398,23 @@ Option('db_sslmode', longopt="--db_sslmode", type=str, rtype=str, action='store'
 Option('pg_path', longopt="--pg_path", type=pg_utils_path, rtype=str, action='store', default=None, envvar=None, metavar="DIRPATH", help="postgres utilities directory")
 Option('db_template', longopt="--db-template", type=str, rtype=str, action='store', default='template0', envvar=None, metavar="DBNAME", help="custom database template to create a new database")
 Option('db_maxconn', longopt="--db_maxconn", type=int, rtype=str, action='store', default=64, envvar=None, metavar=None, help="specify the maximum number of physical connections to PostgreSQL")
-Option('unaccent', longopt="--unaccent", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Try to enable the unaccent extension when creating new databases")
+Option('unaccent', longopt="--unaccent", type=str, rtype=strtobool, action='store_true', default=None, envvar=None, metavar=None, help="Try to enable the unaccent extension when creating new databases")
 
 Option('transient_age_limit', longopt="--transient-age-limit", type=float, rtype=str, action='store', default=1.0, envvar=None, metavar="HOURS", help="Time in hours records created with a TransientModel (mosly wizard) are kept in the database.")
 Option('osv_memory_age_limit', longopt="--osv-memory-age-limit", type=float, rtype=str, action='store', default=DeprecatedAlias('transient_age_limit'), envvar=None, metavar=None, help=argparse.SUPPRESS)
 
-Option('load_language', longopt="--load-language", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='store', default=CommaSeparated(), envvar=None, metavar="LANGCODE", help="specifies the languages for the translations you want to be loaded")
+Option('load_language', longopt="--load-language", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='store', default=CommaSeparated(), envvar=None, file=False, metavar="LANGCODE", help="specifies the languages for the translations you want to be loaded")
 Option('language', shortopt="-l", longopt="--language", type=str, rtype=str, action='store', default=None, envvar=None, metavar="LANGCODE", help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
 Option('translate_out', longopt="--i18n-export", type=i18n_output_file, rtype=str, action='store', default=None, envvar=None, metavar="FILEPATH", help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit. The '-l' option is required")
 Option('translate_in', longopt="--i18n-import", type=i18n_input_file, rtype=str, action='store', default=None, envvar=None, metavar="FILEPATH", help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
-Option('overwrite_existing_translations', longopt="--i18n-overwrite", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="overwrites existing translation terms on updating a module or importing a CSV or a PO file. Use with -u/--update or --i18n-import.")
+Option('overwrite_existing_translations', longopt="--i18n-overwrite", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="overwrites existing translation terms on updating a module or importing a CSV or a PO file. Use with -u/--update or --i18n-import.")
 Option('translate_modules', longopt="--modules", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='store', default=CommaSeparated(), envvar=None, metavar=None, help="specify modules to export. Use in combination with --i18n-export")
 
 Option('list_db', longopt="--no-database-list", type=str, rtype=str, action='store_false', default=None, envvar=None, metavar=None, help="Disable the ability to obtain or view the list of databases. Also disable access to the database manager and selector, so be sure to set a proper --database parameter first.")
 
-Option('dev_mode', longopt="--dev", type=CommaSeparated.parser(choices(['all', 'pudb', 'wdb', 'ipdb', 'pdb', 'reload', 'qweb', 'werkzeug', 'xml'])), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, metavar=None, help="Enable developer mode")
-Option('shell_interface', longopt="--shell-interface", type=str, rtype=str, action='store', default='python', envvar=None, metavar=None, help="Specify a preferred REPL to use in shell mode")
-Option('stop_after_init', longopt="--stop-after-init", type=str, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="stop the server after its initialization")
+Option('dev_mode', longopt="--dev", type=CommaSeparated.parser(choices(['all', 'pudb', 'wdb', 'ipdb', 'pdb', 'reload', 'qweb', 'werkzeug', 'xml'])), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, file=False, metavar=None, help="Enable developer mode")
+Option('shell_interface', longopt="--shell-interface", type=str, rtype=str, action='store', default='python', envvar=None, file=False, metavar=None, help="Specify a preferred REPL to use in shell mode")
+Option('stop_after_init', longopt="--stop-after-init", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, file=False, metavar=None, help="stop the server after its initialization")
 Option('geoip_database', longopt="--geoip-db", type=checkfile('r'), rtype=str, action='store', default=pathlib.Path('/usr/share/GeoIP/GeoLite2-City.mmdb'), envvar=None, metavar=None, help="Absolute path to the GeoIP database file.")
 
 Option('workers', longopt="--workers", type=int, rtype=str, action='store', default=0, envvar=None, metavar=None, help="Specify the number of workers, 0 disable prefork mode.")
@@ -415,6 +423,12 @@ Option('limit_memory_hard', longopt="--limit-memory-hard", type=int, rtype=str, 
 Option('limit_time_cpu', longopt="--limit-time-cpu", type=int, rtype=str, action='store', default=60, envvar=None, metavar="SECONDS", help="Maximum allowed CPU time per request (default 60).")
 Option('limit_time_real', longopt="--limit-time-real", type=int, rtype=str, action='store', default=120, envvar=None, metavar="SECONDS", help="Maximum allowed Real time per request (default 120).")
 Option('limit_request', longopt="--limit-request", type=int, rtype=str, action='store', default=8192, envvar=None, metavar=None, help="Maximum number of request to be processed per worker (default 8192).")
+
+Option('admin_passwd', cli=False, type=str, default='admin')
+Option('csv_internal_sep', cli=False, type=str, default=',')
+Option('publisher_warranty_url', cli=False, file=False, type=str, default='http://services.openerp.com/publisher-warranty/')
+Option('reportgz', cli=False, type=strtobool, default=False)
+Option('root_path', cli=False, file=False, type=checkdir(os.R_OK), default=fullpath(pathlib.Path(__file__)).parent)
 
 Option('population_size', longopt="--size", type=str, rtype=str, action='store', default='small', envvar=None, metavar=None, help="Populate database with auto-generated data")
 Option('populate_models', longopt="--models", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, metavar="MODEL OR PATTERN", help="List of model (comma separated or repeated option) or pattern")
@@ -571,6 +585,13 @@ Command(
 Command(
     name='server',
     section='options',
+    options=[
+        optionmap['admin_passwd'],
+        optionmap['csv_internal_sep'],
+        optionmap['publisher_warranty_url'],
+        optionmap['reportgz'],
+        optionmap['root_path'],
+    ],
     groups=[
         groupmap['Common options'],
         groupmap['HTTP Service Configuration'],
@@ -612,6 +633,7 @@ Command(
 ########################################################################
 ########################################################################
 
+
 def load_default():
     sourcemap['default'].clear()
     sourcemap['default'].update({
@@ -633,6 +655,8 @@ def load_environ():
 def load_cli(argv):
     def add_options(parser, options):
         for option in options:
+            if not option.cli:
+                continue
             args = [opt for opt in (option.shortopt, option.longopt) if opt]
             kwargs = {
                 'dest': option.name,
@@ -682,17 +706,24 @@ def load_file():
     try:
         if configpath.stat().st_mode & 0o777 != 0o600:
             warnings.warn("Running as user 'root' is a security risk.")
-            warnings.warn(f"{configpath}: Wrong permissions, should be user-only read/write (0600)")
+            warnings.warn(f"{configpath}, Wrong permissions, should be user-only read/write (0600)")
+        p = configparser.RawConfigParser()
         p.read([configpath])
     except (FileNotFoundError, IOError):
-        warnings.warn(f"{configpath}: Could not read configuration file")
+        warnings.warn(f"{configpath}, Could not read configuration file")
         return
 
     for sec in p.sections():
         options = sourcemap['file' if sec == 'options' else 'file_' + sec]
         options.clear()
         for opt, val in p.items(sec):
-                options[opt] = opttypemap[opt](val)
+            if opt not in optionmap:
+                warnings.warn(f'{opt}, unknown option')
+            elif not optionmap[opt].file:
+                warnings.warn(f"{opt}, cannot be read from config file")
+            else:
+                options[opt] = optionmap[opt].type(val)
+
 
 
 class Config(collections.abc.MutableMapping):
@@ -708,6 +739,7 @@ class Config(collections.abc.MutableMapping):
             sourcemap["file"],
             sourcemap["environ"],
             sourcemap["default"],
+            sourcemap["readonly"],
         )
 
     def copy(self):
@@ -730,6 +762,10 @@ class Config(collections.abc.MutableMapping):
         self._sectopts.clear()
         self._sectopts.update(sourcemap[section])
 
+    def show(self):
+        for option, value in self.items():
+            print(repr(option), repr(value), sep=": ")
+
     def save(self, configpath=None):
         """
         Export the currently exposed configuration with additionnal
@@ -740,6 +776,8 @@ class Config(collections.abc.MutableMapping):
         # default section, export currently exposed configuration
         p.add_section('options')
         for opt, val in self.items():
+            if not optionmap[opt].file:
+                continue
             if type(val) != str and isinstance(val, collections.abc.Iterable):
                 p.set('options', opt, ",".join(val))
             else:
@@ -752,6 +790,8 @@ class Config(collections.abc.MutableMapping):
             section = source[5:]
             p.add_section(section)
             for opt, val in options.items():
+                if not optionmap[opt].file:
+                    continue
                 if type(val) != str and isinstance(val, collections.abc.Iterable):
                     p.set(section, opt, ",".join(val))
                 else:
