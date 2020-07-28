@@ -45,7 +45,7 @@ class AccountAnalyticLine(models.Model):
     )
     project_id = fields.Many2one('project.project', 'Project', domain=_domain_project_id)
 
-    employee_id = fields.Many2one('hr.employee', "Employee", check_company=True, domain=_domain_employee_id)
+    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
     display_timer = fields.Boolean(
