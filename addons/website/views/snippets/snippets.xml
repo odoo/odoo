@@ -675,7 +675,13 @@
                        data-customize-website-variable="'slideout_shadow'"/>
         </we-select>
         <we-checkbox string="Copyright"
+                data-name="footer_copyright_opt"
                 data-customize-website-views="website.footer_no_copyright|"
+                data-no-preview="true"
+                data-reload="/"/>
+        <we-checkbox string="Language Selector"
+                data-dependencies="!footer_copyright_opt"
+                data-customize-website-views="website.footer_no_copyright|portal.footer_language_selector"
                 data-no-preview="true"
                 data-reload="/"/>
     </div>
@@ -696,6 +702,17 @@
         <we-colorpicker string="Colors"
                         data-customize-website-color="" data-color="copyright"
                         data-with-combinations="true"/>
+        <we-select string="Language Selector" data-reload="/">
+            <we-button data-name="language_selector_none_opt"
+                       data-customize-website-views="">None</we-button>
+            <we-button data-customize-website-views="portal.footer_language_selector">Dropdown</we-button>
+            <we-button data-customize-website-views="portal.footer_language_selector, website.footer_language_selector_inline">Inline</we-button>
+        </we-select>
+        <we-select string="⌙ Label" data-dependencies="!language_selector_none_opt" data-reload="/">
+            <we-button data-customize-website-views="">Text</we-button>
+            <we-button data-customize-website-views="website.footer_language_selector_flag, website.footer_language_selector_no_text">Flag</we-button>
+            <we-button data-customize-website-views="website.footer_language_selector_flag">Flag and Text</we-button>
+        </we-select>
     </div>
 
     <!-- Anchor Name -->

@@ -591,6 +591,21 @@
     </xpath>
 </template>
 
+<!-- Language selector templates -->
+<template id="lang_flag" name="Language Flag">
+    <img class="o_lang_flag align-top" t-att-src="'/web/image/res.country/' + str(env.ref('base.' + lang_code.split('_')[1].lower()).id) + '/image'"/>
+</template>
+
+<template id="language_selector_add_language">
+    <a t-attf-class="o_add_language d-none #{dropdown and 'd-sm-block dropdown-item' or 'd-sm-inline-block list-inline-item'}"
+       groups="website.group_website_publisher"
+       t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
+        <t t-set="url_return" t-value="quote_plus(url_for('', '[lang]') + '?' + keep_query())"/>
+        <i class="fa fa-plus-circle"/>
+        Add a language...
+    </a>
+</template>
+
 <template id="language_selector" inherit_id="portal.language_selector">
     <!-- Always show the language selector on editable websites -->
     <xpath expr="//t[@t-set='language_selector_visible']" position="after">
@@ -598,14 +613,66 @@
     </xpath>
 
     <!-- Add the button to add a language -->
-    <xpath expr="//ul/li" position="after">
-        <li groups="website.group_website_publisher" class="list-inline-item">
-            <t t-set="url_return" t-value="quote_plus(url_for('', '[lang]') + '?' + keep_query())"/>
-            <a class="d-none d-sm-block" t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
-                <i class="fa fa-plus-circle"/>
-                Add a language...
-            </a>
-        </li>
+    <xpath expr="//t[@t-foreach='languages']" position="after">
+        <t t-call="website.language_selector_add_language">
+            <t t-set="dropdown" t-value="True"/>
+        </t>
+    </xpath>
+
+    <!-- Add the 'flags' possibility -->
+    <xpath expr="//button[hasclass('dropdown-toggle')]/span" position="before">
+        <t t-if="flags" t-call="website.lang_flag">
+            <t t-set="lang_code" t-value="active_lang[0]"/>
+        </t>
+    </xpath>
+    <xpath expr="//*[hasclass('js_change_lang')]/span" position="before">
+        <t t-if="flags" t-call="website.lang_flag">
+            <t t-set="lang_code" t-value="lg[0]"/>
+        </t>
+    </xpath>
+</template>
+
+<!-- Alternative extension of the language_selector to make it look like an -->
+<!-- inline list instead of a dropdown -->
+<template id="language_selector_inline" inherit_id="website.language_selector" primary="True">
+    <xpath expr="//*[hasclass('js_language_selector')]" position="attributes">
+        <attribute name="class" remove="dropup" separator=" "/>
+    </xpath>
+    <xpath expr="//*[hasclass('dropdown-toggle')]" position="replace"/>
+    <xpath expr="//*[hasclass('dropdown-menu')]" position="attributes">
+        <attribute name="class" remove="dropdown-menu" add="list-inline" separator=" "/>
+    </xpath>
+    <xpath expr="//*[hasclass('dropdown-item')]" position="attributes">
+        <attribute name="class" remove="dropdown-item" add="list-inline-item" separator=" "/>
+    </xpath>
+    <xpath expr="//t[@t-foreach='languages']" position="inside">
+        <t t-if="not lg_last and not no_text">
+            <span class="list-inline-item">|</span>
+        </t>
+    </xpath>
+    <xpath expr="//t[@t-call='website.language_selector_add_language']" position="replace">
+        <span class="o_add_language list-inline-item">|</span>
+        <t t-call="website.language_selector_add_language">
+            <t t-set="dropdown" t-value="False"/>
+        </t>
+    </xpath>
+</template>
+
+<template id="footer_language_selector_inline" name="Footer Language Selector Inline" inherit_id="portal.footer_language_selector" active="False">
+    <xpath expr="//t[@id='language_selector_call']" position="replace">
+        <t id="language_selector_call" t-call="website.language_selector_inline"/>
+    </xpath>
+</template>
+
+<template id="footer_language_selector_flag" name="Footer Language Selector Flag" inherit_id="portal.footer_language_selector" active="True">
+    <xpath expr="//t[@id='language_selector_call']" position="before">
+        <t t-set="flags" t-value="True"/>
+    </xpath>
+</template>
+
+<template id="footer_language_selector_no_text" name="Footer Language Selector No Text" inherit_id="portal.footer_language_selector" active="False">
+    <xpath expr="//t[@id='language_selector_call']" position="before">
+        <t t-set="no_text" t-value="True"/>
     </xpath>
 </template>
 
