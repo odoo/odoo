@@ -81,7 +81,7 @@ class AccountJournal(models.Model):
     suspense_account_id = fields.Many2one('account.account', string='Bank Suspense Account',
         ondelete='restrict', readonly=False, store=True,
         compute='_compute_suspense_account_id',
-        domain=[('deprecated', '=', False), ('reconcile', '=', True)],
+        domain=[('deprecated', '=', False)],
         help="Bank statements transactions will be posted on the suspense account until the final reconciliation "
              "allowing finding the right account.")
     restrict_mode_hash_table = fields.Boolean(string="Lock Posted Entries with Hash",
@@ -100,7 +100,7 @@ class AccountJournal(models.Model):
     sequence_override_regex = fields.Text(help="Technical field used to enforce complex sequence composition that the system would normally misunderstand.\n"\
                                           "This is a regex that can include all the following capture groups: prefix1, year, prefix2, month, prefix3, seq, suffix.\n"\
                                           "The prefix* groups are the separators between the year, month and the actual increasing sequence number (seq).\n"\
-                                          
+
                                           "e.g: ^(?P<prefix1>.*?)(?P<year>\d{4})(?P<prefix2>\D*?)(?P<month>\d{2})(?P<prefix3>\D+?)(?P<seq>\d+)(?P<suffix>\D*?)$")
 
     inbound_payment_method_ids = fields.Many2many('account.payment.method', 'account_journal_inbound_payment_method_rel', 'journal_id', 'inbound_payment_method',
