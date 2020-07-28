@@ -1393,6 +1393,8 @@ QUnit.module('fields', {}, function () {
         QUnit.test('list in form: create with one2many with many2one', async function (assert) {
             assert.expect(1);
 
+            this.data.partner.fields.p.default = [[0, 0, { display_name: 'new record' }]];
+
             var form = await createView({
                 View: FormView,
                 model: 'partner',
@@ -1431,6 +1433,8 @@ QUnit.module('fields', {}, function () {
             // except that the value for the many2one is explicitely set to false,
             // which is stupid, but this happens, so we have to handle it
             assert.expect(1);
+
+            this.data.partner.fields.p.default = [[0, 0, { display_name: 'new record', trululu: false }]];
 
             var form = await createView({
                 View: FormView,

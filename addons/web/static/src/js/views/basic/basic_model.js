@@ -302,7 +302,7 @@ var BasicModel = AbstractModel.extend({
      *   default value must be generated (used to complete the values dict)
      * @returns {Promise}
      */
-    applyDefaultValues: function (recordID, values, options) {
+    async applyDefaultValues(recordID, values, options) {
         options = options || {};
         var record = this.localData[recordID];
         var viewType = options.viewType || record.viewType;
@@ -312,10 +312,7 @@ var BasicModel = AbstractModel.extend({
         record._changes = record._changes || {};
 
         // ignore values for non requested fields (for instance, fields that are
-        // not in the view)
-        values = _.pick(values, fieldNames);
-
-        // fill default values for missing fields
+        // not in the view) and fill default values for missing fields
         for (var i = 0; i < fieldNames.length; i++) {
             fieldName = fieldNames[i];
             if (!(fieldName in values) && !(fieldName in record._changes)) {
@@ -331,47 +328,12 @@ var BasicModel = AbstractModel.extend({
                 }
             }
         }
-
-        // parse each value and create dataPoints for relational fields
-        var defs = [];
+        // Initialize every field in data.
+        // We just want them to be present.
         for (fieldName in values) {
             field = record.fields[fieldName];
             record.data[fieldName] = null;
-            var dp;
-            if (field.type === 'many2one' && values[fieldName]) {
-                const fValue = values[fieldName];
-                const data = {};
-                if (Array.isArray(fValue)) {
-                    data.id = fValue[0];
-                    data.display_name = fValue[1];
-                } else {
-                    data.id = fValue;
-                }
-                dp = this._makeDataPoint({
-                    context: record.context,
-                    data,
-                    modelName: field.relation,
-                    parentID: record.id,
-                });
-                record._changes[fieldName] = dp.id;
-            } else if (field.type === 'reference' && values[fieldName]) {
-                var ref = values[fieldName].split(',');
-                dp = this._makeDataPoint({
-                    context: record.context,
-                    data: {id: parseInt(ref[1])},
-                    modelName: ref[0],
-                    parentID: record.id,
-                });
-                defs.push(this._fetchNameGet(dp));
-                record._changes[fieldName] = dp.id;
-            } else if (field.type === 'one2many' || field.type === 'many2many') {
-                defs.push(this._processX2ManyCommands(record, fieldName, values[fieldName], options));
-            } else {
-                record._changes[fieldName] = this._parseServerValue(field, values[fieldName]);
-            }
         }
-
-        return Promise.all(defs);
     },
     /**
      * Onchange RPCs may return values for fields that are not in the current
@@ -1839,6 +1801,10 @@ var BasicModel = AbstractModel.extend({
                                 params.res_id = command[1];
                             }
                             rec = self._makeDataPoint(params);
+                            // this is necessary so the fields are initialized
+                            rec.getFieldNames().forEach(fieldName => {
+                                rec.data[fieldName] = null;
+                            });
                             list._cache[rec.res_id] = rec.id;
                         }
                         // Do not abandon the record if it has been created
@@ -4218,8 +4184,7 @@ var BasicModel = AbstractModel.extend({
      */
     _performOnChange: async function (record, fields, viewType) {
         var self = this;
-        const firstOnChange = !fields || !fields.length;
-        fields = fields || [];
+        const firstOnChange = !fields;
 
         // In python, The first onchange will fillup the record with default values
         // we need to send every field name known to us.
@@ -4242,7 +4207,7 @@ var BasicModel = AbstractModel.extend({
         var options = {
             full: true,
         };
-        if (fields.length === 1) {
+        if (fields && fields.length === 1) {
             fields = fields[0];
             // if only one field changed, add its context to the RPC context
             options.fieldName = fields;
@@ -4260,8 +4225,7 @@ var BasicModel = AbstractModel.extend({
             context: context,
         });
         if (firstOnChange) {
-            const fieldNames = Object.keys(record.fieldsInfo[record.viewType]);
-            await this.applyDefaultValues(record.id, result.value, { fieldNames });
+            await this.applyDefaultValues(record.id, result.value);
         }
         if (!record._changes) {
             // if the _changes key does not exist anymore, it means that
@@ -4277,9 +4241,7 @@ var BasicModel = AbstractModel.extend({
         if (result.domain) {
             record._domains = _.extend(record._domains, result.domain);
         }
-        if (!firstOnChange) {
-            await self._applyOnChange(result.value, record);
-        }
+        await self._applyOnChange(result.value, record);
         return result;
     },
     /**

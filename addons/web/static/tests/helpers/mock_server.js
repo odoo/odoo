@@ -1812,7 +1812,7 @@ var MockServer = Class.extend({
                 return Promise.resolve(this._mockNameSearch(args.model, args.args, args.kwargs));
 
             case 'onchange':
-                return Promise.resolve(this._mockOnchange(args.model, args.args));
+                return Promise.resolve(this._mockOnchange(args.model, args.args, args.kwargs));
 
             case 'read':
                 return Promise.resolve(this._mockRead(args.model, args.args, args.kwargs));
