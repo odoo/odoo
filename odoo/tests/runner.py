@@ -10,6 +10,21 @@ class OdooTestResult(unittest.result.TestResult):
     but replacing the "findCaller" in order to give the information we
     have based on the test object that is running.
     """
+    def __str__(self):
+        return f'{len(self.failures)} failed, {len(self.errors)} errors of {self.testsRun} tests'
+
+    def update(self, other):
+        """ Merges an other test result into this one, only updates contents
+
+        :type other: OdooTestResult
+        """
+        self.failures.extend(other.failures)
+        self.errors.extend(other.errors)
+        self.testsRun += other.testsRun
+        self.skipped.extend(other.skipped)
+        self.expectedFailures.extend(other.expectedFailures)
+        self.unexpectedSuccesses.extend(other.unexpectedSuccesses)
+        self.shouldStop = self.shouldStop or other.shouldStop
 
     def log(self, level, msg, *args, test=None, exc_info=None, extra=None, stack_info=False, caller_infos=None):
         """
