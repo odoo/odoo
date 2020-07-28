@@ -993,6 +993,23 @@ class test_o2m(ImporterCase):
         self.assertEqual(b.const, 8)
         self.assertEqual(b.value.mapped('value'), [25, 16])
 
+    def test_name_create_enabled_m2o_in_o2m(self):
+        result = self.import_(['value/m2o'], [[101]])
+        self.assertEqual(result['messages'], [message(
+            u"No matching record found for name '101' "
+            u"in field 'Value/M2O'", moreinfo=moreaction(
+                res_model='export.integer'))])
+        self.assertEqual(result['ids'], False)
+        context = {
+            'name_create_enabled_fields': {'value/m2o': True},
+        }
+        result = self.import_(['value/m2o'], [[101]], context=context)
+        self.assertFalse(result['messages'])
+        self.assertEqual(len(result['ids']), 1)
+        [b] = self.browse()
+        self.assertEqual(b.value.m2o.value, 101)
+
+
 class test_o2m_multiple(ImporterCase):
     model_name = 'export.one2many.multiple'
 
