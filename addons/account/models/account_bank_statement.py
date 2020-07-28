@@ -200,7 +200,7 @@ class AccountBankStatement(models.Model):
             # not have any id yet. However if we are updating an existing record, the domain date <= st.date
             # will find the record itself, so we have to add a condition in the search to ignore self.id
             if not isinstance(st.id, models.NewId):
-                domain.append(('id', '!=', st.id))
+                domain.extend(['|', '&', ('id', '<', st.id), ('date', '=', st.date), '&', ('id', '!=', st.id), ('date', '!=', st.date)])
             previous_statement = self.search(domain, limit=1)
             st.previous_statement_id = previous_statement.id
 
