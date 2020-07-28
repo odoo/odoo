@@ -451,6 +451,19 @@ var FieldHtml = basic_fields.DebouncedField.extend(TranslatableFieldMixin, {
         });
     },
     /**
+     * Allows Enter keypress in a textarea (source mode)
+     *
+     * @private
+     * @param {OdooEvent} ev
+     */
+    _onKeydown: function (ev) {
+        if (ev.which === $.ui.keyCode.ENTER && $(ev.target).is('textarea')) {
+            ev.stopPropagation();
+            return;
+        }
+        this._super.apply(this, arguments);
+    },
+    /**
      * Method called when wysiwyg triggers a change.
      *
      * @private
