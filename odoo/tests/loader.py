@@ -3,17 +3,14 @@ import inspect
 import itertools
 import logging
 import threading
-import time
 import unittest
 
-import odoo
 from .. import tools
 from .common import TagsSelector, OdooSuite
-from .runner import OdooTestRunner, OdooTestResult
+from .runner import OdooTestResult
 
-# backwards compatibility
-_logger = logging.getLogger('odoo.modules.module')
 
+_logger = logging.getLogger(__name__)
 def get_test_modules(module):
     """ Return a list of module for the addons potentially containing tests to
     feed unittest.TestLoader.loadTestsFromModule() """
@@ -53,44 +50,35 @@ def _get_tests_modules(path, module):
               if name.startswith('test_')]
     return result
 
-
-def run_unit_tests(module_name, position='at_install'):
-    """
-    :returns: ``True`` if all of ``module_name``'s tests succeeded, ``False``
-              if any of them failed, ``None`` if no tests were ran.
-    :rtype: bool | None
-    """
-    from ..modules import module
-    # avoid dependency hell
-    module.current_test = module_name
+def make_suite(module_name, position='at_install'):
     mods = get_test_modules(module_name)
-    threading.currentThread().testing = True
+    """ Creates a test suite for all the tests in the specified module,
+    filtered by the provided ``position`` and the current test tags
+
+    :param str module_name: module to load tests from
+    :param str position: "at_install" or "post_install"
+    """
     config_tags = TagsSelector(tools.config['test_tags'])
     position_tag = TagsSelector(position)
+    return OdooSuite(
+        t
+        for m in mods
+        for t in unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
+        if position_tag.check(t) and config_tags.check(t)
+    )
+
+def run_suite(suite, module_name):
+    # avoid dependency hell
+    from ..modules import module
+    module.current_test = module_name
+    threading.currentThread().testing = True
 
     results = OdooTestResult()
-    for m in mods:
-        tests = unwrap_suite(unittest.TestLoader().loadTestsFromModule(m))
-        suite = OdooSuite(t for t in tests if position_tag.check(t) and config_tags.check(t))
+    suite(results)
 
-        if suite.countTestCases():
-            t0 = time.time()
-            t0_sql = odoo.sql_db.sql_counter
-            _logger.info('%s running tests.', m.__name__)
-            result = OdooTestRunner().run(suite)
-            results.update(result)
-            log_level = logging.INFO
-            if time.time() - t0 > 5:
-                log_level = logging.RUNBOT
-            _logger.log(log_level, "%s ran %s tests in %.2fs, %s queries", m.__name__, result.testsRun, time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
-            if not result.wasSuccessful():
-                _logger.error("Module %s: %d failures, %d errors", module_name, len(result.failures), len(result.errors))
-
-    module.current_test = None
     threading.currentThread().testing = False
-
+    module.current_test = None
     return results
-
 
 def unwrap_suite(test):
     """

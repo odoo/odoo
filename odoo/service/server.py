@@ -16,6 +16,7 @@ import sys
 import threading
 import time
 import unittest
+from itertools import chain
 
 import psutil
 import werkzeug.serving
@@ -511,13 +512,16 @@ class ThreadedServer(CommonServer):
 
         if stop:
             if config['test_enable']:
+                logger = odoo.tests.runner._logger
                 with Registry.registries._lock:
                     for db, registry in Registry.registries.d.items():
                         report = registry._assertion_report
-                        log = _logger.error if not report.wasSuccessful() \
-                         else _logger.warning if not report.testsRun \
-                         else _logger.info
-                        log("%s when loading %s", report, db)
+                        log = logger.error if not report.wasSuccessful() \
+                         else logger.warning if not report.testsRun \
+                         else logger.info
+                        log("%s when loading database %r", report, db)
+                        for test, traceback in chain(report.failures, report.errors):
+                            log("%s\n%s", report.getDescription(test), traceback)
             self.stop()
             return rc
 
@@ -1178,9 +1182,8 @@ def load_test_file_py(registry, test_file):
                         unittest.TestLoader().loadTestsFromModule(mod_mod))
                     suite = OdooSuite(tests)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
-                    result = runner.OdooTestRunner().run(suite)
-                    registry._assertion_report.update(result)
-                    if not result.wasSuccessful():
+                    suite(registry._assertion_report)
+                    if not registry._assertion_report.wasSuccessful():
                         _logger.error('%s: at least one error occurred in a test', test_file)
                     return
     finally:
@@ -1215,12 +1218,15 @@ def preload_registries(dbnames):
                 module_names = (registry.updated_modules if update_module else
                                 registry._init_modules)
                 _logger.info("Starting post tests")
+                tests_before = registry._assertion_report.testsRun
                 with odoo.api.Environment.manage():
                     for module_name in module_names:
-                        result = loader.run_unit_tests(module_name, position='post_install')
+                        result = loader.run_suite(loader.make_suite(module_name, 'post_install'), module_name)
                         registry._assertion_report.update(result)
-                _logger.info("All post-tested in %.2fs, %s queries",
-                             time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
+                _logger.info("%d post-tests in %.2fs, %s queries",
+                             registry._assertion_report.testsRun - tests_before,
+                             time.time() - t0,
+                             odoo.sql_db.sql_counter - t0_sql)
 
             if not registry._assertion_report.wasSuccessful():
                 rc += 1
