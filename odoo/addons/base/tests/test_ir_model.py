@@ -142,14 +142,15 @@ class TestXMLID(TransactionCase):
 
     def test_create_xmlids(self):
         # create users and assign them xml ids
-        foo, bar = self.env['res.users'].create([
-            {'name': 'Foo', 'login': 'foo'},
-            {'name': 'Bar', 'login': 'bar'},
-        ])
-        self.env['ir.model.data']._update_xmlids([
-            dict(xml_id='test_convert.foo', record=foo, noupdate=True),
-            dict(xml_id='test_convert.bar', record=bar, noupdate=True),
-        ])
+        foo, bar = self.env['res.users']._load_records([{
+            'xml_id': 'test_convert.foo',
+            'values': {'name': 'Foo', 'login': 'foo'},
+            'noupdate': True,
+        }, {
+            'xml_id': 'test_convert.bar',
+            'values': {'name': 'Bar', 'login': 'bar'},
+            'noupdate': True,
+        }])
 
         self.assertEqual(foo, self.env.ref('test_convert.foo', raise_if_not_found=False))
         self.assertEqual(bar, self.env.ref('test_convert.bar', raise_if_not_found=False))

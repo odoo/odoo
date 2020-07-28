@@ -510,6 +510,14 @@ class ThreadedServer(CommonServer):
         rc = preload_registries(preload)
 
         if stop:
+            if config['test_enable']:
+                with Registry.registries._lock:
+                    for db, registry in Registry.registries.d.items():
+                        report = registry._assertion_report
+                        log = _logger.error if report.failures \
+                         else _logger.warning if not report.successes \
+                         else _logger.info
+                        log("%d / %d tests failed when loading %s", report.failures, report.successes + report.failures, db)
             self.stop()
             return rc
 

@@ -19,7 +19,7 @@ class MassSMSCase(SMSCase):
         a number, find an SMS sent to him, find shortened links in its body
         and call add_click to simulate a click. """
         for url in re.findall(tools.TEXT_URL_REGEX, sent_sms['body']):
-            if '/r' in url:  # shortened link, like 'http://localhost:8069/r/LBG/s/53'
+            if '/r/' in url:  # shortened link, like 'http://localhost:8069/r/LBG/s/53'
                 parsed_url = werkzeug.urls.url_parse(url)
                 path_items = parsed_url.path.split('/')
                 code, sms_sms_id = path_items[2], int(path_items[4])

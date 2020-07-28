@@ -6,7 +6,7 @@
         <field name="arch" type="xml">
             <search string="UTM Campaigns">
                 <field name="name" string="Campaigns"/>
-                <field name="tag_ids" widget="many2many_tags"/>
+                <field name="tag_ids"/>
                 <field name="user_id"/>
                 <group expand="0" string="Group By">
                     <filter string="Stage" name="group_stage_id"
