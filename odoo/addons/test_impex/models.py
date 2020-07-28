@@ -63,6 +63,7 @@ class One2ManyChild(models.Model):
 
     parent_id = fields.Many2one('export.one2many')
     str = fields.Char()
+    m2o = fields.Many2one('export.integer')
     value = fields.Integer()
 
     def name_get(self):
