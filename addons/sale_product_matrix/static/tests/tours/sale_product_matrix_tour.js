@@ -36,6 +36,38 @@ tour.register('sale_matrix_tour', {
     trigger: 'span:contains("Confirm")',
     run: 'click'
 }, {
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    extra_trigger: '.o_form_editable',
+    run: 'click'
+}, {
+    trigger: '.o_edit_product_configuration',
+    run: 'click' // edit the matrix
+}, {
+    trigger: '.o_product_variant_matrix',
+    run: function () {
+        // set all qties to 3
+        $('.o_matrix_input').val(3);
+    }
+}, {
+    trigger: 'span:contains("Confirm")',
+    run: 'click' // apply the matrix
+}, {
+    trigger: 'span:contains("Matrix (PAV11, PAV22, PAV31)\n\nPA4: PAV41")',
+    extra_trigger: '.o_form_editable',
+    run: 'click'
+}, {
+    trigger: '.o_edit_product_configuration',
+    run: 'click' // edit the matrix
+}, {
+    trigger: '.o_product_variant_matrix',
+    run: function () {
+        // reset all qties to 1
+        $('.o_matrix_input').val(1);
+    }
+}, {
+    trigger: 'span:contains("Confirm")',
+    run: 'click' // apply the matrix
+}, {
     trigger: ".o_form_editable .o_field_many2one[name='partner_id'] input",
     extra_trigger: ".o_sale_order",
     run: 'text Agrolait'
