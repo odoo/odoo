@@ -42,7 +42,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
         KeyboardNavigationMixin.start.call(this);
         // Compatibility lang change ?
         if (!this.$('.js_change_lang').length) {
-            var $links = this.$('ul.js_language_selector li a:not([data-oe-id])');
+            var $links = this.$('.js_language_selector a:not([data-oe-id])');
             var m = $(_.min($links, function (l) {
                 return $(l).attr('href').length;
             })).attr('href');
@@ -216,7 +216,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
     _onLangChangeClick: function (ev) {
         ev.preventDefault();
 
-        var $target = $(ev.target);
+        var $target = $(ev.currentTarget);
         // retrieve the hash before the redirect
         var redirect = {
             lang: $target.data('url_code'),
