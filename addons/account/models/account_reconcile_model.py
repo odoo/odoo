@@ -406,19 +406,17 @@ class AccountReconcileModel(models.Model):
 
         results = {line.id: {'aml_ids': []} for line in st_lines}
 
-        available_models = self.filtered(lambda m: m.rule_type != 'writeoff_button').sorted(key=lambda m: (m.sequence, m.id))
+        available_models = self.filtered(lambda m: m.rule_type != 'writeoff_button').sorted()
         aml_ids_to_exclude = set() # Keep track of already processed amls.
         reconciled_amls_ids = set() # Keep track of already reconciled amls.
 
         # First associate with each rec models all the statement lines for which it is applicable
         lines_with_partner_per_model = defaultdict(lambda: [])
         for st_line in st_lines:
-            partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
+            mapped_partner = (partner_map and partner_map.get(st_line.id) and self.env['res.partner'].browse(partner_map[st_line.id])) or st_line.partner_id
 
             for rec_model in available_models:
-                if not partner:
-                    # The function takes care of returning something only for the rules supporting partner mapping
-                    partner = rec_model._get_partner_from_mapping(st_line)
+                partner = mapped_partner or rec_model._get_partner_from_mapping(st_line)
 
                 if rec_model._is_applicable_for(st_line, partner):
                     lines_with_partner_per_model[rec_model].append((st_line, partner))
