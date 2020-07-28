@@ -21,7 +21,7 @@ except ImportError:
     jingtrang = None
 
 import odoo
-from . import assertion_report, pycompat
+from . import pycompat
 from .config import config
 from .misc import file_open, unquote, ustr, SKIPPED_ELEMENT_TYPES
 from .translate import _
@@ -691,14 +691,11 @@ form: module.record_id""" % (xml_id,)
     def noupdate(self):
         return self._noupdate[-1]
 
-    def __init__(self, cr, module, idref, mode, report=None, noupdate=False, xml_filename=None):
+    def __init__(self, cr, module, idref, mode, noupdate=False, xml_filename=None):
         self.mode = mode
         self.module = module
         self.envs = [odoo.api.Environment(cr, SUPERUSER_ID, {})]
         self.idref = {} if idref is None else idref
-        if report is None:
-            report = assertion_report.assertion_report()
-        self.assertion_report = report
         self._noupdate = [noupdate]
         self.xml_filename = xml_filename
         self._tags = {
@@ -718,7 +715,7 @@ form: module.record_id""" % (xml_id,)
         self._tag_root(de)
     DATA_ROOTS = ['odoo', 'data', 'openerp']
 
-def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, report=None, pathname=None):
+def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kind=None, pathname=None):
     if pathname is None:
         pathname = os.path.join(module, filename)
     ext = os.path.splitext(filename)[1].lower()
@@ -729,7 +726,7 @@ def convert_file(cr, module, filename, idref, mode='update', noupdate=False, kin
         elif ext == '.sql':
             convert_sql_import(cr, fp)
         elif ext == '.xml':
-            convert_xml_import(cr, module, fp, idref, mode, noupdate, report)
+            convert_xml_import(cr, module, fp, idref, mode, noupdate)
         elif ext == '.js':
             pass # .js files are valid but ignored here.
         else:
@@ -794,5 +791,5 @@ def convert_xml_import(cr, module, xmlfile, idref=None, mode='init', noupdate=Fa
         xml_filename = xmlfile
     else:
         xml_filename = xmlfile.name
-    obj = xml_import(cr, module, idref, mode, report=report, noupdate=noupdate, xml_filename=xml_filename)
+    obj = xml_import(cr, module, idref, mode, noupdate=noupdate, xml_filename=xml_filename)
     obj.parse(doc.getroot())

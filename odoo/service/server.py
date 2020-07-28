@@ -514,10 +514,10 @@ class ThreadedServer(CommonServer):
                 with Registry.registries._lock:
                     for db, registry in Registry.registries.d.items():
                         report = registry._assertion_report
-                        log = _logger.error if report.failures \
-                         else _logger.warning if not report.successes \
+                        log = _logger.error if not report.wasSuccessful() \
+                         else _logger.warning if not report.testsRun \
                          else _logger.info
-                        log("%d / %d tests failed when loading %s", report.failures, report.successes + report.failures, db)
+                        log("%s when loading %s", report, db)
             self.stop()
             return rc
 
@@ -1179,10 +1179,8 @@ def load_test_file_py(registry, test_file):
                     suite = OdooSuite(tests)
                     _logger.log(logging.INFO, 'running tests %s.', mod_mod.__name__)
                     result = runner.OdooTestRunner().run(suite)
-                    success = result.wasSuccessful()
-                    if hasattr(registry._assertion_report,'report_result'):
-                        registry._assertion_report.report_result(success)
-                    if not success:
+                    registry._assertion_report.update(result)
+                    if not result.wasSuccessful():
                         _logger.error('%s: at least one error occurred in a test', test_file)
                     return
     finally:
@@ -1220,11 +1218,11 @@ def preload_registries(dbnames):
                 with odoo.api.Environment.manage():
                     for module_name in module_names:
                         result = loader.run_unit_tests(module_name, position='post_install')
-                        registry._assertion_report.record_result(result)
+                        registry._assertion_report.update(result)
                 _logger.info("All post-tested in %.2fs, %s queries",
                              time.time() - t0, odoo.sql_db.sql_counter - t0_sql)
 
-            if registry._assertion_report.failures:
+            if not registry._assertion_report.wasSuccessful():
                 rc += 1
         except Exception:
             _logger.critical('Failed to initialize database `%s`.', dbname, exc_info=True)

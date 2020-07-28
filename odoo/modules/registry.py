@@ -19,7 +19,7 @@ import psycopg2
 import odoo
 from .. import SUPERUSER_ID
 from odoo.sql_db import TestCursor
-from odoo.tools import (assertion_report, config, existing_tables, ignore,
+from odoo.tools import (config, existing_tables, ignore,
                         lazy_classproperty, lazy_property, sql, OrderedSet)
 from odoo.tools.lru import LRU
 
@@ -110,7 +110,7 @@ class Registry(Mapping):
         self.models = {}    # model name/model instance mapping
         self._sql_constraints = set()
         self._init = True
-        self._assertion_report = assertion_report.assertion_report()
+        self._assertion_report = odoo.tests.runner.OdooTestResult()
         self._fields_by_model = None
         self._ordinary_tables = None
         self._constraint_queue = deque()
