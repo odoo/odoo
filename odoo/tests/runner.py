@@ -1,8 +1,11 @@
 import logging
+import time
 import unittest
 
-# backwards compatibility
-_logger = logging.getLogger('odoo.modules.module')
+from .. import sql_db
+
+
+_logger = logging.getLogger(__name__)
 class OdooTestResult(unittest.result.TestResult):
     """
     This class in inspired from TextTestResult (https://github.com/python/cpython/blob/master/Lib/unittest/runner.py)
@@ -10,8 +13,14 @@ class OdooTestResult(unittest.result.TestResult):
     but replacing the "findCaller" in order to give the information we
     have based on the test object that is running.
     """
+
+    def __init__(self):
+        super().__init__()
+        self.time_start = None
+        self.queries_start = None
+
     def __str__(self):
-        return f'{len(self.failures)} failed, {len(self.errors)} errors of {self.testsRun} tests'
+        return f'{len(self.failures)} failed, {len(self.errors)} error(s) of {self.testsRun} tests'
 
     def update(self, other):
         """ Merges an other test result into this one, only updates contents
@@ -60,6 +69,8 @@ class OdooTestResult(unittest.result.TestResult):
     def startTest(self, test):
         super().startTest(test)
         self.log(logging.INFO, 'Starting %s ...', self.getDescription(test), test=test)
+        self.time_start = time.time()
+        self.queries_start = sql_db.sql_counter
 
     def addError(self, test, err):
         super().addError(test, err)
@@ -118,14 +129,3 @@ class OdooTestResult(unittest.result.TestResult):
                 infos = (filename, lineno, method, None)
                 return infos
             error_traceback = error_traceback.tb_next
-
-
-class OdooTestRunner(object):
-    """A test runner class that displays results in in logger using OdooTestResult.
-    Simplified verison of TextTestRunner
-    """
-
-    def run(self, test):
-        result = OdooTestResult()
-        test(result)
-        return result

@@ -248,16 +248,27 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             cr.commit()
 
         updating = tools.config.options['init'] or tools.config.options['update']
+        test_time = test_queries = 0
+        test_results = None
         if tools.config.options['test_enable'] and (needs_update or not updating):
             env = api.Environment(cr, SUPERUSER_ID, {})
-            if not needs_update:
-                registry.setup_models(cr)
-            # Python tests
-            env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
-            report.update(odoo.tests.loader.run_unit_tests(module_name))
-            # tests may have reset the environment
-            env = api.Environment(cr, SUPERUSER_ID, {})
-            module = env['ir.module.module'].browse(module_id)
+            loader = odoo.tests.loader
+            suite = loader.make_suite(module_name, 'at_install')
+            if suite.countTestCases():
+                if not needs_update:
+                    registry.setup_models(cr)
+                # Python tests
+                env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
+
+                tests_t0, tests_q0 = time.time(), odoo.sql_db.sql_counter
+                test_results = loader.run_suite(suite, module_name)
+                report.update(test_results)
+                test_time = time.time() - tests_t0
+                test_queries = odoo.sql_db.sql_counter - tests_q0
+
+                # tests may have reset the environment
+                env = api.Environment(cr, SUPERUSER_ID, {})
+                module = env['ir.module.module'].browse(module_id)
 
         if needs_update:
             processed_modules.append(package.name)
@@ -274,11 +285,25 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
                     delattr(package, kind)
             module.flush()
 
-        _logger.log(module_log_level, "Module %s loaded in %.2fs, %s queries (+%s extra)",
-                    module_name,
-                    time.time() - module_t0,
-                    cr.sql_log_count - module_cursor_query_count,
-                    odoo.sql_db.sql_counter - module_extra_query_count)  # extra queries: testes, notify, any other closed cursor
+        extra_queries = odoo.sql_db.sql_counter - module_extra_query_count - test_queries
+        extras = []
+        if test_queries:
+            extras.append(f'+{test_queries} test')
+        if extra_queries:
+            extras.append(f'+{extra_queries} other')
+        _logger.log(
+            module_log_level, "Module %s loaded in %.2fs%s, %s queries%s",
+            module_name, time.time() - module_t0,
+            f' (incl. {test_time:.2f}s test)' if test_time else '',
+            cr.sql_log_count - module_cursor_query_count,
+            f' ({", ".join(extras)})' if extras else ''
+        )
+        if test_results and not test_results.wasSuccessful():
+            _logger.error(
+                "Module %s: %d failures, %d errors of %d tests",
+                module_name, len(test_results.failures), len(test_results.errors),
+                test_results.testsRun
+            )
 
     _logger.runbot("%s modules loaded in %.2fs, %s queries (+%s extra)",
                    len(graph),
