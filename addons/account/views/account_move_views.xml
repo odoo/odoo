@@ -985,7 +985,9 @@
                                                attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                         <field name="invoice_partner_bank_id"
                                                domain="[('partner_id', '=', bank_partner_id)]"
-                                               attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                               attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                               options="{'create_name_field': 'acc_number'}"
+                                               context="{'default_partner_id': bank_partner_id}"/>
                                     </group>
                                 </group>
                             </page>
