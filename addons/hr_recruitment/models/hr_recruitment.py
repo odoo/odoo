@@ -115,7 +115,7 @@ class Applicant(models.Model):
     company_id = fields.Many2one('res.company', "Company", compute='_compute_company', store=True, readonly=False, tracking=True)
     user_id = fields.Many2one(
         'res.users', "Responsible", compute='_compute_user',
-        tracking=True, default=lambda self: self.env.uid, store=True, readonly=False)
+        tracking=True, store=True, readonly=False)
     date_closed = fields.Datetime("Closed", compute='_compute_date_closed', store=True, index=True)
     date_open = fields.Datetime("Assigned", readonly=True, index=True)
     date_last_stage_update = fields.Datetime("Last Stage Update", index=True, default=fields.Datetime.now)
@@ -250,8 +250,8 @@ class Applicant(models.Model):
 
     @api.depends('job_id')
     def _compute_user(self):
-        for applicant in self.filtered(lambda a: a.job_id):
-            applicant.user_id = applicant.job_id.user_id.id
+        for applicant in self:
+            applicant.user_id = applicant.job_id.user_id.id or self.env.uid
 
     @api.depends('partner_id')
     def _compute_partner_phone_email(self):
