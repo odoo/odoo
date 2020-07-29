@@ -170,7 +170,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         (self.comp1 + self.comp2).write({'route_ids': [(4, resupply_sub_on_order_route.id, None)]})
 
         # Tick "manufacture" and MTO on self.comp2
-        mto_route = self.env['stock.location.route'].search([('name', '=', 'Replenish on Order (MTO)')])
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
         manufacture_route = self.env['stock.location.route'].search([('name', '=', 'Manufacture')])
         self.comp2.write({'route_ids': [(4, manufacture_route.id, None)]})
         self.comp2.write({'route_ids': [(4, mto_route.id, None)]})
@@ -228,7 +229,8 @@ class TestSubcontractingFlows(TestMrpSubcontractingCommon):
         the delivery and MO exist.
         """
         # Tick "manufacture" and MTO on self.comp2
-        mto_route = self.env['stock.location.route'].search([('name', '=', 'Replenish on Order (MTO)')])
+        mto_route = self.env.ref('stock.route_warehouse0_mto')
+        mto_route.active = True
         manufacture_route = self.env['stock.location.route'].search([('name', '=', 'Manufacture')])
         self.comp2.write({'route_ids': [(4, manufacture_route.id, None)]})
         self.comp2.write({'route_ids': [(4, mto_route.id, None)]})

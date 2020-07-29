@@ -15,9 +15,9 @@ class TestProcurement(TestMrpCommon):
         # Update BOM
         self.bom_3.bom_line_ids.filtered(lambda x: x.product_id == self.product_5).unlink()
         self.bom_1.bom_line_ids.filtered(lambda x: x.product_id == self.product_1).unlink()
-
         # Update route
         self.warehouse = self.env.ref('stock.warehouse0')
+        self.warehouse.mto_pull_id.route_id.active = True
         route_manufacture = self.warehouse.manufacture_pull_id.route_id.id
         route_mto = self.warehouse.mto_pull_id.route_id.id
         self.product_4.write({'route_ids': [(6, 0, [route_manufacture, route_mto])]})
@@ -115,6 +115,7 @@ class TestProcurement(TestMrpCommon):
         # set the MTO route to the parent category (all)
         self.warehouse = self.env.ref('stock.warehouse0')
         mto_route = self.warehouse.mto_pull_id.route_id
+        mto_route.active = True
         mto_route.product_categ_selectable = True
         all_categ_id.write({'route_ids': [(6, 0, [mto_route.id])]})
 
@@ -130,6 +131,7 @@ class TestProcurement(TestMrpCommon):
     def test_procurement_3(self):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
         warehouse.write({'reception_steps': 'three_steps'})
+        warehouse.mto_pull_id.route_id.active = True
         self.env['stock.location']._parent_store_compute()
         warehouse.reception_route_id.rule_ids.filtered(
             lambda p: p.location_src_id == warehouse.wh_input_stock_loc_id and
@@ -303,7 +305,7 @@ class TestProcurement(TestMrpCommon):
     def test_production_delay_alert(self):
         """Check if the delay alert is set to True on the stock move."""
         self.env['stock.rule'].search([]).delay_alert = True
-
+        self.env.ref('stock.route_warehouse0_mto').active = True
         parent_product = self.env['product.template'].create({
             'name': 'Parent product',
             'route_ids': [

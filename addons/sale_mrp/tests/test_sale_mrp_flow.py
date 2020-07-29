@@ -14,6 +14,7 @@ class TestSaleMrpFlow(ValuationReconciliationTestCommon):
     @classmethod
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
+        cls.env.ref('stock.route_warehouse0_mto').active = True
 
         # Useful models
         cls.StockMove = cls.env['stock.move']
