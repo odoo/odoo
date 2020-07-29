@@ -626,16 +626,62 @@ options.Class.include({
     },
 });
 
-options.registry.BackgroundImage.include({
-    background: async function (previewMode, widgetValue, params) {
+options.registry.BackgroundToggler.include({
+    /**
+     * Toggles background video on or off.
+     *
+     * @see this.selectClass for parameters
+     */
+    toggleBgVideo(previewMode, widgetValue, params) {
+        if (!widgetValue) {
+            // TODO: use setWidgetValue instead of calling background directly when possible
+            const [bgVideoWidget] = this._requestUserValueWidgets('bg_video_opt');
+            const bgVideoOpt = bgVideoWidget.getParent();
+            return bgVideoOpt._setBgVideo(false, '');
+        } else {
+            // TODO: use trigger instead of el.click when possible
+            this._requestUserValueWidgets('bg_video_opt')[0].el.click();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'toggleBgVideo') {
+            return this.$target[0].classList.contains('o_background_video');
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'bg_video_toggler_opt') {
+            return !this.$target.is('.parallax, .s_parallax_bg');
+        }
+        return this._super(...arguments);
+    },
+});
+
+options.registry.BackgroundVideo = options.Class.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Sets the target's background video.
+     *
+     * @see this.selectClass for parameters
+     */
+    background: function (previewMode, widgetValue, params) {
         if (previewMode === 'reset' && this.videoSrc) {
             return this._setBgVideo(false, this.videoSrc);
-        }
-
-        const _super = this._super.bind(this);
-        if (!params.isVideo) {
-            await this._setBgVideo(previewMode, '');
-            return _super(...arguments);
         }
         return this._setBgVideo(previewMode, widgetValue);
     },
@@ -647,9 +693,12 @@ options.registry.BackgroundImage.include({
     /**
      * @override
      */
-    _computeWidgetState: function (methodName) {
-        if (methodName === 'background' && this.$target[0].classList.contains('o_background_video')) {
-            return this.$('> .o_bg_video_container iframe').attr('src');
+    _computeWidgetState: function (methodName, params) {
+        if (methodName === 'background') {
+            if (this.$target[0].classList.contains('o_background_video')) {
+                return this.$('> .o_bg_video_container iframe').attr('src');
+            }
+            return '';
         }
         return this._super(...arguments);
     },
@@ -676,33 +725,6 @@ options.registry.BackgroundImage.include({
             delete target.dataset.bgVideoSrc;
         }
         await this._refreshPublicWidgets();
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * @override
-     */
-     _onBackgroundColorUpdate: async function (ev, previewMode) {
-        const ret = await this._super(...arguments);
-        if (ret) {
-            this._setBgVideo(previewMode, '');
-        }
-        return ret;
-    },
-});
-
-options.registry.BackgroundOptimize.include({
-    /**
-     * @override
-     */
-    _computeVisibility() {
-        if (this.$target.hasClass('o_background_video')) {
-            return false;
-        }
-        return this._super(...arguments);
     },
 });
 

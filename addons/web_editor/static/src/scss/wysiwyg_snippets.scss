@@ -290,7 +290,6 @@ body.editor_enable.editor_has_snippets {
 
             &.fa {
                 display: inline-block;
-                margin: 0 0 0 $o-we-sidebar-content-field-multi-spacing;
                 padding: 0;
                 border: none;
                 background: none;
@@ -374,9 +373,15 @@ body.editor_enable.editor_has_snippets {
                     color: $o-we-sidebar-content-field-control-item-color;
                     text-align: center;
 
+                    > * {
+                        margin-left: $o-we-sidebar-content-field-multi-spacing;
+                    }
                     > we-customizeblock-option {
                         &, .fa {
                             display: inline-block !important;
+                        }
+                        .fa {
+                            margin: 0;
                         }
                     }
                 }
@@ -873,7 +878,7 @@ body.editor_enable.editor_has_snippets {
             background-color: $o-we-bg-darkest;
 
             + .fa {
-                margin-left: 0;
+                margin: 0;
             }
         }
         .o_we_tag_wrapper {

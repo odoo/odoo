@@ -23,10 +23,9 @@
     <xpath expr="." position="inside">
         <div data-js="InnerChart" string="Chart"
             data-selector=".s_chart">
-            <t t-call="web_editor.snippet_options_background_selection_widgets">
-                <t t-set="with_colors" t-value="True"/>
-                <t t-set="with_images" t-value="False"/>
-            </t>
+            <we-row string="Background">
+                <t t-call="web_editor.snippet_options_background_color_widget"/>
+            </we-row>
             <we-select string="Type" data-attribute-name="type" data-attribute-default-value="bar" data-no-preview="true">
                 <we-button data-select-data-attribute="bar" data-name="bar_chart_opt">Bar Vertical</we-button>
                 <we-button data-select-data-attribute="horizontalBar" data-name="horizontal_bar_chart_opt">Bar Horizontal</we-button>

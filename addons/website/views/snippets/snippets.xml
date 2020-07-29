@@ -121,6 +121,31 @@
     </xpath>
 </template>
 
+<template id="snippet_options_background_options" inherit_id="web_editor.snippet_options_background_options">
+    <xpath expr="//we-button[@data-toggle-bg-image]" position="after">
+        <we-button title="Video"
+                   data-name="bg_video_toggler_opt"
+                   t-att-data-dependencies="images_dependencies"
+                   data-toggle-bg-video="true"
+                   data-no-preview="true">
+            <i class="fa fa-fw fa-film"/>
+        </we-button>
+    </xpath>
+    <xpath expr="//div[@data-js='BackgroundOptimize']" position="after">
+        <div data-js="BackgroundVideo"
+             t-att-data-selector="selector"
+             t-att-data-exclude="exclude"
+             t-att-data-target="target">
+            <we-row string="⌙ Video">
+                <we-videopicker title="Edit video"
+                                data-background=""
+                                data-name="bg_video_opt"
+                                data-dependencies="bg_video_opt"/>
+            </we-row>
+        </div>
+    </xpath>
+</template>
+
 <template id="snippet_options_border_line_widgets">
     <we-row t-att-string="label">
         <we-input data-name="border_width_opt"
@@ -622,11 +647,17 @@
          data-drop-near=".o_mega_menu .nav-link"/>
 
     <div data-js="CoverProperties" data-selector=".o_record_cover_container" data-no-check="true">
-        <t t-call="web_editor.snippet_options_background_selection_widgets">
-            <t t-set="with_colors" t-value="True"/>
-            <t t-set="with_images" t-value="True"/>
-            <t t-set="with_color_combinations" t-value="True"/>
-        </t>
+        <we-row string="Background" class="o_we_full_row">
+            <t t-call="web_editor.snippet_options_background_color_widget">
+                <t t-set="with_color_combinations" t-value="True"/>
+            </t>
+            <we-button-group class="ml-auto">
+                <we-imagepicker title="Image" data-background="" data-button-style="true"/>
+                <we-button title="None" data-background="">
+                    <i class="fa fa-fw fa-ban"/>
+                </we-button>
+            </we-button-group>
+        </we-row>
         <we-select string="Size" data-cover-opt-name="size">
             <we-button data-select-class="o_full_screen_height">Full Screen</we-button>
             <we-button class="o_record_cover_opt_size_default" data-select-class="o_half_screen_height">Half Screen</we-button>
