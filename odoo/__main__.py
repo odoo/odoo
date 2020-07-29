@@ -16,5 +16,4 @@ entrypoints = {
     'populate': odoo.cli.populate.Populate().run,
 }
 
-import pudb; pudb.set_trace()
 entrypoints[odoo.config.subcommand]()

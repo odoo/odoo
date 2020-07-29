@@ -2,22 +2,20 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import argparse
-import collections
 import configparser
 import contextlib
 import dataclasses
 import distutils.util
-import itertools
-import functools
-import operator
 import os
 import pathlib
 import tempfile
-import textwrap
 import warnings
+import shlex
 import sys
-from collections.abc import Iterable
-from getpass import getuser
+from collections import UserList, ChainMap
+from collections.abc import Iterable, MutableMapping
+from functools import partial
+from textwrap import dedent, wrap
 from typing import Any, Callable, Optional, List
 
 from odoo import appdirs
@@ -45,13 +43,6 @@ def die(message):
     raise SystemExit(f'Error: {message}\nCould not load configuration. Aborting.')
 
 
-class DeprecatedAlias:
-    def __init__(self, aliased_option):
-        self.aliased_option = aliased_option
-    def __repr__(self):
-        return self.aliased_option
-
-
 ########################################################################
 #                                                                      #
 #                        TYPE-LIKE FUNCTIONS                           #
@@ -59,14 +50,20 @@ class DeprecatedAlias:
 #                                                                      #
 ########################################################################
 
+class Alias:
+    def __init__(self, aliased_option):
+        self.aliased_option = aliased_option
+    def __repr__(self):
+        return self.aliased_option
 
-class CommaSeparated(collections.UserList):
+
+class CommaSeparated(UserList):
     def __init__(self, iterable=None):
         self.data = list(iterable) if iterable else []
         self.comma = ','.join(map(str, self.data))
 
     def __getattr__(self, key):
-        """ Backward compatibility layer for old string format"""
+        """ Backward compatibility layer for old string format """
         attr = getattr(self.comma, key, None)
         if attr is not None:
             warnings.warn(
@@ -79,18 +76,14 @@ class CommaSeparated(collections.UserList):
         return type(self).__name__ + repr(self.data)
 
     @classmethod
-    def merge(cls, oldcommas):
+    def merge(cls, iterable):
         new = cls()
-        for oc in oldcommas:
+        for oc in iterable:
             new.extend(oc)
         return new
 
     @classmethod
     def parser(cls, cast: callable):
-        """
-        Backward compatibility layer with old single argument comma-separated
-        list of values. Returns a list of `cast` converted values.
-        """
         return lambda rawopt: cls(map(cast, rawopt.split(',')))
 
     @staticmethod
@@ -127,7 +120,7 @@ def flatten(it):
     for e in it:
         if isinstance(e, CommaSeparated):
             yield e
-        elif type(e) != str and isinstance(e, collections.abc.Iterable):
+        elif type(e) != str and isinstance(e, Iterable):
             yield from flatten(e)
         else:
             yield e
@@ -149,9 +142,10 @@ def _check_file_access(rawopt: str, mode: int):
         pairs = [(os.R_OK, 'read'), (os.W_OK, 'write'), (os.X_OK, 'exec')]
         missing = ", ".join(perm for bit, perm in pairs if bit & mode)
         die(f'{path}, file requires {missing} permissions')
-    if mode == os.W_OK and not os.access(path.parent, os.W_OK):
-        die(f'{path.parent}, file requires write permission')
-    if not path.is_file():
+    elif mode == os.W_OK:
+        if not os.access(path.parent, os.W_OK):
+            die(f'{path.parent}, file requires write permission')
+    else:
         die(f'{path}, no such file')
     return path
 
@@ -182,7 +176,7 @@ def checkfile(mode: int):
     and os.X_OK. Aliases are 'e': F_OK, 'r': R_OK, 'w': W_OK, 'x': X_OK.
     """
     mode = {'e': os.F_OK, 'r': os.R_OK, 'w': os.W_OK, 'x': os.X_OK}.get(mode, mode)
-    return functools.partial(_check_file_access, mode=mode)
+    return partial(_check_file_access, mode=mode)
 
 
 def checkdir(mode: int):
@@ -194,7 +188,7 @@ def checkdir(mode: int):
     and os.X_OK. Aliases are 'e': F_OK, 'r': R_OK, 'w': W_OK, 'x': X_OK.
     """
     mode = {'e': os.F_OK, 'r': os.R_OK, 'w': os.W_OK, 'x': os.X_OK}.get(mode, mode)
-    return functools.partial(_check_dir_access, mode=mode)
+    return partial(_check_dir_access, mode=mode)
 
 
 def addons_path(rawopt):
@@ -356,13 +350,13 @@ Option('http_enable', longopt="--no-http", type=str, rtype=str, action='store_fa
 Option('proxy_mode', longopt="--proxy-mode", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Activate reverse proxy WSGI wrappers (headers rewriting) Only enable this when running behind a trusted web proxy!")
 
 Option('max_cron_threads', longopt="--max-cron-threads", type=int, rtype=str, action='store', default=2, envvar=None, metavar=None, help="Maximum number of threads processing concurrently cron jobs.")
-Option('limit_time_real_cron', longopt="--limit-time-real-cron", type=int, rtype=str, action='store', default=DeprecatedAlias('limit_time_real'), envvar=None, metavar=None, help="Maximum allowed Real time per cron job. (default: --limit-time-real). Set to 0 for no limit.")
+Option('limit_time_real_cron', longopt="--limit-time-real-cron", type=int, rtype=str, action='store', default=Alias('limit_time_real'), envvar=None, metavar=None, help="Maximum allowed Real time per cron job. (default: --limit-time-real). Set to 0 for no limit.")
 
 Option('dbfilter', longopt="--db-filter", type=str, rtype=str, action='store', default='', envvar=None, metavar="REGEXP", help="Regular expressions for filtering available databases for Web UI. The expression can use %%d (domain) and %%h (host) placeholders.")
 
 Option('test_file', longopt="--test-file", type=checkfile('r'), rtype=str, action='store', default=None, envvar=None, metavar="FILEPATH", help="Launch a python test file.")
 Option('test_enable', longopt="--test-enable", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Enable unit tests while installing or upgrading a module.")
-Option('test_tags', longopt="--test-tags", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, metavar=None, help=textwrap.dedent("""\
+Option('test_tags', longopt="--test-tags", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='append', default=CommaSeparated(), envvar=None, metavar=None, help=dedent("""\
     Comma-separated or repeated option list of spec to filter which tests to execute. Enable unit tests if set.
     A filter spec has the format: [-][tag][/module][:class][.method]
     The '-' specifies if we want to include or exclude tests matching this spec.
@@ -379,13 +373,13 @@ _loghandlers = [
     Option('log_handler', longopt="--log-web", type=str, rtype=str, action='append_const', const='odoo.http:DEBUG', default=None, envvar=None, metavar=None, help="shortcut for --log-handler=odoo.http:DEBUG"),
     Option('log_handler', longopt="--log-sql", type=str, rtype=str, action='append_const', const='odoo.sql_db:DEBUG', default=None, envvar=None, metavar=None, help="shortcut for --log-handler=odoo.sql_db:DEBUG"),
 ]
-Option('log_db', longopt="--log-db", type=str, rtype=strtobool, action='store_true', default=None, envvar=None, metavar=None, help="Enable database logs record")
+Option('log_db', longopt="--log-db", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Enable database logs record")
 Option('log_db_level', longopt="--log-db-level", type=choices(loglevelmap.keys()), rtype=str, action='store', default='warning', envvar=None, metavar="LEVEL", help="specify the level of the database logging")
 
 Option('email_from', longopt="--email-from", type=str, rtype=str, action='store', default=None, envvar=None, metavar="EMAIL", help="specify the SMTP email address for sending email")
 Option('smtp_server', longopt="--smtp", type=str, rtype=str, action='store', default='localhost', envvar=None, metavar="HOST", help="specify the SMTP server for sending email")
 Option('smtp_port', longopt="--smtp-port", type=int, rtype=str, action='store', default=25, envvar=None, metavar="PORT", help="specify the SMTP port")
-Option('smtp_ssl', longopt="--smtp-ssl", type=str, rtype=strtobool, action='store_true', default=None, envvar=None, metavar=None, help="if passed, SMTP connections will be encrypted with SSL (STARTTLS)")
+Option('smtp_ssl', longopt="--smtp-ssl", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="if passed, SMTP connections will be encrypted with SSL (STARTTLS)")
 Option('smtp_user', longopt="--smtp-user", type=str, rtype=str, action='store', default=None, envvar=None, metavar=None, help="specify the SMTP username for sending email")
 Option('smtp_password', longopt="--smtp-password", type=str, rtype=str, action='store', default=None, envvar=None, metavar=None, help="specify the SMTP password for sending email")
 
@@ -398,10 +392,10 @@ Option('db_sslmode', longopt="--db_sslmode", type=str, rtype=str, action='store'
 Option('pg_path', longopt="--pg_path", type=pg_utils_path, rtype=str, action='store', default=None, envvar=None, metavar="DIRPATH", help="postgres utilities directory")
 Option('db_template', longopt="--db-template", type=str, rtype=str, action='store', default='template0', envvar=None, metavar="DBNAME", help="custom database template to create a new database")
 Option('db_maxconn', longopt="--db_maxconn", type=int, rtype=str, action='store', default=64, envvar=None, metavar=None, help="specify the maximum number of physical connections to PostgreSQL")
-Option('unaccent', longopt="--unaccent", type=str, rtype=strtobool, action='store_true', default=None, envvar=None, metavar=None, help="Try to enable the unaccent extension when creating new databases")
+Option('unaccent', longopt="--unaccent", type=strtobool, rtype=str, action='store_true', default=None, envvar=None, metavar=None, help="Try to enable the unaccent extension when creating new databases")
 
 Option('transient_age_limit', longopt="--transient-age-limit", type=float, rtype=str, action='store', default=1.0, envvar=None, metavar="HOURS", help="Time in hours records created with a TransientModel (mosly wizard) are kept in the database.")
-Option('osv_memory_age_limit', longopt="--osv-memory-age-limit", type=float, rtype=str, action='store', default=DeprecatedAlias('transient_age_limit'), envvar=None, metavar=None, help=argparse.SUPPRESS)
+Option('osv_memory_age_limit', longopt="--osv-memory-age-limit", type=float, rtype=str, action='store', default=Alias('transient_age_limit'), envvar=None, metavar=None, help=argparse.SUPPRESS)
 
 Option('load_language', longopt="--load-language", type=CommaSeparated.parser(str), rtype=CommaSeparated.formatter(str), action='store', default=CommaSeparated(), envvar=None, file=False, metavar="LANGCODE", help="specifies the languages for the translations you want to be loaded")
 Option('language', shortopt="-l", longopt="--language", type=str, rtype=str, action='store', default=None, envvar=None, metavar="LANGCODE", help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
@@ -448,6 +442,18 @@ class Group:
     def __post_init__(self):
         groupmap[self.title] = self
 
+
+Group('Bootstraping options', [
+    optionmap['addons_path'],
+    optionmap['upgrade_path'],
+    optionmap['data_dir'],
+    optionmap['log_level'],
+    optionmap['logfile'],
+    optionmap['syslog'],
+    optionmap['log_handler'],
+    optionmap['config'],
+    optionmap['save'],
+])
 
 Group('Common options', [
     optionmap['init'],
@@ -568,19 +574,11 @@ class Command:
         commandmap[self.name] = self
 
 Command(
+    # Common options are grouped in this special fake command for ease of use
     name='',
-    section='options',
-    options=[
-        optionmap['addons_path'],
-        optionmap['upgrade_path'],
-        optionmap['data_dir'],
-        optionmap['log_level'],
-        optionmap['logfile'],
-        optionmap['syslog'],
-        optionmap['log_handler'],
-        optionmap['config'],
-        optionmap['save'],
-     ])
+    section='',
+    options=groupmap['Bootstraping options'].options,
+)
 
 Command(
     name='server',
@@ -630,8 +628,76 @@ Command(
 
 
 ########################################################################
+#                                                                      #
+#                               PARSERS                                #
+#                                                                      #
 ########################################################################
-########################################################################
+
+def parse_args(main_parser, argv):
+    try:
+        cli_options = vars(main_parser.parse_args(argv))
+    except SystemExit as exc:  # change this in 3.9 for exit_on_error=False
+        # retry after converting argv from old odoobin cli
+        new_argv = from_odoobin(argv.copy())
+        try:
+            cli_options = vars(main_parser.parse_args(new_argv))
+        except SystemExit:
+            # not odoobin compatible
+            raise exc
+        else:
+            warnings.warn("\n\n  {}\n\n  {}\n".format("\n  ".join(wrap(dedent("""\
+                The old odoo-bin format CLI is deprecated. Your command
+                line was automatically converted this time. Run Odoo
+                with the '--help' flag to see what changed.
+                Using command:
+                """))),
+                "{exec} {argv0} {argv}".format(
+                    exec=sys.executable,
+                    argv0='-m odoo' if sys.argv[0].endswith('__main__.py') else sys.argv[0],
+                    argv=" ".join(map(shlex.quote, new_argv)),
+                )
+                
+            ), DeprecationWarning)
+
+    return cli_options
+
+def from_odoobin(argv):
+    """ Convert v13 odoo-bin command line arguments to new cli """
+
+    # find the subcommand and its position
+    for cmd in commandmap.values():
+        with contextlib.suppress(ValueError):
+            cmd_index = argv.index(cmd.name)
+            break
+    else:
+        # subcommand not found, force the 'server' subcommand
+        cmd = commandmap['server']
+        cmd_index = 0
+        argv.insert(0, cmd.name)
+
+    # ensure all bootstraping options are before the subcommand
+    for opt in groupmap['Bootstraping options'].options:
+        try:
+            opt_index = argv.index(opt.shortopt)
+        except ValueError:
+            try:
+                opt_index = argv.index(opt.longopt)
+            except ValueError:
+                continue  # option not present, skip
+
+        if opt_index < cmd_index:
+            continue  # option before the command already, skip
+
+        # rewrite argv so the option is moved at the beginning
+        argcnt = {'save': 1, 'syslog': 1}.get(opt.name, 2)
+        argv = (
+            argv[opt_index:opt_index+argcnt]  # [option, value]
+          + argv[:opt_index]                  # + all preceding options
+          + argv[opt_index+argcnt:]           # + all following options
+        )
+        cmd_index += argcnt
+
+    return argv
 
 
 def load_default():
@@ -674,7 +740,7 @@ def load_cli(argv):
 
     # Build the CLI
     main_parser = argparse.ArgumentParser()
-    subparsers = main_parser.add_subparsers(dest='subcommand')
+    subparsers = main_parser.add_subparsers(dest='subcommand', required=True)
     for command in commandmap.values():
         parser = subparsers.add_parser(command.name) if command.name else main_parser
         add_options(parser, command.options)
@@ -686,7 +752,8 @@ def load_cli(argv):
     # Process parsed args
     options = sourcemap['cli']
     options.clear()
-    cli_options = vars(main_parser.parse_args(argv))
+
+    cli_options = parse_args(main_parser, argv)
 
     Config.subcommand = cli_options.pop('subcommand', 'server')
     for opt, val in cli_options.items():
@@ -713,8 +780,9 @@ def load_file():
         warnings.warn(f"{configpath}, Could not read configuration file")
         return
 
+    command_section = commandmap[Config.subcommand].section if Config.subcommand else None
     for sec in p.sections():
-        options = sourcemap['file' if sec == 'options' else 'file_' + sec]
+        options = sourcemap['file' if sec == command_section else 'file_' + sec]
         options.clear()
         for opt, val in p.items(sec):
             if opt not in optionmap:
@@ -725,14 +793,20 @@ def load_file():
                 options[opt] = optionmap[opt].type(val)
 
 
+########################################################################
+#                                                                      #
+#                     CHAINED CONFIGURATION OBJECT                     #
+#                                                                      #
+########################################################################
 
-class Config(collections.abc.MutableMapping):
+
+class Config(MutableMapping):
     subcommand = None
 
     def __init__(self, userchain=None, sectopts=None):
-        self._userchain = userchain or collections.ChainMap({})
+        self._userchain = userchain or ChainMap({})
         self._sectopts = sectopts or {}
-        self._chainmap = collections.ChainMap(
+        self._chainmap = ChainMap(
             self._userchain,
             sourcemap["cli"],
             self._sectopts,
@@ -744,7 +818,7 @@ class Config(collections.abc.MutableMapping):
 
     def copy(self):
         return type(self)(
-            collections.ChainMap([
+            ChainMap([
                 useropts.copy()
                 for useropts
                 in self._userchain.maps
@@ -766,22 +840,22 @@ class Config(collections.abc.MutableMapping):
         for option, value in self.items():
             print(repr(option), repr(value), sep=": ")
 
-    def save(self, configpath=None):
+    def save(self):
         """
         Export the currently exposed configuration with additionnal
         sections to a file
         """
         p = configparser.RawConfigParser()
 
-        # default section, export currently exposed configuration
-        p.add_section('options')
-        for opt, val in self.items():
-            if not optionmap[opt].file:
-                continue
-            if type(val) != str and isinstance(val, collections.abc.Iterable):
-                p.set('options', opt, ",".join(val))
-            else:
-                p.set('options', opt, str(val))
+        # command dedicated section, rewrite 
+        if self.subcommand:
+            command = commandmap[self.subcommand]
+            p.add_section(command.section)
+            for opt in [command.options, *[grp.options for grp in command.groups]]:
+                val = self._chainmap[opt.name]
+                if not opt.file or val is DELETED or isinstance(val, Alias):
+                    continue
+                p.set(command.section, opt.name, opt.rtype(val))
 
         # other sections, rewrite them as-is
         for source, options in sourcemap.items():
@@ -789,19 +863,14 @@ class Config(collections.abc.MutableMapping):
                 continue
             section = source[5:]
             p.add_section(section)
-            for opt, val in options.items():
-                if not optionmap[opt].file:
-                    continue
-                if type(val) != str and isinstance(val, collections.abc.Iterable):
-                    p.set(section, opt, ",".join(val))
-                else:
-                    p.set(section, opt, str(val))
+            for optname, val in options.items():
+                p.set(section, optname, optionmap[optname].rtype(val))
 
         # ensure file exists and write on disk
-        if configpath is None:
-            configpath = chainmap["config"]
+        configpath = self["save"]
         if not configpath.exists():
-            configpath.parent.mkdir(mode=0o755, parents=True)
+            with contextlib.suppress(FileExistsError):
+                configpath.parent.mkdir(mode=0o755, parents=True)
             configpath.touch(mode=0o600)
         with configpath.open('w') as fd:
             p.write(fd)
@@ -823,12 +892,7 @@ class Config(collections.abc.MutableMapping):
         val = self._chainmap[option]
         if val is DELETED:
             raise KeyError(f"{option} has been removed")
-        elif isinstance(val, DeprecatedAlias):
-            warnings.warn(
-                f"The {option} is a deprecated alias to {val.aliased_option}, "
-                "please use the latter. The option may be overridable via a "
-                "dedication section in the configuration file.",
-                DeprecationWarning)
+        elif isinstance(val, Alias):
             return self[val.aliased_option]
         return val
 

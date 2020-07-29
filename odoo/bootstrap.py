@@ -23,6 +23,8 @@ def setup(argv=None):
         config_module.load_cli(argv)
     config_module.load_file()
     config_module.ensure_data_dir(config_module.config['data_dir'])
+    if config_module.config['save']:
+        config_module.config.save()
 
     # phase 3, dynamic library configuration
     if config_module.config.evented:
