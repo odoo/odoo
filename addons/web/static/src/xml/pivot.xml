@@ -8,7 +8,7 @@
             </t>
             <t t-else="" t-call="web.NoContentHelper"/>
         </t>
-        
+
         <table t-if="props.hasData and props.measures.length" class="table-hover table-sm table-bordered" t-att-class="{ o_enable_linking: !props.disableLinking }">
             <thead>
                 <tr t-foreach="props.table.headers" t-as="row" t-key="'header_' + row_index">
