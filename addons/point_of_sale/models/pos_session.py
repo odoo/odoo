@@ -16,7 +16,6 @@ class PosSession(models.Model):
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     POS_SESSION_STATE = [
-        ('new_session', 'New Session'),
         ('opening_control', 'Opening Control'),  # method action_pos_session_open
         ('opened', 'In Progress'),               # method action_pos_session_closing_control
         ('closing_control', 'Closing Control'),  # method action_pos_session_close
@@ -46,7 +45,7 @@ class PosSession(models.Model):
     state = fields.Selection(
         POS_SESSION_STATE, string='Status',
         required=True, readonly=True,
-        index=True, copy=False, default='new_session')
+        index=True, copy=False, default='opening_control')
 
     sequence_number = fields.Integer(string='Order Sequence Number', help='A sequence number that is incremented with each order', default=1)
     login_number = fields.Integer(string='Login Sequence Number', help='A sequence number that is incremented each time a user resumes the pos session', default=0)
@@ -223,8 +222,7 @@ class PosSession(models.Model):
             res = super(PosSession, self.with_context(ctx).sudo()).create(values)
         else:
             res = super(PosSession, self.with_context(ctx)).create(values)
-        if not pos_config.cash_control:
-            res.action_pos_session_open()
+        res.action_pos_session_open()
 
         return res
 
@@ -248,7 +246,14 @@ class PosSession(models.Model):
             values = {}
             if not session.start_at:
                 values['start_at'] = fields.Datetime.now()
-            values['state'] = 'opened'
+            if session.config_id.cash_control:
+                last_sessions = self.env['pos.session'].search([('config_id', '=', self.config_id.id)]).ids
+                # last session includes the new one already.
+                if len(last_sessions) > 1:
+                    self.cash_register_id.balance_start = self.env['pos.session'].browse(last_sessions[1]).cash_register_id.balance_end_real
+                values['state'] = 'opening_control'
+            else:
+                values['state'] = 'opened'
             session.write(values)
         return True
 
@@ -1004,6 +1009,16 @@ class PosSession(models.Model):
         action['context']['pos_session_id'] = self.id
         action['context']['default_pos_id'] = self.config_id.id
         return action
+
+    def set_cashbox_pos(self, cashbox_value, notes):
+        self.state = 'opened'
+        self.cash_register_id.balance_start = cashbox_value
+        if notes:
+            self.env['mail.message'].create({
+                        'body': notes,
+                        'model': 'account.bank.statement',
+                        'res_id': self.cash_register_id.id,
+                    })
 
     def action_view_order(self):
         return {

@@ -68,9 +68,6 @@
                                     <div class="o_primary">
                                         <t t-esc="record.name.value"/>
                                     </div>
-                                    <t t-if="record.pos_session_state.raw_value == 'new_session'">
-                                        <div class="badge badge-info o_kanban_inline_block">New session</div>
-                                    </t>
                                     <t t-if="!record.current_session_id.raw_value &amp;&amp; record.pos_session_username.value">
                                         <div class="badge badge-info o_kanban_inline_block">Opened by <t t-esc="record.pos_session_username.value"/></div>
                                     </t>

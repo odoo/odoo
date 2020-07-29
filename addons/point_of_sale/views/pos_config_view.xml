@@ -409,12 +409,6 @@
                                 <div class="text-muted">
                                     Control cash box at opening and closing
                                 </div>
-                                <div class="content-group mt16" attrs="{'invisible': [('cash_control', '=', False)]}">
-                                    <div class="row mt16">
-                                        <label string="Default Opening" for="default_cashbox_id" class="col-lg-3 o_light_label" />
-                                        <field name="default_cashbox_id" domain="[('is_a_template', '=', True)]" context="{'default_is_a_template': True, 'current_currency_id': currency_id}"/>
-                                    </div>
-                                </div>
                                 <div attrs="{'invisible': [('cash_control', '=', False)]}">
                                     <label for="amount_authorized_diff" string="Authorized Difference" class="font-weight-normal"/>
                                     <field name="amount_authorized_diff"/>

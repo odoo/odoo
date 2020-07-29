@@ -26,7 +26,7 @@ class PosController(http.Controller):
         :returns: object -- The rendered pos session.
         """
         domain = [
-                ('state', '=', 'opened'),
+                ('state', 'in', ['opening_control', 'opened']),
                 ('user_id', '=', request.session.uid),
                 ('rescue', '=', False)
                 ]
@@ -39,7 +39,7 @@ class PosController(http.Controller):
         # session.
         if not pos_session and config_id:
             domain = [
-                ('state', '=', 'opened'),
+                ('state', 'in', ['opening_control', 'opened']),
                 ('rescue', '=', False),
                 ('config_id', '=', int(config_id)),
             ]

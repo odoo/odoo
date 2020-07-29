@@ -273,10 +273,10 @@ exports.PosModel = Backbone.Model.extend({
         },
     },{
         model:  'pos.session',
-        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'payment_method_ids'],
+        fields: ['id', 'name', 'user_id', 'config_id', 'start_at', 'stop_at', 'sequence_number', 'payment_method_ids', 'cash_register_id', 'state'],
         domain: function(self){
             var domain = [
-                ['state','=','opened'],
+                ['state','in',['opening_control','opened']],
                 ['rescue', '=', false],
             ];
             if (self.config_id) domain.push(['config_id', '=', self.config_id]);
@@ -348,6 +348,13 @@ exports.PosModel = Backbone.Model.extend({
             _.map(pricelists, function (pricelist) { pricelist.items = []; });
             self.default_pricelist = _.findWhere(pricelists, {id: self.config.pricelist_id[0]});
             self.pricelists = pricelists;
+        },
+    },{
+        model:  'account.bank.statement',
+        fields: ['id', 'balance_start'],
+        domain: function(self){ return [['id', '=', self.pos_session.cash_register_id[0]]]; },
+        loaded: function(self, statement){
+            self.bank_statement = statement[0];
         },
     },{
         model:  'product.pricelist.item',
@@ -603,7 +610,7 @@ exports.PosModel = Backbone.Model.extend({
             self.barcode_reader.set_barcode_parser(barcode_parser);
             return barcode_parser.is_loaded();
         },
-    }
+    },
     ],
 
     // loads all the needed data on the sever. returns a promise indicating when all the data has loaded.
