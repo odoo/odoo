@@ -280,9 +280,8 @@ class Picking(models.Model):
         'procurement.group', 'Procurement Group',
         readonly=True, related='move_lines.group_id', store=True)
     priority = fields.Selection(
-        PROCUREMENT_PRIORITIES, string='Priority',
-        compute='_compute_priority', inverse='_set_priority', store=True,
-        index=True, tracking=True,
+        PROCUREMENT_PRIORITIES, string='Priority', default='0',
+        inverse='_set_priority', index=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Products will be reserved first for the transfers with the highest priorities.")
     scheduled_date = fields.Datetime(
@@ -457,15 +456,6 @@ class Picking(models.Model):
                     picking.state = 'assigned'
                 else:
                     picking.state = relevant_move_state
-
-    @api.depends('move_lines.priority')
-    def _compute_priority(self):
-        for picking in self:
-            if picking.mapped('move_lines'):
-                priorities = [priority for priority in picking.mapped('move_lines.priority') if priority] or ['1']
-                picking.priority = max(priorities)
-            else:
-                picking.priority = '1'
 
     def _set_priority(self):
         for picking in self:

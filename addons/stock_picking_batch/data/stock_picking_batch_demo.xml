@@ -55,7 +55,7 @@
     <!-- Add picking -->
     <record id="Picking_A" model="stock.picking">
         <field name="move_type">one</field>
-        <field name="priority">2</field>
+        <field name="priority">1</field>
         <field name="user_id" eval="False"/>
         <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="batch_id" ref="stock_picking_batch_freeze_1"/>
@@ -66,7 +66,7 @@
     <record id="Picking_B" model="stock.picking">
         <field name="move_type">one</field>
         <field name="state">assigned</field>
-        <field name="priority">1</field>
+        <field name="priority">0</field>
         <field name="user_id" eval="False"/>
         <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="batch_id" ref="stock_picking_batch_freeze_1"/>
@@ -77,7 +77,7 @@
     <record id="Picking_C" model="stock.picking">
         <field name="move_type">one</field>
         <field name="state">assigned</field>
-        <field name="priority">1</field>
+        <field name="priority">0</field>
         <field name="user_id" eval="False"/>
         <field name="picking_type_id" ref="stock.picking_type_internal"/>
         <field name="batch_id" ref="stock_picking_batch_dry_1"/>

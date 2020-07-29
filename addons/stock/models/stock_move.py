@@ -15,13 +15,13 @@ from odoo.exceptions import UserError
 from odoo.osv import expression
 from odoo.tools.float_utils import float_compare, float_is_zero, float_round
 
-PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
+PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
 
 class StockMove(models.Model):
     _name = "stock.move"
     _description = "Stock Move"
-    _order = 'sequence, id'
+    _order = 'priority desc, sequence, id'
 
     def _default_group_id(self):
         if self.env.context.get('default_picking_id'):
@@ -30,7 +30,7 @@ class StockMove(models.Model):
 
     name = fields.Char('Description', index=True, required=True)
     sequence = fields.Integer('Sequence', default=10)
-    priority = fields.Selection(PROCUREMENT_PRIORITIES, 'Priority', default='1')
+    priority = fields.Selection(PROCUREMENT_PRIORITIES, 'Priority', default='0')
     create_date = fields.Datetime('Creation Date', index=True, readonly=True)
     date = fields.Datetime(
         'Date', default=fields.Datetime.now, index=True, required=True,

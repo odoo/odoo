@@ -18,7 +18,7 @@ class PurchaseOrder(models.Model):
     _name = "purchase.order"
     _inherit = ['mail.thread', 'mail.activity.mixin', 'portal.mixin']
     _description = "Purchase Order"
-    _order = 'date_order desc, id desc'
+    _order = 'priority desc, date_order desc, id desc'
 
     @api.depends('order_line.price_total')
     def _amount_all(self):
@@ -71,6 +71,9 @@ class PurchaseOrder(models.Model):
     }
 
     name = fields.Char('Order Reference', required=True, index=True, copy=False, default='New')
+    priority = fields.Selection(
+        [('0', 'Normal'), ('1', 'Urgent')], 'Priority', default='0',
+        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]})
     origin = fields.Char('Source Document', copy=False,
         help="Reference of the document that generated this purchase order "
              "request (e.g. a sales order)")
