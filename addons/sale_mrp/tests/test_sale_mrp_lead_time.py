@@ -13,7 +13,7 @@ class TestSaleMrpLeadTime(TestStockCommon):
 
     def setUp(self):
         super(TestSaleMrpLeadTime, self).setUp()
-
+        self.env.ref('stock.route_warehouse0_mto').active = True
         # Update the product_1 with type, route, Manufacturing Lead Time and Customer Lead Time
         with Form(self.product_1) as p1:
             p1.type = 'product'

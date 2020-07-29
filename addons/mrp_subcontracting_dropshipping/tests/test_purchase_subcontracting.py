@@ -16,6 +16,7 @@ class TestSubcontractingDropshippingFlows(TestMrpSubcontractingCommon):
         - Delivery for the component to the subcontractor for the specified wh.
         - Po created for the component.
         """
+        self.env.ref('stock.route_warehouse0_mto').active = True
         mto_route = self.env['stock.location.route'].search([('name', '=', 'Replenish on Order (MTO)')])
         resupply_route = self.env['stock.location.route'].search([('name', '=', 'Resupply Subcontractor on Order')])
         buy_route = self.env['stock.location.route'].search([('name', '=', 'Buy')])

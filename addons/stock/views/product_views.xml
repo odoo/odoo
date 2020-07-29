@@ -102,10 +102,11 @@
                     </div>
                 </xpath>
                 <xpath expr="//group[@name='group_lots_and_weight']" position="before">
+                    <field name="has_available_route_ids" invisible="1"/>
                     <group string="Operations" name="operations">
                         <label for="route_ids" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
                         <div>
-                            <field name="route_ids" class="mb-0" widget="many2many_checkboxes" attrs="{'invisible': [('type', 'in', ['service', 'digital'])]}"/>
+                            <field name="route_ids" class="mb-0" widget="many2many_checkboxes" attrs="{'invisible': ['|', ('has_available_route_ids', '=', False), ('type', 'in', ['service', 'digital'])]}"/>
                             <button string="View Diagram" type="action" name="%(action_open_routes)d" icon="fa-arrow-right"
                                  attrs="{'invisible':[('type', 'not in', ['product', 'consu'])]}"
                                  class="btn btn-link pt-0" context="{'default_product_tmpl_id': id}"/>

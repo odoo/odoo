@@ -602,6 +602,8 @@ class ProductTemplate(models.Model):
     # to influence computed field.
     location_id = fields.Many2one('stock.location', 'Location', store=False)
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False)
+    has_available_route_ids = fields.Boolean(
+        'Routes can be selected on this product', compute='_compute_has_available_route_ids')
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
@@ -616,6 +618,10 @@ class ProductTemplate(models.Model):
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
         related='categ_id.total_route_ids', readonly=False)
+
+    @api.depends('type')
+    def _compute_has_available_route_ids(self):
+        self.has_available_route_ids = self.env['stock.location.route'].search_count([('product_selectable', '=', True)])
 
     @api.depends(
         'product_variant_ids',
