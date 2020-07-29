@@ -115,7 +115,16 @@ class ProfitabilityAnalysis(models.Model):
                             FROM project_project P
                                 LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
                                 LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
-                            WHERE AAL.amount < 0.0 AND AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
+                            WHERE  AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
+                                AND (AAL.amount < 0.0
+                                    -- Also retrieve credit notes
+                                    OR AAL.amount > 0.0 AND EXISTS (
+                                        SELECT *
+                                        FROM account_analytic_account AA2
+                                            LEFT JOIN account_analytic_line AAL2 ON AAL2.account_id = AA2.id
+                                        WHERE AA.id = AA2.id AND AAL.amount = -AAL2.amount AND AAL.partner_id = AAL2.partner_id AND AAL.product_id = AAL2.product_id
+                                    )
+                                )
                             GROUP BY P.id, AA.id, AAL.so_line, AAL.product_id
 
                             UNION
