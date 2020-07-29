@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_l10n_co_pos_details_wizard" model="ir.ui.view">
+        <field name="name">l10n_co_pos.details.wizard.form</field>
+        <field name="model">l10n_co_pos.details.wizard</field>
+        <field name="arch" type="xml">
+            <form string="Sales Details">
+                <group>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="include_products"/>
+                    <field name="pos_config_id"/>
+                </group>
+                <footer>
+                    <button name="generate_co_pos_report" string="Print" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+</odoo>

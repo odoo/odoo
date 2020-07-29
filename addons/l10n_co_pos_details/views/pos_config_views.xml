@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="pos_config_view_form" model="ir.ui.view">
+        <field name="name">pos.config.form.view.inherit.l10n_co_pos</field>
+        <field name="model">pos.config</field>
+        <field name="inherit_id" ref="point_of_sale.pos_config_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//div[@id='company']" position="after">
+                <div class="col-12 col-lg-6 o_setting_box">
+                    <div class="o_setting_right_pane">
+                        <label for="l10n_co_pos_serial_number"/>
+                        <div class="content-group mt16">
+                            <field name="l10n_co_pos_serial_number"/>
+                        </div>
+                    </div>
+                </div>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="action_report_co_pos_details" model="ir.actions.act_window">
+        <field name="name">Sales Details</field>
+        <field name="res_model">l10n_co_pos.details.wizard</field>
+        <field name="view_id" ref="view_l10n_co_pos_details_wizard"/>
+        <field name="view_mode">form</field>
+        <field name="target">new</field>
+    </record>
+
+    <record id="sale_details_report" model="ir.actions.report">
+        <field name="name">Sales Details</field>
+        <field name="model">report.l10n_co_pos_details.report_saledetails</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">l10n_co_pos_details.report_saledetails</field>
+    </record>
+
+
+    <menuitem id="menu_report_co_pos_order_details" name="Colombia Sales Details" action="action_report_co_pos_details" parent="point_of_sale.menu_point_rep" sequence="4"/>
+
+</odoo>

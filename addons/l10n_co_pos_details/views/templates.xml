@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <template id="report_saledetails" inherit_id="point_of_sale.report_saledetails" primary="True">
+            <xpath expr="//div[hasclass('page')]/div/h2" position="before">
+                <h2 t-if="pos_config"><t t-esc="pos_config.name"/></h2>
+            </xpath>
+            <xpath expr="//div[hasclass('page')]/h3[1]" position="attributes">
+                <attribute name="t-if">include_products</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('page')]/table[1]" position="attributes">
+                <attribute name="t-if">include_products</attribute>
+            </xpath>
+            <xpath expr="//div[hasclass('page')]/table[2]/thead/tr/th[1]" position="after">
+                <th t-if="pos_config">No. Transactions</th>
+            </xpath>
+            <xpath expr="//div[hasclass('page')]/table[2]/tbody/tr/td[1]" position="after">
+                <td t-if="pos_config"><t t-esc="payment['count']" /></td>
+            </xpath>
+            <xpath expr="//div[hasclass('page')]/strong" position="after">
+                <t t-if="pos_config">
+                    <br/>
+                    <strong>Total number of Transactions: <t t-esc='total_payment_count'/></strong><br/>
+                    <strong t-if='first_ref'>From: <t t-esc='first_ref'/> to <t t-esc='last_ref'/><br/></strong>
+                    <strong>POS Serial Number: <t t-esc='pos_config.l10n_co_pos_serial_number'/></strong>
+                </t>
+            </xpath>
+        </template>
+    </data>
+</odoo>
