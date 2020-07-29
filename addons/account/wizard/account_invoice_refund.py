@@ -91,6 +91,7 @@ class AccountInvoiceRefund(models.TransientModel):
                             'date_invoice': form.date_invoice,
                             'state': 'draft',
                             'number': False,
+                            'reference': False,
                             'invoice_line_ids': invoice_lines,
                             'tax_line_ids': tax_lines,
                             'date': date,
