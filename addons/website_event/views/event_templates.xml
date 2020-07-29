@@ -6,8 +6,8 @@
     <t t-call="website.layout">
         <div id="wrap" class="o_wevent_index">
             <!-- Options -->
-            <t t-set="opt_events_list_cards" t-value="request.website.viewref('website_event.opt_events_list_cards').active"/>
-            <t t-set="opt_events_list_columns" t-value="request.website.viewref('website_event.opt_events_list_columns').active"/>
+            <t t-set="opt_events_list_cards" t-value="is_view_active('website_event.opt_events_list_cards')"/>
+            <t t-set="opt_events_list_columns" t-value="is_view_active('website_event.opt_events_list_columns')"/>
             <!-- Topbar -->
             <t t-call="website_event.index_topbar"/>
             <!-- Drag/Drop Area -->
@@ -164,7 +164,7 @@
 <!-- Index - Events list -->
 <template id="events_list" name="Events list">
     <!-- Options -->
-    <t t-set="opt_index_sidebar" t-value="request.website.viewref('website_event.opt_index_sidebar').active"/>
+    <t t-set="opt_index_sidebar" t-value="is_view_active('website_event.opt_index_sidebar')"/>
     <t t-if="opt_events_list_columns" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-md-6' or 'col-md-6 col-lg-4'"/>
     <t t-else="" t-set="opt_event_size" t-value="opt_index_sidebar and 'col-12' or 'col-xl-10 offset-xl-1'"/>
     <!-- No events -->
