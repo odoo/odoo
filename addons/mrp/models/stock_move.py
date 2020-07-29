@@ -119,6 +119,12 @@ class StockMove(models.Model):
         .filtered(lambda ml: ml.qty_done == 0.0)\
         .write({'move_id': new_move, 'product_uom_qty': 0})
 
+    @api.depends('raw_material_production_id.priority')
+    def _compute_priority(self):
+        super()._compute_priority()
+        for move in self:
+            move.priority = move.raw_material_production_id.priority or move.priority or '0'
+
     @api.depends('raw_material_production_id.move_finished_ids.move_line_ids.lot_id')
     def _compute_order_finished_lot_ids(self):
         for move in self:
