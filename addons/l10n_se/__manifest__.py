@@ -13,10 +13,10 @@
         "data/account_tax_group.xml",
         "data/account_tax_report_data.xml",
         "data/account_tax_template.xml",
-        "data/account_chart_template_configuration.xml",
         "data/account_fiscal_position_template.xml",
         "data/account_fiscal_position_account_template.xml",
         "data/account_fiscal_position_tax_template.xml",
+        "data/account_chart_template_configuration.xml",
     ],
     'demo': [
         'demo/demo_company.xml',
