@@ -498,6 +498,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         copies[4].name = 'XMISC/2019/10005'
         copies[5].name = 'XMISC/2019/10006'
 
+        copies[4].button_draft()
         copies[4].with_context(force_delete=True).unlink()
         copies[5].button_draft()
 
@@ -661,3 +662,13 @@ class TestAccountMove(AccountTestInvoicingCommon):
             {'name': 'included_tax_line',        'debit': 200.0,     'credit': 0.0,      'tax_ids': [],                                  'tax_line_id': self.included_percent_tax.id},
             {'name': 'credit_line_1',            'debit': 0.0,       'credit': 1200.0,   'tax_ids': [],                                  'tax_line_id': False},
         ])
+
+    def test_misc_prevent_unlink_posted_items(self):
+        # You cannot remove journal items if the related journal entry is posted.
+        self.test_move.action_post()
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.line_ids.unlink()
+
+        # You can remove journal items if the related journal entry is draft.
+        self.test_move.button_draft()
+        self.test_move.line_ids.unlink()
