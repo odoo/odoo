@@ -81,8 +81,8 @@
 
             <div class="container o_wslides_home_main">
                 <div class="row">
-                    <t t-set="is_achievements_active" t-value="request.website.viewref('website_slides.toggle_latest_achievements').active"/>
-                    <t t-set="has_side_column" t-value="request.website.viewref('website_slides.toggle_leaderboard').active or is_achievements_active"/>
+                    <t t-set="is_achievements_active" t-value="is_view_active('website_slides.toggle_latest_achievements')"/>
+                    <t t-set="has_side_column" t-value="is_view_active('website_slides.toggle_leaderboard') or is_achievements_active"/>
                     <t t-if="is_public_user">
                         <div t-if="has_side_column" class="col-lg-3 order-3 order-lg-2">
                             <div class="row">

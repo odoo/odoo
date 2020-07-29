@@ -61,8 +61,6 @@ class WebsiteEventController(http.Controller):
                 ("date_begin", "<", sdn(today))],
                 0],
             get_month_filter_domain('month', 0),
-            get_month_filter_domain('nextmonth1', 1),
-            get_month_filter_domain('nextmonth2', 2),
             ['old', _('Past Events'), [
                 ("date_end", "<", sd(today))],
                 0],
