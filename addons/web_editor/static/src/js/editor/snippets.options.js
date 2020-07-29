@@ -1314,36 +1314,59 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     },
 });
 
-const ImagepickerUserValueWidget = UserValueWidget.extend({
+const MediapickerUserValueWidget = UserValueWidget.extend({
     tagName: 'we-button',
     events: {
-        'click': '_onEditImage',
+        'click': '_onEditMedia',
     },
 
     /**
      * @override
      */
-    start: async function () {
+    async start() {
         await this._super(...arguments);
+        if (this.options.dataAttributes.buttonStyle) {
+            const iconEl = document.createElement('i');
+            iconEl.classList.add('fa', 'fa-fw', 'fa-camera');
+            this.containerEl.appendChild(iconEl);
+        } else {
+            this.el.classList.add('fa', 'fa-fw', 'fa-edit');
+        }
+    },
 
-        const allowedSelector = this.el.dataset.allowVideos;
-        this.allowVideos = allowedSelector ? this.$target.is(allowedSelector) : false;
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
 
-        const iconEl = document.createElement('i');
-        iconEl.classList.add('fa', 'fa-fw', 'fa-camera');
-        this.containerEl.appendChild(iconEl);
+    /**
+     * Creates and opens a media dialog to edit a given element's media.
+     *
+     * @private
+     * @param {HTMLElement} el the element whose media should be edited
+     * @param {boolean} [images] whether images should be available
+     *   default: false
+     * @param {boolean} [videos] whether videos should be available
+     *   default: false
+     */
+    _openDialog(el, {images = false, videos = false}) {
+        el.src = this._value;
+        const $editable = this.$target.closest('.o_editable');
+        const mediaDialog = new weWidgets.MediaDialog(this, {
+            noImages: !images,
+            noVideos: !videos,
+            noIcons: true,
+            noDocuments: true,
+            isForBgVideo: true,
+            'res_model': $editable.data('oe-model'),
+            'res_id': $editable.data('oe-id'),
+        }, el).open();
+        return mediaDialog;
     },
 
     //--------------------------------------------------------------------------
     // Public
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    getMethodsParams: function (methodName) {
-        return _.extend({isVideo: this.isVideo}, this._super(...arguments));
-    },
     /**
      * @override
      */
@@ -1357,38 +1380,50 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Called when the edit background button is clicked.
+     * Called when the edit button is clicked.
      *
      * @private
+     * @param {Event} ev
      */
-    _onEditImage: function (ev) {
+    _onEditMedia: function (ev) {},
+});
+
+const ImagepickerUserValueWidget = MediapickerUserValueWidget.extend({
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onEditMedia(ev) {
         // Need a dummy element for the media dialog to modify.
-        const dummyEl = document.createElement(this.isVideo ? 'iframe' : 'img');
-        dummyEl.src = this._value;
-        if (this.isVideo) {
-            // Allows the mediaDialog to select the video tab immediately.
-            dummyEl.classList.add('media_iframe_video');
-        }
-        const $editable = this.$target.closest('.o_editable');
-        const mediaDialog = new weWidgets.MediaDialog(this, {
-            noIcons: true,
-            noDocuments: true,
-            noVideos: !this.allowVideos,
-            isForBgVideo: true,
-            'res_model': $editable.data('oe-model'),
-            'res_id': $editable.data('oe-id'),
-        }, dummyEl).open();
-        mediaDialog.on('save', this, data => {
-            if (data.bgVideoSrc) {
-                this._value = data.bgVideoSrc;
-                this.isVideo = true;
-            } else {
-                // Accessing the value directly through dummyEl.src converts the url to absolute
-                // using getAttribute allows us to keep the url as it was inserted in the DOM
-                // which can be useful to compare it to values stored in db.
-                this._value = dummyEl.getAttribute('src');
-                this.isVideo = false;
-            }
+        const dummyEl = document.createElement('img');
+        const dialog = this._openDialog(dummyEl, {images: true});
+        dialog.on('save', this, data => {
+            // Accessing the value directly through dummyEl.src converts the url to absolute,
+            // using getAttribute allows us to keep the url as it was inserted in the DOM
+            // which can be useful to compare it to values stored in db.
+            this._value = dummyEl.getAttribute('src');
+            this._onUserValueChange();
+        });
+    },
+});
+
+const VideopickerUserValueWidget = MediapickerUserValueWidget.extend({
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onEditMedia(ev) {
+        // Need a dummy element for the media dialog to modify.
+        const dummyEl = document.createElement('iframe');
+        const dialog = this._openDialog(dummyEl, {videos: true});
+        dialog.on('save', this, data => {
+            this._value = data.bgVideoSrc;
             this._onUserValueChange();
         });
     },
@@ -1563,6 +1598,7 @@ const userValueWidgetsRegistry = {
     'we-colorpicker': ColorpickerUserValueWidget,
     'we-datetimepicker': DatetimePickerUserValueWidget,
     'we-imagepicker': ImagepickerUserValueWidget,
+    'we-videopicker': VideopickerUserValueWidget,
     'we-range': RangeUserValueWidget,
 };
 
@@ -3155,6 +3191,46 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
     },
 });
 
+registry.BackgroundToggler = SnippetOptionWidget.extend({
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Toggles background image on or off.
+     *
+     * @see this.selectClass for parameters
+     */
+    toggleBgImage(previewMode, widgetValue, params) {
+        if (!widgetValue) {
+            // TODO: use setWidgetValue instead of calling background directly when possible
+            const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
+            const bgImageOpt = bgImageWidget.getParent();
+            return bgImageOpt.background(false, '', bgImageWidget.getMethodsParams('background'));
+        } else {
+            // TODO: use trigger instead of el.click when possible
+            this._requestUserValueWidgets('bg_image_opt')[0].el.click();
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        if (methodName === 'toggleBgImage') {
+            const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
+            const bgImageOpt = bgImageWidget.getParent();
+            return !!bgImageOpt._computeWidgetState('background', bgImageWidget.getMethodsParams('background'));
+        }
+        return this._super(...arguments);
+    },
+});
+
 /**
  * Handles the edition of snippet's background image.
  */
@@ -3163,10 +3239,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      * @override
      */
     start: function () {
-        // Initialize background and events
-        this.bindBackgroundEvents();
         this.__customImageSrc = this._getSrcFromCssValue();
-
         return this._super(...arguments);
     },
 
@@ -3207,23 +3280,11 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Attaches events so that when a background-color is set, the background
-     * image is removed.
-     */
-    bindBackgroundEvents: function () {
-        if (this.$target.is('.parallax, .s_parallax_bg')) {
-            return;
-        }
-        this.$target.off('.background-option')
-            .on('background-color-event.background-option', this._onBackgroundColorUpdate.bind(this));
-    },
-    /**
      * @override
      */
     setTarget: function () {
         this._super(...arguments);
         // TODO should be automatic for all options as equal to the start method
-        this.bindBackgroundEvents();
         this.__customImageSrc = this._getSrcFromCssValue();
     },
 
@@ -3244,37 +3305,10 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetState: function (methodName) {
-        switch (methodName) {
-            case 'background':
-                return this._getSrcFromCssValue();
+        if (methodName === 'background') {
+            return this._getSrcFromCssValue();
         }
         return this._super(...arguments);
-    },
-
-    //--------------------------------------------------------------------------
-    // Handlers
-    //--------------------------------------------------------------------------
-
-    /**
-     * Called on background-color update (useful to remove the background to be
-     * able to see the chosen color).
-     *
-     * @private
-     * @param {Event} ev
-     * @param {boolean|string} previewMode
-     * @returns {boolean} true if the color has been applied (removing the
-     *                    background)
-     */
-    _onBackgroundColorUpdate: async function (ev, previewMode) {
-        ev.stopPropagation();
-        if (ev.currentTarget !== ev.target) {
-            return false;
-        }
-        if (previewMode === false) {
-            this.__customImageSrc = undefined;
-        }
-        await this.background(previewMode, '', {});
-        return true;
     },
 });
 
@@ -3583,7 +3617,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
  * snippet drop (so that base snippet definition do not need to care about that)
  * and on first focus (for compatibility).
  */
-registry.ColoredLevelBackground = registry.BackgroundImage.extend({
+registry.ColoredLevelBackground = registry.BackgroundToggler.extend({
     /**
      * @override
      */
