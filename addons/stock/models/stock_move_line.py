@@ -585,6 +585,9 @@ class StockMoveLine(models.Model):
             # if this move line is force assigned, unreserve elsewhere if needed
             ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id, action="reserved")
             available_qty, in_date = ml._synchronize_quant(-ml.quantity_product_uom, ml.location_id)
+            # we don't want the in_date if it's an incoming move from a supplier
+            if ml.location_id.usage == "supplier":
+                in_date = False
             ml._synchronize_quant(ml.quantity_product_uom, ml.location_dest_id, package=ml.result_package_id, in_date=in_date)
             if available_qty < 0:
                 ml._free_reservation(
