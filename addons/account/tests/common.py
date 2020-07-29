@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo import fields
-from odoo.tests.common import SavepointCase, HttpCase, tagged, Form
+from odoo.tests.common import SavepointCase, HttpSavepointCase, tagged, Form
 
 import time
 
@@ -34,6 +34,7 @@ class AccountTestInvoicingCommon(SavepointCase):
         user = cls.env['res.users'].create({
             'name': 'Because I am accountman!',
             'login': 'accountman',
+            'password': 'accountman',
             'groups_id': [(6, 0, cls.env.user.groups_id.ids), (4, cls.env.ref('account.group_account_user').id)],
         })
         user.partner_id.email = 'accountman@test.com'
@@ -373,6 +374,11 @@ class AccountTestInvoicingCommon(SavepointCase):
         self.assertRecordValues(sort_lines(move.line_ids.sorted()), expected_lines_values)
         self.assertRecordValues(sort_lines(move.invoice_line_ids.sorted()), expected_lines_values[:len(move.invoice_line_ids)])
         self.assertRecordValues(move, [expected_move_values])
+
+
+@tagged('post_install', '-at_install')
+class AccountTestInvoicingHttpCommon(AccountTestInvoicingCommon, HttpSavepointCase):
+    pass
 
 
 class TestAccountReconciliationCommon(AccountTestInvoicingCommon):

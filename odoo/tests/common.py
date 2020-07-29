@@ -1234,15 +1234,14 @@ class ChromeBrowser():
             return m[0]
         return replacer
 
-class HttpCase(TransactionCase):
-    """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
-    """
+
+class HttpCaseCommon(BaseCase):
     registry_test_mode = True
     browser = None
     browser_size = '1366x768'
 
     def __init__(self, methodName='runTest'):
-        super(HttpCase, self).__init__(methodName)
+        super().__init__(methodName)
         # v8 api with correct xmlrpc exception handling.
         self.xmlrpc_url = url_8 = 'http://%s:%d/xmlrpc/2/' % (HOST, odoo.tools.config['http_port'])
         self.xmlrpc_common = xmlrpclib.ServerProxy(url_8 + 'common')
@@ -1250,6 +1249,20 @@ class HttpCase(TransactionCase):
         self.xmlrpc_object = xmlrpclib.ServerProxy(url_8 + 'object')
         cls = type(self)
         cls._logger = logging.getLogger('%s.%s' % (cls.__module__, cls.__name__))
+
+    def setUp(self):
+        super().setUp()
+        if self.registry_test_mode:
+            self.registry.enter_test_mode(self.cr)
+            self.addCleanup(self.registry.leave_test_mode)
+        # setup a magic session_id that will be rollbacked
+        self.session = odoo.http.root.session_store.new()
+        self.session_id = self.session.sid
+        self.session.db = get_db_name()
+        odoo.http.root.session_store.save(self.session)
+        # setup an url opener helper
+        self.opener = requests.Session()
+        self.opener.cookies['session_id'] = self.session_id
 
     @classmethod
     def start_browser(cls):
@@ -1263,20 +1276,6 @@ class HttpCase(TransactionCase):
         if cls.browser:
             cls.browser.stop()
             cls.browser = None
-
-    def setUp(self):
-        super(HttpCase, self).setUp()
-        if self.registry_test_mode:
-            self.registry.enter_test_mode(self.cr)
-            self.addCleanup(self.registry.leave_test_mode)
-        # setup a magic session_id that will be rollbacked
-        self.session = odoo.http.root.session_store.new()
-        self.session_id = self.session.sid
-        self.session.db = get_db_name()
-        odoo.http.root.session_store.save(self.session)
-        # setup an url opener helper
-        self.opener = requests.Session()
-        self.opener.cookies['session_id'] = self.session_id
 
     def url_open(self, url, data=None, files=None, timeout=10, headers=None, allow_redirects=True):
         self.env['base'].flush()
@@ -1416,6 +1415,16 @@ class HttpCase(TransactionCase):
         # database
         self.env.cache.invalidate()
         return res
+
+
+class HttpCase(HttpCaseCommon, TransactionCase):
+    """ Transactional HTTP TestCase with url_open and Chrome headless helpers.
+    """
+    pass
+
+
+class HttpSavepointCase(HttpCaseCommon, SavepointCase):
+    pass
 
 
 def users(*logins):
