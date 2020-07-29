@@ -91,7 +91,7 @@
                         <field name="meeting_count" widget="statinfo" string="Meetings"/>
                     </button>
                 </div>
-                <widget name="web_ribbon" title="Archived" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
+                <widget name="web_ribbon" title="Refused" bg_color="bg-danger" attrs="{'invisible': [('active', '=', True)]}"/>
                 <field name="kanban_state" widget="kanban_state_selection"/>
                 <field name="active" invisible="1"/>
                 <field name="legend_normal" invisible="1"/>
@@ -285,6 +285,7 @@
                 <templates>
                     <t t-name="kanban-box">
                         <div t-attf-class="{{!selection_mode ? 'oe_kanban_color_' + kanban_getcolor(record.color.raw_value) : ''}} oe_kanban_card oe_kanban_global_click oe_applicant_kanban oe_semantic_html_override">
+                            <span class="badge badge-pill badge-danger pull-right mr-4" attrs="{'invisible': [('active', '=', True)]}">Refused</span>
                             <div class="o_dropdown_kanban dropdown">
                                 <a class="dropdown-toggle o-no-caret btn" role="button" data-toggle="dropdown" href="#" aria-label="Dropdown menu" title="Dropdown menu">
                                     <span class="fa fa-ellipsis-v"/>
@@ -467,9 +468,9 @@
                 <button class="oe_stat_button"
                     icon="fa-pencil"
                     name="%(action_hr_job_applications)d"
-                    context="{'default_user_id': user_id}"
+                    context="{'default_user_id': user_id, 'active_test': False}"
                     type="action">
-                    <field name="application_count" widget="statinfo" string="Applications"/>
+                    <field name="all_application_count" widget="statinfo" string="Applications"/>
                 </button>
                 <button class="oe_stat_button"
                     icon="fa-file-text-o"
