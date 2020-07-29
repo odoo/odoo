@@ -57,6 +57,13 @@ class ModerationDiscardDialog extends Component {
         );
     }
 
+    /**
+     * @returns {string}
+     */
+    get CONFIRMATION() {
+        return this.env._t("Confirmation");
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
