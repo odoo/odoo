@@ -731,6 +731,40 @@ QUnit.test('activity click on mark as done', async function (assert) {
     );
 });
 
+QUnit.test('activity mark as done popover should focus feedback input on open [REQUIRE FOCUS]', async function (assert) {
+    assert.expect(3);
+
+    await this.start();
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+    const activity = this.env.models['mail.activity'].create({
+        canWrite: true,
+        category: 'not_upload_file',
+    });
+    await this.createActivityComponent(activity);
+
+    assert.containsOnce(
+        document.body,
+        '.o_Activity',
+        "should have activity component"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Activity_markDoneButton',
+        "should have activity Mark as Done button"
+    );
+
+    await afterNextRender(() => {
+        document.querySelector('.o_Activity_markDoneButton').click();
+    });
+    assert.strictEqual(
+        document.querySelector('.o_ActivityMarkDonePopover_feedback'),
+        document.activeElement,
+        "the popover textarea should have the focus"
+    );
+});
+
 QUnit.test('activity click on edit', async function (assert) {
     assert.expect(9);
 
@@ -971,6 +1005,74 @@ QUnit.test('activity click on cancel', async function (assert) {
         document.querySelectorAll('.o_Activity').length,
         0,
         "should no longer display activity after clicking on cancel"
+    );
+});
+
+QUnit.test('activity mark done popover close on ESCAPE', async function (assert) {
+    // This test is not in activity_mark_done_popover_tests.js as it requires the activity mark done
+    // component to have a parent in order to allow testing interactions the popover.
+    assert.expect(2);
+
+    await this.start();
+    const activity = this.env.models['mail.activity'].create({
+        canWrite: true,
+        category: 'not_upload_file',
+        id: 12,
+    });
+
+    await this.createActivityComponent(activity);
+    await afterNextRender(() => {
+        document.querySelector('.o_Activity_markDoneButton').click();
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ActivityMarkDonePopover',
+        "Popover component should be present"
+    );
+
+    await afterNextRender(() => {
+        const ev = new window.KeyboardEvent('keydown', { bubbles: true, key: "Escape" });
+        document.querySelector(`.o_ActivityMarkDonePopover`).dispatchEvent(ev);
+    });
+    assert.containsNone(
+        document.body,
+        '.o_ActivityMarkDonePopover',
+        "ESCAPE pressed should have closed the mark done popover"
+    );
+});
+
+QUnit.test('activity mark done popover click on discard', async function (assert) {
+    // This test is not in activity_mark_done_popover_tests.js as it requires the activity mark done
+    // component to have a parent in order to allow testing interactions the popover.
+    assert.expect(3);
+
+    await this.start();
+    const activity = this.env.models['mail.activity'].create({
+        canWrite: true,
+        category: 'not_upload_file',
+        id: 12,
+    });
+    await this.createActivityComponent(activity);
+    await afterNextRender(() => {
+        document.querySelector('.o_Activity_markDoneButton').click();
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_ActivityMarkDonePopover',
+        "Popover component should be present"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ActivityMarkDonePopover_discardButton',
+        "Popover component should contain the discard button"
+    );
+    await afterNextRender(() =>
+        document.querySelector('.o_ActivityMarkDonePopover_discardButton').click()
+    );
+    assert.containsNone(
+        document.body,
+        '.o_ActivityMarkDonePopover',
+        "Discard button clicked should have closed the mark done popover"
     );
 });
 
