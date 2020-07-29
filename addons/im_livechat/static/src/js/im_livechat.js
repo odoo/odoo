@@ -247,7 +247,15 @@ var LivechatButton = Widget.extend({
                     self.call('bus_service', 'addChannel', self._livechat.getUUID());
                     self.call('bus_service', 'startPolling');
 
-                    utils.set_cookie('im_livechat_session', JSON.stringify(self._livechat.toData()), 60*60);
+                    // Safari doesn't accept cookies with non-ASCII characters, so we encode the
+                    // string.
+                    // Note that Python does this encoding automatically.
+                    // Taken from https://stackoverflow.com/a/31652607
+                    let im_livechat_session = JSON.stringify(self._livechat.toData());
+                    im_livechat_session = im_livechat_session.replace(/[\u007F-\uFFFF]/g, chr =>
+                        `\\u${`0000${chr.charCodeAt(0).toString(16)}`.substr(-4)}`
+                    );
+                    utils.set_cookie('im_livechat_session', im_livechat_session, 60*60);
                     utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
                     if (livechatData.operator_pid[0]) {
                         // livechatData.operator_pid contains a tuple (id, name)
