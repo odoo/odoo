@@ -116,9 +116,9 @@ odoo.define('web.PivotController', function (require) {
 
             });
             const noDataDisplayed = !state.hasData || !state.measures.length;
-            this.$buttons.find('.o_pivot_flip_button').toggleClass('d-none', noDataDisplayed);
-            this.$buttons.find('.o_pivot_expand_button').toggleClass('d-none', noDataDisplayed);
-            this.$buttons.find('.o_pivot_download').toggleClass('d-none', noDataDisplayed);
+            this.$buttons.find('.o_pivot_flip_button').prop('disabled', noDataDisplayed);
+            this.$buttons.find('.o_pivot_expand_button').prop('disabled', noDataDisplayed);
+            this.$buttons.find('.o_pivot_download').prop('disabled', noDataDisplayed);
         },
 
         //--------------------------------------------------------------------------

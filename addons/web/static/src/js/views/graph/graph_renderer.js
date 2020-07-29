@@ -767,8 +767,8 @@ return AbstractRenderer.extend({
         if (this.isInDOM) {
             this._renderTitle();
 
-            // try to see if some pathologies are still present after the filtering
-            if (!this.state.isSample && this.state.mode === 'pie') {
+            // detect if some pathologies are still present after the filtering
+            if (this.state.mode === 'pie') {
                 const someNegative = dataPoints.some(dataPt => dataPt.value < 0);
                 const somePositive = dataPoints.some(dataPt => dataPt.value > 0);
                 if (someNegative && somePositive) {
