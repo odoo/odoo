@@ -170,9 +170,9 @@ msgid ""
 "    as a member of one of the Sales Team.\n"
 "</p>"
 msgstr ""
-"<p class='o_view_nocontent_smiling_face'>Adicione novas oportunidades\n"
-"    Você não faz parte de nenhuma equipe comercial. Adicione-se\n"
-"    como membro de uma equipe comercial.\n"
+"<p class='o_view_nocontent_smiling_face'>Adicione novas oportunidades.</p><p>\n"
+"    Você não faz parte de nenhuma equipe comercial.\n"
+"    Adicione-se como membro de uma equipe comercial.\n"
 "</p>"
 
 #. module: crm
@@ -2826,3 +2826,10 @@ msgstr "team_count"
 #, python-format
 msgid "unknown"
 msgstr "desconhecido"
+
+#. module: crm
+#: code:addons/crm/models/crm_team.py:152
+#: code:addons/multierp/src/core/addons/crm/models/crm_team.py:152
+#, python-format
+msgid "<p>As you don't belong to any Sales Team, Odoo opens the first one by default.</p>"
+msgstr "<p><b>Obs.:</b>Como você não pertence a nenhuma equipe de vendas, o sistema abre a primeira por padrão.</p>"
