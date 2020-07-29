@@ -320,7 +320,7 @@ class StockRule(models.Model):
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': picking_description,
-            'priority': values.get('priority', "1"),
+            'priority': values.get('priority', "0"),
             'delay_alert': self.delay_alert,
             'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
         }
@@ -411,7 +411,7 @@ class ProcurementGroup(models.Model):
         procurement_errors = []
         for procurement in procurements:
             procurement.values.setdefault('company_id', self.env.company)
-            procurement.values.setdefault('priority', '1')
+            procurement.values.setdefault('priority', '0')
             procurement.values.setdefault('date_planned', fields.Datetime.now())
             if (
                 procurement.product_id.type not in ('consu', 'product') or

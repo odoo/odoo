@@ -16,7 +16,7 @@ from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_compare, float_is_zero, float_repr, float_round
 from odoo.tools.misc import format_date
 
-PROCUREMENT_PRIORITIES = [('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')]
+PROCUREMENT_PRIORITIES = [('0', 'Normal'), ('1', 'Urgent')]
 
 
 class StockMove(models.Model):
@@ -31,7 +31,9 @@ class StockMove(models.Model):
 
     name = fields.Char('Description', index=True, required=True)
     sequence = fields.Integer('Sequence', default=10)
-    priority = fields.Selection(PROCUREMENT_PRIORITIES, 'Priority', default='1')
+    priority = fields.Selection(
+        PROCUREMENT_PRIORITIES, 'Priority', default='0',
+        compute="_compute_priority", store=True, index=True)
     create_date = fields.Datetime('Creation Date', index=True, readonly=True)
     date = fields.Datetime(
         'Date', default=fields.Datetime.now, index=True, required=True,
@@ -197,6 +199,11 @@ class StockMove(models.Model):
                 move.picking_type_id.use_create_lots and
                 not move.picking_type_id.use_existing_lots
             )
+
+    @api.depends('picking_id.priority')
+    def _compute_priority(self):
+        for move in self:
+            move.priority = move.picking_id.priority or '0'
 
     @api.depends('picking_id.is_locked')
     def _compute_is_locked(self):
@@ -390,7 +397,7 @@ class StockMove(models.Model):
                 total_availability = self.env['stock.quant']._get_available_quantity(move.product_id, move.location_id) if move.product_id else 0.0
                 move.availability = min(move.product_qty, total_availability)
 
-    @api.depends('product_id', 'picking_type_id', 'picking_id', 'reserved_availability')
+    @api.depends('product_id', 'picking_type_id', 'picking_id', 'reserved_availability', 'priority')
     def _compute_json_forecast(self):
         self.json_forecast = False
         if not any(self._ids):

@@ -280,10 +280,7 @@ class Picking(models.Model):
         'procurement.group', 'Procurement Group',
         readonly=True, related='move_lines.group_id', store=True)
     priority = fields.Selection(
-        PROCUREMENT_PRIORITIES, string='Priority',
-        compute='_compute_priority', inverse='_set_priority', store=True,
-        index=True, tracking=True,
-        states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
+        PROCUREMENT_PRIORITIES, string='Priority', default='0', index=True,
         help="Products will be reserved first for the transfers with the highest priorities.")
     scheduled_date = fields.Datetime(
         'Scheduled Date', compute='_compute_scheduled_date', inverse='_set_scheduled_date', store=True,
@@ -482,19 +479,6 @@ class Picking(models.Model):
                     picking.state = 'assigned'
                 else:
                     picking.state = relevant_move_state
-
-    @api.depends('move_lines.priority')
-    def _compute_priority(self):
-        for picking in self:
-            if picking.mapped('move_lines'):
-                priorities = [priority for priority in picking.mapped('move_lines.priority') if priority] or ['1']
-                picking.priority = max(priorities)
-            else:
-                picking.priority = '1'
-
-    def _set_priority(self):
-        for picking in self:
-            picking.move_lines.write({'priority': picking.priority})
 
     @api.depends('move_lines.date_expected')
     def _compute_scheduled_date(self):
@@ -767,7 +751,7 @@ class Picking(models.Model):
                     new_move._action_confirm()
                     todo_moves |= new_move
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
-        self.write({'date_done': fields.Datetime.now()})
+        self.write({'date_done': fields.Datetime.now(), 'priority': '0'})
 
         # if incoming moves make other confirmed/partially_available moves available, assign them
         done_incoming_moves = self.filtered(lambda p: p.picking_type_id.code == 'incoming').move_lines.filtered(lambda m: m.state == 'done')
