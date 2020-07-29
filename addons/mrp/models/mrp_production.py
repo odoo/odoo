@@ -14,6 +14,8 @@ from odoo import api, fields, models, _
 from odoo.exceptions import AccessError, UserError
 from odoo.tools import float_compare, float_round, float_is_zero, format_datetime
 
+from odoo.addons.stock.models.stock_move import PROCUREMENT_PRIORITIES
+
 SIZE_BACK_ORDER_NUMERING = 3
 
 
@@ -23,7 +25,7 @@ class MrpProduction(models.Model):
     _description = 'Production Order'
     _date_name = 'date_planned_start'
     _inherit = ['mail.thread', 'mail.activity.mixin']
-    _order = 'date_planned_start asc,id'
+    _order = 'priority desc, date_planned_start asc,id'
 
     @api.model
     def _get_default_picking_type(self):
@@ -71,6 +73,9 @@ class MrpProduction(models.Model):
 
     name = fields.Char(
         'Reference', copy=False, readonly=True, default=lambda x: _('New'))
+    priority = fields.Selection(
+        PROCUREMENT_PRIORITIES, string='Priority', default='0', index=True,
+        help="Components will be reserved first for the MO with the highest priorities.")
     backorder_sequence = fields.Integer("Backorder Sequence", default=0, copy=False, help="Backorder sequence, if equals to 0 means there is not related backorder")
     origin = fields.Char(
         'Source', copy=False,
@@ -229,8 +234,6 @@ class MrpProduction(models.Model):
         help='The change must be higher than this value to be propagated')
     scrap_ids = fields.One2many('stock.scrap', 'production_id', 'Scraps')
     scrap_count = fields.Integer(compute='_compute_scrap_move_count', string='Scrap Move')
-    priority = fields.Selection([('0', 'Not urgent'), ('1', 'Normal'), ('2', 'Urgent'), ('3', 'Very Urgent')], 'Priority',
-                                readonly=True, states={'draft': [('readonly', False)]}, default='1')
     is_locked = fields.Boolean('Is Locked', default=_get_default_is_locked, copy=False)
     is_planned = fields.Boolean('Its Operations are Planned', compute="_compute_is_planned")
     is_partially_planned = fields.Boolean('One operation is Planned', compute="_compute_is_planned")
@@ -1471,7 +1474,7 @@ class MrpProduction(models.Model):
         })
 
         for production in self:
-            production.write({'date_finished': fields.Datetime.now(), 'product_qty': production.qty_produced})
+            production.write({'date_finished': fields.Datetime.now(), 'product_qty': production.qty_produced, 'priority': '0'})
 
         for workorder in self.workorder_ids.filtered(lambda w: w.state not in ('done', 'cancel')):
             workorder.duration_expected = workorder._get_duration_expected()

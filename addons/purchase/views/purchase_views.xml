@@ -164,6 +164,7 @@
                         <span class="o_form_label" attrs="{'invisible': [('state','not in',('draft','sent'))]}">Request for Quotation </span>
                         <span class="o_form_label" attrs="{'invisible': [('state','in',('draft','sent'))]}">Purchase Order </span>
                         <h1>
+                            <field name="priority" widget="priority" class="mr-3"/>
                             <field name="name" readonly="1"/>
                         </h1>
                     </div>
@@ -393,6 +394,7 @@
                     <field name="user_id"/>
                     <field name="product_id"/>
                     <filter name="my_purchases" string="My Purchases" domain="[('user_id', '=', uid)]"/>
+                    <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter name="draft" string="RFQs" domain="[('state', 'in', ('draft', 'sent', 'to approve'))]"/>
                     <separator/>
@@ -434,6 +436,7 @@
                     <field name="user_id"/>
                     <field name="product_id"/>
                     <filter name="my_Orders" string="My Orders" domain="[('user_id', '=', uid)]"/>
+                    <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter name="unconfirmed" string="Not Acknowledged" domain="[('mail_reception_confirmed', '=', False), ('state', '=', 'purchase')]"/>
                     <filter name="not_invoiced" string="Waiting Bills" domain="[('invoice_status', '=', 'to invoice')]" help="Purchase orders that include lines not invoiced."/>
@@ -479,7 +482,8 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_record_top mb16">
-                                    <div class="o_kanban_record_headings mt4">
+                                    <field name="priority" widget="priority"/>
+                                    <div class="o_kanban_record_headings ml-1">
                                         <strong class="o_kanban_record_title"><span><t t-esc="record.partner_id.value"/></span></strong>
                                     </div>
                                     <strong><field name="amount_total" widget="monetary"/></strong>
@@ -507,6 +511,7 @@
             <field name="arch" type="xml">
                 <tree string="Purchase Order" multi_edit="1" decoration-bf="message_unread==True"
                       decoration-muted="state=='cancel'" decoration-info="state in ('wait','confirmed')" sample="1">
+                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1"/>
@@ -540,6 +545,7 @@
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
+                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1"/>
@@ -576,6 +582,7 @@
                     <header>
                         <button name="action_create_invoice" type="object" string="Create Bills"/>
                     </header>
+                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_unread" invisible="1"/>
                     <field name="partner_ref" optional="hide"/>
                     <field name="name" string="Reference" readonly="1" decoration-bf="1"/>

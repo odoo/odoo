@@ -136,11 +136,11 @@ class ReplenishmentReport(models.AbstractModel):
         in_domain, out_domain = self._move_confirmed_domain(
             product_template_ids, product_variant_ids, wh_location_ids
         )
-        outs = self.env['stock.move'].search(out_domain, order='date_expected, id')
+        outs = self.env['stock.move'].search(out_domain, order='priority desc, date_expected, id')
         outs_per_product = defaultdict(lambda: [])
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
-        ins = self.env['stock.move'].search(in_domain, order='date_expected, id')
+        ins = self.env['stock.move'].search(in_domain, order='priority desc, date_expected, id')
         ins_per_product = defaultdict(lambda: [])
         for in_ in ins:
             ins_per_product[in_.product_id.id].append([in_.product_qty, in_])

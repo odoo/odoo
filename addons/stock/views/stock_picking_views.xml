@@ -160,7 +160,8 @@
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_card oe_kanban_global_click">
                                 <div class="o_kanban_record_top mb8">
-                                    <div class="o_kanban_record_headings">
+                                    <field name="priority" widget="priority"/>
+                                    <div class="o_kanban_record_headings ml-1">
                                         <strong class="o_kanban_record_title"><span><t t-esc="record.name.value"/></span></strong>
                                     </div>
                                     <strong>
@@ -193,6 +194,7 @@
                     <header>
                         <button name="do_unreserve" type="object" string="Unreserve"/>
                     </header>
+                    <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="name" decoration-bf="1"/>
                     <field name="location_id" options="{'no_create': True}" string="From" groups="stock.group_stock_multi_locations" optional="show"/>
                     <field name="location_dest_id" options="{'no_create': True}" string="To" groups="stock.group_stock_multi_locations" optional="show"/>
@@ -208,7 +210,6 @@
                     <field name="origin" optional="show"/>
                     <field name="group_id" invisible="1"/>
                     <field name="backorder_id" optional="hide"/>
-                    <field name="priority" optional="hide"/>
                     <field name="picking_type_id" optional="hide"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="state" optional="show" widget="badge" decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
@@ -285,9 +286,12 @@
                             </div>
                         </button>
                     </div>
-                    <h1>
-                        <field name="name" attrs="{'invisible': [('name','=','/')]}"/>
-                    </h1>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="priority" widget="priority" class="mr-3" attrs="{'invisible': [('name','=','/')]}"/>
+                            <field name="name" attrs="{'invisible': [('name','=','/')]}"/>
+                        </h1>
+                    </div>
                     <group>
                         <group>
                             <div class="o_td_label">
@@ -413,7 +417,6 @@
                                 <group string="Other Information" name="other_infos">
                                     <field name="picking_type_code" invisible="1"/>
                                     <field name="move_type" attrs="{'invisible': [('picking_type_code', '=', 'incoming')]}"/>
-                                    <field name="priority" widget="priority"/>
                                     <field name="user_id" domain="[('share', '=', False)]"/>
                                     <field name="group_id" groups="base.group_no_one"/>
                                     <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" force_save="1"/>
@@ -445,6 +448,7 @@
                     <field name="product_id"/>
                     <field name="picking_type_id"/>
                     <filter name="my_transfers" string="My Transfers" domain="[('user_id', '=', uid)]"/>
+                    <filter string="Starred" name="starred" domain="[('priority', '=', '1')]"/>
                     <separator/>
                     <filter name="draft" string="Draft" domain="[('state', '=', 'draft')]" help="Draft Moves"/>
                     <filter name="waiting" string="Waiting" domain="[('state', 'in', ('confirmed', 'waiting'))]" help="Waiting Moves"/>
