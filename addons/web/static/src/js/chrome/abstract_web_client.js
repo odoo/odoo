@@ -119,6 +119,7 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         this.on("change:title_part", this, this._title_changed);
         this._title_changed();
 
+        const originalState = $.bbq.getState();
         var state = $.bbq.getState();
         // If not set on the url, retrieve cids from the local storage
         // of from the default company on the user
@@ -138,7 +139,9 @@ var AbstractWebClient = Widget.extend(KeyboardNavigationMixin, {
         }
         // Update the user context with this configuration
         session.user_context.allowed_company_ids = stateCompanyIDS;
-        $.bbq.pushState(state);
+        if (!_.isEqual(originalState, state)) {
+            $.bbq.pushState(state);
+        }
         // Update favicon
         $("link[type='image/x-icon']").attr('href', '/web/image/res.company/' + String(stateCompanyIDS[0]) + '/favicon/')
 
