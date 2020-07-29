@@ -18,10 +18,9 @@ try:
             phone_nbr = phonenumbers.parse(number, region=country_code, keep_raw_input=True)
         except phonenumbers.phonenumberutil.NumberParseException as e:
             raise UserError(_('Unable to parse %s:\n%s') % (number, e))
-
         if not phonenumbers.is_possible_number(phone_nbr):
             raise UserError(_('Impossible number %s: probably invalid number of digits') % number)
-        if not phonenumbers.is_valid_number(phone_nbr):
+        if not phonenumbers.is_valid_number(phone_nbr) and tuple([int(e) for e in phonenumbers.__version__.split(".")]) > (8, 8, 10):
             raise UserError(_('Invalid number %s: probably incorrect prefix') % number)
 
         return phone_nbr
