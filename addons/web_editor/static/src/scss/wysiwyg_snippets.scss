@@ -71,11 +71,10 @@ body.editor_enable.editor_has_snippets {
 
         .oe_snippet_thumbnail_img {
             width: 100%;
-            height: 0;
-            padding-bottom: 75%;
-            background-size: cover;
+            height: 60px;
+            background-repeat: no-repeat;
+            background-size: contain;
             background-position: center center;
-            text-align: center;
             overflow: hidden;
         }
 
@@ -160,16 +159,12 @@ body.editor_enable.editor_has_snippets {
         }
 
         .o_panel_body {
+            display: flex; // Needed for too long snippet names
+            flex-wrap: wrap;
             margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
 
-            &::after {
-                content: "";
-                display: table;
-                clear: left;
-            }
-
             > .oe_snippet {
-                float: left;
+                flex: 0 0 auto;
                 width: percentage(1 / 3);
                 background-clip: padding-box;
                 border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
@@ -179,10 +174,6 @@ body.editor_enable.editor_has_snippets {
                 cursor: pointer;
                 cursor: copy;
                 cursor: grab;
-
-                &:nth-child(3n+1) {
-                    clear: left;
-                }
 
                 .oe_snippet_thumbnail_title {
                     display: block;
