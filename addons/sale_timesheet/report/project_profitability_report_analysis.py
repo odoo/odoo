@@ -107,6 +107,7 @@ class ProfitabilityAnalysis(models.Model):
                         JOIN res_company C ON C.id = P.company_id
                         LEFT JOIN (
                             SELECT
+<<<<<<< HEAD
                                 project_id,
                                 analytic_account_id,
                                 sale_line_id,
@@ -240,6 +241,139 @@ class ProfitabilityAnalysis(models.Model):
                         LEFT JOIN product_template T on (PP.product_tmpl_id=T.id)
                         WHERE P.active = 't' AND P.analytic_account_id IS NOT NULL
                     ) AS sub
+=======
+                                P.id AS project_id,
+                                P.analytic_account_id AS analytic_account_id,
+                                TS.so_line AS sale_line_id,
+                                SUM(TS.unit_amount) AS timesheet_unit_amount,
+                                SUM(TS.amount) AS timesheet_cost,
+                                0.0 AS other_revenues,
+                                0.0 AS expense_cost,
+                                0.0 AS downpayment_invoiced
+                            FROM account_analytic_line TS, project_project P
+                            WHERE TS.project_id IS NOT NULL AND P.id = TS.project_id AND P.active = 't' AND P.allow_timesheets = 't'
+                            GROUP BY P.id, TS.so_line
+
+                            UNION
+
+                            SELECT
+                                P.id AS project_id,
+                                P.analytic_account_id AS analytic_account_id,
+                                AAL.so_line AS sale_line_id,
+                                0.0 AS timesheet_unit_amount,
+                                0.0 AS timesheet_cost,
+                                SUM(AAL.amount) AS other_revenues,
+                                0.0 AS expense_cost,
+                                0.0 AS downpayment_invoiced
+                            FROM project_project P
+                                LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
+                                LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
+                            WHERE AAL.amount > 0.0 AND AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
+                            GROUP BY P.id, AA.id, AAL.so_line
+
+                            UNION
+
+                            SELECT
+                                P.id AS project_id,
+                                P.analytic_account_id AS analytic_account_id,
+                                AAL.so_line AS sale_line_id,
+                                0.0 AS timesheet_unit_amount,
+                                0.0 AS timesheet_cost,
+                                0.0 AS other_revenues,
+                                SUM(AAL.amount) AS expense_cost,
+                                0.0 AS downpayment_invoiced
+                            FROM project_project P
+                                LEFT JOIN account_analytic_account AA ON P.analytic_account_id = AA.id
+                                LEFT JOIN account_analytic_line AAL ON AAL.account_id = AA.id
+                            WHERE  AAL.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
+                                AND (AAL.amount < 0.0
+                                    -- Also retrieve credit notes
+                                    OR AAL.amount > 0.0 AND EXISTS (
+                                        SELECT *
+                                        FROM account_analytic_account AA2
+                                            LEFT JOIN account_analytic_line AAL2 ON AAL2.account_id = AA2.id
+                                        WHERE AA.id = AA2.id AND AAL.amount = -AAL2.amount AND AAL.partner_id = AAL2.partner_id AND AAL.product_id = AAL2.product_id
+                                    )
+                                )
+                            GROUP BY P.id, AA.id, AAL.so_line
+
+                            UNION
+
+                            SELECT
+                                P.id AS project_id,
+                                P.analytic_account_id AS analytic_account_id,
+                                MY_SOLS.id AS sale_line_id,
+                                0.0 AS timesheet_unit_amount,
+                                0.0 AS timesheet_cost,
+                                0.0 AS other_revenues,
+                                0.0 AS expense_cost,
+                                CASE WHEN MY_SOLS.invoice_status = 'invoiced' THEN MY_SOLS.price_reduce ELSE 0.0 END AS downpayment_invoiced
+                            FROM project_project P
+                                LEFT JOIN sale_order_line MY_SOL ON P.sale_line_id = MY_SOL.id
+                                LEFT JOIN sale_order MY_S ON MY_SOL.order_id = MY_S.id
+                                LEFT JOIN sale_order_line MY_SOLS ON MY_SOLS.order_id = MY_S.id
+                            WHERE MY_SOLS.is_downpayment = 't'
+                            GROUP BY P.id, MY_SOLS.id
+
+                            UNION
+
+                            SELECT
+                                P.id AS project_id,
+                                P.analytic_account_id AS analytic_account_id,
+                                OLIS.id AS sale_line_id,
+                                0.0 AS timesheet_unit_amount,
+                                0.0 AS timesheet_cost,
+                                0.0 AS other_revenues,
+                                OLIS.price_reduce AS expense_cost,
+                                0.0 AS downpayment_invoiced
+                            FROM project_project P
+                                LEFT JOIN account_analytic_account ANAC ON P.analytic_account_id = ANAC.id
+                                LEFT JOIN account_analytic_line ANLI ON ANAC.id = ANLI.account_id
+                                LEFT JOIN sale_order_line OLI ON P.sale_line_id = OLI.id
+                                LEFT JOIN sale_order ORD ON OLI.order_id = ORD.id
+                                LEFT JOIN sale_order_line OLIS ON ORD.id = OLIS.order_id
+                            WHERE OLIS.product_id = ANLI.product_id AND OLIS.is_downpayment = 't' AND ANLI.amount < 0.0 AND ANLI.project_id IS NULL AND P.active = 't' AND P.allow_timesheets = 't'
+                            GROUP BY P.id, OLIS.id
+
+                            UNION
+
+                            SELECT
+                                P.id AS project_id,
+                                P.analytic_account_id AS analytic_account_id,
+                                SOL.id AS sale_line_id,
+                                0.0 AS timesheet_unit_amount,
+                                0.0 AS timesheet_cost,
+                                0.0 AS other_revenues,
+                                0.0 AS expense_cost,
+                                0.0 AS downpayment_invoiced
+                            FROM sale_order_line SOL
+                                INNER JOIN project_project P ON SOL.project_id = P.id
+                            WHERE P.active = 't' AND P.allow_timesheets = 't'
+
+                            UNION
+
+                            SELECT
+                                P.id AS project_id,
+                                P.analytic_account_id AS analytic_account_id,
+                                SOL.id AS sale_line_id,
+                                0.0 AS timesheet_unit_amount,
+                                0.0 AS timesheet_cost,
+                                0.0 AS other_revenues,
+                                0.0 AS expense_cost,
+                                0.0 AS downpayment_invoiced
+                            FROM sale_order_line SOL
+                                INNER JOIN project_task T ON SOL.task_id = T.id
+                                INNER JOIN project_project P ON P.id = T.project_id
+                            WHERE P.active = 't' AND P.allow_timesheets = 't'
+                        ) SUB_COST_SUMMARY
+                        GROUP BY project_id, analytic_account_id, sale_line_id
+                    ) COST_SUMMARY ON COST_SUMMARY.project_id = P.id
+                    LEFT JOIN sale_order_line SOL ON COST_SUMMARY.sale_line_id = SOL.id
+                    LEFT JOIN sale_order S ON SOL.order_id = S.id
+                    LEFT JOIN product_product PP on (SOL.product_id=PP.id)
+                    LEFT JOIN product_template T on (PP.product_tmpl_id=T.id)
+                    WHERE P.active = 't' AND P.analytic_account_id IS NOT NULL
+>>>>>>> 1b9bb41219e... temp
             )
         """ % self._table
         self._cr.execute(query)
