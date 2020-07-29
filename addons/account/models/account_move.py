@@ -3476,6 +3476,10 @@ class AccountMoveLine(models.Model):
     def unlink(self):
         moves = self.mapped('move_id')
 
+        # Prevent deleting lines on posted entries
+        if any(m.state == 'posted' for m in moves):
+            raise UserError(_('You cannot delete an item linked to a posted entry.'))
+
         # Check the lines are not reconciled (partially or not).
         self._check_reconciliation()
 
