@@ -477,6 +477,8 @@ class SaleOrder(models.Model):
     @api.multi
     def action_draft(self):
         orders = self.filtered(lambda s: s.state in ['cancel', 'sent'])
+        if any([order.state == 'cancel' and any([line.subscription_id for line in order.order_line]) for order in orders]):
+            raise UserError(_('You cannot set to draft a canceled quotation linked to subscriptions. Please create a new quotation.'))
         return orders.write({
             'state': 'draft',
         })
