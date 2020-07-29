@@ -78,6 +78,7 @@
         'static/src/xml/Screens/ProductScreen/NumpadWidget.xml',
         'static/src/xml/Screens/ProductScreen/ActionpadWidget.xml',
         'static/src/xml/Screens/ProductScreen/CategoryBreadcrumb.xml',
+        'static/src/xml/Screens/ProductScreen/CashBoxOpening.xml',
         'static/src/xml/Screens/ProductScreen/CategoryButton.xml',
         'static/src/xml/Screens/ProductScreen/CategorySimpleButton.xml',
         'static/src/xml/Screens/ProductScreen/HomeCategoryBreadcrumb.xml',
