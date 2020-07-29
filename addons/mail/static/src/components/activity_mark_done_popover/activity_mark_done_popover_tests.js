@@ -134,37 +134,6 @@ QUnit.test('activity with force next mark done popover simplest layout', async f
     );
 });
 
-QUnit.test('activity mark done popover click on discard', async function (assert) {
-    assert.expect(4);
-
-    await this.start();
-    const activity = this.env.models['mail.activity'].create({
-        canWrite: true,
-        category: 'not_upload_file',
-        id: 12,
-    });
-    await this.createActivityMarkDonePopoverComponent(activity);
-    function onPopoverClose(ev) {
-        assert.step('event_triggered');
-    }
-    document.addEventListener('o-popover-close', onPopoverClose);
-
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover',
-        "Popover component should be present"
-    );
-    assert.containsOnce(
-        document.body,
-        '.o_ActivityMarkDonePopover_discardButton',
-        "Popover component should contain the discard button"
-    );
-    document.querySelector('.o_ActivityMarkDonePopover_discardButton').click();
-    assert.verifySteps(['event_triggered'], 'Discard clicked should trigger the right event');
-
-    document.removeEventListener('o-popover-close', onPopoverClose);
-});
-
 QUnit.test('activity mark done popover mark done without feedback', async function (assert) {
     assert.expect(7);
 
