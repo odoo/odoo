@@ -1019,12 +1019,10 @@
                 <t t-raw='receipt.footer_html'/>
             </div>
 
-            <div t-if='!receipt.footer_html and receipt.footer'  class="pos-receipt-center-align">
-                <br/>
+            <div t-if='!receipt.footer_html and receipt.footer'  class="pos-receipt-center-align" style="white-space:pre-line">
                 <t t-esc='receipt.footer'/>
-                <br/>
-                <br/>
             </div>
+            <br/>
 
             <div class='after-footer'>
                 <t t-foreach='paymentlines' t-as='line'>

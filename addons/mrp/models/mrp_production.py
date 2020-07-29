@@ -324,6 +324,17 @@ class MrpProduction(models.Model):
         - to_close: The quantity produced is greater than the quantity to
         produce and all work orders has been finished.
         """
+
+        # Manually track "state" and "reservation_state" since tracking doesn't work with computed
+        # fields.
+        tracking = not self._context.get("mail_notrack") and not self._context.get("tracking_disable")
+        initial_values = {}
+        if tracking:
+            initial_values = dict(
+                (production.id, {"state": production.state, "reservation_state": production.reservation_state})
+                for production in self
+            )
+
         # TODO: duplicated code with stock_picking.py
         for production in self:
             if not production.move_raw_ids:
@@ -365,6 +376,9 @@ class MrpProduction(models.Model):
                         production.reservation_state = 'confirmed'
                 elif relevant_move_state != 'draft':
                     production.reservation_state = relevant_move_state
+
+        if tracking and initial_values:
+            self.message_track(self.fields_get(["state", "reservation_state"]), initial_values)
 
     @api.depends('move_raw_ids', 'is_locked', 'state', 'move_raw_ids.quantity_done')
     def _compute_unreserve_visible(self):
