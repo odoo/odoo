@@ -48,6 +48,13 @@ class ModerationRejectDialog extends Component {
         );
     }
 
+    /**
+     * @returns {string}
+     */
+    get SEND_EXPLANATION_TO_AUTHOR() {
+        return this.env._t("Send explanation to author");
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
