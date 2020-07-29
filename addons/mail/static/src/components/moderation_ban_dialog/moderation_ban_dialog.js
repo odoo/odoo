@@ -42,6 +42,13 @@ class ModerationBanDialog extends Component {
         return this.props.messageLocalIds.map(localId => this.env.models['mail.message'].get(localId));
     }
 
+    /**
+     * @returns {string}
+     */
+    get CONFIRMATION() {
+        return this.env._t("Confirmation");
+    }
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------

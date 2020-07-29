@@ -536,9 +536,7 @@ QUnit.test('reject pending moderation message (reject with explanation)', async 
     );
     assert.strictEqual(
         dialog.querySelector('.modal-title').textContent,
-        // TODO FIXME, this should be a proper title "Send explanation to author"
-        // see https://github.com/odoo/owl/issues/670
-        "[object Object]",
+        "Send explanation to author",
         "dialog should have correct title"
     );
 
@@ -694,14 +692,12 @@ QUnit.test('discard pending moderation message (reject without explanation)', as
     );
     assert.strictEqual(
         dialog.querySelector('.modal-title').textContent,
-        // TODO FIXME, this should be a proper title "Confirmation"
-        // see https://github.com/odoo/owl/issues/670
-        "[object Object]",
+        "Confirmation",
         "dialog should have correct title"
     );
     assert.strictEqual(
         dialog.textContent,
-        "[object Object]×You are going to discard 1 message.Do you confirm the action?DiscardCancel",
+        "Confirmation×You are going to discard 1 message.Do you confirm the action?DiscardCancel",
         "should warn the user on discard action"
     );
 
