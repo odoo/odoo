@@ -215,26 +215,22 @@
       name="Notes"
       sequence="3"
       action="note.action_note_note"
-      web_icon="note,static/description/icon.png"/>
-
-    <menuitem
-      id="menu_note_configuration"
-      name="Configuration"
-      sequence="100"
-      parent="menu_note_notes"
-      groups="base.group_no_one"/>
-
-    <menuitem
-      id="menu_notes_stage"
-      name="Stages"
-      parent="menu_note_configuration"
-      action="note.action_note_stage"
-      sequence="21"/>
-
-    <menuitem
-      id="notes_tag_menu"
-      parent="menu_note_configuration"
-      action="note_tag_action"
-      sequence="22"/>
+      web_icon="note,static/description/icon.png">
+        <menuitem
+          id="menu_note_configuration"
+          name="Configuration"
+          sequence="100"
+          groups="base.group_no_one">
+            <menuitem
+              id="menu_notes_stage"
+              name="Stages"
+              action="note.action_note_stage"
+              sequence="21"/>
+            <menuitem
+              id="notes_tag_menu"
+              action="note_tag_action"
+              sequence="22"/>
+        </menuitem>
+    </menuitem>
 
 </odoo>
