@@ -7,6 +7,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
     const { useListener } = require('web.custom_hooks');
     const Registries = require('point_of_sale.Registries');
     const { onChangeOrder, useBarcodeReader } = require('point_of_sale.custom_hooks');
+    const { useState } = owl.hooks;
 
     class ProductScreen extends ControlButtonsMixin(PosComponent) {
         constructor() {
@@ -31,6 +32,8 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                 triggerAtInput: 'update-selected-orderline',
                 useWithBarcode: true,
             });
+            let status = this.showCashBoxOpening()
+            this.state = useState({ cashControl: status});
             this.numpadMode = 'quantity';
             this.mobile_pane = this.props.mobile_pane || 'right';
         }
@@ -53,6 +56,11 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
         }
         get currentOrder() {
             return this.env.pos.get_order();
+        }
+        showCashBoxOpening() {
+            if(this.env.pos.config.cash_control && this.env.pos.pos_session.state == 'opening_control')
+                return true;
+            return false;
         }
         async _clickProduct(event) {
             if (!this.currentOrder) {
