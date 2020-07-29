@@ -7,8 +7,8 @@ from odoo.http import request
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(CustomerPortal, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self):
+        values = super(CustomerPortal, self)._prepare_home_portal_values()
         values['referral_updates_count'] = ''
         # Keep link to avoid having a pointless button
         values['referral_link'] = request.env.user._get_referral_link()
