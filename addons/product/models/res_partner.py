@@ -30,9 +30,17 @@ class Partner(models.Model):
         )
         default_for_country = pls and pls[0]
         actual = self.env['ir.property'].get('property_product_pricelist', 'res.partner', 'res.partner,%s' % self.id)
-
+        # We want to keep the current pricelist if it's still valid for the new country
+        # or if the country would be the same, like in the case of an state change that
+        # triggers this method and could lead to lose the original pricelist
+        update_country = False
+        if default_for_country and actual and default_for_country.id != actual.id:
+            if not actual.country_group_ids:
+                update_country = default_for_country.currency_id != actual.currency_id
+            else:
+                update_country = self.country_id not in actual.mapped("country_group_ids.country_ids")
         # update at each change country, and so erase old pricelist
-        if self.property_product_pricelist or (actual and default_for_country and default_for_country.id != actual.id):
+        if self.property_product_pricelist or update_country:
             # keep the company of the current user before sudo
             self.env['ir.property'].with_context(force_company=self._context.get('force_company', self.env.user.company_id.id)).sudo().set_multi(
                 'property_product_pricelist',
