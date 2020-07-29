@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="view_pos_details_wizard" model="ir.ui.view">
+        <field name="name">pos.details.wizard.form</field>
+        <field name="model">pos.details.wizard</field>
+        <field name="inherit_id" ref="point_of_sale.view_pos_details_wizard"/>
+        <field name="arch" type="xml">
+            <field name="end_date" position="after">
+                <field name="include_products" attrs="{'invisible': [('country_code', '!=', 'CO')]}"/>
+                <field name="country_code" invisible="1"/>
+            </field>
+        </field>
+    </record>
+</odoo>

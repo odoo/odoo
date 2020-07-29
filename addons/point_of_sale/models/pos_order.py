@@ -867,9 +867,8 @@ class ReportSaleDetails(models.AbstractModel):
     _name = 'report.point_of_sale.report_saledetails'
     _description = 'Point of Sale Details'
 
-
     @api.model
-    def get_sale_details(self, date_start=False, date_stop=False, config_ids=False, session_ids=False):
+    def get_sale_details(self, date_start=False, date_stop=False, config_ids=False, session_ids=False, include_products=False):
         """ Serialise the orders of the requested time period, configs and sessions.
 
         :param date_start: The dateTime to start, default today 00:00:00.
@@ -883,7 +882,7 @@ class ReportSaleDetails(models.AbstractModel):
 
         :returns: dict -- Serialised sales.
         """
-        domain = [('state', 'in', ['paid','invoiced','done'])]
+        domain = [('state', 'in', ['paid', 'invoiced', 'done'])]
 
         if (session_ids):
             domain = AND([domain, [('session_id', 'in', session_ids)]])
@@ -906,12 +905,15 @@ class ReportSaleDetails(models.AbstractModel):
                 date_stop = date_start + timedelta(days=1, seconds=-1)
 
             domain = AND([domain,
-                [('date_order', '>=', fields.Datetime.to_string(date_start)),
-                ('date_order', '<=', fields.Datetime.to_string(date_stop))]
-            ])
+                          [('date_order', '>=', fields.Datetime.to_string(date_start)),
+                           ('date_order', '<=', fields.Datetime.to_string(date_stop))]
+                          ])
 
-            if config_ids:
-                domain = AND([domain, [('config_id', 'in', config_ids)]])
+        return self.prepare_sale_details(domain, date_start, date_stop, config_ids, session_ids, include_products)
+
+    def prepare_sale_details(self, domain, date_start, date_stop, config_ids, session_ids, include_products):
+        if not session_ids and config_ids:
+            domain = AND([domain, [('config_id', 'in', config_ids)]])
 
         orders = self.env['pos.order'].search(domain)
 
@@ -977,5 +979,5 @@ class ReportSaleDetails(models.AbstractModel):
     def _get_report_values(self, docids, data=None):
         data = dict(data or {})
         configs = self.env['pos.config'].browse(data['config_ids'])
-        data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs.ids))
+        data.update(self.get_sale_details(data['date_start'], data['date_stop'], configs.ids, include_products=data.get('include_products', False)))
         return data
