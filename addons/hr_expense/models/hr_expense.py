@@ -112,7 +112,7 @@ class HrExpense(models.Model):
                 date_expense = expense.date
                 amount = expense.currency_id._convert(
                     expense.total_amount, expense.company_currency_id,
-                    expense.company_id, date_expense or fields.Date.today())
+                    expense.company_id or expense.sheet_id.company_id, date_expense or fields.Date.today())
             expense.total_amount_company = amount
 
     @api.multi
