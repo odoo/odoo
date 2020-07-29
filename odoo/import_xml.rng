@@ -234,8 +234,9 @@
         </rng:optional>
         <rng:optional><rng:attribute name="groups"/></rng:optional>
         <rng:optional><rng:attribute name="active"/></rng:optional>
+    </rng:define>
+    <rng:define name="submenuitem_contents">
         <rng:optional>
-            <!-- menu can't have both children and action -->
             <rng:choice>
                 <rng:attribute name="action"/>
                 <rng:oneOrMore>
@@ -247,19 +248,25 @@
     <rng:define name="menuitem">
         <rng:element name="menuitem">
             <rng:ref name="menuitem_attrs"/>
-            <rng:optional>
-                <rng:choice>
-                    <!-- can't have submenus with icons -->
+            <rng:choice>
+                <!-- a root menu can have a web_icon, an action and children -->
+                <rng:group>
+                    <rng:optional><rng:attribute name="web_icon"/></rng:optional>
+                    <rng:optional><rng:attribute name="action"/></rng:optional>
+                    <rng:zeroOrMore><rng:ref name="submenuitem"/></rng:zeroOrMore>
+                </rng:group>
+                <!-- a non-root menu can have a parent and either an action or submenus -->
+                <rng:group>
                     <rng:attribute name="parent"/>
-                    <rng:attribute name="web_icon"/>
-                </rng:choice>
-            </rng:optional>
+                    <rng:ref name="submenuitem_contents"/>
+                </rng:group>
+            </rng:choice>
         </rng:element>
     </rng:define>
-    <!-- menuitem except no parent (is implicit) or web_icon attributes -->
     <rng:define name="submenuitem">
         <rng:element name="menuitem">
             <rng:ref name="menuitem_attrs"/>
+            <rng:ref name="submenuitem_contents"/>
         </rng:element>
     </rng:define>
 
