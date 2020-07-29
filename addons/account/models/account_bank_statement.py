@@ -1187,7 +1187,7 @@ class AccountBankStatementLine(models.Model):
         to_delete_commands = [(2, line.id) for line in suspense_lines + other_lines]
 
         # Cleanup previous lines.
-        self.move_id.with_context(check_move_validity=False, skip_account_move_synchronization=True).write({
+        self.move_id.with_context(check_move_validity=False, skip_account_move_synchronization=True, force_delete=True).write({
             'line_ids': to_delete_commands + to_create_commands,
             'to_check': to_check,
         })
@@ -1232,7 +1232,7 @@ class AccountBankStatementLine(models.Model):
         self.payment_ids.unlink()
 
         for st_line in self:
-            st_line.write({
+            st_line.with_context(force_delete=True).write({
                 'to_check': False,
                 'line_ids': [(5, 0)] + [(0, 0, line_vals) for line_vals in st_line._prepare_move_line_default_vals()],
             })
