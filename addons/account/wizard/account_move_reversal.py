@@ -57,6 +57,9 @@ class AccountMoveReversal(models.TransientModel):
             'invoice_user_id': move.invoice_user_id.id,
         }
 
+    def _reverse_moves_post_hook(self, moves):
+        return
+
     def reverse_moves(self):
         moves = self.env['account.move'].browse(self.env.context['active_ids']) if self.env.context.get('active_model') == 'account.move' else self.move_id
 
@@ -83,6 +86,9 @@ class AccountMoveReversal(models.TransientModel):
             new_moves = moves._reverse_moves(default_values_list)
         else:
             return
+
+        if new_moves:
+            self._reverse_moves_post_hook(new_moves)
 
         # Create action.
         action = {
