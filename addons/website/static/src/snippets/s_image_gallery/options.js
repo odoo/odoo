@@ -469,7 +469,6 @@ options.registry.gallery_img = options.Class.extend({
      * @see this.selectClass for parameters
      */
     position: function (previewMode, widgetValue, params) {
-        this.trigger_up('deactivate_snippet');
         this.trigger_up('option_update', {
             optionName: 'gallery',
             name: 'image_index_request',
