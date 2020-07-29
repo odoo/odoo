@@ -329,6 +329,8 @@ class Repair(models.Model):
                     'invoice_line_ids': [],
                     'fiscal_position_id': fp_id
                 }
+                if partner_invoice.property_payment_term_id:
+                    invoice_vals['invoice_payment_term_id'] = partner_invoice.property_payment_term_id.id
                 current_invoices_list.append(invoice_vals)
             else:
                 # if group == True: concatenate invoices by partner and currency
