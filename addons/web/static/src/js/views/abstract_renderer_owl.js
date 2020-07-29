@@ -42,6 +42,8 @@ odoo.define('web.AbstractRendererOwl', function (require) {
          */
         _suppressFocusableElements() {
             if (!this.props.isSample || this.props.isEmbedded) {
+                const disabledEls = this.el.querySelectorAll(`.o_sample_data_disabled`);
+                disabledEls.forEach(el => el.classList.remove('o_sample_data_disabled'));
                 return;
             }
             const rootEls = [];

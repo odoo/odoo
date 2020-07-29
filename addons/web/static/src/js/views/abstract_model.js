@@ -86,6 +86,7 @@ var AbstractModel = mvc.Model.extend({
             state.isSample = true;
         } else {
             state = this.__get(...arguments);
+            state.isSample = false;
         }
         return state;
     },
