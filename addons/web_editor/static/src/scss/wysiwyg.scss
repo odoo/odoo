@@ -7,6 +7,17 @@ $o-we-zindex: $o-we-overlay-zindex + 1 !default;
     @include print-variable('o-we-toolbar-height', $o-we-toolbar-height);
 }
 
+.o_we_command_protector {
+    font-weight: 400 !important;
+
+    b, strong {
+        font-weight: 700 !important;
+    }
+    * {
+        font-weight: inherit !important;
+    }
+}
+
 // EDITOR TOP BAR AND POPOVER
 .note-popover .popover {
     max-width: 350px;
