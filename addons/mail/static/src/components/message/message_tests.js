@@ -125,25 +125,6 @@ QUnit.test('basic rendering', async function (assert) {
     );
 });
 
-QUnit.test('delete attachment linked to message', async function (assert) {
-    assert.expect(1);
-
-    await this.start();
-    const message = this.env.models['mail.message'].create({
-        attachments: [['insert-and-replace', {
-            filename: "BLAH.jpg",
-            id: 10,
-            name: "BLAH",
-        }]],
-        author: [['insert', { id: 7, display_name: "Demo User" }]],
-        body: "<p>Test</p>",
-        id: 100,
-    });
-    await this.createMessageComponent(message);
-    await afterNextRender(() => document.querySelector('.o_Attachment_asideItemUnlink').click());
-    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.id === 10));
-});
-
 QUnit.test('moderation: moderated channel with pending moderation message (author)', async function (assert) {
     assert.expect(1);
 
@@ -698,6 +679,68 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         '.o_MessageSeenIndicator_icon',
         2,
         "message component should have two checks (V)"
+    );
+});
+
+QUnit.test('allow attachment delete on authored message', async function (assert) {
+    assert.expect(3);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        attachments: [['insert-and-replace', {
+            filename: "BLAH.jpg",
+            id: 10,
+            name: "BLAH",
+        }]],
+        author: [['insert', { id: this.env.session.partner_id, display_name: "Me" }]],
+        body: "<p>Test</p>",
+        id: 100,
+    });
+    await this.createMessageComponent(message);
+
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should have an attachment",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment_asideItemUnlink',
+        "should have delete attachment button"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_Attachment_asideItemUnlink').click());
+    assert.containsNone(
+        document.body,
+        '.o_Attachment',
+        "should no longer have an attachment",
+    );
+});
+QUnit.test('prevent attachment delete on non-authored message', async function (assert) {
+    assert.expect(2);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        attachments: [['insert-and-replace', {
+            filename: "BLAH.jpg",
+            id: 10,
+            name: "BLAH",
+        }]],
+        author: [['insert', { id: 11, display_name: "Guy" }]],
+        body: "<p>Test</p>",
+        id: 100,
+    });
+    await this.createMessageComponent(message);
+
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should have an attachment",
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Attachment_asideItemUnlink',
+        "delete attachment button should not be printed"
     );
 });
 
