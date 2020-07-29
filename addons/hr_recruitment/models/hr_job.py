@@ -23,6 +23,7 @@ class Job(models.Model):
         help="Address where employees are working")
     application_ids = fields.One2many('hr.applicant', 'job_id', "Applications")
     application_count = fields.Integer(compute='_compute_application_count', string="Application Count")
+    all_application_count = fields.Integer(compute='_compute_all_application_count', string="All Application Count")
     new_application_count = fields.Integer(
         compute='_compute_new_application_count', string="New Application",
         help="Number of applications that are new in the flow (typically at first step of the flow)")
@@ -73,6 +74,12 @@ class Job(models.Model):
         for job in self:
             job.document_ids = result[job.id]
             job.documents_count = len(job.document_ids)
+
+    def _compute_all_application_count(self):
+        read_group_result = self.env['hr.applicant'].with_context(active_test=False).read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
+        result = dict((data['job_id'][0], data['job_id_count']) for data in read_group_result)
+        for job in self:
+            job.all_application_count = result.get(job.id, 0)
 
     def _compute_application_count(self):
         read_group_result = self.env['hr.applicant'].read_group([('job_id', 'in', self.ids)], ['job_id'], ['job_id'])
