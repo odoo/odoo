@@ -27,7 +27,7 @@ odoo.define("website_blog.tour", function (require) {
         position: "top",
         run: "text",
     }, {
-        trigger: "we-button:has(.fa-camera)",
+        trigger: "we-button[data-background]:nth(1)",
         extra_trigger: "#wrap div[data-oe-expression=\"blog_post.name\"]:not(:containsExact(\"\"))",
         content: _t("Set a blog post <b>cover</b>."),
         position: "right",
