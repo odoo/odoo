@@ -163,7 +163,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Sign in as admin",
-        trigger: '#top_menu li a b:contains("Sign in")',
+        trigger: 'header a[href="/web/login"]',
     },
     {
         content: "Submit login",
@@ -308,7 +308,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Sign in as admin",
-        trigger: '#top_menu li a b:contains("Sign in")',
+        trigger: 'header a[href="/web/login"]',
     },
     {
         content: "Submit login",
@@ -339,7 +339,7 @@ odoo.define('website_sale_tour.tour', function (require) {
     },
     {
         content: "Sign in as abc",
-        trigger: '#top_menu li a b:contains("Sign in")',
+        trigger: 'header a[href="/web/login"]',
     },
     {
         content: "Submit login",
