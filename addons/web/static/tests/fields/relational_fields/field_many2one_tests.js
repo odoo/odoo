@@ -254,8 +254,7 @@ QUnit.module('fields', {}, function () {
             form.destroy();
         });
 
-        QUnit.skip('context in many2one and default get', async function (assert) {
-            // LPE: much problem!
+        QUnit.test('context in many2one and default get', async function (assert) {
             assert.expect(1);
 
             this.data.partner.fields.int_field.default = 14;

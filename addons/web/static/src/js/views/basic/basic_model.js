@@ -1734,6 +1734,7 @@ var BasicModel = AbstractModel.extend({
                             modelName: modelName,
                             parentID: record.id,
                         });
+                        // LPE fixme: check if onchange (python) returns the name_get too
                         defs.push(self._fetchNameGet(rec));
                         id = rec.id;
                         record._changes[name] = id;
@@ -2734,17 +2735,20 @@ var BasicModel = AbstractModel.extend({
         var self = this;
         var toBeFetched = [];
 
+        const recContextSerial = JSON.stringify(record.getContext({viewType: record.viewType}));
         // find all many2one related records to be fetched
         _.each(record.getFieldNames(), function (name) {
             var field = record.fields[name];
             if (field.type === 'many2one' && !record.fieldsInfo[record.viewType][name].__no_fetch) {
                 var localId = (record._changes && record._changes[name]) || record.data[name];
                 var relatedRecord = self.localData[localId];
-                if (!relatedRecord || relatedRecord.data.display_name) {
+                const recFieldContext = record.getContext({fieldName: name, viewType: record.viewType});
+                if (!relatedRecord ||
+                    (relatedRecord.data.display_name && recContextSerial === JSON.stringify(recFieldContext))) {
                     return;
                 }
                 toBeFetched.push({
-                    context: record.getContext({fieldName: name, viewType: record.viewType}),
+                    context: recFieldContext,
                     record: relatedRecord
                 });
             }
