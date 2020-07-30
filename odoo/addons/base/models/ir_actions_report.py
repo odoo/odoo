@@ -819,7 +819,6 @@ class IrActionsReport(models.Model):
 
         data = data and dict(data) or {}
 
-
         if report_model is not None:
             data.update(report_model._get_report_values(docids, data=data))
         else:
@@ -866,7 +865,7 @@ class IrActionsReport(models.Model):
 
         discard_logo_check = self.env.context.get('discard_logo_check')
         if self.env.is_admin() and not self.env.company.external_report_layout_id and config and not discard_logo_check:
-            action = self.env["ir.actions.actions"]._for_xml_id("base.action_base_document_layout_configurator")
+            action = self.env["ir.actions.actions"]._for_xml_id("web.action_base_document_layout_configurator")
             ctx = action.get('context')
             py_ctx = json.loads(ctx) if ctx else {}
             report_action['close_on_report_download'] = True

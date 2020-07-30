@@ -46,14 +46,14 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
             self.assertAlmostEqual(color1[i], color2[i], delta=self.css_color_error)
 
     def _get_images_for_test(self):
-        return ['overwatch.jpg', 'odoo.jpg']
+        return ['sweden.png', 'odoo.png']
 
     def _set_images(self):
         for fname in self._get_images_for_test():
             fname_split = fname.split('.')
             if not fname_split[0] in _file_cache:
                 with Image.open(os.path.join(dir_path, fname), 'r') as img:
-                    base64_img = image_to_base64(img, 'JPEG')
+                    base64_img = image_to_base64(img, 'PNG')
                     primary, secondary = self.env['base.document.layout'].create(
                         {})._parse_logo_colors(base64_img)
                     _img = frozendict({
@@ -69,14 +69,14 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
     def _set_templates_and_layouts(self):
         self.layout_template1 = self.env['ir.ui.view'].create({
             'name': 'layout_template1',
-            'key': 'layout_template1',
+            'key': 'web.layout_template1',
             'type': 'qweb',
             'arch': '''<div></div>''',
         })
         self.env['ir.model.data'].create({
             'name': self.layout_template1.name,
             'model': 'ir.ui.view',
-            'module': 'base',
+            'module': 'web',
             'res_id': self.layout_template1.id,
         })
         self.default_colors = {
@@ -89,14 +89,14 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
         })
         self.layout_template2 = self.env['ir.ui.view'].create({
             'name': 'layout_template2',
-            'key': 'layout_template2',
+            'key': 'web.layout_template2',
             'type': 'qweb',
             'arch': '''<div></div>''',
         })
         self.env['ir.model.data'].create({
             'name': self.layout_template2.name,
             'model': 'ir.ui.view',
-            'module': 'base',
+            'module': 'web',
             'res_id': self.layout_template2.id,
         })
         self.report_layout2 = self.env['report.layout'].create({
@@ -117,19 +117,19 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'primary_color': False,
             'secondary_color': False,
             'logo': False,
-            'external_report_layout_id': self.env.ref('base.layout_template1').id,
+            'external_report_layout_id': self.env.ref('web.layout_template1').id,
             'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
         default_colors = self.default_colors
         with Form(self.env['base.document.layout']) as doc_layout:
             self.assertColors(doc_layout, default_colors)
             self.assertEqual(doc_layout.company_id, self.company)
-            doc_layout.logo = self.company_imgs['overwatch']['img']
+            doc_layout.logo = self.company_imgs['sweden']['img']
 
-            self.assertColors(doc_layout, self.company_imgs['overwatch']['colors'])
+            self.assertColors(doc_layout, self.company_imgs['sweden']['colors'])
 
             doc_layout.logo = ''
-            self.assertColors(doc_layout, self.company_imgs['overwatch']['colors'])
+            self.assertColors(doc_layout, self.company_imgs['sweden']['colors'])
             self.assertEqual(doc_layout.logo, '')
 
     def test_company_no_color_but_logo_change_logo(self):
@@ -138,7 +138,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         self.company.write({
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
-            'logo': self.company_imgs['overwatch']['img'],
+            'logo': self.company_imgs['sweden']['img'],
             'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
@@ -168,7 +168,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         self.company.write({
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
-            'logo': self.company_imgs['overwatch']['img'],
+            'logo': self.company_imgs['sweden']['img'],
             'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
@@ -184,7 +184,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
         self.company.write({
             'primary_color': '#ff0080',
             'secondary_color': '#00ff00',
-            'logo': self.company_imgs['overwatch']['img'],
+            'logo': self.company_imgs['sweden']['img'],
             'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
 
@@ -192,7 +192,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             self.assertColors(doc_layout, self.company)
             doc_layout.primary_color = doc_layout.logo_primary_color
             doc_layout.secondary_color = doc_layout.logo_secondary_color
-            self.assertColors(doc_layout, self.company_imgs['overwatch']['colors'])
+            self.assertColors(doc_layout, self.company_imgs['sweden']['colors'])
 
     # /!\ This case is NOT supported, and probably not supportable
     # res.partner resizes manu-militari the image it is given

@@ -308,6 +308,58 @@ QUnit.module('special_fields', {
 
         form.destroy();
     });
+
+    QUnit.module('IframeWrapper');
+
+    QUnit.test('iframe_wrapper widget in form view', async function (assert) {
+
+        assert.expect(2);
+
+        this.data = {
+            report: {
+                fields: {
+                    report_content: {string: "Content of report", type: "html"}
+                },
+                records: [{
+                    id: 1,
+                    report_content:
+                        `<html>
+                            <head>
+                                <style>
+                                    body { color : rgb(255, 0, 0); }
+                                </style>
+                            <head>
+                            <body>
+                                <div class="nice_div"><p>Some content</p></div>
+                            </body>
+                         </html>`
+                }]
+            }
+        };
+
+        const form = await createView({
+            View: FormView,
+            model: 'report',
+            data: this.data,
+            arch: `<form><field name="report_content" widget="iframe_wrapper"/></form>`,
+            res_id: 1,
+        });
+
+        const $iframe = form.$('iframe');
+        await $iframe.data('ready');
+        const doc = $iframe.contents()[0];
+
+        assert.strictEqual($(doc).find('.nice_div').html(), '<p>Some content</p>',
+            "should have rendered a div with correct content");
+
+        assert.strictEqual($(doc).find('.nice_div p').css('color'), 'rgb(255, 0, 0)',
+            "head tag style should have been applied");
+
+        form.destroy();
+
+    });
+
+
 });
 });
 });
