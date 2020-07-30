@@ -9,7 +9,7 @@ Allows to create task from your sales order
 This module allows to generate a project/task from sales orders.
 """,
     'category': 'Hidden',
-    'depends': ['sale_management', 'project'],
+    'depends': ['sale_management', 'project_management'],
     'data': [
         'security/ir.model.access.csv',
         'security/sale_project_security.xml',
