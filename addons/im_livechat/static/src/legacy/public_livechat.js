@@ -316,6 +316,7 @@ var LivechatButton = Widget.extend({
      */
     _sendMessage: function (message) {
         var self = this;
+        this._livechat._notifyMyselfTyping({ typing: false });
         return session
             .rpc('/mail/chat_post', { uuid: this._livechat.getUUID(), message_content: message.content })
             .then(function (messageId) {
