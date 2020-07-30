@@ -352,8 +352,17 @@ class AdjustmentLines(models.Model):
 
     @api.depends('former_cost', 'additional_landed_cost')
     def _compute_final_cost(self):
-        for line in self:
-            line.final_cost = line.former_cost + line.additional_landed_cost
+        if self[0].currency_id.decimal_places == 0:
+            value_split = 0.0
+            for line in self:
+                fnc = min if line.additional_landed_cost > 0 else max
+                additional_landed_cost = fnc(tools.float_round(line.additional_landed_cost, precision_digits=0, rounding_method='UP'), 
+                                             line.cost_id.amount_total - value_split)
+                line.final_cost = line.former_cost + additional_landed_cost
+                value_split += additional_landed_cost
+        else:
+            for line in self:
+                line.final_cost = line.former_cost + line.additional_landed_cost
 
     def _create_accounting_entries(self, move, qty_out):
         # TDE CLEANME: product chosen for computation ?
