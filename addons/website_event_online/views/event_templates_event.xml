@@ -46,4 +46,10 @@
     </div>
 </template>
 
+<template id="registration_template" inherit_id="website_event.registration_template">
+    <xpath expr="//div" position="after">
+        <div t-if="toast_message" class="o_wevent_register_toaster d-none" t-att-data-message="toast_message"/>
+    </xpath>
+</template>
+
 </odoo>
