@@ -61,11 +61,10 @@
             <field name="arch" type="xml">
                 <form string="Event Category Tag">
                     <sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name"/></h1>
-                        </div>
-                        <field name="category_id" widget="many2one"/>
+                        <group>
+                            <field name="name"/>
+                            <field name="category_id" widget="many2one"/>
+                        </group>
                     </sheet>
                 </form>
             </field>
