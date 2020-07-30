@@ -764,56 +764,6 @@
     </t>
 </template>
 
-<!-- Multipage event - Default template when creating a new page -->
-<template id="default_page">
-    <t t-call="website.layout">
-        <div class="oe_structure oe_empty"/>
-    </t>
-</template>
-
-<!-- Multipage event - Default template for the Introduction page -->
-<template id="template_intro">
-    <t t-call="website_event.layout">
-        <section class="s_title pt48 pb48" data-vcss="001" data-snippet="s_title">
-            <div class="container">
-                <h1>Introduction</h1>
-            </div>
-        </section>
-        <div class="oe_structure oe_empty" id="oe_structure_website_event_intro_1"/>
-    </t>
-</template>
-
-<!-- Multipage event - Default template for the Location page -->
-<template id="template_location">
-    <t t-call="website_event.layout">
-        <div class="oe_structure" id="oe_structure_website_event_location_1"/>
-        <section class="pt32 pb32">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <h1 class="o_page_header mb-3">Event Location</h1>
-                        <h4 class="mb-3" t-field="event.address_id" t-options='{
-                            "widget": "contact",
-                            "fields": ["name"],
-                        }'/>
-                        <div class="mb-3" t-field="event.address_id" t-options='{
-                            "widget": "contact",
-                            "fields": ["address"],
-                            "no_marker": True
-                        }'/>
-                        <div class="mb-3" t-field="event.address_id" t-options='{
-                            "widget": "contact",
-                            "fields": ["phone", "mobile", "email"],
-                            "no_marker": True
-                        }'/>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <div class="oe_structure" id="oe_structure_website_event_location_2"/>
-    </t>
-</template>
-
 <!-- User Navbar -->
 <template id="user_navbar_inherit_website_event" inherit_id="website.user_navbar">
     <xpath expr="//div[@id='o_new_content_menu_choices']//div[@name='module_website_event']" position="attributes">
