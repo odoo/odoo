@@ -10,7 +10,7 @@ class EventRegistration(models.Model):
 
     is_paid = fields.Boolean('Is Paid')
     # TDE FIXME: maybe add an onchange on sale_order_id
-    sale_order_id = fields.Many2one('sale.order', string='Source Sales Order', ondelete='cascade', copy=False)
+    sale_order_id = fields.Many2one('sale.order', string='Sales Order', ondelete='cascade', copy=False)
     sale_order_line_id = fields.Many2one('sale.order.line', string='Sales Order Line', ondelete='cascade', copy=False)
     utm_campaign_id = fields.Many2one(compute='_compute_utm_campaign_id', readonly=False, store=True)
     utm_source_id = fields.Many2one(compute='_compute_utm_source_id', readonly=False, store=True)
