@@ -45,19 +45,14 @@
 <template id="index_topbar" name="Topbar">
     <nav class="navbar navbar-light border-top shadow-sm d-print-none">
         <div class="container">
-            <div class="row d-flex justify-content-between w-100 mr-0">
-                <div class="col-lg-8 col-sm-12">
-                    <span class="navbar-brand h4 my-0">Events</span>
-                    <ul class="o_wevent_index_topbar_filters nav"/>
-                </div>
-                <div class="col-lg-3 col-sm-12 d-flex align-items-center flex-wrap pl-3 pr-0">
+            <div class="d-flex flex-column flex-sm-row justify-content-between w-100">
+                <span class="navbar-brand h4 my-0 mr-auto">Events</span>
+                <ul class="o_wevent_index_topbar_filters nav"/>
+                <div class="d-flex align-items-center flex-wrap pl-sm-3 pr-0">
                     <t t-call="website_event.events_search_box">
                         <t t-set="_searches" t-value="searches"/>
                         <t t-set="_placeholder" t-value="'Search an event ...'"/>
                     </t>
-                    <a href="/event" class="btn btn-info text-nowrap mr-0 w-100" role="button" title="Clear filters">
-                        <i class="fa fa-eraser"/> Clear filters
-                    </a>
                 </div>
             </div>
         </div>
@@ -221,10 +216,6 @@
                                 <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}"/> -
                                 <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
                             </time>
-                            <!-- Organizer -->
-                            <div t-if="event.organizer_id" class="mb-3">
-                                <small class="text-muted text-truncate">Organizer: <span t-field="event.organizer_id" itemprop="organizer"/></small>
-                            </div>
                             <!-- Location -->
                             <div itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
                             <div class="mt8 d-flex align-items-center">
@@ -237,7 +228,11 @@
                         </main>
                     </div>
                     <!-- Footer -->
-                    <footer t-attf-class="small align-self-end w-100 #{opt_events_list_cards and 'card-footer' or ((not opt_events_list_columns) and 'border-top mx-4 mt-auto pt-2' or 'border-top py-2')}">
+                    <footer t-if="not event.event_registrations_open or event.event_registrations_sold_out"
+                        t-att-class="'small align-self-end w-100 %s %s' % (
+                            opt_events_list_cards and 'card-footer' or (not opt_events_list_columns and 'mx-4 mt-auto pt-2') or 'py-2',
+                            opt_events_list_cards and 'border-top' or '',
+                        )">
                         <span t-if="not event.event_registrations_open" class="text-danger">
                             <t t-if="event.start_sale_date and event.start_sale_date &gt; datetime.date.today()">
                                 Registrations not yet open
