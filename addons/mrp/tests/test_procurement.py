@@ -191,8 +191,8 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(mo.move_raw_ids.reserved_availability, 5.0)
         self.assertEqual(mo.move_raw_ids.quantity_done, 3.0)
 
-    def test_date_propagation(self):
-        """ Check propagation of shedule date for manufaturing route."""
+    def test_link_date_mo_moves(self):
+        """ Check link of shedule date for manufaturing with date stock move."""
 
         # create a product with manufacture route
         product_1 = self.env['product.product'].create({
@@ -220,8 +220,6 @@ class TestProcurement(TestMrpCommon):
             'name': 'move_orig',
             'product_id': product_1.id,
             'product_uom': self.ref('uom.product_uom_unit'),
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 1,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -234,7 +232,7 @@ class TestProcurement(TestMrpCommon):
             ('state', '=', 'confirmed')
         ])
 
-        self.assertAlmostEqual(mo.move_finished_ids.date_expected, mo.move_raw_ids.date_expected + timedelta(hours=1), delta=timedelta(seconds=1))
+        self.assertAlmostEqual(mo.move_finished_ids.date, mo.move_raw_ids.date + timedelta(hours=1), delta=timedelta(seconds=1))
 
         self.assertEqual(len(mo), 1, 'the manufacture order is not created')
 
@@ -251,75 +249,13 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(len(move_orig), 1, 'the move orig is not created')
         self.assertEqual(move_orig.product_qty, 10, 'the quantity to produce is not good relative to the move')
 
-        move_dest_scheduled_date = move_dest.date_expected
-
+        new_sheduled_date = fields.Datetime.to_datetime(mo.date_planned_start) + timedelta(days=5)
         mo_form = Form(mo)
-        mo_form.date_planned_start = fields.Datetime.to_datetime(mo_form.date_planned_start) + timedelta(days=5)
-        mo_form.save()
-
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=5), delta=timedelta(seconds=1), msg='date is not propagated')
-
-    def test_planning_update(self):
-        """ Test the delay propagation from a child bom to a source bom."""
-        finished = self.env['product.product'].create({
-            'name': 'finished',
-            'type': 'product',
-        })
-        warehouse = self.env['stock.warehouse'].search([], limit=1)
-        mto_route = warehouse.mto_pull_id.route_id
-        mto_route.active = True
-        inter = self.env['product.product'].create({
-            'name': 'inter',
-            'type': 'product',
-            'route_ids': [
-                (4, self.ref('mrp.route_warehouse0_manufacture')),
-                (4, mto_route.id)
-            ],
-        })
-        component = self.env['product.product'].create({
-            'name': 'component',
-            'type': 'product',
-        })
-        source_bom = self.env['mrp.bom'].create({
-            'product_id': finished.id,
-            'product_tmpl_id': finished.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-            'bom_line_ids': [
-                (0, 0, {'product_id': inter.id, 'product_qty': 1}),
-            ],
-            'operation_ids': [
-                (0, 0, {'name': 'source operation', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
-            ],
-
-        })
-        child_bom = self.env['mrp.bom'].create({
-            'product_id': inter.id,
-            'product_tmpl_id': inter.product_tmpl_id.id,
-            'product_uom_id': self.uom_unit.id,
-            'product_qty': 1.0,
-            'type': 'normal',
-            'bom_line_ids': [
-                (0, 0, {'product_id': component.id, 'product_qty': 1}),
-            ],
-            'operation_ids': [
-                (0, 0, {'name': 'child operation', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
-            ],
-        })
-        mo_form = Form(self.env['mrp.production'])
-        mo_form.product_id = finished
+        mo_form.date_planned_start = new_sheduled_date
         mo = mo_form.save()
-        mo.action_confirm()
-        self.assertEqual(mo.mrp_production_child_count, 1)
-        mo.button_plan()
-        old_wo_date = mo.workorder_ids.date_planned_start
-        child = mo.procurement_group_id.stock_move_ids.created_production_id.procurement_group_id.mrp_production_ids
-        child_form = Form(child)
-        child_form.date_planned_start = datetime.now() + timedelta(days=10)
-        child = child_form.save()
-        new_wo_date = mo.workorder_ids.date_planned_start
-        self.assertFalse(old_wo_date == new_wo_date)
+
+        self.assertAlmostEqual(mo.move_raw_ids.date, mo.date_planned_start, delta=timedelta(seconds=1))
+        self.assertAlmostEqual(mo.move_finished_ids.date, mo.date_planned_finished, delta=timedelta(seconds=1))
 
     def test_finished_move_cancellation(self):
         """Check state of finished move on cancellation of raw moves. """
@@ -346,8 +282,6 @@ class TestProcurement(TestMrpCommon):
             'name': 'move_bottle',
             'product_id': product_bottle.id,
             'product_uom': self.ref('uom.product_uom_unit'),
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 1,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -363,70 +297,6 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(mo.state, 'cancel', 'Manufacturing order should be cancelled.')
         self.assertEqual(mo.move_finished_ids[0].state, 'cancel', 'Finished move should be cancelled if mo is cancelled.')
         self.assertEqual(mo.move_dest_ids[0].state, 'waiting', 'Destination move should not be cancelled if prapogation cancel is False on manufacturing rule.')
-
-    def test_production_delay_alert(self):
-        """Check if the delay alert is set to True on the stock move."""
-        self.env['stock.rule'].search([]).delay_alert = True
-        self.env.ref('stock.route_warehouse0_mto').active = True
-        parent_product = self.env['product.template'].create({
-            'name': 'Parent product',
-            'route_ids': [
-                (4, self.env.ref('mrp.route_warehouse0_manufacture').id, 0),
-                (4, self.env.ref('stock.route_warehouse0_mto').id, 0)
-            ]
-        })
-        child_product = self.env['product.template'].create({
-            'name': 'Child product',
-            'route_ids': [
-                (4, self.env.ref('mrp.route_warehouse0_manufacture').id, 0),
-                (4, self.env.ref('stock.route_warehouse0_mto').id, 0)
-            ]
-        })
-        child_component = self.env['product.template'].create({
-            'name': 'Child product',
-        })
-        parent_bom = self.env['mrp.bom'].create({
-            'product_id': parent_product.product_variant_ids.id,
-            'product_tmpl_id': parent_product.id,
-            'product_uom_id': self.uom_unit.id,
-            'product_qty': 4.0,
-            'operation_ids': [
-                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
-                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
-            ],
-            'type': 'normal',
-        })
-        self.env['mrp.bom.line'].create({
-            'bom_id': parent_bom.id,
-            'product_id': child_product.product_variant_ids.id,
-            'product_qty': 2,
-        })
-        child_bom = self.env['mrp.bom'].create({
-            'product_id': child_product.product_variant_ids.id,
-            'product_tmpl_id': child_product.id,
-            'product_uom_id': self.uom_unit.id,
-            'product_qty': 4.0,
-            'operation_ids': [
-                (0, 0, {'name': 'Cutting Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 12, 'sequence': 1}),
-                (0, 0, {'name': 'Weld Machine', 'workcenter_id': self.workcenter_1.id, 'time_cycle': 18, 'sequence': 2}),
-            ],
-            'type': 'normal',
-        })
-        self.env['mrp.bom.line'].create({
-            'bom_id': child_bom.id,
-            'product_id': child_component.product_variant_ids.id,
-            'product_qty': 2,
-        })
-
-        mrp_order_form = Form(self.env['mrp.production'])
-        mrp_order_form.product_id = parent_product.product_variant_ids
-        mrp_order = mrp_order_form.save()
-        mrp_order.action_confirm()
-
-        child_mrp_production = self.env['mrp.production'].search([('product_id', '=', child_product.product_variant_ids.id)])
-
-        self.assertTrue(child_mrp_production.delay_alert)
-        self.assertTrue(child_mrp_production.move_raw_ids.delay_alert)
 
     def test_procurement_with_empty_bom(self):
         """Ensure that a procurement request using a product with an empty BoM

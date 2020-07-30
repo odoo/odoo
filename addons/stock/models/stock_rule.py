@@ -89,14 +89,6 @@ class StockRule(models.Model):
         help="The 'Manual Operation' value will create a stock move after the current one. "
              "With 'Automatic No Step Added', the location is replaced in the original move.")
     rule_message = fields.Html(compute='_compute_action_message')
-    propagate_date = fields.Boolean(string="Propagate Rescheduling", default=True,
-        help='The rescheduling is propagated to the next move.')
-    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
-        help='The change must be higher than this value to be propagated', default=1)
-    delay_alert = fields.Boolean(
-        'Alert if Delay',
-        help='Log an exception on the picking if this move has to be delayed (due to a change in the previous move scheduled date).',
-    )
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
@@ -106,8 +98,6 @@ class StockRule(models.Model):
         """
         self.location_src_id = self.picking_type_id.default_location_src_id.id
         self.location_id = self.picking_type_id.default_location_dest_id.id
-        if self.picking_type_id.code == 'outgoing':
-            self.delay_alert = True
 
     @api.onchange('route_id', 'company_id')
     def _onchange_route(self):
@@ -174,12 +164,9 @@ class StockRule(models.Model):
         Care this function is not call by method run. It is called explicitely
         in stock_move.py inside the method _push_apply
         """
-        new_date = fields.Datetime.to_string(move.date_expected + relativedelta(days=self.delay))
+        new_date = fields.Datetime.to_string(move.date + relativedelta(days=self.delay))
         if self.auto == 'transparent':
-            move.write({
-                'date': new_date,
-                'date_expected': new_date,
-                'location_dest_id': self.location_id.id})
+            move.write({'date': new_date, 'location_dest_id': self.location_id.id})
             # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
             if self.location_id != move.location_dest_id:
                 # TDE FIXME: should probably be done in the move model IMO
@@ -202,15 +189,11 @@ class StockRule(models.Model):
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_id.id,
             'date': new_date,
-            'date_expected': new_date,
             'company_id': company_id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
             'propagate_cancel': self.propagate_cancel,
-            'propagate_date': self.propagate_date,
-            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'warehouse_id': self.warehouse_id.id,
-            'delay_alert': self.delay_alert,
             'procure_method': 'make_to_order',
         }
         return new_move_vals
@@ -280,7 +263,7 @@ class StockRule(models.Model):
         elif self.group_propagation_option == 'fixed':
             group_id = self.group_id.id
 
-        date_expected = fields.Datetime.to_string(
+        date_scheduled = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
         )
         partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
@@ -314,14 +297,11 @@ class StockRule(models.Model):
             'group_id': group_id,
             'route_ids': [(4, route.id) for route in values.get('route_ids', [])],
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
-            'date': date_expected,
-            'date_expected': date_expected,
+            'date': date_scheduled,
+            'date_deadline': values.get('date_deadline'),
             'propagate_cancel': self.propagate_cancel,
-            'propagate_date': self.propagate_date,
-            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': picking_description,
             'priority': values.get('priority', "0"),
-            'delay_alert': self.delay_alert,
             'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
         }
         for field in self._get_custom_move_fields():
@@ -510,7 +490,7 @@ class ProcurementGroup(models.Model):
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain()
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
-            order='priority desc, date_expected asc')
+            order='priority desc, date asc')
         for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:

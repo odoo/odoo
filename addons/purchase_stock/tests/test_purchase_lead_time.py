@@ -39,8 +39,9 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         # check the picking created or not
         self.assertTrue(purchase.picking_ids, "Picking should be created.")
 
-        # Check scheduled date of In Type shipment
+        # Check scheduled and deadline date of In Type shipment
         self.assertEqual(purchase.picking_ids.scheduled_date, schedule_date, 'Schedule date of In type shipment should be equal to: schedule date of purchase order.')
+        self.assertEqual(purchase.picking_ids.date_deadline, schedule_date + timedelta(days=company.po_lead), 'Deadline date of should be equal to: schedule date of purchase order + lead_po.')
 
     def test_01_product_level_delay(self):
         """ To check schedule dates of multiple purchase order line of the same purchase order,
@@ -86,6 +87,13 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
 
         # Check scheduled date of In Type shipment
         self.assertEqual(purchase2.picking_ids.scheduled_date, po_schedule_date, 'Schedule date of In type shipment should be same as schedule date of purchase order.')
+
+        # Check deadline of pickings
+        self.assertEqual(purchase2.picking_ids.date_deadline, purchase2.date_planned, "Deadline of pickings should be equals to the receipt date of purchase")
+        purchase_form = Form(purchase2)
+        purchase_form.date_planned = purchase2.date_planned + timedelta(days=2)
+        purchase_form.save()
+        self.assertEqual(purchase2.picking_ids.date_deadline, purchase2.date_planned, "Deadline of pickings should be propagate")
 
     def test_02_product_route_level_delays(self):
         """ In order to check dates, set product's Delivery Lead Time
@@ -139,8 +147,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(incoming_shipment2.scheduled_date, incoming_shipment2_date, 'Schedule date of Internal Type shipment for quality control stock location should be equal to: schedule date of Internal type shipment for input stock location + push rule delay..')
 
     def test_merge_po_line(self):
-        """Chage that merging po line for same procurement is done depending on
-        propagate_date and propagate_date_minimum_delta"""
+        """Change that merging po line for same procurement is done."""
 
         # create a product with manufacture route
         product_1 = self.env['product.product'].create({
@@ -155,8 +162,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'move_1',
             'product_id': product_1.id,
             'product_uom': self.ref('uom.product_uom_unit'),
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 1,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 10,
@@ -174,8 +179,6 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
             'name': 'move_2',
             'product_id': product_1.id,
             'product_uom': self.ref('uom.product_uom_unit'),
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 1,
             'location_id': self.ref('stock.stock_location_stock'),
             'location_dest_id': self.ref('stock.stock_location_output'),
             'product_uom_qty': 5,
@@ -189,62 +192,8 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         self.assertEqual(len(po_line), 1, 'the purchase order lines should be merged')
         self.assertEqual(po_line.product_qty, 15, 'the purchase order line has a wrong quantity')
 
-    def test_merge_po_line_2(self):
-        """Chage that merging po line for same procurement is done depending on
-        propagate_date and propagate_date_minimum_delta"""
-
-        # create a product with manufacture route
-        product_1 = self.env['product.product'].create({
-            'name': 'AAA',
-            'route_ids': [(4, self.route_buy)],
-            'seller_ids': [(0, 0, {'name': self.partner_1.id, 'delay': 5})]
-        })
-
-        # create a move for product_1 from stock to output and reserve to trigger the
-        # rule
-        move_1 = self.env['stock.move'].create({
-            'name': 'move_1',
-            'product_id': product_1.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 1,
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.ref('stock.stock_location_output'),
-            'product_uom_qty': 10,
-            'procure_method': 'make_to_order'
-        })
-
-        move_1._action_confirm()
-        po_line = self.env['purchase.order.line'].search([
-            ('product_id', '=', product_1.id),
-        ])
-        self.assertEqual(len(po_line), 1, 'the purchase order line is not created')
-        self.assertEqual(po_line.product_qty, 10, 'the purchase order line has a wrong quantity')
-        po_line.propagate_date = not po_line.propagate_date
-        move_2 = self.env['stock.move'].create({
-            'name': 'move_2',
-            'product_id': product_1.id,
-            'product_uom': self.ref('uom.product_uom_unit'),
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 1,
-            'location_id': self.ref('stock.stock_location_stock'),
-            'location_dest_id': self.ref('stock.stock_location_output'),
-            'product_uom_qty': 5,
-            'procure_method': 'make_to_order'
-        })
-
-        move_2._action_confirm()
-        po_line = self.env['purchase.order.line'].search([
-            ('product_id', '=', product_1.id),
-        ])
-        self.assertEqual(len(po_line), 2, 'the purchase order lines are merged')
-        self.assertEqual(po_line[0].product_qty, 10, 'the purchase order line has a wrong quantity')
-        self.assertEqual(po_line[1].product_qty, 5, 'the purchase order line has a wrong quantity')
-
     def test_merge_po_line_3(self):
-        """Chage merging po line if same procurement is done depending on
-        propagate_date, propagate_date_minimum_delta and custom values.
-        """
+        """Change merging po line if same procurement is done depending on custom values."""
         # Create procurement order of product_1
         ProcurementGroup = self.env['procurement.group']
         procurement_values = {
@@ -316,7 +265,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         for i in range(0, 6):
             delivery_moves |= self.env['stock.move'].create({
                 'name': 'Delivery',
-                'date_expected': datetime.today() + timedelta(days=i),
+                'date': datetime.today() + timedelta(days=i),
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': 5.0,

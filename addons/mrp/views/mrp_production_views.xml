@@ -14,8 +14,7 @@
                     <field name="priority" optional="show" widget="priority" nolabel="1"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="name" decoration-bf="1"/>
-                    <field name="date_planned_start" readonly="1" optional="show"
-                        attrs="{'readonly': [('state', 'in', ['done', 'cancel'])]}" decoration-danger="date_planned_start&lt;now and state not in ('done','cancel')"/>
+                    <field name="date_planned_start" readonly="1" optional="show" widget="remaining_days"/>
                     <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('state', 'in', ['done', 'cancel'])]}" optional="hide"/>
                     <field name="product_id" readonly="1" optional="show"/>
                     <field name="product_uom_id" string="Unit of Measure" options="{'no_open':True,'no_create':True}" groups="uom.group_uom" optional="show"/>
@@ -178,7 +177,10 @@
                             <label for="date_planned_start"/>
                             <div class="o_row">
                                 <field name="date_planned_start"
-                                    attrs="{'readonly': ['|', ('is_partially_planned', '=', True), ('state', 'in', ['close', 'cancel'])]}"/>
+                                    attrs="{'readonly': ['|', ('is_partially_planned', '=', True), ('state', 'in', ['close', 'cancel'])]}"
+                                    decoration-warning="state not in ('done', 'cancel') and date_planned_start &lt; now"
+                                    decoration-danger="state not in ('done', 'cancel') and date_planned_start &lt; current_date"
+                                    decoration-bf="state not in ('done', 'cancel') and (date_planned_start &lt; current_date or date_planned_start &lt; now)"/>
                                 <field name="delay_alert_date" invisible="1"/>
                                 <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
                             </div>
@@ -194,8 +196,7 @@
                                     <field name="operation_id"/>
                                     <field name="byproduct_id"/>
                                     <field name="name"/>
-                                    <field name="date"/>
-                                    <field name="date_expected"/>
+                                    <field name="date_deadline"/>
                                     <field name="picking_type_id"/>
                                     <field name="location_id"/>
                                     <field name="location_dest_id"/>
@@ -203,10 +204,7 @@
                                     <field name="warehouse_id"/>
                                     <field name="origin"/>
                                     <field name="group_id"/>
-                                    <field name="propagate_date"/>
                                     <field name="propagate_cancel"/>
-                                    <field name="delay_alert"/>
-                                    <field name="propagate_date_minimum_delta"/>
                                     <field name="move_dest_ids"/>
                                     <field name="state"/>
                                     <!-- Useless as the editable in tree declaration -> For Form Test-->
@@ -219,10 +217,11 @@
                     <notebook>
                         <page string="Components" name="components">
                             <field name="move_raw_ids"
-                                context="{'default_product_uom_qty': 1.0, 'default_date_expected': date_planned_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
+                                context="{'default_product_uom_qty': 1.0, 'default_date': date_planned_start, 'default_date_deadline': date_deadline, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" 
                                 attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
                                 <tree default_order="is_done,sequence" editable="bottom">
                                     <field name="product_id" force_save="1" required="1" context="{'default_type': 'product'}" attrs="{'readonly': ['|', '|', ('has_move_lines', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
+
                                     <field name="move_line_ids" invisible="1">
                                         <tree>
                                             <field name="lot_id" invisible="1"/>
@@ -246,8 +245,8 @@
                                     <field name="name" invisible="1"/>
                                     <field name="allowed_operation_ids" invisible="1"/>
                                     <field name="unit_factor" invisible="1"/>
+                                    <field name="date_deadline" invisible="1"/>
                                     <field name="date" invisible="1"/>
-                                    <field name="date_expected" invisible="1"/>
                                     <field name="additional" invisible="1"/>
                                     <field name="picking_type_id" invisible="1"/>
                                     <field name="has_tracking" invisible="1"/>
@@ -278,7 +277,7 @@
                         <page string="Work Orders" name="operations" groups="mrp.group_mrp_routings">
                             <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'form_view_ref': 'mrp.mrp_production_workorder_form_view_inherit', 'default_production_id': id, 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/>                        </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
-                            <field name="move_byproduct_ids" context="{'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
+                            <field name="move_byproduct_ids" context="{'default_date': date_planned_finished, 'default_date_deadline': date_deadline, 'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
                                 <tree default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
                                     <field name="product_id" context="{'default_type': 'product'}" domain="[('id', '!=', parent.product_id)]" required="1"/>
 
@@ -306,7 +305,6 @@
                                     <field name="allowed_operation_ids" invisible="1"/>
                                     <field name="unit_factor" invisible="1"/>
                                     <field name="date" invisible="1"/>
-                                    <field name="date_expected" invisible="1"/>
                                     <field name="additional" invisible="1"/>
                                     <field name="picking_type_id" invisible="1"/>
                                     <field name="has_tracking" invisible="1"/>
@@ -337,8 +335,11 @@
                                     <field name="location_dest_id" groups="stock.group_stock_multi_locations" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                 </group>
                                 <group>
-                                    <field name="date_deadline"/>
                                     <field name="origin"/>
+                                    <field name="date_deadline"
+                                        attrs="{'invisible': ['|', ('state', 'in', ('done', 'cancel')), ('date_deadline', '=', False)]}"
+                                        decoration-danger="date_deadline and date_deadline &lt; current_date"
+                                        decoration-bf="date_deadline and date_deadline &lt; current_date"/>
                                 </group>
                             </group>
                         </page>
@@ -362,7 +363,7 @@
                     <field name="product_id"/>
                     <field name="product_qty"/>
                     <field name="product_uom_id" options="{'no_open':True,'no_create':True}"/>
-                    <field name="date_deadline"/>
+                    <field name="date_planned_start"/>
                     <field name="state"/>
                     <field name="activity_state"/>
                     <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}'/>
@@ -378,7 +379,7 @@
                                 </div>
                                 <div class="o_kanban_record_bottom">
                                     <div class="oe_kanban_bottom_left text-muted">
-                                        <span><t t-esc="record.name.value"/> <t t-esc="record.date_deadline.value and record.date_deadline.value.split(' ')[0] or False"/></span>
+                                        <span><t t-esc="record.name.value"/> <t t-esc="record.date_planned_start.value and record.date_planned_start.value.split(' ')[0] or False"/></span>
                                         <field name="activity_ids" widget="kanban_activity"/>
                                         <field name="delay_alert_date" invisible="1"/>
                                         <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
@@ -422,7 +423,7 @@
             <field name="model">mrp.production</field>
             <field name="arch" type="xml">
                 <pivot string="Manufacturing Orders">
-                    <field name="date_deadline" type="row"/>
+                    <field name="date_planned_start" type="row"/>
                 </pivot>
             </field>
         </record>
