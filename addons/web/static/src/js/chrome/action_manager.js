@@ -393,7 +393,7 @@ var ActionManager = Widget.extend({
 
             return dialog.open().opened(function () {
                 self.currentDialogController = controller;
-
+                widget.setParent(dialog);
                 dom.append(dialog.$el, widget.$el, {
                     in_DOM: true,
                     callbacks: [{widget: dialog}, {widget: controller.widget}],
