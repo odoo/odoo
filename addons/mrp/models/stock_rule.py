@@ -84,7 +84,8 @@ class StockRule(models.Model):
             product=product_id, picking_type=self.picking_type_id, bom_type='normal', company_id=company_id.id)
 
     def _prepare_mo_vals(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values, bom):
-        date_deadline = fields.Datetime.to_string(self._get_date_planned(product_id, company_id, values))
+        date_planned = self._get_date_planned(product_id, company_id, values)
+        date_deadline = date_planned + relativedelta(days=company_id.manufacturing_lead)  # Remove manufacturing security of deadline
         return {
             'origin': origin,
             'product_id': product_id.id,
@@ -94,8 +95,8 @@ class StockRule(models.Model):
             'location_src_id': self.location_src_id.id or self.picking_type_id.default_location_src_id.id or location_id.id,
             'location_dest_id': location_id.id,
             'bom_id': bom.id,
-            'date_deadline': date_deadline,
-            'date_planned_start': date_deadline,
+            'date_deadline': fields.Datetime.to_string(date_deadline),
+            'date_planned_start': fields.Datetime.to_string(date_planned),
             'procurement_group_id': False,
             'delay_alert': self.delay_alert,
             'propagate_cancel': self.propagate_cancel,
