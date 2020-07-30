@@ -3852,6 +3852,65 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test("Button with `close` attribute closes dialog", async function (assert) {
+        assert.expect(2);
+        const actions = [
+            {
+                id: 4,
+                name: "Partners Action 4",
+                res_model: "partner",
+                type: "ir.actions.act_window",
+                views: [[false, "form"]],
+            },
+            {
+                id: 5,
+                name: "Create a Partner",
+                res_model: "partner",
+                target: "new",
+                type: "ir.actions.act_window",
+                views: [["view_ref", "form"]],
+            },
+        ];
+
+        const actionManager = await createActionManager({
+            actions,
+            archs: {
+                "partner,false,form": `
+                    <form>
+                        <header>
+                            <button string="Open dialog" name="5" type="action"/>
+                        </header>
+                    </form>
+                `,
+                "partner,view_ref,form": `
+                    <form>
+                        <footer>
+                            <button string="I close the dialog" name="some_method" type="object" close="1"/>
+                        </footer>
+                    </form>
+                `,
+                "partner,false,search": "<search></search>",
+            },
+            data: this.data,
+            mockRPC: async function (route, args) {
+                if (
+                    route === "/web/dataset/call_button" &&
+                    args.method === "some_method"
+                ) {
+                    return { tag: "display_notification", type: "ir.actions.client" };
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        await actionManager.doAction(4);
+        await testUtils.dom.click(`button[name="5"]`);
+        assert.strictEqual($(".modal").length, 1, "It should display a modal");
+        await testUtils.dom.click(`button[name="some_method"]`);
+        assert.strictEqual($(".modal").length, 0, "It should have closed the modal");
+        actionManager.destroy();
+    });
+
     QUnit.test('on_attach_callback is called for actions in target="new"', async function (assert) {
         assert.expect(4);
 
