@@ -2166,7 +2166,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
 
-            assert.strictEqual(count, 3, "should have done 3 rpcs (default_get, onchange, name_get)");
+            assert.strictEqual(count, 2, "should have done 2 rpcs (onchange, name_get)");
             assert.strictEqual(form.$('.o_field_widget[name=trululu] input').val(), 'hello world',
                 "should have taken the correct display name");
             form.destroy();
@@ -2868,7 +2868,7 @@ QUnit.module('fields', {}, function () {
             });
 
             assert.verifySteps([
-                'default_get',
+                'onchange',
                 'name_search', // to display results in the dropdown
                 'load_views', // list view in dialog
                 '/web/dataset/search_read', // to display results in the dialog
@@ -2922,7 +2922,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click($('.modal .o_cp_searchview .o_facet_remove'));
 
             assert.verifySteps([
-                'default_get',
+                'onchange',
                 'name_search', // empty search, triggered when the user clicks in the input
                 'name_search', // to display results in the dropdown
                 'name_search', // to get preselected ids matching the search
@@ -3035,7 +3035,7 @@ QUnit.module('fields', {}, function () {
                 $modal.find('tbody tr').first(), { position: 'top' });
 
             assert.verifySteps([
-                'default_get',
+                'onchange',
                 'name_search', // to display results in the dropdown
                 'load_views', // list view in dialog
                 '/web/dataset/search_read', // to display results in the dialog

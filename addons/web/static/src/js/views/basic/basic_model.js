@@ -2739,12 +2739,17 @@ var BasicModel = AbstractModel.extend({
         // find all many2one related records to be fetched
         _.each(record.getFieldNames(), function (name) {
             var field = record.fields[name];
+            const fieldInfo = record.fieldsInfo[record.viewType][name];
             if (field.type === 'many2one' && !record.fieldsInfo[record.viewType][name].__no_fetch) {
                 var localId = (record._changes && record._changes[name]) || record.data[name];
                 var relatedRecord = self.localData[localId];
                 const recFieldContext = record.getContext({fieldName: name, viewType: record.viewType});
-                if (!relatedRecord ||
-                    (relatedRecord.data.display_name && recContextSerial === JSON.stringify(recFieldContext))) {
+                const alwaysReload = fieldInfo.options && fieldInfo.options.always_reload;
+                if (!alwaysReload &&
+                     (!relatedRecord ||
+                       (relatedRecord.data.display_name && recContextSerial === JSON.stringify(recFieldContext))
+                     )
+                ) {
                     return;
                 }
                 toBeFetched.push({
@@ -4350,6 +4355,8 @@ var BasicModel = AbstractModel.extend({
         var viewType = options && options.viewType || record.viewType;
         var defs = [];
 
+        // LPE FIXME: this is useless, _posprocess only does fetchSpecialData
+        // name_gets are handled in fetchRelational....
         _.each(record.getFieldNames(options), function (name) {
             var field = record.fields[name];
             var fieldInfo = record.fieldsInfo[viewType][name] || {};
