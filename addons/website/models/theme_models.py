@@ -183,9 +183,9 @@ class Theme(models.AbstractModel):
         self.disable_view('website.option_ripple_effect')
 
         # Reinitialize header templates
+        self.enable_view('website.template_header_default')
         self.disable_view('website.template_header_hamburger')
         self.disable_view('website.template_header_vertical')
-        self.disable_view('website.option_header_hamburger_center_logo')
 
         # Reinitialize footer templates
         self.enable_view('website.footer_custom')
