@@ -87,7 +87,7 @@ tour.register('test_reset_page_view_complete_flow_part2', {
             content: "select oe_structure view",
             trigger: '#s2id_ace-view-list',  // use select2 version
             run: function () {
-                var viewId = $('#ace-view-list option:contains("oe_structure")').val();
+                var viewId = $('#ace-view-list option:contains("oe_structure_test_website_page")').val();
                 $('#ace-view-list').val(viewId).trigger('change');
             },
         },

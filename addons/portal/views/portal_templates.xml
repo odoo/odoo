@@ -6,28 +6,23 @@
             <attribute name="t-attf-class" add="#{'o_portal' if is_portal else ''}" separator=" "/>
         </xpath>
         <xpath expr="//div[@id='wrapwrap']/header/img" position="replace">
-            <nav class="navbar navbar-expand-md navbar-light bg-light">
-                <div id="top_menu_container" class="container">
+            <nav class="navbar navbar-expand navbar-light bg-light">
+                <div class="container">
                     <a href="/" class="navbar-brand logo">
                         <img t-att-src="'/logo.png?company=%s' % res_company.id" t-att-alt="'Logo of %s' % res_company.name" t-att-title="res_company.name"/>
                     </a>
-                    <button type="button" class="navbar-toggler" data-toggle="collapse" data-target="#top_menu_collapse">
-                        <span class="navbar-toggler-icon o_not_editable"/>
-                    </button>
-                    <div class="collapse navbar-collapse" id="top_menu_collapse">
-                        <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
-                            <t t-call="portal.placeholder_user_sign_in">
-                                <t t-set="_item_class" t-value="'nav-item'"/>
-                                <t t-set="_link_class" t-value="'nav-link'"/>
-                            </t>
-                            <t t-call="portal.user_dropdown">
-                                <t t-set="_user_name" t-value="true"/>
-                                <t t-set="_item_class" t-value="'nav-item dropdown'"/>
-                                <t t-set="_link_class" t-value="'nav-link'"/>
-                                <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-right'"/>
-                            </t>
-                        </ul>
-                    </div>
+                    <ul id="top_menu" class="nav navbar-nav ml-auto">
+                        <t t-call="portal.placeholder_user_sign_in">
+                            <t t-set="_item_class" t-value="'nav-item'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                        </t>
+                        <t t-call="portal.user_dropdown">
+                            <t t-set="_user_name" t-value="true"/>
+                            <t t-set="_item_class" t-value="'nav-item dropdown'"/>
+                            <t t-set="_link_class" t-value="'nav-link'"/>
+                            <t t-set="_dropdown_menu_class" t-value="'dropdown-menu-right'"/>
+                        </t>
+                    </ul>
                 </div>
             </nav>
         </xpath>

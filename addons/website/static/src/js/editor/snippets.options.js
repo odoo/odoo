@@ -1767,14 +1767,6 @@ options.registry.collapse = options.Class.extend({
 });
 
 options.registry.Header = options.Class.extend({
-    /**
-     * @override
-     */
-    async updateUI() {
-        await this._super(...arguments);
-        const isHamburger = this.$('.navbar-toggler').is(':visible');
-        this.$el.find('#hamburger_opt_label').toggleClass('d-none', isHamburger);
-    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -1792,6 +1784,28 @@ options.registry.Header = options.Class.extend({
             return !this.$('.navbar-brand').hasClass('d-none');
         }
         return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    async _renderOriginalXML($xml) {
+        const uiFragment = await this._super(...arguments);
+
+        const widgets = this._requestUserValueWidgets('header_alignment_opt', 'header_hamburger_type_opt');
+        for (const widget of widgets) {
+            const titleEl = widget.el.querySelector('we-title');
+            const spanEl1 = document.createElement('span');
+            spanEl1.textContent = " (+ ";
+            titleEl.appendChild(spanEl1);
+            const iconEl = document.createElement('i');
+            iconEl.classList.add('fa', 'fa-mobile');
+            titleEl.appendChild(iconEl);
+            const spanEl2 = document.createElement('span');
+            spanEl2.textContent = ")";
+            titleEl.appendChild(spanEl2);
+        }
+
+        return uiFragment;
     },
 });
 

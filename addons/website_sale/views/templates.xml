@@ -73,17 +73,6 @@
         </xpath>
     </template>
 
-    <template id="layout" inherit_id="website.layout">
-        <xpath expr="//header//ul[@id='top_menu']/t[@t-foreach='website.menu_id.child_id']" position="after">
-            <t t-call="website_sale.header_cart_link">
-                <t t-set="_icon" t-value="True"/>
-                <t t-set="_text" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item'"/>
-                <t t-set="_link_class" t-value="'nav-link'"/>
-            </t>
-        </xpath>
-    </template>
-
     <template id="header_cart_link" name="Header Cart Link">
         <t t-set="website_sale_order" t-value="website.sale_get_order()" />
         <t t-set="show_cart" t-value="true"/>
@@ -100,6 +89,36 @@
     <template id="header_hide_empty_cart_link" inherit_id="website_sale.header_cart_link" name="Header Hide Empty Cart link" active="False">
         <xpath expr="//t[@t-set='show_cart']" position="after">
             <t t-set="show_cart" t-value="show_cart and website_sale_order and website_sale_order.cart_quantity" />
+        </xpath>
+    </template>
+
+    <template id="template_header_default" inherit_id="website.template_header_default">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item mx-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_hamburger" inherit_id="website.template_header_hamburger">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_vertical" inherit_id="website.template_header_vertical">
+        <xpath expr="//t[@t-foreach='website.menu_id.child_id']" position="after">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
         </xpath>
     </template>
 

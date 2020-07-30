@@ -30,17 +30,6 @@
         </xpath>
     </template>
 
-    <template id="layout" inherit_id="website_sale.layout">
-        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
-            <t t-call="website_sale_wishlist.header_wishlist_link">
-                <t t-set="_icon" t-value="True"/>
-                <t t-set="_text" t-value="True"/>
-                <t t-set="_item_class" t-value="'nav-item'"/>
-                <t t-set="_link_class" t-value="'nav-link'"/>
-            </t>
-        </xpath>
-    </template>
-
     <template id="header_wishlist_link" name="Header Wishlist Link">
         <t t-set="wishcount" t-value="len(request.env['product.wishlist'].current())"/>
         <t t-set="show_wishes" t-value="True"/>
@@ -59,6 +48,36 @@
         </xpath>
         <xpath expr="//li[contains(@t-attf-class, 'o_wsale_my_wish')]" position="attributes">
             <attribute name="t-attf-class" add="o_wsale_my_wish_hide_empty" separator=" "/>
+        </xpath>
+    </template>
+
+    <template id="template_header_default" inherit_id="website_sale.template_header_default">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item mr-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_hamburger" inherit_id="website_sale.template_header_hamburger">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
+    <template id="template_header_vertical" inherit_id="website_sale.template_header_vertical">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ml-lg-3'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
         </xpath>
     </template>
 
