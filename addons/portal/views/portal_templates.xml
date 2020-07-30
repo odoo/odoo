@@ -16,6 +16,10 @@
                     </button>
                     <div class="collapse navbar-collapse" id="top_menu_collapse">
                         <ul class="nav navbar-nav ml-auto text-right" id="top_menu">
+                            <t t-call="portal.placeholder_user_sign_in">
+                                <t t-set="_item_class" t-value="'nav-item'"/>
+                                <t t-set="_link_class" t-value="'nav-link'"/>
+                            </t>
                             <t t-call="portal.user_dropdown">
                                 <t t-set="_user_name" t-value="true"/>
                                 <t t-set="_item_class" t-value="'nav-item dropdown'"/>
@@ -145,13 +149,12 @@
         </t>
     </template>
 
-    <template id="portal_show_sign_in" inherit_id="portal.frontend_layout" name="Show Sign In">
-        <xpath expr="//ul[@id='top_menu']" position="inside">
-            <li class="nav-item divider" groups="base.group_public"/>
-            <li groups="base.group_public" class="nav-item">
-                <a t-attf-href="/web/login" class="nav-link">
-                    <b>Sign in</b>
-                </a>
+    <template id="placeholder_user_sign_in" name="User Sign In Placeholder"/>
+
+    <template id="user_sign_in" name="User Sign In" inherit_id="portal.placeholder_user_sign_in">
+        <xpath expr="." position="inside">
+            <li groups="base.group_public" t-attf-class="#{_item_class}">
+                <a t-attf-href="/web/login" t-attf-class="#{_link_class}">Sign in</a>
             </li>
         </xpath>
     </template>
