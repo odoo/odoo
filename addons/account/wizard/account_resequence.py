@@ -127,6 +127,9 @@ class ReSequenceWizard(models.TransientModel):
         # Can't change the name of a posted invoice, but we do not want to have the chatter
         # logging 3 separate changes with [state to draft], [change of name], [state to posted]
         self.with_context(tracking_disable=True).move_ids.state = 'draft'
+        if self.move_ids.journal_id and self.move_ids.journal_id.restrict_mode_hash_table:
+            if self.ordering == 'date':
+                raise UserError(_('You can not reorder sequence by date when the journal is locked with a hash.'))
         for move_id in self.move_ids:
             if str(move_id.id) in new_values:
                 if self.ordering == 'keep':
