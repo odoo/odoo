@@ -7,7 +7,7 @@
         <field name="inherit_id" ref="event.view_event_registration_tree" />
         <field name="arch" type="xml">
             <field name="event_id" position="after">
-                <field name="sale_order_id"/>
+                <field name="sale_order_id" optional="hide"/>
             </field>
         </field>
     </record>
