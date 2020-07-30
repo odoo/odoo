@@ -572,7 +572,7 @@ class StockMoveLine(models.Model):
             # We take the current picking first, then the pickings with the latest scheduled date
             current_picking_first = lambda cand: (
                 cand.picking_id != self.move_id.picking_id,
-                -(cand.picking_id.scheduled_date or cand.move_id.date_expected).timestamp()
+                -(cand.picking_id.scheduled_date or cand.move_id.date).timestamp()
                 if cand.picking_id or cand.move_id
                 else -cand.id,
             )

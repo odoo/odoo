@@ -174,12 +174,9 @@ class StockRule(models.Model):
         Care this function is not call by method run. It is called explicitely
         in stock_move.py inside the method _push_apply
         """
-        new_date = fields.Datetime.to_string(move.date_expected + relativedelta(days=self.delay))
+        new_date = fields.Datetime.to_string(move.date + relativedelta(days=self.delay))
         if self.auto == 'transparent':
-            move.write({
-                'date': new_date,
-                'date_expected': new_date,
-                'location_dest_id': self.location_id.id})
+            move.write({'date': new_date, 'location_dest_id': self.location_id.id})
             # avoid looping if a push rule is not well configured; otherwise call again push_apply to see if a next step is defined
             if self.location_id != move.location_dest_id:
                 # TDE FIXME: should probably be done in the move model IMO
@@ -202,7 +199,6 @@ class StockRule(models.Model):
             'location_id': move_to_copy.location_dest_id.id,
             'location_dest_id': self.location_id.id,
             'date': new_date,
-            'date_expected': new_date,
             'company_id': company_id,
             'picking_id': False,
             'picking_type_id': self.picking_type_id.id,
@@ -280,7 +276,7 @@ class StockRule(models.Model):
         elif self.group_propagation_option == 'fixed':
             group_id = self.group_id.id
 
-        date_expected = fields.Datetime.to_string(
+        date_scheduled = fields.Datetime.to_string(
             fields.Datetime.from_string(values['date_planned']) - relativedelta(days=self.delay or 0)
         )
         partner = self.partner_address_id or (values.get('group_id', False) and values['group_id'].partner_id)
@@ -314,8 +310,7 @@ class StockRule(models.Model):
             'group_id': group_id,
             'route_ids': [(4, route.id) for route in values.get('route_ids', [])],
             'warehouse_id': self.propagate_warehouse_id.id or self.warehouse_id.id,
-            'date': date_expected,
-            'date_expected': date_expected,
+            'date': date_scheduled,
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
@@ -510,7 +505,7 @@ class ProcurementGroup(models.Model):
         # Search all confirmed stock_moves and try to assign them
         domain = self._get_moves_to_assign_domain()
         moves_to_assign = self.env['stock.move'].search(domain, limit=None,
-            order='priority desc, date_expected asc')
+            order='priority desc, date asc')
         for moves_chunk in split_every(100, moves_to_assign.ids):
             self.env['stock.move'].browse(moves_chunk)._action_assign()
             if use_new_cursor:

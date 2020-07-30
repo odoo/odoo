@@ -461,19 +461,19 @@ class Picking(models.Model):
         for picking in self:
             picking.move_lines.write({'priority': picking.priority})
 
-    @api.depends('move_lines.date_expected')
+    @api.depends('move_lines.date')
     def _compute_scheduled_date(self):
         for picking in self:
             if picking.move_type == 'direct':
-                picking.scheduled_date = min(picking.move_lines.mapped('date_expected') or [fields.Datetime.now()])
+                picking.scheduled_date = min(picking.move_lines.mapped('date') or [fields.Datetime.now()])
             else:
-                picking.scheduled_date = max(picking.move_lines.mapped('date_expected') or [fields.Datetime.now()])
+                picking.scheduled_date = max(picking.move_lines.mapped('date') or [fields.Datetime.now()])
 
     def _set_scheduled_date(self):
         for picking in self:
             if picking.state in ('done', 'cancel'):
                 raise UserError(_("You cannot change the Scheduled Date on a done or cancelled transfer."))
-            picking.move_lines.write({'date_expected': picking.scheduled_date})
+            picking.move_lines.write({'date': picking.scheduled_date})
 
     def _has_scrap_move(self):
         for picking in self:

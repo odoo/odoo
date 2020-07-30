@@ -127,15 +127,15 @@ class MrpProduction(models.Model):
         help="Location where the system will stock the finished products.")
     date_planned_start = fields.Datetime(
         'Scheduled Date', copy=False, default=_get_default_date_planned_start,
-        compute='_compute_dates_planned', inverse='_set_date_planned_start',
+        inverse='_set_date_planned_start',
         help="Date at which you plan to start the production.",
-        index=True, required=True, store=True)
+        index=True, required=True)
     date_planned_finished = fields.Datetime(
         'Scheduled End Date',
         default=_get_default_date_planned_finished,
-        compute='_compute_dates_planned', inverse='_set_date_planned_finished',
+        inverse='_set_date_planned_finished',
         help="Date at which you plan to finish the production.",
-        copy=False, store=True)
+        copy=False)
     date_deadline = fields.Datetime(
         'Deadline', copy=False, index=True,
         help="Informative date allowing to define when the manufacturing order should be processed at the latest to fulfill delivery on time.")
@@ -292,21 +292,13 @@ class MrpProduction(models.Model):
         for production in self:
             production.mrp_production_backorder_count = len(production.procurement_group_id.mrp_production_ids)
 
-    @api.depends('move_raw_ids.date_expected', 'move_finished_ids.date_expected')
-    def _compute_dates_planned(self):
-        for production in self:
-            if production.state != 'done':
-                production.date_planned_start = max(production.mapped('move_raw_ids.date_expected') or [fields.Datetime.now()])
-                if production.move_finished_ids:
-                    production.date_planned_finished = max(production.mapped('move_finished_ids.date_expected'))
-
     def _set_date_planned_start(self):
         if self.date_planned_start:
-            self.move_raw_ids.write({'date_expected': self.date_planned_start})
+            self.move_raw_ids.write({'date': self.date_planned_start})
 
     def _set_date_planned_finished(self):
         if self.date_planned_finished:
-            self.move_finished_ids.write({'date_expected': self.date_planned_finished})
+            self.move_finished_ids.write({'date': self.date_planned_finished})
 
     def _set_priority(self):
         for production in self:
@@ -576,8 +568,8 @@ class MrpProduction(models.Model):
             if date_planned_finished == self.date_planned_start:
                 date_planned_finished = date_planned_finished + relativedelta(hours=1)
             self.date_planned_finished = date_planned_finished
-            self.move_raw_ids = [(1, m.id, {'date_expected': self.date_planned_start, 'date': self.date_planned_start}) for m in self.move_raw_ids]
-            self.move_finished_ids = [(1, m.id, {'date_expected': date_planned_finished, 'date': date_planned_finished}) for m in self.move_finished_ids]
+            self.move_raw_ids = [(1, m.id, {'date': self.date_planned_start}) for m in self.move_raw_ids]
+            self.move_finished_ids = [(1, m.id, {'date': date_planned_finished}) for m in self.move_finished_ids]
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
@@ -678,14 +670,14 @@ class MrpProduction(models.Model):
                 if production.state == 'done':
                     # for some reason moves added after state = 'done' won't save group_id, reference if added in
                     # "stock_move.default_get()"
-                    production.move_raw_ids.filtered(lambda move: move.additional and move.date_expected > production.date_planned_start).write({
+                    production.move_raw_ids.filtered(lambda move: move.additional and move.date > production.date_planned_start).write({
                         'group_id': production.procurement_group_id.id,
                         'reference': production.name,
-                        'date_expected': production.date_planned_start,
+                        'date': production.date_planned_start,
                     })
-                    production.move_finished_ids.filtered(lambda move: move.additional and move.date_expected > production.date_planned_finished).write({
+                    production.move_finished_ids.filtered(lambda move: move.additional and move.date > production.date_planned_finished).write({
                         'reference': production.name,
-                        'date_expected': production.date_planned_finished,
+                        'date': production.date_planned_finished,
                     })
                 production._autoconfirm_production()
                 if production in production_to_replan:
@@ -789,7 +781,6 @@ class MrpProduction(models.Model):
             'byproduct_id': byproduct_id,
             'name': self.name,
             'date': date_planned_finished,
-            'date_expected': date_planned_finished,
             'picking_type_id': self.picking_type_id.id,
             'location_id': self.product_id.with_company(self.company_id).property_stock_production.id,
             'location_dest_id': self.location_dest_id.id,
@@ -844,7 +835,6 @@ class MrpProduction(models.Model):
             'sequence': bom_line.sequence if bom_line else 10,
             'name': self.name,
             'date': self.date_planned_start,
-            'date_expected': self.date_planned_start,
             'bom_line_id': bom_line.id if bom_line else False,
             'picking_type_id': self.picking_type_id.id,
             'product_id': product_id.id,

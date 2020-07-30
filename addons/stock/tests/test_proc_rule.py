@@ -97,17 +97,17 @@ class TestProcRule(TransactionCase):
             'location_dest_id': self.ref('stock.stock_location_output'),
         })
 
-        move_dest_initial_date = move_dest.date_expected
+        move_dest_initial_date = move_dest.date
 
         # change above the minimum delta
-        move_orig.date_expected += timedelta(days=6)
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated as the minimum delta is below')
+        move_orig.date += timedelta(days=6)
+        self.assertAlmostEqual(move_dest.date, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated as the minimum delta is below')
 
         # change below the minimum delta
-        move_dest_initial_date = move_dest.date_expected
-        move_orig.date_expected += timedelta(days=4)
+        move_dest_initial_date = move_dest.date
+        move_orig.date += timedelta(days=4)
 
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated as the minimum delta is above')
+        self.assertAlmostEqual(move_dest.date, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated as the minimum delta is above')
 
     def test_rule_propagate_2(self):
         move_dest = self.env['stock.move'].create({
@@ -129,15 +129,15 @@ class TestProcRule(TransactionCase):
             'location_dest_id': self.ref('stock.stock_location_output'),
         })
 
-        move_dest_initial_date = move_dest.date_expected
+        move_dest_initial_date = move_dest.date
 
         # change below the minimum delta
-        move_orig.date_expected += timedelta(days=4)
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated')
+        move_orig.date += timedelta(days=4)
+        self.assertAlmostEqual(move_dest.date, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated')
 
         # change above the minimum delta
-        move_orig.date_expected += timedelta(days=2)
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated')
+        move_orig.date += timedelta(days=2)
+        self.assertAlmostEqual(move_dest.date, move_dest_initial_date, delta=timedelta(seconds=10), msg='date should not be propagated')
 
     def test_rule_propagate_3(self):
         move_dest = self.env['stock.move'].create({
@@ -159,13 +159,12 @@ class TestProcRule(TransactionCase):
             'location_dest_id': self.ref('stock.stock_location_output'),
             'quantity_done': 10,
         })
-        move_orig.date_expected -= timedelta(days=6)
-        move_dest_initial_date = move_dest.date_expected
-        move_orig_initial_date = move_orig.date_expected
+        move_orig.date -= timedelta(days=6)
+        move_dest_initial_date = move_dest.date
+        move_orig_initial_date = move_orig.date
         move_orig._action_done()
-        self.assertAlmostEqual(move_orig.date_expected, move_orig_initial_date, delta=timedelta(seconds=10), msg='schedule date should not be impacted by action_done')
         self.assertAlmostEqual(move_orig.date, datetime.now(), delta=timedelta(seconds=10), msg='date should be now')
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated')
+        self.assertAlmostEqual(move_dest.date, move_dest_initial_date + timedelta(days=6), delta=timedelta(seconds=10), msg='date should be propagated')
 
     def test_reordering_rule_1(self):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
@@ -190,7 +189,7 @@ class TestProcRule(TransactionCase):
 
         delivery_move = self.env['stock.move'].create({
             'name': 'Delivery',
-            'date_expected': datetime.today() + timedelta(days=5),
+            'date': datetime.today() + timedelta(days=5),
             'product_id': self.product.id,
             'product_uom': self.uom_unit.id,
             'product_uom_qty': 12.0,
@@ -206,7 +205,7 @@ class TestProcRule(TransactionCase):
             ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
         ])
         self.assertTrue(receipt_move)
-        self.assertEqual(receipt_move.date_expected.date(), date.today())
+        self.assertEqual(receipt_move.date.date(), date.today())
         self.assertEqual(receipt_move.product_uom_qty, 17.0)
 
     def test_reordering_rule_2(self):
@@ -259,7 +258,7 @@ class TestProcRule(TransactionCase):
             ('location_id', '=', self.env.ref('stock.stock_location_suppliers').id)
         ])
         self.assertTrue(receipt_move)
-        self.assertEqual(receipt_move.date_expected.date(), date.today())
+        self.assertEqual(receipt_move.date.date(), date.today())
         self.assertEqual(receipt_move.product_uom_qty, 17.0)
 
 

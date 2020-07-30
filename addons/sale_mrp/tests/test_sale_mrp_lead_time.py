@@ -69,13 +69,18 @@ class TestSaleMrpLeadTime(TestStockCommon):
             msg='Schedule date of picking should be equal to: Order date + Customer Lead Time - Sales Safety Days.'
         )
 
-        # Check schedule date of manufacturing order
-        mo_date = out_date - timedelta(days=self.product_1.produce_delay) - timedelta(days=company.manufacturing_lead)
-        date_deadline = fields.Datetime.from_string(manufacturing_order.date_deadline)
+        # Check schedule date and deadline of manufacturing order
+        mo_deadline = out_date - timedelta(days=self.product_1.produce_delay)
+        mo_scheduled = mo_deadline - timedelta(days=company.manufacturing_lead)
         self.assertAlmostEqual(
-            date_deadline, mo_date,
+            fields.Datetime.from_string(manufacturing_order.date_planned_start), mo_scheduled,
             delta=timedelta(seconds=1),
             msg="Schedule date of manufacturing order should be equal to: Schedule date of picking - product's Manufacturing Lead Time - company's Manufacturing Lead Time."
+        )
+        self.assertAlmostEqual(
+            fields.Datetime.from_string(manufacturing_order.date_deadline), mo_deadline,
+            delta=timedelta(seconds=1),
+            msg="Deadline date of manufacturing order should be equal to: Schedule date of picking - product's Manufacturing Lead Time."
         )
 
     def test_01_product_route_level_delays(self):

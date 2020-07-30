@@ -2735,58 +2735,58 @@ class TestRoutes(TestStockCommon):
         (ship + pack + pick).propagate_date = False
         (ship + pack + pick).delay_alert = True
 
-        # by default they all the the same `date_expected`
-        self.assertEqual(set((ship + pack + pick).mapped('date_expected')), {pick.date_expected})
+        # by default they all the the same `date`
+        self.assertEqual(set((ship + pack + pick).mapped('date')), {pick.date})
 
         # pick - pack - ship
-        ship.date_expected += timedelta(days=2)
-        pack.date_expected += timedelta(days=1)
+        ship.date += timedelta(days=2)
+        pack.date += timedelta(days=1)
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)
 
         # move the pack after the ship
         # pick - ship - pack
-        pack.date_expected += timedelta(days=2)
+        pack.date += timedelta(days=2)
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertTrue(ship.delay_alert_date)
-        self.assertAlmostEqual(ship.delay_alert_date, pack.date_expected)
+        self.assertAlmostEqual(ship.delay_alert_date, pack.date)
 
         # restore the pack before the ship
         # pick - pack - ship
-        pack.date_expected -= timedelta(days=2)
+        pack.date -= timedelta(days=2)
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)
 
         # move the pick after the pack
         # pack - ship - pick
-        pick.date_expected += timedelta(days=3)
+        pick.date += timedelta(days=3)
         self.assertFalse(pick.delay_alert_date)
         self.assertTrue(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)
-        self.assertAlmostEqual(pack.delay_alert_date, pick.date_expected)
+        self.assertAlmostEqual(pack.delay_alert_date, pick.date)
 
         # move the ship before the pack
         # ship - pack - pick
-        ship.date_expected -= timedelta(days=2)
+        ship.date -= timedelta(days=2)
         self.assertFalse(pick.delay_alert_date)
         self.assertTrue(pack.delay_alert_date)
         self.assertTrue(ship.delay_alert_date)
-        self.assertAlmostEqual(pack.delay_alert_date, pick.date_expected)
-        self.assertAlmostEqual(ship.delay_alert_date, pack.date_expected)
+        self.assertAlmostEqual(pack.delay_alert_date, pick.date)
+        self.assertAlmostEqual(ship.delay_alert_date, pack.date)
 
         # move the pack at the end
         # ship - pick - pack
-        pack.date_expected = pick.date_expected + timedelta(days=2)
+        pack.date = pick.date + timedelta(days=2)
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertTrue(ship.delay_alert_date)
-        self.assertAlmostEqual(ship.delay_alert_date, pack.date_expected)
+        self.assertAlmostEqual(ship.delay_alert_date, pack.date)
 
         # fix the ship
-        ship.date_expected = pack.date_expected + timedelta(days=2)
+        ship.date = pack.date + timedelta(days=2)
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)

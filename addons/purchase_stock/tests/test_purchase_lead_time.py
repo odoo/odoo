@@ -316,7 +316,7 @@ class TestPurchaseLeadTime(PurchaseTestCommon):
         for i in range(0, 6):
             delivery_moves |= self.env['stock.move'].create({
                 'name': 'Delivery',
-                'date_expected': datetime.today() + timedelta(days=i),
+                'date': datetime.today() + timedelta(days=i),
                 'product_id': product.id,
                 'product_uom': product.uom_id.id,
                 'product_uom_qty': 5.0,

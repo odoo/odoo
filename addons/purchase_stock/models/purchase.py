@@ -243,7 +243,7 @@ class PurchaseOrder(models.Model):
                 moves = order.order_line._create_stock_moves(picking)
                 moves = moves.filtered(lambda x: x.state not in ('done', 'cancel'))._action_confirm()
                 seq = 0
-                for move in sorted(moves, key=lambda move: move.date_expected):
+                for move in sorted(moves, key=lambda move: move.date):
                     seq += 5
                     move.sequence = seq
                 moves._action_assign()
@@ -362,9 +362,9 @@ class PurchaseOrderLine(models.Model):
         if not moves_to_update:
             moves_to_update = self.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
         for move in moves_to_update:
-            delta_days = (new_date - move.date_expected).total_seconds() / 86400
+            delta_days = (new_date - move.date).total_seconds() / 86400
             if abs(delta_days) >= self.propagate_date_minimum_delta:
-                move.date_expected = move.date_expected + relativedelta.relativedelta(days=delta_days)
+                move.date = move.date + relativedelta.relativedelta(days=delta_days)
 
     def _create_or_update_picking(self):
         for line in self:
@@ -459,8 +459,7 @@ class PurchaseOrderLine(models.Model):
             # TODO: remove index in master?
             'name': (self.name or '')[:2000],
             'product_id': self.product_id.id,
-            'date': self.order_id.date_order,
-            'date_expected': self.order_id.date_planned or self.date_planned,
+            'date': self.order_id.date_planned or self.date_planned,
             'location_id': self.order_id.partner_id.property_stock_supplier.id,
             'location_dest_id': (self.orderpoint_id and not (self.move_ids | self.move_dest_ids)) and self.orderpoint_id.location_id.id or self.order_id._get_destination_location(),
             'picking_id': picking.id,

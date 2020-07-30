@@ -232,7 +232,7 @@ class TestProcurement(TestMrpCommon):
             ('state', '=', 'confirmed')
         ])
 
-        self.assertAlmostEqual(mo.move_finished_ids.date_expected, mo.move_raw_ids.date_expected + timedelta(hours=1), delta=timedelta(seconds=1))
+        self.assertAlmostEqual(mo.move_finished_ids.date, mo.move_raw_ids.date + timedelta(hours=1), delta=timedelta(seconds=1))
 
         self.assertEqual(len(mo), 1, 'the manufacture order is not created')
 
@@ -249,13 +249,13 @@ class TestProcurement(TestMrpCommon):
         self.assertEqual(len(move_orig), 1, 'the move orig is not created')
         self.assertEqual(move_orig.product_qty, 10, 'the quantity to produce is not good relative to the move')
 
-        move_dest_scheduled_date = move_dest.date_expected
+        move_dest_scheduled_date = move_dest.date
 
         mo_form = Form(mo)
         mo_form.date_planned_start = fields.Datetime.to_datetime(mo_form.date_planned_start) + timedelta(days=5)
         mo_form.save()
 
-        self.assertAlmostEqual(move_dest.date_expected, move_dest_scheduled_date + timedelta(days=5), delta=timedelta(seconds=1), msg='date is not propagated')
+        self.assertAlmostEqual(move_dest.date, move_dest_scheduled_date + timedelta(days=5), delta=timedelta(seconds=1), msg='date is not propagated')
 
     def test_finished_move_cancellation(self):
         """Check state of finished move on cancellation of raw moves. """
