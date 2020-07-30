@@ -252,9 +252,9 @@ var LivechatButton = Widget.extend({
                     // Note that Python does this encoding automatically.
                     // Taken from https://stackoverflow.com/a/31652607
                     let im_livechat_session = JSON.stringify(self._livechat.toData());
-                    im_livechat_session = im_livechat_session.replace(/[\u007F-\uFFFF]/g, chr =>
-                        `\\u${`0000${chr.charCodeAt(0).toString(16)}`.substr(-4)}`
-                    );
+                    im_livechat_session = im_livechat_session.replace(/[\u007F-\uFFFF]/g, function(chr) {
+                        return "\\u" + ("0000" + chr.charCodeAt(0).toString(16)).substr(-4)
+                    })
                     utils.set_cookie('im_livechat_session', im_livechat_session, 60*60);
                     utils.set_cookie('im_livechat_auto_popup', JSON.stringify(false), 60*60);
                     if (livechatData.operator_pid[0]) {
@@ -400,7 +400,11 @@ var LivechatButton = Widget.extend({
      */
     _onSaveChatWindow: function (ev) {
         ev.stopPropagation();
-        utils.set_cookie('im_livechat_session', JSON.stringify(this._livechat.toData()), 60*60);
+        let im_livechat_session = JSON.stringify(this._livechat.toData());
+        im_livechat_session = im_livechat_session.replace(/[\u007F-\uFFFF]/g, function(chr) {
+            return "\\u" + ("0000" + chr.charCodeAt(0).toString(16)).substr(-4)
+        })
+        utils.set_cookie('im_livechat_session', im_livechat_session, 60*60);
     },
     /**
      * @private
