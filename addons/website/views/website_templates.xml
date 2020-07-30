@@ -134,7 +134,7 @@
     <xpath expr="//header//ul[@id='top_menu']" position="attributes">
         <attribute name="class" separator=" " add="o_menu_loading" remove="text-right ml-auto"/>
     </xpath>
-    <xpath expr="//header//ul[@id='top_menu']/t[@t-call='portal.user_dropdown']" position="before">
+    <xpath expr="//header//ul[@id='top_menu']/t[@t-call='portal.placeholder_user_sign_in']" position="before">
         <t t-foreach="website.menu_id.child_id" t-as="submenu">
             <t t-call="website.submenu">
                 <t t-set="item_class" t-value="'nav-item'"/>
