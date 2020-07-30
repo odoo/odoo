@@ -2,6 +2,15 @@
 
 from odoo import api, fields, models, tools
 
+from odoo.modules import get_resource_path
+
+try:
+    import sass as libsass
+except ImportError:
+    # If the `sass` python library isn't found, we fallback on the
+    # `sassc` executable in the path.
+    libsass = None
+
 DEFAULT_PRIMARY = '#000000'
 DEFAULT_SECONDARY = '#000000'
 
@@ -21,7 +30,10 @@ class BaseDocumentLayout(models.TransientModel):
     preview_logo = fields.Binary(related='logo', string="Preview logo")
     report_header = fields.Text(related='company_id.report_header', readonly=False)
     report_footer = fields.Text(related='company_id.report_footer', readonly=False)
+
+    # The paper format changes won't be reflected in the preview.
     paperformat_id = fields.Many2one(related='company_id.paperformat_id', readonly=False)
+
     external_report_layout_id = fields.Many2one(related='company_id.external_report_layout_id', readonly=False)
 
     font = fields.Selection(related='company_id.font', readonly=False)
@@ -33,9 +45,27 @@ class BaseDocumentLayout(models.TransientModel):
     logo_secondary_color = fields.Char(compute="_compute_logo_colors")
 
     report_layout_id = fields.Many2one('report.layout')
-    preview = fields.Html(compute='_compute_preview')
 
-    @api.depends('logo_primary_color', 'logo_secondary_color', 'primary_color', 'secondary_color')
+    # All the sanitization get disabled as we want true raw html to be passed to an iframe.
+    preview = fields.Html(compute='_compute_preview',
+                          sanitize=False,
+                          sanitize_tags=False,
+                          sanitize_attributes=False,
+                          sanitize_style=False,
+                          sanitize_form=False,
+                          strip_style=False,
+                          strip_classes=False)
+
+    # Those following fields are required as a company to create invoice report
+    partner_id = fields.Many2one(related='company_id.partner_id', readonly=True)
+    phone = fields.Char(related='company_id.phone', readonly=True)
+    email = fields.Char(related='company_id.email', readonly=True)
+    website = fields.Char(related='company_id.website', readonly=True)
+    vat = fields.Char(related='company_id.vat', readonly=True)
+    name = fields.Char(related='company_id.name', readonly=True)
+    country_id = fields.Many2one(related="company_id.country_id", readonly=True)
+
+    @api.depends('logo_primary_color', 'logo_secondary_color', 'primary_color', 'secondary_color',)
     def _compute_custom_colors(self):
         for wizard in self:
             logo_primary = wizard.logo_primary_color or ''
@@ -58,13 +88,17 @@ class BaseDocumentLayout(models.TransientModel):
                 wizard_for_image = wizard
             wizard.logo_primary_color, wizard.logo_secondary_color = wizard_for_image._parse_logo_colors()
 
-    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color')
+    @api.depends('report_layout_id', 'logo', 'font', 'primary_color', 'secondary_color', 'report_header', 'report_footer')
     def _compute_preview(self):
         """ compute a qweb based preview to display on the wizard """
+
+        styles = self._get_asset_style()
+
         for wizard in self:
             if wizard.report_layout_id:
-                ir_qweb = wizard.env['ir.qweb']
-                wizard.preview = ir_qweb._render('base.layout_preview', {'company': wizard})
+                preview_css = self._get_css_for_preview(styles, wizard.id)
+                ir_ui_view = wizard.env['ir.ui.view']
+                wizard.preview = ir_ui_view._render_template('web.report_invoice_wizard_preview', {'company': wizard, 'preview_css': preview_css})
             else:
                 wizard.preview = False
 
@@ -181,9 +215,62 @@ class BaseDocumentLayout(models.TransientModel):
     @api.model
     def action_open_base_document_layout(self, action_ref=None):
         if not action_ref:
-            action_ref = 'base.action_base_document_layout_configurator'
+            action_ref = 'web.action_base_document_layout_configurator'
         return self.env["ir.actions.actions"]._for_xml_id(action_ref)
 
     def document_layout_save(self):
         # meant to be overridden
         return self.env.context.get('report_action') or {'type': 'ir.actions.act_window_close'}
+
+    def _get_asset_style(self):
+        """
+        Compile the style template. It is a qweb template expecting company ids to generate all the code in one batch.
+        We give a useless company_ids arg, but provide the PREVIEW_ID arg that will prepare the template for
+        '_get_css_for_preview' processing later.
+        :return:
+        """
+        template_style = self.env.ref('web.styles_company_report', raise_if_not_found=False)
+        if not template_style:
+            return b''
+
+        company_styles = template_style._render({
+            'company_ids': self,
+        })
+
+        return company_styles
+
+    @api.model
+    def _get_css_for_preview(self, scss, new_id):
+        """
+        Compile the scss into css.
+        """
+        css_code = self._compile_scss(scss)
+        return css_code
+
+    @api.model
+    def _compile_scss(self, scss_source):
+        """
+        This code will compile valid scss into css.
+        Parameters are the same from odoo/addons/base/models/assetsbundle.py
+        Simply copied and adapted slightly
+        """
+
+        # No scss ? still valid, returns empty css
+        if not scss_source.strip():
+            return ""
+
+        precision = 8
+        output_style = 'expanded'
+        bootstrap_path = get_resource_path('web', 'static', 'lib', 'bootstrap', 'scss')
+
+        try:
+            return libsass.compile(
+                string=scss_source,
+                include_paths=[
+                    bootstrap_path,
+                ],
+                output_style=output_style,
+                precision=precision,
+            )
+        except libsass.CompileError as e:
+            raise libsass.CompileError(e.args[0])

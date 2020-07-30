@@ -4,9 +4,11 @@ odoo.define('web.special_fields', function (require) {
 var core = require('web.core');
 var field_utils = require('web.field_utils');
 var relational_fields = require('web.relational_fields');
+var AbstractField = require('web.AbstractField');
 
 var FieldSelection = relational_fields.FieldSelection;
 var _t = core._t;
+var _lt = core._lt;
 
 
 /**
@@ -62,7 +64,7 @@ var FieldTimezoneMismatch = FieldSelection.extend({
     },
     /**
      * Display the timezone alert
-     * 
+     *
      * Note: timezone alert is a span that is added after $el, and $el is now a
      * set of two elements
      *
@@ -192,9 +194,69 @@ var FieldReportLayout = relational_fields.FieldMany2One.extend({
 });
 
 
+const IframeWrapper = AbstractField.extend({
+    description: _lt("Wrap raw html within an iframe"),
+
+    // If HTML, don't forget to adjust the sanitize options to avoid stripping most of the metadata
+    supportedFieldTypes: ['text', 'html'],
+
+    template: "web.IframeWrapper",
+
+    _render() {
+
+        const spinner = this.el.querySelector('.o_iframe_wrapper_spinner');
+        const iframe = this.el.querySelector('.o_preview_iframe');
+
+        iframe.style.display = 'none';
+        spinner.style.display = 'block';
+
+        // Promise for tests
+        let resolver;
+        $(iframe).data('ready', new Promise((resolve) => {
+            resolver = resolve;
+        }));
+
+        /**
+         * Certain browser don't trigger onload events of iframe for particular cases.
+         * In our case, chrome and safari could be problematic depending on version and environment.
+         * This rather unorthodox solution replace the onload event handler. (jquery on('load') doesn't fix it)
+         */
+        const onloadReplacement = setInterval(() => {
+            const iframeDoc = iframe.contentDocument;
+            if (iframeDoc && (iframeDoc.readyState === 'complete' || iframeDoc.readyState === 'interactive')) {
+
+                /**
+                 * The document.write is not recommended. It is better to manipulate the DOM through $.appendChild and
+                 * others. In our case though, we deal with an iframe without src attribute and with metadata to put in
+                 * head tag. If we use the usual dom methods, the iframe is automatically created with its document
+                 * component containing html > head & body. Therefore, if we want to make it work that way, we would
+                 * need to receive each piece at a time to  append it to this document (with this.record.data and extra
+                 * model fields or with an rpc). It also cause other difficulties getting attribute on the most parent
+                 * nodes, parsing to HTML complex elements, etc.
+                 * Therefore, document.write makes it much more trivial in our situation.
+                 */
+                iframeDoc.open();
+                iframeDoc.write(this.value);
+                iframeDoc.close();
+
+                iframe.style.display = 'block';
+                spinner.style.display = 'none';
+
+                resolver();
+
+                clearInterval(onloadReplacement);
+            }
+        }, 100);
+
+    }
+
+});
+
+
 return {
     FieldTimezoneMismatch: FieldTimezoneMismatch,
     FieldReportLayout: FieldReportLayout,
+    IframeWrapper,
 };
 
 });
