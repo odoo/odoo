@@ -8,22 +8,26 @@ body {
     // Set frontend direction that will be flipped with
     // rtlcss for right-to-left text direction.
     direction: ltr;
-    transition: padding 400ms ease 0s;
 }
 body.o_connected_user {
     padding-top: $o-navbar-height!important;
 
+    &.o_fullscreen_transition {
+        transition: padding 400ms ease 0s;
+
+        #oe_main_menu_navbar, #web_editor-top-edit, #oe_snippets {
+            transition: transform 400ms ease 0s !important;
+        }
+    }
     &.o_fullscreen {
         padding-top: 0 !important;
 
         &.editor_enable.editor_has_snippets {
             padding-left: 0 !important;
         }
-
         #oe_main_menu_navbar, #web_editor-top-edit {
             transform: translateY(-100%);
         }
-
         #oe_snippets {
             transform: translateX(-100%);
         }
@@ -38,7 +42,6 @@ body.o_connected_user {
     z-index: $zindex-modal - 10;
     font-family: $o-we-font-family;
     font-size: 14px;
-    transition: transform 400ms ease 0s; // For fullscreen
 
     a:hover, a:focus {
         text-decoration: none;
