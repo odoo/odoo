@@ -378,7 +378,7 @@ class TestCreatePicking(common.TestProductCommon):
         self.assertEqual(move2.product_uom.id, uom_dozen.id)
         self.assertEqual(move2.product_qty, 24)
 
-    def create_delivery_order(self, propagate_date, propagate_date_minimum_delta):
+    def create_delivery_order(self):
         stock_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_stock')
         customer_location = self.env['ir.model.data'].xmlid_to_object('stock.stock_location_customers')
         unit = self.ref("uom.product_uom_unit")
@@ -392,10 +392,6 @@ class TestCreatePicking(common.TestProductCommon):
         warehouse1 = self.env.ref('stock.warehouse0')
         route_buy = warehouse1.buy_pull_id.route_id
         route_mto = warehouse1.mto_pull_id.route_id
-
-        # change propagete date and Reschedule if Higher Than on rules
-        route_buy.rule_ids.write({'propagate_date': propagate_date,
-            'propagate_date_minimum_delta': propagate_date_minimum_delta})
 
         product = self.env['product.product'].create({
             'name': 'Usb Keyboard',
@@ -430,13 +426,11 @@ class TestCreatePicking(common.TestProductCommon):
 
         return delivery_order, purchase_order
 
-    def test_05_if_propagate_date(self):
-        """ In order to check scheduled date of the delivery order is changed based
-            stock rules with propagate date and minimum delta.
-        """
+    def test_05_propagate_deadline(self):
+        """ In order to check deadline date of the delivery order is changed and the planned date not."""
 
         # Create Delivery Order and with propagate date and minimum delta
-        delivery_order, purchase_order = self.create_delivery_order(True, 5)
+        delivery_order, purchase_order = self.create_delivery_order()
 
         # check po is created or not
         self.assertTrue(purchase_order, 'No purchase order created.')
@@ -446,38 +440,16 @@ class TestCreatePicking(common.TestProductCommon):
         # change scheduled date of po line.
         purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
 
-        # Now check scheduled date of delivery order is changed or not.
-        self.assertEqual(purchase_order_line.date_planned, delivery_order.scheduled_date,
-            'Delivery order schedule date should be changed as we have set date propagate.')
-
-    def test_06_no_propagate_date(self):
-        """ In order to check scheduled date of the delivery order is changed based
-            stock rules without propagate date and minimum delta.
-        """
-
-        # Create Delivery Order and without propagate date and minimum delta
-        delivery_order, purchase_order = self.create_delivery_order(False, 5)
-
-        # check po is created or not
-        self.assertTrue(purchase_order, 'No purchase order created.')
-
-        purchase_order_line = purchase_order.order_line
-
-        # change scheduled date of po line.
-        purchase_order_line.write({'date_planned': purchase_order_line.date_planned + timedelta(days=5)})
-
-        # Now check scheduled date of delivery order is changed or not.
-        self.assertNotEqual(purchase_order_line.date_planned, delivery_order.scheduled_date,
-            'Delivery order schedule date should not changed.')
+        # Now check scheduled date and deadline of delivery order.
+        self.assertNotEqual(
+            purchase_order_line.date_planned, delivery_order.scheduled_date,
+            'Scheduled delivery order date should not changed.')
+        self.assertEqual(
+            purchase_order_line.date_planned, delivery_order.date_deadline,
+            'Delivery deadline date should be changed.')
 
     def test_07_differed_schedule_date(self):
         warehouse = self.env['stock.warehouse'].search([], limit=1)
-
-        # mark all rules as propagate_date so that push rules will use it
-        self.env['stock.rule'].search([]).write({
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 5,
-        })
 
         with Form(warehouse) as w:
             w.reception_steps = 'three_steps'
@@ -492,12 +464,6 @@ class TestCreatePicking(common.TestProductCommon):
             line.date_planned = datetime.today() + timedelta(days=7)
             line.product_qty = 1.0
         po = po_form.save()
-
-        # mark the po line as propagate_date so that the created moves will use it
-        po.order_line.write({
-            'propagate_date': True,
-            'propagate_date_minimum_delta': 5,
-        })
 
         po.button_approve()
 
