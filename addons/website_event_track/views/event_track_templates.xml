@@ -311,7 +311,8 @@
                                 You can add multiple speakers by separating names, emails and phones with commas.
                             </div>
                         </section>
-                        <section id="forms" t-if="event.website_track_proposal">
+                        <section id="forms" class="mb-5"
+                            t-if="event.website_track_proposal">
                             <form class="mt32 js_website_submit_form" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <div class="form-group row">
