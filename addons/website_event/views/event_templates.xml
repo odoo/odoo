@@ -429,7 +429,7 @@
             <div class="container overflow-hidden">
                 <div class="row no-gutters mt-n4 mb-3">
                     <!-- Description -->
-                    <div id="o_wevent_event_main_col" class="col-lg-8 bg-white px-5 pt48 pb-0 shadow-sm">
+                    <div id="o_wevent_event_main_col" class="col-lg-8 bg-white px-3 pt-5 pb-0 shadow-sm">
                         <span t-field="event.description" itemprop="description"/>
                     </div>
                     <div class="col-lg-4 bg-light shadow-sm d-print-none">
@@ -554,14 +554,14 @@
                             <i class="fa fa-check mr-2"/>Registered
                         </span>
                     </div>
-                    <a href="#" role="button" class="btn o_wevent_registration_btn text-left pl-0" data-target="#o_wevent_tickets_collapse">
-                        Tickets
+                    <a href="#" role="button" class="btn o_wevent_registration_btn text-left" data-target="#o_wevent_tickets_collapse">
+                        <span class="py-2">Tickets</span>
                         <span class="close d-none">×</span>
                     </a>
                 </div>
                 <div id="o_wevent_tickets_collapse" class="collapse show">
-                    <div t-foreach="tickets" t-as="ticket" class="row px-3 mx-0 bg-light border-bottom">
-                        <div class="col-8 py-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                    <div t-foreach="tickets" t-as="ticket" class="row px-3 py-3 mx-0 bg-light border-bottom">
+                        <div class="col-md-8 col-xs-12 p-0" itemscope="itemscope" itemtype="http://schema.org/Offer">
                             <h5 itemprop="name" t-field="ticket.name" class="my-0"/>
                             <t t-if="ticket.description">
                                 <small t-field="ticket.description" class="text-muted py-2"/>
@@ -570,7 +570,7 @@
                             <small t-if="ticket.end_sale_date and ticket.sale_available and not ticket.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on <span itemprop="priceValidUntil" t-field="ticket.end_sale_date"/></small>
                             <small t-if="ticket.start_sale_date and not ticket.sale_available and not ticket.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales start on <span itemprop="priceValidUntil" t-field="ticket.start_sale_date"/></small>
                         </div>
-                        <div class="col-4 d-flex align-items-center">
+                        <div class="col-md-4 col-xs-12 p-0 d-flex align-items-center justify-content-between">
                             <div class="o_wevent_registration_multi_select"/>
                             <div class="w-auto ml-auto">
                                 <select t-if="not ticket.is_expired and ticket.sale_available"
@@ -593,7 +593,10 @@
                     <div class="row no-gutters">
                         <div class="col-md-4 offset-md-8 py-2 pl-md-0 pr-md-2">
                             <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" disabled="" t-attf-id="#{event.id}">
-                                Register<t t-if="event.seats_limited"> (Available seats: <t t-esc="event.seats_available"/>)</t>
+                                Register
+                                <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
+                                    (only <t t-esc="event.seats_available"/> available)
+                                </t>
                             </button>
                         </div>
                     </div>
@@ -627,7 +630,12 @@
                         </div>
                     </div>
                     <div class="col-lg-4 pt-3 pt-lg-0 pl-2 pl-lg-0">
-                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-attf-id="#{event.id}">Register</button>
+                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-attf-id="#{event.id}">
+                            Register
+                            <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
+                                (only <t t-esc="event.seats_available"/> available)
+                            </t>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -689,34 +697,40 @@
 <template id="registration_complete" name="Registration Completed">
     <t t-call="website_event.layout">
         <div class="container my-5">
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-12">
                     <h2>Registration confirmed!</h2>
-                    <table class="table table-striped my-4">
-                        <thead class="bg-secondary">
-                            <tr>
-                                <th>Name</th>
-                                <th>Ticket</th>
-                                <th>E-mail</th>
-                                <th>Phone</th>
-                                <th>Reference</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="attendees" t-as="attendee">
-                                <tr>
-                                    <td><t t-if="attendee.name" t-esc="attendee.name"/><t t-else="">N/A</t></td>
-                                    <td><i class="fa fa-ticket"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
-                                    <td><t t-if="attendee.email" t-esc="attendee.email"/><t t-else="">N/A</t></td>
-                                    <td><t t-if="attendee.phone" t-esc="attendee.phone"/><t t-else="">N/A</t></td>
-                                    <td><t t-esc="attendee.id"/></td>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-lg-8">
                     <h3><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h3>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4 col-xs-12 mt-3" t-foreach="attendees" t-as="attendee">
+                    <div class="d-flex flex-column">
+                        <span class="font-weight-bold">
+                            <t t-if="attendee.name" t-esc="attendee.name"/>
+                            <t t-else="">N/A</t>
+                        </span>
+                        <span>
+                            <i class="fa fa-envelope mr-2   "></i>
+                            <t t-if="attendee.email" t-esc="attendee.email"/>
+                            <t t-else="">N/A</t>
+                        </span>
+                        <span>
+                            <i class="fa fa-phone mr-2"></i>
+                            <t t-if="attendee.phone" t-esc="attendee.phone"/>
+                            <t t-else="">N/A</t>
+                        </span>
+                        <span>
+                            <i class="fa fa-ticket mr-2"></i>
+                            <t t-if="attendee.event_ticket_id" t-esc="attendee.event_ticket_id.name"/>
+                            <t t-else="">N/A</t>
+                            (ref: <t t-esc="attendee.id"/>)
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-lg-8">
                     <p><b>Start</b> <span itemprop="startDate" t-esc="event.date_begin_located"/><br/> <b>End</b> <span itemprop="endDate" t-esc="event.date_end_located"/></p>
                     <div id="add_to_calendar" class="mt-4">
                         <a role="button" class="btn btn-primary" t-att-href="iCal_url">
