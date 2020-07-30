@@ -10,7 +10,6 @@ var AbstractRenderer = require('web.AbstractRenderer');
 var config = require('web.config');
 var core = require('web.core');
 var dataComparisonUtils = require('web.dataComparisonUtils');
-const { qweb: OwlQweb } = require('web.env');
 var fieldUtils = require('web.field_utils');
 
 var _t = core._t;
@@ -899,13 +898,17 @@ return AbstractRenderer.extend({
      */
     _renderNoContentHelper: function (context) {
         let templateName;
-        if (context) {
-            templateName = "web.NoContentHelper";
+        if (!context && this.noContentHelp) {
+            templateName = "web.ActionHelper";
+            context = { noContentHelp: this.noContentHelp };
         } else {
-            templateName = this.noContentHelp ? "web.ActionHelper" : "web.NoContentHelper";
-            context = this.noContentHelp ? { noContentHelp: this.noContentHelp } : {};
+            templateName = "web.NoContentHelper";
         }
         const template = document.createElement('template');
+        // FIXME: retrieve owl qweb instance via the env set on Component s.t.
+        // it also works in the tests (importing 'web.env' wouldn't). This won't
+        // be necessary as soon as this rendering will be written in owl.
+        const OwlQweb = owl.Component.env.qweb;
         template.innerHTML = OwlQweb.renderToString(templateName, context);
         this.el.append(template.content.firstChild);
     },

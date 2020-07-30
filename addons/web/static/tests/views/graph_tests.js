@@ -1324,63 +1324,74 @@ QUnit.module('Views', {
         graph.destroy();
     });
 
-    // QUnit.test('empty graph view with sample data', async function (assert) {
-    //     assert.expect(7);
+    QUnit.test('empty graph view with sample data', async function (assert) {
+        assert.expect(8);
 
-    //     const graph = await createView({
-    //         View: GraphView,
-    //         model: "foo",
-    //         data: this.data,
-    //         arch: `
-    //             <graph sample="1">
-    //                 <field name="product_id"/>
-    //                 <field name="date"/>
-    //             </graph>`,
-    //         domain: [['id', '<', 0]],
-    //         debug: 1,
-    //     });
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `
+                <graph sample="1">
+                    <field name="product_id"/>
+                    <field name="date"/>
+                </graph>`,
+            domain: [['id', '<', 0]],
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        });
 
-    //     assert.hasClass(graph.el, 'o_view_sample_data');
-    //     assert.containsOnce(graph, '.o_view_nocontent');
-    //     assert.containsOnce(graph, 'table.o_sample_data_disabled');
+        assert.hasClass(graph.el, 'o_view_sample_data');
+        assert.containsOnce(graph, '.o_view_nocontent');
+        assert.containsOnce(graph, '.o_graph_canvas_container canvas');
+        assert.hasClass(graph.$('.o_graph_canvas_container'), 'o_sample_data_disabled');
 
-    //     // await graph.reload({ domain: [] });
+        await graph.reload({ domain: [] });
 
-    //     // assert.doesNotHaveClass(graph.el, 'o_view_sample_data');
-    //     // assert.containsNone(graph, '.o_view_nocontent');
-    //     // assert.containsOnce(graph, 'table');
-    //     // assert.doesNotHaveClass(graph.$('table'), 'o_sample_data_disabled');
+        assert.doesNotHaveClass(graph.el, 'o_view_sample_data');
+        assert.containsNone(graph, '.o_view_nocontent');
+        assert.containsOnce(graph, '.o_graph_canvas_container canvas');
+        assert.doesNotHaveClass(graph.$('.o_graph_canvas_container'), 'o_sample_data_disabled');
 
-    //     // graph.destroy();
-    // });
+        graph.destroy();
+    });
 
-    // QUnit.test('non empty graph view with sample data', async function (assert) {
-    //     assert.expect(7);
+    QUnit.test('non empty graph view with sample data', async function (assert) {
+        assert.expect(8);
 
-    //     const graph = await createView({
-    //         View: GraphView,
-    //         model: "foo",
-    //         data: this.data,
-    //         arch: `
-    //             <graph sample="1">
-    //                 <field name="product_id"/>
-    //                 <field name="date"/>
-    //             </graph>`,
-    //     })
+        const graph = await createView({
+            View: GraphView,
+            model: "foo",
+            data: this.data,
+            arch: `
+                <graph sample="1">
+                    <field name="product_id"/>
+                    <field name="date"/>
+                </graph>`,
+            viewOptions: {
+                action: {
+                    help: '<p class="abc">click to add a foo</p>'
+                }
+            },
+        })
 
-    //     assert.doesNotHaveClass(graph.el, 'o_view_sample_data');
-    //     assert.containsNone(graph, '.o_view_nocontent');
-    //     assert.containsOnce(graph, 'table');
-    //     assert.doesNotHaveClass(graph.$('table'), 'o_sample_data_disabled');
+        assert.doesNotHaveClass(graph.el, 'o_view_sample_data');
+        assert.containsNone(graph, '.o_view_nocontent');
+        assert.containsOnce(graph, '.o_graph_canvas_container canvas');
+        assert.doesNotHaveClass(graph.$('.o_graph_canvas_container'), 'o_sample_data_disabled');
 
-    //     await graph.reload({ domain: [['id', '<', 0]] });
+        await graph.reload({ domain: [['id', '<', 0]] });
 
-    //     assert.doesNotHaveClass(graph.el, 'o_view_sample_data');
-    //     assert.containsOnce(graph, '.o_view_nocontent');
-    //     assert.containsNone(graph, 'table');
+        assert.doesNotHaveClass(graph.el, 'o_view_sample_data');
+        assert.containsOnce(graph, '.o_graph_canvas_container canvas');
+        assert.doesNotHaveClass(graph.$('.o_graph_canvas_container'), 'o_sample_data_disabled');
+        assert.containsNone(graph, '.o_view_nocontent');
 
-    //     graph.destroy();
-    // });
+        graph.destroy();
+    });
 
     QUnit.module('GraphView: comparison mode', {
         beforeEach: async function () {
