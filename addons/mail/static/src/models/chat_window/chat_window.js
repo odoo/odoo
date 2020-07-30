@@ -132,7 +132,7 @@ function factory(dependencies) {
             if (!this.manager) {
                 return false;
             }
-            const allVisible = this.manager.allOrderedVisible;
+            const allVisible = [...this.manager.allOrderedVisible];
             const index = allVisible.findIndex(visible => visible === this);
             if (index === -1) {
                 return false;
@@ -148,7 +148,7 @@ function factory(dependencies) {
             if (!this.manager) {
                 return false;
             }
-            const index = this.manager.allOrderedVisible.findIndex(visible => visible === this);
+            const index = [...this.manager.allOrderedVisible].findIndex(visible => visible === this);
             if (index === -1) {
                 return false;
             }
@@ -186,7 +186,7 @@ function factory(dependencies) {
             if (!this.manager) {
                 return 0;
             }
-            const visible = this.manager.visual.visible;
+            const visible = [...this.manager.visual.visible];
             const index = visible.findIndex(visible => visible.chatWindowLocalId === this.localId);
             if (index === -1) {
                 return 0;
@@ -206,7 +206,7 @@ function factory(dependencies) {
          * @returns {mail.chat_window|undefined}
          */
         _getNextVisibleUnfoldedChatWindow({ reverse = false } = {}) {
-            const orderedVisible = this.manager.allOrderedVisible;
+            const orderedVisible = [...this.manager.allOrderedVisible];
             /**
              * Return index of next visible chat window of a given visible chat
              * window index. The direction of "next" chat window depends on

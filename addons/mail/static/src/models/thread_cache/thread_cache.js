@@ -126,10 +126,7 @@ function factory(dependencies) {
          * @returns {mail.message|undefined}
          */
         _computeLastFetchedMessage() {
-            const {
-                length: l,
-                [l - 1]: lastFetchedMessage,
-            } = this.orderedFetchedMessages;
+            const lastFetchedMessage = this.orderedFetchedMessages.last();
             if (!lastFetchedMessage) {
                 return [['unlink-all']];
             }
@@ -141,10 +138,7 @@ function factory(dependencies) {
          * @returns {mail.message|undefined}
          */
         _computeLastMessage() {
-            const {
-                length: l,
-                [l - 1]: lastMessage,
-            } = this.orderedMessages;
+            const lastMessage = this.orderedMessages.last();
             if (!lastMessage) {
                 return [['unlink-all']];
             }

@@ -125,7 +125,7 @@ class NotificationList extends Component {
         let notifications = threadNeedactionNotifications.concat(threadNotifications);
         if (props.filter === 'all') {
             const notificationGroups = this.env.messaging.notificationGroupManager.groups;
-            notifications = Object.values(notificationGroups)
+            notifications = notificationGroups
                 .sort((group1, group2) =>
                     group1.date.isAfter(group2.date) ? -1 : 1
                 ).map(notificationGroup => {

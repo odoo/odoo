@@ -172,12 +172,13 @@ class AttachmentViewer extends Component {
      */
     _next() {
         const attachmentViewer = this.attachmentViewer;
-        const index = attachmentViewer.attachments.findIndex(attachment =>
+        const attachments = [...attachmentViewer.attachments];
+        const index = attachments.findIndex(attachment =>
             attachment === attachmentViewer.attachment
         );
-        const nextIndex = (index + 1) % attachmentViewer.attachments.length;
+        const nextIndex = (index + 1) % attachments.length;
         attachmentViewer.update({
-            attachment: [['link', attachmentViewer.attachments[nextIndex]]],
+            attachment: [['link', attachments[nextIndex]]],
         });
     }
 
@@ -188,14 +189,15 @@ class AttachmentViewer extends Component {
      */
     _previous() {
         const attachmentViewer = this.attachmentViewer;
-        const index = attachmentViewer.attachments.findIndex(attachment =>
+        const attachments = [...attachmentViewer.attachments];
+        const index = attachments.findIndex(attachment =>
             attachment === attachmentViewer.attachment
         );
         const nextIndex = index === 0
-            ? attachmentViewer.attachments.length - 1
+            ? attachments.length - 1
             : index - 1;
         attachmentViewer.update({
-            attachment: [['link', attachmentViewer.attachments[nextIndex]]],
+            attachment: [['link', attachments[nextIndex]]],
         });
     }
 

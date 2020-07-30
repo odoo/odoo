@@ -885,7 +885,7 @@ function factory(dependencies) {
                 ...otherPartnersLastSeenMessageIds
             );
             const currentPartnerOrderedSeenMessages =
-                this.orderedMessages.filter(message =>
+                [...this.orderedMessages].filter(message =>
                     message.author === this.messagingCurrentPartner &&
                     message.id <= lastMessageSeenByAllId);
 
@@ -903,10 +903,7 @@ function factory(dependencies) {
          * @returns {mail.message|undefined}
          */
         _computeLastMessage() {
-            const {
-                length: l,
-                [l - 1]: lastMessage,
-            } = this.orderedMessages;
+            const lastMessage = this.orderedMessages.last();
             return [['replace', lastMessage]];
         }
 
@@ -988,26 +985,27 @@ function factory(dependencies) {
          * @returns {string}
          */
         _computeTypingStatusText() {
-            if (this.orderedOtherTypingMembers.length === 0) {
+            const orderedOtherTypingMembers = [...this.orderedOtherTypingMembers];
+            if (orderedOtherTypingMembers.length === 0) {
                 return this.constructor.fields.typingStatusText.default;
             }
-            if (this.orderedOtherTypingMembers.length === 1) {
+            if (orderedOtherTypingMembers.length === 1) {
                 return _.str.sprintf(
                     this.env._t("%s is typing..."),
-                    this.orderedOtherTypingMembers[0].nameOrDisplayName
+                    orderedOtherTypingMembers[0].nameOrDisplayName
                 );
             }
-            if (this.orderedOtherTypingMembers.length === 2) {
+            if (orderedOtherTypingMembers.length === 2) {
                 return _.str.sprintf(
                     this.env._t("%s and %s are typing..."),
-                    this.orderedOtherTypingMembers[0].nameOrDisplayName,
-                    this.orderedOtherTypingMembers[1].nameOrDisplayName
+                    orderedOtherTypingMembers[0].nameOrDisplayName,
+                    orderedOtherTypingMembers[1].nameOrDisplayName
                 );
             }
             return _.str.sprintf(
                 this.env._t("%s, %s and more are typing..."),
-                this.orderedOtherTypingMembers[0].nameOrDisplayName,
-                this.orderedOtherTypingMembers[1].nameOrDisplayName
+                orderedOtherTypingMembers[0].nameOrDisplayName,
+                orderedOtherTypingMembers[1].nameOrDisplayName
             );
         }
 

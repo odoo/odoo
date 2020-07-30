@@ -3,8 +3,8 @@ odoo.define('mail/static/src/model/model_manager.js', function (require) {
 
 const { registry } = require('mail/static/src/model/model_core.js');
 const ModelField = require('mail/static/src/model/model_field.js');
+const { RecordSet } = require('mail/static/src/model/model_recordset.js');
 const { patchClassMethods, patchInstanceMethods } = require('mail/static/src/utils/utils.js');
-
 /**
  * Inner separator used between 2 bits of information in string that is used to
  * identify record and field to be computed during an update cycle.
@@ -122,17 +122,12 @@ class ModelManager {
         const record = new Model({ valid: true });
         Object.defineProperty(record, 'env', { get: () => Model.env });
         record.localId = record._createRecordLocalId(data);
-        // Contains field values of record.
-        record.__values = {};
         // Contains revNumber of record for checking record update in useStore.
         record.__state = 0;
 
-        // Make proxified record, so that access to field redirects
-        // to field getter.
-        const proxifiedRecord = this._makeProxifiedRecord(record);
-        this._records[record.localId] = proxifiedRecord;
-        proxifiedRecord.init();
-        this._makeDefaults(proxifiedRecord);
+        this._records[record.localId] = record;
+        record.init();
+        this._makeDefaults(record);
 
         const data2 = Object.assign({}, data);
         for (const field of Object.values(Model.fields)) {
@@ -152,9 +147,9 @@ class ModelManager {
             }
         }
 
-        this.update(proxifiedRecord, data2);
+        this.update(record, data2);
 
-        return proxifiedRecord;
+        return record;
     }
 
     /**
@@ -690,8 +685,8 @@ class ModelManager {
             }
             if (field.fieldType === 'relation') {
                 if (['one2many', 'many2many'].includes(field.relationType)) {
-                    // Ensure X2many relations are Set by defaults.
-                    field.write(record, new Set(), { registerDependents: false });
+                    // Ensure X2many relations are RecordSet by default.
+                    field.write(record, new RecordSet(), { registerDependents: false });
                 } else {
                     field.write(record, undefined, { registerDependents: false });
                 }
@@ -724,44 +719,6 @@ class ModelManager {
             }
         ));
         return inverseField;
-    }
-
-    /**
-     * Wrap record that has just been created in a proxy. Proxy is useful for
-     * auto-getting records when accessing relational fields.
-     *
-     * @private
-     * @param {mail.model} record
-     * @return {Proxy<mail.model>} proxified record
-     */
-    _makeProxifiedRecord(record) {
-        const proxifiedRecord = new Proxy(record, {
-            get: (target, k) => {
-                if (k === 'constructor') {
-                    return target[k];
-                }
-                const field = target.constructor.fields[k];
-                if (!field) {
-                    // No crash, we allow these reads due to patch()
-                    // implementation details that read on `this._super` even
-                    // if not set before-hand.
-                    return target[k];
-                }
-                return field.get(proxifiedRecord);
-            },
-            set: (target, k, newVal) => {
-                if (target.constructor.fields[k]) {
-                    throw new Error("Forbidden to write on record field without .update()!!");
-                } else {
-                    // No crash, we allow these writes due to following concerns:
-                    // - patch() implementation details that write on `this._super`
-                    // - record listeners that need setting on this with `.bind(this)`
-                    target[k] = newVal;
-                }
-                return true;
-            },
-        });
-        return proxifiedRecord;
     }
 
     /**

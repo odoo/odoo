@@ -2368,8 +2368,13 @@
             let valuesID = ctx.generateID();
             ctx.addLine(`let _${keysID} = _${valuesID} = _${arrayID};`);
             ctx.addIf(`!(_${arrayID} instanceof Array)`);
+            // FIXME https://github.com/odoo/owl/issues/720
+            ctx.addIf(`typeof _${arrayID}[Symbol.iterator] === 'function'`);
+            ctx.addLine(`_${keysID} = _${valuesID} = _${arrayID} = [..._${arrayID}];`);
+            ctx.addElse();
             ctx.addLine(`_${keysID} = Object.keys(_${arrayID});`);
             ctx.addLine(`_${valuesID} = Object.values(_${arrayID});`);
+            ctx.closeIf();
             ctx.closeIf();
             ctx.addLine(`let _length${keysID} = _${keysID}.length;`);
             let varsID = ctx.startProtectScope(true);

@@ -1,6 +1,8 @@
 odoo.define('mail/static/src/model/model_field.js', function (require) {
 'use strict';
 
+const { RecordSet } = require('mail/static/src/model/model_recordset.js');
+
 /**
  * Class whose instances represent field on a model.
  * These field definitions are generated from declared fields in static prop
@@ -261,28 +263,13 @@ class ModelField {
     }
 
     /**
-     * Get the value associated to this field. Relations must convert record
-     * local ids to records.
+     * Get the value associated to this field.
      *
      * @param {mail.model} record
      * @returns {any}
      */
     get(record) {
-        if (this.fieldType === 'attribute') {
-            return this.read(record);
-        }
-        if (this.fieldType === 'relation') {
-            const OtherModel = this.env.models[this.to];
-            if (['one2one', 'many2one'].includes(this.relationType)) {
-                return OtherModel.get(this.read(record));
-            }
-            const res = [];
-            for (const localId of this.read(record)) {
-                res.push(OtherModel.get(localId));
-            }
-            return res;
-        }
-        throw new Error(`cannot get field with unsupported type ${this.fieldType}.`);
+        return this.read(record);
     }
 
     /**
@@ -293,7 +280,7 @@ class ModelField {
      * @returns {any}
      */
     read(record) {
-        return record.__values[this.fieldName];
+        return record[this.fieldName];
     }
 
     /**
@@ -358,10 +345,7 @@ class ModelField {
             // value unchanged, don't need to compute dependent fields
             return;
         }
-        if (this._containsRecords(newVal)) {
-            throw new Error("Forbidden write operation with records!!");
-        }
-        record.__values[this.fieldName] = newVal;
+        record[this.fieldName] = newVal;
         record.__state++;
 
         if (!registerDependents) {
@@ -502,14 +486,14 @@ class ModelField {
 
     /**
      * Converts given value to expected format for x2many processing, which is
-     * an array of localId.
+     * an iterable of record.
      *
      * @private
      * @param {string|mail.model|<mail.model|string>[]} newValue
      * @returns {string[]}
      */
     _setRelationConvertX2ManyValue(newValue) {
-        if (newValue instanceof Array) {
+        if (newValue instanceof Array || newValue instanceof RecordSet) {
             return newValue.map(v => this._setRelationConvertX2OneValue(v));
         }
         return [this._setRelationConvertX2OneValue(newValue)];
@@ -517,14 +501,15 @@ class ModelField {
 
     /**
      * Converts given value to expected format for x2one processing, which is
-     * a localId.
+     * a record.
      *
      * @private
      * @param {string|mail.model} newValue
      * @returns {string}
      */
     _setRelationConvertX2OneValue(newValue) {
-        return newValue instanceof this.env.models['mail.model'] ? newValue.localId : newValue;
+        const OtherModel = this.env.models[this.to];
+        return newValue instanceof this.env.models['mail.model'] ? newValue : OtherModel.get(newValue);
     }
 
     /**
@@ -642,20 +627,20 @@ class ModelField {
      * @param {string|mail.model|<mail.model|string>[]} newValue
      */
     _setRelationLinkMany2Many(record, newValue) {
-        // convert newValue to array of localId
-        const newLocalIds = this._setRelationConvertX2ManyValue(newValue);
+        // convert newValue to array of record
+        const newRecords = this._setRelationConvertX2ManyValue(newValue);
         const OtherModel = this.env.models[this.to];
 
-        for (const newLocalId of newLocalIds) {
+        for (const newRecord of newRecords) {
             // read in loop to catch potential changes from previous iteration
-            const prevLocalIds = this.read(record);
+            const prevRecords = this.read(record);
 
             // other record already linked, avoid linking twice
-            if (prevLocalIds.has(newLocalId)) {
+            if (prevRecords.has(newRecord)) {
                 continue;
             }
 
-            const newOtherRecord = OtherModel.get(newLocalId);
+            const newOtherRecord = OtherModel.get(newRecord);
             // other record may be deleted due to causality, avoid linking
             // deleted records
             if (!newOtherRecord) {
@@ -663,7 +648,7 @@ class ModelField {
             }
 
             // link other record to current record
-            this.write(record, new Set([...prevLocalIds, newLocalId]));
+            this.write(record, new RecordSet([...prevRecords, newRecord]));
 
             // link current record to other record
             newOtherRecord.update({
@@ -680,20 +665,20 @@ class ModelField {
      * @param {string|mail.model} newValue
      */
     _setRelationLinkMany2One(record, newValue) {
-        // convert newValue to localId
-        const newLocalId = this._setRelationConvertX2OneValue(newValue);
+        // convert newValue to record
+        const newRecord = this._setRelationConvertX2OneValue(newValue);
         const OtherModel = this.env.models[this.to];
-        const prevLocalId = this.read(record);
+        const prevRecord = this.read(record);
 
         // other record already linked, avoid linking twice
-        if (prevLocalId === newLocalId) {
+        if (prevRecord === newRecord) {
             return;
         }
 
         // unlink previous other record from current record
         this.write(record, undefined);
 
-        const prevOtherRecord = OtherModel.get(prevLocalId);
+        const prevOtherRecord = OtherModel.get(prevRecord);
         // there may be no previous other record or the previous other record
         // may be deleted due to causality
         if (prevOtherRecord) {
@@ -703,7 +688,7 @@ class ModelField {
             });
         }
 
-        const newOtherRecord = OtherModel.get(newLocalId);
+        const newOtherRecord = OtherModel.get(newRecord);
         // other record may be deleted due to causality, avoid linking
         // deleted records
         if (!newOtherRecord) {
@@ -711,7 +696,7 @@ class ModelField {
         }
 
         // link other record to current records
-        this.write(record, newLocalId);
+        this.write(record, newRecord);
 
         // link current record to other record
         newOtherRecord.update({
@@ -727,20 +712,20 @@ class ModelField {
      * @param {string|mail.model|<string|mail.model>[]} newValue
      */
     _setRelationLinkOne2Many(record, newValue) {
-        // convert newValue to array of localId
-        const newLocalIds = this._setRelationConvertX2ManyValue(newValue);
+        // convert newValue to array of records
+        const newRecords = this._setRelationConvertX2ManyValue(newValue);
         const OtherModel = this.env.models[this.to];
 
-        for (const newLocalId of newLocalIds) {
+        for (const newRecord of newRecords) {
             // read in loop to catch potential changes from previous iteration
-            const prevLocalIds = this.read(record);
+            const prevRecords = this.read(record);
 
             // other record already linked, avoid linking twice
-            if (prevLocalIds.has(newLocalId)) {
+            if (prevRecords.has(newRecord)) {
                 continue;
             }
 
-            const newOtherRecord = OtherModel.get(newLocalId);
+            const newOtherRecord = OtherModel.get(newRecord);
             // other record may be deleted due to causality, avoid linking
             // deleted records
             if (!newOtherRecord) {
@@ -748,7 +733,7 @@ class ModelField {
             }
 
             // link other record to current record
-            this.write(record, new Set([...prevLocalIds, newLocalId]));
+            this.write(record, new RecordSet([...prevRecords, newRecord]));
 
             // link current record to other record
             newOtherRecord.update({
@@ -765,20 +750,20 @@ class ModelField {
      * @param {string|mail.model} value
      */
     _setRelationLinkOne2One(record, newValue) {
-        // convert newValue to localId
-        const newLocalId = this._setRelationConvertX2OneValue(newValue);
-        const prevLocalId = this.read(record);
+        // convert newValue to record
+        const newRecord = this._setRelationConvertX2OneValue(newValue);
+        const prevRecord = this.read(record);
         const OtherModel = this.env.models[this.to];
 
         // other record already linked, avoid linking twice
-        if (prevLocalId === newLocalId) {
+        if (prevRecord === newRecord) {
             return;
         }
 
         // unlink previous other record from current record
         this.write(record, undefined);
 
-        const prevOtherRecord = OtherModel.get(prevLocalId);
+        const prevOtherRecord = OtherModel.get(prevRecord);
         // there may be no previous other record or the previous other record
         // may be deleted due to causality
         if (prevOtherRecord) {
@@ -792,7 +777,7 @@ class ModelField {
             }
         }
 
-        const newOtherRecord = OtherModel.get(newLocalId);
+        const newOtherRecord = OtherModel.get(newRecord);
         // other record may be deleted due to causality, avoid linking deleted
         // records
         if (!newOtherRecord) {
@@ -800,7 +785,7 @@ class ModelField {
         }
 
         // link other record to current record
-        this.write(record, newLocalId);
+        this.write(record, newRecord);
 
         // link current record to other record
         newOtherRecord.update({
@@ -845,28 +830,29 @@ class ModelField {
      * @param {string|mail.model|<string|mail.model>[]|null} newValue
      */
     _setRelationUnlinkMany2Many(record, newValue) {
-        // convert newValue to array of localId, null is considered unlink all
-        const otherLocalIds = newValue === null
-            ? [...this.read(record)]
+        // convert newValue to array of record, null is considered unlink all
+        const otherRecords = newValue === null
+            ? this.read(record)
             : this._setRelationConvertX2ManyValue(newValue);
         const OtherModel = this.env.models[this.to];
 
-        for (const otherLocalId of otherLocalIds) {
+        for (const otherRecord of otherRecords) {
             // read in loop to catch potential changes from previous iteration
-            const prevLocalIds = this.read(record);
+            const prevRecords = this.read(record);
 
             // other record already unlinked, avoid useless processing
-            if (!prevLocalIds.delete(otherLocalId)) {
+            if (!prevRecords.has(otherRecord)) {
                 continue;
             }
 
             // unlink other record from current record
-            this.write(record, new Set([...prevLocalIds]));
+            this.write(record, new RecordSet(prevRecords.filter(
+                record => record !== otherRecord
+            )));
 
-            const otherRecord = OtherModel.get(otherLocalId);
             // other record may be deleted due to causality, avoid useless
             // processing
-            if (otherRecord) {
+            if (OtherModel.get(otherRecord)) {
                 // unlink current record from other record
                 otherRecord.update({
                     [this.inverse]: [['unlink', record]],
@@ -882,21 +868,20 @@ class ModelField {
      * @param {mail.model} record
      */
     _setRelationUnlinkMany2One(record) {
-        const otherLocalId = this.read(record);
+        const otherRecord = this.read(record);
         const OtherModel = this.env.models[this.to];
 
         // other record already unlinked, avoid useless processing
-        if (!otherLocalId) {
+        if (!otherRecord) {
             return;
         }
 
         // unlink other record from current record
         this.write(record, undefined);
 
-        const otherRecord = OtherModel.get(otherLocalId);
         // other record may be deleted due to causality, avoid useless
         // processing
-        if (otherRecord) {
+        if (OtherModel.get(otherRecord)) {
             // unlink current record from other record
             otherRecord.update({
                 [this.inverse]: [['unlink', record]],
@@ -913,28 +898,29 @@ class ModelField {
      *   if null, unlink all items in the relation of provided record.
      */
     _setRelationUnlinkOne2Many(record, newValue) {
-        // convert newValue to array of localId, null is considered unlink all
-        const otherLocalIds = newValue === null
+        // convert newValue to array of record, null is considered unlink all
+        const otherRecords = newValue === null
             ? [...this.read(record)]
             : this._setRelationConvertX2ManyValue(newValue);
         const OtherModel = this.env.models[this.to];
 
-        for (const otherLocalId of otherLocalIds) {
+        for (const otherRecord of otherRecords) {
             // read in loop to catch potential changes from previous iteration
-            const prevLocalIds = this.read(record);
+            const prevRecords = this.read(record);
 
             // other record already unlinked, avoid useless processing
-            if (!prevLocalIds.delete(otherLocalId)) {
+            if (!prevRecords.has(otherRecord)) {
                 continue;
             }
 
             // unlink other record from current record
-            this.write(record, new Set([...prevLocalIds]));
+            this.write(record, new RecordSet(prevRecords.filter(
+                record => record !== otherRecord
+            )));
 
-            const otherRecord = OtherModel.get(otherLocalId);
             // other record may be deleted due to causality, avoid useless
             // processing
-            if (otherRecord) {
+            if (OtherModel.get(otherRecord)) {
                 // unlink current record from other record
                 otherRecord.update({
                     [this.inverse]: [['unlink', record]],
@@ -950,21 +936,20 @@ class ModelField {
      * @param {mail.model} record
      */
     _setRelationUnlinkOne2One(record) {
-        const otherLocalId = this.read(record);
+        const otherRecord = this.read(record);
         const OtherModel = this.env.models[this.to];
 
         // other record already unlinked, avoid useless processing
-        if (!otherLocalId) {
+        if (!otherRecord) {
             return;
         }
 
         // unlink other record from current record
         this.write(record, undefined);
 
-        const otherRecord = OtherModel.get(otherLocalId);
         // other record may be deleted due to causality, avoid useless
         // processing
-        if (otherRecord) {
+        if (OtherModel.get(otherRecord)) {
             // unlink current record from other record
             otherRecord.update({
                 [this.inverse]: [['unlink', record]],

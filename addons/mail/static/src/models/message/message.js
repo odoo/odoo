@@ -369,7 +369,7 @@ function factory(dependencies) {
          * @returns {mail.thread[]}
          */
         _computeNonOriginThreads() {
-            const nonOriginThreads = this.serverChannels.filter(thread => thread !== this.originThread);
+            const nonOriginThreads = [...this.serverChannels.filter(thread => thread !== this.originThread)];
             if (this.isHistory) {
                 nonOriginThreads.push(this.env.messaging.history);
             }

@@ -126,7 +126,7 @@ function factory(dependencies) {
          * @param {mail.chat_window} chatWindow
          */
         shiftLeft(chatWindow) {
-            const chatWindows = this.allOrdered;
+            const chatWindows = [...this.allOrdered];
             const index = chatWindows.findIndex(cw => cw === chatWindow);
             if (index === chatWindows.length - 1) {
                 // already left-most
@@ -146,7 +146,7 @@ function factory(dependencies) {
          * @param {mail.chat_window} chatWindow
          */
         shiftRight(chatWindow) {
-            const chatWindows = this.allOrdered;
+            const chatWindows = [...this.allOrdered];
             const index = chatWindows.findIndex(cw => cw === chatWindow);
             if (index === 0) {
                 // already right-most
@@ -165,7 +165,7 @@ function factory(dependencies) {
          * @param {mail.chat_window} chatWindow2
          */
         swap(chatWindow1, chatWindow2) {
-            const ordered = this.allOrdered;
+            const ordered = [...this.allOrdered];
             const index1 = ordered.findIndex(chatWindow => chatWindow === chatWindow1);
             const index2 = ordered.findIndex(chatWindow => chatWindow === chatWindow2);
             if (index1 === -1 || index2 === -1) {
@@ -252,7 +252,7 @@ function factory(dependencies) {
          * @returns {mail.chat_window|undefined}
          */
         _computeLastVisible() {
-            const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
+            const lastVisible = this.allOrderedVisible.last();
             if (!lastVisible) {
                 return [['unlink-all']];
             }
@@ -305,7 +305,7 @@ function factory(dependencies) {
             const GLOBAL_WINDOW_WIDTH = device.globalWindowInnerWidth;
             const HIDDEN_MENU_WIDTH = 200; // max width, including width of dropup list items
             const START_GAP_WIDTH = device.isMobile ? 0 : 10;
-            const chatWindows = this.allOrdered;
+            const chatWindows = [...this.allOrdered];
             if (!device.isMobile && discuss.isOpen) {
                 return visual;
             }
