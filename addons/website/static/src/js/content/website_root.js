@@ -170,6 +170,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
      */
     _toggleFullscreen(state) {
         this.isFullscreen = state;
+        document.body.classList.add('o_fullscreen_transition');
         document.body.classList.toggle('o_fullscreen', this.isFullscreen);
         document.body.style.overflowX = 'hidden';
         let resizing = true;
@@ -189,6 +190,7 @@ var WebsiteRoot = publicRootData.PublicRoot.extend(KeyboardNavigationMixin, {
             resizing = false;
             document.body.style.overflowX = '';
             document.body.removeEventListener('transitionend', onTransitionEnd);
+            document.body.classList.remove('o_fullscreen_transition');
         };
         document.body.addEventListener('transitionend', onTransitionEnd);
         // Safeguard in case the transitionend event doesn't trigger for whatever reason.
