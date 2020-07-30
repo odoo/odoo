@@ -16,8 +16,8 @@ from odoo.addons.web.controllers.main import Binary
 
 class CustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(CustomerPortal, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self):
+        values = super(CustomerPortal, self)._prepare_home_portal_values()
         values['purchase_count'] = request.env['purchase.order'].search_count([
             ('state', 'in', ['purchase', 'done', 'cancel'])
         ])
@@ -44,7 +44,7 @@ class CustomerPortal(CustomerPortal):
 
         domain = []
 
-        archive_groups = self._get_archive_groups('purchase.order', domain)
+        archive_groups = self._get_archive_groups('purchase.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
