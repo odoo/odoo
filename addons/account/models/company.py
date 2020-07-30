@@ -198,6 +198,7 @@ class ResCompany(models.Model):
             has_unreconciled_statement_lines = self.env['account.bank.statement.line'].search_count([
                 ('company_id', 'in', self.ids),
                 ('is_reconciled', '=', False),
+                ('date', '<=', values['fiscalyear_lock_date']),
             ])
             if has_unreconciled_statement_lines:
                 raise ValidationError(_(
