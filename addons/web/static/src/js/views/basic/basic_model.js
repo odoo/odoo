@@ -1667,7 +1667,7 @@ var BasicModel = AbstractModel.extend({
      *   main viewType from the record
      * @returns {Promise}
      */
-    _applyOnChange: function (values, record, viewType) {
+    _applyOnChange: function (values, record, viewType, hasDefaults=false) {
         var self = this;
         var defs = [];
         var rec;
@@ -1675,6 +1675,9 @@ var BasicModel = AbstractModel.extend({
         record._changes = record._changes || {};
         _.each(values, function (val, name) {
             var field = record.fields[name];
+            if (!field && hasDefaults) {
+                record._changes[name] = val;
+            }
             if (!field) {
                 // this field is unknown so we can't process it for now (it is not
                 // in the current view anyway, otherwise it wouldn't be unknown.
@@ -1803,12 +1806,10 @@ var BasicModel = AbstractModel.extend({
                             }
                             rec = self._makeDataPoint(params);
                             // this is necessary so the fields are initialized
-                            rec._changes = {};
-                            rec.getFieldNames().forEach(fieldName => {
+
+                            const allFields = rec.getFieldNames();
+                            allFields.forEach(fieldName => {
                                 rec.data[fieldName] = null;
-                                if (!(fieldName in command[2]) {
-                                    // inject rawChanges here wssomehaoxw
-                                }
                             });
                             list._cache[rec.res_id] = rec.id;
                         }
@@ -1820,7 +1821,7 @@ var BasicModel = AbstractModel.extend({
                         if (command[0] === 1) {
                             list._changes.push({operation: 'UPDATE', id: rec.id});
                         }
-                        defs.push(self._applyOnChange(command[2], rec));
+                        defs.push(self._applyOnChange(command[2], rec, null, hasDefaults));
                     } else if (command[0] === 4) {
                         // LINK TO
                         linkRecord(list, command[1]);
@@ -4254,7 +4255,7 @@ var BasicModel = AbstractModel.extend({
         if (result.domain) {
             record._domains = _.extend(record._domains, result.domain);
         }
-        await self._applyOnChange(result.value, record);
+        await self._applyOnChange(result.value, record, null, firstOnChange);
         return result;
     },
     /**

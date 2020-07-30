@@ -1842,7 +1842,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('list in form: default_get with x2many create', async function (assert) {
-            assert.expect(4);
+            assert.expect(3);
 
             this.data.partner.fields.timmy.default = [[0, 0, { display_name: 'brandon is the new timmy', name: 'brandon' }]];
             var displayName = 'brandon is the new timmy';
@@ -1867,7 +1867,7 @@ QUnit.module('fields', {}, function () {
                 mockRPC: function (route, args) {
                     if (args.method === 'create') {
                         assert.deepEqual(args.args[0], {
-                            int_field: 101,
+                            int_field: 102,
                             timmy: [
                                 [6, false, []],
                                 [0, args.args[0].timmy[1][1], { display_name: displayName, name: 'brandon' }],
