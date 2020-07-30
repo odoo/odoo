@@ -276,13 +276,11 @@ class ModelField {
             if (['one2one', 'many2one'].includes(this.relationType)) {
                 return OtherModel.get(this.read(record));
             }
-            return this.read(record)
-                .map(localId => OtherModel.get(localId))
-                /**
-                 * FIXME: Stored relation may still contain
-                 * outdated records.
-                 */
-                .filter(record => !!record);
+            const res = [];
+            for (const localId of this.read(record)) {
+                res.push(OtherModel.get(localId));
+            }
+            return res;
         }
         throw new Error(`cannot get field with unsupported type ${this.fieldType}.`);
     }
@@ -295,7 +293,7 @@ class ModelField {
      * @returns {any}
      */
     read(record) {
-        return record.__state[this.fieldName];
+        return record.__values[this.fieldName];
     }
 
     /**
@@ -357,18 +355,15 @@ class ModelField {
      */
     write(record, newVal, { registerDependents = true } = {}) {
         if (this.read(record) === newVal) {
-            return;
-        }
-        const prevStringified = JSON.stringify(this.read(record));
-        record.__state[this.fieldName] = newVal;
-        const newStringified = JSON.stringify(this.read(record));
-        if (this._containsRecords(newVal)) {
-            throw new Error("Forbidden write operation with records in the __state!!");
-        }
-        if (newStringified === prevStringified) {
             // value unchanged, don't need to compute dependent fields
             return;
         }
+        if (this._containsRecords(newVal)) {
+            throw new Error("Forbidden write operation with records!!");
+        }
+        record.__values[this.fieldName] = newVal;
+        record.__state++;
+
         if (!registerDependents) {
             return;
         }
@@ -656,7 +651,7 @@ class ModelField {
             const prevLocalIds = this.read(record);
 
             // other record already linked, avoid linking twice
-            if (prevLocalIds.includes(newLocalId)) {
+            if (prevLocalIds.has(newLocalId)) {
                 continue;
             }
 
@@ -668,7 +663,7 @@ class ModelField {
             }
 
             // link other record to current record
-            this.write(record, prevLocalIds.concat([newLocalId]));
+            this.write(record, new Set([...prevLocalIds, newLocalId]));
 
             // link current record to other record
             newOtherRecord.update({
@@ -741,7 +736,7 @@ class ModelField {
             const prevLocalIds = this.read(record);
 
             // other record already linked, avoid linking twice
-            if (prevLocalIds.includes(newLocalId)) {
+            if (prevLocalIds.has(newLocalId)) {
                 continue;
             }
 
@@ -753,7 +748,7 @@ class ModelField {
             }
 
             // link other record to current record
-            this.write(record, prevLocalIds.concat([newLocalId]));
+            this.write(record, new Set([...prevLocalIds, newLocalId]));
 
             // link current record to other record
             newOtherRecord.update({
@@ -861,14 +856,12 @@ class ModelField {
             const prevLocalIds = this.read(record);
 
             // other record already unlinked, avoid useless processing
-            if (!prevLocalIds.includes(otherLocalId)) {
+            if (!prevLocalIds.delete(otherLocalId)) {
                 continue;
             }
 
             // unlink other record from current record
-            this.write(record, prevLocalIds.filter(
-                localId => localId !== otherLocalId
-            ));
+            this.write(record, new Set([...prevLocalIds]));
 
             const otherRecord = OtherModel.get(otherLocalId);
             // other record may be deleted due to causality, avoid useless
@@ -931,14 +924,12 @@ class ModelField {
             const prevLocalIds = this.read(record);
 
             // other record already unlinked, avoid useless processing
-            if (!prevLocalIds.includes(otherLocalId)) {
+            if (!prevLocalIds.delete(otherLocalId)) {
                 continue;
             }
 
             // unlink other record from current record
-            this.write(record, prevLocalIds.filter(
-                localId => localId !== otherLocalId
-            ));
+            this.write(record, new Set([...prevLocalIds]));
 
             const otherRecord = OtherModel.get(otherLocalId);
             // other record may be deleted due to causality, avoid useless
