@@ -4344,7 +4344,9 @@ class AccountPartialReconcile(models.Model):
                     rounded_amt = self._get_amount_tax_cash_basis(amount, line)
                     if float_is_zero(rounded_amt, precision_rounding=line.company_id.currency_id.rounding):
                         continue
-                    if line.tax_line_id and line.tax_line_id.tax_exigibility == 'on_payment':
+                    taxes = move.line_ids.mapped('tax_line_id').flatten_taxes_hierarchy()
+                    last_include_base = line.tax_line_id.include_base_amount and taxes and taxes[-1] == line.tax_line_id
+                    if line.tax_line_id.tax_exigibility == 'on_payment' and (not line.tax_line_id.include_base_amount or last_include_base):
                         if not newly_created_move:
                             newly_created_move = self._create_tax_basis_move()
                         #create cash basis entry for the tax line
@@ -4386,6 +4388,7 @@ class AccountPartialReconcile(models.Model):
                             to_clear_aml.reconcile()
 
                     taxes_payment_exigible = line.tax_ids.flatten_taxes_hierarchy().filtered(lambda tax: tax.tax_exigibility == 'on_payment')
+                    taxes_payment_exigible = taxes_payment_exigible.filtered(lambda t: not t.include_base_amount) or taxes_payment_exigible and taxes_payment_exigible[-1]
                     if taxes_payment_exigible:
                         if not newly_created_move:
                             newly_created_move = self._create_tax_basis_move()
