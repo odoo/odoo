@@ -7,6 +7,8 @@ odoo.define('web.test_env', async function (require) {
     const { buildQuery } = require("web.rpc");
     const session = require('web.session');
 
+    let qweb;
+
     /**
      * Creates a test environment with the given environment object.
      * Any access to a key that has not been explicitly defined in the given environment object
@@ -17,6 +19,11 @@ odoo.define('web.test_env', async function (require) {
      * @returns {Proxy}
      */
     function makeTestEnvironment(env = {}, providedRPC = null) {
+        if (!qweb) {
+            // avoid parsing templates at every test because it takes a lot of
+            // time and they never change
+            qweb = new owl.QWeb({ templates: session.owlTemplates });
+        }
         const RamStorageService = AbstractStorageService.extend({
             storage: new RamStorage(),
         });
@@ -38,7 +45,7 @@ odoo.define('web.test_env', async function (require) {
             bus: new Bus(),
             device: Object.assign({ isMobile: false }, env.device),
             isDebug: env.isDebug || (() => false),
-            qweb: new owl.QWeb({ templates: session.owlTemplates }),
+            qweb,
             services: Object.assign({
                 ajax: { // for legacy subwidgets
                     rpc() {
