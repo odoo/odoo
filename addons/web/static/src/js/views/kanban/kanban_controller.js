@@ -389,7 +389,7 @@ var KanbanController = BasicController.extend({
     },
     /**
      * @private
-     * * @param {OdooEvent} ev
+     * @param {OdooEvent} ev
      */
     async _onLoadActiveFilter(ev) {
         const columnID = ev.data.columnID;

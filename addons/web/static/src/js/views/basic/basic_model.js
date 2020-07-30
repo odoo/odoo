@@ -4698,7 +4698,7 @@ var BasicModel = AbstractModel.extend({
                     if (oldGroup) {
                         delete self.localData[newGroup.id];
                         // restore the internal state of the group
-                        var updatedProps = _.pick(oldGroup, 'isOpen', 'offset', 'id');
+                        const updatedProps = self._restoreStateFromOldGroup(oldGroup);
                         if (options.onlyGroups || oldGroup.isOpen && newGroup.groupedBy.length) {
                             // If the group is opened and contains subgroups,
                             // also keep its data to keep internal state of
@@ -4925,6 +4925,9 @@ var BasicModel = AbstractModel.extend({
             sampleServer.setExistingGroups(result.groups);
         }
         return result;
+    },
+    _restoreStateFromOldGroup(oldGroup) {
+        return _.pick(oldGroup, "isOpen", "offset", "id");
     },
     /**
      * Allows to save a value in the specialData cache associated to a given

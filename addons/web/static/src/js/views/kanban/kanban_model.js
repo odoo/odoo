@@ -191,18 +191,26 @@ var KanbanModel = BasicModel.extend({
         return this._super(params);
     },
     /**
-     * 
+     * Reload column as per active filter clicked in column progressbar
+     *
+     * @param {string} groupID
+     * @param {string} activeFilter
      */
     loadActiveFilter(groupID, activeFilter) {
         const group = this.localData[groupID];
         if (activeFilter) {
-            group.progressBarValues.activeFilter = activeFilter;
-            const activeFilterDomain = [[group.progressBarValues.field, '=', activeFilter]];
+            group.activeFilter = activeFilter;
+            const activeFilterDomain = [[group.progressBarValues.field, "=", activeFilter]];
             group.domain = group.domain.concat(activeFilterDomain);
         } else {
-            group.domain = group.domain.filter(domain =>
-                            !domain.includes(group.progressBarValues.field, group.progressBarValues.activeFilter));
-            group.progressBarValues.activeFilter = false;
+            group.domain = group.domain.filter(
+                (domain) =>
+                    !domain.includes(
+                        group.progressBarValues.field,
+                        group.activeFilter
+                    )
+            );
+            group.activeFilter = false;
         }
         return this.reload(group.id);
     },
@@ -297,6 +305,17 @@ var KanbanModel = BasicModel.extend({
         }
         return this._reloadProgressBarGroupFromRecord(id, def);
     },
+    _restoreStateFromOldGroup(oldGroup) {
+        const updatedProps = this._super(...arguments);
+        if (oldGroup.activeFilter) {
+            const activeFilterDomain = [
+                [oldGroup.progressBarValues.field, "=", oldGroup.activeFilter],
+            ];
+            updatedProps.domain = oldGroup.domain.concat(activeFilterDomain);
+            updatedProps.activeFilter = oldGroup.activeFilter;
+        }
+        return updatedProps;
+    },
     /**
      * @override
      */
@@ -316,16 +335,6 @@ var KanbanModel = BasicModel.extend({
         var dataPoint = this._super.apply(this, arguments);
         if (params.progressBar) {
             dataPoint.progressBar = params.progressBar;
-        }
-        const oldGroup = _.find(this.localData, function (g) {
-            return g.res_id === dataPoint.res_id && g.value === dataPoint.value;
-        });
-        if (oldGroup && oldGroup.progressBarValues && oldGroup.progressBarValues.activeFilter) {
-            dataPoint.domain = oldGroup.domain;
-            dataPoint.progressBarValues = oldGroup.progressBarValues;
-            if (oldGroup.limit >= oldGroup.loadMoreOffset) {
-                oldGroup.loadMoreOffset = oldGroup.res_ids.length - oldGroup.limit
-            }
         }
         return dataPoint;
     },
@@ -441,7 +450,7 @@ var KanbanModel = BasicModel.extend({
      * @returns {Promise}
      */
     _reloadProgressBarGroupFromRecord: function (recordID, def) {
-        let element = this.localData[recordID];
+        var element = this.localData[recordID];
         if (element.type === 'list' && !element.parentID) {
             // we are reloading the whole view, so there is no need to manually
             // reload the progressbars
@@ -454,10 +463,6 @@ var KanbanModel = BasicModel.extend({
         while (element) {
             if (element.progressBar) {
                 return def.then(function (data) {
-                    const progressbar_element = self.localData[recordID];
-                    if (progressbar_element && progressbar_element.progressBarValues) {
-                        element.domain = progressbar_element.domain;
-                    }
                     return self._load(element, {
                         keepEmptyGroups: true,
                         onlyGroups: true,
