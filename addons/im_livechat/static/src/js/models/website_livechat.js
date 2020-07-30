@@ -101,12 +101,20 @@ var WebsiteLivechat = AbstractThread.extend(ThreadTypingMixin, {
      * @returns {Object}
      */
     toData: function () {
+        let toAscii = function (str) {
+            return str.replace(/[\u007F-\uFFFF]/g, chr =>
+                `\\u${`0000${chr.charCodeAt(0).toString(16)}`.substr(-4)}`
+            );
+        };
+        let operatorPID = this.getOperatorPID();
+        operatorPID[1] = toAscii(operatorPID[1]);
+
         return {
             folded: this.isFolded(),
             id: this.getID(),
             message_unread_counter: this.getUnreadCounter(),
-            operator_pid: this.getOperatorPID(),
-            name: this.getName(),
+            operator_pid: operatorPID,
+            name: toAscii(this.getName()),
             uuid: this.getUUID(),
         };
     },
