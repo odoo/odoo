@@ -8,29 +8,30 @@ body {
     // Set frontend direction that will be flipped with
     // rtlcss for right-to-left text direction.
     direction: ltr;
-    transition: padding 0.35s;
 }
 body.o_connected_user {
     padding-top: $o-navbar-height!important;
 
+    &.o_fullscreen_transition {
+        transition: padding 0.35s;
+
+        #oe_main_menu_navbar, #web_editor-top-edit, #oe_snippets {
+            transition: transform 0.35s !important;
+        }
+    }
     &.o_fullscreen {
         padding-top: 0 !important;
 
         &.editor_enable.editor_has_snippets {
             padding-left: 0 !important;
         }
-
         #oe_main_menu_navbar, #web_editor-top-edit {
             transform: translateY(-100%);
         }
-
         #oe_snippets {
             transform: translateX(-100%);
         }
     }
-}
-#oe_main_menu_navbar, #web_editor-top-edit, #oe_snippets {
-    transition: transform 0.35s !important;
 }
 
 // MAIN MENU STYLE (added above navbar.scss)
