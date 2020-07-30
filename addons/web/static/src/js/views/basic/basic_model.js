@@ -4238,7 +4238,7 @@ var BasicModel = AbstractModel.extend({
             context: context,
         });
         if (firstOnChange) {
-            await this.applyDefaultValues(record.id, result.value);
+            await this.applyDefaultValues(record.id, result.value || {});
         }
         if (!record._changes) {
             // if the _changes key does not exist anymore, it means that
