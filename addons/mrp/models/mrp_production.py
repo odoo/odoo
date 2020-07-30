@@ -691,6 +691,19 @@ class MrpProduction(models.Model):
             self._create_workorder()
 
     def write(self, vals):
+        to_confirm = False
+        if 'product_id' in vals and len(self) == 1 and self.state == 'confirmed':
+            to_confirm = True
+            self.action_cancel()
+            self.reset_to_draft(copy=False)
+            # clean old moves and work orders since they are all deleted
+            vals['move_raw_ids'] = [r for r in vals['move_raw_ids'] if r[0] == 0]
+            vals['move_finished_ids'] = [r for r in vals['move_finished_ids'] if r[0] == 0]
+            if vals.get('move_byproduct_ids'):
+                vals['move_byproduct_ids'] = [r for r in vals['move_byproduct_ids'] if r[0] == 0]
+            if vals.get('workorder_ids'):
+                vals['workorder_ids'] = [r for r in vals['workorder_ids'] if r[0] == 0]
+
         production_to_replan = self.env['mrp.production']
         if 'workorder_ids' in vals:
             production_to_replan = self.filtered(lambda p: p.is_planned)
@@ -734,6 +747,12 @@ class MrpProduction(models.Model):
                 new_date_planned_start = fields.Datetime.to_datetime(vals.get('date_planned_start'))
                 if not production.date_planned_finished or new_date_planned_start >= production.date_planned_finished:
                     production.date_planned_finished = new_date_planned_start + datetime.timedelta(hours=1)
+
+        if to_confirm:
+            (self.move_raw_ids | self.move_finished_ids).write({
+                'group_id': self.procurement_group_id.id,
+            })
+            self.action_confirm()
         return res
 
     @api.model
@@ -1089,6 +1108,11 @@ class MrpProduction(models.Model):
                 raise UserError(_("Add some materials to consume before marking this MO as to do."))
             production.move_raw_ids._adjust_procure_method()
             (production.move_raw_ids | production.move_finished_ids)._action_confirm()
+            # in case of 3-step manufacturing, create post manufacturing move when it's cancelled
+            # this may happen when "reset to draft" or change a confirmed MO
+            if production.move_dest_ids and not production.move_dest_ids.filtered(lambda m: m.state != 'cancel'):
+                production.move_finished_ids.write({'move_dest_ids': [(5,)]})
+                production.move_finished_ids._push_apply()
             production.workorder_ids._action_confirm()
         return True
 
@@ -1293,13 +1317,16 @@ class MrpProduction(models.Model):
             if finish_moves:
                 production._log_downside_manufactured_quantity({finish_move: (production.product_uom_qty, 0.0) for finish_move in finish_moves}, cancel=True)
 
-        self.workorder_ids.filtered(lambda x: x.state not in ['done', 'cancel']).action_cancel()
+        self.workorder_ids.filtered(lambda x: x.state != 'cancel').action_cancel()
         finish_moves = self.move_finished_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         raw_moves = self.move_raw_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
 
         (finish_moves | raw_moves)._action_cancel()
         picking_ids = self.picking_ids.filtered(lambda x: x.state not in ('done', 'cancel'))
         picking_ids.action_cancel()
+        # when log an activity on Parent MO, we will also log on post manufacturing
+        # picking which should be cancelled. Remove them.
+        picking_ids.activity_ids.unlink()
 
         for production, documents in documents_by_production.items():
             filtered_documents = {}
@@ -1729,3 +1756,22 @@ class MrpProduction(models.Model):
                     ) and float_is_zero(production.qty_producing, precision_digits=pd):
                 immediate_productions |= production
         return immediate_productions
+
+    def reset_to_draft(self, copy=True):
+        self.write({
+            'state': 'draft',
+            'qty_producing': 0,
+            'lot_producing_id': False,
+        })
+        cancelled_moves = self.move_raw_ids | self.move_finished_ids
+        cancelled_workorders = self.workorder_ids
+        if copy:
+            for move in cancelled_moves:
+                move.copy()
+        # unlink the move now to avoid state changing to 'in progress' and creating
+        # quality.checks when creating new workorders
+        cancelled_moves.unlink()
+        if copy:
+            for workorder in cancelled_workorders:
+                workorder.copy()
+        cancelled_workorders.unlink()

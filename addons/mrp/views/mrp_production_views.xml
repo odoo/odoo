@@ -91,6 +91,7 @@
                             attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel')), ('confirm_cancel', '=', False)]}"
                             confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process ?"/>
                     <button name="button_unbuild" type="object" string="Unbuild" attrs="{'invisible': [('state', '!=', 'done')]}"/>
+                    <button name="reset_to_draft" type="object" string="Reset to Draft" attrs="{'invisible': [('state', '!=', 'cancel')]}"/>
                 </header>
                 <sheet>
                     <field name="reservation_state" invisible="1"/>
@@ -146,7 +147,7 @@
                             <field name="use_create_components_lots" invisible="1"/>
                             <field name="allowed_product_ids" invisible="1"/>
                             <field name="product_tracking" invisible="1"/>
-                            <field name="product_id" context="{'default_type': 'product'}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            <field name="product_id" context="{'default_type': 'product'}" attrs="{'readonly': [('state', 'not in', ['draft', 'confirmed'])]}"/>
                             <field name="product_tmpl_id" invisible="1"/>
                             <field name="product_description_variants" attrs="{'invisible': [('product_description_variants', 'in', (False, ''))], 'readonly': [('state', '!=', 'draft')]}"/>
                             <label for="product_qty" string="Quantity"/>
