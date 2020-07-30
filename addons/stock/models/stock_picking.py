@@ -240,7 +240,7 @@ class Picking(models.Model):
     _name = "stock.picking"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Transfer"
-    _order = "priority desc, date asc, id desc"
+    _order = "priority desc, scheduled_date asc, id desc"
 
     name = fields.Char(
         'Reference', default='/',
@@ -287,6 +287,12 @@ class Picking(models.Model):
         index=True, default=fields.Datetime.now, tracking=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
+    date_deadline = fields.Datetime(
+        "Deadline", compute='_compute_date_deadline', store=True,
+        help="Date Promise to the customer on the top level document (SO/PO)")
+    has_deadline_issue = fields.Boolean(
+        "Is late", compute='_compute_has_deadline_issue', store=True, default=False,
+        help="Is late or will be late depending of the deadline and scheduled date")
     date = fields.Datetime(
         'Creation Date',
         default=fields.Datetime.now, index=True, tracking=True,
@@ -383,6 +389,11 @@ class Picking(models.Model):
         for picking in self:
             picking.has_tracking = any(m.has_tracking != 'none' for m in picking.move_lines)
 
+    @api.depends('date_deadline', 'scheduled_date')
+    def _compute_has_deadline_issue(self):
+        for picking in self:
+            picking.has_deadline_issue = picking.date_deadline and picking.date_deadline < picking.scheduled_date or False
+
     @api.depends('move_lines.delay_alert_date')
     def _compute_delay_alert_date(self):
         delay_alert_date_data = self.env['stock.move'].read_group([('id', 'in', self.move_lines.ids), ('delay_alert_date', '!=', False)], ['delay_alert_date:max'], 'picking_id')
@@ -437,6 +448,9 @@ class Picking(models.Model):
 
     def _compute_json_popover(self):
         for picking in self:
+            if picking.state in ('done', 'cancel') or not picking.delay_alert_date:
+                picking.json_popover = False
+                continue
             picking.json_popover = json.dumps({
                 'popoverTemplate': 'stock.PopoverStockRescheduling',
                 'delay_alert_date': format_datetime(self.env, picking.delay_alert_date, dt_format=False) if picking.delay_alert_date else False,
@@ -480,19 +494,28 @@ class Picking(models.Model):
                 else:
                     picking.state = relevant_move_state
 
-    @api.depends('move_lines.date_expected')
+    @api.depends('move_lines.state', 'move_lines.date', 'move_type')
     def _compute_scheduled_date(self):
         for picking in self:
+            moves_dates = picking.move_lines.filtered(lambda move: move.state not in ('done', 'cancel')).mapped('date')
             if picking.move_type == 'direct':
-                picking.scheduled_date = min(picking.move_lines.mapped('date_expected') or [fields.Datetime.now()])
+                picking.scheduled_date = min(moves_dates, default=picking.scheduled_date or fields.Datetime.now())
             else:
-                picking.scheduled_date = max(picking.move_lines.mapped('date_expected') or [fields.Datetime.now()])
+                picking.scheduled_date = max(moves_dates, default=picking.scheduled_date or fields.Datetime.now())
+
+    @api.depends('move_lines.date_deadline', 'move_type')
+    def _compute_date_deadline(self):
+        for picking in self:
+            if picking.move_type == 'direct':
+                picking.date_deadline = min(picking.move_lines.filtered('date_deadline').mapped('date_deadline'), default=False)
+            else:
+                picking.date_deadline = max(picking.move_lines.filtered('date_deadline').mapped('date_deadline'), default=False)
 
     def _set_scheduled_date(self):
         for picking in self:
             if picking.state in ('done', 'cancel'):
                 raise UserError(_("You cannot change the Scheduled Date on a done or cancelled transfer."))
-            picking.move_lines.write({'date_expected': picking.scheduled_date})
+            picking.move_lines.write({'date': picking.scheduled_date})
 
     def _has_scrap_move(self):
         for picking in self:

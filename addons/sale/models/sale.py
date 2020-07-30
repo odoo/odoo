@@ -232,9 +232,8 @@ class SaleOrder(models.Model):
     signed_by = fields.Char('Signed By', help='Name of the person that signed the SO.', copy=False)
     signed_on = fields.Datetime('Signed On', help='Date of the signature.', copy=False)
 
-    commitment_date = fields.Datetime('Delivery Date',
-                                      states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},
-                                      copy=False, readonly=True,
+    commitment_date = fields.Datetime('Delivery Date', copy=False,
+                                      states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
                                       help="This is the delivery date promised to the customer. "
                                            "If set, the delivery order will be scheduled based on "
                                            "this date rather than product lead times.")

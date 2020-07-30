@@ -2562,150 +2562,6 @@ class TestRoutes(TestStockCommon):
         self.assertEqual(move_A1.procure_method, 'make_to_order', 'Move A should be "make_to_stock"')
         self.assertEqual(move_A2.procure_method, 'make_to_stock', 'Move A should be "make_to_order"')
 
-    def test_delay_alert_1(self):
-        """ On a pick pack ship scenario, enable the delay alert flag on the pack rule. Edit the
-        schedule date on the pick, a delay alert should be created for the ship.
-        by default:
-            - delay alert set is only ship rule
-            - propagate date is True on all the pick-pack-ship rules
-        """
-        warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
-        warehouse.delivery_steps = 'pick_pack_ship'
-        partner_demo_customer = self.partner
-        final_location = partner_demo_customer.property_stock_customer
-        product_a = self.env['product.product'].create({
-            'name': 'ProductA',
-            'type': 'product',
-        })
-        product_b = self.env['product.product'].create({
-            'name': 'ProductA',
-            'type': 'product',
-        })
-
-        pg = self.env['procurement.group'].create({'name': 'Test-delay_alert'})
-
-        self.env['procurement.group'].run([
-            pg.Procurement(
-                product_a,
-                4.0,
-                product_a.uom_id,
-                final_location,
-                'delay',
-                'delay',
-                warehouse.company_id,
-                {
-                    'warehouse_id': warehouse,
-                    'group_id': pg
-                }
-            ),
-            pg.Procurement(
-                product_b,
-                4.0,
-                product_a.uom_id,
-                final_location,
-                'delay',
-                'delay',
-                warehouse.company_id,
-                {
-                    'warehouse_id': warehouse,
-                    'group_id': pg
-                }
-            )
-        ])
-        first_move = self.env['stock.move'].search([
-            ('product_id', '=', product_a.id),
-            ('state', '=', 'confirmed')
-        ])
-        # Get back pack and ship pickings.
-        picking_pack = first_move.move_dest_ids.picking_id
-        picking_ship = first_move.move_dest_ids.move_dest_ids.picking_id
-        self.assertEqual(len(picking_pack.message_ids), 1)
-        self.assertEqual(len(picking_ship.message_ids), 1)
-
-        # Change the schedule date on the pick.
-        first_move.picking_id.scheduled_date += timedelta(days=2)
-
-        # No activity should be created on the pack.
-        self.assertEqual(len(picking_pack.message_ids), 1)
-
-        # An activity is created on the ship.
-        self.assertEqual(len(picking_ship.message_ids), 2)
-        self.assertTrue('has been automatically' in picking_ship.message_ids[0].body)
-
-        # Change second time the schedule date on the pick.
-        first_move.picking_id.scheduled_date += timedelta(days=2)
-        self.assertEqual(len(picking_ship.message_ids), 2)
-
-    def test_delay_alert_2(self):
-        """ On a pick ship scenario, two pick linked to a ship. The delay alert is set on the ship rule?
-        When editing the schedule date on the two pick, two delay alerts activty should be created
-        on the pack.
-        """
-        self._enable_pick_ship()
-
-        # create a procurement group and set in on the pick stock rule
-        procurement_group0 = self.env['procurement.group'].create({})
-        procurement_group1 = self.env['procurement.group'].create({})
-        pick_rule = self.pick_ship_route.rule_ids.filtered(lambda rule: 'Stock → Output' in rule.name)
-        ship_rule = self.pick_ship_route.rule_ids - pick_rule
-        ship_rule.write({
-            'group_propagation_option': 'fixed',
-            'group_id': procurement_group0.id,
-        })
-
-        ship_location = pick_rule.location_id
-        customer_location = ship_rule.location_id
-        product1 = self.env['product.product'].create({'name': 'product1'})
-        product2 = self.env['product.product'].create({'name': 'product2'})
-
-        picking_ship = self.env['stock.picking'].create({
-            'location_id': ship_location.id,
-            'location_dest_id': self.customer_location,
-            'picking_type_id': self.picking_type_out,
-        })
-
-        move1 = self.env['stock.move'].create({
-            'name': 'first out move',
-            'procure_method': 'make_to_order',
-            'location_id': ship_location.id,
-            'location_dest_id': customer_location.id,
-            'product_id': product1.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 1.0,
-            'warehouse_id': self.wh.id,
-            'group_id': procurement_group0.id,
-            'origin': 'origin1',
-            'picking_id': picking_ship.id,
-            'delay_alert': True,
-        })
-
-        move2 = self.env['stock.move'].create({
-            'name': 'second out move',
-            'procure_method': 'make_to_order',
-            'location_id': ship_location.id,
-            'location_dest_id': customer_location.id,
-            'product_id': product2.id,
-            'product_uom': self.uom_unit.id,
-            'product_uom_qty': 1.0,
-            'warehouse_id': self.wh.id,
-            'group_id': procurement_group1.id,
-            'origin': 'origin2',
-            'picking_id': picking_ship.id,
-            'delay_alert': True,
-        })
-
-        # confirm the picking to create the orig moves
-        picking_ship.action_confirm()
-        picking_pick_1 = move1.move_orig_ids.picking_id
-        picking_pick_2 = move2.move_orig_ids.picking_id
-
-        picking_pick_1.scheduled_date += timedelta(days=2)
-        picking_pick_2.scheduled_date += timedelta(days=2)
-        messages = picking_ship.message_ids
-        self.assertEqual(len(messages), 3, 'not enough messages logged')
-        self.assertTrue(picking_pick_1.name in messages[0].body + messages[1].body, 'Wrong message')
-        self.assertTrue(picking_pick_2.name in messages[0].body + messages[1].body, 'Wrong message')
-
     def test_delay_alert_3(self):
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.delivery_steps = 'pick_pack_ship'
@@ -2732,61 +2588,59 @@ class TestRoutes(TestStockCommon):
             ),
         ])
         ship, pack, pick = self.env['stock.move'].search([('product_id',  '=', product_a.id)])
-        (ship + pack + pick).propagate_date = False
-        (ship + pack + pick).delay_alert = True
 
-        # by default they all the the same `date_expected`
-        self.assertEqual(set((ship + pack + pick).mapped('date_expected')), {pick.date_expected})
+        # by default they all the the same `date`
+        self.assertEqual(set((ship + pack + pick).mapped('date')), {pick.date})
 
         # pick - pack - ship
-        ship.date_expected += timedelta(days=2)
-        pack.date_expected += timedelta(days=1)
+        ship.date += timedelta(days=2)
+        pack.date += timedelta(days=1)
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)
 
         # move the pack after the ship
         # pick - ship - pack
-        pack.date_expected += timedelta(days=2)
+        pack.date += timedelta(days=2)
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertTrue(ship.delay_alert_date)
-        self.assertAlmostEqual(ship.delay_alert_date, pack.date_expected)
+        self.assertAlmostEqual(ship.delay_alert_date, pack.date)
 
         # restore the pack before the ship
         # pick - pack - ship
-        pack.date_expected -= timedelta(days=2)
+        pack.date -= timedelta(days=2)
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)
 
         # move the pick after the pack
         # pack - ship - pick
-        pick.date_expected += timedelta(days=3)
+        pick.date += timedelta(days=3)
         self.assertFalse(pick.delay_alert_date)
         self.assertTrue(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)
-        self.assertAlmostEqual(pack.delay_alert_date, pick.date_expected)
+        self.assertAlmostEqual(pack.delay_alert_date, pick.date)
 
         # move the ship before the pack
         # ship - pack - pick
-        ship.date_expected -= timedelta(days=2)
+        ship.date -= timedelta(days=2)
         self.assertFalse(pick.delay_alert_date)
         self.assertTrue(pack.delay_alert_date)
         self.assertTrue(ship.delay_alert_date)
-        self.assertAlmostEqual(pack.delay_alert_date, pick.date_expected)
-        self.assertAlmostEqual(ship.delay_alert_date, pack.date_expected)
+        self.assertAlmostEqual(pack.delay_alert_date, pick.date)
+        self.assertAlmostEqual(ship.delay_alert_date, pack.date)
 
         # move the pack at the end
         # ship - pick - pack
-        pack.date_expected = pick.date_expected + timedelta(days=2)
+        pack.date = pick.date + timedelta(days=2)
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertTrue(ship.delay_alert_date)
-        self.assertAlmostEqual(ship.delay_alert_date, pack.date_expected)
+        self.assertAlmostEqual(ship.delay_alert_date, pack.date)
 
         # fix the ship
-        ship.date_expected = pack.date_expected + timedelta(days=2)
+        ship.date = pack.date + timedelta(days=2)
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)

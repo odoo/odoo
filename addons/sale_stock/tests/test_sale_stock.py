@@ -644,7 +644,7 @@ class TestSaleStock(TestSaleCommon, ValuationReconciliationTestCommon):
 
         # A new move of 10 unit (15 - 5 units)
         self.assertEqual(so1.order_line.qty_delivered, 5)
-        self.assertEqual(so1.picking_ids[-1].move_lines.product_qty, 10)
+        self.assertEqual(so1.picking_ids.sorted('id')[-1].move_lines.product_qty, 10)
 
     def test_09_qty_available(self):
         """ create a sale order in warehouse1, change to warehouse2 and check the

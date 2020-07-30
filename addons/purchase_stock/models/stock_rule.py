@@ -73,9 +73,6 @@ class StockRule(models.Model):
             partner = supplier.name
             # we put `supplier_info` in values for extensibility purposes
             procurement.values['supplier'] = supplier
-            procurement.values['delay_alert'] = rule.delay_alert
-            procurement.values['propagate_date'] = rule.propagate_date
-            procurement.values['propagate_date_minimum_delta'] = rule.propagate_date_minimum_delta
             procurement.values['propagate_cancel'] = rule.propagate_cancel
 
             domain = rule._make_po_get_domain(procurement.company_id, procurement.values, partner)
@@ -171,15 +168,13 @@ class StockRule(models.Model):
         # generated from the order line has the orderpoint's location as
         # destination location. In case of move_dest_ids those two points are not
         # necessary anymore since those values are taken from destination moves.
-        return procurement.product_id, procurement.product_uom, procurement.values['propagate_date'],\
-            procurement.values['propagate_date_minimum_delta'], procurement.values['propagate_cancel'],\
+        return procurement.product_id, procurement.product_uom, procurement.values['propagate_cancel'],\
             procurement.values.get('product_description_variants'),\
             (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
 
     @api.model
     def _get_procurements_to_merge_sorted(self, procurement):
-        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_date'],\
-            procurement.values['propagate_date_minimum_delta'], procurement.values['propagate_cancel'],\
+        return procurement.product_id.id, procurement.product_uom.id, procurement.values['propagate_cancel'],\
             procurement.values.get('product_description_variants'),\
             (procurement.values.get('orderpoint_id') and not procurement.values.get('move_dest_ids')) and procurement.values['orderpoint_id']
 

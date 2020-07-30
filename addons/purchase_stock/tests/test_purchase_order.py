@@ -212,16 +212,6 @@ class TestPurchaseOrder(ValuationReconciliationTestCommon):
         self.assertEqual(po1.order_line.qty_received, 5)
         self.assertEqual(po1.picking_ids[-1].move_lines.product_qty, 10)
 
-    def test_propagate_date_of_move(self):
-        """ Propagate date of move should be assigned as per value of mto
-            buy route if PO is created manually (not from mto route).
-        """
-        warehouse = self.company_data['default_warehouse']
-        self.po = self.env['purchase.order'].create(self.po_vals)
-        self.po.button_confirm()
-        self.assertFalse(self.po.order_line.mapped('move_dest_ids'))
-        self.assertEqual(self.po.picking_ids.move_lines[0].propagate_date, warehouse.buy_pull_id.propagate_date)
-
     def test_update_date_planned(self):
         po = self.env['purchase.order'].create(self.po_vals)
         po.button_confirm()

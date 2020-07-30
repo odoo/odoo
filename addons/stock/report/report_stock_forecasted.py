@@ -112,7 +112,7 @@ class ReplenishmentReport(models.AbstractModel):
     def _prepare_report_line(self, quantity, move_out=None, move_in=None, replenishment_filled=True, product=False):
         timezone = self._context.get('tz')
         product = product or (move_out.product_id if move_out else move_in.product_id)
-        is_late = move_out.date_expected < move_in.date_expected if (move_out and move_in) else False
+        is_late = move_out.date < move_in.date if (move_out and move_in) else False
         return {
             'document_in': move_in._get_source_document() if move_in else False,
             'document_out': move_out._get_source_document() if move_out else False,
@@ -122,10 +122,10 @@ class ReplenishmentReport(models.AbstractModel):
             },
             'replenishment_filled': replenishment_filled,
             'uom_id': product.uom_id,
-            'receipt_date': format_datetime(self.env, move_in.date_expected, timezone, 'medium') if move_in else False,
-            'delivery_date': format_datetime(self.env, move_out.date_expected, timezone, 'medium') if move_out else False,
-            'receipt_date_short': format_date(self.env, move_in.date_expected) if move_in else False,
-            'delivery_date_short': format_date(self.env, move_out.date_expected) if move_out else False,
+            'receipt_date': format_datetime(self.env, move_in.date, timezone, 'medium') if move_in else False,
+            'delivery_date': format_datetime(self.env, move_out.date, timezone, 'medium') if move_out else False,
+            'receipt_date_short': format_date(self.env, move_in.date) if move_in else False,
+            'delivery_date_short': format_date(self.env, move_out.date) if move_out else False,
             'is_late': is_late,
             'quantity': quantity,
             'move_out': move_out,
@@ -136,11 +136,11 @@ class ReplenishmentReport(models.AbstractModel):
         in_domain, out_domain = self._move_confirmed_domain(
             product_template_ids, product_variant_ids, wh_location_ids
         )
-        outs = self.env['stock.move'].search(out_domain, order='priority desc, date_expected, id')
+        outs = self.env['stock.move'].search(out_domain, order='priority desc, date, id')
         outs_per_product = defaultdict(lambda: [])
         for out in outs:
             outs_per_product[out.product_id.id].append(out)
-        ins = self.env['stock.move'].search(in_domain, order='priority desc, date_expected, id')
+        ins = self.env['stock.move'].search(in_domain, order='priority desc, date, id')
         ins_per_product = defaultdict(lambda: [])
         for in_ in ins:
             ins_per_product[in_.product_id.id].append([in_.product_qty, in_])

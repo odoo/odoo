@@ -36,17 +36,15 @@ class StockMove(models.Model):
         compute="_compute_priority", store=True, index=True)
     create_date = fields.Datetime('Creation Date', index=True, readonly=True)
     date = fields.Datetime(
-        'Date', default=fields.Datetime.now, index=True, required=True,
-        states={'done': [('readonly', True)]},
-        help="Move date: scheduled date until move is done, then date of actual move processing")
+        'Date Scheduled', default=fields.Datetime.now, index=True, required=True,
+        help="Scheduled date until move is done, then date of actual move processing")
+    date_deadline = fields.Datetime(
+        "Deadline", readonly=True,
+        help="Date Promise to the customer on the top level document (SO/PO)")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company,
         index=True, required=True)
-    date_expected = fields.Datetime(
-        'Expected Date', default=fields.Datetime.now, index=True, required=True,
-        states={'done': [('readonly', True)]},
-        help="Scheduled date for the processing of this move")
     product_id = fields.Many2one(
         'product.product', 'Product',
         check_company=True,
@@ -135,11 +133,6 @@ class StockMove(models.Model):
     propagate_cancel = fields.Boolean(
         'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
-    propagate_date = fields.Boolean(string="Propagate Rescheduling",
-        help='The rescheduling is propagated to the next move.')
-    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
-        help='The change must be higher than this value to be propagated')
-    delay_alert = fields.Boolean('Alert if Delay')
     delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', check_company=True)
     inventory_id = fields.Many2one('stock.inventory', 'Inventory', check_company=True)
@@ -446,13 +439,19 @@ class StockMove(models.Model):
                         move.json_forecast = json.dumps({'reservedAvailability': reserved_availability})
                     else:
                         move.json_forecast = json.dumps({
-                            'sortingDate': format_date(self.env, found[0]['move_in'].date_expected, date_format='yyyy-MM-dd'),
+                            'sortingDate': format_date(self.env, found[0]['move_in'].date, date_format='yyyy-MM-dd'),
                             'expectedDate': found[0]["receipt_date_short"],
                             'isLate': found[0]["is_late"],
                             'replenishmentFilled': found[0]["replenishment_filled"]
                         })
                 else:
                     move.json_forecast = json.dumps({'expectedDate': None})
+
+    def _set_date_deadline(self):
+        # Handle the propagation of `date_deadline` fields (up and down stream - only update by up/downstream documents)
+        for move in self:
+            move_linked = (move.move_dest_ids | move.move_orig_ids).filtered(lambda m: m.state not in ('done', 'cancel'))
+            move_linked.filtered(lambda m: m.date_deadline != move.date_deadline).date_deadline = move.date_deadline
 
     @api.constrains('product_uom')
     def _check_uom(self):
@@ -515,34 +514,22 @@ class StockMove(models.Model):
                 # When editing the initial demand, directly run again action assign on receipt moves.
                 receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
                 receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
-
-        # Handle the propagation of `date_expected` and `date` fields.
-        propagated_date_field = False
-        if vals.get('date_expected'):
-            propagated_date_field = 'date_expected'
-        elif vals.get('state', '') == 'done' and vals.get('date'):
-            propagated_date_field = 'date'
-        if propagated_date_field:
-            new_date = fields.Datetime.to_datetime(vals.get(propagated_date_field))
+        # Handle alert date about the scheduled date
+        if vals.get('date'):
+            new_date = fields.Datetime.to_datetime(vals.get('date'))
             for move in self:
-                move_dest_ids = move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
-                delta_days = (new_date - move.date_expected).total_seconds() / 86400
-                if move.propagate_date and abs(delta_days) >= move.propagate_date_minimum_delta and move_dest_ids:
-                    for move_dest in move_dest_ids:
-                        # We want to propagate a negative delta, but not propagate an expected date
-                        # in the past.
-                        new_move_date = max(move_dest.date_expected + relativedelta.relativedelta(days=delta_days or 0), fields.Datetime.now())
-                        move_dest.date_expected = new_move_date
-                    move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_note(move)
-                if move.delay_alert:
-                    move._delay_alert_check(new_date)
+                move._delay_alert_check(new_date)
         res = super(StockMove, self).write(vals)
-        if vals.get('date_expected'):
-            for move in self:
-                if move.state not in ('done', 'cancel'):
-                    move.date = move.date_expected
+        if 'date_deadline' in vals:
+            self._set_date_deadline()
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
+        return res
+
+    @api.model_create_multi
+    def create(self, vals_list):
+        res = super().create(vals_list)
+        res.filtered('date_deadline')._set_date_deadline()
         return res
 
     def _delay_alert_get_documents(self):
@@ -557,17 +544,15 @@ class StockMove(models.Model):
         return list(self.mapped('picking_id'))
 
     def _propagate_date_log_note(self, move_orig):
-        """Post a delay alert log note on the documents linked to `self`.
-
-        :param move_orig: the stock move triggering the delay alert on the next document
-        """
+        """Post a deadline change alert log note on the documents linked to `self`."""
+        # TODO : get the end document (PO/SO/MO)
         doc_orig = move_orig._delay_alert_get_documents()
         documents = self._delay_alert_get_documents()
         if not documents or not doc_orig:
             return
 
-        msg = _("The scheduled date has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
-        msg_subject = _("Scheduled date update due to delay on %s", doc_orig[0].name)
+        msg = _("The deadline has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
+        msg_subject = _("Deadline updates due to delay on %s", doc_orig[0].name)
         # write the message on each document
         for doc in documents:
             last_message = doc.message_ids[:1]
@@ -589,19 +574,12 @@ class StockMove(models.Model):
             return
 
         if new_date is None:
-            new_date = self.date_expected
+            new_date = self.date
 
         # Check if `self` is scheduled after the next moves. If so, the next moves are late.
-        next_done_moves = self.browse()
-        next_nondone_moves = self.browse()
-        next_moves_dates = []
-        for move in self.move_dest_ids:
-            if move.state == 'done':
-                next_done_moves |= move
-            elif move.state != 'cancel':
-                next_nondone_moves |= move
-        next_moves_dates += next_done_moves.mapped('date')
-        next_moves_dates += next_nondone_moves.mapped('date_expected')
+        next_moves = self.move_dest_ids.filtered(lambda move: move.state != 'cancel')
+        next_nondone_moves = next_moves.filtered(lambda move: move.state != 'done')
+        next_moves_dates = next_moves.mapped('date')
         if next_moves_dates:
             next_moves_date = min(next_moves_dates)
             if new_date > next_moves_date:
@@ -610,16 +588,8 @@ class StockMove(models.Model):
                 next_nondone_moves.write({'delay_alert_date': False})
 
         # Check if `self` is scheduled before the previous moves. If so, `self` if late.
-        previous_done_moves = self.browse()
-        previous_nondone_moves = self.browse()
-        previous_moves_dates = []
-        for move in self.move_orig_ids:
-            if move.state == 'done':
-                previous_done_moves |= move
-            elif move.state != 'cancel':
-                previous_nondone_moves |= move
-        previous_moves_dates += previous_done_moves.mapped('date')
-        previous_moves_dates += previous_nondone_moves.mapped('date_expected')
+        previous_moves = self.move_orig_ids.filtered(lambda move: move.state != 'cancel')
+        previous_moves_dates = previous_moves.mapped('date')
         if previous_moves_dates:
             previous_moves_date = max(previous_moves_dates)
             if new_date < previous_moves_date:
@@ -772,8 +742,7 @@ class StockMove(models.Model):
         origin = '/'.join(set(self.filtered(lambda m: m.origin).mapped('origin')))
         return {
             'product_uom_qty': sum(self.mapped('product_uom_qty')),
-            'date': min(self.mapped('date')),
-            'date_expected': min(self.mapped('date_expected')) if self.mapped('picking_id').move_type == 'direct' else max(self.mapped('date_expected')),
+            'date': min(self.mapped('date')) if self.mapped('picking_id').move_type == 'direct' else max(self.mapped('date')),
             'move_dest_ids': [(4, m.id) for m in self.mapped('move_dest_ids')],
             'move_orig_ids': [(4, m.id) for m in self.mapped('move_orig_ids')],
             'state': state,
@@ -785,8 +754,7 @@ class StockMove(models.Model):
         return [
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
-            'package_level_id', 'propagate_cancel', 'propagate_date', 'propagate_date_minimum_delta',
-            'delay_alert', 'description_picking'
+            'package_level_id', 'propagate_cancel', 'description_picking', 'date_deadline'
         ]
 
     @api.model
@@ -795,8 +763,7 @@ class StockMove(models.Model):
         return [
             move.product_id.id, move.price_unit, move.procure_method, move.location_id, move.location_dest_id,
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
-            move.package_level_id.id, move.propagate_cancel, move.propagate_date, move.propagate_date_minimum_delta,
-            move.delay_alert, move.description_picking
+            move.package_level_id.id, move.propagate_cancel, move.description_picking
         ]
 
     def _clean_merged(self):
@@ -1139,7 +1106,8 @@ class StockMove(models.Model):
                 group_id = False
         return {
             'product_description_variants': self.description_picking and self.description_picking.replace(self.product_id._get_description(self.picking_type_id), ''),
-            'date_planned': self.date_expected,
+            'date_planned': self.date,
+            'date_deadline': self.date_deadline,
             'move_dest_ids': self,
             'group_id': group_id,
             'route_ids': self.route_ids,
