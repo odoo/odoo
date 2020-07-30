@@ -122,11 +122,10 @@ class ModelManager {
         const record = new Model({ valid: true });
         Object.defineProperty(record, 'env', { get: () => Model.env });
         record.localId = record._createRecordLocalId(data);
-
-        // Make state, which contain field values of record that have to
-        // be observed in store.
-        this.env.store.state[record.localId] = {};
-        record.__state = this.env.store.state[record.localId];
+        // Contains field values of record.
+        record.__values = {};
+        // Contains revNumber of record for checking record update in useStore.
+        record.__state = 0;
 
         // Make proxified record, so that access to field redirects
         // to field getter.
@@ -299,6 +298,8 @@ class ModelManager {
             }
             this._toComputeFields.clear();
             this._isInUpdateCycle = false;
+            // trigger at most one useStore call per update cycle
+            this.env.store.state.messagingRevNumber++;
         } else {
             this._updateDirect(record, data);
             if (this._isHandlingToUpdateAfters) {
@@ -689,8 +690,8 @@ class ModelManager {
             }
             if (field.fieldType === 'relation') {
                 if (['one2many', 'many2many'].includes(field.relationType)) {
-                    // Ensure X2many relations are arrays by defaults.
-                    field.write(record, [], { registerDependents: false });
+                    // Ensure X2many relations are Set by defaults.
+                    field.write(record, new Set(), { registerDependents: false });
                 } else {
                     field.write(record, undefined, { registerDependents: false });
                 }

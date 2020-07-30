@@ -34,7 +34,9 @@ function addMessagingToEnv(providedEnv = {}) {
      */
     const store = new Store({
         env,
-        state: {},
+        state: {
+            messagingRevNumber: 0,
+        },
     });
 
     /**
