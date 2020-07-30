@@ -69,14 +69,14 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
     def _set_templates_and_layouts(self):
         self.layout_template1 = self.env['ir.ui.view'].create({
             'name': 'layout_template1',
-            'key': 'layout_template1',
+            'key': 'web.layout_template1',
             'type': 'qweb',
             'arch': '''<div></div>''',
         })
         self.env['ir.model.data'].create({
             'name': self.layout_template1.name,
             'model': 'ir.ui.view',
-            'module': 'base',
+            'module': 'web',
             'res_id': self.layout_template1.id,
         })
         self.default_colors = {
@@ -89,14 +89,14 @@ class TestBaseDocumentLayoutHelpers(TransactionCase):
         })
         self.layout_template2 = self.env['ir.ui.view'].create({
             'name': 'layout_template2',
-            'key': 'layout_template2',
+            'key': 'web.layout_template2',
             'type': 'qweb',
             'arch': '''<div></div>''',
         })
         self.env['ir.model.data'].create({
             'name': self.layout_template2.name,
             'model': 'ir.ui.view',
-            'module': 'base',
+            'module': 'web',
             'res_id': self.layout_template2.id,
         })
         self.report_layout2 = self.env['report.layout'].create({
@@ -117,7 +117,7 @@ class TestBaseDocumentLayout(TestBaseDocumentLayoutHelpers):
             'primary_color': False,
             'secondary_color': False,
             'logo': False,
-            'external_report_layout_id': self.env.ref('base.layout_template1').id,
+            'external_report_layout_id': self.env.ref('web.layout_template1').id,
             'paperformat_id': self.env.ref('base.paperformat_us').id,
         })
         default_colors = self.default_colors
