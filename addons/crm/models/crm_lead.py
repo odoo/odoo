@@ -48,17 +48,22 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'email_cc',
     'website']
 
+# Subset of partner fields: sync any of those
 PARTNER_FIELDS_TO_SYNC = [
+    'mobile',
     'title',
+    'function',
+    'website',
+]
+
+# Subset of partner fields: sync all or none to avoid mixed addresses
+PARTNER_ADDRESS_FIELDS_TO_SYNC = [
     'street',
     'street2',
     'city',
+    'zip',
     'state_id',
     'country_id',
-    'mobile',
-    'zip',
-    'function',
-    'website',
 ]
 
 # Those values have been determined based on benchmark to minimise
@@ -429,18 +434,27 @@ class Lead(models.Model):
             self.mobile = self.phone_format(self.mobile)
 
     def _prepare_values_from_partner(self, partner):
-        """ Get a dictionary with values coming from customer information to
-        copy on a lead. Email_from and phone fields get the current lead
-        values to avoid being reset if customer has no value for them. """
+        """ Get a dictionary with values coming from partner information to
+        copy on a lead. Non-address fields get the current lead
+        values to avoid being reset if partner has no value for them. """
+
+        # Sync all address fields from partner, or none, to avoid mixing them.
+        if any(partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC):
+            values = {f: partner[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+        else:
+            values = {f: self[f] for f in PARTNER_ADDRESS_FIELDS_TO_SYNC}
+
+        # For other fields, get the info from the partner, but only if set
+        values.update({f: partner[f] or self[f] for f in PARTNER_FIELDS_TO_SYNC})
+
+        # Fields with specific logic
         partner_name = partner.parent_id.name
         if not partner_name and partner.is_company:
             partner_name = partner.name
         contact_name = False if partner.is_company else partner.name
-
-        values = {f: partner[f] if partner else self[f] for f in PARTNER_FIELDS_TO_SYNC}
         values.update({
             'partner_name': partner_name or self.partner_name,
-            'contact_name': False if partner.is_company else partner.name or self.contact_name,
+            'contact_name': contact_name or self.contact_name,
         })
         return self._convert_to_write(values)
 
