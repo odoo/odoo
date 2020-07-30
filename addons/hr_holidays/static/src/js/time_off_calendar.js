@@ -36,6 +36,14 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             'click .btn-allocation': '_onNewAllocation',
         }),
 
+        /**
+         * @override
+         */
+        start: function () {
+            this.$el.addClass('o_timeoff_calendar');
+            return this._super(...arguments);
+        },
+
         //--------------------------------------------------------------------------
         // Public
         //--------------------------------------------------------------------------
