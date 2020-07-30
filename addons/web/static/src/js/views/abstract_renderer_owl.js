@@ -1,4 +1,4 @@
-odoo.define('web.AbstractRendererOwl', function (require) {
+odoo.define('web.AbstractRendererOwl', function () {
     "use strict";
 
     // Renderers may display sample data when there is no real data to display. In
@@ -49,9 +49,7 @@ odoo.define('web.AbstractRendererOwl', function (require) {
             const rootEls = [];
             for (const selector of this.sampleDataTargets) {
                 const els = [this.el, ...this.el.querySelectorAll(`:scope ${selector}`)];
-                rootEls.push(...els.filter(el => {
-                    return el.matches(selector);
-                }));
+                rootEls.push(...els.filter(el => el.matches(selector)));
             }
             const focusableEls = new Set(rootEls);
             for (const rootEl of rootEls) {
