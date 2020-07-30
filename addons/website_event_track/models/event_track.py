@@ -81,7 +81,7 @@ class Track(models.Model):
     duration = fields.Float('Duration', default=1.5, help="Track duration in hours.")
     location_id = fields.Many2one('event.track.location', 'Location')
     event_id = fields.Many2one('event.event', 'Event', required=True)
-    color = fields.Integer('Color', related="stage_id.color")
+    color = fields.Integer('Color')
     priority = fields.Selection([
         ('0', 'Low'), ('1', 'Medium'),
         ('2', 'High'), ('3', 'Highest')],
