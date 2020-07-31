@@ -113,6 +113,7 @@
             <button type="button" class="o_calendar_button_day btn btn-secondary">Day</button>
             <button type="button" class="o_calendar_button_week btn btn-secondary">Week</button>
             <button type="button" class="o_calendar_button_month btn btn-secondary">Month</button>
+            <button type="button" class="o_calendar_button_year btn btn-secondary">Year</button>
         </div>
     </t>
 
@@ -122,4 +123,35 @@
             <input type='text' name='name' class="o_input o_required_modifier" t-att-value="widget.dataTemplate.name or None"/>
         </div>
     </main>
+
+    <t t-name="CalendarView.yearEvent.popover">
+        <div class="o_cw_body">
+            <t t-foreach="groupKeys" t-as="groupKey">
+                <div class="font-weight-bold mt-2" t-esc="groupKey"/>
+                <t t-foreach="groupedEvents[groupKey]" t-as="event">
+                    <t t-set="record" t-value="event.extendedProps.record"/>
+                    <a href="#" class="o_cw_popover_link btn-link d-block"
+                        t-att-data-id="record.id"
+                        t-att-data-title="record.display_name"
+                        t-esc="record.display_name"/>
+                </t>
+            </t>
+            <div class="mt-2">
+                <a t-if="canCreate" href="#" class="btn-link o_cw_popover_create">
+                    <i class="fa fa-plus"/> Create
+                </a>
+            </div>
+        </div>
+    </t>
+
+    <t t-name="CalendarView.yearEvent.popover.placeholder">
+        <div class="popover o_cw_popover" style="position: relative">
+            <div class="arrow"></div>
+            <div class="popover-header"></div>
+            <div style="position: absolute; top: 0; right: 0.5rem;">
+                <span class="o_cw_popover_close"><i class="fa fa-close small"></i></span>
+            </div>
+            <div class="popover-body"></div>
+        </div>
+    </t>
 </template>

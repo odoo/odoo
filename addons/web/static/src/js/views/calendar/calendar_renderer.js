@@ -3,7 +3,6 @@ odoo.define('web.CalendarRenderer', function (require) {
 
 var AbstractRenderer = require('web.AbstractRenderer');
 var CalendarPopover = require('web.CalendarPopover');
-var config = require('web.config');
 var core = require('web.core');
 var Dialog = require('web.Dialog');
 var field_utils = require('web.field_utils');
@@ -11,6 +10,7 @@ var FieldManagerMixin = require('web.FieldManagerMixin');
 var relational_fields = require('web.relational_fields');
 var session = require('web.session');
 var Widget = require('web.Widget');
+const { createYearCalendarView } = require('/web/static/src/js/libs/fullcalendar.js');
 
 var _t = core._t;
 var qweb = core.qweb;
@@ -18,7 +18,8 @@ var qweb = core.qweb;
 var scales = {
     day: 'timeGridDay',
     week: 'timeGridWeek',
-    month: 'dayGridMonth'
+    month: 'dayGridMonth',
+    year: 'dayGridYear',
 };
 
 var SidebarFilterM2O = relational_fields.FieldMany2One.extend({
@@ -192,6 +193,7 @@ return AbstractRenderer.extend({
         this.hideDate = params.hideDate;
         this.hideTime = params.hideTime;
         this.canDelete = params.canDelete;
+        this.canCreate = params.canCreate;
         this._isInDOM = false;
     },
     /**
@@ -386,7 +388,7 @@ return AbstractRenderer.extend({
      */
     _getFullCalendarOptions: function (fcOptions) {
         var self = this;
-        return Object.assign({}, this.state.fc_options, {
+        const options = Object.assign({}, this.state.fc_options, {
             plugins: [
                 'moment',
                 'interaction',
@@ -408,27 +410,60 @@ return AbstractRenderer.extend({
                 $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_highlight');
                 self._renderEventPopover(eventData, $(eventClickInfo.el));
             },
+            yearDateClick: function (info) {
+                self._unselectEvent();
+                info.view.unselect();
+                if (!info.events.length) {
+                    if (info.selectable) {
+                        const data = {
+                            start: info.date,
+                            allDay: true,
+                        };
+                        if (self.state.context.default_name) {
+                            data.title = self.state.context.default_name;
+                        }
+                        self.trigger_up('openCreate', self._convertEventToFC3Event(data));
+                    }
+                } else {
+                    self._renderYearEventPopover(info.date, info.events, $(info.dayEl));
+                }
+            },
             select: function (selectionInfo) {
                 // Clicking on the view, dispose any visible popover. Otherwise create a new event.
                 if (self.$('.o_cw_popover').length) {
                     self._unselectEvent();
-                } else {
-                    var data = {start: selectionInfo.start, end: selectionInfo.end, allDay: selectionInfo.allDay};
-                    if (self.state.context.default_name) {
-                        data.title = self.state.context.default_name;
-                    }
-                    self.trigger_up('openCreate', self._convertEventToFC3Event(data));
                 }
-                self.calendar.unselect();
+                var data = {start: selectionInfo.start, end: selectionInfo.end, allDay: selectionInfo.allDay};
+                if (self.state.context.default_name) {
+                    data.title = self.state.context.default_name;
+                }
+                self.trigger_up('openCreate', self._convertEventToFC3Event(data));
+                if (self.state.scale === 'year') {
+                    self.calendar.view.unselect();
+                } else {
+                    self.calendar.unselect();
+                }
             },
             eventRender: function (info) {
                 var event = info.event;
                 var element = $(info.el);
                 var view = info.view;
+                element.attr('data-event-id', event.id);
+                if (view.type === 'dayGridYear') {
+                    const color = this.getColor(event.extendedProps.color_index);
+                    if (typeof color === 'string') {
+                        element.css({
+                            backgroundColor: color,
+                        });
+                    } else if (typeof color === 'number') {
+                        element.addClass(`o_calendar_color_${color}`);
+                    } else {
+                        element.addClass('o_calendar_color_1');
+                    }
+                } else {
                 var $render = $(self._eventRender(event));
                 element.find('.fc-content').html($render.html());
                 element.addClass($render.attr('class'));
-                element.attr('data-event-id', event.id);
 
                 // Add background if doesn't exist
                 if (!element.find('.fc-bg').length) {
@@ -455,10 +490,17 @@ return AbstractRenderer.extend({
                 element.on('dblclick', function () {
                     self.trigger_up('edit_event', {id: event.id});
                 });
+                }
             },
             datesRender: function (info) {
-                // compute mode from view.type which is either 'dayGridMonth', 'timeGridWeek' or 'timeGridDay'
-                var mode = info.view.type === 'dayGridMonth' ? 'month' : (info.view.type === 'timeGridWeek' ? 'week' : 'day');
+                // compute mode from view.type which is either
+                // 'dayGridYear', 'dayGridMonth', 'timeGridWeek' or 'timeGridDay'
+                const mode = {
+                    dayGridYear: 'year',
+                    dayGridMonth: 'month',
+                    timeGridWeek: 'week',
+                    timeGridDay: 'day',
+                }[info.view.type];
                 self.trigger_up('viewUpdated', {
                     mode: mode,
                     title: info.view.title,
@@ -509,6 +551,8 @@ return AbstractRenderer.extend({
                 successCB(self.state.data);
             },
         }, fcOptions);
+        options.plugins.push(createYearCalendarView(FullCalendar, options));
+        return options;
     },
     /**
      * Initialize the main calendar
@@ -582,6 +626,7 @@ return AbstractRenderer.extend({
                             .removeClass('o_color o_selected_range');
         var $a;
         switch (this.state.scale) {
+            case 'year': $a = this.$small_calendar.find('td'); break;
             case 'month': $a = this.$small_calendar.find('td'); break;
             case 'week': $a = this.$small_calendar.find('tr:has(.ui-state-active)'); break;
             case 'day': $a = this.$small_calendar.find('a.ui-state-active'); break;
@@ -706,6 +751,26 @@ return AbstractRenderer.extend({
         return _t.database.parameters.time_format.search('%H') !== -1 ? 'HH:mm' : 'hh:mm a';
     },
     /**
+     * Returns event's formatted date for popovers.
+     *
+     * @private
+     * @param {moment} start
+     * @param {moment} end
+     * @param {boolean} showDayName
+     */
+    _getFormattedDate: function (start, end, showDayName) {
+        const isSameDayEvent = start.clone().add(1, 'minute')
+            .isSame(end.clone().subtract(1, 'minute'), 'day');
+        if (!isSameDayEvent && start.isSame(end, 'month')) {
+            // Simplify date-range if an event occurs into the same month (eg. '4-5 August 2019')
+            return start.clone().format('MMMM D') + '-' + end.clone().format('D, YYYY');
+        } else {
+            return isSameDayEvent ?
+                start.clone().format(showDayName ? 'dddd, LL' : 'LL') :
+                start.clone().format('LL') + ' - ' + end.clone().format('LL');
+        }
+    },
+    /**
      * Prepare context to display in the popover.
      *
      * @private
@@ -748,12 +813,7 @@ return AbstractRenderer.extend({
         }
 
         if (!this.hideDate) {
-            if (!isSameDayEvent && start.isSame(end, 'month')) {
-                // Simplify date-range if an event occurs into the same month (eg. '4-5 August 2019')
-                context.eventDate.date = start.clone().format('MMMM D') + '-' + end.clone().format('D, YYYY');
-            } else {
-                context.eventDate.date = isSameDayEvent ? start.clone().format('dddd, LL') : start.clone().format('LL') + ' - ' + end.clone().format('LL');
-            }
+            context.eventDate.date = this._getFormattedDate(start, end, true);
 
             if (eventData.extendedProps.record.allday && isSameDayEvent) {
                 context.eventDate.duration = _t("All day");
@@ -806,6 +866,89 @@ return AbstractRenderer.extend({
                 self._onPopoverShown($(this), calendarPopover);
             }).popover('show');
         });
+    },
+    /**
+     * Render year event popover
+     *
+     * @private
+     * @param {Date} date
+     * @param {Object[]} events
+     * @param {jQueryElement} $el
+     */
+    _renderYearEventPopover: function (date, events, $el) {
+        const groupKeys = [];
+        const groupedEvents = {};
+        for (const event of events) {
+            const start = moment(event.extendedProps.r_start);
+            const end = moment(event.extendedProps.r_end);
+            const key = this._getFormattedDate(start, end, false);
+            if (!(key in groupedEvents)) {
+                groupedEvents[key] = [];
+                groupKeys.push({
+                    key: key,
+                    start: event.extendedProps.r_start,
+                    end: event.extendedProps.r_end,
+                    isSameDayEvent: start.clone().add(1, 'minute')
+                        .isSame(end.clone().subtract(1, 'minute'), 'day'),
+                });
+            }
+            groupedEvents[key].push(event);
+        }
+
+        const popoverContent = qweb.render('CalendarView.yearEvent.popover', {
+            groupedEvents,
+            groupKeys: groupKeys
+                .sort((a, b) => {
+                    if (a.isSameDayEvent) {
+                        // if isSameDayEvent then put it before the others
+                        return Number.MIN_SAFE_INTEGER;
+                    } else if (b.isSameDayEvent) {
+                        return Number.MAX_SAFE_INTEGER;
+                    } else if (a.start.getTime() - b.start.getTime() === 0) {
+                        return a.end.getTime() - b.end.getTime();
+                    }
+                    return a.start.getTime() - b.start.getTime();
+                })
+                .map(x => x.key),
+            canCreate: this.canCreate,
+        });
+
+        $el.popover({
+            animation: false,
+            delay: {
+                show: 50,
+                hide: 100
+            },
+            trigger: 'manual',
+            html: true,
+            content: popoverContent,
+            template: qweb.render('CalendarView.yearEvent.popover.placeholder'),
+            container: '.fc-dayGridYear-view',
+        }).on('shown.bs.popover', () => {
+            $('.o_cw_popover .o_cw_popover_close').on('click', () => this._unselectEvent());
+            $('.o_cw_popover .o_cw_popover_create').on('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this._unselectEvent();
+                const data = {
+                    start: date,
+                    allDay: true,
+                };
+                if (this.state.context.default_name) {
+                    data.title = this.state.context.default_name;
+                }
+                this.trigger_up('openCreate', this._convertEventToFC3Event(data));
+            });
+            $('.o_cw_popover .o_cw_popover_link').on('click', (e) => {
+                e.preventDefault();
+                e.stopPropagation();
+                this._unselectEvent();
+                this.trigger_up('openEvent', {
+                    _id: parseInt(e.target.dataset.id, 10),
+                    title: e.target.dataset.title,
+                });
+            });
+        }).popover('show');
     },
     /**
      * Scroll to the time set in the FullCalendar parameter
