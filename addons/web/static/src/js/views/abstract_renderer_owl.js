@@ -49,6 +49,7 @@ odoo.define('web.AbstractRendererOwl', function () {
             const rootEls = [];
             for (const selector of this.sampleDataTargets) {
                 const els = [this.el, ...this.el.querySelectorAll(`:scope ${selector}`)];
+                // FIXME: all els will match the selector, except maybe this.el, right?
                 rootEls.push(...els.filter(el => el.matches(selector)));
             }
             const focusableEls = new Set(rootEls);

@@ -390,6 +390,7 @@ var AbstractView = Factory.extend({
             withSearchBar: inline ? false : this.withSearchBar,
             withSearchPanel: this.withSearchPanel,
         };
+        // FIXME: is this necessary?
         if ('useSampleModel' in action) {
             params.useSampleModel = action.useSampleModel;
         }
