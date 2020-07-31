@@ -4009,8 +4009,10 @@ QUnit.module('fields', {}, function () {
                 res_id: 1,
                 mockRPC: function (route, args) {
                     if (args.method === 'write') {
+                        // LPE FIXME: default applied when creating a record in the o2m
+                        // this seems legit but looks a hell of a lot like a change in behavior
                         assert.deepEqual(args.args[1].p, [[0, args.args[1].p[0][1], {
-                            foo: false, int_field: 123, product_id: 41,
+                            foo: "My little Foo Value", int_field: 123, product_id: 41,
                         }]]);
                     }
                     return this._super(route, args);
