@@ -107,8 +107,6 @@ odoo.define('web.SampleServer', function (require) {
             switch (params.method || params.route) {
                 case '/web/dataset/search_read':
                     return this._mockSearchReadController(params);
-                case 'get_cohort_data':
-                    return this._mockGetCohortData(params);
                 case 'web_read_group':
                     return this._mockWebReadGroup(params);
                 case 'read_group':
@@ -118,8 +116,12 @@ odoo.define('web.SampleServer', function (require) {
                 case 'read':
                     return this._mockRead(params);
             }
-            const mock = SampleServer.mockRegistry.get(params.model);
-            const mockFunction = mock && mock[params.method || params.route];
+            // this rpc can't be mocked by the SampleServer itself, so check if there is an handler
+            // in the mockRegistry: either specific for this model (with key 'model/method'), or
+            // global (with key 'method')
+            const method = params.method || params.route;
+            const mockFunction = SampleServer.mockRegistry.get(`${params.model}/${method}`) ||
+                                 SampleServer.mockRegistry.get(method);
             if (mockFunction) {
                 return mockFunction.call(this, params);
             }
@@ -321,88 +323,6 @@ odoo.define('web.SampleServer', function (require) {
          */
         _getRandomSubRecordId() {
             return Math.floor(Math.random() * SampleServer.SUB_RECORDSET_SIZE) + 1;
-        }
-        /**
-         * Mocks calls to the get_cohort_data method
-         * @private
-         * @param {Object} params
-         * @param {string} params.model
-         * @param {Object} params.kwargs
-         * @returns {Object}
-         */
-        _mockGetCohortData(params) {
-            const { model } = params;
-            const { date_start, interval, measure, mode, timeline } = params.kwargs;
-
-            const columns_avg = {};
-            const rows = [];
-            let initialChurnValue = 0;
-
-            const groups = this._mockReadGroup({ model, fields: [date_start], groupBy: [date_start + ':' + interval] });
-            const totalCount = groups.length;
-            let totalValue = 0;
-            for (const group of groups) {
-                const format = SampleServer.FORMATS[interval];
-                const displayFormat = SampleServer.DISPLAY_FORMATS[interval];
-                const date = moment(group[date_start + ':' + interval], format);
-                const now = moment();
-                let colStartDate = date.clone();
-                if (timeline === 'backward') {
-                    colStartDate = colStartDate.subtract(15, interval);
-                }
-
-                let value = measure === '__count__' ?
-                                this._getRandomInt(SampleServer.MAX_INTEGER) :
-                                this._generateFieldValue(model, measure);
-                value = value || 25;
-                totalValue += value;
-                let initialValue = value;
-                let max = value;
-
-                const columns = [];
-                for (let column = 0; column <= 15; column++) {
-                    if (!columns_avg[column]) {
-                        columns_avg[column] = { percentage: 0, count: 0 };
-                    }
-                    if (colStartDate.clone().add(column, interval) > now) {
-                        columns.push({ value: '-', churn_value: '-', percentage: '' });
-                        continue;
-                    }
-                    let colValue = 0;
-                    if (max > 0) {
-                        colValue =  Math.min(Math.round(Math.random() * max), max);
-                        max -= colValue;
-                    }
-                    if (timeline === 'backward' && column === 0) {
-                        initialValue = Math.min(Math.round(Math.random() * value), value);
-                        initialChurnValue = value - initialValue;
-                    }
-                    const previousValue = column === 0 ? initialValue : columns[column - 1].value;
-                    const remainingValue = previousValue - colValue;
-                    const previousChurnValue = column === 0 ? initialChurnValue : columns[column - 1].churn_value;
-                    const churn_value = colValue + previousChurnValue;
-                    let percentage = value ? parseFloat(remainingValue / value) : 0;
-                    if (mode === 'churn') {
-                        percentage = 1 - percentage;
-                    }
-                    percentage = Number((100 * percentage).toFixed(1));
-                    columns_avg[column].percentage += percentage;
-                    columns_avg[column].count += 1;
-                    columns.push({
-                        value: remainingValue,
-                        churn_value,
-                        percentage,
-                        period: column, // used as a t-key but we don't care about value itself
-                    });
-                }
-                const keepRow = columns.some(c => c.percentage !== '');
-                if (keepRow) {
-                    rows.push({ date: date.format(displayFormat), value, columns });
-                }
-            }
-            const avg_value = totalCount ? (totalValue / totalCount) : 0;
-            const avg = { avg_value, columns_avg };
-            return { rows, avg };
         }
         /**
          * Mocks calls to the read method.
@@ -713,7 +633,7 @@ odoo.define('web.SampleServer', function (require) {
         quarter: '[Q]Q YYYY',
         year: 'Y',
     };
-    SampleServer.DISPLAY_FORMATS =  Object.assign({}, SampleServer.FORMATS, { 'day': 'DD MMM YYYY' });
+    SampleServer.DISPLAY_FORMATS = Object.assign({}, SampleServer.FORMATS, { day: 'DD MMM YYYY' });
 
     SampleServer.MAIN_RECORDSET_SIZE = 16;
     SampleServer.SUB_RECORDSET_SIZE = 5;
@@ -738,12 +658,11 @@ odoo.define('web.SampleServer', function (require) {
 
     SampleServer.UnimplementedRouteError = UnimplementedRouteError;
 
-    // mockRegistry allows to register mock version of methods or routes for
-    // specific models, for instance
-    //   SampleServer.mockRegistry.registry('res.partner' {
-    //      some_method: () => 23,
-    //      some_route: () => "abcd",
-    //   });
+    // mockRegistry allows to register mock version of methods or routes,
+    // for all models:
+    //   SampleServer.mockRegistry.add('some_route', () => "abcd");
+    // for a specific model (e.g. 'res.partner'):
+    //   SampleServer.mockRegistry.add('res.partner/some_method', () => 23);
     SampleServer.mockRegistry = new Registry();
 
     return SampleServer;
