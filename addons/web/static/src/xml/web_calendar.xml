@@ -110,10 +110,10 @@
 
     <t t-name="CalendarView.scale_buttons">
         <div class="btn-group">
-            <button type="button" class="o_calendar_button_day btn btn-secondary">Day</button>
-            <button type="button" class="o_calendar_button_week btn btn-secondary">Week</button>
-            <button type="button" class="o_calendar_button_month btn btn-secondary">Month</button>
-            <button type="button" class="o_calendar_button_year btn btn-secondary">Year</button>
+            <button type="button" t-if="scales.includes('day')" class="o_calendar_button_day btn btn-secondary">Day</button>
+            <button type="button" t-if="scales.includes('week')" class="o_calendar_button_week btn btn-secondary">Week</button>
+            <button type="button" t-if="scales.includes('month')" class="o_calendar_button_month btn btn-secondary">Month</button>
+            <button type="button" t-if="scales.includes('year')" class="o_calendar_button_year btn btn-secondary">Year</button>
         </div>
     </t>
 

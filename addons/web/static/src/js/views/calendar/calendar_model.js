@@ -9,13 +9,6 @@ var session = require('web.session');
 
 var _t = core._t;
 
-var scales = [
-    'day',
-    'week',
-    'month',
-    'year',
-];
-
 function dateToServer (date) {
     return date.clone().utc().locale('en').format('YYYY-MM-DD HH:mm:ss');
 }
@@ -193,6 +186,7 @@ return AbstractModel.extend({
         this.mapping = params.mapping;
         this.mode = params.mode;       // one of month, week or day
         this.scales = params.scales;   // one of month, week or day
+        this.scalesInfo = params.scalesInfo;
 
         // Check whether the date field is editable (i.e. if the events can be
         // dragged and dropped)
@@ -336,7 +330,7 @@ return AbstractModel.extend({
      * @param {string} scale the scale to set
      */
     setScale: function (scale) {
-        if (!_.contains(scales, scale)) {
+        if (!_.contains(this.scales, scale)) {
             scale = "week";
         }
         this.data.scale = scale;
@@ -440,12 +434,7 @@ return AbstractModel.extend({
             hour12: false,
         };
         return {
-            defaultView: {
-                'year': 'dayGridYear',
-                'month': 'dayGridMonth',
-                'week': 'timeGridWeek',
-                'day': 'timeGridDay',
-            }[this.mode || 'week'],
+            defaultView: this.scalesInfo[this.mode || 'week'],
             header: false,
             selectable: this.creatable && this.create_right,
             selectMirror: true,

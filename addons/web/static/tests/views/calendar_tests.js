@@ -3688,6 +3688,55 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+
+    QUnit.test('allowed scales', async function (assert) {
+        assert.expect(8);
+
+        let calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"/>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_day');
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_week');
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_month');
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_year');
+
+        calendar.destroy();
+
+        calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    scales="day,week"/>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_day');
+        assert.containsOnce(calendar, '.o_calendar_scale_buttons .o_calendar_button_week');
+        assert.containsNone(calendar, '.o_calendar_scale_buttons .o_calendar_button_month');
+        assert.containsNone(calendar, '.o_calendar_scale_buttons .o_calendar_button_year');
+
+        calendar.destroy();
+    });
 });
 
 });
