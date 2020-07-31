@@ -401,6 +401,12 @@ class TestSaleTimesheet(TestCommonSaleTimesheetNoChart):
             'partner_shipping_id': self.partner_customer_usd.id,
             'pricelist_id': self.pricelist_usd.id,
         })
+        # Section Line
+        so_line_ordered_project_only = self.env['sale.order.line'].create({
+            'name': "Section Name",
+            'order_id': sale_order.id,
+            'display_type': 'line_section',
+        })
         so_line_deliver_global_project = self.env['sale.order.line'].create({
             'name': self.product_delivery_timesheet2.name,
             'product_id': self.product_delivery_timesheet2.id,
