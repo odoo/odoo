@@ -35,7 +35,7 @@ return AbstractModel.extend({
      * @returns {Object}
      */
     __get: function () {
-        return Object.assign({}, this.chart);
+        return Object.assign({ isSample: this.isSampleModel }, this.chart);
     },
     /**
      * Initial loading.

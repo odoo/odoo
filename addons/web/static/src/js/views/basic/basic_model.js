@@ -709,6 +709,7 @@ var BasicModel = AbstractModel.extend({
             id: element.id,
             isDirty: element.isDirty,
             isOpen: element.isOpen,
+            isSample: this.isSampleModel,
             limit: element.limit,
             model: element.model,
             offset: element.offset,

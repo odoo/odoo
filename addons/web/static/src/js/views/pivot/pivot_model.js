@@ -507,6 +507,7 @@ var PivotModel = AbstractModel.extend({
             domain: this.data.domain,
             fields: this.fields,
             hasData: this._hasData(),
+            isSample: this.isSampleModel,
             measures: this.data.measures,
             origins: this.data.origins,
             rowGroupBys: groupBys.rowGroupBys,

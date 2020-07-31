@@ -68,13 +68,6 @@ odoo.define('web.AbstractRendererOwl', function () {
         }
     }
 
-    AbstractRenderer.defaultProps = {
-        isSample: false,
-    };
-    AbstractRenderer.props = {
-        isSample: Boolean,
-    };
-
     return AbstractRenderer;
 
 });
