@@ -43,15 +43,21 @@
 
     <!-- options -->
     <div t-name="web_editor.snippet.option.colorpicker" class="colorpicker">
-        <div class="d-flex px-1">
-            <button t-if="widget.withCombinations" type="button" class="btn flex-grow-1 o_we_colorpicker_switch_pane_btn active" data-target="color-combinations">Combinations</button>
-            <button type="button" t-attf-class="btn flex-grow-1 o_we_colorpicker_switch_pane_btn #{widget.withCombinations ? '' : 'active'}" data-target="theme-colors">Custom</button>
-            <button t-if="widget.resetButton" type="button" class="btn flex-grow-1 o_we_color_btn o_colorpicker_reset">
+        <div class="o_we_colorpicker_switch_panel d-flex justify-content-end px-2">
+            <t t-if="widget.withCombinations">
+                <button type="button" tabindex="1" class="o_we_colorpicker_switch_pane_btn active" data-target="color-combinations">
+                    <span>Combinations</span>
+                </button>
+                <button type="button" tabindex="2" t-attf-class="o_we_colorpicker_switch_pane_btn #{widget.withCombinations ? '' : 'active'}" data-target="theme-colors">
+                    <span>Custom</span>
+                </button>
+            </t>
+            <button t-if="widget.resetButton" type="button" class="my-1 ml-auto o_we_color_btn o_colorpicker_reset">
                 <t t-if="widget.withCombinations">None</t>
                 <t t-else="">Reset</t>
             </button>
         </div>
-        <div t-attf-class="o_colorpicker_sections #{widget.withCombinations ? '' : 'd-none'} px-1" data-color-tab="color-combinations">
+        <div t-attf-class="o_colorpicker_sections #{widget.withCombinations ? '' : 'd-none'} pt-2 px-2 pb-3 bg-black-25" data-color-tab="color-combinations">
             <!-- List all Presets -->
             <t t-foreach="5" t-as="i">
                 <t t-call="web_editor.colorpalette.combination.btn">
@@ -59,7 +65,7 @@
                 </t>
             </t>
         </div>
-        <div t-attf-class="o_colorpicker_sections #{widget.withCombinations ? 'd-none' : ''} p-1" data-color-tab="theme-colors"/>
+        <div t-attf-class="o_colorpicker_sections #{widget.withCombinations ? 'd-none' : ''} pt-2 px-2 pb-3 bg-black-25" data-color-tab="theme-colors"/>
     </div>
     <t t-name="web_editor.colorpalette.combination.btn">
         <button type="button" class="o_we_color_btn o_we_color_combination_btn"
