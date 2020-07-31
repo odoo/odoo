@@ -411,6 +411,9 @@ calendar view are:
 ``mode``
     Default display mode when loading the calendar.
     Possible attributes are: ``day``, ``week``, ``month``, ``year``
+``scales``
+    Comma-separated list of scales to provide. By default, all scales are
+    available. See mode for possible scale values.
 
 ``<field>``
   declares fields to aggregate or to use in kanban *logic*. If the field is
