@@ -118,6 +118,7 @@ class Attendee(models.Model):
                 event_id = attendee.event_id.id
                 ics_file = ics_files.get(event_id)
 
+                attachment_values = []
                 if ics_file:
                     attachment_values = [
                         (0, 0, {'name': 'invitation.ics',
