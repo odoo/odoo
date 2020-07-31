@@ -116,13 +116,6 @@
                 'picking_type_id': ref('stock.picking_type_out'),
                 'location_id': ref('stock.stock_location_stock'),
                 'location_dest_id': ref('stock.stock_location_customers'),
-                'move_line_ids': [(0, 0, {
-                    'product_id': ref('product.product_product_6'),
-                    'qty_done': 100,
-                    'product_uom_id': ref('uom.product_uom_unit'),
-                    'location_id': ref('stock.stock_location_stock'),
-                    'location_dest_id': ref('stock.stock_location_customers'),
-                })],
             })]"/>
         </record>
 
@@ -180,13 +173,6 @@
                 'picking_type_id': ref('stock.picking_type_out'),
                 'location_id': ref('stock.stock_location_stock'),
                 'location_dest_id': ref('stock.stock_location_customers'),
-                'move_line_ids': [(0, 0, {
-                    'product_id': ref('product.product_product_3'),
-                    'qty_done': 16,
-                    'product_uom_id': ref('uom.product_uom_unit'),
-                    'location_id': ref('stock.stock_location_stock'),
-                    'location_dest_id': ref('stock.stock_location_customers'),
-                })],
             })]"/>
         </record>
 
@@ -206,13 +192,6 @@
                 'picking_type_id': ref('stock.picking_type_out'),
                 'location_id': ref('stock.stock_location_stock'),
                 'location_dest_id': ref('stock.stock_location_customers'),
-                'move_line_ids': [(0, 0, {
-                    'product_id': ref('product.product_product_3'),
-                    'qty_done': 32,
-                    'product_uom_id': ref('uom.product_uom_unit'),
-                    'location_id': ref('stock.stock_location_stock'),
-                    'location_dest_id': ref('stock.stock_location_customers'),
-                })],
             })]"/>
         </record>
 
@@ -232,13 +211,6 @@
                 'picking_type_id': ref('stock.picking_type_out'),
                 'location_id': ref('stock.stock_location_stock'),
                 'location_dest_id': ref('stock.stock_location_customers'),
-                'move_line_ids': [(0, 0, {
-                    'product_id': ref('product.product_product_6'),
-                    'qty_done': 50,
-                    'product_uom_id': ref('uom.product_uom_unit'),
-                    'location_id': ref('stock.stock_location_stock'),
-                    'location_dest_id': ref('stock.stock_location_customers'),
-                })],
             })]"/>
         </record>
 
@@ -364,13 +336,6 @@
                 'picking_type_id': ref('stock.chi_picking_type_in'),
                 'location_id': ref('stock.stock_location_suppliers'),
                 'location_dest_id': ref('stock.stock_location_shop0'),
-                'move_line_ids': [(0, 0, {
-                    'product_id': ref('product.product_delivery_01'),
-                    'qty_done': 100,
-                    'product_uom_id': ref('uom.product_uom_unit'),
-                    'location_id': ref('stock.stock_location_suppliers'),
-                    'location_dest_id': ref('stock.stock_location_shop0'),
-                })],
                 'company_id': ref('stock.res_company_1'),
             })]"/>
         </record>
@@ -450,13 +415,6 @@
                 'picking_type_id': ref('stock.chi_picking_type_out'),
                 'location_id': ref('stock.stock_location_shop0'),
                 'location_dest_id': ref('stock.stock_location_customers'),
-                'move_line_ids': [(0, 0, {
-                    'product_id': ref('product.product_product_6'),
-                    'qty_done': 100,
-                    'product_uom_id': ref('uom.product_uom_unit'),
-                    'location_id': ref('stock.stock_location_shop0'),
-                    'location_dest_id': ref('stock.stock_location_customers'),
-                })],
                 'company_id': ref('stock.res_company_1'),
             })]"/>
         </record>
@@ -517,6 +475,42 @@
                 obj().env.ref('stock.incomming_chicago_warehouse1').id,
                 obj().env.ref('stock.incomming_chicago_warehouse2').id,
                 obj().env.ref('stock.incomming_chicago_warehouse3').id]"/>
+        </function>
+
+        <function model="stock.picking" name="action_assign">
+            <value model="stock.picking" eval="[
+                obj().env.ref('stock.outgoing_shipment_main_warehouse1').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse4').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse5').id,
+                obj().env.ref('stock.outgoing_shipment_main_warehouse6').id,
+                obj().env.ref('stock.outgoing_chicago_warehouse1').id,
+            ]"/>
+        </function>
+
+        <!-- Adds move lines qty. done -->
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse1'))]"/>
+            <value eval="{'qty_done': 100}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse4'))]"/>
+            <value eval="{'qty_done': 16}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse5'))]"/>
+            <value eval="{'qty_done': 32}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_shipment_main_warehouse6'))]"/>
+            <value eval="{'qty_done': 50}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.incomming_chicago_warehouse1'))]"/>
+            <value eval="{'qty_done': 100}"/>
+        </function>
+        <function model="stock.move.line" name="write">
+            <value model="stock.move.line" search="[('picking_id', '=', ref('stock.outgoing_chicago_warehouse1'))]"/>
+            <value eval="{'qty_done': 100}"/>
         </function>
 
         <function model="stock.picking" name="_action_done">
