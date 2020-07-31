@@ -1439,6 +1439,8 @@ const MediapickerUserValueWidget = UserValueWidget.extend({
             noIcons: true,
             noDocuments: true,
             isForBgVideo: true,
+            vimeoPreviewIds: ['299225971', '414790269', '420192073', '368484050', '334729960', '417478345',
+                '312451183', '415226028', '367762632', '340475898', '374265101', '370467553'],
             'res_model': $editable.data('oe-model'),
             'res_id': $editable.data('oe-id'),
         }, el).open();
