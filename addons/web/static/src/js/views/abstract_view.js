@@ -260,17 +260,8 @@ var AbstractView = Factory.extend({
         if (this.withSearchPanel) {
             // Search panel (Model)
             const SearchPanelComponent = this.config.SearchPanel;
-            const defaultValues = {};
-            Object.keys(this.loadParams.context).forEach((key) => {
-                let match = /^searchpanel_default_(.*)$/.exec(key);
-                if (match) {
-                    defaultValues[match[1]] = this.loadParams.context[key];
-                }
-            });
             extensions[SearchPanelComponent.modelExtension] = {
                 archNodes: searchPanelInfo.children,
-                defaultNoFilter: params.searchPanelDefaultNoFilter,
-                defaultValues,
             };
             this.controllerParams.withSearchPanel = true;
             this.rendererParams.withSearchPanel = true;

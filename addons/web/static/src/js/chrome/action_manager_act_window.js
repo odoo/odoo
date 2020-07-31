@@ -693,7 +693,6 @@ ActionManager.include({
             if (config.device.isMobile && actionData.mobile) {
                 options = Object.assign({}, options, actionData.mobile);
             }
-            action.flags = _.extend({}, action.flags, {searchPanelDefaultNoFilter: true});
             return self.doAction(action, options).then(ev.data.on_success, ev.data.on_fail);
         });
     },

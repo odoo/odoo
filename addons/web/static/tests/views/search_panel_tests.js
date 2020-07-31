@@ -1,10 +1,8 @@
 odoo.define("web/static/tests/views/search_panel_tests.js", function (require) {
 "use strict";
 
-const AbstractStorageService = require('web.AbstractStorageService');
 const FormView = require('web.FormView');
 const KanbanView = require('web.KanbanView');
-const RamStorage = require('web.RamStorage');
 const testUtils = require('web.test_utils');
 const SearchPanel = require("web/static/src/js/views/search_panel.js");
 
@@ -115,13 +113,6 @@ QUnit.module('Views', {
                     </searchpanel>
                 </search>`,
         };
-
-        var RamStorageService = AbstractStorageService.extend({
-            storage: new RamStorage(),
-        });
-        this.services = {
-            local_storage: RamStorageService,
-        };
     },
 }, function () {
 
@@ -138,7 +129,6 @@ QUnit.module('Views', {
                 assert.step((args.method || route) + (args.model ? (' on ' + args.model) : ''));
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -198,7 +188,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -237,7 +226,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `<kanban>
                     <templates>
                         <t t-name="kanban-box">
@@ -279,7 +267,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -320,7 +307,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -368,7 +354,6 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -434,7 +419,6 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -482,132 +466,6 @@ QUnit.module('Views', {
             '[["state","=","ghi"]]',
             '[]',
         ]);
-
-        kanban.destroy();
-    });
-
-    QUnit.test('store and retrieve active category value', async function (assert) {
-        assert.expect(9);
-
-        var Storage = RamStorage.extend({
-            getItem: function (key) {
-                assert.step(`getItem ${key}`);
-                const item = this._super(...arguments);
-                return item || 3; // default: 'asustek'
-            },
-            setItem: function (key, value) {
-                assert.step(`setItem ${key} to ${value}`);
-                this._super(...arguments);
-            },
-        });
-        var RamStorageService = AbstractStorageService.extend({
-            storage: new Storage(),
-        });
-
-        var expectedActiveId = 3;
-        var kanban = await createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            services: {
-                local_storage: RamStorageService,
-            },
-            arch: `
-                <kanban>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="foo"/>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>`,
-            archs: {
-                'partner,false,search': `
-                    <search>
-                        <searchpanel>
-                            <field name="company_id" enable_counters="1"/>
-                        </searchpanel>
-                    </search>`,
-            },
-            mockRPC: function (route, args) {
-                if (route === '/web/dataset/search_read') {
-                    assert.deepEqual(args.domain, [['company_id', 'child_of', expectedActiveId]]);
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        // 'asustek' should be selected by default
-        assert.containsOnce(kanban, '.o_search_panel_category_value .active');
-        assert.containsOnce(kanban, '.o_search_panel_category_value:nth(1) .active');
-        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 2);
-
-        // select 'agrolait'
-        expectedActiveId = 5;
-        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(2) header'));
-
-        assert.verifySteps([
-            'getItem searchpanel_partner_company_id', // get on start
-            'setItem searchpanel_partner_company_id to 5',
-            'getItem searchpanel_partner_company_id', // get on reload
-        ]);
-
-        kanban.destroy();
-    });
-
-    QUnit.test('retrieved category value does not exist', async function (assert) {
-        assert.expect(6);
-
-        var Storage = RamStorage.extend({
-            getItem: function (key) {
-                assert.step('getItem ' + key);
-                return 343; // this value doesn't exist
-            },
-        });
-        var RamStorageService = AbstractStorageService.extend({
-            storage: new Storage(),
-        });
-
-        var kanban = await createView({
-            View: KanbanView,
-            model: 'partner',
-            data: this.data,
-            services: {
-                local_storage: RamStorageService,
-            },
-            arch: `
-                <kanban>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div>
-                                <field name="foo"/>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>`,
-            archs: {
-                'partner,false,search': `
-                    <search>
-                        <searchpanel>
-                            <field name="company_id" enable_counters="1"/>
-                        </searchpanel>
-                    </search>`,
-            },
-            mockRPC: function (route, args) {
-                if (route === '/web/dataset/search_read') {
-                    assert.deepEqual(args.domain, []);
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        // 'All' should be selected by default as the retrieved value does not exist
-        assert.containsOnce(kanban, '.o_search_panel_category_value .active');
-        assert.containsOnce(kanban, '.o_search_panel_category_value:first .active');
-        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
-
-        assert.verifySteps(['getItem searchpanel_partner_company_id']);
 
         kanban.destroy();
     });
@@ -688,7 +546,6 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -778,7 +635,6 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -876,7 +732,6 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -929,7 +784,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -982,7 +836,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1034,7 +887,6 @@ QUnit.module('Views', {
                 }
                 return result;
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1104,6 +956,187 @@ QUnit.module('Views', {
         kanban.destroy();
     });
 
+    QUnit.test("concurrency: single category", async function (assert) {
+        assert.expect(12);
+
+        let prom = testUtils.makeTestPromise();
+        const kanbanPromise = createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            archs: {
+                "partner,false,search": `
+                    <search>
+                        <filter name="Filter" domain="[('id', '=', 1)]"/>
+                        <searchpanel>
+                            <field name="company_id" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            context: {
+                searchpanel_default_company_id: [5],
+            },
+            data: this.data,
+            async mockRPC(route, args) {
+                const _super = this._super.bind(this);
+                if (route !== "/web/dataset/search_read") {
+                    await prom;
+                }
+                assert.step(args.method || route);
+                return _super(...arguments);
+            },
+            model: 'partner',
+            View: KanbanView,
+        });
+
+        // Case 1: search panel is awaited to build the query with search defaults
+        await testUtils.nextTick();
+        assert.verifySteps([]);
+
+        prom.resolve();
+        const kanban = await kanbanPromise;
+
+        assert.verifySteps([
+            "search_panel_select_range",
+            "/web/dataset/search_read",
+        ]);
+
+        // Case 2: search domain changed so we wait for the search panel once again
+        prom = testUtils.makeTestPromise();
+
+        await testUtils.controlPanel.toggleFilterMenu(kanban);
+        await testUtils.controlPanel.toggleMenuItem(kanban, 0);
+
+        assert.verifySteps([]);
+
+        prom.resolve();
+        await testUtils.nextTick();
+
+        assert.verifySteps([
+            "search_panel_select_range",
+            "/web/dataset/search_read",
+        ]);
+
+        // Case 3: search domain is the same and default values do not matter anymore
+        prom = testUtils.makeTestPromise();
+
+        await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
+
+        // The search read is executed right away in this case
+        assert.verifySteps(["/web/dataset/search_read"]);
+
+        prom.resolve();
+        await testUtils.nextTick();
+
+        assert.verifySteps(["search_panel_select_range"]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("concurrency: category and filter", async function (assert) {
+        assert.expect(5);
+
+        let prom = testUtils.makeTestPromise();
+        const kanbanPromise = createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            archs: {
+                "partner,false,search": `
+                    <search>
+                        <searchpanel>
+                            <field name="category_id" enable_counters="1"/>
+                            <field name="company_id" select="multi" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            async mockRPC(route, args) {
+                const _super = this._super.bind(this);
+                if (route !== "/web/dataset/search_read") {
+                    await prom;
+                }
+                assert.step(args.method || route);
+                return _super(...arguments);
+            },
+            model: 'partner',
+            View: KanbanView,
+        });
+
+        await testUtils.nextTick();
+        assert.verifySteps(["/web/dataset/search_read"]);
+
+        prom.resolve();
+        const kanban = await kanbanPromise;
+
+        assert.verifySteps([
+            "search_panel_select_range",
+            "search_panel_select_multi_range",
+        ]);
+
+        kanban.destroy();
+    });
+
+    QUnit.test("concurrency: category and filter with a domain", async function (assert) {
+        assert.expect(5);
+
+        let prom = testUtils.makeTestPromise();
+        const kanbanPromise = createView({
+            arch: `
+                <kanban>
+                    <templates>
+                        <div t-name="kanban-box">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
+                </kanban>`,
+            archs: {
+                "partner,false,search": `
+                    <search>
+                        <searchpanel>
+                            <field name="category_id" enable_counters="1"/>
+                            <field name="company_id" select="multi" domain="[['category_id', '=', category_id]]" enable_counters="1"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            async mockRPC(route, args) {
+                const _super = this._super.bind(this);
+                if (route !== "/web/dataset/search_read") {
+                    await prom;
+                }
+                assert.step(args.method || route);
+                return _super(...arguments);
+            },
+            model: 'partner',
+            View: KanbanView,
+        });
+
+        await testUtils.nextTick();
+        assert.verifySteps([]);
+
+        prom.resolve();
+        const kanban = await kanbanPromise;
+
+        assert.verifySteps([
+            "search_panel_select_range",
+            "search_panel_select_multi_range",
+            "/web/dataset/search_read",
+        ]);
+
+        kanban.destroy();
+    });
+
     QUnit.test('concurrency: misordered get_filters', async function (assert) {
         assert.expect(15);
 
@@ -1119,7 +1152,6 @@ QUnit.module('Views', {
                 }
                 return result;
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1154,7 +1186,7 @@ QUnit.module('Views', {
         // 'All' should still be selected, and there should still be 4 records
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(1) .active');
-        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 1);
 
         // select 'ghi' (delay the reload)
         def = testUtils.makeTestPromise();
@@ -1164,7 +1196,7 @@ QUnit.module('Views', {
         // 'All' should still be selected, and there should still be 4 records
         assert.containsOnce(kanban, '.o_search_panel_category_value .active');
         assert.containsOnce(kanban, '.o_search_panel_category_value:nth(3) .active');
-        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 4);
+        assert.containsN(kanban, '.o_kanban_record:not(.o_kanban_ghost)', 2);
 
         // unlock ghi search
         ghiDef.resolve();
@@ -1198,7 +1230,6 @@ QUnit.module('Views', {
                 }
                 return result;
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1264,7 +1295,6 @@ QUnit.module('Views', {
                 }
                 return result;
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1371,7 +1401,6 @@ QUnit.module('Views', {
                 }
                 return result;
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1463,7 +1492,6 @@ QUnit.module('Views', {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1533,7 +1561,6 @@ QUnit.module('Views', {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1606,7 +1633,6 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1711,7 +1737,6 @@ QUnit.module('Views', {
                 }
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1823,7 +1848,6 @@ QUnit.module('Views', {
                 }
                 return result;
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -1952,7 +1976,6 @@ QUnit.module('Views', {
                 }
                 return result;
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -2002,7 +2025,6 @@ QUnit.module('Views', {
                 }
                 return result;
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -2073,7 +2095,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -2123,7 +2144,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -2165,7 +2185,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -2215,7 +2234,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `<kanban>
                     <templates><t t-name="kanban-box">
                         <div>
@@ -2261,7 +2279,6 @@ QUnit.module('Views', {
             View: KanbanView,
             model: 'partner',
             data: this.data,
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -2358,7 +2375,6 @@ QUnit.module('Views', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: this.services,
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     assert.step(JSON.stringify(args.domain));
@@ -2407,7 +2423,6 @@ QUnit.module('Views', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: this.services,
             mockRPC: function (route, args) {
                 if (route === '/web/dataset/search_read') {
                     assert.step(JSON.stringify(args.domain));
@@ -2488,26 +2503,10 @@ QUnit.module('Views', {
     QUnit.test('after onExecuteAction, selects "All" as default category value', async function (assert) {
         assert.expect(4);
 
-        var Storage = RamStorage.extend({
-            getItem: function (key) {
-                assert.step('getItem ' + key);
-                return 3; // 'asustek'
-            },
-            setItem: function (key, value) {
-                assert.step('setItem ' + key + ' to ' + value);
-            },
-        });
-        var RamStorageService = AbstractStorageService.extend({
-            storage: new Storage(),
-        });
-
         var actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: {
-                local_storage: RamStorageService,
-            },
         });
 
         await actionManager.doAction(2);
@@ -2530,7 +2529,6 @@ QUnit.module('Views', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: this.services,
         });
 
         await actionManager.doAction(2);
@@ -2549,7 +2547,6 @@ QUnit.module('Views', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: this.services,
             mockRPC: function (route, args) {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
@@ -2587,7 +2584,6 @@ QUnit.module('Views', {
             actions: this.actions,
             archs: this.archs,
             data: this.data,
-            services: this.services,
         });
         actionManager.$el.css('max-height', 300);
 
@@ -2669,7 +2665,6 @@ QUnit.module('Views', {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -2694,7 +2689,7 @@ QUnit.module('Views', {
         assert.verifySteps([
             'search_panel_select_range',
             "search_panel_select_multi_range",
-            '/web/dataset/search_read'
+            '/web/dataset/search_read',
         ]);
 
         assert.deepEqual(getCounters(kanban), [
@@ -2712,7 +2707,7 @@ QUnit.module('Views', {
         assert.verifySteps([
             'search_panel_select_range',
             "search_panel_select_multi_range",
-            '/web/dataset/search_read'
+            '/web/dataset/search_read',
         ]);
 
         kanban.destroy();
@@ -2745,7 +2740,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -2788,7 +2782,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -2831,7 +2824,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -2869,7 +2861,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -2907,7 +2898,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -2950,7 +2940,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -2993,7 +2982,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3031,7 +3019,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3067,7 +3054,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3103,7 +3089,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3139,7 +3124,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3175,7 +3159,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3211,7 +3194,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3247,7 +3229,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3283,7 +3264,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3319,7 +3299,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3355,7 +3334,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3391,7 +3369,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3427,7 +3404,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3463,7 +3439,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3499,7 +3474,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3535,7 +3509,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3571,7 +3544,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3607,7 +3579,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3643,7 +3614,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3679,7 +3649,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3715,7 +3684,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3751,7 +3719,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3787,7 +3754,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3823,7 +3789,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3859,7 +3824,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3895,7 +3859,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3936,7 +3899,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -3980,7 +3942,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -4018,7 +3979,6 @@ QUnit.module('Views', {
             },
             data: this.data,
             model: 'partner',
-            services: this.services,
             View: KanbanView,
         });
 
@@ -4043,7 +4003,6 @@ QUnit.module('Views', {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
@@ -4115,7 +4074,6 @@ QUnit.module('Views', {
                 assert.step(args.method || route);
                 return this._super.apply(this, arguments);
             },
-            services: this.services,
             arch: `
                 <kanban>
                     <templates>
