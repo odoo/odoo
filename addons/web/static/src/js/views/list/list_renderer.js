@@ -1099,7 +1099,7 @@ var ListRenderer = BasicRenderer.extend({
                 this.$('table').append(
                     $('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>')
                 );
-                this.$el.append(this._renderOptionalColumnsDropdown());
+                this.$('table').append(this._renderOptionalColumnsDropdown());
             }
             if (this.selection.length) {
                 const $checked_rows = this.$('tr').filter(
