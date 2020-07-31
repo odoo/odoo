@@ -82,7 +82,9 @@ var AbstractModel = mvc.Model.extend({
     get(_, options) {
         const sample = options && options.withSampleData && this._isInSampleMode;
         const state = sample ? this.sampleModel.__get(...arguments) : this.__get(...arguments);
-        state.isSample = sample;
+        if (state) {
+            state.isSample = sample;
+        }
         return state;
     },
     /**
