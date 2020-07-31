@@ -222,14 +222,6 @@
             </field>
         </record>
 
-        <menuitem
-            id="menu_event_track"
-            name="Tracks"
-            sequence="40"
-            action="action_event_track"
-            parent="event.event_main_menu"
-            groups="base.group_no_one"/>
-
         <!-- EVENTS/CONFIGURATION/EVENT locations -->
         <record model="ir.ui.view" id="view_event_location_form">
             <field name="name">Event Locations</field>
@@ -260,12 +252,6 @@
             <field name="res_model">event.track.location</field>
         </record>
 
-        <menuitem
-            id="menu_event_track_location"
-            name="Locations"
-            action="action_event_track_location"
-            parent="event.menu_event_configuration"/>
-
         <!-- EVENTS/CONFIGURATION/EVENT Tags -->
         <record model="ir.ui.view" id="view_event_track_tag_form">
             <field name="name">Track Tags</field>
@@ -295,12 +281,6 @@
             <field name="name">Track Tags</field>
             <field name="res_model">event.track.tag</field>
         </record>
-
-        <menuitem
-            id="menu_event_track_tag"
-            action="action_event_track_tag"
-            parent="event.menu_event_configuration"
-            groups="base.group_no_one"/>
 
         <!-- EVENTS TRACK STAGES-->
         <record id="event_track_stage_view_search" model="ir.ui.view">
@@ -385,11 +365,5 @@
               </p>
             </field>
         </record>
-
-        <menuitem name="Track Stages"
-            id="event_track_stage_menu"
-            action="event_track_stage_action"
-            parent="event.menu_event_configuration"
-            groups="base.group_no_one"/>
 
 </odoo>

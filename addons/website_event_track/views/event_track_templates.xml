@@ -75,7 +75,7 @@
                             <t t-set="track" t-value="dt[1][location][0]"/>
                             <t t-if="track">
                                 <td t-att-rowspan="dt[1][location][3]" t-attf-class="event_color_#{track.color} #{track and 'event_track' or ''}">
-                                    <t t-if="track">
+                                    <t t-if="track" name="track_agenda_track_cell">
                                         <a t-attf-href="/event/#{ slug(event) }/track/#{ slug(track) }">
                                             <span t-esc="track and track.name"/>
                                             <span t-if="not track.website_published" class="badge badge-warning">unpublished</span>
@@ -307,7 +307,8 @@
                                 You can add multiple speakers by separating names, emails and phones with commas.
                             </div>
                         </section>
-                        <section id="forms" t-if="event.website_track_proposal">
+                        <section id="forms" class="mb-5"
+                            t-if="event.website_track_proposal">
                             <form class="mt32 js_website_submit_form" t-attf-action="/event/#{event.id}/track_proposal/post" method="post" enctype="multipart/form-data">
                                 <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>
                                 <div class="form-group row">
