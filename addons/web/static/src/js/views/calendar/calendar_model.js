@@ -12,7 +12,8 @@ var _t = core._t;
 var scales = [
     'day',
     'week',
-    'month'
+    'month',
+    'year',
 ];
 
 function dateToServer (date) {
@@ -273,6 +274,19 @@ return AbstractModel.extend({
         this.data.highlight_date = this.data.target_date = start.clone();
         this.data.start_date = this.data.end_date = start;
         switch (this.data.scale) {
+            case 'year': {
+                const yearStart = this.data.start_date.clone().startOf('year');
+                let yearStartDay = this.week_start;
+                if (yearStart.day() < yearStartDay) {
+                    // the 1st of January is before our week start (e.g. week start is Monday, and
+                    // 01/01 is Sunday), so we go one week back
+                    yearStartDay -= 7;
+                }
+                this.data.start_date = yearStart.day(yearStartDay).startOf('day');
+                this.data.end_date = this.data.end_date.clone()
+                    .endOf('year').day(this.week_stop).endOf('day');
+                break;
+            }
             case 'month':
                 var monthStart = this.data.start_date.clone().startOf('month');
 
@@ -426,7 +440,12 @@ return AbstractModel.extend({
             hour12: false,
         };
         return {
-            defaultView: (this.mode === "month")? "dayGridMonth" : ((this.mode === "week")? "timeGridWeek" : ((this.mode === "day")? "timeGridDay" : "timeGridWeek")),
+            defaultView: {
+                'year': 'dayGridYear',
+                'month': 'dayGridMonth',
+                'week': 'timeGridWeek',
+                'day': 'timeGridDay',
+            }[this.mode || 'week'],
             header: false,
             selectable: this.creatable && this.create_right,
             selectMirror: true,

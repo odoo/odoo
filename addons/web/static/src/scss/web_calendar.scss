@@ -63,6 +63,10 @@ $o-cw-filter-avatar-size: 20px;
     .o_calendar_widget {
         height: 100%;
 
+        > .fc-view-container {
+            height: 100%;
+        }
+
         // ===  Adapt calendar table borders ===
         // =====================================
 
@@ -313,6 +317,100 @@ $o-cw-filter-avatar-size: 20px;
 
                     .fc-content {
                         padding-right: 6px;
+                    }
+                }
+            }
+        }
+        // ====== Year only
+        .fc-dayGridYear-view {
+            border: none;
+            height: 100%;
+            padding-top: 1rem;
+            padding-left: $o-horizontal-padding;
+            box-sizing: border-box;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-evenly;
+            overflow-y: auto;
+
+            > table {
+                height: 100%;
+            }
+
+            table, tr, th, td {
+                border: none;
+            }
+
+            &.fc-readonly-year-view {
+                .fc-day-top:not(.fc-has-event) {
+                    cursor: default !important;
+                }
+            }
+
+            &:not(.fc-readonly-year-view) {
+                .fc-day-top:hover > .fc-day-number {
+                    font-weight: bold;
+                    border-radius: 100%;
+                    text-align: center;
+                    background-color: rgba(#87c0d1, 0.5);
+                    color: gray('900');
+                }
+            }
+
+            > .fc-month-container {
+                width: 25%;
+                min-width: 25rem;
+                box-sizing: border-box;
+
+                > .fc-month {
+                    width: 21rem;
+                    margin: auto;
+
+                    > .fc-toolbar.fc-header-toolbar {
+                        margin-top: 15px;
+                        margin-bottom: 5px;
+                        cursor: default;
+
+                        h2 {
+                            font-size: 1.2rem;
+                            color: gray('600');
+                        }
+                    }
+
+                    .fc-widget-header {
+                        padding: 2px 0;
+                        cursor: default;
+                    }
+
+                    .fc-dayGridMonth-view {
+                        padding-left: unset;
+                    }
+
+                    .fc-week.fc-row {
+                        min-height: unset;
+                    }
+
+                    .fc-disabled-day {
+                        background-color: unset;
+                    }
+
+                    .fc-day-top {
+                        text-align: center;
+                        padding: 5px;
+                        cursor: pointer;
+
+                        > .fc-day-number {
+                            display: block;
+                            float: unset;
+                            line-height: unset;
+                            margin: auto;
+                            padding: 0.1rem 0;
+                            font-size: 1.2rem;
+                        }
+
+                        &.fc-today > .fc-day-number {
+                            font-weight: bold;
+                        }
                     }
                 }
             }
