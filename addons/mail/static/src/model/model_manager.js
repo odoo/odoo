@@ -119,42 +119,44 @@ class ModelManager {
      * @returns {mail.model} newly created record
      */
     create(Model, data = {}) {
-        const record = new Model({ valid: true });
-        Object.defineProperty(record, 'env', { get: () => Model.env });
-        record.localId = record._createRecordLocalId(data);
-        // Contains field values of record.
-        record.__values = {};
-        // Contains revNumber of record for checking record update in useStore.
-        record.__state = 0;
+        return this._updateCycle(() => {
+            const record = new Model({ valid: true });
+            Object.defineProperty(record, 'env', { get: () => Model.env });
+            record.localId = record._createRecordLocalId(data);
+            // Contains field values of record.
+            record.__values = {};
+            // Contains revNumber of record for checking record update in useStore.
+            record.__state = 0;
 
-        // Make proxified record, so that access to field redirects
-        // to field getter.
-        const proxifiedRecord = this._makeProxifiedRecord(record);
-        this._records[record.localId] = proxifiedRecord;
-        proxifiedRecord.init();
-        this._makeDefaults(proxifiedRecord);
+            // Make proxified record, so that access to field redirects
+            // to field getter.
+            const proxifiedRecord = this._makeProxifiedRecord(record);
+            this._records[record.localId] = proxifiedRecord;
+            proxifiedRecord.init();
+            this._makeDefaults(proxifiedRecord);
 
-        const data2 = Object.assign({}, data);
-        for (const field of Object.values(Model.fields)) {
-            if (field.fieldType !== 'relation') {
-                continue;
+            const data2 = Object.assign({}, data);
+            for (const field of Object.values(Model.fields)) {
+                if (field.fieldType !== 'relation') {
+                    continue;
+                }
+                if (!field.autocreate) {
+                    continue;
+                }
+                data2[field.fieldName] = [['create']];
             }
-            if (!field.autocreate) {
-                continue;
+
+            for (const field of Object.values(Model.fields)) {
+                if (field.compute || field.related) {
+                    // new record should always invoke computed fields.
+                    this.registerToComputeField(record, field);
+                }
             }
-            data2[field.fieldName] = [['create']];
-        }
 
-        for (const field of Object.values(Model.fields)) {
-            if (field.compute || field.related) {
-                // new record should always invoke computed fields.
-                this.registerToComputeField(record, field);
-            }
-        }
+            this.update(proxifiedRecord, data2);
 
-        this.update(proxifiedRecord, data2);
-
-        return proxifiedRecord;
+            return proxifiedRecord;
+        });
     }
 
     /**
@@ -165,46 +167,50 @@ class ModelManager {
      * @param {mail.model} record
      */
     delete(record) {
-        const Model = record.constructor;
-        if (!this.get(Model, record)) {
-            // Record has already been deleted.
-            // (e.g. unlinking one of its reverse relation was causal)
-            return;
-        }
-        const data = {};
-        const recordRelations = Object.values(Model.fields)
-            .filter(field => field.fieldType === 'relation');
-        for (const relation of recordRelations) {
-            if (relation.isCausal) {
-                switch (relation.relationType) {
-                    case 'one2one':
-                    case 'many2one':
-                        if (record[relation.fieldName]) {
-                            record[relation.fieldName].delete();
-                        }
-                        break;
-                    case 'one2many':
-                    case 'many2many':
-                        for (const relatedRecord of record[relation.fieldName]) {
-                            relatedRecord.delete();
-                        }
-                        break;
-                }
+        this._updateCycle(() => {
+            const Model = record.constructor;
+            if (!this.get(Model, record)) {
+                // Record has already been deleted.
+                // (e.g. unlinking one of its reverse relation was causal)
+                return;
             }
-            data[relation.fieldName] = [['unlink-all']];
-        }
-        record.update(data);
-        delete this._records[record.localId];
-        delete this.env.store.state[record.localId];
+            const data = {};
+            const recordRelations = Object.values(Model.fields)
+                .filter(field => field.fieldType === 'relation');
+            for (const relation of recordRelations) {
+                if (relation.isCausal) {
+                    switch (relation.relationType) {
+                        case 'one2one':
+                        case 'many2one':
+                            if (record[relation.fieldName]) {
+                                record[relation.fieldName].delete();
+                            }
+                            break;
+                        case 'one2many':
+                        case 'many2many':
+                            for (const relatedRecord of record[relation.fieldName]) {
+                                relatedRecord.delete();
+                            }
+                            break;
+                    }
+                }
+                data[relation.fieldName] = [['unlink-all']];
+            }
+            record.update(data);
+            delete this._records[record.localId];
+            delete this.env.store.state[record.localId];
+        });
     }
 
     /**
      * Delete all records.
      */
     deleteAll() {
-        for (const record of Object.values(this._records)) {
-            record.delete();
-        }
+        this._updateCycle(() => {
+            for (const record of Object.values(this._records)) {
+                record.delete();
+            }
+        });
     }
 
     /**
@@ -257,13 +263,15 @@ class ModelManager {
      * @returns {mail.model} created or updated record.
      */
     insert(Model, data) {
-        let record = Model.find(Model._findFunctionFromData(data));
-        if (!record) {
-            record = Model.create(data);
-        } else {
-            record.update(data);
-        }
-        return record;
+        return this._updateCycle(() => {
+            let record = Model.find(Model._findFunctionFromData(data));
+            if (!record) {
+                record = Model.create(data);
+            } else {
+                record.update(data);
+            }
+            return record;
+        });
     }
 
     /**
@@ -276,36 +284,9 @@ class ModelManager {
      * @param {Object} data
      */
     update(record, data) {
-        if (!this._isInUpdateCycle) {
-            this._isInUpdateCycle = true;
+        this._updateCycle(() => {
             this._updateDirect(record, data);
-            while (
-                this._toComputeFields.size > 0 ||
-                this._toUpdateAfters.length > 0
-            ) {
-                if (this._toComputeFields.size > 0) {
-                    this._updateComputes();
-                } else {
-                    this._isHandlingToUpdateAfters = true;
-                    // process one update after
-                    const [recordToUpdate, previous] = this._toUpdateAfters.pop();
-                    const RecordToUpdateModel = recordToUpdate.constructor;
-                    if (this.get(RecordToUpdateModel, recordToUpdate)) {
-                        recordToUpdate._updateAfter(previous);
-                    }
-                    this._isHandlingToUpdateAfters = false;
-                }
-            }
-            this._toComputeFields.clear();
-            this._isInUpdateCycle = false;
-            // trigger at most one useStore call per update cycle
-            this.env.store.state.messagingRevNumber++;
-        } else {
-            this._updateDirect(record, data);
-            if (this._isHandlingToUpdateAfters) {
-                this._updateComputes();
-            }
-        }
+        });
     }
 
     /**
@@ -915,6 +896,54 @@ class ModelManager {
                 field.doCompute(record);
             }
         }
+    }
+
+    /**
+     * Executes the provided function as part of a single update cycle. This
+     * allows the execution of computed fields to happen only once, at the end
+     * of the last pending update cycle.
+     * It makes sense to call this function when the provided function is
+     * expected to create/update/delete records, which in turn would lead to
+     * potentially triggering computes.
+     *
+     * @private
+     * @param {function} func synchronous function expected to trigger computes
+     * @returns {any} the result of the provided function
+     */
+    _updateCycle(func) {
+        let res;
+        if (!this._isInUpdateCycle) {
+            this._isInUpdateCycle = true;
+            res = func();
+            this._updateComputes();
+            while (this._toUpdateAfters.length > 0) {
+                this._isHandlingToUpdateAfters = true;
+                // process one update after
+                const [recordToUpdate, previous] = this._toUpdateAfters.pop();
+                const RecordToUpdateModel = recordToUpdate.constructor;
+                if (this.get(RecordToUpdateModel, recordToUpdate)) {
+                    recordToUpdate._updateAfter(previous);
+                }
+                this._isHandlingToUpdateAfters = false;
+            }
+            this._isInUpdateCycle = false;
+            // trigger at most one useStore call per update cycle
+            this.env.store.state.messagingRevNumber++;
+        } else {
+            const wasHandlingToUpdateAfters = this._isHandlingToUpdateAfters;
+            this._isHandlingToUpdateAfters = false;
+            res = func();
+            if (wasHandlingToUpdateAfters) {
+                // Special case for computes triggered during an _updateAfter:
+                // execute them at the end of the current cycle, instead of at
+                // the end of the last pending cycle. This is because
+                // _updateAfter is expected to work with the "final" state just
+                // like business code, not with a temporary non-computed state.
+                this._updateComputes();
+                this._isHandlingToUpdateAfters = true;
+            }
+        }
+        return res;
     }
 
     /**
