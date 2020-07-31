@@ -62,10 +62,10 @@ class Event(models.Model):
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.website_track = event.event_type_id.website_track
-            elif event.website_track_proposal and not event.website_track:
-                event.website_track = True
             elif event.website_menu != event._origin.website_menu or not event.website_track:
                 event.website_track = event.website_menu
+            elif event.website_track_proposal and not event.website_track:
+                event.website_track = True
 
     @api.depends('event_type_id', 'website_track')
     def _compute_website_track_proposal(self):
@@ -165,7 +165,7 @@ class Event(models.Model):
         self.ensure_one()
         return [
             (_('Talks'), '/event/%s/track' % slug(self), False, 'track'),
-            (_('Agenda'), '/event/%s/agenda' % slug(self), False, 'track')]
+            (_('Agenda'), '/event/%s/agenda' % slug(self), False, False)]
 
     def _get_track_proposal_menu_entries(self):
         """ See website_event_track._get_track_menu_entries() """
