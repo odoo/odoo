@@ -869,13 +869,18 @@ class TestMrpOrder(TestMrpCommon):
         mo_form = Form(mo)
         mo_form.qty_producing = 3
         self.assertEqual(sum([x['quantity_done'] for x in mo_form.move_raw_ids._records]), 15, 'Update the produce quantity should change the components quantity.')
-        self.assertEqual(sum([x['reserved_availability'] for x in mo_form.move_raw_ids._records]), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        mo = mo_form.save()
+        self.assertEqual(sum(mo.move_raw_ids.mapped('reserved_availability')), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        mo_form = Form(mo)
         mo_form.qty_producing = 4
         self.assertEqual(sum([x['quantity_done'] for x in mo_form.move_raw_ids._records]), 20, 'Update the produce quantity should change the components quantity.')
-        self.assertEqual(sum([x['reserved_availability'] for x in mo_form.move_raw_ids._records]), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        mo = mo_form.save()
+        self.assertEqual(sum(mo.move_raw_ids.mapped('reserved_availability')), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        mo_form = Form(mo)
         mo_form.qty_producing = 1
         self.assertEqual(sum([x['quantity_done'] for x in mo_form.move_raw_ids._records]), 5, 'Update the produce quantity should change the components quantity.')
-        self.assertEqual(sum([x['reserved_availability'] for x in mo_form.move_raw_ids._records]), 5, 'Update the produce quantity should not change the components reserved quantity.')
+        mo = mo_form.save()
+        self.assertEqual(sum(mo.move_raw_ids.mapped('reserved_availability')), 5, 'Update the produce quantity should not change the components reserved quantity.')
         # try adding another product that doesn't belong to the BoM
         with mo_form.move_raw_ids.new() as move:
             move.product_id = self.product_4

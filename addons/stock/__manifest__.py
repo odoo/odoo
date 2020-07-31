@@ -26,6 +26,7 @@
         'data/stock_traceability_report_data.xml',
         'data/procurement_data.xml',
 
+        'report/report_stock_forecasted.xml',
         'report/report_stock_quantity.xml',
         'report/stock_report_views.xml',
         'report/report_package_barcode.xml',
@@ -82,6 +83,8 @@
         'static/src/xml/inventory_report.xml',
         'static/src/xml/inventory_lines.xml',
         'static/src/xml/popover_widget.xml',
+        'static/src/xml/forecast_widget.xml',
+        'static/src/xml/report_stock_forecasted.xml',
         'static/src/xml/stock_orderpoint.xml',
         'static/src/xml/stock_traceability_report_backend.xml',
     ],
