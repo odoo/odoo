@@ -85,8 +85,8 @@ class ResConfigSettings(models.TransientModel):
             active = False
         warehouses.mapped('int_type_id').write({'active': active})
 
-    def execute(self):
-        res = super(ResConfigSettings, self).execute()
+    def set_values(self):
+        res = super(ResConfigSettings, self).set_values()
         self.ensure_one()
         if self.group_stock_multi_locations or self.group_stock_production_lot or self.group_stock_tracking_lot:
             picking_types = self.env['stock.picking.type'].with_context(active_test=False).search([
