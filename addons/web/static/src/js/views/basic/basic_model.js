@@ -1769,6 +1769,7 @@ var BasicModel = AbstractModel.extend({
                         limit: fieldInfo.limit,
                         modelName: field.relation,
                         parentID: record.id,
+                        relationField: field.relation_field,
                         static: true,
                         type: 'list',
                         viewType: view ? view.type : fieldInfo.viewType,

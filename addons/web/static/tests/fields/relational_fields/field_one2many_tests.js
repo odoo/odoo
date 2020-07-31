@@ -4550,7 +4550,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('parent data is properly sent on an onchange rpc, new record', async function (assert) {
-            assert.expect(6);
+            assert.expect(4);
 
             this.data.turtle.onchanges = { turtle_bar: function () { } };
             var form = await createView({
