@@ -240,7 +240,7 @@ class Picking(models.Model):
     _name = "stock.picking"
     _inherit = ['mail.thread', 'mail.activity.mixin']
     _description = "Transfer"
-    _order = "priority desc, date asc, id desc"
+    _order = "priority desc, scheduled_date asc, id desc"
 
     name = fields.Char(
         'Reference', default='/',
@@ -289,6 +289,7 @@ class Picking(models.Model):
         index=True, default=fields.Datetime.now, tracking=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
+    # TODO: Maybe possible to remove (currently use in PoS to convert amount)
     date = fields.Datetime(
         'Creation Date',
         default=fields.Datetime.now, index=True, tracking=True,
