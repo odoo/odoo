@@ -145,12 +145,15 @@
                                 <field name="user_id" domain="[('share', '=', False)]"/>
                                 <field name="event_id"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
+                                <field name="color" widget="color_picker"/>
                             </group>
                         </group>
                         <notebook>
                             <page string="Speakers" name="speakers">
                                 <group>
-                                    <field name="partner_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"/>
+                                    <field name="partner_id"
+                                        domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]"
+                                        context="{'default_phone': partner_phone, 'default_email': partner_email}"/>
                                     <field name="partner_name"/>
                                     <field name="partner_email"/>
                                     <field name="partner_phone" class="o_force_ltr"/>
@@ -178,7 +181,13 @@
                 <tree string="Event Track">
                     <field name="name"/>
                     <field name="active" invisible="1"/>
-                    <field name="event_id"/>
+                    <field name="partner_name"/>
+                    <field name="partner_id" optional="hide"/>
+                    <field name="partner_email"/>
+                    <field name="partner_phone"/>
+                    <field name="event_id" invisible="context.get('default_event_id')"/>
+                    <field name="stage_id"/>
+                    <field name="color" widget="color_picker" optional="hide"/>
                     <field name="activity_exception_decoration" widget="activity_exception"/>
                 </tree>
             </field>

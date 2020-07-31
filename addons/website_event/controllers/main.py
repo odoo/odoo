@@ -207,15 +207,19 @@ class WebsiteEventController(http.Controller):
         if not event.can_access_from_current_website():
             raise werkzeug.exceptions.NotFound()
 
+        values = self._prepare_event_register_values(event, **post)
+        return request.render("website_event.event_description_full", values)
+
+    def _prepare_event_register_values(self, event, **post):
+        """Return the require values to render the template."""
         urls = event._get_event_resource_urls()
-        values = {
+        return {
             'event': event,
             'main_object': event,
             'range': range,
             'google_url': urls.get('google_url'),
             'iCal_url': urls.get('iCal_url'),
         }
-        return request.render("website_event.event_description_full", values)
 
     @http.route('/event/add_event', type='json', auth="user", methods=['POST'], website=True)
     def add_event(self, event_name="New Event", **kwargs):
