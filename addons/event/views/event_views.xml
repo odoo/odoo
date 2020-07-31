@@ -72,10 +72,15 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="col-12 col-lg-6 o_setting_box" name="event_type_visibility_tags">
+                                <div class="o_setting_left_pane"/>
                                 <div class="o_setting_right_pane">
                                     <label for="tag_ids" string="Tags"/>
-                                    <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                                    <div class="row">
+                                        <div class="col-12 mt16">
+                                            <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -226,22 +231,22 @@
                                     <field name="date_end" widget="daterange" nolabel="1" class="oe_inline" options="{'related_start_date': 'date_begin'}"/>
                                 </div>
                                 <field name="date_tz"/>
-                                <field name="organizer_id"/>
-                                <field name="user_id" domain="[('share', '=', False)]"/>
-                                <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="event_type_id" string="Template" options="{'no_create':True}"/>
                                 <field name="tag_ids" widget="many2many_tags" options="{'no_quick_create': True}"/>
                             </group>
                             <group>
+                                <field name="organizer_id"/>
+                                <field name="user_id" domain="[('share', '=', False)]"/>
+                                <field name="company_id" groups="base.group_multi_company"/>
                                 <field name="address_id"
                                     context="{'show_address': 1}"
                                     options='{"always_reload": True}'/>
-                                <field name="auto_confirm"/>
                                 <label for="seats_limited" string="Limit Registrations"/>
                                 <div>
                                     <field name="seats_limited"/>
                                     <span attrs="{'invisible': [('seats_limited', '=', False)], 'required': [('seats_limited', '=', False)]}">to <field name="seats_max" class="oe_inline"/> Attendees</span>
                                 </div>
+                                <field name="auto_confirm"/>
                             </group>
                         </group>
                         <notebook>
@@ -332,6 +337,7 @@
                     <field name="address_id"/>
                     <field name="date_begin"/>
                     <field name="date_end"/>
+                    <field name="auto_confirm"/>
                     <field name="seats_unconfirmed"/>
                     <field name="seats_reserved"/>
                     <field name="seats_used"/>
@@ -369,7 +375,7 @@
                                                 <t t-esc="record.seats_expected.raw_value"/> Expected attendees
                                             </a>
                                             <t t-set="total_seats" t-value="record.seats_reserved.raw_value + record.seats_used.raw_value"/>
-                                            <div class="pt-2 pt-md-0" t-if="total_seats > 0">
+                                            <div  class="pt-2 pt-md-0" t-if="total_seats > 0 and ! record.auto_confirm.raw_value"><br/>
                                                 <a class="pl-2" name="%(act_event_registration_from_event)d" type="action" context="{'search_default_confirmed': True}">
                                                     <i class="fa fa-level-up fa-rotate-90" title="Confirmed"/><span class="pl-2"><t t-esc="total_seats"/> Confirmed</span>
                                                 </a>
@@ -500,14 +506,14 @@
             <field name="model">event.registration</field>
             <field name="arch" type="xml">
                 <tree string="Registration" multi_edit="1" sample="1">
-                    <field name="create_date" optional="hide"/>
+                    <field name="create_date" optional="show" string="Registration Date"/>
                     <field name="date_open" optional="hide"/>
-                    <field name="partner_id"/>
                     <field name="name"/>
-                    <field name="email" optional="hide"/>
-                    <field name="phone" optional="hide"/>
+                    <field name="partner_id" optional="hide"/>
+                    <field name="email" optional="show"/>
+                    <field name="phone" optional="show"/>
                     <field name="mobile" optional="hide"/>
-                    <field name="event_id"/>
+                    <field name="event_id" invisible="context.get('default_event_id')"/>
                     <field name="event_ticket_id" domain="[('event_id', '=', event_id)]"/>
                     <field name="state" readonly="0"/>
                     <field name="company_id" groups="base.group_multi_company" optional="hide"/>
