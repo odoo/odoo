@@ -584,7 +584,7 @@ return AbstractRenderer.extend({
                 });
             },
             'showOtherMonths': true,
-            'dayNamesMin' : this.state.fc_options.dayNamesShort,
+            'dayNamesMin' : this.state.fc_options.dayNamesShort.map(x => x[0]),
             'monthNames': this.state.fc_options.monthNamesShort,
             'firstDay': this.state.fc_options.firstDay,
         });

@@ -476,18 +476,23 @@ $o-cw-filter-avatar-size: 20px;
         th {
             padding: .7em .2em;
             width: 14%;
+
+            > span {
+                color: #666666;
+            }
         }
 
         td {
             padding: 0;
 
             a, span {
-                padding: .2em .2em .1em;
-                float: right;
-                width: 22px;
+                padding: 5px 0;
                 background: none;
                 text-align: center;
-                color: gray('700');
+                vertical-align: middle;
+                font-size: 1.2rem;
+                color: gray('900');
+                font-weight: 400;
             }
 
             &.ui-datepicker-current-day a {
@@ -497,11 +502,11 @@ $o-cw-filter-avatar-size: 20px;
             }
 
             &.ui-datepicker-today a {
+                margin: auto;
                 border-radius: 100%;
-                padding-top: 0.3em;
+                padding: .1em;
                 width: 25px;
                 background: mix($o-cw-color-today-accent, white, 80%);
-                font-weight: bold;
                 color: white;
             }
 
@@ -516,6 +521,12 @@ $o-cw-filter-avatar-size: 20px;
 
         .ui-datepicker-header {
             border-radius: 0;
+
+            .ui-datepicker-title {
+                color: gray('600');
+                font-size: 1.2rem;
+                font-weight: normal;
+            }
 
             .ui-icon {
                 background-image: none;
@@ -640,6 +651,10 @@ $o-cw-filter-avatar-size: 20px;
         line-height: 1;
     }
 
+    .card-footer {
+        background: none;
+    }
+
     .o_cw_popover_close {
         cursor: pointer;
     }
@@ -656,12 +671,12 @@ $o-cw-filter-avatar-size: 20px;
 
     .list-group-item {
         padding: 0.5rem 1rem;
+        border: none;
     }
 
     .o_cw_popover_fields_secondary {
         max-height: 170px; // Fallback for old browsers
         max-height: 25vh;
-        overflow-y: auto;
 
         &::-webkit-scrollbar {
             background: gray('200');
@@ -691,6 +706,11 @@ $o-cw-filter-avatar-size: 20px;
     $color: nth($o-colors-complete, $i);
 
     .o_calendar_view .fc-view {
+        .fc-bgevent.o_calendar_color_#{$i - 1} {
+            border-color: $color;
+            background-color: $color;
+            opacity: 0.2;
+        }
         .fc-event.o_calendar_color_#{$i - 1} {
             border-color: $color;
             color: darken($color, 35%);
