@@ -123,7 +123,7 @@ QUnit.module('fields', {}, function () {
                         display_name: "leonardo",
                         turtle_bar: true,
                         turtle_foo: "yop",
-                        turle_int: 1,
+                        turtle_int: 1,
                         partner_ids: [],
                     }, {
                         id: 2,
@@ -3139,7 +3139,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('editing a o2m, with required field and onchange', async function (assert) {
-            assert.expect(12);
+            assert.expect(11);
 
             this.data.turtle.fields.turtle_foo.required = true;
             delete this.data.turtle.fields.turtle_foo.default;
@@ -3951,8 +3951,11 @@ QUnit.module('fields', {}, function () {
                 },
                 mockRPC: function (route, args) {
                     if (args.method === 'onchange') {
-                        assert.deepEqual(args.args[1].p, [[4, 2, false], [0, args.args[1].p[1][1], { product_id: 41 }]],
-                            "should trigger onchange with correct parameters");
+                        const [idList, currentData] = args.args;
+                        if (args.model === 'partner' && idList.length === 1 && idList[0] === 1) {
+                            assert.deepEqual(currentData.p, [[4, 2, false], [0, currentData.p[1][1], { product_id: 41 }]],
+                                "should trigger onchange with correct parameters");
+                        }
                     }
                     return this._super.apply(this, arguments);
                 },
@@ -7683,7 +7686,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('onchange in a one2many with non inline view on a new record', async function (assert) {
-            assert.expect(8);
+            assert.expect(6);
 
             this.data.turtle.onchanges = {
                 display_name: function (obj) {
@@ -8762,7 +8765,7 @@ QUnit.module('fields', {}, function () {
         });
 
         QUnit.test('many2manys inside a one2many are fetched in batch after onchange', async function (assert) {
-            assert.expect(7);
+            assert.expect(6);
 
             this.data.partner.onchanges = {
                 turtles: function (obj) {
