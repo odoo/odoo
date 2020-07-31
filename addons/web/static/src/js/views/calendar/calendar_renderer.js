@@ -505,6 +505,9 @@ return AbstractRenderer.extend({
             height: 'parent',
             unselectAuto: false,
             dir: _t.database.parameters.direction,
+            events: (info, successCB) => {
+                successCB(self.state.data);
+            },
         }, fcOptions);
     },
     /**
@@ -605,10 +608,13 @@ return AbstractRenderer.extend({
         if (this.target_date !== this.state.target_date.toString()) {
             this.calendar.gotoDate(moment(this.state.target_date).toDate());
             this.target_date = this.state.target_date.toString();
+        } else {
+            // this.calendar.gotoDate already renders events when called
+            // so render events only when domain changes
+            this._renderEvents();
         }
 
         this._unselectEvent();
-        this._renderEvents();
         // this._scrollToScrollTime();
     },
     /**
@@ -617,10 +623,7 @@ return AbstractRenderer.extend({
      * @private
      */
     _renderEvents: function () {
-        this.calendar.getEvents().forEach(function(event) {
-            event.remove();
-        });
-        this.calendar.addEventSource(this.state.data);
+        this.calendar.refetchEvents();
     },
     /**
      * Render all filters
