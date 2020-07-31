@@ -1,23 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 from odoo.tools import float_is_zero, float_compare
-from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheetNoChart
+from odoo.addons.sale_timesheet.tests.common import TestCommonSaleTimesheet
+from odoo.tests import tagged
 
 
-class TestReporting(TestCommonSaleTimesheetNoChart):
+@tagged('-at_install', 'post_install')
+class TestReporting(TestCommonSaleTimesheet):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestReporting, cls).setUpClass()
-
-        cls.setUpEmployees()
-        cls.setUpServiceProducts()
-        cls.setUpAdditionalAccounts()
-        cls.setUpAccountJournal()
-
-        # tweak demo data: force currency and remove confusing rates
-        company_currency = cls.env.user.company_id.currency_id
-        cls.env.ref('product.list0').currency_id = company_currency
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         # expense product
         cls.product_expense = cls.env['product.product'].with_context(mail_notrack=True, mail_create_nolog=True).create({
@@ -30,28 +23,28 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
             'default_code': 'EXP',
             'service_type': 'manual',
             'taxes_id': False,
-            'property_account_income_id': cls.account_sale.id,
+            'property_account_income_id': cls.company_data['default_account_revenue'].id,
         })
 
         # create Analytic Accounts
         cls.analytic_account_1 = cls.env['account.analytic.account'].create({
             'name': 'Test AA 1',
             'code': 'AA1',
-            'company_id': cls.partner_customer_usd.company_id.id,
-            'partner_id': cls.partner_customer_usd.id
+            'company_id': cls.company_data['company'].id,
+            'partner_id': cls.partner_a.id
         })
         cls.analytic_account_2 = cls.env['account.analytic.account'].create({
             'name': 'Test AA 2',
             'code': 'AA2',
-            'company_id': cls.partner_customer_usd.company_id.id,
-            'partner_id': cls.partner_customer_usd.id
+            'company_id': cls.company_data['company'].id,
+            'partner_id': cls.partner_a.id
         })
 
         # Sale orders each will create project and a task in a global project (one SO is 'delivered', the other is 'ordered')
         cls.sale_order_1 = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
-            'partner_id': cls.partner_customer_usd.id,
-            'partner_invoice_id': cls.partner_customer_usd.id,
-            'partner_shipping_id': cls.partner_customer_usd.id,
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
             'analytic_account_id': cls.analytic_account_1.id,
         })
         cls.so_line_deliver_project = cls.env['sale.order.line'].create({
@@ -72,9 +65,9 @@ class TestReporting(TestCommonSaleTimesheetNoChart):
         })
 
         cls.sale_order_2 = cls.env['sale.order'].with_context(mail_notrack=True, mail_create_nolog=True).create({
-            'partner_id': cls.partner_customer_usd.id,
-            'partner_invoice_id': cls.partner_customer_usd.id,
-            'partner_shipping_id': cls.partner_customer_usd.id,
+            'partner_id': cls.partner_a.id,
+            'partner_invoice_id': cls.partner_a.id,
+            'partner_shipping_id': cls.partner_a.id,
             'analytic_account_id': cls.analytic_account_2.id,
         })
         cls.so_line_order_project = cls.env['sale.order.line'].create({
