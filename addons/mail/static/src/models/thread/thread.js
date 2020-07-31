@@ -363,19 +363,14 @@ function factory(dependencies) {
                 }
                 return list;
             }, []);
-            const messagePreviews = await this.env.services.rpc({
+            const channelPreviews = await this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_fetch_preview',
                 args: [channelIds],
             }, { shadow: true });
-            for (const preview of messagePreviews) {
-                const messageData = preview.last_message;
-                if (messageData) {
-                    this.env.models['mail.message'].insert(
-                        this.env.models['mail.message'].convertData(messageData)
-                    );
-                }
-            }
+            this.env.models['mail.message'].insert(channelPreviews.filter(p => p.last_message).map(
+                channelPreview => this.env.models['mail.message'].convertData(channelPreview.last_message)
+            ));
         }
 
         /**

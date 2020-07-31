@@ -61,13 +61,9 @@ function factory(dependencies) {
                 method: 'activity_format',
                 args: [newActivityIds]
             }));
-            const activities = [];
-            for (const activityData of activitiesData) {
-                const activity = this.env.models['mail.activity'].insert(
-                    this.env.models['mail.activity'].convertData(activityData)
-                );
-                activities.push(activity);
-            }
+            const activities = this.env.models['mail.activity'].insert(activitiesData.map(
+                activityData => this.env.models['mail.activity'].convertData(activityData)
+            ));
             this.update({ activities: [['replace', activities]] });
         }
 

@@ -115,47 +115,56 @@ class ModelManager {
      * from this record creation.
      *
      * @param {mail.model} Model class
-     * @param {Object} [data={}]
-     * @returns {mail.model} newly created record
+     * @param {Object|Object[]} [data={}]
+     *  If data is an iterable, multiple records will be created.
+     * @returns {mail.model|mail.model[]} newly created record(s)
      */
     create(Model, data = {}) {
         return this._updateCycle(() => {
-            const record = new Model({ valid: true });
-            Object.defineProperty(record, 'env', { get: () => Model.env });
-            record.localId = record._createRecordLocalId(data);
-            // Contains field values of record.
-            record.__values = {};
-            // Contains revNumber of record for checking record update in useStore.
-            record.__state = 0;
+            const isMulti = typeof data[Symbol.iterator] === 'function';
+            const dataList = isMulti ? data : [data];
+            const res = dataList.map(data => {
+                const record = new Model({ valid: true });
+                Object.defineProperty(record, 'env', { get: () => Model.env });
+                record.localId = record._createRecordLocalId(data);
+                // Contains field values of record.
+                record.__values = {};
+                // Contains revNumber of record for checking record update in useStore.
+                record.__state = 0;
 
-            // Make proxified record, so that access to field redirects
-            // to field getter.
-            const proxifiedRecord = this._makeProxifiedRecord(record);
-            this._records[record.localId] = proxifiedRecord;
-            proxifiedRecord.init();
-            this._makeDefaults(proxifiedRecord);
+                // Make proxified record, so that access to field redirects
+                // to field getter.
+                const proxifiedRecord = this._makeProxifiedRecord(record);
+                this._records[record.localId] = proxifiedRecord;
+                proxifiedRecord.init();
+                this._makeDefaults(proxifiedRecord);
 
-            const data2 = Object.assign({}, data);
-            for (const field of Object.values(Model.fields)) {
-                if (field.fieldType !== 'relation') {
-                    continue;
+                const data2 = Object.assign({}, data);
+                for (const field of Object.values(Model.fields)) {
+                    if (field.fieldType !== 'relation') {
+                        continue;
+                    }
+                    if (!field.autocreate) {
+                        continue;
+                    }
+                    data2[field.fieldName] = [['create']];
                 }
-                if (!field.autocreate) {
-                    continue;
+
+                for (const field of Object.values(Model.fields)) {
+                    if (field.compute || field.related) {
+                        // new record should always invoke computed fields.
+                        this.registerToComputeField(record, field);
+                    }
                 }
-                data2[field.fieldName] = [['create']];
+
+                this.update(proxifiedRecord, data2);
+
+                return proxifiedRecord;
+            });
+            if (!isMulti) {
+                return res[0];
             }
-
-            for (const field of Object.values(Model.fields)) {
-                if (field.compute || field.related) {
-                    // new record should always invoke computed fields.
-                    this.registerToComputeField(record, field);
-                }
-            }
-
-            this.update(proxifiedRecord, data2);
-
-            return proxifiedRecord;
+            return res;
         });
     }
 
@@ -259,18 +268,27 @@ class ModelManager {
      * per "unique find" criteria from data on Model.
      *
      * @param {mail.model} Model class
-     * @param {Object} data
-     * @returns {mail.model} created or updated record.
+     * @param {Object|Object[]} data
+     *  If data is an iterable, multiple records will be created/updated.
+     * @returns {mail.model|mail.model[]} created or updated record(s).
      */
     insert(Model, data) {
         return this._updateCycle(() => {
-            let record = Model.find(Model._findFunctionFromData(data));
-            if (!record) {
-                record = Model.create(data);
-            } else {
-                record.update(data);
+            const isMulti = typeof data[Symbol.iterator] === 'function';
+            const dataList = isMulti ? data : [data];
+            const res = dataList.map(data => {
+                let record = Model.find(Model._findFunctionFromData(data));
+                if (!record) {
+                    record = Model.create(data);
+                } else {
+                    record.update(data);
+                }
+                return record;
+            });
+            if (!isMulti) {
+                return res[0];
             }
-            return record;
+            return res;
         });
     }
 
@@ -721,7 +739,10 @@ class ModelManager {
                 if (k === 'constructor') {
                     return target[k];
                 }
-                const field = target.constructor.fields[k];
+                const fields = target.constructor.fields;
+                const field = Object.prototype.hasOwnProperty.call(fields, k)
+                    ? fields[k]
+                    : undefined;
                 if (!field) {
                     // No crash, we allow these reads due to patch()
                     // implementation details that read on `this._super` even

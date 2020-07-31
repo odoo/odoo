@@ -109,10 +109,10 @@ function factory(dependencies) {
                     },
                     { shadow: true }
                 );
-                for (const data of partnersData) {
-                    const partner = this.insert(this.convertData(data));
-                    partners.push(partner);
-                }
+                const newPartners = this.insert(partnersData.map(
+                    partnerData => this.convertData(partnerData)
+                ));
+                partners.push(...newPartners);
             }
             callback(partners);
         }

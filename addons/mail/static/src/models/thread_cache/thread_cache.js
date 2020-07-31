@@ -266,11 +266,9 @@ function factory(dependencies) {
          * @param {Object[]} messageData
          */
         _handleMessagesLoaded(messagesData) {
-            const messages = messagesData.map(data =>
-                this.env.models['mail.message'].insert(
-                    this.env.models['mail.message'].convertData(data)
-                )
-            );
+            const messages = this.env.models['mail.message'].insert(messagesData.map(
+                messageData => this.env.models['mail.message'].convertData(messageData)
+            ));
 
             if (!this.thread) {
                 return;

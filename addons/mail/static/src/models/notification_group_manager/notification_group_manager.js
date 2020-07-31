@@ -17,6 +17,7 @@ function factory(dependencies) {
                 group.delete();
             }
             const groups = [];
+            // TODO batch insert, better logic task-2258605
             this.env.messaging.currentPartner.failureNotifications.forEach(notification => {
                 const thread = notification.message.originThread;
                 // Notifications are grouped by model and notification_type.
