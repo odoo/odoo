@@ -62,6 +62,23 @@
                     </div>
                 </div>
             </div>
+            <div id="iface_tipproduct" position="after">
+                <div class="col-12 col-lg-6 o_setting_box"
+                     id="set_tip_after_payment"
+                     title="Activate to add tip form in bill and set tip on order after payment."
+                     attrs="{'invisible': ['|', ('module_pos_restaurant', '=', False), ('iface_tipproduct', '=', False)]}">
+                    <div class="o_setting_left_pane">
+                        <field name="set_tip_after_payment" attrs="{'readonly': [('has_active_session','=', True)]}"/>
+                    </div>
+                    <div class="o_setting_right_pane">
+                        <label for="set_tip_after_payment"/>
+                        <span class="fa fa-lg fa-cutlery" title="Ask tips on bill" role="img" aria-label="Ask tips on bill"/>
+                        <div class="text-muted">
+                            Ask tips on bill and set tip on order after payment.
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="category_reference" position="before">
                 <div class="col-12 col-lg-6 o_setting_box"
                      id="is_table_management"

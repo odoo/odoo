@@ -183,3 +183,17 @@ class TestFrontend(odoo.tests.HttpCase):
     def test_04_ticket_screen(self):
         self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
         self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'PosResTicketScreenTour', login="admin", step_delay=50)
+
+    def test_05_tip_screen(self):
+        self.pos_config.write({'set_tip_after_payment': True, 'iface_tipproduct': True, 'tip_product_id': self.env.ref('point_of_sale.product_product_tip')})
+        self.pos_config.with_user(self.env.ref('base.user_admin')).open_session_cb(check_coa=False)
+        self.start_tour("/pos/web?config_id=%d" % self.pos_config.id, 'PosResTipScreenTour', login="admin", step_delay=50)
+
+        order1 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0001')])
+        order2 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0002')])
+        order3 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0003')])
+        order4 = self.env['pos.order'].search([('pos_reference', 'ilike', '%-0004')])
+        self.assertTrue(order1.is_tipped and order1.tip_amount == 0.40)
+        self.assertTrue(order2.is_tipped and order2.tip_amount == 1.00)
+        self.assertTrue(order3.is_tipped and order3.tip_amount == 1.50)
+        self.assertTrue(order4.is_tipped and order4.tip_amount == 1.00)
