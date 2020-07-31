@@ -201,7 +201,17 @@ models.PosModel = models.PosModel.extend({
         var orders = this.get_order_list();
         if (orders.length) {
             order = order ? orders.find((o) => o.uid === order.uid) : null;
-            this.set_order(order || orders[0]);
+            if (order) {
+                this.set_order(order);
+            } else {
+                // do not mindlessly set the first order in the list.
+                orders = orders.filter(order => !order.finalized);
+                if (orders.length) {
+                    this.set_order(orders[0]);
+                } else {
+                    this.add_new_order();
+                }
+            }
         } else {
             this.add_new_order();  // or create a new order with the current table
         }
@@ -215,12 +225,10 @@ models.PosModel = models.PosModel.extend({
         this._get_from_server(table.id).then(function (server_orders) {
             var orders = self.get_order_list();
             orders.forEach(function(order){
-                const screen = order.get_screen_data();
-                // Only remove the 'Receipt' status order when 'Next Order'
-                // from the receipt screen is clicked. We are bypassing the
-                // removal of paid order here to make sure those orders are
-                // still in the tickets list.
-                if (order.server_id && screen.name !== 'ReceiptScreen'){
+                // We don't remove the validated orders because we still want to see them
+                // in the ticket screen. Orders in 'ReceiptScreen' or 'TipScreen' are validated
+                // orders.
+                if (order.server_id && !order.finalized){
                     self.get("orders").remove(order);
                     order.destroy();
                 }
@@ -339,7 +347,7 @@ models.PosModel = models.PosModel.extend({
 
     // get customer count at table
     get_customer_count: function(table) {
-        var orders = this.get_table_orders(table);
+        var orders = this.get_table_orders(table).filter(order => !order.finalized);
         var count  = 0;
         for (var i = 0; i < orders.length; i++) {
             count += orders[i].get_customer_count();

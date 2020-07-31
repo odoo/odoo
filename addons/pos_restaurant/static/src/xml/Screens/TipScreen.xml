@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+    <t t-name="pos_restaurant.TipScreen" owl="1">
+        <div class="tip-screen screen">
+            <div class="screen-content">
+                <div class="top-content">
+                    <span class="button back" t-on-click="showScreen('FloorScreen')">
+                        <i class="fa fa-angle-double-left"></i>
+                        <span> </span>
+                        <span>Back</span>
+                    </span>
+                    <div class="top-content-center">
+                        <h1>Add a tip</h1>
+                    </div>
+                </div>
+                <div class="tip-options">
+                    <div class="total-amount">
+                        <t t-esc="env.pos.format_currency(totalAmount)" />
+                    </div>
+                    <div class="tip-amount-options">
+                        <div class="percentage-amounts">
+                            <t t-foreach="percentageTips" t-as="tip" t-key="tip.percentage">
+                                <div class="button" t-on-click="setTip(tip.amount)">
+                                    <div class="percentage">
+                                        <t t-esc="tip.percentage"></t>
+                                    </div>
+                                    <div class="amount">
+                                        <t t-esc="env.pos.format_currency(tip.amount)" />
+                                    </div>
+                                </div>
+                            </t>
+                        </div>
+                        <div class="custom-amount-form">
+                            <div class="item label">Custom Amount</div>
+                            <div class="item input">
+                                <input type="text" t-model="state.inputCustomAmount" />
+                                <div class="currency">
+                                    <t t-esc="env.pos.getCurrencySymbol()" />
+                                </div>
+                            </div>
+                            <div class="item add button" t-on-click="tipCustomAmount">
+                                <span>Add</span>
+                            </div>
+                        </div>
+                        <div class="no-tip" t-on-click="goNextScreen">
+                            <div class="button">No Tip</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+
+</templates>
