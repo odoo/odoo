@@ -68,6 +68,7 @@ var CalendarController = AbstractController.extend({
         this.previousOpen = null;
         // The quickCreating attribute ensures that we don't do several create
         this.quickCreating = false;
+        this.scales = params.scales;
     },
 
     //--------------------------------------------------------------------------
@@ -133,7 +134,9 @@ var CalendarController = AbstractController.extend({
      * @return {{}}
      */
     _renderButtonsParameters() {
-        return {};
+        return {
+            scales: this.scales,
+        };
     },
     /**
      * @override

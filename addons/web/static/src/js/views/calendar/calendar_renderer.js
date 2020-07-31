@@ -15,13 +15,6 @@ const { createYearCalendarView } = require('/web/static/src/js/libs/fullcalendar
 var _t = core._t;
 var qweb = core.qweb;
 
-var scales = {
-    day: 'timeGridDay',
-    week: 'timeGridWeek',
-    month: 'dayGridMonth',
-    year: 'dayGridYear',
-};
-
 var SidebarFilterM2O = relational_fields.FieldMany2One.extend({
     _getSearchBlacklist: function () {
         return this._super.apply(this, arguments).concat(this.filter_ids || []);
@@ -194,6 +187,7 @@ return AbstractRenderer.extend({
         this.hideTime = params.hideTime;
         this.canDelete = params.canDelete;
         this.canCreate = params.canCreate;
+        this.scalesInfo = params.scalesInfo;
         this._isInDOM = false;
     },
     /**
@@ -493,16 +487,11 @@ return AbstractRenderer.extend({
                 }
             },
             datesRender: function (info) {
-                // compute mode from view.type which is either
-                // 'dayGridYear', 'dayGridMonth', 'timeGridWeek' or 'timeGridDay'
-                const mode = {
-                    dayGridYear: 'year',
-                    dayGridMonth: 'month',
-                    timeGridWeek: 'week',
-                    timeGridDay: 'day',
-                }[info.view.type];
+                const viewToMode = Object.fromEntries(
+                    Object.entries(self.scalesInfo).map(([k, v]) => [v, k])
+                );
                 self.trigger_up('viewUpdated', {
-                    mode: mode,
+                    mode: viewToMode[info.view.type],
                     title: info.view.title,
                 });
             },
@@ -646,8 +635,8 @@ return AbstractRenderer.extend({
     _renderCalendar() {
         this.calendar.unselect();
 
-        if (scales[this.state.scale] !== this.calendar.view.type) {
-            this.calendar.changeView(scales[this.state.scale]);
+        if (this.scalesInfo[this.state.scale] !== this.calendar.view.type) {
+            this.calendar.changeView(this.scalesInfo[this.state.scale]);
         }
 
         if (this.target_date !== this.state.target_date.toString()) {
