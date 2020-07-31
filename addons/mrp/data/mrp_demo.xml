@@ -79,7 +79,9 @@
         </record>
 
         <function model="stock.move" name="create">
-            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_1')._get_moves_raw_values()"/>
+            <value model="stock.move" eval="
+                obj().env.ref('mrp.mrp_production_1')._get_moves_raw_values() +
+                obj().env.ref('mrp.mrp_production_1')._get_moves_finished_values()"/>
         </function>
 
         <!-- Table -->
@@ -272,18 +274,19 @@
             <field name="operation_id" ref="mrp.mrp_routing_workcenter_5"/>
         </record>
 
+        <!-- Table MO -->
         <record id="mrp_production_3" model="mrp.production">
             <field name="product_id" ref="product_product_computer_desk"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="product_qty">1</field>
+            <field name="date_planned_start" eval="(DateTime.today() + relativedelta(days=1)).strftime('%Y-%m-%d %H:%M')"/>
             <field name="bom_id" ref="mrp_bom_desk"/>
         </record>
 
         <function model="stock.move" name="create">
-            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_3')._get_moves_raw_values()"/>
-        </function>
-        <function model="stock.move" name="create">
-            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_3')._get_moves_finished_values()"/>
+            <value model="stock.move" eval="
+                obj().env.ref('mrp.mrp_production_3')._get_moves_raw_values() +
+                obj().env.ref('mrp.mrp_production_3')._get_moves_finished_values()"/>
         </function>
 
         <record id="mrp_bom_table_top" model="mrp.bom">
@@ -373,6 +376,23 @@
             <field name="sequence">1</field>
             <field name="bom_id" ref="mrp_bom_wood_panel"/>
         </record>
+
+        <!-- Table Top MO -->
+        <record id="mrp_production_4" model="mrp.production">
+            <field name="product_id" ref="product_product_computer_desk_head"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="product_qty">2</field>
+            <field name="location_src_id" ref="stock.stock_location_stock"/>
+            <field name="location_dest_id" ref="stock.stock_location_stock"/>
+            <field name="bom_id" ref="mrp_bom_table_top"/>
+        </record>
+
+        <!-- Generate Table & Table Top MO's moves -->
+        <function model="stock.move" name="create">
+            <value model="stock.move" eval="
+                obj().env.ref('mrp.mrp_production_4')._get_moves_raw_values() +
+                obj().env.ref('mrp.mrp_production_4')._get_moves_finished_values()"/>
+        </function>
 
         <!-- Table Kit -->
 
@@ -625,11 +645,9 @@
         </record>
 
         <function model="stock.move" name="create">
-            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_raw_values()"/>
-        </function>
-
-        <function model="stock.move" name="create">
-            <value model="stock.move" eval="obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_finished_values()"/>
+            <value model="stock.move" eval="
+                obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_raw_values() +
+                obj().env.ref('mrp.mrp_production_laptop_cust')._get_moves_finished_values()"/>
         </function>
 
         <!-- Run Scheduler -->
@@ -683,16 +701,14 @@
             <value eval="[ref('mrp.mrp_production_3')]"/>
         </function>
 
-        <function model="mrp.production" name="action_confirm">
-            <value eval="[ref('mrp.mrp_production_3')]"/>
-        </function>
+        <function model="mrp.production" name="action_confirm" eval="[[
+            ref('mrp.mrp_production_3'),
+            ref('mrp.mrp_production_4'),
+            ref('mrp.mrp_production_laptop_cust'),
+        ]]"/>
 
         <function model="mrp.production" name="button_plan">
             <value eval="[ref('mrp.mrp_production_3')]"/>
-        </function>
-
-        <function model="mrp.production" name="action_confirm">
-            <value eval="[ref('mrp.mrp_production_laptop_cust')]"/>
         </function>
 
         <function model="mrp.production" name="write">
