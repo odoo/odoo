@@ -306,13 +306,16 @@ var AbstractView = Factory.extend({
      */
     getController: async function () {
         const _super = this._super.bind(this);
-        await this.controllerParams.searchModel.load();
-        const query = this.controllerParams.searchModel.get('query');
-        this._updateMVCParams(query);
+        const { searchModel } = this.controllerParams;
+        await searchModel.load();
+        this._updateMVCParams(searchModel.get("query"));
         // get the parent of the model if it already exists, as _super will
         // set the new controller as parent, which we don't want
         const modelParent = this.model && this.model.getParent();
-        const controller = await _super(...arguments);
+        const [controller] = await Promise.all([
+            _super(...arguments),
+            searchModel.isReady(),
+        ]);
         if (modelParent) {
             // if we already add a model, restore its parent
             this.model.setParent(modelParent);
