@@ -7,10 +7,12 @@ import time
 import werkzeug.wrappers
 from PIL import Image, ImageFont, ImageDraw
 from lxml import etree
+from base64 import b64decode
 
 from odoo.http import request
 from odoo import http, tools, _
 from odoo.exceptions import UserError
+from odoo.modules.module import get_resource_path
 
 logger = logging.getLogger(__name__)
 
@@ -492,3 +494,45 @@ class Web_Editor(http.Controller):
             return attachment.image_src
         attachment.generate_access_token()
         return '%s?access_token=%s' % (attachment.image_src, attachment.access_token)
+
+    @http.route(['/web_editor/shape/<module>/<path:filename>'], type='http', auth="public", website=True)
+    def background_shape(self, module, filename, **kwargs):
+        """
+        Returns a color-customized background-shape.
+        """
+        shape_path = get_resource_path(module, 'static', 'shapes', filename)
+        if shape_path:
+            svg = open(shape_path, 'r').read()
+        else:
+            # Fallback to attachments for future migrations
+            attachment = request.env['ir.attachment'].search([('url', '=like', request.httprequest.path)], limit=1)
+            if not attachment:
+                raise werkzeug.exceptions.NotFound()
+            svg = b64decode(attachment.datas).decode('utf-8')
+
+        user_colors = []
+        for key, color in kwargs.items():
+            match = re.match('^c([12345])$', key)
+            if match:
+                user_colors.append([tools.html_escape(color), match.group(1)])
+
+        default_palette = {
+            '1': '#3AADAA',
+            '2': '#7C6576',
+            '3': '#F6F6F6',
+            '4': '#FFFFFF',
+            '5': '#383E45',
+        }
+        color_mapping = {default_palette[palette_number]: color for color, palette_number in user_colors}
+        # create a case-insensitive regex to match all the colors to replace, eg: '(?i)(#3AADAA)|(#7C6576)'
+        regex = '(?i)%s' % '|'.join('(%s)' % color for color in color_mapping.keys())
+
+        def subber(match):
+            key = match.group().upper()
+            return color_mapping[key] if key in color_mapping else key
+        svg = re.sub(regex, subber, svg)
+
+        return request.make_response(svg, [
+            ('Content-type', 'image/svg+xml'),
+            ('Cache-control', 'max-age=%s' % http.STATIC_CACHE_LONG),
+        ])

@@ -200,6 +200,20 @@ function _normalizeColor(color) {
     }
     return _getCSSVariableValue(color);
 }
+/**
+ * Parse an element's background-image's url.
+ *
+ * @param {string} string a css value in the form 'url("...")'
+ * @returns {string|false} the src of the image or false if not parsable
+ */
+function _getBgImageURL(el) {
+    const string = $(el).css('background-image');
+    const match = string.match(/^url\((['"])(.*?)\1\)$/);
+    if (!match) {
+        return '';
+    }
+    return match[2];
+}
 
 return {
     CSS_SHORTHANDS: CSS_SHORTHANDS,
@@ -213,5 +227,6 @@ return {
     computeColorClasses: _computeColorClasses,
     getCSSVariableValue: _getCSSVariableValue,
     normalizeColor: _normalizeColor,
+    getBgImageURL: _getBgImageURL,
 };
 });
