@@ -53,11 +53,11 @@ body.editor_enable.editor_has_snippets {
     // No root because can be drag and drop (and the helper is in the body)
     position: relative;
     z-index: $o-we-zindex;
-    width: 100px;
+    width: 77px;
     background-color: $o-we-sidebar-blocks-content-snippet-bg;
 
     &.ui-draggable-dragging {
-        transform: rotate(3deg);
+        transform: rotate(-3deg) scale(1.2);
         box-shadow: 0 5px 25px -10px black;
         transition: transform 0.3s, box-shadow 0.3s;
     }
@@ -81,6 +81,15 @@ body.editor_enable.editor_has_snippets {
 
     .oe_snippet_thumbnail_title {
         display: none;
+    }
+
+    &:not(:hover):not(.o_disabled):not(.o_snippet_install) {
+        background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .9);
+
+        .oe_snippet_thumbnail {
+            filter: saturate(.7);
+            opacity: .9;
+        }
     }
 }
 
@@ -267,52 +276,55 @@ body.editor_enable.editor_has_snippets {
                     text-align: center;
                 }
 
-                &.o_disabled {
-                    .oe_snippet_thumbnail {
-                        background-color: rgba(255, 0, 0, 0.75);
-                    }
-                    .oe_snippet_thumbnail_img {
-                        opacity: 0.8;
-                    }
+                &.o_disabled .o_snippet_undroppable {
+                    @include o-position-absolute(8px, 6px, auto, auto);
                 }
 
                 &.o_snippet_install {
-                    .oe_snippet_thumbnail_img {
-                        opacity: 0.5;
-                    }
                     .btn.o_install_btn {
-                        display: none;
-                        @include o-position-absolute($top: 16px);
+                        @include o-position-absolute($top: 10px);
                     }
-                    &:hover .btn.o_install_btn {
-                        display: block;
+
+                    &:not(:hover) .btn.o_install_btn {
+                        display: none;
+                    }
+                }
+
+                &.o_disabled, &.o_snippet_install {
+                    background-color: rgba($o-we-sidebar-blocks-content-snippet-bg, .2);
+
+                    .oe_snippet_thumbnail_img {
+                        opacity: .4;
+                        filter: saturate(0) blur(1px);
                     }
                 }
             }
         }
         #snippet_custom .oe_snippet {
-            .o_delete_btn {
-                @include o-position-absolute(0, 0);
-                display: none;
-                width: 25px;
-                height: 25px;
-                background-color: rgba(255, 0, 0, 0.75);
-                justify-content: center;
-                align-items: center;
+            width: 100%;
 
-                &:hover {
-                    cursor: pointer;
-                }
-            }
-            &:hover .o_delete_btn {
+            &, .oe_snippet_thumbnail, .o_delete_btn {
                 display: flex;
             }
-            .o_image_ribbon {
-                @include o-position-absolute($top: 0, $left: 0);
-                width: 0;
-                height: 0;
-                border-right: 20px solid transparent;
-                border-top: 20px solid $o-enterprise-color;
+            .oe_snippet_thumbnail, .o_delete_btn {
+                align-items: center;
+            }
+            .oe_snippet_thumbnail {
+                min-width: 0; // Ensure text-overflow on flex children
+            }
+            .oe_snippet_thumbnail_title {
+                @include o-text-overflow(block);
+            }
+            .oe_snippet_thumbnail_img {
+                flex-shrink: 0;
+                width: 40px;
+                height: 32px;
+                padding: 0;
+            }
+            .o_delete_btn {
+                @extend %we-generic-link;
+                padding-top: 0;
+                padding-bottom: 0;
             }
         }
     }
