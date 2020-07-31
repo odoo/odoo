@@ -8,7 +8,10 @@ const time = require('web.time');
 var Widget = require('web.Widget');
 var ColorPaletteWidget = require('web_editor.ColorPalette').ColorPaletteWidget;
 const weUtils = require('web_editor.utils');
-const {normalizeColor} = weUtils;
+const {
+    normalizeColor,
+    getBgImageURL,
+} = weUtils;
 var weWidgets = require('wysiwyg.widgets');
 const {
     loadImage,
@@ -1588,6 +1591,87 @@ const RangeUserValueWidget = UserValueWidget.extend({
     },
 });
 
+const SelectPagerUserValueWidget = SelectUserValueWidget.extend({
+    className: (SelectUserValueWidget.prototype.className || '') + ' o_we_select_pager',
+    events: Object.assign({}, SelectUserValueWidget.prototype.events, {
+        'click .o_we_pager_next, .o_we_pager_prev': '_onPageChange',
+    }),
+
+    /**
+     * @override
+     */
+    async start() {
+        const _super = this._super.bind(this);
+        this.pages = this.options.childNodes.filter(node => node.matches && node.matches('we-select-page'));
+        this.numPages = this.pages.length;
+
+        const prev = document.createElement('i');
+        prev.classList.add('o_we_pager_prev', 'fa', 'fa-chevron-left');
+
+        this.pageNum = document.createElement('span');
+        this.currentPage = 0;
+        this._updatePageNum();
+
+        const next = document.createElement('i');
+        next.classList.add('o_we_pager_next', 'fa', 'fa-chevron-right');
+
+        const pagerControls = document.createElement('div');
+        pagerControls.classList.add('o_we_pager_controls');
+        pagerControls.appendChild(prev);
+        pagerControls.appendChild(this.pageNum);
+        pagerControls.appendChild(next);
+
+        await _super(...arguments);
+        this.menuEl.classList.add('o_we_has_pager');
+        $(this.menuEl).prepend(pagerControls);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * Updates the pager's page number display.
+     *
+     * @private
+     */
+    _updatePageNum() {
+        this.pages.forEach((page, i) => page.classList.toggle('active', i === this.currentPage));
+        this.pageNum.textContent = `${this.currentPage + 1}/${this.numPages}`;
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Goes to the previous/next page with wrap-around.
+     *
+     * @private
+     */
+    _onPageChange(ev) {
+        ev.preventDefault();
+        ev.stopPropagation();
+        const delta = ev.target.matches('.o_we_pager_next') ? 1 : -1;
+        this.currentPage = (this.currentPage + this.numPages + delta) % this.numPages;
+        this._updatePageNum();
+    },
+    /**
+     * @override
+     */
+    _onClick(ev) {
+        const activeButton = this._getActiveSubWidget();
+        if (activeButton) {
+            const currentPage = this.pages.indexOf(activeButton.el.closest('we-select-page'));
+            if (currentPage !== -1) {
+                this.currentPage = currentPage;
+                this._updatePageNum();
+            }
+        }
+        return this._super(...arguments);
+    },
+});
+
 const userValueWidgetsRegistry = {
     'we-button': ButtonUserValueWidget,
     'we-checkbox': CheckboxUserValueWidget,
@@ -1600,6 +1684,7 @@ const userValueWidgetsRegistry = {
     'we-imagepicker': ImagepickerUserValueWidget,
     'we-videopicker': VideopickerUserValueWidget,
     'we-range': RangeUserValueWidget,
+    'we-select-pager': SelectPagerUserValueWidget,
 };
 
 /**
@@ -3087,18 +3172,6 @@ registry.ImageOptimize = ImageHandlerOption.extend({
 });
 
 /**
- * Returns the src value from a css value related to a background image
- * (e.g. "url('blabla')" => "blabla" / "none" => "").
- *
- * @param {string} value
- * @returns {string}
- */
-const getSrcFromCssValue = value => {
-    var srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
-    return value && value.replace(srcValueWrapper, '') || '';
-};
-
-/**
  * Controls background image width and quality.
  */
 registry.BackgroundOptimize = ImageHandlerOption.extend({
@@ -3166,9 +3239,9 @@ registry.BackgroundOptimize = ImageHandlerOption.extend({
         Object.entries(this.$target[0].dataset).forEach(([key, value]) => {
             this.img.dataset[key] = value;
         });
-        const src = new URL(getSrcFromCssValue(this.$target.css('background-image')), window.location.origin);
+        const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
         // Make URL relative because that is how image urls are stored in the database.
-        this.img.src = src.origin === window.location.origin ? src.pathname : src;
+        this.img.src = src.origin === window.location.origin && src.pathname;
         return await this._super(...arguments);
     },
 
@@ -3213,6 +3286,18 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
             this._requestUserValueWidgets('bg_image_opt')[0].el.click();
         }
     },
+    /**
+     * Toggles background shape on or off.
+     *
+     * @see this.selectClass for parameters
+     */
+    toggleBgShape(previewMode, widgetValue, params) {
+        const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
+        const shapeOption = shapeWidget.getParent();
+        // TODO: open select after shape was selected?
+        // TODO: use setWidgetValue instead of calling shapeOption method directly when possible
+        return shapeOption._toggleShape();
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -3222,10 +3307,17 @@ registry.BackgroundToggler = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetState(methodName, params) {
-        if (methodName === 'toggleBgImage') {
-            const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
-            const bgImageOpt = bgImageWidget.getParent();
-            return !!bgImageOpt._computeWidgetState('background', bgImageWidget.getMethodsParams('background'));
+        switch (methodName) {
+            case 'toggleBgImage': {
+                const [bgImageWidget] = this._requestUserValueWidgets('bg_image_opt');
+                const bgImageOpt = bgImageWidget.getParent();
+                return !!bgImageOpt._computeWidgetState('background', bgImageWidget.getMethodsParams('background'));
+            }
+            case 'toggleBgShape': {
+                const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
+                const shapeOption = shapeWidget.getParent();
+                return !!shapeOption._computeWidgetState('shape', shapeWidget.getMethodsParams('shape'));
+            }
         }
         return this._super(...arguments);
     },
@@ -3239,7 +3331,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      * @override
      */
     start: function () {
-        this.__customImageSrc = this._getSrcFromCssValue();
+        this.__customImageSrc = getBgImageURL(this.$target[0]);
         return this._super(...arguments);
     },
 
@@ -3254,7 +3346,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      */
     background: async function (previewMode, widgetValue, params) {
         if (previewMode === true) {
-            this.__customImageSrc = this._getSrcFromCssValue();
+            this.__customImageSrc = getBgImageURL(this.$target[0]);
         } else if (previewMode === 'reset') {
             widgetValue = this.__customImageSrc;
         } else {
@@ -3285,7 +3377,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     setTarget: function () {
         this._super(...arguments);
         // TODO should be automatic for all options as equal to the start method
-        this.__customImageSrc = this._getSrcFromCssValue();
+        this.__customImageSrc = getBgImageURL(this.$target[0]);
     },
 
     //--------------------------------------------------------------------------
@@ -3293,22 +3385,308 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
     //--------------------------------------------------------------------------
 
     /**
-     * Returns the background image's src.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getSrcFromCssValue: function () {
-        return getSrcFromCssValue(this.$target.css('background-image'));
-    },
-    /**
      * @override
      */
     _computeWidgetState: function (methodName) {
         if (methodName === 'background') {
-            return this._getSrcFromCssValue();
+            return getBgImageURL(this.$target[0]);
         }
         return this._super(...arguments);
+    },
+});
+
+/**
+ * Handles background shapes.
+ */
+registry.BackgroundShape = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    updateUI() {
+        if (this.rerender) {
+            this.rerender = false;
+            return this._rerenderXML();
+        }
+        return this._super.apply(this, arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Sets the current background shape.
+     *
+     * @see this.selectClass for params
+     */
+    shape(previewMode, widgetValue, params) {
+        this._handlePreviewState(previewMode, () => {
+            return {shape: widgetValue, colors: this._getDefaultColors(), flip: []};
+        });
+    },
+    /**
+     * Sets the current background shape's colors.
+     *
+     * @see this.selectClass for params
+     */
+    color(previewMode, widgetValue, params) {
+        this._handlePreviewState(previewMode, () => {
+            const {colorName} = params;
+            const {colors: previousColors} = this._getShapeData();
+            const newColor = widgetValue || this._getDefaultColors()[colorName];
+            const newColors = Object.assign(previousColors, {[colorName]: newColor});
+            return {colors: newColors};
+        });
+    },
+    /**
+     * Flips the shape on its x axis.
+     *
+     * @see this.selectClass for params
+     */
+    flipX(previewMode, widgetValue, params) {
+        this._flipShape(previewMode, 'x');
+    },
+    /**
+     * Flips the shape on its y axis.
+     *
+     * @see this.selectClass for params
+     */
+    flipY(previewMode, widgetValue, params) {
+        this._flipShape(previewMode, 'y');
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'shape': {
+                return this._getShapeData().shape;
+            }
+            case 'color': {
+                const {shape, colors: customColors} = this._getShapeData();
+                const colors = Object.assign(this._getDefaultColors(), customColors);
+                const color = shape && colors[params.colorName];
+                return color ? normalizeColor(color) : '';
+            }
+            case 'flipX': {
+                return this.$target.find('> .o_we_shape.o_we_flip_x').length !== 0;
+            }
+            case 'flipY': {
+                return this.$target.find('> .o_we_shape.o_we_flip_y').length !== 0;
+            }
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _renderCustomXML(uiFragment) {
+        Object.keys(this._getDefaultColors()).map(colorName => {
+            uiFragment.querySelector('[data-name="colors"]')
+                .prepend($(`<we-colorpicker data-color="true" data-color-name="${colorName}">`)[0]);
+        });
+
+        uiFragment.querySelectorAll('we-select-pager we-button[data-shape]').forEach(btn => {
+            const btnContent = document.createElement('div');
+            btnContent.classList.add('o_we_shape_btn_content', 'position-relative', 'border-dark');
+            const btnContentInnerDiv = document.createElement('div');
+            btnContentInnerDiv.classList.add('o_we_shape');
+            btnContent.appendChild(btnContentInnerDiv);
+
+            const {shape} = btn.dataset;
+            const shapeEl = btnContent.querySelector('.o_we_shape');
+            shapeEl.classList.add(`o_${shape.replace(/\//g, '_')}`);
+            btn.append(btnContent);
+        });
+        return uiFragment;
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'shape_none_opt') {
+            return false;
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * Flips the shape on its x/y axis.
+     *
+     * @param {boolean} previewMode
+     * @param {'x'|'y'} axis the axis of the shape that should be flipped.
+     */
+    _flipShape(previewMode, axis) {
+        this._handlePreviewState(previewMode, () => {
+            const flip = new Set(this._getShapeData().flip);
+            if (flip.has(axis)) {
+                flip.delete(axis);
+            } else {
+                flip.add(axis);
+            }
+            return {flip: [...flip]};
+        });
+    },
+    /**
+     * Handles everything related to saving state before preview and restoring
+     * it after a preview or locking in the changes when not in preview.
+     *
+     * @param {boolean} previewMode
+     * @param {function} computeShapeData function to compute the new shape data.
+     */
+    _handlePreviewState(previewMode, computeShapeData) {
+        if (previewMode === 'reset') {
+            if (this.prevShape) {
+                this.$target[0].dataset.oeShapeData = this.prevShape;
+            } else {
+                delete this.$target[0].dataset.oeShapeData;
+            }
+        } else {
+            if (previewMode === true) {
+                this.prevShape = this.$target[0].dataset.oeShapeData;
+            }
+            const newShapeData = computeShapeData();
+            this._markShape(newShapeData);
+            if (previewMode === false) {
+                this.prevShape = this.$target[0].dataset.oeShapeData;
+                if (newShapeData.hasOwnProperty('shape')) {
+                    // Need to rerender for correct number of colorpickers
+                    this.rerender = true;
+                }
+            }
+        }
+
+        // Updates/removes the shape container as needed and gives it the
+        // correct background shape
+        const json = this.$target[0].dataset.oeShapeData;
+        const {shape, colors, flip = []} = json ? JSON.parse(json) : {};
+        const target = this.$target[0];
+        let shapeContainer = target.querySelector(':scope > .o_we_shape');
+        if (!shape) {
+            if (shapeContainer) {
+                shapeContainer.remove();
+            }
+            return;
+        }
+        if (!shapeContainer) {
+            shapeContainer = document.createElement('div');
+            target.prepend(shapeContainer);
+            if (shapeContainer.nextElementSibling.matches('.s_parallax_bg')) {
+                // Move parallax before shape so it shows on top.
+                target.prepend(shapeContainer.nextElementSibling);
+            }
+            target.style.position = 'relative';
+        }
+        shapeContainer.className = `o_we_shape o_${shape.replace(/\//g, '_')}`;
+        flip.forEach(dir => {
+            shapeContainer.classList.add(`o_we_flip_${dir}`);
+        });
+        // Custom colors, overwrite shape that is set by the class
+        $(shapeContainer).css('background-image', colors ? `url("${this._getShapeSrc()}")` : '');
+    },
+    /**
+     * Overwrites shape properties with the specified data.
+     *
+     * @private
+     * @param {Object} newData an object with the new data
+     */
+    _markShape(newData) {
+        const defaultColors = this._getDefaultColors();
+        const shapeData = Object.assign(this._getShapeData(), newData);
+        const areColorsDefault = Object.entries(shapeData.colors).every(([colorName, colorValue]) => {
+            return colorValue === defaultColors[colorName];
+        });
+        if (areColorsDefault) {
+            delete shapeData.colors;
+        }
+        if (!shapeData.shape) {
+            delete this.$target[0].dataset.oeShapeData;
+        } else {
+            this.$target[0].dataset.oeShapeData = JSON.stringify(shapeData);
+        }
+    },
+    /**
+     * Returns the src of the shape corresponding to the current parameters.
+     *
+     * @private
+     */
+    _getShapeSrc() {
+        const {shape, colors} = this._getShapeData();
+        if (!shape) {
+            return '';
+        }
+        const queryString = Object.entries(colors)
+            .map(([colorName, colorValue]) => {
+                const encodedCol = encodeURIComponent(normalizeColor(colorValue));
+                return `${colorName}=${encodedCol}`;
+            }).join('&');
+        return `/web_editor/shape/${shape}.svg?${queryString}`;
+    },
+    /**
+     * Retrieves current shape data from the target's dataset.
+     *
+     * @private
+     * @param {HTMLElement} [target=this.$target[0]] the target on which to read
+     *   the shape data.
+     */
+    _getShapeData(target = this.$target[0]) {
+        const defaultData = {
+            shape: '',
+            colors: this._getDefaultColors(),
+            flip: [],
+        };
+        const json = target.dataset.oeShapeData;
+        return json ? Object.assign(defaultData, JSON.parse(json)) : defaultData;
+    },
+    /**
+     * Returns the default colors for the currently selected shape.
+     *
+     * @private
+     */
+    _getDefaultColors() {
+        const $shapeContainer = this.$target.find('> .o_we_shape')
+            .clone()
+            .addClass('d-none')
+            // Needs to be in document for bg-image class to take effect
+            .appendTo(document.body);
+        const shapeContainer = $shapeContainer[0];
+        $shapeContainer.css('background-image', '');
+        const shapeSrc = shapeContainer && getBgImageURL(shapeContainer);
+        $shapeContainer.remove();
+        if (!shapeSrc) {
+            return {};
+        }
+        const url = new URL(shapeSrc, window.location.origin);
+        return Object.fromEntries(url.searchParams.entries());
+    },
+    /**
+     * Toggles whether there is a shape or not, to be called from bg toggler.
+     *
+     * @private
+     */
+    _toggleShape() {
+        if (this._getShapeData().shape) {
+            return this._handlePreviewState(false, () => ({shape: ''}));
+        } else {
+            const target = this.$target[0];
+            const previousSibling = target.previousElementSibling;
+            const [shapeWidget] = this._requestUserValueWidgets('bg_shape_opt');
+            const possibleShapes = shapeWidget.getMethodsParams('shape').possibleValues;
+            let shapeToSelect;
+            if (previousSibling) {
+                const previousShape = this._getShapeData(previousSibling).shape;
+                shapeToSelect = possibleShapes.find((shape, i) => {
+                    return possibleShapes[i - 1] === previousShape;
+                });
+            } else {
+                shapeToSelect = possibleShapes[1];
+            }
+            return this._handlePreviewState(false, () => ({shape: shapeToSelect}));
+        }
     },
 });
 
@@ -3364,7 +3742,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         await new Promise(resolve => {
             this.img = document.createElement('img');
             this.img.addEventListener('load', () => resolve());
-            this.img.src = this._getSrcFromCssValue();
+            this.img.src = getBgImageURL(this.$target[0]);
         });
 
         const position = this.$target.css('background-position').split(' ').map(v => parseInt(v));
@@ -3399,7 +3777,7 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
      * @override
      */
     _computeVisibility: function () {
-        return this._super(...arguments) && (this.$target.css('background-image') !== 'none');
+        return this._super(...arguments) && !!getBgImageURL(this.$target[0]);
     },
     /**
      * @override
@@ -3505,15 +3883,6 @@ registry.BackgroundPosition = SnippetOptionWidget.extend({
         // Needs to be deferred or the click event that activated the overlay deactivates it as well.
         // This is caused by the click event which we are currently handling bubbling up to the document.
         window.setTimeout(() => $(document).on('click.bgposition', this._onDocumentClicked.bind(this)), 0);
-    },
-    /**
-     * Returns the background image's src.
-     *
-     * @private
-     * @returns {string}
-     */
-    _getSrcFromCssValue: function () {
-        return getSrcFromCssValue(this.$target.css('background-image'));
     },
     /**
      * Returns the difference between the target's size and the background's

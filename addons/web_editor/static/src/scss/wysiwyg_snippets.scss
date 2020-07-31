@@ -506,9 +506,12 @@ body.editor_enable.editor_has_snippets {
             we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
-                max-height: 600px;
-                overflow-y: auto;
                 margin-top: $o-we-sidebar-content-field-dropdown-spacing !important;
+
+                &:not(.o_we_has_pager) {
+                    max-height: 600px;
+                    overflow-y: auto;
+                }
 
                 > we-title {
                     line-height: $o-we-sidebar-content-field-dropdown-item-height;
@@ -539,6 +542,25 @@ body.editor_enable.editor_has_snippets {
                         @include we-icon-button('\f00c', $align: left);
                         color: $o-we-sidebar-content-field-dropdown-item-active-color;
                     }
+                }
+            }
+            .o_we_pager_controls {
+                display: flex;
+                align-items: center;
+                padding: $o-we-sidebar-content-field-label-spacing;
+            }
+            .o_we_pager_next, .o_we_pager_prev {
+                padding: $o-we-sidebar-content-field-label-spacing;
+                cursor: pointer;
+            }
+            we-select-page {
+                display: none;
+                width: 100%;
+                max-height: 600px;
+                overflow-y: auto;
+
+                &.active {
+                    display: block;
                 }
             }
         }
@@ -1436,4 +1458,22 @@ body.editor_enable.editor_has_snippets {
 // CONTAINER PREVIEW
 .o_container_preview {
     outline: 2px dashed $o-we-handles-accent-color;
+}
+
+we-select.o_we_shape_menu {
+    we-button[data-shape] {
+        padding: 0 !important;
+
+        &.active {
+            border: 1px solid $o-we-color-success !important;
+        }
+        div {
+            width: 100%;
+        }
+        .o_we_shape_btn_content {
+            width: 100%;
+            height: 75px;
+            background-color: lightgray; // Must be a color which can make all shapes appear
+        }
+    }
 }
