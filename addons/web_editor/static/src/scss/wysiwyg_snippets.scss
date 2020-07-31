@@ -440,9 +440,6 @@ body.editor_enable.editor_has_snippets {
                     margin-bottom: 1px; // Not sure why but not really centered otherwise
                 }
             }
-            &.active {
-                @include we-icon-button('\f00c', $align: left);
-            }
             &.fa > div {
                 display: none;
             }
@@ -480,17 +477,9 @@ body.editor_enable.editor_has_snippets {
                 }
             }
 
-            &.active {
-                padding-left: 0;
-
-                we-checkbox {
-                    background-color: $o-we-sidebar-content-field-toggle-active-bg;
-                    justify-content: flex-end;
-                }
-
-                &::after {
-                    display: none;
-                }
+            &.active we-checkbox {
+                background-color: $o-we-sidebar-content-field-toggle-active-bg;
+                justify-content: flex-end;
             }
         }
 
@@ -542,6 +531,7 @@ body.editor_enable.editor_has_snippets {
                     }
 
                     &.active {
+                        @include we-icon-button('\f00c', $align: left);
                         color: $o-we-sidebar-content-field-dropdown-item-active-color;
                     }
                 }
@@ -557,13 +547,6 @@ body.editor_enable.editor_has_snippets {
                 we-button {
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
 
-                    &.active {
-                        padding-left: $o-we-sidebar-content-field-button-group-button-spacing;
-
-                        &::after {
-                            display: none;
-                        }
-                    }
                     + we-button {
                         border-left: none;
                     }
