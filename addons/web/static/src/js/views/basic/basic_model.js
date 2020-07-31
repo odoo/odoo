@@ -334,6 +334,7 @@ var BasicModel = AbstractModel.extend({
             field = record.fields[fieldName];
             record.data[fieldName] = null;
         }
+        return values;
     },
     /**
      * Onchange RPCs may return values for fields that are not in the current
@@ -1668,6 +1669,10 @@ var BasicModel = AbstractModel.extend({
      * @returns {Promise}
      */
     _applyOnChange: function (values, record, viewType, hasDefaults=false) {
+        // LPE FIXME: from basic_view end of _loadData:  we can't use he return of a model.get
+        if (typeof record === 'string') {
+            record = this.localData[record];
+        }
         var self = this;
         var defs = [];
         var rec;
@@ -1677,6 +1682,7 @@ var BasicModel = AbstractModel.extend({
             var field = record.fields[name];
             if (!field && hasDefaults) {
                 record._changes[name] = val;
+                //return; // LPE necessary ???
             }
             if (!field) {
                 // this field is unknown so we can't process it for now (it is not
@@ -1690,7 +1696,7 @@ var BasicModel = AbstractModel.extend({
                 record._rawChanges[name] = val;
                 return;
             }
-            if (record._rawChanges[name]) {
+            if (record._rawChanges && record._rawChanges[name]) {
                 // if previous _rawChanges exists, clear them since the field is now knwon
                 // and restoring outdated onchange over posterious change is wrong
                 delete record._rawChanges[name];
@@ -1748,7 +1754,8 @@ var BasicModel = AbstractModel.extend({
             } else if (field.type === 'one2many' || field.type === 'many2many') {
                 var listId = record._changes[name] || record.data[name];
                 var list;
-                if (listId) {
+                // LPE FIXME
+                if (listId && !Array.isArray(listId)) {
                     list = self.localData[listId];
                 } else {
                     var fieldInfo = record.fieldsInfo[viewType][name];
@@ -2746,17 +2753,18 @@ var BasicModel = AbstractModel.extend({
                 var relatedRecord = self.localData[localId];
                 const recFieldContext = record.getContext({fieldName: name, viewType: record.viewType});
                 const alwaysReload = fieldInfo.options && fieldInfo.options.always_reload;
-                if (!alwaysReload &&
-                     (!relatedRecord ||
-                       (relatedRecord.data.display_name && recContextSerial === JSON.stringify(recFieldContext))
+
+                if (relatedRecord &&
+                     (!relatedRecord.data.display_name ||
+                       recContextSerial === JSON.stringify(recFieldContext) ||
+                       alwaysReload
                      )
                 ) {
-                    return;
+                    toBeFetched.push({
+                        context: recFieldContext,
+                        record: relatedRecord
+                    });
                 }
-                toBeFetched.push({
-                    context: recFieldContext,
-                    record: relatedRecord
-                });
             }
         });
 

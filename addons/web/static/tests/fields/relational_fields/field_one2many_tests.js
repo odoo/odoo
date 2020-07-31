@@ -165,7 +165,7 @@ QUnit.module('fields', {}, function () {
         QUnit.module('FieldOne2Many');
 
         QUnit.test('New record with a o2m also with 2 new records, ordered, and resequenced', async function (assert) {
-            assert.expect(3);
+            assert.expect(2);
 
             // Needed to have two new records in a single stroke
             this.data.partner.onchanges = {
@@ -211,7 +211,7 @@ QUnit.module('fields', {}, function () {
 
             // Only those two should have been called
             // name_get on trululu would trigger an traceback
-            assert.verifySteps(['default_get partner', 'onchange partner']);
+            assert.verifySteps(['onchange partner']);
 
             form.destroy();
         });
@@ -2868,7 +2868,7 @@ QUnit.module('fields', {}, function () {
             assert.containsNone(form, 'tr.o_data_row',
                 "should still have 0 data rows");
 
-            assert.verifySteps(['read', 'default_get', 'default_get']);
+            assert.verifySteps(['read', 'onchange', 'onchange']);
             form.destroy();
         });
 
@@ -3134,7 +3134,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), 'enter');
             assert.hasClass(form.$('input[name="turtle_foo"]'), 'o_field_invalid',
                 "input should be marked invalid");
-            assert.verifySteps(['read', 'default_get']);
+            assert.verifySteps(['read', 'onchange']);
             form.destroy();
         });
 
@@ -3190,7 +3190,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_data_row td:contains(9)').length, 1,
                 "should have one row with turtle_int value");
 
-            assert.verifySteps(['read', 'default_get', 'onchange', 'onchange', 'write', 'read', 'read']);
+            assert.verifySteps(['read', 'onchange', 'onchange', 'write', 'read', 'read']);
             form.destroy();
         });
 
@@ -3223,7 +3223,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), 'escape');
             assert.containsNone(form, 'tr.o_data_row',
                 "data row should have been discarded");
-            assert.verifySteps(['read', 'default_get']);
+            assert.verifySteps(['read', 'onchange']);
             form.destroy();
         });
 
@@ -3258,7 +3258,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.fields.triggerKeydown(form.$('input[name="turtle_foo"]'), 'escape');
             assert.containsNone(form, 'tr.o_data_row',
                 "data row should have been discarded");
-            assert.verifySteps(['read', 'default_get']);
+            assert.verifySteps(['read', 'onchange']);
             form.destroy();
         });
 
@@ -4203,7 +4203,7 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 2,
                 mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
+                    if (args.method === 'onchange') {
                         assert.strictEqual(args.kwargs.context.date, '2017-01-25',
                             "should have properly evaluated date key in context");
                     }
@@ -4237,7 +4237,7 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
                 mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
+                    if (args.method === 'onchange') {
                         var expected = counter === 0 ?
                             [[4, 2, false]] :
                             [[4, 2, false], [0, args.kwargs.context.turtles[1][1], { turtle_foo: 'hammer' }]];
@@ -4311,7 +4311,7 @@ QUnit.module('fields', {}, function () {
                     '</form>',
                 res_id: 1,
                 mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
+                    if (args.method === 'onchange') {
                         var context = args.kwargs.context;
                         assert.strictEqual(context.hello, "world");
                         assert.strictEqual(context.abc, 10);
@@ -4498,7 +4498,7 @@ QUnit.module('fields', {}, function () {
                     '</field>' +
                     '</form>',
                 mockRPC: function (route, args) {
-                    if (args.method === 'default_get') {
+                    if (args.method === 'onchange') {
                         n++;
                         if (n === 2) {
                             var context = args.kwargs.context;
@@ -4573,7 +4573,7 @@ QUnit.module('fields', {}, function () {
                 },
             });
             await testUtils.dom.click(form.$('tbody td.o_field_x2many_list_row_add a'));
-            assert.verifySteps(['default_get', 'onchange', 'default_get', 'onchange']);
+            assert.verifySteps(['onchange', 'onchange']);
             form.destroy();
         });
 
@@ -5371,6 +5371,10 @@ QUnit.module('fields', {}, function () {
         QUnit.test('nested x2many default values', async function (assert) {
             assert.expect(3);
 
+            this.data.partner.fields.turtles.default = [
+                [0, 0, { partner_ids: [[6, 0, [4]]] }],
+                [0, 0, { partner_ids: [[6, 0, [1]]] }],
+            ];
             var form = await createView({
                 View: FormView,
                 model: 'partner',
@@ -5382,17 +5386,6 @@ QUnit.module('fields', {}, function () {
                     '</tree>' +
                     '</field>' +
                     '</form>',
-                mockRPC: function (route, args) {
-                    if (args.model === 'partner' && args.method === 'default_get') {
-                        return Promise.resolve({
-                            turtles: [
-                                [0, 0, { partner_ids: [[6, 0, [4]]] }],
-                                [0, 0, { partner_ids: [[6, 0, [1]]] }],
-                            ],
-                        });
-                    }
-                    return this._super.apply(this, arguments);
-                },
             });
 
             assert.containsN(form, '.o_list_view .o_data_row', 2,
@@ -6018,7 +6011,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
                 "int_field should still be 0 (no onchange should have been done yet");
 
-            assert.verifySteps(['read', 'default_get'], "no onchange should have been applied");
+            assert.verifySteps(['read', 'onchange'], "no onchange should have been applied");
 
             await testUtils.fields.editInput(form.$('.o_field_widget[name="turtle_foo"]'), "some text");
             assert.verifySteps(['onchange']);
@@ -6081,7 +6074,7 @@ QUnit.module('fields', {}, function () {
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
             assert.strictEqual(form.$('.o_field_widget[name="int_field"]').val(), "0",
                 "int_field should still be 0 (no onchange should have been done yet)");
-            assert.verifySteps(['load_views', 'read', 'default_get'], "no onchange should have been applied");
+            assert.verifySteps(['load_views', 'read', 'onchange'], "no onchange should have been applied");
 
             // fill turtle_foo field
             await testUtils.fields.editInput(form.$('.o_field_widget[name="turtle_foo"]'), "some text");
@@ -6579,7 +6572,7 @@ QUnit.module('fields', {}, function () {
             // triggers an onchange on partner, because the new record is valid
             await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
 
-            assert.verifySteps(['read', 'default_get', 'onchange']);
+            assert.verifySteps(['read', 'onchange']);
             form.destroy();
         });
 
@@ -6671,7 +6664,7 @@ QUnit.module('fields', {}, function () {
 
             assert.containsN(form, 'tr.o_data_row', 40);
 
-            assert.verifySteps(['read', 'read', 'default_get', 'write', 'read', 'read']);
+            assert.verifySteps(['read', 'read', 'onchange', 'write', 'read', 'read']);
             form.destroy();
         });
 
@@ -6766,7 +6759,7 @@ QUnit.module('fields', {}, function () {
 
             assert.containsN(form, 'tr.o_data_row', 40);
 
-            assert.verifySteps(['read', 'read', 'read', 'default_get', 'write', 'read', 'read']);
+            assert.verifySteps(['read', 'read', 'read', 'onchange', 'write', 'read', 'read']);
             form.destroy();
         });
 
@@ -7059,7 +7052,7 @@ QUnit.module('fields', {}, function () {
                 mockRPC: function (route, args) {
                     assert.strictEqual(args.kwargs.context.flutter, 'shy',
                         'view context key should be used for every rpcs');
-                    if (args.method === 'default_get') {
+                    if (args.method === 'onchange') {
                         if (args.model === 'partner') {
                             assert.strictEqual(args.kwargs.context.default_flutter, 'why',
                                 "should have default_* values in context for form view RPCs");
@@ -7726,9 +7719,7 @@ QUnit.module('fields', {}, function () {
 
             assert.verifySteps([
                 'load_views', // load sub list
-                'default_get', // main record
                 'onchange', // main record
-                'default_get', // sub record
                 'onchange', // sub record
                 'onchange', // edition of display_name of sub record
             ]);
@@ -8315,9 +8306,9 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_data_row').text(), 'some foo value',
                 "foo field should have correct value");
             assert.verifySteps([
-                'default_get', // main record
-                'default_get', // line 1
-                'default_get', // line 2
+                'onchange', // main record
+                'onchange', // line 1
+                'onchange', // line 2
                 'create',
                 'read', // main record
                 'read', // line 1
@@ -8816,7 +8807,7 @@ QUnit.module('fields', {}, function () {
             assert.strictEqual(form.$('.o_field_widget[name="partner_ids"]').text().replace(/\s/g, ''),
                 "secondrecordsecondrecordaaa");
 
-            assert.verifySteps(['default_get', 'onchange', 'read']);
+            assert.verifySteps(['onchange', 'read']);
 
             form.destroy();
         });

@@ -183,10 +183,13 @@ var BasicView = AbstractView.extend({
 
             var def;
             if (fieldNames.length) {
+                // LPE FIXME !!
                 if (model.isNew(record.id)) {
                     def = model.applyDefaultValues(record.id, {}, {
                         fieldNames: fieldNames,
                         viewType: viewType,
+                    }).then((values) => {
+                        return model._applyOnChange(values, record.id, viewType);
                     });
                 } else {
                     def = model.reload(record.id, {
