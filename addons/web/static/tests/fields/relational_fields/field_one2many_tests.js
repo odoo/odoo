@@ -123,7 +123,6 @@ QUnit.module('fields', {}, function () {
                         display_name: "leonardo",
                         turtle_bar: true,
                         turtle_foo: "yop",
-                        turtle_int: 1,
                         partner_ids: [],
                     }, {
                         id: 2,
@@ -609,7 +608,7 @@ QUnit.module('fields', {}, function () {
                 },
                 res_id: 1,
             });
-            assert.strictEqual(form.$('.o_field_one2many .o_list_view .o_data_row').text(), "9blip21kawa1yop",
+            assert.strictEqual(form.$('.o_field_one2many .o_list_view .o_data_row').text(), "9blip21kawa0yop",
                 "the default order should be correctly applied");
             form.destroy();
         });
@@ -698,7 +697,7 @@ QUnit.module('fields', {}, function () {
             );
 
             assert.strictEqual(nbConfirmChange, 1, "should have confirmed changes only once");
-            assert.verifySteps(["1", "2"],
+            assert.verifySteps(["0", "1"],
                 "sequences values should be incremental starting from the previous minimum one");
 
             assert.strictEqual(form.$('td.o_data_cell:not(.o_handle_cell)').text(), "blipyopkawa",
@@ -709,8 +708,8 @@ QUnit.module('fields', {}, function () {
             assert.deepEqual(_.map(this.data.turtle.records, function (turtle) {
                 return _.pick(turtle, 'id', 'turtle_foo', 'turtle_int');
             }), [
-                    { id: 1, turtle_foo: "yop", turtle_int: 2 },
-                    { id: 2, turtle_foo: "blip", turtle_int: 1 },
+                    { id: 1, turtle_foo: "yop", turtle_int: 1 },
+                    { id: 2, turtle_foo: "blip", turtle_int: 0 },
                     { id: 3, turtle_foo: "kawa", turtle_int: 21 }
                 ], "should have save the changed sequence");
 
@@ -4400,7 +4399,7 @@ QUnit.module('fields', {}, function () {
 
             assert.containsN(form, '.o_data_row', 3,
                 "sould have 3 records in one2many list");
-            assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.51tototo1.550xphone",
+            assert.strictEqual(form.$('.o_data_row').text(), "blip1.59yop1.50tototo1.550xphone",
                 "should display the record values in one2many list");
 
             await testUtils.dom.click($('.o_form_button_save'));
@@ -8678,9 +8677,9 @@ QUnit.module('fields', {}, function () {
                     if (args.method === 'write') {
                         assert.deepEqual(args.args[1], {
                             turtles: [
-                                [1, 2, {turtle_int: 1}],
-                                [1, 3, {turtle_int: 2}],
-                                [1, 1, {turtle_int: 3}],
+                                [1, 2, {turtle_int: 0}],
+                                [1, 3, {turtle_int: 1}],
+                                [1, 1, {turtle_int: 2}],
                             ],
                         });
                     }
