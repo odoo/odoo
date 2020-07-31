@@ -2,7 +2,6 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from odoo.addons.stock_landed_costs.tests.common import TestStockLandedCostsCommon
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
 from odoo.exceptions import ValidationError
 from odoo.tests import tagged
 
@@ -20,19 +19,15 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
             'name': "LC product 1",
             'weight': 10,
             'volume': 1,
+            'categ_id': self.stock_account_product_categ.id,
         })
-        product_landed_cost_1.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.company_data['default_account_expense']
-        product_landed_cost_1.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.company_data['default_account_revenue']
 
         product_landed_cost_2 = self.env['product.product'].create({
             'name': "LC product 2",
             'weight': 20,
             'volume': 1.5,
+            'categ_id': self.stock_account_product_categ.id,
         })
-        product_landed_cost_2.product_tmpl_id.categ_id.property_cost_method = 'fifo'
-        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_input_categ_id = self.company_data['default_account_expense']
-        product_landed_cost_2.product_tmpl_id.categ_id.property_stock_account_output_categ_id = self.company_data['default_account_revenue']
 
         self.assertEqual(product_landed_cost_1.value_svl, 0)
         self.assertEqual(product_landed_cost_1.quantity_svl, 0)
@@ -98,7 +93,10 @@ class TestStockLandedCosts(TestStockLandedCostsCommon):
 
         # I create a landed cost for those 2 pickings
         default_vals = self.env['stock.landed.cost'].default_get(list(self.env['stock.landed.cost'].fields_get()))
-        virtual_home_staging = self.env['product.product'].create({'name': 'Virtual Home Staging'})
+        virtual_home_staging = self.env['product.product'].create({
+            'name': 'Virtual Home Staging',
+            'categ_id': self.stock_account_product_categ.id,
+        })
         default_vals.update({
             'picking_ids': [picking_landed_cost_1.id, picking_landed_cost_2.id],
             'account_journal_id': self.expenses_journal,

@@ -1,14 +1,16 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo.addons.sale.tests.test_sale_common import TestCommonSaleNoChart
+from odoo.addons.sale.tests.common import TestSaleCommon
+from odoo.tests import tagged
 
 
-class TestSaleOrder(TestCommonSaleNoChart):
+@tagged('-at_install', 'post_install')
+class TestSaleOrder(TestSaleCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestSaleOrder, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         Pricelist = cls.env['product.pricelist']
         Product = cls.env['product.product']
@@ -103,11 +105,13 @@ class TestSaleOrder(TestCommonSaleNoChart):
 
         # create some sale orders
         cls.sale_order = SaleOrder.create({
-            'partner_id': cls.partner_customer_usd.id,
+            'partner_id': cls.partner_a.id,
+            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
 
         cls.sale_order_no_price_list = SaleOrder.create({
-            'partner_id': cls.partner_customer_usd.id,
+            'partner_id': cls.partner_a.id,
+            'pricelist_id': cls.company_data['default_pricelist'].id,
         })
 
     def test_01_template_without_pricelist(self):

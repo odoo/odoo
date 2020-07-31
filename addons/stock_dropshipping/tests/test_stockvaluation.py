@@ -1,67 +1,25 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
-
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import Form, tagged
 
+
 @tagged('post_install', '-at_install')
-class TestStockValuation(StockAccountTestCommon):
+class TestStockValuation(ValuationReconciliationTestCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestStockValuation, cls).setUpClass()
-        # Setup a new company to avoid any external influence
-        cls.company = cls.env['res.company'].create({
-            'name': 'My Test Company',
-            'currency_id': cls.env.ref('base.USD').id,
-        })
-        cls.env.user.company_id = cls.company
-        cls.create_accounting_minimal_data()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.supplier_location = cls.env.ref('stock.stock_location_suppliers')
-        cls.stock_location = cls.env.ref('stock.stock_location_stock')
+        cls.stock_location = cls.company_data['default_warehouse'].lot_stock_id
         cls.partner_id = cls.env['res.partner'].create({'name': 'My Test Partner'})
         cls.product1 = cls.env['product.product'].create({
             'name': 'Large Desk',
             'type': 'product',
-            'categ_id': cls.env.ref('product.product_category_all').id,
+            'categ_id': cls.stock_account_product_categ.id,
             'taxes_id': [(6, 0, [])],
         })
-        cls.categ_id = cls.product1.categ_id
-        cls.stock_input_account = cls.env['account.account'].create({
-            'name': 'Stock Input',
-            'code': 'StockIn',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
-            'reconcile': True,
-        })
-        cls.stock_output_account = cls.env['account.account'].create({
-            'name': 'Stock Output',
-            'code': 'StockOut',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
-            'reconcile': True,
-        })
-        cls.stock_valuation_account = cls.env['account.account'].create({
-            'name': 'Stock Valuation',
-            'code': 'Stock Valuation',
-            'user_type_id': cls.env.ref('account.data_account_type_current_assets').id,
-        })
-        cls.stock_journal = cls.env['account.journal'].create({
-            'name': 'Stock Journal',
-            'code': 'STJTEST',
-            'type': 'general',
-        })
-        cls.product1.categ_id.write({
-            'property_stock_account_input_categ_id': cls.stock_input_account.id,
-            'property_stock_account_output_categ_id': cls.stock_output_account.id,
-            'property_stock_valuation_account_id': cls.stock_valuation_account.id,
-            'property_stock_journal': cls.stock_journal.id,
-        })
-        cls.acc_payable = cls.partner_id.property_account_payable_id.id
-        cls.acc_expense = cls.categ_id.property_account_expense_categ_id.id
-        cls.acc_receivable = cls.partner_id.property_account_receivable_id.id
-        cls.acc_sale = cls.categ_id.property_account_income_categ_id.id
-        cls.acc_stock_in = cls.categ_id.property_stock_account_input_categ_id.id
-        cls.acc_stock_out = cls.categ_id.property_stock_account_output_categ_id.id
 
     def _dropship_product1(self):
         # enable the dropship and MTO route on the product
@@ -111,7 +69,9 @@ class TestStockValuation(StockAccountTestCommon):
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
         move_form.partner_id = vendor1
         move_form.purchase_id = self.purchase_order1
-        move_form.line_ids.tax_ids = False
+        for i in range(len(self.purchase_order1.order_line)):
+            with move_form.invoice_line_ids.edit(i) as line_form:
+                line_form.tax_ids.clear()
         self.vendor_bill1 = move_form.save()
         self.vendor_bill1.post()
 
@@ -155,10 +115,10 @@ class TestStockValuation(StockAccountTestCommon):
         all_amls = self._dropship_product1()
 
         expected_aml = {
-            self.acc_payable:    (0.0, 8.0),
-            self.acc_expense:    (8.0, 0.0),
-            self.acc_receivable: (12.0, 0.0),
-            self.acc_sale:       (0.0, 12.0),
+            self.company_data['default_account_payable'].id:        (0.0, 8.0),
+            self.company_data['default_account_expense'].id:        (8.0, 0.0),
+            self.company_data['default_account_receivable'].id:     (12.0, 0.0),
+            self.company_data['default_account_revenue'].id:        (0.0, 12.0),
         }
 
         self._check_results(expected_aml, 4, all_amls)
@@ -173,10 +133,10 @@ class TestStockValuation(StockAccountTestCommon):
         all_amls = self._dropship_product1()
 
         expected_aml = {
-            self.acc_payable:    (0.0, 8.0),
-            self.acc_expense:    (8.0, 0.0),
-            self.acc_receivable: (12.0, 0.0),
-            self.acc_sale:       (0.0, 12.0),
+            self.company_data['default_account_payable'].id:        (0.0, 8.0),
+            self.company_data['default_account_expense'].id:        (8.0, 0.0),
+            self.company_data['default_account_receivable'].id:     (12.0, 0.0),
+            self.company_data['default_account_revenue'].id:        (0.0, 12.0),
         }
 
         self._check_results(expected_aml, 4, all_amls)
@@ -191,10 +151,10 @@ class TestStockValuation(StockAccountTestCommon):
         all_amls = self._dropship_product1()
 
         expected_aml = {
-            self.acc_payable:    (0.0, 8.0),
-            self.acc_expense:    (8.0, 0.0),
-            self.acc_receivable: (12.0, 0.0),
-            self.acc_sale:       (0.0, 12.0),
+            self.company_data['default_account_payable'].id:        (0.0, 8.0),
+            self.company_data['default_account_expense'].id:        (8.0, 0.0),
+            self.company_data['default_account_receivable'].id:     (12.0, 0.0),
+            self.company_data['default_account_revenue'].id:        (0.0, 12.0),
         }
 
         self._check_results(expected_aml, 4, all_amls)
@@ -210,10 +170,10 @@ class TestStockValuation(StockAccountTestCommon):
         all_amls = self._dropship_product1()
 
         expected_aml = {
-            self.acc_payable:    (0.0, 8.0),
-            self.acc_expense:    (8.0, 0.0),
-            self.acc_receivable: (12.0, 0.0),
-            self.acc_sale:       (0.0, 12.0),
+            self.company_data['default_account_payable'].id:        (0.0, 8.0),
+            self.company_data['default_account_expense'].id:        (8.0, 0.0),
+            self.company_data['default_account_receivable'].id:     (12.0, 0.0),
+            self.company_data['default_account_revenue'].id:        (0.0, 12.0),
         }
 
         self._check_results(expected_aml, 4, all_amls)
@@ -231,12 +191,12 @@ class TestStockValuation(StockAccountTestCommon):
         all_amls = self._dropship_product1()
 
         expected_aml = {
-            self.acc_payable:    (0.0, 8.0),
-            self.acc_expense:    (10.0, 0.0),
-            self.acc_receivable: (12.0, 0.0),
-            self.acc_sale:       (0.0, 12.0),
-            self.acc_stock_in:   (8.0, 10.0),
-            self.acc_stock_out:  (10.0, 10.0),
+            self.company_data['default_account_payable'].id:        (0.0, 8.0),
+            self.company_data['default_account_expense'].id:        (10.0, 0.0),
+            self.company_data['default_account_receivable'].id:     (12.0, 0.0),
+            self.company_data['default_account_revenue'].id:        (0.0, 12.0),
+            self.company_data['default_account_stock_in'].id:       (8.0, 10.0),
+            self.company_data['default_account_stock_out'].id:      (10.0, 10.0),
         }
         # Interim IN is not balanced because because there's a difference between the po line
         # price unit and the standard price. We could set a price difference account on the
@@ -254,12 +214,12 @@ class TestStockValuation(StockAccountTestCommon):
         all_amls = self._dropship_product1()
 
         expected_aml = {
-            self.acc_payable:    (0.0, 8.0),
-            self.acc_expense:    (10.0, 0.0),
-            self.acc_receivable: (12.0, 0.0),
-            self.acc_sale:       (0.0, 12.0),
-            self.acc_stock_in:   (8.0, 10.0),
-            self.acc_stock_out:  (10.0, 10.0),
+            self.company_data['default_account_payable'].id:        (0.0, 8.0),
+            self.company_data['default_account_expense'].id:        (10.0, 0.0),
+            self.company_data['default_account_receivable'].id:     (12.0, 0.0),
+            self.company_data['default_account_revenue'].id:        (0.0, 12.0),
+            self.company_data['default_account_stock_in'].id:       (8.0, 10.0),
+            self.company_data['default_account_stock_out'].id:      (10.0, 10.0),
         }
         # Interim IN is not balanced because because there's a difference between the po line
         # price unit and the standard price. We could set a price difference account on the
@@ -277,12 +237,12 @@ class TestStockValuation(StockAccountTestCommon):
         all_amls = self._dropship_product1()
 
         expected_aml = {
-            self.acc_payable:    (0.0, 8.0),
-            self.acc_expense:    (8.0, 0.0),
-            self.acc_receivable: (12.0, 0.0),
-            self.acc_sale:       (0.0, 12.0),
-            self.acc_stock_in:   (8.0, 8.0),
-            self.acc_stock_out:  (8.0, 8.0),
+            self.company_data['default_account_payable'].id:        (0.0, 8.0),
+            self.company_data['default_account_expense'].id:        (8.0, 0.0),
+            self.company_data['default_account_receivable'].id:     (12.0, 0.0),
+            self.company_data['default_account_revenue'].id:        (0.0, 12.0),
+            self.company_data['default_account_stock_in'].id:       (8.0, 8.0),
+            self.company_data['default_account_stock_out'].id:      (8.0, 8.0),
         }
 
         self._check_results(expected_aml, 10, all_amls)
@@ -297,12 +257,12 @@ class TestStockValuation(StockAccountTestCommon):
         all_amls = self._dropship_product1()
 
         expected_aml = {
-            self.acc_payable:    (0.0, 8.0),
-            self.acc_expense:    (8.0, 0.0),
-            self.acc_receivable: (12.0, 0.0),
-            self.acc_sale:       (0.0, 12.0),
-            self.acc_stock_in:   (8.0, 8.0),
-            self.acc_stock_out:  (8.0, 8.0),
+            self.company_data['default_account_payable'].id:        (0.0, 8.0),
+            self.company_data['default_account_expense'].id:        (8.0, 0.0),
+            self.company_data['default_account_receivable'].id:     (12.0, 0.0),
+            self.company_data['default_account_revenue'].id:        (0.0, 12.0),
+            self.company_data['default_account_stock_in'].id:       (8.0, 8.0),
+            self.company_data['default_account_stock_out'].id:      (8.0, 8.0),
         }
         self._check_results(expected_aml, 10, all_amls)
 
@@ -332,8 +292,8 @@ class TestStockValuation(StockAccountTestCommon):
 
         # Two extra AML should have been created for the return
         expected_aml = {
-            self.acc_stock_in:   (10.0, 0.0),
-            self.acc_stock_out:  (0.0, 10.0),
+            self.company_data['default_account_stock_in'].id:       (10.0, 0.0),
+            self.company_data['default_account_stock_out'].id:      (0.0, 10.0),
         }
 
         self._check_results(expected_aml, 4, all_amls_return - all_amls)

@@ -2,39 +2,28 @@
 from random import randint
 
 from odoo import fields, tools
-from odoo.addons.stock_account.tests.common import StockAccountTestCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests.common import SavepointCase, Form
-from odoo.tools import float_is_zero
+from odoo.tests import tagged
 
 
-class TestPointOfSaleCommon(StockAccountTestCommon):
+@tagged('post_install', '-at_install')
+class TestPointOfSaleCommon(ValuationReconciliationTestCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestPointOfSaleCommon, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
+
+        cls.company_data['company'].write({
+            'point_of_sale_update_stock_quantities': 'real',
+        })
 
         cls.AccountBankStatement = cls.env['account.bank.statement']
         cls.AccountBankStatementLine = cls.env['account.bank.statement.line']
         cls.PosMakePayment = cls.env['pos.make.payment']
         cls.PosOrder = cls.env['pos.order']
         cls.PosSession = cls.env['pos.session']
-        cls.company = cls.env.ref('base.main_company')
-        cls.company.point_of_sale_update_stock_quantities = 'real'
-        cls.company_id = cls.company.id
-        coa = cls.env['account.chart.template'].search([
-            ('currency_id', '=', cls.company.currency_id.id),
-            ], limit=1)
-        test_sale_journal = cls.env['account.journal'].create({
-            'name': 'Sales Journal - Test',
-            'code': 'TSJ',
-            'type': 'sale',
-            'company_id': cls.company_id})
-        cls.company.write({
-            'anglo_saxon_accounting': coa.use_anglo_saxon,
-            'bank_account_code_prefix': 'test' + coa.bank_account_code_prefix,
-            'cash_account_code_prefix': 'test' + coa.cash_account_code_prefix,
-            'transfer_account_code_prefix': 'test' + coa.transfer_account_code_prefix,
-            'chart_template_id': coa.id,})
+        cls.company = cls.company_data['company']
         cls.product3 = cls.env['product.product'].create({
             'name': 'Product 3',
             'list_price': 450,
@@ -45,10 +34,10 @@ class TestPointOfSaleCommon(StockAccountTestCommon):
         })
         cls.partner1 = cls.env['res.partner'].create({'name': 'Partner 1'})
         cls.partner4 = cls.env['res.partner'].create({'name': 'Partner 4'})
-        cls.pos_config = cls.env.ref('point_of_sale.pos_config_main')
-        cls.pos_config.write({
-            'journal_id': test_sale_journal.id,
-            'invoice_journal_id': test_sale_journal.id,
+        cls.pos_config = cls.env['pos.config'].create({
+            'name': 'Main',
+            'journal_id': cls.company_data['default_journal_sale'].id,
+            'invoice_journal_id': cls.company_data['default_journal_sale'].id,
         })
         cls.led_lamp = cls.env['product.product'].create({
             'name': 'LED Lamp',
@@ -65,26 +54,24 @@ class TestPointOfSaleCommon(StockAccountTestCommon):
             'available_in_pos': True,
             'list_price': 1.28,
         })
-        cls.default_receivable_account = cls.a_recv
-        cls.company.account_default_pos_receivable_account_id = cls.default_receivable_account
         cls.cash_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Cash',
-            'receivable_account_id': cls.default_receivable_account.id,
+            'receivable_account_id': cls.company_data['default_account_receivable'].id,
             'is_cash_count': True,
-            'cash_journal_id': cls.cash_journal.id,
-            'company_id': cls.env.user.company_id.id,
+            'cash_journal_id': cls.company_data['default_journal_cash'].id,
+            'company_id': cls.env.company.id,
         })
         cls.bank_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Bank',
-            'receivable_account_id': cls.default_receivable_account.id,
+            'receivable_account_id': cls.company_data['default_account_receivable'].id,
             'is_cash_count': False,
-            'company_id': cls.env.user.company_id.id,
+            'company_id': cls.env.company.id,
         })
         cls.credit_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Credit',
-            'receivable_account_id': cls.default_receivable_account.id,
+            'receivable_account_id': cls.company_data['default_account_receivable'].id,
             'split_transactions': True,
-            'company_id': cls.env.user.company_id.id,
+            'company_id': cls.env.company.id,
         })
         cls.pos_config.write({'payment_method_ids': [(4, cls.credit_payment_method.id), (4, cls.bank_payment_method.id), (4, cls.cash_payment_method.id)]})
 
@@ -93,7 +80,7 @@ class TestPointOfSaleCommon(StockAccountTestCommon):
             'type': 'sale',
             'name': 'Point of Sale',
             'code': 'POSS - Test',
-            'company_id': cls.env.user.company_id.id,
+            'company_id': cls.env.company.id,
             'sequence': 20
         })
 
@@ -103,7 +90,7 @@ class TestPointOfSaleCommon(StockAccountTestCommon):
             'name': 'VAT 10 perc Incl',
             'amount_type': 'percent',
             'amount': 10.0,
-            'price_include': 1
+            'price_include': True,
         })
 
         # assign this 10 percent tax on the [PCSC234] PC Assemble SC234 product
@@ -115,22 +102,18 @@ class TestPointOfSaleCommon(StockAccountTestCommon):
             'name': 'VAT 5 perc Incl',
             'amount_type': 'percent',
             'amount': 5.0,
-            'price_include': 0
+            'price_include': False,
         })
 
         # create a second VAT tax of 5% but this time for a child company, to
         # ensure that only product taxes of the current session's company are considered
         #(this tax should be ignore when computing order's taxes in following tests)
-        another_company = cls.env['res.company'].create({
-            'name': 'My Other Company',
-            'partner_id': cls.env['res.partner'].create({'name': 'My Other Company Partner'}).id,
-        })
-
-        account_tax_05_incl_chicago = Tax.with_context(default_company_id=another_company.id).create({
+        account_tax_05_incl_chicago = Tax.create({
             'name': 'VAT 05 perc Excl (US)',
             'amount_type': 'percent',
             'amount': 5.0,
-            'price_include': 0,
+            'price_include': False,
+            'company_id': cls.company_data_2['company'].id,
         })
 
         cls.product4.company_id = False
@@ -143,10 +126,11 @@ class TestPointOfSaleCommon(StockAccountTestCommon):
         refund_rep_lines = (account_tax_05_incl | account_tax_10_incl).mapped('refund_repartition_line_ids')
 
         # Expense account, should just be something else than receivable/payable
-        (invoice_rep_lines | refund_rep_lines).write({'account_id': cls.a_expense.id})
+        (invoice_rep_lines | refund_rep_lines).write({'account_id': cls.company_data['default_account_tax_sale'].id})
 
 
-class TestPoSCommon(StockAccountTestCommon):
+@tagged('post_install', '-at_install')
+class TestPoSCommon(ValuationReconciliationTestCommon):
     """ Set common values for different special test cases.
 
     The idea is to set up common values here for the tests
@@ -155,15 +139,15 @@ class TestPoSCommon(StockAccountTestCommon):
     """
 
     @classmethod
-    def setUpClass(cls):
-        super(TestPoSCommon, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        cls.pos_manager = cls.env.ref('base.user_admin')
-        cls.env = cls.env(user=cls.pos_manager)
+        cls.company_data['company'].write({
+            'point_of_sale_update_stock_quantities': 'real',
+        })
 
         # Set basic defaults
-        cls.company = cls.env.ref('base.main_company')
-        cls.company.point_of_sale_update_stock_quantities = 'real'
+        cls.company = cls.company_data['company']
         cls.pos_sale_journal = cls.env['account.journal'].create({
             'type': 'sale',
             'name': 'Point of Sale Test',
@@ -171,15 +155,9 @@ class TestPoSCommon(StockAccountTestCommon):
             'company_id': cls.company.id,
             'sequence': 20
         })
-        cls.invoice_journal = cls.env['account.journal'].create({
-            'type': 'sale',
-            'name': 'Invoice Journal Test',
-            'code': 'INVT',
-            'company_id': cls.company.id,
-            'sequence': 21
-        })
-        cls.receivable_account = cls.pos_manager.partner_id.property_account_receivable_id
-        cls.tax_received_account = cls.a_expense # Whatever the account, just not receivable/payable
+        cls.invoice_journal = cls.company_data['default_journal_sale']
+        cls.receivable_account = cls.company_data['default_account_receivable']
+        cls.tax_received_account = cls.company_data['default_account_tax_sale']
         cls.company.account_default_pos_receivable_account_id = cls.env['account.account'].create({
             'code': 'X1012 - POS',
             'name': 'Debtors - (POS)',
@@ -199,7 +177,7 @@ class TestPoSCommon(StockAccountTestCommon):
         cls.company_currency = cls.company.currency_id
         # other_currency is a currency different from the company_currency
         # sometimes company_currency is different from USD, so handle appropriately.
-        cls.other_currency = cls.env.ref('base.EUR') if cls.company_currency == cls.env.ref('base.USD') else cls.env.ref('base.USD')
+        cls.other_currency = cls.currency_data['currency']
 
         cls.currency_pricelist = cls.env['product.pricelist'].create({
             'name': 'Public Pricelist',
@@ -242,7 +220,7 @@ class TestPoSCommon(StockAccountTestCommon):
 
         cls.stock_location_components = cls.env["stock.location"].create({
             'name': 'Shelf 1',
-            'location_id': cls.env.ref('stock.warehouse0').lot_stock_id.id,
+            'location_id': cls.company_data['default_warehouse'].lot_stock_id.id,
         })
 
     #####################
@@ -264,21 +242,21 @@ class TestPoSCommon(StockAccountTestCommon):
             'name': 'Cash',
             'receivable_account_id': cls.pos_receivable_account.id,
             'is_cash_count': True,
-            'cash_journal_id': cls.cash_journal.id,
-            'company_id': cls.env.user.company_id.id,
+            'cash_journal_id': cls.company_data['default_journal_cash'].id,
+            'company_id': cls.env.company.id,
         })
         bank_payment_method = cls.env['pos.payment.method'].create({
             'name': 'Bank',
             'receivable_account_id': cls.pos_receivable_account.id,
             'is_cash_count': False,
-            'company_id': cls.env.user.company_id.id,
+            'company_id': cls.env.company.id,
         })
         cash_split_pm = cls.env['pos.payment.method'].create({
             'name': 'Split (Cash) PM',
             'receivable_account_id': cls.pos_receivable_account.id,
             'split_transactions': True,
             'is_cash_count': True,
-            'cash_journal_id': cls.cash_journal.id,
+            'cash_journal_id': cls.company_data['default_journal_cash'].id,
         })
         config.write({'payment_method_ids': [(4, cash_split_pm.id), (4, cash_payment_method.id), (4, bank_payment_method.id)]})
         return config
@@ -345,14 +323,13 @@ class TestPoSCommon(StockAccountTestCommon):
 
     @classmethod
     def _create_categ_anglo(cls):
-        cls.o_income.reconcile = True
         return cls.env['product.category'].create({
             'name': 'Anglo',
             'parent_id': False,
             'property_cost_method': 'fifo',
             'property_valuation': 'real_time',
-            'property_stock_account_input_categ_id': cls.o_expense.id,
-            'property_stock_account_output_categ_id': cls.o_income.id,
+            'property_stock_account_input_categ_id': cls.company_data['default_account_stock_in'].id,
+            'property_stock_account_output_categ_id': cls.company_data['default_account_stock_out'].id,
         })
 
     @classmethod
@@ -471,7 +448,7 @@ class TestPoSCommon(StockAccountTestCommon):
                 'sequence_number': 2,
                 'statement_ids': payments,
                 'uid': uid,
-                'user_id': self.pos_manager.id,
+                'user_id': self.env.user.id,
                 'to_invoice': is_invoiced,
             },
             'id': uid,
