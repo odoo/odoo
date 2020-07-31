@@ -163,6 +163,7 @@ odoo.define('point_of_sale.TicketScreen', function (require) {
                 ProductScreen: 'Ongoing',
                 PaymentScreen: 'Payment',
                 ReceiptScreen: 'Receipt',
+                TipScreen: 'Tipping',
             };
         }
         _initializeSearchFieldConstants() {

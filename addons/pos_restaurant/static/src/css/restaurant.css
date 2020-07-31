@@ -391,3 +391,159 @@
         flex: none;
     }
 }
+
+.tip-screen .tip-options .total-amount {
+    text-align: center;
+    font-size: x-large;
+    margin-top: 1.5rem;
+    margin-bottom: 1.5rem;
+}
+
+.tip-screen .tip-amount-options {
+    background: white;
+    border-radius: 3px;
+    margin-left: 4rem;
+    margin-right: 4rem;
+}
+
+.tip-screen .percentage-amounts {
+    display: flex;
+}
+
+.tip-screen .tip-options .button {
+    background: #FAFAFA;
+    border: solid 1px rgb(209, 209, 209);
+    border-radius: 3px;
+    flex: 1;
+    margin: 1rem;
+    display: flex;
+    flex-flow: column nowrap;
+    justify-content: center;
+    cursor: pointer;
+}
+
+.tip-screen .tip-options .button .percentage {
+    text-align: center;
+    font-size: xx-large;
+    color: #2196F3;
+    padding-top: 4rem;
+    padding-bottom: 0.75rem;
+}
+
+.tip-screen .tip-options .button .amount {
+    text-align: center;
+    font-size: large;
+    color: #757575;
+    padding-bottom: 4rem;
+}
+
+.tip-screen .custom-amount-form {
+    display: flex;
+}
+
+.tip-screen .custom-amount-form .item {
+    font-size: x-large;
+    color: #2196F3;
+    margin: 1rem;
+    flex: 1
+}
+
+.tip-screen .custom-amount-form .label {
+    padding-top: 1.5rem;
+    padding-bottom: 1.5rem;
+    text-align: center;
+}
+
+.tip-screen .custom-amount-form .input {
+    background: #FAFAFA;
+    border: solid 1px rgb(209, 209, 209);
+    border-radius: 3px;
+    margin: 1rem;
+    text-align: right;
+    overflow: hidden;
+    position: relative;
+}
+
+.tip-screen .custom-amount-form .input .currency {
+    position: absolute;
+    display: flex;
+    right: 0;
+    top: 0;
+    bottom: 0;
+    width: 3rem;
+    justify-content: center;
+    align-items: center;
+}
+
+.tip-screen .custom-amount-form .input input {
+    border: none;
+    padding: 0;
+    outline: none;
+    font-size: x-large;
+    text-align: right;
+    margin-left: 1rem;
+    margin-right: 3rem;
+    height: 100%;
+    width: calc(100% - 4rem);
+    background: #FAFAFA;
+    color: #2196F3;
+}
+
+.tip-screen .custom-amount-form .input input:focus {
+    border: none;
+    padding: 0;
+    outline: none;
+}
+
+.tip-screen .custom-amount-form .add {
+    text-align: center;
+}
+
+.tip-screen .no-tip {
+    display: flex;
+    color: #2196F3;
+    font-size: x-large;
+}
+
+.tip-screen .no-tip .button {
+    text-align: center;
+    flex: 1;
+    padding: 1.5rem;
+}
+
+.pos-receipt .tip-form {
+    padding-top: 10px;
+    padding-bottom: 10px;
+}
+
+.pos-receipt .tip-form > div {
+    margin-top: 10px;
+}
+
+.pos-receipt .tip-form .checkbox {
+    display: inline-block;
+    height: 25px;
+    width: 25px;
+    border: solid 1px black;
+    margin-right: 10px;
+    box-shadow: 2px 2px 0px 0px rgba(171,171,171,1);
+}
+
+.pos-receipt .tip-form .option {
+    display: flex;
+    flex-flow: row nowrap;
+    align-items: center;
+    flex: 1;
+    justify-content: center;
+}
+
+.pos-receipt .tip-form .option .percentage {
+    font-size: 10px;
+    color: #757575;
+}
+
+.pos-receipt .tip-form .percentage-options {
+    display: flex;
+    flex-flow: row nowrap;
+    margin-bottom: 16px;
+}

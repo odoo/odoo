@@ -70,6 +70,10 @@ exports.PosModel = Backbone.Model.extend({
         this.order_sequence = 1;
         window.posmodel = this;
 
+        // Object mapping the order's name (which contains the uid) to it's server_id after
+        // validation (order paid then sent to the backend).
+        this.validated_orders_name_server_id_map = {};
+
         // Extract the config id from the url.
         var given_config = new RegExp('[\?&]config_id=([^&#]*)').exec(window.location.href);
         this.config_id = given_config && given_config[1] && parseInt(given_config[1]) || false;
@@ -1035,6 +1039,9 @@ exports.PosModel = Backbone.Model.extend({
 
         return this._save_to_server(orders, options).then(function (server_ids) {
             self.set_synch('connected');
+            for (let i = 0; i < server_ids.length; i++) {
+                self.validated_orders_name_server_id_map[server_ids[i].pos_reference] = server_ids[i].id;
+            }
             return _.pluck(server_ids, 'id');
         }).catch(function(error){
             self.set_synch(self.get('failed') ? 'error' : 'disconnected');
@@ -1372,7 +1379,11 @@ exports.PosModel = Backbone.Model.extend({
 
     disallowLineQuantityChange() {
         return false;
-    }
+    },
+
+    getCurrencySymbol() {
+        return this.currency ? this.currency.symbol : '$';
+    },
 });
 
 /**
@@ -2624,6 +2635,8 @@ exports.Order = Backbone.Model.extend({
         this.account_move = json.account_move;
         this.backendId = json.id;
         this.isFromClosedSession = json.is_session_closed;
+        this.is_tipped = json.is_tipped || false;
+        this.tip_amount = json.tip_amount || 0;
     },
     export_as_JSON: function() {
         var orderLines, paymentLines;
@@ -2654,6 +2667,8 @@ exports.Order = Backbone.Model.extend({
             fiscal_position_id: this.fiscal_position ? this.fiscal_position.id : false,
             server_id: this.server_id ? this.server_id : false,
             to_invoice: this.to_invoice ? this.to_invoice : false,
+            is_tipped: this.is_tipped || false,
+            tip_amount: this.tip_amount || 0,
         };
         if (!this.is_paid && this.user_id) {
             json.user_id = this.user_id;
@@ -2848,7 +2863,8 @@ exports.Order = Backbone.Model.extend({
                     return;
                 }
             }
-            this.add_product(tip_product, {
+            return this.add_product(tip_product, {
+              is_tip: true,
               quantity: 1,
               price: tip,
               lst_price: tip,
@@ -2920,6 +2936,10 @@ exports.Order = Backbone.Model.extend({
             for (var prop in options.extras) {
                 line[prop] = options.extras[prop];
             }
+        }
+        if (options.is_tip) {
+            this.is_tipped = true;
+            this.tip_amount = options.price;
         }
 
         var to_merge_orderline;
@@ -3299,7 +3319,7 @@ exports.Order = Backbone.Model.extend({
             if (this.get_paymentlines().length > 0) return { name: 'PaymentScreen' };
             return { name: 'ProductScreen' };
         }
-        if (screen.name !== 'ReceiptScreen' && this.get_paymentlines().length > 0) {
+        if (!this.finalized && this.get_paymentlines().length > 0) {
             return { name: 'PaymentScreen' };
         }
         return screen;

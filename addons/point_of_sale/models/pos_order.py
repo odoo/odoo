@@ -49,6 +49,8 @@ class PosOrder(models.Model):
             'amount_return':  ui_order['amount_return'],
             'company_id': self.env['pos.session'].browse(ui_order['pos_session_id']).company_id.id,
             'to_invoice': ui_order['to_invoice'] if "to_invoice" in ui_order else False,
+            'is_tipped': ui_order.get('is_tipped', False),
+            'tip_amount': ui_order.get('tip_amount', 0),
         }
 
     @api.model
@@ -253,6 +255,8 @@ class PosOrder(models.Model):
     session_move_id = fields.Many2one('account.move', string='Session Journal Entry', related='session_id.move_id', readonly=True, copy=False)
     to_invoice = fields.Boolean('To invoice')
     is_invoiced = fields.Boolean('Is Invoiced', compute='_compute_is_invoiced')
+    is_tipped = fields.Boolean('Is this already tipped?', readonly=True)
+    tip_amount = fields.Float(string='Tip Amount', digits=0, readonly=True)
 
     @api.depends('account_move')
     def _compute_is_invoiced(self):
@@ -615,6 +619,8 @@ class PosOrder(models.Model):
             'state': order.state,
             'account_move': order.account_move.id,
             'id': order.id,
+            'is_tipped': order.is_tipped,
+            'tip_amount': order.tip_amount,
         }
 
     def export_for_ui(self):

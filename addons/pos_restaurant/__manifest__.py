@@ -46,6 +46,7 @@ This module adds several features to the Point of Sale that are specific to rest
         'static/src/xml/Screens/FloorScreen/EditBar.xml',
         'static/src/xml/Screens/FloorScreen/TableWidget.xml',
         'static/src/xml/Screens/FloorScreen/EditableTable.xml',
+        'static/src/xml/Screens/TipScreen.xml',
         'static/src/xml/ChromeWidgets/BackToFloorButton.xml',
         'static/src/xml/multiprint.xml',
     ],

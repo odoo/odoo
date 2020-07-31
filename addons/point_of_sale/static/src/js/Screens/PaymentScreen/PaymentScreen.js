@@ -199,7 +199,7 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
             const shouldShowPrintInvoice = errorCode
                 ? this.currentOrder.is_to_invoice() && errorCode < 0
                 : false;
-            this.showScreen('ReceiptScreen', { printInvoiceIsShown: shouldShowPrintInvoice });
+            this.showScreen(this.nextScreen, { printInvoiceIsShown: shouldShowPrintInvoice });
 
             // If we succeeded in syncing the current order, and
             // there are still other orders that are left unsynced,
@@ -218,6 +218,9 @@ odoo.define('point_of_sale.PaymentScreen', function (require) {
                     this.env.pos.push_orders();
                 }
             }
+        }
+        get nextScreen() {
+            return 'ReceiptScreen';
         }
         async _isOrderValid(isForceValidate) {
             if (this.currentOrder.get_orderlines().length === 0) {

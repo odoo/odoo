@@ -14,6 +14,7 @@ class PosConfig(models.Model):
     printer_ids = fields.Many2many('restaurant.printer', 'pos_config_printer_rel', 'config_id', 'printer_id', string='Order Printers')
     is_table_management = fields.Boolean('Floors & Tables')
     is_order_printer = fields.Boolean('Order Printer')
+    set_tip_after_payment = fields.Boolean('Set Tip After Payment')
     module_pos_restaurant = fields.Boolean(default=True)
 
     @api.onchange('module_pos_restaurant')
@@ -24,6 +25,11 @@ class PosConfig(models.Model):
             'is_order_printer': False,
             'is_table_management': False,
             'iface_orderline_notes': False})
+
+    @api.onchange('iface_tipproduct')
+    def _onchange_iface_tipproduct(self):
+        if not self.iface_tipproduct:
+            self.set_tip_after_payment = False
 
     def get_tables_order_count(self):
         """         """
