@@ -22,7 +22,11 @@
                     <field name="bom_id" readonly="1" optional="hide"/>
                     <field name="origin" optional="show"/>
                     <field name="user_id" optional="hide" widget="many2one_avatar_user"/>
-                    <field name="reservation_state" optional="show"/>
+                    <field name="reservation_state" invisible="1"/>
+                    <field name="components_availability_state" invisible="1"/>
+                    <field name="components_availability" optional="show"
+                        decoration-danger="components_availability_state == 'late'"
+                        decoration-warning="components_availability_state == 'expected'"/>
                     <field name="product_qty" sum="Total Qty" string="Quantity" readonly="1" optional="show"/>
                     <field name="company_id" readonly="1" groups="base.group_multi_company" optional="show"/>
                     <field name="state" optional="show" widget='badge' decoration-success="state == 'done'" decoration-info="state not in ('done', 'cancel')"/>
@@ -254,7 +258,7 @@
                                     <field name="state" invisible="1" force_save="1"/>
                                     <field name="should_consume_qty" invisible="1"/>
                                     <field name="product_uom_qty" widget="mrp_should_consume" string="To Consume" attrs="{'readonly': ['&amp;', ('parent.state', '!=', 'draft'), '|', ('parent.state', 'not in', ('confirmed', 'planned', 'progress', 'to_close')), ('parent.is_locked', '=', True)]}" width="1"/>
-                                    <field name="reserved_availability" attrs="{'invisible': [('is_done', '=', True)], 'column_invisible': [('parent.state', 'in', ('draft', 'done'))]}" string="Reserved" decoration-danger="not is_done and reserved_availability &lt; product_uom_qty and product_uom_qty - reserved_availability &gt; 0.0001"/>
+                                    <field name="json_forecast" string="Reserved" attrs="{'column_invisible': [('parent.state', 'in', ['draft', 'done'])]}" widget="forecast_widget"/>
                                     <field name="is_quantity_done_editable" invisible="1"/>
                                     <field name="quantity_done" string="Consumed"
                                         decoration-success="not is_done and (quantity_done - should_consume_qty == 0)"
