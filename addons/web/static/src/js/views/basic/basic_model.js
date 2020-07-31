@@ -2761,7 +2761,7 @@ var BasicModel = AbstractModel.extend({
 
                 if (relatedRecord &&
                      (!relatedRecord.data.display_name ||
-                       recContextSerial === JSON.stringify(recFieldContext) ||
+                       recContextSerial !== JSON.stringify(recFieldContext) ||
                        alwaysReload
                      )
                 ) {
