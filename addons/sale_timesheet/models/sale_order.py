@@ -118,7 +118,7 @@ class SaleOrderLine(models.Model):
 
             :param date: date to search timesheets before this date.
         """
-        lines_by_timesheet = self.filtered(lambda sol: sol.product_id._is_delivered_timesheet())
+        lines_by_timesheet = self.filtered(lambda sol: sol.product_id and sol.product_id._is_delivered_timesheet())
         domain = lines_by_timesheet._timesheet_compute_delivered_quantity_domain()
         domain = expression.AND([domain, [
             ('date', '<=', date),
@@ -128,5 +128,4 @@ class SaleOrderLine(models.Model):
         mapping = lines_by_timesheet.sudo()._get_delivered_quantity_by_analytic(domain)
 
         for line in lines_by_timesheet:
-            if line.product_id._is_delivered_timesheet():
-                line.qty_to_invoice = mapping.get(line.id, 0.0)
+            line.qty_to_invoice = mapping.get(line.id, 0.0)
