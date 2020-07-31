@@ -131,7 +131,6 @@ class StockMove(models.Model):
         help='The rescheduling is propagated to the next move.')
     propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
         help='The change must be higher than this value to be propagated')
-    delay_alert = fields.Boolean('Alert if Delay')
     delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', check_company=True)
     inventory_id = fields.Many2one('stock.inventory', 'Inventory', check_company=True)
@@ -460,9 +459,8 @@ class StockMove(models.Model):
                         # in the past.
                         new_move_date = max(move_dest.date + relativedelta.relativedelta(days=delta_days or 0), fields.Datetime.now())
                         move_dest.date = new_move_date
-                    move_dest_ids.filtered(lambda m: m.delay_alert)._propagate_date_log_note(move)
-                if move.delay_alert:
-                    move._delay_alert_check(new_date)
+                    move_dest_ids._propagate_date_log_note(move)
+                move._delay_alert_check(new_date)
         res = super(StockMove, self).write(vals)
         if receipt_moves_to_reassign:
             receipt_moves_to_reassign._action_assign()
@@ -693,7 +691,7 @@ class StockMove(models.Model):
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
             'package_level_id', 'propagate_cancel', 'propagate_date', 'propagate_date_minimum_delta',
-            'delay_alert', 'description_picking'
+            'description_picking'
         ]
 
     @api.model
@@ -703,7 +701,7 @@ class StockMove(models.Model):
             move.product_id.id, move.price_unit, move.procure_method, move.location_id, move.location_dest_id,
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
             move.package_level_id.id, move.propagate_cancel, move.propagate_date, move.propagate_date_minimum_delta,
-            move.delay_alert, move.description_picking
+            move.description_picking
         ]
 
     def _clean_merged(self):

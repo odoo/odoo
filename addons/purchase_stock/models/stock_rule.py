@@ -73,7 +73,6 @@ class StockRule(models.Model):
             partner = supplier.name
             # we put `supplier_info` in values for extensibility purposes
             procurement.values['supplier'] = supplier
-            procurement.values['delay_alert'] = rule.delay_alert
             procurement.values['propagate_date'] = rule.propagate_date
             procurement.values['propagate_date_minimum_delta'] = rule.propagate_date_minimum_delta
             procurement.values['propagate_cancel'] = rule.propagate_cancel

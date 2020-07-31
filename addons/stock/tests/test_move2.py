@@ -2566,7 +2566,6 @@ class TestRoutes(TestStockCommon):
         """ On a pick pack ship scenario, enable the delay alert flag on the pack rule. Edit the
         schedule date on the pick, a delay alert should be created for the ship.
         by default:
-            - delay alert set is only ship rule
             - propagate date is True on all the pick-pack-ship rules
         """
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
@@ -2619,14 +2618,12 @@ class TestRoutes(TestStockCommon):
         # Get back pack and ship pickings.
         picking_pack = first_move.move_dest_ids.picking_id
         picking_ship = first_move.move_dest_ids.move_dest_ids.picking_id
-        self.assertEqual(len(picking_pack.message_ids), 1)
-        self.assertEqual(len(picking_ship.message_ids), 1)
 
         # Change the schedule date on the pick.
         first_move.picking_id.scheduled_date += timedelta(days=2)
 
-        # No activity should be created on the pack.
-        self.assertEqual(len(picking_pack.message_ids), 1)
+        # As activity should be created on the pack.
+        self.assertEqual(len(picking_pack.message_ids), 2)
 
         # An activity is created on the ship.
         self.assertEqual(len(picking_ship.message_ids), 2)
@@ -2676,7 +2673,6 @@ class TestRoutes(TestStockCommon):
             'group_id': procurement_group0.id,
             'origin': 'origin1',
             'picking_id': picking_ship.id,
-            'delay_alert': True,
         })
 
         move2 = self.env['stock.move'].create({
@@ -2691,7 +2687,6 @@ class TestRoutes(TestStockCommon):
             'group_id': procurement_group1.id,
             'origin': 'origin2',
             'picking_id': picking_ship.id,
-            'delay_alert': True,
         })
 
         # confirm the picking to create the orig moves
@@ -2733,7 +2728,6 @@ class TestRoutes(TestStockCommon):
         ])
         ship, pack, pick = self.env['stock.move'].search([('product_id',  '=', product_a.id)])
         (ship + pack + pick).propagate_date = False
-        (ship + pack + pick).delay_alert = True
 
         # by default they all the the same `date`
         self.assertEqual(set((ship + pack + pick).mapped('date')), {pick.date})

@@ -98,7 +98,6 @@ class StockRule(models.Model):
             'date_deadline': fields.Datetime.to_string(date_deadline),
             'date_planned_start': fields.Datetime.to_string(date_planned),
             'procurement_group_id': False,
-            'delay_alert': self.delay_alert,
             'propagate_cancel': self.propagate_cancel,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,

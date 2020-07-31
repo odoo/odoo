@@ -93,10 +93,6 @@ class StockRule(models.Model):
         help='The rescheduling is propagated to the next move.')
     propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
         help='The change must be higher than this value to be propagated', default=1)
-    delay_alert = fields.Boolean(
-        'Alert if Delay',
-        help='Log an exception on the picking if this move has to be delayed (due to a change in the previous move scheduled date).',
-    )
 
     @api.onchange('picking_type_id')
     def _onchange_picking_type(self):
@@ -106,8 +102,6 @@ class StockRule(models.Model):
         """
         self.location_src_id = self.picking_type_id.default_location_src_id.id
         self.location_id = self.picking_type_id.default_location_dest_id.id
-        if self.picking_type_id.code == 'outgoing':
-            self.delay_alert = True
 
     @api.onchange('route_id', 'company_id')
     def _onchange_route(self):
@@ -206,7 +200,6 @@ class StockRule(models.Model):
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'warehouse_id': self.warehouse_id.id,
-            'delay_alert': self.delay_alert,
             'procure_method': 'make_to_order',
         }
         return new_move_vals
@@ -316,7 +309,6 @@ class StockRule(models.Model):
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': picking_description,
             'priority': values.get('priority', "0"),
-            'delay_alert': self.delay_alert,
             'orderpoint_id': values.get('orderpoint_id') and values['orderpoint_id'].id,
         }
         for field in self._get_custom_move_fields():
