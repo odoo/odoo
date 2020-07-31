@@ -1087,39 +1087,27 @@ body.editor_enable.editor_has_snippets {
     background-color: $o-we-sidebar-content-field-colorpicker-dropdown-bg;
     color: $o-we-sidebar-content-field-colorpicker-dropdown-color;
 
-    .d-flex .btn.o_we_colorpicker_switch_pane_btn {
-        color: inherit !important;
-        font-size: inherit !important;
-        font-weight: inherit !important;
-
-        &.active {
-            color: $o-we-sidebar-content-field-colorpicker-dropdown-active-color;
-            border-bottom: $o-we-sidebar-tabs-active-border-width solid $o-we-sidebar-tabs-active-border-color;
-        }
-        + .o_colorpicker_reset {
-            padding: 0 $o-we-sidebar-content-field-clickable-spacing !important;
-            border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color !important;
-            border-radius: $o-we-sidebar-content-field-border-radius !important;
-            background: $o-we-sidebar-content-field-clickable-bg !important;
-            line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width !important;
-            color: inherit !important;
-            font-size: inherit !important;
-            font-weight: inherit !important;
-            align-self: center;
-        }
-        &:focus {
-            box-shadow: none;
-        }
+    .o_we_colorpicker_switch_panel {
+        border-bottom: 1px solid $o-we-bg-dark;
+        box-shadow: inset 0 1px 0 rgba(white, .2);
+    }
+    .o_we_colorpicker_switch_pane_btn {
+        @extend %we-generic-tab-button;
+        flex: 0 0 auto;
+    }
+    .o_colorpicker_reset {
+        max-width: 40%;
+        @extend %we-generic-button;
     }
     .o_colorpicker_sections {
 
         .o_we_color_btn, .o_we_color_combination_btn {
             float: left;
             width: percentage(1 / 8);
-            padding-top: percentage(1 / 8);
+            padding-top: percentage(1 / 10);
             margin: 0;
-            border: none;
-            box-shadow: inset 0 0 0 1px $o-we-sidebar-content-field-colorpicker-dropdown-bg;
+            border: 1px solid $o-we-sidebar-content-field-colorpicker-dropdown-bg;
+            box-shadow: $o-we-sidebar-content-field-colorpicker-shadow;
 
             &.o_colorpicker_reset {
                 background-color: transparent;
@@ -1135,25 +1123,23 @@ body.editor_enable.editor_has_snippets {
                 }
             }
         }
-
         .o_we_color_combination_btn {
             float: none;
             width: 100%;
             padding: 0;
             margin: 0;
+            border: 0;
             background-clip: padding-box;
             border-top: $o-we-sidebar-content-field-spacing solid transparent;
             border-bottom: $o-we-sidebar-content-field-spacing solid transparent;
 
-            > .o_we_cc_preview_wrapper {
-                padding: $o-we-sidebar-content-field-clickable-spacing;
-            }
-
-            + .o_we_color_combination_btn {
-                margin-top: -$o-we-sidebar-content-field-spacing;
+            .o_we_cc_preview_wrapper:after {
+                // For some reasons, in this specific context we have to
+                // compensate a 1px gap between the flex container and the
+                // absolute positioned pseudo-element that generates the bg.
+                bottom: -1px;
             }
         }
-
         .o_colorpicker_section {
             padding-top: $o-we-sidebar-content-field-spacing;
 
