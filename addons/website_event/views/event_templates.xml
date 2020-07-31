@@ -45,18 +45,14 @@
 <template id="index_topbar" name="Topbar">
     <nav class="navbar navbar-light border-top shadow-sm d-print-none">
         <div class="container">
-            <div class="row d-flex justify-content-between w-100 mr-0">
-                <div class="col-lg-8 col-sm-12">
-                    <span class="navbar-brand h4 my-0">Events</span>
-                    <ul class="o_wevent_index_topbar_filters nav"/>
-                </div>
-                <div class="col-lg-3 col-sm-12 d-flex align-items-center flex-wrap px16">
+            <div class="d-flex flex-column flex-sm-row justify-content-between w-100">
+                <span class="navbar-brand h4 my-0 mr-auto">Events</span>
+                <ul class="o_wevent_index_topbar_filters nav"/>
+                <div class="d-flex align-items-center flex-wrap pl-sm-3 pr-0">
                     <t t-call="website_event.events_search_box">
                         <t t-set="_searches" t-value="searches"/>
+                        <t t-set="_placeholder" t-value="'Search an event ...'"/>
                     </t>
-                    <a href="/event" class="btn btn-info text-nowrap mr-0 w-100" role="button" title="Clear filters">
-                        <i class="fa fa-eraser"/> Clear filters
-                    </a>
                 </div>
             </div>
         </div>
@@ -154,6 +150,7 @@
         <form t-attf-class="o_wevent_event_searchbar_form o_wait_lazy_js w-100 my-1 my-lg-0 #{_classes}"
               t-att-action="action if action else '/event'" method="get">
             <t t-set="search" t-value="search or _searches and _searches['search']"/>
+            <t t-set="placeholder" t-value="placeholder or _placeholder"/>
             <t>$0</t>
             <t t-foreach="_searches" t-as="search">
                 <input t-if="search != 'search' and search_value != 'all'" type="hidden"
@@ -219,10 +216,6 @@
                                 <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'date_only': 'true', 'format': 'long'}"/> -
                                 <span t-field="event.with_context(tz=event.date_tz).date_begin" t-options="{'time_only': 'true', 'format': 'short'}"/>
                             </time>
-                            <!-- Organizer -->
-                            <div t-if="event.organizer_id" class="mb-3">
-                                <small class="text-muted text-truncate">Organizer: <span t-field="event.organizer_id" itemprop="organizer"/></small>
-                            </div>
                             <!-- Location -->
                             <div itemprop="location" t-field="event.address_id" t-options="{'widget': 'contact', 'fields': ['city'], 'no_marker': 'true'}"/>
                             <div class="mt8 d-flex align-items-center">
@@ -235,7 +228,11 @@
                         </main>
                     </div>
                     <!-- Footer -->
-                    <footer t-attf-class="small align-self-end w-100 #{opt_events_list_cards and 'card-footer' or ((not opt_events_list_columns) and 'border-top mx-4 mt-auto pt-2' or 'border-top py-2')}">
+                    <footer t-if="not event.event_registrations_open or event.event_registrations_sold_out"
+                        t-att-class="'small align-self-end w-100 %s %s' % (
+                            opt_events_list_cards and 'card-footer' or (not opt_events_list_columns and 'mx-4 mt-auto pt-2') or 'py-2',
+                            opt_events_list_cards and 'border-top' or '',
+                        )">
                         <span t-if="not event.event_registrations_open" class="text-danger">
                             <t t-if="event.start_sale_date and event.start_sale_date &gt; datetime.date.today()">
                                 Registrations not yet open
@@ -432,7 +429,7 @@
             <div class="container overflow-hidden">
                 <div class="row no-gutters mt-n4 mb-3">
                     <!-- Description -->
-                    <div id="o_wevent_event_main_col" class="col-lg-8 bg-white px-5 pt48 pb-0 shadow-sm">
+                    <div id="o_wevent_event_main_col" class="col-lg-8 bg-white px-3 pt-5 pb-0 shadow-sm">
                         <span t-field="event.description" itemprop="description"/>
                     </div>
                     <div class="col-lg-4 bg-light shadow-sm d-print-none">
@@ -557,14 +554,14 @@
                             <i class="fa fa-check mr-2"/>Registered
                         </span>
                     </div>
-                    <a href="#" role="button" class="btn o_wevent_registration_btn text-left pl-0" data-target="#o_wevent_tickets_collapse">
-                        Tickets
+                    <a href="#" role="button" class="btn o_wevent_registration_btn text-left" data-target="#o_wevent_tickets_collapse">
+                        <span class="py-2">Tickets</span>
                         <span class="close d-none">×</span>
                     </a>
                 </div>
                 <div id="o_wevent_tickets_collapse" class="collapse show">
-                    <div t-foreach="tickets" t-as="ticket" class="row px-3 mx-0 bg-light border-bottom">
-                        <div class="col-8 py-3" itemscope="itemscope" itemtype="http://schema.org/Offer">
+                    <div t-foreach="tickets" t-as="ticket" class="row px-3 py-3 mx-0 bg-light border-bottom">
+                        <div class="col-md-8 col-xs-12 p-0" itemscope="itemscope" itemtype="http://schema.org/Offer">
                             <h5 itemprop="name" t-field="ticket.name" class="my-0"/>
                             <t t-if="ticket.description">
                                 <small t-field="ticket.description" class="text-muted py-2"/>
@@ -573,7 +570,7 @@
                             <small t-if="ticket.end_sale_date and ticket.sale_available and not ticket.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales end on <span itemprop="priceValidUntil" t-field="ticket.end_sale_date"/></small>
                             <small t-if="ticket.start_sale_date and not ticket.sale_available and not ticket.is_expired" class="text-muted mr-3" itemprop="availabilityEnds">Sales start on <span itemprop="priceValidUntil" t-field="ticket.start_sale_date"/></small>
                         </div>
-                        <div class="col-4 d-flex align-items-center">
+                        <div class="col-md-4 col-xs-12 p-0 d-flex align-items-center justify-content-between">
                             <div class="o_wevent_registration_multi_select"/>
                             <div class="w-auto ml-auto">
                                 <select t-if="not ticket.is_expired and ticket.sale_available"
@@ -596,7 +593,10 @@
                     <div class="row no-gutters">
                         <div class="col-md-4 offset-md-8 py-2 pl-md-0 pr-md-2">
                             <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" disabled="" t-attf-id="#{event.id}">
-                                Register<t t-if="event.seats_limited"> (Available seats: <t t-esc="event.seats_available"/>)</t>
+                                Register
+                                <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
+                                    (only <t t-esc="event.seats_available"/> available)
+                                </t>
                             </button>
                         </div>
                     </div>
@@ -630,7 +630,12 @@
                         </div>
                     </div>
                     <div class="col-lg-4 pt-3 pt-lg-0 pl-2 pl-lg-0">
-                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-attf-id="#{event.id}">Register</button>
+                        <button type="submit" class="btn btn-primary o_wait_lazy_js btn-block a-submit" t-attf-id="#{event.id}">
+                            Register
+                            <t t-if="event.seats_limited and event.seats_max and event.seats_available &lt;= (event.seats_max * 0.2)">
+                                (only <t t-esc="event.seats_available"/> available)
+                            </t>
+                        </button>
                     </div>
                 </div>
             </div>
@@ -692,34 +697,40 @@
 <template id="registration_complete" name="Registration Completed">
     <t t-call="website_event.layout">
         <div class="container my-5">
-            <div class="row">
+            <div class="row mb-3">
                 <div class="col-12">
                     <h2>Registration confirmed!</h2>
-                    <table class="table table-striped my-4">
-                        <thead class="bg-secondary">
-                            <tr>
-                                <th>Name</th>
-                                <th>Ticket</th>
-                                <th>E-mail</th>
-                                <th>Phone</th>
-                                <th>Reference</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            <t t-foreach="attendees" t-as="attendee">
-                                <tr>
-                                    <td><t t-if="attendee.name" t-esc="attendee.name"/><t t-else="">N/A</t></td>
-                                    <td><i class="fa fa-ticket"></i> <t t-if='attendee.event_ticket_id'><t t-esc="attendee.event_ticket_id.name"/></t><t t-if='not attendee.event_ticket_id'>N/A</t></td>
-                                    <td><t t-if="attendee.email" t-esc="attendee.email"/><t t-else="">N/A</t></td>
-                                    <td><t t-if="attendee.phone" t-esc="attendee.phone"/><t t-else="">N/A</t></td>
-                                    <td><t t-esc="attendee.id"/></td>
-                                </tr>
-                            </t>
-                        </tbody>
-                    </table>
-                </div>
-                <div class="col-lg-8">
                     <h3><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h3>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-md-4 col-xs-12 mt-3" t-foreach="attendees" t-as="attendee">
+                    <div class="d-flex flex-column">
+                        <span class="font-weight-bold">
+                            <t t-if="attendee.name" t-esc="attendee.name"/>
+                            <t t-else="">N/A</t>
+                        </span>
+                        <span>
+                            <i class="fa fa-envelope mr-2   "></i>
+                            <t t-if="attendee.email" t-esc="attendee.email"/>
+                            <t t-else="">N/A</t>
+                        </span>
+                        <span>
+                            <i class="fa fa-phone mr-2"></i>
+                            <t t-if="attendee.phone" t-esc="attendee.phone"/>
+                            <t t-else="">N/A</t>
+                        </span>
+                        <span>
+                            <i class="fa fa-ticket mr-2"></i>
+                            <t t-if="attendee.event_ticket_id" t-esc="attendee.event_ticket_id.name"/>
+                            <t t-else="">N/A</t>
+                            (ref: <t t-esc="attendee.id"/>)
+                        </span>
+                    </div>
+                </div>
+            </div>
+            <div class="row mb-3">
+                <div class="col-lg-8">
                     <p><b>Start</b> <span itemprop="startDate" t-esc="event.date_begin_located"/><br/> <b>End</b> <span itemprop="endDate" t-esc="event.date_end_located"/></p>
                     <div id="add_to_calendar" class="mt-4">
                         <a role="button" class="btn btn-primary" t-att-href="iCal_url">
@@ -760,56 +771,6 @@
                 </div>
             </div>
         </div>
-    </t>
-</template>
-
-<!-- Multipage event - Default template when creating a new page -->
-<template id="default_page">
-    <t t-call="website.layout">
-        <div class="oe_structure oe_empty"/>
-    </t>
-</template>
-
-<!-- Multipage event - Default template for the Introduction page -->
-<template id="template_intro">
-    <t t-call="website_event.layout">
-        <section class="s_title pt48 pb48" data-vcss="001" data-snippet="s_title">
-            <div class="container">
-                <h1>Introduction</h1>
-            </div>
-        </section>
-        <div class="oe_structure oe_empty" id="oe_structure_website_event_intro_1"/>
-    </t>
-</template>
-
-<!-- Multipage event - Default template for the Location page -->
-<template id="template_location">
-    <t t-call="website_event.layout">
-        <div class="oe_structure" id="oe_structure_website_event_location_1"/>
-        <section class="pt32 pb32">
-            <div class="container">
-                <div class="row">
-                    <div class="col-12">
-                        <h1 class="o_page_header mb-3">Event Location</h1>
-                        <h4 class="mb-3" t-field="event.address_id" t-options='{
-                            "widget": "contact",
-                            "fields": ["name"],
-                        }'/>
-                        <div class="mb-3" t-field="event.address_id" t-options='{
-                            "widget": "contact",
-                            "fields": ["address"],
-                            "no_marker": True
-                        }'/>
-                        <div class="mb-3" t-field="event.address_id" t-options='{
-                            "widget": "contact",
-                            "fields": ["phone", "mobile", "email"],
-                            "no_marker": True
-                        }'/>
-                    </div>
-                </div>
-            </div>
-        </section>
-        <div class="oe_structure" id="oe_structure_website_event_location_2"/>
     </t>
 </template>
 
