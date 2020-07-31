@@ -75,7 +75,7 @@ class Event(models.Model):
     def write(self, vals):
         menus_state_by_field = self._split_menus_state_by_field()
         res = super(Event, self).write(vals)
-        menus_update_by_field = self._get_menus_update_by_field(menus_state_by_field)
+        menus_update_by_field = self._get_menus_update_by_field(menus_state_by_field, force_update=vals.keys())
         self._update_website_menus(menus_update_by_field=menus_update_by_field)
         return res
 
@@ -113,10 +113,15 @@ class Event(models.Model):
             }
         return menus_state_by_field
 
-    def _get_menus_update_by_field(self, menus_state_by_field):
+    def _get_menus_update_by_field(self, menus_state_by_field, force_update=None):
         """ For each field linked to a menu, get the set of events requiring
         this menu to be activated or de-activated based on previous recorded
         value.
+
+        :param menus_state_by_field: see ``_split_menus_state_by_field``;
+        :param force_update: list of field to which we force update of menus. This
+          is used notably when a direct write to a stored editable field messes with
+          its pre-computed value, notably in a transient mode (aka demo for example);
 
         :return dict: key = name of field triggering a website menu update, get {
           'activated': subset of self having its menu toggled to True
@@ -124,9 +129,12 @@ class Event(models.Model):
         } """
         menus_update_by_field = dict()
         for fname in self._get_menu_update_fields():
-            menus_update_by_field[fname] = self.env['event.event']
-            menus_update_by_field[fname] |= menus_state_by_field[fname]['activated'].filtered(lambda event: not event[fname])
-            menus_update_by_field[fname] |= menus_state_by_field[fname]['deactivated'].filtered(lambda event: event[fname])
+            if fname in force_update:
+                menus_update_by_field[fname] = self
+            else:
+                menus_update_by_field[fname] = self.env['event.event']
+                menus_update_by_field[fname] |= menus_state_by_field[fname]['activated'].filtered(lambda event: not event[fname])
+                menus_update_by_field[fname] |= menus_state_by_field[fname]['deactivated'].filtered(lambda event: event[fname])
         return menus_update_by_field
 
     def _get_menu_entries(self):
