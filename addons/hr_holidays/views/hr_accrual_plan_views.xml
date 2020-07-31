@@ -5,6 +5,14 @@
         <field name="arch" type="xml">
             <form string="Accrual Plan">
                 <sheet>
+                     <div class="oe_button_box" name="button_box">
+                        <button class="oe_stat_button" icon="fa-user" name="action_open_accrual_plan_employees" type="object">
+                            <div class="o_stat_info">
+                                <field name="employees_count" class="o_stat_value"/>
+                                <span class="o_stat_text"> Employees</span>
+                            </div>
+                        </button>
+                    </div>
                     <div class="oe_title">
                         <h1>
                             <field name="name" placeholder="Accrual plan"/>
@@ -49,6 +57,7 @@
         <field name="arch" type="xml">
             <form string="Accrual Name">
                 <sheet>
+                    <div class="oe_button_box" name="button_box"/>
                     <div class="oe_title">
                         <h1>
                             <field name="name"/>
@@ -64,7 +73,7 @@
                     <label for="added_hours" string="Accrue of"/>
                     <div class="o_row">
                             <field name="added_hours"/>
-                            <span> hours per worked hours</span>
+                            <span> hours per worked days</span>
                     </div>
                     <label for="frequency" string="Accrual period"/>
                     <div class="o_row">

@@ -23,10 +23,15 @@ class AccrualPlan(models.Model):
                                  required=True, readonly=True, default=lambda self: self.env.company)
     employee_ids = fields.One2many('hr.employee', 'accrual_plan_id')
     allocation_ids = fields.One2many('hr.leave.allocation', 'accrual_plan_id')
+    employees_count = fields.Integer("Employees", compute='_compute_employees_count')
 
+    @api.depends('employee_ids')
+    def _compute_employees_count(self):
+        for plan in self:
+            plan.employees_count = len(plan.employee_ids)
 
     def _get_accrual_line(self, employee):
-        #Get the appropriate accrual line accorded to the start date of an employee
+        # Get the appropriate accrual line accorded to the start date of an employee
         line = False
         date_start_work = datetime.combine(employee._get_date_start_work(), time(0, 0, 0))
         today = datetime.combine(fields.Date.today(), time(0, 0, 0))
@@ -40,7 +45,16 @@ class AccrualPlan(models.Model):
                     line = accrual_line
         return line
 
-
+    def action_open_accrual_plan_employees(self):
+        self.ensure_one()
+        return {
+            'name': _("Accrual Plan's Employees"),
+            'type': 'ir.actions.act_window',
+            'view_type': 'kanban',
+            'view_mode': 'kanban',
+            'res_model': 'hr.employee',
+            'domain': [('accrual_plan_id', '=', self.id)],
+        }
 
 class AccrualPlanLine(models.Model):
     _name = "hr.accrual"
@@ -50,12 +64,12 @@ class AccrualPlanLine(models.Model):
     name = fields.Char('Accrual Name', required=True)
     plan_id = fields.Many2one('hr.accrual.plan', "Accrual Plan")
     # Start date
-    start_count = fields.Float("Start after", default=0, help="This field determines the number for the interval of time before the accrual plan starts.")
+    start_count = fields.Float("Start after", help="This field determines the number for the interval of time before the accrual plan starts.")
     start_type = fields.Selection(
         [('days', 'day(s)'), ('months', 'month(s)'), ('years', 'year(s)')], default='days', string=" ", help="This field determines the unit for the interval of time.", required=True)
     start_delta = fields.Datetime(compute="_compute_start_delta", store=True)
     # Accrue of
-    added_hours = fields.Float("Hours per worked hours", required=True, help="The number of hours that will be incremented for every period")
+    added_hours = fields.Float("Hours per worked days", required=True, help="The number of hours that will be incremented for every period")
     # Accrual period
     frequency = fields.Selection([
         ('daily', 'daily'),
@@ -74,7 +88,7 @@ class AccrualPlanLine(models.Model):
         ('last friday', 'on the last friday')
     ], default='first')
     # Max accrual
-    maximum = fields.Float('Maximum accrual hours', help="The maximum allocated hours. The hours above this limit will not be added")
+    maximum = fields.Float('Maximum accrual hours', help="The maximum allocated hours. The hours above this limit will not be added", default="1000")
     maximum_type = fields.Selection([
         ('hours', 'hours'),
         ('days', 'days'),

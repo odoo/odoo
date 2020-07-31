@@ -175,12 +175,13 @@ class HolidaysAllocation(models.Model):
                 if line:
                     #Get the period based on frequency and start of period of the accrual line
                     period = line._get_period(holiday.employee_id)
+                    delta = period["next"] - period["previous"]
 
-                    # Calculate the total of added hours for the period
+                    # Calculate the total of added hours (by day) for the period
                     worked = holiday.employee_id._get_work_days_data(period["previous"], period["next"], domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
                     left = holiday.employee_id._get_leave_days_data(period["previous"], period["next"], domain=[('holiday_id.holiday_status_id.unpaid', '=', True), ('time_type', '=', 'leave')])['days']
                     prorata = worked / (left + worked) if worked else 0
-                    added_hours = prorata * line.added_hours
+                    added_hours = prorata * line.added_hours * delta.days
 
                     #  Verify that the limit isn't passed
                     if line.maximum > 0:
@@ -198,14 +199,14 @@ class HolidaysAllocation(models.Model):
                                 added_hours = maximum - actual_hours
                         else :
                             if line.maximum_period == 'days' :
-                                delta = (period["next"] - period["previous"]).days
+                                gap = delta
                             elif line.maximum_period == 'weeks':
-                                delta = (period["next"] - period["previous"]).days / 7
+                                gap = delta / 7
                             elif line.maximum_period == 'months':
-                                delta = (period["next"] - period["previous"]).months
+                                gap = delta.months
 
                             if (added_hours / delta) > maximum:
-                                added_hours = maximum * delta
+                                added_hours = maximum * gap
 
                     # Convert the added hours in days
                     added_days = added_hours / (holiday.employee_id.resource_calendar_id.hours_per_day or HOURS_PER_DAY)
