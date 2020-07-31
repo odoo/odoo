@@ -62,7 +62,7 @@ class Event(models.Model):
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.website_track = event.event_type_id.website_track
-            elif event.website_menu != event._origin.website_menu or not event.website_track:
+            elif event.website_menu != event._origin.website_menu or not event.website_menu or not event.website_track:
                 event.website_track = event.website_menu
             elif event.website_track_proposal and not event.website_track:
                 event.website_track = True
@@ -74,7 +74,7 @@ class Event(models.Model):
         for event in self:
             if event.event_type_id and event.event_type_id != event._origin.event_type_id:
                 event.website_track_proposal = event.event_type_id.website_track_proposal
-            elif event.website_track != event._origin.website_track or not event.website_track_proposal:
+            elif event.website_track != event._origin.website_track or not event.website_track or not event.website_track_proposal:
                 event.website_track_proposal = event.website_track
 
     @api.depends('track_ids.tag_ids', 'track_ids.tag_ids.color')
@@ -98,9 +98,9 @@ class Event(models.Model):
     def _update_website_menus(self, menus_update_by_field=None):
         super(Event, self)._update_website_menus(menus_update_by_field=menus_update_by_field)
         for event in self:
-            if not menus_update_by_field or event in menus_update_by_field.get('website_track'):
+            if (not menus_update_by_field) or (event in menus_update_by_field.get('website_track')):
                 event._update_website_menu_entry('website_track', 'track_menu_ids', '_get_track_menu_entries')
-            if not menus_update_by_field or event in menus_update_by_field.get('website_track_proposal'):
+            if (not menus_update_by_field) or (event in menus_update_by_field.get('website_track_proposal')):
                 event._update_website_menu_entry('website_track_proposal', 'track_proposal_menu_ids', '_get_track_proposal_menu_entries')
 
     def _update_website_menu_entry(self, fname_bool, fname_o2m, method_name):
