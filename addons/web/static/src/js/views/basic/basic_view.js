@@ -183,12 +183,15 @@ var BasicView = AbstractView.extend({
 
             var def;
             if (fieldNames.length) {
-                // LPE FIXME !!
+                // LPE FIXME: this is kinda ugly because methods name seem
+                // inaccurate, at least in this context
+                // this is just advice for cleaning up....
                 if (model.isNew(record.id)) {
                     def = model.applyDefaultValues(record.id, {}, {
                         fieldNames: fieldNames,
                         viewType: viewType,
                     }).then((values) => {
+                        // LPE FIXME pass record.id because record is a copy of localData
                         return model._applyOnChange(values, record.id, viewType);
                     });
                 } else {

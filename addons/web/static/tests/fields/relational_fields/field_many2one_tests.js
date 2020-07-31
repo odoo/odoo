@@ -2242,6 +2242,7 @@ QUnit.module('fields', {}, function () {
         QUnit.skip('quick create on a many2one', async function (assert) {
             // LPE FIXME: there are two focusout events caught by the M2O field
             // don't know why yet, but has nothing to do with onchange stuff
+            // crash happens sometimes in master also
             assert.expect(6);
 
             var form = await createView({

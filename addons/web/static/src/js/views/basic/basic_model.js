@@ -1744,6 +1744,7 @@ var BasicModel = AbstractModel.extend({
                             parentID: record.id,
                         });
                         // LPE fixme: check if onchange (python) returns the name_get too
+                        // for reference fields
                         defs.push(self._fetchNameGet(rec));
                         id = rec.id;
                         record._changes[name] = id;
@@ -1754,7 +1755,10 @@ var BasicModel = AbstractModel.extend({
             } else if (field.type === 'one2many' || field.type === 'many2many') {
                 var listId = record._changes[name] || record.data[name];
                 var list;
-                // LPE FIXME
+                // LPE FIXME: formerly in _processX2MCommands (in applyDefaultValue)
+                // fields that weren't in the view were pushed in _changes
+                // I tried to imitate it (grep hasDefaults), but then unprocessed
+                // fields end up in _changes, this if protects against this
                 if (listId && !Array.isArray(listId)) {
                     list = self.localData[listId];
                 } else {
@@ -4367,6 +4371,7 @@ var BasicModel = AbstractModel.extend({
 
         // LPE FIXME: this is useless, _posprocess only does fetchSpecialData
         // name_gets are handled in fetchRelational....
+        // besides, at this point record.data is empty....
         _.each(record.getFieldNames(options), function (name) {
             var field = record.fields[name];
             var fieldInfo = record.fieldsInfo[viewType][name] || {};
