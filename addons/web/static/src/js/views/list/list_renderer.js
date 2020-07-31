@@ -986,7 +986,7 @@ var ListRenderer = BasicRenderer.extend({
             if (self.optionalColumns.length) {
                 self.$el.addClass('o_list_optional_columns');
                 self.$('table').append($('<i class="o_optional_columns_dropdown_toggle fa fa-ellipsis-v"/>'));
-                self.$el.append(self._renderOptionalColumnsDropdown());
+                self.$('table').append(self._renderOptionalColumnsDropdown());
             }
 
             if (self.selection.length) {
