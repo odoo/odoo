@@ -594,14 +594,15 @@ class JsonRequest(WebRequest):
             _logger.info('%s: %s', self.httprequest.path, msg)
             raise werkzeug.exceptions.BadRequest(msg)
 
-        self.params = dict(self.jsonrequest.get("params", {}))
+        if isinstance(self.jsonrequest, dict):
+            self.params = dict(self.jsonrequest.get("params", {}))
         self.context = self.params.pop('context', dict(self.session.context))
 
     def _json_response(self, result=None, error=None):
 
         response = {
             'jsonrpc': '2.0',
-            'id': self.jsonrequest.get('id')
+            'id': self.jsonrequest.get('id') if isinstance(self.jsonrequest, dict) else None
             }
         if error is not None:
             response['error'] = error
