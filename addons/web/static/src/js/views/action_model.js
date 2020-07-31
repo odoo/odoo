@@ -17,6 +17,29 @@ odoo.define("web/static/src/js/views/action_model.js", function (require) {
     class ActionModelExtension extends Model.Extension {
 
         //---------------------------------------------------------------------
+        // Public
+        //---------------------------------------------------------------------
+
+        /**
+         * Initiates the asynchronous tasks of the extension and returns a
+         * promise resolved as soon as all the informations necessary to build
+         * the search query are ready.
+         * @returns {Promise}
+         */
+        async callLoad() {
+            this.loadPromise = super.callLoad(...arguments);
+            await this.loadPromise;
+        }
+
+        /**
+         * Returns a promise resolved when the extension is completely ready.
+         * @returns {Promise}
+         */
+        async isReady() {
+            await this.loadPromise;
+        }
+
+        //---------------------------------------------------------------------
         // Static
         //---------------------------------------------------------------------
 
@@ -51,9 +74,27 @@ odoo.define("web/static/src/js/views/action_model.js", function (require) {
             return super.get(...arguments);
         }
 
+        /**
+         * Returns a promise resolved when all extensions are completely ready.
+         * @returns {Promise}
+         */
+        async isReady() {
+            await this._awaitExtensions();
+        }
+
         //---------------------------------------------------------------------
         // Private
         //---------------------------------------------------------------------
+
+        /**
+         * @private
+         * @returns {Promise}
+         */
+        async _awaitExtensions() {
+            await Promise.all(this.extensions.flat().map(
+                (extension) => extension.isReady()
+            ));
+        }
 
         /**
          * @override
@@ -140,11 +181,16 @@ odoo.define("web/static/src/js/views/action_model.js", function (require) {
         }
 
         /**
+         * Overridden to trigger a "search" event as soon as the query data
+         * are ready.
          * @override
          */
-        _notifyComponents() {
-            this.trigger("search", this.get("query"));
-            super._notifyComponents(...arguments);
+        async _loadExtensions({ isInitialLoad }) {
+            await super._loadExtensions(...arguments);
+            if (!isInitialLoad) {
+                this.trigger("search", this.get("query"));
+                await this._awaitExtensions();
+            }
         }
 
         //---------------------------------------------------------------------
