@@ -143,11 +143,10 @@ function factory(dependencies) {
             channel_direct_message = [],
             channel_private_group = [],
         } = {}) {
-            for (const data of channel_channel.concat(channel_direct_message, channel_private_group)) {
-                this.env.models['mail.thread'].insert(
-                    this.env.models['mail.thread'].convertData(data),
-                );
-            }
+            const channelsData = channel_channel.concat(channel_direct_message, channel_private_group);
+            this.env.models['mail.thread'].insert(channelsData.map(
+                channelData => this.env.models['mail.thread'].convertData(channelData)
+            ));
         }
 
         /**
@@ -203,10 +202,10 @@ function factory(dependencies) {
          * @param {Object} mailFailuresData
          */
         _initMailFailures(mailFailuresData) {
-            for (const messageData of mailFailuresData) {
-                const message = this.env.models['mail.message'].insert(
-                    this.env.models['mail.message'].convertData(messageData)
-                );
+            const messages = this.env.models['mail.message'].insert(mailFailuresData.map(
+                messageData => this.env.models['mail.message'].convertData(messageData)
+            ));
+            for (const message of messages) {
                 // implicit: failures are sent by the server at initialization
                 // only if the current partner is author of the message
                 if (!message.author && this.messaging.currentPartner) {
