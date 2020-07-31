@@ -61,8 +61,9 @@ function factory() {
          * function, otherwise the record will not be registered.
          *
          * @static
-         * @param {Object} [data] data object with initial data, including relations.
-         * @returns {mail.model} newly created record
+         * @param {Object|Object[]} [data] data object with initial data, including relations.
+         *  If data is an iterable, multiple records will be created.
+         * @returns {mail.model|mail.model[]} newly created record(s)
          */
         static create(data) {
             return this.env.modelManager.create(this, data);
@@ -99,8 +100,9 @@ function factory() {
          * on provided data.
          *
          * @static
-         * @param {Object} data
-         * @returns {mail.model} created or updated record.
+         * @param {Object|Object[]} data
+         *  If data is an iterable, multiple records will be created/updated.
+         * @returns {mail.model|mail.model[]} created or updated record(s).
          */
         static insert(data) {
             return this.env.modelManager.insert(this, data);
