@@ -20,7 +20,7 @@ odoo.define("web/static/src/js/model.js", function (require) {
         constructor(config) {
             this.config = config;
             this.env = this.config.env;
-            this._shouldLoad = true;
+            this.shouldLoad = true;
             this.state = {};
         }
 
@@ -30,12 +30,23 @@ odoo.define("web/static/src/js/model.js", function (require) {
 
         /**
          * Used by the parent model to initiate a load action. The actual
-         * loading of the extension is determined by the "_shouldLoad" property.
+         * loading of the extension is determined by the "shouldLoad" property.
+         * @param {Object} params
          */
-        async callLoad() {
-            if (this._shouldLoad) {
-                this._shouldLoad = false;
-                await this.load();
+        async callLoad(params) {
+            if (this.shouldLoad) {
+                this.shouldLoad = false;
+                await this.load(params);
+            }
+        }
+
+        /**
+         * @param {string} method
+         * @param  {...any} args
+         */
+        dispatch(method, ...args) {
+            if (method in this) {
+                this[method](...args);
             }
         }
 
@@ -65,8 +76,8 @@ odoo.define("web/static/src/js/model.js", function (require) {
          * @param {Object} [state]
          */
         importState(state) {
-            this._shouldLoad = !state;
-            if (this._shouldLoad) {
+            this.shouldLoad = !state;
+            if (this.shouldLoad) {
                 this.prepareState();
             } else {
                 Object.assign(this.state, state);
@@ -76,9 +87,10 @@ odoo.define("web/static/src/js/model.js", function (require) {
         /**
          * Called and awaited on initial model load.
          * @abstract
+         * @param {Object} params
          * @returns {Promise}
          */
-        async load() {
+        async load(/* params */) {
             /* ... */
         }
 
@@ -88,15 +100,6 @@ odoo.define("web/static/src/js/model.js", function (require) {
          * @abstract
          */
         prepareState() {
-            /* ... */
-        }
-
-        /**
-         * Called and awaited after an action dispatch.
-         * @abstract
-         * @returns {Promise}
-         */
-        async reloadAfterDispatch() {
             /* ... */
         }
     }
@@ -285,40 +288,32 @@ odoo.define("web/static/src/js/model.js", function (require) {
          * extension. This method must be overridden if multiple extensions
          * return a value with a common method (and dispatchAll does not
          * suffice). After the dispatch of the action, all models are partially
-         * reloaded (@see ModelExtension.reloadAfterDispatch()) and components
-         * are notified afterwards.
+         * reloaded and components are notified afterwards.
+         * @param {string} method
+         * @param {...any} args
          */
         dispatch(method, ...args) {
             const isInitialDispatch = !this.dispatching;
             this.dispatching = true;
             for (const extension of this.extensions.flat()) {
-                if (method in extension) {
-                    extension[method](...args);
+                extension.dispatch(method, ...args);
+            }
+            if (!isInitialDispatch) {
+                return;
+            }
+            this.dispatching = false;
+            let rev = this.rev;
+            // Calls 'after dispatch' hooks
+            // Purpose: fetch updated data from the server. This is considered
+            // a loading action and is thus performed by groups instead of
+            // loading all extensions at once.
+            this._loadExtensions({ isInitialLoad: false }).then(() => {
+                // Notifies subscribed components
+                // Purpose: re-render components bound by 'useModel'
+                if (rev === this.rev) {
+                    this._notifyComponents();
                 }
-            }
-            if (isInitialDispatch) {
-                this.dispatching = false;
-                (async () => {
-                    // Calls 'after dispatch' hooks
-                    // Purpose: fetch updated data from the server. This is
-                    // considered a loading action and is thus performed by groups
-                    // instead of loading all extensions at once.
-                    for (let layer = 0; layer < this.extensions.length; layer++) {
-                        const afterDispatchPromises = [];
-                        for (const extension of this.extensions[layer]) {
-                            afterDispatchPromises.push(extension.reloadAfterDispatch());
-                        }
-                        await Promise.all(afterDispatchPromises);
-                    }
-                    // Notifies subscribed components
-                    // Purpose: re-render components bound by 'useModel'
-                    let rev = this.rev;
-                    await Promise.resolve();
-                    if (rev === this.rev) {
-                        this._notifyComponents();
-                    }
-                })();
-            }
+            });
         }
 
         /**
@@ -378,13 +373,7 @@ odoo.define("web/static/src/js/model.js", function (require) {
          * @returns {Promise}
          */
         async load() {
-            for (let layer = 0; layer < this.extensions.length; layer++) {
-                const layerPromises = [];
-                for (const extension of this.extensions[layer]) {
-                    layerPromises.push(extension.callLoad());
-                }
-                await Promise.all(layerPromises);
-            }
+            await this._loadExtensions({ isInitialLoad: true });
         }
 
         //---------------------------------------------------------------------
@@ -414,6 +403,24 @@ odoo.define("web/static/src/js/model.js", function (require) {
                 }
             }
             return results;
+        }
+
+        /**
+         * Private handler to loop over all extension layers sequencially and
+         * wait for a given callback to be completed on all extensions of a
+         * same layer.
+         * @private
+         * @param {Object} params
+         * @param {boolean} params.isInitialLoad whether this call comes
+         *      from the initial load.
+         * @returns {Promise}
+         */
+        async _loadExtensions(params) {
+            for (let layer = 0; layer < this.extensions.length; layer++) {
+                await Promise.all(this.extensions[layer].map(
+                    (extension) => extension.callLoad(params)
+                ));
+            }
         }
 
         /**
