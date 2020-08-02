@@ -6,11 +6,10 @@
 # Đurđica Žarković <durdica.zarkovic@storm.hr>, 2017
 # Vladimir Olujić <olujic.vladimir@storm.hr>, 2017
 # Karolina Tonković <karolina.tonkovic@storm.hr>, 2019
-# Martin Trigaux, 2019
 # Ivica Dimjašević <ivica.dimjasevic@storm.hr>, 2019
 # Tina Milas, 2019
-# Davor Bojkić <davor.bojkic@storm.hr>, 2020
 # Bole <bole@dajmi5.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Bole <bole@dajmi5.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Croatian (https://www.transifex.com/odoo/teams/41243/hr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +27,12 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "(Available seats:"
+msgid "(only"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "(ref:"
 msgstr ""
 
 #. module: website_event
@@ -66,6 +70,13 @@ msgid ""
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.template_intro
+msgid ""
+"<font style=\"font-size: 62px;\" "
+"class=\"o_default_snippet_text\">Introduction</font>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
 msgstr ""
@@ -79,11 +90,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check mr-2\"/>Registered"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<i class=\"fa fa-eraser\"/> Clear filters"
 msgstr ""
 
 #. module: website_event
@@ -166,7 +172,14 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<span class=\"navbar-brand h4 my-0\">Events</span>"
+msgid "<span class=\"navbar-brand h4 my-0 mr-auto\">Events</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<span class=\"py-2\">Tickets</span>\n"
+"                        <span class=\"close d-none\">×</span>"
 msgstr ""
 
 #. module: website_event
@@ -268,11 +281,6 @@ msgid ""
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "Clear filters"
-msgstr ""
-
-#. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
@@ -339,11 +347,6 @@ msgid "Date &amp; Time"
 msgstr "Datum &amp; Vrijeme"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
-msgid "Dedicated Menu"
-msgstr "Namjenski izbornik"
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
 msgid "Display a dedicated menu on Website"
 msgstr ""
@@ -361,11 +364,6 @@ msgstr ""
 #, python-format
 msgid "Drag this block and drop it in your page."
 msgstr "Povucite ovaj blok i pustite ga na Vašoj stranici. "
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "E-mail"
-msgstr "E-pošta"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -480,6 +478,7 @@ msgstr ""
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/models/website_menu.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.template_intro
 #, python-format
 msgid "Introduction"
@@ -497,6 +496,7 @@ msgstr ""
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/models/website_menu.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #, python-format
 msgid "Location"
@@ -518,7 +518,6 @@ msgstr "Nedostupno"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Name"
 msgstr "Naziv"
 
@@ -548,11 +547,6 @@ msgid "Organizer"
 msgstr "Organizator"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "Organizer:"
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "Our Trainings"
 msgstr "Naši treninzi"
@@ -562,11 +556,6 @@ msgstr "Naši treninzi"
 #, python-format
 msgid "Past Events"
 msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Phone"
-msgstr "Telefon"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -594,11 +583,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Questions"
 msgstr "Pitanja"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Reference"
-msgstr "Vezna oznaka"
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
@@ -631,6 +615,7 @@ msgid "Registrations are <b>closed</b>"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations not yet open"
 msgstr ""
@@ -690,11 +675,6 @@ msgid "This shortcut will bring you right back to the event form."
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Ticket"
-msgstr "Prijava"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket #"
 msgstr ""
@@ -702,13 +682,6 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Ticket Sales starting on"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"Tickets\n"
-"                        <span class=\"close d-none\">×</span>"
 msgstr ""
 
 #. module: website_event
@@ -775,12 +748,23 @@ msgid "Website Home"
 msgstr "Web naslovnica"
 
 #. module: website_event
+#: model:ir.model,name:website_event.model_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
+msgid "Website Menu"
+msgstr "Website izbornik"
+
+#. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid ""
 "With the Edit button, you can <b>customize</b> the web page visitors will "
 "see when registrating."
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "available)"
 msgstr ""
 
 #. module: website_event

@@ -8,17 +8,16 @@
 # e2f <projects@e2f.com>, 2018
 # liAnGjiA <liangjia@qq.com>, 2018
 # keecome <7017511@qq.com>, 2019
-# v2exerer <9010446@qq.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2019
+# Martin Trigaux, 2019
 # 苏州远鼎 <tiexinliu@126.com>, 2019
 # Fisher <fisher@kdomi.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # Mandy Choy <mnc@odoo.com>, 2019
-# Felix Yang/杨孟泽 <felixyangsh@aliyun.com>, 2019
+# Felix Yang - Elico Corp <felixyangsh@aliyun.com>, 2019
 # SHOM <shanmuxin@yeah.net>, 2020
 # as co02 <asco02@163.com>, 2020
-# Martin Trigaux, 2020
-# Felix Yuen <fyu@odoo.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
+# v2exerer <9010446@qq.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Felix Yuen <fyu@odoo.com>, 2020\n"
+"Last-Translator: v2exerer <9010446@qq.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,7 +35,12 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "(Available seats:"
+msgid "(only"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "(ref:"
 msgstr ""
 
 #. module: website_event
@@ -74,6 +78,13 @@ msgid ""
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.template_intro
+msgid ""
+"<font style=\"font-size: 62px;\" "
+"class=\"o_default_snippet_text\">Introduction</font>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
 msgstr ""
@@ -88,11 +99,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check mr-2\"/>Registered"
 msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<i class=\"fa fa-eraser\"/> Clear filters"
-msgstr "<i class=\"fa fa-eraser\"/> 清除筛选"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -182,7 +188,14 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<span class=\"navbar-brand h4 my-0\">Events</span>"
+msgid "<span class=\"navbar-brand h4 my-0 mr-auto\">Events</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<span class=\"py-2\">Tickets</span>\n"
+"                        <span class=\"close d-none\">×</span>"
 msgstr ""
 
 #. module: website_event
@@ -286,11 +299,6 @@ msgstr ""
 " 菜单：注册、日程表、地图..."
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "Clear filters"
-msgstr "清除筛选"
-
-#. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
@@ -355,11 +363,6 @@ msgid "Date &amp; Time"
 msgstr "日期时间"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
-msgid "Dedicated Menu"
-msgstr "专用菜单"
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
 msgid "Display a dedicated menu on Website"
 msgstr "在网站上显示专用菜单"
@@ -377,11 +380,6 @@ msgstr ""
 #, python-format
 msgid "Drag this block and drop it in your page."
 msgstr "拖动此区块并放在你的页面中。"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "E-mail"
-msgstr "电子邮件"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -496,6 +494,7 @@ msgstr ""
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/models/website_menu.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.template_intro
 #, python-format
 msgid "Introduction"
@@ -513,6 +512,7 @@ msgstr ""
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/models/website_menu.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #, python-format
 msgid "Location"
@@ -534,7 +534,6 @@ msgstr "无"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Name"
 msgstr "名称"
 
@@ -564,11 +563,6 @@ msgid "Organizer"
 msgstr "组织者"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "Organizer:"
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "Our Trainings"
 msgstr "我们的培训"
@@ -578,11 +572,6 @@ msgstr "我们的培训"
 #, python-format
 msgid "Past Events"
 msgstr "过往事务"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Phone"
-msgstr "电话"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -610,11 +599,6 @@ msgstr "预览徽章"
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Questions"
 msgstr "问题"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Reference"
-msgstr "参考"
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
@@ -647,6 +631,7 @@ msgid "Registrations are <b>closed</b>"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations not yet open"
 msgstr ""
@@ -706,11 +691,6 @@ msgid "This shortcut will bring you right back to the event form."
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Ticket"
-msgstr "门票"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket #"
 msgstr ""
@@ -718,13 +698,6 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Ticket Sales starting on"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"Tickets\n"
-"                        <span class=\"close d-none\">×</span>"
 msgstr ""
 
 #. module: website_event
@@ -791,12 +764,23 @@ msgid "Website Home"
 msgstr "网站首页"
 
 #. module: website_event
+#: model:ir.model,name:website_event.model_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
+msgid "Website Menu"
+msgstr "网站菜单"
+
+#. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid ""
 "With the Edit button, you can <b>customize</b> the web page visitors will "
 "see when registrating."
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "available)"
 msgstr ""
 
 #. module: website_event

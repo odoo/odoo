@@ -4,10 +4,10 @@
 # 
 # Translators:
 # Iulian Cutui <iulian.cutui@gmail.com>, 2018
-# Dorin Hongu <dhongu@gmail.com>, 2019
-# Martin Trigaux, 2020
 # Cozmin Candea <office@terrabit.ro>, 2020
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
+# Dorin Hongu <dhongu@gmail.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -133,11 +133,6 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
 msgid "About The Speaker"
-msgstr ""
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
-msgid "Accepted Stage"
 msgstr ""
 
 #. module: website_event_track
@@ -292,6 +287,11 @@ msgid "Confirmed"
 msgstr "Nelansată"
 
 #. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_sponsor_action_from_event
+msgid "Create a Sponsor"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
@@ -355,6 +355,11 @@ msgid "Documents"
 msgstr "Documente"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
+msgid "Done Stage"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Dropdown menu"
 msgstr "Meniul derulant"
@@ -385,6 +390,7 @@ msgstr "Șablon email"
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
 msgstr "Eveniment"
@@ -525,6 +531,7 @@ msgid "Grey"
 msgstr "Gri"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
 msgstr "Grupează după"
@@ -662,11 +669,6 @@ msgid "Location"
 msgstr "Locație"
 
 #. module: website_event_track
-#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
-msgid "Locations"
-msgstr "Locații"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_128
 msgid "Logo"
 msgstr "Sigla"
@@ -696,6 +698,11 @@ msgstr "Meniu"
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
 msgid "Menu Type"
 msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_event_menu_action
+msgid "Menus"
+msgstr "Meniuri"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_has_error
@@ -1002,6 +1009,11 @@ msgid "Sponsors"
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+msgid "Sponsorship"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Stage"
@@ -1147,6 +1159,11 @@ msgid "Track End Date"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
+msgstr ""
+
+#. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
 msgstr ""
@@ -1267,8 +1284,31 @@ msgid "We will evaluate your proposition and get back to you shortly."
 msgstr ""
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_tree
+msgid "Website"
+msgstr "Pagină web"
+
+#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_form
 msgid "Website Event Menu"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_tree
+msgid "Website Event Menus"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "Meniu website"
+
+#. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_website_event_menu
+msgid "Website Menus"
 msgstr ""
 
 #. module: website_event_track

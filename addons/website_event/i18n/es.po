@@ -12,14 +12,14 @@
 # Juan Pablo Mora <jpm@odoo.com>, 2019
 # Rick Hunter <rick_hunter_ec@yahoo.com>, 2019
 # gabriumaa <gabriel.umana@delfixcr.com>, 2019
+# Jesse Garza <jga@odoo.com>, 2019
 # Nelson Ramírez Sánchez <info@konos.cl>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
-# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Jon Perez <jop@odoo.com>, 2020
-# Jesse Garza <jga@odoo.com>, 2020
+# Leonardo J. Caballero G. <leonardocaballero@gmail.com>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
 # Paulina Rodriguez <pauli.rodriguez.c@gmail.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
@@ -27,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Paulina Rodriguez <pauli.rodriguez.c@gmail.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,8 +37,13 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "(Available seats:"
-msgstr "(Sitios disponibles:"
+msgid "(only"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "(ref:"
+msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.snippet_options
@@ -77,6 +82,13 @@ msgstr ""
 "eventos.</em>"
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.template_intro
+msgid ""
+"<font style=\"font-size: 62px;\" "
+"class=\"o_default_snippet_text\">Introduction</font>"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
 msgstr "<i class=\"fa fa-ban mr-2\"/>Agotado"
@@ -91,11 +103,6 @@ msgstr "<i class=\"fa fa-ban mr-2\"/>No publicado"
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check mr-2\"/>Registered"
 msgstr "<i class=\"fa fa-check mr-2\"/>Registrado"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<i class=\"fa fa-eraser\"/> Clear filters"
-msgstr "<i class=\"fa fa-eraser\"/>Eliminar filtros"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -189,7 +196,14 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<span class=\"navbar-brand h4 my-0\">Events</span>"
+msgid "<span class=\"navbar-brand h4 my-0 mr-auto\">Events</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<span class=\"py-2\">Tickets</span>\n"
+"                        <span class=\"close d-none\">×</span>"
 msgstr ""
 
 #. module: website_event
@@ -299,11 +313,6 @@ msgstr ""
 " en el sitio web: registros, programa, mapa..."
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "Clear filters"
-msgstr "Quitar filtros"
-
-#. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/tours/website_event.js:0
 #, python-format
@@ -370,11 +379,6 @@ msgid "Date &amp; Time"
 msgstr "Fecha y Hora"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
-msgid "Dedicated Menu"
-msgstr "Menú dedicado"
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
 msgid "Display a dedicated menu on Website"
 msgstr "Mostrar un menú dedicado en el sitio web"
@@ -392,11 +396,6 @@ msgstr ""
 #, python-format
 msgid "Drag this block and drop it in your page."
 msgstr "Arrastre este bloque y suéltelo en su página."
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "E-mail"
-msgstr "Email"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -513,6 +512,7 @@ msgstr "Google"
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/models/website_menu.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.template_intro
 #, python-format
 msgid "Introduction"
@@ -530,6 +530,7 @@ msgstr "Juan Pérez"
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/models/website_menu.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #, python-format
 msgid "Location"
@@ -551,7 +552,6 @@ msgstr "N/A"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Name"
 msgstr "Nombre"
 
@@ -581,11 +581,6 @@ msgid "Organizer"
 msgstr "Organizador"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "Organizer:"
-msgstr "Organizador:"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "Our Trainings"
 msgstr "Nuestras formaciones"
@@ -595,11 +590,6 @@ msgstr "Nuestras formaciones"
 #, python-format
 msgid "Past Events"
 msgstr "Eventos pasados"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Phone"
-msgstr "Teléfono"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
@@ -627,11 +617,6 @@ msgstr "Previsualizar acreditación"
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Questions"
 msgstr "Preguntas"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Reference"
-msgstr "Referencia"
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
@@ -664,6 +649,7 @@ msgid "Registrations are <b>closed</b>"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations not yet open"
 msgstr ""
@@ -723,11 +709,6 @@ msgid "This shortcut will bring you right back to the event form."
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Ticket"
-msgstr "Entrada"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket #"
 msgstr "boleto #"
@@ -735,13 +716,6 @@ msgstr "boleto #"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Ticket Sales starting on"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"Tickets\n"
-"                        <span class=\"close d-none\">×</span>"
 msgstr ""
 
 #. module: website_event
@@ -809,12 +783,23 @@ msgid "Website Home"
 msgstr "Página de inicio del sitio web"
 
 #. module: website_event
+#: model:ir.model,name:website_event.model_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
+msgid "Website Menu"
+msgstr "Menú del sitio web"
+
+#. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
 msgid ""
 "With the Edit button, you can <b>customize</b> the web page visitors will "
 "see when registrating."
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "available)"
 msgstr ""
 
 #. module: website_event

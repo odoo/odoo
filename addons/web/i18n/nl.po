@@ -51,6 +51,12 @@ msgid ""
 "                            tr:last-child td {\n"
 "                                border-bottom: 3px solid"
 msgstr ""
+"!important;\n"
+"                            }\n"
+"                        }\n"
+"                        tbody {\n"
+"                            tr:last-child td {\n"
+"                                border-bottom: 3px solid"
 
 #. module: web
 #. openerp-web
@@ -117,6 +123,9 @@ msgid ""
 "                    #total strong {\n"
 "                        color:"
 msgstr ""
+"&amp;.o_report_layout_boxed {\n"
+"                    #total strong {\n"
+"                        color:"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.styles_company_report
@@ -125,6 +134,9 @@ msgid ""
 "                    h2 {\n"
 "                        color:"
 msgstr ""
+"&amp;.o_report_layout_standard {\n"
+"                    h2 {\n"
+"                        color:"
 
 #. module: web
 #. openerp-web
@@ -246,6 +258,16 @@ msgid ""
 "                        &amp;.o_total td {\n"
 "                            background-color: rgba("
 msgstr ""
+", 0.1);\n"
+"                                }\n"
+"                        }\n"
+"                    }\n"
+"                }\n"
+"                .row &gt; div &gt; table,\n"
+"                div#total table {\n"
+"                    tr {\n"
+"                        &amp;.o_total td {\n"
+"                            background-color: rgba("
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.styles_company_report
@@ -326,6 +348,13 @@ msgid ""
 "                        strong {\n"
 "                            color:"
 msgstr ""
+";\n"
+"                            }\n"
+"                        }\n"
+"                    }\n"
+"                    #total {\n"
+"                        strong {\n"
+"                            color:"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.styles_company_report
@@ -358,6 +387,13 @@ msgid ""
 "                   strong {\n"
 "                        color:"
 msgstr ""
+";\n"
+"                        }\n"
+"                    }\n"
+"                }\n"
+"                &amp;.o_report_layout_background {\n"
+"                   strong {\n"
+"                        color:"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.styles_company_report
@@ -404,6 +440,10 @@ msgid ""
 "                    .pagenumber {\n"
 "                        border: 3px solid"
 msgstr ""
+";\n"
+"                    }\n"
+"                    .pagenumber {\n"
+"                        border: 3px solid"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.styles_company_report
@@ -413,6 +453,10 @@ msgid ""
 "                    h2 span {\n"
 "                        color:"
 msgstr ""
+";\n"
+"                    }\n"
+"                    h2 span {\n"
+"                        color:"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.styles_company_report
@@ -435,6 +479,10 @@ msgid ""
 "                    strong {\n"
 "                        color:"
 msgstr ""
+";\n"
+"                    }\n"
+"                    strong {\n"
+"                        color:"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.styles_company_report
@@ -445,6 +493,11 @@ msgid ""
 "                        thead {\n"
 "                            color:"
 msgstr ""
+";\n"
+"                    }\n"
+"                    table {\n"
+"                        thead {\n"
+"                            color:"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.styles_company_report
@@ -502,6 +555,13 @@ msgid ""
 "                        li {\n"
 "                            color:"
 msgstr ""
+";\n"
+"                    }\n"
+"                }\n"
+"                &amp;.o_background_footer {\n"
+"                    ul {\n"
+"                        li {\n"
+"                            color:"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.styles_company_report
@@ -529,6 +589,17 @@ msgid ""
 "                        strong {\n"
 "                            color:"
 msgstr ""
+";\n"
+"                    }\n"
+"                }\n"
+"                .row &gt; div &gt; table,\n"
+"                div#total table {\n"
+"                    &amp;:first-child,\n"
+"                    &amp;:last-child,\n"
+"                    &amp;.o_subtotal,\n"
+"                    &amp;.o_total {\n"
+"                        strong {\n"
+"                            color:"
 
 #. module: web
 #: model_terms:ir.ui.view,arch_db:web.external_layout_background
@@ -4514,7 +4585,7 @@ msgstr "Uploaden... (%s%%)"
 #: code:addons/web/static/src/js/views/kanban/kanban_column_quick_create.js:0
 #, python-format
 msgid "Use This For My Project"
-msgstr ""
+msgstr "Gebruik dit voor mijn project"
 
 #. module: web
 #. openerp-web
@@ -4907,7 +4978,7 @@ msgstr "zijn geldig voor deze update."
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "at:"
-msgstr ""
+msgstr "op:"
 
 #. module: web
 #. openerp-web
@@ -4950,7 +5021,7 @@ msgstr ""
 #: code:addons/web/static/src/xml/base.xml:0
 #, python-format
 msgid "env._t('Print')"
-msgstr ""
+msgstr "env._t('Print')"
 
 #. module: web
 #. openerp-web

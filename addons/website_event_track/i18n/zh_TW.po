@@ -140,11 +140,6 @@ msgid "About The Speaker"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
-msgid "Accepted Stage"
-msgstr "已接受階段"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_needaction
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
 msgid "Action Needed"
@@ -298,6 +293,11 @@ msgid "Confirmed"
 msgstr "已確認"
 
 #. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_sponsor_action_from_event
+msgid "Create a Sponsor"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
@@ -361,6 +361,11 @@ msgid "Documents"
 msgstr "文檔"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
+msgid "Done Stage"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Dropdown menu"
 msgstr "下拉選單"
@@ -391,6 +396,7 @@ msgstr "電郵模板"
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
 msgstr "活動"
@@ -531,6 +537,7 @@ msgid "Grey"
 msgstr "灰色"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
 msgstr "分組"
@@ -668,11 +675,6 @@ msgid "Location"
 msgstr "地點"
 
 #. module: website_event_track
-#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
-msgid "Locations"
-msgstr "位置"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_128
 msgid "Logo"
 msgstr "徽標"
@@ -702,6 +704,11 @@ msgstr "選單"
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
 msgid "Menu Type"
 msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_event_menu_action
+msgid "Menus"
+msgstr "選單"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_has_error
@@ -1007,6 +1014,11 @@ msgid "Sponsors"
 msgstr "贊助人"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+msgid "Sponsorship"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Stage"
@@ -1151,6 +1163,11 @@ msgid "Track End Date"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
+msgstr ""
+
+#. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
 msgstr "追蹤已就緒"
@@ -1278,8 +1295,31 @@ msgid "We will evaluate your proposition and get back to you shortly."
 msgstr "我們將評估您的建議，並盡快給您回覆。"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_tree
+msgid "Website"
+msgstr "網站"
+
+#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_form
 msgid "Website Event Menu"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_tree
+msgid "Website Event Menus"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "網站選單"
+
+#. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_website_event_menu
+msgid "Website Menus"
 msgstr ""
 
 #. module: website_event_track

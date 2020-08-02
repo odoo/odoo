@@ -16,7 +16,6 @@
 # e2f <projects@e2f.com>, 2018
 # Ralf Hilgenstock <rh@dialoge.info>, 2018
 # Wolfgang Taferner, 2018
-# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2018
 # Katharina Moritz <kmo@e2f.com>, 2018
 # Tom, 2018
 # Johannes Croe <jcr@odoo.com>, 2019
@@ -24,8 +23,9 @@
 # Bettina Pfeifer <betzilla@web.de>, 2019
 # Leon Grill <leg@odoo.com>, 2019
 # Christian Mahlich <c.mahlich@gmail.com>, 2019
-# Martin Trigaux, 2020
 # JEK Odoo <jek@odoo.com>, 2020
+# Martin Trigaux, 2020
+# f91684c3ff9ec3e650d5c8461e534581_686eae3 <449b96d9f63071f94d89e129677b83de_366193>, 2020
 # Ermin Trevisan <trevi@twanda.com>, 2020
 # 
 msgid ""
@@ -181,11 +181,6 @@ msgid "About The Speaker"
 msgstr ""
 
 #. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
-msgid "Accepted Stage"
-msgstr "Akzeptierte Stufe"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_needaction
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
 msgid "Action Needed"
@@ -339,6 +334,11 @@ msgid "Confirmed"
 msgstr "Bestätigt"
 
 #. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_sponsor_action_from_event
+msgid "Create a Sponsor"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
@@ -402,6 +402,11 @@ msgid "Documents"
 msgstr "Dokumente"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
+msgid "Done Stage"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Dropdown menu"
 msgstr "Dropdownmenu"
@@ -432,6 +437,7 @@ msgstr "E-Mail Vorlage"
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
 msgstr "Event"
@@ -572,6 +578,7 @@ msgid "Grey"
 msgstr "Grau"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
 msgstr "Gruppieren nach"
@@ -713,11 +720,6 @@ msgid "Location"
 msgstr "Ort"
 
 #. module: website_event_track
-#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
-msgid "Locations"
-msgstr "Veranstaltungsorte"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_128
 msgid "Logo"
 msgstr "Logo"
@@ -747,6 +749,11 @@ msgstr "Menü"
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
 msgid "Menu Type"
 msgstr ""
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_event_menu_action
+msgid "Menus"
+msgstr "Menüs"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_has_error
@@ -1052,6 +1059,11 @@ msgid "Sponsors"
 msgstr "Sponsoren"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+msgid "Sponsorship"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Stage"
@@ -1199,6 +1211,11 @@ msgid "Track End Date"
 msgstr ""
 
 #. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
+msgstr ""
+
+#. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
 msgstr "Track bereit"
@@ -1326,8 +1343,31 @@ msgid "We will evaluate your proposition and get back to you shortly."
 msgstr "Wir evaluieren Ihre Vorschläge und kommen in Kürze auf Sie zurück."
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_tree
+msgid "Website"
+msgstr "Website"
+
+#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_form
 msgid "Website Event Menu"
+msgstr ""
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_tree
+msgid "Website Event Menus"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "Website-Menü"
+
+#. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_website_event_menu
+msgid "Website Menus"
 msgstr ""
 
 #. module: website_event_track

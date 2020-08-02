@@ -8,8 +8,8 @@
 # Onii Onii <onii0223@yahoo.com>, 2018
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
-# Martin Trigaux, 2020
 # Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
@@ -17,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:46+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +27,12 @@ msgstr ""
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid "(Available seats:"
+msgid "(only"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
+msgid "(ref:"
 msgstr ""
 
 #. module: website_event
@@ -45,23 +50,30 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<b>Start</b>"
-msgstr ""
+msgstr "<b>Эхлэх</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
 msgid "<b>View all</b>"
-msgstr ""
+msgstr "<b>Бүгдийг харах</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<br/> <b>End</b>"
-msgstr ""
+msgstr "<br/> <b>Дуусгах</b>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_quotes
 msgid ""
 "<em>Write here a quote from one of your attendees. It gives confidence in "
 "your events.</em>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.template_intro
+msgid ""
+"<font style=\"font-size: 62px;\" "
+"class=\"o_default_snippet_text\">Introduction</font>"
 msgstr ""
 
 #. module: website_event
@@ -72,18 +84,13 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-ban mr-2\"/>Unpublished"
-msgstr ""
+msgstr "<i class=\"fa fa-ban mr-2\"/>Нийтлээгүй"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "<i class=\"fa fa-check mr-2\"/>Registered"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<i class=\"fa fa-eraser\"/> Clear filters"
-msgstr "<i class=\"fa fa-eraser mr-1\"/>Шүүлтүүр цэвэрлэх"
+msgstr "<i class=\"fa fa-check mr-2\"/>Бүртгэсэн"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -91,21 +98,23 @@ msgid ""
 "<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
 "title=\"Facebook\"/>"
 msgstr ""
+"<i class=\"fa fa-facebook text-facebook\" aria-label=\"Facebook\" "
+"title=\"Facebook\"/>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
 msgid "<i class=\"fa fa-flag mr-2\"/>Events:"
-msgstr ""
+msgstr "<i class=\"fa fa-flag mr-2\"/>Арга хэмжээ:"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to Google Calendar"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-calendar\"/> Google Цаглабарт нэмэх"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "<i class=\"fa fa-fw fa-calendar\"/> Add to iCal/Outlook"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-calendar\"/> iCal/Outlook - т нэмэх"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -116,7 +125,7 @@ msgstr "<i class=\"fa fa-github text-github\" aria-label=\"Github\" title=\"Gith
 #: model_terms:ir.ui.view,arch_db:website_event.country_events_list
 #: model_terms:ir.ui.view,arch_db:website_event.s_country_events
 msgid "<i class=\"fa fa-globe mr-2\"/>Upcoming Events"
-msgstr ""
+msgstr "<i class=\"fa fa-globe mr-2\"/>Удахгүй болох арга хэмжээнүүд"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_follow_us
@@ -139,7 +148,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.layout
 msgid "<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>All Events"
-msgstr ""
+msgstr "<i class=\"fa fa-long-arrow-left text-primary mr-2\"/>Бүх арга хэмжээнүүд"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -170,10 +179,19 @@ msgid ""
 "<span class=\"badge badge-secondary text-uppercase "
 "o_wevent_badge\">Speaker</span>"
 msgstr ""
+"<span class=\"badge badge-secondary text-uppercase "
+"o_wevent_badge\">Илтгэгч</span>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "<span class=\"navbar-brand h4 my-0\">Events</span>"
+msgid "<span class=\"navbar-brand h4 my-0 mr-auto\">Events</span>"
+msgstr ""
+
+#. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid ""
+"<span class=\"py-2\">Tickets</span>\n"
+"                        <span class=\"close d-none\">×</span>"
 msgstr ""
 
 #. module: website_event
@@ -215,7 +233,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "A past event"
-msgstr ""
+msgstr "Өнгөрсөн арга хэмжээ"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
@@ -225,7 +243,7 @@ msgstr "Бидний тухай"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Add to Calendar"
-msgstr ""
+msgstr "Цаглабарт нэмэх"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:0
@@ -236,12 +254,12 @@ msgstr "Бүх улсууд"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_location
 msgid "All countries"
-msgstr ""
+msgstr "Бүх улсууд"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Ask questions to attendees when registering online"
-msgstr ""
+msgstr "Онлайнаар бүтргүүлэх үед оролцогчдоом асуулт асуух"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
@@ -272,11 +290,6 @@ msgstr "Цуцлах"
 msgid ""
 "Check this option to have menus for your event on the\n"
 "                                website: registrations, schedule, map, ..."
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.index_topbar
-msgid "Clear filters"
 msgstr ""
 
 #. module: website_event
@@ -346,14 +359,9 @@ msgid "Date &amp; Time"
 msgstr "Огноо &amp; Цаг"
 
 #. module: website_event
-#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
-msgid "Dedicated Menu"
-msgstr "Зориулагдсан Цэс"
-
-#. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_type__website_menu
 msgid "Display a dedicated menu on Website"
-msgstr ""
+msgstr "Вебсайтад зориулсан цэсийг харуулах"
 
 #. module: website_event
 #. openerp-web
@@ -370,11 +378,6 @@ msgid "Drag this block and drop it in your page."
 msgstr "Энэ блокыг чирээд хуудас дээр тавина уу."
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "E-mail"
-msgstr "Э-мэйл"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Email"
 msgstr "Имэйл"
@@ -382,7 +385,7 @@ msgstr "Имэйл"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "End -"
-msgstr ""
+msgstr "Дуусах -"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_event
@@ -424,7 +427,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event.field_event_event__subtitle
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 msgid "Event Subtitle"
-msgstr ""
+msgstr "Арга хэмжээний дэд гарчиг"
 
 #. module: website_event
 #: model:ir.model,name:website_event.model_event_type
@@ -434,7 +437,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_details
 msgid "Event Title"
-msgstr ""
+msgstr "Арга хэмжээний гарчиг"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.404
@@ -478,15 +481,16 @@ msgstr "Биднийг дагах"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Get the direction"
-msgstr ""
+msgstr "Чиглэл "
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Google"
-msgstr ""
+msgstr "Google"
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/models/website_menu.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.template_intro
 #, python-format
 msgid "Introduction"
@@ -500,10 +504,11 @@ msgstr "Оролцож байгаа"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.s_speaker_bio
 msgid "John DOE"
-msgstr ""
+msgstr "John DOE"
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
+#: code:addons/website_event/models/website_menu.py:0
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 #, python-format
 msgid "Location"
@@ -525,7 +530,6 @@ msgstr "Алга"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Name"
 msgstr "Нэр"
 
@@ -540,7 +544,7 @@ msgstr "Шинэ Арга хэмжээ"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "No events found."
-msgstr ""
+msgstr "Арга хэмжээ олдсонгүй"
 
 #. module: website_event
 #. openerp-web
@@ -555,11 +559,6 @@ msgid "Organizer"
 msgstr "Зохион байгуулагч"
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.events_list
-msgid "Organizer:"
-msgstr ""
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "Our Trainings"
 msgstr "Манай Сургалтууд"
@@ -568,44 +567,34 @@ msgstr "Манай Сургалтууд"
 #: code:addons/website_event/controllers/main.py:0
 #, python-format
 msgid "Past Events"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Phone"
-msgstr "Утас"
+msgstr "Өнгөрсөн арга хэмжээнүүд"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Phone <small>(Optional)</small>"
-msgstr ""
+msgstr "Утас <small>(заавал биш)</small>"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_photos
 msgid "Photos"
-msgstr ""
+msgstr "Зурагнууд"
 
 #. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/website_event.js:0
 #, python-format
 msgid "Please select at least one ticket."
-msgstr ""
+msgstr "Дор хаяж нэг тасалбар сонгоно уу"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_event_view_form_inherit_website
 msgid "Preview Badges"
-msgstr ""
+msgstr "Тэмдэгт харах"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.res_config_settings_view_form
 msgid "Questions"
 msgstr "Асуултууд"
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Reference"
-msgstr "Дугаар"
 
 #. module: website_event
 #: code:addons/website_event/models/event_event.py:0
@@ -624,7 +613,7 @@ msgstr "Бүртгэл"
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_complete
 msgid "Registration confirmed!"
-msgstr ""
+msgstr "Бүртгэл амжилттай!"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
@@ -638,6 +627,7 @@ msgid "Registrations are <b>closed</b>"
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.events_list
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Registrations not yet open"
 msgstr ""
@@ -650,7 +640,7 @@ msgstr "Арга хэмжээний жагсаалт руу буцах."
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "SHARE"
-msgstr ""
+msgstr "ХУВААЛЦАХ"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
@@ -681,7 +671,7 @@ msgstr "Уучлаарай, хүссэн арга хэмжээ боломжгү�
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "Start -"
-msgstr ""
+msgstr "Эхлэх-"
 
 #. module: website_event
 #: code:addons/website_event/controllers/main.py:0
@@ -697,25 +687,13 @@ msgid "This shortcut will bring you right back to the event form."
 msgstr ""
 
 #. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_complete
-msgid "Ticket"
-msgstr "Тасалбар"
-
-#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_attendee_details
 msgid "Ticket #"
-msgstr ""
+msgstr "Тасалбар #"
 
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.registration_template
 msgid "Ticket Sales starting on"
-msgstr ""
-
-#. module: website_event
-#: model_terms:ir.ui.view,arch_db:website_event.registration_template
-msgid ""
-"Tickets\n"
-"                        <span class=\"close d-none\">×</span>"
 msgstr ""
 
 #. module: website_event
@@ -749,7 +727,7 @@ msgstr ""
 #. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.events_list
 msgid "Use the top button '<b>+ New</b>' to create an event."
-msgstr ""
+msgstr "Арга хэмжээ үүсгэхийн тулд '<b>+ Шинэ</b>' товчыг ашиглана уу"
 
 #. module: website_event
 #. openerp-web
@@ -762,6 +740,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event.index_sidebar_about_us
 msgid "Use this paragrah to write a short text about your events or company."
 msgstr ""
+"Энэ  параграфыг ашиглан өөрийн арга хэмжээ эсвэл компанид богино текст бичих"
 
 #. module: website_event
 #: model:ir.model.fields,field_description:website_event.field_event_event__website_published
@@ -782,6 +761,12 @@ msgid "Website Home"
 msgstr "Вэбсайт Нүүр"
 
 #. module: website_event
+#: model:ir.model,name:website_event.model_website_menu
+#: model:ir.model.fields,field_description:website_event.field_event_event__website_menu
+msgid "Website Menu"
+msgstr "Вебсайтын цэс"
+
+#. module: website_event
 #. openerp-web
 #: code:addons/website_event/static/src/js/tours/event_tour.js:0
 #, python-format
@@ -791,6 +776,11 @@ msgid ""
 msgstr ""
 
 #. module: website_event
+#: model_terms:ir.ui.view,arch_db:website_event.registration_template
+msgid "available)"
+msgstr ""
+
+#. module: website_event
 #: model_terms:ir.ui.view,arch_db:website_event.event_description_full
 msgid "iCal/Outlook"
-msgstr ""
+msgstr "iCal/Outlook"

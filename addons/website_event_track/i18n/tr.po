@@ -16,14 +16,14 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2019
 # Umur Akın <umura@projetgrup.com>, 2019
 # Abdullah Onur Uğur <aonurugur@outlook.com>, 2019
-# Ediz Duman <neps1192@gmail.com>, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Yedigen, 2019
-# Martin Trigaux, 2020
-# Murat Kaplan <muratk@projetgrup.com>, 2020
 # abc Def <hdogan1974@gmail.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
+# Ediz Duman <neps1192@gmail.com>, 2020
+# Murat Kaplan <muratk@projetgrup.com>, 2020
+# Martin Trigaux, 2020
 # 
 msgid ""
 msgstr ""
@@ -31,7 +31,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-21 10:47+0000\n"
 "PO-Revision-Date: 2016-08-05 13:12+0000\n"
-"Last-Translator: Murat Durmuş <muratd@projetgrup.com>, 2020\n"
+"Last-Translator: Martin Trigaux, 2020\n"
 "Language-Team: Turkish (https://www.transifex.com/odoo/teams/41243/tr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -164,11 +164,6 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
 msgid "About The Speaker"
 msgstr "Konuşmacı Hakkında"
-
-#. module: website_event_track
-#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
-msgid "Accepted Stage"
-msgstr "Kabul Edilen Aşama"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_needaction
@@ -324,6 +319,11 @@ msgid "Confirmed"
 msgstr "Onayda"
 
 #. module: website_event_track
+#: model_terms:ir.actions.act_window,help:website_event_track.event_sponsor_action_from_event
+msgid "Create a Sponsor"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor_type__create_uid
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__create_uid
@@ -391,6 +391,11 @@ msgid "Documents"
 msgstr "Belge"
 
 #. module: website_event_track
+#: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
+msgid "Done Stage"
+msgstr ""
+
+#. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_kanban
 msgid "Dropdown menu"
 msgstr "Dropdown Menü"
@@ -421,6 +426,7 @@ msgstr "Eposta Şablonu"
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__event_id
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__event_id
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Event"
 msgstr "Etkinlik"
@@ -561,6 +567,7 @@ msgid "Grey"
 msgstr "Gri"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Group By"
 msgstr "Grupla"
@@ -699,11 +706,6 @@ msgid "Location"
 msgstr "Konum"
 
 #. module: website_event_track
-#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
-msgid "Locations"
-msgstr "Konumlar"
-
-#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__image_128
 msgid "Logo"
 msgstr "Logo"
@@ -733,6 +735,11 @@ msgstr "Menü"
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
 msgid "Menu Type"
 msgstr "Menü Türü"
+
+#. module: website_event_track
+#: model:ir.actions.act_window,name:website_event_track.website_event_menu_action
+msgid "Menus"
+msgstr "Menüler"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__message_has_error
@@ -1041,6 +1048,11 @@ msgid "Sponsors"
 msgstr "Sponsorlar"
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_search
+msgid "Sponsorship"
+msgstr ""
+
+#. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__stage_id
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "Stage"
@@ -1187,6 +1199,11 @@ msgid "Track End Date"
 msgstr "Parkur Bitiş Tarihi"
 
 #. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_event_track_location
+msgid "Track Locations"
+msgstr ""
+
+#. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
 msgid "Track Ready"
 msgstr "İzleme Hazır"
@@ -1313,9 +1330,32 @@ msgid "We will evaluate your proposition and get back to you shortly."
 msgstr "Biz teklifi değerlendirmek ve kısa bir süre size geri alırsınız."
 
 #. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_form
+#: model_terms:ir.ui.view,arch_db:website_event_track.event_sponsor_view_tree
+msgid "Website"
+msgstr "Websitesi"
+
+#. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_form
 msgid "Website Event Menu"
 msgstr "Web Sitesi Etkinlik Menüsü"
+
+#. module: website_event_track
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_search
+#: model_terms:ir.ui.view,arch_db:website_event_track.website_event_menu_view_tree
+msgid "Website Event Menus"
+msgstr ""
+
+#. module: website_event_track
+#: model:ir.model,name:website_event_track.model_website_menu
+msgid "Website Menu"
+msgstr "Web Sitesi Menü"
+
+#. module: website_event_track
+#: model:ir.ui.menu,name:website_event_track.menu_website_event_menu
+msgid "Website Menus"
+msgstr ""
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_sponsor__website_message_ids
