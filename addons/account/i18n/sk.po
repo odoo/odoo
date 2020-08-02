@@ -12,13 +12,13 @@
 # gebri <gebri@inmail.sk>, 2019
 # Martin Trigaux, 2020
 # Stefan Stieranka <stieranka@itec.sk>, 2020
-# Jan Prokop, 2020
 # Peter Dovicovic <dovicovic@gmail.com>, 2020
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Jojo1 Jojo <jojo1@atlas.sk>, 2020
 # Igor K <igorkocis12@gmail.com>, 2020
 # karolína schusterová <karolina.schusterova@vdp.sk>, 2020
 # Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
+# Jan Prokop, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
+"Last-Translator: Jan Prokop, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -5462,6 +5462,8 @@ msgid ""
 "If set, the accounting entries created during the bank statement reconciliation process will be created at this date.\n"
 "This is useful if the accounting period in which the entries should normally be booked is already closed."
 msgstr ""
+"Ak je nastavené, účtovné zápisy vytvorené počas odsúhlasovania výpisu budú s týmto dátumom.\n"
+"Je to vhodné vtedy ak je účtovné obdobie, v ktorom by sa zápisy inak vytvorili, už uzavreté."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_tax__analytic
@@ -10720,6 +10722,9 @@ msgid ""
 "                                                                                                       This is useful if you install accounting after having used invoicing for some time and\n"
 "                                                                                                       don't want to reconcile all the past payments with bank statements."
 msgstr ""
+"Odsúhlasovací widget nebude brať do úvahy platby staršie ako tento dátum.\n"
+"Je to užitočné ak bolo účtovníctvo nainštalované neskôr, keď už boli vydané nejaké faktúry a\n"
+"ie je potrebné odsúhlasovať všetky staré platby s výpismi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_config_settings__account_bank_reconciliation_start
@@ -10728,6 +10733,9 @@ msgid ""
 "               This is useful if you install accounting after having used invoicing for some time and\n"
 "               don't want to reconcile all the past payments with bank statements."
 msgstr ""
+"Odsúhlasovací widget nebude brať do úvahy platby staršie ako tento dátum.\n"
+"Je to užitočné ak bolo účtovníctvo nainštalované neskôr, keď už boli vydané nejaké faktúry a\n"
+"ie je potrebné odsúhlasovať všetky staré platby s výpismi."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__statement_id
@@ -11075,6 +11083,10 @@ msgid ""
 "        * Amount Paid: Only applied when paying an amount.\n"
 "        * Amount Paid/Received: Applied in both cases."
 msgstr ""
+"Model odsúhlasenia sa bude aplikovať len na vybrané typy transakcií:\n"
+"     * Prijatá suma: Uplatňuje sa iba pri prijatí sumy. \n"
+"     * Zaplatená suma: Uplatňuje sa iba pri platbe sumy.\n"
+"     * Suma zaplatená / prijatá: Platí v oboch prípadoch."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_partner
@@ -11091,6 +11103,8 @@ msgid ""
 "The reconciliation model will only be applied when the amount being lower "
 "than, greater than or between specified amount(s)."
 msgstr ""
+"Model odsúhlasenia bude aplikovaný len ak je suma väčšia než, menšia než "
+"alebo v nastavenom rozsahu. "
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_reconcile_model__match_label
@@ -11127,7 +11141,7 @@ msgstr ""
 #: model:ir.model.fields,help:account.field_account_reconcile_model_template__match_journal_ids
 msgid ""
 "The reconciliation model will only be available from the selected journals."
-msgstr ""
+msgstr "Model odsúhlasenia bude dostupný pre vybrané denníky."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_tax_adjustments_wizard__tax_report_line_id
@@ -11351,6 +11365,8 @@ msgid ""
 "This allows you grouping payments into a single batch and eases the reconciliation process.\n"
 "-This installs the account_batch_payment module."
 msgstr ""
+"Umožní zoskupenie platieb do jednej dávky pre uľahčenie odsúhlasovania.\n"
+"- Nainštaluje modul account_batch_payment."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_chart_template__complete_tax_set
@@ -12035,6 +12051,7 @@ msgid ""
 "Validate the statement line automatically (reconciliation based on your "
 "rule)."
 msgstr ""
+"Overte položku výpisu automaticky (na základe odsúhlasenia podľa pravidla)."
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_bank_statement__state__confirm
@@ -12645,7 +12662,7 @@ msgstr ""
 msgid ""
 "You cannot switch an account to prevent the reconciliation if some partial "
 "reconciliations are still pending."
-msgstr ""
+msgstr "Nemôžete zmeniť účet pokiaľ sú otvorené čiastkové odsúhlasenia."
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
