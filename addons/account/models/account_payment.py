@@ -375,15 +375,16 @@ class account_payment(models.Model):
                     raise UserError(_('There is no Transfer Account defined in the accounting settings. Please define one to be able to confirm this transfer.'))
                 payment.destination_account_id = payment.company_id.transfer_account_id.id
             elif payment.partner_id:
+                partner = self.partner_id.with_context(force_company=payment.company_id.id)
                 if payment.partner_type == 'customer':
-                    payment.destination_account_id = payment.partner_id.property_account_receivable_id.id
+                    payment.destination_account_id = partner.property_account_receivable_id.id
                 else:
-                    payment.destination_account_id = payment.partner_id.property_account_payable_id.id
+                    payment.destination_account_id = partner.property_account_payable_id.id
             elif payment.partner_type == 'customer':
-                default_account = self.env['ir.property'].get('property_account_receivable_id', 'res.partner')
+                default_account = self.env['ir.property'].with_context(force_company=payment.company_id.id).get('property_account_receivable_id', 'res.partner')
                 payment.destination_account_id = default_account.id
             elif payment.partner_type == 'supplier':
-                default_account = self.env['ir.property'].get('property_account_payable_id', 'res.partner')
+                default_account = self.env['ir.property'].with_context(force_company=payment.company_id.id).get('property_account_payable_id', 'res.partner')
                 payment.destination_account_id = default_account.id
 
     @api.depends('move_line_ids.matched_debit_ids', 'move_line_ids.matched_credit_ids')

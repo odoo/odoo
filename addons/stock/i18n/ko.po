@@ -876,6 +876,12 @@ msgid "Available Products"
 msgstr "사용 가능 제품"
 
 #. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr "유형을 변경하기 전에 사용 가능한 수량을 0으로 설정해야 합니다"
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"

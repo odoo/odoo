@@ -9,7 +9,7 @@ class PortalAccount(PortalAccount):
 
     def _invoice_get_page_view_values(self, invoice, access_token, **kwargs):
         values = super(PortalAccount, self)._invoice_get_page_view_values(invoice, access_token, **kwargs)
-        payment_inputs = request.env['payment.acquirer']._get_available_payment_input(company=invoice.company_id)
+        payment_inputs = request.env['payment.acquirer']._get_available_payment_input(partner=invoice.partner_id, company=invoice.company_id)
         # if not connected (using public user), the method _get_available_payment_input will return public user tokens
         is_public_user = request.env.user._is_public()
         if is_public_user:

@@ -371,6 +371,7 @@ class PurchaseOrderLine(models.Model):
             qty -= move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
         for move in incoming_moves:
             qty += move.product_uom._compute_quantity(move.product_uom_qty, self.product_uom, rounding_method='HALF-UP')
+        description_picking = self.product_id.with_context(lang=self.order_id.dest_address_id.lang or self.env.user.lang)._get_description(self.order_id.picking_type_id)
         template = {
             # truncate to 2000 to avoid triggering index limit error
             # TODO: remove index in master?
@@ -393,7 +394,7 @@ class PurchaseOrderLine(models.Model):
             'origin': self.order_id.name,
             'propagate_date': self.propagate_date,
             'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
-            'description_picking': self.product_id._get_description(self.order_id.picking_type_id),
+            'description_picking': description_picking,
             'propagate_cancel': self.propagate_cancel,
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
             'warehouse_id': self.order_id.picking_type_id.warehouse_id.id,

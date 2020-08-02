@@ -9,7 +9,7 @@
         <record id="afpt_non_recoverable_vat_1_tax" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="l10n_cl.afpt_non_recoverable_vat_1"/>
             <field name="tax_src_id" ref="l10n_cl.OTAX_19"/>
-            <field name="tax_dest_id" ref="l10n_cl.iva_activo_fijo_uso_no_recup"/>
+            <field name="tax_dest_id" ref="l10n_cl.iva_compra_no_recup"/>
         </record>
 
         <record id="afpt_non_recoverable_vat_2" model="account.fiscal.position.template">
@@ -19,7 +19,7 @@
         <record id="afpt_non_recoverable_vat_2_tax" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="afpt_non_recoverable_vat_2"/>
             <field name="tax_src_id" ref="l10n_cl.OTAX_19"/>
-            <field name="tax_dest_id" ref="l10n_cl.iva_activo_fijo_uso_no_recup"/>
+            <field name="tax_dest_id" ref="l10n_cl.iva_compra_no_recup"/>
         </record>
 
         <record id="afpt_non_recoverable_vat_3" model="account.fiscal.position.template">
@@ -29,7 +29,7 @@
         <record id="afpt_non_recoverable_vat_3_tax" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="afpt_non_recoverable_vat_3"/>
             <field name="tax_src_id" ref="l10n_cl.OTAX_19"/>
-            <field name="tax_dest_id" ref="l10n_cl.iva_activo_fijo_uso_no_recup"/>
+            <field name="tax_dest_id" ref="l10n_cl.iva_compra_no_recup"/>
         </record>
 
         <record id="afpt_non_recoverable_vat_4" model="account.fiscal.position.template">
@@ -39,8 +39,18 @@
         <record id="afpt_non_recoverable_vat_4_tax" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="afpt_non_recoverable_vat_4"/>
             <field name="tax_src_id" ref="l10n_cl.OTAX_19"/>
-            <field name="tax_dest_id" ref="l10n_cl.iva_activo_fijo_uso_no_recup"/>
+            <field name="tax_dest_id" ref="l10n_cl.iva_compra_no_recup"/>
+       </record>
+        <record id="afpt_non_recoverable_vat_4_account_1" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="afpt_non_recoverable_vat_4"/>
+            <field name="account_src_id" ref="l10n_cl.account_410235"/>
+            <field name="account_dest_id" ref="l10n_cl.account_410165"/>
         </record>
+        <record id="afpt_non_recoverable_vat_4_account_2" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="afpt_non_recoverable_vat_4"/>
+            <field name="account_src_id" ref="l10n_cl.account_410230"/>
+            <field name="account_dest_id" ref="l10n_cl.account_410165"/>
+       </record>
 
         <record id="afpt_non_recoverable_vat_9" model="account.fiscal.position.template">
             <field name="name">Compras - Otros</field>
@@ -49,7 +59,7 @@
         <record id="afpt_non_recoverable_vat_9_tax" model="account.fiscal.position.tax.template">
             <field name="position_id" ref="afpt_non_recoverable_vat_9"/>
             <field name="tax_src_id" ref="l10n_cl.OTAX_19"/>
-            <field name="tax_dest_id" ref="l10n_cl.iva_activo_fijo_uso_no_recup"/>
+            <field name="tax_dest_id" ref="l10n_cl.iva_compra_no_recup"/>
         </record>
 
         <record id="afpt_fixed_asset" model="account.fiscal.position.template">
@@ -60,6 +70,16 @@
             <field name="position_id" ref="afpt_fixed_asset"/>
             <field name="tax_src_id" ref="l10n_cl.OTAX_19"/>
             <field name="tax_dest_id" ref="l10n_cl.iva_activo_fijo_uso_comun"/>
+        </record>
+        <record id="afpt_fixed_asset_account_1" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="afpt_fixed_asset"/>
+            <field name="account_src_id" ref="l10n_cl.account_410230"/>
+            <field name="account_dest_id" ref="l10n_cl.account_121140"/>
+        </record>
+        <record id="afpt_fixed_asset_account_2" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="afpt_fixed_asset"/>
+            <field name="account_src_id" ref="l10n_cl.account_410235"/>
+            <field name="account_dest_id" ref="l10n_cl.account_121140"/>
         </record>
 
         <record id="afpt_purchase_exempt" model="account.fiscal.position.template">
@@ -74,6 +94,26 @@
             <field name="position_id" ref="afpt_purchase_exempt"/>
             <field name="account_src_id" ref="l10n_cl.account_410230"/>
             <field name="account_dest_id" ref="l10n_cl.account_410130"/>
+        </record>
+
+        <record id="afpt_purchase_supermarket" model="account.fiscal.position.template">
+            <field name="name">Compras - Supermercado</field>
+            <field name="chart_template_id" ref="l10n_cl.cl_chart_template"/>
+        </record>
+        <record id="afpt_purchase_supermarket_tax" model="account.fiscal.position.tax.template">
+            <field name="position_id" ref="afpt_purchase_supermarket"/>
+            <field name="tax_src_id" ref="l10n_cl.ITAX_19"/>
+            <field name="tax_dest_id" ref="l10n_cl.iva_supermercado_recup"/>
+        </record>
+        <record id="afpt_purchase_supermarket_account" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="afpt_purchase_supermarket"/>
+            <field name="account_src_id" ref="l10n_cl.account_410230"/>
+            <field name="account_dest_id" ref="l10n_cl.account_410233"/>
+        </record>
+        <record id="afpt_purchase_supermarket_account_1" model="account.fiscal.position.account.template">
+            <field name="position_id" ref="afpt_purchase_supermarket"/>
+            <field name="account_src_id" ref="l10n_cl.account_410235"/>
+            <field name="account_dest_id" ref="l10n_cl.account_410233"/>
         </record>
 
         <record id="afpt_sale_exempt" model="account.fiscal.position.template">

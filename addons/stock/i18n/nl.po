@@ -897,6 +897,12 @@ msgid "Available Products"
 msgstr "Beschikbare producten"
 
 #. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
@@ -1862,7 +1868,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Demand"
-msgstr "Vraag"
+msgstr "Gevraagd"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__route_ids

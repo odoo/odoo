@@ -28,6 +28,10 @@ class StripeCommon(PaymentAcquirerCommon):
 @odoo.tests.tagged('post_install', '-at_install', '-standard', 'external')
 class StripeTest(StripeCommon):
 
+    def run(self, result=None):
+        with mute_logger('odoo.addons.payment.models.payment_acquirer', 'odoo.addons.payment_stripe.models.payment'):
+            StripeCommon.run(self, result)
+
     def test_10_stripe_s2s(self):
         self.assertEqual(self.stripe.state, 'test', 'test without test environment')
         # Create transaction
@@ -76,3 +80,29 @@ class StripeTest(StripeCommon):
         tx.form_feedback(stripe_post_data, 'stripe')
         self.assertEqual(tx.state, 'done', 'Stripe: validation did not put tx into done state')
         self.assertEqual(tx.acquirer_reference, stripe_post_data.get('id'), 'Stripe: validation did not update tx id')
+
+    def test_add_available_payment_method_types(self):
+        tx_values = {
+            'billing_partner_country': self.env.ref('base.be'),
+            'currency': self.env.ref('base.EUR'),
+            'type': 'form'
+        }
+        stripe_session_data = {}
+
+        self.stripe._add_available_payment_method_types(stripe_session_data, tx_values)
+
+        actual = {pmt for key, pmt in stripe_session_data.items() if key.startswith('payment_method_types')}
+        self.assertEqual({'card', 'bancontact'}, actual)
+
+    def test_add_available_payment_method_types_recurrent(self):
+        tx_values = {
+            'billing_partner_country': self.env.ref('base.be'),
+            'currency': self.env.ref('base.EUR'),
+            'type': 'form_save'
+        }
+        stripe_session_data = {}
+
+        self.stripe._add_available_payment_method_types(stripe_session_data, tx_values)
+
+        actual = {pmt for key, pmt in stripe_session_data.items() if key.startswith('payment_method_types')}
+        self.assertEqual({'card'}, actual)

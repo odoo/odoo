@@ -97,7 +97,7 @@ class SaleOrderLine(models.Model):
 
     def _get_display_price(self, product):
         if self.event_ticket_id and self.event_id:
-            company = self.event_id.company_id or self.env.company.id
+            company = self.event_id.company_id or self.env.company
             currency = company.currency_id
             return currency._convert(
                 self.event_ticket_id.price, self.order_id.currency_id,

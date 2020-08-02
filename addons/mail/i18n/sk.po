@@ -16,6 +16,7 @@
 # Michal Matus <misko.matus@gmail.com>, 2020
 # Filip Brenčič <brencicf5@gmail.com>, 2020
 # Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -314,7 +315,7 @@ msgstr ""
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', True)]}\">vybrané záznamy</span>\n"
 "                                <span attrs=\"{'invisible': [('use_active_domain', '=', False)]}\">aktuálne vyhľadávanie</span>.\n"
 "                            </span>\n"
-"                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">sledovateľov dokumentu a</span>"
+"                            <span name=\"document_followers_text\" attrs=\"{'invisible':['|', ('model', '=', False), ('composition_mode', '=', 'mass_mail')]}\">Oodberatelia dokumentu a</span>"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -389,7 +390,7 @@ msgid ""
 "note. Followers won't receive any email notification."
 msgstr ""
 "<strong>Interná komunikácia</strong>: odpoveď vytvorí internú poznámku. "
-"Sledovatelia nedostanú žiadne emailové upozornenie."
+"Odberatelia nedostanú žiadne emailové upozornenie."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
@@ -643,13 +644,13 @@ msgstr "Pridaj čiernu listinu mailov"
 #: model_terms:ir.ui.view,arch_db:mail.mail_wizard_invite_form
 #, python-format
 msgid "Add Followers"
-msgstr "Pridať Nasledovníkov"
+msgstr "Pridať odberateľov"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:0
 #, python-format
 msgid "Add Followers can only be done on a mail thread model"
-msgstr "Pridávanie sledovateľov je možné len v modeli mailových vláken"
+msgstr "Pridávanie odberateľov je možné len v modeli mailových vláken"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__add_sign
@@ -1860,7 +1861,7 @@ msgstr "Dokument"
 #. module: mail
 #: model:ir.model,name:mail.model_mail_followers
 msgid "Document Followers"
-msgstr "Sledujúci dokument"
+msgstr "Dokument odberateľov"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__res_model_id
@@ -1892,7 +1893,7 @@ msgstr "Hotovo"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Launch Next"
-msgstr "Hotovo & Spusť nové"
+msgstr "Hotovo & spusťte nové"
 
 #. module: mail
 #. openerp-web
@@ -1900,7 +1901,7 @@ msgstr "Hotovo & Spusť nové"
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
 #, python-format
 msgid "Done & Schedule Next"
-msgstr "Hotovo & Plánuj nové"
+msgstr "Hotovo & plánujte nové"
 
 #. module: mail
 #. openerp-web
@@ -1931,7 +1932,7 @@ msgstr "Rozbaľovacie menu"
 #: code:addons/mail/static/src/xml/followers.xml:0
 #, python-format
 msgid "Dropdown menu - Followers"
-msgstr "Rozbaľovacie menu - nasledovníci"
+msgstr "Rozbaľovacie menu - odberatelia"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity__date_deadline
@@ -2003,7 +2004,7 @@ msgstr "Email"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__email
 msgid "Email Address"
-msgstr "Emailová Adresa"
+msgstr "Emailová adresa"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_address_mixin
@@ -2013,17 +2014,17 @@ msgstr "E-mailová adresa Mixin"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_view_form
 msgid "Email Alias"
-msgstr "Alias Email"
+msgstr "Alias email"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias
 msgid "Email Aliases"
-msgstr "Aliasy Emailu"
+msgstr "Aliasy emailu"
 
 #. module: mail
 #: model:ir.model,name:mail.model_mail_alias_mixin
 msgid "Email Aliases Mixin"
-msgstr "Aliasy Emailu mixin"
+msgstr "Aliasy emailu mixin"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_blacklist_view_tree
@@ -2403,7 +2404,7 @@ msgstr "Odberatelia"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_channel_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
+msgstr "Odberatelia (kanály)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_partner_ids
@@ -2414,7 +2415,7 @@ msgstr "Odberatelia (Kanály)"
 #: model:ir.model.fields,field_description:mail.field_res_partner__message_partner_ids
 #: model:ir.model.fields,field_description:mail.field_res_users__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_subscription_form
@@ -2703,8 +2704,8 @@ msgid ""
 "If checked, the partners will receive an email warning they have been added "
 "in the document's followers."
 msgstr ""
-"Pokiaľ zaškrtnuté, partneri budú prijímať varovanie emailom kde sú pridaný "
-"ako sledovanie dokumentov."
+"Pokiaľ zaškrtnuté, partneri budú prijímať upozornenie emailom, kde sú "
+"pridaní v dokumente odberateľov."
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_email_template_preview__user_signature
@@ -3196,14 +3197,14 @@ msgstr "Nahrávanie..."
 #: model_terms:ir.ui.view,arch_db:mail.email_compose_message_wizard_form
 #, python-format
 msgid "Log"
-msgstr "Protokol"
+msgstr "Pridať"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/chatter.xml:0
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr "Pridať poznámku. Sledujúci nebudú notifikovaní."
+msgstr "Pridať poznámku. Odberatelia nebudú notifikovaní."
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -3425,7 +3426,7 @@ msgid ""
 "Members of those groups will automatically added as followers. Note that "
 "they will be able to manage their subscription manually if necessary."
 msgstr ""
-"Členovia týchto skupín budú automaticky pridaný ako sledujúci. Vprípade "
+"Členovia týchto skupín budú automaticky pridaný ako odberatelia. Vprípade "
 "potreby budú schopní spravovať ich odberanie manuálne."
 
 #. module: mail
@@ -3833,7 +3834,7 @@ msgstr "Nová hodnota Datetime"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_float
 msgid "New Value Float"
-msgstr "Nová hodnota Float"
+msgstr "Nová hodnota float"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_integer
@@ -3848,7 +3849,7 @@ msgstr "Nová hodnota Monetary"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_tracking_value__new_value_text
 msgid "New Value Text"
-msgstr "Nová hodnota Text"
+msgstr "Nová hodnota text"
 
 #. module: mail
 #. openerp-web
@@ -4083,12 +4084,12 @@ msgstr "Notifikácie"
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_compose_message__notify
 msgid "Notify followers"
-msgstr "Notifikovať sledujúcich"
+msgstr "Notifikovať odberateľov"
 
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_compose_message__notify
 msgid "Notify followers of the document (mass post only)"
-msgstr "Notifikovať sledujúcich dokumentu (len pri hromadých správach)"
+msgstr "Notifikovať odberateľov dokumentu (len pri hromadých správach)"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_blacklist__message_needaction_counter
@@ -6354,6 +6355,14 @@ msgid ""
 msgstr ""
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:89
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "You have been assigned to %s"
@@ -6552,7 +6561,7 @@ msgstr "napr. Prediskutovať návrh"
 #: code:addons/mail/static/src/js/followers.js:0
 #, python-format
 msgid "followers"
-msgstr "sledujúci"
+msgstr "Odberatelia"
 
 #. module: mail
 #. openerp-web
@@ -6702,7 +6711,7 @@ msgstr "obmedzené na členov kanála"
 #: code:addons/mail/models/mail_alias.py:0
 #, python-format
 msgid "restricted to followers"
-msgstr "obmedzené na sledovateľov"
+msgstr "obmedzené na odberateľov"
 
 #. module: mail
 #: code:addons/mail/models/mail_alias.py:0

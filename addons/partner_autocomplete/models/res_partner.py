@@ -166,7 +166,7 @@ class ResPartner(models.Model):
 
     def _is_vat_syncable(self, vat):
         vat_country_code = vat[:2]
-        partner_country_code = self.country_id and self.country_id.code
+        partner_country_code = self.country_id.code if self.country_id else ''
         return self._is_company_in_europe(vat_country_code) and (partner_country_code == vat_country_code or not partner_country_code)
 
     def _is_synchable(self):

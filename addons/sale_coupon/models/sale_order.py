@@ -89,7 +89,7 @@ class SaleOrder(models.Model):
             # do not give more free reward than products
             reward_product_qty = min(reward_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
             if program.rule_minimum_amount:
-                order_total = sum(line.price_total for line in order_lines.filtered(lambda x: x.product_id != program.reward_product_id))
+                order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
                 reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
         else:
             reward_product_qty = min(max_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
@@ -272,6 +272,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         programs = self.env['sale.coupon.program'].search([
             ('promo_code_usage', '=', 'no_code_needed'),
+            '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
         ])._filter_programs_from_common_rules(self)
         return programs
 

@@ -42,7 +42,50 @@ class AccountMove(models.Model):
             'record': self,
             'format_date': format_date,
             'format_monetary': format_monetary,
+            'invoice_line_values': [],
         }
+
+        # Tax lines.
+        aggregated_taxes_details = {line.tax_line_id.id: {
+            'line': line,
+            'tax_amount': -line.amount_currency if line.currency_id else -line.balance,
+            'tax_base_amount': 0.0,
+        } for line in self.line_ids.filtered('tax_line_id')}
+
+        # Invoice lines.
+        for i, line in enumerate(self.invoice_line_ids.filtered(lambda l: not l.display_type)):
+            price_unit_with_discount = line.price_unit * (1 - (line.discount / 100.0))
+            taxes_res = line.tax_ids.compute_all(
+                price_unit_with_discount,
+                currency=line.currency_id,
+                quantity=line.quantity,
+                product=line.product_id,
+                partner=self.partner_id,
+                is_refund=line.move_id.type in ('in_refund', 'out_refund'),
+            )
+
+            line_template_values = {
+                'line': line,
+                'index': i + 1,
+                'tax_details': [],
+                'net_price_subtotal': taxes_res['total_excluded'],
+            }
+
+            for tax_res in taxes_res['taxes']:
+                tax = self.env['account.tax'].browse(tax_res['id'])
+                line_template_values['tax_details'].append({
+                    'tax': tax,
+                    'tax_amount': tax_res['amount'],
+                    'tax_base_amount': tax_res['base'],
+                })
+
+                if tax.id in aggregated_taxes_details:
+                    aggregated_taxes_details[tax.id]['tax_base_amount'] += tax_res['base']
+
+            template_values['invoice_line_values'].append(line_template_values)
+
+        template_values['tax_details'] = list(aggregated_taxes_details.values())
+
         content = self.env.ref('account_facturx.account_invoice_facturx_export').render(template_values)
         return b"<?xml version='1.0' encoding='UTF-8'?>" + content
 

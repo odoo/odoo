@@ -18,10 +18,10 @@
 # 425fe09b3064b9f906f637fff94056ae_a00ea56 <0fa3588fa89906bfcb3a354600956e0e_308047>, 2019
 # Pedro Castro Silva <pedrocs@exo.pt>, 2019
 # Diogo Fonseca <dsf@thinkopensolutions.pt>, 2019
-# Nuno Silva <nuno.silva@arxi.pt>, 2020
 # Tiago Santos <tiago.santos@arxi.pt>, 2020
 # cafonso <cafonso62@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Nuno Silva <nuno.silva@arxi.pt>, 2020
 # Manuela Silva <manuelarodsilva@gmail.com>, 2020
 # 
 msgid ""
@@ -250,7 +250,7 @@ msgstr ""
 "            ${object.partner_id.name},\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Enviamos em anexo a \n"
+"        Aqui tem a sua\n"
 "        % if object.name:\n"
 "            fatura <strong>${object.name}</strong>\n"
 "        % else:\n"
@@ -262,9 +262,9 @@ msgstr ""
 "        no valor de <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
 "        de ${object.company_id.name}.\n"
 "        % if object.invoice_payment_state == 'paid':\n"
-"            Esta fatura já se encontra paga.\n"
+"            Esta fatura já está paga.\n"
 "        % else:\n"
-"            Por favor, efetue o pagamento assim que possível.\n"
+"            Por favor, reemita o pagamento assim que possível.\n"
 "        % endif\n"
 "        <br/><br/>\n"
 "        Se tiver alguma dúvida, não hesite em contactar-nos.\n"
@@ -281,12 +281,12 @@ msgstr "<em>Rascunho de Fatura</em>"
 #: model_terms:ir.ui.view,arch_db:account.account_move_line_view_kanban
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_kanban
 msgid "<i class=\"fa fa-clock-o\" aria-label=\"Date\" role=\"img\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" aria-label=\"Data\" role=\"img\" title=\"Data\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_kanban
 msgid "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Data\" title=\"Data\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_invoice_page
@@ -470,6 +470,8 @@ msgid ""
 "<span class=\"o_form_label\">Rounding Method</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Método de Arredondamento</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -605,7 +607,7 @@ msgstr "<span>Quantidade </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Referência</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -3608,7 +3610,7 @@ msgstr "Criado por"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "Created by: %s"
-msgstr ""
+msgstr "Criado por: %s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_account__create_date
@@ -4325,7 +4327,7 @@ msgstr "Nome a Exibir"
 #: model:ir.model.fields,field_description:account.field_res_company__qr_code
 #: model:ir.model.fields,field_description:account.field_res_config_settings__qr_code
 msgid "Display SEPA QR code"
-msgstr ""
+msgstr "Mostrar Código SEPA QR"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__display_type
@@ -6005,7 +6007,7 @@ msgstr "Fatura paga"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_invoice_send_wizard_form
 msgid "Invoice send & Print"
-msgstr ""
+msgstr "Envio & Impressão de Fatura"
 
 #. module: account
 #: model:mail.message.subtype,description:account.mt_invoice_validated
@@ -6370,7 +6372,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement_line__journal_currency_id
 msgid "Journal's Currency"
-msgstr ""
+msgstr "Moeda do Diário"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_form
@@ -6909,7 +6911,7 @@ msgid ""
 "Batch Deposit: Encase several customer checks at once by generating a batch deposit to submit to your bank. When encoding the bank statement in Odoo,you are suggested to reconcile the transaction with the batch deposit. Enable this option from the settings."
 msgstr ""
 "Manual: receba pagamentos em numerário, cheque ou qualquer outro método fora do Odoo.\n"
-"Eletrónico: receba pagamentos automaticamente através de um gestor de transações pedindo uma transação com um cartão guardado pelo cliente quando compra ou subscreve ''on-line'' (código de pagamento).\n"
+"Eletrónico: receba pagamentos automaticamente através de uma instituição de pagamentos solicitando uma transação com um cartão guardado pelo cliente quando compra ou subscreve <i>on-line</i> (código de pagamento).\n"
 "Vários depósitos: junte vários cheques de clientes ao mesmo tempo gerando um depósito em série para submeter ao seu banco. Quando codificar o extrato bancário no Odoo, é-lhe sugerido que reconcilie a transação com o depósito em série. Ative esta opção nas definições."
 
 #. module: account
@@ -8325,7 +8327,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL de Acesso Portal"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -8719,7 +8721,7 @@ msgstr "Entradas Reconciliadas"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoice_ids
 msgid "Reconciled Invoices"
-msgstr ""
+msgstr "Faturas Reconciliadas"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_payment__reconciled_invoices_count
@@ -8988,7 +8990,7 @@ msgstr "Valore Residual na Moeda"
 #: code:addons/account/models/account_journal_dashboard.py:0
 #, python-format
 msgid "Residual amount"
-msgstr ""
+msgstr "Valor residual"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__user_id
@@ -9060,7 +9062,7 @@ msgstr ""
 #: code:addons/account/wizard/account_move_reversal.py:0
 #, python-format
 msgid "Reversal of: %s"
-msgstr ""
+msgstr "Reversão de: %s"
 
 #. module: account
 #: code:addons/account/wizard/account_move_reversal.py:0
@@ -9638,7 +9640,7 @@ msgstr "Definições"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_bank_account_step
 msgid "Setup your bank account to sync bank feeds."
-msgstr ""
+msgstr "Configure a sua conta bancária para sincronizar os extratos bancários"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.onboarding_chart_of_account_step
@@ -12776,6 +12778,12 @@ msgstr ""
 "contabilísticos relacionados com as diferenças entre taxas de câmbio."
 
 #. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
+
+#. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
 msgid "Zip Range"
 msgstr "Código Postal"
@@ -12949,7 +12957,7 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
 msgid "the parent company"
-msgstr "a empresa ascendente"
+msgstr "a \"empresa-mãe\""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view

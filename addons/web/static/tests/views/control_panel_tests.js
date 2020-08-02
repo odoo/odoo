@@ -396,8 +396,8 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
-    QUnit.test('fiels and filters with groups/invisible attribute are not always rendered but activable as search default', async function (assert) {
-        assert.expect(13);
+    QUnit.test('fields and filters with groups/invisible attribute are not always rendered but activable as search default', async function (assert) {
+        assert.expect(15);
         var controlPanel = await createControlPanel({
             model: 'partner',
             arch: "<search>" +
@@ -405,15 +405,19 @@ QUnit.module('Views', {
                         "<field name=\"foo\" string=\"Foo A\"/>" +
                         "<filter name=\"filterA\" string=\"FA\" domain=\"[]\"/>" +
                         "<filter name=\"filterB\" string=\"FB\" invisible=\"1\" domain=\"[]\"/>" +
+                        "<filter name=\"filterC\" string=\"FC\" invisible=\"not context.get('show_filterC')\"/>" +
                         "<filter name=\"groupByA\" string=\"GA\" context=\"{'group_by': 'date_field:day'}\"/>" +
                         "<filter name=\"groupByB\" string=\"GB\" context=\"{'group_by': 'date_field:day'}\" invisible=\"1\"/>" +
                     "</search>",
             data: this.data,
             searchMenuTypes: ['filter', 'groupBy'],
-            context: {
-                search_default_display_name: 'value',
-                search_default_filterB: true,
-                search_default_groupByB: true,
+            viewOptions: {
+                context: {
+                    show_filterC: true,
+                    search_default_display_name: 'value',
+                    search_default_filterB: true,
+                    search_default_groupByB: true,
+                },
             },
         });
 
@@ -424,6 +428,7 @@ QUnit.module('Views', {
         await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("FA")');
         assert.containsNone(controlPanel, '.o_menu_item a:contains("FB")');
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("FC")');
         // default filter should be activated even if invisible
         assert.containsOnce(controlPanel, '.o_searchview_facet .o_facet_values:contains(FB)');
 
@@ -450,11 +455,49 @@ QUnit.module('Views', {
         await testUtils.dom.click(controlPanel.$('.o_filters_menu_button'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("FA")');
         assert.containsNone(controlPanel, '.o_menu_item a:contains("FB")');
+        assert.containsOnce(controlPanel, '.o_menu_item a:contains("FC")');
 
         await testUtils.dom.click(controlPanel.$('button span.fa-bars'));
         assert.containsOnce(controlPanel, '.o_menu_item a:contains("GA")');
         assert.containsNone(controlPanel, '.o_menu_item a:contains("GB")');
 
+
+        controlPanel.destroy();
+    });
+
+    QUnit.test('invisible fields and filters with unknown related fields should not be rendered', async function (assert) {
+        assert.expect(2);
+
+        // This test case considers that the current user is not a member of
+        // the "base.group_system" group and both "bar" and "date_field" fields
+        // have field-level access control that limit access to them only from
+        // that group.
+        //
+        // As MockServer currently does not support "groups" access control, we:
+        //
+        // - emulate field-level access control of fields_get() by removing
+        //   "bar" and "date_field" from the model fields
+        // - set filters with groups="base.group_system" as `invisible=1` in
+        //   view to emulate the behavior of fields_view_get()
+        //   [see ir.ui.view `_apply_group()`]
+
+        delete this.data['partner'].fields['bar'];
+        delete this.data['partner'].fields['date_field'];
+
+        var controlPanel = await createControlPanel({
+            model: 'partner',
+            arch: "<search>" +
+                        "<field name=\"foo\"/>" +
+                        "<filter name=\"filterDate\" string=\"Date\" date=\"date_field\" default_period=\"last_365_days\" invisible=\"1\" groups=\"base.group_system\"/>" +
+                        "<filter name=\"groupByBar\" string=\"Bar\" context=\"{'group_by': 'bar'}\" invisible=\"1\" groups=\"base.group_system\"/>" +
+                    "</search>",
+            data: this.data,
+        });
+
+        assert.containsNone(controlPanel, '.o_search_options .o_dropdown:contains("Filters")',
+            "there should not be filter dropdown");
+        assert.containsNone(controlPanel, '.o_search_options .o_dropdown:contains("Group By")',
+            "there should not be groupby dropdown");
 
         controlPanel.destroy();
     });

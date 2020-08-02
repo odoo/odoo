@@ -146,7 +146,7 @@
                 </a>
             </div>
             <div class="float-right mt-2">
-                <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb8 mt8'">
+                <button t-if="mode == 'payment'" id="o_payment_form_pay" type="submit" t-att-class="submit_class if submit_class else 'btn btn-primary btn-lg mb8 mt8'" disabled="true">
                     <t t-if="submit_txt">
                         <i t-if="icon_class and not icon_right" t-attf-class="fa {{icon_class}}"/>
                         <t t-esc="submit_txt"/>

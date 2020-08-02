@@ -324,6 +324,17 @@ class MrpProduction(models.Model):
         - to_close: The quantity produced is greater than the quantity to
         produce and all work orders has been finished.
         """
+
+        # Manually track "state" and "reservation_state" since tracking doesn't work with computed
+        # fields.
+        tracking = not self._context.get("mail_notrack") and not self._context.get("tracking_disable")
+        initial_values = {}
+        if tracking:
+            initial_values = dict(
+                (production.id, {"state": production.state, "reservation_state": production.reservation_state})
+                for production in self
+            )
+
         # TODO: duplicated code with stock_picking.py
         for production in self:
             if not production.move_raw_ids:
@@ -365,6 +376,9 @@ class MrpProduction(models.Model):
                         production.reservation_state = 'confirmed'
                 elif relevant_move_state != 'draft':
                     production.reservation_state = relevant_move_state
+
+        if tracking and initial_values:
+            self.message_track(self.fields_get(["state", "reservation_state"]), initial_values)
 
     @api.depends('move_raw_ids', 'is_locked', 'state', 'move_raw_ids.quantity_done')
     def _compute_unreserve_visible(self):
@@ -442,6 +456,10 @@ class MrpProduction(models.Model):
 
     @api.onchange('bom_id', 'product_id', 'product_qty', 'product_uom_id')
     def _onchange_move_raw(self):
+        # Clear move raws if we are changing the product. In case of creation (self._origin is empty),
+        # we need to avoid keeping incorrect lines, so clearing is necessary too.
+        if self.product_id != self._origin.product_id:
+            self.move_raw_ids = [(5,)]
         if self.bom_id and self.product_qty > 0:
             # keep manual entries
             list_move_raw = [(4, move.id) for move in self.move_raw_ids.filtered(lambda m: not m.bom_line_id)]
@@ -887,6 +905,18 @@ class MrpProduction(models.Model):
                     continue
                 filtered_documents[(parent, responsible)] = rendering_context
             production._log_manufacture_exception(filtered_documents, cancel=True)
+
+        # In case of a flexible BOM, we don't know from the state of the moves if the MO should
+        # remain in progress or done. Indeed, if all moves are done/cancel but the quantity produced
+        # is lower than expected, it might mean:
+        # - we have used all components but we still want to produce the quantity expected
+        # - we have used all components and we won't be able to produce the last units
+        #
+        # However, if the user clicks on 'Cancel', it is expected that the MO is either done or
+        # canceled. If the MO is still in progress at this point, it means that the move raws
+        # are either all done or a mix of done / canceled => the MO should be done.
+        self.filtered(lambda p: p.state not in ['done', 'cancel'] and p.bom_id.consumption == 'flexible').write({'state': 'done'})
+
         return True
 
     def _get_document_iterate_key(self, move_raw_id):

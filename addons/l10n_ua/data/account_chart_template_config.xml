@@ -30,7 +30,9 @@
             <field name="expense_currency_exchange_account_id" ref="ua_ias_2500"/>
             <field name="default_pos_receivable_account_id" ref="ua_ias_1122" />
         </record>
+    </data>
 
+    <data noupdate="1">
         <function model="account.chart.template" name="try_loading">
             <value eval="[ref('l10n_ua.l10n_ua_psbo_chart_template')]"/>
         </function>

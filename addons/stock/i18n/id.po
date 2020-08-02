@@ -17,6 +17,8 @@
 # Ryanto The <ry.the77@gmail.com>, 2019
 # Martin Trigaux, 2020
 # PAS IRVANUS <ipankbiz@gmail.com>, 2020
+# Gradien Foundation <gradien.co@gmail.com>, 2020
+# whenweresober <gulmugurzu@yevme.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: PAS IRVANUS <ipankbiz@gmail.com>, 2020\n"
+"Last-Translator: whenweresober <gulmugurzu@yevme.com>, 2020\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -199,7 +201,7 @@ msgid ""
 "                    <strong>Here is your current inventory: </strong>"
 msgstr ""
 "<br/>\n"
-"<strong>Ini adalah inventaris Anda saat ini: </strong>"
+"<strong>Ini adalah stock persediaan Anda saat ini: </strong>"
 
 #. module: stock
 #: code:addons/stock/models/stock_rule.py:0
@@ -262,7 +264,7 @@ msgstr "<i class=\"fa fa-clock-o\" role=\"img\" aria-label=\"Date\" title=\"Date
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
 msgid "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\"Manage\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Kelola\" title=\"Kelola\"/>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
@@ -552,7 +554,7 @@ msgstr "Aktivitas"
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr "Activity Exception Decoration"
+msgstr "Dekorasi Pengecualian Aktivitas"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__activity_state
@@ -745,7 +747,7 @@ msgid ""
 "inconsistencies in your inventory."
 msgstr ""
 "Apakah Anda yakin ingin mengkonfirmasi operasi ini? Hal ini dapat "
-"menyebabkan inventaris Anda menjadi tidak konsisten."
+"menyebabkan stok persediaan Anda menjadi tidak konsisten."
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_overprocessed_transfer
@@ -785,7 +787,7 @@ msgstr "Pergerakan telah Ditetapkan"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_attachment_count
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_attachment_count
 msgid "Attachment Count"
-msgstr "Attachment Count"
+msgstr "Hitungan Lampiran"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_attribute_action
@@ -818,6 +820,12 @@ msgstr "Tersedia"
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "Produk yang Tersedia"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -1098,7 +1106,7 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_quantity_history__inventory_datetime
 msgid "Choose a date to get the inventory at that date"
-msgstr "Pilih tanggal untuk mendapat inventaris pada tanggal tersebut"
+msgstr "Pilih tanggal untuk mendapat stok persediaan pada tanggal tersebut"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -2458,7 +2466,7 @@ msgstr "Ikon"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr "Icon to indicate an exception activity."
+msgstr "Ikon untuk menunjukkan sebuah aktivitas pengecualian."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
@@ -2468,7 +2476,7 @@ msgstr "Icon to indicate an exception activity."
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_needaction
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Jika dicentang pesan-pesan baru membutuhkan penanganan lebih lanjut."
+msgstr "Jika dicentang, pesan baru memerlukan penanganan dan perhatian Anda."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_has_error
@@ -2478,7 +2486,7 @@ msgstr "Jika dicentang pesan-pesan baru membutuhkan penanganan lebih lanjut."
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_has_error
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr "If checked, some messages have a delivery error."
+msgstr "Jika dicentang, beberapa pesan mempunyai kesalahan dalam pengiriman."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_cancel
@@ -2782,35 +2790,35 @@ msgstr "Inventaris"
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Persediaan"
+msgstr "Stok Persediaan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustment"
-msgstr "Penyesuaian Persediaan"
+msgstr "Penyesuaian Stok Persediaan"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 msgid "Inventory Adjustments"
-msgstr "Penyesuaian Persediaan"
+msgstr "Penyesuaian Stok Persediaan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__date
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__inventory_date
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Date"
-msgstr "Tanggal Inventarisasi"
+msgstr "Tanggal Stock Persediaan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "Inventory Details"
-msgstr "Rincian Inventarisasi"
+msgstr "Rincian Stock Persediaan"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr "Baris Inventarisasi"
+msgstr "Baris Stok Persediaan"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
@@ -2822,17 +2830,17 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Location"
-msgstr "Lokasi Persediaan"
+msgstr "Lokasi Stok Persediaan"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Lokasi Persediaan"
+msgstr "Lokasi Stok Persediaan"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
 msgid "Inventory Loss"
-msgstr "Persediaan Hilang"
+msgstr "Stok Persediaan Hilang"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
@@ -2842,23 +2850,23 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__name
 msgid "Inventory Reference"
-msgstr "Referensi Inventarisasi"
+msgstr "Referensi Stok Persediaan"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Inventory Report"
-msgstr "Laporan Persediaan"
+msgstr "Laporan Stok Persediaan"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
 msgid "Inventory Routes"
-msgstr "Rute Persediaan"
+msgstr "Rute Stok Persediaan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_tree
 msgid "Inventory Valuation"
-msgstr "Penilaian Persediaan"
+msgstr "Penilaian Stok Persediaan"
 
 #. module: stock
 #. openerp-web
@@ -2866,7 +2874,7 @@ msgstr "Penilaian Persediaan"
 #: model:ir.model.fields,field_description:stock.field_stock_quantity_history__inventory_datetime
 #, python-format
 msgid "Inventory at Date"
-msgstr "Persediaan pada Tanggal"
+msgstr "Stok Persediaan pada Tanggal"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__is_editable
@@ -3256,7 +3264,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_tree
 msgid "Lot/Serial Number Inventory"
-msgstr "Inventaris Nomor Seri/Lot"
+msgstr "Stock Persediaan Nomor Seri/Lot"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__lot_name
@@ -3307,7 +3315,7 @@ msgstr "Aturan MTO"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_main_attachment_id
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_main_attachment_id
 msgid "Main Attachment"
-msgstr "Main Attachment"
+msgstr "Lampiran Utama"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -3344,7 +3352,7 @@ msgstr "Kelola Pengemasan"
 #. module: stock
 #: model:res.groups,name:stock.group_adv_location
 msgid "Manage Push and Pull inventory flows"
-msgstr "Kelola Alur Dorong dan Tarik Persediaan"
+msgstr "Kelola Alur Dorong dan Tarik Stok Persediaan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -3398,7 +3406,7 @@ msgstr "Jumlah Maksimum"
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error
 msgid "Message Delivery error"
-msgstr "Message Delivery error"
+msgstr "Kesalahan Pengiriman Pesan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_partner__picking_warn_msg
@@ -3421,7 +3429,7 @@ msgstr "Metode"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_warehouse_orderpoint
 msgid "Minimum Inventory Rule"
-msgstr "Aturan Persediaan Minimum"
+msgstr "Aturan Stok Persediaan Minimum"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__product_min_qty
@@ -3691,7 +3699,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of errors"
-msgstr "Number of errors"
+msgstr "Jumlah kesalahan"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction_counter
@@ -3705,7 +3713,7 @@ msgstr "Jumlah pesan yang butuh tindakan"
 #: model:ir.model.fields,help:stock.field_stock_production_lot__message_has_error_counter
 #: model:ir.model.fields,help:stock.field_stock_scrap__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr "Number of messages with delivery error"
+msgstr "Jumlah dari pesan dengan kesalahan pengiriman"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_unread_counter
@@ -5178,7 +5186,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_production_lot__message_has_sms_error
 #: model:ir.model.fields,field_description:stock.field_stock_scrap__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr "SMS Delivery error"
+msgstr "Kesalahan Pengiriman SMS"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_replenish__date_planned
@@ -5270,12 +5278,12 @@ msgstr "Pembuangan"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Search Inventory"
-msgstr "Cari Inventaris"
+msgstr "Cari Stok Persediaan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Search Inventory Lines"
-msgstr "Cari Baris Inventaris"
+msgstr "Cari Baris Stok Persediaan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_filter
@@ -5592,7 +5600,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Start Inventory"
-msgstr "Mulai Inventarisasi"
+msgstr "Mulai Stok Persediaan"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_report_stock_quantity__state
@@ -5794,7 +5802,7 @@ msgid ""
 "and to track inventory accordingly."
 msgstr ""
 "Simpan produk di lokasi tertentu di gudang Anda (mis: kotak, rak) dan "
-"telusuri inventaris sesuai dengan lokasi tersebut."
+"telusuri stock persediaan sesuai dengan lokasi tersebut."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_out_id
@@ -6218,12 +6226,12 @@ msgid ""
 "this quantity on assigned moves affects the product reservation, and should "
 "be done with care."
 msgstr ""
-"Ini adalah jumlah produk dari sudut pandang persediaan. Untuk pergerakan "
-"pada status 'selesai', ini adalah jumlah produk yang sebenarnya bergerak. "
-"Untuk pergerakan lainnya, ini adalah jumlah produk yang direncanakan akan "
-"dipindahkan. Mengurangi jumlah ini tidak menghasilkan backorder. Mengubah "
-"kuantitas ini pada pergerakan yang telah ditetapkan, akan mempengaruhi "
-"reservasi produk, dan harus dilakukan dengan hati-hati."
+"Ini adalah jumlah produk dari sudut pandang stok persediaan. Untuk "
+"pergerakan pada status 'selesai', ini adalah jumlah produk yang sebenarnya "
+"bergerak. Untuk pergerakan lainnya, ini adalah jumlah produk yang "
+"direncanakan akan dipindahkan. Mengurangi jumlah ini tidak menghasilkan "
+"backorder. Mengubah kuantitas ini pada pergerakan yang telah ditetapkan, "
+"akan mempengaruhi reservasi produk, dan harus dilakukan dengan hati-hati."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_inventory_form
@@ -6250,9 +6258,9 @@ msgid ""
 "                operations on a specific product. You can filter on the product\n"
 "                to see all the past or future movements for the product."
 msgstr ""
-"Menu ini memungkinkan Anda untuk menelusuri penuh operasi persediaan pada "
-"produk tertentu. Anda dapat menyaring produk untuk melihat semua pergerakan "
-"masa lalu atau masa depan untuk produk tersebut."
+"Menu ini memungkinkan Anda untuk menelusuri penuh operasi stok persediaan "
+"pada produk tertentu. Anda dapat menyaring produk untuk melihat semua "
+"pergerakan masa lalu atau masa depan untuk produk tersebut."
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.stock_move_line_action
@@ -6323,8 +6331,9 @@ msgid ""
 "This stock location will be used, instead of the default one, as the source "
 "location for stock moves generated when you do an inventory."
 msgstr ""
-"Lokasi stok ini akan digunakan, bukan yang standar, sebagai lokasi sumber "
-"untuk pergerakan stok yang dihasilkan ketika anda mengerjakan inventarisasi"
+"Lokasi stok ini akan digunakan, bukan yang standar, sebagai lokasi asal "
+"untuk pergerakan stok yang dihasilkan ketika Anda mulai mengerjakan stock "
+"persediaan."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_product_product__responsible_id
@@ -6539,7 +6548,7 @@ msgstr "Tipe Operasi"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_decoration
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr "Type of the exception activity on record."
+msgstr "Jenis dari aktivitas pengecualian pada rekaman data."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_delivery_ups
@@ -7228,8 +7237,8 @@ msgid ""
 "You cannot set a negative product quantity in an inventory line:\n"
 "\t%s - qty: %s"
 msgstr ""
-"Anda tidak dapat memasukkan kuantitas negatif produk di baris inventarisasi:"
-" %s - qty: %s"
+"Anda tidak dapat memasukkan kuantitas negatif produk di baris stok "
+"persediaan: %s - qty: %s"
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -7425,7 +7434,7 @@ msgstr "hari"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "e.g. Annual inventory"
-msgstr "mis. Inventarisasi Tahunan"
+msgstr "mis. Stok Persediaan Tahunan"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_production_lot_form

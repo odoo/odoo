@@ -5,9 +5,10 @@
 # Translators:
 # Cristian Salamea <ovnicraft@gmail.com>, 2019
 # Martin Trigaux, 2019
-# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2019
 # Massiel Acuna <mac@odoo.com>, 2019
 # Cristopher Cravioto <ccr@odoo.com>, 2019
+# Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
+# Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 11:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:08+0000\n"
-"Last-Translator: Cristopher Cravioto <ccr@odoo.com>, 2019\n"
+"Last-Translator: Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -79,7 +80,7 @@ msgstr "Disposición del cheque"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_left
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_left
 msgid "Check Left Margin"
-msgstr ""
+msgstr "Verificar margen izquierdo"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_payment__check_number
@@ -99,7 +100,7 @@ msgstr "Comprueba la impresión del método de pago seleccionado"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_right
 msgid "Check Right Margin"
-msgstr ""
+msgstr "Verificar margen derecho"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_account_journal__check_sequence_id
@@ -110,7 +111,7 @@ msgstr "Secuencia de los cheques"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_top
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_margin_top
 msgid "Check Top Margin"
-msgstr ""
+msgstr "Verificar margen superior"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_manual_sequencing
@@ -126,7 +127,7 @@ msgstr "Cheque a imprimir"
 #. module: account_check_printing
 #: model:account.payment.method,name:account_check_printing.account_payment_method_check
 msgid "Checks"
-msgstr "Revisiones"
+msgstr "Cheques"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_account_journal__check_sequence_id
@@ -153,7 +154,7 @@ msgstr "Compañías"
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__country_code
 msgid "Company Country code"
-msgstr ""
+msgstr "Código de país de la empresa"
 
 #. module: account_check_printing
 #: model:ir.model,name:account_check_printing.model_res_config_settings
@@ -233,7 +234,7 @@ msgstr "Nº del próximo cheque"
 #: code:addons/account_check_printing/wizard/print_prenumbered_checks.py:0
 #, python-format
 msgid "Next Check Number should only contains numbers."
-msgstr ""
+msgstr "El siguiente número de verificación solo debe contener números."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__disabled
@@ -281,7 +282,7 @@ msgstr "Imprimir cheques"
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_date_label
 #: model:ir.model.fields,field_description:account_check_printing.field_res_config_settings__account_check_printing_date_label
 msgid "Print Date Label"
-msgstr ""
+msgstr "Imprimir etiqueta de fecha"
 
 #. module: account_check_printing
 #: code:addons/account_check_printing/models/account_payment.py:0
@@ -299,12 +300,12 @@ msgstr "Registrar pago"
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.view_account_payment_form_inherited
 msgid "Reset Amount in Words"
-msgstr ""
+msgstr "Restablecer cantidad en palabras"
 
 #. module: account_check_printing
 #: model:ir.model.fields,field_description:account_check_printing.field_res_company__account_check_printing_margin_right
 msgid "Right Margin"
-msgstr ""
+msgstr "Margen derecho"
 
 #. module: account_check_printing
 #: model:ir.model.fields,help:account_check_printing.field_res_company__account_check_printing_layout
@@ -377,6 +378,8 @@ msgid ""
 "This option allows you to print the date label on the check as per CPA. "
 "Disable this if your pre-printed check includes the date label."
 msgstr ""
+"Esta opción le permite imprimir la etiqueta de fecha en el cheque según el "
+"CPA. Desactive esto si su cheque preimpreso incluye la etiqueta de fecha."
 
 #. module: account_check_printing
 #: model_terms:ir.ui.view,arch_db:account_check_printing.print_pre_numbered_checks_view
@@ -397,18 +400,20 @@ msgid ""
 "You have to choose a check layout. For this, go in Apps, search for 'Checks "
 "layout' and install one."
 msgstr ""
+"Tienes que elegir un diseño de cheque. Para esto, vaya a Aplicaciones, "
+"busque 'Diseño de cheques' e instale uno."
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_middle
 msgid "check in middle"
-msgstr ""
+msgstr "verificar en el medio"
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_bottom
 msgid "check on bottom"
-msgstr ""
+msgstr "verificar en la parte inferior"
 
 #. module: account_check_printing
 #: model:ir.model.fields.selection,name:account_check_printing.selection__res_company__account_check_printing_layout__action_print_check_top
 msgid "check on top"
-msgstr ""
+msgstr "verificar en la parte superior"

@@ -13,7 +13,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
     def setUpClass(cls, chart_template_ref=None):
         super().setUpClass(chart_template_ref=chart_template_ref)
 
-        tax_repartition_line = cls.company_data['default_tax_sale'].invoice_repartition_line_ids\
+        tax_repartition_line = cls.company_data['default_tax_sale'].refund_repartition_line_ids\
             .filtered(lambda line: line.repartition_type == 'tax')
         cls.test_move = cls.env['account.move'].create({
             'type': 'entry',
@@ -475,3 +475,13 @@ class TestAccountMove(AccountTestInvoicingCommon):
             {'name': 'included_tax_line',        'debit': 200.0,     'credit': 0.0,      'tax_ids': [],                                  'tax_line_id': self.included_percent_tax.id},
             {'name': 'credit_line_1',            'debit': 0.0,       'credit': 1200.0,   'tax_ids': [],                                  'tax_line_id': False},
         ])
+
+    def test_misc_prevent_unlink_posted_items(self):
+        # You cannot remove journal items if the related journal entry is posted.
+        self.test_move.action_post()
+        with self.assertRaises(UserError), self.cr.savepoint():
+            self.test_move.line_ids.unlink()
+
+        # You can remove journal items if the related journal entry is draft.
+        self.test_move.button_draft()
+        self.test_move.line_ids.unlink()

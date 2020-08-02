@@ -27,6 +27,7 @@ class AccountMove(models.Model):
 
     l10n_ch_isr_sent = fields.Boolean(default=False, help="Boolean value telling whether or not the ISR corresponding to this invoice has already been printed or sent by mail.")
     l10n_ch_currency_name = fields.Char(related='currency_id.name', readonly=True, string="Currency Name", help="The name of this invoice's currency") #This field is used in the "invisible" condition field of the 'Print ISR' button.
+    l10n_ch_isr_needs_fixing = fields.Boolean(compute="_compute_l10n_ch_isr_needs_fixing", help="Used to show a warning banner when the vendor bill needs a correct ISR payment reference. ")
 
     @api.depends('invoice_partner_bank_id.l10n_ch_isr_subscription_eur', 'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_subscription(self):
@@ -60,9 +61,9 @@ class AccountMove(models.Model):
                     record.l10n_ch_isr_subscription = _format_isr_subscription_scanline(isr_subscription)
                     record.l10n_ch_isr_subscription_formatted = _format_isr_subscription(isr_subscription)
 
-    @api.depends('name', 'invoice_partner_bank_id.l10n_ch_postal')
+    @api.depends('name', 'invoice_partner_bank_id.l10n_ch_postal', 'invoice_partner_bank_id.acc_number')
     def _compute_l10n_ch_isr_number(self):
-        """ The ISR reference number is 27 characters long. The first 12 of them
+        """ The QRR or ISR reference number is 27 characters long. The first 12 of them
         contain the postal account number of this ISR's issuer, removing the zeros
         at the beginning and filling the empty places with zeros on the right if it is
         too short. The next 14 characters contain an internal reference identifying
@@ -72,8 +73,10 @@ class AccountMove(models.Model):
         of a recursive modulo 10 on its first 26 characters.
         """
         for record in self:
-            if record.name and record.invoice_partner_bank_id and record.invoice_partner_bank_id.l10n_ch_postal:
-                invoice_issuer_ref = record.invoice_partner_bank_id.l10n_ch_postal.ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
+            has_qriban = record.invoice_partner_bank_id._is_qr_iban()
+            isr_subscription = record.invoice_partner_bank_id.l10n_ch_postal
+            if (has_qriban or isr_subscription) and record.name:
+                invoice_issuer_ref = (isr_subscription or '').ljust(l10n_ch_ISR_NUMBER_ISSUER_LENGTH, '0')
                 invoice_ref = re.sub('[^\d]', '', record.name)
                 #We only keep the last digits of the sequence number if it is too long
                 invoice_ref = invoice_ref[-l10n_ch_ISR_NUMBER_ISSUER_LENGTH:]
@@ -142,7 +145,6 @@ class AccountMove(models.Model):
 
     @api.depends(
         'type', 'name', 'currency_id.name',
-        'invoice_partner_bank_id.l10n_ch_postal',
         'invoice_partner_bank_id.l10n_ch_isr_subscription_eur',
         'invoice_partner_bank_id.l10n_ch_isr_subscription_chf')
     def _compute_l10n_ch_isr_valid(self):
@@ -151,8 +153,34 @@ class AccountMove(models.Model):
             record.l10n_ch_isr_valid = record.type == 'out_invoice' and\
                 record.name and \
                 record.l10n_ch_isr_subscription and \
-                record.invoice_partner_bank_id.l10n_ch_postal and \
                 record.l10n_ch_currency_name in ['EUR', 'CHF']
+
+    @api.depends('type', 'invoice_partner_bank_id', 'invoice_payment_ref')
+    def _compute_l10n_ch_isr_needs_fixing(self):
+        for inv in self:
+            if inv.type == 'in_invoice' and inv.company_id.country_id.code == "CH":
+                partner_bank = inv.invoice_partner_bank_id
+                if partner_bank._is_isr_issuer() and not inv._has_isr_ref():
+                    inv.l10n_ch_isr_needs_fixing = True
+                    continue
+            inv.l10n_ch_isr_needs_fixing = False
+
+    def _has_isr_ref(self):
+        """Check if this invoice has a valid ISR reference (for Switzerland)
+        e.g.
+        12371
+        000000000000000000000012371
+        210000000003139471430009017
+        21 00000 00003 13947 14300 09017
+        """
+        self.ensure_one()
+        ref = self.invoice_payment_ref or self.ref
+        if not ref:
+            return False
+        ref = ref.replace(' ', '')
+        if re.match(r'^(\d{2,27})$', ref):
+            return ref == mod10r(ref[:-1])
+        return False
 
     def split_total_amount(self):
         """ Splits the total amount of this invoice in two parts, using the dot as
@@ -181,7 +209,7 @@ class AccountMove(models.Model):
             self.l10n_ch_isr_sent = True
             return self.env.ref('l10n_ch.l10n_ch_isr_report').report_action(self)
         else:
-           raise ValidationError(_("""You cannot generate an ISR yet.\n
+            raise ValidationError(_("""You cannot generate an ISR yet.\n
                                    For this, you need to :\n
                                    - set a valid postal account number (or an IBAN referencing one) for your company\n
                                    - define its bank\n
@@ -240,3 +268,16 @@ class AccountMove(models.Model):
         """
         self.ensure_one()
         return self.l10n_ch_isr_number
+
+    @api.model
+    def space_qrr_reference(self, qrr_ref):
+        """ Makes the provided QRR reference human-friendly, spacing its elements
+        by blocks of 5 from right to left.
+        """
+        spaced_qrr_ref = ''
+        i = len(qrr_ref) # i is the index after the last index to consider in substrings
+        while i > 0:
+            spaced_qrr_ref = qrr_ref[max(i-5, 0) : i] + ' ' + spaced_qrr_ref
+            i -= 5
+
+        return spaced_qrr_ref

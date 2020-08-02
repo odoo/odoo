@@ -13,12 +13,13 @@
 # nurbakhit nurka <nurbakhit@bumanit.mn>, 2019
 # nasaaskii <nasaaskii@gmail.com>, 2019
 # Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2019
+# Bayarkhuu Bataa, 2019
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
-# Bayarkhuu Bataa, 2020
 # Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020
 # Martin Trigaux, 2020
-# Батболд <batbold.ts@gmail.com>, 2020
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
+# Minj P <pminj322@gmail.com>, 2020
+# Батболд <batbold.ts@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020\n"
+"Last-Translator: Батболд <batbold.ts@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -890,6 +891,12 @@ msgid "Available Products"
 msgstr "Бэлэн байгаа бараа"
 
 #. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
@@ -1655,7 +1662,7 @@ msgstr "Нөхөн дүүргэлт хэрэгжвэл зохих огноо."
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__date_done
 msgid "Date at which the transfer has been processed or cancelled."
-msgstr "Шилжүүлгэ хийгдсэн эсвэл цуцлагдсан огноо."
+msgstr "Шилжүүлэг хийгдсэн эсвэл цуцлагдсан огноо."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__date_done
@@ -2547,7 +2554,7 @@ msgstr "Дүрс"
 #: model:ir.model.fields,help:stock.field_stock_picking__activity_exception_icon
 #: model:ir.model.fields,help:stock.field_stock_production_lot__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ажилбар дээр сануулга гарсныг илэрхийлэх зураг."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__message_needaction
@@ -2810,14 +2817,14 @@ msgstr "Дотоод Сурвалж"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking_type__code__internal
 msgid "Internal Transfer"
-msgstr "Дотоод шилжүүлгэ"
+msgstr "Дотоод шилжүүлэг"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #: model:stock.picking.type,name:stock.picking_type_internal
 #, python-format
 msgid "Internal Transfers"
-msgstr "Дотоод шилжүүлгэ"
+msgstr "Дотоод шилжүүлэг"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_company__internal_transit_location_id
@@ -2921,7 +2928,7 @@ msgstr "Тооллогын байрлал"
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Тооллогын байрлалууд"
+msgstr "Нөөцийн байрлалууд"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
@@ -3178,7 +3185,7 @@ msgstr "Хоцорсон ажилбар"
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_late
 msgid "Late Transfers"
-msgstr "Хоцролттой Шилжилтүүд"
+msgstr "Хоцорсон шилжүүлгүүд"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse_orderpoint__lead_days
@@ -4139,7 +4146,7 @@ msgstr "Баглааны Код"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_quant_package_form
 msgid "Package Transfers"
-msgstr "Баглаа Шилжилт"
+msgstr "Багц шилжүүлэг"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant_package__packaging_id
@@ -4601,7 +4608,7 @@ msgstr "Тараах"
 #: model:ir.model.fields,field_description:stock.field_stock_move__propagate_date
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_date
 msgid "Propagate Rescheduling"
-msgstr ""
+msgstr "Дахин товлолтыг дамжуулах"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__propagate_cancel
@@ -6092,7 +6099,7 @@ msgstr "Байрлалын зураасан код нь компанийн хэ�
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_date_minimum_delta
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_date_minimum_delta
 msgid "The change must be higher than this value to be propagated"
-msgstr ""
+msgstr "Дахин товлолтыг дамжуулах"
 
 #. module: stock
 #: model:ir.model.constraint,message:stock.constraint_stock_warehouse_warehouse_code_uniq
@@ -6206,7 +6213,7 @@ msgstr ""
 #: model:ir.model.fields,help:stock.field_stock_move__propagate_date
 #: model:ir.model.fields,help:stock.field_stock_rule__propagate_date
 msgid "The rescheduling is propagated to the next move."
-msgstr ""
+msgstr "Дараагийн барааны хөдөлгөөний товлох хугацаа өөрчлөгдөнө."
 
 #. module: stock
 #: code:addons/stock/models/stock_move.py:0
@@ -6593,7 +6600,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search
 msgid "Transfer"
-msgstr "Шилжүүлгэ"
+msgstr "Шилжүүлэг"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__picking_partner_id
@@ -6615,7 +6622,7 @@ msgstr "Шилжүүлэх Код"
 #: model:ir.ui.menu,name:stock.all_picking
 #: model_terms:ir.ui.view,arch_db:stock.procurement_group_form_view
 msgid "Transfers"
-msgstr "Барааны шилжүүлгэ"
+msgstr "Барааны шилжүүлэг"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_picking_form
@@ -6632,7 +6639,7 @@ msgstr ""
 #. module: stock
 #: model:ir.actions.act_window,name:stock.do_view_pickings
 msgid "Transfers for Groups"
-msgstr ""
+msgstr "Товлосон хугацаанаас хоцорсон шилжүүлгүүд"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_internal_search

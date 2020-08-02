@@ -363,6 +363,11 @@ class ProductTemplate(models.Model):
         if self.uom_id:
             self.uom_po_id = self.uom_id.id
 
+    @api.onchange('uom_po_id')
+    def _onchange_uom(self):
+        if self.uom_id and self.uom_po_id and self.uom_id.category_id != self.uom_po_id.category_id:
+            self.uom_po_id = self.uom_id
+
     @api.onchange('type')
     def _onchange_type(self):
         # Do nothing but needed for inheritance
@@ -397,6 +402,11 @@ class ProductTemplate(models.Model):
         return templates
 
     def write(self, vals):
+        uom = self.env['uom.uom'].browse(vals.get('uom_id')) or self.uom_id
+        uom_po = self.env['uom.uom'].browse(vals.get('uom_po_id')) or self.uom_po_id
+        if uom and uom_po and uom.category_id != uom_po.category_id:
+            vals['uom_po_id'] = uom.id
+
         res = super(ProductTemplate, self).write(vals)
         if 'attribute_line_ids' in vals or vals.get('active'):
             self._create_variant_ids()
@@ -549,7 +559,7 @@ class ProductTemplate(models.Model):
         for tmpl_id in self:
             lines_without_no_variants = tmpl_id.valid_product_template_attribute_line_ids._without_no_variant_attributes()
 
-            all_variants = tmpl_id.with_context(active_test=False).product_variant_ids.sorted('active')
+            all_variants = tmpl_id.with_context(active_test=False).product_variant_ids.sorted(lambda p: (p.active, -p.id))
 
             current_variants_to_create = []
             current_variants_to_activate = Product
@@ -568,6 +578,11 @@ class ProductTemplate(models.Model):
                     ):
                         variant.product_template_attribute_value_ids = combination
 
+            # Set containing existing `product.template.attribute.value` combination
+            existing_variants = {
+                variant.product_template_attribute_value_ids: variant for variant in all_variants
+            }
+
             # Determine which product variants need to be created based on the attribute
             # configuration. If any attribute is set to generate variants dynamically, skip the
             # process.
@@ -579,10 +594,6 @@ class ProductTemplate(models.Model):
                 all_combinations = itertools.product(*[
                     ptal.product_template_value_ids._only_active() for ptal in lines_without_no_variants
                 ])
-                # Set containing existing `product.template.attribute.value` combination
-                existing_variants = {
-                    variant.product_template_attribute_value_ids: variant for variant in all_variants
-                }
                 # For each possible variant, create if it doesn't exist yet.
                 for combination_tuple in all_combinations:
                     combination = self.env['product.template.attribute.value'].concat(*combination_tuple)
@@ -600,6 +611,16 @@ class ProductTemplate(models.Model):
                                 'You should either not generate variants for each combination or generate them on demand from the sales order. '
                                 'To do so, open the form view of attributes and change the mode of *Create Variants*.'))
                 variants_to_create += current_variants_to_create
+                variants_to_activate += current_variants_to_activate
+
+            else:
+                for variant in existing_variants.values():
+                    is_combination_possible = self._is_combination_possible_by_config(
+                        combination=variant.product_template_attribute_value_ids,
+                        ignore_no_variant=True,
+                    )
+                    if is_combination_possible:
+                        current_variants_to_activate += variant
                 variants_to_activate += current_variants_to_activate
 
             variants_to_unlink += all_variants - current_variants_to_activate
@@ -646,8 +667,8 @@ class ProductTemplate(models.Model):
         """Return the existing variants that are possible.
 
         For dynamic attributes, it will only return the variants that have been
-        created already. For no_variant attributes, it will return an empty
-        recordset because the variants themselves are not a full combination.
+        created already.
+
         If there are a lot of variants, this method might be slow. Even if there
         aren't too many variants, for performance reasons, do not call this
         method in a loop over the product templates.
@@ -774,7 +795,41 @@ class ProductTemplate(models.Model):
             for attribute_value in all_product_attribute_values
         }
 
-    def _is_combination_possible(self, combination, parent_combination=None):
+    def _is_combination_possible_by_config(self, combination, ignore_no_variant=False):
+        """Return whether the given combination is possible according to the config of attributes on the template
+
+        :param combination: the combination to check for possibility
+        :type combination: recordset `product.template.attribute.value`
+
+        :param ignore_no_variant: whether no_variant attributes should be ignored
+        :type ignore_no_variant: bool
+
+        :return: wether the given combination is possible according to the config of attributes on the template
+        :rtype: bool
+        """
+        self.ensure_one()
+
+        attribute_lines = self.valid_product_template_attribute_line_ids
+
+        if ignore_no_variant:
+            attribute_lines = attribute_lines._without_no_variant_attributes()
+
+        if len(combination) != len(attribute_lines):
+            # number of attribute values passed is different than the
+            # configuration of attributes on the template
+            return False
+
+        if attribute_lines != combination.attribute_line_id:
+            # combination has different attributes than the ones configured on the template
+            return False
+
+        if not (attribute_lines.product_template_value_ids._only_active() >= combination):
+            # combination has different values than the ones configured on the template
+            return False
+
+        return True
+
+    def _is_combination_possible(self, combination, parent_combination=None, ignore_no_variant=False):
         """
         The combination is possible if it is not excluded by any rule
         coming from the current template, not excluded by any rule from the
@@ -790,6 +845,9 @@ class ProductTemplate(models.Model):
         :param combination: the combination to check for possibility
         :type combination: recordset `product.template.attribute.value`
 
+        :param ignore_no_variant: whether no_variant attributes should be ignored
+        :type ignore_no_variant: bool
+
         :param parent_combination: combination from which `self` is an
             optional or accessory product.
         :type parent_combination: recordset `product.template.attribute.value`
@@ -799,17 +857,7 @@ class ProductTemplate(models.Model):
         """
         self.ensure_one()
 
-        if len(combination) != len(self.valid_product_template_attribute_line_ids):
-            # number of attribute values passed is different than the
-            # configuration of attributes on the template
-            return False
-
-        if self.valid_product_template_attribute_line_ids != combination.attribute_line_id:
-            # combination has different attributes than the ones configured on the template
-            return False
-
-        if self.valid_product_template_attribute_line_ids.product_template_value_ids._only_active() < combination:
-            # combination has different values than the ones configured on the template
+        if not self._is_combination_possible_by_config(combination, ignore_no_variant):
             return False
 
         variant = self._get_variant_for_combination(combination)

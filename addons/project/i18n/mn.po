@@ -10,14 +10,15 @@
 # nasaaskii <nasaaskii@gmail.com>, 2019
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # tserendavaa tsogtoo <tseegii011929@gmail.com>, 2019
-# nurbahyt baha <nurbahyt.kh@gmail.com>, 2019
+# Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2019
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
 # Minj P <pminj322@gmail.com>, 2019
-# Батболд <batbold.ts@gmail.com>, 2019
 # baaska sh <sh.baaskash@gmail.com>, 2019
 # Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
 # Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2020
+# Батболд <batbold.ts@gmail.com>, 2020
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +26,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Khoschuluu Khuderchuluu <khoschuluu@gmail.com>, 2020\n"
+"Last-Translator: Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,12 +48,12 @@ msgstr "#Даалгаврууд"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_open
 msgid "# Working Days to Assign"
-msgstr ""
+msgstr "# Ажиллах өдрийг оноох"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__working_days_close
 msgid "# Working Days to Close"
-msgstr ""
+msgstr "# Ажиллах өдрийг хаах"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__nbr
@@ -62,12 +63,12 @@ msgstr "Даалгаврын #"
 #. module: project
 #: model:mail.template,subject:project.rating_project_request_email_template
 msgid "${object.project_id.company_id.name}: Satisfaction Survey"
-msgstr ""
+msgstr "${object.project_id.company_id.name}: Сэтгэл ханамжийн судалгаа"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "% On"
-msgstr ""
+msgstr "% Асаах"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -163,6 +164,62 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div>\n"
+"    % set access_token = object.rating_get_access_token()\n"
+"    % set partner = object.rating_get_partner_id()\n"
+"    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"width:100%; margin:0px auto;\">\n"
+"    <tbody>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Сайн байна уу ${partner.name},<br/>\n"
+"            Бидний үйлчилгээнд үнэлгээ өгнө үү  \"<strong>${object.name}</strong>\"\n"
+"            % if object.rating_get_rated_partner_id().name:\n"
+"                оноох нь <strong>${object.rating_get_rated_partner_id().name}</strong>.<br/>\n"
+"            % else:\n"
+"                .<br/>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"        <tr><td style=\"text-align: center;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" summary=\"o_mail_notification\" style=\"width:100%; margin: 32px 0px 32px 0px;\">\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <strong>Бидний үйлчилгээг мэдрэмжээр илэрхийлнэ үү</strong><br/>\n"
+"                    <span style=\"text-color: #888888\">(Дүр төрхөөс нэгийг сонгож дарна уу)</span>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"font-size: 13px;\">\n"
+"                    <table style=\"width:100%;text-align:center;\">\n"
+"                        <tr>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/10\">\n"
+"                                    <img alt=\"Satisfied\" src=\"/rating/static/src/img/rating_10.png\" title=\"Satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/5\">\n"
+"                                    <img alt=\"Not satisfied\" src=\"/rating/static/src/img/rating_5.png\" title=\"Not satisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <a href=\"/rating/${access_token}/1\">\n"
+"                                    <img alt=\"Highly Dissatisfied\" src=\"/rating/static/src/img/rating_1.png\" title=\"Highly Dissatisfied\"/>\n"
+"                                </a>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td></tr>\n"
+"        <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"            Бид таны санал хүсэлтэнд талархаж байна.Бид үйлчилгээг улам сайжруулхад туслах болно. \n"
+"            % if object.project_id.rating_status == 'stage':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Таны судалгааг илгээлээ ,төслийн дараагийн үе шатрүү шилжүүлсэн. <b>${object.stage_id.name}</b></span>\n"
+"            % endif\n"
+"            % if object.project_id.rating_status == 'periodic':\n"
+"                <br/><span style=\"margin: 0px 0px 0px 0px; font-size: 12px; opacity: 0.5; color: #454748;\">Таны судалгаа илгээгдлээ <b>${object.project_id.rating_status_period}</b> as long as the task is in the <b>${object.stage_id.name}</b> stage.</span>\n"
+"            % endif\n"
+"        </td></tr>\n"
+"    </tbody>\n"
+"    </table>\n"
+"</div>\n"
+"            "
 
 #. module: project
 #: model:mail.template,body_html:project.mail_template_data_project_task
@@ -177,6 +234,15 @@ msgid ""
 "</div>\n"
 "        "
 msgstr ""
+"<div>\n"
+"Эрхэм хүндэт ${object.partner_id.name or 'customer'},<br/>\n"
+"    Хүсэлтэнд тань баярлалаа<br/>\n"
+"    Өөр асуух тодруулах зүйл байвал бидэнд хандана уу.\n"
+"    <br/><br/>\n"
+"    Баярлалаа\n"
+"    <br/>\n"
+"</div>\n"
+"        "
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_index
@@ -224,7 +290,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<i class=\"fa fa-smile-o\"/> No rating yet"
-msgstr ""
+msgstr "<i class=\"fa fa-smile-o\"/> Хараахан үнэлэгдээгүй"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -241,7 +307,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "<p>Once your task is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>Даалгавар бэлэн төлөвд байна , та одоо халгалж болно</p>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_project
@@ -380,6 +446,8 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
 msgstr ""
+"Тохиргоон дээр багана нэмэх <b>таны даалгаврын үе шатууд</b>.<br/><i>e.g. "
+"Шинэ - Явагдаж буй - Дууссан</i>"
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
@@ -437,7 +505,7 @@ msgstr "Бүх даалгавар"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All employees"
-msgstr ""
+msgstr "Бүх ажилчид"
 
 #. module: project
 #. openerp-web
@@ -744,7 +812,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
 msgid "Cover Image"
-msgstr ""
+msgstr "Ковер зураг"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified_footer
@@ -765,7 +833,7 @@ msgstr "Төсөл үүсгэх"
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_task_type_form
 msgid "Create a new stage in the task pipeline"
-msgstr ""
+msgstr "Даалгаврын суваг т шинэ үе шат үүсгэх"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
@@ -780,7 +848,7 @@ msgstr "Даалгавар үүсгэх"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__create_date
 msgid "Created On"
-msgstr ""
+msgstr "Үүсгэсэн"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__create_uid
@@ -1076,7 +1144,7 @@ msgstr "Имэйл загвар"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Имэйл CC-дэхь"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1141,7 +1209,7 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Final Document"
-msgstr ""
+msgstr "Эцсийн баримт"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__fold
@@ -1165,7 +1233,7 @@ msgstr "Дагасан"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "Дагсан даалгаврууд"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
@@ -1203,14 +1271,14 @@ msgstr "АА"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "Захиалагчийн санал хүсэлт авах"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Getting Things Done (GTD)"
-msgstr ""
+msgstr "Ажил бүтээх (GTD)"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__sequence
@@ -1323,7 +1391,7 @@ msgstr "Дүрс"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ажилбар дээр сануулга гарсныг илэрхийлэх зураг."
 
 #. module: project
 #. openerp-web
@@ -1433,7 +1501,7 @@ msgstr "Явагдаж буй"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "In development"
-msgstr ""
+msgstr "Хөгжүүлэлт"
 
 #. module: project
 #. openerp-web
@@ -1456,7 +1524,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
-msgstr ""
+msgstr "Уригдсан ажилчид"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -1495,7 +1563,7 @@ msgstr "Канбан Төлөв"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__kanban_state_label
 msgid "Kanban State Label"
-msgstr ""
+msgstr "Канбан Төлөвийн шошго"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__legend_done
@@ -1510,7 +1578,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Label used for the tasks of the project."
-msgstr ""
+msgstr "Төслийн даалгаварт шошго ашигласан"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1552,7 +1620,7 @@ msgstr "Сүүлийн үе шат дах шинэчлэл"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
 msgid "Last Updated On"
-msgstr ""
+msgstr "Сүүлд Шинэчлэгдсэн"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__write_uid
@@ -1601,7 +1669,7 @@ msgstr "Анхны төслийг тань үүсгэцгээе."
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "Let's create your first task."
-msgstr ""
+msgstr "Таны эхний даалгаврыг үүсгэцгээе"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -1613,7 +1681,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Ирсэн имэйлүүдийн CC жагсаалт"
 
 #. module: project
 #. openerp-web
@@ -1625,7 +1693,7 @@ msgstr "Шууд"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Log time on tasks"
-msgstr ""
+msgstr "Даалгаврын цагийн бүртгэл"
 
 #. module: project
 #. openerp-web
@@ -1639,7 +1707,7 @@ msgstr "Лого загвар"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Long Term"
-msgstr ""
+msgstr "Урт Нэр томьёо"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
@@ -1655,7 +1723,7 @@ msgstr "Үндсэн хавсралт"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__attachment_ids
 msgid "Main Attachments"
-msgstr ""
+msgstr "Үндсэн хавсралт"
 
 #. module: project
 #. openerp-web
@@ -1705,7 +1773,7 @@ msgstr "Нэр"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Name of the tasks :"
-msgstr ""
+msgstr "Даалгавруудын нэрс :"
 
 #. module: project
 #: model:project.task,legend_blocked:project.project_task_10
@@ -1839,12 +1907,12 @@ msgstr "Үйлдлийн тоо"
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_open
 msgid "Number of Working Days to Open the task"
-msgstr ""
+msgstr "Даалгаврыг нээх хүртэлх ажлын өдрийн тоо"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_report_project_task_user__working_days_close
 msgid "Number of Working Days to close the task"
-msgstr ""
+msgstr "Даалгаврыг хаах хүртэлх ажлын өдрийн тоо"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__doc_count
@@ -1969,7 +2037,7 @@ msgstr "Эзэмшигч"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Page Ideas"
-msgstr ""
+msgstr "Хуудсын санаанууд"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_parent_model_id
@@ -2003,7 +2071,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "Сэтгэл ханамжын хувь"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2062,7 +2130,7 @@ msgstr "Гаднаас хандах URL"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Portal users and all employees"
-msgstr ""
+msgstr "Портал хэрэглэгчид болон бүх ажилчид"
 
 #. module: project
 #. openerp-web
@@ -2162,7 +2230,7 @@ msgstr ""
 #: model:ir.cron,cron_name:project.ir_cron_rating_project
 #: model:ir.cron,name:project.ir_cron_rating_project
 msgid "Project: Send rating"
-msgstr ""
+msgstr "Төсөл: Үнэлгээ инээх"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_view_project_all
@@ -2194,12 +2262,12 @@ msgstr "Улирлаар"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_popover
 msgid "Rated partner"
-msgstr ""
+msgstr "Үнэлсэн харилцагч"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Rated tasks"
-msgstr ""
+msgstr "Үнэлсэн даалгаврууд"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.rating_rating_action_view_project_rating
@@ -2241,12 +2309,12 @@ msgstr "Үнэлгээний Сүүлчийн Утга"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_request_deadline
 msgid "Rating Request Deadline"
-msgstr ""
+msgstr "Үнэлгээний хүсэлтийн эцсийн огноо"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "Сэтгэл ханамжын үнэлгээ"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
@@ -2256,7 +2324,7 @@ msgstr "Үнэлгээний тоо"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__portal_show_rating
 msgid "Rating visible publicly"
-msgstr ""
+msgstr "Үнэлгээ нийтэд ил харагдах"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
@@ -2273,7 +2341,7 @@ msgstr "Үнэлгээнүүд"
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "Ratings of %s"
-msgstr ""
+msgstr "Үнэлгээ: %s"
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -2365,28 +2433,28 @@ msgstr "Тайлан"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research"
-msgstr ""
+msgstr "Дахин хайх"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Research Project"
-msgstr ""
+msgstr "Төсөл дахин хайх"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Researching"
-msgstr ""
+msgstr "Дахин хайж байна"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Resources Allocation"
-msgstr ""
+msgstr "Нөөцийг хувиарлах"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_user_id
@@ -2444,7 +2512,7 @@ msgstr "Зурвасаас хайх"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr ""
+msgstr "Үе шатаас хайх"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -2472,7 +2540,7 @@ msgstr "Зохиомол мэйл хаяг ашиглах"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr ""
+msgstr "Үе шатад загвар мэйл тохируулах"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -2506,14 +2574,14 @@ msgstr ""
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Software Development"
-msgstr ""
+msgstr "Програмын хөгжүүлэлт"
 
 #. module: project
 #. openerp-web
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Specifications"
-msgstr ""
+msgstr "Дэлгэрэнгүй тодорхойлолт"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2602,7 +2670,7 @@ msgstr "Дэд даалгаврууд"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__subtask_planned_hours
 msgid "Subtasks"
-msgstr ""
+msgstr "Дэд даалгаврууд"
 
 #. module: project
 #. openerp-web
@@ -2619,7 +2687,7 @@ msgstr "Пайзын нэр"
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "Tag name already exists!"
-msgstr ""
+msgstr "Пайзын нэр аль хэдийн үүссэн байна !"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -2657,14 +2725,14 @@ msgstr "Даалгавар Хоригдсон"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__task_count
 msgid "Task Count"
-msgstr ""
+msgstr "Даалгав тоололт"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_new
 #: model:mail.message.subtype,name:project.mt_project_task_new
 #: model:mail.message.subtype,name:project.mt_task_new
 msgid "Task Created"
-msgstr ""
+msgstr "Даалгавар үүсэлт"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_hr_timesheet
@@ -2719,12 +2787,12 @@ msgstr "Даалгавар Хоригдсон"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task in progress. Click to block or set as done."
-msgstr ""
+msgstr "Даалгавар явагдаж байна. Хориглох эсвэл хийсэн -г дарах"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Task is blocked. Click to unblock or set as done."
-msgstr ""
+msgstr "Даалгавар хориглогдсон байна. Хориг цуцлах эсвэл хийсэн-г дарах"
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
@@ -2765,7 +2833,7 @@ msgstr "Даалгавар шинжилгээ"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Tasks Management"
-msgstr ""
+msgstr "Даалгаврын менежмент"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
@@ -2846,7 +2914,7 @@ msgstr "Төсөл алга."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this object at the moment"
-msgstr ""
+msgstr "Одоогоор энэ зүйлд үнэлгээ алга."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -2893,7 +2961,7 @@ msgstr "Энэ үе нь Канбан харагдацад бичлэг байх
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "This step is done. Click to block or set in progress."
-msgstr ""
+msgstr "Энэ алхам нь Хориглосон эсвэл Явагдаж буйг дархад хийгдэнэ"
 
 #. module: project
 #. openerp-web
@@ -2905,7 +2973,7 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Time Management"
-msgstr ""
+msgstr "Цагийн менежмент"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -2934,7 +3002,7 @@ msgstr "Товлогдсон"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "To Print"
-msgstr ""
+msgstr "Хэвлэх рүү"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.act_project_project_2_project_task_all
@@ -3005,12 +3073,12 @@ msgstr "Уншаагүй зурвасын тоолуур"
 #: model:ir.model.fields,field_description:project.field_res_config_settings__group_project_rating
 #: model:res.groups,name:project.group_project_rating
 msgid "Use Rating on Project"
-msgstr ""
+msgstr "Төслийн үнэлгээ ашиглах"
 
 #. module: project
 #: model:res.groups,name:project.group_subtask_project
 msgid "Use Subtasks"
-msgstr ""
+msgstr "Дээд даалгаврууд ашиглах"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__label_tasks
@@ -3100,32 +3168,32 @@ msgstr "Ажлын Цаг"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Assign"
-msgstr ""
+msgstr "Ажиллах хугацааг оноох"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
 msgid "Working Time to Close"
-msgstr ""
+msgstr "Ажиллах хугацааг хаах"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_open
 msgid "Working days to assign"
-msgstr ""
+msgstr "Ажиллах өдрийг оноох"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_days_close
 msgid "Working days to close"
-msgstr ""
+msgstr "Ажиллах өдрийг хаах"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_open
 msgid "Working hours to assign"
-msgstr ""
+msgstr "Ажиллах цагийг оноох"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__working_hours_close
 msgid "Working hours to close"
-msgstr ""
+msgstr "Ажиллах цагийг хаах"
 
 #. module: project
 #: model:ir.filters,name:project.filter_task_report_workload
@@ -3182,7 +3250,7 @@ msgstr "дундаж"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "bad"
-msgstr ""
+msgstr "муу"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_project_view_form_simplified
@@ -3197,13 +3265,13 @@ msgstr ""
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 msgid "happy"
-msgstr ""
+msgstr "Баяртай"
 
 #. module: project
 #: code:addons/project/models/project.py:0
 #, python-format
 msgid "task"
-msgstr ""
+msgstr "даалгавар"
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.open_view_project_all

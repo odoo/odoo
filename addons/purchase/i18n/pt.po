@@ -102,7 +102,7 @@ msgstr ""
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Segue em anexo o pedido de cotação <strong>${object.name}</strong>\n"
+"        Aqui tem anexado o pedido de cotação <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            com a referencia: ${object.partner_ref}\n"
 "        % endif\n"
@@ -111,7 +111,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        Se tiver alguma dúvida, não hesite em contactar-nos.\n"
 "        <br/><br/>\n"
-"        Os melhores cumprimentos,\n"
+"        Com os melhores cumprimentos,\n"
 "    </p>\n"
 "</div>"
 
@@ -144,7 +144,7 @@ msgstr ""
 "            (${object.partner_id.parent_id.name})\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Segue em anexo o pedido de cotação <strong>${object.name}</strong>\n"
+"        Aqui tem anexado o pedido de cotação <strong>${object.name}</strong>\n"
 "        % if object.partner_ref:\n"
 "            com a referencia: ${object.partner_ref}\n"
 "        % endif\n"
@@ -152,7 +152,7 @@ msgstr ""
 "        <br/><br/>\n"
 "        Se tiver alguma dúvida, não exite em contactar-nos.\n"
 "        <br/><br/>\n"
-"        Os melhores cumprimentos,\n"
+"        Com os melhores cumprimentos,\n"
 "    </p>\n"
 "</div>"
 
@@ -1261,7 +1261,7 @@ msgstr "Termos de Pagamento"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "URL de Acesso Portal"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_product_category__property_account_creditor_price_difference_categ
@@ -2252,4 +2252,12 @@ msgstr ""
 msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
+msgstr ""
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid ""
+"You cannot change the type of a purchase order line. Instead you should "
+"delete the current line and create a new line of the proper type."
 msgstr ""

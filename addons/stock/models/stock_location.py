@@ -130,6 +130,8 @@ class Location(models.Model):
         args = args or []
         if operator == 'ilike' and not (name or '').strip():
             domain = []
+        elif operator in expression.NEGATIVE_TERM_OPERATORS:
+            domain = [('barcode', operator, name), ('complete_name', operator, name)]
         else:
             domain = ['|', ('barcode', operator, name), ('complete_name', operator, name)]
         location_ids = self._search(expression.AND([domain, args]), limit=limit, access_rights_uid=name_get_uid)

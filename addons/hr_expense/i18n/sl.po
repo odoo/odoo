@@ -34,6 +34,8 @@ msgid ""
 "'Expenses - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
 "''))"
 msgstr ""
+"'Stroški - %s - %s' % (object.employee_id.name, (object.name).replace('/', "
+"''))"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.product_product_expense_form_view
@@ -41,6 +43,8 @@ msgid ""
 "<i class=\"text-muted oe_edit_only\">Use this reference as a subject prefix "
 "when submitting by email.</i>"
 msgstr ""
+"<i class=\"text-muted oe_edit_only\">Pri predložitvi po e-pošti uporabite to"
+" referenco kot predmet sporočila</i>"
 
 #. module: hr_expense
 #. openerp-web
@@ -72,14 +76,14 @@ msgstr ""
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "<p>Once your <b> Expense </b> is ready, you can save it.</p>"
-msgstr ""
+msgstr "<p>Ko je vaš <b> strošek </b> pripravljen, ga lahko shranite.</p>"
 
 #. module: hr_expense
 #. openerp-web
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "<p>Select expenses to submit them to your manager</p>"
-msgstr ""
+msgstr "<p>Izberite stroške, da jih predložite svojemu upravitelju</p>"
 
 #. module: hr_expense
 #. openerp-web
@@ -108,7 +112,7 @@ msgstr "<strong>Zaposleni:</strong>"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
 msgid "<strong>Payment By:</strong>"
-msgstr ""
+msgstr "<strong>Plačilo:</strong>"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.report_expense_sheet
@@ -127,6 +131,8 @@ msgid ""
 "A payment of %s %s with the reference <a href='/mail/view?%s'>%s</a> related"
 " to your expense %s has been made."
 msgstr ""
+"Plačilo %s %s z referenco <a href='/mail/view?%s'>%s</a> povezano z vašimi "
+"stroški %s je bilo ustvarjeno."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__account_id
@@ -172,18 +178,18 @@ msgstr "Tipi aktivnosti"
 #: code:addons/hr_expense/models/hr_expense.py:0
 #, python-format
 msgid "Add a new expense,"
-msgstr ""
+msgstr "Dodajte nov strošek,"
 
 #. module: hr_expense
 #: model:res.groups,name:hr_expense.group_hr_expense_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: hr_expense
 #: model:product.product,name:hr_expense.air_ticket
 #: model:product.template,name:hr_expense.air_ticket_product_template
 msgid "Air Flight"
-msgstr ""
+msgstr "Zračni let"
 
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
@@ -203,7 +209,7 @@ msgstr "Vsa poročila o stroških"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.hr_expense_actions_all
 msgid "All Expenses"
-msgstr ""
+msgstr "Vsi stroški"
 
 #. module: hr_expense
 #. openerp-web
@@ -266,7 +272,7 @@ msgstr "Priložite dokument"
 #: code:addons/hr_expense/static/src/js/tours/hr_expense.js:0
 #, python-format
 msgid "Attach your receipt here."
-msgstr ""
+msgstr "Tukaj priložite potrdilo."
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__message_attachment_count
@@ -282,7 +288,7 @@ msgstr "Bančni dnevnik"
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__reference
 msgid "Bill Reference"
-msgstr ""
+msgstr "Referenca računa"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__can_reset
@@ -353,7 +359,7 @@ msgstr "Pretvorba med enotami mere je možna samo v isti kategoriji."
 #: model:ir.actions.server,name:hr_expense.hr_expense_submit_action_server
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_view_form
 msgid "Create Report"
-msgstr ""
+msgstr "Ustvari poročilo"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_request_approve_expense_sheet
@@ -367,7 +373,7 @@ msgstr "Ustvari nov strošek"
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.hr_expense_product
 msgid "Create a new expense product"
-msgstr ""
+msgstr "Ustvarite nov izdelek, ki predstavlja strošek"
 
 #. module: hr_expense
 #: model_terms:ir.actions.act_window,help:hr_expense.action_hr_expense_sheet_all_all
@@ -380,7 +386,7 @@ msgstr "Ustvari novo poročilo o stroških"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.res_config_settings_view_form
 msgid "Create expenses from incoming emails"
-msgstr ""
+msgstr "Ustvarite stroške iz e-poštnih sporočil"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense__create_uid
@@ -457,7 +463,7 @@ msgstr "Osnutek"
 #. module: hr_expense
 #: model_terms:ir.ui.view,arch_db:hr_expense.hr_expense_sheet_register_payment_view_form
 msgid "Draft Payment"
-msgstr ""
+msgstr "Osnutek plačila"
 
 #. module: hr_expense
 #: model:ir.model,name:hr_expense.model_hr_employee
@@ -476,7 +482,7 @@ msgstr "Zaposlen (za povračilo)"
 #. module: hr_expense
 #: model:ir.actions.act_window,name:hr_expense.action_approved_expense
 msgid "Employee Expenses"
-msgstr ""
+msgstr "Stroški zaposlenih"
 
 #. module: hr_expense
 #: model:ir.model.fields,field_description:hr_expense.field_hr_expense_sheet__address_id

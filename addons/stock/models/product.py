@@ -4,6 +4,7 @@
 from odoo import api, fields, models, _
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.tools import pycompat,float_is_zero
 from odoo.tools.float_utils import float_round
 from datetime import datetime
 import operator as py_operator
@@ -722,6 +723,8 @@ class ProductTemplate(models.Model):
             ])
             if existing_move_lines:
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
+        if 'type' in vals and vals['type'] != 'product' and any(p.type == 'product' and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
+            raise UserError(_("Available quantity should be set to zero before changing type"))
         return super(ProductTemplate, self).write(vals)
 
     # Be aware that the exact same function exists in product.product

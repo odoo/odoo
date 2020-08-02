@@ -8,6 +8,7 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -46,12 +47,12 @@ msgstr "Kritéria analýzy"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_avg_price
 msgid "Avg. Price in Customer Invoices."
-msgstr "Priem. cena na faktúrach zákazníkov."
+msgstr "Priem. cena na zákazníckych faktúrach"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_avg_price
 msgid "Avg. Price in Vendor Bills "
-msgstr "Priem. cena na dodacích účtenkách."
+msgstr "Priem. cena na dodávateľských dokladoch."
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__purchase_avg_price
@@ -127,7 +128,7 @@ msgstr "Očakávaný predaj - obrat"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__expected_margin_rate
 msgid "Expected margin * 100 / Expected Sale"
-msgstr "Očakávaná marža * 100 / Oçakávaný predaj"
+msgstr "Očakávaná marža * 100 / Očakávaný predaj"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__from_date
@@ -188,7 +189,7 @@ msgstr "Normálna cena"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_gap
 msgid "Normal Cost - Total Cost"
-msgstr "Normálna cena - Celková cena"
+msgstr "Normálny náklad - Celkový náklad"
 
 #. module: product_margin
 #: model_terms:ir.ui.view,arch_db:product_margin.product_margin_form_view
@@ -199,13 +200,13 @@ msgstr "Otvorené marže"
 #: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__open_paid
 #: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__open_paid
 msgid "Open and Paid"
-msgstr "Otvorené a Zaplatené"
+msgstr "Otvorené a zaplatené"
 
 #. module: product_margin
 #: model:ir.model.fields.selection,name:product_margin.selection__product_margin__invoice_state__paid
 #: model:ir.model.fields.selection,name:product_margin.selection__product_product__invoice_state__paid
 msgid "Paid"
-msgstr "Platené"
+msgstr "Zaplatené"
 
 #. module: product_margin
 #: model:ir.model,name:product_margin.model_product_product
@@ -262,18 +263,18 @@ msgstr "Štandardná cena"
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__normal_cost
 msgid "Sum of Multiplication of Cost price and quantity of Vendor Bills"
-msgstr "Súčet násobenia nákupnej ceny a množstva účteniek predajcov"
+msgstr "Súčet násobenia nákupnej ceny a množstva dodávateľských dokladov"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__turnover
 msgid ""
 "Sum of Multiplication of Invoice price and quantity of Customer Invoices"
-msgstr "Súčet násobenia faktúrovej ceny a mnoźstva zákaznických faktúr"
+msgstr "Súčet násobenia faktúrovej ceny a množstva zákazníckych faktúr"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__total_cost
 msgid "Sum of Multiplication of Invoice price and quantity of Vendor Bills "
-msgstr "Súčet násobenia faktúrovej ceny a množstva účteniek predajcov"
+msgstr "Súčet násobenia faktúrovej ceny a množstva dodávateľských dokladov"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_expected
@@ -281,17 +282,17 @@ msgid ""
 "Sum of Multiplication of Sale Catalog price and quantity of Customer "
 "Invoices"
 msgstr ""
-"Súčet násobenia predajnj katalógovej ceny a množstva zákaznických faktúr"
+"Súčet násobenia predajnej katalógovej ceny a množstva zákaznických faktúr"
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__sale_num_invoiced
 msgid "Sum of Quantity in Customer Invoices"
-msgstr "Súčet množstva na faktúrach zákazníkov"
+msgstr "Súčet množstva na zákazníckych faktúrach "
 
 #. module: product_margin
 #: model:ir.model.fields,help:product_margin.field_product_product__purchase_num_invoiced
 msgid "Sum of Quantity in Vendor Bills"
-msgstr "Súčet množstva v účtenkách dodávateľov"
+msgstr "Súčet množstva na dodávateľských dokladoch"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_margin__to_date
@@ -302,7 +303,7 @@ msgstr "Do"
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_cost
 #: model_terms:ir.ui.view,arch_db:product_margin.view_product_margin_tree
 msgid "Total Cost"
-msgstr "Celkové Náklady"
+msgstr "Celkové náklady"
 
 #. module: product_margin
 #: model:ir.model.fields,field_description:product_margin.field_product_product__total_margin

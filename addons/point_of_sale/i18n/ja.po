@@ -155,7 +155,7 @@ msgstr "<span class=\"o_form_label\">デフォルト価格リスト</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Journal Entries</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">仕訳</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -165,7 +165,7 @@ msgstr "<span class=\"o_form_label\">従業員でログイン</span>"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "<span class=\"o_form_label\">Order Reference</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">オーダ参照</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -3637,7 +3637,7 @@ msgstr "マネージャーのみ価格変更できる"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
 msgid "Resume"
-msgstr "レジュメ"
+msgstr "再開"
 
 #. module: point_of_sale
 #. openerp-web
@@ -4211,7 +4211,7 @@ msgstr ""
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__subtotal
 msgid "Tax-Excluded Price"
-msgstr "税抜き価格"
+msgstr "税抜価格"
 
 #. module: point_of_sale
 #: model:ir.model.fields.selection,name:point_of_sale.selection__pos_config__iface_tax_included__total
@@ -5132,6 +5132,13 @@ msgid ""
 msgstr ""
 
 #. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"You must configure an intermediary account for the payment methods: %s."
+msgstr ""
+
+#. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.product_product_action
 msgid ""
 "You must define a product for everything you sell through\n"
@@ -5169,7 +5176,7 @@ msgstr "あなたのインターネット接続はおそらくダウンしてい
 #: code:addons/point_of_sale/models/pos_session.py:0
 #, python-format
 msgid "Your PoS Session is open since "
-msgstr ""
+msgstr "POSセッションが次の日から開いたままです:"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0

@@ -155,7 +155,7 @@ class MrpUnbuild(models.Model):
             if move.has_tracking != 'none':
                 original_move = move in produce_moves and self.mo_id.move_raw_ids or self.mo_id.move_finished_ids
                 original_move = original_move.filtered(lambda m: m.product_id == move.product_id)
-                needed_quantity = move.product_qty
+                needed_quantity = move.product_uom_qty
                 moves_lines = original_move.mapped('move_line_ids')
                 if move in produce_moves and self.lot_id:
                     moves_lines = moves_lines.filtered(lambda ml: self.lot_id in ml.lot_produced_ids)

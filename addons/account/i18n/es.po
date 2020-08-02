@@ -66,6 +66,8 @@
 # Martin Trigaux, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Carlos Dauden <carlos.dauden@tecnativa.com>, 2020
+# Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020
 # Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # 
 msgid ""
@@ -766,7 +768,7 @@ msgstr "<strong class=\"text-muted\">Vendedor</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Importe vencido</strong>"
+msgstr "<strong>Importe adeudado</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -4624,7 +4626,7 @@ msgstr "Vencido"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__residual
 msgid "Due Amount"
-msgstr "Importe vencido"
+msgstr "Importe adeudado"
 
 #. module: account
 #. openerp-web
@@ -8002,7 +8004,7 @@ msgstr "Emisor del pago"
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Originator Tax"
-msgstr "Impuesto de origen"
+msgstr "Impuesto (cuota)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
@@ -8012,7 +8014,7 @@ msgstr "Línea de reparto de impuestos origen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_group_id
 msgid "Originator tax group"
-msgstr "Grupo de impuestos origen"
+msgstr "Grupo de impuestos (cuota)"
 
 #. module: account
 #. openerp-web
@@ -13326,6 +13328,12 @@ msgstr ""
 "Debería configurar la 'Cuenta de pérdidas por tasa de cambio' en las "
 "opciones de contabilidad para gestionar automáticamente los asientos "
 "relacionados con diferencias entre tipos de cambio."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr "Establezca un valor de redondeo positivo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

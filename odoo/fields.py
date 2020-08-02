@@ -895,7 +895,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 model.flush([self.name])
 
         if self.required and not has_notnull:
-            model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
+            model.pool.post_constraint(apply_required, model, self.name)
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
@@ -2563,9 +2563,13 @@ class Many2one(_Relational):
         """ Remove `records` from the cached values of the inverse fields of `self`. """
         cache = records.env.cache
         record_ids = set(records._ids)
+
+        # align(id) returns a NewId if records are new, a real id otherwise
+        align = (lambda id_: id_) if all(record_ids) else (lambda id_: id_ and NewId(id_))
+
         for invf in records._field_inverses[self]:
             corecords = records.env[self.comodel_name].browse(
-                id_ for id_ in cache.get_values(records, self)
+                align(id_) for id_ in cache.get_values(records, self)
             )
             for corecord in corecords:
                 ids0 = cache.get(corecord, invf, None)
@@ -3077,6 +3081,11 @@ class One2many(_RelationalMulti):
 
         if self.store:
             inverse = self.inverse_name
+
+            # make sure self's inverse is in cache
+            inverse_field = comodel._fields[inverse]
+            for record in records:
+                cache.update(record[self.name], inverse_field, itertools.repeat(record.id))
 
             for recs, commands in records_commands_list:
                 for command in commands:
@@ -3622,6 +3631,16 @@ def prefetch_x2many_ids(record, field):
     records = record.browse(record._prefetch_ids)
     ids_list = record.env.cache.get_values(records, field)
     return unique(id_ for ids in ids_list for id_ in ids)
+
+
+def apply_required(model, field_name):
+    """ Set a NOT NULL constraint on the given field, if necessary. """
+    # At the time this function is called, the model's _fields may have been reset, although
+    # the model's class is still the same. Retrieve the field to see whether the NOT NULL
+    # constraint still applies
+    field = model._fields[field_name]
+    if field.store and field.required:
+        sql.set_not_null(model.env.cr, model._table, field_name)
 
 
 # imported here to avoid dependency cycle issues

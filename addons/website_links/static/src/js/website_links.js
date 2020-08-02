@@ -58,6 +58,7 @@ var SelectBox = publicWidget.Widget.extend({
             createSearchChoicePosition: 'bottom',
             multiple: false,
             data: self.objects,
+            minimumInputLength: self.objects.length > 100 ? 3 : 0,
         });
     },
 

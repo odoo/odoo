@@ -7268,6 +7268,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "Nije plaćeno"
 
@@ -12610,6 +12611,12 @@ msgid ""
 msgstr ""
 "Kako bi automatski knjižili stavke temeljnice vezane za razlike tečaja, "
 "trebate konfigurirati 'konto tečanih razlika' u postavkama konta."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

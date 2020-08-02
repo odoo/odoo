@@ -1463,14 +1463,35 @@ class AccountTax(models.Model):
             return base_amount - (base_amount * (self.amount / 100))
 
     def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, is_refund=False):
-        """ Just converts parameters in browse records and calls for compute_all, because js widgets can't serialize browse records """
+        """ Called by the reconciliation to compute taxes on writeoff during bank reconciliation
+        """
         if currency_id:
             currency_id = self.env['res.currency'].browse(currency_id)
         if product_id:
             product_id = self.env['product.product'].browse(product_id)
         if partner_id:
             partner_id = self.env['res.partner'].browse(partner_id)
-        return self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
+
+        # We first need to find out whether this tax computation is made for a refund
+        tax_type = self and self[0].type_tax_use
+        is_refund = is_refund or (tax_type == 'sale' and price_unit < 0) or (tax_type == 'purchase' and price_unit > 0)
+
+        rslt = self.compute_all(price_unit, currency=currency_id, quantity=quantity, product=product_id, partner=partner_id, is_refund=is_refund)
+
+        # The reconciliation widget calls this function to generate writeoffs on bank journals,
+        # so the sign of the tags might need to be inverted, so that the tax report
+        # computation can treat them as any other miscellaneous operations, while
+        # keeping a computation in line with the effect the tax would have had on an invoice.
+
+        if (tax_type == 'sale' and not is_refund) or (tax_type == 'purchase' and is_refund):
+            base_tags = self.env['account.account.tag'].browse(rslt['base_tags'])
+            rslt['base_tags'] = self.env['account.move.line']._revert_signed_tags(base_tags).ids
+
+            for tax_result in rslt['taxes']:
+                tax_tags = self.env['account.account.tag'].browse(tax_result['tag_ids'])
+                tax_result['tag_ids'] = self.env['account.move.line']._revert_signed_tags(tax_tags).ids
+
+        return rslt
 
     def flatten_taxes_hierarchy(self):
         # Flattens the taxes contained in this recordset, returning all the
@@ -1588,7 +1609,7 @@ class AccountTax(models.Model):
         # For the computation of move lines, we could have a negative base value.
         # In this case, compute all with positive values and negate them at the end.
         sign = 1
-        if base < 0:
+        if base <= 0:
             base = -base
             sign = -1
 
@@ -1644,8 +1665,10 @@ class AccountTax(models.Model):
             tax_repartition_lines = (is_refund and tax.refund_repartition_line_ids or tax.invoice_repartition_line_ids).filtered(lambda x: x.repartition_type == 'tax')
             sum_repartition_factor = sum(tax_repartition_lines.mapped('factor'))
 
+            price_include = self._context.get('force_price_include', tax.price_include)
+
             #compute the tax_amount
-            if (self._context.get('force_price_include') or tax.price_include) and total_included_checkpoints.get(i):
+            if price_include and total_included_checkpoints.get(i):
                 # We know the total to reach for that tax, so we make a substraction to avoid any rounding issues
                 tax_amount = total_included_checkpoints[i] - (base + cumulated_tax_included_amount)
                 cumulated_tax_included_amount = 0
@@ -1657,7 +1680,7 @@ class AccountTax(models.Model):
             tax_amount = round(tax_amount, prec)
             factorized_tax_amount = round(tax_amount * sum_repartition_factor, prec)
 
-            if tax.price_include and not total_included_checkpoints.get(i):
+            if price_include and not total_included_checkpoints.get(i):
                 cumulated_tax_included_amount += factorized_tax_amount
 
             # If the tax affects the base of subsequent taxes, its tax move lines must
@@ -1696,7 +1719,7 @@ class AccountTax(models.Model):
                     'sequence': tax.sequence,
                     'account_id': tax.cash_basis_transition_account_id.id if tax.tax_exigibility == 'on_payment' else repartition_line.account_id.id,
                     'analytic': tax.analytic,
-                    'price_include': tax.price_include or self._context.get('force_price_include'),
+                    'price_include': price_include,
                     'tax_exigibility': tax.tax_exigibility,
                     'tax_repartition_line_id': repartition_line.id,
                     'tag_ids': (repartition_line.tag_ids + subsequent_tags).ids,

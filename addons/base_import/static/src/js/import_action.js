@@ -355,6 +355,11 @@ var DataImport = AbstractAction.extend({
         this.$form.toggleClass(
             'oe_import_noheaders text-muted',
             !this.$('input.oe_import_has_header').prop('checked'));
+
+        // Clear the input value to allow onchange to be triggered
+        // if the file is the same (for all browsers)
+        self.$('input.oe_import_file').val('');
+
         this._rpc({
                 model: 'base_import.import',
                 method: 'parse_preview',

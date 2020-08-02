@@ -12,7 +12,9 @@
             <field name="expense_currency_exchange_account_id" ref="chart8160"/>
             <field name="default_pos_receivable_account_id" ref="chart1501" />
         </record>
+    </data>
 
+    <data noupdate="1">
         <function model="account.chart.template" name="try_loading">
             <value eval="[ref('l10n_no.no_chart_template')]"/>
         </function>

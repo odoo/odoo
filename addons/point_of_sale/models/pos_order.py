@@ -343,7 +343,11 @@ class PosOrder(models.Model):
         }
 
     def _is_pos_order_paid(self):
-        return float_is_zero(self.amount_total - self.amount_paid, precision_rounding=self.currency_id.rounding)
+        return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
+
+    def _get_rounded_amount(self, amount):
+        currency = self.currency_id
+        return currency.round(amount) if currency else amount
 
     def action_pos_order_paid(self):
         if not self._is_pos_order_paid():
@@ -472,7 +476,7 @@ class PosOrder(models.Model):
             if picking_type:
                 message = _("This transfer has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
                 picking_vals = {
-                    'origin': order.name,
+                    'origin': '%s - %s' % (order.session_id.name, order.name),
                     'partner_id': address.get('delivery', False),
                     'user_id': False,
                     'date_done': order.date_order,

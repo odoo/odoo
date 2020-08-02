@@ -16,7 +16,7 @@ class ResCompany(models.Model):
     l10n_ar_afip_responsibility_type_id = fields.Many2one(
         domain="[('code', 'in', [1, 4, 6])]", related='partner_id.l10n_ar_afip_responsibility_type_id', readonly=False)
     l10n_ar_company_requires_vat = fields.Boolean(compute='_compute_l10n_ar_company_requires_vat', string='Company Requires Vat?')
-    l10n_ar_afip_start_date = fields.Date('Activities Start Date')
+    l10n_ar_afip_start_date = fields.Date('Activities Start')
 
     @api.onchange('country_id')
     def onchange_country(self):

@@ -8,13 +8,13 @@
 # Martin Wilderoth <martin.wilderoth@linserv.se>, 2019
 # Leif Persson <leifpz54@gmail.com>, 2019
 # Robert Frykelius <robert.frykelius@linserv.se>, 2019
-# Jakob Krabbe <jakob.krabbe@vertel.se>, 2019
 # Kristoffer Grundström <lovaren@gmail.com>, 2019
 # Anders Wallenquist <anders.wallenquist@vertel.se>, 2019
 # Haojun Zou <apollo_zhj@msn.com>, 2019
 # Chrille Hedberg <hedberg.chrille@gmail.com>, 2019
 # Kim Asplund <kim.asplund@gmail.com>, 2020
 # Martin Trigaux, 2020
+# Jakob Krabbe <jakob.krabbe@vertel.se>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +22,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Jakob Krabbe <jakob.krabbe@vertel.se>, 2020\n"
 "Language-Team: Swedish (https://www.transifex.com/odoo/teams/41243/sv/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -430,7 +430,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.report_inventory
 #: model_terms:ir.ui.view,arch_db:stock.report_picking
 msgid "<strong>Product</strong>"
-msgstr ""
+msgstr "<strong>Produkt</strong>"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_move_kanban
@@ -789,6 +789,12 @@ msgstr "Tillgänglig"
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
+msgstr ""
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
 msgstr ""
 
 #. module: stock

@@ -107,12 +107,12 @@ class Slide(models.Model):
     _description = 'Slides'
     _mail_post_access = 'read'
     _order_by_strategy = {
-        'sequence': 'sequence asc',
+        'sequence': 'sequence asc, id asc',
         'most_viewed': 'total_views desc',
         'most_voted': 'likes desc',
         'latest': 'date_published desc',
     }
-    _order = 'sequence asc, is_category asc'
+    _order = 'sequence asc, is_category asc, id asc'
 
     # description
     name = fields.Char('Title', required=True, translate=True)
@@ -317,7 +317,9 @@ class Slide(models.Model):
             elif record.slide_type == 'video' and record.document_id:
                 if not record.mime_type:
                     # embed youtube video
-                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?theme=light" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
+                    query = urls.url_parse(record.url).query
+                    query = query + '&theme=light' if query else 'theme=light'
+                    record.embed_code = '<iframe src="//www.youtube.com/embed/%s?%s" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id, query)
                 else:
                     # embed google doc video
                     record.embed_code = '<iframe src="//drive.google.com/file/d/%s/preview" allowFullScreen="true" frameborder="0"></iframe>' % (record.document_id)
@@ -482,11 +484,19 @@ class Slide(models.Model):
             publish_template = slide.channel_id.publish_template_id
             html_body = publish_template.with_context(base_url=base_url)._render_template(publish_template.body_html, 'slide.slide', slide.id)
             subject = publish_template._render_template(publish_template.subject, 'slide.slide', slide.id)
+            # We want to use the 'reply_to' of the template if set. However, `mail.message` will check
+            # if the key 'reply_to' is in the kwargs before calling _get_reply_to. If the value is
+            # falsy, we don't include it in the 'message_post' call.
+            kwargs = {}
+            reply_to = publish_template._render_template(publish_template.reply_to, 'slide.slide', slide.id)
+            if reply_to:
+                kwargs['reply_to'] = reply_to
             slide.channel_id.with_context(mail_create_nosubscribe=True).message_post(
                 subject=subject,
                 body=html_body,
                 subtype='website_slides.mt_channel_slide_published',
                 email_layout_xmlid='mail.mail_notification_light',
+                **kwargs,
             )
         return True
 

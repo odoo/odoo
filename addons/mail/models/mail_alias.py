@@ -11,6 +11,10 @@ from odoo.tools.safe_eval import safe_eval
 
 _logger = logging.getLogger(__name__)
 
+# see rfc5322 section 3.2.3
+atext = r"[a-zA-Z0-9!#$%&'*+\-/=?^_`{|}~]"
+dot_atom_text = re.compile(r"^%s+(\.%s+)*$" % (atext, atext))
+
 
 class Alias(models.Model):
     """A Mail Alias is a mapping of an email address with a given Odoo Document
@@ -72,6 +76,17 @@ class Alias(models.Model):
     _sql_constraints = [
         ('alias_unique', 'UNIQUE(alias_name)', 'Unfortunately this email alias is already used, please choose a unique one')
     ]
+
+    @api.constrains('alias_name')
+    def _alias_is_ascii(self):
+        """ The local-part ("display-name" <local-part@domain>) of an
+            address only contains limited range of ascii characters.
+            We DO NOT allow anything else than ASCII dot-atom formed
+            local-part. Quoted-string and internationnal characters are
+            to be rejected. See rfc5322 sections 3.4.1 and 3.2.3
+        """
+        if self.alias_name and not dot_atom_text.match(self.alias_name):
+            raise ValidationError(_("You cannot use anything else than unaccented latin characters in the alias address."))
 
     def _get_alias_domain(self):
         alias_domain = self.env["ir.config_parameter"].sudo().get_param("mail.catchall.domain")
