@@ -63,7 +63,7 @@ msgstr "Regulă de achiziție"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_warehouse__buy_to_resupply
 msgid "Buy to Resupply"
-msgstr ""
+msgstr "Cumpără pentru reaprovizionare"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_res_config_settings
@@ -73,7 +73,7 @@ msgstr "Setări de configurare"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_move__created_purchase_line_id
 msgid "Created Purchase Order Line"
-msgstr ""
+msgstr "Linie Comandă de Achiziție Creată"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_type_id
@@ -101,7 +101,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__module_stock_dropshipping
 msgid "Dropshipping"
-msgstr ""
+msgstr "Dropshipping"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.exception_on_po
@@ -150,7 +150,7 @@ msgstr "Expediat"
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_res_config_settings__is_installed_sale
 msgid "Is the Sale Module Installed"
-msgstr ""
+msgstr "Este Instalat Modulul de Vânzare"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -179,6 +179,10 @@ msgid ""
 "Orders for reordering products,they will be scheduled that many days earlier"
 " to cope with unexpected vendor delays."
 msgstr ""
+"Marja de eroare pentru termenele de plată ale vânzătorilor. Când sistemul "
+"generează comenzi de achiziție pentru reachiziționarea de produse, acestea "
+"vor fi programate cu multe zile mai devreme, să facă față întârzierilor "
+"neașteptate ale vânzătorilor."
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_warehouse_orderpoint
@@ -198,7 +202,7 @@ msgstr ""
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__orderpoint_id
 msgid "Orderpoint"
-msgstr ""
+msgstr "Orderpoint"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__picking_count
@@ -246,12 +250,12 @@ msgstr "Comenzi de achiziție"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_purchase_report
 msgid "Purchase Report"
-msgstr ""
+msgstr "Raport Achiziție"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_production_lot__purchase_order_count
 msgid "Purchase order count"
-msgstr ""
+msgstr "Nr. Comenzi de achiziție"
 
 #. module: purchase_stock
 #: selection:stock.rule,action:0
@@ -277,7 +281,7 @@ msgstr "Primiri"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
 msgid "Request your vendors to deliver to your customers"
-msgstr ""
+msgstr "Solicitați furnizorilor să livreze clienților"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order_line__move_ids
@@ -298,7 +302,7 @@ msgstr "Rute"
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
 msgid "Schedule receivings earlier to avoid delays"
-msgstr ""
+msgstr "Programează mai devreme recepțiile pentru a evita întârzierile"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_move
@@ -318,12 +322,12 @@ msgstr "Regulă stoc"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Raport Regulă Stoc"
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__default_location_dest_id_usage
 msgid "Technical field used to display the Drop Ship Address"
-msgstr ""
+msgstr "Câmpul tehnic utilizat pentru afișarea adresei de expediție"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:265
@@ -352,11 +356,16 @@ msgid ""
 "on-demand flow. The requested delivery address will be the customer delivery"
 " address and not your warehouse."
 msgstr ""
+"Acest lucru adaugă un traseu de expediție pentru a aplica pe produse pentru "
+"a solicita furnizorilor să le livreze clienților. Un produs la navetă va "
+"genera o cerere de achiziție pentru ofertă odată confirmată comanda de "
+"vânzare. Acesta este un flux la cerere. Adresa de livrare solicitată va fi "
+"adresa de livrare a clientului și nu depozitul dvs."
 
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order__picking_type_id
 msgid "This will determine operation type of incoming shipment"
-msgstr ""
+msgstr "Aceasta va determina tipul de operație pentru recepție"
 
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_stock_picking
@@ -392,6 +401,8 @@ msgid ""
 "When products are needed in <b>%s</b>, <br/> a request for quotation is "
 "created to fulfill the need."
 msgstr ""
+"Când produsele sunt necesare <b>%s</b>, <br/>o cerere de ofertă este creată "
+"pentru a satisface nevoile."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:257
@@ -400,12 +411,14 @@ msgid ""
 "You cannot decrease the ordered quantity below the received quantity.\n"
 "Create a return first."
 msgstr ""
+"Nu puteți scădea cantitatea comandată sub cantitatea primită.\n"
+"Creați mai întâi o întoarcere."
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:186
 #, python-format
 msgid "You must set a Vendor Location for this partner %s"
-msgstr ""
+msgstr "Trebuie să setați un Punct de Vânzare pentru acest partener %s"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_stock
