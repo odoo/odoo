@@ -3,7 +3,7 @@ from odoo.addons.account.tests.common import AccountTestInvoicingCommon
 from odoo.tests import tagged, new_test_user
 from odoo.tests.common import Form
 from odoo import fields
-from odoo.exceptions import ValidationError, UserError
+from odoo.exceptions import ValidationError, UserError, RedirectWarning
 
 from dateutil.relativedelta import relativedelta
 from functools import reduce
@@ -156,7 +156,7 @@ class TestAccountMove(AccountTestInvoicingCommon):
         statement.button_post()
 
         # You can't lock the fiscal year if there is some unreconciled statement.
-        with self.assertRaises(ValidationError), self.cr.savepoint():
+        with self.assertRaises(RedirectWarning), self.cr.savepoint():
             self.test_move.company_id.fiscalyear_lock_date = fields.Date.from_string('2017-01-01')
 
     def test_misc_tax_lock_date_1(self):
