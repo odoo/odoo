@@ -738,6 +738,11 @@ body.editor_enable.editor_has_snippets {
                     box-shadow: $o-we-sidebar-content-field-colorpicker-shadow;
                 }
             }
+
+            &.o_we_widget_opened .o_we_color_preview {
+                border: 2px solid $o-we-accent;
+            }
+
             we-toggler {
                 display: none;
             }
@@ -1152,14 +1157,10 @@ body.editor_enable.editor_has_snippets {
             .o_we_color_btn {
                 position: relative;
 
-                &.selected::before {
-                    @include o-position-absolute(0, 0, 0, 0);
-                    content: "\f00c" !important;
-                    display: flex;
-                    justify-content: center;
-                    align-items: center;
-                    font-family: FontAwesome !important;
-                    color: $o-we-color-success;
+                &.selected {
+                    box-shadow: inset 0 0 0 1px $o-we-sidebar-content-field-colorpicker-dropdown-bg,
+                                inset 0 0 0 3px $o-we-accent,
+                                inset 0 0 0 4px white;
                 }
 
                 &.o_btn_transparent::before {
