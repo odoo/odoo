@@ -413,4 +413,22 @@ QUnit.test('parse datetime without separator', function (assert) {
     core._t.database.parameters = originalParameters;
 });
 });
+
+QUnit.test('parse smart date input', function (assert) {
+    assert.expect(10);
+
+    const format = "DD MM YYYY";
+    assert.strictEqual(fieldUtils.parse.date("+1d").format(format), moment().add(1, 'days').format(format));
+    assert.strictEqual(fieldUtils.parse.datetime("+2w").format(format), moment().add(2, 'weeks').format(format));
+    assert.strictEqual(fieldUtils.parse.date("+3m").format(format), moment().add(3, 'months').format(format));
+    assert.strictEqual(fieldUtils.parse.datetime("+4y").format(format), moment().add(4, 'years').format(format));
+
+    assert.strictEqual(fieldUtils.parse.date("+5").format(format), moment().add(5, 'days').format(format));
+    assert.strictEqual(fieldUtils.parse.datetime("-5").format(format), moment().subtract(5, 'days').format(format));
+
+    assert.strictEqual(fieldUtils.parse.date("-4y").format(format), moment().subtract(4, 'years').format(format));
+    assert.strictEqual(fieldUtils.parse.datetime("-3m").format(format), moment().subtract(3, 'months').format(format));
+    assert.strictEqual(fieldUtils.parse.date("-2w").format(format), moment().subtract(2, 'weeks').format(format));
+    assert.strictEqual(fieldUtils.parse.datetime("-1d").format(format), moment().subtract(1, 'days').format(format));
+});
 });
