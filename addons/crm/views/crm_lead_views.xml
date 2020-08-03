@@ -576,19 +576,17 @@
             </field>
         </record>
 
-        <act_window name="Send email"
-            res_model="mail.compose.message"
-            binding_model="crm.lead"
-            binding_views="list"
-            view_mode="form"
-            target="new"
-            id="crm_lead_act_window_compose"
-            context="{
+        <record id="crm_lead_act_window_compose" model="ir.actions.act_window">
+            <field name="name">Send email</field>
+            <field name="res_model">mail.compose.message</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+            <field name="context" eval="{
                 'default_composition_mode': 'comment',
                 'default_use_template': True,
                 'default_template_id': ref('crm.email_template_opportunity_mail'),
-                }"
-        />
+            }"/>
+        </record>
 
         <!--
             crm.lead (as Opportunity) views
