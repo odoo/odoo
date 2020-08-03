@@ -3891,6 +3891,36 @@ QUnit.module('basic_fields', {
         form.destroy();
     });
 
+    QUnit.test('date field: hit enter should update value', async function (assert) {
+        assert.expect(2);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch:'<form string="Partners"><field name="date"/></form>',
+            res_id: 1,
+            translateParameters: {  // Avoid issues due to localization formats
+                date_format: '%m/%d/%Y',
+            },
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        const year = (new Date()).getFullYear();
+
+        await testUtils.fields.editInput(form.el.querySelector('input[name="date"]'), '01/08');
+        await testUtils.fields.triggerKeydown(form.el.querySelector('input[name="date"]'), 'enter');
+        assert.strictEqual(form.el.querySelector('input[name="date"]').value, '01/08/' + year);
+
+        await testUtils.fields.editInput(form.el.querySelector('input[name="date"]'), '08/01');
+        await testUtils.fields.triggerKeydown(form.el.querySelector('input[name="date"]'), 'enter');
+        assert.strictEqual(form.el.querySelector('input[name="date"]').value, '08/01/' + year);
+
+        form.destroy();
+    });
+
     QUnit.module('FieldDatetime');
 
     QUnit.test('datetime field in form view', async function (assert) {
