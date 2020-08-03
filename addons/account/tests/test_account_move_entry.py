@@ -340,6 +340,27 @@ class TestAccountMove(AccountTestInvoicingCommon):
         # You can remove journal items if the related journal entry is still balanced.
         self.test_move.line_ids.unlink()
 
+    def test_sequence_change_date(self):
+        # Check setup
+        self.assertEqual(self.test_move.state, 'draft')
+        self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
+        self.assertEqual(fields.Date.to_string(self.test_move.date), '2016-01-01')
+
+        # Never posetd, the number must change if we change the date
+        self.test_move.date = '2020-02-02'
+        self.assertEqual(self.test_move.name, 'MISC/2020/02/0001')
+
+        # We don't recompute user's input when posting
+        self.test_move.name = 'MyMISC/2020/0000001'
+        self.test_move.post()
+        self.assertEqual(self.test_move.name, 'MyMISC/2020/0000001')
+
+        # Has been posted, and it doesn't change anymore
+        self.test_move.button_draft()
+        self.test_move.date = '2020-01-02'
+        self.test_move.post()
+        self.assertEqual(self.test_move.name, 'MyMISC/2020/0000001')
+
     def test_journal_sequence(self):
         self.assertEqual(self.test_move.name, 'MISC/2016/01/0001')
         self.test_move.post()
