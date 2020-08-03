@@ -96,25 +96,27 @@ class MailController(http.Controller):
                 record_action = record_sudo._get_access_action(access_uid=uid)
         else:
             record_action = record_sudo._get_access_action()
-            if record_action['type'] == 'ir.actions.act_url' and record_action.get('target_type') != 'public':
-                url_params = {
-                    'model': model,
-                    'id': res_id,
-                    'active_id': res_id,
-                    'action': record_action.get('id'),
-                }
-                view_id = record_sudo.get_formview_id()
-                if view_id:
-                    url_params['view_id'] = view_id
-                url = '/web/login?redirect=#%s' % url_encode(url_params)
-                return request.redirect(url)
+
+            # for an unlogged user, anything other than a public url should
+            # bounce through the login page
+            if (record_action['type'], record_action.get('target_type')) != ('ir.actions.act_url', 'public'):
+                return request.redirect(
+                    '/web/login?' + url_encode({
+                        'redirect': '/mail/view?' + url_encode({
+                            'model': model,
+                            'res_id': res_id,
+                            'access_token': access_token,
+                            **kwargs
+                        })
+                    })
+                )
 
         record_action.pop('target_type', None)
         # the record has an URL redirection: use it directly
         if record_action['type'] == 'ir.actions.act_url':
             return request.redirect(record_action['url'])
         # other choice: act_window (no support of anything else currently)
-        elif not record_action['type'] == 'ir.actions.act_window':
+        elif record_action['type'] != 'ir.actions.act_window':
             return cls._redirect_to_messaging()
 
         url_params = {
