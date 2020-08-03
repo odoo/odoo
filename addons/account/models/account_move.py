@@ -1037,16 +1037,16 @@ class AccountMove(models.Model):
     @api.depends('posted_before', 'state', 'highest_name')
     def _compute_name(self):
         for record in self.sorted(lambda m: (m.date, m.ref or '', m.id)):
+            if record.name and not record.posted_before:
+                # Never been posted, but had a name set
+                record.name = '/'
             if not record.name or record.name == '/':
-                if record.state == 'draft' and not record.posted_before and not record.highest_name:
+                if not record.posted_before and not record.highest_name:
                     # First name of the period for the journal, no name yet
                     record._set_next_sequence()
                 elif record.state == 'posted':
                     # No name yet but has been posted
                     record._set_next_sequence()
-            if record.name and record.state == 'draft' and not record.posted_before and record.highest_name:
-                # Not the first name of the period for the journal, but had a name set
-                record.name = '/'
             record.name = record.name or '/'
 
     @api.depends('journal_id', 'date')
