@@ -366,6 +366,11 @@
         <t t-call="website.snippet_options_shadow_widgets"/>
     </div>
 
+    <!-- Mobile display options -->
+    <div data-selector="section .row > div">
+        <we-checkbox string="Shown On Mobile" data-select-class="d-none d-md-block|" data-no-preview="true"/>
+    </div>
+
     <div data-js="sizing_y"
         data-selector="section, .row > div, .parallax, .s_hr, .carousel-item, .s_rating"
         data-exclude="section:has(> .carousel), .s_image_gallery .carousel-item, .s_col_no_resize.row > div"/>
