@@ -88,11 +88,11 @@ function factory() {
          * assumes the record does not exist.
          *
          * @static
-         * @param {string|mail.model|undefined} recordOrLocalId
+         * @param {string} localId
          * @returns {mail.model|undefined}
          */
-        static get(recordOrLocalId) {
-            return this.env.modelManager.get(this, recordOrLocalId);
+        static get(localId) {
+            return this.env.modelManager.get(this, localId);
         }
 
         /**
@@ -123,13 +123,13 @@ function factory() {
         async async(func) {
             return new Promise((resolve, reject) => {
                 Promise.resolve(func()).then(result => {
-                    if (this.constructor.get(this)) {
+                    if (this.exists()) {
                         resolve(result);
                     } else {
                         reject(new RecordDeletedError(this.localId));
                     }
                 }).catch(error => {
-                    if (this.constructor.get(this)) {
+                    if (this.exists()) {
                         reject(error);
                     } else {
                         reject(new RecordDeletedError(this.localId));
