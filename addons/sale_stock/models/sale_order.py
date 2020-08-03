@@ -72,7 +72,8 @@ class SaleOrder(models.Model):
     def _inverse_commitment_date(self):
         for sale in self:
             # protagate commitment_date as the deadline of the related stock move.
-            sale.order_line.move_ids = sale.commitment_date
+            # TODO: take in account delay in stock rules ??
+            sale.order_line.move_ids.date_deadline = sale.commitment_date
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):

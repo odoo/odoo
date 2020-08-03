@@ -1035,6 +1035,7 @@ class StockMove(models.Model):
         return {
             'product_description_variants': self.description_picking and self.description_picking.replace(self.product_id._get_description(self.picking_type_id), ''),
             'date_planned': self.date,
+            'date_deadline': self.date_deadline,
             'move_dest_ids': self,
             'group_id': group_id,
             'route_ids': self.route_ids,

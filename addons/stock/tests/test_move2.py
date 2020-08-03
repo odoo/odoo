@@ -2564,10 +2564,7 @@ class TestRoutes(TestStockCommon):
 
     def test_delay_alert_1(self):
         """ On a pick pack ship scenario, enable the delay alert flag on the pack rule. Edit the
-        schedule date on the pick, a delay alert should be created for the ship.
-        by default:
-            - propagate date is True on all the pick-pack-ship rules
-        """
+        schedule date on the pick, a delay alert should be created for the ship."""
         warehouse = self.env['stock.warehouse'].search([('company_id', '=', self.env.company.id)], limit=1)
         warehouse.delivery_steps = 'pick_pack_ship'
         partner_demo_customer = self.partner
@@ -2727,7 +2724,6 @@ class TestRoutes(TestStockCommon):
             ),
         ])
         ship, pack, pick = self.env['stock.move'].search([('product_id',  '=', product_a.id)])
-        (ship + pack + pick).propagate_date = False
 
         # by default they all the the same `date`
         self.assertEqual(set((ship + pack + pick).mapped('date')), {pick.date})
