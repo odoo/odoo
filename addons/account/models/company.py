@@ -77,6 +77,7 @@ class ResCompany(models.Model):
     property_stock_valuation_account_id = fields.Many2one('account.account', string="Account Template for Stock Valuation")
     bank_journal_ids = fields.One2many('account.journal', 'company_id', domain=[('type', '=', 'bank')], string='Bank Journals')
     tax_exigibility = fields.Boolean(string='Use Cash Basis')
+    account_tax_fiscal_country_id = fields.Many2one('res.country', string="Fiscal Country", compute='compute_account_tax_fiscal_country', store=True, readonly=False, help="The country to use the tax reports from for this company")
 
     incoterm_id = fields.Many2one('account.incoterms', string='Default incoterm',
         help='International Commercial Terms are a series of predefined commercial terms used in international transactions.')
@@ -146,6 +147,11 @@ class ResCompany(models.Model):
             max_day = calendar.monthrange(year, int(rec.fiscalyear_last_month))[1]
             if rec.fiscalyear_last_day > max_day:
                 raise ValidationError(_("Invalid fiscal year last day"))
+
+    @api.depends('country_id')
+    def compute_account_tax_fiscal_country(self):
+        for record in self:
+            record.account_tax_fiscal_country_id = record.country_id
 
     def get_and_update_account_invoice_onboarding_state(self):
         """ This method is called on the controller rendering method and ensures that the animations
@@ -244,6 +250,7 @@ class ResCompany(models.Model):
             if values.get('bank_account_code_prefix'):
                 new_bank_code = values.get('bank_account_code_prefix') or company.bank_account_code_prefix
                 company.reflect_code_prefix_change(company.bank_account_code_prefix, new_bank_code)
+
             if values.get('cash_account_code_prefix'):
                 new_cash_code = values.get('cash_account_code_prefix') or company.cash_account_code_prefix
                 company.reflect_code_prefix_change(company.cash_account_code_prefix, new_cash_code)
@@ -589,16 +596,3 @@ class ResCompany(models.Model):
             results_by_journal['results'].append(rslt)
 
         return results_by_journal
-
-    def get_fiscal_country(self):
-        """ Returns the country to be used for this company's tax report.
-        By default, it'll be the one from the address; but a config parameter
-        may be used for each company to customize that behavior.
-        """
-        self.ensure_one()
-
-        fiscal_country_key = 'account_fiscal_country_%s' % self.id
-        forced_country_code = self.env['ir.config_parameter'].sudo().get_param(fiscal_country_key)
-        forced_country = forced_country_code and self.env['res.country'].search([('code', 'ilike', forced_country_code)], limit=1)
-
-        return forced_country or self.country_id
