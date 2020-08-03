@@ -10,8 +10,8 @@ from odoo.http import request
 
 class PortalAccount(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(PortalAccount, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self):
+        values = super(PortalAccount, self)._prepare_home_portal_values()
         invoice_count = request.env['account.move'].search_count([
             ('move_type', 'in', ('out_invoice', 'in_invoice', 'out_refund', 'in_refund', 'out_receipt', 'in_receipt')),
         ])
@@ -57,7 +57,7 @@ class PortalAccount(CustomerPortal):
             filterby = 'all'
         domain += searchbar_filters[filterby]['domain']
 
-        archive_groups = self._get_archive_groups('account.move', domain)
+        archive_groups = self._get_archive_groups('account.move', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
