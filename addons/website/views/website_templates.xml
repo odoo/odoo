@@ -593,7 +593,7 @@
 
 <!-- Language selector templates -->
 <template id="lang_flag" name="Language Flag">
-    <img class="o_lang_flag align-top" t-att-src="'/web/image/res.country/' + str(env.ref('base.' + lang_code.split('_')[1].lower()).id) + '/image'"/>
+    <img class="o_lang_flag" t-attf-src="#{flag_image_src}?height=25"/>
 </template>
 
 <template id="language_selector_add_language">
@@ -622,12 +622,12 @@
     <!-- Add the 'flags' possibility -->
     <xpath expr="//button[hasclass('dropdown-toggle')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
-            <t t-set="lang_code" t-value="active_lang[0]"/>
+            <t t-set="flag_image_src" t-value="active_lang[4]"/>
         </t>
     </xpath>
     <xpath expr="//*[hasclass('js_change_lang')]/span" position="before">
         <t t-if="flags" t-call="website.lang_flag">
-            <t t-set="lang_code" t-value="lg[0]"/>
+            <t t-set="flag_image_src" t-value="lg[4]"/>
         </t>
     </xpath>
 </template>
