@@ -231,25 +231,22 @@ Display a sidebar beside the post content.
 <!-- (Option) Post Sidebar: display tags -->
 <template id="opt_blog_post_tags_display" name="Tags" inherit_id="website_blog.blog_post_sidebar" active="True" customize_show="True" priority="3">
     <xpath expr="//div[@id='o_wblog_post_sidebar']" position="inside">
-        <div t-if="blog_post.tag_ids" class="o_wblog_sidebar_block pb-5">
-            <div class="d-flex justify-content-between mb-4 border-bottom">
-                <h6 class="text-uppercase pb-2  font-weight-bold">Tags</h6>
-                <a role="menuitem" t-attf-href="/blog/#{slug(blog_post.blog_id)}/post/#{slug(blog_post)}/?enable_editor=1"
-                    title='Edit tag list' id="edit-tag-list">Edit</a>
-            </div>
-            <div class="h5">
-                <t t-foreach="blog_post.tag_ids" t-as="one_tag">
-                    <a class="badge border post_link" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
-                </t>
-            </div>
-        </div>
-        <div t-else="" groups="website.group_website_designer" class="o_wblog_sidebar_block pb-5">
+        <div class="o_wblog_sidebar_block pb-5">
             <h6 class="text-uppercase pb-3 mb-4 border-bottom font-weight-bold">Tags</h6>
-            <div class="mb-4 bg-100 py-2 px-3 border">
-                <h6 class="text-muted"><em>No tags defined</em></h6>
-                <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
-                    title='Edit in backend' id="edit-in-backend">Add some</a>
-            </div>
+            <t t-if="blog_post.tag_ids">
+                <div class="h5">
+                    <t t-foreach="blog_post.tag_ids" t-as="one_tag">
+                        <a class="badge border post_link" t-attf-href="#{blog_url(tag=one_tag.id)}" t-esc="one_tag.name"/>
+                    </t>
+                </div>
+            </t>
+            <t t-else="">
+                <div class="mb-4 bg-100 py-2 px-3 border" groups="website.group_website_designer">
+                    <h6 class="text-muted"><em>No tags defined</em></h6>
+                    <a role="menuitem" t-attf-href="/web#view_type=form&amp;model=#{main_object._name}&amp;id=#{main_object.id}&amp;action=#{action}&amp;menu_id=#{menu or main_object.env.ref('website.menu_website_configuration').id}"
+                        title='Edit in backend' id="edit-in-backend">Add some</a>
+                </div>
+            </t>
         </div>
         <div class="oe_structure" id="oe_structure_blog_post_sidebar_4"/>
     </xpath>
