@@ -346,7 +346,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].create({
+    const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.session.partner_id,
         display_name: "Demo User",
     });
@@ -402,7 +402,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].create({
+    const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.session.partner_id,
         display_name: "Demo User",
     });
@@ -457,7 +457,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
     assert.expect(4);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].create({
+    const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.session.partner_id,
         display_name: "Demo User",
     });
@@ -537,10 +537,12 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         id: 11,
         partnerSeenInfos: [['create', [
             {
+                id: this.env.session.partner_id,
                 lastFetchedMessage: [['insert', {id: 100}]],
                 partner: [['insert', {id: this.env.session.partner_id}]],
             },
             {
+                id: 100,
                 lastFetchedMessage: [['insert', {id: 100}]],
                 partner: [['link', author]],
             },
@@ -548,7 +550,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['link', author]],
         body: "<p>Test</p>",
         id: 100,
@@ -572,7 +574,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].create({
+    const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.session.partner_id,
         display_name: "Demo User",
     });
@@ -591,7 +593,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         id: 100,
         originThread: [['link', thread]],
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 99,
@@ -600,10 +602,12 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     thread.update({
        partnerSeenInfos: [['create', [
             {
+                id: currentPartner.id,
                 lastSeenMessage: [['link', lastSeenMessage]],
                 partner: [['link', currentPartner]],
             },
             {
+                id: 100,
                 lastSeenMessage: [['link', lastSeenMessage]],
                 partner: [['insert', {id: 100}]],
             },
@@ -632,18 +636,19 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].create({
+    const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.session.partner_id,
-        display_name: "Demo User"
     });
     const thread = this.env.models['mail.thread'].create({
         id: 11,
         partnerSeenInfos: [['create', [
             {
+                id: currentPartner.id,
                 lastSeenMessage: [['insert', {id: 100}]],
                 partner: [['link', currentPartner]],
             },
             {
+                id: 100,
                 partner: [['insert', {id: 100}]],
                 lastFetchedMessage: [['insert', {id: 100}]],
                 lastSeenMessage: [['insert', {id: 99}]],
@@ -656,7 +661,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 100,
@@ -677,8 +682,8 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
     assert.containsN(
         document.body,
         '.o_MessageSeenIndicator_icon',
-        2,
-        "message component should have two checks (V)"
+        1,
+        "message component should have one check (V) because the message was fetched by everyone but no other member than author has seen the message"
     );
 });
 
