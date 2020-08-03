@@ -809,6 +809,8 @@ var SnippetsMenu = Widget.extend({
         'click .o_we_invisible_entry': '_onInvisibleEntryClick',
         'click #snippet_custom .o_delete_btn': '_onDeleteBtnClick',
         'mousedown': '_onMouseDown',
+        'input .o_snippet_search_filter_input': '_onSnippetSearchInput',
+        'click .o_snippet_search_filter_reset': '_onSnippetSearchResetClick',
     },
     custom_events: {
         'activate_insertion_zones': '_onActivateInsertionZones',
@@ -1730,6 +1732,37 @@ var SnippetsMenu = Widget.extend({
     },
     /**
      * @private
+     * @param {string} [search]
+     */
+    _filterSnippets(search) {
+        const searchInputEl = this.el.querySelector('.o_snippet_search_filter_input');
+        const searchInputReset = this.el.querySelector('.o_snippet_search_filter_reset');
+        if (search !== undefined) {
+            searchInputEl.value = search;
+        } else {
+            search = searchInputEl.value;
+        }
+        search = search.toLowerCase();
+        searchInputReset.classList.toggle('d-none', !search);
+        const strMatches = str => !search || str.toLowerCase().includes(search);
+        for (const panelEl of this.el.querySelectorAll('.o_panel')) {
+            let hasVisibleSnippet = false;
+            const panelTitle = panelEl.querySelector('.o_panel_header').textContent;
+            const isPanelTitleMatch = strMatches(panelTitle);
+            for (const snippetEl of panelEl.querySelectorAll('.oe_snippet')) {
+                const matches = (isPanelTitleMatch
+                    || strMatches(snippetEl.getAttribute('name'))
+                    || strMatches(snippetEl.dataset.oeKeywords || ''));
+                if (matches) {
+                    hasVisibleSnippet = true;
+                }
+                snippetEl.classList.toggle('d-none', !matches);
+            }
+            panelEl.classList.toggle('d-none', !hasVisibleSnippet);
+        }
+    },
+    /**
+     * @private
      * @param {Object} [options={}]
      * @returns {Object}
      */
@@ -1928,6 +1961,7 @@ var SnippetsMenu = Widget.extend({
             $(this.customizePanel).append(content);
         }
 
+        this.$('.o_snippet_search_filter').toggleClass('d-none', tab !== this.tabs.BLOCKS);
         this.$('#o_scroll').toggleClass('d-none', tab !== this.tabs.BLOCKS);
         this.customizePanel.classList.toggle('d-none', tab === this.tabs.BLOCKS);
 
@@ -2297,6 +2331,22 @@ var SnippetsMenu = Widget.extend({
      */
     _onUserValueWidgetClosing: function () {
         this.el.classList.remove('o_we_backdrop');
+    },
+    /**
+     * Called when search input value changed -> adapts the snippets grid.
+     *
+     * @private
+     */
+    _onSnippetSearchInput: function () {
+        this._filterSnippets();
+    },
+    /**
+     * Called on snippet search filter reset -> clear input field search.
+     *
+     * @private
+     */
+    _onSnippetSearchResetClick: function () {
+        this._filterSnippets('');
     },
 });
 

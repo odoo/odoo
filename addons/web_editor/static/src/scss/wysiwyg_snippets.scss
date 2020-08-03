@@ -197,6 +197,38 @@ body.editor_enable.editor_has_snippets {
         }
     }
 
+    // Snippet filter input
+    .o_snippet_search_filter {
+        position: relative;
+        width: 100%;
+        padding: $o-we-sidebar-blocks-content-spacing;
+
+        .o_snippet_search_filter_input {
+            width: 100%;
+            padding: $o-we-sidebar-content-field-clickable-spacing;
+            padding-right: 2em;
+            border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+            background-color: $o-we-sidebar-content-field-input-bg;
+            color: inherit;
+
+            &::placeholder {
+                color: $o-we-sidebar-content-field-control-item-color;
+            }
+            &:focus {
+                border-color: $o-we-sidebar-content-field-input-border-color;
+                outline: none;
+            }
+        }
+        .o_snippet_search_filter_reset {
+            @include o-position-absolute($o-we-sidebar-blocks-content-spacing, $o-we-sidebar-blocks-content-spacing, $o-we-sidebar-blocks-content-spacing);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0 $o-we-sidebar-content-field-clickable-spacing;
+            cursor: pointer;
+        }
+    }
+
     > #o_scroll, > .o_we_customize_panel {
         flex: 1 1 auto;
         height: 100%;
