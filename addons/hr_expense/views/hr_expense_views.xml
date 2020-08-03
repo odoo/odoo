@@ -494,14 +494,19 @@
                  <header>
                     <button name="action_submit_sheet" states="draft" string="Submit to Manager" type="object" class="oe_highlight o_expense_sheet_submit"/>
                     <button name="approve_expense_sheets" states="submit" string="Approve" type="object" groups="hr_expense.group_hr_expense_team_approver" class="oe_highlight o_expense_sheet_approve"/>
-                    <button name="action_sheet_move_create" string="Post Journal Entries" type="object" groups="account.group_account_manager" attrs="{'invisible': [('state', '!=', 'approve')]}" class="oe_highlight o_expense_sheet_post"/>
+                    <button name="action_sheet_move_create"
+                            string="Post Journal Entries"
+                            type="object"
+                            class="oe_highlight o_expense_sheet_post"
+                            attrs="{'invisible': [('state', '!=', 'approve')]}"
+                            groups="account.group_account_invoice"/>
                     <button name="action_register_payment"
                             type="object"
                             class="oe_highlight o_expense_sheet_pay"
                             attrs="{'invisible': [('state', '!=', 'post')]}"
                             context="{'dont_redirect_to_payments': True}"
                             string="Register Payment"
-                            groups="account.group_account_manager"/>
+                            groups="account.group_account_invoice"/>
                     <button name="reset_expense_sheets" string="Reset to Draft" type="object" attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['submit', 'cancel'])]}"/>
                     <button name="%(hr_expense.hr_expense_refuse_wizard_action)d" states="submit,approve" context="{'hr_expense_refuse_model':'hr.expense.sheet'}" string="Refuse" type="action" groups="hr_expense.group_hr_expense_team_approver" />
                     <button name="reset_expense_sheets" string="Reset to Draft" type="object" attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['submit', 'cancel'])]}"/>
@@ -886,7 +891,7 @@ if records:
 
         <record id="action_expense_sheet_register_payment" model="ir.actions.server">
             <field name="name">Register Payment</field>
-            <field name="groups_id" eval="[(4, ref('account.group_account_manager'))]"/>
+            <field name="groups_id" eval="[(4, ref('account.group_account_invoice'))]"/>
             <field name="model_id" ref="hr_expense.model_hr_expense_sheet"/>
             <field name="binding_model_id" ref="hr_expense.model_hr_expense_sheet"/>
             <field name="binding_view_types">list</field>
@@ -903,13 +908,19 @@ if records:
         <menuitem id="menu_hr_expense_my_expenses_to_submit" sequence="1" parent="menu_hr_expense_my_expenses" action="hr_expense_actions_my_unsubmitted"/>
         <menuitem id="menu_hr_expense_sheet_my_reports" sequence="3" parent="menu_hr_expense_my_expenses" action="action_hr_expense_sheet_my_all"/>
 
-        <menuitem id="menu_hr_expense_report" name="Expense Reports" sequence="2" parent="menu_hr_expense_root" groups="hr_expense.group_hr_expense_team_approver"/>
-        <menuitem id="menu_hr_expense_sheet_all_to_approve" name="To Approve" sequence="1" parent="menu_hr_expense_report"
-            action="action_hr_expense_sheet_all_to_approve"/>
-        <menuitem id="menu_hr_expense_sheet_all_to_post" name="To Post" sequence="2" parent="menu_hr_expense_report"
-            action="action_hr_expense_sheet_all_to_post" groups="account.group_account_readonly"/>
-        <menuitem id="menu_hr_expense_sheet_all_to_pay" name="To Pay" sequence="3" parent="menu_hr_expense_report"
-            action="action_hr_expense_sheet_all_to_pay" groups="account.group_account_readonly"/>
+        <menuitem id="menu_hr_expense_report" name="Expense Reports" sequence="2" parent="menu_hr_expense_root"/>
+        <menuitem id="menu_hr_expense_sheet_all_to_approve"
+                  name="To Approve" sequence="1" parent="menu_hr_expense_report"
+                  action="action_hr_expense_sheet_all_to_approve"
+                  groups="hr_expense.group_hr_expense_team_approver"/>
+        <menuitem id="menu_hr_expense_sheet_all_to_post"
+                  name="To Post" sequence="2" parent="menu_hr_expense_report"
+                  action="action_hr_expense_sheet_all_to_post"
+                  groups="account.group_account_invoice,hr_expense.group_hr_expense_manager"/>
+        <menuitem id="menu_hr_expense_sheet_all_to_pay"
+                  name="To Pay" sequence="3" parent="menu_hr_expense_report"
+                  action="action_hr_expense_sheet_all_to_pay"
+                  groups="account.group_account_invoice,hr_expense.group_hr_expense_manager"/>
 
         <menuitem id="menu_hr_expense_reports" name="Reporting" sequence="4" parent="menu_hr_expense_root" groups="hr_expense.group_hr_expense_manager"/>
         <menuitem id="menu_hr_expense_all_expenses" name="Expenses Analysis" sequence="0" parent="menu_hr_expense_reports" action="hr_expense_actions_all"/>
