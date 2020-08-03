@@ -31,10 +31,10 @@ function date_to_utc (k, v) {
 /**
  * Converts a string to a Date javascript object using OpenERP's
  * datetime string format (exemple: '2011-12-01 15:12:35.832').
- * 
+ *
  * The time zone is assumed to be UTC (standard for OpenERP 6.1)
  * and will be converted to the browser's time zone.
- * 
+ *
  * @param {String} str A string representing a datetime.
  * @returns {Date}
  */
@@ -65,11 +65,11 @@ function str_to_datetime (str) {
 /**
  * Converts a string to a Date javascript object using OpenERP's
  * date string format (exemple: '2011-12-01').
- * 
+ *
  * As a date is not subject to time zones, we assume it should be
  * represented as a Date javascript object at 00:00:00 in the
  * time zone of the browser.
- * 
+ *
  * @param {String} str A string representing a date.
  * @returns {Date}
  */
@@ -95,11 +95,11 @@ function str_to_date (str) {
 /**
  * Converts a string to a Date javascript object using OpenERP's
  * time string format (exemple: '15:12:35').
- * 
+ *
  * The OpenERP times are supposed to always be naive times. We assume it is
  * represented using a javascript Date with a date 1 of January 1970 and a
  * time corresponding to the meant time in the browser's time zone.
- * 
+ *
  * @param {String} str A string representing a time.
  * @returns {Date}
  */
@@ -126,10 +126,10 @@ function str_to_time (str) {
 /**
  * Converts a Date javascript object to a string using OpenERP's
  * datetime string format (exemple: '2011-12-01 15:12:35').
- * 
+ *
  * The time zone of the Date object is assumed to be the one of the
  * browser and it will be converted to UTC (standard for OpenERP 6.1).
- * 
+ *
  * @param {Date} obj
  * @returns {String} A string representing a datetime.
  */
@@ -145,11 +145,11 @@ function datetime_to_str (obj) {
 /**
  * Converts a Date javascript object to a string using OpenERP's
  * date string format (exemple: '2011-12-01').
- * 
+ *
  * As a date is not subject to time zones, we assume it should be
  * represented as a Date javascript object at 00:00:00 in the
  * time zone of the browser.
- * 
+ *
  * @param {Date} obj
  * @returns {String} A string representing a date.
  */
@@ -164,11 +164,11 @@ function date_to_str (obj) {
 /**
  * Converts a Date javascript object to a string using OpenERP's
  * time string format (exemple: '15:12:35').
- * 
+ *
  * The OpenERP times are supposed to always be naive times. We assume it is
  * represented using a javascript Date with a date 1 of January 1970 and a
  * time corresponding to the meant time in the browser's time zone.
- * 
+ *
  * @param {Date} obj
  * @returns {String} A string representing a time.
  */
@@ -281,23 +281,33 @@ var inverse_normalize_format_table = _.invert(normalize_format_table);
 
 /**
  * Get date format of the user's language
+ * @param {string} [dateFormat=(translation date format)]
+ * @returns {string}
  */
-function getLangDateFormat() {
-    return strftime_to_moment_format(_t.database.parameters.date_format);
+function getLangDateFormat(dateFormat = _t.database.parameters.date_format) {
+    return strftime_to_moment_format(dateFormat);
 }
 
 /**
  * Get time format of the user's language
+ * @param {string} [timeFormat=(translation time format)]
+ * @returns {string}
  */
-function getLangTimeFormat() {
-    return strftime_to_moment_format(_t.database.parameters.time_format);
+function getLangTimeFormat(timeFormat = _t.database.parameters.time_format) {
+    return strftime_to_moment_format(timeFormat);
 }
 
 /**
  * Get date time format of the user's language
+ * @param {string} [dateFormat=(translation date format)]
+ * @param {string} [timeFormat=(translation time format)]
+ * @returns {string}
  */
-function getLangDatetimeFormat() {
-    return strftime_to_moment_format(_t.database.parameters.date_format + " " + _t.database.parameters.time_format);
+function getLangDatetimeFormat(
+    dateFormat = _t.database.parameters.date_format,
+    timeFormat = _t.database.parameters.time_format
+) {
+    return strftime_to_moment_format([dateFormat, timeFormat].join(" "));
 }
 
 
@@ -320,4 +330,3 @@ return {
 };
 
 });
-

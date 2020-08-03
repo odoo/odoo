@@ -98,24 +98,25 @@ function formatChar(value, field, options) {
  * an empty string. Note that this is dependant on the localization settings
  *
  * @param {Moment|false} value
- * @param {Object} [field]
- *        a description of the field (note: this parameter is ignored)
- * @param {Object} [options] additional options
+ * @param {Object} [field] a description of the field (note: this parameter is
+ *      ignored)
+ * @param {Object} [options={}] additional options
  * @param {boolean} [options.timezone=true] use the user timezone when formating the
  *        date
+ * @param {boolean} [options.format] default is taken from the translation
+ *      database
  * @returns {string}
  */
-function formatDate(value, field, options) {
+function formatDate(value, field, options = {}) {
     if (value === false || isNaN(value)) {
         return "";
     }
     if (field && field.type === 'datetime') {
-        if (!options || !('timezone' in options) || options.timezone) {
+        if (!('timezone' in options) || options.timezone) {
             value = value.clone().add(session.getTZOffset(value), 'minutes');
         }
     }
-    var date_format = time.getLangDateFormat();
-    return value.format(date_format);
+    return value.format(options.format || time.getLangDateFormat());
 }
 
 /**
@@ -124,21 +125,23 @@ function formatDate(value, field, options) {
  * settings
  *
  * @params {Moment|false}
- * @param {Object} [field]
- *        a description of the field (note: this parameter is ignored)
- * @param {Object} [options] additional options
+ * @param {Object} [field] a description of the field (note: this parameter is
+ *      ignored)
+ * @param {Object} [options={}] additional options
  * @param {boolean} [options.timezone=true] use the user timezone when formating the
- *        date
+ *      date
+ * @param {boolean} [options.format] default is taken from the translation
+ *      database
  * @returns {string}
  */
-function formatDateTime(value, field, options) {
+function formatDateTime(value, field, options = {}) {
     if (value === false) {
         return "";
     }
-    if (!options || !('timezone' in options) || options.timezone) {
+    if (!('timezone' in options) || options.timezone) {
         value = value.clone().add(session.getTZOffset(value), 'minutes');
     }
-    return value.format(time.getLangDatetimeFormat());
+    return value.format(options.format || time.getLangDatetimeFormat());
 }
 
 /**
@@ -420,24 +423,24 @@ function formatSelection(value, field, options) {
  * @param {string} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
- * @param {Object} [options] additional options
+ * @param {Object} [options={}] additional options
  * @param {boolean} [options.isUTC] the formatted date is utc
  * @param {boolean} [options.timezone=false] format the date after apply the timezone
  *        offset
  * @returns {Moment|false} Moment date object
  */
-function parseDate(value, field, options) {
+function parseDate(value, field, options = {}) {
     if (!value) {
         return false;
     }
-    var datePattern = time.getLangDateFormat();
-    var datePatternWoZero = datePattern.replace('MM', 'M').replace('DD', 'D');
-    var date;
-    if (options && options.isUTC) {
+    const dateFormat = options.format || time.getLangDateFormat();
+    const dateFormatWoZero = dateFormat.replace('MM', 'M').replace('DD', 'D');
+    let date;
+    if (options.isUTC) {
         value = value.padStart(10, "0"); // server may send "932-10-10" for "0932-10-10" on some OS
         date = moment.utc(value);
     } else {
-        date = moment.utc(value, [datePattern, datePatternWoZero, moment.ISO_8601]);
+        date = moment.utc(value, [dateFormat, dateFormatWoZero, moment.ISO_8601]);
     }
     if (date.isValid()) {
         if (date.year() === 0) {
@@ -458,29 +461,29 @@ function parseDate(value, field, options) {
  * @param {string} value
  * @param {Object} [field]
  *        a description of the field (note: this parameter is ignored)
- * @param {Object} [options] additional options
+ * @param {Object} [options={}] additional options
  * @param {boolean} [options.isUTC] the formatted date is utc
  * @param {boolean} [options.timezone=false] format the date after apply the timezone
  *        offset
  * @returns {Moment|false} Moment date object
  */
-function parseDateTime(value, field, options) {
+function parseDateTime(value, field, options = {}) {
     if (!value) {
         return false;
     }
-    var datePattern = time.getLangDateFormat(),
-        timePattern = time.getLangTimeFormat();
-    var datePatternWoZero = datePattern.replace('MM','M').replace('DD','D'),
-        timePatternWoZero = timePattern.replace('HH','H').replace('mm','m').replace('ss','s');
-    var pattern1 = datePattern + ' ' + timePattern;
-    var pattern2 = datePatternWoZero + ' ' + timePatternWoZero;
-    var datetime;
-    if (options && options.isUTC) {
+    const dtFormat = options.format || time.getLangDatetimeFormat();
+    const [dateFormat, timeFormat] = dtFormat.split(/ /);
+    const dtFormatWoZero = [
+        dateFormat.replace('MM','M').replace('DD','D'),
+        timeFormat.replace('HH','H').replace('mm','m').replace('ss','s'),
+    ].join(" ");
+    let datetime;
+    if (options.isUTC) {
         // phatomjs crash if we don't use this format
         datetime = moment.utc(value.replace(' ', 'T') + 'Z');
     } else {
-        datetime = moment.utc(value, [pattern1, pattern2, moment.ISO_8601]);
-        if (options && options.timezone) {
+        datetime = moment.utc(value, [dtFormat, dtFormatWoZero, moment.ISO_8601]);
+        if (options.timezone) {
             datetime.add(-session.getTZOffset(datetime), 'minutes');
         }
     }

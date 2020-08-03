@@ -22,17 +22,17 @@ odoo.define('web.test_env', async function (require) {
             // time and they never change
             qweb = new owl.QWeb({ templates: session.owlTemplates });
         }
-        const database = {
-            parameters: {
+        const database = Object.assign({}, env.database, {
+            parameters: Object.assign({
                 code: "en_US",
-                date_format: '%m/%d/%Y',
+                date_format: 'MM/DD/YYYY',
                 decimal_point: ".",
                 direction: 'ltr',
                 grouping: [],
                 thousands_sep: ",",
-                time_format: '%H:%M:%S',
-            },
-        };
+                time_format: 'HH:mm:ss',
+            }, env.database && env.database.parameters),
+        });
         const defaultEnv = {
             _t: env._t || Object.assign((s => s), { database }),
             browser: Object.assign({
@@ -73,6 +73,20 @@ odoo.define('web.test_env', async function (require) {
                 },
                 url: session.url,
             }, env.session),
+            time: Object.assign({
+                getLangDateFormat() {
+                    return env._t.database.parameters.date_format;
+                },
+                getLangTimeFormat() {
+                    return env._t.database.parameters.time_format;
+                },
+                getLangDatetimeFormat() {
+                    return [
+                        env._t.database.parameters.date_format,
+                        env._t.database.parameters.time_format,
+                    ].join(" ");
+                },
+            }, env.time),
         };
         return Object.assign(env, defaultEnv);
     }

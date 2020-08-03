@@ -22,6 +22,7 @@ odoo.define("web.commonEnv", function (require) {
     const { bus } = require("web.core");
     const rpc = require("web.rpc");
     const session = require("web.session");
+    const time = require("web.time");
     const { _t } = require("web.translation");
     const utils = require("web.utils");
 
@@ -41,6 +42,21 @@ odoo.define("web.commonEnv", function (require) {
     Object.defineProperty(browser, 'innerWidth', {
         get: () => window.innerWidth,
     });
+
+    const envTime = {
+        getLangDateFormat() {
+            return time.getLangDateFormat(env._t.database.parameters.date_format);
+        },
+        getLangTimeFormat() {
+            return time.getLangTimeFormat(env._t.database.parameters.time_format);
+        },
+        getLangDatetimeFormat() {
+            return time.getLangDatetimeFormat(
+                env._t.database.parameters.date_format,
+                env._t.database.parameters.time_format,
+            );
+        },
+    };
 
     // Build the basic env
     const env = {
@@ -95,6 +111,7 @@ odoo.define("web.commonEnv", function (require) {
             },
         },
         session,
+        time: envTime,
     };
 
     return env;
