@@ -241,11 +241,11 @@ class ModelField {
      */
     doCompute(record) {
         if (this.compute) {
-            this.set(record, record[this.compute]());
+            record.update({ [this.fieldName]: record[this.compute]() });
             return;
         }
         if (this.related) {
-            this.set(record, this._computeRelated(record));
+            record.update({ [this.fieldName]: this._computeRelated(record) });
             return;
         }
         throw new Error("No compute method defined on this field definition");
