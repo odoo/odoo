@@ -2696,7 +2696,7 @@ class AccountMoveLine(models.Model):
     company_currency_id = fields.Many2one(related='company_id.currency_id', string='Company Currency',
         readonly=True, store=True,
         help='Utility field to express amount currency')
-    country_id = fields.Many2one(comodel_name='res.country', related='move_id.company_id.country_id')
+    tax_fiscal_country_id = fields.Many2one(comodel_name='res.country', related='move_id.company_id.account_tax_fiscal_country_id')
     account_id = fields.Many2one('account.account', string='Account',
         index=True, ondelete="cascade",
         domain="[('deprecated', '=', False), ('company_id', '=', 'company_id'),('is_off_balance', '=', False)]",

@@ -91,7 +91,7 @@ class AccountTax(models.Model):
         help="Account used to transition the tax amount for cash basis taxes. It will contain the tax amount as long as the original invoice has not been reconciled ; at reconciliation, this amount cancelled on this account and put on the regular tax account.")
     invoice_repartition_line_ids = fields.One2many(string="Repartition for Invoices", comodel_name="account.tax.repartition.line", inverse_name="invoice_tax_id", copy=True, help="Repartition when the tax is used on an invoice")
     refund_repartition_line_ids = fields.One2many(string="Repartition for Refund Invoices", comodel_name="account.tax.repartition.line", inverse_name="refund_tax_id", copy=True, help="Repartition when the tax is used on a refund")
-    country_id = fields.Many2one(string='Country', comodel_name='res.country', related='company_id.country_id', help="Technical field used to restrict the domain of account tags for tax repartition lines created for this tax.")
+    tax_fiscal_country_id = fields.Many2one(string='Fiscal Country', comodel_name='res.country', related='company_id.account_tax_fiscal_country_id', help="Technical field used to restrict the domain of account tags for tax repartition lines created for this tax.")
 
     _sql_constraints = [
         ('name_company_uniq', 'unique(name, company_id, type_tax_use, tax_scope)', 'Tax names must be unique !'),
@@ -108,15 +108,15 @@ class AccountTax(models.Model):
         if 'refund_repartition_line_ids' in fields_list:
             # We write on the related country_id field so that the field is recomputed. Without that, it will stay empty until we save the record.
             rslt['refund_repartition_line_ids'] = [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
             ]
 
         if 'invoice_repartition_line_ids' in fields_list:
             # We write on the related country_id field so that the field is recomputed. Without that, it will stay empty until we save the record.
             rslt['invoice_repartition_line_ids'] = [
-                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
-                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'country_id': company.country_id.id}),
+                (0, 0, {'repartition_type': 'base', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
+                (0, 0, {'repartition_type': 'tax', 'factor_percent': 100.0, 'tag_ids': [], 'company_id': company_id, 'tax_fiscal_country_id': company.country_id.id}),
             ]
 
         return rslt
@@ -636,7 +636,7 @@ class AccountTaxRepartitionLine(models.Model):
         check_company=True,
         help="The tax set to apply this repartition on refund invoices. Mutually exclusive with invoice_tax_id")
     tax_id = fields.Many2one(comodel_name='account.tax', compute='_compute_tax_id')
-    country_id = fields.Many2one(string="Country", comodel_name='res.country', related='company_id.country_id', help="Technical field used to restrict tags domain in form view.")
+    tax_fiscal_country_id = fields.Many2one(string="Fiscal Country", comodel_name='res.country', related='company_id.account_tax_fiscal_country_id', help="Technical field used to restrict tags domain in form view.")
     company_id = fields.Many2one(string="Company", comodel_name='res.company', compute="_compute_company", store=True, help="The company this repartition line belongs to.")
     sequence = fields.Integer(string="Sequence", default=1, help="The order in which display and match repartition lines. For refunds to work properly, invoice repartition lines should be arranged in the same order as the credit note repartition lines they correspond to.")
     use_in_tax_closing = fields.Boolean(string="Tax Closing Entry")

@@ -27,9 +27,9 @@
                     <field name="factor_percent" attrs="{'invisible': [('repartition_type', '=', 'base')]}"/>
                     <field name="repartition_type"/>
                     <field name="account_id" attrs="{'invisible': [('repartition_type', '=', 'base')]}" options="{'no_create': True}"/>
-                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('applicability', '=', 'taxes'), ('country_id', '=', country_id)]"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'no_create': True}" domain="[('applicability', '=', 'taxes'), ('country_id', '=', tax_fiscal_country_id)]"/>
                     <field name="use_in_tax_closing" optional="hidden" />
-                    <field name="country_id" invisible="1"/>
+                    <field name="tax_fiscal_country_id" invisible="1"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
             </field>
@@ -133,7 +133,7 @@
                     <notebook>
                         <page string="Definition" name="definition">
                             <div attrs="{'invisible': [('amount_type', '=', 'group')]}">
-                                <field name="country_id" invisible="1"/>
+                                <field name="tax_fiscal_country_id" invisible="1"/>
                                 <group string="Repartition for Invoices">
                                     <field name="invoice_repartition_line_ids" nolabel="1" context="{'default_company_id': company_id}"/>
                                 </group>
