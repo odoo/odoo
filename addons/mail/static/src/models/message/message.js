@@ -316,6 +316,13 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
+
+        /**
          * @returns {boolean}
          */
         _computeFailureNotifications() {
@@ -430,14 +437,6 @@ function factory(dependencies) {
                 threads.push(this.originThread);
             }
             return [['replace', threads]];
-        }
-
-        /**
-         * @override
-         */
-        _createRecordLocalId(data) {
-            const Message = this.env.models['mail.message'];
-            return `${Message.modelName}_${data.id}`;
         }
 
     }

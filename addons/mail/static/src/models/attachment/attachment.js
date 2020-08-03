@@ -50,6 +50,20 @@ function factory(dependencies) {
         }
 
         /**
+         * @override
+         */
+        static create(data) {
+            const isMulti = typeof data[Symbol.iterator] === 'function';
+            const dataList = isMulti ? data : [data];
+            for (const data of dataList) {
+                if (!data.id) {
+                    data.id = getAttachmentNextTemporaryId();
+                }
+            }
+            return super.create(...arguments);
+        }
+
+        /**
          * View provided attachment(s), with given attachment initially. Prompts
          * the attachment viewer.
          *
@@ -93,6 +107,13 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
 
         /**
          * @private
@@ -187,17 +208,6 @@ function factory(dependencies) {
 
         /**
          * @private
-         * @returns {integer}
-         */
-        _computeId() {
-            if (this.isTemporary && (this.id === undefined || this.id > 0)) {
-                return getAttachmentNextTemporaryId();
-            }
-            return this.id;
-        }
-
-        /**
-         * @private
          * @returns {boolean}
          */
         _computeIsLinkedToComposer() {
@@ -234,18 +244,6 @@ function factory(dependencies) {
          */
         _computeMediaType() {
             return this.mimetype && this.mimetype.split('/').shift();
-        }
-
-        /**
-         * @override
-         */
-        _createRecordLocalId(data) {
-            const { id, isTemporary = false } = data;
-            const Attachment = this.env.models['mail.attachment'];
-            if (isTemporary) {
-                return `${Attachment.modelName}_${nextTemporaryId}`;
-            }
-            return `${Attachment.modelName}_${id}`;
         }
 
     }
@@ -291,10 +289,7 @@ function factory(dependencies) {
                 'url',
             ],
         }),
-        id: attr({
-            compute: '_computeId',
-            dependencies: ['isTemporary'],
-        }),
+        id: attr(),
         isLinkedToComposer: attr({
             compute: '_computeIsLinkedToComposer',
             dependencies: ['composers'],

@@ -39,9 +39,9 @@ function factory() {
          */
         init() {}
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // Public
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
 
         /**
          * Returns all records of this model that match provided criteria.
@@ -154,20 +154,9 @@ function factory() {
             this.env.modelManager.update(this, data);
         }
 
-        //--------------------------------------------------------------------------
+        //----------------------------------------------------------------------
         // Private
-        //--------------------------------------------------------------------------
-
-        /**
-         * @static
-         * @private
-         * @param {Object} data
-         * @param {any} data.id
-         * @return {function}
-         */
-        static _findFunctionFromData(data) {
-            return record => record.id === data.id;
-        }
+        //----------------------------------------------------------------------
 
         /**
          * This method generates a local id for this record that is
@@ -180,12 +169,13 @@ function factory() {
          * track relations and records in the system instead of arbitrary
          * number to differenciate them.
          *
+         * @static
          * @private
          * @param {Object} data
          * @returns {string}
          */
-        _createRecordLocalId(data) {
-            return _.uniqueId(`${this.constructor.modelName}_`);
+        static _createRecordLocalId(data) {
+            return _.uniqueId(`${this.modelName}_`);
         }
 
         /**

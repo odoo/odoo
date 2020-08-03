@@ -126,7 +126,10 @@ class ModelManager {
             const res = dataList.map(data => {
                 const record = new Model({ valid: true });
                 Object.defineProperty(record, 'env', { get: () => Model.env });
-                record.localId = record._createRecordLocalId(data);
+                record.localId = Model._createRecordLocalId(data);
+                if (Model.get(record.localId)) {
+                    throw Error(`A record already exists for model "${Model.modelName}" with localId "${record.localId}".`);
+                }
                 // Contains field values of record.
                 record.__values = {};
                 // Contains revNumber of record for checking record update in useStore.
@@ -207,7 +210,6 @@ class ModelManager {
             }
             record.update(data);
             delete this._records[record.localId];
-            delete this.env.store.state[record.localId];
         });
     }
 
@@ -277,7 +279,8 @@ class ModelManager {
             const isMulti = typeof data[Symbol.iterator] === 'function';
             const dataList = isMulti ? data : [data];
             const res = dataList.map(data => {
-                let record = Model.find(Model._findFunctionFromData(data));
+                const localId = Model._createRecordLocalId(data);
+                let record = Model.get(localId);
                 if (!record) {
                     record = Model.create(data);
                 } else {

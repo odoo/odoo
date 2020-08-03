@@ -60,10 +60,12 @@ QUnit.test('rendering when just one has received the message', async function (a
         model: 'mail.channel',
         partnerSeenInfos: [['create', [
             {
+                id: 10,
                 partner: [['create', {id: 10}]],
                 lastFetchedMessage: [['insert', {id: 100}]]
             },
             {
+                id: 100,
                 partner: [['create', {id: 100}]],
             },
         ]]],
@@ -72,7 +74,7 @@ QUnit.test('rendering when just one has received the message', async function (a
             message: [['insert', {id: 100}]],
         }]],
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
@@ -105,10 +107,12 @@ QUnit.test('rendering when everyone have received the message', async function (
         model: 'mail.channel',
         partnerSeenInfos: [['create', [
             {
+                id: 10,
                 partner: [['create', {id: 10}]],
                 lastFetchedMessage: [['insert', {id: 100}]],
             },
             {
+                id: 100,
                 partner: [['create', {id: 100}]],
                 lastFetchedMessage: [['insert', {id: 99}]],
             },
@@ -118,7 +122,7 @@ QUnit.test('rendering when everyone have received the message', async function (
             message: [['insert', {id: 100}]],
         }]],
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
@@ -151,11 +155,13 @@ QUnit.test('rendering when just one has seen the message', async function (asser
         model: 'mail.channel',
         partnerSeenInfos: [['create', [
             {
+                id: 10,
                 partner: [['create', {id: 10}]],
                 lastFetchedMessage: [['insert', {id: 100}]],
                 lastSeenMessage: [['insert', {id: 100}]],
             },
             {
+                id: 100,
                 partner: [['create', {id: 100}]],
                 lastFetchedMessage: [['insert', {id: 99}]],
             },
@@ -165,7 +171,7 @@ QUnit.test('rendering when just one has seen the message', async function (asser
             message: [['insert', {id: 100}]],
         }]],
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
@@ -199,11 +205,13 @@ QUnit.test('rendering when just one has seen & received the message', async func
         model: 'mail.channel',
         partnerSeenInfos: [['create', [
             {
+                id: 10,
                 partner: [['create', {id: 10}]],
                 lastFetchedMessage: [['insert', {id: 100}]],
                 lastSeenMessage: [['insert', {id: 100}]],
             },
             {
+                id: 100,
                 partner: [['create', {id: 100}]],
             },
         ]]],
@@ -212,7 +220,7 @@ QUnit.test('rendering when just one has seen & received the message', async func
             message: [['insert', {id: 100}]],
         }]],
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
@@ -246,11 +254,13 @@ QUnit.test('rendering when just everyone has seen the message', async function (
         model: 'mail.channel',
         partnerSeenInfos: [['create', [
             {
+                id: 10,
                 partner: [['create', {id: 10}]],
                 lastFetchedMessage: [['insert', {id: 100}]],
                 lastSeenMessage: [['insert', {id: 100}]],
             },
             {
+                id: 100,
                 partner: [['create', {id: 100}]],
                 lastFetchedMessage: [['insert', {id: 100}]],
                 lastSeenMessage: [['insert', {id: 100}]],
@@ -261,7 +271,7 @@ QUnit.test('rendering when just everyone has seen the message', async function (
             message: [['insert', {id: 100}]],
         }]],
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,

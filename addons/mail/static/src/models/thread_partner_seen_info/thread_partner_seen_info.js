@@ -6,7 +6,20 @@ const { attr, many2one } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
-    class ThreadPartnerSeenInfo extends dependencies['mail.model'] {}
+    class ThreadPartnerSeenInfo extends dependencies['mail.model'] {
+
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
+
+    }
 
     ThreadPartnerSeenInfo.modelName = 'mail.thread_partner_seen_info';
 

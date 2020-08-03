@@ -42,8 +42,8 @@ function factory(dependencies) {
         /**
          * @override
          */
-        _createRecordLocalId(data) {
-            return `${this.env.models['mail.user'].modelName}_${data.id}`;
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
         }
 
         /**

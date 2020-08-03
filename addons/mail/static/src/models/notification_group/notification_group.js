@@ -63,9 +63,8 @@ function factory(dependencies) {
         /**
          * @override
          */
-        _createRecordLocalId(data) {
-            const NotificationGroup = this.env.models['mail.notification_group'];
-            return `${NotificationGroup.modelName}_${data.id}`;
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
         }
 
         /**
