@@ -721,7 +721,7 @@ class Post(models.Model):
             'date': self.create_date,
         }
         # done with the author user to have create_uid correctly set
-        new_message = question.with_user(self_sudo.create_uid.id).with_context(mail_create_nosubscribe=True).message_post(**values)
+        new_message = question.with_user(self_sudo.create_uid.id).with_context(mail_create_nosubscribe=True).sudo().message_post(**values).sudo(False)
 
         # unlink the original answer, using SUPERUSER_ID to avoid karma issues
         self.sudo().unlink()
@@ -765,7 +765,7 @@ class Post(models.Model):
             'name': _('Re: %s') % (question.name or ''),
         }
         # done with the author user to have create_uid correctly set
-        new_post = self.with_user(post_create_uid).create(post_values)
+        new_post = self.with_user(post_create_uid).sudo().create(post_values).sudo(False)
 
         # delete comment
         comment.unlink()
