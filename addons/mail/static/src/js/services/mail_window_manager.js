@@ -620,7 +620,11 @@ MailManager.include({
      */
     _onDiscussOpen: function (open) {
         this._super.apply(this, arguments);
-
+        // No need to toggle thread window visibility because these are
+        // always shown in full screen mode on mobile.
+        if (config.device.isMobile) {
+            return;
+        }
         if (open) {
             $(this.THREAD_WINDOW_APPENDTO).addClass('o_no_thread_window');
         } else {
