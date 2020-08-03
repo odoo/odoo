@@ -121,12 +121,11 @@ publicWidget.registry.ProductWishlist = publicWidget.Widget.extend(VariantMixin,
      * @private
      */
     _updateWishlistView: function () {
-        if (this.wishlistProductIDs.length > 0) {
-            $('.o_wsale_my_wish').show();
-            $('.my_wish_quantity').text(this.wishlistProductIDs.length);
-        } else {
-            $('.o_wsale_my_wish').hide();
+        const $wishButton = $('.o_wsale_my_wish');
+        if ($wishButton.hasClass('o_wsale_my_wish_hide_empty')) {
+            $wishButton.toggleClass('d-none', !this.wishlistProductIDs.length);
         }
+        $wishButton.find('.my_wish_quantity').text(this.wishlistProductIDs.length);
     },
     /**
      * @private
