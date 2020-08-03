@@ -581,6 +581,7 @@
             <field name="res_model">mail.compose.message</field>
             <field name="view_mode">form</field>
             <field name="target">new</field>
+<<<<<<< HEAD
             <field name="context">{
                 'default_composition_mode': 'comment',
                 'default_use_template': True,
@@ -612,6 +613,13 @@
             allowing to have a well formed email template (context action considered as set). -->
         <record id="email_template_opportunity_mail" model="mail.template">
             <field name="ref_ir_act_window" ref="crm.action_lead_mass_mail"/>
+=======
+            <field name="context" eval="{
+                'default_composition_mode': 'comment',
+                'default_use_template': True,
+                'default_template_id': ref('crm.email_template_opportunity_mail'),
+            }"/>
+>>>>>>> 1c40f46eb32... temp
         </record>
 
         <!--
