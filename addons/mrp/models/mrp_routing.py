@@ -32,7 +32,7 @@ class MrpRoutingWorkcenter(models.Model):
     worksheet = fields.Binary('PDF')
     worksheet_google_slide = fields.Char('Google Slide', help="Paste the url of your Google Slide. Make sure the access to the document is public.")
     time_mode = fields.Selection([
-        ('auto', 'Compute based on real time'),
+        ('auto', 'Compute based on tracked time'),
         ('manual', 'Set duration manually')], string='Duration Computation',
         default='manual')
     time_mode_batch = fields.Integer('Based on', default=10)
