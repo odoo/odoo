@@ -71,11 +71,11 @@ class ModelManager {
          */
         this._toComputeFields = new Map();
         /**
-         * List of "update after" on records that have been registered.
+         * Map of "update after" on records that have been registered.
          * These are processed after any explicit update and computed/related
          * fields.
          */
-        this._toUpdateAfters = [];
+        this._toUpdateAfters = new Map();
     }
 
     /**
@@ -940,16 +940,17 @@ class ModelManager {
             this._isInUpdateCycle = true;
             res = func();
             this._updateComputes();
-            while (this._toUpdateAfters.length > 0) {
-                this._isHandlingToUpdateAfters = true;
-                // process one update after
-                const [recordToUpdate, previous] = this._toUpdateAfters.pop();
-                const RecordToUpdateModel = recordToUpdate.constructor;
-                if (this.get(RecordToUpdateModel, recordToUpdate)) {
-                    recordToUpdate._updateAfter(previous);
+            this._isHandlingToUpdateAfters = true;
+            while (this._toUpdateAfters.size > 0) {
+                for (const [record, previous] of this._toUpdateAfters) {
+                    this._toUpdateAfters.delete(record);
+                    const RecordToUpdateModel = record.constructor;
+                    if (this.get(RecordToUpdateModel, record)) {
+                        record._updateAfter(previous);
+                    }
                 }
-                this._isHandlingToUpdateAfters = false;
             }
+            this._isHandlingToUpdateAfters = false;
             this._isInUpdateCycle = false;
             // trigger at most one useStore call per update cycle
             this.env.store.state.messagingRevNumber++;
@@ -978,11 +979,10 @@ class ModelManager {
      * @param {Object} data
      */
     _updateDirect(record, data) {
-        const existing = this._toUpdateAfters.find(entry => entry[0] === record);
-        if (!existing) {
+        if (!this._toUpdateAfters.has(record)) {
             // queue updateAfter before calling field.set to ensure previous
             // contains the value at the start of update cycle
-            this._toUpdateAfters.push([record, record._updateBefore()]);
+            this._toUpdateAfters.set(record, record._updateBefore());
         }
         for (const [k, v] of Object.entries(data)) {
             const Model = record.constructor;
