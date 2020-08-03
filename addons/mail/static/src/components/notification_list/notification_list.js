@@ -53,8 +53,8 @@ class NotificationList extends Component {
      */
     async _loadPreviews() {
         const threads = this.notifications
-            .filter(notification => notification.thread)
-            .map(notification => this.env.models['mail.thread'].get(notification.thread));
+            .filter(notification => notification.thread && notification.thread.exists())
+            .map(notification => notification.thread);
         this.env.models['mail.thread'].loadPreviews(threads);
     }
 

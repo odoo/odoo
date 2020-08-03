@@ -51,10 +51,6 @@ class ModelManager {
          */
         this._isInUpdateCycle = false;
         /**
-         * Contains all records. key is local id, while value is the record.
-         */
-        this._records = {};
-        /**
          * Fields flagged to call compute during an update cycle.
          * For instance, when a field with dependents got update, dependent
          * fields should update themselves by invoking compute at end of
@@ -97,8 +93,7 @@ class ModelManager {
      * @returns {mail.model[]} records matching criteria.
      */
     all(Model, filterFunc) {
-        const allRecords = Object.values(this._records)
-            .filter(e => e instanceof Model);
+        const allRecords = Object.values(Model.__records);
         if (filterFunc) {
             return allRecords.filter(filterFunc);
         }
@@ -156,7 +151,7 @@ class ModelManager {
                 // Contains revNumber of record for checking record update in useStore.
                 record.__state = 0;
 
-                this._records[record.localId] = record;
+                Model.__records[record.localId] = record;
                 record.init();
 
                 // Make default values of its fields for newly created record.
@@ -210,7 +205,7 @@ class ModelManager {
     delete(record) {
         this._updateCycle(() => {
             const Model = record.constructor;
-            if (!this.get(Model, record)) {
+            if (!record.exists()) {
                 // Record has already been deleted.
                 // (e.g. unlinking one of its reverse relation was causal)
                 return;
@@ -238,7 +233,7 @@ class ModelManager {
                 data[relation.fieldName] = [['unlink-all']];
             }
             record.update(data);
-            delete this._records[record.localId];
+            delete Model.__records[record.localId];
         });
     }
 
@@ -247,8 +242,10 @@ class ModelManager {
      */
     deleteAll() {
         this._updateCycle(() => {
-            for (const record of Object.values(this._records)) {
-                record.delete();
+            for (const Model of Object.values(this.env.models)) {
+                for (const record of Object.values(Model.__records)) {
+                    record.delete();
+                }
             }
         });
     }
@@ -261,7 +258,7 @@ class ModelManager {
      * @returns {boolean}
      */
     exists(Model, record) {
-        return this._records[record.localId] ? true : false;
+        return Model.__records[record.localId] ? true : false;
     }
 
     /**
@@ -279,29 +276,30 @@ class ModelManager {
 
     /**
      * This method returns the record of provided model that matches provided
-     * record/local id. Useful to convert a local id to a record, and also to
-     * determine whether the record is still "alive" (i.e. not deleted). Note
-     * that even if there's a record in the system having provided local id, if
-     * the resulting record is not an instance of this model, this getter
+     * local id. Useful to convert a local id to a record.
+     * Note that even if there's a record in the system having provided local
+     * id, if the resulting record is not an instance of this model, this getter
      * assumes the record does not exist.
      *
      * @param {mail.model} Model class
-     * @param {string|mail.model|undefined} recordOrLocalId
+     * @param {string} localId
      * @returns {mail.model|undefined} record, if exists
      */
-    get(Model, recordOrLocalId) {
-        if (recordOrLocalId === undefined) {
-            return undefined;
-        }
-        const record = this._records[
-            recordOrLocalId instanceof this.env.models['mail.model']
-                ? recordOrLocalId.localId
-                : recordOrLocalId
-        ];
-        if (!(record instanceof Model)) {
+    get(Model, localId) {
+        if (!localId) {
             return;
         }
-        return record;
+        const record = Model.__records[localId];
+        if (record) {
+            return record;
+        }
+        // support for inherited models (eg. relation targeting `mail.model`)
+        for (const Model of Object.values(this.env.models)) {
+            const record = Model.__records[localId];
+            if (record) {
+                return record;
+            }
+        }
     }
 
     /**
@@ -676,6 +674,10 @@ class ModelManager {
             // Make environment accessible from Model.
             const Model = generatable.factory(Models);
             Model.env = this.env;
+            /**
+            * Contains all records. key is local id, while value is the record.
+            */
+            Model.__records = {};
             for (const patch of generatable.patches) {
                 switch (patch.type) {
                     case 'class':
@@ -689,7 +691,7 @@ class ModelManager {
                         break;
                 }
             }
-            if (!Model.hasOwnProperty('modelName')) {
+            if (!Object.prototype.hasOwnProperty.call(Model, 'modelName')) {
                 throw new Error(`Missing static property "modelName" on Model class "${Model.name}".`);
             }
             if (generatedNames.includes(Model.modelName)) {
@@ -761,7 +763,7 @@ class ModelManager {
          * 1. Prepare fields.
          */
         for (const Model of Object.values(Models)) {
-            if (!Model.hasOwnProperty('fields')) {
+            if (!Object.prototype.hasOwnProperty.call(Model, 'fields')) {
                 Model.fields = {};
             }
             Model.inverseRelations = [];
@@ -922,8 +924,7 @@ class ModelManager {
             while (this._toUpdateAfters.size > 0) {
                 for (const [record, previous] of this._toUpdateAfters) {
                     this._toUpdateAfters.delete(record);
-                    const RecordToUpdateModel = record.constructor;
-                    if (this.get(RecordToUpdateModel, record)) {
+                    if (record.exists()) {
                         record._updateAfter(previous);
                     }
                 }
