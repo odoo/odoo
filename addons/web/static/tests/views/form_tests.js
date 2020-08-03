@@ -6,6 +6,7 @@ var BasicModel = require('web.BasicModel');
 var concurrency = require('web.concurrency');
 var core = require('web.core');
 var fieldRegistry = require('web.field_registry');
+const fieldRegistryOwl = require('web.field_registry_owl');
 var FormView = require('web.FormView');
 var mixins = require('web.mixins');
 var NotificationService = require('web.NotificationService');
@@ -9531,6 +9532,34 @@ QUnit.module('Views', {
 
         form.destroy();
         delete widgetRegistry.map.test;
+    });
+
+    QUnit.test('do not call mounted twice on children', async function (assert) {
+        assert.expect(3);
+
+        class CustomFieldComponent extends fieldRegistryOwl.get('boolean') {
+            mounted() {
+                super.mounted(...arguments);
+                assert.step('mounted');
+            }
+            willUnmount() {
+                super.willUnmount(...arguments);
+                assert.step('willUnmount');
+            }
+        }
+        fieldRegistryOwl.add('custom', CustomFieldComponent);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `<form><field name="bar" widget="custom"/></form>`,
+        });
+
+        form.destroy();
+        delete fieldRegistryOwl.map.custom;
+        
+        assert.verifySteps(['mounted', 'willUnmount']);
     });
 });
 
