@@ -7,7 +7,7 @@ import base64
 import io
 
 from odoo import api, fields, models, _
-from odoo.exceptions import Warning
+from odoo.exceptions import UserError
 from odoo.tools import float_is_zero, pycompat
 
 
@@ -19,10 +19,16 @@ class AccountFrFec(models.TransientModel):
     date_to = fields.Date(string='End Date', required=True)
     fec_data = fields.Binary('FEC File', readonly=True, attachment=False)
     filename = fields.Char(string='Filename', size=256, readonly=True)
+    test_file = fields.Boolean()
     export_type = fields.Selection([
         ('official', 'Official FEC report (posted entries only)'),
         ('nonofficial', 'Non-official FEC report (posted and unposted entries)'),
         ], string='Export Type', required=True, default='official')
+
+    @api.onchange('test_file')
+    def _onchange_export_file(self):
+        if not self.test_file:
+            self.export_type = 'official'
 
     def do_query_unaffected_earnings(self):
         ''' Compute the sum of ending balances for all accounts that are of a type that does not bring forward the balance in new fiscal years.
@@ -87,11 +93,9 @@ class AccountFrFec(models.TransientModel):
         dom_tom_group = self.env.ref('l10n_fr.dom-tom')
         is_dom_tom = company.country_id.code in dom_tom_group.country_ids.mapped('code')
         if not is_dom_tom and not company.vat:
-            raise Warning(
-                _("Missing VAT number for company %s", company.name))
+            raise UserError(_("Missing VAT number for company %s", company.name))
         if not is_dom_tom and company.vat[0:2] != 'FR':
-            raise Warning(
-                _("FEC is for French companies only !"))
+            raise UserError(_("FEC is for French companies only !"))
 
         return {
             'siren': company.vat[4:13] if not is_dom_tom else '',
@@ -107,6 +111,12 @@ class AccountFrFec(models.TransientModel):
         # 2) CSV files are easier to read/use for a regular accountant.
         # So it will be easier for the accountant to check the file before
         # sending it to the fiscal administration
+        today = fields.Date.today()
+        if self.date_from > today or self.date_to > today:
+            raise UserError(_('You could not set the start date or the end date in the future.'))
+        if self.date_from >= self.date_to:
+            raise UserError(_('The start date must be inferior to the end date.'))
+
         company = self.env.company
         company_legal_data = self._get_company_legal_data(company)
 
@@ -371,13 +381,16 @@ class AccountFrFec(models.TransientModel):
             'filename': '%sFEC%s%s.csv' % (company_legal_data['siren'], end_date, suffix),
             })
 
-        action = {
+        # Set fiscal year lock date to the end date (not in test)
+        fiscalyear_lock_date = self.env.company.fiscalyear_lock_date
+        if not self.test_file and (not fiscalyear_lock_date or fiscalyear_lock_date < self.date_to):
+            self.env.company.write({'fiscalyear_lock_date': self.date_to})
+        return {
             'name': 'FEC',
             'type': 'ir.actions.act_url',
             'url': "web/content/?model=account.fr.fec&id=" + str(self.id) + "&filename_field=filename&field=fec_data&download=true&filename=" + self.filename,
             'target': 'self',
-            }
-        return action
+        }
 
     def _csv_write_rows(self, rows, lineterminator=u'\r\n'):
         """
