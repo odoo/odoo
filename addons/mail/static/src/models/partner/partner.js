@@ -157,6 +157,13 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
+
+        /**
          * @static
          * @private
          */
@@ -209,14 +216,6 @@ function factory(dependencies) {
          */
         _computeNameOrDisplayName() {
             return this.name || this.display_name;
-        }
-
-        /**
-         * @override
-         */
-        _createRecordLocalId(data) {
-            const Partner = this.env.models['mail.partner'];
-            return `${Partner.modelName}_${data.id}`;
         }
 
     }

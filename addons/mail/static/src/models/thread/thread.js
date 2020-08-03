@@ -764,8 +764,13 @@ function factory(dependencies) {
         /**
          * @override
          */
-        static _findFunctionFromData(data) {
-            return record => record.id === data.id && record.model === data.model;
+        static _createRecordLocalId(data) {
+            const { channel_type, id, model } = data;
+            let threadModel = model;
+            if (!threadModel && channel_type) {
+                threadModel = 'mail.channel';
+            }
+            return `${this.modelName}_${threadModel}_${id}`;
         }
 
         /**
@@ -1004,22 +1009,6 @@ function factory(dependencies) {
                 this.orderedOtherTypingMembers[0].nameOrDisplayName,
                 this.orderedOtherTypingMembers[1].nameOrDisplayName
             );
-        }
-
-        /**
-         * @override
-         */
-        _createRecordLocalId(data) {
-            const { channel_type, id, isTemporary = false, model } = data;
-            let threadModel = model;
-            if (!threadModel && channel_type) {
-                threadModel = 'mail.channel';
-            }
-            const Thread = this.env.models['mail.thread'];
-            if (isTemporary) {
-                return `${Thread.modelName}_${id}`;
-            }
-            return `${Thread.modelName}_${threadModel}_${id}`;
         }
 
         /**
