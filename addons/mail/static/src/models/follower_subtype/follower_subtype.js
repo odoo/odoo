@@ -43,6 +43,17 @@ function factory(dependencies) {
             return data2;
         }
 
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
+
     }
 
     FollowerSubtype.fields = {
