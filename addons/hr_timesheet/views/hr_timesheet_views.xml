@@ -21,7 +21,7 @@
             <field name="name">account.analytic.line.tree.hr_timesheet</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <tree editable="top" string="Timesheet Activities">
+                <tree editable="top" string="Timesheet Activities" sample="1">
                     <field name="date"/>
                     <field name="project_id" required="1" options="{'no_create_edit': True}" context="{'form_view_ref': 'project.project_project_view_form_simplified',}"/>
                     <field name="task_id" optional="show" options="{'no_create_edit': True, 'no_open': True}" widget="task_with_hours" context="{'default_project_id': project_id}" domain="[('project_id', '=', project_id)]"/>
@@ -156,7 +156,7 @@
             <field name="name">account.analytic.line.kanban</field>
             <field name="model">account.analytic.line</field>
             <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
+                <kanban class="o_kanban_mobile" sample="1">
                     <field name="date"/>
                     <field name="employee_id"/>
                     <field name="user_id"/>
@@ -212,8 +212,9 @@
             <field name="search_view_id" ref="hr_timesheet_line_my_timesheet_search"/>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Record a new activity
-              </p><p>
+                No activities found. Let's start a new one!
+              </p>
+              <p>
                 Track your working hours by projects every day and invoice this time to your customers.
               </p>
             </field>
@@ -272,10 +273,11 @@
             }</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Record a new activity
-                </p><p>
-                    Track your working hours by projects every day and invoice this time to your customers.
-                </p>
+                    No activities found. Let's start a new one!
+              </p>
+              <p>
+                Track your working hours by projects every day and invoice this time to your customers.
+              </p>
             </field>
         </record>
 
