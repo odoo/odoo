@@ -33,8 +33,12 @@ class StockMove(models.Model):
     priority = fields.Selection(PROCUREMENT_PRIORITIES, 'Priority', default='0')
     create_date = fields.Datetime('Creation Date', index=True, readonly=True)
     date = fields.Datetime(
-        'Date Scheduled (technical)', default=fields.Datetime.now, index=True, required=True,
+        'Date Scheduled', default=fields.Datetime.now,
+        index=True, required=True,
         help="Scheduled date until move is done, then date of actual move processing")
+    date_deadline = fields.Datetime(
+        "Deadline Date", readonly=True,
+        help="Date Promise to the customer on the top level document (SO/PO)")
     company_id = fields.Many2one(
         'res.company', 'Company',
         default=lambda self: self.env.company,
@@ -127,10 +131,6 @@ class StockMove(models.Model):
     propagate_cancel = fields.Boolean(
         'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
-    propagate_date = fields.Boolean(string="Propagate Rescheduling",
-        help='The rescheduling is propagated to the next move.')
-    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than',
-        help='The change must be higher than this value to be propagated')
     delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time')
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', check_company=True)
     inventory_id = fields.Many2one('stock.inventory', 'Inventory', check_company=True)
@@ -444,21 +444,13 @@ class StockMove(models.Model):
                 receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
                 receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
 
-        # Handle the propagation of `date` fields.
-        propagated_date_field = False
-        if vals.get('date'):
-            propagated_date_field = 'date'
-        if propagated_date_field:
-            new_date = fields.Datetime.to_datetime(vals.get(propagated_date_field))
+        # Handle the propagation of `date_deadline` fields.
+        if vals.get('date_deadline'):
+            new_date = fields.Datetime.to_datetime(vals.get('date_deadline'))
             for move in self:
                 move_dest_ids = move.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
-                delta_days = (new_date - move.date).total_seconds() / 86400
-                if move.propagate_date and abs(delta_days) >= move.propagate_date_minimum_delta and move_dest_ids:
-                    for move_dest in move_dest_ids:
-                        # We want to propagate a negative delta, but not propagate an expected date
-                        # in the past.
-                        new_move_date = max(move_dest.date + relativedelta.relativedelta(days=delta_days or 0), fields.Datetime.now())
-                        move_dest.date = new_move_date
+                if move_dest_ids:
+                    move_dest_ids.write({'date_deadline': new_date})
                     move_dest_ids._propagate_date_log_note(move)
                 move._delay_alert_check(new_date)
         res = super(StockMove, self).write(vals)
@@ -487,8 +479,8 @@ class StockMove(models.Model):
         if not documents or not doc_orig:
             return
 
-        msg = _("The scheduled date has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
-        msg_subject = _("Scheduled date update due to delay on %s", doc_orig[0].name)
+        msg = _("The deadline has been automatically updated due to a delay on <a href='#' data-oe-model='%s' data-oe-id='%s'>%s</a>.") % (doc_orig[0]._name, doc_orig[0].id, doc_orig[0].name)
+        msg_subject = _("Deadline updates due to delay on %s", doc_orig[0].name)
         # write the message on each document
         for doc in documents:
             last_message = doc.message_ids[:1]
@@ -690,8 +682,7 @@ class StockMove(models.Model):
         return [
             'product_id', 'price_unit', 'procure_method', 'location_id', 'location_dest_id',
             'product_uom', 'restrict_partner_id', 'scrapped', 'origin_returned_move_id',
-            'package_level_id', 'propagate_cancel', 'propagate_date', 'propagate_date_minimum_delta',
-            'description_picking'
+            'package_level_id', 'propagate_cancel', 'description_picking'
         ]
 
     @api.model
@@ -700,8 +691,7 @@ class StockMove(models.Model):
         return [
             move.product_id.id, move.price_unit, move.procure_method, move.location_id, move.location_dest_id,
             move.product_uom.id, move.restrict_partner_id.id, move.scrapped, move.origin_returned_move_id.id,
-            move.package_level_id.id, move.propagate_cancel, move.propagate_date, move.propagate_date_minimum_delta,
-            move.description_picking
+            move.package_level_id.id, move.propagate_cancel, move.description_picking
         ]
 
     def _clean_merged(self):

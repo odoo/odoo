@@ -88,14 +88,6 @@ class PurchaseOrder(models.Model):
                         to_log[order_line] = (order_line.product_qty, pre_order_line_qty[order_line])
                 if to_log:
                     order._log_decrease_ordered_quantity(to_log)
-        # if date_planned value is set, use this to set move line expected dates
-        if vals.get('date_planned'):
-            new_date = fields.Datetime.to_datetime(vals['date_planned'])
-            # let's make sure it's not "no date"
-            if new_date:
-                order_lines_to_update = self.order_line.filtered(lambda l: l.propagate_date)
-                for order_line in order_lines_to_update:
-                    order_line._update_move_expected_date(new_date)
         return res
 
     # --------------------------------------------------
@@ -292,8 +284,6 @@ class PurchaseOrderLine(models.Model):
     orderpoint_id = fields.Many2one('stock.warehouse.orderpoint', 'Orderpoint')
     move_dest_ids = fields.One2many('stock.move', 'created_purchase_line_id', 'Downstream Moves')
     product_description_variants = fields.Char('Custom Description')
-    propagate_date = fields.Boolean(string="Propagate Rescheduling", help='The rescheduling is propagated to the next move.')
-    propagate_date_minimum_delta = fields.Integer(string='Reschedule if Higher Than', help='The change must be higher than this value to be propagated')
     propagate_cancel = fields.Boolean('Propagate cancellation', default=True)
 
     def _compute_qty_received_method(self):
@@ -343,9 +333,9 @@ class PurchaseOrderLine(models.Model):
     def write(self, values):
         for line in self.filtered(lambda l: not l.display_type):
             # PO date_planned overrides any PO line date_planned values
-            if values.get('date_planned') and line.propagate_date:
+            if values.get('date_planned'):
                 new_date = fields.Datetime.to_datetime(values['date_planned'])
-                self._update_move_expected_date(new_date)
+                self._update_move_date_deadline(new_date)
         result = super(PurchaseOrderLine, self).write(values)
         if 'product_qty' in values:
             self.filtered(lambda l: l.order_id.state == 'purchase')._create_or_update_picking()
@@ -355,15 +345,12 @@ class PurchaseOrderLine(models.Model):
     # Business methods
     # --------------------------------------------------
 
-    def _update_move_expected_date(self, new_date):
-        """ Updates corresponding move picking line expected dates that are not yet completed. """
+    def _update_move_date_deadline(self, new_date):
+        """ Updates corresponding move picking line deadline dates that are not yet completed. """
         moves_to_update = self.move_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
         if not moves_to_update:
             moves_to_update = self.move_dest_ids.filtered(lambda m: m.state not in ('done', 'cancel'))
-        for move in moves_to_update:
-            delta_days = (new_date - move.date).total_seconds() / 86400
-            if abs(delta_days) >= self.propagate_date_minimum_delta:
-                move.date = move.date + relativedelta.relativedelta(days=delta_days)
+        moves_to_update.date_deadline = new_date
 
     def _create_or_update_picking(self):
         for line in self:
@@ -471,8 +458,6 @@ class PurchaseOrderLine(models.Model):
             'picking_type_id': self.order_id.picking_type_id.id,
             'group_id': self.order_id.group_id.id,
             'origin': self.order_id.name,
-            'propagate_date': self.order_id.picking_type_id.warehouse_id.buy_pull_id.propagate_date if not self.move_dest_ids else self.propagate_date,
-            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'description_picking': description_picking,
             'propagate_cancel': self.propagate_cancel,
             'route_ids': self.order_id.picking_type_id.warehouse_id and [(6, 0, [x.id for x in self.order_id.picking_type_id.warehouse_id.route_ids])] or [],
@@ -492,8 +477,6 @@ class PurchaseOrderLine(models.Model):
         res['move_dest_ids'] = [(4, x.id) for x in values.get('move_dest_ids', [])]
         res['orderpoint_id'] = values.get('orderpoint_id', False) and values.get('orderpoint_id').id
         res['propagate_cancel'] = values.get('propagate_cancel')
-        res['propagate_date'] = values.get('propagate_date')
-        res['propagate_date_minimum_delta'] = values.get('propagate_date_minimum_delta')
         res['product_description_variants'] = values.get('product_description_variants')
         return res
 
@@ -519,9 +502,7 @@ class PurchaseOrderLine(models.Model):
         if values.get('product_description_variants'):
             description_picking += values['product_description_variants']
         lines = self.filtered(
-            lambda l: l.propagate_date == values['propagate_date'] and
-            l.propagate_date_minimum_delta == values['propagate_date_minimum_delta'] and
-            l.propagate_cancel == values['propagate_cancel'] and
+            lambda l: l.propagate_cancel == values['propagate_cancel'] and
             ((values['orderpoint_id'] and not values['move_dest_ids']) and l.orderpoint_id == values['orderpoint_id'] or True) and
             (not values.get('product_description_variants') or l.name == description_picking))
         return lines and lines[0] or self.env['purchase.order.line']
@@ -543,7 +524,7 @@ class PurchaseOrderLine(models.Model):
         move_to_update = self.move_ids.filtered(lambda m: m.state not in ['done', 'cancel'])
         if move_to_update:
             super()._update_date_planned(updated_date)
-            self._update_move_expected_date(updated_date)
+            self._update_move_date_deadline(updated_date)
 
     @api.model
     def _update_qty_received_method(self):

@@ -99,8 +99,6 @@ class StockRule(models.Model):
             'date_planned_start': fields.Datetime.to_string(date_planned),
             'procurement_group_id': False,
             'propagate_cancel': self.propagate_cancel,
-            'propagate_date': self.propagate_date,
-            'propagate_date_minimum_delta': self.propagate_date_minimum_delta,
             'orderpoint_id': values.get('orderpoint_id', False) and values.get('orderpoint_id').id,
             'picking_type_id': self.picking_type_id.id or values['warehouse_id'].manu_type_id.id,
             'company_id': company_id.id,
@@ -109,6 +107,7 @@ class StockRule(models.Model):
         }
 
     def _get_date_planned(self, product_id, company_id, values):
+        # TODO: Doesn't take in account the duration of the MO to be finished
         format_date_planned = fields.Datetime.from_string(values['date_planned'])
         date_planned = format_date_planned - relativedelta(days=product_id.produce_delay)
         date_planned = date_planned - relativedelta(days=company_id.manufacturing_lead)

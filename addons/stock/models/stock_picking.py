@@ -289,6 +289,9 @@ class Picking(models.Model):
         index=True, default=fields.Datetime.now, tracking=True,
         states={'done': [('readonly', True)], 'cancel': [('readonly', True)]},
         help="Scheduled time for the first part of the shipment to be processed. Setting manually a value here would set it as expected date for all the stock moves.")
+    date_deadline = fields.Datetime(
+        "Deadline Date", compute='_compute_deadline_date', store=True,
+        help="Date Promise to the customer on the top level document (SO/PO)")
     # TODO: Maybe possible to remove (currently use in PoS to convert amount)
     date = fields.Datetime(
         'Creation Date',
@@ -469,6 +472,14 @@ class Picking(models.Model):
                 picking.scheduled_date = min(picking.move_lines.mapped('date') or [fields.Datetime.now()])
             else:
                 picking.scheduled_date = max(picking.move_lines.mapped('date') or [fields.Datetime.now()])
+
+    @api.depends('move_lines.date_deadline')
+    def _compute_deadline_date(self):
+        for picking in self:
+            if picking.move_type == 'direct':
+                picking.date_deadline = min(picking.move_lines.mapped('date_deadline'), default=fields.Datetime.now())
+            else:
+                picking.date_deadline = max(picking.move_lines.mapped('date_deadline'), default=fields.Datetime.now())
 
     def _set_scheduled_date(self):
         for picking in self:

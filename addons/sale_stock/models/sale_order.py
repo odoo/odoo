@@ -46,6 +46,7 @@ class SaleOrder(models.Model):
                                           "the order lines.")
     json_popover = fields.Char('JSON data for the popover widget', compute='_compute_json_popover')
     show_json_popover = fields.Boolean('Has late picking', compute='_compute_json_popover')
+    commitment_date = fields.Datetime(inverse='_inverse_commitment_date')
 
     def _init_column(self, column_name):
         """ Ensure the default warehouse_id is correctly assigned
@@ -67,6 +68,11 @@ class SaleOrder(models.Model):
             query = 'UPDATE "%s" SET "%s"=%s WHERE "%s" IS NULL' % (
                 self._table, column_name, field.column_format, column_name)
             self._cr.execute(query, (value,))
+
+    def _inverse_commitment_date(self):
+        for sale in self:
+            # protagate commitment_date as the deadline of the related stock move.
+            sale.order_line.move_ids = sale.commitment_date
 
     @api.depends('picking_ids.date_done')
     def _compute_effective_date(self):
@@ -465,23 +471,20 @@ class SaleOrderLine(models.Model):
         """
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         self.ensure_one()
-        date_planned = self.order_id.date_order\
-            + timedelta(days=self.customer_lead or 0.0) - timedelta(days=self.order_id.company_id.security_lead)
+        # Use the delivery date if there is else use date_order and lead time
+        date_deadline = self.order_id.commitment_date or (self.order_id.date_order + timedelta(days=self.customer_lead or 0.0))
+        date_planned = date_deadline - timedelta(days=self.order_id.company_id.security_lead)
         values.update({
             'group_id': group_id,
             'sale_line_id': self.id,
             'date_planned': date_planned,
+            'date_deadline': date_deadline,
             'route_ids': self.route_id,
             'warehouse_id': self.order_id.warehouse_id or False,
             'partner_id': self.order_id.partner_shipping_id.id,
             'product_description_variants': self._get_sale_order_line_multiline_description_variants(),
             'company_id': self.order_id.company_id,
         })
-        for line in self.filtered("order_id.commitment_date"):
-            date_planned = fields.Datetime.from_string(line.order_id.commitment_date) - timedelta(days=line.order_id.company_id.security_lead)
-            values.update({
-                'date_planned': fields.Datetime.to_string(date_planned),
-            })
         return values
 
     def _get_qty_procurement(self, previous_product_uom_qty=False):
