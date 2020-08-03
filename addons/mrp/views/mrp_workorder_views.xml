@@ -300,11 +300,12 @@
         <field name="arch" type="xml">
             <gantt class="o_mrp_workorder_gantt" date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" default_group_by="production_id" create="0" delete="0"
                 progress="progress" plan="0"
-                decoration-danger="'text-danger' in json_popover"
+                decoration-danger="json_popover and 'text-danger' in json_popover"
                 decoration-success="state == 'done'"
-                decoration-warning="state == 'cancel' or 'text-warning' in json_popover"
+                decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
                 color="workcenter_id"
                 display_unavailability="1"
+                sample="1"
                 form_view_id="%(mrp_production_workorder_form_view_inherit)d">
 
                 <field name="date_planned_start"/>
@@ -334,11 +335,11 @@
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
             <gantt class="o_mrp_workorder_gantt" date_stop="date_planned_finished" date_start="date_planned_start" string="Operations" default_group_by="workcenter_id" create="0"
-                delete="0"
+                delete="0" sample="1"
                 progress="progress" plan="0"
-                decoration-danger="'text-danger' in json_popover"
+                decoration-danger="json_popover and 'text-danger' in json_popover"
                 decoration-success="state == 'done'"
-                decoration-warning="state == 'cancel' or 'text-warning' in json_popover"
+                decoration-warning="state == 'cancel' or (json_popover and 'text-warning' in json_popover)"
                 color="production_id"
                 display_unavailability="1"
                 form_view_id="mrp_production_workorder_form_view_inherit_gantt">
