@@ -244,13 +244,23 @@ snippetsEditor.Class.include({
      */
     toggleMegaMenuSnippets: function (show) {
         setTimeout(() => this._activateSnippet(false));
-        this.$('#snippet_mega_menu').toggleClass('d-none', !show);
+        this._showMegaMenuSnippets = show;
+        this._filterSnippets();
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
+    /**
+     * @override
+     */
+    _filterSnippets(search) {
+        this._super(...arguments);
+        if (!this._showMegaMenuSnippets) {
+            this.el.querySelector('#snippet_mega_menu').classList.add('d-none');
+        }
+    },
     /**
      * @override
      */
