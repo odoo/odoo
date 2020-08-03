@@ -48,6 +48,17 @@ class Lang(models.Model):
     decimal_point = fields.Char(string='Decimal Separator', required=True, default='.', trim=False)
     thousands_sep = fields.Char(string='Thousands Separator', default=',', trim=False)
 
+    @api.depends('code', 'flag_image')
+    def _compute_field_flag_image_url(self):
+        for lang in self:
+            if lang.flag_image:
+                lang.flag_image_url = f"/web/image/res.lang/{lang.id}/flag_image"
+            else:
+                lang.flag_image_url = f"/base/static/img/country_flags/{lang.code.lower().rsplit('_')[-1]}.png"
+
+    flag_image = fields.Image("Image")
+    flag_image_url = fields.Char(compute=_compute_field_flag_image_url)
+
     _sql_constraints = [
         ('name_uniq', 'unique(name)', 'The name of the language must be unique !'),
         ('code_uniq', 'unique(code)', 'The code of the language must be unique !'),
@@ -216,7 +227,7 @@ class Lang(models.Model):
         return langs.get_sorted()
 
     def get_sorted(self):
-        return sorted([(lang.code, lang.url_code, lang.name, lang.active) for lang in self], key=itemgetter(2))
+        return sorted([(lang.code, lang.url_code, lang.name, lang.active, lang.flag_image_url) for lang in self], key=itemgetter(2))
 
     @tools.ormcache('self.id')
     def _get_cached_values(self):
