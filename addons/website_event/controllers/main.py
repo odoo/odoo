@@ -36,7 +36,7 @@ class WebsiteEventController(http.Controller):
         searches.setdefault('country', 'all')
 
         website = request.website
-        today = datetime.today()
+        today = fields.Datetime.today()
 
         def sdn(date):
             return fields.Datetime.to_string(date.replace(hour=23, minute=59, second=59))
