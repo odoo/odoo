@@ -3,7 +3,6 @@ odoo.define('web.datepicker_tests', function (require) {
 
     const { DatePicker, DateTimePicker } = require('web.DatePickerOwl');
     const testUtils = require('web.test_utils');
-    const time = require('web.time');
 
     const { createComponent } = testUtils;
 
@@ -105,9 +104,13 @@ odoo.define('web.datepicker_tests', function (require) {
         QUnit.test("Date format is correctly set", async function (assert) {
             assert.expect(2);
 
-            testUtils.patch(time, { getLangDateFormat: () => "YYYY/MM/DD" });
             const picker = await createComponent(DatePicker, {
                 props: { date: moment('01/09/1997') },
+                env: {
+                    database: {
+                        parameters: { date_format: "YYYY/MM/DD" },
+                    },
+                },
             });
             const input = picker.el.querySelector('.o_datepicker_input');
 
@@ -119,7 +122,6 @@ odoo.define('web.datepicker_tests', function (require) {
             assert.strictEqual(input.value, '1997/01/09');
 
             picker.destroy();
-            testUtils.unpatch(time);
         });
 
         QUnit.module('DateTimePicker');
@@ -236,21 +238,27 @@ odoo.define('web.datepicker_tests', function (require) {
         QUnit.test("Date time format is correctly set", async function (assert) {
             assert.expect(2);
 
-            testUtils.patch(time, { getLangDatetimeFormat: () => "hh:mm:ss YYYY/MM/DD" });
             const picker = await createComponent(DateTimePicker, {
                 props: { date: moment('01/09/1997 12:30:01') },
+                env: {
+                    database: {
+                        parameters: {
+                            date_format: "YYYY/MM/DD",
+                            time_format: "ss:mm:HH",
+                        },
+                    },
+                },
             });
             const input = picker.el.querySelector('.o_datepicker_input');
 
-            assert.strictEqual(input.value, '12:30:01 1997/01/09');
+            assert.strictEqual(input.value, '1997/01/09 01:30:12');
 
             // Forces an update to assert that the registered format is the correct one
             await testUtils.dom.click(input);
 
-            assert.strictEqual(input.value, '12:30:01 1997/01/09');
+            assert.strictEqual(input.value, '1997/01/09 01:30:12');
 
             picker.destroy();
-            testUtils.unpatch(time);
         });
     });
 });

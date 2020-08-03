@@ -2,7 +2,6 @@ odoo.define('web.DatePickerOwl', function (require) {
     "use strict";
 
     const field_utils = require('web.field_utils');
-    const time = require('web.time');
     const { useAutofocus } = require('web.custom_hooks');
 
     const { Component, hooks } = owl;
@@ -61,14 +60,14 @@ odoo.define('web.DatePickerOwl', function (require) {
         }
 
         //---------------------------------------------------------------------
-        // Private
+        // Getters
         //---------------------------------------------------------------------
 
         /**
          * @returns {string}
          */
         get defaultFormat() {
-            return time.getLangDateFormat();
+            return this.env.time.getLangDateFormat();
         }
 
         //---------------------------------------------------------------------
@@ -90,8 +89,13 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @returns {string}
          */
         _formatDate(date) {
+            const formatter = field_utils.format[this.typeOfDate];
+            const formatOptions = {
+                format: this.props.format || this.defaultFormat,
+                timezone: false,
+            };
             try {
-                return field_utils.format[this.typeOfDate](date, null, { timezone: false });
+                return formatter(date, null, formatOptions);
             } catch (err) {
                 return false;
             }
@@ -103,8 +107,13 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @returns {moment}
          */
         _parseInput(inputValue) {
+            const parser = field_utils.parse[this.typeOfDate];
+            const parseOptions = {
+                format: this.props.format || this.defaultFormat,
+                timezone: false,
+            };
             try {
-                return field_utils.parse[this.typeOfDate](inputValue, null, { timezone: false });
+                return parser(inputValue, null, parseOptions);
             } catch (err) {
                 return false;
             }
@@ -244,7 +253,7 @@ odoo.define('web.DatePickerOwl', function (require) {
          * @override
          */
         get defaultFormat() {
-            return time.getLangDatetimeFormat();
+            return this.env.time.getLangDatetimeFormat();
         }
     }
 
