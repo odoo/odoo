@@ -597,9 +597,16 @@ body.editor_enable.editor_has_snippets {
 
                 we-button {
                     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
+                    border-radius: 0;
 
                     + we-button {
                         border-left: none;
+                    }
+                    &:first-child {
+                        @include border-left-radius($o-we-sidebar-content-field-border-radius);
+                    }
+                    &:last-child {
+                        @include border-right-radius($o-we-sidebar-content-field-border-radius);
                     }
                 }
             }
