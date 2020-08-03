@@ -14,7 +14,7 @@
         </record>
 
         <record id="group_hr_timesheet_approver" model="res.groups">
-            <field name="name">See all timesheets</field>
+            <field name="name">Approver</field>
             <field name="category_id" ref="base.module_category_services_timesheets"/>
             <field name="implied_ids" eval="[(4, ref('hr_timesheet.group_hr_timesheet_user'))]"/>
         </record>
