@@ -10,8 +10,6 @@
                 <form string="Create a Backorder">
                     <group>
                         <p>
-                            You produced less than the initial demand.
-                        </p><p class="text-muted">
                             Create a backorder if you expect to process the remaining products later. Do not create a backorder if you will not process the remaining products.
                         </p>
                     </group>
@@ -27,15 +25,15 @@
                             colspan="1" type="object" class="btn-primary" attrs="{'invisible': [('show_backorder_lines', '!=', False)]}"/>
                         <button name="action_backorder" string="Validate"
                             colspan="1" type="object" class="btn-primary" attrs="{'invisible': [('show_backorder_lines', '=', False)]}"/>
-                        <button name="action_close_mo" type="object" string="Mark as Done" attrs="{'invisible': [('show_backorder_lines', '!=', False)]}"/>
-                        <button string="Cancel" class="btn-secondary" special="cancel" />
+                        <button name="action_close_mo" type="object" string="No Backorder" attrs="{'invisible': [('show_backorder_lines', '!=', False)]}"/>
+                        <button string="Discard" class="btn-secondary" special="cancel" />
                     </footer>
                 </form>
             </field>
         </record>
 
         <record id="action_mrp_production_backorder" model="ir.actions.act_window">
-            <field name="name">Backorder</field>
+            <field name="name">You produced less than initial demand</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">mrp.production.backorder</field>
             <field name="view_mode">form</field>

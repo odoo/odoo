@@ -69,7 +69,7 @@
                 <header>
                     <field name="confirm_cancel" invisible="1"/>
                     <field name="show_lock" invisible="1"/>
-                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('qty_producing', '=', 0)]}" string="Backorder" type="object" class="oe_highlight"/>
+                    <button name="button_mark_done" attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('qty_producing', '=', 0)]}" string="Validate" type="object" class="oe_highlight"/>
                     <button name="button_mark_done" attrs="{'invisible': [('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
                     <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object" class="oe_highlight"/>
                     <button name="action_assign" attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}" string="Check availability" type="object"/>
@@ -114,7 +114,7 @@
                         <button class="oe_stat_button" name="action_view_mrp_production_backorders" type="object" icon="fa-wrench" attrs="{'invisible': [('mrp_production_backorder_count', '&lt;', 2)]}">
                             <div class="o_field_widget o_stat_info">
                                 <span class="o_stat_value"><field name="mrp_production_backorder_count"/></span>
-                                <span class="o_stat_text">Backorder MO's</span>
+                                <span class="o_stat_text">Backorders</span>
                             </div>
                         </button>
                         <button class="oe_stat_button" name="action_see_move_scrap" type="object" icon="fa-arrows-v" attrs="{'invisible': [('scrap_count', '=', 0)]}">
@@ -166,7 +166,6 @@
                                 context="{'default_product_tmpl_id': product_tmpl_id}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                         </group>
                         <group name="group_extra_info">
-                            <field name="date_deadline"/>
                             <label for="date_planned_start"/>
                             <div class="o_row">
                                 <field name="date_planned_start"
@@ -175,7 +174,6 @@
                                 <field string=" " name="json_popover" widget="stock_rescheduling_popover" attrs="{'invisible': [('delay_alert_date', '=', False)]}"/>
                             </div>
                             <field name="user_id" domain="[('share', '=', False)]"/>
-                            <field name="origin"/>
                             <field name="company_id" groups="base.group_multi_company" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}" force_save="1"/>
                             <field name="show_final_lots" invisible="1"/>
                             <field name="production_location_id" invisible="1" readonly="1"/>
@@ -211,12 +209,11 @@
                     </group>
                     <notebook>
                         <page string="Components" name="components">
-                            <field name="move_raw_ids" 
-                                context="{'default_date_expected': date_planned_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" 
-                                attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
-                                <tree delete="0" default_order="is_done,sequence" editable="bottom">
-                                    <field name="product_id" required="1" context="{'default_type': 'product'}" attrs="{'readonly': ['|', '|', ('has_move_lines', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
-
+                            <field name="move_raw_ids"
+                                context="{'default_product_uom_qty': 1.0, 'default_date_expected': date_planned_start, 'default_location_id': location_src_id, 'default_location_dest_id': production_location_id, 'default_state': 'draft', 'default_raw_material_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}"
+                                attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
+                                <tree default_order="is_done,sequence" editable="bottom">
+                                    <field name="product_id" force_save="1" required="1" context="{'default_type': 'product'}" attrs="{'readonly': ['|', '|', ('has_move_lines', '=', True), ('state', '=', 'cancel'), '&amp;', ('state', '!=', 'draft'), ('additional', '=', False) ]}"/>
                                     <field name="move_line_ids" invisible="1">
                                         <tree>
                                             <field name="lot_id" invisible="1"/>
@@ -272,8 +269,8 @@
                         <page string="Operations" name="operations" groups="mrp.group_mrp_routings">
                             <field name="workorder_ids" attrs="{'readonly': [('state', 'in', ['cancel', 'done'])]}" context="{'tree_view_ref': 'mrp.mrp_production_workorder_tree_editable_view', 'form_view_ref': 'mrp.mrp_production_workorder_form_view_inherit', 'default_production_id': id, 'default_product_uom_id': product_uom_id, 'default_consumption': consumption, 'default_company_id': company_id}"/>                        </page>
                         <page string="By-Products" name="finished_products" groups="mrp.group_mrp_byproducts">
-                            <field name="move_byproduct_ids" context="{'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}">
-                                <tree delete="0" default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
+                            <field name="move_byproduct_ids" context="{'default_location_id': production_location_id, 'default_location_dest_id': location_src_id, 'default_state': 'draft', 'default_production_id': id, 'default_picking_type_id': picking_type_id, 'default_company_id': company_id}" attrs="{'readonly': ['|', ('state', '=', 'cancel'), '&amp;', ('state', '=', 'done'), ('is_locked', '=', True)]}" options="{'delete': [('state', '=', 'draft')]}">
+                                <tree default_order="is_done,sequence" decoration-muted="is_done" editable="bottom">
                                     <field name="product_id" context="{'default_type': 'product'}" domain="[('id', '!=', parent.product_id)]" required="1"/>
 
                                     <field name="move_line_ids" invisible="1">
@@ -323,12 +320,16 @@
                                 </tree>
                             </field>
                         </page>
-                        <page string="Miscellaneous" name="miscellaneous" groups="stock.group_stock_multi_locations">
+                        <page string="Miscellaneous" name="miscellaneous">
                             <group>
                                 <group>
                                     <field name="picking_type_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="location_src_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
                                     <field name="location_dest_id" options="{'no_create': True}" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                </group>
+                                <group>
+                                    <field name="date_deadline"/>
+                                    <field name="origin"/>
                                 </group>
                             </group>
                         </page>
