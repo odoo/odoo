@@ -297,7 +297,7 @@ var BaseSettingController = FormController.extend({
             var recordID = ev.data.recordID;
             var _super = this._super;
             var args = arguments;
-            this._discardChanges(recordID).then(function () {
+            this._discardChanges(recordID, { noAbandon: true }).then(function () {
                 _super.apply(self, args);
             });
         } else {
