@@ -696,14 +696,14 @@
 
 <template id="registration_complete" name="Registration Completed">
     <t t-call="website_event.layout">
-        <div class="container my-5">
+        <div class="container my-5 o_wereg_confirmed">
             <div class="row mb-3">
                 <div class="col-12">
-                    <h2>Registration confirmed!</h2>
-                    <h3><a t-attf-href="/event/#{slug(event)}"><t t-esc="event.name"/></a></h3>
+                    <h3>Registration confirmed!</h3>
+                    <span class="h4 text-muted" t-esc="event.name"/>
                 </div>
             </div>
-            <div class="row mb-3">
+            <div class="row mb-3 o_wereg_confirmed_attendees">
                 <div class="col-md-4 col-xs-12 mt-3" t-foreach="attendees" t-as="attendee">
                     <div class="d-flex flex-column">
                         <span class="font-weight-bold">
