@@ -359,5 +359,70 @@ QUnit.module('base_settings_tests', {
         form.destroy();
     });
 
+    QUnit.test('execute action from settings view with several actions in the breadcrumb', async function (assert) {
+        // This commit fixes a race condition, that's why we artificially slow down a read rpc
+        assert.expect(4);
+
+        const actions = [{
+            id: 1,
+            name: 'First action',
+            res_model: 'project',
+            type: 'ir.actions.act_window',
+            views: [[1, 'list']],
+        }, {
+            id: 2,
+            name: 'Settings view',
+            res_model: 'project',
+            type: 'ir.actions.act_window',
+            views: [[2, 'form']],
+        }, {
+            id: 3,
+            name: 'Other action',
+            res_model: 'project',
+            type: 'ir.actions.act_window',
+            views: [[3, 'list']],
+        }];
+        const archs = {
+            'project,1,list': '<tree><field name="foo"/></tree>',
+            'project,2,form': `
+                <form string="Settings" js_class="base_settings">
+                    <div class="app_settings_block" string="CRM" data-key="crm">
+                        <button name="3" string="Execute action" type="action"/>
+                    </div>
+                </form>`,
+            'project,3,list': '<tree><field name="foo"/></tree>',
+            'project,false,search': '<search></search>',
+        };
+
+        let loadViewsDef;
+        const actionManager = await createActionManager({
+            actions: actions,
+            archs: archs,
+            data: this.data,
+            async mockRPC(route, args) {
+                const _super = this._super.bind(this);
+                if (args.method === 'read') {
+                    await Promise.resolve(loadViewsDef); // slow down reload of settings view
+                }
+                return _super(route, args);
+            },
+        });
+
+        await actionManager.doAction(1);
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'First action');
+
+        await actionManager.doAction(2);
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'First actionNew');
+
+        loadViewsDef = testUtils.makeTestPromise();
+        await testUtils.dom.click(actionManager.$('button[name="3"]'));
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'First actionNew');
+
+        loadViewsDef.resolve();
+        await testUtils.nextTick();
+        assert.strictEqual(actionManager.$('.breadcrumb').text(), 'First actionNewOther action');
+
+        actionManager.destroy();
+    });
 });
 });
