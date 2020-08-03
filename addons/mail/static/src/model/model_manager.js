@@ -6,11 +6,6 @@ const ModelField = require('mail/static/src/model/model_field.js');
 const { patchClassMethods, patchInstanceMethods } = require('mail/static/src/utils/utils.js');
 
 /**
- * Inner separator used between 2 bits of information in string that is used to
- * identify record and field to be computed during an update cycle.
- */
-const COMPUTE_RECORD_FIELD_INNER_SEPARATOR = "--||--||--";
-/**
  * Inner separator used between bits of information in string that is used to
  * identify a dependent of a field. Useful to determine which record and field
  * to register for compute during this update cycle.
@@ -123,9 +118,35 @@ class ModelManager {
         return this._updateCycle(() => {
             const isMulti = typeof data[Symbol.iterator] === 'function';
             const dataList = isMulti ? data : [data];
-            const res = dataList.map(data => {
-                const record = new Model({ valid: true });
-                Object.defineProperty(record, 'env', { get: () => Model.env });
+            const fieldNames = new Set(Object.keys(Model.fields));
+            const fields = Object.values(Model.fields);
+            const records = [];
+            for (const data of dataList) {
+                // Make proxified record, so that access to field redirects
+                // to field getter.
+                const record = new Proxy(new Model({ valid: true }), {
+                    get: (target, k) => {
+                        if (!(fieldNames.has(k))) {
+                            // No crash, we allow these reads due to patch()
+                            // implementation details that read on `this._super` even
+                            // if not set before-hand.
+                            return target[k];
+                        }
+                        return Model.fields[k].get(target);
+                    },
+                    set: (target, k, newVal) => {
+                        if (fieldNames.has(k)) {
+                            throw new Error("Forbidden to write on record field without .update()!!");
+                        } else {
+                            // No crash, we allow these writes due to following concerns:
+                            // - patch() implementation details that write on `this._super`
+                            // - record listeners that need setting on this with `.bind(this)`
+                            target[k] = newVal;
+                        }
+                        return true;
+                    },
+                });
+                record.env = this.env;
                 record.localId = Model._createRecordLocalId(data);
                 if (Model.get(record.localId)) {
                     throw Error(`A record already exists for model "${Model.modelName}" with localId "${record.localId}".`);
@@ -135,15 +156,26 @@ class ModelManager {
                 // Contains revNumber of record for checking record update in useStore.
                 record.__state = 0;
 
-                // Make proxified record, so that access to field redirects
-                // to field getter.
-                const proxifiedRecord = this._makeProxifiedRecord(record);
-                this._records[record.localId] = proxifiedRecord;
-                proxifiedRecord.init();
-                this._makeDefaults(proxifiedRecord);
+                this._records[record.localId] = record;
+                record.init();
+
+                // Make default values of its fields for newly created record.
+                for (const field of fields) {
+                    if (field.fieldType === 'attribute') {
+                        field.write(record, field.default, { registerDependents: false });
+                    }
+                    if (field.fieldType === 'relation') {
+                        if (['one2many', 'many2many'].includes(field.relationType)) {
+                            // Ensure X2many relations are Set by defaults.
+                            field.write(record, new Set(), { registerDependents: false });
+                        } else {
+                            field.write(record, undefined, { registerDependents: false });
+                        }
+                    }
+                }
 
                 const data2 = Object.assign({}, data);
-                for (const field of Object.values(Model.fields)) {
+                for (const field of fields) {
                     if (field.fieldType !== 'relation') {
                         continue;
                     }
@@ -153,21 +185,18 @@ class ModelManager {
                     data2[field.fieldName] = [['create']];
                 }
 
-                for (const field of Object.values(Model.fields)) {
+                for (const field of fields) {
                     if (field.compute || field.related) {
                         // new record should always invoke computed fields.
                         this.registerToComputeField(record, field);
                     }
                 }
 
-                this.update(proxifiedRecord, data2);
+                this.update(record, data2);
 
-                return proxifiedRecord;
-            });
-            if (!isMulti) {
-                return res[0];
+                records.push(record);
             }
-            return res;
+            return isMulti ? records : records[0];
         });
     }
 
@@ -225,6 +254,17 @@ class ModelManager {
     }
 
     /**
+     * Returns whether the given record still exists.
+     *
+     * @param {mail.model} Model class
+     * @param {mail.model} record
+     * @returns {boolean}
+     */
+    exists(Model, record) {
+        return this._records[record.localId] ? true : false;
+    }
+
+    /**
      * Get the record of provided model that has provided
      * criteria, if it exists.
      *
@@ -278,7 +318,8 @@ class ModelManager {
         return this._updateCycle(() => {
             const isMulti = typeof data[Symbol.iterator] === 'function';
             const dataList = isMulti ? data : [data];
-            const res = dataList.map(data => {
+            const records = [];
+            for (const data of dataList) {
                 const localId = Model._createRecordLocalId(data);
                 let record = Model.get(localId);
                 if (!record) {
@@ -286,12 +327,9 @@ class ModelManager {
                 } else {
                     record.update(data);
                 }
-                return record;
-            });
-            if (!isMulti) {
-                return res[0];
+                records.push(record);
             }
-            return res;
+            return isMulti ? records : records[0];
         });
     }
 
@@ -318,8 +356,10 @@ class ModelManager {
      * @param {ModelField} field
      */
     registerToComputeField(record, field) {
-        const entry = [record.localId, field.fieldName].join(COMPUTE_RECORD_FIELD_INNER_SEPARATOR);
-        this._toComputeFields.set(entry, true);
+        if (!this._toComputeFields.has(record)) {
+            this._toComputeFields.set(record, new Set());
+        }
+        this._toComputeFields.get(record).add(field);
     }
 
     //--------------------------------------------------------------------------
@@ -635,7 +675,7 @@ class ModelManager {
             }
             // Make environment accessible from Model.
             const Model = generatable.factory(Models);
-            Object.defineProperty(Model, 'env', { get: () => this.env });
+            Model.env = this.env;
             for (const patch of generatable.patches) {
                 switch (patch.type) {
                     case 'class':
@@ -679,29 +719,6 @@ class ModelManager {
     }
 
     /**
-     * Make default values of its fields for newly created record.
-     *
-     * @private
-     * @param {mail.model} record
-     */
-    _makeDefaults(record) {
-        const Model = record.constructor;
-        for (const field of Object.values(Model.fields)) {
-            if (field.fieldType === 'attribute') {
-                field.write(record, field.default, { registerDependents: false });
-            }
-            if (field.fieldType === 'relation') {
-                if (['one2many', 'many2many'].includes(field.relationType)) {
-                    // Ensure X2many relations are Set by defaults.
-                    field.write(record, new Set(), { registerDependents: false });
-                } else {
-                    field.write(record, undefined, { registerDependents: false });
-                }
-            }
-        }
-    }
-
-    /**
      * @private
      * @param {mail.model} Model class
      * @param {ModelField} field
@@ -726,47 +743,6 @@ class ModelManager {
             }
         ));
         return inverseField;
-    }
-
-    /**
-     * Wrap record that has just been created in a proxy. Proxy is useful for
-     * auto-getting records when accessing relational fields.
-     *
-     * @private
-     * @param {mail.model} record
-     * @return {Proxy<mail.model>} proxified record
-     */
-    _makeProxifiedRecord(record) {
-        const proxifiedRecord = new Proxy(record, {
-            get: (target, k) => {
-                if (k === 'constructor') {
-                    return target[k];
-                }
-                const fields = target.constructor.fields;
-                const field = Object.prototype.hasOwnProperty.call(fields, k)
-                    ? fields[k]
-                    : undefined;
-                if (!field) {
-                    // No crash, we allow these reads due to patch()
-                    // implementation details that read on `this._super` even
-                    // if not set before-hand.
-                    return target[k];
-                }
-                return field.get(proxifiedRecord);
-            },
-            set: (target, k, newVal) => {
-                if (target.constructor.fields[k]) {
-                    throw new Error("Forbidden to write on record field without .update()!!");
-                } else {
-                    // No crash, we allow these writes due to following concerns:
-                    // - patch() implementation details that write on `this._super`
-                    // - record listeners that need setting on this with `.bind(this)`
-                    target[k] = newVal;
-                }
-                return true;
-            },
-        });
-        return proxifiedRecord;
     }
 
     /**
@@ -909,15 +885,17 @@ class ModelManager {
      */
     _updateComputes() {
         while (this._toComputeFields.size > 0) {
-            // process one compute field
-            const key = this._toComputeFields.keys().next().value;
-            const [recordLocalId, fieldName] = key.split(COMPUTE_RECORD_FIELD_INNER_SEPARATOR);
-            this._toComputeFields.delete(key);
-            const record = this.env.models['mail.model'].get(recordLocalId);
-            if (record) {
-                const Model = record.constructor;
-                const field = Model.fields[fieldName];
-                field.doCompute(record);
+            for (const [record, fields] of this._toComputeFields) {
+                this._toComputeFields.delete(record);
+                if (!record.exists()) {
+                    continue;
+                }
+                while (fields.size > 0) {
+                    for (const field of fields) {
+                        fields.delete(field);
+                        field.doCompute(record);
+                    }
+                }
             }
         }
     }
@@ -984,13 +962,13 @@ class ModelManager {
             // contains the value at the start of update cycle
             this._toUpdateAfters.set(record, record._updateBefore());
         }
-        for (const [k, v] of Object.entries(data)) {
-            const Model = record.constructor;
-            const field = Model.fields[k];
+        const Model = record.constructor;
+        for (const fieldName of Object.keys(data)) {
+            const field = Model.fields[fieldName];
             if (!field) {
-                throw new Error(`Cannot create/update record with data unrelated to a field. (model: "${Model.modelName}", non-field attempted update: "${k}")`);
+                throw new Error(`Cannot create/update record with data unrelated to a field. (model: "${Model.modelName}", non-field attempted update: "${fieldName}")`);
             }
-            field.set(record, v);
+            field.set(record, data[fieldName]);
         }
     }
 
