@@ -28,13 +28,6 @@
             <field name="product_qty">16.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
-        <record id="stock_inventory_line_14" model="stock.inventory.line">
-            <field name="product_id" ref="product.product_product_25"/>
-            <field name="product_uom_id" ref="uom.product_uom_unit"/>
-            <field name="inventory_id" ref="stock_inventory_0"/>
-            <field name="product_qty">16.0</field>
-            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
-        </record>
         <record id="stock_inventory_line_2" model="stock.inventory.line">
             <field name="product_id" ref="product.product_product_7"/>
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
@@ -132,6 +125,13 @@
             <field name="product_uom_id" ref="uom.product_uom_unit"/>
             <field name="inventory_id" ref="stock_inventory_0"/>
             <field name="product_qty">60.0</field>
+            <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
+        </record>
+        <record id="stock_inventory_line_15" model="stock.inventory.line">
+            <field name="product_id" ref="product.product_product_25"/>
+            <field name="product_uom_id" ref="uom.product_uom_unit"/>
+            <field name="inventory_id" ref="stock_inventory_0"/>
+            <field name="product_qty">16.0</field>
             <field name="location_id" model="stock.location" eval="obj().env.ref('stock.warehouse0').lot_stock_id.id"/>
         </record>
 
