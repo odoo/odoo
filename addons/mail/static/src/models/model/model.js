@@ -146,6 +146,15 @@ function factory() {
         }
 
         /**
+         * Returns whether the current record exists.
+         *
+         * @returns {boolean}
+         */
+        exists() {
+            return this.env.modelManager.exists(this.constructor, this);
+        }
+
+        /**
          * Update this record with provided data.
          *
          * @param {Object} [data={}]
