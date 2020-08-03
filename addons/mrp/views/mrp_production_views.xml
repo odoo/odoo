@@ -156,7 +156,7 @@
                                 <field name="product_uom_id" options="{'no_open': True, 'no_create': True}" force_save="1" groups="uom.group_uom" attrs="{'readonly': [('state', '!=', 'draft')]}" class="oe_inline"/>
                                 <span class='text-bf'>To Produce</span>
                             </div>
-                            <label for="lot_producing_id" attrs="{'invisible': [('product_tracking', 'in', ('none', False))]}"/>
+                            <label for="lot_producing_id" attrs="{'invisible': ['|', ('state', '=', 'draft'), ('product_tracking', 'in', ('none', False))]}"/>
                             <div class="o_row" attrs="{'invisible': [('product_tracking', 'in', ('none', False))]}">
                                 <field name="lot_producing_id"
                                     context="{'default_product_id': product_id, 'default_company_id': company_id}" attrs="{'invisible': [('product_tracking', 'in', ('none', False))]}"/>
