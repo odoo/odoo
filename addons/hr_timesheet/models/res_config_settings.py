@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from odoo import fields, models
+from odoo import api, fields, models
 
 
 class ResConfigSettings(models.TransientModel):
@@ -20,3 +20,10 @@ class ResConfigSettings(models.TransientModel):
         and widgets to help the encoding. All reporting will still be expressed in hours (default value).""")
     timesheet_min_duration = fields.Integer('Minimal duration', default=15, config_parameter='hr_timesheet.timesheet_min_duration')
     timesheet_rounding = fields.Integer('Rounding up', default=15, config_parameter='hr_timesheet.timesheet_rounding')
+    is_encode_uom_days = fields.Boolean(compute='_compute_is_encode_uom_days')
+
+    @api.depends('timesheet_encode_uom_id')
+    def _compute_is_encode_uom_days(self):
+        product_uom_day = self.env.ref('uom.product_uom_day')
+        for settings in self:
+            settings.is_encode_uom_days = settings.timesheet_encode_uom_id == product_uom_day

@@ -14,4 +14,5 @@ class PortalAccount(PortalAccount):
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
         domain = expression.AND([domain, [('timesheet_invoice_id', '=', invoice.id)]])
         values['timesheets'] = request.env['account.analytic.line'].sudo().search(domain)
+        values['is_uom_day'] = request.env['account.analytic.line'].sudo()._is_timesheet_encode_uom_day()
         return values

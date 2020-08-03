@@ -1287,7 +1287,14 @@ var FieldFloatToggle = AbstractField.extend({
             this._setValue(next_val); // will be parsed in _setValue
         }
     },
-
+    /**
+     * For float toggle fields, 0 is a valid value.
+     *
+     * @override
+     */
+    isSet: function () {
+        return this.value === 0 || this._super(...arguments);
+    },
 });
 
 var FieldPercentage = FieldFloat.extend({
