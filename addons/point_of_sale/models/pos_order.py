@@ -363,7 +363,7 @@ class PosOrder(models.Model):
                     amount_subtotal = line.price_subtotal
 
                 # Search for the income account using fiscal position.
-                income_account = line.product_id.product_tmpl_id.get_product_accounts(self.fiscal_position_id)['income'].id
+                income_account = line.product_id.product_tmpl_id.get_product_accounts(order.fiscal_position_id)['income'].id
                 if not income_account:
                     raise UserError(_('Please define income '
                                       'account for this product: "%s" (id:%d).')
