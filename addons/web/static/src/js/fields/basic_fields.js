@@ -863,6 +863,25 @@ var FieldDate = InputField.extend({
         this.datewidget.setValue(this.value);
         this.$input = this.datewidget.$input;
     },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * Confirm the value on hit enter and re-render
+     *
+     * @private
+     * @override
+     * @param {KeyboardEvent} ev
+     */
+    async _onKeydown(ev) {
+        this._super(...arguments);
+        if (ev.which === $.ui.keyCode.ENTER) {
+            await this._setValue(this.$input.val());
+            this._render();
+        }
+    },
 });
 
 var FieldDateTime = FieldDate.extend({
