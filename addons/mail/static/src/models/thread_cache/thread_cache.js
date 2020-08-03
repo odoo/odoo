@@ -95,6 +95,17 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            const {
+                stringifiedDomain = '[]',
+                thread: [[commandInsert, thread]],
+            } = data;
+            return `${this.modelName}_[${thread.localId}]_<${stringifiedDomain}>`;
+        }
+
+        /**
          * @private
          */
         _computeCheckedMessages() {
@@ -202,18 +213,6 @@ function factory(dependencies) {
             return [['replace', this.messages.filter(
                 message => message.hasCheckbox && !this.checkedMessages.includes(message)
             )]];
-        }
-
-        /**
-         * @override
-         */
-        _createRecordLocalId(data) {
-            const {
-                stringifiedDomain = '[]',
-                thread: [[commandInsert, thread]],
-            } = data;
-            const ThreadCache = this.env.models['mail.thread_cache'];
-            return `${ThreadCache.modelName}_[${thread.localId}]_<${stringifiedDomain}>`;
         }
 
         /**

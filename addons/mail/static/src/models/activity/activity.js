@@ -210,6 +210,13 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
+
+        /**
          * @private
          * @returns {boolean}
          */

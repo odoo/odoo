@@ -6,7 +6,20 @@ const { attr } = require('mail/static/src/model/model_field.js');
 
 function factory(dependencies) {
 
-    class Country extends dependencies['mail.model'] {}
+    class Country extends dependencies['mail.model'] {
+
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
+
+    }
 
     Country.fields = {
         id: attr(),
