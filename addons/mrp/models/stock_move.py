@@ -415,8 +415,11 @@ class StockMove(models.Model):
 
     def _show_details_in_draft(self):
         self.ensure_one()
-        if self.raw_material_production_id and self.state == 'draft':
+        production = self.raw_material_production_id or self.production_id
+        if production and (self.state != 'draft' or production.state != 'draft'):
             return True
+        elif production:
+            return False
         else:
             return super()._show_details_in_draft()
 
