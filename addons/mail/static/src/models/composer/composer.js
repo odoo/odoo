@@ -109,7 +109,7 @@ function factory(dependencies) {
             };
             const options = {
                 on_close: () => {
-                    if (!this.constructor.get(this)) {
+                    if (!this.exists()) {
                         return;
                     }
                     this._reset();

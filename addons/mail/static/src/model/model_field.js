@@ -601,8 +601,7 @@ class ModelField {
      * @param {string|string[]|mail.model|mail.model[]} newValue
      */
     _setRelationLink(record, newValue) {
-        const Model = record.constructor;
-        if (!Model.get(record)) {
+        if (!record.exists()) {
             // current record may be deleted due to causality
             return;
         }
@@ -770,8 +769,7 @@ class ModelField {
      * @param {string|string[]|mail.model|mail.model[]|null} newValue
      */
     _setRelationUnlink(record, newValue) {
-        const Model = record.constructor;
-        if (!Model.get(record)) {
+        if (!record.exists()) {
             // current record may be deleted due to causality
             return;
         }

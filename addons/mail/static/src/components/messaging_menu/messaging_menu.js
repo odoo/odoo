@@ -247,7 +247,7 @@ class MessagingMenu extends Component {
      */
     _onSelectThread(ev) {
         ev.stopPropagation();
-        this.env.models['mail.thread'].get(ev.detail.thread).open();
+        ev.detail.thread.open();
         if (!this.env.messaging.device.isMobile) {
             this.messagingMenu.close();
         }
