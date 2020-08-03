@@ -593,16 +593,7 @@ class ModelField {
         // TODO IMP insert-and-replace should not unlink-all (task-2270780)
         this._setRelationUnlink(record, null);
         const OtherModel = this.env.models[this.to];
-        let other;
-        if (['one2one', 'many2one'].includes(this.relationType)) {
-            other = OtherModel.insert(data);
-        } else {
-            if (data instanceof Array) {
-                other = data.map(d => OtherModel.insert(d));
-            } else {
-                other = OtherModel.insert(data);
-            }
-        }
+        const other = OtherModel.insert(data);
         this._setRelationLink(record, other);
     }
 
