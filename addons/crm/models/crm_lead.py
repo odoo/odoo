@@ -295,7 +295,7 @@ class Lead(models.Model):
     @api.depends('partner_id.email')
     def _compute_email_from(self):
         for lead in self:
-            if lead.partner_id and lead.partner_id.email != lead.email_from:
+            if lead.partner_id.email and lead.partner_id.email != lead.email_from:
                 lead.email_from = lead.partner_id.email
 
     def _inverse_email_from(self):
@@ -306,7 +306,7 @@ class Lead(models.Model):
     @api.depends('partner_id.phone')
     def _compute_phone(self):
         for lead in self:
-            if lead.partner_id and lead.phone != lead.partner_id.phone:
+            if lead.partner_id.phone and lead.phone != lead.partner_id.phone:
                 lead.phone = lead.partner_id.phone
 
     def _inverse_phone(self):
