@@ -4,7 +4,7 @@
 {
     'name': 'Turkey - Accounting',
     'version': '1.0',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 Türkiye için Tek düzen hesap planı şablonu Odoo Modülü.
 ==========================================================

@@ -16,7 +16,7 @@
 
     'author': "Odoo",
     'website': "https://www.odoo.com",
-    'category': 'Accounting/Accounting',
+    'category': 'Accounting/Localizations/Purchase',
     'version': '1.0',
 
     'depends': ['l10n_in_purchase', 'l10n_in_stock'],

@@ -5,7 +5,7 @@
     'name': 'Indian - Purchase Report(GST)',
     'version': '1.0',
     'description': """GST Purchase Report""",
-    'category': 'Accounting/Accounting',
+    'category': 'Accounting/Localizations/Purchase',
     'depends': [
         'l10n_in',
         'purchase',

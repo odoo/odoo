@@ -5,7 +5,7 @@
     'version' : '1.0',
     'author': 'XCLUDE',
     'website': 'https://www.xclude.se',
-    'category': 'Localization',
+    'category': 'Accounting/Localizations',
     'description': """
 Add Structured Communication to Customer Invoices and Vendor Bill.
 ------------------------------------------------------------------

@@ -5,7 +5,7 @@
     'name': 'Uruguay - Chart of Accounts',
     'version': '0.1',
     'author': 'Uruguay l10n Team, Guillem Barba',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 General Chart of Accounts.
 ==========================
