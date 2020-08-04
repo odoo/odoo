@@ -231,6 +231,7 @@ odoo.define('web.test_utils', async function (require) {
             dragoverFile: testUtilsFile.dragoverFile,
             dropFile: testUtilsFile.dropFile,
             dropFiles: testUtilsFile.dropFiles,
+            inputFiles: testUtilsFile.inputFiles,
         },
 
         createActionManager: testUtilsCreate.createActionManager,

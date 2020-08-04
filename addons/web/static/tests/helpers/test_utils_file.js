@@ -29,7 +29,7 @@ function _createFakeDataTransfer(files) {
         effectAllowed: 'all',
         files,
         getData: function () {
-            return file;
+            return files;
         },
         items: [],
         types: ['Files'],
@@ -115,6 +115,34 @@ function dropFiles($el, files) {
     $el[0].dispatchEvent(ev);
 }
 
+/**
+ * Set files in a file input
+ *
+ * @param {DOM.Element} el
+ * @param {Object[]} files must have been created beforehand
+ *   @see testUtils.file.createFile
+ */
+function inputFiles(el, files) {
+    // could not use _createFakeDataTransfer as el.files assignation will only
+    // work with a real FileList object.
+    const dataTransfer = new window.DataTransfer();
+    for (const file of files) {
+        dataTransfer.items.add(file);
+    }
+    el.files = dataTransfer.files;
+    /**
+     * Changing files programatically is not supposed to trigger the event but
+     * it does in Chrome versions before 73 (which is on runbot), so in that
+     * case there is no need to make a manual dispatch, because it would lead to
+     * the files being added twice.
+     */
+    const versionRaw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
+    const chromeVersion = versionRaw ? parseInt(versionRaw[2], 10) : false;
+    if (!chromeVersion || chromeVersion >= 73) {
+        el.dispatchEvent(new Event('change'));
+    }
+}
+
 //------------------------------------------------------------------------------
 // Exposed API
 //------------------------------------------------------------------------------
@@ -124,6 +152,7 @@ return {
     dragoverFile: dragoverFile,
     dropFile: dropFile,
     dropFiles,
+    inputFiles,
 };
 
 });

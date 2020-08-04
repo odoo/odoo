@@ -10,13 +10,17 @@ const {
     beforeEach: utilsBeforeEach,
     dragenterFiles,
     dropFiles,
-    inputFiles,
     nextAnimationFrame,
     pasteFiles,
     start: utilsStart,
 } = require('mail/static/src/utils/test_utils.js');
 
-const { file: { createFile } } = require('web.test_utils');
+const {
+    file: {
+        createFile,
+        inputFiles,
+    },
+} = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
