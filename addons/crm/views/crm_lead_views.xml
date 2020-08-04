@@ -47,10 +47,10 @@
                             <h1><field name="name" placeholder="e.g. Product Pricing"/></h1>
                             <h2 class="o_row row no-gutters d-flex align-items-end">
                                 <div class="col" attrs="{'invisible': [('type', '=', 'lead')]}">
-                                    <label for="planned_revenue" class="oe_edit_only" />
+                                    <label for="expected_revenue" class="oe_edit_only" />
                                     <div class="o_row">
                                         <field name="company_currency" invisible="1"/>
-                                        <field name="planned_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
+                                        <field name="expected_revenue" class="oe_inline" widget='monetary' options="{'currency_field': 'company_currency'}"/>
                                         <span class="oe_grey p-2"> at </span>
                                     </div>
                                 </div>
@@ -387,7 +387,7 @@
             <field name="priority" eval="2"/>
             <field name="arch" type="xml">
                 <calendar string="Leads Generation" create="0" mode="month" date_start="activity_date_deadline" color="user_id" hide_time="true" event_limit="5">
-                    <field name="planned_revenue"/>
+                    <field name="expected_revenue"/>
                     <field name="partner_id" avatar_field="image_128"/>
                     <field name="user_id" filters="1" invisible="1"/>
                 </calendar>
@@ -405,9 +405,9 @@
                         <field name="name" placeholder="e.g. Product Pricing" />
                         <field name="email_from" string="Email" />
                         <field name="phone" string="Phone" />
-                        <label for="planned_revenue"/>
+                        <label for="expected_revenue"/>
                         <div class="o_row">
-                            <field name="planned_revenue" class="oe_inline mr-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                            <field name="expected_revenue" class="oe_inline mr-5" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                             <field name="priority" class="oe_inline" nolabel="1" widget="priority"/>
                         </div>
                         <field name="company_currency" invisible="1"/>
@@ -441,7 +441,7 @@
                             <img t-att-src="activity_image('res.users', 'image_128', record.user_id.raw_value)" t-att-title="record.user_id.value" t-att-alt="record.user_id.value"/>
                             <div>
                                 <field name="name" display="full"/>
-                                <field name="planned_revenue" widget="monetary" display="full" muted="1"/>
+                                <field name="expected_revenue" widget="monetary" display="full" muted="1"/>
                             </div>
                         </div>
                     </templates>
@@ -459,7 +459,7 @@
                     <field name="stage_id" options='{"group_by_tooltip": {"requirements": "Description"}}'/>
                     <field name="color"/>
                     <field name="priority"/>
-                    <field name="planned_revenue"/>
+                    <field name="expected_revenue"/>
                     <field name="kanban_state"/>
                     <field name="activity_date_deadline"/>
                     <field name="user_email"/>
@@ -470,7 +470,7 @@
                     <field name="company_currency"/>
                     <field name="activity_state" />
                     <field name="activity_ids" />
-                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="planned_revenue" help="This bar allows to filter the opportunities based on scheduled activities."/>
+                    <progressbar field="activity_state" colors='{"planned": "success", "today": "warning", "overdue": "danger"}' sum_field="expected_revenue" help="This bar allows to filter the opportunities based on scheduled activities."/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="#{!selection_mode ? kanban_color(record.color.raw_value) : ''} oe_kanban_global_click">
@@ -490,8 +490,8 @@
                                         <strong><field name="name"/></strong>
                                     </div>
                                     <div class="o_kanban_record_subtitle">
-                                        <t t-if="record.planned_revenue.raw_value">
-                                            <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                                        <t t-if="record.expected_revenue.raw_value">
+                                            <field name="expected_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                                             <span t-if="record.partner_id.value"> - </span>
                                         </t>
                                         <span t-if="record.partner_id.value" t-esc="record.partner_id.value"></span>
@@ -644,7 +644,7 @@
                     <field name="medium_id" optional="hide"/>
                     <field name="source_id" optional="hide"/>
                     <field name="company_currency" invisible="1"/>
-                    <field name="planned_revenue" sum="Expected Revenues" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
+                    <field name="expected_revenue" sum="Expected Revenues" optional="show" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                     <field name="stage_id" optional="show" decoration-bf="1"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" optional="hide"/>
@@ -730,7 +730,7 @@
                 <pivot string="Pipeline Analysis">
                     <field name="create_date" interval="month" type="row"/>
                     <field name="stage_id" type="col"/>
-                    <field name="planned_revenue" type="measure"/>
+                    <field name="expected_revenue" type="measure"/>
                     <field name="color" invisible="1"/>
                 </pivot>
             </field>
