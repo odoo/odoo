@@ -84,7 +84,7 @@
     customize_show="True">
     <xpath expr="//ul[hasclass('o_wesession_topbar_filters')]" position="inside">
         <t t-foreach="tag_categories" t-as="tag_category">
-            <li t-if="tag_category.tag_ids" class="nav-item dropdown mr-2 my-1">
+            <li t-if="tag_category.tag_ids and any(tag.color for tag in tag_category.tag_ids)" class="nav-item dropdown mr-2 my-1">
                 <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
                     <i class="fa fa-folder-open"/>
                     <t t-esc="tag_category.name"/>
@@ -95,6 +95,7 @@
                                 slug(event),
                                 keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))
                             )"
+                            t-if="tag.color"
                             t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
                             <t t-esc="tag.name"/>
                         </a>
@@ -226,7 +227,7 @@
                         </span>
                         <div t-att-class="'%s col-12 mt-2 mt-md-0' % ('col-md-2' if not event.is_done else 'col-md-3')">
                             <t t-foreach="track.tag_ids" t-as="tag">
-                                <t t-call="website_event_track_session.track_tag_badge_link"/>
+                                <t t-if="tag.color" t-call="website_event_track_session.track_tag_badge_link"/>
                             </t>
                         </div>
                         <div t-att-class="'%s col-12 mt-2 mt-md-0' % ('col-md-6' if not event.is_done else 'col-md-4')"
@@ -311,7 +312,7 @@
                         <!-- Tags> -->
                         <div>
                             <t t-foreach="track.tag_ids" t-as="tag">
-                                <t t-call="website_event_track_session.track_tag_badge_info"/>
+                                <t t-if="tag.color" t-call="website_event_track_session.track_tag_badge_info"/>
                             </t>
                         </div>
                     </main>
