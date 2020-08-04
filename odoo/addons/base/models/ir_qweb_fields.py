@@ -222,6 +222,7 @@ class DateTimeConverter(models.AbstractModel):
         options = super(DateTimeConverter, self).get_available_options()
         options.update(
             format=dict(type='string', string=_('Pattern to format')),
+            tz_name=dict(type='char', string=_('Optional timezone name')),
             time_only=dict(type='boolean', string=_('Display only the time')),
             hide_seconds=dict(type='boolean', string=_('Hide seconds')),
             date_only=dict(type='boolean', string=_('Display only the date')),
@@ -242,6 +243,11 @@ class DateTimeConverter(models.AbstractModel):
 
         value = fields.Datetime.context_timestamp(self, value)
 
+        if options.get('tz_name'):
+            tzinfo = babel.dates.get_timezone(options['tz_name'])
+        else:
+            tzinfo = None
+
         if 'format' in options:
             pattern = options['format']
         else:
@@ -259,10 +265,12 @@ class DateTimeConverter(models.AbstractModel):
 
         if options.get('time_only'):
             format_func = babel.dates.format_time
+            return pycompat.to_text(format_func(value, format=pattern, locale=locale))
         if options.get('date_only'):
             format_func = babel.dates.format_date
+            return pycompat.to_text(format_func(value, format=pattern, locale=locale))
 
-        return pycompat.to_text(format_func(value, format=pattern, locale=locale))
+        return pycompat.to_text(format_func(value, format=pattern, tzinfo=tzinfo, locale=locale))
 
 
 class TextConverter(models.AbstractModel):
@@ -528,6 +536,11 @@ class DurationConverter(models.AbstractModel):
                 description=_("Formatting: long, short, narrow (not used for digital)"),
                 default_value='long'
             ),
+            add_direction=dict(
+                type="boolean",
+                string=_("Add direction"),
+                description=_("Add directional information (not used for digital)")
+            ),
         )
         return options
 
@@ -566,7 +579,12 @@ class DurationConverter(models.AbstractModel):
             if not v:
                 continue
             section = babel.dates.format_timedelta(
-                v*secs_per_unit, format=options.get('format', 'long'), threshold=1, locale=locale)
+                v*secs_per_unit,
+                granularity=round_to,
+                add_direction=options.get('add_direction'),
+                format=options.get('format', 'long'),
+                threshold=1,
+                locale=locale)
             if section:
                 sections.append(section)
 

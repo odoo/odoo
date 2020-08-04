@@ -71,6 +71,9 @@ class AccountMoveReversal(models.TransientModel):
             'auto_post': True if reverse_date > fields.Date.context_today(self) else False,
         }
 
+    def _reverse_moves_post_hook(self, moves):
+        return
+
     def reverse_moves(self):
         self.ensure_one()
         moves = self.move_ids
@@ -100,6 +103,8 @@ class AccountMoveReversal(models.TransientModel):
             return
 
         self.new_move_ids = new_moves
+        if new_moves:
+            self._reverse_moves_post_hook(new_moves)
 
         # Create action.
         action = {

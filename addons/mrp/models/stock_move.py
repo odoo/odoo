@@ -108,7 +108,7 @@ class StockMove(models.Model):
         store=True,
         help='Technical Field to order moves')
     needs_lots = fields.Boolean('Tracking', compute='_compute_needs_lots')
-    order_finished_lot_ids = fields.Many2many('stock.production.lot', compute='_compute_order_finished_lot_ids')
+    order_finished_lot_ids = fields.Many2many('stock.production.lot', string="Finished Lot/Serial Number", compute='_compute_order_finished_lot_ids')
     finished_lots_exist = fields.Boolean('Finished Lots Exist', compute='_compute_order_finished_lot_ids')
     should_consume_qty = fields.Float('Quantity To Consume', compute='_compute_should_consume_qty')
 
@@ -123,7 +123,8 @@ class StockMove(models.Model):
     def _compute_order_finished_lot_ids(self):
         for move in self:
             if move.raw_material_production_id.move_finished_ids:
-                finished_lots_ids = move.raw_material_production_id.move_finished_ids.mapped('move_line_ids.lot_id').ids
+                # TODO ryv : to clean in master, finished_lots_exist is never used. order_finished_lot_ids can become one2many instead
+                finished_lots_ids = move.raw_material_production_id.lot_producing_id
                 if finished_lots_ids:
                     move.order_finished_lot_ids = finished_lots_ids
                     move.finished_lots_exist = True
@@ -316,6 +317,16 @@ class StockMove(models.Model):
                 vals['state'] = 'assigned'
         return vals
 
+    @api.model
+    def _consuming_picking_types(self):
+        res = super()._consuming_picking_types()
+        res.append('mrp_operation')
+        return res
+
+    def _get_source_document(self):
+        res = super()._get_source_document()
+        return res or self.production_id or self.raw_material_production_id
+
     def _get_upstream_documents_and_responsibles(self, visited):
         if self.production_id and self.production_id.state not in ('done', 'cancel'):
             return [(self.production_id, self.production_id.user_id, visited)]
@@ -404,8 +415,11 @@ class StockMove(models.Model):
 
     def _show_details_in_draft(self):
         self.ensure_one()
-        if self.raw_material_production_id and self.state == 'draft':
+        production = self.raw_material_production_id or self.production_id
+        if production and (self.state != 'draft' or production.state != 'draft'):
             return True
+        elif production:
+            return False
         else:
             return super()._show_details_in_draft()
 

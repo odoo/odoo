@@ -4,6 +4,7 @@
 import json
 import time
 from ast import literal_eval
+from collections import defaultdict
 from datetime import date
 from itertools import groupby
 from operator import itemgetter
@@ -370,6 +371,12 @@ class Picking(models.Model):
     immediate_transfer = fields.Boolean(default=False)
     package_level_ids = fields.One2many('stock.package_level', 'picking_id')
     package_level_ids_details = fields.One2many('stock.package_level', 'picking_id')
+    products_availability = fields.Char(
+        string="Product Availability", compute='_compute_products_availability')
+    products_availability_state = fields.Selection([
+        ('available', 'Available'),
+        ('expected', 'Expected'),
+        ('late', 'Late')], compute='_compute_products_availability')
 
     _sql_constraints = [
         ('name_uniq', 'unique(name, company_id)', 'Reference must be unique per company!'),
@@ -385,6 +392,25 @@ class Picking(models.Model):
         delay_alert_date_data = {data['picking_id'][0]: data['delay_alert_date'] for data in delay_alert_date_data}
         for picking in self:
             picking.delay_alert_date = delay_alert_date_data.get(picking.id, False)
+
+    @api.depends('move_lines', 'state')
+    def _compute_products_availability(self):
+        self.products_availability = False
+        self.products_availability_state = 'available'
+        pickings = self.filtered(lambda picking: picking.state not in ['cancel', 'draft', 'done'] and picking.picking_type_code == 'outgoing')
+        for picking in pickings:
+            forecast_data = []
+            for move in picking.move_lines:
+                if move.json_forecast:
+                    forecast_data.append(json.loads(move.json_forecast))
+            picking.products_availability = 'Available'
+            forecast_data.sort(key=lambda line: line.get('sortingDate', ''), reverse=True)
+            if len(forecast_data) > 0 and forecast_data[0].get('sortingDate', False):
+                picking.products_availability = _('Exp %s', forecast_data[0]['expectedDate'])
+                picking.products_availability_state = 'late' if forecast_data[0]['isLate'] else 'expected'
+            elif any(not data.get('reservedAvailability', False) for data in forecast_data):
+                picking.products_availability = 'Not Available'
+                picking.products_availability_state = 'late'
 
     @api.depends('picking_type_id.show_operations')
     def _compute_show_operations(self):
@@ -680,6 +706,20 @@ class Picking(models.Model):
         package_level_done.write({'is_done': False})
         moves._action_assign()
         package_level_done.write({'is_done': True})
+
+        # run scheduler for moves are not fully reserved
+        orderpoints_by_company = defaultdict(lambda: self.env['stock.warehouse.orderpoint'])
+        for move in moves:
+            orderpoint = self.env['stock.warehouse.orderpoint'].search([
+                ('product_id', '=', move.product_id.id),
+                ('trigger', '=', 'auto'),
+                ('location_id', 'parent_of', move.location_id.id),
+            ], limit=1)
+            if orderpoint:
+                orderpoints_by_company[move.company_id] |= orderpoint
+        for company, orderpoints in orderpoints_by_company.items():
+            orderpoints._procure_orderpoint_confirm(company_id=company, raise_user_error=False)
+
         return True
 
     def action_cancel(self):
@@ -728,6 +768,16 @@ class Picking(models.Model):
                     todo_moves |= new_move
         todo_moves._action_done(cancel_backorder=self.env.context.get('cancel_backorder'))
         self.write({'date_done': fields.Datetime.now()})
+
+        # if incoming moves make other confirmed/partially_available moves available, assign them
+        done_incoming_moves = self.filtered(lambda p: p.picking_type_id.code == 'incoming').move_lines.filtered(lambda m: m.state == 'done')
+        domains = []
+        for move in done_incoming_moves:
+            domains.append([('product_id', '=', move.product_id.id), ('location_id', '=', move.location_dest_id.id)])
+        static_domain = [('state', 'in', ['confirmed', 'partially_available']), ('procure_method', '=', 'make_to_stock')]
+        moves_to_reserve = self.env['stock.move'].search(expression.AND([static_domain, expression.OR(domains)]))
+        moves_to_reserve._action_assign()
+
         self._send_confirmation_email()
         return True
 

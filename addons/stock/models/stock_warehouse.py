@@ -198,9 +198,8 @@ class Warehouse(models.Model):
                     ('state', 'not in', ('done', 'cancel')),
                 ])
                 if move_ids:
-                    raise UserError(_('You still have ongoing operations for picking\
-                        types %s in warehouse %s') %
-                        (', '.join(move_ids.mapped('picking_type_id.name')), warehouse.name))
+                    raise UserError(_('You still have ongoing operations for picking types %s in warehouse %s') %
+                                    (', '.join(move_ids.mapped('picking_type_id.name')), warehouse.name))
                 else:
                     picking_type_ids.write({'active': vals['active']})
                 location_ids = self.env['stock.location'].with_context(active_test=False).search([('location_id', 'child_of', warehouse.view_location_id.id)])
@@ -210,9 +209,8 @@ class Warehouse(models.Model):
                     ('id', 'not in', picking_type_ids.ids),
                 ])
                 if picking_type_using_locations:
-                    raise UserError(_('%s use default source or destination locations\
-                        from warehouse %s that will be archived.') %
-                        (', '.join(picking_type_using_locations.mapped('name')), warehouse.name))
+                    raise UserError(_('%s use default source or destination locations from warehouse %s that will be archived.') %
+                                    (', '.join(picking_type_using_locations.mapped('name')), warehouse.name))
                 warehouse.view_location_id.write({'active': vals['active']})
 
                 rule_ids = self.env['stock.rule'].with_context(active_test=False).search([('warehouse_id', '=', self.id)])

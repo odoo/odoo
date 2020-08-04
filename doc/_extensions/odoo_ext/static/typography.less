@@ -33,6 +33,13 @@ h1, h2, h3, h4, h5, h6 {
     border-bottom: 2px solid #f4f6f7;
 }
 
+.footnote-ref {
+    &:before {content: '[';}
+    &:after {content: ']';}
+    vertical-align: super;
+    font-size: 1ex;
+}
+
 article.doc-body {
 
     // Vertical rhythm

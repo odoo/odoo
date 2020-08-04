@@ -16,8 +16,8 @@ from odoo.addons.portal.controllers.portal import CustomerPortal, pager as porta
 
 class TimesheetCustomerPortal(CustomerPortal):
 
-    def _prepare_portal_layout_values(self):
-        values = super(TimesheetCustomerPortal, self)._prepare_portal_layout_values()
+    def _prepare_home_portal_values(self):
+        values = super(TimesheetCustomerPortal, self)._prepare_home_portal_values()
         domain = request.env['account.analytic.line']._timesheet_get_portal_domain()
         values['timesheet_count'] = request.env['account.analytic.line'].sudo().search_count(domain)
         return values
@@ -141,5 +141,6 @@ class TimesheetCustomerPortal(CustomerPortal):
             'searchbar_groupby': searchbar_groupby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
             'filterby': filterby,
+            'is_uom_day': request.env['account.analytic.line']._is_timesheet_encode_uom_day(),
         })
         return request.render("hr_timesheet.portal_my_timesheets", values)

@@ -56,6 +56,17 @@ function factory(dependencies) {
             }
         }
 
+        //----------------------------------------------------------------------
+        // Private
+        //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
+
     }
 
     MailTemplate.fields = {

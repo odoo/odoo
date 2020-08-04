@@ -45,7 +45,7 @@ class AccountAnalyticLine(models.Model):
         'project.project', 'Project', compute='_compute_project_task_id', store=True, readonly=False,
         domain=_domain_project_id)
     user_id = fields.Many2one(compute='_compute_user_id', store=True, readonly=False)
-    employee_id = fields.Many2one('hr.employee', "Employee", check_company=True, domain=_domain_employee_id)
+    employee_id = fields.Many2one('hr.employee', "Employee", domain=_domain_employee_id)
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
 
@@ -94,7 +94,7 @@ class AccountAnalyticLine(models.Model):
 
     def write(self, values):
         # If it's a basic user then check if the timesheet is his own.
-        if not self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') and any(self.env.user.id != analytic_line.user_id.id for analytic_line in self):
+        if not (self.user_has_groups('hr_timesheet.group_hr_timesheet_approver') or self.env.su) and any(self.env.user.id != analytic_line.user_id.id for analytic_line in self):
             raise AccessError(_("You cannot access timesheets that are not yours."))
 
         values = self._timesheet_preprocess(values)
@@ -189,3 +189,15 @@ class AccountAnalyticLine(models.Model):
                     'amount': amount_converted,
                 })
         return result
+
+    def _is_timesheet_encode_uom_day(self):
+        company_uom = self.env.company.timesheet_encode_uom_id
+        return company_uom == self.env.ref('uom.product_uom_day')
+
+    def _convert_hours_to_days(self, time):
+        uom_hour = self.env.ref('uom.product_uom_hour')
+        uom_day = self.env.ref('uom.product_uom_day')
+        return round(uom_hour._compute_quantity(time, uom_day, raise_if_failure=False), 2)
+
+    def _get_timesheet_time_day(self):
+        return self._convert_hours_to_days(self.unit_amount)

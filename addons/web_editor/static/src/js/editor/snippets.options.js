@@ -77,7 +77,14 @@ function _buildTitleElement(title) {
  * @param {string} src
  * @returns {HTMLElement}
  */
-function _buildImgElement(src) {
+async function _buildImgElement(src) {
+    if (src.split('.').pop() === 'svg') {
+        const response = await window.fetch(src);
+        const text = await response.text();
+        const parser = new window.DOMParser();
+        const xmlDoc = parser.parseFromString(text, 'text/xml');
+        return xmlDoc.getElementsByTagName('svg')[0];
+    }
     const imgEl = document.createElement('img');
     imgEl.src = src;
     return imgEl;
@@ -156,15 +163,23 @@ const UserValueWidget = Widget.extend({
     /**
      * @override
      */
+    async willStart() {
+        await this._super(...arguments);
+        if (this.options.dataAttributes.img) {
+            this.imgEl = await _buildImgElement(this.options.dataAttributes.img);
+        }
+    },
+    /**
+     * @override
+     */
     _makeDescriptive: function () {
         const $el = this._super(...arguments);
         const el = $el[0];
         _addTitleAndAllowedAttributes(el, this.title, this.options);
         this.containerEl = document.createElement('div');
 
-        if (el.dataset.img) {
-            const imgEl = _buildImgElement(el.dataset.img);
-            this.containerEl.appendChild(imgEl);
+        if (this.imgEl) {
+            this.containerEl.appendChild(this.imgEl);
         }
 
         el.appendChild(this.containerEl);
@@ -192,7 +207,13 @@ const UserValueWidget = Widget.extend({
      * @override
      */
     destroy() {
-        this.$el.off('.img_animate');
+        // Check if $el exists in case the widget is destroyed before it has
+        // been fully initialized.
+        // TODO there is probably better to do. This case was found only in
+        // tours, where the editor is left before the widget icon is loaded.
+        if (this.$el) {
+            this.$el.off('.img_animate');
+        }
         this._super(...arguments);
     },
 
@@ -1443,7 +1464,7 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
         this.inputEl.setAttribute('data-target', '#' + datetimePickerId);
 
         const datepickersOptions = {
-            minDate: moment({y: 1900}),
+            minDate: moment({ y: 1 }),
             maxDate: moment().add(200, 'y'),
             calendarWeeks: true,
             defaultDate: moment().format(),
@@ -1601,6 +1622,7 @@ const SnippetOptionWidget = Widget.extend({
     tagName: 'we-customizeblock-option',
     custom_events: {
         'user_value_update': '_onUserValueUpdate',
+        'user_value_widget_critical': '_onUserValueWidgetCritical',
     },
     /**
      * Indicates if the option should be displayed in the button group at the
@@ -2279,6 +2301,13 @@ const SnippetOptionWidget = Widget.extend({
         await this._renderXMLWidgets(uiFragment);
         await this._renderCustomWidgets(uiFragment);
 
+        if (this.isDestroyed()) {
+            // TODO there is probably better to do. This case was found only in
+            // tours, where the editor is left before the widget are fully
+            // loaded (loadMethodsData doesn't work if the widget is destroyed).
+            return uiFragment;
+        }
+
         const validMethodNames = [];
         for (const key in this) {
             validMethodNames.push(key);
@@ -2545,6 +2574,14 @@ const SnippetOptionWidget = Widget.extend({
                 reloadEditor: true,
             });
         }
+    },
+    /**
+     * @private
+     */
+    _onUserValueWidgetCritical() {
+        this.trigger_up('remove_snippet', {
+            $snippet: this.$target,
+        });
     },
 });
 const registry = {};
@@ -3697,7 +3734,7 @@ registry.many2one = SnippetOptionWidget.extend({
         this.$search.find('input')
             .focus()
             .on('keyup', function (e) {
-                self.$overlay.removeClass('o_keypress');
+                self.$overlay.removeClass('o_overlay_hidden');
                 self._findExisting($(this).val());
             });
 

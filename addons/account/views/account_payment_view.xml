@@ -9,6 +9,9 @@
             <field name="model">account.payment</field>
             <field name="arch" type="xml">
                 <tree edit="false" sample="1">
+                    <header>
+                        <button name="action_post" type="object" string="Confirm"/>
+                    </header>
                     <field name="date"/>
                     <field name="name"/>
                     <field name="journal_id"/>

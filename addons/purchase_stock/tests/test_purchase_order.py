@@ -4,39 +4,36 @@
 from datetime import datetime, timedelta
 
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
-from odoo.addons.account.tests.common import AccountTestCommon
+from odoo.addons.stock_account.tests.test_anglo_saxon_valuation_reconciliation_common import ValuationReconciliationTestCommon
 from odoo.tests import Form, tagged
 
 
 @tagged('post_install', '-at_install')
-class TestPurchaseOrder(AccountTestCommon):
+class TestPurchaseOrder(ValuationReconciliationTestCommon):
 
-    def setUp(self):
-        super(TestPurchaseOrder, self).setUp()
-        # Useful models
-        self.PurchaseOrder = self.env['purchase.order']
-        self.PurchaseOrderLine = self.env['purchase.order.line']
-        self.partner_id = self.env['res.partner'].create({'name': 'Wood Corner Partner'})
-        self.product_id_1 = self.env['product.product'].create({'name': 'Large Desk'})
-        self.product_id_2 = self.env['product.product'].create({'name': 'Conference Chair'})
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        (self.product_id_1 | self.product_id_2).write({'purchase_method': 'purchase'})
-        self.po_vals = {
-            'partner_id': self.partner_id.id,
+        cls.product_id_1 = cls.env['product.product'].create({'name': 'Large Desk', 'purchase_method': 'purchase'})
+        cls.product_id_2 = cls.env['product.product'].create({'name': 'Conference Chair', 'purchase_method': 'purchase'})
+
+        cls.po_vals = {
+            'partner_id': cls.partner_a.id,
             'order_line': [
                 (0, 0, {
-                    'name': self.product_id_1.name,
-                    'product_id': self.product_id_1.id,
+                    'name': cls.product_id_1.name,
+                    'product_id': cls.product_id_1.id,
                     'product_qty': 5.0,
-                    'product_uom': self.product_id_1.uom_po_id.id,
+                    'product_uom': cls.product_id_1.uom_po_id.id,
                     'price_unit': 500.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 }),
                 (0, 0, {
-                    'name': self.product_id_2.name,
-                    'product_id': self.product_id_2.id,
+                    'name': cls.product_id_2.name,
+                    'product_id': cls.product_id_2.id,
                     'product_qty': 5.0,
-                    'product_uom': self.product_id_2.uom_po_id.id,
+                    'product_uom': cls.product_id_2.uom_po_id.id,
                     'price_unit': 250.0,
                     'date_planned': datetime.today().strftime(DEFAULT_SERVER_DATETIME_FORMAT),
                 })],
@@ -44,15 +41,15 @@ class TestPurchaseOrder(AccountTestCommon):
 
     def test_00_purchase_order_flow(self):
         # Ensure product_id_2 doesn't have res_partner_1 as supplier
-        if self.partner_id in self.product_id_2.seller_ids.mapped('name'):
-            id_to_remove = self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id).ids[0] if self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id) else False
+        if self.partner_a in self.product_id_2.seller_ids.mapped('name'):
+            id_to_remove = self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_a).ids[0] if self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_a) else False
             if id_to_remove:
                 self.product_id_2.write({
                     'seller_ids': [(2, id_to_remove, False)],
                 })
-        self.assertFalse(self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id), 'Purchase: the partner should not be in the list of the product suppliers')
+        self.assertFalse(self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_a), 'Purchase: the partner should not be in the list of the product suppliers')
 
-        self.po = self.PurchaseOrder.create(self.po_vals)
+        self.po = self.env['purchase.order'].create(self.po_vals)
         self.assertTrue(self.po, 'Purchase: no purchase order created')
         self.assertEqual(self.po.invoice_status, 'no', 'Purchase: PO invoice_status should be "Not purchased"')
         self.assertEqual(self.po.order_line.mapped('qty_received'), [0.0, 0.0], 'Purchase: no product should be received"')
@@ -62,9 +59,9 @@ class TestPurchaseOrder(AccountTestCommon):
         self.assertEqual(self.po.state, 'purchase', 'Purchase: PO state should be "Purchase"')
         self.assertEqual(self.po.invoice_status, 'to invoice', 'Purchase: PO invoice_status should be "Waiting Invoices"')
 
-        self.assertTrue(self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_id), 'Purchase: the partner should be in the list of the product suppliers')
+        self.assertTrue(self.product_id_2.seller_ids.filtered(lambda r: r.name == self.partner_a), 'Purchase: the partner should be in the list of the product suppliers')
 
-        seller = self.product_id_2._select_seller(partner_id=self.partner_id, quantity=2.0, date=self.po.date_planned, uom_id=self.product_id_2.uom_po_id)
+        seller = self.product_id_2._select_seller(partner_id=self.partner_a, quantity=2.0, date=self.po.date_planned, uom_id=self.product_id_2.uom_po_id)
         price_unit = seller.price if seller else 0.0
         if price_unit and seller and self.po.currency_id and seller.currency_id != self.po.currency_id:
             price_unit = seller.currency_id._convert(price_unit, self.po.currency_id, self.po.company_id, self.po.date_order)
@@ -77,7 +74,7 @@ class TestPurchaseOrder(AccountTestCommon):
         self.assertEqual(self.po.order_line.mapped('qty_received'), [5.0, 5.0], 'Purchase: all products should be received"')
 
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.partner_id = self.partner_id
+        move_form.partner_id = self.partner_a
         move_form.purchase_id = self.po
         self.invoice = move_form.save()
 
@@ -109,7 +106,7 @@ class TestPurchaseOrder(AccountTestCommon):
 
         #After Receiving all products create vendor bill.
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_invoice'))
-        move_form.partner_id = self.partner_id
+        move_form.partner_id = self.partner_a
         move_form.purchase_id = self.po
         self.invoice = move_form.save()
         self.invoice.post()
@@ -132,14 +129,14 @@ class TestPurchaseOrder(AccountTestCommon):
 
         # Validate picking
         return_pick.move_line_ids.write({'qty_done': 2})
-        
+
         return_pick.button_validate()
 
         # Check Received quantity
         self.assertEqual(self.po.order_line[0].qty_received, 3.0, 'Purchase: delivered quantity should be 3.0 instead of "%s" after picking return' % self.po.order_line[0].qty_received)
         #Create vendor bill for refund qty
         move_form = Form(self.env['account.move'].with_context(default_move_type='in_refund'))
-        move_form.partner_id = self.partner_id
+        move_form.partner_id = self.partner_a
         move_form.purchase_id = self.po
         self.invoice = move_form.save()
         move_form = Form(self.invoice)
@@ -165,7 +162,7 @@ class TestPurchaseOrder(AccountTestCommon):
         item1 = self.product_id_1
         uom_unit = self.env.ref('uom.product_uom_unit')
         po1 = self.env['purchase.order'].create({
-            'partner_id': self.partner_id.id,
+            'partner_id': self.partner_a.id,
             'order_line': [
                 (0, 0, {
                     'name': item1.name,
@@ -219,14 +216,14 @@ class TestPurchaseOrder(AccountTestCommon):
         """ Propagate date of move should be assigned as per value of mto
             buy route if PO is created manually (not from mto route).
         """
-        warehouse = self.env.ref('stock.warehouse0')
+        warehouse = self.company_data['default_warehouse']
         self.po = self.env['purchase.order'].create(self.po_vals)
         self.po.button_confirm()
         self.assertFalse(self.po.order_line.mapped('move_dest_ids'))
         self.assertEqual(self.po.picking_ids.move_lines[0].propagate_date, warehouse.buy_pull_id.propagate_date)
 
     def test_update_date_planned(self):
-        po = self.PurchaseOrder.create(self.po_vals)
+        po = self.env['purchase.order'].create(self.po_vals)
         po.button_confirm()
 
         today = datetime.today().replace(microsecond=0)
@@ -240,9 +237,9 @@ class TestPurchaseOrder(AccountTestCommon):
             ('res_id', '=', po.id),
         ])
         self.assertTrue(activity)
-        self.assertEqual(
+        self.assertIn(
+            '<p> partner_a modified receipt dates for the following products:</p><p> \xa0 - Large Desk from %s to %s </p><p>Those dates have been updated accordingly on the receipt %s.</p>' % (today.date(), tomorrow.date(), po.picking_ids.name),
             activity.note,
-            '<p> Wood Corner Partner modified receipt dates for the following products:</p><p> \xa0 - Large Desk from %s to %s </p><p>Those dates have been updated accordingly on the receipt %s.</p>' % (today.date(), tomorrow.date(), po.picking_ids.name)
         )
 
         # receive products
@@ -254,7 +251,7 @@ class TestPurchaseOrder(AccountTestCommon):
         old_date = po.order_line[1].date_planned
         po._update_date_planned_for_lines([(po.order_line[1], tomorrow)])
         self.assertEqual(po.order_line[1].date_planned, old_date)
-        self.assertEqual(
+        self.assertIn(
+            '<p> partner_a modified receipt dates for the following products:</p><p> \xa0 - Large Desk from %s to %s </p><p> \xa0 - Conference Chair from %s to %s </p><p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>' % (today.date(), tomorrow.date(), today.date(), tomorrow.date(), po.picking_ids.name),
             activity.note,
-            '<p> Wood Corner Partner modified receipt dates for the following products:</p><p> \xa0 - Large Desk from %s to %s </p><p> \xa0 - Conference Chair from %s to %s </p><p>Those dates couldn’t be modified accordingly on the receipt %s which had already been validated.</p>' % (today.date(), tomorrow.date(), today.date(), tomorrow.date(), po.picking_ids.name)
         )

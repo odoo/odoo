@@ -30,6 +30,8 @@ class Project(models.Model):
     def _plan_prepare_values(self):
         currency = self.env.company.currency_id
         uom_hour = self.env.ref('uom.product_uom_hour')
+        company_uom = self.env.company.timesheet_encode_uom_id
+        is_uom_day = company_uom == self.env.ref('uom.product_uom_day')
         hour_rounding = uom_hour.rounding
         billable_types = ['non_billable', 'non_billable_project', 'billable_time', 'billable_fixed']
 
@@ -39,13 +41,14 @@ class Project(models.Model):
             'timesheet_domain': [('project_id', 'in', self.ids)],
             'profitability_domain': [('project_id', 'in', self.ids)],
             'stat_buttons': self._plan_get_stat_button(),
+            'is_uom_day': is_uom_day,
         }
 
         #
         # Hours, Rates and Profitability
         #
         dashboard_values = {
-            'hours': dict.fromkeys(billable_types + ['total'], 0.0),
+            'time': dict.fromkeys(billable_types + ['total'], 0.0),
             'rates': dict.fromkeys(billable_types + ['total'], 0.0),
             'profit': {
                 'invoiced': 0.0,
@@ -58,8 +61,12 @@ class Project(models.Model):
         # hours from non-invoiced timesheets that are linked to canceled so
         canceled_hours_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False), ('so_line.state', '=', 'cancel')]
         total_canceled_hours = sum(self.env['account.analytic.line'].search(canceled_hours_domain).mapped('unit_amount'))
-        dashboard_values['hours']['canceled'] = float_round(total_canceled_hours, precision_rounding=hour_rounding)
-        dashboard_values['hours']['total'] += float_round(total_canceled_hours, precision_rounding=hour_rounding)
+        canceled_hours = float_round(total_canceled_hours, precision_rounding=hour_rounding)
+        if is_uom_day:
+            # convert time from hours to days
+            canceled_hours = round(uom_hour._compute_quantity(canceled_hours, company_uom, raise_if_failure=False), 2)
+        dashboard_values['time']['canceled'] = canceled_hours
+        dashboard_values['time']['total'] += canceled_hours
 
         # hours (from timesheet) and rates (by billable type)
         dashboard_domain = [('project_id', 'in', self.ids), ('timesheet_invoice_type', '!=', False), '|', ('so_line', '=', False), ('so_line.state', '!=', 'cancel')]  # force billable type
@@ -67,12 +74,17 @@ class Project(models.Model):
         dashboard_total_hours = sum([data['unit_amount'] for data in dashboard_data]) + total_canceled_hours
         for data in dashboard_data:
             billable_type = data['timesheet_invoice_type']
-            dashboard_values['hours'][billable_type] = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
-            dashboard_values['hours']['total'] += float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
+            amount = float_round(data.get('unit_amount'), precision_rounding=hour_rounding)
+            if is_uom_day:
+                # convert time from hours to days
+                amount = round(uom_hour._compute_quantity(amount, company_uom, raise_if_failure=False), 2)
+            dashboard_values['time'][billable_type] = amount
+            dashboard_values['time']['total'] += amount
             # rates
             rate = round(data.get('unit_amount') / dashboard_total_hours * 100, 2) if dashboard_total_hours else 0.0
             dashboard_values['rates'][billable_type] = rate
             dashboard_values['rates']['total'] += rate
+        dashboard_values['time']['total'] = round(dashboard_values['time']['total'], 2)
 
         # rates from non-invoiced timesheets that are linked to canceled so
         dashboard_values['rates']['canceled'] = float_round(100 * total_canceled_hours / (dashboard_total_hours or 1), precision_rounding=hour_rounding)
@@ -148,6 +160,11 @@ class Project(models.Model):
         # compute total
         for employee_id, vals in repartition_employee.items():
             repartition_employee[employee_id]['total'] = sum([vals[inv_type] for inv_type in [*billable_types, 'canceled']])
+            if is_uom_day:
+                # convert all times from hours to days
+                for time_type in ['non_billable_project', 'non_billable', 'billable_time', 'billable_fixed', 'canceled', 'total']:
+                    if repartition_employee[employee_id][time_type]:
+                        repartition_employee[employee_id][time_type] = round(uom_hour._compute_quantity(repartition_employee[employee_id][time_type], company_uom, raise_if_failure=False), 2)
         hours_per_employee = [repartition_employee[employee_id]['total'] for employee_id in repartition_employee]
         values['repartition_employee_max'] = (max(hours_per_employee) if hours_per_employee else 1) or 1
         values['repartition_employee'] = repartition_employee
@@ -166,6 +183,8 @@ class Project(models.Model):
             return False
 
         uom_hour = self.env.ref('uom.product_uom_hour')
+        company_uom = self.env.company.timesheet_encode_uom_id
+        is_uom_day = company_uom and company_uom == self.env.ref('uom.product_uom_day')
 
         # build SQL query and fetch raw data
         query, query_params = self._table_rows_sql_query()
@@ -250,6 +269,11 @@ class Project(models.Model):
                             sale_line_row[0]['has_children'] = True
                             timesheet_forecast_table_rows.append(employee_row)
 
+        if is_uom_day:
+            # convert all values from hours to days
+            for row in timesheet_forecast_table_rows:
+                for index in range(1, len(row)):
+                    row[index] = round(uom_hour._compute_quantity(row[index], company_uom, raise_if_failure=False), 2)
         # complete table data
         return {
             'header': self._table_header(),

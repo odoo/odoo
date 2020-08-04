@@ -8,6 +8,7 @@ from collections import defaultdict
 from odoo import _, api, fields, models, SUPERUSER_ID
 from odoo.exceptions import UserError
 from odoo.osv import expression
+from odoo.tools import pycompat,float_is_zero
 from odoo.tools.float_utils import float_round
 
 OPERATORS = {
@@ -511,10 +512,8 @@ class Product(models.Model):
         return self.product_tmpl_id.with_context(default_product_id=self.id).action_update_quantity_on_hand()
 
     def action_product_forecast_report(self):
-        action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
-        action['domain'] = [
-            ('product_id', '=', self.id),
-        ]
+        self.ensure_one()
+        action = self.env.ref('stock.stock_replenishment_product_product_action').read()[0]
         return action
 
     @api.model
@@ -603,6 +602,8 @@ class ProductTemplate(models.Model):
     # to influence computed field.
     location_id = fields.Many2one('stock.location', 'Location', store=False)
     warehouse_id = fields.Many2one('stock.warehouse', 'Warehouse', store=False)
+    has_available_route_ids = fields.Boolean(
+        'Routes can be selected on this product', compute='_compute_has_available_route_ids')
     route_ids = fields.Many2many(
         'stock.location.route', 'stock_route_product', 'product_id', 'route_id', 'Routes',
         domain=[('product_selectable', '=', True)],
@@ -617,6 +618,10 @@ class ProductTemplate(models.Model):
     route_from_categ_ids = fields.Many2many(
         relation="stock.location.route", string="Category Routes",
         related='categ_id.total_route_ids', readonly=False)
+
+    @api.depends('type')
+    def _compute_has_available_route_ids(self):
+        self.has_available_route_ids = self.env['stock.location.route'].search_count([('product_selectable', '=', True)])
 
     @api.depends(
         'product_variant_ids',
@@ -733,6 +738,8 @@ class ProductTemplate(models.Model):
             ])
             if existing_move_lines:
                 raise UserError(_("You can not change the type of a product that is currently reserved on a stock move. If you need to change the type, you should first unreserve the stock move."))
+        if 'type' in vals and vals['type'] != 'product' and any(p.type == 'product' and not float_is_zero(p.qty_available, precision_rounding=p.uom_id.rounding) for p in self):
+            raise UserError(_("Available quantity should be set to zero before changing type"))
         return super(ProductTemplate, self).write(vals)
 
     # Be aware that the exact same function exists in product.product
@@ -808,11 +815,8 @@ class ProductTemplate(models.Model):
         return action
 
     def action_product_tmpl_forecast_report(self):
-        action = self.env.ref('stock.report_stock_quantity_action_product').read()[0]
-        product_ids = self.with_context(active_test=False).product_variant_ids.filtered(lambda p: p.virtual_available != 0)
-        action['domain'] = [
-            ('product_id', 'in', product_ids.ids)
-        ]
+        self.ensure_one()
+        action = self.env.ref('stock.stock_replenishment_product_product_action').read()[0]
         return action
 
 class ProductCategory(models.Model):

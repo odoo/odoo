@@ -1,33 +1,15 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
+from odoo.addons.account.tests.common import AccountTestInvoicingCommon
+from odoo.tests import tagged
 
-from odoo.addons.account.tests.common import AccountTestNoChartCommon
 
-
-class TestCommonPurchaseNoChart(AccountTestNoChartCommon):
-    """ This class should be extended for test suite of purchase flows with a minimal chart of accounting
-        installed. This test suite should be executed at module installation.
-        This class provides some method to generate testing data well configured, according to the minimal
-        chart of account, defined in `AccountTestNoChartCommon` class.
-    """
+@tagged('post_install', '-at_install')
+class TestPurchaseToInvoice(AccountTestInvoicingCommon):
 
     @classmethod
     def setUpClass(cls):
-        super(TestCommonPurchaseNoChart, cls).setUpClass()
-
-        # create a vendor
-        context_no_mail = {'no_reset_password': True, 'mail_create_nosubscribe': True, 'mail_create_nolog': True}
-        Partner = cls.env['res.partner'].with_context(context_no_mail)
-        cls.vendor = Partner.create({
-            'name': 'vendor',
-            'email': 'vendor@vendor.com',
-            'property_account_payable_id': cls.account_payable.id,
-            'property_account_receivable_id': cls.account_receivable.id,
-            'company_id': cls.env.ref('base.main_company').id
-        })
-
-    @classmethod
-    def setUpClassicProducts(cls):
+        super(TestPurchaseToInvoice, cls).setUpClass()
         uom_unit = cls.env.ref('uom.product_uom_unit')
         uom_hour = cls.env.ref('uom.product_uom_hour')
         cls.product_order = cls.env['product.product'].create({
@@ -40,7 +22,6 @@ class TestCommonPurchaseNoChart(AccountTestNoChartCommon):
             'purchase_method': 'purchase',
             'default_code': 'PROD_ORDER',
             'taxes_id': False,
-            # 'categ_id': cls.product_category.id,
         })
         cls.service_deliver = cls.env['product.product'].create({
             'name': "Cost-plus Contract",
@@ -52,7 +33,6 @@ class TestCommonPurchaseNoChart(AccountTestNoChartCommon):
             'purchase_method': 'receive',
             'default_code': 'SERV_DEL',
             'taxes_id': False,
-            # 'categ_id': cls.product_category.id,
         })
         cls.service_order = cls.env['product.product'].create({
             'name': "Prepaid Consulting",
@@ -64,7 +44,6 @@ class TestCommonPurchaseNoChart(AccountTestNoChartCommon):
             'purchase_method': 'purchase',
             'default_code': 'PRE-PAID',
             'taxes_id': False,
-            # 'categ_id': cls.product_category.id,
         })
         cls.product_deliver = cls.env['product.product'].create({
             'name': "Switch, 24 ports",
@@ -76,24 +55,13 @@ class TestCommonPurchaseNoChart(AccountTestNoChartCommon):
             'purchase_method': 'receive',
             'default_code': 'PROD_DEL',
             'taxes_id': False,
-            # 'categ_id': cls.product_category.id,
         })
-
-
-class TestPurchaseToInvoice(TestCommonPurchaseNoChart):
-
-    @classmethod
-    def setUpClass(cls):
-        super(TestPurchaseToInvoice, cls).setUpClass()
-        cls.setUpClassicProducts()
-        cls.setUpAdditionalAccounts()
-        cls.setUpAccountJournal()
 
     def test_vendor_bill_delivered(self):
         """Test if a order of product invoiced by delivered quantity can be
         correctly invoiced."""
         purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
-            'partner_id': self.vendor.id,
+            'partner_id': self.partner_a.id,
         })
         PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
         pol_prod_deliver = PurchaseOrderLine.create({
@@ -137,7 +105,7 @@ class TestPurchaseToInvoice(TestCommonPurchaseNoChart):
         """Test if a order of product invoiced by ordered quantity can be
         correctly invoiced."""
         purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
-            'partner_id': self.vendor.id,
+            'partner_id': self.partner_a.id,
         })
         PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
         pol_prod_order = PurchaseOrderLine.create({
@@ -181,7 +149,7 @@ class TestPurchaseToInvoice(TestCommonPurchaseNoChart):
         """Test when return product, a order of product invoiced by delivered
         quantity can be correctly invoiced."""
         purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
-            'partner_id': self.vendor.id,
+            'partner_id': self.partner_a.id,
         })
         PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
         pol_prod_deliver = PurchaseOrderLine.create({
@@ -226,7 +194,7 @@ class TestPurchaseToInvoice(TestCommonPurchaseNoChart):
         """Test when return product, a order of product invoiced by ordered
         quantity can be correctly invoiced."""
         purchase_order = self.env['purchase.order'].with_context(tracking_disable=True).create({
-            'partner_id': self.vendor.id,
+            'partner_id': self.partner_a.id,
         })
         PurchaseOrderLine = self.env['purchase.order.line'].with_context(tracking_disable=True)
         pol_prod_order = PurchaseOrderLine.create({

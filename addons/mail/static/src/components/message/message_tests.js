@@ -125,25 +125,6 @@ QUnit.test('basic rendering', async function (assert) {
     );
 });
 
-QUnit.test('delete attachment linked to message', async function (assert) {
-    assert.expect(1);
-
-    await this.start();
-    const message = this.env.models['mail.message'].create({
-        attachments: [['insert-and-replace', {
-            filename: "BLAH.jpg",
-            id: 10,
-            name: "BLAH",
-        }]],
-        author: [['insert', { id: 7, display_name: "Demo User" }]],
-        body: "<p>Test</p>",
-        id: 100,
-    });
-    await this.createMessageComponent(message);
-    await afterNextRender(() => document.querySelector('.o_Attachment_asideItemUnlink').click());
-    assert.notOk(this.env.models['mail.attachment'].find(attachment => attachment.id === 10));
-});
-
 QUnit.test('moderation: moderated channel with pending moderation message (author)', async function (assert) {
     assert.expect(1);
 
@@ -365,7 +346,7 @@ QUnit.test("'channel_fetch' notification received is correctly handled", async f
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].create({
+    const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.session.partner_id,
         display_name: "Demo User",
     });
@@ -421,7 +402,7 @@ QUnit.test("'channel_seen' notification received is correctly handled", async fu
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].create({
+    const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.session.partner_id,
         display_name: "Demo User",
     });
@@ -476,7 +457,7 @@ QUnit.test("'channel_fetch' notification then 'channel_seen' received  are corre
     assert.expect(4);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].create({
+    const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.session.partner_id,
         display_name: "Demo User",
     });
@@ -556,10 +537,12 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         id: 11,
         partnerSeenInfos: [['create', [
             {
+                id: this.env.session.partner_id,
                 lastFetchedMessage: [['insert', {id: 100}]],
                 partner: [['insert', {id: this.env.session.partner_id}]],
             },
             {
+                id: 100,
                 lastFetchedMessage: [['insert', {id: 100}]],
                 partner: [['link', author]],
             },
@@ -567,7 +550,7 @@ QUnit.test('do not show messaging seen indicator if not authored by me', async f
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['link', author]],
         body: "<p>Test</p>",
         id: 100,
@@ -591,7 +574,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].create({
+    const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.session.partner_id,
         display_name: "Demo User",
     });
@@ -610,7 +593,7 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
         id: 100,
         originThread: [['link', thread]],
     });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 99,
@@ -619,10 +602,12 @@ QUnit.test('do not show messaging seen indicator if before last seen by all mess
     thread.update({
        partnerSeenInfos: [['create', [
             {
+                id: currentPartner.id,
                 lastSeenMessage: [['link', lastSeenMessage]],
                 partner: [['link', currentPartner]],
             },
             {
+                id: 100,
                 lastSeenMessage: [['link', lastSeenMessage]],
                 partner: [['insert', {id: 100}]],
             },
@@ -651,18 +636,19 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
     assert.expect(3);
 
     await this.start();
-    const currentPartner = this.env.models['mail.partner'].create({
+    const currentPartner = this.env.models['mail.partner'].insert({
         id: this.env.session.partner_id,
-        display_name: "Demo User"
     });
     const thread = this.env.models['mail.thread'].create({
         id: 11,
         partnerSeenInfos: [['create', [
             {
+                id: currentPartner.id,
                 lastSeenMessage: [['insert', {id: 100}]],
                 partner: [['link', currentPartner]],
             },
             {
+                id: 100,
                 partner: [['insert', {id: 100}]],
                 lastFetchedMessage: [['insert', {id: 100}]],
                 lastSeenMessage: [['insert', {id: 99}]],
@@ -675,7 +661,7 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
         model: 'mail.channel',
     });
     const threadViewer = this.env.models['mail.thread_viewer'].create({ thread: [['link', thread]] });
-    const message = this.env.models['mail.message'].create({
+    const message = this.env.models['mail.message'].insert({
         author: [['link', currentPartner]],
         body: "<p>Test</p>",
         id: 100,
@@ -696,8 +682,70 @@ QUnit.test('only show messaging seen indicator if authored by me, after last see
     assert.containsN(
         document.body,
         '.o_MessageSeenIndicator_icon',
-        2,
-        "message component should have two checks (V)"
+        1,
+        "message component should have one check (V) because the message was fetched by everyone but no other member than author has seen the message"
+    );
+});
+
+QUnit.test('allow attachment delete on authored message', async function (assert) {
+    assert.expect(3);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        attachments: [['insert-and-replace', {
+            filename: "BLAH.jpg",
+            id: 10,
+            name: "BLAH",
+        }]],
+        author: [['insert', { id: this.env.session.partner_id, display_name: "Me" }]],
+        body: "<p>Test</p>",
+        id: 100,
+    });
+    await this.createMessageComponent(message);
+
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should have an attachment",
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment_asideItemUnlink',
+        "should have delete attachment button"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_Attachment_asideItemUnlink').click());
+    assert.containsNone(
+        document.body,
+        '.o_Attachment',
+        "should no longer have an attachment",
+    );
+});
+QUnit.test('prevent attachment delete on non-authored message', async function (assert) {
+    assert.expect(2);
+
+    await this.start();
+    const message = this.env.models['mail.message'].create({
+        attachments: [['insert-and-replace', {
+            filename: "BLAH.jpg",
+            id: 10,
+            name: "BLAH",
+        }]],
+        author: [['insert', { id: 11, display_name: "Guy" }]],
+        body: "<p>Test</p>",
+        id: 100,
+    });
+    await this.createMessageComponent(message);
+
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment',
+        "should have an attachment",
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Attachment_asideItemUnlink',
+        "delete attachment button should not be printed"
     );
 });
 

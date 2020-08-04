@@ -71,11 +71,10 @@ body.editor_enable.editor_has_snippets {
 
         .oe_snippet_thumbnail_img {
             width: 100%;
-            height: 0;
-            padding-bottom: 75%;
-            background-size: cover;
+            height: 60px;
+            background-repeat: no-repeat;
+            background-size: contain;
             background-position: center center;
-            text-align: center;
             overflow: hidden;
         }
 
@@ -109,7 +108,7 @@ body.editor_enable.editor_has_snippets {
     font-weight: 700;
     line-height: 1;
 
-    transition: transform 400ms ease 0s; // Also for fullscreen
+    transition: transform 400ms ease 0s;
     transform: translateX(-100%);
 
     &.o_loaded {
@@ -160,16 +159,12 @@ body.editor_enable.editor_has_snippets {
         }
 
         .o_panel_body {
+            display: flex; // Needed for too long snippet names
+            flex-wrap: wrap;
             margin-left: -$o-we-sidebar-blocks-content-snippet-spacing;
 
-            &::after {
-                content: "";
-                display: table;
-                clear: left;
-            }
-
             > .oe_snippet {
-                float: left;
+                flex: 0 0 auto;
                 width: percentage(1 / 3);
                 background-clip: padding-box;
                 border-left: $o-we-sidebar-blocks-content-snippet-spacing solid transparent;
@@ -179,10 +174,6 @@ body.editor_enable.editor_has_snippets {
                 cursor: pointer;
                 cursor: copy;
                 cursor: grab;
-
-                &:nth-child(3n+1) {
-                    clear: left;
-                }
 
                 .oe_snippet_thumbnail_title {
                     display: block;
@@ -263,6 +254,20 @@ body.editor_enable.editor_has_snippets {
             width: $o-we-sidebar-width / 2; // TODO maybe there is a better way to implement this
         }
 
+        @mixin we-svg-icon(
+                $graphic: $o-we-sidebar-content-field-color,
+                $subdle: $o-we-sidebar-content-field-color,
+                $subdle-opacity: 0.5) {
+            svg {
+                .o_graphic {
+                    fill: $graphic;
+                }
+                .o_subdle {
+                    fill: rgba($subdle, $subdle-opacity);
+                }
+            }
+        }
+
         we-button, we-toggler {
             cursor: pointer;
             @include o-text-overflow(block);
@@ -273,10 +278,14 @@ body.editor_enable.editor_has_snippets {
             color: $o-we-sidebar-content-field-color;
             line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
             text-align: left;
+            @include we-svg-icon();
 
+            &.active, &:hover {
+                color: $o-we-sidebar-content-field-pressed-color;
+                @include we-svg-icon($o-we-sidebar-content-field-pressed-color, $subdle-opacity: .75);
+            }
             &.active {
                 background: $o-we-sidebar-content-field-pressed-bg;
-                color: $o-we-sidebar-content-field-pressed-color;
             }
 
             &.fa {
@@ -884,6 +893,22 @@ body.editor_enable.editor_has_snippets {
                 margin-right: $o-we-sidebar-content-field-label-spacing;
             }
         }
+
+        .o_we_tag {
+            display: inline-block;
+            padding: $o-we-sidebar-content-field-label-spacing;
+            border: $o-we-item-border-width solid $o-we-item-border-color;
+            border-radius: 5px;
+            background-color: $o-we-bg-darkest;
+
+            + .fa {
+                margin-left: 0;
+            }
+        }
+        .o_we_tag_wrapper {
+            display: inline-block;
+            margin: ($o-we-sidebar-content-field-label-spacing * 1.5) $o-we-sidebar-content-field-label-spacing 0 0;
+        }
     }
 
     > .o_we_invisible_el_panel {
@@ -1100,8 +1125,9 @@ body.editor_enable.editor_has_snippets {
         text-align: center;
         transition: opacity 400ms linear 0s;
 
-        &.o_keypress {
+        &.o_overlay_hidden {
             opacity: 0;
+            transition: none;
         }
         &.oe_active {
             display: block;

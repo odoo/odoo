@@ -22,7 +22,7 @@ class Repair(models.Model):
 
     name = fields.Char(
         'Repair Reference',
-        default=lambda self: self.env['ir.sequence'].next_by_code('repair.order'),
+        default='/',
         copy=False, required=True,
         states={'confirmed': [('readonly', True)]})
     product_id = fields.Many2one(
@@ -203,6 +203,12 @@ class Repair(models.Model):
                 raise UserError(_('You can not delete a repair order which is linked to an invoice which has been posted once.'))
         return super().unlink()
 
+    @api.model
+    def create(self, vals):
+        if vals.get('name', '/') == '/':
+            vals['name'] = self.env['ir.sequence'].next_by_code('repair.order') or '/'
+        return super(Repair, self).create(vals)
+
     def button_dummy(self):
         # TDE FIXME: this button is very interesting
         return True
@@ -341,6 +347,8 @@ class Repair(models.Model):
                     'invoice_line_ids': [],
                     'fiscal_position_id': fpos.id
                 }
+                if partner_invoice.property_payment_term_id:
+                    invoice_vals['invoice_payment_term_id'] = partner_invoice.property_payment_term_id.id
                 current_invoices_list.append(invoice_vals)
             else:
                 # if group == True: concatenate invoices by partner and currency

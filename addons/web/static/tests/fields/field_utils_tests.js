@@ -316,7 +316,7 @@ QUnit.test('parse percentage', function(assert) {
 });
 
 QUnit.test('parse datetime', function (assert) {
-    assert.expect(5);
+    assert.expect(6);
 
     var originalParameters = _.clone(core._t.database.parameters);
     var originalLocale = moment.locale();
@@ -343,8 +343,12 @@ QUnit.test('parse datetime', function (assert) {
 
     moment.locale('englishForTest');
     _.extend(core._t.database.parameters, {date_format: '%m/%d/%Y', time_format: '%H:%M:%S'});
-    assert.throws(function () {fieldUtils.parse.datetime("13/01/2019 12:00:00", {}, {})}, /is not a correct/, "Wrongly formated dates should be invalids");
-    assert.throws(function () {fieldUtils.parse.datetime("1899-01-01 12:00:00", {}, {})}, /is not a correct/, "Dates before 1900 should be invalids");
+    assert.throws(function () {
+        fieldUtils.parse.datetime("13/01/2019 12:00:00", {}, {});
+    }, /is not a correct/, "Wrongly formated dates should be invalid");
+    assert.throws(function () {
+        fieldUtils.parse.datetime("10000-01-01 12:00:00", {}, {});
+    }, /is not a correct/, "Dates after 9999 should be invalid");
 
     dateStr = '01/13/2019 10:05:45';
     date1 = fieldUtils.parse.datetime(dateStr);
@@ -355,6 +359,11 @@ QUnit.test('parse datetime', function (assert) {
     date1 = fieldUtils.parse.datetime(dateStr);
     date2 = moment.utc(dateStr, ['M/D/YYYY H:m:s'], true);
     assert.equal(date1.format(), date2.format(), "Date without leading 0");
+
+    dateStr = '01/01/0001 10:15:45';
+    date1 = fieldUtils.parse.datetime(dateStr);
+    date2 = moment.utc(dateStr, ['MM/DD/YYYY HH:mm:ss'], true);
+    assert.equal(date1.format(), date2.format(), "can parse dates of year 1");
 
     moment.locale('norvegianForTest');
     _.extend(core._t.database.parameters, {date_format: '%d. %b %Y', time_format: '%H:%M:%S'});

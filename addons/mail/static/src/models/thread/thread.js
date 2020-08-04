@@ -363,19 +363,14 @@ function factory(dependencies) {
                 }
                 return list;
             }, []);
-            const messagePreviews = await this.env.services.rpc({
+            const channelPreviews = await this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_fetch_preview',
                 args: [channelIds],
             }, { shadow: true });
-            for (const preview of messagePreviews) {
-                const messageData = preview.last_message;
-                if (messageData) {
-                    this.env.models['mail.message'].insert(
-                        this.env.models['mail.message'].convertData(messageData)
-                    );
-                }
-            }
+            this.env.models['mail.message'].insert(channelPreviews.filter(p => p.last_message).map(
+                channelPreview => this.env.models['mail.message'].convertData(channelPreview.last_message)
+            ));
         }
 
         /**
@@ -769,8 +764,13 @@ function factory(dependencies) {
         /**
          * @override
          */
-        static _findFunctionFromData(data) {
-            return record => record.id === data.id && record.model === data.model;
+        static _createRecordLocalId(data) {
+            const { channel_type, id, model } = data;
+            let threadModel = model;
+            if (!threadModel && channel_type) {
+                threadModel = 'mail.channel';
+            }
+            return `${this.modelName}_${threadModel}_${id}`;
         }
 
         /**
@@ -1009,22 +1009,6 @@ function factory(dependencies) {
                 this.orderedOtherTypingMembers[0].nameOrDisplayName,
                 this.orderedOtherTypingMembers[1].nameOrDisplayName
             );
-        }
-
-        /**
-         * @override
-         */
-        _createRecordLocalId(data) {
-            const { channel_type, id, isTemporary = false, model } = data;
-            let threadModel = model;
-            if (!threadModel && channel_type) {
-                threadModel = 'mail.channel';
-            }
-            const Thread = this.env.models['mail.thread'];
-            if (isTemporary) {
-                return `${Thread.modelName}_${id}`;
-            }
-            return `${Thread.modelName}_${threadModel}_${id}`;
         }
 
         /**

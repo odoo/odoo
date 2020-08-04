@@ -25,6 +25,7 @@ class PurchaseTestCommon(TestStockCommon):
     @classmethod
     def setUpClass(cls):
         super(PurchaseTestCommon, cls).setUpClass()
+        cls.env.ref('stock.route_warehouse0_mto').active = True
 
         cls.route_buy = cls.warehouse_1.buy_pull_id.route_id.id
         cls.route_mto = cls.warehouse_1.mto_pull_id.route_id.id

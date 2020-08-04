@@ -109,10 +109,10 @@ function factory(dependencies) {
                     },
                     { shadow: true }
                 );
-                for (const data of partnersData) {
-                    const partner = this.insert(this.convertData(data));
-                    partners.push(partner);
-                }
+                const newPartners = this.insert(partnersData.map(
+                    partnerData => this.convertData(partnerData)
+                ));
+                partners.push(...newPartners);
             }
             callback(partners);
         }
@@ -155,6 +155,13 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
         // Private
         //----------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            return `${this.modelName}_${data.id}`;
+        }
 
         /**
          * @static
@@ -209,14 +216,6 @@ function factory(dependencies) {
          */
         _computeNameOrDisplayName() {
             return this.name || this.display_name;
-        }
-
-        /**
-         * @override
-         */
-        _createRecordLocalId(data) {
-            const Partner = this.env.models['mail.partner'];
-            return `${Partner.modelName}_${data.id}`;
         }
 
     }

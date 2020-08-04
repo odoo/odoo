@@ -2790,3 +2790,131 @@ class TestRoutes(TestStockCommon):
         self.assertFalse(pick.delay_alert_date)
         self.assertFalse(pack.delay_alert_date)
         self.assertFalse(ship.delay_alert_date)
+
+
+class TestAutoAssign(TestStockCommon):
+    def create_pick_ship(self):
+        picking_client = self.env['stock.picking'].create({
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+        })
+
+        dest = self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_client.id,
+            'location_id': self.pack_location,
+            'location_dest_id': self.customer_location,
+            'state': 'waiting',
+            'procure_method': 'make_to_order',
+        })
+
+        picking_pick = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'picking_type_id': self.picking_type_out,
+        })
+
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_pick.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'move_dest_ids': [(4, dest.id)],
+            'state': 'confirmed',
+        })
+        return picking_pick, picking_client
+
+    def test_auto_assign_0(self):
+        """Create a outgoing MTS move without enough products in stock, then
+        validate a incoming move to check if the outgoing move is automatically
+        assigned.
+        """
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+
+        # create customer picking and move
+        customer_picking = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'picking_type_id': self.picking_type_out,
+        })
+        customer_move = self.env['stock.move'].create({
+            'name': 'customer move',
+            'location_id': self.stock_location,
+            'location_dest_id': self.customer_location,
+            'product_id': self.productA.id,
+            'product_uom': self.productA.uom_id.id,
+            'product_uom_qty': 10.0,
+            'picking_id': customer_picking.id,
+            'picking_type_id': self.picking_type_out,
+        })
+        customer_picking.action_confirm()
+        customer_picking.action_assign()
+        self.assertEqual(customer_move.state, 'confirmed')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, stock_location), 0)
+
+        # create supplier picking and move
+        supplier_picking = self.env['stock.picking'].create({
+            'location_id': self.customer_location,
+            'location_dest_id': self.stock_location,
+            'picking_type_id': self.picking_type_in,
+        })
+        supplier_move = self.env['stock.move'].create({
+            'name': 'test_transit_1',
+            'location_id': self.customer_location,
+            'location_dest_id': self.stock_location,
+            'product_id': self.productA.id,
+            'product_uom': self.productA.uom_id.id,
+            'product_uom_qty': 10.0,
+            'picking_id': supplier_picking.id,
+        })
+        customer_picking.action_confirm()
+        customer_picking.action_assign()
+        supplier_move.quantity_done = 10
+        supplier_picking._action_done()
+
+        # customer move should be automatically assigned and no more available product in stock
+        self.assertEqual(customer_move.state, 'assigned')
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, stock_location), 0)
+
+    def test_auto_assign_1(self):
+        """Create a outgoing MTO move without enough products, then validate a
+        move to make it available to check if the outgoing move is not
+        automatically assigned.
+        """
+        picking_pick, picking_client = self.create_pick_ship()
+        pack_location = self.env['stock.location'].browse(self.pack_location)
+        stock_location = self.env['stock.location'].browse(self.stock_location)
+
+        # make some stock
+        self.env['stock.quant']._update_available_quantity(self.productA, stock_location, 10.0)
+
+        # create another move to make product available in pack_location
+        picking_pick_2 = self.env['stock.picking'].create({
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'picking_type_id': self.picking_type_out,
+        })
+        self.MoveObj.create({
+            'name': self.productA.name,
+            'product_id': self.productA.id,
+            'product_uom_qty': 10,
+            'product_uom': self.productA.uom_id.id,
+            'picking_id': picking_pick_2.id,
+            'location_id': self.stock_location,
+            'location_dest_id': self.pack_location,
+            'state': 'confirmed',
+        })
+        picking_pick_2.action_assign()
+        picking_pick_2.move_lines[0].move_line_ids[0].qty_done = 10.0
+        picking_pick_2._action_done()
+
+        self.assertEqual(picking_client.state, 'waiting', "MTO moves can't be automatically assigned.")
+        self.assertEqual(self.env['stock.quant']._get_available_quantity(self.productA, pack_location), 10.0)

@@ -95,6 +95,17 @@ function factory(dependencies) {
         //----------------------------------------------------------------------
 
         /**
+         * @override
+         */
+        static _createRecordLocalId(data) {
+            const {
+                stringifiedDomain = '[]',
+                thread: [[commandInsert, thread]],
+            } = data;
+            return `${this.modelName}_[${thread.localId}]_<${stringifiedDomain}>`;
+        }
+
+        /**
          * @private
          */
         _computeCheckedMessages() {
@@ -205,18 +216,6 @@ function factory(dependencies) {
         }
 
         /**
-         * @override
-         */
-        _createRecordLocalId(data) {
-            const {
-                stringifiedDomain = '[]',
-                thread: [[commandInsert, thread]],
-            } = data;
-            const ThreadCache = this.env.models['mail.thread_cache'];
-            return `${ThreadCache.modelName}_[${thread.localId}]_<${stringifiedDomain}>`;
-        }
-
-        /**
          * @private
          * @param {Array} domain
          * @returns {Array}
@@ -234,7 +233,13 @@ function factory(dependencies) {
             } else if (thread === this.env.messaging.moderation) {
                 return domain.concat([['need_moderation', '=', true]]);
             } else {
-                return domain.concat([['model', '=', thread.model], ['res_id', '=', thread.id]]);
+                // Avoid to load user_notification as these messages are not
+                // meant to be shown on chatters.
+                return domain.concat([
+                    ['message_type', '!=', 'user_notification'],
+                    ['model', '=', thread.model],
+                    ['res_id', '=', thread.id],
+                ]);
             }
         }
 
@@ -260,11 +265,9 @@ function factory(dependencies) {
          * @param {Object[]} messageData
          */
         _handleMessagesLoaded(messagesData) {
-            const messages = messagesData.map(data =>
-                this.env.models['mail.message'].insert(
-                    this.env.models['mail.message'].convertData(data)
-                )
-            );
+            const messages = this.env.models['mail.message'].insert(messagesData.map(
+                messageData => this.env.models['mail.message'].convertData(messageData)
+            ));
 
             if (!this.thread) {
                 return;

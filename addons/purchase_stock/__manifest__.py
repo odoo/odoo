@@ -24,6 +24,7 @@
         'views/product_category_views.xml',
         'report/purchase_report_views.xml',
         'report/purchase_report_templates.xml',
+        'report/report_stock_forecasted.xml',
         'report/report_stock_rule.xml',
     ],
     'demo': [

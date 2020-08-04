@@ -293,6 +293,10 @@ class ChatWindow extends Component {
          * CTRL-C & CTRL-V when on the home menu.
          */
         ev.stopPropagation();
+        if (!this.chatWindow) {
+            // prevent crash during delete
+            return;
+        }
         switch (ev.key) {
             case 'Tab':
                 ev.preventDefault();
