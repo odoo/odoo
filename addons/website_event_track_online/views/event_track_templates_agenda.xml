@@ -173,15 +173,17 @@
                 <span class="text-bold" t-esc="track.name"/>
             </div>
             <div class="d-flex justify-content-center flex-wrap">
-                <span t-foreach="track.tag_ids" t-as="tag"
-                      t-attf-class="mr-1 mt-1 badge #{'o_tag_color_'+str(tag.color)}" t-esc="tag.name"
-                      t-attf-onclick="
-                        var value = '#{tag.name}' ;
-                        var target = $('#event_track_search');
-                        if (target.val() == value) { target.val(''); } else { target.val(value); }
-                        target.trigger('input');
-                      "
-                />
+                <t t-foreach="track.tag_ids" t-as="tag">
+                    <span t-if="tag.color"
+                          t-attf-class="mr-1 mt-1 badge #{'o_tag_color_'+str(tag.color)}" t-esc="tag.name"
+                          t-attf-onclick="
+                            var value = '#{tag.name}' ;
+                            var target = $('#event_track_search');
+                            if (target.val() == value) { target.val(''); } else { target.val(value); }
+                            target.trigger('input');
+                          "
+                    />
+                </t>
             </div>
         </div>
     </div>
