@@ -847,32 +847,6 @@ function dropFiles(el, files) {
 }
 
 /**
- * Set files in a file input
- *
- * @param {DOM.Element} el
- * @param {Object[]} files must have been created beforehand
- *   @see testUtils.file.createFile
- */
-function inputFiles(el, files) {
-    const dataTransfer = new window.DataTransfer();
-    for (const file of files) {
-        dataTransfer.items.add(file);
-    }
-    el.files = dataTransfer.files;
-    /**
-     * Changing files programatically is not supposed to trigger the event but
-     * it does in Chrome versions before 73 (which is on runbot), so in that
-     * case there is no need to make a manual dispatch, because it would lead to
-     * the files being added twice.
-     */
-    const versionRaw = navigator.userAgent.match(/Chrom(e|ium)\/([0-9]+)\./);
-    const chromeVersion = versionRaw ? parseInt(versionRaw[2], 10) : false;
-    if (!chromeVersion || chromeVersion >= 73) {
-        el.dispatchEvent(new Event('change'));
-    }
-}
-
-/**
  * Paste some files on a DOM element
  *
  * @param {DOM.Element} el
@@ -897,7 +871,6 @@ return {
     beforeEach,
     dragenterFiles,
     dropFiles,
-    inputFiles,
     nextAnimationFrame,
     nextTick,
     pasteFiles,

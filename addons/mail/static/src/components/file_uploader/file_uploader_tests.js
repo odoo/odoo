@@ -7,12 +7,16 @@ const components = {
 const {
     afterEach: utilsAfterEach,
     beforeEach: utilsBeforeEach,
-    inputFiles,
     nextAnimationFrame,
     start: utilsStart,
 } = require('mail/static/src/utils/test_utils.js');
 
-const { file: { createFile } } = require('web.test_utils');
+const {
+    file: {
+        createFile,
+        inputFiles,
+    },
+} = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {

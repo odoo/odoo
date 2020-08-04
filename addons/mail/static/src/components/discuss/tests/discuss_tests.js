@@ -7,12 +7,17 @@ const {
     afterEach: utilsAfterEach,
     afterNextRender,
     beforeEach: utilsBeforeEach,
-    inputFiles,
     start: utilsStart,
 } = require('mail/static/src/utils/test_utils.js');
 
 const Bus = require('web.Bus');
-const { makeTestPromise, file: { createFile } } = require('web.test_utils');
+const {
+    makeTestPromise,
+    file: {
+        createFile,
+        inputFiles,
+    },
+} = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
