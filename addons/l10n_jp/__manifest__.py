@@ -6,7 +6,7 @@
 {
     'name': 'Japan - Accounting',
     'version': '2.2',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     'description': """
 
 Overview:

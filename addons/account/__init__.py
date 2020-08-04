@@ -16,7 +16,10 @@ def _auto_install_l10n(cr, registry):
     country_code = env.company.country_id.code
     if country_code:
         #auto install localization module(s) if available
-        to_install_l10n = env['ir.module.module'].search_count([('name', 'like', 'l10n_'), ('state', '=', 'to install')])
+        to_install_l10n = env['ir.module.module'].search_count([
+            ('category_id', '=', env.ref('base.module_category_accounting_localizations_account_charts').id),
+            ('state', '=', 'to install'),
+        ])
         module_list = []
         if to_install_l10n:
             # We don't install a CoA if one was passed in the command line
