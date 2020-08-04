@@ -222,7 +222,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
     reload: async function (params = {}) {
         if (params.controllerState) {
             this.importState(params.controllerState);
-            await this.searchModel.load();
             Object.assign(params, this.searchModel.get('query'));
         }
         return this.update(params, {});

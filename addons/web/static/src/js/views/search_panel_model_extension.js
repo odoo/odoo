@@ -14,6 +14,14 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
     let nextSectionId = 1;
 
     /**
+     * @param {Filter} filter
+     * @returns {boolean}
+     */
+    function hasDomain(filter) {
+        return filter.domain !== "[]";
+    }
+
+    /**
      * @param {Section} section
      * @returns {boolean}
      */
@@ -68,13 +76,43 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
         constructor() {
             super(...arguments);
 
-            this.searchDomain = null;
-            this.DEFAULT_VALUE_INDEX = 0;
+            this.categoriesToLoad = [];
+            this.defaultValues = {};
+            this.filtersToLoad = [];
+            this.initialStateImport = false;
+            this.searchDomain = [];
+            for (const key in this.config.context) {
+                const match = /^searchpanel_default_(.*)$/.exec(key);
+                if (match) {
+                    this.defaultValues[match[1]] = this.config.context[key];
+                }
+            }
         }
 
         //---------------------------------------------------------------------
         // Public
         //---------------------------------------------------------------------
+
+        /**
+         * @override
+         */
+        async callLoad(params) {
+            const searchDomain = this._getExternalDomain();
+            params.searchDomainChanged = (
+                JSON.stringify(this.searchDomain) !== JSON.stringify(searchDomain)
+            );
+            if (!this.shouldLoad && !this.initialStateImport) {
+                const isFetchable = (section) => section.enableCounters ||
+                    (params.searchDomainChanged && !section.expand);
+                this.categoriesToLoad = this.categories.filter(isFetchable);
+                this.filtersToLoad = this.filters.filter(isFetchable);
+                this.shouldLoad = params.searchDomainChanged ||
+                    Boolean(this.categoriesToLoad.length + this.filtersToLoad.length);
+            }
+            this.searchDomain = searchDomain;
+            this.initialStateImport = false;
+            await super.callLoad(params);
+        }
 
         /**
          * @override
@@ -109,6 +147,7 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
          * @override
          */
         importState(importedState) {
+            this.initialStateImport = Boolean(importedState && !this.state.sections);
             super.importState(...arguments);
             if (importedState) {
                 this.state.sections = new Map(this.state.sections);
@@ -127,8 +166,18 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
         /**
          * @override
          */
-        async load() {
-            await this._fetchSections({ initialLoad: true });
+        async isReady() {
+            await this.sectionsPromise;
+        }
+
+        /**
+         * @override
+         */
+        async load(params) {
+            this.sectionsPromise = this._fetchSections(params.isInitialLoad);
+            if (this._shouldWaitForData(params)) {
+                await this.sectionsPromise;
+            }
         }
 
         /**
@@ -137,13 +186,6 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
         prepareState() {
             Object.assign(this.state, { sections: new Map() });
             this._createSectionsFromArch();
-        }
-
-        /**
-         * @override
-         */
-        async reloadAfterDispatch() {
-            await this._fetchSections();
         }
 
         //---------------------------------------------------------------------
@@ -180,18 +222,13 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
         }
 
         /**
-         * Sets the active value id of a given category. This will also update
-         * the local storage value.
+         * Sets the active value id of a given category.
          * @param {number} sectionId
          * @param {number} valueId
          */
         toggleCategoryValue(sectionId, valueId) {
             const category = this.state.sections.get(sectionId);
             category.activeValueId = valueId;
-            const storageKey = `searchpanel_${this.config.modelName}_${category.fieldName}`;
-            this.env.services.local_storage.setItem(storageKey, valueId);
-            // FIXME this should be removed (in another commit): should no longer (re)store
-            // active category in localStorage
         }
 
         /**
@@ -240,7 +277,7 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
          */
         _applyDefaultFilterValues() {
             for (const { fieldName, values } of this.filters) {
-                const defaultValues = this.config.defaultValues[fieldName] || [];
+                const defaultValues = this.defaultValues[fieldName] || [];
                 for (const valueId of defaultValues) {
                     const value = values.get(valueId);
                     if (value) {
@@ -266,15 +303,6 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
             if (category.hierarchize) {
                 category.parentField = parentField;
             }
-
-            const allItem = {
-                childrenIds: [],
-                display_name: this.env._t("All"),
-                id: false,
-                bold: true,
-                parentId: false,
-            };
-            category.values = new Map([[false, allItem]]);
             for (const value of values) {
                 category.values.set(
                     value.id,
@@ -299,7 +327,8 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
                 }
             }
             // Set active value from context
-            category.activeValueId = this._getCategoryDefaultValue(values, category);
+            const valueIds = [false, ...values.map((val) => val.id)];
+            this._ensureCategoryValue(category, valueIds);
         }
 
         /**
@@ -318,8 +347,8 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
 
             // restore checked property
             values.forEach((value) => {
-                const oldValue = filter.values && filter.values.get(value.id);
-                value.checked = (oldValue && oldValue.checked) || false;
+                const oldValue = filter.values.get(value.id);
+                value.checked = oldValue ? oldValue.checked : false;
             });
 
             filter.values = new Map();
@@ -390,12 +419,21 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
                     index,
                     limit: pyUtils.py_eval(attrs.limit || String(DEFAULT_LIMIT)),
                     type,
+                    values: new Map(),
                 };
                 if (type === "category") {
+                    section.activeValueId = this.defaultValues[attrs.name];
                     section.icon = section.icon || "fa-folder";
                     section.hierarchize = !!pyUtils.py_eval(
                         attrs.hierarchize || "1"
                     );
+                    section.values.set(false, {
+                        childrenIds: [],
+                        display_name: this.env._t("All"),
+                        id: false,
+                        bold: true,
+                        parentId: false,
+                    });
                 } else {
                     section.domain = attrs.domain || "[]";
                     section.groupBy = attrs.groupby;
@@ -406,103 +444,96 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
         }
 
         /**
+         * Ensures that the active value of a category is one of its own
+         * existing values.
+         * @private
+         * @param {Category} category
+         * @param {number[]} valueIds
+         */
+        _ensureCategoryValue(category, valueIds) {
+            if (!valueIds.includes(category.activeValueId)) {
+                category.activeValueId = valueIds[0];
+            }
+        }
+
+        /**
          * Fetches values for each category at startup. At reload a category is
          * only fetched if needed.
          * @private
-         * @param {{
-         *      initialLoad: boolean,
-         *      searchDomainHasChanged: boolean
-         *  }} options
+         * @param {Category[]} categories
          * @returns {Promise} resolved when all categories have been fetched
          */
-        async _fetchCategories({ initialLoad, searchDomainHasChanged }) {
-            const proms = [];
-            for (const category of this.categories) {
-                const { enableCounters, expand, hierarchize, limit } = category;
-                if (initialLoad || enableCounters || (searchDomainHasChanged && !expand)) {
-                    const prom = this.env.services.rpc({
-                        method: "search_panel_select_range",
-                        model: this.config.modelName,
-                        args: [category.fieldName],
-                        kwargs: {
-                            category_domain: this._getCategoryDomain(
-                                category.id
-                            ),
-                            enable_counters: enableCounters,
-                            expand,
-                            filter_domain: this._getFilterDomain(),
-                            hierarchize,
-                            limit,
-                            search_domain: this.searchDomain,
-                        },
-                    }).then(result => this._createCategoryTree(category.id, result));
-                    proms.push(prom);
-                }
-            }
-            await Promise.all(proms);
+        async _fetchCategories(categories) {
+            const filterDomain = this._getFilterDomain();
+            await Promise.all(categories.map(async (category) => {
+                const result = await this.env.services.rpc({
+                    method: "search_panel_select_range",
+                    model: this.config.modelName,
+                    args: [category.fieldName],
+                    kwargs: {
+                        category_domain: this._getCategoryDomain(category.id),
+                        enable_counters: category.enableCounters,
+                        expand: category.expand,
+                        filter_domain: filterDomain,
+                        hierarchize: category.hierarchize,
+                        limit: category.limit,
+                        search_domain: this.searchDomain,
+                    },
+                });
+                this._createCategoryTree(category.id, result);
+            }));
         }
 
         /**
          * Fetches values for each filter. This is done at startup and at each
          * reload if needed.
          * @private
-         * @param {{
-         *      initialLoad: boolean,
-         *      searchDomainHasChanged: boolean
-         *  }} options
+         * @param {Filter[]} filters
          * @returns {Promise} resolved when all filters have been fetched
          */
-        async _fetchFilters({ initialLoad, searchDomainHasChanged }) {
+        async _fetchFilters(filters) {
             const evalContext = {};
             for (const category of this.categories) {
                 evalContext[category.fieldName] = category.activeValueId;
             }
             const categoryDomain = this._getCategoryDomain();
-            const proms = [];
-            for (const filter of this.filters) {
-                const { enableCounters, expand, groupBy, limit } = filter;
-                if (initialLoad || enableCounters || (searchDomainHasChanged && !expand)) {
-                    const prom = this.env.services.rpc({
-                        method: "search_panel_select_multi_range",
-                        model: this.config.modelName,
-                        args: [filter.fieldName],
-                        kwargs: {
-                            category_domain: categoryDomain,
-                            comodel_domain: Domain.prototype.stringToArray(
-                                filter.domain,
-                                evalContext
-                            ),
-                            enable_counters: enableCounters,
-                            filter_domain: this._getFilterDomain(filter.id),
-                            expand,
-                            group_by: groupBy || false,
-                            group_domain: this._getGroupDomain(filter),
-                            limit,
-                            search_domain: this.searchDomain,
-                        },
-                    }).then(result => this._createFilterTree(filter.id, result));
-                    proms.push(prom);
-                }
-            }
-            await Promise.all(proms);
+            await Promise.all(filters.map(async (filter) => {
+                const result = await this.env.services.rpc({
+                    method: "search_panel_select_multi_range",
+                    model: this.config.modelName,
+                    args: [filter.fieldName],
+                    kwargs: {
+                        category_domain: categoryDomain,
+                        comodel_domain: Domain.prototype.stringToArray(
+                            filter.domain,
+                            evalContext
+                        ),
+                        enable_counters: filter.enableCounters,
+                        filter_domain: this._getFilterDomain(filter.id),
+                        expand: filter.expand,
+                        group_by: filter.groupBy || false,
+                        group_domain: this._getGroupDomain(filter),
+                        limit: filter.limit,
+                        search_domain: this.searchDomain,
+                    },
+                });
+                this._createFilterTree(filter.id, result);
+            }));
         }
 
         /**
-         * Fetches categories and filters at startup or if needed.
          * @private
-         * @param {Object} [options={}]
-         * @param {boolean} [options.initialLoad=false]
+         * @param {boolean} isInitialLoad
+         * @returns {Promise}
          */
-        async _fetchSections(options = {}) {
-            const searchDomain = this._getExternalDomain();
-            if (!options.initialLoad) {
-                options.searchDomainHasChanged =
-                    JSON.stringify(this.searchDomain) !== JSON.stringify(searchDomain);
-            }
-            this.searchDomain = searchDomain;
-            await this._fetchCategories(options);
-            await this._fetchFilters(options);
-            if (options.initialLoad) {
+        async _fetchSections(isInitialLoad) {
+            await this._fetchCategories(
+                isInitialLoad ? this.categories : this.categoriesToLoad
+            );
+            await this._fetchFilters(
+                isInitialLoad ? this.filters : this.filtersToLoad
+            );
+            if (isInitialLoad) {
                 this._applyDefaultFilterValues();
             }
         }
@@ -520,51 +551,20 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
             for (const category of this.categories) {
                 if (
                     category.id === excludedCategoryId ||
-                    category.activeValueId === false
+                    !category.activeValueId
                 ) {
                     continue;
                 }
-                if (category.activeValueId) {
-                    const field = this.config.fields[category.fieldName];
-                    const operator =
-                        field.type === "many2one" && category.parentField ? "child_of" : "=";
-                    domain.push([
-                        category.fieldName,
-                        operator,
-                        category.activeValueId,
-                    ]);
-                }
+                const field = this.config.fields[category.fieldName];
+                const operator =
+                    field.type === "many2one" && category.parentField ? "child_of" : "=";
+                domain.push([
+                    category.fieldName,
+                    operator,
+                    category.activeValueId,
+                ]);
             }
             return domain;
-        }
-
-        /**
-         * @private
-         * @param {Object[]} values
-         * @param {Category} category
-         * @returns {number | false}
-         */
-        _getCategoryDefaultValue(values, { fieldName }) {
-            const validValues = [false, ...values.map((val) => val.id)];
-            const defaultValue = this.config.defaultValues[fieldName];
-            if (validValues.includes(defaultValue)) {
-                return defaultValue;
-            }
-            if (this.config.defaultNoFilter) {
-                return false;
-            }
-            // If not set in context, or set to an unknown value, set active value
-            // from localStorage
-            const storageKey = `searchpanel_${this.config.modelName}_${fieldName}`;
-            const storageValue = this.env.services.local_storage.getItem(storageKey);
-            if (validValues.includes(storageValue)) {
-                return storageValue;
-            }
-            // If still not a valid value, get the search panel default value
-            // from the given valid values.
-            return validValues[
-                Math.min(validValues.length - 1, this.DEFAULT_VALUE_INDEX)
-            ];
         }
 
         /**
@@ -617,7 +617,7 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
                     for (const group of groups.values()) {
                         addCondition(fieldName, group.values);
                     }
-                } else if (values) {
+                } else {
                     addCondition(fieldName, values);
                 }
             }
@@ -692,6 +692,33 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
                 }
             }
             return groupDomain;
+        }
+
+        /**
+         * Returns whether the query informations should be considered as ready
+         * before or after having (re-)fetched the sections data.
+         * @private
+         * @param {Object} params
+         * @param {boolean} params.isInitialLoad
+         * @param {boolean} params.searchDomainChanged
+         * @returns {boolean}
+         */
+        _shouldWaitForData({ isInitialLoad, searchDomainChanged }) {
+            if (isInitialLoad && Object.keys(this.defaultValues).length) {
+                // Default values need to be checked on initial load
+                return true;
+            }
+            if (this.categories.length && this.filters.some(hasDomain)) {
+                // Selected category value might affect the filter values
+                return true;
+            }
+            if (!this.searchDomain.length) {
+                // No search domain -> no need to check for expand
+                return false;
+            }
+            return [...this.state.sections.values()].some(
+                (section) => !section.expand && searchDomainChanged
+            );
         }
 
         //---------------------------------------------------------------------
