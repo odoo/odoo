@@ -1160,7 +1160,7 @@ class MrpProduction(models.Model):
 
             # Instantiate start_date for the next workorder planning
             if workorder.next_work_order_id:
-                if workorder.operation_id.batch == 'no' or workorder.operation_id.batch_size >= qty_to_produce:
+                if not workorder.operation_id or workorder.operation_id.batch == 'no' or workorder.operation_id.batch_size >= qty_to_produce:
                     start_date = best_finished_date
                 else:
                     cycle_number = float_round(workorder.operation_id.batch_size / best_workcenter.capacity, precision_digits=0, rounding_method='UP')
