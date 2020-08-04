@@ -109,7 +109,7 @@ class WebsiteAccount(CustomerPortal):
             'date': {'label': _('Newest'), 'order': 'create_date desc'},
             'name': {'label': _('Name'), 'order': 'name'},
             'contact_name': {'label': _('Contact Name'), 'order': 'contact_name'},
-            'revenue': {'label': _('Expected Revenue'), 'order': 'planned_revenue desc'},
+            'revenue': {'label': _('Expected Revenue'), 'order': 'expected_revenue desc'},
             'probability': {'label': _('Probability'), 'order': 'probability desc'},
             'stage': {'label': _('Stage'), 'order': 'stage_id'},
         }

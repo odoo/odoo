@@ -63,14 +63,14 @@ class Team(models.Model):
             ('team_id', 'in', self.ids),
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
-        ]).read(['planned_revenue', 'team_id'])
+        ]).read(['expected_revenue', 'team_id'])
         counts = {}
         amounts = {}
         for datum in opportunity_data:
             counts.setdefault(datum['team_id'][0], 0)
             amounts.setdefault(datum['team_id'][0], 0)
             counts[datum['team_id'][0]] += 1
-            amounts[datum['team_id'][0]] += (datum.get('planned_revenue', 0))
+            amounts[datum['team_id'][0]] += (datum.get('expected_revenue', 0))
         for team in self:
             team.opportunities_count = counts.get(team.id, 0)
             team.opportunities_amount = amounts.get(team.id, 0)
@@ -81,9 +81,9 @@ class Team(models.Model):
             ('probability', '<', 100),
             ('type', '=', 'opportunity'),
             ('date_deadline', '<', fields.Date.to_string(fields.Datetime.now()))
-        ], ['planned_revenue', 'team_id'], ['team_id'])
+        ], ['expected_revenue', 'team_id'], ['team_id'])
         counts = {datum['team_id'][0]: datum['team_id_count'] for datum in opportunity_data}
-        amounts = {datum['team_id'][0]: (datum['planned_revenue']) for datum in opportunity_data}
+        amounts = {datum['team_id'][0]: (datum['expected_revenue']) for datum in opportunity_data}
         for team in self:
             team.opportunities_overdue_count = counts.get(team.id, 0)
             team.opportunities_overdue_amount = amounts.get(team.id, 0)

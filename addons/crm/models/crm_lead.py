@@ -38,7 +38,7 @@ CRM_LEAD_FIELDS_TO_MERGE = [
     'partner_name',
     'phone',
     'probability',
-    'planned_revenue',
+    'expected_revenue',
     'street',
     'street2',
     'zip',
@@ -125,8 +125,8 @@ class Lead(models.Model):
         help="Classify and analyze your lead/opportunity categories like: Training, Service")
     color = fields.Integer('Color Index', default=0)
     # Opportunity specific
-    planned_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
-    expected_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_expected_revenue")
+    expected_revenue = fields.Monetary('Expected Revenue', currency_field='company_currency', tracking=True)
+    prorated_revenue = fields.Monetary('Prorated Revenue', currency_field='company_currency', store=True, compute="_compute_prorated_revenue")
     company_currency = fields.Many2one("res.currency", string='Currency', related='company_id.currency_id', readonly=True)
     # Dates
     date_closed = fields.Datetime('Closed Date', readonly=True, copy=False)
@@ -366,10 +366,10 @@ class Lead(models.Model):
                 if was_automated:
                     lead.probability = lead.automated_probability
 
-    @api.depends('planned_revenue', 'probability')
-    def _compute_expected_revenue(self):
+    @api.depends('expected_revenue', 'probability')
+    def _compute_prorated_revenue(self):
         for lead in self:
-            lead.expected_revenue = round((lead.planned_revenue or 0.0) * (lead.probability or 0) / 100.0, 2)
+            lead.prorated_revenue = round((lead.expected_revenue or 0.0) * (lead.probability or 0) / 100.0, 2)
 
     def _compute_meeting_count(self):
         if self.ids:
@@ -721,14 +721,14 @@ class Lead(models.Model):
         self.ensure_one()
         self.action_set_won()
 
-        if self.user_id and self.team_id and self.planned_revenue:
+        if self.user_id and self.team_id and self.expected_revenue:
             query = """
                 SELECT
                     SUM(CASE WHEN user_id = %(user_id)s THEN 1 ELSE 0 END) as total_won,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_30,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN planned_revenue ELSE 0 END) as max_user_7,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_30,
-                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN planned_revenue ELSE 0 END) as max_team_7
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_30,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND user_id = %(user_id)s THEN expected_revenue ELSE 0 END) as max_user_7,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '30 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_30,
+                    MAX(CASE WHEN date_closed >= CURRENT_DATE - INTERVAL '7 days' AND team_id = %(team_id)s THEN expected_revenue ELSE 0 END) as max_team_7
                 FROM crm_lead
                 WHERE
                     type = 'opportunity'
@@ -748,13 +748,13 @@ class Lead(models.Model):
             message = False
             if query_result['total_won'] == 1:
                 message = _('Go, go, go! Congrats for your first deal.')
-            elif query_result['max_team_30'] == self.planned_revenue:
+            elif query_result['max_team_30'] == self.expected_revenue:
                 message = _('Boom! Team record for the past 30 days.')
-            elif query_result['max_team_7'] == self.planned_revenue:
+            elif query_result['max_team_7'] == self.expected_revenue:
                 message = _('Yeah! Deal of the last 7 days for the team.')
-            elif query_result['max_user_30'] == self.planned_revenue:
+            elif query_result['max_user_30'] == self.expected_revenue:
                 message = _('You just beat your personal record for the past 30 days.')
-            elif query_result['max_user_7'] == self.planned_revenue:
+            elif query_result['max_user_7'] == self.expected_revenue:
                 message = _('You just beat your personal record for the past 7 days.')
 
             if message:

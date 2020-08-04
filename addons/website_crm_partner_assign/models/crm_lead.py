@@ -208,7 +208,7 @@ class CrmLead(models.Model):
         self.check_access_rights('write')
         for lead in self:
             lead_values = {
-                'planned_revenue': values['planned_revenue'],
+                'expected_revenue': values['expected_revenue'],
                 'probability': values['probability'],
                 'priority': values['priority'],
                 'date_deadline': values['date_deadline'] or False,
