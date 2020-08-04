@@ -7,6 +7,34 @@ from odoo.tests.common import users
 
 class TestCRMLead(TestCrmCommon):
 
+    @classmethod
+    def setUpClass(cls):
+        super(TestCRMLead, cls).setUpClass()
+        cls.country_ref = cls.env.ref('base.be')
+        cls.test_email = '"Test Email" <test.email@example.com>'
+        cls.test_phone = '0485112233'
+
+    @users('user_sales_leads')
+    def test_crm_lead_creation_no_partner(self):
+        lead_data = {
+            'name': 'Test',
+            'country_id': self.country_ref.id,
+            'email_from': self.test_email,
+            'phone': self.test_phone,
+        }
+        lead = self.env['crm.lead'].new(lead_data)
+        # get the street should not trigger cache miss
+        lead.street
+        # Create the lead and the write partner_id = False: country should remain
+        lead = self.env['crm.lead'].create(lead_data)
+        self.assertEqual(lead.country_id, self.country_ref, "Country should be set on the lead")
+        self.assertEqual(lead.email_from, self.test_email)
+        self.assertEqual(lead.phone, self.test_phone)
+        lead.partner_id = False
+        self.assertEqual(lead.country_id, self.country_ref, "Country should still be set on the lead")
+        self.assertEqual(lead.email_from, self.test_email)
+        self.assertEqual(lead.phone, self.test_phone)
+
     @users('user_sales_manager')
     def test_crm_lead_creation_partner(self):
         lead = self.env['crm.lead'].create({
@@ -23,6 +51,7 @@ class TestCRMLead(TestCrmCommon):
 
         # update to a partner, should udpate address
         lead.write({'partner_id': self.contact_1.id})
+<<<<<<< HEAD
         # self.assertEqual(lead.partner_name, self.contact_company_1.name)
         # self.assertEqual(lead.contact_name, self.contact_1.name)
         # self.assertEqual(lead.email_from, self.contact_1.email)
@@ -60,6 +89,34 @@ class TestCRMLead(TestCrmCommon):
         self.assertFalse(partner.email)
         self.assertFalse(partner.email_normalized)
         self.assertFalse(partner.phone)
+=======
+        self.assertEqual(lead.partner_name, self.contact_company_1.name)
+        self.assertEqual(lead.contact_name, self.contact_1.name)
+        self.assertEqual(lead.email_from, self.contact_1.email)
+        self.assertEqual(lead.street, self.contact_1.street)
+        self.assertEqual(lead.city, self.contact_1.city)
+        self.assertEqual(lead.zip, self.contact_1.zip)
+        self.assertEqual(lead.country_id, self.contact_1.country_id)
+
+    def test_crm_lead_creation_partner_no_info(self):
+        empty_partner = self.env['res.partner'].create({
+            'name': 'Empty partner',
+            'is_company': True
+        })
+        lead_data = {
+            'name': 'Test',
+            'country_id': self.country_ref.id,
+            'email_from': self.test_email,
+            'phone': self.test_phone,
+        }
+        lead = self.env['crm.lead'].create(lead_data)
+        lead.partner_id = empty_partner
+        self.assertEqual(lead.country_id, self.env['res.country'], "Country should be empty")
+        self.assertEqual(lead.contact_name, False, "Contact name should be empty")
+        self.assertEqual(lead.email_from, self.test_email, "Email From should keep its initial value")
+        self.assertEqual(lead.phone, self.test_phone, "Phone should keep its initial value")
+        self.assertEqual(lead.partner_name, empty_partner.name, "Partner name should be set as contact is a company")
+>>>>>>> 3f338ca75a5... temp
 
     @users('user_sales_manager')
     def test_crm_lead_stages(self):
@@ -72,6 +129,40 @@ class TestCRMLead(TestCrmCommon):
         lead.action_set_won()
         self.assertEqual(lead.probability, 100.0)
         self.assertEqual(lead.stage_id, self.stage_gen_won)  # generic won stage has lower sequence than team won stage
+
+    @users('user_sales_leads')
+    def test_crm_lead_update_contact(self):
+        # ensure initial data, especially for corner cases
+        self.assertFalse(self.contact_company_1.phone)
+        self.assertEqual(self.contact_company_1.country_id.code, "US")
+        lead = self.env['crm.lead'].create({
+            'name': 'Test',
+            'country_id': self.country_ref.id,
+            'email_from': self.test_email,
+            'phone': self.test_phone,
+        })
+        self.assertEqual(lead.country_id, self.country_ref, "Country should be set on the lead")
+        lead.partner_id = False
+        self.assertEqual(lead.country_id, self.country_ref, "Country should still be set on the lead")
+        self.assertEqual(lead.email_from, self.test_email)
+        self.assertEqual(lead.phone, self.test_phone)
+        self.assertEqual(lead.email_state, 'correct')
+        self.assertEqual(lead.phone_state, 'correct')
+
+        lead.partner_id = self.contact_company_1
+        self.assertEqual(lead.country_id, self.contact_company_1.country_id, "Country should still be the one set on partner")
+        self.assertEqual(lead.email_from, self.contact_company_1.email)
+        self.assertEqual(lead.phone, self.test_phone)
+        self.assertEqual(lead.email_state, 'correct')
+        # currently we keep phone as partner as a void one -> may lead to inconsistencies
+        self.assertEqual(lead.phone_state, 'incorrect', "Belgian phone with US country -> considered as incorrect")
+
+        lead.email_from = 'broken'
+        lead.phone = 'alsobroken'
+        self.assertEqual(lead.email_state, 'incorrect')
+        self.assertEqual(lead.phone_state, 'incorrect')
+        self.assertEqual(self.contact_company_1.email, 'planet.express@test.example.com')
+        self.assertEqual(self.contact_company_1.phone, False)
 
     @users('user_sales_manager')
     def test_crm_team_alias(self):

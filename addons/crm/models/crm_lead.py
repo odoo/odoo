@@ -423,6 +423,7 @@ class Lead(models.Model):
         if not partner_name and partner.is_company:
             partner_name = partner.name
 
+<<<<<<< HEAD
         return {
             'partner_name': partner_name,
             'contact_name': partner.name if not partner.is_company else False,
@@ -437,6 +438,16 @@ class Lead(models.Model):
             'function': partner.function,
             'website': partner.website,
         }
+=======
+        values = {f: partner[f] if partner else self[f] for f in PARTNER_FIELDS_TO_SYNC}
+        values.update({
+            'partner_name': partner_name if partner else self.partner_name,
+            'contact_name': contact_name if partner else self.contact_name,
+            'email_from': partner.email or self.email_from,
+            'phone': partner.phone or self.phone,
+        })
+        return self._convert_to_write(values)
+>>>>>>> 3f338ca75a5... temp
 
     # ------------------------------------------------------------
     # ORM
