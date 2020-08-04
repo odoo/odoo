@@ -375,7 +375,7 @@ class account_payment(models.Model):
                     raise UserError(_('There is no Transfer Account defined in the accounting settings. Please define one to be able to confirm this transfer.'))
                 payment.destination_account_id = payment.company_id.transfer_account_id.id
             elif payment.partner_id:
-                partner = self.partner_id.with_context(force_company=payment.company_id.id)
+                partner = payment.partner_id.with_context(force_company=payment.company_id.id)
                 if payment.partner_type == 'customer':
                     payment.destination_account_id = partner.property_account_receivable_id.id
                 else:
