@@ -76,8 +76,13 @@ class HolidaysRequest(models.Model):
         LeaveType = self.env['hr.leave.type'].with_context(employee_id=defaults.get('employee_id'), default_date_from=defaults.get('date_from', fields.Datetime.now()))
         lt = LeaveType.search([('valid', '=', True)], limit=1)
 
-        defaults['holiday_status_id'] = lt.id if lt else defaults.get('holiday_status_id')
-        defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
+        now = fields.Datetime.now()
+        defaults.update({
+            'holiday_status_id': lt.id if lt else defaults.get('holiday_status_id'),
+            'state': 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft',
+            'date_from': now,
+            'date_to': now,
+        })
         return defaults
 
     def _default_employee(self):
@@ -141,11 +146,9 @@ class HolidaysRequest(models.Model):
     # duration
     date_from = fields.Datetime(
         'Start Date', readonly=True, index=True, copy=False, required=True,
-        default=fields.Datetime.now,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True)
     date_to = fields.Datetime(
         'End Date', readonly=True, copy=False, required=True,
-        default=fields.Datetime.now,
         states={'draft': [('readonly', False)], 'confirm': [('readonly', False)]}, tracking=True)
     number_of_days = fields.Float(
         'Duration (Days)', copy=False, tracking=True,
