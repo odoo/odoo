@@ -4,10 +4,10 @@
 <!-- Snippets menu -->
 <template id="snippets" inherit_id="web_editor.snippets" primary="True" groups="base.group_user">
     <xpath expr="//div[@id='snippets_menu']" position="inside">
-        <button type="button" class="o_we_customize_theme_btn"
+        <button type="button" tabindex="3" class="o_we_customize_theme_btn text-uppercase"
                 data-title="Customize your theme"
                 groups="website.group_website_designer" accesskey="2">
-            Options
+            <span>Options</span>
         </button>
     </xpath>
     <xpath expr="//t[@id='default_snippets']" position="replace">

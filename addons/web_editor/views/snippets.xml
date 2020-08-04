@@ -2,14 +2,14 @@
 <odoo>
 <template id="snippets" groups="base.group_user">
     <div id="snippets_menu">
-        <button type="button" class="o_we_add_snippet_btn active" accesskey="1">
-            Blocks
+        <button type="button" tabindex="1" class="o_we_add_snippet_btn active text-uppercase" accesskey="1">
+            <span>Blocks</span>
         </button>
         <t t-set="customize_title">Click in the page to customize</t>
-        <button type="button" class="o_we_customize_snippet_btn"
+        <button type="button" tabindex="2" class="o_we_customize_snippet_btn text-uppercase"
                 t-att-data-title="customize_title"
                 disabled="disabled">
-            Style
+            <span>Style</span>
         </button>
     </div>
 
