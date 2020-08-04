@@ -255,14 +255,14 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
             return 'userInputs';
         } else if (this.hasCorrectAnswers && ['question', 'userInputs'].includes(this.currentScreen)) {
             return 'results';
-        } else if (['question', 'userInputs', 'results'].includes(this.currentScreen) &&
-                   this.isScoredQuestion) {
-            return 'leaderboard';
-        } else if (this.sessionShowLeaderboard && this.isLastQuestion) {
-            return 'leaderboardFinal';
-        } else {
-            return 'nextQuestion';
+        } else if (this.sessionShowLeaderboard) {
+            if (['question', 'userInputs', 'results'].includes(this.currentScreen) && this.isScoredQuestion) {
+                return 'leaderboard';
+            } else if (this.isLastQuestion) {
+                return 'leaderboardFinal';
+            }
         }
+        return 'nextQuestion';
     },
 
     /**
@@ -327,8 +327,8 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                 self.$el.fadeIn(self.fadeInOutTime, function () {
                     self._startTimer();
                 });
-            } else {
-                // Display last screen
+            } else if (self.sessionShowLeaderboard) {
+                // Display last screen if leaderboard activated
                 self.isLastQuestion = true;
                 self._setupLeaderboard().then(function () {
                     self.$('.o_survey_session_leaderboard_title').text(_('Final Leaderboard'));
@@ -336,6 +336,8 @@ publicWidget.registry.SurveySessionManage = publicWidget.Widget.extend({
                     self.$('.o_survey_leaderboard_buttons').removeClass('d-none');
                     self.leaderBoard.showLeaderboard(false);
                 });
+            } else {
+                self.$('.o_survey_session_close').click();
             }
         });
     },
