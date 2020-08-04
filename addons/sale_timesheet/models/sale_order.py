@@ -79,9 +79,10 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super(SaleOrder, self)._action_confirm()
-        self.mapped('order_line').sudo().with_context(
-            force_company=self.company_id.id,
-        )._timesheet_service_generation()
+        for order in self:
+            order.mapped('order_line').sudo().with_context(
+                force_company=order.company_id.id,
+            )._timesheet_service_generation()
         return result
 
     def action_view_task(self):
