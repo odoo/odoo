@@ -78,12 +78,12 @@ class EventTrack(models.Model):
         now_utc = utc.localize(fields.Datetime.now().replace(microsecond=0))
         for track in self:
             if not track.website_cta:
-                track.is_cta_live = track.website_cta_start_remaining = False
+                track.is_website_cta_live = track.website_cta_start_remaining = False
                 continue
 
             date_begin_utc = utc.localize(track.date, is_dst=False) + timedelta(minutes=track.website_cta_delay or 0)
             date_end_utc = utc.localize(track.date_end, is_dst=False)
-            track.is_cta_live = date_begin_utc <= now_utc <= date_end_utc
+            track.is_website_cta_live = date_begin_utc <= now_utc <= date_end_utc
             if date_begin_utc >= now_utc:
                 td = date_begin_utc - now_utc
                 track.website_cta_start_remaining = int(td.total_seconds())
