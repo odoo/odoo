@@ -454,13 +454,10 @@ class Survey(http.Controller):
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
-        if survey_sudo.scoring_type == 'scoring_without_answers':
-            return request.render("survey.403", {'survey': survey_sudo})
-
         return request.render('survey.survey_print', {
             'review': review,
             'survey': survey_sudo,
-            'answer': answer_sudo,
+            'answer': answer_sudo if survey_sudo.scoring_type != 'scoring_without_answers' else answer_sudo.browse(),
             'page_nr': 0,
             'quizz_correction': survey_sudo.scoring_type != 'scoring_without_answers' and answer_sudo})
 
