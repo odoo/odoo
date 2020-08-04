@@ -6,15 +6,18 @@
         <field name="arch" type="xml">
             <tree string="Product" multi_edit="1" sample="1">
                 <field name="product_variant_count" invisible="1"/>
+                <field name="sale_ok" invisible="1"/>
+                <field name="currency_id" invisible="1"/>
+                <field name="cost_currency_id" invisible="1"/>
 
                 <field name="sequence" widget="handle" readonly="1"/>
+                <field name="name" string="Product Name"/>
                 <field name="default_code" optional="show"/>
                 <field name="barcode" optional="hide" attrs="{'readonly': [('product_variant_count', '>', 1)]}"/>
-                <field name="name"/>
                 <field name="company_id" options="{'no_create_edit': True}"
                     groups="base.group_multi_company" optional="hide"/>
-                <field name="list_price" string="Sales Price" optional="show"/>
-                <field name="standard_price" optional="show" readonly="1"/>
+                <field name="list_price" string="Sales Price" widget='monetary' options="{'currency_field': 'currency_id'}" optional="show" decoration-muted="not sale_ok"/>
+                <field name="standard_price" widget='monetary' options="{'currency_field': 'cost_currency_id'}" optional="show" readonly="1"/>
                 <field name="categ_id" optional="hide"/>
                 <field name="type" optional="hide" readonly="1"/>
                 <field name="uom_id" readonly="1" optional="show" groups="uom.group_uom"/>
