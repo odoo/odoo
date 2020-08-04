@@ -97,8 +97,9 @@ class SnailmailLetter(models.Model):
             })
         letters = super().create(vals_list)
 
+        notification_vals = []
         for letter in letters:
-            self.env['mail.notification'].sudo().create({
+            notification_vals.append({
                 'mail_message_id': letter.message_id.id,
                 'res_partner_id': letter.partner_id.id,
                 'notification_type': 'snail',
@@ -106,6 +107,8 @@ class SnailmailLetter(models.Model):
                 'is_read': True,  # discard Inbox notification
                 'notification_status': 'ready',
             })
+
+        self.env['mail.notification'].sudo().create(notification_vals)
 
         return letters
 
