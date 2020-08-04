@@ -53,7 +53,7 @@ class Invite(models.TransientModel):
             document = Model.browse(wizard.res_id)
 
             # filter partner_ids to get the new followers, to avoid sending email to already following partners
-            new_partners = wizard.partner_ids - document.message_partner_ids
+            new_partners = wizard.partner_ids - document.sudo().message_partner_ids
             new_channels = wizard.channel_ids - document.message_channel_ids
             document.message_subscribe(new_partners.ids, new_channels.ids)
 
