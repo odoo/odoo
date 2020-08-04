@@ -97,9 +97,11 @@ QUnit.module('Views', {
             'partner,false,list': '<tree><field name="foo"/></tree>',
             'partner,false,kanban':
                 `<kanban>
-                    <templates><t t-name="kanban-box">
-                        <div><field name="foo"/></div>
-                    </t></templates>
+                    <templates>
+                        <div t-name="kanban-box" class="oe_kanban_global_click">
+                            <field name="foo"/>
+                        </div>
+                    </templates>
                 </kanban>`,
             'partner,false,form':
                 `<form>
@@ -2401,9 +2403,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('search panel filters are kept between switch views', async function (assert) {
-        assert.expect(16);
+        assert.expect(17);
 
-        var actionManager = await createActionManager({
+        const actionManager = await createActionManager({
             actions: this.actions,
             archs: this.archs,
             data: this.data,
@@ -2438,12 +2440,16 @@ QUnit.module('Views', {
         assert.containsN(actionManager, '.o_search_panel_filter_value input:checked', 2);
         assert.containsN(actionManager, '.o_kanban_record:not(.o_kanban_ghost)', 4);
 
+        await testUtils.dom.click(actionManager.$(".o_kanban_record:nth(0)"));
+        await testUtils.dom.click(actionManager.$(".breadcrumb-item:nth(0)"));
+
         assert.verifySteps([
             '[]', // initial search_read
             '[["category_id","in",[6]]]', // kanban, after selecting the gold filter
             '[["category_id","in",[6]]]', // list
             '[["category_id","in",[6,7]]]', // list, after selecting the silver filter
             '[["category_id","in",[6,7]]]', // kanban
+            '[["category_id","in",[6,7]]]', // kanban, after switching back from form view
         ]);
 
         actionManager.destroy();
@@ -4070,7 +4076,7 @@ QUnit.module('Views', {
             '/web/dataset/search_read',
         ]);
 
-        await assert.containsN(kanban, '.o_kanban_record span', 4);
+        assert.containsN(kanban, '.o_kanban_record span', 4);
 
         // select 'ABC' in search panel
         await testUtils.dom.click(kanban.$('.o_search_panel_category_value:nth(1) header'));
