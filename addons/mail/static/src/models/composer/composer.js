@@ -86,7 +86,7 @@ function factory(dependencies) {
          * Open the full composer modal.
          */
         async openFullComposer() {
-            const attachmentIds = this.attachments.map(attachment => attachment.res_id);
+            const attachmentIds = this.attachments.map(attachment => attachment.id);
 
             const context = {
                 default_attachment_ids: attachmentIds,
