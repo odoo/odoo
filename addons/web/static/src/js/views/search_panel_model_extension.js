@@ -38,6 +38,16 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
     }
 
     /**
+     * Returns a serialised array of the given map with its values being the
+     * shallow copies of the original values.
+     * @param {Map<any, Object>} map
+     * @return {Array[]}
+     */
+    function serialiseMap(map) {
+        return [...map].map(([key, val]) => [key, Object.assign({}, val)]);
+    }
+
+    /**
      * @typedef Section
      * @prop {string} color
      * @prop {string} description
@@ -118,14 +128,14 @@ odoo.define("web/static/src/js/views/search_panel_model_extension.js", function 
          * @override
          */
         exportState() {
-            const state = super.exportState();
-            state.sections = [...state.sections];
+            const state = Object.assign({}, super.exportState());
+            state.sections = serialiseMap(state.sections);
             for (const [id, section] of state.sections) {
-                section.values = [...section.values];
+                section.values = serialiseMap(section.values);
                 if (section.groups) {
-                    section.groups = [...section.groups];
+                    section.groups = serialiseMap(section.groups);
                     for (const [id, group] of section.groups) {
-                        group.values = [...group.values];
+                        group.values = serialiseMap(group.values);
                     }
                 }
             }
