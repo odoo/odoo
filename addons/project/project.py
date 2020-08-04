@@ -63,8 +63,30 @@ class project(osv.osv):
                            LEFT JOIN project_user_rel rel ON rel.project_id = project.analytic_account_id
                            WHERE (account.user_id = %s or rel.uid = %s)"""%(user, user))
                 return [(r[0]) for r in cr.fetchall()]
-        return super(project, self).search(cr, user, args, offset=offset, limit=limit, order=order,
-            context=context, count=count)
+        return super(project, self).search(cr, 1, args, offset=offset, limit=limit, order=order,
+                                           context=context, count=count)
+
+    # Override of standard read() method, to force visibility of all project.project
+    def read(self, cr, uid, ids, fields=None, context=None, load='', **kwargs):
+        if isinstance(ids, (int,long)):
+            ids = [ids]
+
+        projects = []
+        projects_admin = super(project, self).read(cr, 1, ids, fields, context) or []
+        for id in ids:
+            try:
+                # try to read each intervention with uid
+                projects.append(super(project, self).read(cr, uid, id, fields, context))
+            except:
+                continue
+
+        if projects_admin != projects and isinstance(projects, list):
+            # get list of all id read by uid
+            ids_user = list(map(lambda x: x['id'], projects))
+            # add all interventions that can't be read by uid
+            projects.extend(list(filter(lambda x: x['id'] not in ids_user, projects_admin)))
+
+        return projects
 
     def _complete_name(self, cr, uid, ids, name, args, context=None):
         res = {}
@@ -522,7 +544,7 @@ class task(osv.osv):
             if domain[0] == 'project_id' and (not isinstance(domain[2], str)):
                 id = isinstance(domain[2], list) and domain[2][0] or domain[2]
                 if id and isinstance(id, (long, int)):
-                    if obj_project.read(cr, user, id, ['state'])['state'] == 'template':
+                    if obj_project.read(cr, user, id, ['state'])[0]['state'] == 'template':
                         args.append(('active', '=', False))
         return super(task, self).search(cr, user, args, offset=offset, limit=limit, order=order, context=context, count=count)
 
