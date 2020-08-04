@@ -49,9 +49,10 @@
     <record model="ir.rule" id="project_public_members_rule">
         <field name="name">Project: employees: following required for follower-only projects</field>
         <field name="model_id" ref="model_project_project"/>
-        <field name="domain_force">['|',
+        <field name="domain_force">['|','|',
                                         ('privacy_visibility', '!=', 'followers'),
-                                        ('message_partner_ids', 'in', [user.partner_id.id])
+                                        ('message_partner_ids', 'in', [user.partner_id.id]),
+                                        ('task_ids.message_partner_ids', 'in', [user.partner_id.id]),
                                     ]</field>
         <field name="groups" eval="[(4, ref('base.group_user'))]"/>
     </record>

@@ -10,6 +10,10 @@ class TestPortalProjectBase(TestProjectBase):
 
     def setUp(self):
         super(TestPortalProjectBase, self).setUp()
+
+        user_group_employee = self.env.ref('base.group_user')
+        user_group_project_user = self.env.ref('project.group_project_user')
+
         self.user_noone = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
             'name': 'Noemie NoOne',
             'login': 'noemie',
@@ -17,6 +21,15 @@ class TestPortalProjectBase(TestProjectBase):
             'signature': '--\nNoemie',
             'notification_type': 'email',
             'groups_id': [(6, 0, [])]})
+
+        self.user_follower = self.env['res.users'].with_context({'no_reset_password': True, 'mail_create_nosubscribe': True}).create({
+            'name': 'Jack Follow',
+            'login': 'jack',
+            'email': 'n.n@example.com',
+            'signature': '--\nJack',
+            'notification_type': 'email',
+            'groups_id': [(6, 0, [user_group_employee.id, user_group_project_user.id])]
+        })
 
         self.task_3 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Test3', 'user_id': self.user_portal.id, 'project_id': self.project_pigs.id})
@@ -26,6 +39,8 @@ class TestPortalProjectBase(TestProjectBase):
             'name': 'Test5', 'user_id': False, 'project_id': self.project_pigs.id})
         self.task_6 = self.env['project.task'].with_context({'mail_create_nolog': True}).create({
             'name': 'Test5', 'user_id': False, 'project_id': self.project_pigs.id})
+
+        self.task_6.message_subscribe(partner_ids=[self.user_follower.partner_id.id])
 
 
 class TestPortalProject(TestPortalProjectBase):
@@ -66,8 +81,19 @@ class TestPortalProject(TestPortalProjectBase):
         pigs = self.project_pigs
         pigs.write({'privacy_visibility': 'followers'})
 
+        # Do: Jack reads project -> ok (task follower ok followers)
+        pigs.sudo(self.user_follower).read(['user_id'])
+        # Do: Jack edit project -> ko (task follower ko followers)
+        self.assertRaises(AccessError, pigs.sudo(self.user_follower).write, {'name': 'Test Follow not ok'})
+        # Do: Jack edit task not followed -> ko (task follower ko followers)
+        self.assertRaises(AccessError, self.task_5.sudo(self.user_follower).write, {'name': 'Test Follow not ok'})
+        # Do: Jack edit task followed-> ok (task follower ok followers)
+        self.task_6.sudo(self.user_follower).write({'name': 'Test Follow ok'})
+
         # Do: Alfred reads project -> ko (employee ko followers)
+        pigs.task_ids.message_unsubscribe(partner_ids=[self.user_projectuser.partner_id.id])
         self.assertRaises(AccessError, pigs.sudo(self.user_projectuser).read, ['user_id'])
+
         # Test: no project task visible
         tasks = self.env['project.task'].sudo(self.user_projectuser).search([('project_id', '=', pigs.id)])
         self.assertEqual(tasks, self.task_1,
