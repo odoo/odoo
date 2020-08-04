@@ -50,8 +50,13 @@ class SaleOrder(models.Model):
     def _action_confirm(self):
         """ On SO confirmation, some lines should generate a task or a project. """
         result = super()._action_confirm()
-        self.mapped('order_line').sudo() \
-            .with_company(self.company_id)._timesheet_service_generation()
+        if len(self.company_id) == 1:
+            # All orders are in the same company
+            self.order_line.sudo().with_company(self.company_id)._timesheet_service_generation()
+        else:
+            # Orders from different companies are confirmed together
+            for order in self:
+                order.order_line.sudo().with_company(order.company_id)._timesheet_service_generation()
         return result
 
     def action_view_task(self):
