@@ -1,0 +1,33 @@
+<?xml version="1.0"?>
+<odoo>
+
+    <record id="event_track_view_form" model="ir.ui.view">
+        <field name="name">event.track.view.form.inherit.session</field>
+        <field name="model">event.track</field>
+        <field name="inherit_id" ref="website_event_track.view_event_track_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//page[@name='description']" position="after">
+                <page string="Interactivity" name="interactivity">
+                    <group>
+                        <group name="event_track_cta_group">
+                            <field name="website_cta"/>
+                            <field name="website_cta_title" placeholder="e.g. Get Yours Now !"
+                                attrs="{'invisible': [('website_cta', '=', False)],
+                                        'required': [('website_cta', '=', True)]}"/>
+                            <field name="website_cta_url" placeholder="e.g. http://www.example.com"
+                                attrs="{'invisible': [('website_cta', '=', False)],
+                                        'required': [('website_cta', '=', True)]}"/>
+                            <label for="website_cta_delay"
+                                attrs="{'invisible': [('website_cta', '=', False)]}"/>
+                            <div attrs="{'invisible': [('website_cta', '=', False)]}">
+                                <field name="website_cta_delay" class="oe_inline"
+                                    attrs="{'required': [('website_cta', '=', True)]}"/> minutes after talk start
+                            </div>
+                        </group>
+                    </group>
+                </page>
+            </xpath>
+        </field>
+    </record>
+
+</odoo>

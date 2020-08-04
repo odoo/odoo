@@ -1,0 +1,194 @@
+/*
+ * EVENT TOOL: REMINDER WIDGET
+ */
+.o_wevent_event .o_wetrack_js_reminder {
+    width: fit-content;
+    height: fit-content;
+    cursor: pointer;
+    background: grey;
+
+    i {
+        &.fa-bell {
+            color: gold;
+        }
+        &.fa-bell-o {
+            color: white
+        }
+    }
+
+    // Icon only
+    &.o_wetrack_reminder_light {
+        background: transparent;
+        padding: 0;
+        i {
+            &.inactive_color_dark {
+                color: grey;
+            }
+        }
+        &:not(.o_wetrack_reminder_small) {
+            i {
+                font-size: 1.5em;
+            }
+        }
+    }
+
+    // Text included
+    &:not(.o_wetrack_reminder_light) {
+        &.o_wetrack_reminder_small {
+            padding: 0.25rem 0.50rem;
+            span {
+                min-width: 70px;
+            }
+        }
+    }
+}
+
+/*
+ * AGENDA
+ */
+.o_we_online_agenda {
+    overflow-x: hidden;
+    @media (max-width: map-get($grid-breakpoints, 'md')) {
+        overflow-x: scroll;
+    }
+
+    table {
+        border-collapse: separate;
+        border-spacing: 0em 0em;
+        tr {
+            height: 15px;
+            line-height: 1em;
+            &.active {
+                td.active {
+                    padding: 0em 0.5em;
+                    font-size: smaller;
+                    border-top: 1px solid lightgrey;
+                }
+            }
+        }
+        th.active, td:not(.active) {
+            background-color: #d3d3d36e;
+        }
+        th.position-sticky {
+            left: 0;
+        }
+        td {
+            height: 0px;
+            border: 0px;
+            &.active {
+                position: sticky;
+                left: 0;
+                min-width: 100px;
+                background-color: white;
+            }
+            div.o_we_agenda_card_content {
+                height: 100%;
+                span {
+                    cursor: pointer;
+                }
+            }
+            .badge {
+                height: fit-content;
+            }
+            &.invisible {
+                visibility: visible !important;
+                opacity: 0.3;
+            }
+            &.o_we_agenda_time_slot_main {
+                border-top: 1px solid lightgrey;
+            }
+            &.o_we_agenda_time_slot_half {
+                border-top: 1px dashed lightgrey;
+            }
+            &.event_color_0 {
+                background-color: lightgrey;
+            }
+            &.event_color_1 {
+                background-color: rgba(240, 96, 80, 0.2);
+            }
+            &.event_color_2 {
+                background-color: rgba(244, 164, 96, 0.2);
+            }
+            &.event_color_3 {
+                background-color: rgba(247, 205, 31, 0.2);
+            }
+            &.event_color_4 {
+                background-color: rgba(108,193,237,0.2);
+            }
+            &.event_color_5 {
+                background-color: rgba(129,73,104,0.2);
+            }
+            &.event_color_6 {
+                background-color: rgba(235,126,127,0.2);
+            }
+            &.event_color_7 {
+                background-color: rgba(44,131,151,0.2);
+            }
+            &.event_color_8 {
+                background-color: rgba(71,85,119,0.2);;
+            }
+            &.event_color_9 {
+                background-color: rgba(214,20,95,0.2);
+            }
+            &.event_color_10 {
+                background-color: rgba(48,195,129,0.2);
+            }
+            &.event_color_11 {
+                background-color: rgba(147,101,184,0.2);
+            }
+        }
+    }
+}
+
+/*
+ * EVENT TOOL: SPONSOR WIDGET
+ */
+.o_wevent_event .o_wevent_sponsor_card {
+    position: relative;
+    width: 100px;
+    height: 100px;
+    border: 1px solid $gray-200;
+    background-color: $white;
+    margin: 0 -1px -1px 0;
+
+    .ribbon-wrapper {
+        width: 50px;
+        height: 50px;
+    }
+
+    .ribbon {
+        font: bold 10px Sans-Serif;
+        padding: 2px 0;
+        top: 10px;
+        width: 70px;
+        background-image: none; // not needed if colors for ribbons (Gold,Silver,Bronze) is removed in website_event_track.css
+
+        &.ribbon_Gold {
+            background-color: #e3aa24;
+            color:$white;
+        }
+
+        &.ribbon_Silver {
+            background-color: #adb5bd;
+            color: $white;
+        }
+
+        &.ribbon_Bronze {
+            background-color: #c7632a;
+            color: $white;
+        }
+    }
+
+    &:before {
+        content: "";
+        display: block;
+        @include o-position-absolute(0,0,0,0);
+        background-color: $black;
+        opacity: 0;
+        transition: opacity .3s;
+    }
+
+    &:hover:before {
+        opacity:.1;
+    }
+}

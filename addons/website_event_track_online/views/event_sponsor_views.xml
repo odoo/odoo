@@ -1,0 +1,62 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="event_sponsor_view_search" model="ir.ui.view">
+        <field name="name">event.sponsor.view.search.inherit.online</field>
+        <field name="model">event.sponsor</field>
+        <field name="inherit_id" ref="website_event_track.event_sponsor_view_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_sponsor_view_tree" model="ir.ui.view">
+        <field name="name">event.sponsor.view.tree.inherit.online</field>
+        <field name="model">event.sponsor</field>
+        <field name="inherit_id" ref="website_event_track.event_sponsor_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="name"/>
+                <field name="email"/>
+                <field name="phone"/>
+                <field name="mobile"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_sponsor_view_form" model="ir.ui.view">
+        <field name="name">event.sponsor.view.form.inherit.online</field>
+        <field name="model">event.sponsor</field>
+        <field name="inherit_id" ref="website_event_track.event_sponsor_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='image_128']" position="replace">
+                <field name="image_512" widget="image" class="oe_avatar"/>
+            </xpath>
+            <xpath expr="//h1//field[@name='partner_id']" position="replace">
+                <div class="oe_title">
+                    <label for="name" class="oe_edit_only" string="Sponsor Name"/>
+                    <h1><field name="name" placeholder="e.g. : OpenWood Decoration"/></h1>
+                </div>
+            </xpath>
+            <xpath expr="//field[@name='event_id']" position="after">
+                <field name="partner_id" string="Partner"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_email']" position="replace">
+                <field name="email" widget="email" string="Email"
+                    placeholder="e.g. : open.wood.decoration@example.com"/>
+            </xpath>
+            <xpath expr="//field[@name='url']" position="attributes">
+                <attribute name="placeholder">e.g. : https://www.odoo.com</attribute>
+            </xpath>
+            <xpath expr="//field[@name='partner_phone']" position="replace">
+                <field name="phone" widget="phone" string="Phone" options="{'enable_sms': True}"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_mobile']" position="replace">
+                <field name="mobile" widget="phone" string="Mobile" options="{'enable_sms': True}"/>
+            </xpath>
+        </field>
+    </record>
+</odoo>

@@ -119,6 +119,23 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
             len(pages)
         )
 
+    def assertVisitorDeactivated(self, visitor, main_visitor):
+        """ Temporary method to check that a visitor has been de-activated / merged
+        with other visitor, notably in case of login (see User.authenticate() as
+        well as Visitor._link_to_visitor() ).
+
+        As final result depends on installed modules (see overrides) due to stable
+        improvements linked to EventOnline, this method contains a hack to avoid
+        doing too much overrides just for that behavior. """
+        if 'parent_id' in self.env['website.visitor']:
+            self.assertTrue(bool(visitor))
+            self.assertFalse(visitor.active)
+            self.assertTrue(main_visitor.active)
+            self.assertEqual(visitor.parent_id, main_visitor)
+        else:
+            self.assertFalse(visitor)
+            self.assertTrue(bool(main_visitor))
+
     def test_visitor_creation_on_tracked_page(self):
         """ Test various flows involving visitor creation and update. """
         existing_visitors = self.env['website.visitor'].search([])
@@ -209,7 +226,7 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
 
         # one visitor is deleted
         visitor_anonymous = self.env['website.visitor'].with_context(active_test=False).search([('id', '=', visitor_anonymous.id)])
-        self.assertFalse(visitor_anonymous)
+        self.assertVisitorDeactivated(visitor_anonymous, visitor_admin)
         new_visitors = self.env['website.visitor'].search([('id', 'not in', existing_visitors.ids)])
         self.assertEqual(new_visitors, visitor_admin | visitor_portal)
         visitor_admin = self.env['website.visitor'].search([('partner_id', '=', self.partner_admin.id)])
@@ -300,6 +317,7 @@ class WebsiteVisitorTests(MockVisitor, HttpCaseWithUserDemo):
         with self.mock_visitor_from_request(force_visitor=new_visitor):
             self.authenticate('demo', 'demo')
         (new_visitor | old_visitor).flush()
+        partner_demo.flush()
         partner_demo.invalidate_cache(fnames=['visitor_ids'])
         self.assertEqual(partner_demo.visitor_ids, old_visitor, "The partner visitor should be back to the 'old' visitor.")
 

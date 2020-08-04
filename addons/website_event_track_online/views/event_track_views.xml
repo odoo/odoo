@@ -1,0 +1,75 @@
+<?xml version="1.0"?>
+<odoo>
+    <record id="website_visitor_action_from_track" model="ir.actions.act_window">
+        <field name="name">Visitors Wishlist</field>
+        <field name="res_model">website.visitor</field>
+        <field name="view_mode">kanban,tree,form,graph</field>
+        <field name="domain">[('event_track_wishlisted_ids', 'in', [active_id])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                Wait for visitors to wishlist your tracks
+            </p>
+        </field>
+    </record>
+
+    <record id="event_track_view_search" model="ir.ui.view">
+        <field name="name">event.track.view.search.inherit.event.track.online</field>
+        <field name="model">event.track</field>
+        <field name="inherit_id" ref="website_event_track.view_event_track_search"/>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='message_needaction']" position="after">
+                <filter string="Always Wishlisted" name="filter_wishlisted_by_default" domain="[('wishlisted_by_default', '=', True)]"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_track_view_tree" model="ir.ui.view" >
+        <field name="name">event.track.view.tree.inherit.event.track.online</field>
+        <field name="model">event.track</field>
+        <field name="inherit_id" ref="website_event_track.view_event_track_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='event_id']" position="after">
+                <field name="wishlisted_by_default" optional="hide"/>
+                <field name="wishlist_visitor_count" optional="hide"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_track_view_form" model="ir.ui.view" >
+        <field name="name">event.track.view.form.inherit.event.track.online</field>
+        <field name="model">event.track</field>
+        <field name="inherit_id" ref="website_event_track.view_event_track_form"/>
+        <field name="arch" type="xml">
+            <field name="active" position='after'>
+                <field name="wishlisted_by_default"/>
+            </field>
+            <field name="is_published" position="before">
+                <button name="%(website_event_track_online.website_visitor_action_from_track)d"
+                        type="action"
+                        class="oe_stat_button"
+                        icon="fa-bell">
+                    <field name="wishlist_visitor_count" string="Wishlisted By" widget="statinfo"/>
+                </button>
+            </field>
+            <xpath expr="//field[@name='image']" position="replace">
+                <field name="website_image" widget="image" class="oe_avatar"/>
+            </xpath>
+            <xpath expr="//field[@name='partner_biography']" position="after">
+                <field name="image" widget="image" class="oe_avatar float-left"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_track_action_from_visitor" model="ir.actions.act_window">
+        <field name="name">Wishlisted Tracks</field>
+        <field name="res_model">event.track</field>
+        <field name="view_mode">kanban,tree,form</field>
+        <field name="domain">[('wishlist_visitor_ids', 'in', [active_id])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_empty_folder">
+                No track wishlisted by this visitor
+            </p>
+        </field>
+    </record>
+
+</odoo>

@@ -1,0 +1,48 @@
+<?xml version="1.0"?>
+<odoo><data>
+    <record id="event_tag_category_view_form" model="ir.ui.view">
+        <field name="name">event.tag.category.view.form.inherit.online</field>
+        <field name="model">event.tag.category</field>
+        <field name="inherit_id" ref="event.event_tag_category_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']//field[@name='name']" position="after">
+                <field name="color" widget="color_picker"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_tag_category_view_list" model="ir.ui.view">
+        <field name="name">event.tag.category.view.tree.inherit.online</field>
+        <field name="model">event.tag.category</field>
+        <field name="inherit_id" ref="event.event_tag_category_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='tag_ids']" position="attributes">
+                <attribute name="widget">many2many_tags</attribute>
+                <attribute name="options">{'color_field': 'color'}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_tag_view_list" model="ir.ui.view">
+        <field name="name">event.tag.view.list.inherit.online</field>
+        <field name="model">event.tag</field>
+        <field name="inherit_id" ref="event.event_tag_view_tree"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="color" widget="color_picker"/>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="event_tag_view_form" model="ir.ui.view">
+        <field name="name">event.tag.view.form.inherit.online</field>
+        <field name="model">event.tag</field>
+        <field name="inherit_id" ref="event.event_tag_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='category_id']" position="after">
+                <field name="color" widget="color_picker"/>
+            </xpath>
+        </field>
+    </record>
+
+</data></odoo>
