@@ -23,7 +23,7 @@ class AccountAnalyticLine(models.Model):
     task_id = fields.Many2one('project.task', 'Task', index=True, domain="[('company_id', '=', company_id)]")
     project_id = fields.Many2one('project.project', 'Project', domain=[('allow_timesheets', '=', True)])
 
-    employee_id = fields.Many2one('hr.employee', "Employee", check_company=True)
+    employee_id = fields.Many2one('hr.employee', "Employee")
     department_id = fields.Many2one('hr.department', "Department", compute='_compute_department_id', store=True, compute_sudo=True)
     encoding_uom_id = fields.Many2one('uom.uom', compute='_compute_encoding_uom_id')
 
@@ -113,11 +113,10 @@ class AccountAnalyticLine(models.Model):
     # ----------------------------------------------------
 
     def _timesheet_get_portal_domain(self):
-        return ['|', '&',
+        return ['&',
                 ('task_id.project_id.privacy_visibility', '=', 'portal'),
+                '|',
                 ('task_id.project_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id]),
-                '&',
-                ('task_id.project_id.privacy_visibility', '=', 'portal'),
                 ('task_id.message_partner_ids', 'child_of', [self.env.user.partner_id.commercial_partner_id.id])]
 
     def _timesheet_preprocess(self, vals):

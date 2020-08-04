@@ -436,6 +436,8 @@ class Applicant(models.Model):
             # suggested recipients. This heuristic allows to avoid ugly hacks in JS.
             new_partner = message.partner_ids.filtered(lambda partner: partner.email == self.email_from)
             if new_partner:
+                if new_partner.create_date.date() == fields.Date.today():
+                    new_partner.type = 'private'
                 self.search([
                     ('partner_id', '=', False),
                     ('email_from', '=', new_partner.email),
@@ -455,6 +457,7 @@ class Applicant(models.Model):
                     raise UserError(_('You must define a Contact Name for this applicant.'))
                 new_partner_id = self.env['res.partner'].create({
                     'is_company': False,
+                    'type': 'private',
                     'name': applicant.partner_name,
                     'email': applicant.email_from,
                     'phone': applicant.partner_phone,

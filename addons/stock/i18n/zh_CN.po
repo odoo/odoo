@@ -143,7 +143,7 @@ msgstr "%s 限制访问 %s"
 msgid ""
 "%s use default source or destination locations                        from "
 "warehouse %s that will be archived."
-msgstr "%s 使用将要停用的仓库中的默认源或目标位置。 %s "
+msgstr "%s 使用将要归档的仓库中的默认源或目标位置。 %s "
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
@@ -759,7 +759,7 @@ msgstr "可应用于产品"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__product_categ_selectable
 msgid "Applicable on Product Category"
-msgstr "可应用于品类"
+msgstr "可应用于产品类别"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location_route__warehouse_selectable
@@ -787,7 +787,7 @@ msgstr "应用特定路线进行补货，而不是产品的默认路线。"
 #: model_terms:ir.ui.view,arch_db:stock.view_warehouse_orderpoint_form
 #: model_terms:ir.ui.view,arch_db:stock.warehouse_orderpoint_search
 msgid "Archived"
-msgstr "已停用"
+msgstr "已归档"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_warn_insufficient_qty_form_view
@@ -867,6 +867,12 @@ msgstr "可用"
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "可用的产品"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -1090,7 +1096,7 @@ msgstr "变更为更好名称"
 msgid ""
 "Changing the company of this record is forbidden at this point, you should "
 "rather archive it and create a new one."
-msgstr "此时禁止更改此记录的公司，您应该将其停用并创建一个新记录。"
+msgstr "此时禁止更改此记录的公司，您应该将其归档并创建一个新记录。"
 
 #. module: stock
 #: code:addons/stock/models/stock_picking.py:0
@@ -1716,7 +1722,7 @@ msgid ""
 "where to take the products from, which lot etc. for this location. This "
 "method can be enforced at the product category level, and a fallback is made"
 " on the parent locations if none is set here."
-msgstr "通过位置定义信息反映产品的确切位置的方法。此方法可于品类上执行，如果上级位置没有设置也可以延伸到其上级位置。"
+msgstr "通过位置定义信息反映产品的确切位置的方法。此方法可于产品类别上执行，如果上级位置没有设置也可以延伸到其上级位置。"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay
@@ -4334,7 +4340,7 @@ msgstr "产品条码 (ZPL)"
 #: model_terms:ir.ui.view,arch_db:stock.stock_location_route_form_view
 #, python-format
 msgid "Product Categories"
-msgstr "品类"
+msgstr "产品类别"
 
 #. module: stock
 #: model:ir.model,name:stock.model_product_category
@@ -4342,7 +4348,7 @@ msgstr "品类"
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__category_id
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_search
 msgid "Product Category"
-msgstr "品类"
+msgstr "产品类别"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.label_product_product
@@ -5123,7 +5129,7 @@ msgstr "勾选的项目会自动建立补货路线"
 msgid ""
 "Routes will be created for these resupply warehouses and you can select them"
 " on products and product categories"
-msgstr "将会为这些补充仓库创建路线，而且你可以在产品和品类选择它们"
+msgstr "将会为这些补充仓库创建路线，而且你可以在产品和产品类别选择它们"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__rule_message
@@ -6898,7 +6904,7 @@ msgstr "选中此选项后，可以在产品表单的存货选项卡中选择路
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
 msgid "When checked, the route will be selectable on the Product Category."
-msgstr "选中此选项后，将在品类上选择该路线"
+msgstr "选中此选项后，将在产品类别上选择该路线"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id
@@ -7027,7 +7033,7 @@ msgid ""
 msgstr ""
 "你可以在这里定义贯穿于整个仓库的主要路线，\n"
 "与此同时这也决定了产品的流向。\n"
-"这些路径可以被设置在产品、品类上，\n"
+"这些路径可以被设置在产品、产品类别上，\n"
 " 或者应用于补货和销售订单上。"
 
 #. module: stock
@@ -7128,7 +7134,7 @@ msgid ""
 "You cannot change the unit of measure as there are already stock moves for "
 "this product. If you want to change the unit of measure, you should rather "
 "archive this product and create a new one."
-msgstr "你无法更改计量单位，因为此产品已有库存变动。如果要更改计量单位，则应该停用此产品并创建新产品。"
+msgstr "你无法更改计量单位，因为此产品已有库存变动。如果要更改计量单位，则应该归档此产品并创建新产品。"
 
 #. module: stock
 #: code:addons/stock/models/stock_scrap.py:0
@@ -7309,7 +7315,7 @@ msgstr "在仓库%s中仍然有正在进行的提取类型%s的操作"
 msgid ""
 "You still have some active reordering rules on this product. Please archive "
 "or delete them first."
-msgstr "您对此产品仍然有一些启用的重新排序规则。 请先停用或删除它们。"
+msgstr "您对此产品仍然有一些取消归档的重新排序规则。 请先归档或删除它们。"
 
 #. module: stock
 #: code:addons/stock/models/stock_location.py:0

@@ -791,6 +791,9 @@ class Lead(models.Model):
         if len(self.ids) <= 1:
             raise UserError(_('Please select more than one element (lead or opportunity) from the list view.'))
 
+        if len(self.ids) > 5 and not self.env.is_superuser():
+            raise UserError(_("To prevent data loss, Leads and Opportunities can only be merged by groups of 5."))
+
         opportunities = self._sort_by_confidence_level(reverse=True)
 
         # get SORTED recordset of head and tail, and complete list

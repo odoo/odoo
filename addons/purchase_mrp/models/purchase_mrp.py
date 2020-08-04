@@ -15,7 +15,7 @@ class PurchaseOrderLine(models.Model):
     _inherit = 'purchase.order.line'
 
     def _compute_qty_received(self):
-        super(PurchaseOrderLine, self)._compute_qty_received()
+        kit_lines = self.env['purchase.order.line']
         for line in self:
             if line.qty_received_method == 'stock_moves' and line.move_ids:
                 kit_bom = self.env['mrp.bom']._bom_find(product=line.product_id, company_id=line.company_id.id, bom_type='phantom')
@@ -27,6 +27,8 @@ class PurchaseOrderLine(models.Model):
                         'outgoing_moves': lambda m: m.location_id.usage != 'supplier' and m.to_refund
                     }
                     line.qty_received = moves._compute_kit_quantities(line.product_id, order_qty, kit_bom, filters)
+                    kit_lines += line
+        super(PurchaseOrderLine, self - kit_lines)._compute_qty_received()
 
     def _get_upstream_documents_and_responsibles(self, visited):
         return [(self.order_id, self.order_id.user_id, visited)]
