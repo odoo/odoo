@@ -442,7 +442,7 @@ class Lead(models.Model):
             'partner_name': partner_name or self.partner_name,
             'contact_name': False if partner.is_company else partner.name or self.contact_name,
         })
-        return values
+        return self._convert_to_write(values)
 
     # ------------------------------------------------------------
     # ORM
