@@ -548,14 +548,11 @@ class Survey(http.Controller):
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
-        if survey_sudo.scoring_type == 'scoring_without_answers':
-            return request.render("survey.survey_403_page", {'survey': survey_sudo})
-
         return request.render('survey.survey_page_print', {
             'is_html_empty': is_html_empty,
             'review': review,
             'survey': survey_sudo,
-            'answer': answer_sudo,
+            'answer': answer_sudo if survey_sudo.scoring_type != 'scoring_without_answers' else answer_sudo.browse(),
             'questions_to_display': answer_sudo._get_print_questions(),
             'scoring_display_correction': survey_sudo.scoring_type == 'scoring_with_answers' and answer_sudo,
             'format_datetime': lambda dt: format_datetime(request.env, dt, dt_format=False),
