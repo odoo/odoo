@@ -72,7 +72,7 @@
             <field name="model">mrp.workcenter.productivity</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <graph string="Workcenter Productivity" type="pie">
+                <graph string="Workcenter Productivity" type="pie" sample="1">
                     <field name="loss_id"/>
                     <field name="duration" type="measure"/>
                 </graph>
@@ -565,7 +565,7 @@
         <field name="name">mrp.workcenter.productivity.graph</field>
         <field name="model">mrp.workcenter.productivity</field>
         <field name="arch" type="xml">
-            <graph string="Workcenter Productivity">
+            <graph string="Workcenter Productivity" sample="1">
                 <field name="workcenter_id"/>
                 <field name="loss_id"/>
                 <field name="duration" type="measure"/>

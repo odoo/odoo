@@ -260,7 +260,7 @@
         <field name="name">mrp.production.work.order.graph</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <graph string="Operations">
+            <graph string="Operations" sample="1">
                 <field name="production_id"/>
                 <field name="duration" type="measure"/>
             </graph>
@@ -488,7 +488,7 @@
         <field name="name">report.workcenter.load.graph</field>
         <field name="model">mrp.workorder</field>
         <field name="arch" type="xml">
-            <graph string="Work Center load" type="bar">
+            <graph string="Work Center load" type="bar" sample="1">
                 <field name="production_date" interval="day"/>
                 <field name="workcenter_id"/>
                 <field name="duration_expected" type="measure"/>
