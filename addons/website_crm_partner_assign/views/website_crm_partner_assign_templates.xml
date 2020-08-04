@@ -320,7 +320,7 @@
                         </td>
                         <td><span t-field="opp.contact_name" /></td>
                         <td>
-                            <span class="text-nowrap" t-esc="opp.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/> at <span t-field="opp.probability" />%
+                            <span class="text-nowrap" t-esc="opp.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opp.company_currency}"/> at <span t-field="opp.probability" />%
                         </td>
                         <td>
                             <span class="badge badge-info badge-pill" title="Current stage of the opportunity" t-esc="opp.stage_id.name" />
@@ -529,7 +529,7 @@
                         <div class="col-lg-5 mb-4 mb-lg-0">
                             <div class="border-bottom d-flex justify-content-between py-2 mb-3 align-items-center">
                                 <h5 class="mb-0">
-                                    <span class="text-nowrap" t-esc="opportunity.planned_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> at
+                                    <span class="text-nowrap" t-esc="opportunity.expected_revenue" t-options="{'widget': 'monetary', 'display_currency': opportunity.company_currency}"/> at
                                     <span class="badge badge-info badge-pill"><span t-field="opportunity.probability"/>%</span>
                                 </h5>
                                 <button type="button" data-toggle="modal" data-target=".modal_edit_opp" class="btn btn-link btn-sm"><i class="fa fa-pencil mr-1"/>Edit</button>
@@ -633,7 +633,7 @@
                                                             <div class="input-group-prepend">
                                                                 <div class="input-group-text"><span class="text-nowrap" t-esc="opportunity.company_currency.symbol"/></div>
                                                             </div>
-                                                            <input type="text" name="planned_revenue" class="form-control planned_revenue" t-att-value="opportunity.planned_revenue" placeholder="Planned Revenue"/>
+                                                            <input type="text" name="expected_revenue" class="form-control expected_revenue" t-att-value="opportunity.expected_revenue" placeholder="Planned Revenue"/>
                                                         </div>
                                                     </div>
                                                     <div class="col-auto">at</div>
