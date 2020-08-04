@@ -368,7 +368,7 @@ class Lead(models.Model):
             'email_from': partner.email or self.email_from,
             'phone': partner.phone or self.phone,
         })
-        return values
+        return self._convert_to_write(values)
 
     # ------------------------------------------------------------
     # ORM
