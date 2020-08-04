@@ -1,6 +1,11 @@
 odoo.define('mail/static/tests/tours/mail_full_composer_test_tour.js', function (require) {
 "use strict";
 
+const {
+    createFile,
+    inputFiles,
+} = require('web.test_utils_file');
+
 const tour = require('web_tour.tour');
 
 /**
@@ -19,12 +24,31 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     trigger: '.o_ComposerTextInput_textarea',
     run: 'text blahblah',
 }, {
+    content: "Add one file in composer",
+    trigger: '.o_Composer_buttonAttachment',
+    async run() {
+        const file = await createFile({
+            content: 'hello, world',
+            contentType: 'text/plain',
+            name: 'text.txt',
+        });
+        inputFiles(
+            document.querySelector('.o_FileUploader_input'),
+            [file]
+        );
+    },
+}, {
     content: "Open full composer",
     trigger: '.o_Composer_buttonFullComposer',
+    extra_trigger: '.o_Attachment:not(.o-temporary)' // waiting the attachment to be uploaded
+}, {
+    content: "Check the earlier provided attachment is listed",
+    trigger: '.o_attachment[title="text.txt"]',
+    run() {},
 }, {
     content: "Check subject is autofilled",
     trigger: 'input[name="subject"]',
-    run: () => {
+    run() {
         const subjectValue = document.querySelector('input[name="subject"]').value;
         if (subjectValue !== "Re: Test User") {
             console.error(
@@ -35,7 +59,7 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
 }, {
     content: "Check composer content is kept",
     trigger: '.oe_form_field[name="body"]',
-    run: () => {
+    run() {
         const bodyContent = document.querySelector('.oe_form_field[name="body"] textarea').textContent;
         if (!bodyContent.includes("blahblah")) {
             console.error(
@@ -50,13 +74,16 @@ tour.register('mail/static/tests/tours/mail_full_composer_test_tour.js', {
     content: "Check a template is listed",
     in_modal: false,
     trigger: '.ui-autocomplete .ui-menu-item a:contains("Test template")',
-    run: () => {},
+    run() {},
 }, {
     content: "Send message",
     trigger: '.o_mail_send',
 }, {
     content: "Check message is shown",
     trigger: '.o_Message:contains("blahblah")',
+}, {
+    content: "Check message contains the attachment",
+    trigger: '.o_Message .o_Attachment_filename:contains("text.txt")',
 }]);
 
 });

@@ -5,12 +5,14 @@ const {
     afterEach: utilsAfterEach,
     afterNextRender,
     beforeEach: utilsBeforeEach,
-    inputFiles,
     start: utilsStart,
 } = require('mail/static/src/utils/test_utils.js');
 
 const {
-    file: { createFile },
+    file: {
+        createFile,
+        inputFiles,
+    },
     dom: { triggerEvent },
 } = require('web.test_utils');
 
