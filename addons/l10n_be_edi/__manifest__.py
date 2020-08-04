@@ -2,7 +2,7 @@
 {
     'name': 'Belgium - E-Invoicing (UBL 2.0, e-fff)',
     'version': '0.1',
-    'category': 'Hidden',
+    'category': 'Accounting/Localizations/EDI',
     'summary': 'E-Invoicing, Universal Business Language (UBL 2.0), e-fff protocol',
     'description': """
 Universal Business Language (UBL <http://ubl.xml.org/>`_) is a library of standard electronic XML business documents such as

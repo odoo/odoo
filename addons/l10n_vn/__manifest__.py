@@ -7,7 +7,7 @@
     "version": "2.0",
     "author": "General Solutions",
     'website': 'http://gscom.vn',
-    'category': 'Accounting/Localizations',
+    'category': 'Accounting/Localizations/Account Charts',
     "description": """
 This is the module to manage the accounting chart for Vietnam in Odoo.
 =========================================================================
