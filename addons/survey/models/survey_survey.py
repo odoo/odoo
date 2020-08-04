@@ -72,7 +72,7 @@ class Survey(models.Model):
         ('all', 'All questions'),
         ('random', 'Randomized per section')],
         string="Selection", required=True, default='all',
-        help="If randomized is selected, add the number of random questions next to the section.")
+        help="If randomized is selected, you can configure the number of random questions by section. This mode is ignored in live session.")
     progression_mode = fields.Selection([
         ('percent', 'Percentage'),
         ('number', 'Number')], string='Progression Mode', default='percent',
@@ -509,7 +509,7 @@ class Survey(models.Model):
         if self.questions_layout == 'page_per_section':
             result = self.page_ids
         elif self.questions_layout == 'page_per_question':
-            if self.questions_selection == 'random':
+            if self.questions_selection == 'random' and not self.session_state:
                 result = user_input.predefined_question_ids
             else:
                 result = self.question_and_page_ids.filtered(
@@ -528,6 +528,9 @@ class Survey(models.Model):
           (all section questions could be disabled based on previously selected answers)
 
         The whole logic is inverted if "go_back" is passed as True.
+
+        As pages with description are considered as potential question to display, we show the page
+        if it contains at least one active question or a description.
 
         :param user_input: user's answers
         :param page_or_question_id: current page or question id
@@ -555,36 +558,38 @@ class Survey(models.Model):
 
         # Conditional Questions Management
         triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
-        if survey.has_conditional_questions and triggered_questions_by_answer:
-            if survey.questions_layout == 'page_per_question':
-                question_candidates = pages_or_questions[0:current_page_index] if go_back \
-                    else pages_or_questions[current_page_index + 1:]
-                for question in question_candidates.sorted(reverse=go_back):
+        inactive_questions = user_input._get_inactive_conditional_questions()
+        if survey.questions_layout == 'page_per_question':
+            question_candidates = pages_or_questions[0:current_page_index] if go_back \
+                else pages_or_questions[current_page_index + 1:]
+            for question in question_candidates.sorted(reverse=go_back):
+                # pages with description are potential questions to display (are part of question_candidates)
+                if question.is_page:
+                    contains_active_question = any(sub_question not in inactive_questions for sub_question in question.question_ids)
+                    is_description_section = not question.question_ids and not is_html_empty(question.description)
+                    if contains_active_question or is_description_section:
+                        return question
+                else:
                     triggering_answer = triggering_answer_by_question.get(question)
                     if not triggering_answer or triggering_answer in selected_answers:
                         # question is visible because not conditioned or conditioned by a selected answer
-                        # -> return it
                         return question
-            elif survey.questions_layout == 'page_per_section':
-                inactive_questions = user_input._get_inactive_conditional_questions()
-                section_candidates = pages_or_questions[0:current_page_index] if go_back \
-                    else pages_or_questions[current_page_index + 1:]
-                for section in section_candidates.sorted(reverse=go_back):
-                    if any(question not in inactive_questions for question in section.question_ids):
-                        # section contains at least one active question
-                        # -> return it
-                        return section
-                return Question
-        else:
-            return pages_or_questions[current_page_index + (1 if not go_back else -1)]
-
-        return Question
+        elif survey.questions_layout == 'page_per_section':
+            section_candidates = pages_or_questions[0:current_page_index] if go_back \
+                else pages_or_questions[current_page_index + 1:]
+            for section in section_candidates.sorted(reverse=go_back):
+                contains_active_question = any(question not in inactive_questions for question in section.question_ids)
+                is_description_section = not section.question_ids and not is_html_empty(section.description)
+                if contains_active_question or is_description_section:
+                    return section
+            return Question
 
     def _is_last_page_or_question(self, user_input, page_or_question):
         """ This method checks if the given question or page is the last one.
         This includes conditional questions configuration. If the given question is normally not the last one but
         every following questions are inactive due to conditional questions configurations (and user choices),
-        the given question will be the last one.
+        the given question will be the last one, except if the given question is conditioning at least
+        one of the following questions.
         For section, we check in each following section if there is an active question.
         If yes, the given page is not the last one.
         """
@@ -593,11 +598,24 @@ class Survey(models.Model):
         next_page_or_question_candidates = pages_or_questions[current_page_index + 1:]
         if next_page_or_question_candidates:
             inactive_questions = user_input._get_inactive_conditional_questions()
+            triggering_answer_by_question, triggered_questions_by_answer, selected_answers = user_input._get_conditional_values()
             if self.questions_layout == 'page_per_question':
-                return not any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+                next_active_question = any(next_question not in inactive_questions for next_question in next_page_or_question_candidates)
+                is_triggering_question = any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in page_or_question.suggested_answer_ids)
+                return not(next_active_question or is_triggering_question)
             elif self.questions_layout == 'page_per_section':
+                is_triggering_section = False
+                for question in page_or_question.question_ids:
+                    if any(triggering_answer in triggered_questions_by_answer.keys() for triggering_answer in
+                           question.suggested_answer_ids):
+                        is_triggering_section = True
+                        break
+                next_active_question = False
                 for section in next_page_or_question_candidates:
-                    return not any(next_question not in inactive_questions for next_question in section.question_ids)
+                    next_active_question = any(next_question not in inactive_questions for next_question in section.question_ids)
+                    if next_active_question:
+                        break
+                return not(next_active_question or is_triggering_section)
 
         return True
 
@@ -708,9 +726,10 @@ class Survey(models.Model):
                 if not most_voted_answer or votes_by_answer[most_voted_answer] < votes_by_answer[answer]:
                     most_voted_answer_by_questions[question] = answer
 
-        # return a fake 'audiance' user_input
+        # return a fake 'audience' user_input
         fake_user_input = self.env['survey.user_input'].new({
             'survey_id': self.id,
+            'predefined_question_ids': [(6, 0, self._prepare_user_input_predefined_questions().ids)]
         })
 
         fake_user_input_lines = self.env['survey.user_input.line']
