@@ -55,9 +55,9 @@ odoo.define("lunch/static/src/js/lunch_model_extension.js", function (require) {
          * @param {number} locationId
          * @returns {Promise}
          */
-        async setLocationId(locationId) {
+        setLocationId(locationId) {
             this.state.locationId = locationId;
-            await this.env.services.rpc({
+            this.env.services.rpc({
                 route: "/lunch/user_location_set",
                 params: {
                     context: this.env.session.user_context,
@@ -71,9 +71,9 @@ odoo.define("lunch/static/src/js/lunch_model_extension.js", function (require) {
          * @param {number} userId
          * @returns {Promise}
          */
-        async updateUserId(userId) {
+        updateUserId(userId) {
             this.state.userId = userId;
-            await this._updateLocationId();
+            this.shouldLoad = true;
         }
 
         //---------------------------------------------------------------------
