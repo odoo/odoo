@@ -82,6 +82,12 @@ class HolidaysRequest(models.Model):
         if 'state' in fields_list and not defaults.get('state'):
             lt = self.env['hr.leave.type'].browse(defaults.get('holiday_status_id'))
             defaults['state'] = 'confirm' if lt and lt.leave_validation_type != 'no_validation' else 'draft'
+
+        now = fields.Datetime.now()
+        defaults.update({
+            'date_from': now,
+            'date_to': now,
+        })
         return defaults
 
     def _default_get_request_parameters(self, values):
@@ -143,11 +149,9 @@ class HolidaysRequest(models.Model):
     # duration
     date_from = fields.Datetime(
         'Start Date', compute='_compute_date_from_to', store=True, readonly=False, index=True, copy=False, required=True, tracking=True,
-        default=fields.Datetime.now,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
     date_to = fields.Datetime(
         'End Date', compute='_compute_date_from_to', store=True, readonly=False, copy=False, required=True, tracking=True,
-        default=fields.Datetime.now,
         states={'cancel': [('readonly', True)], 'refuse': [('readonly', True)], 'validate1': [('readonly', True)], 'validate': [('readonly', True)]})
     number_of_days = fields.Float(
         'Duration (Days)', compute='_compute_number_of_days', store=True, readonly=False, copy=False, tracking=True,
@@ -309,7 +313,7 @@ class HolidaysRequest(models.Model):
                 'request_unit_half', 'request_unit_hours', 'request_unit_custom', 'employee_id')
     def _compute_date_from_to(self):
         for holiday in self:
-            if holiday.request_date_from > holiday.request_date_to:
+            if holiday.request_date_from and holiday.request_date_to and holiday.request_date_from > holiday.request_date_to:
                 holiday.request_date_to = holiday.request_date_from
             if not holiday.request_date_from:
                 holiday.date_from = False
