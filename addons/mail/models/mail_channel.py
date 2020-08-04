@@ -600,12 +600,13 @@ class Channel(models.Model):
             # add members infos
             partner_ids = channel_partners.mapped('partner_id').ids
             info['members'] = [partner_infos[partner] for partner in partner_ids]
-            info['seen_partners_info'] = [{
-                'id': cp.id,
-                'partner_id': cp.partner_id.id,
-                'fetched_message_id': cp.fetched_message_id.id,
-                'seen_message_id': cp.seen_message_id.id,
-            } for cp in channel_partners]
+            if channel.channel_type != 'channel':
+                info['seen_partners_info'] = [{
+                    'id': cp.id,
+                    'partner_id': cp.partner_id.id,
+                    'fetched_message_id': cp.fetched_message_id.id,
+                    'seen_message_id': cp.seen_message_id.id,
+                } for cp in channel_partners]
 
             channel_infos.append(info)
         return channel_infos
