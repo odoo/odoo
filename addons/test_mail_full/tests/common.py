@@ -10,7 +10,7 @@ class TestMailFullCommon(TestMassMailCommon, MassSMSCommon):
 
     @classmethod
     def _create_records_for_batch(cls, model, count):
-        records = cls.env['mail.test.sms']
+        records = cls.env[model]
         partners = cls.env['res.partner']
         country_id = cls.env.ref('base.be').id,
         for x in range(count):
