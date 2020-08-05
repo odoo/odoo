@@ -148,7 +148,10 @@ class MassMailing(models.Model):
 
     def _compute_total(self):
         for mass_mailing in self:
-            mass_mailing.total = len(mass_mailing.sudo()._get_recipients())
+            total = self.env[mass_mailing.mailing_model_real].search_count(mass_mailing._parse_mailing_domain())
+            if mass_mailing.contact_ab_pc < 100:
+                total = int(total / 100.0 * mass_mailing.contact_ab_pc)
+            mass_mailing.total = total
 
     def _compute_clicks_ratio(self):
         self.env.cr.execute("""
@@ -510,13 +513,8 @@ class MassMailing(models.Model):
         }
 
     def _get_recipients(self):
-        try:
-            mailing_domain = literal_eval(self.mailing_domain)
-        except:
-            res_ids = []
-            mailing_domain = [('id', 'in', res_ids)]
-        else:
-            res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
+        mailing_domain = self._parse_mailing_domain()
+        res_ids = self.env[self.mailing_model_real].search(mailing_domain).ids
 
         # randomly choose a fragment
         if self.contact_ab_pc < 100:
@@ -776,6 +774,14 @@ class MassMailing(models.Model):
         if self.mailing_type == 'mail' and 'opt_out' in self.env[self.mailing_model_name]._fields:
             mailing_domain = expression.AND([[('opt_out', '=', False)], mailing_domain])
 
+        return mailing_domain
+
+    def _parse_mailing_domain(self):
+        self.ensure_one()
+        try:
+            mailing_domain = literal_eval(self.mailing_domain)
+        except Exception:
+            mailing_domain = [('id', 'in', [])]
         return mailing_domain
 
     def _unsubscribe_token(self, res_id, email):
