@@ -175,7 +175,7 @@ QUnit.test('rendering when just one has seen the message', async function (asser
         author: [['insert', { id: this.env.session.partner_id, display_name: "Demo User" }]],
         body: "<p>Test</p>",
         id: 100,
-        originThread: [['link', thread.main]],
+        originThread: [['link', thread]],
     });
     await this.createMessageSeenIndicatorComponent({ message, thread });
     assert.containsOnce(

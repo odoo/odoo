@@ -111,7 +111,7 @@ function factory(dependencies) {
                 }
             }
             this._subtypesListDialog = this.env.messaging.dialogManager.open('mail.follower_subtype_list', {
-                follower: [['replace', this]],
+                follower: [['link', this]],
             });
         }
 

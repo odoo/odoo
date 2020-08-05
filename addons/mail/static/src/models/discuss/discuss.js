@@ -462,7 +462,7 @@ function factory(dependencies) {
             related: 'thread.model',
         }),
         threadViewer: one2one('mail.thread_viewer', {
-            autocreate: true,
+            default: [['create']],
             isCausal: true,
         }),
     };
