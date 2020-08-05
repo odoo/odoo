@@ -17,13 +17,20 @@ class MailRenderMixin(models.AbstractModel):
 
     @api.model
     def _shorten_links(self, html, link_tracker_vals, blacklist=None, base_url=None):
-        """
+        """ Shorten links in an html content. It uses the '/r' short URL routing
+        introduced in this module. Using the standard Odoo regex local links are
+        found and replaced by global URLs (not including mailto, tel, sms).
+
+        TDE FIXME: could be great to have a record to enable website-based URLs
 
         :param link_tracker_vals: values given to the created link.tracker, containing
           for example: campaign_id, medium_id, source_id, and any other relevant fields
           like mass_mailing_id in mass_mailing;
+        :param list blacklist: list of (local) URLs to not shorten (e.g.
+          '/unsubscribe_from_list')
+        :param str base_url: either given, either based on config parameter
 
-        :return: update
+        :return: updated html
         """
         base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         short_schema = base_url + '/r/'
@@ -42,11 +49,16 @@ class MailRenderMixin(models.AbstractModel):
         return html
 
     @api.model
-    def _shorten_links_text(self, html, link_tracker_vals, blacklist=None, base_url=None):
+    def _shorten_links_text(self, content, link_tracker_vals, blacklist=None, base_url=None):
+        """ Shorten links in a string content. Works like ``_shorten_links`` but
+        targetting string content, not html.
+
+        :return: updated content
+        """
         base_url = base_url or self.env['ir.config_parameter'].sudo().get_param('web.base.url')
         shortened_schema = base_url + '/r/'
         unsubscribe_schema = base_url + '/sms/'
-        for original_url in re.findall(tools.TEXT_URL_REGEX, html):
+        for original_url in re.findall(tools.TEXT_URL_REGEX, content):
             # don't shorten already-shortened links or links towards unsubscribe page
             if original_url.startswith(shortened_schema) or original_url.startswith(unsubscribe_schema):
                 continue
@@ -58,6 +70,6 @@ class MailRenderMixin(models.AbstractModel):
             create_vals = dict(link_tracker_vals, url= utils.unescape(original_url))
             link = self.env['link.tracker'].create(create_vals)
             if link.short_url:
-                html = html.replace(original_url, link.short_url, 1)
+                content = content.replace(original_url, link.short_url, 1)
 
-        return html
+        return content
