@@ -1045,7 +1045,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
 
         uiFragment.querySelectorAll('.o_cc_subheadings_toggler').forEach(headingsEl => {
             const togglerEl = document.createElement('span');
-            togglerEl.classList.add('o_cc_subheadings_toggler_icon', 'o_we_fold_icon', 'fa', 'fa-caret-down');
+            togglerEl.classList.add('o_cc_subheadings_toggler_icon', 'o_we_fold_icon', 'fa', 'fa-caret-right');
             togglerEl.setAttribute('role', 'button');
             const titleEl = headingsEl.querySelector('we-title');
             titleEl.insertBefore(togglerEl, titleEl.firstChild);
@@ -1116,9 +1116,11 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
     _onCCHeadingsTogglerClick(ev) {
         const togglerEl = ev.currentTarget;
         const collapseEl = togglerEl.closest('we-collapse').querySelector('.o_cc_subheadings_collapse');
-        const show = togglerEl.classList.contains('fa-caret-down');
-        togglerEl.classList.toggle('fa-caret-down', !show);
-        togglerEl.classList.toggle('fa-caret-up', show);
+        const show = togglerEl.classList.contains('fa-caret-right');
+        const parentEl = togglerEl.closest('we-select');
+        togglerEl.classList.toggle('fa-caret-right', !show);
+        togglerEl.classList.toggle('fa-caret-down', show);
+        parentEl.classList.toggle('active', show);
         this._showCCSubHeadings[collapseEl.dataset.uid] = show;
         // FIXME big hack to rerender the interface (all the foldable code is
         // a hack currently anyway, it needs to be generic)
