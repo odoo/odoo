@@ -142,9 +142,9 @@ function factory(dependencies) {
                 [l - 1]: lastFetchedMessage,
             } = this.orderedFetchedMessages;
             if (!lastFetchedMessage) {
-                return [['unlink-all']];
+                return [['unlink']];
             }
-            return [['replace', lastFetchedMessage]];
+            return [['link', lastFetchedMessage]];
         }
 
         /**
@@ -157,9 +157,9 @@ function factory(dependencies) {
                 [l - 1]: lastMessage,
             } = this.orderedMessages;
             if (!lastMessage) {
-                return [['unlink-all']];
+                return [['unlink']];
             }
-            return [['replace', lastMessage]];
+            return [['link', lastMessage]];
         }
 
         /**

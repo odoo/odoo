@@ -1,7 +1,6 @@
 odoo.define('mail/static/src/env/test_env.js', function (require) {
 'use strict';
 
-const ModelManager = require('mail/static/src/model/model_manager.js');
 const { makeDeferred } = require('mail/static/src/utils/deferred/deferred.js');
 const { nextTick } = require('mail/static/src/utils/utils.js');
 
@@ -74,7 +73,7 @@ function addMessagingToEnv(providedEnv = {}) {
         messaging: undefined,
         messagingInitializedDeferred: makeDeferred(),
         messagingBus: new EventBus(),
-        modelManager: new ModelManager(),
+        modelManager: undefined,
         store,
     });
 

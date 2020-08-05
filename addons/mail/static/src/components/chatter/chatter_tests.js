@@ -55,6 +55,7 @@ QUnit.module('chatter_tests.js', {
 QUnit.test('base rendering when chatter has no attachment', async function (assert) {
     assert.expect(6);
 
+    this.data['res.partner'].records.push({ id: 100 });
     const messages = [...Array(60).keys()].map(id => {
         return {
             author_id: [10, "Demo User"],
@@ -157,6 +158,7 @@ QUnit.test('base rendering when chatter has no record', async function (assert) 
 QUnit.test('base rendering when chatter has attachments', async function (assert) {
     assert.expect(3);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start({
         async mockRPC(route, args) {
             if (route.includes('ir.attachment/search_read')) {
@@ -200,6 +202,7 @@ QUnit.test('base rendering when chatter has attachments', async function (assert
 QUnit.test('show attachment box', async function (assert) {
     assert.expect(6);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start({
         async mockRPC(route, args) {
             if (route.includes('ir.attachment/search_read')) {
@@ -262,6 +265,7 @@ QUnit.test('show attachment box', async function (assert) {
 QUnit.test('composer show/hide on log note/send message', async function (assert) {
     assert.expect(10);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
@@ -343,6 +347,7 @@ QUnit.test('composer show/hide on log note/send message', async function (assert
 QUnit.test('should not display user notification messages in chatter', async function (assert) {
     assert.expect(1);
 
+    this.data['res.partner'].records.push({ id: 100 });
     this.data['mail.message'].records = [{
         author_id: [7, "Demo"],
         body: "<p>User notification</p>",

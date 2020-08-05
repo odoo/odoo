@@ -132,7 +132,7 @@ function factory(dependencies) {
             default: {},
         }),
         chatWindowManager: one2one('mail.chat_window_manager', {
-            autocreate: true,
+            default: [['create']],
             inverse: 'messaging',
             isCausal: true,
         }),
@@ -142,15 +142,15 @@ function factory(dependencies) {
         currentPartner: one2one('mail.partner'),
         currentUser: one2one('mail.user'),
         device: one2one('mail.device', {
-            autocreate: true,
+            default: [['create']],
             isCausal: true,
         }),
         dialogManager: one2one('mail.dialog_manager', {
-            autocreate: true,
+            default: [['create']],
             isCausal: true,
         }),
         discuss: one2one('mail.discuss', {
-            autocreate: true,
+            default: [['create']],
             inverse: 'messaging',
             isCausal: true,
         }),
@@ -163,7 +163,7 @@ function factory(dependencies) {
          */
         inbox: one2one('mail.thread'),
         initializer: one2one('mail.messaging_initializer', {
-            autocreate: true,
+            default: [['create']],
             inverse: 'messaging',
             isCausal: true,
         }),
@@ -171,11 +171,11 @@ function factory(dependencies) {
             default: false,
         }),
         locale: one2one('mail.locale', {
-            autocreate: true,
+            default: [['create']],
             isCausal: true,
         }),
         messagingMenu: one2one('mail.messaging_menu', {
-            autocreate: true,
+            default: [['create']],
             inverse: 'messaging',
             isCausal: true,
         }),
@@ -184,11 +184,11 @@ function factory(dependencies) {
          */
         moderation: one2one('mail.thread'),
         notificationGroupManager: one2one('mail.notification_group_manager', {
-            autocreate: true,
+            default: [['create']],
             isCausal: true,
         }),
         notificationHandler: one2one('mail.messaging_notification_handler', {
-            autocreate: true,
+            default: [['create']],
             inverse: 'messaging',
             isCausal: true,
         }),

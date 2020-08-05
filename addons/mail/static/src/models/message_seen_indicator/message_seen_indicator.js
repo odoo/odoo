@@ -20,8 +20,8 @@ function factory(dependencies) {
          */
         static computeId(message, thread) {
             if (message && thread) {
-                const messageId = Number.isInteger(message) ? message : message.id;
-                const threadId = Number.isInteger(thread) ? thread : thread.id;
+                const messageId = typeof message !== 'object' ? message : message.id;
+                const threadId = typeof thread !== 'object' ? thread : thread.id;
                 return [messageId, threadId].join('-');
             }
             return undefined;

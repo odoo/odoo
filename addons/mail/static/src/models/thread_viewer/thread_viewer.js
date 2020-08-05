@@ -72,7 +72,7 @@ function factory(dependencies) {
          */
         handleVisibleMessage(message) {
             if (!this.lastVisibleMessage || this.lastVisibleMessage.id < message.id) {
-                this.update({ lastVisibleMessage: [['replace', message]] });
+                this.update({ lastVisibleMessage: [['link', message]] });
             }
         }
 
@@ -102,7 +102,7 @@ function factory(dependencies) {
             if (!this.thread) {
                 return [];
             }
-            return [['replace', this.thread.cache(this.stringifiedDomain)]];
+            return [['link', this.thread.cache(this.stringifiedDomain)]];
         }
 
         /**

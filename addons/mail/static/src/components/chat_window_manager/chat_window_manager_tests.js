@@ -750,7 +750,7 @@ QUnit.test('focus next visible chat window when closing current chat window with
 QUnit.test('[technical] chat window: composer state conservation on toggle home menu', async function (assert) {
     // technical as show/hide home menu simulation are involved and home menu implementation
     // have side-effects on DOM that may make chat window components not work
-    assert.expect(6);
+    assert.expect(7);
 
     Object.assign(this.data.initMessaging, {
         channel_slots: {
@@ -775,6 +775,11 @@ QUnit.test('[technical] chat window: composer state conservation on toggle home 
         document.querySelector(`.o_ComposerTextInput_textarea`).focus();
         document.execCommand('insertText', false, 'XDU for the win !');
     });
+    assert.containsNone(
+        document.body,
+        '.o_Composer .o_Attachment',
+        "composer should have no attachment initially"
+    );
     // Set attachments of the composer
     const files = [
         await createFile({
@@ -803,7 +808,7 @@ QUnit.test('[technical] chat window: composer state conservation on toggle home 
         document.body,
         '.o_Composer .o_Attachment',
         2,
-        "verify chat window composer initial attachment count"
+        "composer should have 2 total attachments after adding 2 attachments"
     );
 
     await this.hideHomeMenu();

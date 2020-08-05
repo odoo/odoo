@@ -87,7 +87,7 @@ function factory(dependencies) {
                 return;
             }
             this.env.messaging.dialogManager.open('mail.attachment_viewer', {
-                attachment: [['replace', attachment]],
+                attachment: [['link', attachment]],
                 attachments: [['replace', attachments]],
             });
         }

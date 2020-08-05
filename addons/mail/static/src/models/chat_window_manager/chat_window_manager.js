@@ -254,9 +254,9 @@ function factory(dependencies) {
         _computeLastVisible() {
             const { length: l, [l - 1]: lastVisible } = this.allOrderedVisible;
             if (!lastVisible) {
-                return [['unlink-all']];
+                return [['unlink']];
             }
-            return [['replace', lastVisible]];
+            return [['link', lastVisible]];
         }
 
         /**
@@ -268,7 +268,7 @@ function factory(dependencies) {
             if (!chatWindow) {
                 return [['unlink']];
             }
-            return [['replace', chatWindow]];
+            return [['link', chatWindow]];
         }
 
         /**
