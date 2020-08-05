@@ -485,11 +485,13 @@ body.editor_enable.editor_has_snippets {
         }
 
         .o_we_fold_icon {
-            @include o-position-absolute(0, 100%, 0, auto);
+            @include o-position-absolute(0, 100%, 0, -$o-we-sidebar-content-indent);
             display: flex;
             justify-content: center;
             align-items: center;
-            width: 1em;
+            width: $o-we-sidebar-content-indent;
+
+            @extend %we-generic-link;
         }
 
         //----------------------------------------------------------------------

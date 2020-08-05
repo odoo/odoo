@@ -103,20 +103,146 @@ $i: 1;
     border-top: 1px solid currentColor !important;
 }
 
-#oe_snippets > .o_we_customize_panel .o_we_user_value_widget.o_palette_color_preview_button {
-    > div {
-        display: flex;
-        flex: 1 1 auto;
-        align-items: stretch;
+#oe_snippets > .o_we_customize_panel {
+    .o_we_user_value_widget.o_palette_color_preview_button {
+        > div {
+            display: flex;
+            flex: 1 1 auto;
+            align-items: stretch;
+        }
+        .o_palette_color_preview {
+            flex: 1 0 0;
+            margin: 1px 0;
+            transition: flex 150ms ease 0s;
+        }
+        &:not(:hover) .o_palette_color_preview {
+            &:nth-child(4), &:nth-child(5) {
+                flex: 0 0 0;
+            }
+        }
     }
-    .o_palette_color_preview {
-        flex: 1 0 0;
-        margin: 1px 0;
-        transition: flex 150ms ease 0s;
+
+    //----------------------------------------------------------------------
+    // 'Options' Tab Specific Components
+    //----------------------------------------------------------------------
+
+    // Theme Colors Editor
+    .o_we_theme_colors_selector {
+
+        > we-title {
+            display: none
+        }
+        .o_we_so_color_palette.o_we_user_value_widget {
+
+            + .o_we_so_color_palette {
+                margin-left: 10px;
+            }
+            .o_we_color_preview {
+                width: $o-we-sidebar-content-field-colorpicker-size-large;
+                height: $o-we-sidebar-content-field-colorpicker-size-large;
+            }
+        }
+        > div, we-select.o_we_theme_colors_select, we-toggler {
+            display: flex;
+        }
+        > div {
+            align-items: stretch;
+            width: 100%;
+        }
+        we-select.o_we_theme_colors_select {
+            justify-content: flex-end;
+            margin-left: auto;
+
+            > div, we-toggler {
+                height: 100%;
+            }
+        }
+        we-toggler {
+            align-items: center;
+            padding: 0 0.4rem;
+            font-size: 1.5em;
+
+            &:after {
+                content: none;
+            }
+        }
     }
-    &:not(:hover) .o_palette_color_preview {
-        &:nth-child(4), &:nth-child(5) {
-            flex: 0 0 0;
+
+    // Palettes Dropdown
+    .o_palette_color_preview_button > div {
+        min-height: 24px;
+    }
+
+    // CC Editor
+    .o_color_combinations_edition {
+        $-cc-base-spacer: 16px;
+        $-cc-r-gap: $o-we-sidebar-content-block-spacing * -1;
+        $-cc-l-gap: ($o-we-sidebar-content-indent * -1) - 1px;
+
+        we-toggler {
+            margin: ($-cc-base-spacer * .5) 0;
+            border: 0;
+            padding-right: 0;
+            background: none;
+            overflow: visible;
+
+            &:after {
+                top: $-cc-base-spacer * .3;
+                left: $-cc-base-spacer * -1;
+                font-size: 1.3em;
+                transform: rotate(-90deg);
+            }
+            .o_we_cc_preview_wrapper {
+                border: 1px solid $o-we-sidebar-content-field-dropdown-border-color;
+            }
+            &.active {
+                &::after {
+                    transform: rotate(180deg);
+                }
+                &::before, + we-collapse::before {
+                    content: '';
+                    background-color: $o-we-sidebar-content-field-dropdown-bg;
+                }
+                &::before {
+                    @include o-position-absolute($-cc-base-spacer * -0.25, $-cc-r-gap, 0, $-cc-l-gap);
+                }
+                + we-collapse {
+                    margin-bottom: $-cc-base-spacer * 2;
+                    padding-left: $-cc-base-spacer;
+                    border: none;
+                    background: none;
+
+                    &:before {
+                        @include o-position-absolute(0, $-cc-r-gap, $-cc-base-spacer * -1, $-cc-l-gap);
+                    }
+                }
+            }
+        }
+        &:last-of-type we-toggler {
+            margin-bottom: 0;
+        }
+        we-collapse {
+            we-select.o_cc_subheadings_toggler, .o_cc_subheadings_collapse {
+                we-title {
+                    position: relative;
+                    overflow: visible;
+                }
+            }
+            .o_cc_subheadings_collapse {
+                margin-bottom: $-cc-base-spacer;
+            }
+            we-select.o_cc_subheadings_toggler.active::before, .o_cc_subheadings_collapse::before {
+                content: '';
+                background-color: $o-we-sidebar-bg;
+                opacity: .8;
+            }
+            we-select.o_cc_subheadings_toggler.active:before {
+                @include o-position-absolute($-cc-base-spacer * -0.25, $-cc-r-gap, $-cc-base-spacer * -0.5, $-cc-l-gap * 2);
+                box-shadow: 0 -1px 0 black;
+            }
+            .o_cc_subheadings_collapse::before {
+                @include o-position-absolute(0, $-cc-r-gap, $-cc-base-spacer * -0.5, $-cc-l-gap * 2);
+            }
         }
     }
 }
