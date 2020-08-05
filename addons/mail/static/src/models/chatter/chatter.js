@@ -50,6 +50,10 @@ function factory(dependencies) {
         }
 
         async refreshActivities() {
+            if (!this.thread || this.thread.isTemporary) {
+                this.update({ activities: [['unlink-all']] });
+                return;
+            }
             // A bit "extreme", may be improved
             const [{ activity_ids: newActivityIds }] = await this.async(() => this.env.services.rpc({
                 model: this.thread.model,
@@ -166,18 +170,24 @@ function factory(dependencies) {
                 }
             }
 
-            if (previous.activityIds.join(',') !== this.activityIds.join(',')) {
+            if (
+                !previous.activityIds ||
+                previous.activityIds.join(',') !== this.activityIds.join(',')
+            ) {
                 this.refreshActivities();
             }
             if (
-                previous.followerIds.join(',') !== this.followerIds.join(',') &&
-                !this.thread.isTemporary
+                !previous.followerIds ||
+                previous.followerIds.join(',') !== this.followerIds.join(',')
             ) {
-                this.thread.refreshFollowers();
+                if (this.thread) {
+                    this.thread.refreshFollowers();
+                }
             }
             if (
+                !previous.messageIds ||
                 previous.thread !== this.thread ||
-                (this.thread && this.messageIds.join(',') !== previous.messageIds.join(','))
+                this.messageIds.join(',') !== previous.messageIds.join(',')
             ) {
                 this.refresh();
             }
@@ -316,7 +326,7 @@ function factory(dependencies) {
         threadId: attr(),
         threadModel: attr(),
         threadViewer: one2one('mail.thread_viewer', {
-            autocreate: true,
+            default: [['create']],
         }),
         todayActivities: one2many('mail.activity', {
             compute: '_computeTodayActivities',

@@ -89,10 +89,12 @@ function factory() {
          *
          * @static
          * @param {string} localId
+         * @param {Object} param1
+         * @param {boolean} [param1.isCheckingInheritance]
          * @returns {mail.model|undefined}
          */
-        static get(localId) {
-            return this.env.modelManager.get(this, localId);
+        static get(localId, { isCheckingInheritance } = {}) {
+            return this.env.modelManager.get(this, localId, { isCheckingInheritance });
         }
 
         /**

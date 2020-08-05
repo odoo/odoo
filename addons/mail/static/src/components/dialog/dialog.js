@@ -82,7 +82,7 @@ class Dialog extends Component {
         ) {
             return;
         }
-        this.dialog.close();
+        this.dialog.delete();
     }
 
     /**
@@ -91,7 +91,7 @@ class Dialog extends Component {
      */
     _onKeydownDocument(ev) {
         if (ev.key === 'Escape') {
-            this.dialog.close();
+            this.dialog.delete();
         }
     }
 

@@ -542,7 +542,7 @@ function factory(dependencies) {
         openExpanded() {
             const discuss = this.env.messaging.discuss;
             if (['mail.channel', 'mail.box'].includes(this.model)) {
-                discuss.threadViewer.update({ thread: [['replace', this]] });
+                discuss.threadViewer.update({ thread: [['link', this]] });
                 this.env.bus.trigger('do-action', {
                     action: 'mail.action_discuss',
                     options: {
@@ -581,6 +581,10 @@ function factory(dependencies) {
          * Refresh followers information from server.
          */
         async refreshFollowers() {
+            if (this.isTemporary) {
+                this.update({ followers: [['unlink-all']] });
+                return;
+            }
             // FIXME Do that with only one RPC (see task-2243180)
             const [{ message_follower_ids: followerIds }] = await this.async(() => this.env.services.rpc({
                 model: this.model,
@@ -895,7 +899,7 @@ function factory(dependencies) {
             ) {
                 return [['unlink-all']];
             }
-            return [['replace', currentPartnerOrderedSeenMessages.slice().pop()]];
+            return [['link', currentPartnerOrderedSeenMessages.slice().pop()]];
         }
 
         /**
@@ -907,7 +911,10 @@ function factory(dependencies) {
                 length: l,
                 [l - 1]: lastMessage,
             } = this.orderedMessages;
-            return [['replace', lastMessage]];
+            if (lastMessage) {
+                return [['link', lastMessage]];
+            }
+            return [['unlink']];
         }
 
         /**
@@ -922,7 +929,10 @@ function factory(dependencies) {
                 length: l,
                 [l - 1]: lastNeedactionMessage,
             } = orderedNeedactionMessages;
-            return [['replace', lastNeedactionMessage]];
+            if (lastNeedactionMessage) {
+                return [['link', lastNeedactionMessage]];
+            }
+            return [['unlink']];
         }
 
         /**

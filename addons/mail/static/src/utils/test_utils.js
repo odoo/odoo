@@ -7,6 +7,7 @@ const {
     addMessagingToEnv,
     addTimeControlToEnv,
 } = require('mail/static/src/env/test_env.js');
+const ModelManager = require('mail/static/src/model/model_manager.js');
 const ChatWindowService = require('mail/static/src/services/chat_window_service/chat_window_service.js');
 const DialogService = require('mail/static/src/services/dialog_service/dialog_service.js');
 const { nextTick } = require('mail/static/src/utils/utils.js');
@@ -754,6 +755,9 @@ async function start(param0 = {}) {
     }
 
     testEnv = Component.env;
+    Object.assign(testEnv, {
+        modelManager: new ModelManager(testEnv),
+    });
 
     /**
      * Components cannot use web.bus, because they cannot use

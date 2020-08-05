@@ -43,7 +43,7 @@ Object.assign(env, {
     loadingBaseDelayDuration: 400,
     messaging: undefined,
     messagingBus: new EventBus(),
-    modelManager: new ModelManager(),
+    modelManager: new ModelManager(env),
     store,
 });
 
