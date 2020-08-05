@@ -951,7 +951,7 @@ def dumpstacks(sig=None, frame=None, thread_idents=None):
             for line in extract_stack(stack):
                 code.append(line)
 
-    if odoo.evented:
+    if config.evented:
         # code from http://stackoverflow.com/questions/12510648/in-gevent-how-can-i-dump-stack-traces-of-all-running-greenlets
         import gc
         from greenlet import greenlet

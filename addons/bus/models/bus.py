@@ -106,7 +106,7 @@ class ImDispatch(object):
         # Dont hang ctrl-c for a poll request, we need to bypass private
         # attribute access because we dont know before starting the thread that
         # it will handle a longpolling request
-        if not odoo.evented:
+        if not odoo.config.evented:
             current = threading.current_thread()
             current._daemonic = True
             # rename the thread to avoid tests waiting for a longpolling
@@ -179,7 +179,7 @@ class ImDispatch(object):
                 time.sleep(TIMEOUT)
 
     def start(self):
-        if odoo.evented:
+        if odoo.config.evented:
             # gevent mode
             import gevent
             self.Event = gevent.event.Event
@@ -194,6 +194,6 @@ class ImDispatch(object):
         return self
 
 dispatch = None
-if not odoo.multi_process or odoo.evented:
+if not odoo.config.multi_process or odoo.config.evented:
     # We only use the event dispatcher in threaded and gevent mode
     dispatch = ImDispatch()

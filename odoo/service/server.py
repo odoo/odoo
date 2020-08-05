@@ -1132,8 +1132,7 @@ class WorkerCron(Worker):
 server = None
 
 def load_server_wide_modules():
-    server_wide_modules = {'base', 'web'} | set(odoo.conf.server_wide_modules)
-    for m in server_wide_modules:
+    for m in config['server_wide_modules']:
         try:
             odoo.modules.module.load_openerp_module(m)
         except Exception:
@@ -1269,7 +1268,7 @@ def start(preload=None, stop=False):
         server = ThreadedServer(odoo.service.wsgi_server.application)
 
     watcher = None
-    if 'reload' in config['dev_mode'] and not odoo.evented:
+    if 'reload' in config['dev_mode'] and not odoo.config.evented:
         if inotify:
             watcher = FSWatcherInotify()
             watcher.start()

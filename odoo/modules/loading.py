@@ -238,7 +238,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             migrations.migrate_module(package, 'post')
 
             # Update translations for all installed languages
-            overwrite = odoo.tools.config["overwrite_existing_translations"]
+            overwrite = odoo.config["overwrite_existing_translations"]
             module.with_context(overwrite=overwrite)._update_translations()
 
             if package.name is not None:
@@ -258,7 +258,7 @@ def load_module_graph(cr, graph, status=None, perform_checks=True,
             # (separately in their own transaction)
             cr.commit()
 
-            if tools.config.options['test_enable']:
+            if odoo.config['test_enable']:
                 report.record_result(load_test(idref, mode))
                 # Python tests
                 env['ir.http']._clear_routing_map()     # force routing map to be rebuilt
@@ -355,15 +355,15 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.info("init db")
             odoo.modules.db.initialize(cr)
             update_module = True # process auto-installed modules
-            tools.config["init"]["all"] = 1
-            if not tools.config['without_demo']:
-                tools.config["demo"]['all'] = 1
+            odoo.config["init"] |= {'all'}
+            if not odoo.config['without_demo']:
+                odoo.config["demo"] |= {'all'}
 
         # This is a brand new registry, just created in
         # odoo.modules.registry.Registry.new().
         registry = odoo.registry(cr.dbname)
 
-        if 'base' in tools.config['update'] or 'all' in tools.config['update']:
+        if 'base' in odoo.config['update'] or 'all' in odoo.config['update']:
             cr.execute("update ir_module_module set state=%s where name=%s and state=%s", ('to upgrade', 'base', 'installed'))
 
         # STEP 1: LOAD BASE (must be done before module dependencies can be computed for later steps)
@@ -380,7 +380,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             cr, graph, status, perform_checks=update_module,
             report=report, models_to_check=models_to_check)
 
-        load_lang = tools.config.pop('load_language')
+        load_lang = odoo.config.pop('load_language', None)
         if load_lang or update_module:
             # some base models are used below, so make sure they are set up
             registry.setup_models(cr)
@@ -396,17 +396,15 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             _logger.info('updating modules list')
             Module.update_list()
 
-            _check_module_names(cr, itertools.chain(tools.config['init'], tools.config['update']))
+            _check_module_names(cr, itertools.chain(odoo.config['init'], odoo.config['update']))
 
-            module_names = [k for k, v in tools.config['init'].items() if v]
-            if module_names:
-                modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', module_names)])
+            if odoo.config['init']:
+                modules = Module.search([('state', '=', 'uninstalled'), ('name', 'in', list(odoo.config['init']))])
                 if modules:
                     modules.button_install()
 
-            module_names = [k for k, v in tools.config['update'].items() if v]
-            if module_names:
-                modules = Module.search([('state', '=', 'installed'), ('name', 'in', module_names)])
+            if odoo.config['update']:
+                modules = Module.search([('state', '=', 'installed'), ('name', 'in', list(odoo.config['update']))])
                 if modules:
                     modules.button_upgrade()
 
@@ -483,7 +481,7 @@ def load_modules(db, force_demo=False, status=None, update_module=False):
             env['base'].flush()
 
         for kind in ('init', 'demo', 'update'):
-            tools.config[kind] = {}
+            odoo.config[kind] = {}
 
         # STEP 5: Uninstall modules to remove
         if update_module:

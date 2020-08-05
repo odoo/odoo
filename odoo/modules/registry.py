@@ -5,7 +5,7 @@
 
 """
 from collections import defaultdict, deque
-from collections.abc import Mapping
+from collections.abc import Mapping, MutableMapping
 from contextlib import closing, contextmanager
 from functools import partial
 from operator import attrgetter
@@ -18,8 +18,9 @@ import psycopg2
 
 import odoo
 from .. import SUPERUSER_ID
+from odoo import config
 from odoo.sql_db import TestCursor
-from odoo.tools import (assertion_report, config, existing_tables, ignore,
+from odoo.tools import (assertion_report, existing_tables, ignore,
                         lazy_classproperty, lazy_property, sql, OrderedSet)
 from odoo.tools.lru import LRU
 

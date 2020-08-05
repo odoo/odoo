@@ -48,6 +48,7 @@ from lxml.builder import E
 from psycopg2.extensions import AsIs
 
 import odoo
+from .config import config
 from . import SUPERUSER_ID
 from . import api
 from . import tools
@@ -56,7 +57,6 @@ from .osv.query import Query
 from .tools import frozendict, lazy_classproperty, ormcache, \
                    Collector, LastOrderedSet, OrderedSet, IterableGenerator, \
                    groupby, unique
-from .tools.config import config
 from .tools.func import frame_codeinfo
 from .tools.misc import CountingStream, clean_context, DEFAULT_SERVER_DATETIME_FORMAT, DEFAULT_SERVER_DATE_FORMAT, get_lang
 from .tools.translate import _

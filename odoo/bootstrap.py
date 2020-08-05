@@ -19,7 +19,7 @@ def setup(argv=None):
     from . import config as config_module
     config_module.load_default()
     config_module.load_environ()
-    if argv:
+    if argv is not None:
         config_module.load_cli(argv)
     config_module.load_file()
     config_module.ensure_data_dir(config_module.config['data_dir'])
@@ -32,6 +32,9 @@ def setup(argv=None):
 
     # phase 4, import all odoo libraries and setup dynamic namespaces
     _setup_import_system()
+
+    # phase 5, place some deprecated aliases
+    _place_backward_compatible_aids()
 
 
 def _setup_import_system():
@@ -55,9 +58,10 @@ def _setup_import_system():
     odoo.modules.initialize_sys_path()
 
     #----------------------------------------------------------
-    # Imports
+    # Standalone Imports
     #----------------------------------------------------------
     import odoo.conf
+    import odoo.exceptions
     import odoo.loglevels
     import odoo.logging_config
     import odoo.osv
@@ -172,3 +176,41 @@ def _use_cooperative_networking():
                 raise psycopg2.OperationalError(
                     "Bad result from poll: %r" % state)
     psycopg2.extensions.set_wait_callback(gevent_wait_callback)
+
+def _place_backward_compatible_aids():
+    import odoo
+    import warnings
+
+    moved_tmpl = "{} has been moved to {}. Please use the later."
+    def warn_moved(from_, to):
+        warnings.warn(
+            moved_tmpl.format(from_, to),
+            DeprecationWarning,
+            stacklevel=5,  # warn_moved > evented > lazy > lazy > real one
+        )
+
+
+    @odoo.tools.lazy
+    def evented():
+        warn_moved('odoo.evented', 'odoo.config.evented')
+        return odoo.config.evented
+
+    @odoo.tools.lazy
+    def multi_process():
+        warn_moved('odoo.multi_process', 'odoo.config.multi_process')
+        return odoo.config.multi_process
+
+    @odoo.tools.lazy
+    def addons_paths():
+        warn_moved('odoo.conf.addons_path', "odoo.config['addons_paths']")
+        return odoo.config['addons_paths']
+
+    @odoo.tools.lazy
+    def server_wide_modules():
+        warn_moved('odoo.conf.server_wide_modules', "odoo.config['server_wide_modules']")
+        return odoo.config['server_wide_modules']
+
+    odoo.evented = evented
+    odoo.multi_process = multi_process
+    odoo.conf.addons_paths = addons_paths
+    odoo.conf.server_wide_modules = server_wide_modules

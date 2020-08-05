@@ -7,7 +7,6 @@ import itertools
 import logging
 
 import odoo
-import odoo.tools as tools
 
 _logger = logging.getLogger(__name__)
 
@@ -83,7 +82,7 @@ class Graph(dict):
                 current.remove(package)
                 node = self.add_node(package, info)
                 for kind in ('init', 'demo', 'update'):
-                    if package in tools.config[kind] or 'all' in tools.config[kind] or kind in force:
+                    if package in odoo.config[kind] or 'all' in odoo.config[kind] or kind in force:
                         setattr(node, kind, True)
             else:
                 later.add(package)
@@ -155,7 +154,7 @@ class Node(object):
     def __setattr__(self, name, value):
         super(Node, self).__setattr__(name, value)
         if name in ('init', 'update', 'demo'):
-            tools.config[name][self.name] = 1
+            odoo.config[name] |= {self.name}
             for child in self.children:
                 setattr(child, name, value)
         if name == 'depth':

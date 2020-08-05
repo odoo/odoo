@@ -10,6 +10,6 @@ def config():
     warnings.warn(
         "The configuration have been moved from odoo.tools.config to "
         "odoo.config. Please import the later.",
-        DeprecationWarning, stacklevel=2,
+        DeprecationWarning, stacklevel=4,
     )
     return odoo.config

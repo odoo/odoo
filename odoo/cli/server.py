@@ -126,12 +126,12 @@ def main():
     # bit overkill, but better safe than sorry I guess
     csv.field_size_limit(500 * 1024 * 1024)
 
-    preload = []
     db_name = config.get('db_name')
+    preload = [db_name] if db_name else []
     if db_name:
         try:
             odoo.service.db._create_empty_database(db_name)
-            config['init']['base'] = True
+            config['init'] |= {'base'}
         except ProgrammingError as err:
             if err.pgcode == errorcodes.INSUFFICIENT_PRIVILEGE:
                 # We use an INFO loglevel on purpose in order to avoid
@@ -153,11 +153,6 @@ def main():
         # TODO juc, this one too
         import_translation()
         sys.exit(0)
-
-    # This needs to be done now to ensure the use of the multiprocessing
-    # signaling mecanism for registries loaded with -d
-    if config['workers']:
-        odoo.multi_process = True
 
     stop = config["stop_after_init"]
 
