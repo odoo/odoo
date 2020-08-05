@@ -1460,7 +1460,7 @@ class AccountTax(models.Model):
             return base_amount / (1 - self.amount / 100) - base_amount if (1 - self.amount / 100) else 0.0
         # <=> new_base * (1 - tax_amount) = base
         if self.amount_type == 'division' and price_include:
-            return base_amount - (base_amount * (self.amount / 100))
+            return base_amount * (self.amount / 100)
 
     def json_friendly_compute_all(self, price_unit, currency_id=None, quantity=1.0, product_id=None, partner_id=None, is_refund=False):
         """ Called by the reconciliation to compute taxes on writeoff during bank reconciliation
