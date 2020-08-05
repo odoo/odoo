@@ -30,13 +30,10 @@ class ModelManager {
          * Set as public attribute so that it can be used by model field.
          */
         this.DEPENDENT_INNER_SEPARATOR = DEPENDENT_INNER_SEPARATOR;
-
         /**
-         * The messaging env. It is passed on start(), due to the way mocking
-         * of OWL env in tests work...
+         * The messaging env.
          */
-        this.env = undefined;
-
+        this.env = env;
         /**
          * Whether this is currently handling an "update after" on a record.
          * Useful to determine if we should process computed/related fields.
@@ -73,8 +70,7 @@ class ModelManager {
      * Called when all JS modules that register or patch models have been
      * done. This launches generation of models.
      */
-    start(env) {
-        this.env = env;
+    start() {
         /**
          * Generate the models.
          */
@@ -154,36 +150,28 @@ class ModelManager {
                 Model.__records[record.localId] = record;
                 record.init();
 
-                // Make default values of its fields for newly created record.
+                // Ensure X2many relations are Set initially (other fields can stay undefined).
                 for (const field of fields) {
-                    if (field.fieldType === 'attribute') {
-                        field.write(record, field.default, { registerDependents: false });
-                    }
                     if (field.fieldType === 'relation') {
                         if (['one2many', 'many2many'].includes(field.relationType)) {
-                            // Ensure X2many relations are Set by defaults.
-                            field.write(record, new Set(), { registerDependents: false });
-                        } else {
-                            field.write(record, undefined, { registerDependents: false });
+                            record.__values[field.fieldName] = new Set();
                         }
                     }
                 }
 
-                const data2 = Object.assign({}, data);
+                const data2 = {};
                 for (const field of fields) {
-                    if (field.fieldType !== 'relation') {
-                        continue;
+                    if (field.fieldName in data) {
+                        data2[field.fieldName] = data[field.fieldName];
+                    } else {
+                        data2[field.fieldName] = field.default;
                     }
-                    if (!field.autocreate) {
-                        continue;
-                    }
-                    data2[field.fieldName] = [['create']];
                 }
 
                 for (const field of fields) {
                     if (field.compute || field.related) {
                         // new record should always invoke computed fields.
-                        this.registerToComputeField(record, field);
+                        this._registerToComputeField(record, field);
                     }
                 }
 
@@ -206,33 +194,16 @@ class ModelManager {
         this._updateCycle(() => {
             const Model = record.constructor;
             if (!record.exists()) {
-                // Record has already been deleted.
-                // (e.g. unlinking one of its reverse relation was causal)
-                return;
+                throw Error(`Cannot delete already deleted record ${record.localId}.`);
             }
-            const data = {};
-            const recordRelations = Object.values(Model.fields)
-                .filter(field => field.fieldType === 'relation');
-            for (const relation of recordRelations) {
-                if (relation.isCausal) {
-                    switch (relation.relationType) {
-                        case 'one2one':
-                        case 'many2one':
-                            if (record[relation.fieldName]) {
-                                record[relation.fieldName].delete();
-                            }
-                            break;
-                        case 'one2many':
-                        case 'many2many':
-                            for (const relatedRecord of record[relation.fieldName]) {
-                                relatedRecord.delete();
-                            }
-                            break;
-                    }
+            for (const field of Object.values(Model.fields)) {
+                if (field.fieldType === 'relation') {
+                    // ensure inverses are properly unlinked
+                    field.set(record, [['unlink-all']]);
                 }
-                data[relation.fieldName] = [['unlink-all']];
             }
-            record.update(data);
+            this._toComputeFields.delete(record);
+            this._toUpdateAfters.delete(record);
             delete Model.__records[record.localId];
         });
     }
@@ -283,9 +254,11 @@ class ModelManager {
      *
      * @param {mail.model} Model class
      * @param {string} localId
+     * @param {Object} param2
+     * @param {boolean} [param2.isCheckingInheritance=false]
      * @returns {mail.model|undefined} record, if exists
      */
-    get(Model, localId) {
+    get(Model, localId, { isCheckingInheritance = false } = {}) {
         if (!localId) {
             return;
         }
@@ -293,13 +266,20 @@ class ModelManager {
         if (record) {
             return record;
         }
+        if (!isCheckingInheritance) {
+            return;
+        }
         // support for inherited models (eg. relation targeting `mail.model`)
-        for (const Model of Object.values(this.env.models)) {
-            const record = Model.__records[localId];
+        for (const SubModel of Object.values(this.env.models)) {
+            if (!(SubModel.prototype instanceof Model)) {
+                continue;
+            }
+            const record = SubModel.__records[localId];
             if (record) {
                 return record;
             }
         }
+        return;
     }
 
     /**
@@ -339,25 +319,37 @@ class ModelManager {
      *
      * @param {mail.model} record
      * @param {Object} data
+     * @returns {boolean} whether any value changed for the current record
      */
     update(record, data) {
-        this._updateCycle(() => {
-            this._updateDirect(record, data);
+        return this._updateCycle(() => {
+            if (!record.exists()) {
+                throw Error(`Cannot update already deleted record ${record.localId}.`);
+            }
+            if (!this._toUpdateAfters.has(record)) {
+                // queue updateAfter before calling field.set to ensure previous
+                // contains the value at the start of update cycle
+                this._toUpdateAfters.set(record, record._updateBefore());
+            }
+            const Model = record.constructor;
+            let hasChanged = false;
+            for (const fieldName of Object.keys(data)) {
+                const field = Model.fields[fieldName];
+                if (!field) {
+                    throw new Error(`Cannot create/update record with data unrelated to a field. (model: "${Model.modelName}", non-field attempted update: "${fieldName}")`);
+                }
+                if (!field.set(record, data[fieldName])) {
+                    continue;
+                }
+                hasChanged = true;
+                // flag all dependent fields for compute
+                this._registerComputeOfDependents(record, field);
+            }
+            if (hasChanged) {
+                record.__state++;
+            }
+            return hasChanged;
         });
-    }
-
-    /**
-     * Register a pair record/field for the compute step of the update cycle in
-     * progress.
-     *
-     * @param {mail.model} record
-     * @param {ModelField} field
-     */
-    registerToComputeField(record, field) {
-        if (!this._toComputeFields.has(record)) {
-            this._toComputeFields.set(record, new Set());
-        }
-        this._toComputeFields.get(record).add(field);
     }
 
     //--------------------------------------------------------------------------
@@ -408,7 +400,6 @@ class ModelManager {
                 if (field.fieldType === 'attribute') {
                     const invalidKeys = Object.keys(field).filter(key =>
                         ![
-                            'autocreate',
                             'compute',
                             'default',
                             'dependencies',
@@ -423,8 +414,8 @@ class ModelManager {
                 if (field.fieldType === 'relation') {
                     const invalidKeys = Object.keys(field).filter(key =>
                         ![
-                            'autocreate',
                             'compute',
+                            'default',
                             'dependencies',
                             'fieldType',
                             'inverse',
@@ -740,6 +731,7 @@ class ModelManager {
             {},
             relFunc(Model.modelName, { inverse: field.fieldName }),
             {
+                env: this.env,
                 fieldName: `_inverse_${Model.modelName}/${field.fieldName}`,
                 modelManager: this,
             }
@@ -770,6 +762,7 @@ class ModelManager {
             // Make fields aware of their field name.
             for (const [fieldName, fieldData] of Object.entries(Model.fields)) {
                 Model.fields[fieldName] = new ModelField(Object.assign({}, fieldData, {
+                    env: this.env,
                     fieldName,
                     modelManager: this,
                 }));
@@ -881,6 +874,61 @@ class ModelManager {
     }
 
     /**
+     * Registers compute of dependents for the given field, if applicable.
+     *
+     * @param {mail.model} record
+     * @param {ModelField} field
+     */
+    _registerComputeOfDependents(record, field) {
+        const Model = record.constructor;
+        for (const dependent of field.dependents) {
+            const [hash, currentFieldName, relatedFieldName] = dependent.split(
+                this.DEPENDENT_INNER_SEPARATOR
+            );
+            const field = Model.fields[currentFieldName];
+            if (relatedFieldName) {
+                if (['one2many', 'many2many'].includes(field.relationType)) {
+                    for (const otherRecord of record[currentFieldName]) {
+                        const OtherModel = otherRecord.constructor;
+                        const field = OtherModel.fields[relatedFieldName];
+                        if (field && field.hashes.includes(hash)) {
+                            this._registerToComputeField(otherRecord, field);
+                        }
+                    }
+                } else {
+                    const otherRecord = record[currentFieldName];
+                    if (!otherRecord) {
+                        continue;
+                    }
+                    const OtherModel = otherRecord.constructor;
+                    const field = OtherModel.fields[relatedFieldName];
+                    if (field && field.hashes.includes(hash)) {
+                        this._registerToComputeField(otherRecord, field);
+                    }
+                }
+            } else {
+                if (field && field.hashes.includes(hash)) {
+                    this._registerToComputeField(record, field);
+                }
+            }
+        }
+    }
+
+    /**
+     * Register a pair record/field for the compute step of the update cycle in
+     * progress.
+     *
+     * @param {mail.model} record
+     * @param {ModelField} field
+     */
+    _registerToComputeField(record, field) {
+        if (!this._toComputeFields.has(record)) {
+            this._toComputeFields.set(record, new Set());
+        }
+        this._toComputeFields.get(record).add(field);
+    }
+
+    /**
      * Process registered computed fields in the current update cycle.
      *
      * @private
@@ -890,7 +938,7 @@ class ModelManager {
             for (const [record, fields] of this._toComputeFields) {
                 this._toComputeFields.delete(record);
                 if (!record.exists()) {
-                    continue;
+                    throw Error(`Cannot execute computes for already deleted record ${record.localId}.`);
                 }
                 while (fields.size > 0) {
                     for (const field of fields) {
@@ -924,9 +972,10 @@ class ModelManager {
             while (this._toUpdateAfters.size > 0) {
                 for (const [record, previous] of this._toUpdateAfters) {
                     this._toUpdateAfters.delete(record);
-                    if (record.exists()) {
-                        record._updateAfter(previous);
+                    if (!record.exists()) {
+                        throw Error(`Cannot _updateAfter for already deleted record ${record.localId}.`);
                     }
+                    record._updateAfter(previous);
                 }
             }
             this._isHandlingToUpdateAfters = false;
@@ -948,29 +997,6 @@ class ModelManager {
             }
         }
         return res;
-    }
-
-    /**
-     * Process a direct update on given record with provided data.
-     *
-     * @private
-     * @param {mail.model} record
-     * @param {Object} data
-     */
-    _updateDirect(record, data) {
-        if (!this._toUpdateAfters.has(record)) {
-            // queue updateAfter before calling field.set to ensure previous
-            // contains the value at the start of update cycle
-            this._toUpdateAfters.set(record, record._updateBefore());
-        }
-        const Model = record.constructor;
-        for (const fieldName of Object.keys(data)) {
-            const field = Model.fields[fieldName];
-            if (!field) {
-                throw new Error(`Cannot create/update record with data unrelated to a field. (model: "${Model.modelName}", non-field attempted update: "${fieldName}")`);
-            }
-            field.set(record, data[fieldName]);
-        }
     }
 
 }

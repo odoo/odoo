@@ -57,6 +57,7 @@ QUnit.module('chatter_topbar_tests.js', {
 QUnit.test('base rendering', async function (assert) {
     assert.expect(8);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
@@ -155,6 +156,7 @@ QUnit.test('base disabled rendering', async function (assert) {
 QUnit.test('attachment loading is delayed', async function (assert) {
     assert.expect(4);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start({
         hasTimeControl: true,
         loadingBaseDelayDuration: 100,
@@ -198,6 +200,7 @@ QUnit.test('attachment loading is delayed', async function (assert) {
 QUnit.test('attachment counter while loading attachments', async function (assert) {
     assert.expect(4);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start({
         async mockRPC(route) {
             if (route.includes('ir.attachment/search_read')) {
@@ -237,6 +240,7 @@ QUnit.test('attachment counter while loading attachments', async function (asser
 QUnit.test('attachment counter transition when attachments become loaded)', async function (assert) {
     assert.expect(7);
 
+    this.data['res.partner'].records.push({ id: 100 });
     const attachmentPromise = makeTestPromise();
     await this.start({
         async mockRPC(route) {
@@ -295,6 +299,7 @@ QUnit.test('attachment counter transition when attachments become loaded)', asyn
 QUnit.test('attachment counter without attachments', async function (assert) {
     assert.expect(4);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
@@ -327,6 +332,7 @@ QUnit.test('attachment counter without attachments', async function (assert) {
 QUnit.test('attachment counter with attachments', async function (assert) {
     assert.expect(4);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start({
         async mockRPC(route) {
             if (route.includes('ir.attachment/search_read')) {
@@ -376,6 +382,7 @@ QUnit.test('attachment counter with attachments', async function (assert) {
 QUnit.test('composer state conserved when clicking on another topbar button', async function (assert) {
     assert.expect(8);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
@@ -586,6 +593,7 @@ QUnit.test('rendering with multiple channel followers', async function (assert) 
 QUnit.test('log note/send message switching', async function (assert) {
     assert.expect(8);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
@@ -645,6 +653,7 @@ QUnit.test('log note/send message switching', async function (assert) {
 QUnit.test('log note toggling', async function (assert) {
     assert.expect(4);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
@@ -684,6 +693,7 @@ QUnit.test('log note toggling', async function (assert) {
 QUnit.test('send message toggling', async function (assert) {
     assert.expect(4);
 
+    this.data['res.partner'].records.push({ id: 100 });
     await this.start();
     const chatter = this.env.models['mail.chatter'].create({
         threadId: 100,
