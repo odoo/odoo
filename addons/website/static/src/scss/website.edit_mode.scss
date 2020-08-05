@@ -29,9 +29,20 @@ $-editor-messages-margin-x: 2%;
 
 .o_editable {
     &:not(:empty), &[data-oe-type] {
-        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):hover,
+        &:not([data-oe-model="ir.ui.view"]):not([data-oe-type="html"]):not(.o_editable_no_shadow):not([data-oe-type="image"]):hover,
         &.o_editable_date_field_linked {
             box-shadow: $o-brand-odoo 0 0 5px 2px inset;
+        }
+        &[data-oe-type="image"]:not(.o_editable_no_shadow):hover {
+            position: relative;
+
+            &:after {
+                content: "";
+                pointer-events: none;
+                @include o-position-absolute(0, 0, 0, 0);
+                z-index: 1;
+                box-shadow: $o-brand-odoo 0 0 5px 2px inset;
+            }
         }
     }
     &:focus, &[data-oe-type] {
