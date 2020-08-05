@@ -9,6 +9,7 @@ const {
     start: utilsStart,
 } = require('mail/static/src/utils/test_utils.js');
 
+const Bus = require('web.Bus');
 
 QUnit.module('mail', {}, function () {
 QUnit.module('components', {}, function () {
@@ -501,7 +502,7 @@ QUnit.test('show subject of message in inbox', async function (assert) {
         document.querySelector('.o_Message_subject').textContent,
         "Subject: Salutations, voyageur",
         "Subject of the message should be 'Salutations, voyageur'"
-    )
+    );
 });
 
 QUnit.test('show subject of message in history', async function (assert) {
@@ -549,7 +550,83 @@ QUnit.test('show subject of message in history', async function (assert) {
         document.querySelector('.o_Message_subject').textContent,
         "Subject: Salutations, voyageur",
         "Subject of the message should be 'Salutations, voyageur'"
-    )
+    );
+});
+
+QUnit.test('click on (non-channel/non-partner) origin thread link should redirect to form view', async function (assert) {
+    assert.expect(9);
+
+    const bus = new Bus();
+    bus.on('do-action', null, payload => {
+        // Callback of doing an action (action manager).
+        // Expected to be called on click on origin thread link,
+        // which redirects to form view of record related to origin thread
+        assert.step('do-action');
+        assert.strictEqual(
+            payload.action.type,
+            'ir.actions.act_window',
+            "action should open a view"
+        );
+        assert.deepEqual(
+            payload.action.views,
+            [[false, 'form']],
+            "action should open form view"
+        );
+        assert.strictEqual(
+            payload.action.res_model,
+            'some.model',
+            "action should open view with model 'some.model' (model of message origin thread)"
+        );
+        assert.strictEqual(
+            payload.action.res_id,
+            10,
+            "action should open view with id 10 (id of message origin thread)"
+        );
+    });
+    Object.assign(this.data.initMessaging, {
+        needaction_inbox_counter: 1,
+    });
+    this.data['mail.message'].records = [{
+        author_id: [7, "Demo"],
+        body: "<p>Test</p>",
+        date: "2019-04-20 11:00:00",
+        id: 100,
+        message_type: 'comment',
+        model: 'some.model',
+        needaction: true,
+        needaction_partner_ids: [3],
+        record_name: "Some record",
+        res_id: 10,
+    }];
+    await this.start({
+        env: {
+            bus,
+            session: {
+                name: 'Admin',
+                partner_display_name: 'Your Company, Admin',
+                partner_id: 3,
+                uid: 2,
+            },
+        },
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Message',
+        "should display a single message"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Message_originThreadLink',
+        "should display origin thread link"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_Message_originThreadLink').textContent,
+        "Some record",
+        "origin thread link should display record name"
+    );
+
+    document.querySelector('.o_Message_originThreadLink').click();
+    assert.verifySteps(['do-action'], "should have made an action on click on origin thread (to open form view)");
 });
 
 });

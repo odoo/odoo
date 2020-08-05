@@ -94,7 +94,7 @@ function factory(dependencies) {
                 chat.open();
             } else {
                 this.openDocument({
-                    model: 'res.partner',
+                    model,
                     id,
                 });
             }
