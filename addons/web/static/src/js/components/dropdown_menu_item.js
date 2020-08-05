@@ -86,7 +86,11 @@ odoo.define('web.DropdownMenuItem', function (require) {
          * @param {MouseEvent} ev
          */
         _onWindowClick(ev) {
-            if (this.state.open && !this.el.contains(ev.target)) {
+            if (
+                this.state.open &&
+                !this.el.contains(ev.target) &&
+                !this.el.contains(document.activeElement)
+            ) {
                 this.state.open = false;
             }
         }
