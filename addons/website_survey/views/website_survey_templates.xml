@@ -10,9 +10,24 @@
                 <t t-raw="0"/>
             </t>
         </xpath>
+<<<<<<< HEAD
         <xpath expr="t" position="before">
             <t t-set="hide_header" t-value="survey.certificate" />
             <t t-set="hide_footer" t-value="survey.certificate" />
+=======
+    </template>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Survey Assets">
+        <xpath expr="." position="inside">
+            <script src="/web/static/lib/nvd3/d3.v3.js"/>
+            <script src="/web/static/lib/nvd3/nv.d3.js"/>
+            <script type="text/javascript" src="/survey/static/src/js/survey_result.js"/>
+            <script type="text/javascript" src="/survey/static/src/js/survey.js"/>
+            <script type="text/javascript" src="/web/static/src/js/fields/field_utils.js"/>
+            <link href="/survey/static/src/css/survey_print.css" rel="stylesheet" type="text/css"/>
+            <link href="/web/static/lib/nvd3/nv.d3.css" rel="stylesheet" type="text/css"/>
+            <link href="/survey/static/src/css/survey_result.css" rel="stylesheet" type="text/css"/>
+>>>>>>> d587387eb7e... temp
         </xpath>
     </template>
 </odoo>
