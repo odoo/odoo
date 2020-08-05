@@ -126,7 +126,7 @@ class TxPaypal(models.Model):
 
     @api.model
     def _paypal_form_get_tx_from_data(self, data):
-        reference, txn_id = data.get('item_number'), data.get('txn_id')
+        reference, txn_id = data.get('item_number%s' % data.get('num_cart_items', '')), data.get('txn_id')
         if not reference or not txn_id:
             error_msg = _('Paypal: received data with missing reference (%s) or txn_id (%s)') % (reference, txn_id)
             _logger.info(error_msg)
