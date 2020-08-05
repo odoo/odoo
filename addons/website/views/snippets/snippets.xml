@@ -144,23 +144,32 @@
             <we-select string=" ⌙ Parallax"
                        data-attribute-name="scrollBackgroundRatio"
                        data-attribute-default-value="0"
+                       data-parallax-type-opt="true"
                        data-no-preview="true"
                        data-dependencies="bg_image_opt">
                 <we-button data-name="parallax_none_opt" data-select-data-attribute="0">None</we-button>
                 <we-button data-select-data-attribute="1">Fixed</we-button>
-                <we-button data-name="parallax_very_slow_opt" data-select-data-attribute="0.6">Very Slow</we-button>
-                <we-button data-name="parallax_slow_opt" data-select-data-attribute="1.2">Slow</we-button>
-                <we-button data-name="parallax_fast_opt" data-select-data-attribute="1.6">Fast</we-button>
-                <we-button data-name="parallax_very_fast_opt" data-select-data-attribute="2">Very Fast</we-button>
+                <we-button data-name="parallax_top_opt" data-select-data-attribute="1.5">Bottom to Top</we-button>
+                <we-button data-name="parallax_bottom_opt" data-select-data-attribute="-1.5">Top to Bottom</we-button>
             </we-select>
-            <we-select string="  ⌙ Direction"
-                       data-attribute-name="scrollBackgroundDirection"
-                       data-attribute-default-value="top"
-                       data-no-preview="true"
-                       data-dependencies="parallax_very_slow_opt, parallax_slow_opt, parallax_fast_opt, parallax_very_fast_opt">
-                <we-button data-select-data-attribute="top">Bottom to Top</we-button>
-                <we-button data-select-data-attribute="bottom">Top to Bottom</we-button>
-            </we-select>
+            <we-range string="  ⌙ Intensity"
+                      data-dependencies="parallax_top_opt"
+                      data-select-data-attribute=""
+                      data-attribute-name="scrollBackgroundRatio"
+                      data-attribute-default-value="0"
+                      data-no-preview="true"
+                      data-min="0"
+                      data-max="3"
+                      data-step="0.15"/> <!-- Make sure this cannot land on 1 -->
+            <we-range string="  ⌙ Intensity"
+                      data-dependencies="parallax_bottom_opt"
+                      data-select-data-attribute=""
+                      data-attribute-name="scrollBackgroundRatio"
+                      data-attribute-default-value="0"
+                      data-no-preview="true"
+                      data-min="0"
+                      data-max="-3"
+                      data-step="0.15"/> <!-- Make sure this cannot land on 1 -->
         </div>
         <div data-js="BackgroundVideo"
              t-att-data-selector="selector"
