@@ -253,6 +253,9 @@ class Discuss extends Component {
      * @param {mail.thread} ev.detail.thread
      */
     _onSelectThread(ev) {
+        if (this.env.messaging.device.isMobile) {
+            ev.detail.thread.open();
+        }
         this.discuss.threadViewer.update({ thread: [['link', ev.detail.thread]] });
     }
 
