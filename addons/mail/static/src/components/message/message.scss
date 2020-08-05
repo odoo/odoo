@@ -356,3 +356,10 @@
 .o_Message_sidebarItem.o-message-squashed {
     display: none;
 }
+
+// Used to hide buttons on rating emails in chatter
+// FIXME: should use a better approach for not having such buttons
+// in chatter of such messages, but keep having them in emails.
+.o_Message_content [summary~="o_mail_notification"] {
+    display: none;
+}
