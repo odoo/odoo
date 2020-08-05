@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <template id="assets_frontend" inherit_id="website.assets_frontend" name="Event Online Assets Frontend">
+        <xpath expr="//link[last()]" position="after">
+            <link rel="stylesheet" type="text/scss" href="/website_event_online/static/src/scss/website_event_templates.scss"/>
+        </xpath>
+        <xpath expr="//script[last()]" position="after">
+            <script type="text/javascript" src="/website_event_online/static/src/js/display_timer_widget.js"></script>
+            <script type="text/javascript" src="/website_event_online/static/src/js/register_toaster_widget.js"></script>
+        </xpath>
+    </template>
+
+</odoo>
