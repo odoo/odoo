@@ -1665,8 +1665,27 @@ options.registry.Parallax = options.Class.extend({
     /**
      * @override
      */
-    async _computeVisibility() {
+    async _computeVisibility(widgetName) {
         return !this.$target.hasClass('o_background_video');
+    },
+    /**
+     * @override
+     */
+    async _computeWidgetState(methodName, params) {
+        if (methodName === 'selectDataAttribute' && params.parallaxTypeOpt) {
+            const attrName = params.attributeName;
+            const attrValue = (this.$target[0].dataset[attrName] || params.attributeDefaultValue).trim();
+            switch (attrValue) {
+                case '0':
+                case '1': {
+                    return attrValue;
+                }
+                default: {
+                    return (attrValue.startsWith('-') ? '-1.5' : '1.5');
+                }
+            }
+        }
+        return this._super(...arguments);
     },
     /**
      * Updates external background-related option to work with the parallax

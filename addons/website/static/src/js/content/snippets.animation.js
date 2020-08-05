@@ -553,15 +553,11 @@ registry.Parallax = Animation.extend({
         this.ratio = this.speed * (this.viewport / 10);
 
         // Provide a "safe-area" to limit parallax
+        const absoluteRatio = Math.abs(this.ratio);
         this.$bg.css({
-            top: -this.ratio,
-            bottom: -this.ratio,
+            top: -absoluteRatio,
+            bottom: -absoluteRatio,
         });
-
-        // Get parallax direction
-        if (this.el.dataset.scrollBackgroundDirection === 'bottom') {
-            this.ratio = -this.ratio;
-        }
     },
 
     //--------------------------------------------------------------------------
