@@ -83,7 +83,7 @@
         <!-- Create STOCK_MOVE for OUT -->
         <record id="outgoing_shipment_main_warehouse" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
-            <field name="origin">outgoing shipment main_warehouse</field>
+            <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="scheduled_date" eval="DateTime.today()"/>
@@ -121,7 +121,7 @@
 
         <record id="outgoing_shipment_main_warehouse2" model="stock.picking">
             <field name="picking_type_id" ref="stock.picking_type_out"/>
-            <field name="origin">outgoing shipment your_company warehouse</field>
+            <field name="origin">outgoing shipment</field>
             <field name="user_id"></field>
             <field name="partner_id" ref="base.res_partner_1"/>
             <field name="scheduled_date" eval="DateTime.today() - timedelta(days=5)"/>
