@@ -56,7 +56,7 @@ class PaypalController(http.Controller):
         Once data is validated, process it. """
         res = False
         post['cmd'] = '_notify-validate'
-        reference = post.get('item_number')
+        reference = post.get('item_number%s' % post.get('num_cart_items', ''))
         tx = None
         if reference:
             tx = request.env['payment.transaction'].sudo().search([('reference', '=', reference)])
