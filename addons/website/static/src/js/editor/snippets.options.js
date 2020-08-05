@@ -1048,7 +1048,7 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             togglerEl.classList.add('pt-0', 'pb-0', 'pl-0');
             const divEl = document.createElement('div');
             const ccPreviewEl = $(qweb.render('web_editor.color.combination.preview'))[0];
-            ccPreviewEl.classList.add('p-1', 'text-center', `o_cc${i}`);
+            ccPreviewEl.classList.add('text-center', `o_cc${i}`);
             divEl.appendChild(ccPreviewEl);
             togglerEl.appendChild(divEl);
             ccEl.appendChild(togglerEl);
