@@ -59,10 +59,18 @@ $-seen-urls: ();
 }
 
 #wrapwrap {
-    background-size: cover;
-    background-repeat: no-repeat;
-    background-position: center;
-    background-attachment: fixed;
+    @if o-website-value('body-image') {
+        background-image: url("/#{str-slice(o-website-value('body-image'), 2)}");
+        background-position: center;
+        background-attachment: fixed;
+        @if o-website-value('body-image-type') == 'pattern' {
+            background-size: auto;
+            background-repeat: repeat;
+        } @else {
+            background-size: cover;
+            background-repeat: no-repeat;
+        }
+    }
 
     @if ($o-theme-layout == 'boxed') {
         @include media-breakpoint-up(md) {

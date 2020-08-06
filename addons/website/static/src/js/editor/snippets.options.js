@@ -782,43 +782,25 @@ options.registry.OptionsTab = options.Class.extend({
         });
     },
     /**
-     * @todo use scss customization instead (like for user colors)
      * @see this.selectClass for parameters
      */
-    async customizeBodyBg(previewMode, widgetValue, params) {
-        const xmlID = 'website.option_custom_body_image';
-        if (widgetValue) {
-            await this._rpc({
-                model: 'ir.model.data',
-                method: 'get_object_reference',
-                args: xmlID.split('.'),
-            }).then(data => {
-                return this._rpc({
-                    model: 'ir.ui.view',
-                    method: 'save',
-                    args: [
-                        data[1],
-                        `#wrapwrap { background-image: url("${widgetValue}"); }`,
-                        '//style',
-                    ],
-                });
-            });
-        } else {
-            await this._customizeWebsiteViews('', {possibleValues: ['', xmlID]});
+    async customizeBodyBgType(previewMode, widgetValue, params) {
+        if (widgetValue === 'NONE') {
+            this.bodyImageType = 'image';
+            return this.customizeBodyBg(previewMode, '', params);
         }
-
-        await this._reloadBundles();
+        // TODO improve: hack to click on external image picker
+        this.bodyImageType = widgetValue;
+        const widget = this._requestUserValueWidgets(params.imagepicker)[0];
+        widget.$el.click();
     },
     /**
-     * @see this.selectClass for parameters
+     * @override
      */
-    async enableImagepicker(previewMode, widgetValue, params) {
-        if (widgetValue) {
-            // TODO improve: here we make a hack so that a hidden imagepicker
-            // widget opens...
-            const widget = this._requestUserValueWidgets(widgetValue)[0];
-            widget.$el.click();
-        }
+    async customizeBodyBg(previewMode, widgetValue, params) {
+        // TODO improve: customize two variables at the same time...
+        await this.customizeWebsiteVariable(previewMode, this.bodyImageType, {variable: 'body-image-type'});
+        await this.customizeWebsiteVariable(previewMode, widgetValue ? `'${widgetValue}'` : '', {variable: 'body-image'});
     },
     /**
      * @see this.selectClass for parameters
@@ -940,10 +922,12 @@ options.registry.OptionsTab = options.Class.extend({
      * @override
      */
     async _computeWidgetState(methodName, params) {
-        if (methodName === 'customizeBodyBg') {
-            const bgURL = $('#wrapwrap').css('background-image');
-            const srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
-            return bgURL && bgURL.replace(srcValueWrapper, '') || '';
+        if (methodName === 'customizeBodyBgType') {
+            const bgImage = $('#wrapwrap').css('background-image');
+            if (bgImage === 'none') {
+                return "NONE";
+            }
+            return weUtils.getCSSVariableValue('body-image-type');
         }
         return this._super(...arguments);
     },

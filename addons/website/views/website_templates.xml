@@ -728,20 +728,6 @@
     </xpath>
 </template>
 
-<template id="option_custom_body_image" inherit_id="website.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <style>
-            <!-- Patched by JS option -->
-        </style>
-    </xpath>
-</template>
-
-<template id="option_custom_body_pattern" inherit_id="website.assets_frontend" active="False">
-    <xpath expr="//link[last()]" position="after">
-        <link rel="stylesheet" type="text/scss" href="/website/static/src/scss/options/layout/option_custom_body_pattern.scss"/>
-    </xpath>
-</template>
-
 <template id="kanban">
     <t t-set="step"><t t-esc="step or 0"/></t>
     <t t-set="scope"><t t-esc="scope or 0"/></t>
