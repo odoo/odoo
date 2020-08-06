@@ -1795,10 +1795,10 @@ class AccountMove(models.Model):
             return self.env.ref('account.mt_invoice_validated')
         return super(AccountMove, self)._track_subtype(init_values)
 
-    def _get_creation_message(self):
+    def _creation_message(self):
         # OVERRIDE
         if not self.is_invoice(include_receipts=True):
-            return super()._get_creation_message()
+            return super()._creation_message()
         return {
             'out_invoice': _('Invoice Created'),
             'out_refund': _('Credit Note Created'),
