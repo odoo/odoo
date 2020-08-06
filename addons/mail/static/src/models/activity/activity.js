@@ -234,6 +234,21 @@ function factory(dependencies) {
         _computeMessaging() {
             return [['link', this.env.messaging]];
         }
+
+        /**
+         * Wysiwyg editor put `<p><br></p>` even without a note on the activity.
+         * This compute replaces this almost empty value by an actual empty
+         * value, to reduce the size the empty note takes on the UI.
+         *
+         * @private
+         * @returns {string|undefined}
+         */
+        _computeNote() {
+            if (this.note === '<p><br></p>') {
+                return undefined;
+            }
+            return this.note;
+        }
     }
 
     Activity.fields = {
@@ -282,7 +297,12 @@ function factory(dependencies) {
          * Do not use this value in a 't-raw' if the activity has been created
          * directly from user input and not from server data as it's not escaped.
          */
-        note: attr(),
+        note: attr({
+            compute: '_computeNote',
+            dependencies: [
+                'note',
+            ],
+        }),
         res_id: attr(),
         res_model: attr(),
         state: attr(),
