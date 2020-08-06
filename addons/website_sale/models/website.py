@@ -226,6 +226,8 @@ class Website(models.Model):
         company = self.company_id or pricelist.company_id
         if company:
             values['company_id'] = company.id
+            if self.env['ir.config_parameter'].sudo().get_param('sale.use_sale_note'):
+                values['note'] = company.sale_note or ""
 
         return values
 
