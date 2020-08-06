@@ -49,8 +49,7 @@ class PurchaseOrder(models.Model):
     def _compute_effective_date(self):
         for order in self:
             pickings = order.picking_ids.filtered(lambda x: x.state == 'done' and x.location_dest_id.usage == 'internal' and x.date_done)
-            dates_list = pickings.mapped('date_done')
-            order.effective_date = min(dates_list).date() if dates_list else False
+            order.effective_date = min(pickings.mapped('date_done'), default=False)
 
     @api.depends('picking_ids', 'picking_ids.state')
     def _compute_is_shipped(self):
@@ -490,11 +489,7 @@ class PurchaseOrderLine(models.Model):
                 values.append(val)
             line.move_dest_ids.created_purchase_line_id = False
 
-        moves = self.env['stock.move'].create(values)
-        for move in moves:
-            # update delay alert
-            move._delay_alert_check()
-        return moves
+        return self.env['stock.move'].create(values)
 
     def _find_candidate(self, product_id, product_qty, product_uom, location_id, name, origin, company_id, values):
         """ Return the record in self where the procument with values passed as
