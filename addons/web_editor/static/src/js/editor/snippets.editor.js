@@ -767,7 +767,6 @@ var SnippetEditor = Widget.extend({
 
         const proms1 = Object.keys(this.styles).map(key => {
             return this.styles[key].updateUI({
-                forced: ev.data.widget,
                 noVisibility: true,
             });
         });

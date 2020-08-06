@@ -346,8 +346,7 @@ const UserValueWidget = Widget.extend({
     isPreviewed: function () {
         const focusEl = document.activeElement;
         if (focusEl && focusEl.tagName === 'INPUT'
-                && (this.el === focusEl || this.el.contains(focusEl))
-                && !this._validating) {
+                && (this.el === focusEl || this.el.contains(focusEl))) {
             return true;
         }
         return this.el.classList.contains('o_we_preview');
@@ -474,34 +473,15 @@ const UserValueWidget = Widget.extend({
      * @param {string} value
      * @param {string} [methodName]
      */
-    setValue: function (value, methodName) {
+    async setValue(value, methodName) {
         this._value = value;
+        this.el.classList.remove('o_we_preview');
     },
     /**
      * @param {boolean} show
      */
     toggleVisibility: function (show) {
         this.el.classList.toggle('d-none', !show);
-    },
-    /**
-     * Updates the UI to match the user value the widget currently holds, only
-     * if the UI can currently be updated.
-     *
-     * Note: this method is only needed if @see setValue can make the widget
-     * hold a value which is not synchronized with its current UI (for focus
-     * reasons or other ones) or if the widget is not one capable of holding
-     * a value (but may have an UI which depends on other elements).
-     *
-     * @todo if the UI cannot be updated, we do nothing while it should ideally
-     *       updates as soon as it can be.
-     * @param {boolean} [force=false]
-     * @returns {Promise}
-     */
-    updateUI: async function (force) {
-        if (force || !this.isPreviewed()) {
-            await this._updateUI();
-        }
-        this._validating = false;
     },
 
     //--------------------------------------------------------------------------
@@ -525,19 +505,6 @@ const UserValueWidget = Widget.extend({
             ev.preventDefault();
         }
         return true;
-    },
-    /**
-     * Updates the UI to match the user value the widget currently holds (this
-     * method is called by @see updateUI and does not perform a check to verify
-     * if the UI can be updated).
-     *
-     * @private
-     * @returns {Promise}
-     */
-    _updateUI: async function () {
-        this.el.classList.remove('o_we_preview');
-        const proms = this._userValueWidgets.map(widget => widget.updateUI(true));
-        return Promise.all(proms);
     },
 
     //--------------------------------------------------------------------------
@@ -653,7 +620,8 @@ const ButtonUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    setValue: function (value, methodName) {
+    async setValue(value, methodName) {
+        await this._super(...arguments);
         let active = !!value;
         if (methodName) {
             if (!this._methodsNames.includes(methodName)) {
@@ -748,19 +716,20 @@ const BaseSelectionUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    setValue(value, methodName) {
-        this._userValueWidgets.forEach(widget => {
-            widget.setValue(NULL_ID, methodName);
-        });
+    async setValue(value, methodName) {
+        const _super = this._super.bind(this);
+        for (const widget of this._userValueWidgets) {
+            await widget.setValue(NULL_ID, methodName);
+        }
         for (const widget of [...this._userValueWidgets].reverse()) {
-            widget.setValue(value, methodName);
+            await widget.setValue(value, methodName);
             if (widget.isActive()) {
                 // Only one select item can be true at a time, we consider the
                 // last one if multiple would be active.
                 return;
             }
         }
-        this._super(...arguments);
+        await _super(...arguments);
     },
 
     //--------------------------------------------------------------------------
@@ -831,15 +800,10 @@ const SelectUserValueWidget = BaseSelectionUserValueWidget.extend({
         this._super(...arguments);
         this.menuTogglerEl.classList.add('active');
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @override
      */
-    _updateUI: async function () {
+    async setValue() {
         await this._super(...arguments);
 
         if (this.icon) {
@@ -999,34 +963,27 @@ const InputUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    setValue: function (value, methodName) {
+    async setValue(value, methodName) {
         const params = this._methodsParams;
-        if (!params.unit) {
-            return this._super(value, methodName);
+        if (params.unit) {
+            value = value.split(' ').map(v => {
+                const numValue = weUtils.convertValueToUnit(v, params.unit, params.cssProperty, this.$target);
+                if (isNaN(numValue)) {
+                    return ''; // Something not supported
+                }
+                return this._floatToStr(numValue);
+            }).join(' ');
         }
 
-        value = value.split(' ').map(v => {
-            const numValue = weUtils.convertValueToUnit(v, params.unit, params.cssProperty, this.$target);
-            if (isNaN(numValue)) {
-                return ''; // Something not supported
-            }
-            return this._floatToStr(numValue);
-        }).join(' ');
+        await this._super(value, methodName);
 
-        this._super(value, methodName);
+        this.inputEl.value = this._value;
     },
 
     //--------------------------------------------------------------------------
     // Private
     //--------------------------------------------------------------------------
 
-    /**
-     * @override
-     */
-    _updateUI: async function () {
-        await this._super(...arguments);
-        this.inputEl.value = this._value;
-    },
     /**
      * Converts a floating value to a string, rounded to 3 digits without zeros.
      *
@@ -1075,7 +1032,6 @@ const InputUserValueWidget = UserValueWidget.extend({
     _onInputKeydown: function (ev) {
         switch (ev.which) {
             case $.ui.keyCode.ENTER: {
-                this._validating = true;
                 this._onUserValueChange(ev);
                 break;
             }
@@ -1139,15 +1095,15 @@ const MultiUserValueWidget = UserValueWidget.extend({
     /**
      * @override
      */
-    setValue: function (value, methodName) {
+    async setValue(value, methodName) {
         let values = value.split(/\s*\|\s*/g);
         if (values.length === 1) {
             values = value.split(/\s+/g);
         }
         for (let i = 0; i < this._userValueWidgets.length - 1; i++) {
-            this._userValueWidgets[i].setValue(values.shift() || '', methodName);
+            await this._userValueWidgets[i].setValue(values.shift() || '', methodName);
         }
-        this._userValueWidgets[this._userValueWidgets.length - 1].setValue(values.join(' '), methodName);
+        await this._userValueWidgets[this._userValueWidgets.length - 1].setValue(values.join(' '), methodName);
     },
 });
 
@@ -1239,6 +1195,31 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
     isActive: function () {
         return !weUtils.areCssValuesEqual(this._value, 'rgba(0, 0, 0, 0)');
     },
+    /**
+     * Updates the color preview + re-render the whole color palette widget.
+     *
+     * @override
+     */
+    async setValue(color) {
+        await this._super(...arguments);
+
+        const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
+        this.colorPreviewEl.classList.remove(...classes);
+        this.colorPreviewEl.style.removeProperty('background-color');
+
+        if (this._value) {
+            if (ColorpickerWidget.isCSSColor(this._value)) {
+                this.colorPreviewEl.style.backgroundColor = this._value;
+            } else if (weUtils.isColorCombinationName(this._value)) {
+                this.colorPreviewEl.classList.add('o_cc', `o_cc${this._value}`);
+            } else {
+                this.colorPreviewEl.classList.add(`bg-${this._value}`);
+            }
+        }
+
+        await this._renderColorPalette();
+    },
+
 
     //--------------------------------------------------------------------------
     // Private
@@ -1266,30 +1247,6 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
             });
         }
         return this.colorPalette.appendTo(document.createDocumentFragment());
-    },
-    /**
-     * Updates the color preview + re-render the whole color palette widget.
-     *
-     * @override
-     */
-    _updateUI: async function (color) {
-        await this._super(...arguments);
-
-        const classes = weUtils.computeColorClasses(this.colorPalette.getColorNames());
-        this.colorPreviewEl.classList.remove(...classes);
-        this.colorPreviewEl.style.removeProperty('background-color');
-
-        if (this._value) {
-            if (ColorpickerWidget.isCSSColor(this._value)) {
-                this.colorPreviewEl.style.backgroundColor = this._value;
-            } else if (weUtils.isColorCombinationName(this._value)) {
-                this.colorPreviewEl.classList.add('o_cc', `o_cc${this._value}`);
-            } else {
-                this.colorPreviewEl.classList.add(`bg-${this._value}`);
-            }
-        }
-
-        await this._renderColorPalette();
     },
 
     //--------------------------------------------------------------------------
@@ -1375,21 +1332,21 @@ const ImagepickerUserValueWidget = UserValueWidget.extend({
         iconEl.classList.add('fa', 'fa-fw', 'fa-camera');
         this.containerEl.appendChild(iconEl);
     },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      */
     getMethodsParams: function (methodName) {
         return _.extend({isVideo: this.isVideo}, this._super(...arguments));
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @override
      */
-    async _updateUI() {
+    async setValue() {
         await this._super(...arguments);
         this.el.classList.toggle('active', this.isActive());
     },
@@ -1513,15 +1470,10 @@ const DatetimePickerUserValueWidget = InputUserValueWidget.extend({
     isPreviewed: function () {
         return this._super(...arguments) || !!$(this.inputEl).data('datetimepicker').widget;
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @override
      */
-    _updateUI: async function () {
+    async setValue() {
         await this._super(...arguments);
         let momentObj = moment.unix(this._value);
         if (!momentObj.isValid()) {
@@ -1971,14 +1923,12 @@ const SnippetOptionWidget = Widget.extend({
     /**
      * Updates the UI. For widget update, @see _computeWidgetState.
      *
-     * @param {UserValueWidget} [forced=null]
-     *     Only non-previewed widgets are updated, except for the one given here
      * @param {boolean} [noVisibility=false]
      *     If true, only update widget values and their UI, not their visibility
      *     -> @see updateUIVisibility for toggling visibility only
      * @returns {Promise}
      */
-    updateUI: async function ({forced, noVisibility} = {}) {
+    updateUI: async function ({noVisibility} = {}) {
         // For each widget, for each of their option method, notify to the
         // widget the current value they should hold according to the $target's
         // current state, related for that method.
@@ -2002,12 +1952,8 @@ const SnippetOptionWidget = Widget.extend({
                     continue;
                 }
                 const normalizedValue = this._normalizeWidgetValue(value);
-                widget.setValue(normalizedValue, methodName);
+                await widget.setValue(normalizedValue, methodName);
             }
-
-            // Refresh the UI of all widgets (after all the current values they
-            // hold have been updated).
-            return widget.updateUI(widget === forced);
         });
         await Promise.all(proms);
 
@@ -2523,7 +2469,6 @@ const SnippetOptionWidget = Widget.extend({
                 // Will update the UI of the correct widgets for all options
                 // related to the same $target/editor if necessary
                 this.trigger_up('snippet_option_update', {
-                    widget: widget,
                     previewMode: previewMode,
                     onSuccess: () => resolve(),
                 });
