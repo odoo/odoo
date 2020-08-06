@@ -713,17 +713,14 @@
     </div>
 
     <!-- Theme options -->
-    <div data-js="SwitchTheme" data-selector="theme" data-no-check="true">
-        <we-button class="o_we_primary_btn" data-switch-theme="" data-no-preview="true">Switch Theme</we-button>
-    </div>
-    <div data-js="Theme" data-selector="theme" data-no-check="true">
+    <div data-js="ThemeColors" data-selector="theme-colors" data-no-check="true">
         <we-alert class="o_old_color_system_warning d-none">
             It appears your website is still using the old color system of
             Odoo 13.0 in some places. We made sure it is still working but
             we recommend you to try to use the new color system, which is
             still customizable.
         </we-alert>
-        <we-row string="Theme colors" class="o_we_fw">
+        <we-row>
             <we-colorpicker data-name="color_1_opt" title="Primary"
                             data-customize-website-color="" data-color="o-color-1"
                             data-use-css-color="true"/>
@@ -739,36 +736,16 @@
             <we-select data-icon="fa-lightbulb-o" data-variable="color-palettes-number"/>
         </we-row>
         <div class="o_color_combinations_edition"/>
-        <we-row string="Status Colors">
-            <we-colorpicker title="Success" data-customize-website-color="" data-color-type="theme" data-color="success"/>
-            <we-colorpicker title="Info" data-customize-website-color="" data-color-type="theme" data-color="info"/>
-            <we-colorpicker title="Warning" data-customize-website-color="" data-color-type="theme" data-color="warning"/>
-            <we-colorpicker title="Error" data-customize-website-color="" data-color-type="theme" data-color="danger"/>
-        </we-row>
-        <we-row string="Typography">
-            <we-fontfamilypicker data-variable="font"/>
-            <we-input data-customize-website-variable="null" data-variable="font-size-base" data-unit="px" data-save-unit="rem"/>
-        </we-row>
-        <we-select string="Links Underline" data-variable="link-underline">
-            <we-button data-customize-website-variable="'never'">Never</we-button>
-            <we-button data-customize-website-variable="'hover'">On Hover</we-button>
-            <we-button data-customize-website-variable="'always'">Always</we-button>
-        </we-select>
-        <we-fontfamilypicker string="Headings" data-variable="headings-font"/>
-        <we-fontfamilypicker string="Buttons Font" data-variable="buttons-font"/>
-        <we-select string="Main Buttons" data-variable="btn-primary-outline">
-            <we-button data-customize-website-variable="false">Fill</we-button>
-            <we-button data-customize-website-variable="true">Outline</we-button>
-        </we-select>
-        <we-select string="Buttons" data-variable="btn-secondary-outline">
-            <we-button data-customize-website-variable="false">Fill</we-button>
-            <we-button data-customize-website-variable="true">Outline</we-button>
-        </we-select>
+    </div>
+    <div data-js="OptionsTab" data-selector="theme-options" data-no-check="true">
+        <we-checkbox string="Show Header"
+                     data-customize-website-views="website.option_layout_hide_header|"
+                     data-reload="/"/>
         <we-select string="Layout">
             <we-button data-customize-website-views="" data-name="layout_full_opt">Full</we-button>
             <we-button data-customize-website-views="website.option_layout_boxed_variables" id="option_layout_boxed">Boxed</we-button>
         </we-select>
-        <we-row string="Background" data-no-preview="true">
+        <we-row string="⌙ Background" data-no-preview="true">
             <we-colorpicker data-dependencies="!layout_full_opt"
                             data-customize-website-color=""
                             data-color="body"/>
@@ -785,13 +762,44 @@
             <!-- Hidden imagepicker enabled by above button-group -->
             <we-imagepicker data-name="body_bg_image_opt" data-customize-body-bg=""/>
         </we-row>
-        <we-checkbox string="Show Header" data-customize-website-views="website.option_layout_hide_header|" data-reload="/"/>
+        <we-input string="Font size"
+                  data-customize-website-variable="null"
+                  data-variable="font-size-base"
+                  data-unit="px"
+                  data-save-unit="rem"/>
+        <we-fontfamilypicker string="Font family" data-variable="font"/>
+        <we-fontfamilypicker string="⌙ Headings" data-variable="headings-font"/>
+        <we-fontfamilypicker string="⌙ Buttons" data-variable="buttons-font"/>
+        <we-select string="Main Buttons" data-variable="btn-primary-outline">
+            <we-button data-customize-website-variable="false">Fill</we-button>
+            <we-button data-customize-website-variable="true">Outline</we-button>
+        </we-select>
+        <we-select string="Buttons" data-variable="btn-secondary-outline">
+            <we-button data-customize-website-variable="false">Fill</we-button>
+            <we-button data-customize-website-variable="true">Outline</we-button>
+        </we-select>
+        <we-select string="Link Style" data-variable="link-underline">
+            <we-button data-customize-website-variable="'never'">Normal</we-button>
+            <we-button data-customize-website-variable="'hover'">Underline On Hover</we-button>
+            <we-button data-customize-website-variable="'always'">Always Underlined</we-button>
+        </we-select>
+        <we-row string="Status Colors">
+            <we-colorpicker title="Success" data-customize-website-color="" data-color-type="theme" data-color="success"/>
+            <we-colorpicker title="Info" data-customize-website-color="" data-color-type="theme" data-color="info"/>
+            <we-colorpicker title="Warning" data-customize-website-color="" data-color-type="theme" data-color="warning"/>
+            <we-colorpicker title="Error" data-customize-website-color="" data-color-type="theme" data-color="danger"/>
+        </we-row>
+    </div>
+    <div data-js="OptionsTab" data-selector="website-settings" data-no-check="true">
+        <we-row string="Theme">
+            <we-button data-switch-theme="" data-no-preview="true">Switch Theme</we-button>
+        </we-row>
         <we-row string="Code Injection" title="Enter code that will be added into every page of your site">
             <we-button data-no-preview="true" data-open-custom-code-dialog="head">&amp;lt;head&amp;gt;</we-button>
             <we-button data-no-preview="true" data-open-custom-code-dialog="footer">&amp;lt;/body&amp;gt;</we-button>
         </we-row>
         <we-row string="Google Map">
-            <we-button data-configure-api-key="" data-no-preview="true">API key</we-button>
+            <we-button data-configure-api-key="" data-no-preview="true">Custom Key</we-button>
         </we-row>
     </div>
 </template>

@@ -710,61 +710,7 @@ options.registry.BackgroundOptimize.include({
     },
 });
 
-options.registry.SwitchTheme = options.Class.extend({
-    isTopOption: true,
-
-    //--------------------------------------------------------------------------
-    // Options
-    //--------------------------------------------------------------------------
-
-    /**
-     * @see this.selectClass for parameters
-     */
-    switchTheme: async function (previewMode, widgetValue, params) {
-        const save = await new Promise(resolve => {
-            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
-                confirm_callback: () => resolve(true),
-                cancel_callback: () => resolve(false),
-            });
-        });
-        if (!save) {
-            return;
-        }
-        this.trigger_up('request_save', {
-            reload: false,
-            onSuccess: () => window.location.href = '/web#action=website.theme_install_kanban_action',
-        });
-    },
-});
-
-options.registry.Theme = options.Class.extend({
-    events: {
-        'click .o_color_combinations_edition we-toggler': '_onCCTogglerClick',
-        // FIXME investigate why using 'click' does not work *anymore* but those
-        // foldable areas will be made more robust and standard with the new UI.
-        'mouseup .o_cc_subheadings_toggler_icon': '_onCCHeadingsTogglerClick',
-    },
-
-    /**
-     * @override
-     */
-    start: async function () {
-        // Checks for support of the old color system
-        const style = window.getComputedStyle(document.documentElement);
-        const supportOldColorSystem = weUtils.getCSSVariableValue('support-13-0-color-system', style) === 'true';
-        const hasCustomizedOldColorSystem = weUtils.getCSSVariableValue('has-customized-13-0-color-system', style) === 'true';
-        this._showOldColorSystemWarning = supportOldColorSystem && hasCustomizedOldColorSystem;
-
-        return this._super(...arguments);
-    },
-    /**
-     * @override
-     */
-    updateUIVisibility: async function () {
-        await this._super(...arguments);
-        const oldColorSystemEl = this.el.querySelector('.o_old_color_system_warning');
-        oldColorSystemEl.classList.toggle('d-none', !this._showOldColorSystemWarning);
-    },
+options.registry.OptionsTab = options.Class.extend({
 
     //--------------------------------------------------------------------------
     // Options
@@ -786,7 +732,7 @@ options.registry.Theme = options.Class.extend({
      * @todo use scss customization instead (like for user colors)
      * @see this.selectClass for parameters
      */
-    customizeBodyBg: async function (previewMode, widgetValue, params) {
+    async customizeBodyBg(previewMode, widgetValue, params) {
         const xmlID = 'website.option_custom_body_image';
         if (widgetValue) {
             await this._rpc({
@@ -810,6 +756,9 @@ options.registry.Theme = options.Class.extend({
 
         await this._reloadBundles();
     },
+    /**
+     * @see this.selectClass for parameters
+     */
     async enableImagepicker(previewMode, widgetValue, params) {
         if (widgetValue) {
             // TODO improve: here we make a hack so that a hidden imagepicker
@@ -892,6 +841,24 @@ options.registry.Theme = options.Class.extend({
             dialog.open();
         });
     },
+    /**
+     * @see this.selectClass for parameters
+     */
+    async switchTheme(previewMode, widgetValue, params) {
+        const save = await new Promise(resolve => {
+            Dialog.confirm(this, _t("Changing theme requires to leave the editor. This will save all your changes, are you sure you want to proceed? Be careful that changing the theme will reset all your color customizations."), {
+                confirm_callback: () => resolve(true),
+                cancel_callback: () => resolve(false),
+            });
+        });
+        if (!save) {
+            return;
+        }
+        this.trigger_up('request_save', {
+            reload: false,
+            onSuccess: () => window.location.href = '/web#action=website.theme_install_kanban_action',
+        });
+    },
 
     //--------------------------------------------------------------------------
     // Private
@@ -919,7 +886,7 @@ options.registry.Theme = options.Class.extend({
     /**
      * @override
      */
-    _computeWidgetState: async function (methodName, params) {
+    async _computeWidgetState(methodName, params) {
         if (methodName === 'customizeBodyBg') {
             const bgURL = $('#wrapwrap').css('background-image');
             const srcValueWrapper = /url\(['"]*|['"]*\)|^none$/g;
@@ -964,6 +931,46 @@ options.registry.Theme = options.Class.extend({
         });
         return aceEditor;
     },
+});
+
+options.registry.ThemeColors = options.registry.OptionsTab.extend({
+    events: Object.assign({}, options.registry.OptionsTab.prototype.events, {
+        'click .o_color_combinations_edition we-toggler': '_onCCTogglerClick',
+        // FIXME investigate why using 'click' does not work *anymore* but those
+        // foldable areas will be made more robust and standard with the new UI.
+        'mouseup .o_cc_subheadings_toggler_icon': '_onCCHeadingsTogglerClick',
+    }),
+
+    /**
+     * @override
+     */
+    async start() {
+        // Checks for support of the old color system
+        const style = window.getComputedStyle(document.documentElement);
+        const supportOldColorSystem = weUtils.getCSSVariableValue('support-13-0-color-system', style) === 'true';
+        const hasCustomizedOldColorSystem = weUtils.getCSSVariableValue('has-customized-13-0-color-system', style) === 'true';
+        this._showOldColorSystemWarning = supportOldColorSystem && hasCustomizedOldColorSystem;
+
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Public
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    async updateUIVisibility() {
+        await this._super(...arguments);
+        const oldColorSystemEl = this.el.querySelector('.o_old_color_system_warning');
+        oldColorSystemEl.classList.toggle('d-none', !this._showOldColorSystemWarning);
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
     /**
      * @override
      */
