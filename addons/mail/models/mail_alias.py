@@ -142,6 +142,7 @@ class Alias(models.Model):
         name already exists an UserError is raised. """
         sanitized_name = remove_accents(name).lower().split('@')[0]
         sanitized_name = re.sub(r'[^\w+.]+', '-', sanitized_name)
+        sanitized_name = sanitized_name.encode('ascii', errors='replace').decode()
 
         catchall_alias = self.env['ir.config_parameter'].sudo().get_param('mail.catchall.alias')
         bounce_alias = self.env['ir.config_parameter'].sudo().get_param('mail.bounce.alias')
