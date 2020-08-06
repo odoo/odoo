@@ -90,6 +90,13 @@
                 'graph_groupbys': ['date:month', 'subtype_id'],
             }</field>
             <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p><p>
+                    Start scheduling activities on your opportunities
+                </p>
+            </field>
        </record>
 
        <menuitem
@@ -100,12 +107,19 @@
             action="crm_activity_report_action"
             sequence="3"/>
 
-       <record id="crm_activity_report_action_team" model="ir.actions.act_window">
-           <field name="name">Pipeline Activities</field>
-           <field name="res_model">crm.activity.report</field>
-           <field name="view_mode">graph,pivot,tree</field>
-           <field name="context">{'search_default_team_id': active_id}</field>
-           <field name="domain">[]</field>
-       </record>
+        <record id="crm_activity_report_action_team" model="ir.actions.act_window">
+            <field name="name">Pipeline Activities</field>
+            <field name="res_model">crm.activity.report</field>
+            <field name="view_mode">graph,pivot,tree</field>
+            <field name="context">{'search_default_team_id': active_id}</field>
+            <field name="domain">[]</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p><p>
+                    Start scheduling activities on your opportunities
+                </p>
+            </field>
+        </record>
 
 </odoo>

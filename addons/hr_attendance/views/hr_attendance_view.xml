@@ -167,6 +167,11 @@
         <field name="res_model">hr.attendance</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id"></field>  <!-- force empty -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="hr_attendance_action_graph_filtered" model="ir.actions.act_window">
@@ -178,6 +183,11 @@
             'default_department_id': active_id}
         </field>
         <field name="view_id"></field>  <!-- force empty -->
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="hr_attendance_action_kiosk_mode" model="ir.actions.client">

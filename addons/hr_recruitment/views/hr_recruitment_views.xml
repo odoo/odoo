@@ -984,6 +984,11 @@ action = act
             (0, 0, {'view_mode': 'graph', 'view_id': ref('hr_applicant_view_graph')}),
             (0, 0, {'view_mode': 'pivot', 'view_id': ref('hr_applicant_view_pivot')})]"/>
         <field name="context">{'search_default_creation_month': 1, 'search_default_job': 2}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
     <menuitem name="Reporting" id="report_hr_recruitment" parent="menu_hr_recruitment_root"
     sequence="99"/>
@@ -999,6 +1004,11 @@ action = act
             'search_default_department_id': [active_id],
             'default_department_id': active_id}
         </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="action_hr_recruitment_report_filtered_job" model="ir.actions.act_window">
@@ -1009,6 +1019,11 @@ action = act
         <field name="context">{
             'search_default_job_id': [active_id],
             'default_job_id': active_id}
+        </field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
         </field>
     </record>
 

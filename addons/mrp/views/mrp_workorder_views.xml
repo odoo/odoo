@@ -27,11 +27,10 @@
         <field name="search_view_id" ref="view_mrp_production_work_order_search"/>
         <field name="domain">[('operation_id.bom_id', '=', active_id), ('state', '=', 'done')]</field>
         <field name="help" type="html">
-            <p class="o_view_nocontent_empty_folder">
-              No data to display
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
             </p><p>
-              You will get here statistics about the
-              work orders duration related to this routing.
+                Get statistics about the work orders duration related to this routing.
             </p>
         </field>
     </record>
@@ -502,6 +501,11 @@
         <field name="res_model">mrp.workorder</field>
         <field name="view_mode">graph,pivot</field>
         <field name="view_id" ref="view_workcenter_load_pivot"/>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="action_mrp_workcenter_load_report_pivot" model="ir.actions.act_window.view">
