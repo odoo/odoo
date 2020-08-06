@@ -3,10 +3,11 @@
 import time
 import math
 import re
+import logging
 
 from odoo.osv import expression
 from odoo.tools.float_utils import float_round as round, float_compare
-from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT
+from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, remove_accents
 from odoo.exceptions import UserError, ValidationError
 from odoo import api, fields, models, _, tools
 from odoo.tests.common import Form
@@ -16,6 +17,9 @@ TYPE_TAX_USE = [
     ('purchase', 'Purchases'),
     ('none', 'None'),
 ]
+
+
+_logger = logging.getLogger(__name__)
 
 
 class AccountAccountType(models.Model):
@@ -877,7 +881,19 @@ class AccountJournal(models.Model):
         if not alias_name:
             alias_name = self.name
             if self.company_id != self.env.ref('base.main_company'):
-                alias_name += '-' + re.sub("[^\w!#$%&'*+/=?^`{|}~\-]", '', str(self.company_id.name))
+                alias_name += '-' + str(self.company_id.name)
+        try:
+            remove_accents(alias_name).encode('ascii')
+        except UnicodeEncodeError:
+            try:
+                remove_accents(self.code).encode('ascii')
+                safe_alias_name = self.code
+            except UnicodeEncodeError:
+                safe_alias_name = self.type
+            _logger.warning("Cannot use '%s' as email alias, fallback to '%s'",
+                alias_name, safe_alias_name)
+            alias_name = safe_alias_name
+
         return {
             'alias_defaults': {'type': type == 'purchase' and 'in_invoice' or 'out_invoice', 'company_id': self.company_id.id, 'journal_id': self.id},
             'alias_parent_thread_id': self.id,
