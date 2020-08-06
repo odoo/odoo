@@ -697,6 +697,18 @@ body.editor_enable.editor_has_snippets {
                 }
             }
         }
+        // Only when main option (not in a we-row or something like that...)
+        we-customizeblock-option > we-button-group.o_we_user_value_widget we-selection-items {
+            @include large-component();
+
+            we-button {
+                display: flex;
+                justify-content: center;
+                flex: 0 1 percentage(1/3);
+                padding: 0 2px;
+                text-align: center;
+            }
+        }
 
         // Inputs
         we-input.o_we_user_value_widget {
