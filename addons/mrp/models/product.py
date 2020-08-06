@@ -62,7 +62,6 @@ class ProductTemplate(models.Model):
          - 'qty_available'
          - 'incoming_qty'
          - 'outgoing_qty'
-         - 'free_qty'
         """
         product_without_bom = self.browse([])
         for product_template in self:
