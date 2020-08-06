@@ -173,6 +173,7 @@ var AbstractView = Factory.extend({
             this._updateMVCParams(params.searchQuery);
         }
 
+        const cpFieldsView = params.controlPanelFieldsView || {};
         if (this.withControlPanel) {
             this.controlPanelModelConfig = {
                 env: Component.env,
@@ -183,7 +184,7 @@ var AbstractView = Factory.extend({
                 // control initialization
                 activateDefaultFavorite: params.activateDefaultFavorite,
                 dynamicFilters: params.dynamicFilters,
-                viewInfo: params.controlPanelFieldsView,
+                viewInfo: cpFieldsView,
                 withSearchBar: params.withSearchBar,
                 // used to avoid timeRanges in query
                 searchMenuTypes: params.searchMenuTypes,
@@ -197,7 +198,7 @@ var AbstractView = Factory.extend({
                 action,
                 breadcrumbs: params.breadcrumbs,
                 controlPanelModel,
-                fields: this.fields,
+                fields: cpFieldsView.fields,
                 searchMenuTypes: params.searchMenuTypes,
                 view: this.fieldsView,
                 views: action.views && action.views.filter(v => v.multiRecord === this.multi_record),
@@ -210,7 +211,7 @@ var AbstractView = Factory.extend({
 
         if (this.withSearchPanel) {
             this.searchPanelParams = {
-                arch: (params.controlPanelFieldsView || {}).arch,
+                arch: cpFieldsView.arch,
                 defaultNoFilter: params.searchPanelDefaultNoFilter,
                 fields: this.fields,
                 model: this.loadParams.modelName,
