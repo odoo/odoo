@@ -239,10 +239,11 @@ class Module(models.Model):
     def _get_icon_image(self):
         for module in self:
             module.icon_image = ''
+            path = ""
             if module.icon:
                 path_parts = module.icon.split('/')
                 path = modules.get_module_resource(path_parts[1], *path_parts[2:])
-            else:
+            elif module.id:
                 path = modules.module.get_module_icon(module.name)
             if path:
                 with tools.file_open(path, 'rb') as image_file:
@@ -306,7 +307,7 @@ class Module(models.Model):
 
     def _compute_has_iap(self):
         for module in self:
-            module.has_iap = 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
+            module.has_iap = bool(module.id) and 'iap' in module.upstream_dependencies(exclude_states=('',)).mapped('name')
 
     def unlink(self):
         if not self:
