@@ -26,8 +26,6 @@ from psycopg2 import ProgrammingError, errorcodes
 import odoo
 from odoo import config
 
-from . import Command
-
 __author__ = odoo.release.author
 __version__ = odoo.release.version
 
@@ -159,8 +157,3 @@ def main():
     setup_pid_file()
     rc = odoo.service.server.start(preload=preload, stop=stop)
     sys.exit(rc)
-
-class Server(Command):
-    """Start the odoo server (default command)"""
-    def run(self, args):
-        main(args)

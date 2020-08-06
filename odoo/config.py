@@ -280,14 +280,14 @@ def checkpath(mode: int) -> Callable[[str], str]:
     and os.X_OK. Aliases are 'e': F_OK, 'r': R_OK, 'w': W_OK, 'x': X_OK.
     """
     mode = {'e': os.F_OK, 'r': os.R_OK, 'w': os.W_OK, 'x': os.X_OK}.get(mode, mode)
-    def exists(rawopt):
+    def exists(rawopt: str) -> str:
         try:
-            return _check_file_access(rawopt, mode)
+            return str(_check_file_access(rawopt, mode))
         except ValueError as exc:
             if exc.args[0] != 'no such file':
                 raise
         try:
-            return _check_dir_access(rawopt, mode)
+            return str(_check_dir_access(rawopt, mode))
         except ValueError as exc:
             if exc.args[0] != 'no such directory':
                 raise
@@ -295,18 +295,16 @@ def checkpath(mode: int) -> Callable[[str], str]:
     return exists
 
 
-
-
 def addons_path(rawopt: str) -> str:
     """ Ensure `rawopt` is a valid addons path, the fullpath is returned """
     path = _check_dir_access(rawopt, os.R_OK | os.X_OK)
-    if not next(path.glob('*/__manifest__.py'), None):
+    if not path.glob('*/__manifest__.py'):
         olds = path.glob('*/__openerp__.py')
         if not olds:
             raise ValueError("not a valid addons path, doesn't contain modules")
         warnings.warn(
             'Using "__openerp__.py" as module manifest is deprecated, '
-            'please renome them as "__manifest__.py". Affected '
+            'please rename them as "__manifest__.py". Affected '
             'modules: %s' % ", ".join((old.parent.name for old in olds)),
             DeprecationWarning)
     return str(path)
@@ -417,6 +415,18 @@ def dyndemo(config) -> List[str]:
     return config['init'] if not config['without_demo'] else {}
 
 
+SCAFFOLD_TMPL_DIR = fullpath(__file__).parent.joinpath('cli/templates')
+
+
+def scaffold_builtins():
+    return [p.name for p in SCAFFOLD_TMPL_DIR.iterdir()]
+
+
+def scaffold_template(rawopt):
+    if rawopt in scaffold_builtins():
+        return str(SCAFFOLD_TMPL_DIR.joinpath(rawopt))
+    return str(_check_dir_access(rawopt, os.R_OK))
+
 
 ########################################################################
 #                                                                      #
@@ -518,16 +528,16 @@ Option('transient_age_limit', args=["--transient-age-limit"], parse=float, actio
 Option('osv_memory_age_limit', args=["--osv-memory-age-limit"], parse=float, action='store', default=Alias('transient_age_limit'), help=argparse.SUPPRESS)
 
 Option('load_language', args=["--load-language"], parse=CommaList.parser(str), action='store', default=CommaList(), file=False, metavar="LANGCODE", help="specifies the languages for the translations you want to be loaded")
-Option('language', shortopt="-l", args=["--language"], parse=str, action='store', metavar="LANGCODE", help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
-Option('translate_out', longopt="--i18n-export", parse=i18n_output_file, action='store', metavar="FILEPATH", help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit. The '-l' option is required")
-Option('translate_in', longopt="--i18n-import", parse=i18n_input_file, action='store', metavar="FILEPATH", help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
-Option('overwrite_existing_translations', longopt="--i18n-overwrite", parse=strtobool, action='store_true', help="overwrites existing translation terms on updating a module or importing a CSV or a PO file. Use with -u/--update or --i18n-import.")
+Option('language', args=["-l", "--language"], parse=str, action='store', metavar="LANGCODE", help="specify the language of the translation file. Use it with --i18n-export or --i18n-import")
+Option('translate_out', args=["--i18n-export"], parse=i18n_output_file, action='store', metavar="FILEPATH", help="export all sentences to be translated to a CSV file, a PO file or a TGZ archive and exit. The '-l' option is required")
+Option('translate_in', args=["--i18n-import"], parse=i18n_input_file, action='store', metavar="FILEPATH", help="import a CSV or a PO file with translations and exit. The '-l' option is required.")
+Option('overwrite_existing_translations', args=["--i18n-overwrite"], parse=strtobool, action='store_true', help="overwrites existing translation terms on updating a module or importing a CSV or a PO file. Use with -u/--update or --i18n-import.")
 Option('translate_modules', args=["--modules"], parse=CommaList.parser(str), action='store', default=CommaList(), help="specify modules to export. Use in combination with --i18n-export")
 
 Option('list_db', args=["--no-database-list"], parse=strtobool, action='store_false', help="Disable the ability to obtain or view the list of databases. Also disable access to the database manager and selector, so be sure to set a proper --database parameter first.")
 
 Option('dev_mode', args=["--dev"], parse=CommaList.parser(choices(['all', 'pudb', 'wdb', 'ipdb', 'pdb', 'reload', 'qweb', 'werkzeug', 'xml'])), action='append', default=CommaList(), file=False, help="Enable developer mode")
-Option('shell_interface', args=["--shell-interface"], parse=str, action='store', default='python', file=False, help="Specify a preferred REPL to use in shell mode")
+Option('shell_interface', args=["--shell-interface"], parse=choices(['ipython', 'ptpython', 'bpython', 'python']), action='store', default=None, file=False, help="Specify a preferred REPL to use in shell mode")
 Option('stop_after_init', args=["--stop-after-init"], parse=strtobool, action='store_true', file=False, help="stop the server after its initialization")
 Option('geoip_database', args=["--geoip-db"], parse=str, action='store', default='/usr/share/GeoIP/GeoLite2-City.mmdb', help="Absolute path to the GeoIP database file.")
 
@@ -547,17 +557,22 @@ Option('root_path', file=False, parse=checkdir(os.R_OK), default=str(fullpath(Pa
 Option('population_size', args=["--size"], parse=str, action='store', default='small', help="Populate database with auto-generated data")
 Option('populate_models', args=["--models"], parse=CommaList.parser(str), action='append', default=CommaList(), metavar="MODEL OR PATTERN", help="List of model (comma separated or repeated option) or pattern")
 
-Option('verbose', shortopt='-v', longopt='--verbose', action='count', parse=int, default=0, help="Increase verbosity")
-Option('clocpaths', shortopt='-p', longopt='--path', action='append', parse=CommaList.parser(checkpath('r')), default=CommaList(), metavar="PATH", help="File or directory")
+Option('verbose', args=['-v', '--verbose'], action='count', parse=int, default=0, help="Increase verbosity")
+Option('cloc_paths', args=['-p', '--path'], action='append', parse=CommaList.parser(checkpath('r')), default=CommaList(), metavar="PATH", help="File or directory")
 
-Option('deploy_module_path', parse=checkdir('r'), file=False, metavar="DIR", help="Url of the server (default=http://localhost:8069)")
-Option('deploy_url', parse=str, default='http://localhost:8069', nargs='?', metavar="URL" help="Url of the server")
+Option('deploy_module_path', args=["path"], parse=checkdir('r'), file=False, metavar="DIR", help="Path of the module to deploy")
+Option('deploy_url', args=["url"], parse=str, default='http://localhost:8069', nargs='?', metavar="URL", help="Url of the server")
 Option('deploy_db', args=["--db"], parse=str, help='Database to use if server does not use db-filter.')
 Option('deploy_login', args=["--login"], parse=str, default='admin', help="Login (default=admin)")
 Option('deploy_pwd', args=["--password"], parse=str, default='admin', help="Password (default=admin). Setting the password via the cli is a security risk, you may instead use the configuration file.")
 Option('deploy_verify_ssl', args=["--verify-ssl"], parse=strtobool, action='store_true', default=False, help="Verify SSL certificate")
-Option('deploy_force', args=["--force"], parse=strtobool, action='store_true', default=False, help="Force init even if module is already installed. (will update `noupdate="1"` records)")
+Option('deploy_force', args=["--force"], parse=strtobool, action='store_true', default=False, help="Force init even if module is already installed. (will update `noupdate=\"1\"` records)")
 
+Option('scaffold_modname', args=["name"], file=False, required=True, parse=str, metavar="MODULE", help="Name of the module to create")
+Option('scaffold_destdir', args=["dest"], nargs='?', default='.', parse=checkdir('w'), metavar="DIR", help="Directory to create the module in (default: current dir)")
+Option('scaffold_template', args=["-t", "--template"], parse=scaffold_template, default='default', metavar="TMPL", help="Use a custom module template, can be a template name or the path to a module template.")
+
+Option('startsc_path', args=["--path"], file=False, parse=checkdir('r'), default=fullpath('.'), envvar='VIRTUAL_ENV', metavar="DIRPATH", help="Directory where your project's modules are stored (will autodetect from current dir)")
 
 ########################################################################
 #                                                                      #
@@ -774,7 +789,8 @@ Command(
         groupmap['Security-related options'],
         groupmap['Misc options'],
         groupmap['Multiprocessing options'],
-    ])
+    ]
+)
 
 Command(
     name='populate',
@@ -786,7 +802,7 @@ Command(
         *commandmap['server'].options,
     ],
     groups=commandmap['server'].groups,
-    )
+)
 
 Command(
     name='cloc',
@@ -805,13 +821,15 @@ Command(
 
     In the latter mode, only the custom code is accounted for.
     """),
+    section='cloc',
     options=[
         optionmap['verbose'],
-        optionmap['inputpaths'],
+        optionmap['cloc_paths'],
     ],
     groups=[
         groupmap['Database related options'],
-    ])
+    ]
+)
 
 Command(
     name='deploy',
@@ -827,7 +845,34 @@ Command(
         optionmap['deploy_force'],
     ],
     groups=[],
-    )
+)
+
+Command(
+    name='scaffold',
+    desc=dedent("""\
+    Generates an Odoo module skeleton.
+
+    Built-in available templates are: %s
+    """ % scaffold_builtins()),
+    section='scaffold',
+    options=[
+        optionmap['scaffold_modname'],
+        optionmap['scaffold_destdir'],
+        optionmap['scaffold_template'],
+    ],
+    groups=[],
+)
+
+Command(
+    name='start',
+    desc="Quick start the Odoo server for your project",
+    section='options',
+    options=[
+        optionmap['startsc_path'],
+        *commandmap['server'].options
+    ],
+    groups=commandmap['server'].groups
+)
 
 ########################################################################
 #                                                                      #
@@ -928,9 +973,9 @@ def load_environ():
             val = os.getenv(option.envvar)
             if val:
                 try:
-                    options[opt] = option.parse(val)
+                    options[option.name] = option.parse(val)
                 except ValueError as exc:
-                    die(opt, val, f"{option.envvar} environment variable", exc)
+                    die(option.name, val, f"{option.envvar} environment variable", exc)
 
 
 def load_cli(argv):
@@ -942,6 +987,7 @@ def load_cli(argv):
         for option in options:
             if not option.args:
                 continue
+
             kwargs = {
                 'dest': option.name,
                 'action': option.action,
@@ -951,7 +997,7 @@ def load_cli(argv):
                 **{'const': o.const for o in (option,) if o.const},
             }
             try:
-                parser.add_argument(*options.args, **kwargs)
+                parser.add_argument(*option.args, **kwargs)
             except Exception as exc:
                 raise Exception(option) from exc
 
@@ -1172,6 +1218,17 @@ class Config(MutableMapping):
         dictionnary.
         """
         self._userchain[option] = value
+
+    def setdefault(option, default):
+        """
+        Set the option if it is not defined in any source skipping the
+        hardcoded default ones.
+        """
+        try:
+            return ChainMap(self._chainmap[:-1])[option]
+        except KeyError:
+            self[option] = default
+            return default
 
     def __delitem__(self, option):
         """
