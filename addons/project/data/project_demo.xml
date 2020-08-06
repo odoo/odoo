@@ -22,25 +22,25 @@
         </record>
 
         <!-- Stages -->
-        <record id="project_stage_0" model="project.task.type">
+        <record id="project_stage_0" model="project.task.type" forcecreate="False">
             <field name="sequence">1</field>
             <field name="name">To Do</field>
             <field name="legend_blocked">Not validated</field>
             <field name="legend_priority">Use the star for tasks related to gold customers</field>
             <field name="mail_template_id" ref="project.mail_template_data_project_task"/>
         </record>
-        <record id="project_stage_1" model="project.task.type">
+        <record id="project_stage_1" model="project.task.type" forcecreate="False">
             <field name="sequence">10</field>
             <field name="name">In Progress</field>
             <field name="legend_blocked">Need functional or technical help</field>
             <field name="legend_done">Buzz or set as done</field>
         </record>
-        <record id="project_stage_2" model="project.task.type">
+        <record id="project_stage_2" model="project.task.type" forcecreate="False">
             <field name="sequence">20</field>
             <field name="name">Done</field>
             <field name="fold" eval="True"/>
         </record>
-        <record id="project_stage_3" model="project.task.type">
+        <record id="project_stage_3" model="project.task.type" forcecreate="False">
             <field name="sequence">30</field>
             <field name="name">Cancelled</field>
             <field name="legend_done">Ready to reopen</field>
@@ -317,7 +317,7 @@ Send it ASAP, its urgent.</field>
         </record>
 
         <!-- add the email template as value for the project stage 2 -->
-        <record id="project.project_stage_2" model="project.task.type">
+        <record id="project.project_stage_2" model="project.task.type" forcecreate="False">
             <field name="rating_template_id" ref="rating_project_request_email_template"/>
         </record>
 
