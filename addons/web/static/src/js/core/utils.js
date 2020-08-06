@@ -743,17 +743,20 @@ var utils = {
      *
      * @param {any[]} array
      * @param {string | function} [criterion]
+     * @param {('asc' | 'desc')} [order='asc'] sort by ascending if order is 'asc' else descending
      */
-    sortBy: function (array, criterion) {
+    sortBy: function (array, criterion, order = 'asc') {
         const extract = _getExtractorFrom(criterion);
         return array.slice().sort((elA, elB) => {
             const a = extract(elA);
             const b = extract(elB);
+            let result;
             if (isNaN(a) && isNaN(b)) {
-                return a > b ? 1 : a < b ? -1 : 0;
+                result = a > b ? 1 : a < b ? -1 : 0;
             } else {
-                return a - b;
+                result = a - b;
             }
+            return order === 'asc' ? result : -result;
         });
     },
     /**
