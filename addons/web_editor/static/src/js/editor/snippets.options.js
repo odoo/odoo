@@ -2464,12 +2464,14 @@ const SnippetOptionWidget = Widget.extend({
 
             // Call widget option methods and update $target
             await this._select(previewMode, widget);
+            if (previewMode) {
+                return;
+            }
 
             await new Promise(resolve => setTimeout(() => {
                 // Will update the UI of the correct widgets for all options
-                // related to the same $target/editor if necessary
+                // related to the same $target/editor
                 this.trigger_up('snippet_option_update', {
-                    previewMode: previewMode,
                     onSuccess: () => resolve(),
                 });
             // Set timeout needed so that the user event which triggered the
@@ -3210,16 +3212,7 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             this.$target.removeClass('oe_img_bg');
         }
 
-        if (previewMode === 'reset') {
-            return new Promise(resolve => {
-                // Will update the UI of the correct widgets for all options
-                // related to the same $target/editor
-                this.trigger_up('snippet_option_update', {
-                    previewMode: 'reset',
-                    onSuccess: () => resolve(),
-                });
-            });
-        } else {
+        if (previewMode !== 'reset') {
             removeOnImageChangeAttrs.forEach(attr => delete this.$target[0].dataset[attr]);
             this.$target.trigger('background_changed', [previewMode]);
         }
