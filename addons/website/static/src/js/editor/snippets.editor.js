@@ -1,7 +1,7 @@
 odoo.define('website.snippet.editor', function (require) {
 'use strict';
 
-const {qweb, _t} = require('web.core');
+const {qweb, _t, _lt} = require('web.core');
 const Dialog = require('web.Dialog');
 const weSnippetEditor = require('web_editor.snippet.editor');
 const wSnippetOptions = require('website.editor.snippets.options');
@@ -21,6 +21,11 @@ weSnippetEditor.Class.include({
     tabs: _.extend({}, weSnippetEditor.Class.prototype.tabs, {
         THEME: 'theme',
     }),
+    optionsTabStructure: [
+        ['theme-colors', _lt("Theme Colors")],
+        ['theme-options', _lt("Theme Options")],
+        ['website-settings', _lt("Website Settings")],
+    ],
 
     //--------------------------------------------------------------------------
     // Private
@@ -150,10 +155,20 @@ weSnippetEditor.Class.include({
         this._addTabLoading(this.tabs.THEME);
         await new Promise(resolve => setTimeout(() => resolve())); // Needed to force the loading to appear... to review with new design
 
-        if (!this.fakeThemeEl) {
-            this.fakeThemeEl = document.createElement('theme');
-            this.fakeThemeEl.dataset.name = _t("General Options");
-            this.el.appendChild(this.fakeThemeEl);
+        if (!this.topFakeOptionEl) {
+            let el;
+            for (const [elementName, title] of this.optionsTabStructure) {
+                const newEl = document.createElement(elementName);
+                newEl.dataset.name = title;
+                if (el) {
+                    el.appendChild(newEl);
+                } else {
+                    this.topFakeOptionEl = newEl;
+                }
+                el = newEl;
+            }
+            this.bottomFakeOptionEl = el;
+            this.el.appendChild(this.topFakeOptionEl);
         }
 
         // Need all of this in that order so that:
@@ -161,9 +176,9 @@ weSnippetEditor.Class.include({
         //   called each time.
         // - the element is hidden afterwards so it does not take space in the
         //   DOM, same as the overlay which may make a scrollbar appear.
-        this.fakeThemeEl.classList.remove('d-none');
-        const editor = await this._activateSnippet($(this.fakeThemeEl));
-        this.fakeThemeEl.classList.add('d-none');
+        this.topFakeOptionEl.classList.remove('d-none');
+        const editor = await this._activateSnippet($(this.bottomFakeOptionEl));
+        this.topFakeOptionEl.classList.add('d-none');
         editor.toggleOverlay(false);
 
         this._updateLeftPanelContent({
