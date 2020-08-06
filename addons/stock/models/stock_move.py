@@ -133,7 +133,7 @@ class StockMove(models.Model):
     propagate_cancel = fields.Boolean(
         'Propagate cancel and split', default=True,
         help='If checked, when this move is cancelled, cancel the linked move too')
-    delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time')
+    delay_alert_date = fields.Datetime('Delay Alert Date', help='Process at this date to be on time', compute="_compute_delay_alert_date", store=True)
     picking_type_id = fields.Many2one('stock.picking.type', 'Operation Type', check_company=True)
     inventory_id = fields.Many2one('stock.inventory', 'Inventory', check_company=True)
     move_line_ids = fields.One2many('stock.move.line', 'move_id')
@@ -289,6 +289,19 @@ class StockMove(models.Model):
         if self.picking_type_id.show_reserved is False:
             return self.move_line_nosuggest_ids
         return self.move_line_ids
+
+    @api.depends('move_orig_ids.date', 'move_orig_ids.state', 'state', 'date')
+    def _compute_delay_alert_date(self):
+        for move in self:
+            if move.state in ('done', 'cancel'):
+                move.delay_alert_date = False
+                continue
+            prev_moves = move.move_orig_ids.filtered(lambda m: m.state not in ('done', 'cancel') and m.date)
+            prev_max_date = max(prev_moves.mapped("date"), default=False)
+            if prev_max_date and prev_max_date > move.date:
+                move.delay_alert_date = prev_max_date
+            else:
+                move.delay_alert_date = False
 
     @api.depends('move_line_ids.qty_done', 'move_line_ids.product_uom_id', 'move_line_nosuggest_ids.qty_done', 'picking_type_id')
     def _quantity_done_compute(self):
@@ -514,11 +527,6 @@ class StockMove(models.Model):
                 # When editing the initial demand, directly run again action assign on receipt moves.
                 receipt_moves_to_reassign |= move_to_unreserve.filtered(lambda m: m.location_id.usage == 'supplier')
                 receipt_moves_to_reassign |= (self - move_to_unreserve).filtered(lambda m: m.location_id.usage == 'supplier' and m.state in ('partially_available', 'assigned'))
-        # Handle alert date about the scheduled date
-        if vals.get('date'):
-            new_date = fields.Datetime.to_datetime(vals.get('date'))
-            for move in self:
-                move._delay_alert_check(new_date)
         res = super(StockMove, self).write(vals)
         if 'date_deadline' in vals:
             self._set_date_deadline()
@@ -561,41 +569,6 @@ class StockMove(models.Model):
                 continue
             odoobot_id = self.env['ir.model.data'].xmlid_to_res_id("base.partner_root")
             doc.message_post(body=msg, author_id=odoobot_id, subject=msg_subject)
-
-    def _delay_alert_check(self, new_date=None):
-        """Set an alert on late moves by using the `delay_alert_date` field.
-        The alert is always on the move that cannot be done because its preceding moves are late.
-
-        :param new_date: the new expected date, to set when calling this method before `create` or `write`
-        :param new_date: datetime, optional
-        """
-        self.ensure_one()
-        if self.state in ('done', 'cancel'):
-            return
-
-        if new_date is None:
-            new_date = self.date
-
-        # Check if `self` is scheduled after the next moves. If so, the next moves are late.
-        next_moves = self.move_dest_ids.filtered(lambda move: move.state != 'cancel')
-        next_nondone_moves = next_moves.filtered(lambda move: move.state != 'done')
-        next_moves_dates = next_moves.mapped('date')
-        if next_moves_dates:
-            next_moves_date = min(next_moves_dates)
-            if new_date > next_moves_date:
-                next_nondone_moves.write({'delay_alert_date': new_date})
-            else:
-                next_nondone_moves.write({'delay_alert_date': False})
-
-        # Check if `self` is scheduled before the previous moves. If so, `self` if late.
-        previous_moves = self.move_orig_ids.filtered(lambda move: move.state != 'cancel')
-        previous_moves_dates = previous_moves.mapped('date')
-        if previous_moves_dates:
-            previous_moves_date = max(previous_moves_dates)
-            if new_date < previous_moves_date:
-                self.write({'delay_alert_date': previous_moves_date})
-            else:
-                self.write({'delay_alert_date': False})
 
     def action_show_details(self):
         """ Returns an action that will open a form view (in a popup) allowing to work on all the
@@ -1362,7 +1335,6 @@ class StockMove(models.Model):
         self.write({
             'state': 'cancel',
             'move_orig_ids': [(5, 0, 0)],
-            'delay_alert_date': False,
             'procure_method': 'make_to_stock',
         })
         return True
@@ -1469,7 +1441,7 @@ class StockMove(models.Model):
             if len(result_package.quant_ids.filtered(lambda q: not float_is_zero(abs(q.quantity) + abs(q.reserved_quantity), precision_rounding=q.product_uom_id.rounding)).mapped('location_id')) > 1:
                 raise UserError(_('You cannot move the same package content more than once in the same transfer or split the same package into two location.'))
         picking = moves_todo.mapped('picking_id')
-        moves_todo.write({'state': 'done', 'date': fields.Datetime.now(), 'delay_alert_date': False})
+        moves_todo.write({'state': 'done', 'date': fields.Datetime.now()})
 
         move_dests_per_company = defaultdict(lambda: self.env['stock.move'])
         for move_dest in moves_todo.move_dest_ids:

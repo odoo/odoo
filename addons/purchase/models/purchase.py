@@ -954,7 +954,7 @@ class PurchaseOrderLine(models.Model):
             date_planned = date_order + relativedelta(days=seller.delay if seller else 0)
         else:
             date_planned = datetime.today() + relativedelta(days=seller.delay if seller else 0)
-        return self._convert_to_last_minute_of_day(date_planned)
+        return self._convert_to_middle_of_day(date_planned)
 
     @api.depends('product_id', 'date_order')
     def _compute_analytic_id_and_tag_ids(self):
@@ -975,7 +975,7 @@ class PurchaseOrderLine(models.Model):
             return
 
         # Reset date, price and quantity since _onchange_quantity will provide default values
-        self.date_planned = self.order_id.date_planned or self._convert_to_last_minute_of_day(datetime.today())
+        self.date_planned = self.order_id.date_planned or self._convert_to_middle_of_day(datetime.today())
         self.price_unit = self.product_qty = 0.0
 
         self._product_id_change()
@@ -1165,11 +1165,11 @@ class PurchaseOrderLine(models.Model):
             'order_id': po.id,
         }
 
-    def _convert_to_last_minute_of_day(self, date):
+    def _convert_to_middle_of_day(self, date):
         """Return a datetime which is the last minute of the input date(time)
         according to order user's time zone, convert to UTC time.
         """
-        return timezone(self.order_id.user_id.tz or 'UTC').localize(datetime.combine(date, time.max)).astimezone(UTC).replace(tzinfo=None, microsecond=0, second=0)
+        return timezone(self.order_id.user_id.tz or self.company_id.partner_id.tz or 'UTC').localize(datetime.combine(date, time(12))).astimezone(UTC).replace(tzinfo=None)
 
     def _update_date_planned(self, updated_date):
         self.date_planned = updated_date

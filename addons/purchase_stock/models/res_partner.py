@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
-from datetime import timedelta
+from datetime import timedelta, datetime, time
 
 from odoo import api, fields, models
 
@@ -25,7 +25,7 @@ class ResPartner(models.Model):
         for line in order_lines:
             on_time, ordered = partner_dict.get(line.partner_id, (0, 0))
             ordered += line.product_uom_qty
-            on_time += sum(line.mapped('move_ids').filtered(lambda m: m.state == 'done' and m.date <= m.purchase_line_id.date_planned).mapped('quantity_done'))
+            on_time += sum(line.mapped('move_ids').filtered(lambda m: m.state == 'done' and m.date <= datetime.combine(m.purchase_line_id.date_planned, time.min)).mapped('quantity_done'))
             partner_dict[line.partner_id] = (on_time, ordered)
         seen_partner = self.env['res.partner']
         for partner, numbers in partner_dict.items():

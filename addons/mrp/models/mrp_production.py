@@ -733,6 +733,7 @@ class MrpProduction(models.Model):
         production = super(MrpProduction, self).create(values)
         (production.move_raw_ids | production.move_finished_ids).write({
             'group_id': production.procurement_group_id.id,
+            'origin': production.name
         })
         production.move_raw_ids.write({'date': production.date_planned_start})
         production.move_finished_ids.write({'date': production.date_planned_finished})
