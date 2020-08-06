@@ -33,7 +33,7 @@ class AccountPaymentTerm(models.Model):
 
     def compute(self, value, date_ref=False, currency=None):
         self.ensure_one()
-        date_ref = date_ref or fields.Date.today()
+        date_ref = date_ref or fields.Date.context_today(self)
         amount = value
         sign = value < 0 and -1 or 1
         result = []
@@ -63,7 +63,7 @@ class AccountPaymentTerm(models.Model):
         amount = sum(amt for _, amt in result)
         dist = currency.round(value - amount)
         if dist:
-            last_date = result and result[-1][0] or fields.Date.today()
+            last_date = result and result[-1][0] or fields.Date.context_today(self)
             result.append((last_date, dist))
         return result
 

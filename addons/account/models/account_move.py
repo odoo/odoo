@@ -105,7 +105,7 @@ class AccountMove(models.Model):
 
     @api.model
     def _get_default_invoice_date(self):
-        return fields.Date.today() if self._context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') else False
+        return fields.Date.context_today(self) if self._context.get('default_move_type', 'entry') in ('in_invoice', 'in_refund', 'in_receipt') else False
 
     @api.model
     def _get_default_currency(self):
@@ -1430,7 +1430,7 @@ class AccountMove(models.Model):
                 tax_key_add_base = tuple(move._get_tax_key_for_group_add_base(line))
                 if tax_key_add_base not in done_taxes:
                     if line.currency_id and line.company_currency_id and line.currency_id != line.company_currency_id:
-                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line.date or fields.Date.today())
+                        amount = line.company_currency_id._convert(line.tax_base_amount, line.currency_id, line.company_id, line.date or fields.Date.context_today(self))
                     else:
                         amount = line.tax_base_amount
                     res[line.tax_line_id.tax_group_id]['base'] += amount
@@ -2309,7 +2309,7 @@ class AccountMove(models.Model):
         :return Model<account.move>: the documents that have been posted
         """
         if soft:
-            future_moves = self.filtered(lambda move: move.date > fields.Date.today())
+            future_moves = self.filtered(lambda move: move.date > fields.Date.context_today(self))
             future_moves.auto_post = True
             for move in future_moves:
                 msg = _('This move will be posted at the accounting date: %(date)s', date=format_date(self.env, move.date))
@@ -2324,7 +2324,7 @@ class AccountMove(models.Model):
         for move in to_post:
             if not move.line_ids.filtered(lambda line: not line.display_type):
                 raise UserError(_('You need to add a line before posting.'))
-            if move.auto_post and move.date > fields.Date.today():
+            if move.auto_post and move.date > fields.Date.context_today(self):
                 date_msg = move.date.strftime(get_lang(self.env).date_format)
                 raise UserError(_("This move is configured to be auto-posted on %s", date_msg))
 
@@ -2653,7 +2653,7 @@ class AccountMove(models.Model):
         '''
         records = self.search([
             ('state', '=', 'draft'),
-            ('date', '<=', fields.Date.today()),
+            ('date', '<=', fields.Date.context_today(self)),
             ('auto_post', '=', True),
         ])
         records._post()
@@ -3360,7 +3360,7 @@ class AccountMoveLine(models.Model):
             company_currency = line.account_id.company_id.currency_id
             balance = line.amount_currency
             if line.currency_id and company_currency and line.currency_id != company_currency:
-                balance = line.currency_id._convert(balance, company_currency, line.account_id.company_id, line.move_id.date or fields.Date.today())
+                balance = line.currency_id._convert(balance, company_currency, line.account_id.company_id, line.move_id.date or fields.Date.context_today(self))
                 line.debit = balance > 0 and balance or 0.0
                 line.credit = balance < 0 and -balance or 0.0
     # -------------------------------------------------------------------------
@@ -4450,7 +4450,7 @@ class AccountMoveLine(models.Model):
             total = 0
             total_currency = 0
             writeoff_lines = []
-            date = fields.Date.today()
+            date = fields.Date.context_today(self)
             for vals in lines:
                 # Check and complete vals
                 if 'account_id' not in vals or 'journal_id' not in vals:
@@ -4458,7 +4458,7 @@ class AccountMoveLine(models.Model):
                 if ('debit' in vals) ^ ('credit' in vals):
                     raise UserError(_("Either pass both debit and credit or none."))
                 if 'date' not in vals:
-                    vals['date'] = self._context.get('date_p') or fields.Date.today()
+                    vals['date'] = self._context.get('date_p') or fields.Date.context_today(self)
                 vals['date'] = fields.Date.to_date(vals['date'])
                 if vals['date'] and vals['date'] < date:
                     date = vals['date']

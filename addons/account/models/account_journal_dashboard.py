@@ -263,7 +263,7 @@ class account_journal(models.Model):
             self.env.cr.execute(query, query_args)
             query_results_drafts = self.env.cr.dictfetchall()
 
-            today = fields.Date.today()
+            today = fields.Date.context_today(self)
             query = '''
                 SELECT
                     (CASE WHEN move_type IN ('out_refund', 'in_refund') THEN -1 ELSE 1 END) * amount_residual AS amount_total,
@@ -373,7 +373,7 @@ class account_journal(models.Model):
             cur = self.env['res.currency'].browse(result.get('currency'))
             company = self.env['res.company'].browse(result.get('company_id')) or self.env.company
             rslt_count += 1
-            date = result.get('invoice_date') or fields.Date.today()
+            date = result.get('invoice_date') or fields.Date.context_today(self)
 
             amount = result.get('amount_total', 0) or 0
             if cur != target_currency:
