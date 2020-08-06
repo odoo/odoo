@@ -241,7 +241,7 @@ var AbstractView = Factory.extend({
             const controlPanelProps = {
                 action: params.action,
                 breadcrumbs: params.breadcrumbs,
-                fields: this.fields,
+                fields,
                 searchMenuTypes: params.searchMenuTypes,
                 view: this.fieldsView,
                 views: params.action.views && params.action.views.filter(
