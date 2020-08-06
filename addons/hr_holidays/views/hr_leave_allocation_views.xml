@@ -38,10 +38,12 @@
                         ]"/>
                 <group expand="0" string="Group By">
                     <filter name="group_employee" string="Employee" context="{'group_by':'employee_id'}"/>
-                    <filter name="group_category" string="Category" context="{'group_by':'category_id'}"/>
-                    <filter name="group_second_approver_id" string="Validator" context="{'group_by':'second_approver_id'}"/>
                     <filter name="group_type" string="Type" context="{'group_by':'holiday_status_id'}"/>
+                    <filter name="group_state" string="Status" context="{'group_by': 'state'}"/>
                 </group>
+                <searchpanel>
+                    <field name="state" string="Status"/>
+                </searchpanel>
             </search>
         </field>
     </record>
@@ -66,7 +68,7 @@
                             icon="fa-calendar"
                             type="action"
                             attrs="{'invisible': [('holiday_type', '!=', 'employee')]}"
-                            name="%(hr_leave_action_all)d"
+                            name="%(hr_leave_action_action_approve_department)d"
                             context="{'search_default_employee_id': [employee_id], 'search_default_holiday_status_id': [holiday_status_id], 'default_holiday_status_id': holiday_status_id}"
                             help="Time off Taken/Total Allocated">
                             <div class="o_stat_info">
@@ -79,13 +81,12 @@
                             </div>
                         </button>
                     </div>
-                    <div class="oe_title oe_read_only">
-                        <h2><field name="display_name"/></h2>
+                    <div class="oe_title">
+                        <h2><field name="name" placeholder="e.g. Public Holiday Allocation" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/></h2>
                     </div>
                     <group>
                         <group>
                             <field name="type_request_unit" invisible="1"/>
-                            <field name="name" attrs="{'readonly': [('state', 'not in', ('draft', 'confirm'))]}" required="1"/>
                             <field name="holiday_status_id" context="{'employee_id':employee_id}"/>
 
                             <field name="allocation_type" invisible="1" widget="radio"/>
@@ -133,8 +134,8 @@
                     attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', '!=', 'confirm')]}"/>
                 <button string="Validate" name="action_validate" states="validate1" type="object" class="oe_highlight"/>
                 <button string="Refuse" name="action_refuse" states="confirm,validate,validate1" type="object"
-                    attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate','validate1'))]}"/>
-                <button string="Reset to Draft" name="action_draft" type="object"
+                    attrs="{'invisible': ['|', ('can_approve', '=', False), ('state', 'not in', ('confirm','validate1'))]}"/>
+                <button string="Mark as Draft" name="action_draft" type="object"
                         attrs="{'invisible': ['|', ('can_reset', '=', False), ('state', 'not in', ['confirm', 'refuse'])]}"/>
             </xpath>
             <xpath expr="//field[@name='employee_id']" position="before">
@@ -192,9 +193,9 @@
             <tree string="Allocation Requests" sample="1">
                 <field name="employee_id"/>
                 <field name="department_id" optional="hide"/>
-                <field name="holiday_status_id"/>
+                <field name="holiday_status_id" class="font-weight-bold"/>
                 <field name="name"/>
-                <field name="duration_display"/>
+                <field name="duration_display" string="Duration"/>
                 <field name="message_needaction" invisible="1"/>
                 <field name="state" widget="badge" decoration-info="state == 'draft'" decoration-warning="state in ('confirm','validate1')" decoration-success="state == 'validate'"/>
                 <button string="Approve" name="action_approve" type="object"
@@ -207,7 +208,7 @@
                     groups="hr_holidays.group_hr_holidays_manager"/>
                 <button string="Refuse" name="action_refuse" type="object"
                     icon="fa-times"
-                    states="confirm,validate,validate1"
+                    states="confirm,validate1"
                     groups="hr_holidays.group_hr_holidays_manager"/>
                 <field name="activity_exception_decoration" widget="activity_exception"/>
             </tree>
@@ -234,6 +235,45 @@
                 <attribute name="invisible">1</attribute>
             </xpath>
             <xpath expr="//button[@name='action_refuse']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_view_search_my" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.search.my</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="view_hr_leave_allocation_filter"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//searchpanel" position="replace"/>
+            <xpath expr="//filter[@name='message_needaction']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='managed_people']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='my_team_leaves']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='my_leaves']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="hr_leave_allocation_view_search_manager" model="ir.ui.view">
+        <field name="name">hr.leave.allocation.view.search.my</field>
+        <field name="model">hr.leave.allocation</field>
+        <field name="inherit_id" ref="view_hr_leave_allocation_filter"/>
+        <field name="mode">primary</field>
+        <field name="priority">32</field>
+        <field name="arch" type="xml">
+            <xpath expr="//filter[@name='message_needaction']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
+            <xpath expr="//filter[@name='my_leaves']" position="attributes">
                 <attribute name="invisible">1</attribute>
             </xpath>
         </field>
@@ -327,6 +367,7 @@
         <field name="name">My Allocations</field>
         <field name="res_model">hr.leave.allocation</field>
         <field name="view_mode">tree,kanban,form,activity</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_my"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new time off allocation request
@@ -357,6 +398,7 @@
         <field name="view_mode">tree,kanban,form,activity</field>
         <field name="context">{}</field>
         <field name="domain">[]</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_manager"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new time off allocation request
@@ -368,11 +410,12 @@
     </record>
 
     <record id="hr_leave_allocation_action_approve_department" model="ir.actions.act_window">
-        <field name="name">Department Allocation to Approve</field>
+        <field name="name">Allocations</field>
         <field name="res_model">hr.leave.allocation</field>
         <field name="view_mode">tree,form,kanban,activity</field>
-        <field name="context">{'search_default_approve':1}</field>
-        <field name="domain">[('employee_id.leave_manager_id', '=', uid)]</field>
+        <field name="context">{'search_default_managed_people': 1}</field>
+        <field name="domain">[]</field>
+        <field name="search_view_id" ref="hr_holidays.hr_leave_allocation_view_search_manager"/>
         <field name="help" type="html">
             <p class="o_view_nocontent_smiling_face">
                 Create a new time off allocation

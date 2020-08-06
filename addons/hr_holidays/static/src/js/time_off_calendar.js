@@ -51,8 +51,8 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             this._super.apply(this, arguments);
 
             $(QWeb.render('hr_holidays.dashboard.calendar.button', {
-                time_off: _t('New Time Off Request'),
-                request: _t('New Allocation Request'),
+                time_off: _t('New Time Off'),
+                request: _t('New Allocation'),
             })).appendTo(this.$buttons);
 
             if ($node) {
@@ -125,6 +125,13 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
             params['template'] = QWeb.render('hr_holidays.calendar.popover.placeholder', {color: this.getColor(eventData.color_index), calendarIcon: calendarIcon});
             return params;
         },
+
+        _render: function () {
+            var self = this;
+            return this._super.apply(this, arguments).then(function () {
+                self.$el.parent().find('.o_calendar_mini').hide();
+            });
+        },
     });
 
     var TimeOffCalendarRenderer = TimeOffPopoverRenderer.extend({
@@ -137,6 +144,7 @@ odoo.define('hr_holidays.dashboard.view_custo', function(require) {
                     context: self.context,
                 });
             }).then(function (result) {
+                self.$el.parent().find('.o_calendar_mini').hide();
                 self.$el.parent().find('.o_timeoff_container').remove();
                 var elem = QWeb.render('hr_holidays.dashboard_calendar_header', {
                     timeoffs: result,
