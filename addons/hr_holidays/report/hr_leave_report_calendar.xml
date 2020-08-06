@@ -9,15 +9,16 @@
         <field name="view_id"/>
         <field name="search_view_id"/>
         <field name="domain"/>
-        <field name="context"/>
+        <field name="context">{'hide_employee_name': 1}</field>
     </record>
 
     <record id="hr_leave_report_calendar_view" model="ir.ui.view">
         <field name="name">hr.leave.report.calendar.view</field>
         <field name="model">hr.leave.report.calendar</field>
         <field name="arch" type="xml">
-            <calendar string="Time Off" date_start="start_datetime" date_stop="stop_datetime" mode="month" quick_add="False" color="employee_id" event_open_popup="True" js_class="time_off_calendar_all">
+            <calendar string="Time Off" date_start="start_datetime" date_stop="stop_datetime" mode="month" quick_add="False" color="employee_id" event_open_popup="True" js_class="time_off_calendar_all" show_unusual_days="True">
                 <field name="name"/>
+                <field name="employee_id" filters="1" invisible="1"/>
             </calendar>
         </field>
     </record>

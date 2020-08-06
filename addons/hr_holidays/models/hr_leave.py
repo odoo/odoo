@@ -158,7 +158,8 @@ class HolidaysRequest(models.Model):
     number_of_hours_display = fields.Float(
         'Duration in hours', compute='_compute_number_of_hours_display', readonly=True,
         help='Number of hours of the time off request according to your working schedule. Used for interface.')
-    duration_display = fields.Char('Requested (Days/Hours)', compute='_compute_duration_display',
+    number_of_hours_text = fields.Char(compute='_compute_number_of_hours_text')
+    duration_display = fields.Char('Requested (Days/Hours)', compute='_compute_duration_display', store=True,
         help="Field allowing to see the leave request duration in days or hours depending on the leave_type_request_unit")    # details
     # details
     meeting_id = fields.Many2one('calendar.event', string='Meeting', copy=False)
@@ -511,6 +512,15 @@ class HolidaysRequest(models.Model):
                 else float_round(leave.number_of_days_display, precision_digits=2)),
                 _('hours') if leave.leave_type_request_unit == 'hour' else _('days'))
 
+    @api.depends('number_of_hours_display')
+    def _compute_number_of_hours_text(self):
+        # YTI Note: All this because a readonly field takes all the width on edit mode...
+        for leave in self:
+            leave.number_of_hours_text = '%s%s Hours%s' % (
+                '' if leave.request_unit_half or leave.request_unit_hours else '(',
+                float_round(leave.number_of_hours_display, precision_digits=2),
+                '' if leave.request_unit_half or leave.request_unit_hours else ')')
+
     @api.depends('state', 'employee_id', 'department_id')
     def _compute_can_reset(self):
         for holiday in self:
@@ -623,28 +633,49 @@ class HolidaysRequest(models.Model):
                 else:
                     target = leave.employee_id.name
                 if leave.leave_type_request_unit == 'hour':
-                    res.append((
-                        leave.id,
-                        _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
-                            person=target,
-                            leave_type=leave.holiday_status_id.name,
-                            duration=leave.number_of_hours_display,
-                            date=fields.Date.to_string(leave.date_from),
-                        )
-                    ))
+                    if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
+                        res.append((
+                            leave.id,
+                            _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
+                                person=target,
+                                leave_type=leave.holiday_status_id.name,
+                                duration=leave.number_of_hours_display,
+                                date=fields.Date.to_string(leave.date_from),
+                            )
+                        ))
+                    else:
+                        res.append((
+                            leave.id,
+                            _("%(person)s on %(leave_type)s: %(duration).2f hours on %(date)s",
+                                person=target,
+                                leave_type=leave.holiday_status_id.name,
+                                duration=leave.number_of_hours_display,
+                                date=fields.Date.to_string(leave.date_from),
+                            )
+                        ))
                 else:
                     display_date = fields.Date.to_string(leave.date_from)
                     if leave.number_of_days > 1:
                         display_date += ' ⇨ %s' % fields.Date.to_string(leave.date_to)
-                    res.append((
-                        leave.id,
-                        _("%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)",
-                            person=target,
-                            leave_type=leave.holiday_status_id.name,
-                            duration=leave.number_of_days,
-                            start=display_date,
-                        )
-                    ))
+                    if self.env.context.get('hide_employee_name') and 'employee_id' in self.env.context.get('group_by', []):
+                        res.append((
+                            leave.id,
+                            _("%(leave_type)s: %(duration).2f days (%(start)s)",
+                                leave_type=leave.holiday_status_id.name,
+                                duration=leave.number_of_days,
+                                start=display_date,
+                            )
+                        ))
+                    else:
+                        res.append((
+                            leave.id,
+                            _("%(person)s on %(leave_type)s: %(duration).2f days (%(start)s)",
+                                person=target,
+                                leave_type=leave.holiday_status_id.name,
+                                duration=leave.number_of_days,
+                                start=display_date,
+                            )
+                        ))
         return res
 
     def add_follower(self, employee_id):

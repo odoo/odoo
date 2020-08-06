@@ -172,8 +172,10 @@ odoo.define("web/static/src/js/views/search_panel.js", function (require) {
                             }
                         }
                     }
-                    for (const value of section.values.values()) {
-                        this.state.active[section.id][value.id] = value.checked;
+                    if (section && section.values) {
+                        for (const value of section.values.values()) {
+                            this.state.active[section.id][value.id] = value.checked;
+                        }
                     }
                 }
             }

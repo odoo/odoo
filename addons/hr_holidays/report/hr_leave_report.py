@@ -15,8 +15,8 @@ class LeaveReport(models.Model):
     name = fields.Char('Description', readonly=True)
     number_of_days = fields.Float('Number of Days', readonly=True)
     leave_type = fields.Selection([
-        ('allocation', 'Allocation Request'),
-        ('request', 'Time Off Request')
+        ('allocation', 'Allocation'),
+        ('request', 'Time Off')
         ], string='Request Type', readonly=True)
     department_id = fields.Many2one('hr.department', string='Department', readonly=True)
     category_id = fields.Many2one('hr.employee.category', string='Employee Tag', readonly=True)
@@ -94,12 +94,13 @@ class LeaveReport(models.Model):
             'name': _('Time Off Analysis'),
             'type': 'ir.actions.act_window',
             'res_model': 'hr.leave.report',
-            'view_mode': 'tree,form,pivot',
+            'view_mode': 'tree,pivot,form',
             'search_view_id': self.env.ref('hr_holidays.view_hr_holidays_filter_report').id,
             'domain': domain,
             'context': {
                 'search_default_group_type': True,
-                'search_default_year': True
+                'search_default_year': True,
+                'search_default_validated': True,
             }
         }
 
