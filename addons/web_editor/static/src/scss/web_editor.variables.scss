@@ -10,7 +10,8 @@ $o-we-bg-darkest: #000000 !default;
 $o-we-bg-darker: #141217 !default;
 $o-we-bg-dark: #191922 !default;
 $o-we-bg-light: #2b2b33 !default;
-$o-we-bg-lighter: #4b4b59 !default;
+$o-we-bg-lighter: #3e3e46 !default;
+$o-we-bg-lightest: #595964 !default;
 
 $o-we-fg-darker: #9d9d9d !default;
 $o-we-fg-dark: #C6C6C6 !default;
@@ -52,9 +53,16 @@ $o-we-toolbar-height: 32px !default;
 $o-we-item-border-width: 1px !default;
 $o-we-item-border-color: $o-we-bg-darkest !default;
 $o-we-item-border-radius: 1px !default;
-$o-we-item-clickable-bg: linear-gradient($o-we-bg-light, $o-we-bg-darker) !default;
-$o-we-item-pressed-bg: linear-gradient($o-we-bg-darkest, $o-we-bg-darker) !default;
+$o-we-item-clickable-bg: $o-we-bg-lightest!default;
+$o-we-item-clickable-color: $o-we-fg-light!default;
+$o-we-item-clickable-hover-bg: $o-we-bg-dark!default;
+$o-we-item-pressed-bg: $o-we-bg-darker !default;
 $o-we-item-pressed-color: $o-we-fg-lighter !default;
+
+$o-we-item-standup-color-light: $o-we-fg-lighter;
+$o-we-item-standup-color-dark: $o-we-bg-darkest;
+$o-we-item-standup-top: inset 0 1px 0;
+$o-we-item-standup-bottom: inset 0 -1px 0;
 
 $o-we-dropdown-spacing: 5px !default;
 $o-we-dropdown-bg: $o-we-bg-darker !default;
@@ -63,7 +71,7 @@ $o-we-dropdown-border-color: $o-we-bg-darkest !default;
 $o-we-dropdown-shadow: 0 2px 8px 0 rgba(black, 0.5) !default;
 $o-we-dropdown-item-height: 34px !default;
 $o-we-dropdown-item-spacing: 1px !default;
-$o-we-dropdown-item-bg: $o-we-bg-lighter !default;
+$o-we-dropdown-item-bg: $o-we-bg-lightest !default;
 $o-we-dropdown-item-bg-hover: $o-we-bg-light !default;
 $o-we-dropdown-item-color: $o-we-fg-dark !default;
 $o-we-dropdown-item-hover-color: $o-we-fg-light !default;
@@ -79,8 +87,6 @@ $o-we-sidebar-width: $o-we-sidebar-border-width + 290px !default;
 
 $o-we-sidebar-top-height: 46px !default;
 
-$o-we-sidebar-tabs-border-width: $o-we-sidebar-border-width !default;
-$o-we-sidebar-tabs-border-color: $o-we-sidebar-border-color !default;
 $o-we-sidebar-tabs-size-ratio: 1 !default;
 $o-we-sidebar-tabs-bg: $o-we-bg-darker !default;
 $o-we-sidebar-tabs-color: $o-we-sidebar-color !default;
@@ -102,14 +108,9 @@ $o-we-sidebar-content-padding-base: 10px !default;
 $o-we-sidebar-content-indent: $o-we-sidebar-content-gutter-item-indent + $o-we-sidebar-content-padding-base !default;
 $o-we-sidebar-content-backdrop-bg: rgba(black, 0.2) !default;
 
-$o-we-sidebar-content-main-title-border-extension: -1px !default;
-$o-we-sidebar-content-main-title-border-color: $o-we-bg-lighter !default;
 $o-we-sidebar-content-main-title-height: 32px !default;
-$o-we-sidebar-content-main-title-shadow-start: rgba(black, 0.4);
-$o-we-sidebar-content-main-title-shadow: linear-gradient($o-we-sidebar-content-main-title-shadow-start, rgba(black, 0)) !default;
 $o-we-sidebar-content-main-title-color: $o-we-fg-lighter !default;
 $o-we-sidebar-content-main-title-font-size: 13px !default;
-$o-we-sidebar-content-main-title-margin-bottom: 2px !default;
 
 $o-we-sidebar-content-block-spacing: 10px !default;
 
@@ -131,6 +132,7 @@ $o-we-sidebar-content-field-border-color:$o-we-item-border-color !default;
 $o-we-sidebar-content-field-border-radius: $o-we-item-border-radius !default;
 $o-we-sidebar-content-field-disabled-color: $o-we-sidebar-content-field-control-item-color !default;
 $o-we-sidebar-content-field-clickable-bg: $o-we-item-clickable-bg !default;
+$o-we-sidebar-content-field-clickable-color: $o-we-item-clickable-color !default;
 $o-we-sidebar-content-field-clickable-spacing: $o-we-sidebar-content-field-label-spacing !default;
 $o-we-sidebar-content-field-pressed-bg: $o-we-item-pressed-bg !default;
 $o-we-sidebar-content-field-pressed-color: $o-we-item-pressed-color !default;
@@ -152,7 +154,7 @@ $o-we-sidebar-content-field-dropdown-item-active-color: $o-we-dropdown-item-acti
 $o-we-sidebar-content-field-colorpicker-size: 20px !default;
 $o-we-sidebar-content-field-colorpicker-size-large: 26px !default;
 $o-we-sidebar-content-field-colorpicker-shadow: inset 0 0 0 1px rgba(white, 0.5) !default;
-$o-we-sidebar-content-field-colorpicker-dropdown-bg: $o-we-bg-lighter !default;
+$o-we-sidebar-content-field-colorpicker-dropdown-bg: $o-we-bg-lightest !default;
 $o-we-sidebar-content-field-colorpicker-dropdown-color: $o-we-fg-light !default;
 $o-we-sidebar-content-field-colorpicker-dropdown-active-color: $o-we-fg-lighter !default;
 $o-we-sidebar-content-field-colorpicker-cc-width: 208px !default;
