@@ -1,25 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 
-        <record id="stock_move_tree" model="ir.ui.view">
-            <field name="name">Stock Moves</field>
-            <field name="model">stock.move</field>
-            <field name="arch" type="xml">
-                <tree decoration-muted="state == 'cancel'" string="Moves" create="false">
-                    <field name="product_id"/>
-                    <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                    <field name="picking_id"/>
-                    <field name="location_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                    <field name="location_dest_id" options="{'no_create': True}" groups="stock.group_stock_multi_locations"/>
-                    <field name="create_date" groups="base.group_no_one"/>
-                    <field name="date" groups="base.group_no_one"/>
-                    <field name="state"/>
-                </tree>
-            </field>
-        </record>
-
-
         <record id="view_move_pivot" model="ir.ui.view">
             <field name="name">stock.move.pivot</field>
             <field name="model">stock.move</field>
@@ -140,31 +121,6 @@
                         </t>
                     </templates>
                 </kanban>
-            </field>
-        </record>
-
-        <record id="view_move_picking_tree" model="ir.ui.view">
-            <field name="name">stock.move.tree</field>
-            <field name="model">stock.move</field>
-            <field eval="12" name="priority"/>
-            <field name="arch" type="xml">
-                <tree decoration-muted="scrapped == True" string="Stock Moves" editable="bottom">
-                    <field name="company_id" invisible="1"/>
-                    <field name="product_id"/>
-                    <field name="name" invisible="1"/>
-                    <field name="product_uom_category_id" invisible="1"/>
-                    <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                    <field name="location_id" options="{'no_create': True}" invisible="1"/>
-                    <field name="create_date" options="{'no_create': True}" invisible="1" />
-                    <field name="date" invisible="1" />
-                    <field name="picking_type_id" invisible="1"/>
-                    <field name="scrapped" invisible="1"/>
-                    <field name="availability" invisible="1"/>
-                    <field name="reserved_availability" invisible="1"/>
-                    <field name="location_dest_id" invisible="1"/>
-                    <field name="state"/>
-                </tree>
             </field>
         </record>
 
@@ -484,97 +440,6 @@
                     <field name="state" optional="show"/>
                     <field name="company_id" invisible="1"/>
                 </tree>
-            </field>
-        </record>
-
-        <record id="stock_move_view_kanban" model="ir.ui.view">
-            <field name="name">stock.move.kanban2</field>
-            <field name="model">stock.move</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile" quick_create="false">
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div class="row mb4">
-                                    <div class="col-8">
-                                        <strong><span><field name="product_id"/></span></strong>
-                                    </div>
-                                    <div class="col-4">
-                                        <span class="float-right text-right">
-                                            <field name="state" widget="label_selection" readonly="1" options="{'classes': {'draft': 'default', 'cancel': 'danger',
-                                            'assigned': 'success', 'confirmed': 'default'}}"/>
-                                        </span>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-4">
-                                        <strong><span><field name="priority" widget="priority"/></span></strong>
-                                    </div>
-                                    <div class="col-8">
-                                        <span class="float-right">
-                                            <i class="fa fa-clock-o" role="img" aria-label="Date" title="Date"/> <field name="date"/>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
-            </field>
-        </record>
-
-        <!-- test -->
-        <record id="view_move_tree_receipt_picking_board" model="ir.ui.view">
-            <field name="name">stock.move.tree3</field>
-            <field name="model">stock.move</field>
-            <field eval="6" name="priority"/>
-            <field name="arch" type="xml">
-                <tree string="Moves">
-                    <field name="company_id" invisible="1"/>
-                    <field name="picking_id" string="Reference"/>
-                    <field name="product_id"/>
-                    <field name="product_uom_qty"/>
-                    <field name="product_uom" options="{'no_open': True, 'no_create': True}" string="Unit of Measure" groups="uom.group_uom"/>
-                    <field name="date" groups="base.group_no_one"/>
-                </tree>
-            </field>
-        </record>
-
-        <record id="view_stock_move_kanban" model="ir.ui.view">
-            <field name="name">stock.move.kanban</field>
-            <field name="model">stock.move</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
-                    <field name="product_id"/>
-                    <field name="state"/>
-                    <field name="product_uom_qty"/>
-                    <field name="priority"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_global_click">
-                                <div class="row mb4">
-                                    <div class="col-6">
-                                        <strong><field name="product_id"/></strong>
-                                    </div>
-                                    <div class="col-6 text-right">
-                                        <strong>Qty: </strong><field name="product_uom_qty"/>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-6 text-muted">
-                                        <field name="priority" widget="priority"/>
-                                    </div>
-                                    <div class="col-6">
-                                        <span class="float-right">
-                                            <field name="state" widget="label_selection" options="{'classes': {'draft': 'info', 'cancel': 'default',
-                                            'assigned': 'success', 'done': 'success'}}"/>
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
             </field>
         </record>
 
