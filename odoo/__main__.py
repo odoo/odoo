@@ -13,7 +13,9 @@ odoo.logging_config.init_logger()
 
 entrypoints = {
     'server': odoo.cli.server.main,
-    'populate': odoo.cli.populate.Populate().run,
+    'populate': odoo.cli.populate.main,
+    'cloc': odoo.cli.cloc.main,
+    'deploy': odoo.cli.cloc.main,
 }
 
 entrypoints[odoo.config.subcommand]()
