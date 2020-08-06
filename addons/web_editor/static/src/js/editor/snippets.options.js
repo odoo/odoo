@@ -1234,8 +1234,9 @@ const ColorpickerUserValueWidget = SelectUserValueWidget.extend({
      * @returns {Promise}
      */
     _renderColorPalette: function () {
+        const preselectedColor = this.options.dataAttributes.preselectedColor || '';
         const options = {
-            selectedColor: this._value,
+            selectedColor: this._value || preselectedColor,
         };
         if (this.options.dataAttributes.excluded) {
             options.excluded = this.options.dataAttributes.excluded.replace(/ /g, '').split(',');
