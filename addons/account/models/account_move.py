@@ -2232,7 +2232,8 @@ class AccountMove(models.Model):
                     .filtered(lambda account: account.reconcile or account.internal_type == 'liquidity')
                 for account in accounts:
                     (move.line_ids + reverse_move.line_ids)\
-                        .filtered(lambda line: line.account_id == account and line.balance)\
+                        .filtered(lambda line: line.account_id == account and not line.reconciled)\
+                        .with_context(move_reverse_cancel=cancel)\
                         .reconcile()
 
         return reverse_moves
@@ -4371,7 +4372,7 @@ class AccountMoveLine(models.Model):
         # ==== Create entries for cash basis taxes ====
 
         is_cash_basis_needed = account.user_type_id.type in ('receivable', 'payable')
-        if is_cash_basis_needed:
+        if is_cash_basis_needed and not self._context.get('move_reverse_cancel'):
             tax_cash_basis_moves = partials._create_tax_cash_basis_moves()
             results['tax_cash_basis_moves'] = tax_cash_basis_moves
 
