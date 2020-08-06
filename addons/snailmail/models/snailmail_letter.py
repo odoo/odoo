@@ -11,6 +11,7 @@ from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_ENDPOINT = 'https://iap-snailmail.odoo.com'
 PRINT_ENDPOINT = '/iap/snailmail/1/print'
+DEFAULT_TIMEOUT = 30
 
 ERROR_CODES = [
     'MISSING_REQUIRED_FIELDS',
@@ -301,8 +302,9 @@ class SnailmailLetter(models.Model):
         }
         """
         endpoint = self.env['ir.config_parameter'].sudo().get_param('snailmail.endpoint', DEFAULT_ENDPOINT)
+        timeout = self.env['ir.config_parameter'].sudo().get_param('snailmail.timeout', DEFAULT_TIMEOUT)
         params = self._snailmail_create('print')
-        response = jsonrpc(endpoint + PRINT_ENDPOINT, params=params)
+        response = jsonrpc(endpoint + PRINT_ENDPOINT, params=params, timeout=timeout)
         for doc in response['request']['documents']:
             if doc.get('sent') and response['request_code'] == 200:
                 note = _('The document was correctly sent by post.<br>The tracking id is %s' % doc['send_id'])

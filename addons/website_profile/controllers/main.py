@@ -48,6 +48,7 @@ class WebsiteProfile(http.Controller):
         return user_sudo
 
     def _prepare_user_values(self, **kwargs):
+        kwargs.pop('edit_translations', None) # avoid nuking edit_translations
         values = {
             'user': request.env.user,
             'is_public_user': request.website.is_public_user(),
