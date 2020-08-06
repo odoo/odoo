@@ -66,9 +66,9 @@ function _useChatWindow(callbacks) {
         destroy: prevDestroy,
     } = callbacks;
     return Object.assign({}, callbacks, {
-        mount: prevMount.concat(() => {
+        mount: prevMount.concat(async () => {
             // trigger mounting of chat window manager
-            Component.env.services['chat_window']._onWebClientReady();
+            await Component.env.services['chat_window']._onWebClientReady();
         }),
         destroy: prevDestroy.concat(() => {
             Component.env.services['chat_window'].destroy();
@@ -91,9 +91,9 @@ function _useDialog(callbacks) {
         destroy: prevDestroy,
     } = callbacks;
     return Object.assign({}, callbacks, {
-        mount: prevMount.concat(() => {
+        mount: prevMount.concat(async () => {
             // trigger mounting of dialog manager
-            Component.env.services['dialog']._onWebClientReady();
+            await Component.env.services['dialog']._onWebClientReady();
         }),
         destroy: prevDestroy.concat(() => {
             Component.env.services['dialog'].destroy();
@@ -137,7 +137,7 @@ function _useDiscuss(callbacks) {
             discussWidget = new DiscussWidget(widget, state.discussData);
             await discussWidget.appendTo($(selector));
             if (state.autoOpenDiscuss) {
-                discussWidget.on_attach_callback();
+                await discussWidget.on_attach_callback();
             }
         }),
         return: prevReturn.concat(result => {
@@ -165,7 +165,7 @@ function _useMessagingMenu(callbacks) {
         mount: prevMount.concat(async ({ selector, widget }) => {
             messagingMenuWidget = new MessagingMenuWidget(widget, {});
             await messagingMenuWidget.appendTo($(selector));
-            messagingMenuWidget.on_attach_callback();
+            await messagingMenuWidget.on_attach_callback();
         }),
         return: prevReturn.concat(result => {
             Object.assign(result, { messagingMenuWidget });
