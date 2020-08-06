@@ -101,7 +101,8 @@ const CountdownWidget = publicWidget.Widget.extend({
             } else {
                 // Show (non editable) msg when user lands on already finished countdown
                 if (!this.$('.s_countdown_end_redirect_message').length) {
-                    this.$target.find('.container').append(
+                    const $container = this.$('> .container, > .container-fluid, > .o_container_small');
+                    $container.append(
                         $(qweb.render('website.s_countdown.end_redirect_message', {
                             redirectUrl: redirectUrl,
                         }))
