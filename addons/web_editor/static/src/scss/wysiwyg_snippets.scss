@@ -107,13 +107,21 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
-%we-generic-link {
-    cursor: pointer;
-    color: $o-we-sidebar-content-field-color;
-    line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
-    text-decoration: none;
+%we-generic-clickable {
     outline: none;
+    text-decoration: none;
+    line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
+    cursor: pointer;
+
+    &[disabled] {
+        opacity: .5;
+    }
+}
+
+%we-generic-link {
+    color: $o-we-sidebar-content-field-color;
     @include we-svg-icon();
+    @extend %we-generic-clickable;
 
     &:not([disabled]) {
         &.active, &:hover {
@@ -133,21 +141,27 @@ body.editor_enable.editor_has_snippets {
             }
         }
     }
-    &[disabled] {
-        opacity: .5;
-    }
 }
 
 %we-generic-button {
-    @extend %we-generic-link;
+    @extend %we-generic-clickable;
     @include o-text-overflow(block);
+    @include we-svg-icon($o-we-sidebar-content-field-clickable-color, $o-we-sidebar-content-field-clickable-color);
+
     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
     border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
     border-radius: $o-we-sidebar-content-field-border-radius;
     background: $o-we-sidebar-content-field-clickable-bg;
+    color: $o-we-sidebar-content-field-clickable-color;
+
+    &:not([disabled]):hover {
+        @include we-svg-icon($o-we-sidebar-content-field-pressed-color, $subdle-opacity: .75);
+        color: $o-we-sidebar-content-field-pressed-color;
+    }
 
     &.active {
         background: $o-we-sidebar-content-field-pressed-bg;
+        color: $o-we-sidebar-content-field-pressed-color;
     }
 }
 
@@ -200,9 +214,8 @@ body.editor_enable.editor_has_snippets {
     #snippets_menu {
         flex: 0 0 auto;
         display: flex;
-        border: solid $o-we-sidebar-tabs-border-color;
-        border-width: $o-we-sidebar-tabs-border-width 0;
         background: $o-we-sidebar-tabs-bg;
+        box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
         color: $o-we-sidebar-tabs-color;
 
         > button {
@@ -251,6 +264,7 @@ body.editor_enable.editor_has_snippets {
     > #o_scroll {
         background-color: $o-we-sidebar-blocks-content-bg;
         padding: 0 $o-we-sidebar-blocks-content-spacing;
+        box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
 
         .o_panel, .o_panel_header {
             padding: $o-we-sidebar-blocks-content-spacing 0;
@@ -419,16 +433,17 @@ body.editor_enable.editor_has_snippets {
         we-customizeblock-options {
             position: relative;
             display: block;
-            box-shadow: 0 $o-we-sidebar-content-main-title-border-extension 0 $o-we-sidebar-content-main-title-border-color;
-            padding: $o-we-sidebar-content-block-spacing * .3 $o-we-sidebar-content-padding-base $o-we-sidebar-content-block-spacing * 1.5 $o-we-sidebar-content-indent;
-            background-image: $o-we-sidebar-content-main-title-shadow;
-            background-size: 100% ($o-we-sidebar-content-main-title-height / 2);
-            background-repeat: no-repeat;
+            padding: 0 $o-we-sidebar-content-padding-base $o-we-sidebar-content-block-spacing * 1.5 $o-we-sidebar-content-indent;
+            background: $o-we-bg-lighter;
+            box-shadow: $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, 0.8);
 
             > we-title {
                 display: flex;
                 align-items: center;
-                margin-bottom: $o-we-sidebar-content-main-title-margin-bottom - $o-we-sidebar-content-field-spacing;
+                margin: 0 (-$o-we-sidebar-content-padding-base) 0 (-$o-we-sidebar-content-indent);
+                padding: $o-we-sidebar-content-block-spacing * .3 $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
+                background: $o-we-bg-light;
+                box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2), $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, .5);
                 font-size: $o-we-sidebar-content-main-title-font-size;
 
                 > span {
@@ -522,6 +537,9 @@ body.editor_enable.editor_has_snippets {
 
                 > img {
                     margin-bottom: 1px; // Not sure why but not really centered otherwise
+                }
+                > svg {
+                    margin-bottom: 2px; // Not sure why but not really centered otherwise
                 }
             }
             &.fa > div {
@@ -1036,7 +1054,7 @@ body.editor_enable.editor_has_snippets {
         overflow-y: auto;
         padding: $o-we-sidebar-blocks-content-spacing;
         background-color: $o-we-sidebar-blocks-content-bg;
-        border-top: $o-we-sidebar-tabs-border-width solid $o-we-sidebar-tabs-border-color;
+        box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
 
         .o_panel_header {
             padding: $o-we-sidebar-content-field-spacing 0;
