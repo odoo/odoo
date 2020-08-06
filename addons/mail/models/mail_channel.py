@@ -391,7 +391,7 @@ class Channel(models.Model):
             author = self.env['res.partner'].browse(message_dict.get('author_id', False))
             if not author or author not in self.channel_partner_ids:
                 return _('restricted to channel members')
-            return True
+            return False
         return super(Channel, self)._alias_get_error_message(message, message_dict, alias)
 
     def init(self):
