@@ -942,6 +942,13 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
     }),
 
     /**
+     * @constructor
+     */
+    init() {
+        this._super(...arguments);
+        this._showCCSubHeadings = {};
+    },
+    /**
      * @override
      */
     async start() {
@@ -974,6 +981,15 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
     /**
      * @override
      */
+    async _computeWidgetVisibility(widgetName, params) {
+        if (params.shUid) {
+            return !!this._showCCSubHeadings[params.shUid];
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
     async _renderOriginalXML($xml) {
         const uiFragment = await this._super(...arguments);
 
@@ -983,9 +999,6 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
             togglerEl.setAttribute('role', 'button');
             const titleEl = headingsEl.querySelector('we-title');
             titleEl.insertBefore(togglerEl, titleEl.firstChild);
-        });
-        uiFragment.querySelectorAll('.o_cc_subheadings_collapse').forEach(subheadingsEl => {
-            subheadingsEl.classList.add('d-none');
         });
 
         return uiFragment;
@@ -1056,7 +1069,16 @@ options.registry.ThemeColors = options.registry.OptionsTab.extend({
         const show = togglerEl.classList.contains('fa-caret-down');
         togglerEl.classList.toggle('fa-caret-down', !show);
         togglerEl.classList.toggle('fa-caret-up', show);
-        collapseEl.classList.toggle('d-none', !show);
+        this._showCCSubHeadings[collapseEl.dataset.uid] = show;
+        // FIXME big hack to rerender the interface (all the foldable code is
+        // a hack currently anyway, it needs to be generic)
+        this.trigger_up('snippet_edition_request', {exec: async () => {
+            return new Promise(resolve => setTimeout(() => {
+                this.trigger_up('snippet_option_update', {
+                    onSuccess: () => resolve(),
+                });
+            }));
+        }});
     },
 });
 
