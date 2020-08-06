@@ -24,6 +24,7 @@ class ChatWindowManager extends Component {
             return {
                 allOrderedVisible: allOrderedVisible.map(chatWindow => chatWindow ? chatWindow.__state : undefined),
                 chatWindowManager: chatWindowManager ? chatWindowManager.__state : undefined,
+                isInitialized: this.env.messaging.isInitialized,
             };
         }, {
             compareDepth: {
