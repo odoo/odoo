@@ -1205,7 +1205,7 @@ class MrpProduction(models.Model):
         :rtype: list
         """
         issues = []
-        if self.env.context.get('skip_consumption', False):
+        if self.env.context.get('skip_consumption', False) or self.env.context.get('skip_immediate', False):
             return issues
         for order in self:
             if order.consumption == 'flexible' or not order.bom_id or not order.bom_id.bom_line_ids:
