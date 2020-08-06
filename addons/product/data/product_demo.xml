@@ -6,27 +6,27 @@
             <field name="implied_ids" eval="[(4, ref('product.group_product_variant'))]"/>
         </record>
 
-        <record id="product_category_2" model="product.category">
+        <record id="product_category_2" model="product.category" forcecreate="False">
             <field name="parent_id" ref="product.product_category_all"/>
             <field name="name">Internal</field>
         </record>
-        <record id="product_category_3" model="product.category">
+        <record id="product_category_3" model="product.category" forcecreate="False">
             <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">Services</field>
         </record>
-        <record id="product_category_6" model="product.category">
+        <record id="product_category_6" model="product.category" forcecreate="False">
             <field name="parent_id" ref="product.product_category_3"/>
             <field name="name">Saleable</field>
         </record>
-        <record id="product_category_4" model="product.category">
+        <record id="product_category_4" model="product.category" forcecreate="False">
             <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">Software</field>
         </record>
-        <record id="product_category_5" model="product.category">
+        <record id="product_category_5" model="product.category" forcecreate="False">
             <field name="parent_id" ref="product_category_1"/>
             <field name="name">Office Furniture</field>
         </record>
-        <record id="product_category_consumable" model="product.category">
+        <record id="product_category_consumable" model="product.category" forcecreate="False">
             <field name="parent_id" ref="product_category_all"/>
             <field name="name">Consumable</field>
         </record>

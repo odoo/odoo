@@ -11,7 +11,7 @@
             <field name="product_categories_ids" eval="[(6, 0, [ref('point_of_sale.pos_category_miscellaneous')])]" />
         </record>
 
-        <record id="product_category_pos" model="product.category">
+        <record id="product_category_pos" model="product.category" forcecreate="False">
             <field name="parent_id" ref="product.product_category_1"/>
             <field name="name">PoS</field>
         </record>
