@@ -50,7 +50,7 @@ function factory(dependencies) {
                 route: '/mail/init_messaging',
                 params: { context: context }
             }));
-            this._init(data);
+            await this.async(() => this._init(data));
             if (discuss.isOpen) {
                 discuss.openInitThread();
             }
@@ -78,7 +78,7 @@ function factory(dependencies) {
          * @param {Object[]} [param0.shortcodes=[]]
          * @param {integer} [param0.starred_counter=0]
          */
-        _init({
+        async _init({
             channel_slots,
             commands = [],
             is_moderator = false,
@@ -94,22 +94,28 @@ function factory(dependencies) {
             starred_counter = 0
         }) {
             const discuss = this.messaging.discuss;
+            // partners first because the rest of the code relies on them
             this._initPartners({
                 moderation_channel_ids,
                 partner_root,
                 public_partner,
             });
-            this._initChannels(channel_slots);
-            this._initCommands(commands);
+            // mailboxes after partners and before other initializers that might
+            // manipulate threads or messages
             this._initMailboxes({
                 is_moderator,
                 moderation_counter,
                 needaction_inbox_counter,
                 starred_counter,
             });
-            this._initMailFailures(mail_failures);
+            // various suggestions in no particular order
             this._initCannedResponses(shortcodes);
-            this._initMentionPartnerSuggestions(mention_partner_suggestions);
+            this._initCommands(commands);
+            await this.async(() => this._initMentionPartnerSuggestions(mention_partner_suggestions));
+            // channels when the rest of messaging is ready
+            await this.async(() => this._initChannels(channel_slots));
+            // failures after channels
+            this._initMailFailures(mail_failures);
             discuss.update({ menu_id });
         }
 
@@ -138,15 +144,20 @@ function factory(dependencies) {
          * @param {Object[]} [param0.channel_direct_message=[]]
          * @param {Object[]} [param0.channel_private_group=[]]
          */
-        _initChannels({
+        async _initChannels({
             channel_channel = [],
             channel_direct_message = [],
             channel_private_group = [],
         } = {}) {
             const channelsData = channel_channel.concat(channel_direct_message, channel_private_group);
-            this.env.models['mail.thread'].insert(channelsData.map(
-                channelData => this.env.models['mail.thread'].convertData(channelData)
-            ));
+            for (const channelData of channelsData) {
+                // there might be a lot of channels, insert each of them one by
+                // one asynchronously to avoid blocking the UI
+                await this.async(() => new Promise(resolve => setTimeout(resolve)));
+                this.env.models['mail.thread'].insert(
+                    this.env.models['mail.thread'].convertData(channelData)
+                );
+            }
         }
 
         /**
@@ -221,9 +232,12 @@ function factory(dependencies) {
          * @private
          * @param {Object[]} mentionPartnerSuggestionsData
          */
-        _initMentionPartnerSuggestions(mentionPartnerSuggestionsData) {
+        async _initMentionPartnerSuggestions(mentionPartnerSuggestionsData) {
             for (const suggestions of mentionPartnerSuggestionsData) {
                 for (const suggestion of suggestions) {
+                    // there might be a lot of partners, insert each of them one
+                    // by one asynchronously to avoid blocking the UI
+                    await this.async(() => new Promise(resolve => setTimeout(resolve)));
                     const { email, id, name } = suggestion;
                     this.env.models['mail.partner'].insert({ email, id, name });
                 }
