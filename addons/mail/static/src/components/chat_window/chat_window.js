@@ -115,6 +115,9 @@ class ChatWindow extends Component {
             isDoFocus: false,
             isFocused: true,
         });
+        if (this.chatWindow.isFolded) {
+            return;
+        }
         if (!this.chatWindow.thread) {
             this._inputRef.comp.focus();
         } else {

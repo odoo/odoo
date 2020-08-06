@@ -746,7 +746,6 @@ QUnit.test('focus next visible chat window when closing current chat window with
     );
 });
 
-
 QUnit.test('[technical] chat window: composer state conservation on toggle home menu', async function (assert) {
     // technical as show/hide home menu simulation are involved and home menu implementation
     // have side-effects on DOM that may make chat window components not work
@@ -1176,6 +1175,143 @@ QUnit.test('open 2 chat windows: check shift operations are available', async fu
         document.querySelectorAll('.o_ChatWindow')[1].dataset.threadLocalId,
         initialSecondChatWindowThreadLocalId,
         "Second chat window should be back at second place after first one has been shifted left then right"
+    );
+});
+
+QUnit.test('open 2 folded chat windows: check shift operations are available', async function (assert) {
+    /**
+     * computation uses following info:
+     * ([mocked] global window width: 900px)
+     * (others: @see `mail/static/src/models/chat_window_manager/chat_window_manager.js:visual`)
+     *
+     * - chat window width: 325px
+     * - start/end/between gap width: 10px/10px/5px
+     * - global width: 900px
+     *
+     * 2 visible chat windows + hidden menu:
+     *  10 + 325 + 5 + 325 + 10 = 675 < 900
+     */
+    assert.expect(13);
+
+    const channel = {
+        channel_type: "channel",
+        id: 20,
+        is_minimized: true,
+        is_pinned: true,
+        name: "General",
+        state: 'folded',
+    };
+    const chat = {
+        channel_type: "chat",
+        direct_partner: [{
+            id: 7,
+            name: "Demo",
+        }],
+        id: 10,
+        is_minimized: true,
+        is_pinned: true,
+        state: 'folded',
+    };
+    this.data['mail.channel'].records = [channel, chat];
+    Object.assign(this.data.initMessaging, {
+        channel_slots: {
+            channel_channel: [channel],
+            channel_direct_message: [chat],
+        },
+    });
+    await this.start({
+        env: {
+            browser: {
+                innerWidth: 900,
+            },
+        },
+    });
+
+    assert.containsN(
+        document.body,
+        '.o_ChatWindow',
+        2,
+        "should have opened 2 chat windows initially"
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatWindow[data-visible-index="0"]'),
+        'o-folded',
+        "first chat window should be folded"
+    );
+    assert.hasClass(
+        document.querySelector('.o_ChatWindow[data-visible-index="1"]'),
+        'o-folded',
+        "second chat window should be folded"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow .o_ChatWindowHeader_commandShiftLeft',
+        "there should be only one chat window allowed to shift left even if folded"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_ChatWindow .o_ChatWindowHeader_commandShiftRight',
+        "there should be only one chat window allowed to shift right even if folded"
+    );
+
+    const initialFirstChatWindowThreadLocalId =
+        document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId;
+    const initialSecondChatWindowThreadLocalId =
+        document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId;
+    await afterNextRender(() =>
+        document.querySelector('.o_ChatWindowHeader_commandShiftLeft').click()
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
+        initialSecondChatWindowThreadLocalId,
+        "First chat window should be second after it has been shift left"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId,
+        initialFirstChatWindowThreadLocalId,
+        "Second chat window should be first after the first has been shifted left"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_ChatWindowHeader_commandShiftLeft').click()
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
+        initialFirstChatWindowThreadLocalId,
+        "First chat window should be back at first place"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId,
+        initialSecondChatWindowThreadLocalId,
+        "Second chat window should be back at second place"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_ChatWindowHeader_commandShiftRight').click()
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
+        initialSecondChatWindowThreadLocalId,
+        "First chat window should be second after it has been shift right"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId,
+        initialFirstChatWindowThreadLocalId,
+        "Second chat window should be first after the first has been shifted right"
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_ChatWindowHeader_commandShiftRight').click()
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow[data-visible-index="0"]').dataset.threadLocalId,
+        initialFirstChatWindowThreadLocalId,
+        "First chat window should be back at first place"
+    );
+    assert.strictEqual(
+        document.querySelector('.o_ChatWindow[data-visible-index="1"]').dataset.threadLocalId,
+        initialSecondChatWindowThreadLocalId,
+        "Second chat window should be back at second place"
     );
 });
 
