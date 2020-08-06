@@ -84,6 +84,64 @@ body.editor_enable.editor_has_snippets {
     }
 }
 
+@mixin we-svg-icon(
+        $graphic: $o-we-sidebar-content-field-color,
+        $subdle: $o-we-sidebar-content-field-color,
+        $subdle-opacity: 0.5) {
+    svg {
+        .o_graphic {
+            fill: $graphic;
+        }
+        .o_subdle {
+            fill: rgba($subdle, $subdle-opacity);
+        }
+    }
+}
+
+%we-generic-link {
+    cursor: pointer;
+    color: $o-we-sidebar-content-field-color;
+    line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
+    text-decoration: none;
+    outline: none;
+    @include we-svg-icon();
+
+    &:not([disabled]) {
+        &.active, &:hover {
+            @include we-svg-icon($o-we-sidebar-content-field-pressed-color, $subdle-opacity: .75);
+            color: $o-we-sidebar-content-field-pressed-color;
+        }
+
+        $-hover-colors: (
+            'success': $o-we-color-success,
+            'info': $o-we-color-info,
+            'warning': $o-we-color-warning,
+            'danger': $o-we-color-danger,
+        );
+        @each $name, $color in $-hover-colors {
+            &.o_we_hover_#{$name}:hover {
+                color: $color;
+            }
+        }
+    }
+    &[disabled] {
+        opacity: .5;
+    }
+}
+
+%we-generic-button {
+    @extend %we-generic-link;
+    @include o-text-overflow(block);
+    padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
+    border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
+    border-radius: $o-we-sidebar-content-field-border-radius;
+    background: $o-we-sidebar-content-field-clickable-bg;
+
+    &.active {
+        background: $o-we-sidebar-content-field-pressed-bg;
+    }
+}
+
 // SNIPPET PANEL
 #oe_snippets {
     @include o-w-preserve-btn;
@@ -249,46 +307,15 @@ body.editor_enable.editor_has_snippets {
             width: $o-we-sidebar-width / 2; // TODO maybe there is a better way to implement this
         }
 
-        @mixin we-svg-icon(
-                $graphic: $o-we-sidebar-content-field-color,
-                $subdle: $o-we-sidebar-content-field-color,
-                $subdle-opacity: 0.5) {
-            svg {
-                .o_graphic {
-                    fill: $graphic;
-                }
-                .o_subdle {
-                    fill: rgba($subdle, $subdle-opacity);
-                }
-            }
-        }
-
         we-button, we-toggler {
-            cursor: pointer;
-            @include o-text-overflow(block);
-            padding: 0 $o-we-sidebar-content-field-clickable-spacing;
-            border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
-            border-radius: $o-we-sidebar-content-field-border-radius;
-            background: $o-we-sidebar-content-field-clickable-bg;
-            color: $o-we-sidebar-content-field-color;
-            line-height: $o-we-sidebar-content-field-height - 2 * $o-we-sidebar-content-field-border-width;
+            @extend %we-generic-button;
             text-align: left;
-            @include we-svg-icon();
-
-            &.active, &:hover {
-                color: $o-we-sidebar-content-field-pressed-color;
-                @include we-svg-icon($o-we-sidebar-content-field-pressed-color, $subdle-opacity: .75);
-            }
-            &.active {
-                background: $o-we-sidebar-content-field-pressed-bg;
-            }
 
             &.fa {
                 display: inline-block;
                 padding: 0;
                 border: none;
                 background: none;
-                color: inherit;
                 text-align: center;
 
                 &.fa-times, &.fa-minus {
@@ -365,8 +392,6 @@ body.editor_enable.editor_has_snippets {
                     flex: 0 0 auto;
                     display: block;
                     margin-left: auto;
-                    color: $o-we-sidebar-content-field-control-item-color;
-                    text-align: center;
 
                     > * {
                         margin-left: $o-we-sidebar-content-field-multi-spacing;
@@ -378,6 +403,10 @@ body.editor_enable.editor_has_snippets {
                         .fa {
                             margin: 0;
                         }
+                    }
+
+                    .fa {
+                        @extend %we-generic-link;
                     }
                 }
             }
