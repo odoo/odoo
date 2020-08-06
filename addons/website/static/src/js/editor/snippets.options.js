@@ -113,13 +113,13 @@ const FontFamilyPickerUserValueWidget = SelectUserValueWidget.extend({
     },
 
     //--------------------------------------------------------------------------
-    // Private
+    // Public
     //--------------------------------------------------------------------------
 
     /**
      * @override
      */
-    _updateUI: async function () {
+    async setValue() {
         await this._super(...arguments);
 
         for (const className of this.menuTogglerEl.classList) {
@@ -269,15 +269,10 @@ const GPSPicker = InputUserValueWidget.extend({
     getMethodsParams: function (methodName) {
         return Object.assign({gmapPlace: this._gmapPlace || {}}, this._super(...arguments));
     },
-
-    //--------------------------------------------------------------------------
-    // Private
-    //--------------------------------------------------------------------------
-
     /**
      * @override
      */
-    _updateUI: async function () {
+    async setValue() {
         await this._super(...arguments);
 
         await new Promise(resolve => {
@@ -320,6 +315,7 @@ const GPSPicker = InputUserValueWidget.extend({
         });
         this.inputEl.value = this._gmapPlace.formatted_address;
     },
+
     //--------------------------------------------------------------------------
     // Handlers
     //--------------------------------------------------------------------------
