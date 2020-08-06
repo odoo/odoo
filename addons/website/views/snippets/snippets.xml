@@ -886,18 +886,17 @@
             <we-colorpicker data-dependencies="!layout_full_opt"
                             data-customize-website-color=""
                             data-color="body"/>
-            <we-button-group>
+            <we-button-group data-imagepicker="body_bg_image_opt">
                 <we-button title="Image"
-                           data-customize-website-views="website.option_custom_body_image"
-                           data-enable-imagepicker="body_bg_image_opt"><i class="fa fa-fw fa-camera"/></we-button>
+                           data-customize-body-bg-type="'image'"><i class="fa fa-fw fa-camera"/></we-button>
                 <we-button title="Pattern"
-                           data-customize-website-views="website.option_custom_body_image, website.option_custom_body_pattern"
-                           data-enable-imagepicker="body_bg_image_opt"><i class="fa fa-fw fa-th"/></we-button>
+                           data-customize-body-bg-type="'pattern'"><i class="fa fa-fw fa-th"/></we-button>
                 <we-button title="None"
-                           data-customize-website-views=""><i class="fa fa-fw fa-ban"/></we-button>
+                           data-customize-body-bg-type="NONE"><i class="fa fa-fw fa-ban"/></we-button>
             </we-button-group>
             <!-- Hidden imagepicker enabled by above button-group -->
-            <we-imagepicker data-name="body_bg_image_opt" data-customize-body-bg=""/>
+            <we-imagepicker data-name="body_bg_image_opt"
+                            data-customize-body-bg=""/>
         </we-row>
         <we-input string="Font size"
                   data-customize-website-variable="null"
