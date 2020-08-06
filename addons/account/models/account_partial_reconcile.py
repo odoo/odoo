@@ -108,7 +108,7 @@ class AccountPartialReconcile(models.Model):
 
         # Reverse all exchange moves at once.
         moves_to_reverse = self.env['account.move'].search([('tax_cash_basis_rec_id', 'in', self.ids)])
-        today = fields.Date.today()
+        today = fields.Date.context_today(self)
         default_values_list = [{
             'date': move.date if move.date > (move.company_id.period_lock_date or date.min) else today,
             'ref': _('Reversal of: %s') % move.name,
