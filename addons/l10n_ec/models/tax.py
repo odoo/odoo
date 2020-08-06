@@ -9,4 +9,4 @@ class tax_group(models.Model):
     _inherit = "account.tax.group"
     _name = "account.tax.group"
 
-    code = fields.Char(_"Code")
+    code = fields.Char(_("Code"))
