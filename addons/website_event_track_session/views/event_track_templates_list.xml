@@ -203,7 +203,7 @@
                     </li>
                     <li t-foreach="tracks" t-as="track"
                         class="o_wesession_list_item row bg-white-50 py-2">
-                        <span t-att-class="'%s col-12 o_wesession_list_item_topic d-flex align-items-center' % ('col-md-4' if not event.is_done else 'col-md-5')"
+                        <span t-att-class="'%s col-12 o_wesession_list_item_topic d-flex align-items-start' % ('col-md-4' if not event.is_done else 'col-md-5')"
                             name="o_wesession_list_item_topic">
                             <a t-att-href="track.website_url"
                                 t-if="track.is_published or user_event_manager">
