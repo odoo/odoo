@@ -41,8 +41,6 @@ def _setup_import_system():
     import importlib
     import odoo
 
-    # odoo.addons = addons
-
     #----------------------------------------------------------
     # Configuration
     #----------------------------------------------------------
@@ -112,7 +110,7 @@ def _enable_warnings():
         'reportlab.lib.rl_safe_eval',# reportlab importing ABC from collections
         'xlrd/xlsx',# xlrd mischecks iter() on trees or something so calls deprecated getiterator() instead of iter()
         'babel.localedata',# babel importing ABC from collections
-        'werkzeug.datastructures'#werkzeug importing ABC from collections
+        'werkzeug.datastructures',#werkzeug importing ABC from collections
     ]:
         warnings.filterwarnings('ignore', category=DeprecationWarning, module=module)
 
@@ -186,7 +184,7 @@ def _place_backward_compatible_aids():
         warnings.warn(
             moved_tmpl.format(from_, to),
             DeprecationWarning,
-            stacklevel=5,  # warn_moved > evented > lazy > lazy > real one
+            stacklevel=5,  # warn_moved > evented > lazy > lazy > real src
         )
 
 

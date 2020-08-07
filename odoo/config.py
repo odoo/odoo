@@ -1,9 +1,14 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+"""
+TODO Document me
+"""
+
 import argparse
 import configparser
 import contextlib
+import copy
 import dataclasses
 import datetime
 import distutils.util
@@ -14,7 +19,9 @@ import shlex
 import sys
 import traceback
 from collections import ChainMap
-from collections.abc import Iterable, Set, MutableMapping, Sequence, Collection
+from collections.abc import (
+    Iterable, Set, MutableMapping, Sequence, Collection
+)
 from pathlib import Path
 from textwrap import dedent, wrap
 from typing import Any, Callable, Optional, List
@@ -38,8 +45,9 @@ DELETED = object()  # inserted in the top-most chained map to mark the
 
 
 def logformat(level, message, exc_info=False):
+    """ Format a message like logging whould do """
     now = datetime.datetime.utcnow().strftime('%Y-%m-%d %H:%M:%S,%f')
-    now = now[:-4]  # %f is nanosecond resolutions, we want centiseconds
+    now = now[:-3]  # %f is nanosecond resolutions, we want milliseconds
     msg = "{now} {pid} {level} ? odoo.config: {message}".format(
         now=now,
         pid=os.getpid(),
@@ -51,11 +59,15 @@ def logformat(level, message, exc_info=False):
     return msg
 
 def warn(*args, file=sys.stderr, **kwargs):
+    """ Emit a warning like logging would do """
     message = kwargs.get('sep', ' ').join(map(str, args))
     print(logformat('WARNING', message), file=file, **kwargs)
 
 def die(option, value, source, exc):
-    raise SystemExit(logformat("CRITICAL", f"Could not parse {value!r} for option '{option}' from {source}\n{exc}"))
+    """ exit with an error formmated like logging would do """
+    raise SystemExit(logformat("CRITICAL", dedent(f"""\
+        Could not parse {value!r} for option '{option}' from {source}
+        {exc}""")))
 
 
 ########################################################################
@@ -101,6 +113,27 @@ class Dynamic:
 
 
 class CommaOption(Collection):
+    """
+    Composite (list of, set of) options are comma seperated list of
+    values. i.e. `-i base,crm`. While thanks to argparse's nargs='*' and
+    action='append' it is possible to repeat the argument and let the
+    lib creates the list for us, we want to be backward compatible and
+    other sources do not provide similar mechanism.
+
+    This meta type provide the tooling required to correctly parse
+    composite options via the `parser` constructor.
+
+    Example:
+
+        Option(
+            'foo', args=['--foo'],
+            type=CommaList.parser(int),  # composite of number
+            default=CommaList()          # default empty list
+        )
+        parse_args(['--foo', '1,2', '--foo', '3'])
+        options['foo'] == [1, 2, 3]
+    """
+
     @classmethod
     def parser(cls, cast: callable):
         return lambda rawopt: cls(map(cast, rawopt.split(',')))
@@ -113,6 +146,12 @@ class CommaOption(Collection):
         return new
 
     def split(self, char):
+        """
+        Previous cli did not parse the comma separated values and just
+        left the raw string in the configuration. It was common for
+        user code to call `split(',')`, we make sure we don't break that
+        "string" API layer with this (somewhat useless) method.
+        """
         warnings.warn(
             "The option has been parsed to the best suited collection "
             "already, there is no need to split it",
@@ -138,6 +177,7 @@ class CommaOption(Collection):
 
 
 class CommaList(CommaOption, Sequence):
+    """ Composite list option """
     def __init__(self, data=None):
         self.data = list(data) if data is not None else list()
 
@@ -155,6 +195,7 @@ class CommaList(CommaOption, Sequence):
 
 
 class CommaSet(CommaOption, Set):
+    """ Composite set option """
     def __init__(self, data=None):
         self.data = set(data) if data is not None else set()
 
@@ -184,6 +225,10 @@ def strtobool(rawopt: str):
 
 
 def choices(selection: list, cast: callable=str):
+    """
+    Value must be taken from the given ``selection``, apply ``cast``
+    on the option before verifying it is in the selection.
+    """
     def assert_in(rawopt):
         opt = cast(rawopt)
         if opt not in selection:
@@ -192,7 +237,7 @@ def choices(selection: list, cast: callable=str):
     return assert_in
 
 
-def fullpath(path: str):
+def fullpath(path: str) -> Path:
     return Path(path).expanduser().resolve().absolute()
 
 
@@ -321,6 +366,7 @@ def upgrade_path(rawopt: str) -> str:
 
 
 def get_default_datadir() -> str:
+    """ Get the default datadir os-wise location, the fullpath is returned """
     if Path('~').expanduser().is_dir():
         func = appdirs.user_data_dir
     elif sys.platform in ['win32', 'darwin']:
@@ -332,6 +378,7 @@ def get_default_datadir() -> str:
 
 
 def get_default_addons_path():
+    """ Return the default addons path list, ['.../odoo/addons', '.../addons'] """
     root = fullpath(__file__).parent
     return CommaList([
         str(root.joinpath('addons').resolve().absolute()),
@@ -340,12 +387,20 @@ def get_default_addons_path():
 
 
 def get_odoorc() -> str:
+    """
+    Get the default odoorc configuration file os-wise,
+    the full path is returned
+    """
     if os.name == 'nt':
         return str(fullpath(sys.argv[0]).parent().joinpath('odoo.conf'))
     return str(Path.home().joinpath('.odoorc'))
 
 
 def data_dir(rawopt: str) -> str:
+    """
+    Ensure the given path looks like to be a valid data_dir path,
+    the fullpath is returned. Mind the ``ensure_data_dir`` function.
+    """
     return str(_check_dir_access(rawopt, os.R_OK | os.W_OK | os.X_OK))
 
 
@@ -394,7 +449,9 @@ def pg_utils_path(rawopt: str) -> str:
 
 
 def i18n_input_file(rawopt: str) -> str:
-    """ Ensure `rawopt` is a valid translation file, the fullpath is returned """
+    """
+    Ensure `rawopt` is a valid translation file, the fullpath is returned
+    """
     path = _check_file_access(rawopt, 'r')
     formats = {'.csv', '.po'}
     if not path.suffixes or path.suffixes[-1].lower() not in formats:
@@ -403,7 +460,9 @@ def i18n_input_file(rawopt: str) -> str:
 
 
 def i18n_output_file(rawopt: str) -> str:
-    """ Ensure `rawopt` is a valid translation file, the fullpath is returned """
+    """
+    Ensure `rawopt` is a valid translation file, the fullpath is returned
+    """
     path = _check_file_access(rawopt, 'w')
     formats = {'.csv', '.po', '.tgz'}
     if not path.suffixes or path.suffixes[-1].lower() not in formats:
@@ -412,6 +471,7 @@ def i18n_output_file(rawopt: str) -> str:
 
 
 def dyndemo(config) -> List[str]:
+    """ Dynamically create the demo option """
     return config['init'] if not config['without_demo'] else {}
 
 
@@ -419,10 +479,12 @@ SCAFFOLD_TMPL_DIR = fullpath(__file__).parent.joinpath('cli/templates')
 
 
 def scaffold_builtins():
+    """ List scaffold templates """
     return [p.name for p in SCAFFOLD_TMPL_DIR.iterdir()]
 
 
 def scaffold_template(rawopt):
+    """ Ensure it is a valid builtin template or template dir """
     if rawopt in scaffold_builtins():
         return str(SCAFFOLD_TMPL_DIR.joinpath(rawopt))
     return str(_check_dir_access(rawopt, os.R_OK))
@@ -436,24 +498,68 @@ def scaffold_template(rawopt):
 
 @dataclasses.dataclass(frozen=True)
 class Option:
-    name: str                            # python-side option name
-    parse: Callable[[str], Any]          # source -> python converting function
+    """
+    Option placeholder with all informations needed to find, retrieve
+    and parse the option from various sources.
+    """
 
-    format: Callable[[str], Any] = str   # python -> config file converting function
-    required: bool = False               # should the default value be skipped
-    default: Any = None                  # default, last-resort, option value
-    file: bool = True                    # should the option be read from/save to the config file
-    envvar: Optional[str] = None         # environment variable to load the option from
+    name: str
+    """
+    The option's value will be accessible under this name via the
+    ``Config`` object. The name is also used in various mappings and
+    in config error reports.
+    """
 
-    args: List[str] = (                  # argparse's argument and flags
-        dataclasses.field(default_factory=list))
-    action: str = "store"                # argparse's action
-    metavar: Optional[str] = None        # argparse's metavar
-    const: Any = None                    # argparse's const
-    nargs: Optional[int] = None          # argparse's nargs
-    help: Optional[str] = None           # argparse's help
+    parse: Callable[[str], Any]
+    """
+    The parsing function used to convert the raw string value to its
+    Python equivalent. The parsing function is also responsible for
+    option validation and sanitization and should raise a ValueError
+    on error.
+    """
+
+    format: Callable[[str], Any] = str
+    """
+    The formatting function used to convert the python parsed option
+    back to the configuration file.
+    """
+
+    required: bool = False
+    """
+    Whether the user have to provide a suitable value via any source,
+    that the is no hardcoded default value should not be used.
+    """
+
+    default: Any = None
+    """
+    The default hardcoded value, ultimate fallback to use if the option
+    has not been given in any other source. The value must have the
+    right python type already.
+    """
+
+    file: bool = True
+    """
+    Whether the option can be read from the configuration file and
+    should be written back on configuration save.
+    """
+
+    envvar: Optional[str] = None
+    """
+    The environment variable where to find the option.
+    """
+
+    args: List[str] = dataclasses.field(default_factory=list)
+    action: str = "store"
+    metavar: Optional[str] = None
+    const: Any = None
+    nargs: Optional[int] = None
+    help: Optional[str] = None
+    """
+    argparse's argument used to dynamically create the cli parser.
+    """
 
     def __post_init__(self):
+        """ Register every new option in the optionmap """
         optionmap.setdefault(self.name, self)
 
 Option('addons_path', args=["--addons-path"], parse=CommaList.parser(addons_path), action='append', default=get_default_addons_path(), metavar="DIRPATH", help="specify additional addons paths")
@@ -582,11 +688,29 @@ Option('startsc_path', args=["--path"], file=False, parse=checkdir('r'), default
 
 @dataclasses.dataclass(frozen=True)
 class Group:
+    """
+    Container of related options, the purpose is both to display related
+    options in distinct sections in the --help of argparse and to reuse
+    entire group of options in various commands.
+    """
+
     title: str
+    """
+    Unique argparse section title, is also used in the groupmap dict.
+    """
+
     desc: str
+    """
+    The argparse description of the section.
+    """
+
     options: List[Option]
+    """
+    The list of list of related options.
+    """
 
     def __post_init__(self):
+        """ Register every group in the groupmap """
         groupmap[self.title] = self
 
 
@@ -740,7 +864,16 @@ Group('Multiprocessing options', dedent("""\
 
 @dataclasses.dataclass(frozen=True)
 class Command:
+    """
+    Command are container of groups and options used by a specific
+    entrypoint in the application.
+    """
+
     name: str
+    """
+    The subcommand 
+    """
+
     desc: str
     section: str
     options: List[Option] = dataclasses.field(default_factory=list)
@@ -881,7 +1014,8 @@ Command(
 ########################################################################
 
 def backward_compatible_parse_args(main_parser, argv):
-    """ Old v13- and new v14+ dual command-line arguments parser """
+    """ Old v13 and new v14+ dual command-line arguments parser """
+
     try:
         cli_options = vars(main_parser.parse_args(argv))
     except SystemExit as exc:  # TODO juc, use exit_on_error=False in py3.9
@@ -892,10 +1026,13 @@ def backward_compatible_parse_args(main_parser, argv):
         try:
             cli_options = vars(main_parser.parse_args(new_argv))
         except SystemExit:
-            # not odoobin compatible
+            # not v13 odoobin compatible
             raise exc
         else:
-            warnings.warn("\n\n  {}\n\n  {}\n".format("\n  ".join(wrap(dedent("""\
+            # odoo v13 compatible, supply a warning asking the user
+            # to use the new cli
+            warnings.warn("\n\n  {}\n\n  {}\n".format(
+                "\n  ".join(wrap(dedent("""\
                 The old odoo-bin format CLI is deprecated. Your command
                 line was automatically converted this time. Run Odoo
                 with the '--help' flag to see what changed.
@@ -903,10 +1040,9 @@ def backward_compatible_parse_args(main_parser, argv):
                 """))),
                 "{exec} {argv0} {argv}".format(
                     exec=sys.executable,
-                    argv0='-m odoo' if sys.argv[0].endswith('__main__.py') else sys.argv[0],
+                    argv0=sys.argv[0],
                     argv=" ".join(map(shlex.quote, new_argv)),
                 )
-                
             ), DeprecationWarning)
 
     return cli_options
@@ -916,7 +1052,9 @@ def from_odoobin(argv):
 
     # In v14+ parser, the subcommand is mandatory and bootstraping 
     # options are to be put before the subcommand. This function moves
-    # those options before the given subcommand.
+    # those options before the given subcommand and force the 'server'
+    # subcommand is none is provided (it was the default subcommand in
+    # v13)
 
     # find the subcommand and its position
     for cmd in commandmap.values():
@@ -931,13 +1069,12 @@ def from_odoobin(argv):
 
     # move all bootstraping options before the subcommand
     for opt in groupmap['Bootstraping options'].options:
-        try:
-            opt_index = argv.index(opt.shortopt)
-        except ValueError:
-            try:
-                opt_index = argv.index(opt.longopt)
-            except ValueError:
-                continue  # option not present, skip
+        for arg in opt.args:
+            with contextlib.suppress(ValueError):
+                opt_index = argv.index(arg)
+                break
+        else:
+            continue  # option not present, skip
 
         if opt_index < cmd_index:
             continue  # option before the command already, skip
@@ -988,6 +1125,12 @@ def load_cli(argv):
             if not option.args:
                 continue
 
+            args = option.args
+            if not option.args[0].startswith('-'):
+                # cannot have mandatory arg and dest
+                # at the same time, using dest
+                args = []
+
             kwargs = {
                 'dest': option.name,
                 'action': option.action,
@@ -996,10 +1139,11 @@ def load_cli(argv):
                 **{'metavar': o.metavar for o in (option,) if o.metavar},
                 **{'const': o.const for o in (option,) if o.const},
             }
+
             try:
-                parser.add_argument(*option.args, **kwargs)
+                parser.add_argument(*args, **kwargs)
             except Exception as exc:
-                raise Exception(option) from exc
+                raise Exception(f"Invalid option definition for {option.name}") from exc
 
     main_parser = argparse.ArgumentParser(description=commandmap[''].desc)
     subparsers = main_parser.add_subparsers(dest='subcommand', required=True)
@@ -1014,7 +1158,7 @@ def load_cli(argv):
             add_options(groupcli, group.options)
 
     # Parse args and process them
-    cli_options = parse_args(main_parser, argv)
+    cli_options = backward_compatible_parse_args(main_parser, argv)
     Config.subcommand = cli_options.pop('subcommand')
 
     def parser(option):
@@ -1046,7 +1190,7 @@ def load_cli(argv):
             # gives a list of CommaOption like [("base",), ("web","website")],
             # we merge such lists into a single CommaOption
             if all(isinstance(e, CommaOption) for e in val):
-                val = CommaOption._merge(val)
+                val = type(val[0])._merge(val)
             options[opt] = val
 
         # Normal option, parse and save it
@@ -1058,7 +1202,8 @@ def load_file():
     configpath = config['config']
     try:
         if os.stat(configpath).st_mode & 0o777 != 0o600:
-            warn(f"Wrong configuration file permissions at {configpath}, should be user-only read/write (0600).")
+            warn(f"Wrong configuration file permissions at {configpath}, "
+                  "should be user-only read/write (0600).")
         p = configparser.RawConfigParser()
         p.read([configpath])
     except (FileNotFoundError, IOError):
@@ -1072,13 +1217,15 @@ def load_file():
         for opt, val in p.items(sec):
             # Skip unknown, non-file authorized and False/None invalid placeholders
             if opt not in optionmap:
-                warn(f'unknown option {opt} in config file {configpath} in [{sec}], skipped.')
+                warn(f"unknown option {opt} in config file {configpath} "
+                     f"in [{sec}], skipped.")
                 continue
             if not optionmap[opt].file:
                 warn(f"option {opt} cannot be read from config file, skipped.")
                 continue
             if val in ('False', 'None') and optionmap[opt].parse != strtobool:
-                warn(f"invalid value {val!r} for option {opt} in config file {configpath} in [{sec}], please remove it, skipped.")
+                warn(f"invalid value {val!r} for option {opt} in config file "
+                     f"{configpath} in [{sec}], please remove it, skipped.")
                 continue
 
             # Parse the option string
@@ -1096,6 +1243,10 @@ def load_file():
 
 
 class Config(MutableMapping):
+    """
+    TODO Document me
+    """
+
     subcommand = None
 
     def __init__(self, userchain=None, sectopts=None):
@@ -1111,9 +1262,10 @@ class Config(MutableMapping):
         )
 
     def copy(self):
+        """ Return a deepcopy of the current configuration """
         return type(self)(
             ChainMap([
-                useropts.copy()
+                copy.deepcopy(useropts)
                 for useropts
                 in self._userchain.maps
             ]),
@@ -1131,12 +1283,27 @@ class Config(MutableMapping):
         self._sectopts.update(sourcemap[section])
 
     def show(self):
+        """ Pretty print the current configuration """
+
+        # option | user | cli | file | environ | default
+        # -------|------|-----|------|---------|--------
+        # foo    |      |     |      |         | 'foo'
+        # bar    |      |     |      | 'bazar' | 'bar'
+        # baz    |      |     |      |         | -> bar
+        # spam   |      |     |      |         | 4
+        # -------|------|-----|------|---------|--------
+        # eggs   |      |     |      |         | [6, 6]
+
+
         class NotSet:
             def __repr__(self):
                 return ''
+
         notset = NotSet()
 
-        allsources = {'temp%i' % i: temp for i, temp in enumerate(self._userchain.maps[:-1])}
+        allsources = {
+            'temp%i' % i: temp for i, temp in enumerate(self._userchain.maps[:-1])
+        }
         allsources['user'] = self._userchain.maps[-1]
         allsources['cli'] = sourcemap['cli']
         allsources['[section]'] = self._sectopts
@@ -1144,17 +1311,29 @@ class Config(MutableMapping):
 
         sys.stdout.flush()
         sys.stderr.flush()
-        print("{:<20}".format('option'), *["{:<20}".format(src) for src in allsources], sep=" | ")
+        print(
+            "{:<20}".format('option'),
+            *["{:<20}".format(src) for src in allsources],
+            sep=" | "
+        )
         for no, option in enumerate(self):
             if no % 4 == 0:
                 print("-|-".join("-" * 20 for i in range(len(allsources) + 1)))
-            print("{:<20}".format(option)[:20], *["{:<20}".format(repr(src.get(option, notset)))[:20] for src in allsources.values()], sep=" | ")
+            print(
+                "{:<20}".format(option)[:20],
+                *[
+                    "{:<20}".format(repr(src.get(option, notset)))[:20]
+                    for src in allsources.values()
+                ],
+                sep=" | "
+            )
         sys.stdout.flush()
+
 
     def save(self):
         """
         Export the currently exposed configuration with additionnal
-        sections to a file
+        sections to the config['save'] file.
         """
         p = configparser.RawConfigParser()
 
@@ -1206,10 +1385,11 @@ class Config(MutableMapping):
         val = self._chainmap[option]
         if val is DELETED:
             raise KeyError(f'{option} has been removed')
-        if isinstance(val, Alias):
-            return self[val.aliased_option]
-        if isinstance(val, Dynamic):
-            return val.function(self)
+        elif isinstance(val, Alias):
+            val = self[val.aliased_option]
+        elif isinstance(val, Dynamic):
+            val = val.function(self)
+            self[option] = val
         return val
 
     def __setitem__(self, option, value):
@@ -1232,7 +1412,7 @@ class Config(MutableMapping):
 
     def __delitem__(self, option):
         """
-        Mark the corresponding option as removed to prevent subsequent use
+        Mark the option as removed to prevent subsequent use
         """
         self._userchain[option] = DELETED
 

@@ -219,5 +219,8 @@ def runbot(self, message, *args, **kws):
     self.log(logging.RUNBOT, message, *args, **kws)
 logging.Logger.runbot = runbot
 
+# messages are captured by a null handler by default to
+# give a chance other libraries to express their own will,
+# is removed when odoo is used as an application.
 null_handler = logging.NullHandler()
 logging.Logger('odoo').addHandler(null_handler)

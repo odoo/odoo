@@ -20,7 +20,8 @@ def registry(database_name=None):
     on the current thread. If the registry does not exist yet, it is created on
     the fly.
     """
+    import odoo.modules
     if database_name is None:
         import threading
         database_name = threading.currentThread().dbname
-    return modules.registry.Registry(database_name)
+    return odoo.modules.registry.Registry(database_name)

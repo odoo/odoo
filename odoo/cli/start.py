@@ -22,7 +22,8 @@ def main():
     # point an addons path, only the addons_path is updated. Fail if the
     # path is not relevant.
 
-    if module_root := get_module_root(path):
+    module_root = get_module_root(path)
+    if module_root:
         module_name = os.path.basename(module_root)
         odoo.config.setdefault('db_name', module_name)
         odoo.config.setdefault('dbfilter', f'^{module_name}$')

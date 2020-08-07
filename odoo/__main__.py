@@ -18,6 +18,7 @@ entrypoints = {
     'scaffold': odoo.cli.scaffold.main,
     'server': odoo.cli.server.main,
     'shell': odoo.cli.shell.main,
+    'start': odoo.cli.start.main,
 }
 
 entrypoints[odoo.config.subcommand]()
