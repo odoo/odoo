@@ -551,10 +551,10 @@ QUnit.module('Views', {
             'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
-            'default_get', // quick create
+            'onchange', // quick create
             'name_create', // should perform a name_create to create the record
             'read', // read the created record
-            'default_get', // reopen the quick create automatically
+            'onchange', // reopen the quick create automatically
         ]);
 
         kanban.destroy();
@@ -625,11 +625,11 @@ QUnit.module('Views', {
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'load_views', // form view in quick create
-            'default_get', // quick create
+            'onchange', // quick create
             'create', // should perform a create to create the record
             'read', // read the created record
             'load_views', // form view in quick create (is actually in cache)
-            'default_get', // reopen the quick create automatically
+            'onchange', // reopen the quick create automatically
         ]);
 
         kanban.destroy();
@@ -682,10 +682,10 @@ QUnit.module('Views', {
             'web_read_group', // initial read_group
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
-            'default_get', // quick create
+            'onchange', // quick create
             'name_create', // should perform a name_create to create the record
             'read', // read the created record
-            'default_get', // reopen the quick create automatically
+            'onchange', // reopen the quick create automatically
         ]);
 
         kanban.destroy();
@@ -750,18 +750,18 @@ QUnit.module('Views', {
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'load_views', // form view in quick create
-            'default_get', // quick create
+            'onchange', // quick create
             'create', // should perform a create to create the record
             'read', // read the created record
             'load_views', // form view in quick create (is actually in cache)
-            'default_get', // reopen the quick create automatically
+            'onchange', // reopen the quick create automatically
         ]);
 
         kanban.destroy();
     });
 
     QUnit.test('quick create record with default values and onchanges', async function (assert) {
-        assert.expect(11);
+        assert.expect(10);
 
         this.data.partner.fields.int_field.default = 4;
         this.data.partner.onchanges = {
@@ -814,8 +814,7 @@ QUnit.module('Views', {
             '/web/dataset/search_read', // initial search_read (first column)
             '/web/dataset/search_read', // initial search_read (second column)
             'load_views', // form view in quick create
-            'default_get', // quick create
-            'onchange', // default_get's onchange
+            'onchange', // quick create
             'onchange', // onchange due to 'foo' field change
         ]);
 

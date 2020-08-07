@@ -81,7 +81,9 @@ odoo.define('web.basic_model_tests', function (require) {
         QUnit.module('BasicModel');
 
         QUnit.test('can process x2many commands', async function (assert) {
-            assert.expect(5);
+            assert.expect(6);
+
+            this.data.partner.fields.product_ids.default = [[0, 0, { category: [] }]];
 
             const form = await createView({
                 View: FormView,
@@ -111,22 +113,16 @@ odoo.define('web.basic_model_tests', function (require) {
                 },
                 mockRPC(route, args) {
                     assert.step(args.method);
-                    if (args.method === 'default_get' && args.model === 'partner') {
-                        return Promise.resolve({
-                            product_ids: [
-                                [0, 0, {category: []}],
-                            ]
-                        });
-                    }
                     return this._super.apply(this, arguments);
                 },
             });
 
             assert.verifySteps([
                 'load_views',
-                'default_get',
+                'onchange',
             ]);
             assert.containsOnce(form, '.o_field_x2many_list', 'should have rendered a x2many list');
+            assert.containsOnce(form, '.o_data_row', 'should have added 1 record as default');
             assert.containsOnce(form, '.o_field_x2many_list_row_add', 'should have rendered a x2many add row on list');
             form.destroy();
         });
@@ -691,7 +687,7 @@ odoo.define('web.basic_model_tests', function (require) {
             model.destroy();
         });
 
-        QUnit.test('can make a default_record, no onchange', async function (assert) {
+        QUnit.test('can make a default_record with the help of onchange', async function (assert) {
             assert.expect(5);
 
             this.params.context = {};
@@ -714,8 +710,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.deepEqual(record.data.product_ids.data, [], "o2m default should be []");
             assert.deepEqual(record.data.category.data, [], "m2m default should be []");
 
-            assert.verifySteps(['default_get'],
-                "there should be default_get");
+            assert.verifySteps(['onchange']);
 
             model.destroy();
         });
@@ -756,7 +751,7 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('can make a default_record with default relational values', async function (assert) {
-            assert.expect(7);
+            assert.expect(6);
 
             this.data.partner.fields.product_id.default = 37;
             this.data.partner.fields.product_ids.default = [
@@ -805,8 +800,7 @@ odoo.define('web.basic_model_tests', function (require) {
             assert.deepEqual(record.data.category.res_ids, [12, 14],
                 "m2m default should be [12, 14]");
 
-            assert.verifySteps(['default_get', 'name_get'],
-                "there should be default_get and name_get");
+            assert.verifySteps(['onchange']);
 
             model.destroy();
         });
@@ -872,7 +866,7 @@ odoo.define('web.basic_model_tests', function (require) {
                 "should have fetched correct name");
             assert.strictEqual(record.data.other_product_id.data.display_name, "xpad",
                 "should have fetched correct name");
-            assert.strictEqual(rpcCount, 2, "should have done 2 rpcs: default_get and 1 name_get");
+            assert.strictEqual(rpcCount, 1, "should have done 1 rpc: onchange");
             model.destroy();
         });
 
@@ -1402,7 +1396,7 @@ odoo.define('web.basic_model_tests', function (require) {
         });
 
         QUnit.test('default_get: fetch many2one with default (empty & not) inside x2manys', async function (assert) {
-            assert.expect(4);
+            assert.expect(3);
 
             this.data.partner.fields.category_m2o = {
                 type: 'many2one',
@@ -1419,12 +1413,6 @@ odoo.define('web.basic_model_tests', function (require) {
             var model = await createModel({
                 Model: BasicModel,
                 data: this.data,
-                mockRPC: function (route, args) {
-                    if (args.method === 'name_get' && args.model === 'partner_type') {
-                        assert.deepEqual(args.args, [[12]], "should name_get on category 12");
-                    }
-                    return this._super(route, args);
-                },
             });
 
             var params = {
@@ -2199,8 +2187,7 @@ odoo.define('web.basic_model_tests', function (require) {
 
             var recordID = await model.load(this.params);
             recordID = await model.reload(recordID);
-            assert.verifySteps(['default_get', 'default_get'],
-                "two default_get RPCs should have been done");
+            assert.verifySteps(['onchange', 'onchange']);
             var record = model.get(recordID);
             assert.strictEqual(record.data.product_id, false,
                 "m2o default value should be false");
