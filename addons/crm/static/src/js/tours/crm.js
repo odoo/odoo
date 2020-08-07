@@ -26,8 +26,8 @@ tour.register('crm_tour', {
     position: 'bottom',
 }, {
     trigger: ".o_kanban_quick_create .o_field_widget[name='partner_id']",
-    content: _t('Look for a Contact or create a new one.<br><i>Tip : Did you know you can search by VAT Number as well?</i>'),
-    position: "right",
+    content: _t('<b>Write a few letters</b> to look for a company, or create a new one.'),
+    position: "bottom",
     run: function (actions) {
         actions.text("Brandon Freeman", this.$anchor.find("input"));
     },
