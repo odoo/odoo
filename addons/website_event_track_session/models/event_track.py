@@ -90,6 +90,18 @@ class EventTrack(models.Model):
             else:
                 track.website_cta_start_remaining = 0
 
+    @api.model_create_multi
+    def create(self, values_list):
+        for values in values_list:
+            if values.get('website_cta_url'):
+                values['website_cta_url'] = self.env['res.partner']._clean_website(values['website_cta_url'])
+        return super(EventTrack, self).create(values_list)
+
+    def write(self, values):
+        if values.get('website_cta_url'):
+            values['website_cta_url'] = self.env['res.partner']._clean_website(values['website_cta_url'])
+        return super(EventTrack, self).write(values)
+
     def _get_track_suggestions(self, restrict_domain=None, limit=None):
         """ Returns the next tracks suggested after going to the current one
         given by self. Tracks always belong to the same event.
