@@ -27,7 +27,7 @@
                         threadLocalId="chatter.thread.localId"
                     />
                 </t>
-                <t t-if="chatter.thread">
+                <div class="chatter_overflow" t-if="chatter.thread">
                     <t t-if="chatter.hasActivities and chatter.activities.length > 0">
                         <ActivityBox
                             class="o_Chatter_activityBox"
@@ -45,7 +45,7 @@
                             t-ref="thread"
                         />
                     </t>
-                </t>
+                </div>
             </t>
         </div>
     </t>
