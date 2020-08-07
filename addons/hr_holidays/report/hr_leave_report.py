@@ -80,24 +80,6 @@ class LeaveReport(models.Model):
             );
         """)
 
-    def _read_from_database(self, field_names, inherited_field_names=[]):
-        if 'name' in field_names and 'employee_id' not in field_names:
-            field_names.append('employee_id')
-        super(LeaveReport, self)._read_from_database(field_names, inherited_field_names)
-        if 'name' in field_names:
-            if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
-                return
-            current_employee = self.env.user.employee_id
-            for record in self:
-                emp_id = record._cache.get('employee_id', [False])[0]
-                if emp_id != current_employee.id:
-                    try:
-                        record._cache['name']
-                        record._cache['name'] = '*****'
-                    except Exception:
-                        # skip SpecialValue (e.g. for missing record or access right)
-                        pass
-
     @api.model
     def action_time_off_analysis(self):
         domain = [('holiday_type', '=', 'employee')]
@@ -123,6 +105,6 @@ class LeaveReport(models.Model):
 
     @api.model
     def read_group(self, domain, fields, groupby, offset=0, limit=None, orderby=False, lazy=True):
-        if not self.user_has_groups('hr_holidays.group_hr_holidays_user') and 'private_name' in groupby:
+        if not self.user_has_groups('hr_holidays.group_hr_holidays_user') and 'name' in groupby:
             raise exceptions.UserError(_('Such grouping is not allowed.'))
         return super(LeaveReport, self).read_group(domain, fields, groupby, offset=offset, limit=limit, orderby=orderby, lazy=lazy)
