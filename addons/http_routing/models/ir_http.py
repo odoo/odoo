@@ -409,7 +409,7 @@ class IrHttp(models.AbstractModel):
         request.rerouting.append(path)
         if len(request.rerouting) > cls.rerouting_limit:
             raise Exception("Rerouting limit exceeded")
-        request.httprequest.environ['PATH_INFO'] = path
+        request.httprequest.environ['PATH_INFO'] = path.encode(request.httprequest.charset).decode('latin1', 'replace')
         # void werkzeug cached_property. TODO: find a proper way to do this
         for key in ('path', 'full_path', 'url', 'base_url'):
             request.httprequest.__dict__.pop(key, None)
