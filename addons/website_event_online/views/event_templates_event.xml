@@ -12,11 +12,36 @@
     </xpath>
 </template>
 
-<template id="events_list" inherit_id="website_event.events_list">
+<!-- Support tag colors -->
+<template id="events_list" name="Events List (Online)"
+    inherit_id="website_event.events_list">
     <xpath expr="//t[@t-foreach='event.tag_ids']/span" position="replace">
-        <span t-attf-class="badge mr8 #{'badge-primary' if tag in search_tags else 'badge-light'}  #{'o_tag_color_%s' % tag.color if tag.color else ''}">
+        <span t-if="tag.color" t-attf-class="badge mr8 #{'badge-primary' if tag in search_tags else 'badge-light'}  #{'o_tag_color_%s' % tag.color if tag.color else ''}">
             <span t-esc="tag.name"/>
         </span>
+    </xpath>
+</template>
+
+<template id="event_category_tag" name="Filter by Tags (Online)"
+    inherit_id="website_event.event_category_tag">
+    <xpath expr="//t[@t-foreach='categories']" position="replace">
+        <t t-foreach="categories" t-as="category">
+            <li t-if="category.tag_ids and any(tag.color for tag in category.tag_ids)" class="nav-item dropdown mr-2 my-1">
+                <a href="#" role="button" class="btn dropdown-toggle" data-toggle="dropdown">
+                    <i class="fa fa-folder-open"/>
+                    <t t-esc="category.name"/>
+                </a>
+                <div class="dropdown-menu">
+                    <t t-foreach="category.tag_ids" t-as="tag">
+                        <a t-if="tag.color"
+                            t-att-href="'/event?%s' % keep_query('*', tags=str((search_tags - tag).ids if tag in search_tags else (tag | search_tags).ids))"
+                            t-attf-class="dropdown-item d-flex align-items-center justify-content-between #{'active' if tag in search_tags else ''}">
+                            <t t-esc="tag.name"/>
+                        </a>
+                    </t>
+                </div>
+            </li>
+        </t>
     </xpath>
 </template>
 
