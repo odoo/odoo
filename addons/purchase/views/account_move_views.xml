@@ -10,9 +10,9 @@
             <field name="invoice_vendor_bill_id" position="after">
                 <field name="purchase_id" invisible="1"/>
                 <label for="purchase_vendor_bill_id" string="Auto-Complete" class="oe_edit_only"
-                       attrs="{'invisible': ['|', '|', ('state','not in',['draft']), ('state', '=', 'purchase'), ('move_type', '!=', 'in_invoice')]}" />
+                       attrs="{'invisible': ['|', ('state','!=','draft'), ('move_type', '!=', 'in_invoice')]}" />
                 <field name="purchase_vendor_bill_id" nolabel="1"
-                       attrs="{'invisible': ['|', '|', ('state','not in',['draft']), ('state', '=', 'purchase'), ('move_type', '!=', 'in_invoice')]}"
+                       attrs="{'invisible': ['|', ('state','!=','draft'), ('move_type', '!=', 'in_invoice')]}"
                        class="oe_edit_only"
                        domain="[('company_id', '=', company_id), ('partner_id','child_of', [partner_id])]"
                        placeholder="Select a purchase order or an old bill"
@@ -28,6 +28,7 @@
             <!-- Add link to purchase_line_id to account.move.line -->
             <xpath expr="//field[@name='invoice_line_ids']/tree/field[@name='company_id']" position="after">
                 <field name="purchase_line_id" invisible="1"/>
+                <field name="purchase_order_id" attrs="{'column_invisible': [('parent.move_type', '!=', 'in_invoice')]}" optional="hide"/>
             </xpath>
             <xpath expr="//field[@name='line_ids']/tree/field[@name='company_id']" position="after">
                 <field name="purchase_line_id" invisible="1"/>
