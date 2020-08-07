@@ -124,8 +124,9 @@ class MrpUnbuild(models.Model):
 
     @api.constrains('product_qty')
     def _check_qty(self):
-        if self.product_qty <= 0:
-            raise ValueError(_('Unbuild Order product quantity has to be strictly positive.'))
+        for unbuild in self:
+            if unbuild.product_qty <= 0:
+                raise ValueError(_('Unbuild Order product quantity has to be strictly positive.'))
 
     @api.model
     def create(self, vals):

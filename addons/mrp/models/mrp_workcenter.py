@@ -73,8 +73,9 @@ class MrpWorkcenter(models.Model):
 
     @api.constrains('alternative_workcenter_ids')
     def _check_alternative_workcenter(self):
-        if self in self.alternative_workcenter_ids:
-            raise ValidationError(_("A workcenter cannot be an alternative of itself"))
+        for workcenter in self:
+            if workcenter in workcenter.alternative_workcenter_ids:
+                raise ValidationError(_("Workcenter %s cannot be an alternative of itself.", workcenter.name))
 
     @api.depends('order_ids.duration_expected', 'order_ids.workcenter_id', 'order_ids.state', 'order_ids.date_planned_start')
     def _compute_workorder_count(self):
