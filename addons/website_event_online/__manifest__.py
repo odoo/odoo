@@ -22,6 +22,7 @@
         'views/event_type_views.xml',
         'views/website_visitor_views.xml',
         'views/event_templates_event.xml',
+        'views/event_templates_widgets.xml',
     ],
     'demo': [
         'data/website_visitor_demo.xml',
