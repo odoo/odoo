@@ -18,7 +18,7 @@ from odoo.tools.translate import _
 class EventTrackOnlineController(WebsiteEventTrackController):
 
     def _event_agenda_get_tracks(self, event):
-        tracks_sudo = event.sudo().track_ids
+        tracks_sudo = event.sudo().track_ids.filtered(lambda track: track.date)
         if not request.env.user.has_group('event.group_event_manager'):
             tracks_sudo = tracks_sudo.filtered(lambda track: track.is_published or track.stage_id.is_accepted)
         return tracks_sudo
