@@ -308,20 +308,27 @@ class Registry(Mapping):
     def post_constraint(self, func, *args, **kwargs):
         """ Call the given function, and delay it if it fails during an upgrade. """
         try:
-            func(*args, **kwargs)
+            if (func, args, kwargs) not in self._constraint_queue:
+                # Module A may try to apply a constraint and fail but another module B inheriting
+                # from Module A may try to reapply the same constraint and succeed, however the
+                # constraint would already be in the _constraint_queue and would be executed again
+                # at the end of the registry cycle, this would fail (already-existing constraint)
+                # and generate an error, therefore a constraint should only be applied if it's
+                # not already marked as "to be applied".
+                func(*args, **kwargs)
         except Exception as e:
             if self._is_install:
                 _schema.error(*e.args)
             else:
                 _schema.info(*e.args)
-                self._constraint_queue.append(partial(func, *args, **kwargs))
+                self._constraint_queue.append((func, args, kwargs))
 
     def finalize_constraints(self):
         """ Call the delayed functions from above. """
         while self._constraint_queue:
-            func = self._constraint_queue.popleft()
+            func, args, kwargs = self._constraint_queue.popleft()
             try:
-                func()
+                func(*args, **kwargs)
             except Exception as e:
                 _schema.error(*e.args)
 
