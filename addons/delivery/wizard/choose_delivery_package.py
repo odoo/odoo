@@ -9,6 +9,7 @@ class ChooseDeliveryPackage(models.TransientModel):
     _name = 'choose.delivery.package'
     _description = 'Delivery Package Selection Wizard'
 
+    @api.model
     def default_get(self, fields_list):
         defaults = super().default_get(fields_list)
         if 'shipping_weight' in fields_list:
