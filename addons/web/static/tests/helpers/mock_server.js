@@ -204,6 +204,43 @@ var MockServer = Class.extend({
         }
     },
     /**
+     * Converts an Object representing a record to actual return Object of the
+     * python `onchange` method.
+     * Specifically, it applies `name_get` on many2one's and transforms raw id
+     * list in orm command lists for x2many's.
+     * For x2m fields that add or update records (ORM commands 0 and 1), it is
+     * recursive.
+     *
+     * @private
+     * @param {string} model: the model's name
+     * @param {Object} values: an object representing a record
+     * @returns {Object}
+     */
+    _convertToOnChange(model, values) {
+        Object.entries(values).forEach(([fname, val]) => {
+            const field = this.data[model].fields[fname];
+            if (field.type === 'many2one' && typeof val === 'number') {
+                // implicit name_get
+                const m2oRecord = this.data[field.relation].records.find(r => r.id === val);
+                values[fname] = [val, m2oRecord.display_name];
+            } else if (field.type === 'one2many' || field.type === 'many2many') {
+                // TESTS ONLY
+                // one2many_ids = [1,2,3] is a simpler way to express it than orm commands
+                const isCommandList = val.length && Array.isArray(val[0]);
+                if (!isCommandList) {
+                    values[fname] = [[6, false, val]];
+                } else {
+                    val.forEach(cmd => {
+                        if (cmd[0] === 0 || cmd[0] === 1) {
+                            cmd[2] = this._convertToOnChange(field.relation, cmd[2]);
+                        }
+                    });
+                }
+            }
+        });
+        return values;
+    },
+    /**
      * helper to evaluate a domain for given field values.
      * Currently, this is only a wrapper of the Domain.compute function in
      * "web.Domain".
@@ -520,7 +557,7 @@ var MockServer = Class.extend({
      *   values
      * @returns {Object}
      */
-    _mockDefaultGet: function (modelName, args, kwargs={}) {
+    _mockDefaultGet: function (modelName, args, kwargs = {}) {
         const fields = args[0];
         const model = this.data[modelName];
         const result = {};
@@ -1218,29 +1255,60 @@ var MockServer = Class.extend({
      *
      * @private
      * @param {string} model
-     * @param {string|string[]} args a list of field names, or just a field name
+     * @param {Object} args
+     * @param {Object} args[1] the current record data
+     * @param {string|string[]} [args[2]] a list of field names, or just a field name
+     * @param {Object} args[3] the onchange spec
+     * @param {Object} [kwargs]
      * @returns {Object}
      */
-    _mockOnchange: function (model, args) {
+    _mockOnchange: function (model, args, kwargs) {
+        const currentData = args[1];
+        let fields = args[2];
+        const onChangeSpec = args[3];
         var onchanges = this.data[model].onchanges || {};
-        var record = args[1];
-        var fields = args[2];
-        if (!(fields instanceof Array)) {
+
+        if (fields && !(fields instanceof Array)) {
             fields = [fields];
         }
-        var result = {};
-        _.each(fields, function (field) {
+        const firstOnChange = !fields || !fields.length;
+        const onchangeVals = {};
+        let defaultVals;
+        let nullValues;
+        if (firstOnChange) {
+            const fieldsFromView = Object.keys(onChangeSpec).reduce((acc, fname) => {
+                fname = fname.split('.', 1)[0];
+                if (!acc.includes(fname)) {
+                    acc.push(fname);
+                }
+                return acc;
+            }, []);
+            const defaultingFields = fieldsFromView.filter(fname => !(fname in currentData));
+            defaultVals = this._mockDefaultGet(model, [defaultingFields], kwargs);
+            // It is the new semantics: no field in arguments means we are in
+            // a default_get + onchange situation
+            fields = fieldsFromView;
+            nullValues = {};
+            fields.filter(fName => !Object.keys(defaultVals).includes(fName)).forEach(fName => {
+                nullValues[fName] = false;
+            });
+        }
+        Object.assign(currentData, defaultVals);
+        fields.forEach(field => {
             if (field in onchanges) {
-                var changes = _.clone(record);
+                const changes = Object.assign({}, nullValues, currentData);
                 onchanges[field](changes);
-                _.each(changes, function (value, key) {
-                    if (record[key] !== value) {
-                        result[key] = value;
+                Object.entries(changes).forEach(([key, value]) => {
+                    if (currentData[key] !== value) {
+                        onchangeVals[key] = value;
                     }
                 });
             }
         });
-        return {value: result};
+
+        return {
+            value: this._convertToOnChange(model, Object.assign({}, defaultVals, onchangeVals)),
+        };
     },
     /**
      * Simulate a 'read' operation.
@@ -1771,9 +1839,6 @@ var MockServer = Class.extend({
             case 'create':
                 return Promise.resolve(this._mockCreate(args.model, args.args[0]));
 
-            case 'default_get':
-                return Promise.resolve(this._mockDefaultGet(args.model, args.args, args.kwargs));
-
             case 'fields_get':
                 return Promise.resolve(this._mockFieldsGet(args.model, args.args));
 
@@ -1796,7 +1861,7 @@ var MockServer = Class.extend({
                 return Promise.resolve(this._mockNameSearch(args.model, args.args, args.kwargs));
 
             case 'onchange':
-                return Promise.resolve(this._mockOnchange(args.model, args.args));
+                return Promise.resolve(this._mockOnchange(args.model, args.args, args.kwargs));
 
             case 'read':
                 return Promise.resolve(this._mockRead(args.model, args.args, args.kwargs));
