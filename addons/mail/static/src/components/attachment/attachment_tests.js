@@ -563,7 +563,6 @@ QUnit.test('view attachment', async function (assert) {
         isDownloadable: false,
         isEditable: false,
     });
-
     assert.containsOnce(
         document.body,
         '.o_Attachment_image',
@@ -579,6 +578,45 @@ QUnit.test('view attachment', async function (assert) {
         document.body,
         '.o_AttachmentViewer',
         'an attachment viewer should have been opened once attachment image is clicked',
+    );
+});
+
+QUnit.test('close attachment viewer', async function (assert) {
+    assert.expect(3);
+
+    await this.start({ hasDialog: true });
+    const attachment = this.env.models['mail.attachment'].create({
+        filename: "test.png",
+        id: 750,
+        mimetype: 'image/png',
+        name: "test.png",
+    });
+
+    await this.createAttachmentComponent(attachment, {
+        detailsMode: 'hover',
+        isDownloadable: false,
+        isEditable: false,
+    });
+    assert.containsOnce(
+        document.body,
+        '.o_Attachment_image',
+        "attachment should have an image part"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_Attachment_image').click());
+    assert.containsOnce(
+        document.body,
+        '.o_AttachmentViewer',
+        "an attachment viewer should have been opened once attachment image is clicked",
+    );
+
+    await afterNextRender(() =>
+        document.querySelector('.o_AttachmentViewer_headerItemButtonClose').click()
+    );
+    assert.containsNone(
+        document.body,
+        '.o_Dialog',
+        "attachment viewer should be closed after clicking on close button"
     );
 });
 
