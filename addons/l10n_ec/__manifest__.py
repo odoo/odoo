@@ -20,7 +20,7 @@ Accounting chart and localization for Ecuador.
     ],
     'data': [
         'data/account_type.xml',
-        'data/account_group.xml',
+        #'data/account_group_data.xml',
         'data/l10n_ec_chart_data.xml',
         #'data/l10n_ec_chart_post_data.xml',
         'data/account.tax.group.csv',
@@ -28,7 +28,7 @@ Accounting chart and localization for Ecuador.
         'data/account_chart_template_data.xml',
         'data/res.country.state.csv',
         'data/res.bank.csv',
-        'account.fiscal.position.csv',
+        'data/account.fiscal.position.csv',
 
     ],
     'demo': [
