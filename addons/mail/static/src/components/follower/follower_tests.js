@@ -339,11 +339,78 @@ QUnit.test('click on edit follower', async function (assert) {
         ['fetch_subtypes'],
         "clicking on edit follower should fetch subtypes"
     );
-
     assert.containsOnce(
         document.body,
         '.o_FollowerSubtypeList',
         "A dialog allowing to edit follower subtypes should have been created"
+    );
+});
+
+QUnit.test('edit follower and close subtype dialog', async function (assert) {
+    assert.expect(6);
+
+    await this.start({
+        hasDialog: true,
+        async mockRPC(route, args) {
+            if (route.includes('/mail/read_subscription_data')) {
+                assert.step('fetch_subtypes');
+                return [{
+                    default: true,
+                    followed: true,
+                    internal: false,
+                    id: 1,
+                    name: "Dummy test",
+                    res_model: 'res.partner'
+                }];
+            }
+            return this._super(...arguments);
+        },
+    });
+    const thread = this.env.models['mail.thread'].create({
+        id: 100,
+        model: 'res.partner',
+    });
+    const follower = await this.env.models['mail.follower'].create({
+        followedThread: [['link', thread]],
+        id: 2,
+        isActive: true,
+        isEditable: true,
+        partner: [['insert', {
+            email: "bla@bla.bla",
+            id: this.env.session.partner_id,
+            name: "François Perusse",
+        }]],
+    });
+    await this.createFollowerComponent(follower);
+    assert.containsOnce(
+        document.body,
+        '.o_Follower',
+        "should have follower component"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_Follower_editButton',
+        "should display an edit button"
+    );
+
+    await afterNextRender(() => document.querySelector('.o_Follower_editButton').click());
+    assert.verifySteps(
+        ['fetch_subtypes'],
+        "clicking on edit follower should fetch subtypes"
+    );
+    assert.containsOnce(
+        document.body,
+        '.o_FollowerSubtypeList',
+        "dialog allowing to edit follower subtypes should have been created"
+    );
+
+    await afterNextRender(
+        () => document.querySelector('.o_FollowerSubtypeList_closeButton').click()
+    );
+    assert.containsNone(
+        document.body,
+        '.o_DialogManager_dialog',
+        "follower subtype dialog should be closed after clicking on close button"
     );
 });
 
