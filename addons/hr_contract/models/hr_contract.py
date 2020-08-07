@@ -126,8 +126,12 @@ class Contract(models.Model):
 
     @api.constrains('date_start', 'date_end')
     def _check_dates(self):
-        if self.filtered(lambda c: c.date_end and c.date_start > c.date_end):
-            raise ValidationError(_('Contract start date must be earlier than contract end date.'))
+        for contract in self:
+            if contract.date_end and contract.date_start > contract.date_end:
+                raise ValidationError(_(
+                    'Contract %(contract)s: start date (%(start)s) must be earlier than contract end date (%(end)s).',
+                    contract=contract.name, start=contract.date_start, end=contract.date_end,
+                ))
 
     @api.model
     def update_state(self):
