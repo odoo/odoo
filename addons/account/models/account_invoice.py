@@ -869,7 +869,6 @@ class AccountInvoice(models.Model):
         self.account_id = account_id
         if payment_term_id:
             self.payment_term_id = payment_term_id
-        self.date_due = False
         self.fiscal_position_id = fiscal_position
 
         if type in ('in_invoice', 'out_refund'):
