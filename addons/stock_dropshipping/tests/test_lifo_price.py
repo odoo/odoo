@@ -77,6 +77,8 @@ class TestLifoPrice(ValuationReconciliationTestCommon):
         purchase_order_lifo2.picking_ids[0].button_validate()
 
         # Let us send some goods
+        # FIX needed after rebase, commented until rebase on master
+        # self.company_data['default_warehouse'].out_type_id.show_operations = False
         out_form = Form(self.env['stock.picking'])
         out_form.picking_type_id = self.company_data['default_warehouse'].out_type_id
         out_form.immediate_transfer = True
