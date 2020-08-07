@@ -130,4 +130,19 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
                 account_move_lines_to_reconcile |= line
         account_move_lines_to_reconcile.reconcile()
 
+        # Determine is the move is now fully paid.
+        paid_moves = self.env['account.move']
+        for move in account_move_lines_to_reconcile.move_id:
+            if move.currency_id == self.company_id.currency_id:
+                is_fully_paid = self.company_id.currency_id.is_zero(move.amount_residual)
+            else:
+                is_fully_paid = move.currency_id.is_zero(move.amount_residual_currency)
+            if is_fully_paid:
+                paid_moves |= move
+        expense_sheets = self.env['hr.expense.sheet'].search([
+            ('account_move_id', 'in', paid_moves.ids),
+            ('state', '!=', 'done'),
+        ])
+        expense_sheets.set_to_paid()
+
         return {'type': 'ir.actions.act_window_close'}
