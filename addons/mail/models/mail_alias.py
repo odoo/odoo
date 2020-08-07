@@ -166,6 +166,7 @@ class Alias(models.Model):
     def _clean_and_make_unique(self, name, alias_ids=False):
         # when an alias name appears to already be an email, we keep the local part only
         name = remove_accents(name).lower().split('@')[0]
+        name = name.translate(str.maketrans({'đ': 'd'}))
         name = re.sub(r'[^\w+.]+', '-', name)
         return self._find_unique(name, alias_ids=alias_ids)
 
