@@ -53,6 +53,7 @@
     }
 
     table {
+        table-layout:fixed;
         border-collapse: separate;
         border-spacing: 0em 0em;
         tr {
@@ -68,6 +69,9 @@
         }
         th.active, td:not(.active) {
             background-color: #d3d3d36e;
+        }
+        th:not(.active), td.active {
+            width: 150px;
         }
         th.position-sticky {
             left: 0;
