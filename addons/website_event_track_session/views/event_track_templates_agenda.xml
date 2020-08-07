@@ -5,7 +5,7 @@
     inherit_id="website_event_track_online.agenda_main_track">
     <xpath expr="//div[hasclass('o_weagenda_track_badges')]/small[1]" position="before">
         <small t-if="track.is_track_live and not track.is_track_done and track.website_published"
-            class="ml-1 badge badge-danger">Live
+            class="mx-1 badge badge-danger">Live
         </small>
     </xpath>
 </template>
