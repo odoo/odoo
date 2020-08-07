@@ -18,7 +18,7 @@ function factory(dependencies) {
         close() {
             const dialog = this.env.models['mail.dialog'].find(dialog => dialog.record === this);
             if (dialog) {
-                this.env.messaging.dialogManager.close(dialog);
+                dialog.delete();
             }
         }
     }
