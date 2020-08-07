@@ -864,7 +864,7 @@ QUnit.module('Views', {
         });
 
         await testUtils.dom.click(list.$buttons.find('.o_list_button_add'));
-        assert.verifySteps(['search_read', 'default_get'], "no nameget should be done");
+        assert.verifySteps(['search_read', 'onchange'], "no nameget should be done");
 
         list.destroy();
     });
@@ -5565,7 +5565,7 @@ QUnit.module('Views', {
         await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="foo"]'), 'enter');
         assert.containsN(list, 'tr.o_data_row', 5, "should have created a 5th row");
 
-        assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/foo/default_get']);
+        assert.verifySteps(['/web/dataset/search_read', '/web/dataset/call_kw/foo/onchange']);
         list.destroy();
     });
 
@@ -5604,14 +5604,14 @@ QUnit.module('Views', {
         assert.verifySteps(['/web/dataset/search_read',
             '/web/dataset/call_kw/foo/write',
             '/web/dataset/call_kw/foo/read',
-            '/web/dataset/call_kw/foo/default_get']);
+            '/web/dataset/call_kw/foo/onchange']);
         list.destroy();
     });
 
     QUnit.test('navigation with tab and read completes after default_get', async function (assert) {
         assert.expect(8);
 
-        var defaultGetPromise = testUtils.makeTestPromise();
+        var onchangeGetPromise = testUtils.makeTestPromise();
         var readPromise = testUtils.makeTestPromise();
 
         var list = await createView({
@@ -5629,8 +5629,8 @@ QUnit.module('Views', {
                         return result;
                     });
                 }
-                if (args.method === 'default_get') {
-                    return defaultGetPromise.then(function () {
+                if (args.method === 'onchange') {
+                    return onchangeGetPromise.then(function () {
                         return result;
                     });
                 }
@@ -5643,7 +5643,7 @@ QUnit.module('Views', {
         await testUtils.fields.editInput(list.$('tr.o_selected_row input[name="int_field"]'), '1234');
         await testUtils.fields.triggerKeydown(list.$('tr.o_selected_row input[name="int_field"]'), 'tab');
 
-        defaultGetPromise.resolve();
+        onchangeGetPromise.resolve();
         assert.containsN(list, 'tbody tr.o_data_row', 4,
             "should have 4 data rows");
 
@@ -5661,7 +5661,7 @@ QUnit.module('Views', {
         assert.hasClass(list.$('tr.o_data_row:eq(4)'),'o_selected_row',
             "5th row should be selected");
 
-        assert.verifySteps(['write', 'read', 'default_get']);
+        assert.verifySteps(['write', 'read', 'onchange']);
         list.destroy();
     });
 
@@ -7215,7 +7215,7 @@ QUnit.module('Views', {
 
         // create a record and edit its value
         await testUtils.dom.click($('.o_list_button_add'));
-        assert.verifySteps(['default_get']);
+        assert.verifySteps(['onchange']);
 
         await testUtils.fields.editInput(list.$('.o_selected_row .o_field_widget[name=int_field]'), 123);
         assert.containsNone(document.body, '.modal', "the multi edition should not be triggered during creation");
@@ -9176,10 +9176,10 @@ QUnit.module('Views', {
             '/web/dataset/search_read',
             'write',
             'read',
-            'default_get',
+            'onchange',
             'create',
             'read',
-            'default_get',
+            'onchange',
         ]);
 
         list.destroy();
@@ -9255,7 +9255,7 @@ QUnit.module('Views', {
             'web_read_group',
             '/web/dataset/search_read',
             '/web/dataset/search_read',
-            'default_get',
+            'onchange',
         ]);
 
         list.destroy();
@@ -9814,7 +9814,7 @@ QUnit.module('Views', {
                     '</tree>',
             groupBy: ['priority'],
             mockRPC: function (route, args) {
-                if (args.method === 'default_get') {
+                if (args.method === 'onchange') {
                     assert.step(args.kwargs.context.default_priority.toString());
                 }
                 return this._super.apply(this, arguments);
@@ -9851,7 +9851,7 @@ QUnit.module('Views', {
                     '</tree>',
             groupBy: ['m2o'],
             mockRPC: function (route, args) {
-                if (args.method === 'default_get') {
+                if (args.method === 'onchange') {
                     assert.step(args.kwargs.context.default_m2o.toString());
                 }
                 return this._super.apply(this, arguments);

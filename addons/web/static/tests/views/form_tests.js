@@ -86,6 +86,7 @@ QUnit.module('Views', {
             },
             product: {
                 fields: {
+                    display_name: {string: "Product Name", type: "char"},
                     name: {string: "Product Name", type: "char"},
                     partner_type_id: {string: "Partner type", type: "many2one", relation: "partner_type"},
                 },
@@ -1539,7 +1540,7 @@ QUnit.module('Views', {
                 assert.strictEqual(form.$('input[name="qux"]').val(), "1.0",
             "qux input is properly formatted");
 
-        assert.verifySteps(['default_get', 'create', 'read', 'write', 'read']);
+        assert.verifySteps(['onchange', 'create', 'read', 'write', 'read']);
         form.destroy();
     });
 
@@ -1797,7 +1798,7 @@ QUnit.module('Views', {
         });
         await testUtils.dom.click('.o_form_statusbar button.p', form);
 
-        assert.verifySteps(['default_get', 'create', 'read', 'execute_action', 'read']);
+        assert.verifySteps(['onchange', 'create', 'read', 'execute_action', 'read']);
         form.destroy();
     });
 
@@ -1847,7 +1848,7 @@ QUnit.module('Views', {
         });
         await testUtils.dom.click('.o_form_statusbar button.p', form);
 
-        assert.verifySteps(['default_get', 'create', 'read', 'execute_action', 'read']);
+        assert.verifySteps(['onchange', 'create', 'read', 'execute_action', 'read']);
         form.destroy();
     });
 
@@ -2063,6 +2064,7 @@ QUnit.module('Views', {
         assert.expect(1);
         this.data.partner.onchanges.foo = function (obj) {};
 
+        let checkOnchange = false;
         var form = await createView({
             View: FormView,
             model: 'partner',
@@ -2079,7 +2081,7 @@ QUnit.module('Views', {
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {
-                if (args.method === "onchange") {
+                if (args.method === "onchange" && checkOnchange) {
                     assert.deepEqual(args.args[1], {
                         display_name: "first record",
                         foo: "tralala",
@@ -2103,6 +2105,7 @@ QUnit.module('Views', {
         await testUtils.fields.editInput(form.$('.o_field_one2many input[name=qux]'), '12.4');
 
         // trigger an onchange by modifying foo
+        checkOnchange = true;
         await testUtils.fields.editInput(form.$('input[name=foo]'), 'tralala');
 
         form.destroy();
@@ -2176,7 +2179,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('default record with a one2many and an onchange on sub field', async function (assert) {
-        assert.expect(4);
+        assert.expect(3);
 
         this.data.partner.onchanges.foo = function () {};
 
@@ -2202,7 +2205,7 @@ QUnit.module('Views', {
                 return this._super.apply(this, arguments);
             },
         });
-        assert.verifySteps(['default_get', 'onchange']);
+        assert.verifySteps(['onchange']);
         form.destroy();
     });
 
@@ -2340,19 +2343,18 @@ QUnit.module('Views', {
             "should have new foo2 value in one2many");
         assert.containsOnce(form, 'td:contains(xphone)',
             "should have a cell with the name field 'product_id', set to xphone");
-        assert.strictEqual(nameGetCount, 1, "should have done only 1 nameget");
+        assert.strictEqual(nameGetCount, 0, "should have done no nameget");
         form.destroy();
     });
 
     QUnit.test('make default record with non empty many2one', async function (assert) {
-        var done = assert.async();
         assert.expect(2);
 
         this.data.partner.fields.trululu.default = 4;
 
         var nameGetCount = 0;
 
-        createView({
+        const form = await createView({
             View: FormView,
             model: 'partner',
             data: this.data,
@@ -2360,20 +2362,16 @@ QUnit.module('Views', {
             mockRPC: function (route, args) {
                 if (args.method === 'name_get') {
                     nameGetCount++;
-                    var result = this._super.apply(this, arguments);
-                    return concurrency.delay(1).then(function () {
-                        return result;
-                    });
                 }
                 return this._super.apply(this, arguments);
             },
-        }).then(function (form) {
-            assert.strictEqual(form.$('.o_field_widget[name=trululu] input').val(), 'aaa',
-                "default value should be correctly displayed");
-            assert.strictEqual(nameGetCount, 1, "should have done one name_get");
-            form.destroy();
-            done();
         });
+
+        assert.strictEqual(form.$('.o_field_widget[name=trululu] input').val(), 'aaa',
+            "default value should be correctly displayed");
+        assert.strictEqual(nameGetCount, 0, "should have done no name_get");
+
+        form.destroy();
     });
 
     QUnit.test('form view properly change its title', async function (assert) {
@@ -3720,44 +3718,6 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.test('default_get, onchange which fails, should still work', async function (assert) {
-        assert.expect(1);
-
-        this.data.partner.onchanges.foo = true;
-
-        var form = await createView({
-            View: FormView,
-            model: 'partner',
-            data: this.data,
-            arch: '<form>' +
-                    '<field name="foo"/>' +
-                '</form>',
-            mockRPC: function (route, args) {
-                if (args.method === 'onchange') {
-                    // we simulate a validation error.  In the 'real' web client,
-                    // the server error will be used by the session to display
-                    // an error dialog.  From the point of view of the basic
-                    // model, the promise is just rejected.
-                    return Promise.reject();
-                }
-                return this._super.apply(this, arguments);
-            },
-        });
-
-        // this test checks that a form view is still rendered when the server
-        // onchange fails (for example, because of a validation error, or, more
-        // likely, a bug in the onchange code).  This is quite rare, but if the
-        // onchange fails, we still want to display the form view (with the error
-        // dialog from the session/crashmanager).  Otherwise, we could be in the
-        // situation where a user clicks on a button, it should open a wizard,
-        // but something fails and the wizard is not even rendered.  In that
-        // case, there is nothing that the user could do.
-        assert.strictEqual(form.$('.o_field_widget[name="foo"]').val(), 'My little Foo Value',
-            "should display proper default value");
-
-        form.destroy();
-    });
-
     QUnit.test('button box is rendered in create mode', async function (assert) {
         assert.expect(3);
 
@@ -3919,7 +3879,7 @@ QUnit.module('Views', {
                     [5],
                     [1, 4, {
                         display_name: "gold",
-                        timmy: [5]
+                        timmy: [[5]],
                     }],
                 ];
             },
@@ -5079,6 +5039,9 @@ QUnit.module('Views', {
         assert.expect(1);
 
         this.data.partner.records[0].product_ids = [37];
+        this.data.partner.fields.product_ids.default = [
+            [0, 0, { name: 'xdroid', partner_type_id: 12 }]
+        ];
 
         var form = await createView({
             View: FormView,
@@ -5096,14 +5059,6 @@ QUnit.module('Views', {
                     '</sheet>' +
                 '</form>',
             mockRPC: function (route, args) {
-                if (args.method === 'default_get') {
-                    return Promise.resolve({
-                        product_ids: [[0, 0, {
-                            name: 'xdroid',
-                            partner_type_id: 12,
-                        }]]
-                    });
-                }
                 if (args.method === 'create') {
                     var command = args.args[0].product_ids[0];
                     assert.strictEqual(command[2].partner_type_id, 12,
@@ -5468,6 +5423,7 @@ QUnit.module('Views', {
     QUnit.test('check if id and active_id are defined', async function (assert) {
         assert.expect(2);
 
+        let checkOnchange = false;
         var form = await createView({
             View: FormView,
             model: 'partner',
@@ -5485,7 +5441,7 @@ QUnit.module('Views', {
                 "partner,false,form": '<form><field name="trululu"/></form>'
             },
             mockRPC: function (route, args) {
-                if (args.method === 'default_get' && args.args[0][0] === 'trululu') {
+                if (args.method === 'onchange' && checkOnchange) {
                     assert.strictEqual(args.kwargs.context.current_id, false,
                         "current_id should be false");
                     assert.strictEqual(args.kwargs.context.default_trululu, false,
@@ -5495,6 +5451,7 @@ QUnit.module('Views', {
             },
         });
 
+        checkOnchange = true;
         await testUtils.dom.click(form.$('.o_field_x2many_list_row_add a'));
         form.destroy();
     });
@@ -5784,63 +5741,61 @@ QUnit.module('Views', {
         form.destroy();
     });
 
-    QUnit.module('focus and scroll test', async function () {
-        QUnit.test('no focus set on form when closing many2one modal if lastActivatedFieldIndex is not set', async function (assert) {
-            assert.expect(8);
+    QUnit.test('no focus set on form when closing many2one modal if lastActivatedFieldIndex is not set', async function (assert) {
+        assert.expect(8);
 
-            var form = await createView({
-                View: FormView,
-                model: 'partner',
-                data: this.data,
-                arch: '<form string="Partners">' +
-                        '<field name="display_name"/>' +
-                        '<field name="foo"/>' +
-                        '<field name="bar"/>' +
-                        '<field name="p"/>' +
-                        '<field name="timmy"/>' +
-                        '<field name="product_ids"/>' +
-                        '<field name="trululu"/>' +
-                    '</form>',
-                res_id: 2,
-                archs: {
-                    'partner,false,list': '<tree><field name="display_name"/></tree>',
-                    'partner_type,false,list': '<tree><field name="name"/></tree>',
-                    'partner,false,form': '<form><field name="trululu"/></form>',
-                    'product,false,list': '<tree><field name="name"/></tree>',
-                },
-                mockRPC: function (route, args) {
-                    if (args.method === 'get_formview_id') {
-                        return Promise.resolve(false);
-                    }
-                    return this._super(route, args);
-                },
-            });
-
-            // set max-height to have scroll forcefully so that we can test scroll position after modal close
-            $('.o_content').css({'overflow': 'auto', 'max-height': '300px'});
-            // Open many2one modal, lastActivatedFieldIndex will not set as we directly click on external button
-            await testUtils.form.clickEdit(form);
-            assert.strictEqual($(".o_content").scrollTop(), 0, "scroll position should be 0");
-
-            form.$(".o_field_many2one[name='trululu'] .o_input").focus();
-            assert.notStrictEqual($(".o_content").scrollTop(), 0, "scroll position should not be 0");
-
-            await testUtils.dom.click(form.$('.o_external_button'));
-            // Close modal
-            await testUtils.dom.click($('.modal').last().find('button[class="close"]'));
-            assert.notStrictEqual($(".o_content").scrollTop(), 0,
-                "scroll position should not be 0 after closing modal");
-            assert.containsNone(document.body, '.modal', 'There should be no modal');
-            assert.doesNotHaveClass($('body'), 'modal-open', 'Modal is not said opened');
-            assert.strictEqual(form.renderer.lastActivatedFieldIndex, -1,
-                "lastActivatedFieldIndex is -1");
-            assert.equal(document.activeElement, $('body')[0],
-                'body is focused, should not set focus on form widget');
-            assert.notStrictEqual(document.activeElement, form.$('.o_field_many2one[name="trululu"] .o_input'),
-                'field widget should not be focused when lastActivatedFieldIndex is -1');
-
-            form.destroy();
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="display_name"/>' +
+                    '<field name="foo"/>' +
+                    '<field name="bar"/>' +
+                    '<field name="p"/>' +
+                    '<field name="timmy"/>' +
+                    '<field name="product_ids"/>' +
+                    '<field name="trululu"/>' +
+                '</form>',
+            res_id: 2,
+            archs: {
+                'partner,false,list': '<tree><field name="display_name"/></tree>',
+                'partner_type,false,list': '<tree><field name="name"/></tree>',
+                'partner,false,form': '<form><field name="trululu"/></form>',
+                'product,false,list': '<tree><field name="name"/></tree>',
+            },
+            mockRPC: function (route, args) {
+                if (args.method === 'get_formview_id') {
+                    return Promise.resolve(false);
+                }
+                return this._super(route, args);
+            },
         });
+
+        // set max-height to have scroll forcefully so that we can test scroll position after modal close
+        $('.o_content').css({'overflow': 'auto', 'max-height': '300px'});
+        // Open many2one modal, lastActivatedFieldIndex will not set as we directly click on external button
+        await testUtils.form.clickEdit(form);
+        assert.strictEqual($(".o_content").scrollTop(), 0, "scroll position should be 0");
+
+        form.$(".o_field_many2one[name='trululu'] .o_input").focus();
+        assert.notStrictEqual($(".o_content").scrollTop(), 0, "scroll position should not be 0");
+
+        await testUtils.dom.click(form.$('.o_external_button'));
+        // Close modal
+        await testUtils.dom.click($('.modal').last().find('button[class="close"]'));
+        assert.notStrictEqual($(".o_content").scrollTop(), 0,
+            "scroll position should not be 0 after closing modal");
+        assert.containsNone(document.body, '.modal', 'There should be no modal');
+        assert.doesNotHaveClass($('body'), 'modal-open', 'Modal is not said opened');
+        assert.strictEqual(form.renderer.lastActivatedFieldIndex, -1,
+            "lastActivatedFieldIndex is -1");
+        assert.equal(document.activeElement, $('body')[0],
+            'body is focused, should not set focus on form widget');
+        assert.notStrictEqual(document.activeElement, form.$('.o_field_many2one[name="trululu"] .o_input'),
+            'field widget should not be focused when lastActivatedFieldIndex is -1');
+
+        form.destroy();
     });
 
     QUnit.test('in create mode, autofocus fields are focused', async function (assert) {
@@ -6262,6 +6217,9 @@ QUnit.module('Views', {
     });
 
     QUnit.test('do not perform extra RPC to read invisible many2one fields', async function (assert) {
+        // This test isn't really meaningful anymore, since default_get and (first) onchange rpcs
+        // have been merged in a single onchange rpc, returning nameget for many2one fields. But it
+        // isn't really costly, and it still checks rpcs done when creating a new record with a m2o.
         assert.expect(2);
 
         this.data.partner.fields.trululu.default = 2;
@@ -6281,7 +6239,7 @@ QUnit.module('Views', {
             },
         });
 
-        assert.verifySteps(['default_get'], "only one RPC should have been done");
+        assert.verifySteps(['onchange'], "only one RPC should have been done");
 
         form.destroy();
     });
@@ -7067,7 +7025,7 @@ QUnit.module('Views', {
         assert.ok(!form.$('.o_statusbar_buttons button').prop('disabled'),
             'button should no longer be disabled');
 
-        assert.verifySteps(['default_get']);
+        assert.verifySteps(['onchange']);
 
         // click on button, and click on ok in confirm dialog
         await testUtils.dom.click(form.$('.o_statusbar_buttons button'));
@@ -8512,7 +8470,7 @@ QUnit.module('Views', {
         assert.containsOnce(form, '.o_form_readonly', "form view should be in readonly");
         assert.strictEqual(form.$('.o_form_view').text().trim(), 'some foo value',
             "foo field should have correct value");
-        assert.verifySteps(['default_get', 'create', 'read']);
+        assert.verifySteps(['onchange', 'create', 'read']);
 
         form.destroy();
     });
@@ -9284,7 +9242,7 @@ QUnit.module('Views', {
         form.destroy();
     });
     QUnit.test('if the focus is on the save button, hitting ESCAPE should discard', async function (assert) {
-        assert.expect(1);
+        assert.expect(0);
 
         var form = await createView({
             View: FormView,
@@ -9297,8 +9255,8 @@ QUnit.module('Views', {
                 mode: 'edit',
             },
             mockRPC: function (route, args) {
-                if (args.method === 'default_get') {
-                    assert.ok(true, "should call the /create route");
+                if (args.method === 'create') {
+                    throw new Error('Create should not be called');
                 }
                 return this._super(route, args);
             },
@@ -9319,7 +9277,7 @@ QUnit.module('Views', {
         this.data.partner.onchanges = {
             p: function (obj) {
                 onchangeNum++;
-                obj.foo = obj.p.length.toString();
+                obj.foo = obj.p ? obj.p.length.toString() : "0";
             },
         };
 
@@ -9377,7 +9335,7 @@ QUnit.module('Views', {
     });
 
     QUnit.test('if the focus is on the discard button, hitting ESCAPE should discard', async function (assert) {
-        assert.expect(1);
+        assert.expect(0);
 
         var form = await createView({
             View: FormView,
@@ -9390,8 +9348,8 @@ QUnit.module('Views', {
                 mode: 'edit',
             },
             mockRPC: function (route, args) {
-                if (args.method === 'default_get') {
-                    assert.ok(true, "should call the /create route");
+                if (args.method === 'create') {
+                    throw new Error('Create should not be called');
                 }
                 return this._super(route, args);
             },
@@ -9438,7 +9396,7 @@ QUnit.module('Views', {
         await testUtils.form.clickSave(form);
 
         assert.verifySteps([
-            'default_get',
+            'onchange',
             'create',
             'reload company',
             'read',
