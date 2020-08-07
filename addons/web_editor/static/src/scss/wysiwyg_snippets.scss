@@ -1336,12 +1336,17 @@ body.editor_enable.editor_has_snippets {
                     display: block;
                     width: $o-we-handles-btn-size;
                     height: $o-we-handles-btn-size;
-                    border: solid 1px darken($o-we-handles-accent-color, 10%);
+                    border: solid 1px darken($o-we-handles-accent-color, 20%);
                     line-height: $o-we-handles-btn-size - 2;
                     font-size: 14px;
                     font-family: FontAwesome;
-                    background-color: darken($o-we-handles-accent-color, 20%);
+                    background-color: darken($o-we-handles-accent-color, 10%);
                     color: white;
+                }
+
+                &.o_handle_start:after {
+                    background-color: rgba($o-we-sidebar-content-field-clickable-bg, .6);
+                    border-color: rgba($o-we-sidebar-content-field-border-color, .2);
                 }
 
                 &:hover,
@@ -1409,35 +1414,38 @@ body.editor_enable.editor_has_snippets {
 
                 > div {
                     display: flex;
-                    align-items: center;
 
                     > * {
-                        margin: 0 2px;
-                        border: 1px solid #999999;
-                        border-radius: 20%;
-                        color: #999999;
-                        opacity: 0.5;
-                        transition: opacity 400ms ease 0s;
-                        cursor: pointer;
-
-                        &:hover {
-                            opacity: 1;
-                        }
+                        @extend %we-generic-button;
+                        margin: 0 1px 0;
+                        min-width: 22px;
+                        padding: 0 $o-we-sidebar-content-field-button-group-button-spacing * .5;
+                        color: $o-we-fg-lighter;
                     }
-                }
-            }
-
-            .o_overlay_move_options {
-                .o_move_handle {
-                    padding: 3px 4px;
-                    cursor: move;
-
-                    &::before, &::after {
-                        content: '\f141';
-                        display: block;
-                        font-family: FontAwesome;
-                        font-size: 0.8em;
-                        line-height: 0.4em;
+                    .o_move_handle {
+                        cursor: move;
+                        width: 30px;
+                        height: 22px;
+                        background-image: url('/web_editor/static/src/img/snippets_options/o_overlay_move_drag.svg');
+                        background-position: center;
+                        background-repeat: no-repeat;
+                    }
+                    .o_delete_button {
+                        margin-left: $o-we-sidebar-content-field-button-group-button-spacing;
+                        background-color: mix($o-we-color-danger, $o-we-sidebar-content-field-clickable-bg);;
+                    }
+                    &:hover {
+                        > * {
+                            @include o-hover-opacity(.6);
+                        }
+                        we-button:hover, .o_move_handle:hover {
+                            border-color: mix($o-we-handles-accent-color, $o-we-sidebar-content-field-pressed-bg, .4);
+                            background-color: $o-we-sidebar-content-field-pressed-bg;
+                        }
+                        .o_delete_button:hover {
+                            border-color: mix($o-we-color-danger, $o-we-sidebar-content-field-pressed-bg, .4);
+                            background-color: $o-we-color-danger;
+                        }
                     }
                 }
             }
