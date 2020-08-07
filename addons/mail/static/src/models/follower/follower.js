@@ -59,7 +59,7 @@ function factory(dependencies) {
          *  Close subtypes dialog
          */
         closeSubtypes() {
-            this.env.messaging.dialogManager.close(this._subtypesListDialog);
+            this._subtypesListDialog.delete();
             this._subtypesListDialog = undefined;
         }
 
