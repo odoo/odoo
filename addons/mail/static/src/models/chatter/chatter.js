@@ -50,6 +50,9 @@ function factory(dependencies) {
         }
 
         async refreshActivities() {
+            if (!this.hasActivities) {
+                return;
+            }
             if (!this.thread || this.thread.isTemporary) {
                 this.update({ activities: [['unlink-all']] });
                 return;
