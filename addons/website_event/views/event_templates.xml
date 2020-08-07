@@ -204,7 +204,9 @@
                             </t>
                         </div>
                     </header>
-                    <div t-attf-class="#{opt_events_list_columns and 'col-12' or 'col'}">
+                    <div t-att-class="'%s %s' % (
+                        opt_events_list_columns and 'col-12' or 'col',
+                        opt_events_list_columns and event.event_registrations_open and not event.event_registrations_sold_out and 'h-100' or '')">
                         <!-- Body -->
                         <main t-attf-class="#{opt_events_list_cards and 'card-body' or (opt_events_list_columns and 'py-3' or 'px-4')}">
                             <!-- Title -->
