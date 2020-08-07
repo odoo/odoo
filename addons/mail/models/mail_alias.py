@@ -87,8 +87,12 @@ class Alias(models.Model):
             local-part. Quoted-string and internationnal characters are
             to be rejected. See rfc5322 sections 3.4.1 and 3.2.3
         """
-        if self.alias_name and not dot_atom_text.match(self.alias_name):
-            raise ValidationError(_("You cannot use anything else than unaccented latin characters in the alias address."))
+        for alias in self:
+            if alias.alias_name and not dot_atom_text.match(alias.alias_name):
+                raise ValidationError(_(
+                    "You cannot use anything else than unaccented latin characters in the alias address (%s).",
+                    alias.alias_name,
+                ))
 
     def _compute_alias_domain(self):
         alias_domain = self._default_alias_domain()
