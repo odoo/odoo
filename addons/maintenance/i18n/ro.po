@@ -8,6 +8,7 @@
 # Cozmin Candea <office@terrabit.ro>, 2018
 # Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
+# Hongu Cosmin <cosmin513@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2018-01-30 13:41+0000\n"
 "PO-Revision-Date: 2017-09-20 10:19+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
+"Last-Translator: Hongu Cosmin <cosmin513@gmail.com>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -293,7 +294,7 @@ msgstr "Tablou de bord"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_next_action_date
 msgid "Date of the next preventive maintenance"
-msgstr ""
+msgstr "Data următoarei mentenanțe preventive"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_request_date
@@ -312,12 +313,12 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_request_close_date
 msgid "Date the maintenance was finished. "
-msgstr ""
+msgstr "Data la care mentenanța a fost realizată."
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_period
 msgid "Days between each preventive maintenance"
-msgstr ""
+msgstr "Zile între fiecare mentenanță preventivă"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_defaults
@@ -592,22 +593,22 @@ msgstr "Cerere întreținere"
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_cat_req_created
 msgid "Maintenance Request Created"
-msgstr ""
+msgstr "Cerere de Mentenanță Creată"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_tree
 msgid "Maintenance Request Stage"
-msgstr ""
+msgstr "Stadiul Cererii de Mentenanță"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_stage_view_search
 msgid "Maintenance Request Stages"
-msgstr ""
+msgstr "Stadiile Cererii de Mentenanță"
 
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_created
 msgid "Maintenance Request created"
-msgstr ""
+msgstr "Cerere de Mentenanță Creată"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.hr_equipment_request_action
@@ -638,7 +639,7 @@ msgstr "Etape întreținere"
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_tree
 msgid "Maintenance Team"
-msgstr ""
+msgstr "Echipă de Mentenanță"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_dashboard_action
@@ -707,7 +708,7 @@ msgstr "Cerere nouă"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
 msgid "Next Preventive Maintenance"
-msgstr ""
+msgstr "Următoarea Mentenantă Preventivă"
 
 #. module: maintenance
 #: model:ir.actions.act_window,help:maintenance.maintenance_request_action_reports
@@ -732,22 +733,22 @@ msgstr "Număr de solicitări"
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_block
 msgid "Number of Requests Blocked"
-msgstr ""
+msgstr "Numărul de Cereri Blocate"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_date
 msgid "Number of Requests Scheduled"
-msgstr ""
+msgstr "Numărul de Cereri Programate"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_unscheduled
 msgid "Number of Requests Unscheduled"
-msgstr ""
+msgstr "Numărul de Cereri Neprogramate"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_team_todo_request_count_high_priority
 msgid "Number of Requests in High Priority"
-msgstr ""
+msgstr "Numărul de Cereri cu Prioritate Ridicată"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_force_thread_id
@@ -828,7 +829,7 @@ msgstr "Preventiv"
 #: code:addons/maintenance/models/maintenance.py:227
 #, python-format
 msgid "Preventive Maintenance - %s"
-msgstr ""
+msgstr "Mentenanță Preventivă - %s"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_form
@@ -858,7 +859,7 @@ msgstr "Pregătit pentru etapa următoare"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_kanban
 msgid "Record Colour"
-msgstr ""
+msgstr "Înregistrează Culoarea"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_equipment_category_alias_force_thread_id
@@ -890,7 +891,7 @@ msgstr "Cerere"
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_created
 msgid "Request Created"
-msgstr ""
+msgstr "Cerere Creată"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_request_date
@@ -977,6 +978,8 @@ msgstr "Număr de serie"
 msgid ""
 "Set archive to true to hide the maintenance request without deleting it."
 msgstr ""
+"Setează arhiva pe true pentru a ascunde cererea de mentenanță fără a o "
+"sterge."
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_kanban
@@ -1009,7 +1012,7 @@ msgstr "Etape"
 #. module: maintenance
 #: model:mail.message.subtype,name:maintenance.mt_req_status
 msgid "Status Changed"
-msgstr ""
+msgstr "Status Schimbat"
 
 #. module: maintenance
 #: model:mail.message.subtype,description:maintenance.mt_req_status
@@ -1024,7 +1027,7 @@ msgstr ""
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_name
 msgid "Subjects"
-msgstr ""
+msgstr "Subiecți"
 
 #. module: maintenance
 #: model:ir.model.fields,field_description:maintenance.field_maintenance_request_maintenance_team_id
@@ -1039,7 +1042,7 @@ msgstr "Membrii echipei"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.maintenance_team_view_form
 msgid "Team Name"
-msgstr ""
+msgstr "Numele Echipei"
 
 #. module: maintenance
 #: model:ir.actions.act_window,name:maintenance.maintenance_team_action_settings
@@ -1054,7 +1057,7 @@ msgstr "Tehnician"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Technicians"
-msgstr ""
+msgstr "Tehnicieni"
 
 #. module: maintenance
 #: model:ir.model.fields,help:maintenance.field_maintenance_equipment_category_alias_model_id
@@ -1093,7 +1096,7 @@ msgstr ""
 #. module: maintenance
 #: model:res.groups,comment:maintenance.group_equipment_manager
 msgid "The user will be able to manage equipments."
-msgstr ""
+msgstr "Utilizatorul va putea să gestioneze echipamentele."
 
 #. module: maintenance
 #: model:ir.actions.act_window,help:maintenance.hr_equipment_action
@@ -1142,7 +1145,7 @@ msgstr "Neatribuit"
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_view_search
 msgid "Under Maintenance"
-msgstr ""
+msgstr "Sub Mentenanță"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_kanban
@@ -1228,7 +1231,7 @@ msgstr "ore"
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_pivot
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_tree
 msgid "maintenance Request"
-msgstr ""
+msgstr "Cerere de mentenanță"
 
 #. module: maintenance
 #: model:ir.ui.view,arch_db:maintenance.hr_equipment_request_view_search
