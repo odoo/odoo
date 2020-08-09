@@ -194,6 +194,7 @@ class ProductTemplate(models.Model):
         for template in self:
             template.cost_currency_id = company.currency_id.id
 
+    @api.depends_context('pricelist', 'partner', 'quantity', 'uom', 'date', 'no_variant_attributes_price_extra')
     def _compute_template_price(self):
         prices = self._compute_template_price_no_inverse()
         for template in self:
