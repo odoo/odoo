@@ -153,7 +153,7 @@ const matchCache = async (request) => {
         return await cache.match(request);
     }
     if (isCachableURL(request.url)) {
-        const serializedRequest = await serializeRequest(requestCopy);
+        const serializedRequest = await serializeRequest(request);
         const cachedResponse = await get(buildCacheKey(serializedRequest), cacheStore);
         if (cachedResponse) {
             return deserializeResponse(cachedResponse);
