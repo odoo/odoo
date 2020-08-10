@@ -209,6 +209,7 @@ return AbstractRenderer.extend({
         // this.$el.height($(window).height() - this.$el.offset().top);
         this.calendar.render();
         this._renderCalendar();
+        window.addEventListener('click', this._onWindowClick.bind(this));
     },
     /**
      * Called when the field is detached from the DOM.
@@ -216,6 +217,7 @@ return AbstractRenderer.extend({
     on_detach_callback: function () {
         this._super(...arguments);
         this._isInDOM = false;
+        window.removeEventListener('click', this._onWindowClick);
     },
     /**
      * @override
@@ -399,6 +401,8 @@ return AbstractRenderer.extend({
                 self.trigger_up('updateRecord', event);
             },
             eventClick: function (eventClickInfo) {
+                eventClickInfo.jsEvent.preventDefault();
+                eventClickInfo.jsEvent.stopPropagation();
                 var eventData = eventClickInfo.event;
                 self._unselectEvent();
                 $(self.calendarElement).find(_.str.sprintf('[data-event-id=%s]', eventData.id)).addClass('o_cw_custom_highlight');
@@ -960,6 +964,16 @@ return AbstractRenderer.extend({
     _unselectEvent: function () {
         this.$('.fc-event').removeClass('o_cw_custom_highlight');
         this.$('.o_cw_popover').popover('dispose');
+    },
+    /**
+     * @private
+     * @param {MouseEvent} e
+     */
+    _onWindowClick: function (e) {
+        const popover = this.el.querySelector('.o_cw_popover');
+        if (popover && !popover.contains(e.target)) {
+            this._unselectEvent();
+        }
     },
     /**
      * @private
