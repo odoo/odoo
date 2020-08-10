@@ -2,7 +2,7 @@
 <templates id="template" xml:space="preserve">
 
     <t t-name="Chrome" owl="1">
-        <div class="pos" t-att-class="{ 'big-scrollbars': state.uiState.hasBigScrollBars }">
+        <div class="pos" t-att-class="{ 'big-scrollbars': state.hasBigScrollBars }">
             <div class="pos-receipt-print"></div>
             <div class="pos-topheader" t-att-class="{ oe_hidden: state.uiState !== 'READY' }">
                 <div t-if="tempScreen.isShown" class="block-top-header" />
