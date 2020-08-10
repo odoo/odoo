@@ -102,6 +102,14 @@ class HrExpenseSheetRegisterPaymentWizard(models.TransientModel):
 
     def expense_post_payment(self):
         self.ensure_one()
+
+        samples = self.expense_sheet_id.mapped('expense_line_ids.sample')
+        if samples.count(True):
+            if samples.count(False):
+                raise UserError(_("You can't mix sample expenses and regular ones"))
+            self.expense_sheet_id.set_to_paid()
+            return {'type': 'ir.actions.act_window_close'}
+
         company = self.company_id
         self = self.with_company(company.id)
         context = dict(self._context or {})
