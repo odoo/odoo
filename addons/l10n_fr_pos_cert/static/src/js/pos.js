@@ -104,7 +104,7 @@ models.Orderline = models.Orderline.extend({
                         } else {
                             var decrease_line = selected_orderline.clone();
                             decrease_line.order = order;
-                            orderline_super.set_quantity.apply(decrease_line, [-qty_decrease]);
+                            orderline_super.set_quantity.apply(decrease_line, [-qty_decrease, true]);
                             order.add_orderline(decrease_line);
                         }
                     }
