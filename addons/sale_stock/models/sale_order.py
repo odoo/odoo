@@ -367,7 +367,7 @@ class SaleOrderLine(models.Model):
         # compute
         precision = self.env['decimal.precision'].precision_get('Product Unit of Measure')
         for so_line in self:
-            if any(so_line.move_ids.filtered(lambda move: move.state in ['done'])):
+            if any(move.state == 'done' for move in so_line.move_ids):
                 qty_delivered = float_repr(so_line.qty_delivered, precision)
                 so_line.json_forecast = json.dumps({'reservedAvailability': qty_delivered})
             else:

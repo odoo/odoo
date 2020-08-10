@@ -92,7 +92,7 @@
                                     <span t-field="partner.display_name"/>
                                 </a>
                                 <div t-field="partner.website_short_description"/>
-                                <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
+                                <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
                                     <small><a t-attf-href="/partners/#{slug(partner)}#right_column">
                                         <t t-esc="partner.implemented_count"/> reference(s)
                                     </a></small>
@@ -163,7 +163,7 @@
 </template>
 
 <template id="references_block" name="Partner References Block">
-    <t t-if="any([p.website_published for p in partner.implemented_partner_ids])">
+    <t t-if="any(p.website_published for p in partner.implemented_partner_ids)">
         <h3 id="references">References</h3>
         <div t-foreach="partner.implemented_partner_ids" t-if="reference.website_published" t-as="reference" class="media mt-3">
             <span t-field="reference.image_128" class="d-block mr-3 text-center o_width_128" t-options='{"widget": "image", "qweb_img_responsive": False, "class": "o_image_128_max"}'/>

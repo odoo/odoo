@@ -63,7 +63,7 @@ class AccountAnalyticLine(models.Model):
 
     def _check_can_write(self, values):
         if self.sudo().filtered(lambda aal: aal.so_line.product_id.invoice_policy == "delivery") and self.filtered(lambda t: t.timesheet_invoice_id and t.timesheet_invoice_id.state != 'cancel'):
-            if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']]):
+            if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'project_id', 'task_id', 'so_line', 'amount', 'date']):
                 raise UserError(_('You can not modify already invoiced timesheets (linked to a Sales order items invoiced on Time and material).'))
 
     @api.model
@@ -86,7 +86,7 @@ class AccountAnalyticLine(models.Model):
     def _timesheet_postprocess_values(self, values):
         result = super(AccountAnalyticLine, self)._timesheet_postprocess_values(values)
         # (re)compute the sale line
-        if any([field_name in values for field_name in ['task_id', 'employee_id']]):
+        if any(field_name in values for field_name in ['task_id', 'employee_id']):
             for timesheet in self:
                 result[timesheet.id].update({
                     'so_line': timesheet._timesheet_determine_sale_line(timesheet.task_id, timesheet.employee_id).id,

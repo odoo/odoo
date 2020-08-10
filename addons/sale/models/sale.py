@@ -825,7 +825,7 @@ Reason(s) of this behavior could be:
         """
         # create an analytic account if at least an expense product
         for order in self:
-            if any([expense_policy not in [False, 'no'] for expense_policy in order.order_line.mapped('product_id.expense_policy')]):
+            if any(expense_policy not in [False, 'no'] for expense_policy in order.order_line.mapped('product_id.expense_policy')):
                 if not order.analytic_account_id:
                     order._create_analytic_account()
 
@@ -928,12 +928,12 @@ Reason(s) of this behavior could be:
         '''
         # Ensure the currencies are the same.
         currency = self[0].pricelist_id.currency_id
-        if any([so.pricelist_id.currency_id != currency for so in self]):
+        if any(so.pricelist_id.currency_id != currency for so in self):
             raise ValidationError(_('A transaction can\'t be linked to sales orders having different currencies.'))
 
         # Ensure the partner are the same.
         partner = self[0].partner_id
-        if any([so.partner_id != partner for so in self]):
+        if any(so.partner_id != partner for so in self):
             raise ValidationError(_('A transaction can\'t be linked to sales orders having different partners.'))
 
         # Try to retrieve the acquirer. However, fallback to the token's acquirer.
