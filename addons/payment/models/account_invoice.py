@@ -30,12 +30,12 @@ class AccountMove(models.Model):
         '''
         # Ensure the currencies are the same.
         currency = self[0].currency_id
-        if any([inv.currency_id != currency for inv in self]):
+        if any(inv.currency_id != currency for inv in self):
             raise ValidationError(_('A transaction can\'t be linked to invoices having different currencies.'))
 
         # Ensure the partner are the same.
         partner = self[0].partner_id
-        if any([inv.partner_id != partner for inv in self]):
+        if any(inv.partner_id != partner for inv in self):
             raise ValidationError(_('A transaction can\'t be linked to invoices having different partners.'))
 
         # Try to retrieve the acquirer. However, fallback to the token's acquirer.

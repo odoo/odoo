@@ -20,8 +20,7 @@ class Partner(models.Model):
         [users, partners] = super(Partner, self).get_mention_suggestions(search, limit=limit)
         if len(partners) + len(users) < limit and "odoobot".startswith(search.lower()):
             odoobot = self.env.ref("base.partner_root")
-            if not any([elem['id'] == odoobot.id for elem in partners]):
-                if odoobot:
-                    partners.append({'id': odoobot.id, 'name': odoobot.name, 'email': odoobot.email})
+            if odoobot and not any(elem['id'] == odoobot.id for elem in partners):
+                partners.append({'id': odoobot.id, 'name': odoobot.name, 'email': odoobot.email})
         return [users, partners]
 

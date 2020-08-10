@@ -501,10 +501,10 @@ class MrpProduction(models.Model):
     def _compute_unreserve_visible(self):
         for order in self:
             already_reserved = order.state not in ('done', 'cancel') and order.mapped('move_raw_ids.move_line_ids')
-            any_quantity_done = any([m.quantity_done > 0 for m in order.move_raw_ids])
+            any_quantity_done = any(m.quantity_done > 0 for m in order.move_raw_ids)
 
             order.unreserve_visible = not any_quantity_done and already_reserved
-            order.reserve_visible = (order.is_planned or order.state in ('confirmed', 'progress', 'to_close')) and any(move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids.filtered(lambda m: m.product_uom_qty))
+            order.reserve_visible = (order.is_planned or order.state in ('confirmed', 'progress', 'to_close')) and any(move.product_uom_qty and move.state in ['confirmed', 'partially_available'] for move in order.move_raw_ids)
 
     @api.depends('workorder_ids.state', 'move_finished_ids', 'move_finished_ids.quantity_done')
     def _get_produced_qty(self):

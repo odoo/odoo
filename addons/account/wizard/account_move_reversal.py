@@ -85,7 +85,7 @@ class AccountMoveReversal(models.TransientModel):
 
         # Handle reverse method.
         if self.refund_method == 'cancel':
-            if any([vals.get('auto_post', False) for vals in default_values_list]):
+            if any(vals.get('auto_post', False) for vals in default_values_list):
                 new_moves = moves._reverse_moves(default_values_list)
             else:
                 new_moves = moves._reverse_moves(default_values_list, cancel=True)

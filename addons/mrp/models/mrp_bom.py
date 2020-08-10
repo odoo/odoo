@@ -377,7 +377,7 @@ class MrpBomLine(models.Model):
             return False
         if self.bom_product_template_attribute_value_ids:
             for ptal, iter_ptav in groupby(self.bom_product_template_attribute_value_ids.sorted('attribute_line_id'), lambda ptav: ptav.attribute_line_id):
-                if not any([ptav in product.product_template_attribute_value_ids for ptav in iter_ptav]):
+                if not any(ptav in product.product_template_attribute_value_ids for ptav in iter_ptav):
                     return True
         return False
 
