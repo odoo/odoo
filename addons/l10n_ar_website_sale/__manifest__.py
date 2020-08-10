@@ -13,6 +13,8 @@
     'data': [
         'data/ir_model_fields.xml',
         'views/templates.xml',
+    ],
+    'demo': [
         'demo/website_demo.xml',
     ],
     'installable': True,
