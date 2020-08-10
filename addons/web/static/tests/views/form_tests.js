@@ -8625,6 +8625,38 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('call canBeRemoved twice', async function (assert) {
+        assert.expect(4);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form><field name="display_name"/><field name="foo"/></form>',
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        assert.containsOnce(form, '.o_form_editable');
+        await testUtils.fields.editInput(form.$('.o_field_widget[name=foo]'), 'some value');
+
+        form.canBeRemoved();
+        await testUtils.nextTick();
+        assert.containsOnce(document.body, '.modal');
+
+        form.canBeRemoved();
+        await testUtils.nextTick();
+        assert.containsOnce(document.body, '.modal');
+
+        await testUtils.dom.click($('.modal .modal-footer .btn-secondary'));
+
+        assert.containsNone(document.body, '.modal');
+
+        form.destroy();
+    });
+
     QUnit.test('domain returned by onchange is cleared on discard', async function (assert) {
         assert.expect(4);
 
