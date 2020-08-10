@@ -16,6 +16,7 @@ class Employee(models.Model):
     contracts_count = fields.Integer(compute='_compute_contracts_count', string='Contract Count')
     contract_warning = fields.Boolean(string='Contract Warning', store=True, compute='_compute_contract_warning', groups="hr.group_hr_user")
     first_contract_date = fields.Date(compute='_compute_first_contract_date', groups="hr.group_hr_user")
+    contract_expiration_date = fields.Date(compute='_compute_contract_expiration_date', groups="hr.group_hr_user")
 
     @api.depends('contract_ids.state')
     def _compute_first_contract_date(self):
@@ -25,6 +26,15 @@ class Employee(models.Model):
                 employee.first_contract_date = min(contracts.mapped('date_start'))
             else:
                 employee.first_contract_date = False
+
+    @api.depends('contract_ids.state')
+    def _compute_contract_expiration_date(self):
+        for employee in self:
+            contract = employee.sudo().contract_ids.filtered(lambda c: c.state in ['open', 'close'])
+            if contract:
+                employee.contract_expiration_date = contract.date_end
+            else:
+                employee.contract_expiration_date = False
 
     @api.depends('contract_id', 'contract_id.state', 'contract_id.kanban_state')
     def _compute_contract_warning(self):
