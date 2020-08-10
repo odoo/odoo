@@ -43,8 +43,6 @@ class TestCRMLead(TestCrmCommon):
             'email_from': '"Raoulette TestContact" <raoulette@test.example.com>',
         })
         self.assertEqual(lead.type, 'lead')
-        self.assertEqual(lead.user_id, self.user_sales_manager)
-        self.assertEqual(lead.team_id, self.sales_team_1)
         self.assertEqual(lead.stage_id, self.stage_team1_1)
         self.assertEqual(lead.contact_name, 'Raoulette TestContact')
         self.assertEqual(lead.email_from, '"Raoulette TestContact" <raoulette@test.example.com>')
