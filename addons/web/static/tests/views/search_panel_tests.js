@@ -4,6 +4,7 @@ odoo.define('web.search_panel_tests', function (require) {
 var AbstractStorageService = require('web.AbstractStorageService');
 var FormView = require('web.FormView');
 var KanbanView = require('web.KanbanView');
+const ListView = require('web.ListView');
 var RamStorage = require('web.RamStorage');
 var testUtils = require('web.test_utils');
 
@@ -4134,6 +4135,36 @@ QUnit.module('Views', {
         );
 
         kanban.destroy();
+    });
+
+    QUnit.test("Category with counters and filter with domain", async function (assert) {
+        assert.expect(2);
+
+        const list = await createView({
+            arch: '<tree><field name="foo"/></tree>',
+            archs: {
+                'partner,false,search': `
+                    <search>
+                        <searchpanel>
+                            <field name="category_id" enable_counters="1"/>
+                            <field name="company_id" select="multi" domain="[['category_id', '=', category_id]]"/>
+                        </searchpanel>
+                    </search>`,
+            },
+            data: this.data,
+            model: "partner",
+            services: this.services,
+            View: ListView,
+        });
+
+        assert.containsN(list, ".o_data_row", 4);
+        assert.strictEqual(
+            list.$(".o_search_panel_category_value").text().replace(/\s/g, ""),
+            "Allgoldsilver",
+            "Category counters should be empty if a filter has a domain attribute"
+        );
+
+        list.destroy();
     });
 });
 });

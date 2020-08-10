@@ -33,6 +33,8 @@ const SEARCH_PANEL_DEFAULT_LIMIT = 200;
  */
 function _processSearchPanelNode(node, fields) {
     const sections = {};
+    let hasCategoryWithCounters = false;
+    let hasFilterWithDomain = false;
     node.children.forEach(({ attrs, tag }, index) => {
         if (tag !== 'field' || attrs.invisible === "1") {
             return;
@@ -58,13 +60,35 @@ function _processSearchPanelNode(node, fields) {
         if (section.type === 'category') {
             section.icon = section.icon || 'fa-folder';
             section.hierarchize = !!pyUtils.py_eval(attrs.hierarchize || '1');
+            hasCategoryWithCounters = hasCategoryWithCounters || section.enableCounters;
         } else if (section.type === 'filter') {
             section.domain = attrs.domain || '[]';
             section.groupBy = attrs.groupby;
             section.icon = section.icon || 'fa-filter';
+            hasFilterWithDomain = hasFilterWithDomain || section.domain !== "[]";
         }
         sections[sectionId] = section;
     });
+    /**
+     * Category counters are automatically disabled if a filter domain is found
+     * to avoid inconsistencies with the counters. The underlying problem could
+     * actually be solved by reworking the search panel and the way the
+     * counters are computed, though this is not the current priority
+     * considering the time it would take, hence this quick "fix".
+     */
+    if (hasCategoryWithCounters && hasFilterWithDomain) {
+        // If incompatibilities are found -> disables all category counters
+        for (const section of Object.values(sections)) {
+            if (section.type === "category") {
+                section.enableCounters = false;
+            }
+        }
+        // ... and triggers a warning
+        console.warn(
+            "Warning: categories with counters are incompatible with filters having a domain attribute.",
+            "All category counters have been disabled to avoid inconsistencies.",
+        );
+    }
     return sections;
 }
 
