@@ -259,7 +259,7 @@ odoo.define('point_of_sale.ProductScreen', function(require) {
                     let decreasedQuantity = currentQuantity - newQuantity
                     newLine.order = order;
 
-                    newLine.set_quantity( - decreasedQuantity);
+                    newLine.set_quantity( - decreasedQuantity, true);
                     order.add_orderline(newLine);
                 }
             }
