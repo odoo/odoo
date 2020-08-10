@@ -11,13 +11,13 @@ function factory(dependencies) {
         /**
          * @override
          */
-        delete() {
+        _willDelete() {
             if (this.env.messaging) {
                 if (this === this.env.messaging.currentUser) {
-                    this.env.messaging.update({ currentUser: [['unlink-all']] });
+                    this.env.messaging.update({ currentUser: [['unlink']] });
                 }
             }
-            super.delete();
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------
