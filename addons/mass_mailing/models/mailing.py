@@ -67,6 +67,11 @@ class MassMailing(models.Model):
 
     active = fields.Boolean(default=True, tracking=True)
     subject = fields.Char('Subject', help='Subject of your Mailing', required=True, translate=True)
+    preview = fields.Char(
+        'Preview', translate=True,
+        help='Catchy preview sentence that encourages recipients to open this email.\n'
+             'In most inboxes, this is displayed next to the subject.\n'
+             'Keep it empty if you prefer the first characters of your email content to appear instead.')
     email_from = fields.Char(string='Send From', required=True,
         default=lambda self: self.env.user.email_formatted)
     sent_date = fields.Datetime(string='Sent Date', copy=False)
@@ -569,7 +574,7 @@ class MassMailing(models.Model):
             composer_values = {
                 'author_id': author_id,
                 'attachment_ids': [(4, attachment.id) for attachment in mailing.attachment_ids],
-                'body': self._prepend_preview(self.body_html),
+                'body': self._prepend_preview(self.body_html, self.preview),
                 'subject': mailing.subject,
                 'model': mailing.mailing_model_real,
                 'email_from': mailing.email_from,
