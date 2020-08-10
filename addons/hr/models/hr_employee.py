@@ -104,7 +104,7 @@ class HrEmployeePrivate(models.Model):
     color = fields.Integer('Color Index', default=0, groups="hr.group_hr_user")
     barcode = fields.Char(string="Badge ID", help="ID used for employee identification.", groups="hr.group_hr_user", copy=False)
     pin = fields.Char(string="PIN", groups="hr.group_hr_user", copy=False,
-        help="PIN used to Check In/Out in Kiosk Mode (if enabled in Configuration).")
+        help="PIN used to Check In/Out in the Kiosk Mode of the Attendance application (if enabled in Configuration) and to change the cashier in the Point of Sale application.")
     departure_reason = fields.Selection([
         ('fired', 'Fired'),
         ('resigned', 'Resigned'),
