@@ -67,7 +67,7 @@
                         <i class="fa fa-ban mr-2"/>Sold Out
                     </span>
                     <div t-if="event.is_participating" id="registered" class="ml-auto pr-3 d-none">
-                        <span  class="text-success ml-3">
+                        <span class="o_wevent_badge badge badge-success ml-3">
                             <i class="fa fa-check mr-2"/>Registered
                         </span>
                     </div>
@@ -249,16 +249,16 @@
             <div class="row mb-3">
                 <div class="col-lg-8">
                     <p><b>Start</b> <span itemprop="startDate" t-esc="event.date_begin_located"/><br/> <b>End</b> <span itemprop="endDate" t-esc="event.date_end_located"/></p>
-                    <div id="add_to_calendar" class="mt-4">
+                    <div id="add_to_calendar" class="mt-4 d-flex flex-column flex-md-row">
                         <a role="button" class="btn btn-primary" t-att-href="iCal_url">
                             <i class="fa fa-fw fa-calendar"/> Add to iCal/Outlook
                         </a>
-                        <a role="button" class="btn btn-primary" t-att-href="google_url" target='_blank'>
+                        <a role="button" class="btn btn-primary ml-md-2 mt-2 mt-md-0" t-att-href="google_url" target='_blank'>
                             <i class="fa fa-fw fa-calendar"/> Add to Google Calendar
                         </a>
                     </div>
                 </div>
-                <div class="col-lg-4">
+                <div class="col-lg-4 mt-4 mt-lg-0">
                     <h4 t-field="event.address_id" class="text-secondary font-weight-bold" t-options='{
                         "widget": "contact",
                         "fields": ["name"]
