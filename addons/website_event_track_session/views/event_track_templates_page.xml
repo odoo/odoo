@@ -195,13 +195,9 @@
                     t-options="{'widget': 'duration', 'digital': False, 'add_direction': True,
                                 'unit': 'second', 'round': 'minute', 'format': 'narrow'}"/>
             </small>
-            <small t-elif="track_other.date"
-                class="badge badge-light">
-                <span t-esc="track_other.date"
-                    t-options="{'widget': 'datetime', 'format': 'short'}"/>
-                <span t-esc="track_other.date"
-                    t-options="{'widget': 'datetime', 'tz_name': track_other.event_id.date_tz, 'format': 'ZZZZ'}"/>
-            </small>
+            <div t-elif="track_other.date" class="badge badge-light">
+                <span t-esc="track_other.date" t-options="{'widget': 'datetime', 'tz_name': track_other.event_id.date_tz, 'format': 'MMM. dd'}"/>
+            </div>
         </div>
     </div>
 </template>
