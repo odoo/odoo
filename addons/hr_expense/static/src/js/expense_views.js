@@ -8,6 +8,7 @@ odoo.define('hr_expense.expenses.tree', function (require) {
     var viewRegistry = require('web.view_registry');
     var core = require('web.core');
     var ListRenderer = require('web.ListRenderer');
+    var KanbanRenderer = require('web.KanbanRenderer');
     var session = require('web.session');
 
     var QWeb = core.qweb;
@@ -20,13 +21,13 @@ odoo.define('hr_expense.expenses.tree', function (require) {
         }),
     });
 
-    var ExpenseListRenderer = ListRenderer.extend({
+    const ExpenseDashboardMixin = {
         _render: async function () {
             var self = this;
             await this._super(...arguments);
             const result = await this._rpc({
                 model: 'hr.expense',
-                method: 'get_expense_dashbord',
+                method: 'get_expense_dashboard',
                 context: this.context,
             });
 
@@ -49,7 +50,9 @@ odoo.define('hr_expense.expenses.tree', function (require) {
             }
             return value;
         }
-    });
+    }
+
+    var ExpenseListRenderer = ListRenderer.extend(ExpenseDashboardMixin);
 
     var ExpensesListViewDashboardUpload = ListView.extend({
         config: _.extend({}, ListView.prototype.config, {
@@ -72,9 +75,12 @@ odoo.define('hr_expense.expenses.tree', function (require) {
         }),
     });
 
+    var ExpenseKanbanRenderer = KanbanRenderer.extend(ExpenseDashboardMixin);
+
     var ExpensesKanbanView = KanbanView.extend({
         config: _.extend({}, KanbanView.prototype.config, {
             Controller: ExpensesKanbanController,
+            Renderer: ExpenseKanbanRenderer,
         }),
     });
 
