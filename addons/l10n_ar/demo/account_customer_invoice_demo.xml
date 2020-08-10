@@ -275,7 +275,7 @@
         <field name="partner_id" ref="l10n_ar.res_partner_adhoc"/>
         <field name="invoice_user_id" ref="base.user_demo"/>
         <field name="invoice_payment_term_id" ref="account.account_payment_term_end_following_month"/>
-        <field name="type">out_invoice</field>
+        <field name="move_type">out_invoice</field>
         <field name="invoice_date" eval="time.strftime('%Y-%m')+'-13'"/>
         <field name="company_id" ref="company_ri"/>
         <field name="invoice_line_ids" eval="[
