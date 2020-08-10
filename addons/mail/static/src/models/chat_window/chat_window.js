@@ -11,31 +11,23 @@ function factory(dependencies) {
         /**
          * @override
          */
-        static create(data) {
-            const chatWindow = super.create(data);
-            chatWindow._onShowHomeMenu.bind(chatWindow);
-            chatWindow._onHideHomeMenu.bind(chatWindow)
+        _created() {
+            const res = super._created(...arguments);
+            this._onShowHomeMenu.bind(this);
+            this._onHideHomeMenu.bind(this);
 
-            chatWindow.env.messagingBus.on(
-                'hide_home_menu',
-                chatWindow,
-                chatWindow._onHideHomeMenu
-            );
-            chatWindow.env.messagingBus.on(
-                'show_home_menu',
-                chatWindow,
-                chatWindow._onShowHomeMenu
-            );
-            return chatWindow;
+            this.env.messagingBus.on('hide_home_menu', this, this._onHideHomeMenu);
+            this.env.messagingBus.on('show_home_menu', this, this._onShowHomeMenu);
+            return res;
         }
 
         /**
          * @override
          */
-        delete() {
+        _willDelete() {
             this.env.messagingBus.off('hide_home_menu', this, this._onHideHomeMenu);
             this.env.messagingBus.off('show_home_menu', this, this._onShowHomeMenu);
-            super.delete();
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------
