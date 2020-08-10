@@ -68,7 +68,7 @@ class Employee(models.AbstractModel):
                     ('ip', '!=', False),
                     ('create_date', '>=', Datetime.to_string(Datetime.now().replace(hour=0, minute=0, second=0, microsecond=0)))]
                 ).mapped('ip')
-                if any([ip in ip_list for ip in employee_ips]):
+                if any(ip in ip_list for ip in employee_ips):
                     ip_employees |= employee
             ip_employees.write({'ip_connected': True})
             employees = employees - ip_employees

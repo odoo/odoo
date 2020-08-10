@@ -57,7 +57,7 @@ class SaleOrderLine(models.Model):
             if order_line.qty_delivered_method == 'stock_move':
                 boms = order_line.move_ids.mapped('bom_line_id.bom_id')
                 dropship = False
-                if not boms and any([m._is_dropshipped() for m in order_line.move_ids]):
+                if not boms and any(m._is_dropshipped() for m in order_line.move_ids):
                     boms = boms._bom_find(product=order_line.product_id, company_id=order_line.company_id.id, bom_type='phantom')
                     dropship = True
                 # We fetch the BoMs of type kits linked to the order_line,

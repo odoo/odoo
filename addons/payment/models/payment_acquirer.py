@@ -1090,13 +1090,13 @@ class PaymentTransaction(models.Model):
         return res
 
     def action_capture(self):
-        if any([t.state != 'authorized' for t in self]):
-            raise ValidationError(_('Only transactions having the capture status can be captured.'))
+        if any(t.state != 'authorized' for t in self):
+            raise ValidationError(_('Only transactions having the authorized status can be captured.'))
         for tx in self:
             tx.s2s_capture_transaction()
 
     def action_void(self):
-        if any([t.state != 'authorized' for t in self]):
+        if any(t.state != 'authorized' for t in self):
             raise ValidationError(_('Only transactions having the capture status can be voided.'))
         for tx in self:
             tx.s2s_void_transaction()

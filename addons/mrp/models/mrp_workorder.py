@@ -630,7 +630,7 @@ class MrpWorkorder(models.Model):
         return True
 
     def button_done(self):
-        if any([x.state in ('done', 'cancel') for x in self]):
+        if any(x.state in ('done', 'cancel') for x in self):
             raise UserError(_('A Manufacturing Order is already done or cancelled.'))
         self.end_all()
         end_date = datetime.now()

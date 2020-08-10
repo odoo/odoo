@@ -82,7 +82,7 @@
                                             </td>
                                             <td>
                                                 <t t-if="not has_package">
-                                                    <t t-if="any(move_operation.filtered(lambda l: l.state == 'done'))">
+                                                    <t t-if="move_operation.state == 'done'">
                                                         <span t-esc="sum(move_operation.mapped('qty_done'))"/>
                                                     </t>
                                                     <t t-else="">

@@ -13,7 +13,7 @@
         </a>
     </li>
     <li t-if="has_visible_submenu" t-attf-class="#{item_class or ''} dropdown #{
-        (submenu.clean_url() and submenu.clean_url() != '/' and any([request.httprequest.path == child.url for child in submenu.child_id if child.url]) or
+        (submenu.clean_url() and submenu.clean_url() != '/' and any(request.httprequest.path == child.url for child in submenu.child_id if child.url) or
          (submenu.clean_url() and request.httprequest.path == submenu.clean_url())) and 'active'
         } #{submenu.is_mega_menu and 'position-static'}">
         <a t-attf-class="#{link_class or ''} dropdown-toggle #{submenu.is_mega_menu and 'o_mega_menu_toggle'}" data-toggle="dropdown" href="#">

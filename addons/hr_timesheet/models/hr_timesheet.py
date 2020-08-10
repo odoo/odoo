@@ -181,7 +181,7 @@ class AccountAnalyticLine(models.Model):
         result = {id_: {} for id_ in self.ids}
         sudo_self = self.sudo()  # this creates only one env for all operation that required sudo()
         # (re)compute the amount (depending on unit_amount, employee_id for the cost, and account_id for currency)
-        if any([field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']]):
+        if any(field_name in values for field_name in ['unit_amount', 'employee_id', 'account_id']):
             for timesheet in sudo_self:
                 cost = timesheet.employee_id.timesheet_cost or 0.0
                 amount = -timesheet.unit_amount * cost
