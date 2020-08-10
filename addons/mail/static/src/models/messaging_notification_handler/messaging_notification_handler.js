@@ -13,10 +13,10 @@ function factory(dependencies) {
         /**
          * @override
          */
-        delete() {
+        _willDelete() {
             this.env.services['bus_service'].off('notification');
             this.env.services['bus_service'].stopPolling();
-            super.delete();
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------

@@ -30,14 +30,44 @@ function factory() {
         }
 
         /**
-         * Called when the record is being created, but not yet processed
-         * its create value on the fields. This method is handy to define purely
-         * technical property on this record, like handling of timers. This
-         * method acts like the constructor, but has a very important difference:
-         * the `this` is the proxified record, so evaluation of field values
-         * on get/set work correctly.
+         * This function is called during the create cycle, when the record has
+         * already been created, but its values have not yet been assigned.
+         *
+         * It is usually preferable to override @see `_created`.
+         *
+         * The main use case is to prepare the record for the assignation of its
+         * values, for example if a computed field relies on the record to have
+         * some purely technical property correctly set.
+         *
+         * @abstract
+         * @private
          */
-        init() {}
+        _willCreate() {}
+
+        /**
+         * This function is called after the record has been created, more
+         * precisely at the end of the update cycle (which means all implicit
+         * changes such as computes have been applied too).
+         *
+         * The main use case is to register listeners on the record.
+         *
+         * @abstract
+         * @private
+         */
+        _created() {}
+
+        /**
+         * This function is called when the record is about to be deleted. The
+         * record still has all of its fields values accessible, but for all
+         * intents and purposes the record should already be considered
+         * deleted, which means update shouldn't be called inside this method.
+         *
+         * The main use case is to unregister listeners on the record.
+         *
+         * @abstract
+         * @private
+         */
+        _willDelete() {}
 
         //----------------------------------------------------------------------
         // Public

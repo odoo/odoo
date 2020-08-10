@@ -11,9 +11,9 @@ function factory(dependencies) {
         /**
          * @override
          */
-        delete() {
+        _willDelete() {
             this.env.services['bus_service'].off('window_focus', null, this._handleGlobalWindowFocus);
-            super.delete();
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------

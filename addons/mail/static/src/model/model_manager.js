@@ -34,19 +34,31 @@ class ModelManager {
          * The messaging env.
          */
         this.env = env;
+
+        //----------------------------------------------------------------------
+        // Various variables that are necessary to handle an update cycle. The
+        // goal of having an update cycle is to delay the execution of computes,
+        // life-cycle hooks and potential UI re-renders until the last possible
+        // moment, for performance reasons.
+        //----------------------------------------------------------------------
+
         /**
-         * Whether this is currently handling an "update after" on a record.
-         * Useful to determine if we should process computed/related fields.
+         * Set of records that have been created during the current update
+         * cycle. Useful to trigger `_created()` hook methods.
          */
-        this._isHandlingToUpdateAfters = false;
+        this._createdRecords = new Set();
         /**
-         * Determine whether an update cycle is currently in progress.
-         * Useful to determine whether an update should initiate an update
-         * cycle or not. An update cycle basically prioritizes processing
-         * of all direct updates (i.e. explicit from `data`) before
-         * processing computes.
+         * Tracks whether something has changed during the current update cycle.
+         * Useful to notify components (through the store) that some records
+         * have been changed.
          */
-        this._isInUpdateCycle = false;
+        this._hasAnyChangeDuringCycle = false;
+        /**
+         * Set of records that have been updated during the current update
+         * cycle. Useful to allow observers (typically components) to detect
+         * whether specific records have been changed.
+         */
+        this._updatedRecords = new Set();
         /**
          * Fields flagged to call compute during an update cycle.
          * For instance, when a field with dependents got update, dependent
@@ -106,81 +118,9 @@ class ModelManager {
      * @returns {mail.model|mail.model[]} newly created record(s)
      */
     create(Model, data = {}) {
-        return this._updateCycle(() => {
-            const isMulti = typeof data[Symbol.iterator] === 'function';
-            const dataList = isMulti ? data : [data];
-            const fieldNames = new Set(Object.keys(Model.fields));
-            const fields = Object.values(Model.fields);
-            const records = [];
-            for (const data of dataList) {
-                // Make proxified record, so that access to field redirects
-                // to field getter.
-                const record = new Proxy(new Model({ valid: true }), {
-                    get: (target, k) => {
-                        if (!(fieldNames.has(k))) {
-                            // No crash, we allow these reads due to patch()
-                            // implementation details that read on `this._super` even
-                            // if not set before-hand.
-                            return target[k];
-                        }
-                        return Model.fields[k].get(target);
-                    },
-                    set: (target, k, newVal) => {
-                        if (fieldNames.has(k)) {
-                            throw new Error("Forbidden to write on record field without .update()!!");
-                        } else {
-                            // No crash, we allow these writes due to following concerns:
-                            // - patch() implementation details that write on `this._super`
-                            // - record listeners that need setting on this with `.bind(this)`
-                            target[k] = newVal;
-                        }
-                        return true;
-                    },
-                });
-                record.env = this.env;
-                record.localId = Model._createRecordLocalId(data);
-                if (Model.get(record.localId)) {
-                    throw Error(`A record already exists for model "${Model.modelName}" with localId "${record.localId}".`);
-                }
-                // Contains field values of record.
-                record.__values = {};
-                // Contains revNumber of record for checking record update in useStore.
-                record.__state = 0;
-
-                Model.__records[record.localId] = record;
-                record.init();
-
-                // Ensure X2many relations are Set initially (other fields can stay undefined).
-                for (const field of fields) {
-                    if (field.fieldType === 'relation') {
-                        if (['one2many', 'many2many'].includes(field.relationType)) {
-                            record.__values[field.fieldName] = new Set();
-                        }
-                    }
-                }
-
-                const data2 = {};
-                for (const field of fields) {
-                    if (field.fieldName in data) {
-                        data2[field.fieldName] = data[field.fieldName];
-                    } else {
-                        data2[field.fieldName] = field.default;
-                    }
-                }
-
-                for (const field of fields) {
-                    if (field.compute || field.related) {
-                        // new record should always invoke computed fields.
-                        this._registerToComputeField(record, field);
-                    }
-                }
-
-                this.update(record, data2);
-
-                records.push(record);
-            }
-            return isMulti ? records : records[0];
-        });
+        const res = this._create(Model, data);
+        this._flushUpdateCycle();
+        return res;
     }
 
     /**
@@ -191,34 +131,20 @@ class ModelManager {
      * @param {mail.model} record
      */
     delete(record) {
-        this._updateCycle(() => {
-            const Model = record.constructor;
-            if (!record.exists()) {
-                throw Error(`Cannot delete already deleted record ${record.localId}.`);
-            }
-            for (const field of Object.values(Model.fields)) {
-                if (field.fieldType === 'relation') {
-                    // ensure inverses are properly unlinked
-                    field.set(record, [['unlink-all']]);
-                }
-            }
-            this._toComputeFields.delete(record);
-            this._toUpdateAfters.delete(record);
-            delete Model.__records[record.localId];
-        });
+        this._delete(record);
+        this._flushUpdateCycle();
     }
 
     /**
      * Delete all records.
      */
     deleteAll() {
-        this._updateCycle(() => {
-            for (const Model of Object.values(this.env.models)) {
-                for (const record of Object.values(Model.__records)) {
-                    record.delete();
-                }
+        for (const Model of Object.values(this.env.models)) {
+            for (const record of Object.values(Model.__records)) {
+                this._delete(record);
             }
-        });
+        }
+        this._flushUpdateCycle();
     }
 
     /**
@@ -293,22 +219,9 @@ class ModelManager {
      * @returns {mail.model|mail.model[]} created or updated record(s).
      */
     insert(Model, data) {
-        return this._updateCycle(() => {
-            const isMulti = typeof data[Symbol.iterator] === 'function';
-            const dataList = isMulti ? data : [data];
-            const records = [];
-            for (const data of dataList) {
-                const localId = Model._createRecordLocalId(data);
-                let record = Model.get(localId);
-                if (!record) {
-                    record = Model.create(data);
-                } else {
-                    record.update(data);
-                }
-                records.push(record);
-            }
-            return isMulti ? records : records[0];
-        });
+        const res = this._insert(Model, data);
+        this._flushUpdateCycle();
+        return res;
     }
 
     /**
@@ -322,34 +235,9 @@ class ModelManager {
      * @returns {boolean} whether any value changed for the current record
      */
     update(record, data) {
-        return this._updateCycle(() => {
-            if (!record.exists()) {
-                throw Error(`Cannot update already deleted record ${record.localId}.`);
-            }
-            if (!this._toUpdateAfters.has(record)) {
-                // queue updateAfter before calling field.set to ensure previous
-                // contains the value at the start of update cycle
-                this._toUpdateAfters.set(record, record._updateBefore());
-            }
-            const Model = record.constructor;
-            let hasChanged = false;
-            for (const fieldName of Object.keys(data)) {
-                const field = Model.fields[fieldName];
-                if (!field) {
-                    throw new Error(`Cannot create/update record with data unrelated to a field. (model: "${Model.modelName}", non-field attempted update: "${fieldName}")`);
-                }
-                if (!field.set(record, data[fieldName])) {
-                    continue;
-                }
-                hasChanged = true;
-                // flag all dependent fields for compute
-                this._registerComputeOfDependents(record, field);
-            }
-            if (hasChanged) {
-                record.__state++;
-            }
-            return hasChanged;
-        });
+        const res = this._update(record, data);
+        this._flushUpdateCycle();
+        return res;
     }
 
     //--------------------------------------------------------------------------
@@ -641,6 +529,209 @@ class ModelManager {
 
     /**
      * @private
+     * @param {mail.model} Model class
+     * @param {Object|Object[]} [data={}]
+     * @returns {mail.model|mail.model[]}
+     */
+    _create(Model, data = {}) {
+        const isMulti = typeof data[Symbol.iterator] === 'function';
+        const dataList = isMulti ? data : [data];
+        const fieldNames = new Set(Object.keys(Model.fields));
+        const fields = Object.values(Model.fields);
+        const records = [];
+        for (const data of dataList) {
+            /**
+             * 0. Ensure the record can be created: localId must be unique.
+             */
+            const localId = Model._createRecordLocalId(data);
+            if (Model.get(localId)) {
+                throw Error(`A record already exists for model "${Model.modelName}" with localId "${localId}".`);
+            }
+            /**
+             * 1. Make proxified record, to redirects field access to field
+             * getter and to prevent field from being written without calling
+             * update (which is necessary to process update cycle).
+             */
+            const record = new Proxy(new Model({ valid: true }), {
+                get: (target, k) => {
+                    if (!(fieldNames.has(k))) {
+                        // No crash, we allow these reads due to patch()
+                        // implementation details that read on `this._super` even
+                        // if not set before-hand.
+                        return target[k];
+                    }
+                    return Model.fields[k].get(target);
+                },
+                set: (target, k, newVal) => {
+                    if (fieldNames.has(k)) {
+                        throw new Error("Forbidden to write on record field without .update()!!");
+                    } else {
+                        // No crash, we allow these writes due to following concerns:
+                        // - patch() implementation details that write on `this._super`
+                        // - record listeners that need setting on this with `.bind(this)`
+                        target[k] = newVal;
+                    }
+                    return true;
+                },
+            });
+            /**
+             * 2. Prepare record state. Assign various keys and values that are
+             * expected to be found on every record.
+             */
+            Object.assign(record, {
+                // The messaging env.
+                env: this.env,
+                // The unique record identifier.
+                localId,
+                // Field values of record.
+                __values: {},
+                // revNumber of record for detecting changes in useStore.
+                __state: 0,
+            });
+            // Ensure X2many relations are Set initially (other fields can stay undefined).
+            for (const field of fields) {
+                if (field.fieldType === 'relation') {
+                    if (['one2many', 'many2many'].includes(field.relationType)) {
+                        record.__values[field.fieldName] = new Set();
+                    }
+                }
+            }
+            /**
+             * 3. Register record and invoke the life-cycle hook `_willCreate.`
+             * After this step the record is in a functioning state and it is
+             * considered existing.
+             */
+            Model.__records[record.localId] = record;
+            record._willCreate();
+            /**
+             * 4. Write provided data, default data, and register computes.
+             */
+            const data2 = {};
+            for (const field of fields) {
+                if (field.fieldName in data) {
+                    data2[field.fieldName] = data[field.fieldName];
+                } else {
+                    data2[field.fieldName] = field.default;
+                }
+                if (field.compute || field.related) {
+                    // new record should always invoke computed fields.
+                    this._registerToComputeField(record, field);
+                }
+            }
+            this._update(record, data2);
+            /**
+             * 5. Register post processing operation that are to be delayed at
+             * the end of the update cycle.
+             */
+            this._createdRecords.add(record);
+            this._hasAnyChangeDuringCycle = true;
+
+            records.push(record);
+        }
+        return isMulti ? records : records[0];
+    }
+
+    /**
+     * @private
+     * @param {mail.model} record
+     */
+    _delete(record) {
+        const Model = record.constructor;
+        if (!record.exists()) {
+            throw Error(`Cannot delete already deleted record ${record.localId}.`);
+        }
+        record._willDelete();
+        for (const field of Object.values(Model.fields)) {
+            if (field.fieldType === 'relation') {
+                // ensure inverses are properly unlinked
+                field.set(record, [['unlink-all']]);
+            }
+        }
+        this._hasAnyChangeDuringCycle = true;
+        // TODO ideally deleting the record should be done at the top of the
+        // method, and it shouldn't be needed to manually remove
+        // _toComputeFields and _toUpdateAfters, but it is not possible until
+        // related are also properly unlinked during `set`
+        this._toComputeFields.delete(record);
+        this._toUpdateAfters.delete(record);
+        delete Model.__records[record.localId];
+    }
+
+    /**
+     * Terminates an update cycle by executing its pending operations: execute
+     * computed fields, execute life-cycle hooks, update rev numbers.
+     *
+     * @private
+     */
+    _flushUpdateCycle(func) {
+        // Execution of computes
+        while (this._toComputeFields.size > 0) {
+            for (const [record, fields] of this._toComputeFields) {
+                // delete at every step to avoid recursion, indeed doCompute
+                // might trigger an update cycle itself
+                this._toComputeFields.delete(record);
+                if (!record.exists()) {
+                    throw Error(`Cannot execute computes for already deleted record ${record.localId}.`);
+                }
+                while (fields.size > 0) {
+                    for (const field of fields) {
+                        // delete at every step to avoid recursion
+                        fields.delete(field);
+                        if (field.compute) {
+                            this._update(record, { [field.fieldName]: record[field.compute]() });
+                            continue;
+                        }
+                        if (field.related) {
+                            this._update(record, { [field.fieldName]: field.computeRelated(record) });
+                            continue;
+                        }
+                        throw new Error("No compute method defined on this field definition");
+                    }
+                }
+            }
+        }
+
+        // Execution of _updateAfter
+        while (this._toUpdateAfters.size > 0) {
+            for (const [record, previous] of this._toUpdateAfters) {
+                // delete at every step to avoid recursion, indeed _updateAfter
+                // might trigger an update cycle itself
+                this._toUpdateAfters.delete(record);
+                if (!record.exists()) {
+                    throw Error(`Cannot _updateAfter for already deleted record ${record.localId}.`);
+                }
+                record._updateAfter(previous);
+            }
+        }
+
+        // Execution of _created
+        while (this._createdRecords.size > 0) {
+            for (const record of this._createdRecords) {
+                // delete at every step to avoid recursion, indeed _created
+                // might trigger an update cycle itself
+                this._createdRecords.delete(record);
+                if (!record.exists()) {
+                    throw Error(`Cannot call _created for already deleted record ${record.localId}.`);
+                }
+                record._created();
+            }
+        }
+
+        // Increment record rev number (for useStore comparison)
+        for (const record of this._updatedRecords) {
+            record.__state++;
+        }
+        this._updatedRecords.clear();
+
+        // Trigger at most one useStore call per update cycle
+        if (this._hasAnyChangeDuringCycle) {
+            this.env.store.state.messagingRevNumber++;
+            this._hasAnyChangeDuringCycle = false;
+        }
+    }
+
+    /**
+     * @private
      * @returns {Object}
      * @throws {Error} in case it cannot generate models.
      */
@@ -709,6 +800,29 @@ class ModelManager {
          */
         this._checkProcessedFieldsOnModels(Models);
         return Models;
+    }
+
+    /**
+     * @private
+     * @param {mail.model}
+     * @param {Object|Object[]} data
+     * @returns {mail.model|mail.model[]}
+     */
+    _insert(Model, data) {
+        const isMulti = typeof data[Symbol.iterator] === 'function';
+        const dataList = isMulti ? data : [data];
+        const records = [];
+        for (const data of dataList) {
+            const localId = Model._createRecordLocalId(data);
+            let record = Model.get(localId);
+            if (!record) {
+                record = this._create(Model, data);
+            } else {
+                this._update(record, data);
+            }
+            records.push(record);
+        }
+        return isMulti ? records : records[0];
     }
 
     /**
@@ -876,39 +990,42 @@ class ModelManager {
     /**
      * Registers compute of dependents for the given field, if applicable.
      *
+     * @private
      * @param {mail.model} record
      * @param {ModelField} field
      */
     _registerComputeOfDependents(record, field) {
         const Model = record.constructor;
         for (const dependent of field.dependents) {
-            const [hash, currentFieldName, relatedFieldName] = dependent.split(
+            const [hash, fieldName1, fieldName2] = dependent.split(
                 this.DEPENDENT_INNER_SEPARATOR
             );
-            const field = Model.fields[currentFieldName];
-            if (relatedFieldName) {
-                if (['one2many', 'many2many'].includes(field.relationType)) {
-                    for (const otherRecord of record[currentFieldName]) {
+            const field1 = Model.fields[fieldName1];
+            if (fieldName2) {
+                // "fieldName1.fieldName2" -> dependent is on another record
+                if (['one2many', 'many2many'].includes(field1.relationType)) {
+                    for (const otherRecord of record[fieldName1]) {
                         const OtherModel = otherRecord.constructor;
-                        const field = OtherModel.fields[relatedFieldName];
-                        if (field && field.hashes.includes(hash)) {
-                            this._registerToComputeField(otherRecord, field);
+                        const field2 = OtherModel.fields[fieldName2];
+                        if (field2 && field2.hashes.includes(hash)) {
+                            this._registerToComputeField(otherRecord, field2);
                         }
                     }
                 } else {
-                    const otherRecord = record[currentFieldName];
+                    const otherRecord = record[fieldName1];
                     if (!otherRecord) {
                         continue;
                     }
                     const OtherModel = otherRecord.constructor;
-                    const field = OtherModel.fields[relatedFieldName];
-                    if (field && field.hashes.includes(hash)) {
-                        this._registerToComputeField(otherRecord, field);
+                    const field2 = OtherModel.fields[fieldName2];
+                    if (field2 && field2.hashes.includes(hash)) {
+                        this._registerToComputeField(otherRecord, field2);
                     }
                 }
             } else {
-                if (field && field.hashes.includes(hash)) {
-                    this._registerToComputeField(record, field);
+                // "fieldName1" only -> dependent is on current record
+                if (field1 && field1.hashes.includes(hash)) {
+                    this._registerToComputeField(record, field1);
                 }
             }
         }
@@ -918,6 +1035,7 @@ class ModelManager {
      * Register a pair record/field for the compute step of the update cycle in
      * progress.
      *
+     * @private
      * @param {mail.model} record
      * @param {ModelField} field
      */
@@ -929,74 +1047,41 @@ class ModelManager {
     }
 
     /**
-     * Process registered computed fields in the current update cycle.
-     *
      * @private
+     * @param {mail.model} record
+     * @param {Object} data
+     * @param {Object} [options]
+     * @returns {boolean} whether any value changed for the current record
      */
-    _updateComputes() {
-        while (this._toComputeFields.size > 0) {
-            for (const [record, fields] of this._toComputeFields) {
-                this._toComputeFields.delete(record);
-                if (!record.exists()) {
-                    throw Error(`Cannot execute computes for already deleted record ${record.localId}.`);
-                }
-                while (fields.size > 0) {
-                    for (const field of fields) {
-                        fields.delete(field);
-                        field.doCompute(record);
-                    }
-                }
-            }
+    _update(record, data, options) {
+        if (!record.exists()) {
+            throw Error(`Cannot update already deleted record ${record.localId}.`);
         }
-    }
-
-    /**
-     * Executes the provided function as part of a single update cycle. This
-     * allows the execution of computed fields to happen only once, at the end
-     * of the last pending update cycle.
-     * It makes sense to call this function when the provided function is
-     * expected to create/update/delete records, which in turn would lead to
-     * potentially triggering computes.
-     *
-     * @private
-     * @param {function} func synchronous function expected to trigger computes
-     * @returns {any} the result of the provided function
-     */
-    _updateCycle(func) {
-        let res;
-        if (!this._isInUpdateCycle) {
-            this._isInUpdateCycle = true;
-            res = func();
-            this._updateComputes();
-            this._isHandlingToUpdateAfters = true;
-            while (this._toUpdateAfters.size > 0) {
-                for (const [record, previous] of this._toUpdateAfters) {
-                    this._toUpdateAfters.delete(record);
-                    if (!record.exists()) {
-                        throw Error(`Cannot _updateAfter for already deleted record ${record.localId}.`);
-                    }
-                    record._updateAfter(previous);
-                }
-            }
-            this._isHandlingToUpdateAfters = false;
-            this._isInUpdateCycle = false;
-            // trigger at most one useStore call per update cycle
-            this.env.store.state.messagingRevNumber++;
-        } else {
-            const wasHandlingToUpdateAfters = this._isHandlingToUpdateAfters;
-            this._isHandlingToUpdateAfters = false;
-            res = func();
-            if (wasHandlingToUpdateAfters) {
-                // Special case for computes triggered during an _updateAfter:
-                // execute them at the end of the current cycle, instead of at
-                // the end of the last pending cycle. This is because
-                // _updateAfter is expected to work with the "final" state just
-                // like business code, not with a temporary non-computed state.
-                this._updateComputes();
-                this._isHandlingToUpdateAfters = true;
-            }
+        if (!this._toUpdateAfters.has(record)) {
+            // queue updateAfter before calling field.set to ensure previous
+            // contains the value at the start of update cycle
+            this._toUpdateAfters.set(record, record._updateBefore());
         }
-        return res;
+        const Model = record.constructor;
+        let hasChanged = false;
+        for (const fieldName of Object.keys(data)) {
+            const field = Model.fields[fieldName];
+            if (!field) {
+                throw new Error(`Cannot create/update record with data unrelated to a field. (model: "${Model.modelName}", non-field attempted update: "${fieldName}")`);
+            }
+            const newVal = data[fieldName];
+            if (!field.set(record, newVal, options)) {
+                continue;
+            }
+            hasChanged = true;
+            // flag all dependent fields for compute
+            this._registerComputeOfDependents(record, field);
+        }
+        if (hasChanged) {
+            this._updatedRecords.add(record);
+            this._hasAnyChangeDuringCycle = true;
+        }
+        return hasChanged;
     }
 
 }

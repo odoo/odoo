@@ -11,27 +11,10 @@ function factory(dependencies) {
     class Thread extends dependencies['mail.model'] {
 
         /**
-         * FIXME With this, whenever client is aware of new thread, this will
-         * (almost) always focus its composer when displayed. This shouldn't be
-         * the case, instead auto-focus of composer is flow-specific.
-         * See task-2277537
-         *
          * @override
          */
-        static create(data) {
-            if (!data.composer) {
-                data.composer = [['create', {
-                    isDoFocus: true,
-                }]];
-            }
-            return super.create(data);
-        }
-
-        /**
-         * @override
-         */
-        init(...args) {
-            super.init(...args);
+        _willCreate() {
+            const res = super._willCreate(...arguments);
             /**
              * Timer of current partner that was currently typing something, but
              * there is no change on the input for 5 seconds. This is used
@@ -110,19 +93,20 @@ function factory(dependencies) {
                 ({ isTyping }) => this.async(() => this._notifyCurrentPartnerTypingStatus({ isTyping })),
                 2.5 * 1000
             );
+            return res;
         }
 
         /**
          * @override
          */
-        delete(...args) {
+        _willDelete() {
             this._currentPartnerInactiveTypingTimer.clear();
             this._currentPartnerLongTypingTimer.clear();
             this._throttleNotifyCurrentPartnerTypingStatus.clear();
             for (const timer of this._otherMembersLongTypingTimers.values()) {
                 timer.clear();
             }
-            super.delete(...args);
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------
@@ -470,14 +454,15 @@ function factory(dependencies) {
          * Only makes sense if pendingFoldState is set to the desired value.
          */
         async notifyFoldStateToServer() {
-            await this.async(() => this.env.services.rpc({
+            // method is called from _updateAfter so it cannot be async
+            this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'channel_fold',
                 kwargs: {
                     uuid: this.uuid,
                     state: this.pendingFoldState,
                 }
-            }, { shadow: true }));
+            }, { shadow: true });
         }
 
         /**
@@ -486,12 +471,13 @@ function factory(dependencies) {
          *
          * Only makes sense if pendingServerState is set to 'unpin'.
          */
-        async notifyUnPinToServer() {
-            return this.async(() => this.env.services.rpc({
+        notifyUnPinToServer() {
+            // method is called from _updateAfter so it cannot be async
+            this.env.services.rpc({
                 model: 'mail.channel',
                 method: 'execute_command',
                 args: [[this.id], 'leave']
-            }));
+            });
         }
 
         /**
@@ -1206,6 +1192,13 @@ function factory(dependencies) {
             dependencies: ['viewersChatWindow'],
         }),
         composer: one2one('mail.composer', {
+            /**
+             * FIXME With this, whenever client is aware of new thread, this will
+             * (almost) always focus its composer when displayed. This shouldn't be
+             * the case, instead auto-focus of composer is flow-specific.
+             * See task-2277537
+             */
+            default: [['create', { isDoFocus: true }]],
             inverse: 'thread',
             isCausal: true,
         }),

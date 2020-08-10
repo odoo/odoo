@@ -12,9 +12,9 @@ function factory(dependencies) {
         /**
          * @override
          */
-        delete() {
+        _willDelete() {
             this._stopLoading();
-            super.delete();
+            return super._willDelete(...arguments);
         }
 
         //----------------------------------------------------------------------
