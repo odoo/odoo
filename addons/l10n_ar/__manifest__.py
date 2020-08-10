@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 {
-    'name': 'Argentinian Accounting',
+    'name': 'Argentina - Accounting',
     'version': "3.0",
     'description': """
 Functional
