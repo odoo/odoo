@@ -71,7 +71,7 @@
             background-color: #d3d3d36e;
         }
         th:not(.active), td.active {
-            width: 150px;
+            width: 100px;
         }
         th.position-sticky {
             left: 0;
@@ -93,6 +93,10 @@
             }
             .badge {
                 height: fit-content;
+                max-width: 100%;
+                white-space: nowrap;
+                text-overflow: ellipsis;
+                overflow: hidden;
             }
             &.invisible {
                 visibility: visible !important;
