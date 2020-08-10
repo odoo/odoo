@@ -47,6 +47,10 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
         // operations to complete before checking if there are changes to
         // discard when discardChanges is called
         this.savingDef = Promise.resolve();
+        // discardingDef is used to ensure that we don't ask twice the user if
+        // he wants to discard changes, when 'canBeDiscarded' is called several
+        // times "in parallel"
+        this.discardingDef = null;
         this.viewId = params.viewId;
     },
     /**
@@ -78,21 +82,30 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      */
     canBeDiscarded: function (recordID) {
         var self = this;
+        if (this.discardingDef) {
+            // discard dialog is already open
+            return this.discardingDef;
+        }
         if (!this.isDirty(recordID)) {
             return Promise.resolve(false);
         }
 
         var message = _t("The record has been modified, your changes will be discarded. Do you want to proceed?");
-        var def;
-        def = new Promise(function (resolve, reject) {
+        this.discardingDef = new Promise(function (resolve, reject) {
             var dialog = Dialog.confirm(self, message, {
                 title: _t("Warning"),
-                confirm_callback: resolve.bind(self, true),
-                cancel_callback: reject,
+                confirm_callback: () => {
+                    resolve(true);
+                    self.discardingDef = null;
+                },
+                cancel_callback: () => {
+                    reject();
+                    self.discardingDef = null;
+                },
             });
-            dialog.on('closed', def, reject);
+            dialog.on('closed', self.discardingDef, reject);
         });
-        return def;
+        return this.discardingDef;
     },
     /**
      * Ask the renderer if all associated field widget are in a valid state for
