@@ -9,7 +9,7 @@
 #               Humberto Ochoa (Vauxoo)
 
 {
-    'name': 'Colombian - Accounting',
+    'name': 'Colombia - Accounting',
     'version': '0.8',
     'category': 'Accounting/Localizations/Account Charts',
     'description': 'Colombian Accounting and Tax Preconfiguration',
