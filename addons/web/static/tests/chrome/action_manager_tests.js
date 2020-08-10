@@ -2889,6 +2889,43 @@ QUnit.module('ActionManager', {
         actionManager.destroy();
     });
 
+    QUnit.test('explicitly call clear_uncommitted_change twice do not open discard dialog twice', async function (assert) {
+        assert.expect(6);
+
+        var actionManager = await createActionManager({
+            actions: this.actions,
+            archs: this.archs,
+            data: this.data,
+            intercepts: {
+                clear_uncommitted_changes: function (ev) {
+                    actionManager.clearUncommittedChanges();
+                },
+            },
+        });
+
+        // execute an action and edit existing record
+        await actionManager.doAction(3);
+
+        await testUtils.dom.click(actionManager.$('.o_list_view .o_data_row:first'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_readonly');
+
+        await testUtils.dom.click($('.o_control_panel .o_form_button_edit'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_editable');
+
+        await testUtils.fields.editInput(actionManager.$('input[name=foo]'), 'val');
+        actionManager.trigger_up('clear_uncommitted_changes');
+        assert.containsOnce($('body'), '.modal'); // confirm discard dialog
+        actionManager.trigger_up("clear_uncommitted_changes");
+        assert.containsOnce($('body'), '.modal'); // confirm discard dialog
+        // confirm discard changes
+        await testUtils.dom.click($('.modal .modal-footer .btn-primary'));
+        assert.containsOnce(actionManager, '.o_form_view.o_form_readonly');
+        assert.strictEqual(actionManager.$('span[name=foo]').text(), 'yop',
+            'changes should be discarded');
+
+        actionManager.destroy();
+    });
+
     QUnit.test('limit set in action is passed to each created controller', function (assert) {
         assert.expect(2);
 

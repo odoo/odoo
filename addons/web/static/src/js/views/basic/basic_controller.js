@@ -72,19 +72,31 @@ var BasicController = AbstractController.extend(FieldManagerMixin, {
      *          rejected otherwise
      */
     canBeDiscarded: function (recordID) {
+        var self = this;
         if (!this.isDirty(recordID)) {
             return $.when(false);
         }
 
+        // Discard dialog is already open, return discardDef
+        if (self.discardDef) {
+            return self.discardDef;
+        }
+
         var message = _t("The record has been modified, your changes will be discarded. Do you want to proceed?");
-        var def = $.Deferred();
+        this.discardDef = $.Deferred();
         var dialog = Dialog.confirm(this, message, {
             title: _t("Warning"),
-            confirm_callback: def.resolve.bind(def, true),
-            cancel_callback: def.reject.bind(def),
+            confirm_callback: function () {
+                self.discardDef.resolve(true);
+                self.discardDef = undefined;
+            },
+            cancel_callback: function () {
+                self.discardDef.reject();
+                self.discardDef = undefined;
+            },
         });
-        dialog.on('closed', def, def.reject);
-        return def;
+        dialog.on("closed", this.discardDef, this.discardDef.reject);
+        return this.discardDef;
     },
     /**
      * Ask the renderer if all associated field widget are in a valid state for
