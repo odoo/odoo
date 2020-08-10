@@ -330,13 +330,13 @@
                     <field name="partner_name" optional="hide"/>
                     <field name="email_from" optional="show"/>
                     <field name="phone" optional="show" class="o_force_ltr"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="city" optional="show"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="show"/>
                     <field name="partner_id" invisible="1"/>
                     <field name="user_id" optional="show"  widget="many2one_avatar_user"/>
                     <field name="team_id" optional="show"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" invisible="1"/>
                     <field name="campaign_id" optional="hide"/>
@@ -394,7 +394,7 @@
             </field>
         </record>
 
-        <record  id="crm_case_calendar_view_leads" model="ir.ui.view">
+        <record id="crm_case_calendar_view_leads" model="ir.ui.view">
             <field name="name">crm.lead.calendar.lead</field>
             <field name="model">crm.lead</field>
             <field name="priority" eval="2"/>
@@ -655,6 +655,7 @@
                     <field name="contact_name" optional="show"/>
                     <field name="email_from"/>
                     <field name="phone" class="o_force_ltr"/>
+                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="city" optional="hide"/>
                     <field name="state_id" optional="hide"/>
                     <field name="country_id" optional="hide"/>
@@ -675,7 +676,6 @@
                     <field name="stage_id" optional="show" decoration-bf="1"/>
                     <field name="active" invisible="1"/>
                     <field name="probability" optional="hide"/>
-                    <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="referred" invisible="1"/>
                     <field name="message_needaction" invisible="1"/>

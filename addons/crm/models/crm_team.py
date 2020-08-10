@@ -26,11 +26,11 @@ class Team(models.Model):
         help="Number of leads and opportunities assigned this last month.")
     opportunities_count = fields.Integer(
         string='# Opportunities', compute='_compute_opportunities_data')
-    opportunities_amount = fields.Integer(
+    opportunities_amount = fields.Monetary(
         string='Opportunities Revenues', compute='_compute_opportunities_data')
     opportunities_overdue_count = fields.Integer(
         string='# Overdue Opportunities', compute='_compute_opportunities_overdue_data')
-    opportunities_overdue_amount = fields.Integer(
+    opportunities_overdue_amount = fields.Monetary(
         string='Overdue Opportunities Revenues', compute='_compute_opportunities_overdue_data',)
     # alias: improve fields coming from _inherits, use inherited to avoid replacing them
     alias_user_id = fields.Many2one(
