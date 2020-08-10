@@ -18,14 +18,12 @@
             <field name="domain">[('state', 'not in', ('done', 'cancel'))]</field>
             <field name="context">{'search_default_workcenter_id': active_id}</field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_smiling_face">
-                Add a work center
-              </p><p>
-                Work Centers allow you to create and manage manufacturing
-                units. They consist of workers and/or machines, which are
-                considered as units for task assignment as well as capacity
-                and planning forecast.
-              </p>
+                <p class="o_view_nocontent_smiling_face">
+                    No work orders to do!
+                </p><p>
+                    Work orders are operations to do as part of a manufacturing order.
+                    Operations are defined in the bill of materials or added in the manufacturing order directly.
+                </p>
             </field>
         </record>
 
