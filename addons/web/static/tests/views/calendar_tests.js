@@ -3737,6 +3737,45 @@ QUnit.module('Views', {
 
         calendar.destroy();
     });
+
+    QUnit.test('click outside the popup should close it', async function (assert) {
+        assert.expect(4);
+
+        var calendar = await createCalendarView({
+            View: CalendarView,
+            model: 'event',
+            data: this.data,
+            arch:
+                `<calendar
+                    create="false"
+                    event_open_popup="true"
+                    quick_add="false"
+                    date_start="start"
+                    date_stop="stop"
+                    all_day="allday"
+                    mode="month"/>`,
+            archs: archs,
+            viewOptions: {
+                initialDate: initialDate,
+            },
+        });
+
+        assert.containsNone(calendar, '.o_cw_popover');
+
+        await testUtils.dom.click(calendar.el.querySelector('.fc-event .fc-content'));
+        assert.containsOnce(calendar, '.o_cw_popover',
+            'open popup when click on event');
+
+        await testUtils.dom.click(calendar.el.querySelector('.o_cw_body'));
+        assert.containsOnce(calendar, '.o_cw_popover',
+            'keep popup openned when click inside popup');
+
+        await testUtils.dom.click(calendar.el.querySelector('.o_content'));
+        assert.containsNone(calendar, '.o_cw_popover',
+            'close popup when click outside popup');
+
+        calendar.destroy();
+    });
 });
 
 });
