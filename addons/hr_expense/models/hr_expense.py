@@ -102,6 +102,8 @@ class HrExpense(models.Model):
     is_editable = fields.Boolean("Is Editable By Current User", compute='_compute_is_editable')
     is_ref_editable = fields.Boolean("Reference Is Editable By Current User", compute='_compute_is_ref_editable')
 
+    sample = fields.Boolean()
+
     @api.depends('sheet_id', 'sheet_id.account_move_id', 'sheet_id.state')
     def _compute_state(self):
         for expense in self:
@@ -311,6 +313,7 @@ class HrExpense(models.Model):
 
     def action_submit_expenses(self):
         sheet = self._create_sheet_from_expenses()
+        sheet.action_submit_sheet()
         return {
             'name': _('New Expense Report'),
             'type': 'ir.actions.act_window',
@@ -542,25 +545,28 @@ class HrExpense(models.Model):
         self.sheet_id.message_post_with_view('hr_expense.hr_expense_template_refuse_reason',
                                              values={'reason': reason, 'is_sheet': False, 'name': self.name})
 
-    # YTI fix typo in master
     @api.model
-    def get_expense_dashbord(self):
+    def get_expense_dashboard(self):
         expense_state = {
             'draft': {
                 'description': _('to report'),
-                'amount': list(),
+                'amount': 0.0,
+                'currency': self.env.company.currency_id.id,
             },
             'reported': {
                 'description': _('under validation'),
-                'amount': list(),
+                'amount': 0.0,
+                'currency': self.env.company.currency_id.id,
             },
             'approved': {
                 'description': _('to be reimbursed'),
-                'amount': list(),
+                'amount': 0.0,
+                'currency': self.env.company.currency_id.id,
             }
         }
         if not self.env.user.employee_ids:
             return expense_state
+        target_currency = self.env.company.currency_id
         expenses = self.read_group(
             [
                 ('employee_id', 'in', self.env.user.employee_ids.ids),
@@ -569,9 +575,10 @@ class HrExpense(models.Model):
             ], ['total_amount', 'currency_id', 'state'], ['state', 'currency_id'], lazy=False)
         for expense in expenses:
             state = expense['state']
-            currency = expense['currency_id'][0]
-            amount = expense['total_amount']
-            expense_state[state]['amount'].append((currency, amount))
+            currency = self.env['res.currency'].browse(expense['currency_id'][0])
+            amount = currency._convert(
+                    expense['total_amount'], target_currency, self.env.company, fields.Date.today())
+            expense_state[state]['amount'] += amount
         return expense_state
 
     # ----------------------------------------
@@ -867,6 +874,13 @@ class HrExpenseSheet(models.Model):
     # --------------------------------------------
 
     def action_sheet_move_create(self):
+        samples = self.mapped('expense_line_ids.sample')
+        if samples.count(True):
+            if samples.count(False):
+                raise UserError(_("You can't mix sample expenses and regular ones"))
+            self.write({'state': 'post'})
+            return
+
         if any(sheet.state != 'approve' for sheet in self):
             raise UserError(_("You can only generate accounting entry for approved expense(s)."))
 
