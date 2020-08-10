@@ -14,9 +14,10 @@ class FleetVehicle(models.Model):
     def action_generate_analytic_account(self):
         if not self.env.user.has_group('fleet.fleet_group_user'):
             raise AccessError(_("Sorry, you must be at least a fleet user to make this action."))
+        AanalyticAccount = self.env['account.analytic.account'].sudo()
         for vehicle in self:
-            analytic_account = self.env['account.analytic.account'].sudo().create([{
-                'name': self._get_analytic_name(),
-                'company_id': self.company_id.id or self.env.company.id,
-            }])
+            analytic_account = AanalyticAccount.create({
+                'name': vehicle._get_analytic_name(),
+                'company_id': vehicle.company_id.id or vehicle.env.company.id,
+            })
             vehicle.write({'analytic_account_id': analytic_account.id})
