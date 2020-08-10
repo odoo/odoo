@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 {
-    'name': 'Uruguay - Chart of Accounts',
+    'name': 'Uruguay - Accounting',
     'version': '0.1',
     'author': 'Uruguay l10n Team, Guillem Barba',
     'category': 'Accounting/Localizations/Account Charts',
