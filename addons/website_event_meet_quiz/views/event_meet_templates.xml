@@ -8,39 +8,34 @@
 </template>
 
 <template id="community_leaderboard_small" name="Small Leaderboard">
-    <div class="row">
-        <div class="col">
-            <div class="w-100 d-flex justify-content-between align-items-end o_page_header">
-                <h1 class="m-0">Leaderboard</h1>
-                <a t-attf-href="#{'/event/%s/community/leaderboard' % (slug(event))}">View all</a>
-            </div>
-        </div>
+    <div class="w-100 d-flex justify-content-between align-items-end o_page_header">
+        <h1 class="m-0">Leaderboard</h1>
+        <a t-attf-href="#{'/event/%s/community/leaderboard' % (slug(event))}">View all</a>
     </div>
-    <div class="row">
-        <div class="col">
-            <t t-foreach="top3_visitors" t-as="visitor">
-                <t t-call="website_event_meet_quiz.visitor_quiz_points_card"/>
-            </t>
-        </div>
-    </div>
+    <t t-call="website_event_meet_quiz.visitor_quiz_points_card"/>
 </template>
 
-<template id='visitor_quiz_points_card' name="User Quick Quiz Points Card">
-    <div class="d-flex mb-3 align-items-center justify-content-between">
-        <div class="d-flex align-items-center">
-            <b class="mr-2 text-muted" t-esc="visitor['position']"/>
-            <img class="rounded-circle float-left"
-                style="width: 32px; height: 32px; object-fit: cover;"
-                t-att-src="image_data_uri(visitor['visitor'].partner_image) if visitor['visitor'].partner_image else '/web/static/src/img/user_placeholder.jpg'"
-                t-att-alt="visitor['visitor'].display_name"/>
-            <div style="line-height:1.3">
-                <span class="font-weight-bold" t-esc="visitor['visitor'].display_name"/>
-            </div>
-        </div>
-        <div class="d-flex align-items-center">
-            <span><t t-esc="visitor['points']"/> Points</span>
-        </div>
-    </div>
+<template id='visitor_quiz_points_card' name="Small Leaderboard: top3">
+    <table class="w-100">
+        <tr t-foreach="top3_visitors" t-as="visitor">
+            <td><div class="d-flex align-items-center mb-3">
+                <b class="mr-2 text-muted" t-esc="visitor['position']"/>
+                <img class="rounded-circle float-left"
+                    style="width: 32px; height: 32px; object-fit: cover;"
+                    t-att-src="image_data_uri(visitor['visitor'].partner_image) if visitor['visitor'].partner_image else '/web/static/src/img/user_placeholder.jpg'"
+                    t-att-alt="visitor['visitor'].display_name"/>
+                <div class="o_we_leaderboard_name">
+                    <span t-if="visitor['visitor'] == current_visitor and not visitor['visitor'].name" class="font-weight-bold">You</span>
+                    <span t-else="" class="font-weight-bold" t-esc="visitor['visitor'].display_name"/>
+                </div>
+            </div></td>
+            <td class="text-right">
+                <div class="mb-3">
+                    <span class="text-nowrap"><t t-esc="visitor['points']"/> xp</span>
+                </div>
+            </td>
+        </tr>
+    </table>
 </template>
 
 </odoo>
