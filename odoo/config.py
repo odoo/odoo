@@ -575,7 +575,7 @@ Option('save', args=["-s", "--save"], parse=checkfile('w'), action='store', narg
 
 Option('init', args=["-i", "--init"], parse=CommaSet.parser(str), action='append', default=CommaSet(), file=False, help='install one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d')
 Option('update', args=["-u", "--update"], parse=CommaSet.parser(str), action='append', default=CommaSet(), file=False, help='update one or more modules (comma-separated list or repeated option, use "all" for all modules), requires -d.')
-Option('demo', default=Dynamic(dyndemo), parse=dict, file=False)
+Option('demo', default=Dynamic(dyndemo), parse=dict, file=False, help=argparse.SUPPRESS)
 Option('without_demo', args=["--without-demo"], parse=strtobool, action='store_true', help='disable loading demo data for modules to be installed (comma-separated or repeated option, use "all" for all modules), requires -d and -i.')
 Option('server_wide_modules', args=["--load"], parse=CommaSet.parser(str), action='append', default=CommaSet({'base','web'}), metavar="MODULE", help="framework modules to load once for all databases (comma-separated or repeated option)")
 Option('pidfile', args=["--pidfile"], parse=checkfile('w'), action='store', metavar="FILEPATH", help="file where the server pid will be stored")
@@ -1374,7 +1374,7 @@ class Config(MutableMapping):
                 p.set(section, optname, optionmap[optname].format(val))
 
         # ensure file exists and write on disk
-        configpath = self["save"]
+        configpath = Path(self["save"])
         if not configpath.exists():
             with contextlib.suppress(FileExistsError):
                 configpath.parent.mkdir(mode=0o755, parents=True)
