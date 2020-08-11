@@ -173,7 +173,7 @@ odoo.define('web.PivotController', function (require) {
             if (ev.target.closest('.o_pivot_measures_list')) {
                 ev.preventDefault();
                 ev.stopPropagation();
-                const field = $target.data('field');
+                const field = ev.target.dataset.field;
                 if (field) {
                     this.update({ measure: field });
                 }
