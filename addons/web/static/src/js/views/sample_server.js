@@ -116,8 +116,12 @@ odoo.define('web.SampleServer', function (require) {
                 case 'read':
                     return this._mockRead(params);
             }
-            const mock = SampleServer.mockRegistry.get(params.model);
-            const mockFunction = mock && mock[params.method || params.route];
+            // this rpc can't be mocked by the SampleServer itself, so check if there is an handler
+            // in the mockRegistry: either specific for this model (with key 'model/method'), or
+            // global (with key 'method')
+            const method = params.method || params.route;
+            const mockFunction = SampleServer.mockRegistry.get(`${params.model}/${method}`) ||
+                                 SampleServer.mockRegistry.get(method);
             if (mockFunction) {
                 return mockFunction.call(this, params);
             }
@@ -652,12 +656,11 @@ odoo.define('web.SampleServer', function (require) {
 
     SampleServer.UnimplementedRouteError = UnimplementedRouteError;
 
-    // mockRegistry allows to register mock version of methods or routes for
-    // specific models, for instance
-    //   SampleServer.mockRegistry.registry('res.partner' {
-    //      some_method: () => 23,
-    //      some_route: () => "abcd",
-    //   });
+    // mockRegistry allows to register mock version of methods or routes,
+    // for all models:
+    //   SampleServer.mockRegistry.add('some_route', () => "abcd");
+    // for a specific model (e.g. 'res.partner'):
+    //   SampleServer.mockRegistry.add('res.partner/some_method', () => 23);
     SampleServer.mockRegistry = new Registry();
 
     return SampleServer;
