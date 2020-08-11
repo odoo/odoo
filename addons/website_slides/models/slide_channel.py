@@ -96,8 +96,8 @@ class Channel(models.Model):
     description_short = fields.Text('Short Description', translate=True, help="The description that is displayed on the course card")
     description_html = fields.Html('Detailed Description', translate=tools.html_translate, sanitize_attributes=False, sanitize_form=False)
     channel_type = fields.Selection([
-        ('documentation', 'Documentation'), ('training', 'Training')],
-        string="Course type", default="documentation", required=True)
+        ('training', 'Training'), ('documentation', 'Documentation')],
+        string="Course type", default="training", required=True)
     sequence = fields.Integer(default=10, help='Display order')
     user_id = fields.Many2one('res.users', string='Responsible', default=lambda self: self.env.uid)
     color = fields.Integer('Color Index', default=0, help='Used to decorate kanban view')
@@ -115,8 +115,17 @@ class Channel(models.Model):
     promote_strategy = fields.Selection([
         ('latest', 'Latest Published'),
         ('most_voted', 'Most Voted'),
-        ('most_viewed', 'Most Viewed')],
-        string="Featured Content", default='latest', required=True)
+        ('most_viewed', 'Most Viewed'),
+        ('specific', 'Specific'),
+        ('none', 'None')],
+        string="Promoted Content", default='latest', required=False,
+        help='Depending the promote strategy, a slide will appear on the top of the course\'s page :\n'
+             ' * Latest Published : the slide created last.\n'
+             ' * Most Voted : the slide which have to most vote.\n'
+             ' * Most Viewed ; the slide which have been viewed the most.\n'
+             ' * Specific : You choose the slide to appear.\n'
+             ' * None : There won\'t be any slide showing.\n')
+    promoted_slide_id = fields.Many2one('slide.slide', string='Promoted Slide')
     access_token = fields.Char("Security Token", copy=False, default=_default_access_token)
     nbr_presentation = fields.Integer('Presentations', compute='_compute_slides_statistics', store=True)
     nbr_document = fields.Integer('Documents', compute='_compute_slides_statistics', store=True)
@@ -131,7 +140,7 @@ class Channel(models.Model):
     rating_avg_stars = fields.Float("Rating Average (Stars)", compute='_compute_rating_stats', digits=(16, 1), compute_sudo=True)
     # configuration
     allow_comment = fields.Boolean(
-        "Allow rating on Course", default=False,
+        "Allow rating on Course", default=True,
         help="If checked it allows members to either:\n"
              " * like content and post comments on documentation course;\n"
              " * post comment and review on training course;")

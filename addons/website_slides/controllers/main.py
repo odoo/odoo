@@ -406,7 +406,8 @@ class WebsiteSlides(WebsiteProfile):
 
         # sorting criterion
         if channel.channel_type == 'documentation':
-            actual_sorting = sorting if sorting and sorting in request.env['slide.slide']._order_by_strategy else channel.promote_strategy
+            default_sorting = 'latest' if channel.promote_strategy in ['specific', 'none', False] else channel.promote_strategy
+            actual_sorting = sorting if sorting and sorting in request.env['slide.slide']._order_by_strategy else default_sorting
         else:
             actual_sorting = 'sequence'
         order = request.env['slide.slide']._order_by_strategy[actual_sorting]
@@ -489,7 +490,10 @@ class WebsiteSlides(WebsiteProfile):
         # of them but unreachable ones won't be clickable (+ slide controller will crash anyway)
         # documentation mode may display less slides than content by category but overhead of
         # computation is reasonable
-        values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
+        if channel.promote_strategy == 'specific':
+            values['slide_promoted'] = channel.sudo().promoted_slide_id
+        else:
+            values['slide_promoted'] = request.env['slide.slide'].sudo().search(domain, limit=1, order=order)
 
         limit_category_data = False
         if channel.channel_type == 'documentation':
