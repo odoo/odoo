@@ -229,13 +229,18 @@ var PivotController = AbstractController.extend({
                     .expandAll()
                     .then(this.update.bind(this, {}, {reload: false}));
         }
-        if ($target.parents('.o_pivot_measures_list').length) {
-            var field = $target.data('field');
+        if (
+            $target.parents('.o_pivot_measures_list').length ||
+            $target.hasClass('o_pivot_measures_list')
+        ) {
             ev.preventDefault();
             ev.stopPropagation();
-            this.model
+            var field = $target.data('field');
+            if (field) {
+                this.model
                     .toggleMeasure(field)
                     .then(this.update.bind(this, {}, {reload: false}));
+            }
         }
         if ($target.hasClass('o_pivot_download')) {
             this._downloadTable();
