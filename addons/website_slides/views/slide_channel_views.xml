@@ -18,8 +18,8 @@
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer">
                                 <div class="o_field_widget o_stat_info">
-                                    <span class="o_stat_value"><field name="total_slides" nolabel="1"/></span>
-                                    <span name="total_slides_label" class="o_stat_text">Contents</span>
+                                    <span class="o_stat_value"><field name="total_views" nolabel="1"/> Visits</span>
+                                    <span class="o_stat_value"><field name="total_slides" nolabel="1"/> Contents</span>
                                 </div>
                             </button>
                             <button name="action_redirect_to_done_members"
@@ -45,7 +45,10 @@
                                 class="oe_stat_button"
                                 groups="website_slides.group_website_slides_officer"
                                 attrs="{'invisible': [('allow_comment', '=', False)]}">
-                                <field name="rating_count" string="Reviews" widget="statinfo"/>
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value"><field name="rating_avg_stars" nolabel="1"/>/5</span>
+                                    <span name="rating_count_label" class="o_stat_text"><field name="rating_count" nolabel="1"/> Reviews</span>
+                                </div>
                             </button>
                             <field name="is_published" widget="website_redirect_button"/>
                         </div>
@@ -53,7 +56,7 @@
                         <field name="image_1920" widget="image" class="oe_avatar" options="{'preview_image': 'image_128'}"/>
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only" string="Course Title"/>
-                            <h1><field name="name" default_focus="1" placeholder="Course Title"/></h1>
+                            <h1><field name="name" default_focus="1" placeholder="Computer Science for kids"/></h1>
                         </div>
                         <div>
                             <field name="active" invisible="1"/>
@@ -61,7 +64,7 @@
                         </div>
                         <notebook colspan="4">
                             <page name="content" string="Content">
-                                <field name="slide_ids" colspan="4" nolabel="1" widget="slide_category_one2many" mode="tree,kanban" context="{'default_channel_id': active_id, 'form_view_ref' : 'website_slides.view_slide_slide_form_wo_channel_id'}">
+                                <field name="slide_ids" string="Content" colspan="4" nolabel="1" widget="slide_category_one2many" mode="tree,kanban" context="{'default_channel_id': active_id, 'form_view_ref' : 'website_slides.view_slide_slide_form_wo_channel_id'}">
                                      <tree decoration-bf="is_category" editable="bottom">
                                         <field name="sequence" widget="handle"/>
                                         <field name="name"/>
@@ -80,8 +83,7 @@
                             </page>
                             <page name="description" string="Description">
                                 <group>
-                                    <field name="description" colspan="4" />
-                                    <field name="description_short" colspan="4" />
+                                    <field name="description" colspan="4" placeholder="Common tasks for a computer scientist is asking the right questions and answering questions. In this course, you'll study those topics with activities about mathematics, science and logic."/>
                                 </group>
                             </page>
                             <page name="options" string="Options">
@@ -107,6 +109,10 @@
                                         <field name="visibility" widget="radio"/>
                                         <field name="promote_strategy" widget="radio"
                                         attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
+                                        <field name="promoted_slide_id"
+                                               attrs="{'invisible': ['|', ('channel_type', '=', 'training'), ('promote_strategy', '!=', 'specific')],
+                                                       'required': [('channel_type', '!=', 'training'), ('promote_strategy', '=', 'specific')]}"
+                                               domain="[('channel_id', '=', active_id), ('is_category', '=', False)]"/>
                                     </group>
                                 </group>
                                 <div attrs="{'invisible': [('enroll', '!=', 'invite')]}">
@@ -114,33 +120,16 @@
                                     <field name="enroll_msg" colspan="4" nolabel="1"/>
                                 </div>
                             </page>
-                            <page string="Karma Rules" name="karma_rules">
+                            <page string="Karma" name="karma_rules">
                                 <group>
-                                    <field name="karma_gen_channel_rank" string="Rank Course"/>
-                                    <field name="karma_gen_channel_finish" string="Finish Course"/>
-                                    <field name="karma_review" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
-                                    <field name="karma_slide_comment" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
-                                    <field name="karma_slide_vote" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
-                                </group>
-                            </page>
-                            <page name="statistics" string="Statistics">
-                                <group>
-                                    <group name="statistics_nbr" class="col-4">
-                                        <field name="nbr_presentation"/>
-                                        <field name="nbr_document"/>
-                                        <field name="nbr_video"/>
-                                        <field name="nbr_infographic"/>
-                                        <field name="nbr_quiz" string="Quizzes"/>
-                                        <field name="nbr_webpage"/>
+                                    <group string="Rewards">
+                                        <field name="karma_gen_channel_rank" string="Review Course"/>
+                                        <field name="karma_gen_channel_finish" string="Finish Course"/>
                                     </group>
-                                    <group name="view_stats">
-                                        <field name="total_views" string="Visits"/>
-                                        <field string="Rating" name="rating_avg" widget="field_float_rating"/>
-                                        <label for="total_time" string="Watch Time"/>
-                                        <div>
-                                            <field name="total_time" widget="float_time" />
-                                            <span class="ml-2">Hours</span>
-                                        </div>
+                                    <group string="Access Rights" attrs="{'invisible': [('allow_comment', '!=', True)]}">
+                                        <field name="karma_review" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
+                                        <field name="karma_slide_comment" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
+                                        <field name="karma_slide_vote" attrs="{'invisible': [('allow_comment', '!=', True)]}"/>
                                     </group>
                                 </group>
                             </page>
@@ -181,6 +170,7 @@
                 <tree string="Courses" create="false" default_order="total_views desc" sample="1">
                     <field name="name"/>
                     <field name="total_views"/>
+                    <field name="total_time" widget="float_time" />
                     <field name="members_count"/>
                     <field name="total_votes"/>
                     <field name="rating_avg_stars"/>
