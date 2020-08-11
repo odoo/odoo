@@ -101,6 +101,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         await Promise.all(promises);
         await this._update(this.initialState, { shouldUpdateSearchComponents: false });
         this.updateButtons();
+        this.el.classList.toggle('o_view_sample_data', this.model.isInSampleMode());
     },
     /**
      * @override
@@ -255,6 +256,7 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         ];
         await this.dp.add(Promise.all(promises));
         this.updateButtons();
+        this.el.classList.toggle('o_view_sample_data', this.model.isInSampleMode());
     },
 
     //--------------------------------------------------------------------------
@@ -381,6 +383,9 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
      * some buttons in the control panel, such as the current graph type for a
      * graph view.
      *
+     * FIXME: this hook should be synchronous, and called once async rendering
+     * has been done.
+     *
      * @private
      * @param {Object} state the state given by the model
      * @param {Object} [params={}]
@@ -408,7 +413,6 @@ var AbstractController = mvc.Controller.extend(ActionMixin, {
         }
         this._pushState();
         await Promise.all(promises);
-        this.el.classList.toggle('o_view_sample_data', this.model.isInSampleMode());
     },
     /**
      * Can be used to update the key 'cp_content'. This method is called in start and _update methods.
