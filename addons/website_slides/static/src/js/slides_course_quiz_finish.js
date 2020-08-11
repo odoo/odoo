@@ -24,7 +24,6 @@ var SlideQuizFinishModal = Dialog.extend({
         options = _.defaults(options || {}, {
             size: 'medium',
             dialogClass: 'd-flex p-0',
-            $parentNode: parent.$el,
             technical: false,
             renderHeader: false,
             renderFooter: false

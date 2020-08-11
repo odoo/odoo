@@ -4,23 +4,20 @@
         <div>
             <form class="clearfix">
                 <div class="row">
-                    <div class="col" id="o_wslides_js_slide_upload_left_column">
+                    <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
                         <div class="form-group">
-                            <label for="certification_id" class="col-form-label col-md-3">Certification</label>
+                            <label for="certification_id" class="col-form-label">Certification</label>
                             <input class="form-control" id="certification_id" required="required"/>
-                        </div>
-                        <div class="form-group">
-                            <label for="upload" class="col-form-label">Choose an Image</label>
-                            <input id="upload" class="form-control" data-prevent-onchange='true' name="file" accept="image/*" type="file" required="required"/>
                         </div>
                         <t t-call="website.slide.upload.modal.common"/>
                         <canvas id="data_canvas" class="d-none"></canvas>
                     </div>
  
-                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6 d-none">
-                        <div class="img-thumbnail">
-                            <div class="o_slide_preview">
-                                <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
+                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6">
+                        <div class="img-thumbnail h-100">
+                            <div class="o_slide_tutorial p-3">
+                                <div class="h5">How to upload a certification on your course?</div>
+                                <div class="mx-3 my-4">You can create your certification from here or use an existing one. Once your certification is created, you can still edit it in backend.</div>
                             </div>
                         </div>
                     </div>        

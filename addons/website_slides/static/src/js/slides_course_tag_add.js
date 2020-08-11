@@ -29,12 +29,14 @@ var TagCourseDialog = Dialog.extend({
                 click: this._onClickFormSubmit.bind(this)
             }, {
                 text: _t("Discard"),
-                close: true
+                click: this._onClickClose.bind(this)
             }]
         });
 
         this.channelID = parseInt(options.channelId, 10);
         this.tagIds = options.channelTagIds || [];
+        // Open with a tag name as default
+        this.defaultTag = options.defaultTag;
         this._super(parent, options);
     },
     start: function () {
@@ -42,6 +44,9 @@ var TagCourseDialog = Dialog.extend({
         return this._super.apply(this, arguments).then(function () {
             self._bindSelect2Dropdown();
             self._hideTagGroup();
+            if (self.defaultTag) {
+                self._setDefaultSelection();
+            }
         });
     },
 
@@ -149,6 +154,11 @@ var TagCourseDialog = Dialog.extend({
             }
         };
         return values;
+    },
+
+    _setDefaultSelection: function () {
+        this.$('#tag_id').select2('data', {id: _.uniqueId('tag_'), text: this.defaultTag, create: true}, true);
+        this.$('#tag_id').select2('readonly', true);
     },
 
     /**
@@ -260,7 +270,16 @@ var TagCourseDialog = Dialog.extend({
     //--------------------------------------------------------------------------
     // Handler
     //--------------------------------------------------------------------------
+
     _onClickFormSubmit: function () {
+        if (this.defaultTag && !this.channelID) {
+            this._createNewTag();
+        } else {
+            this._addTagToChannel();
+        }
+    },
+
+    _addTagToChannel: function () {
         var self = this;
         var $form = this.$('#slides_channel_tag_add_form');
         if (this._formValidate($form)) {
@@ -278,6 +297,34 @@ var TagCourseDialog = Dialog.extend({
                 }
             });
         }
+    },
+
+    _createNewTag: function () {
+        var self = this;
+        var $form = this.$('#slides_channel_tag_add_form');
+        this.$('#tag_id').select2('readonly', false);
+        var valid = this._formValidate($form);
+        this.$('#tag_id').select2('readonly', true);
+        if (valid) {
+            var values = this._getSelect2DropdownValues();
+            return this._rpc({
+                route: '/slide_channel_tag/add',
+                params: {
+                    'tag_id': values.tag_id,
+                    'group_id': values.group_id
+                },
+            }).then(function (data) {
+                self.trigger_up('tag_refresh', { tag_id: data.tag_id });
+                self.close();
+            });
+        }
+    },
+
+    _onClickClose: function () {
+        if (this.defaultTag && !this.channelID) {
+            this.trigger_up('tag_remove_new');
+        }
+        this.close();
     },
 
     _onChangeTag: function (ev) {

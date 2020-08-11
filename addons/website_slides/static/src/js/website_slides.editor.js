@@ -5,6 +5,7 @@ var core = require('web.core');
 var Dialog = require('web.Dialog');
 var QWeb = core.qweb;
 var WebsiteNewMenu = require('website.newMenu');
+var TagCourseDialog = require('website_slides.channel_tag.add').TagCourseDialog;
 var wUtils = require('website.utils');
 
 var _t = core._t;
@@ -13,8 +14,16 @@ var _t = core._t;
 var ChannelCreateDialog = Dialog.extend({
     template: 'website.slide.channel.create',
     xmlDependencies: Dialog.prototype.xmlDependencies.concat(
-        ['/website_slides/static/src/xml/website_slides_channel.xml']
+        ['/website_slides/static/src/xml/website_slides_channel.xml',
+         '/website_slides/static/src/xml/website_slides_channel_tag.xml']
     ),
+    events: _.extend({}, Dialog.prototype.events, {
+        'change input#tag_ids' : '_onChangeTag',
+    }),
+    custom_events: _.extend({}, Dialog.prototype.custom_events, {
+        'tag_refresh': '_onTagRefresh',
+        'tag_remove_new': '_onTagRemoveNew',
+    }),
     /**
      * @override
      * @param {Object} parent
@@ -45,6 +54,29 @@ var ChannelCreateDialog = Dialog.extend({
                 formatNoMatches: false,
                 multiple: true,
                 selection_data: false,
+                formatSelection: function (data) {
+                    if (data.tag) {
+                        data.text = data.tag;
+                    }
+                    return data.text;
+                },
+                createSearchChoice: function(term, data) {
+                    var addedTags = $(this.opts.element).select2('data');
+                    if (_.filter(_.union(addedTags, data), function (tag) {
+                        return tag.text.toLowerCase().localeCompare(term.toLowerCase()) === 0;
+                    }).length === 0) {
+                        if (this.opts.can_create) {
+                            return {
+                                id: _.uniqueId('tag_'),
+                                create: true,
+                                tag: term,
+                                text: _.str.sprintf(_t("Create new Tag '%s'"), term),
+                            };
+                        } else {
+                            return undefined;
+                        }
+                    }
+                },
                 fill_data: function (query, data) {
                     var that = this,
                         tags = {results: []};
@@ -86,6 +118,44 @@ var ChannelCreateDialog = Dialog.extend({
         } else {
             $form.submit();
         }
+    },
+    _onChangeTag: function (ev) {
+        var self = this;
+        var tags = $(ev.currentTarget).select2('data');
+        tags.forEach(function (element) {
+            if (element.create) {
+                new TagCourseDialog(self, { defaultTag: element.text }).open();
+            }
+        });
+    },
+    /**
+     * Replace the new tag ID by its real ID
+     * @param ev
+     * @private
+     */
+    _onTagRefresh: function (ev) {
+        var $tag_ids = $('#tag_ids');
+        var tags = $tag_ids.select2('data');
+        tags.forEach(function (element) {
+            if (element.create) {
+                element.id = ev.data.tag_id;
+                element.create = false;
+            }
+        });
+        $tag_ids.select2('data', tags);
+        // Set selection_data to false to force tag reload
+        $tag_ids.data('select2').opts.selection_data = false;
+    },
+    /**
+     * Remove the created tag if the user clicks on 'Discard' on the create tag Dialog
+     * @private
+     */
+    _onTagRemoveNew: function () {
+        var tags = $('#tag_ids').select2('data');
+        tags = tags.filter(function (value) {
+            return !value.create;
+        });
+        $('#tag_ids').select2('data', tags);
     },
 });
 

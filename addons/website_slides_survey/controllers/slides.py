@@ -54,7 +54,6 @@ class WebsiteSlidesSurvey(WebsiteSlides):
             # Create survey first as certification slide needs a survey_id (constraint)
             post['survey_id'] = request.env['survey.survey'].create({
                 'title': post['survey']['title'],
-                'background_image': post['image_1920'],
                 'questions_layout': 'page_per_question',
                 'is_attempts_limited': True,
                 'attempts_limit': 1,
