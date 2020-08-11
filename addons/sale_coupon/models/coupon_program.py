@@ -175,6 +175,11 @@ class CouponProgram(models.Model):
             programs += programs_curr_order._filter_not_ordered_reward_programs(order)
         return programs
 
+    def _get_discount_product_values(self):
+        res = super()._get_discount_product_values()
+        res['invoice_policy'] = 'order'
+        return res
+
     def _is_global_discount_program(self):
         self.ensure_one()
         return self.promo_applicability == 'on_current_order' and \
