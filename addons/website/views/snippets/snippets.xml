@@ -383,10 +383,18 @@
 
     <div data-js="CarouselItem"
          data-selector=".s_carousel .carousel-item, .s_quotes_carousel .carousel-item">
-        <we-button data-slide="left" data-no-preview="true" class="fa fa-fw fa-angle-left"/>
-        <we-button data-slide="right" data-no-preview="true" class="fa fa-fw fa-angle-right"/>
-        <we-button data-add-slide="true" data-no-preview="true" class="fa fa-fw fa-plus"/>
-        <we-button data-remove-slide="true" data-no-preview="true" class="fa fa-fw fa-minus"/>
+        <we-button data-slide="left" data-no-preview="true">
+            <i class="fa fa-fw fa-angle-left"/>
+        </we-button>
+        <we-button data-slide="right" data-no-preview="true" class="mr-2">
+            <i class="fa fa-fw fa-angle-right"/>
+        </we-button>
+        <we-button data-add-slide="true" data-no-preview="true" class="o_we_text_success">
+            <i class="fa fa-fw fa-plus"/>
+        </we-button>
+        <we-button data-remove-slide="true" data-no-preview="true" class="o_we_text_danger">
+            <i class="fa fa-fw fa-minus"/>
+        </we-button>
     </div>
 
     <!-- Accordion -->
@@ -491,7 +499,7 @@
 
     <div data-js="SnippetSave"
         t-attf-data-selector="#{so_snippet_addition_selector}, #{so_content_addition_selector}">
-        <we-button class="fa fa-fw fa-save o_we_hover_warning"
+        <we-button class="fa fa-fw fa-save o_we_link o_we_hover_warning"
                    title="Save the block to use it elsewhere"
                    data-save-snippet=""
                    data-no-preview="true"/>
@@ -719,7 +727,7 @@
     <div data-js="anchor"
         data-selector=":not(p).oe_structure > *, :not(p)[data-oe-type=html] > *"
         data-exclude=".modal *, .oe_structure .oe_structure *, [data-oe-type=html] .oe_structure *">
-        <we-button class="fa fa-fw fa-link"
+        <we-button class="fa fa-fw fa-link o_we_link"
                    title="Create a link to target this section"
                    data-no-preview="true"/>
     </div>

@@ -116,6 +116,29 @@ body.editor_enable.editor_has_snippets {
     &[disabled] {
         opacity: .5;
     }
+
+    &:not([disabled]) {
+        &.active:not(.o_we_no_toggle), &:hover {
+            color: $o-we-sidebar-content-field-pressed-color;
+        }
+
+        $-hover-colors: (
+            'success': $o-we-color-success,
+            'info': $o-we-color-info,
+            'warning': $o-we-color-warning,
+            'danger': $o-we-color-danger,
+        );
+
+        @each $name, $color in $-hover-colors {
+            &.o_we_text_#{$name} {
+                color: $color;
+            }
+
+            &.o_we_hover_#{$name}:hover {
+                color: $color;
+            }
+        }
+    }
 }
 
 %we-generic-link {
@@ -126,19 +149,6 @@ body.editor_enable.editor_has_snippets {
     &:not([disabled]) {
         &.active, &:hover {
             @include we-svg-icon($o-we-sidebar-content-field-pressed-color, $subdle-opacity: .75);
-            color: $o-we-sidebar-content-field-pressed-color;
-        }
-
-        $-hover-colors: (
-            'success': $o-we-color-success,
-            'info': $o-we-color-info,
-            'warning': $o-we-color-warning,
-            'danger': $o-we-color-danger,
-        );
-        @each $name, $color in $-hover-colors {
-            &.o_we_hover_#{$name}:hover {
-                color: $color;
-            }
         }
     }
 }
@@ -151,17 +161,15 @@ body.editor_enable.editor_has_snippets {
     padding: 0 $o-we-sidebar-content-field-button-group-button-spacing;
     border: $o-we-sidebar-content-field-border-width solid $o-we-sidebar-content-field-border-color;
     border-radius: $o-we-sidebar-content-field-border-radius;
-    background: $o-we-sidebar-content-field-clickable-bg;
+    background-color: $o-we-sidebar-content-field-clickable-bg;
     color: $o-we-sidebar-content-field-clickable-color;
 
-    &:not([disabled]):hover {
+    &:not([disabled]):hover, &.active:not(.o_we_no_toggle) {
         @include we-svg-icon($o-we-sidebar-content-field-pressed-color, $subdle-opacity: .75);
-        color: $o-we-sidebar-content-field-pressed-color;
     }
 
-    &.active {
-        background: $o-we-sidebar-content-field-pressed-bg;
-        color: $o-we-sidebar-content-field-pressed-color;
+    &.active:not(.o_we_no_toggle) {
+        background-color: $o-we-sidebar-content-field-pressed-bg;
     }
 }
 
@@ -171,7 +179,7 @@ body.editor_enable.editor_has_snippets {
     flex: 1 1 auto;
     justify-content: center;
     border: none;
-    background: transparent;
+    background-color: transparent;
     color: inherit;
     font-weight: normal;
 
@@ -214,7 +222,7 @@ body.editor_enable.editor_has_snippets {
     #snippets_menu {
         flex: 0 0 auto;
         display: flex;
-        background: $o-we-sidebar-tabs-bg;
+        background-color: $o-we-sidebar-tabs-bg;
         box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2);
         color: $o-we-sidebar-tabs-color;
 
@@ -228,6 +236,7 @@ body.editor_enable.editor_has_snippets {
         position: relative;
         width: 100%;
         padding: $o-we-sidebar-blocks-content-spacing;
+        background-color: $o-we-bg-lighter;
 
         .o_snippet_search_filter_input {
             width: 100%;
@@ -366,38 +375,24 @@ body.editor_enable.editor_has_snippets {
 
         @mixin large-component() {
             flex: 1 1 auto;
-            width: ($o-we-sidebar-width - $o-we-sidebar-content-padding-base - $o-we-sidebar-content-indent) * 0.5;
+            width: $o-we-sidebar-content-available-room * .6;
         }
 
         we-button, we-toggler {
             @extend %we-generic-button;
-            text-align: left;
-
-            &.fa {
-                display: inline-block;
-                padding: 0;
-                border: none;
-                background: none;
-                text-align: center;
-
-                &.fa-times, &.fa-minus {
-                    color: $o-we-color-danger;
-                }
-                &.fa-plus {
-                    color: $o-we-color-success;
-                }
-
-                &.active {
-                    padding: 0;
-
-                    &::after {
-                        display: none;
-                    }
-                }
-            }
         }
+
+        we-button.o_we_link {
+            @extend %we-generic-link;
+            margin-top: 0;
+            border: 0;
+            padding: 0;
+            background: 0;
+        }
+
         we-toggler {
             @include we-icon-button('\f0d7');
+            text-align: left;
 
             + * {
                 display: none !important;
@@ -407,7 +402,6 @@ body.editor_enable.editor_has_snippets {
             }
             &.active {
                 @include we-icon-button('\f0d8');
-
                 + * {
                     display: block !important;
                 }
@@ -434,7 +428,7 @@ body.editor_enable.editor_has_snippets {
             position: relative;
             display: block;
             padding: 0 $o-we-sidebar-content-padding-base $o-we-sidebar-content-block-spacing * 1.5 $o-we-sidebar-content-indent;
-            background: $o-we-bg-lighter;
+            background-color: $o-we-bg-lighter;
             box-shadow: $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, 0.8);
 
             > we-title {
@@ -442,7 +436,7 @@ body.editor_enable.editor_has_snippets {
                 align-items: center;
                 margin: 0 (-$o-we-sidebar-content-padding-base) 0 (-$o-we-sidebar-content-indent);
                 padding: $o-we-sidebar-content-block-spacing * .3 $o-we-sidebar-content-padding-base 0 $o-we-sidebar-content-indent;
-                background: $o-we-bg-light;
+                background-color: $o-we-bg-light;
                 box-shadow: $o-we-item-standup-top rgba($o-we-item-standup-color-light, .2), $o-we-item-standup-bottom rgba($o-we-item-standup-color-dark, .5);
                 font-size: $o-we-sidebar-content-main-title-font-size;
 
@@ -453,7 +447,7 @@ body.editor_enable.editor_has_snippets {
 
                 > we-top-button-group {
                     flex: 0 0 auto;
-                    display: block;
+                    display: flex;
                     margin-left: auto;
                     font-size: .9em;
 
@@ -461,20 +455,13 @@ body.editor_enable.editor_has_snippets {
                         font-size: 1.2em;
                     }
 
-                    > * {
+                    we-button {
                         margin-left: $o-we-sidebar-content-field-multi-spacing;
-                    }
-                    > we-customizeblock-option {
-                        &, .fa {
-                            display: inline-block !important;
-                        }
-                        .fa {
-                            margin: 0;
-                        }
-                    }
+                        padding: 0 $o-we-sidebar-content-field-multi-spacing;
 
-                    .fa {
-                        @extend %we-generic-link;
+                        &.fa {
+                            margin-left: $o-we-sidebar-content-field-label-spacing;
+                        }
                     }
                 }
             }
@@ -548,7 +535,7 @@ body.editor_enable.editor_has_snippets {
         }
 
         // Checkboxes
-        .o_we_checkbox_wrapper.o_we_user_value_widget {
+        we-button.o_we_checkbox_wrapper.o_we_user_value_widget {
             padding: 0;
             border: none;
             background: none;
@@ -621,6 +608,10 @@ body.editor_enable.editor_has_snippets {
                     border-right-width: ($o-we-item-spacing - 1px);
                 }
             }
+            &:not(.o_we_so_color_palette) + we-button:not(:hover) {
+                background: none;
+            }
+
             we-selection-items {
                 @include o-position-absolute(100%, 0, auto, 0);
                 z-index: $zindex-dropdown;
@@ -725,8 +716,8 @@ body.editor_enable.editor_has_snippets {
             we-button {
                 display: flex;
                 justify-content: center;
-                flex: 0 1 percentage(1/3);
-                padding: 0 2px;
+                flex: 0 1 percentage(1/4);
+                padding: ($o-we-sidebar-content-field-button-group-button-spacing / 4) ($o-we-sidebar-content-field-button-group-button-spacing / 3);
                 text-align: center;
             }
         }
@@ -743,6 +734,10 @@ body.editor_enable.editor_has_snippets {
 
                 &:focus-within {
                     border-color: $o-we-sidebar-content-field-input-border-color;
+                }
+
+                > we-button { // for input-group
+                    border: none;
                 }
             }
 
@@ -862,7 +857,7 @@ body.editor_enable.editor_has_snippets {
             input[type="range"] {
                 @include large-component();
                 height: $o-we-sidebar-content-field-height;
-                padding: 0;
+                padding: 0 $o-we-item-border-width 0 0;
                 background-color: transparent;
                 appearance: none;
 

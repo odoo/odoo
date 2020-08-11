@@ -201,7 +201,7 @@ options.registry.InnerChart = options.Class.extend({
      */
     _makeDeleteButton: function (...classes) {
         const rmbuttonEl = options.buildElement('we-button', null, {
-            classes: ['fa', 'fa-fw', 'fa-minus', ...classes],
+            classes: ['o_we_text_danger', 'o_we_link', 'fa', 'fa-fw', 'fa-minus', ...classes],
         });
         const newEl = document.createElement('td');
         newEl.appendChild(rmbuttonEl);
