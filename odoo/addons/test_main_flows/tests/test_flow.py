@@ -7,6 +7,9 @@ import unittest
 class BaseTestUi(odoo.tests.HttpCase):
 
     def main_flow_tour(self):
+        # Enable Make to Order
+        self.env.ref('stock.route_warehouse0_mto').active = True
+
         # Define minimal accounting data to run without CoA
         a_expense = self.env['account.account'].create({
             'code': 'X2120',
