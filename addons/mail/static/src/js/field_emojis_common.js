@@ -1,10 +1,9 @@
-odoo.define('mail.text_emojis_field', function (require) {
+odoo.define('mail.field_emojis_common', function (require) {
 "use strict";
 
 var basicFields = require('web.basic_fields');
 var core = require('web.core');
 var emojis = require('mail.emojis');
-var registry = require('web.field_registry');
 var MailEmojisMixin = require('mail.emoji_mixin');
 var _onEmojiClickMixin = MailEmojisMixin._onEmojiClick;
 var QWeb = core.qweb;
@@ -132,19 +131,6 @@ var FieldEmojiCommon = {
     }
 };
 
-/**
- * Extension of the FieldText that will add emojis support
- */
-var FieldTextEmojis = basicFields.FieldText.extend(MailEmojisMixin, FieldEmojiCommon);
-
-/**
- * Extension of the FieldChar that will add emojis support
- */
-var FieldCharEmojis = basicFields.FieldChar.extend(MailEmojisMixin, FieldEmojiCommon);
-
-registry.add('text_emojis', FieldTextEmojis);
-registry.add('char_emojis', FieldCharEmojis);
-
-return {FieldTextEmojis: FieldTextEmojis, FieldCharEmojis: FieldCharEmojis, FieldEmojiCommon: FieldEmojiCommon};
+return FieldEmojiCommon;
 
 });
