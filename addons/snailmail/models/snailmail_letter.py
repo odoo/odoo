@@ -282,7 +282,9 @@ class SnailmailLetter(models.Model):
 
     @api.multi
     def snailmail_print(self):
-        self._snailmail_print()
+        self.write({'state': 'pending'})
+        if len(self) == 1:
+            self._snailmail_print()
 
     @api.multi
     def cancel(self):
@@ -297,10 +299,13 @@ class SnailmailLetter(models.Model):
         return len(self)
 
     @api.model
-    def _snailmail_cron(self):
+    def _snailmail_cron(self, autocommit=True):
         letters_send = self.search([('state', '=', 'pending')])
-        if letters_send:
-            letters_send._snailmail_print()
+        for letter in letters_send:
+            letter._snailmail_print()
+            # Commit after every letter sent to avoid to send it back in case of a rollback
+            if autocommit:
+                self.env.cr.commit()
         limit_date = datetime.datetime.utcnow() - datetime.timedelta(days=1)
         limit_date_str = datetime.datetime.strftime(limit_date, tools.DEFAULT_SERVER_DATETIME_FORMAT)
         letters_canceled = self.search([
