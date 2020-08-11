@@ -3,17 +3,15 @@
 // ------------------------------------------------------------------
 
 .o_ActivityMarkDonePopover {
-    align-content: space-between;
-    display: flex;
-    flex-flow: row wrap;
     min-height: 100px;
 }
 
 .o_ActivityMarkDonePopover_buttons {
-    display: flex;
-    flex: 1;
-    justify-content: space-between;
     margin-top: map-get($spacers, 2);
+}
+
+.o_ActivityMarkDonePopover_doneButton {
+    margin: map-get($spacers, 0) map-get($spacers, 2);
 }
 
 .o_ActivityMarkDonePopover_feedback {
