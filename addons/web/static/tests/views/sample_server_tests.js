@@ -350,7 +350,7 @@ odoo.define('web.sample_server_tests', function (require) {
             assert.strictEqual(result.length, 3);
             assert.deepEqual(
                 result.map((g) => g.profession),
-                ["gardener", "brewer", "adventurer"]
+                ["adventurer", "brewer", "gardener"]
             );
             assert.strictEqual(
                 result.reduce((acc, g) => acc + g.profession_count, 0),
@@ -373,7 +373,7 @@ odoo.define('web.sample_server_tests', function (require) {
             assert.strictEqual(result.length, 3);
             assert.deepEqual(
                 result.map((g) => g.profession),
-                ["gardener", "brewer", "adventurer"]
+                ["adventurer", "brewer", "gardener"]
             );
             assert.strictEqual(
                 result.reduce((acc, g) => acc + g.profession_count, 0),

@@ -145,7 +145,7 @@ odoo.define('web.SampleServer', function (require) {
         _aggregateFields(measures, records) {
             const values = {};
             for (const { fieldName, type } of measures) {
-                if (type === 'float' || type === 'integer') {
+                if (['float', 'integer', 'monetary'].includes(type)) {
                     if (records.length) {
                         let value = 0;
                         for (const record of records) {
@@ -333,7 +333,6 @@ odoo.define('web.SampleServer', function (require) {
         _getRandomSubRecordId() {
             return Math.floor(Math.random() * SampleServer.SUB_RECORDSET_SIZE) + 1;
         }
-
         /**
          * Mocks calls to the read method.
          * @private
@@ -397,9 +396,10 @@ odoo.define('web.SampleServer', function (require) {
             }
             for (const groupBySpec of groupBy) {
                 let [fieldName, interval] = groupBySpec.split(':');
+                interval = interval || 'month';
                 const { type, relation } = fields[fieldName];
                 if (type) {
-                    const gb = { fieldName, type, interval, relation };
+                    const gb = { fieldName, type, interval, relation, alias: groupBySpec };
                     normalizedGroupBys.push(gb);
                 }
             }
@@ -422,12 +422,12 @@ odoo.define('web.SampleServer', function (require) {
                 const [fieldName, aggregateFunction] = measureSpec.split(':');
                 const { type } = fields[fieldName];
                 if (!params.groupBy.includes(fieldName) && type &&
-                        (type !== 'many2one' || aggregateFunction !== 'count_distinct')) {
+                (type !== 'many2one' || aggregateFunction !== 'count_distinct')) {
                     measures.push({ fieldName, type });
                 }
             }
 
-            const result = [];
+            let result = [];
             for (const id in groups) {
                 const records = groups[id];
                 const group = { __domain: [] };
@@ -438,11 +438,21 @@ odoo.define('web.SampleServer', function (require) {
                 group[countKey] = records.length;
                 const firstElem = records[0];
                 for (const gb of normalizedGroupBys) {
-                    const { fieldName } = gb;
-                    group[fieldName] = this._formatValue(firstElem[fieldName], gb);
+                    const { alias, fieldName } = gb;
+                    group[alias] = this._formatValue(firstElem[fieldName], gb);
                 }
                 Object.assign(group, this._aggregateFields(measures, records));
                 result.push(group);
+            }
+            if (normalizedGroupBys.length > 0) {
+                const { alias, interval, type } = normalizedGroupBys[0];
+                result = utils.sortBy(result, (group) => {
+                    const val = group[alias];
+                    if (['date', 'datetime'].includes(type)) {
+                        return moment(val, SampleServer.FORMATS[interval]);
+                    }
+                    return val;
+                });
             }
             return result;
         }
@@ -627,11 +637,12 @@ odoo.define('web.SampleServer', function (require) {
 
     SampleServer.FORMATS = {
         day: 'YYYY-MM-DD',
-        week: 'ww YYYY',
+        week: '[W]ww YYYY',
         month: 'MMMM YYYY',
         quarter: '[Q]Q YYYY',
         year: 'Y',
     };
+    SampleServer.DISPLAY_FORMATS = Object.assign({}, SampleServer.FORMATS, { day: 'DD MMM YYYY' });
 
     SampleServer.MAIN_RECORDSET_SIZE = 16;
     SampleServer.SUB_RECORDSET_SIZE = 5;
@@ -641,7 +652,7 @@ odoo.define('web.SampleServer', function (require) {
     SampleServer.MAX_INTEGER = 50;
     SampleServer.MAX_COLOR_INT = 7;
     SampleServer.MAX_MONETARY = 100000;
-    SampleServer.DATE_DELTA = 24 * 7; // in hours -> 7 days
+    SampleServer.DATE_DELTA = 24 * 60; // in hours -> 60 days
 
     SampleServer.SAMPLE_COUNTRIES = ["Belgium", "France", "Portugal", "Singapore", "Australia"];
     SampleServer.SAMPLE_PEOPLE = [
