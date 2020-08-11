@@ -35,13 +35,15 @@ class WebsiteSaleBackend(WebsiteBackend):
                 order_per_day_ratio=0, order_sold_ratio=0, order_convertion_pctg=0,
             )
         )
+
         results['dashboards']['sales'] = sales_values
 
-        results['dashboards']['sales']['utm_graph'] = self.fetch_utm_data(datetime_from, datetime_to)
         results['groups']['sale_salesman'] = request.env['res.users'].has_group('sales_team.group_sale_salesman')
+
         if not results['groups']['sale_salesman']:
             return results
 
+        results['dashboards']['sales']['utm_graph'] = self.fetch_utm_data(datetime_from, datetime_to)
         # Product-based computation
         sale_report_domain = [
             ('website_id', '=', current_website.id),

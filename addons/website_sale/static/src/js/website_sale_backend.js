@@ -27,7 +27,7 @@ WebsiteBackend.include({
     render_graphs: function() {
         this._super();
         this.utmGraphData = this.dashboards_data.sales.utm_graph;
-        this._renderUtmGraph();
+        this.utmGraphData && this._renderUtmGraph();
     },
 
     //--------------------------------------------------------------------------
