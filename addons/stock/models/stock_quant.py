@@ -610,7 +610,7 @@ class StockQuant(models.Model):
         action = {
             'name': _('Stock On Hand'),
             'view_type': 'tree',
-            'view_mode': 'list',
+            'view_mode': 'list,form',
             'res_model': 'stock.quant',
             'type': 'ir.actions.act_window',
             'context': ctx,
@@ -624,22 +624,22 @@ class StockQuant(models.Model):
 
         if self._is_inventory_mode():
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree_editable').id
+            form_view = self.env.ref('stock.view_stock_quant_form_editable').id
         else:
             action['view_id'] = self.env.ref('stock.view_stock_quant_tree').id
-            # Enables form view in readonly list
-            action.update({
-                'view_mode': 'tree,form',
-                'views': [
-                    (action['view_id'], 'list'),
-                    (self.env.ref('stock.view_stock_quant_form').id, 'form'),
-                ],
-            })
+            form_view = self.env.ref('stock.view_stock_quant_form').id
+        action.update({
+            'views': [
+                (action['view_id'], 'list'),
+                (form_view, 'form'),
+            ],
+        })
         if extend:
             action.update({
                 'view_mode': 'tree,form,pivot,graph',
                 'views': [
                     (action['view_id'], 'list'),
-                    (self.env.ref('stock.view_stock_quant_form').id, 'form'),
+                    (form_view, 'form'),
                     (self.env.ref('stock.view_stock_quant_pivot').id, 'pivot'),
                     (self.env.ref('stock.stock_quant_view_graph').id, 'graph'),
                 ],
