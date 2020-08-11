@@ -30,8 +30,11 @@ const UrlPickerUserValueWidget = InputUserValueWidget.extend({
     start: async function () {
         await this._super(...arguments);
         const linkButton = document.createElement('we-button');
-        linkButton.classList.add('o_we_redirect_to', 'fa', 'fa-fw', 'fa-external-link');
+        const icon = document.createElement('i');
+        icon.classList.add('fa', 'fa-fw', 'fa-external-link')
+        linkButton.classList.add('o_we_redirect_to');
         linkButton.title = _t("Redirect to URL in a new tab");
+        linkButton.appendChild(icon);
         this.containerEl.appendChild(linkButton);
         this.el.classList.add('o_we_large_input');
         this.inputEl.classList.add('text-left');
