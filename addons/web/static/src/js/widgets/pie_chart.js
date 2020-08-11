@@ -45,6 +45,7 @@ var PieChart = Widget.extend({
             withControlPanel: false,
             withSearchPanel: false,
             isEmbedded: true,
+            useSampleModel: record.isSample,
             mode: 'pie',
         };
         this.subViewParams.searchQuery = {

@@ -161,7 +161,7 @@ return mvc.Renderer.extend({
      * @see sampleDataTargets
      */
     _suppressFocusableElements() {
-        if (!this.state.isSample) {
+        if (!this.state.isSample || this.isEmbedded) {
             return;
         }
         const rootEls = [];
