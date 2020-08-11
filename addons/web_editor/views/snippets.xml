@@ -151,7 +151,7 @@
              t-att-data-selector="selector"
              t-att-data-exclude="exclude"
              t-att-data-target="target">
-            <we-select-pager class="o_we_shape_menu" string="Shape" data-dependencies="!shape_none_opt" data-name="bg_shape_opt">
+            <we-select-pager class="o_we_shape_menu" string="⌙ Shape" data-dependencies="!shape_none_opt" data-name="bg_shape_opt">
                 <!-- Invisible None button to be used for select's placeholder text -->
                 <we-button data-shape="" data-name="shape_none_opt"/>
                 <we-select-page>
@@ -265,11 +265,11 @@
                     <we-button data-shape="web_editor/Zigs/05" data-select-label="Zigs 05"/>
                 </we-select-page>
             </we-select-pager>
-            <we-row string="⌙ Flip">
+            <we-row string=" ⌙ Flip"><!-- &emsp; -->
                 <we-button data-flip-x="true" data-no-preview="true" data-dependencies="!shape_none_opt"><i class="fa fa-fw fa-arrows-h"/></we-button>
                 <we-button data-flip-y="true" data-no-preview="true" data-dependencies="!shape_none_opt"><i class="fa fa-fw fa-arrows-v"/></we-button>
             </we-row>
-            <we-row string="⌙ Colors" data-name="colors"/>
+            <we-row string=" ⌙ Colors" data-name="colors"/>
         </div>
     </t>
 </template>
