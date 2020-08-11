@@ -1956,6 +1956,32 @@ QUnit.module('Views', {
         actionManager.destroy();
     });
 
+    QUnit.test('Click on the measure list but not on a menu item', async function (assert) {
+        assert.expect(2);
+
+        const pivot = await createView({
+            View: PivotView,
+            model: "partner",
+            data: this.data,
+            arch: `<pivot/>`
+        });
+
+        // open the "Measures" menu
+        await testUtils.dom.click(pivot.$buttons[0].querySelector('button'));
+
+        // click on the divider in the "Measures" menu does not crash
+        await testUtils.dom.click(pivot.$buttons[0].querySelector('.o_pivot_measures_list .dropdown-divider'));
+        // the menu should still be open
+        assert.isVisible(pivot.$buttons[0].querySelector('.o_pivot_measures_list'));
+
+        // click on the measure list but not on a menu item or the separator
+        await testUtils.dom.click(pivot.$buttons[0].querySelector('.o_pivot_measures_list'));
+        // the menu should still be open
+        assert.isVisible(pivot.$buttons[0].querySelector('.o_pivot_measures_list'));
+
+        pivot.destroy();
+    });
+
     QUnit.module('Sort in comparison mode', {
         beforeEach: function () {
             this.data.partner.records[0].date = '2016-12-15';
