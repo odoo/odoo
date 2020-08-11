@@ -593,6 +593,7 @@ var SnippetsMenu = Widget.extend({
         this.$editable = $editable;
         this.$activeSnippet = false;
         this.snippetEditors = [];
+        this.documentHeight = $(document).height();
     },
     /**
      * @override
@@ -1287,6 +1288,13 @@ var SnippetsMenu = Widget.extend({
                 left: left,
                 top: top,
             },
+            drag: function (ev, ui) {
+                var rightEdge = $('body').outerWidth() - ui.helper.outerWidth();
+                var bottomEdge = self.documentHeight - ui.helper.outerHeight();
+                ui.position.top = Math.max(0, ui.position.top);
+                ui.position.left = Math.min(rightEdge, ui.position.left);
+                ui.position.top = Math.min(bottomEdge, ui.position.top);
+            },
             start: function () {
                 dropped = false;
                 $snippet = $(this);
@@ -1322,6 +1330,7 @@ var SnippetsMenu = Widget.extend({
                         if (!dropped) {
                             dropped = true;
                             $(this).first().after($toInsert).addClass('d-none');
+                            self.documentHeight = $(document).height();
                         }
                     },
                     out: function () {
@@ -1330,6 +1339,7 @@ var SnippetsMenu = Widget.extend({
                             dropped = false;
                             $toInsert.detach();
                             $(this).removeClass('d-none');
+                            self.documentHeight = $(document).height();
                         }
                     },
                 });
