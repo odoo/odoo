@@ -16,6 +16,7 @@
         'views/assets.xml',
         'views/chat_room_templates.xml',
         'views/chat_room_views.xml',
+        'views/res_config_settings.xml',
     ],
     'application': False,
 }

@@ -15,6 +15,19 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
         'click .o_wjitsi_room_link': '_onChatRoomClick',
     },
 
+    /**
+      * Manage the chat room (Jitsi), update the participant count...
+      *
+      * The widget takes some options
+      * - 'room-name', the name of the Jitsi room
+      * - 'chat-room-id', the ID of the `chat.room` record
+      * - 'auto-open', the chat room will be automatically opened when the page is loaded
+      * - 'check-full', check if the chat room is full before joining
+      * - 'attach-to', a JQuery selector of the element on which we will add the Jitsi
+      *                iframe. If nothing is specified, it will open a modal instead.
+      * - 'default-username': the username to use in the chat room
+      * - 'jitsi-server': the domain name of the Jitsi server to use
+      */
     start: async function () {
         await this._super.apply(this, arguments);
         this.roomName = this.$el.data('room-name');
@@ -28,6 +41,8 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
         this.attachTo = this.$el.data('attach-to') || false;
         // default username for jitsi
         this.defaultUsername = this.$el.data('default-username') || false;
+
+        this.jitsiServer = this.$el.data('jitsi-server') || 'meet.jit.si';
 
         if (this.autoOpen) {
             await this._onChatRoomClick();
@@ -224,7 +239,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
     _openMobileApplication: async function (roomName) {
         if (config.device.isMobile) {
             // we are on mobile, open the room in the application
-            window.location = `intent://meet.jit.si/${roomName}#Intent;scheme=org.jitsi.meet;package=org.jitsi.meet;end`;
+            window.location = `intent://${this.jitsiServer}/${roomName}#Intent;scheme=org.jitsi.meet;package=org.jitsi.meet;end`;
             return true;
         }
         return false;
@@ -240,7 +255,6 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
       */
     _createJitsiRoom: async function (roomName, $parentNode) {
       await this._loadJisti();
-        const domain = "meet.jit.si";
         const options = {
             roomName: roomName,
             width: "100%",
@@ -248,7 +262,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
             parentNode: $parentNode[0],
             configOverwrite: {disableDeepLinking: true},
         };
-        return new window.JitsiMeetExternalAPI(domain, options);
+        return new window.JitsiMeetExternalAPI(this.jitsiServer, options);
     },
 
     /**
@@ -259,7 +273,7 @@ publicWidget.registry.ChatRoom = publicWidget.Widget.extend({
     _loadJisti: async function () {
       if (!window.JitsiMeetExternalAPI) {
           await $.ajax({
-              url: "https://meet.jit.si/external_api.js",
+              url: `https://${this.jitsiServer}/external_api.js`,
               dataType: "script",
           });
       }
