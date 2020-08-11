@@ -209,6 +209,6 @@ class AccountPayment(models.Model):
             'number': invoice.ref and invoice.name + ' - ' + invoice.ref or invoice.name,
             'amount_total': formatLang(self.env, invoice_sign * invoice.amount_total, currency_obj=invoice.currency_id),
             'amount_residual': formatLang(self.env, amount_residual, currency_obj=invoice.currency_id) if amount_residual * 10**4 != 0 else '-',
-            'amount_paid': formatLang(self.env, invoice_sign * amount_paid, currency_obj=invoice.currency_id),
+            'amount_paid': formatLang(self.env, invoice_sign * amount_paid, currency_obj=self.currency_id),
             'currency': invoice.currency_id,
         }
