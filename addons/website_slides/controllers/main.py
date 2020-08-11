@@ -259,6 +259,37 @@ class WebsiteSlides(WebsiteProfile):
             session_slide_answer_quiz.pop(str(slide['id']), None)
         request.session['slide_answer_quiz'] = json.dumps(session_slide_answer_quiz)
 
+    # TAG UTILITIES
+    # --------------------------------------------------
+
+    def _create_or_get_channel_tag(self, tag_id, group_id):
+        if not tag_id:
+            return request.env['slide.channel.tag']
+        # handle creation of new channel tag
+        if tag_id[0] == 0:
+            group_id = self._create_or_get_channel_tag_group(group_id)
+            if not group_id:
+                return {'error': _('Missing "Tag Group" for creating a new "Tag".')}
+
+            new_tag = request.env['slide.channel.tag'].create({
+                'name': tag_id[1]['name'],
+                'group_id': group_id,
+            })
+            return new_tag
+        return request.env['slide.channel.tag'].browse(tag_id[0])
+
+    def _create_or_get_channel_tag_group(self, group_id):
+        if not group_id:
+            return False
+        # handle creation of new channel tag group
+        if group_id[0] == 0:
+            tag_group = request.env['slide.channel.tag.group'].create({
+                'name': group_id[1]['name'],
+            })
+            group_id = tag_group.id
+        # use existing channel tag group
+        return group_id[0]
+
     # --------------------------------------------------
     # SLIDE.CHANNEL MAIN / SEARCH
     # --------------------------------------------------
@@ -617,29 +648,9 @@ class WebsiteSlides(WebsiteProfile):
             if not can_upload or not can_publish:
                 return {'error': _('You cannot add tags to this course.')}
 
-        if tag_id:
-            # handle creation of new channel tag
-            if tag_id[0] == 0:
-                if group_id:
-                    # handle creation of new channel tag group
-                    if group_id[0] == 0:
-                        tag_group = request.env['slide.channel.tag.group'].create({
-                            'name': group_id[1]['name'],
-                        })
-                        group_id = tag_group.id
-                    # use existing channel tag group
-                    else:
-                        group_id = group_id[0]
-                else:
-                    return {'error': _('Missing "Tag Group" for creating a new "Tag".')}
+        tag = self._create_or_get_channel_tag(tag_id, group_id)
+        tag.write({'channel_ids': [(4, channel.id, 0)]})
 
-                request.env['slide.channel.tag'].create({'name': tag_id[1]['name'],
-                                                         'channel_ids': [channel.id],
-                                                         'group_id': group_id,
-                                                         })
-            else:
-                # use existing channel tag
-                request.env['slide.channel.tag'].browse(tag_id[0]).write({'channel_ids': [(4, channel.id, 0)]})
         return {'url': "/slides/%s" % (slug(channel))}
 
     @http.route(['/slides/channel/subscribe'], type='json', auth='user', website=True)
@@ -810,6 +821,15 @@ class WebsiteSlides(WebsiteProfile):
         slide = request.env['slide.slide'].browse(int(slide_id))
         result = slide._send_share_email(email, fullscreen)
         return result
+
+    # --------------------------------------------------
+    # TAGS SECTION
+    # --------------------------------------------------
+
+    @http.route('/slide_channel_tag/add', type='json', auth='user', methods=['POST'], website=True)
+    def slide_channel_tag_create_or_get(self, tag_id, group_id):
+        tag = self._create_or_get_channel_tag(tag_id, group_id)
+        return {'tag_id': tag.id}
 
     # --------------------------------------------------
     # QUIZ SECTION

@@ -39,7 +39,7 @@
         Uploading template
     -->
     <t t-name="website.slide.upload.modal.uploading">
-        <div class="text-center" aria-hidden="true" role="status">
+        <div class="text-center" role="status">
             <div class="fa-3x">
                 <i class="fa fa-spinner fa-pulse"></i>
             </div>
@@ -88,17 +88,25 @@
         <div>
             <form class="clearfix">
                 <div class="row">
-                    <div id="o_wslides_js_slide_upload_left_column" class="col">
+                    <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
                         <div class="form-group">
                             <label for="upload" class="col-form-label">Choose a PDF or an Image</label>
-                            <input id="upload" name="file" class="form-control" accept="image/*,application/pdf" type="file" required="required"/>
+                            <input id="upload" name="file" class="form-control h-100" accept="image/*,application/pdf" type="file" required="required"/>
                         </div>
                         <canvas id="data_canvas" class="d-none"></canvas>
                         <t t-call="website.slide.upload.modal.common"/>
                     </div>
-                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6 d-none">
-                        <div class="img-thumbnail">
-                            <div class="o_slide_preview">
+                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6">
+                        <div class="img-thumbnail h-100">
+                            <div class="o_slide_tutorial p-3">
+                                <div class="h5">How to upload your PowerPoint Presentations or Word Documents?</div>
+                                <div class="mx-3 my-4">Save your presentations or documents as PDF files and upload them.</div>
+                                <div class="alert alert-warning" role="alert">
+                                    <i class="fa fa-info-circle pr-2"/>
+                                    Only JPG, PNG, PDF, files types are supported
+                                </div>
+                            </div>
+                            <div class="o_slide_preview d-none">
                                 <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
                             </div>
                         </div>
@@ -112,18 +120,15 @@
         <div>
             <form class="clearfix">
                 <div class="row">
-                    <div id="o_wslides_js_slide_upload_left_column" class="col">
-                        <div class="form-group">
-                            <label for="upload" class="col-form-label">Choose a Cover Image</label>
-                            <input id="upload" name="file" class="form-control" accept="image/*" type="file" required="required"/>
-                        </div>
+                    <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
                         <canvas id="data_canvas" class="d-none"></canvas>
                         <t t-call="website.slide.upload.modal.common"/>
                     </div>
-                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6 d-none">
-                        <div class="img-thumbnail">
-                            <div class="o_slide_preview">
-                                <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
+                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6">
+                        <div class="img-thumbnail h-100">
+                            <div class="o_slide_tutorial p-3">
+                                <div class="h5">How to create a Lesson as a Web Page?</div>
+                                <div class="mx-3 my-4">First, create your lesson, then edit it with the website builder. You'll be able to drop building blocks on your page and edit them.</div>
                             </div>
                         </div>
                     </div>
@@ -136,7 +141,7 @@
         <div>
             <form class="clearfix">
                 <div class="row">
-                    <div id="o_wslides_js_slide_upload_left_column" class="col">
+                    <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
                         <div class="form-group">
                             <label for="url" class="col-form-label">Youtube Link</label>
                             <input id="url" name="url" class="form-control" placeholder="Youtube Video URL" required="required"/>
@@ -144,9 +149,15 @@
                         <canvas id="data_canvas" class="d-none"></canvas>
                         <t t-call="website.slide.upload.modal.common"/>
                     </div>
-                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6 d-none">
-                        <div class="img-thumbnail">
-                            <div class="o_slide_preview">
+                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6">
+                        <div class="img-thumbnail h-100">
+                            <div class="o_slide_tutorial p-3">
+                                <div class="h5">How to upload your videos ?</div>
+                                <div class="mx-3 my-4">First, upload your videos on YouTube and mark them as <strong>unlisted</strong>. This way, they will be secured.</div>
+                                <div class="mx-3 my-4">What does <strong>unlisted</strong> means? The YouTube unlisted meaning is a video which can be viewed only by the users having the link to it. Your video will never come up in the search results nor on your channel.</div>
+                                <div class="mx-3 my-4"><a href="https://support.google.com/youtube/answer/157177" target="_blank" >Change video privacy settings</a></div>
+                            </div>
+                            <div class="o_slide_preview d-none">
                                 <img src="/website_slides/static/src/img/document.png" id="slide-image" title="Content Preview" alt="Content Preview" class="img-fluid"/>
                             </div>
                         </div>
@@ -159,8 +170,21 @@
     <t t-name="website.slide.upload.quiz">
         <div>
             <form class="clearfix">
-                <canvas id="data_canvas" class="d-none"></canvas>
-                <t t-call="website.slide.upload.modal.common"/>
+                <div class="row">
+                    <div id="o_wslides_js_slide_upload_left_column" class="col-md-6">
+                        <canvas id="data_canvas" class="d-none"></canvas>
+                        <t t-call="website.slide.upload.modal.common"/>
+                    </div>
+                    <div id="o_wslides_js_slide_upload_preview_column" class="col-md-6">
+                        <div class="img-thumbnail h-100">
+                            <div class="o_slide_tutorial p-3">
+                                <div class="h5">Test your students with small Quizzes</div>
+                                <div class="mx-3 my-4">With Quizzes you can keep your students focused and motivated by answering some questions and gaining some karma points</div>
+                                <img src="/website_slides/static/src/img/onboarding-quiz.png" title="Quiz Demo Data" class="img-fluid"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </form>
         </div>
     </t>
