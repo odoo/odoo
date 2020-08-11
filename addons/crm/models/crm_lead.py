@@ -1571,8 +1571,10 @@ class Lead(models.Model):
             for field, value in values['values']:
                 if field != "probability":  # was added to lead values in batch mode to know won/lost state, but is not a pls fields.
                     leads_pls_fields.add(field)
+                else:  # extract lead probability - needed to increment tag_id frequency. (proba always before tag_id)
+                    lead_probability = value
                 if field == 'tag_id':  # handle tag_id separatelly (as in One Shot rebuild mode)
-                    leads_frequency_values_by_team[team_id].append({field: value, 'count': 1})
+                    leads_frequency_values_by_team[team_id].append({field: value, 'count': 1, 'probability': lead_probability})
                 else:
                     lead_frequency_values[field] = value
             leads_frequency_values_by_team[team_id].append(lead_frequency_values)
