@@ -1,10 +1,9 @@
-odoo.define('mail.text_emojis_field', function (require) {
+odoo.define('mail.field_emojis_common', function (require) {
 "use strict";
 
 var basicFields = require('web.basic_fields');
 var core = require('web.core');
 var emojis = require('mail.emojis');
-var registry = require('web.field_registry');
 var MailEmojisMixin = require('mail.emoji_mixin');
 var _onEmojiClickMixin = MailEmojisMixin._onEmojiClick;
 var QWeb = core.qweb;
@@ -24,34 +23,10 @@ var FieldEmojiCommon = {
     },
 
     /**
-     * This will add an emoji button that shows the emojis selection dropdown.
-     *
-     * We use 'on_attach_callback' because we need the element to be attached to the form first.
-     * That's because the $emojisIcon element needs to be rendered outside of this $el
-     * (which is an text element, that can't 'contain' any other elements).
-     *
      * @override
      */
     on_attach_callback: function () {
-        if (!this.$emojisIcon) {
-            this.$emojisIcon = $(QWeb.render('mail.EmojisDropdown', {widget: this}));
-            this.$emojisIcon.find('.o_mail_emoji').on('click', this._onEmojiClick.bind(this));
-
-            if (this.$el.filter('span.o_field_translate').length) {
-                // multi-languages activated, place the button on the left of the translation button
-                this.$emojisIcon.addClass('o_mail_emojis_dropdown_translation');
-            }
-            if (this.$el.filter('textarea').length) {
-                this.$emojisIcon.addClass('o_mail_emojis_dropdown_textarea');
-            }
-            this.$el.last().after(this.$emojisIcon);
-        }
-
-        if (this.mode === 'edit') {
-            this.$emojisIcon.show();
-        } else {
-            this.$emojisIcon.hide();
-        }
+        this._attachEmojisDropdown();
     },
 
     //--------------------------------------------------------------------------
@@ -122,22 +97,40 @@ var FieldEmojiCommon = {
      */
     _triggerOnchange: function () {
         this.$input.trigger('change');
+    },
+
+    /**
+     * This will add an emoji button that shows the emojis selection dropdown.
+     *
+     * Should be used inside 'on_attach_callback' because we need the element to be attached to the form first.
+     * That's because the $emojisIcon element needs to be rendered outside of this $el
+     * (which is an text element, that can't 'contain' any other elements).
+     * 
+     * @private
+     */
+    _attachEmojisDropdown: function () {
+        if (!this.$emojisIcon) {
+            this.$emojisIcon = $(QWeb.render('mail.EmojisDropdown', {widget: this}));
+            this.$emojisIcon.find('.o_mail_emoji').on('click', this._onEmojiClick.bind(this));
+
+            if (this.$el.filter('span.o_field_translate').length) {
+                // multi-languages activated, place the button on the left of the translation button
+                this.$emojisIcon.addClass('o_mail_emojis_dropdown_translation');
+            }
+            if (this.$el.filter('textarea').length) {
+                this.$emojisIcon.addClass('o_mail_emojis_dropdown_textarea');
+            }
+            this.$el.last().after(this.$emojisIcon);
+        }
+
+        if (this.mode === 'edit') {
+            this.$emojisIcon.show();
+        } else {
+            this.$emojisIcon.hide();
+        }
     }
 };
 
-/**
- * Extension of the FieldText that will add emojis support
- */
-var FieldTextEmojis = basicFields.FieldText.extend(MailEmojisMixin, FieldEmojiCommon);
-
-/**
- * Extension of the FieldChar that will add emojis support
- */
-var FieldCharEmojis = basicFields.FieldChar.extend(MailEmojisMixin, FieldEmojiCommon);
-
-registry.add('text_emojis', FieldTextEmojis);
-registry.add('char_emojis', FieldCharEmojis);
-
-return {FieldTextEmojis: FieldTextEmojis, FieldCharEmojis: FieldCharEmojis};
+return FieldEmojiCommon;
 
 });
