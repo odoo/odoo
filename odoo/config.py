@@ -12,6 +12,7 @@ import copy
 import dataclasses
 import datetime
 import distutils.util
+import itertools
 import os
 import tempfile
 import warnings
@@ -1069,9 +1070,12 @@ def from_odoobin(argv):
 
     # move all bootstraping options before the subcommand
     for opt in groupmap['Bootstraping options'].options:
-        for arg in opt.args:
-            with contextlib.suppress(ValueError):
-                opt_index = argv.index(arg)
+        argcnt = {'save': 1, 'syslog': 1}.get(opt.name, 2)
+
+        for arg1, (opt_index, arg2) in itertools.product(opt.args, enumerate(argv)):
+            arg2, eq, _ = arg2.partition('=')
+            if arg1 == arg2:
+                argcnt -= int(bool(eq))  # --foo=bidule instead of --foo bidule
                 break
         else:
             continue  # option not present, skip
@@ -1080,7 +1084,6 @@ def from_odoobin(argv):
             continue  # option before the command already, skip
 
         # rewrite argv so the option is moved at the beginning
-        argcnt = {'save': 1, 'syslog': 1}.get(opt.name, 2)
         argv = (
             argv[opt_index:opt_index+argcnt]  # [option, value]
           + argv[:opt_index]                  # + all preceding options
