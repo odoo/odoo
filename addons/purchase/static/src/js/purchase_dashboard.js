@@ -26,10 +26,8 @@ var QWeb = core.qweb;
 // Add mock of method 'retrieve_dashboard' in SampleServer, so that we can have
 // the sample data in empty purchase kanban and list view
 let dashboardValues;
-SampleServer.mockRegistry.add('purchase.order', {
-    retrieve_dashboard: () => {
-        return Object.assign({}, dashboardValues);
-    },
+SampleServer.mockRegistry.add('purchase.order/retrieve_dashboard', () => {
+    return Object.assign({}, dashboardValues);
 });
 
 
