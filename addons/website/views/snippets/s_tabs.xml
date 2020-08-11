@@ -65,16 +65,20 @@
     <xpath expr="." position="inside">
         <div data-js="NavTabs" data-selector="section.s_tabs">
             <we-button data-add-tab=""
-                        data-no-preview="true"
-                        class="fa fa-fw fa-plus"
-                        title="Add Tab"
-                        aria-label="Add Tab"/>
+                       data-no-preview="true"
+                       class="o_we_text_success ml-0"
+                       title="Add Tab"
+                       aria-label="Add Tab">
+                <i class="fa fa-fw fa-plus"/>
+            </we-button>
             <we-button data-remove-tab=""
-                        data-name="remove_tab_opt"
-                        data-no-preview="true"
-                        class="fa fa-fw fa-minus"
-                        title="Remove Tab"
-                        aria-label="Remove Tab"/>
+                       data-name="remove_tab_opt"
+                       data-no-preview="true"
+                       class="o_we_text_danger mr-3"
+                       title="Remove Tab"
+                       aria-label="Remove Tab">
+                <i class="fa fa-fw fa-minus"/>
+            </we-button>
         </div>
         <div data-js="NavTabsStyle" data-selector="section" data-target=".s_tabs_main">
             <we-select string="Style">

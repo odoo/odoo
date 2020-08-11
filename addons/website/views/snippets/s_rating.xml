@@ -35,7 +35,9 @@
                     data-apply-to=".s_rating_active_icons"
                     data-css-property="color"
                     data-color-prefix="text-"/>
-                <we-button class="fa fa-fw fa-edit" data-custom-icon="true" data-custom-active-icon="true" data-no-preview="true"></we-button>
+                <we-button data-custom-icon="true" data-custom-active-icon="true" data-no-preview="true">
+                    <i class="fa fa-fw fa-refresh mr-1"/> Replace Icon
+                </we-button>
             </we-row>
             <we-row string="⌙ Inactive">
                 <we-colorpicker
@@ -43,11 +45,13 @@
                     data-apply-to=".s_rating_inactive_icons"
                     data-css-property="color"
                     data-color-prefix="text-"/>
-                <we-button class="fa fa-fw fa-edit" data-custom-icon="true" data-custom-active-icon="false" data-no-preview="true"></we-button>
+                <we-button data-custom-icon="true" data-custom-active-icon="false" data-no-preview="true">
+                    <i class="fa fa-fw fa-refresh mr-1"/> Replace Icon
+                </we-button>
             </we-row>
             <we-row string="Score">
                 <we-input data-active-icons-number="true" data-step="1"/>
-                <span>/</span>
+                <span class="mx-2">/</span>
                 <we-input data-total-icons-number="true" data-step="1"/>
             </we-row>
             <we-button-group string="Size" data-apply-to=".s_rating_icons">
