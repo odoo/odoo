@@ -373,7 +373,7 @@ class ProcurementGroup(models.Model):
                                 if float_compare(remainder, 0.0, precision_rounding=orderpoint.product_uom.rounding) > 0:
                                     qty += orderpoint.qty_multiple - remainder
 
-                                if float_compare(qty, 0.0, precision_rounding=orderpoint.product_uom.rounding) < 0:
+                                if float_compare(qty, 0.0, precision_rounding=orderpoint.product_uom.rounding) <= 0:
                                     continue
 
                                 qty -= substract_quantity[orderpoint.id]
