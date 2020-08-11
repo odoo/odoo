@@ -405,12 +405,12 @@ def data_dir(rawopt: str) -> str:
     return str(_check_dir_access(rawopt, os.R_OK | os.W_OK | os.X_OK))
 
 
-def ensure_data_dir(datadir: str):
+def ensure_data_dir():
     """
     Ensure the `datadir` is a valid data dir, the addons, sessions, and
     filestore are automatically created if missing.
     """
-    datadir = Path(datadir)
+    datadir = Path(config['data_dir'])
     ad = datadir.joinpath('addons')
     if not ad.exists():
         ad.mkdir(mode=0o700)
@@ -1013,6 +1013,17 @@ Command(
 #                               PARSERS                                #
 #                                                                      #
 ########################################################################
+
+def setup(argv=None):
+    load_default()
+    load_environ()
+    if argv is not None:
+        load_cli(argv)
+    load_file()
+    ensure_data_dir()
+    if config['save']:
+        config.save()
+
 
 def backward_compatible_parse_args(main_parser, argv):
     """ Old v13 and new v14+ dual command-line arguments parser """

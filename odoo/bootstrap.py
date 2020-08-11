@@ -3,6 +3,11 @@
 
 
 def setup(argv=None):
+    """
+    TODO Document me
+    explain why the argv is nice to integrate with external stuffs
+    """
+
     # only setup once
     if getattr(setup, "called", False):
         return
@@ -17,14 +22,7 @@ def setup(argv=None):
 
     # phase 2, configuration loading and exposure
     from . import config as config_module
-    config_module.load_default()
-    config_module.load_environ()
-    if argv is not None:
-        config_module.load_cli(argv)
-    config_module.load_file()
-    config_module.ensure_data_dir(config_module.config['data_dir'])
-    if config_module.config['save']:
-        config_module.config.save()
+    config_module.setup(argv)
 
     # phase 3, dynamic library configuration
     if config_module.config.evented:
