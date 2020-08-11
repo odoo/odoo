@@ -233,11 +233,15 @@ var PivotController = AbstractController.extend({
         if ($target.hasClass('o_pivot_expand_button')) {
             this.model.expandAll().then(this.update.bind(this, {}, {reload: false}));
         }
-        if ($target.parents('.o_pivot_measures_list').length) {
+        if (ev.target.closest('.o_pivot_measures_list')) {
             ev.preventDefault();
             ev.stopPropagation();
-            var field = $target.data('field');
-            this.model.toggleMeasure(field).then(this.update.bind(this, {}, {reload: false}));
+            const field = ev.target.dataset.field;
+            if (field) {
+                this.model
+                    .toggleMeasure(field)
+                    .then(this.update.bind(this, {}, { reload: false }));
+            }
         }
         if ($target.hasClass('o_pivot_download')) {
             this._downloadTable();
