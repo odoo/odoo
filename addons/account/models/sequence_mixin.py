@@ -204,7 +204,7 @@ class SequenceMixin(models.AbstractModel):
 
         format, format_values = self._get_sequence_format_param(last_sequence)
         if new:
-            format_values['seq'] = 0
+            format_values['seq'] = format_values.get('seq', 0)
             format_values['year'] = self[self._sequence_date_field].year % (10 ** format_values['year_length'])
             format_values['month'] = self[self._sequence_date_field].month
         format_values['seq'] = format_values['seq'] + 1
