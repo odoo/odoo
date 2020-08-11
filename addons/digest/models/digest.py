@@ -28,7 +28,7 @@ class Digest(models.Model):
                                     ('monthly', 'Monthly'),
                                     ('quarterly', 'Quarterly')],
                                    string='Periodicity', default='daily', required=True)
-    next_run_date = fields.Date(string='Next Send Date')
+    next_run_date = fields.Date(string='Next Send Date', compute="_compute_next_run_date", store=True, readonly=False)
     currency_id = fields.Many2one(related="company_id.currency_id", string='Currency', readonly=False)
     company_id = fields.Many2one('res.company', string='Company', default=lambda self: self.env.company.id)
     available_fields = fields.Char(compute='_compute_available_fields')
@@ -68,17 +68,20 @@ class Digest(models.Model):
             total_messages = self.env['mail.message'].search_count([('create_date', '>=', start), ('create_date', '<', end), ('subtype_id', '=', discussion_subtype_id), ('message_type', 'in', ['comment', 'email'])])
             record.kpi_mail_message_total_value = total_messages
 
-    @api.onchange('periodicity')
-    def _onchange_periodicity(self):
-        self.next_run_date = self._get_next_run_date()
-
-    @api.model_create_multi
-    def create(self, vals_list):
-        digests = super().create(vals_list)
-        for digest in digests:
-            if not digest.next_run_date:
-                digest.next_run_date = digest._get_next_run_date()
-        return digests
+    @api.depends('periodicity')
+    def _compute_next_run_date(self):
+        today = fields.Date.today()
+        for digest in self:
+            if digest.periodicity == 'weekly':
+                delta = relativedelta(weeks=1)
+            elif digest.periodicity == 'monthly':
+                delta = relativedelta(months=1)
+            elif digest.periodicity == 'quarterly':
+                delta = relativedelta(months=3)
+            else:
+                # default = daily
+                delta = relativedelta(days=1)
+            digest.next_run_date = today + delta
 
     # ------------------------------------------------------------
     # ACTIONS
@@ -111,7 +114,8 @@ class Digest(models.Model):
                 )._action_send_to_user(user, tips_count=1)
             if digest in to_slowdown:
                 digest.write({'periodicity': 'weekly'})
-            digest.next_run_date = digest._get_next_run_date()
+        # Mark the next_run_date to recompute.
+        self.env.add_to_compute(self._fields['next_run_date'], self)
 
     def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
         web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
@@ -273,18 +277,6 @@ class Digest(models.Model):
             ))
 
         return preferences
-
-    def _get_next_run_date(self):
-        self.ensure_one()
-        if self.periodicity == 'daily':
-            delta = relativedelta(days=1)
-        if self.periodicity == 'weekly':
-            delta = relativedelta(weeks=1)
-        elif self.periodicity == 'monthly':
-            delta = relativedelta(months=1)
-        elif self.periodicity == 'quarterly':
-            delta = relativedelta(months=3)
-        return date.today() + delta
 
     def _compute_timeframes(self, company):
         now = datetime.utcnow()
