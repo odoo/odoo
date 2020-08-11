@@ -107,6 +107,10 @@
                                         <field name="visibility" widget="radio"/>
                                         <field name="promote_strategy" widget="radio"
                                         attrs="{'invisible': [('channel_type', '=', 'training')]}"/>
+                                        <field name="promoted_slide_id"
+                                               attrs="{'invisible': ['|', ('channel_type', '=', 'training'), ('promote_strategy', '!=', 'specific')],
+                                                       'required': [('channel_type', '!=', 'training'), ('promote_strategy', '=', 'specific')]}"
+                                               domain="[('channel_id', '=', active_id), ('is_category', '=', False)]"/>
                                     </group>
                                 </group>
                                 <div attrs="{'invisible': [('enroll', '!=', 'invite')]}">
