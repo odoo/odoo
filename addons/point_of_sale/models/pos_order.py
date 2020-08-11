@@ -606,7 +606,7 @@ class PosOrder(models.Model):
             'lines': [[0, 0, line] for line in order.lines.export_for_ui()],
             'statement_ids': [[0, 0, payment] for payment in order.payment_ids.export_for_ui()],
             'name': order.pos_reference,
-            'uid': order.pos_reference[6:],
+            'uid': order.pos_reference[-14:],
             'amount_paid': order.amount_paid,
             'amount_total': order.amount_total,
             'amount_tax': order.amount_tax,
@@ -625,6 +625,7 @@ class PosOrder(models.Model):
             'id': order.id,
             'is_tipped': order.is_tipped,
             'tip_amount': order.tip_amount,
+            'server_id': order.id,
         }
 
     def export_for_ui(self):
@@ -771,6 +772,7 @@ class PosOrderLine(models.Model):
 
     def _export_for_ui(self, orderline):
         return {
+            'order_id': orderline.order_id.id,
             'qty': orderline.qty,
             'price_unit': orderline.price_unit,
             'price_subtotal': orderline.price_subtotal,
@@ -780,6 +782,8 @@ class PosOrderLine(models.Model):
             'tax_ids': [[6, False, orderline.tax_ids.mapped(lambda tax: tax.id)]],
             'id': orderline.id,
             'pack_lot_ids': [[0, 0, lot] for lot in orderline.pack_lot_ids.export_for_ui()],
+            'server_id': orderline.id,
+            'full_product_name': orderline.full_product_name,
         }
 
     def export_for_ui(self):
@@ -799,6 +803,10 @@ class PosOrderLineLot(models.Model):
     def _export_for_ui(self, lot):
         return {
             'lot_name': lot.lot_name,
+            'pos_order_line_id': lot.pos_order_line_id.id,
+            'order_id': lot.order_id.id,
+            'product_id': lot.product_id.id,
+            'server_id': lot.id,
         }
 
     def export_for_ui(self):

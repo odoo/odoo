@@ -50,6 +50,7 @@ class PosPayment(models.Model):
 
     def _export_for_ui(self, payment):
         return {
+            'id': payment.id,
             'payment_method_id': payment.payment_method_id.id,
             'amount': payment.amount,
             'payment_status': payment.payment_status,
@@ -58,6 +59,7 @@ class PosPayment(models.Model):
             'transaction_id': payment.transaction_id,
             'ticket': payment.ticket,
             'is_change': payment.is_change,
+            'server_id': payment.id,
         }
 
     def export_for_ui(self):
