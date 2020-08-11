@@ -1,29 +1,6 @@
 <?xml version="1.0" ?>
 <odoo><data>
 
-<template id='courses_footer'>
-    <!-- 'users':  3 top users with picture (skip users without picture) -->
-    <section class="s_banner bg-900" style="background-image: url(/website_slides/static/src/img/banner_heroes_default.svg); background-size: cover; background-position: right bottom" data-snippet="s_banner">
-        <div class="container py-5">
-            <div class="row align-items-center">
-                <div t-attf-class="col-12 #{'col-md' if top3_users else 'text-center'}">
-                    <h2 class="my-4 text-white">Meet The Heros Who Transformed Their Company!</h2>
-                    <a href="/profile/users" class="btn btn-primary btn-lg">Go meet them</a>
-                </div>
-                <div class="col-12 col-md-5" t-if="top3_users">
-                    <div class="ml-4 ml-md-2 mt-3">
-                        <t t-foreach="top3_users" t-as="user">
-                            <img class="rounded-circle img-fluid shadow ml-n4"
-                                style="width: 140px; height: 140px; max-width: 40%; max-height: 40%; object-fit: cover; border: 6px solid white;"
-                                t-attf-src="/web/image/res.users/#{user['id']}/image_256"/>
-                        </t>
-                    </div>
-                </div>
-            </div>
-        </div>
-    </section>
-</template>
-
 <!-- Channels home template -->
 <template id='courses_home' name="Odoo Courses Homepage">
     <t t-set="body_classname" t-value="'o_wslides_body'"/>
@@ -33,13 +10,10 @@
                 <div class="container align-items-center d-flex mb-5 mt-lg-5 pt-lg-4 pb-lg-1">
                     <div>
                         <h1 class="display-3 mb-0">Reach new heights</h1>
-                        <h2 class="mb-4">Start your online course today !</h2>
+                        <h2 class="mb-4">Start your online course today!</h2>
                         <div class="row mt-1 mb-3">
-                            <div class="col-lg-6">
-                                <p>Skill up and have an impact! Your business career starts here. Time to start a course.</p>
-                            </div>
-                            <div class="col-lg-3">
-                                <a href="slides/all" class="btn btn-primary btn-lg">Pick a course</a>
+                            <div class="col">
+                                <p>Skill up and have an impact! Your business career starts here.<br/>Time to start a course.</p>
                             </div>
                         </div>
                     </div>
@@ -81,16 +55,12 @@
 
             <div class="container o_wslides_home_main">
                 <div class="row">
-                    <t t-set="is_achievements_active" t-value="request.website.viewref('website_slides.toggle_latest_achievements').active"/>
-                    <t t-set="has_side_column" t-value="request.website.viewref('website_slides.toggle_leaderboard').active or is_achievements_active"/>
+                    <t t-set="has_side_column" t-value="request.website.viewref('website_slides.toggle_leaderboard').active"/>
                     <t t-if="is_public_user">
                         <div t-if="has_side_column" class="col-lg-3 order-3 order-lg-2">
                             <div class="row">
-                                <div class="col-12 col-md-7 col-lg-12">
-                                    <t t-call="website_slides.slides_home_achievements_small"/>
-                                </div>
-                                <div class="col-12 col-md-5 col-lg-12 mt-5 mt-md-0">
-                                    <div t-att-class="'pl-md-5 pl-lg-0 mt-lg-4' if is_achievements_active else 'pl-md-5 pl-lg-0'">
+                                <div class="col-12 col-md-5 col-lg-12">
+                                    <div class="pl-md-5 pl-lg-0">
                                         <t t-call="website_slides.slides_home_users_small"/>
                                     </div>
                                 </div>
@@ -116,9 +86,8 @@
                                 <div class="row no-gutters mb-5 mt-3 mt-lg-0">
                                     <div class="col-12 col-sm-6 col-lg-12">
                                         <t t-call="website_slides.slides_home_user_profile_small"/>
-                                        <hr class="d-sm-none d-lg-block"/>
                                     </div>
-                                    <div class="col-12 col-sm-6 col-lg-12 d-flex align-items-center">
+                                    <div class="col-12 col-sm-6 col-lg-12 pl-md-5 pl-lg-0 mt-lg-4">
                                         <t t-call="website_slides.slides_home_user_achievements_small"/>
                                     </div>
                                     <div class="col-12 col-md-7 col-lg-12 pl-md-5 pl-lg-0 mt-lg-4 mb-3">
@@ -343,6 +312,12 @@
     </t>
 </template>
 
+<template id='courses_footer'>
+    <section class="s_banner">
+        <div class="oe_structure oe_empty"/>
+    </section>
+</template>
+
 <template id='course_card' name="Course Card">
     <div t-attf-class="card w-100 o_wslides_course_card mb-4 #{'o_wslides_course_unpublished' if not channel.is_published else ''}">
         <t t-set="course_image" t-value="website.image_url(channel, 'image_1024')"/>
@@ -406,21 +381,20 @@
 
 <template id="toggle_latest_achievements" inherit_id="website_slides.slides_home_achievements_small" active="True" customize_show="True" name='Display Achievements'>
     <xpath expr="//t[hasclass('o_wslides_home_aside')]" position="inside">
-        <div class="row o_wslides_home_aside_title">
-            <div class="col">
-                <h5 class="m-0">Latest achievements</h5>
-                <hr class="mt-2"/>
+        <div t-if="achievements">
+            <div class="row o_wslides_home_aside_title">
+                <div class="col">
+                    <h5 class="m-0">Latest achievements</h5>
+                    <hr class="mt-2"/>
+                </div>
             </div>
-        </div>
-        <div class="row">
-            <t t-if="achievements">
+            <div class="row">
                 <div class="col">
                     <t t-foreach="achievements" t-as="achievement">
                         <t t-call="website_slides.achievement_card"/>
                     </t>
                 </div>
-            </t>
-            <t t-else=""><p class="col mt8">No achievements currently :(</p></t>
+            </div>
         </div>
     </xpath>
 </template>
@@ -499,7 +473,14 @@
 </template>
 
 <template id='slides_home_user_achievements_small' name="User Achievements">
-    <div class="o_wslides_home_aside flex-grow-1 mb-2">
+    <div class="o_wslides_home_aside flex-grow-1">
+        <div class="row o_wslides_home_aside_title">
+            <div class="col">
+                <a href="/profile/ranks_badges?badge_category=slides" class="float-right">View all</a>
+                <h5 class="m-0">Badges</h5>
+                <hr class="mt-2 pt-2"/>
+            </div>
+        </div>
         <t t-foreach="challenges" t-as="challenge">
             <t t-set="challenge_done" t-value="challenge in challenges_done if challenges_done else False"/>
             <div t-attf-class="d-flex mb-3 align-items-center #{'o_wslides_entry_muted' if not challenge_done else ''}">

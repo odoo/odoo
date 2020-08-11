@@ -12,7 +12,9 @@
                     <t t-set="inline_mode" t-value="true"/>
                 </t>
             </div>
-            <button t-if="widget.options['display_composer']" type="button" class="btn btn-sm btn-primary mx-3" data-toggle="modal" data-target="#ratingpopupcomposer">
+            <button t-if="widget.options['display_composer']" type="button"
+                t-att-class="'btn btn-sm mx-3 ' + widget.options['link_btn_classes'] or 'btn-primary'"
+                data-toggle="modal" data-target="#ratingpopupcomposer">
                 <t t-if="widget.options['display_composer']">
                     <t t-if="widget.options['default_message_id']">
                         Modify your review
