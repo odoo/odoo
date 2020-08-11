@@ -643,6 +643,10 @@ class Users(models.Model):
                         raise AccessDenied()
                     user = user.with_user(user)
                     user._check_credentials(password)
+                    tz = request.httprequest.cookies.get('tz') if request else None
+                    if tz in pytz.all_timezones and (not user.tz or not user.login_date):
+                        # first login or missing tz -> set tz to browser tz
+                        user.tz = tz
                     user._update_last_login()
         except AccessDenied:
             _logger.info("Login failed for db:%s login:%s from %s", db, login, ip)
