@@ -24,6 +24,15 @@ class Mailing(models.Model):
     mailing_type = fields.Selection(selection_add=[
         ('sms', 'SMS')
     ], ondelete={'sms': 'set default'})
+
+    # 'sms_subject' added to override 'subject' field (string attribute should be labelled "Title" when mailing_type == 'sms').
+    # 'sms_subject' should have the same helper as 'subject' field when 'mass_mailing_sms' installed.
+    # otherwise 'sms_subject' will get the old helper from 'mass_mailing' module.
+    # overriding 'subject' field helper in this model is not working, since the helper will keep the new value
+    # even when 'mass_mailing_sms' removed (see 'mailing_mailing_view_form_sms' for more details).                    
+    sms_subject = fields.Char('Title', help='For an Email, Subject your Recipients will see in their inbox.\n'
+                              'For an SMS Text Message, internal Title of the Message.',
+                              related='subject', translate=True, readonly=False)
     # sms options
     body_plaintext = fields.Text('SMS Body', compute='_compute_body_plaintext', store=True, readonly=False)
     sms_template_id = fields.Many2one('sms.template', string='SMS Template', ondelete='set null')
@@ -73,6 +82,17 @@ class Mailing(models.Model):
                 mail.sms_has_insufficient_credit = trace_dict[mail.id]['sms_credit']
                 mail.sms_has_unregistered_account = trace_dict[mail.id]['sms_acc']
 
+
+    # --------------------------------------------------
+    # ORM OVERRIDES
+    # --------------------------------------------------
+
+    @api.model
+    def create(self, values):
+        # Get subject from "sms_subject" field when SMS installed (used to build the name of record in the super 'create' method)
+        if values.get('mailing_type') == 'sms' and values.get('sms_subject'):
+            values['subject'] = values['sms_subject']
+        return super(Mailing, self).create(values)
 
     # --------------------------------------------------
     # BUSINESS / VIEWS ACTIONS
