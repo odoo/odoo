@@ -225,12 +225,12 @@ class GoogleCalendar(models.AbstractModel):
             "start": {
                 type: start_date,
                 vstype: None,
-                'timeZone': self.env.context.get('tz') or 'UTC',
+                'timeZone': self.env.context.get('tz') or self.env.user.tz or 'UTC',
             },
             "end": {
                 type: final_date,
                 vstype: None,
-                'timeZone': self.env.context.get('tz') or 'UTC',
+                'timeZone': self.env.context.get('tz') or self.env.user.tz or 'UTC',
             },
             "attendees": attendee_list,
             "reminders": {
@@ -380,16 +380,16 @@ class GoogleCalendar(models.AbstractModel):
 
         try:
             status, content, ask_time = self.env['google.service']._do_request(url, data_json, headers, type='PATCH')
+            update_date = datetime.strptime(content['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
+            oe_event.write({'oe_update_date': update_date})
+
+            if self.env.context.get('curr_attendee'):
+                self.env['calendar.attendee'].browse(self.env.context['curr_attendee']).write(
+                    {'oe_synchro_date': update_date})
         except requests.HTTPError as e:
             if e.response.status_code != 403:
                 raise e
             _logger.info("Could not update Google event %s" % google_event['id'])
-
-        update_date = datetime.strptime(content['updated'], "%Y-%m-%dT%H:%M:%S.%fz")
-        oe_event.write({'oe_update_date': update_date})
-
-        if self.env.context.get('curr_attendee'):
-            self.env['calendar.attendee'].browse(self.env.context['curr_attendee']).write({'oe_synchro_date': update_date})
 
     def update_an_event(self, event):
         data = self.generate_data(event)

@@ -43,6 +43,14 @@
                 height: 17px;
             }
         }
+        &.o_list_computing_widths {
+            > tbody > tr > td {
+                &.o_list_text, // text field, className on the td
+                > .o_field_text { // text field with widget, className inside the td
+                    white-space: pre !important;
+                }
+            }
+        }
 
         tfoot {
             cursor: default;

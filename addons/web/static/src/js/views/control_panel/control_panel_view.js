@@ -177,9 +177,6 @@ var ControlPanelView = Factory.extend({
                                 attrs.name ||
                                 attrs.domain ||
                                 'Ω';
-        if (attrs.invisible) {
-            filter.invisible = true;
-        }
         if (filter.type === 'filter') {
             if (filter.isDefault) {
                 filter.defaultRank = -5;
@@ -327,6 +324,22 @@ var ControlPanelView = Factory.extend({
                 };
                 if (filter.type === 'filter' || filter.type === 'groupBy') {
                     filter.groupNumber = groupNumber;
+                }
+                if (preFilter.attrs && JSON.parse(preFilter.attrs.modifiers || '{}').invisible) {
+                    filter.invisible = true;
+
+                    var preFilterFieldName = null;
+                    if (preFilter.tag == 'filter' && preFilter.attrs.date) {
+                        preFilterFieldName = preFilter.attrs.date;
+                    } else if (preFilter.tag == 'groupBy') {
+                        preFilterFieldName = preFilter.attrs.fieldName;
+                    }
+                    if (preFilterFieldName && !self.fields[preFilterFieldName]) {
+                        // In some case when a field is limited to specific groups
+                        // on the model, we need to ensure to discard related filter
+                        // as it may still be present in the view (in 'invisible' state)
+                        return;
+                    }
                 }
                 self._extractAttributes(filter, preFilter.attrs);
                 currentGroup.push(filter);

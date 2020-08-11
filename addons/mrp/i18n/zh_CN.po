@@ -12,7 +12,6 @@
 # xu xiaohu <xu.xiaohu@gmail.com>, 2019
 # 卓忆科技 <zhanghao@jointd.com>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # Shane Tsoi <sso@odoo.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # Jeanphy <hzh0292@qq.com>, 2019
@@ -23,6 +22,7 @@
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
 # Martin Trigaux, 2019
 # liAnGjiA <liangjia@qq.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
@@ -534,6 +534,15 @@ msgstr "批准"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "已归档"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"At least one work order has a quantity produced lower than the quantity "
+"produced in the manufacturing order. You must complete the work orders "
+"before posting the inventory."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -2891,7 +2900,7 @@ msgstr "生产"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_byproduct__operation_id
 msgid "Produced in Operation"
-msgstr ""
+msgstr "生产的操作"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_product_product
@@ -2917,7 +2926,7 @@ msgstr "产品"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "Product Attachments"
-msgstr ""
+msgstr "产品文档附件"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -3059,7 +3068,7 @@ msgstr "未投料数量"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__progress
 msgid "Progress Done (%)"
-msgstr ""
+msgstr "完成进度 (%)"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date
@@ -3132,7 +3141,7 @@ msgstr "将被生产的数量"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_product_produce_line_kanban
 msgid "Quantity To Consume"
-msgstr ""
+msgstr "待消耗的数量"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_change_production_qty__product_qty
@@ -3712,7 +3721,7 @@ msgstr "子 BOM"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
 msgid "Subcontract the production of some products"
-msgstr ""
+msgstr "外包一些产品的生产"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_subcontracting
@@ -3809,7 +3818,7 @@ msgstr "容量必须严格为正数."
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_date_minimum_delta
 msgid "The change must be higher than this value to be propagated"
-msgstr ""
+msgstr "要传播的更改必须大于此值"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
@@ -3883,7 +3892,7 @@ msgstr "这是附加到记录ID。"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_date
 msgid "The rescheduling is propagated to the next move."
-msgstr ""
+msgstr "重新调度被传播到下一个移动。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__routing_id
@@ -3956,6 +3965,8 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
+"此菜单为您提供特定产品的库存操作的完整可追溯性。\n"
+"你可以对产品进行过滤，查看产品过去的所有动作。"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_location_id
@@ -4089,7 +4100,7 @@ msgstr "顶板的木板。"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_routing_workcenter_tree_view
 msgid "Total Duration"
-msgstr ""
+msgstr "总时长"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__workorder_late_count
@@ -4313,7 +4324,7 @@ msgstr "更新"
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__worksheet
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__worksheet
 msgid "Upload your PDF file."
-msgstr ""
+msgstr "上传PDF文件"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_production__priority__2
@@ -4358,7 +4369,7 @@ msgstr "如果交货时间过长，并根据销售预测进行生产，那么使
 #: code:addons/mrp/static/src/xml/mrp.xml:0
 #, python-format
 msgid "Variant:"
-msgstr "变体:"
+msgstr "变体："
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_document__priority__3
@@ -4396,7 +4407,7 @@ msgstr "材料等待中"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_production_filter
 msgid "Waiting for Component"
-msgstr ""
+msgstr "等待组件"
 
 #. module: mrp
 #: model:ir.model.fields.selection,name:mrp.selection__mrp_workorder__state__pending

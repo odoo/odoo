@@ -138,7 +138,7 @@
                                     </tr>
                                     <t t-foreach="o.amount_by_group" t-as="amount_by_group">
                                         <tr style="">
-                                            <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) == 1 and o.amount_untaxed == amount_by_group[2]">
+                                            <t t-if="len(o.line_ids.filtered(lambda line: line.tax_line_id)) in [0, 1] and o.amount_untaxed == amount_by_group[2]">
                                                 <td><span class="text-nowrap" t-esc="amount_by_group[0]"/></td>
                                                 <td class="text-right o_price_total">
                                                     <span class="text-nowrap" t-esc="amount_by_group[3]" />
@@ -182,7 +182,7 @@
                     <div id="qrcode" t-if="(o.company_id.qr_code) and (o.currency_id.name == 'EUR') and (o.invoice_partner_bank_id.acc_number != False)">
                         <p t-if="(o.invoice_partner_bank_id.qr_code_valid)">
                             <strong class="text-center">Scan me with your banking app.</strong><br /><br />
-                            <img class="border border-dark rounded" t-att-src="o.invoice_partner_bank_id.build_qr_code_url(o.amount_residual,(o.ref) if (o.ref) else o.name)"/>
+                            <img class="border border-dark rounded" t-att-src="o.invoice_partner_bank_id.build_qr_code_url(o.amount_residual, o.invoice_payment_ref or o.ref or o.name)"/>
                         </p>
                         <p t-if="(o.invoice_partner_bank_id.qr_code_valid == False)">
                             <strong class="text-center">The SEPA QR Code informations are not set correctly.</strong><br />

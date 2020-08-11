@@ -5,6 +5,7 @@
 # Translators:
 # Martin Trigaux, 2019
 # Dorin Hongu <dhongu@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
@@ -12,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,6 +30,9 @@ msgid ""
 "href=\"https://www.odoo.com/help\" target=\"new\">support</a> for further "
 "assistance.</p>"
 msgstr ""
+"<p>A apărut o eroare necunoscută. Vă rugăm să contactați <a "
+"href=\"https://www.odoo.com/help\" target=\"new\">asistența noastră</a> "
+"pentru asistență suplimentară.</p>"
 
 #. module: snailmail
 #. openerp-web
@@ -38,6 +42,8 @@ msgid ""
 "<p>The country to which you want to send the letter is not supported by our "
 "service.</p>"
 msgstr ""
+"<p>Țara către care doriți să trimiteți scrisoarea nu este acceptată de "
+"serviciul nostru.</p>"
 
 #. module: snailmail
 #. openerp-web
@@ -49,6 +55,10 @@ msgid ""
 " href=%s target=\"_blank\"><i class= \"fa fa-arrow-right\"/> Buy "
 "credits</a></div>"
 msgstr ""
+"<p>Scrisoarea nu a putut fi trimisă din cauza creditelor insuficiente din "
+"contul dvs. IAP.</p><div class= \"text-right\"><a class=\"btn btn-link "
+"buy_credits\" href=%s target=\"_blank\"><i class= \"fa fa-arrow-right\"/> "
+"Cumpărare credite</a></div>"
 
 #. module: snailmail
 #. openerp-web
@@ -59,6 +69,9 @@ msgid ""
 "\"text-right\"><a class=\"btn btn-link buy_credits\" href=%s><i class= \"fa "
 "fa-arrow-right\"/> Buy credits</a></div>"
 msgstr ""
+"<p>Pentru a trimite o scrisoare aveți nevoie de credite în contul dvs. "
+"IAP.</p><div class= \"text-right\"><a class=\"btn btn-link buy_credits\" "
+"href=%s><i class= \"fa fa-arrow-right\"/>Cumpărare credite</a></div>"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_cover
@@ -66,7 +79,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_format_error__snailmail_cover
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Add a Cover Page"
-msgstr ""
+msgstr "Adăugare Pagină de Copertă"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
@@ -78,19 +91,20 @@ msgstr "Adresa"
 #: code:addons/snailmail/static/src/js/mail_failure.js:0
 #, python-format
 msgid "An error occured when sending a letter with Snailmail"
-msgstr ""
+msgstr "A apărut o eroare la trimiterea unei scrisori cu Snailmail"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An error occured when sending the document by post.<br>Error: %s"
 msgstr ""
+"A apărut o eroare la trimiterea documentului prin poștă.<br>Eroare: %s"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "An unknown error happened. Please contact the support."
-msgstr ""
+msgstr "A apărut o eroare necunoscută. Vă rugăm să contactați asistența."
 
 #. module: snailmail
 #: code:addons/snailmail/wizard/snailmail_letter_cancel.py:0
@@ -99,6 +113,8 @@ msgid ""
 "Are you sure you want to discard %s snailmail delivery failures. You won't "
 "be able to re-send these letters later!"
 msgstr ""
+"Sunteți sigur că doriți să eliminați %s erorile de livrare snailmail. Nu "
+"veți mai putea trimite aceste scrisori mai târziu!"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_id
@@ -108,29 +124,29 @@ msgstr "Atașament"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__attachment_fname
 msgid "Attachment Filename"
-msgstr ""
+msgstr "Nume Fișier Atașat"
 
 #. module: snailmail
 #. openerp-web
 #: code:addons/snailmail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Awaiting Dispatch"
-msgstr ""
+msgstr "Aşteptare Expediere"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__duplex
 msgid "Both side"
-msgstr ""
+msgstr "Both side"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_company__snailmail_duplex
 msgid "Both sides"
-msgstr ""
+msgstr "Both sides"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__credit_error
 msgid "CREDIT_ERROR"
-msgstr ""
+msgstr "CREDIT_ERROR"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_cancel
@@ -141,7 +157,7 @@ msgstr "Anulează"
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Cancel Letter"
-msgstr ""
+msgstr "Anulare Scrisoare"
 
 #. module: snailmail
 #. openerp-web
@@ -150,13 +166,13 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 #, python-format
 msgid "Cancel letter"
-msgstr ""
+msgstr "Anulare scrisoara"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_cancel
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Cancel notification in failure"
-msgstr ""
+msgstr "Eroare Notificare Anulare "
 
 #. module: snailmail
 #. openerp-web
@@ -219,7 +235,7 @@ msgstr "Țară"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__cover
 msgid "Cover Page"
-msgstr ""
+msgstr "Copertă"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__create_uid
@@ -245,12 +261,12 @@ msgstr "Renunțați la eșecurile de livrare"
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_cancel_action
 msgid "Discard snailmail delivery failures"
-msgstr ""
+msgstr "Renunțare erori livrare snailmail"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_cancel
 msgid "Dismiss notification for resend by model"
-msgstr ""
+msgstr "Respingeți notificarea pentru retrimitere după model"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__display_name
@@ -283,7 +299,7 @@ msgstr "Eroare"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__format_error
 msgid "FORMAT_ERROR"
-msgstr ""
+msgstr "FORMAT_ERROR"
 
 #. module: snailmail
 #. openerp-web
@@ -292,22 +308,22 @@ msgstr ""
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_missing_required_fields_action
 #, python-format
 msgid "Failed letter"
-msgstr ""
+msgstr "Scrisoare eșuată"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.snailmail_letter_format_error_action
 msgid "Format Error"
-msgstr ""
+msgstr "Eroare Format"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_format_error
 msgid "Format Error Sending a Snailmail Letter"
-msgstr ""
+msgstr "Eroare Format Trimitere Scrisoare Snailmail"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_cancel__help_message
 msgid "Help message"
-msgstr ""
+msgstr "Mesaj de ajutor"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__id
@@ -324,11 +340,14 @@ msgid ""
 "notification and review them one by one by clicking on the red paper-plane "
 "next to each message."
 msgstr ""
+"Dacă doriți să le trimiteți din nou, faceți clic pe Anulează acum, apoi "
+"faceți clic pe notificare și revizitați-le una câte una făcând Click pe "
+"avion de hartie roșu de lângă fiecare mesaj."
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__state__pending
 msgid "In Queue"
-msgstr ""
+msgstr "În coadă"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__info_msg
@@ -364,23 +383,23 @@ msgstr "Ultima actualizare pe"
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__letter_ids
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__letter_id
 msgid "Letter"
-msgstr ""
+msgstr "Scrisoare"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "Letter sent by post with Snailmail"
-msgstr ""
+msgstr "Scrisoare trimisă prin poștă cu Snailmail"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_list
 msgid "Letters"
-msgstr ""
+msgstr "Scrisori"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__missing_required_fields
 msgid "MISSING_REQUIRED_FIELDS"
-msgstr ""
+msgstr "MISSING_REQUIRED_FIELDS"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_mail_message
@@ -407,13 +426,13 @@ msgstr "Model"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__no_price_available
 msgid "NO_PRICE_AVAILABLE"
-msgstr ""
+msgstr "NO_PRICE_AVAILABLE"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "One or more required fields are empty."
-msgstr ""
+msgstr "Unul sau mai multe câmpuri obligatorii sunt goale."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__report_template
@@ -427,6 +446,9 @@ msgid ""
 "                Please modify the format of the template or update your settings\n"
 "                to automatically add a blank cover page to all letters."
 msgstr ""
+"Serviciul nostru nu poate citi scrisoarea dvs. datorită formatului său.<br/>\n"
+"                Vă rugăm să modificați formatul șablonului sau să actualizați setările\n"
+"                pentru a adăuga automat o pagină de copertă goală tuturor scrisorilor."
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter_missing_required_fields__partner_id
@@ -441,19 +463,19 @@ msgstr "Imprimați ambele părți"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_res_config_settings__snailmail_color
 msgid "Print In Color"
-msgstr ""
+msgstr "Printare în Culoare"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_qweb_field_contact
 msgid "Qweb Field Contact"
-msgstr ""
+msgstr "Contact Câmp Qweb"
 
 #. module: snailmail
 #. openerp-web
 #: code:addons/snailmail/static/src/js/thread_widget.js:0
 #, python-format
 msgid "Re-send letter"
-msgstr ""
+msgstr "Retrimitere scrisoare"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__partner_id
@@ -468,7 +490,7 @@ msgstr ""
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_ir_actions_report
 msgid "Report Action"
-msgstr ""
+msgstr "Raportați acțiunea"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_form
@@ -486,40 +508,40 @@ msgstr "Trimis"
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__user_id
 msgid "Sent by"
-msgstr ""
+msgstr "Trimis de către"
 
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__mail_message__message_type__snailmail
 msgid "Snailmail"
-msgstr ""
+msgstr "Snailmail"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter
 msgid "Snailmail Letter"
-msgstr ""
+msgstr "Scrisoare Snailmail"
 
 #. module: snailmail
 #: model:ir.actions.act_window,name:snailmail.action_mail_letters
 #: model:ir.ui.menu,name:snailmail.menu_snailmail_letters
 msgid "Snailmail Letters"
-msgstr ""
+msgstr "Scrisori Snailmail"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_status
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_status
 msgid "Snailmail Status"
-msgstr ""
+msgstr "Stare Snailmail"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_snailmail_letter__message_id
 msgid "Snailmail Status Message"
-msgstr ""
+msgstr "Mesaj Stare Snailmail"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__snailmail_error
 #: model:ir.model.fields,field_description:snailmail.field_mail_message__snailmail_error
 msgid "Snailmail message in error"
-msgstr ""
+msgstr "Eroare Mesaj Snailmail "
 
 #. module: snailmail
 #: model:ir.actions.server,name:snailmail.snailmail_print_ir_actions_server
@@ -565,13 +587,13 @@ msgstr "Strada2"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__trial_error
 msgid "TRIAL_ERROR"
-msgstr ""
+msgstr "TRIAL_ERROR"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
 #, python-format
 msgid "The address of the recipient is not complete"
-msgstr ""
+msgstr "Adresa destinatarului nu este completă"
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -580,6 +602,8 @@ msgid ""
 "The attachment of the letter could not be sent. Please check its content and"
 " contact the support if the problem persists."
 msgstr ""
+"Fișierul din scrisoare nu a putut fi trimis. Verificați conținutul acestuia "
+"și contactați asistența dacă problema persistă."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -593,6 +617,8 @@ msgid ""
 "The customer address is not complete. Update the address here and re-send "
 "the letter."
 msgstr ""
+"Adresa clientului nu este completă. Actualizați adresa aici și trimiteți din"
+" nou scrisoarea."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -600,6 +626,8 @@ msgstr ""
 msgid ""
 "The document was correctly sent by post.<br>The tracking id is %ssend_id"
 msgstr ""
+"Documentul a fost trimis corect prin poștă.<br>ID-ul de urmărire este "
+"%ssend_id"
 
 #. module: snailmail
 #: model:ir.model.fields,field_description:snailmail.field_mail_mail__message_type
@@ -610,22 +638,22 @@ msgstr "Tip"
 #. module: snailmail
 #: model:ir.model.fields.selection,name:snailmail.selection__snailmail_letter__error_code__unknown_error
 msgid "UNKNOWN_ERROR"
-msgstr ""
+msgstr "UNKNOWN_ERROR"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_format_error
 msgid "Update Config and Re-send"
-msgstr ""
+msgstr "Actualizați Config și trimiteți din nou"
 
 #. module: snailmail
 #: model_terms:ir.ui.view,arch_db:snailmail.snailmail_letter_missing_required_fields
 msgid "Update address and re-send"
-msgstr ""
+msgstr "Actualizare adresă și re-trimitere"
 
 #. module: snailmail
 #: model:ir.model,name:snailmail.model_snailmail_letter_missing_required_fields
 msgid "Update address of partner"
-msgstr ""
+msgstr "Adresă actualizare partener"
 
 #. module: snailmail
 #: model:ir.model.fields,help:snailmail.field_snailmail_letter__state
@@ -634,6 +662,9 @@ msgid ""
 "If the letter is correctly sent, the status goes in 'Sent',\n"
 "If not, it will got in state 'Error' and the error message will be displayed in the field 'Error Message'."
 msgstr ""
+"Când este creat ă o scrisoare, starea este „În așteptare”.\n"
+"Dacă scrisoarea este trimisă corect, starea va intra în „Trimis”,\n"
+"În caz contrar, va primi starea „Eroare” și mesajul de eroare va fi afișat în câmpul „Mesaj eroare”."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0
@@ -642,6 +673,9 @@ msgid ""
 "You don't have an IAP account registered for this service.<br>Please go to "
 "<a href=%s target=\"new\">iap.odoo.com</a> to claim your free credits."
 msgstr ""
+"Nu aveți un cont IAP înregistrat pentru acest serviciu.<br>Vă rugăm să "
+"accesați <a href=%s target=\"new\">iap.odoo.com</a> pentru a solicita "
+"creditele dvs. gratuite."
 
 #. module: snailmail
 #: code:addons/snailmail/models/snailmail_letter.py:0

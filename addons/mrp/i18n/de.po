@@ -16,6 +16,7 @@
 # Martin Trigaux, 2019
 # philku79 <philip.kuss@gmx.de>, 2019
 # Philipp Fürstos <pfu@odoo.com>, 2020
+# JEK Odoo <jek@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -23,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Philipp Fürstos <pfu@odoo.com>, 2020\n"
+"Last-Translator: JEK Odoo <jek@odoo.com>, 2020\n"
 "Language-Team: German (https://www.transifex.com/odoo/teams/41243/de/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -352,7 +353,7 @@ msgstr "Arbeitsplatz"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 msgid "<strong>Workcenter: </strong>"
-msgstr ""
+msgstr "<strong>Arbeitsplatz: </strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -548,6 +549,15 @@ msgstr "Genehmigen"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Archiviert"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"At least one work order has a quantity produced lower than the quantity "
+"produced in the manufacturing order. You must complete the work orders "
+"before posting the inventory."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view

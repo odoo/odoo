@@ -589,7 +589,7 @@ msgstr "Crea una carta di pagamento"
 #. module: payment
 #: model_terms:ir.actions.act_window,help:payment.payment_token_action
 msgid "Create a saved payment data"
-msgstr ""
+msgstr "Crea dati di pagamento salvati"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__create_uid
@@ -1161,6 +1161,13 @@ msgstr "Nome del token di pagamento"
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer__save_token__none
 msgid "Never"
 msgstr "Mai"
+
+#. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid ""
+"This partner has no email, which may cause issues with some payment "
+"acquirers. Setting an email for this partner is advised."
+msgstr ""
 
 #. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0

@@ -29,7 +29,22 @@ tags_to_kill = ["script", "head", "meta", "title", "link", "style", "frame", "if
 tags_to_remove = ['html', 'body']
 
 # allow new semantic HTML5 tags
-allowed_tags = clean.defs.tags | frozenset('article section header footer hgroup nav aside figure main'.split() + [etree.Comment])
+allowed_tags = frozenset({
+    'a', 'abbr', 'acronym', 'address', 'applet', 'area', 'article', 'aside',
+    'audio', 'b', 'basefont', 'bdi', 'bdo', 'big', 'blink', 'blockquote', 'body', 'br',
+    'button', 'canvas', 'caption', 'center', 'cite', 'code', 'col', 'colgroup',
+    'command', 'datalist', 'dd', 'del', 'details', 'dfn', 'dir', 'div', 'dl',
+    'dt', 'em', 'fieldset', 'figcaption', 'figure', 'font', 'footer', 'form',
+    'frameset', 'h1', 'h2', 'h3', 'h4', 'h5', 'h6', 'header', 'hgroup', 'hr', 'html',
+    'i', 'img', 'input', 'ins', 'isindex', 'kbd', 'keygen', 'label', 'legend',
+    'li', 'main', 'map', 'mark', 'marquee', 'math', 'menu', 'meter', 'nav',
+    'ol', 'optgroup', 'option', 'output', 'p', 'param', 'pre', 'progress', 'q',
+    'rp', 'rt', 'ruby', 's', 'samp', 'section', 'select', 'small', 'source',
+    'span', 'strike', 'strong', 'sub', 'summary', 'sup', 'svg', 'table', 'tbody',
+    'td', 'textarea', 'tfoot', 'th', 'thead', 'time', 'tr', 'track', 'tt', 'u',
+    'ul', 'var', 'video', 'wbr'
+}) | frozenset([etree.Comment])
+
 safe_attrs = clean.defs.safe_attrs | frozenset(
     ['style',
      'data-o-mail-quote',  # quote detection
@@ -159,11 +174,6 @@ class _Cleaner(clean.Cleaner):
                 el.attrib['style'] = '; '.join('%s:%s' % (key, val) for (key, val) in valid_styles.items())
             else:
                 del el.attrib['style']
-
-    def allow_element(self, el):
-        if el.tag == 'object' and el.get('type') == "image/svg+xml":
-            return True
-        return super(_Cleaner, self).allow_element(el)
 
 
 def html_sanitize(src, silent=True, sanitize_tags=True, sanitize_attributes=False, sanitize_style=False, strip_style=False, strip_classes=False):
@@ -514,21 +524,35 @@ def email_escape_char(email_address):
     return email_address.replace('\\', '\\\\').replace('%', '\\%').replace('_', '\\_')
 
 # was mail_message.decode()
-def decode_smtp_header(smtp_header):
+def decode_smtp_header(smtp_header, quoted=False):
     """Returns unicode() string conversion of the given encoded smtp header
     text. email.header decode_header method return a decoded string and its
-    charset for each decoded par of the header. This method unicodes the
-    decoded header and join them in a complete string. """
+    charset for each decoded part of the header. This method unicodes the
+    decoded header and join them in a complete string.
+
+    :param bool quoted: when True, encoded words in the header will be turned into RFC822
+        quoted-strings after decoding, which is appropriate for address headers
+    """
     if isinstance(smtp_header, Header):
         smtp_header = ustr(smtp_header)
     if smtp_header:
-        text = decode_header(smtp_header.replace('\r', ''))
-        return ''.join([ustr(x[0], x[1]) for x in text])
-    return u''
+        pairs = decode_header(smtp_header.replace('\r', ''))
+        tokens = []
+        for token, enc in pairs:
+            token = ustr(token, enc)
+            if enc and quoted:
+                # re-quote the encoded word to form an RFC822 quoted-string
+                token = email_addr_escapes_re.sub(r'\\\g<0>', token)
+                tokens.append('"%s"' % token)
+            else:
+                # plain word
+                tokens.append(token)
+        return ''.join(tokens)
+    return ''
 
 # was mail_thread.decode_header()
-def decode_message_header(message, header, separator=' '):
-    return separator.join(decode_smtp_header(h) for h in message.get_all(header, []) if h)
+def decode_message_header(message, header, separator=' ', quoted=False):
+    return separator.join(decode_smtp_header(h, quoted=quoted) for h in message.get_all(header, []) if h)
 
 def formataddr(pair, charset='utf-8'):
     """Pretty format a 2-tuple of the form (realname, email_address).

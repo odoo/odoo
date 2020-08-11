@@ -17,6 +17,7 @@
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
 # Arminas Grigonis <arminas@versada.lt>, 2020
 # Arunas Vaitekunas <vaitekunas@gmail.com>, 2020
+# Denis Knotko <denis_knotko@yahoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -24,7 +25,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Arunas Vaitekunas <vaitekunas@gmail.com>, 2020\n"
+"Last-Translator: Denis Knotko <denis_knotko@yahoo.com>, 2020\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -840,6 +841,12 @@ msgstr "Pasiekiamas"
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "Pasiekiami produktai"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -6662,7 +6669,7 @@ msgstr "Matavimo vienetas"
 #: model:product.product,uom_name:stock.product_cable_management_box
 #: model:product.template,uom_name:stock.product_cable_management_box_product_template
 msgid "Units"
-msgstr ""
+msgstr "Vienetai"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -7005,14 +7012,8 @@ msgstr "Pasvertas produktas"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Kai šiam maršrutui pasirenkamas sandėlis, šis maršrutas turėtų būti laikomas"
-" numatytuoju, kai produktai pereina jį. Ši elgsena gali būti perrašoma "
-"maršrutų, esančių produktuose ar produktų kategorijose, arba pageidautinuose"
-" maršrutuose planiniuose užsakymuose."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7023,19 +7024,13 @@ msgstr "Kai visi produktai paruošti"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Kai pažymėta, maršrutas bus pasirenkamas iš produkto formos inventoriaus "
-"skilties. Tai turės aukštesnį prioritetą nei Sandėlio maršrutas."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Kai pažymėta, maršrutas bus pasirenkamas produkto kategorijoje. Tai turės "
-"aukštesnį prioritetą nei Sandėlio maršrutas."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

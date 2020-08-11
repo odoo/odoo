@@ -1,22 +1,24 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.account_test_classes import AccountingTestCase
-from odoo.tests.common import Form
-from odoo.tests import tagged
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
+from odoo.tests import tagged, Form
 
 
 @tagged('post_install', '-at_install')
-class TestInvoiceTaxes(AccountingTestCase):
+class TestInvoiceTaxes(AccountTestInvoicingCommon):
 
-    def setUp(self):
-        super(TestInvoiceTaxes, self).setUp()
+    @classmethod
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
-        self.percent_tax_1 = self.env['account.tax'].create({
+        cls.company_data['company'].country_id = cls.env.ref('base.be')
+
+        cls.percent_tax_1 = cls.env['account.tax'].create({
             'name': '21%',
             'amount_type': 'percent',
             'amount': 21,
             'sequence': 10,
         })
-        self.percent_tax_1_incl = self.env['account.tax'].create({
+        cls.percent_tax_1_incl = cls.env['account.tax'].create({
             'name': '21% incl',
             'amount_type': 'percent',
             'amount': 21,
@@ -24,41 +26,55 @@ class TestInvoiceTaxes(AccountingTestCase):
             'include_base_amount': True,
             'sequence': 20,
         })
-        self.percent_tax_2 = self.env['account.tax'].create({
+        cls.percent_tax_2 = cls.env['account.tax'].create({
             'name': '12%',
             'amount_type': 'percent',
             'amount': 12,
             'sequence': 30,
         })
-        self.group_tax = self.env['account.tax'].create({
+        cls.group_tax = cls.env['account.tax'].create({
             'name': 'group 12% + 21%',
             'amount_type': 'group',
             'amount': 21,
             'children_tax_ids': [
-                (4, self.percent_tax_1_incl.id),
-                (4, self.percent_tax_2.id)
+                (4, cls.percent_tax_1_incl.id),
+                (4, cls.percent_tax_2.id)
             ],
             'sequence': 40,
         })
+
+        cls.tax_report_line = cls.env['account.tax.report.line'].create({
+            'name': 'test_tax_report_line',
+            'tag_name': 'test_tax_report_line',
+            'country_id': cls.env.ref('base.be').id,
+            'sequence': 10,
+        })
+        cls.tax_tag_pos = cls.tax_report_line.tag_ids.filtered(lambda x: not x.tax_negate)
+        cls.tax_tag_neg = cls.tax_report_line.tag_ids.filtered(lambda x: x.tax_negate)
+        cls.base_tax_report_line = cls.env['account.tax.report.line'].create({
+            'name': 'base_test_tax_report_line',
+            'tag_name': 'base_test_tax_report_line',
+            'country_id': cls.env.ref('base.be').id,
+            'sequence': 10,
+        })
+        cls.base_tag_pos = cls.base_tax_report_line.tag_ids.filtered(lambda x: not x.tax_negate)
+        cls.base_tag_neg = cls.base_tax_report_line.tag_ids.filtered(lambda x: x.tax_negate)
 
     def _create_invoice(self, taxes_per_line, inv_type='out_invoice'):
         ''' Create an invoice on the fly.
 
         :param taxes_per_line: A list of tuple (price_unit, account.tax recordset)
         '''
-        self_ctx = self.env['account.move'].with_context(default_type=inv_type)
-        invoice_form = Form(self_ctx)
-        invoice_form.partner_id = self.env.ref('base.partner_demo')
-
-        for amount, taxes in taxes_per_line:
-            with invoice_form.invoice_line_ids.new() as invoice_line_form:
-                invoice_line_form.name = 'xxxx'
-                invoice_line_form.quantity = 1
-                invoice_line_form.price_unit = amount
-                invoice_line_form.tax_ids.clear()
-                for tax in taxes:
-                    invoice_line_form.tax_ids.add(tax)
-        return invoice_form.save()
+        return self.env['account.move'].create({
+            'type': inv_type,
+            'partner_id': self.partner_a.id,
+            'invoice_line_ids': [(0, 0, {
+                'name': 'xxxx',
+                'quantity': 1,
+                'price_unit': amount,
+                'tax_ids': [(6, 0, taxes.ids)],
+            }) for amount, taxes in taxes_per_line],
+        })
 
     def test_one_tax_per_line(self):
         ''' Test:
@@ -139,7 +155,7 @@ class TestInvoiceTaxes(AccountingTestCase):
         return self.env['account.account.tag'].create({
             'name': tag_name,
             'applicability': 'taxes',
-            'country_id': self.env.ref('base.main_company').country_id.id,
+            'country_id': self.env.company.country_id.id,
         })
 
     def test_tax_repartition(self):
@@ -231,3 +247,183 @@ class TestInvoiceTaxes(AccountingTestCase):
         self.assertEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == ref_base_line.account_id).balance), 4.2, "Refund tax line on base account should amount to 4.2 (10% of 42)")
         self.assertAlmostEqual(abs(ref_tax_lines.filtered(lambda x: x.account_id == account_1).balance), 37.8, 2, "Refund tax line on account 1 should amount to 37.8 (90% of 42)")
         self.assertEqual(ref_tax_lines.mapped('tag_ids'), ref_tax_tag, "Refund tax lines should have the right tag")
+
+    def test_misc_journal_entry_tax_tags_sale(self):
+        sale_tax = self.env['account.tax'].create({
+            'name': 'tax',
+            'type_tax_use': 'sale',
+            'amount_type': 'percent',
+            'amount': 10,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'factor_percent': 100.0,
+                    'tag_ids': [(6, 0, self.base_tag_pos.ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'factor_percent': 100.0,
+                    'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'factor_percent': 100.0,
+                    'tag_ids': [(6, 0, self.base_tag_neg.ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'factor_percent': 100.0,
+                    'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
+                }),
+            ],
+        })
+
+        # === Tax in debit ===
+
+        move_form = Form(self.env['account.move'], view='account.view_move_form')
+        move_form.ref = 'azerty'
+
+        # Debit base tax line.
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'debit_line_1'
+            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.debit = 1000.0
+            credit_line.tax_ids.clear()
+            credit_line.tax_ids.add(sale_tax)
+
+            self.assertTrue(credit_line.recompute_tax_line)
+
+        # Balance the journal entry.
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'balance'
+            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.credit = 1100.0
+
+        move = move_form.save()
+
+        self.assertRecordValues(move.line_ids.sorted('balance'), [
+            {'balance': -1100.0,    'tax_ids': [],              'tag_ids': []},
+            {'balance': 100.0,      'tax_ids': [],              'tag_ids': self.tax_tag_neg.ids},
+            {'balance': 1000.0,     'tax_ids': sale_tax.ids,    'tag_ids': self.base_tag_neg.ids},
+        ])
+
+        # === Tax in credit ===
+
+        move_form = Form(self.env['account.move'], view='account.view_move_form')
+        move_form.ref = 'azerty'
+
+        # Debit base tax line.
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'debit_line_1'
+            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.credit = 1000.0
+            credit_line.tax_ids.clear()
+            credit_line.tax_ids.add(sale_tax)
+
+            self.assertTrue(credit_line.recompute_tax_line)
+
+        # Balance the journal entry.
+        with move_form.line_ids.new() as debit_line:
+            debit_line.name = 'balance'
+            debit_line.account_id = self.company_data['default_account_revenue']
+            debit_line.debit = 1100.0
+
+        move = move_form.save()
+
+        self.assertRecordValues(move.line_ids.sorted('balance'), [
+            {'balance': -1000.0,    'tax_ids': sale_tax.ids,    'tag_ids': self.base_tag_neg.ids},
+            {'balance': -100.0,     'tax_ids': [],              'tag_ids': self.tax_tag_neg.ids},
+            {'balance': 1100.0,     'tax_ids': [],              'tag_ids': []},
+        ])
+
+    def test_misc_journal_entry_tax_tags_purchase(self):
+        purch_tax = self.env['account.tax'].create({
+            'name': 'tax',
+            'type_tax_use': 'purchase',
+            'amount_type': 'percent',
+            'amount': 10,
+            'invoice_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'factor_percent': 100.0,
+                    'tag_ids': [(6, 0, self.base_tag_pos.ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'factor_percent': 100.0,
+                    'tag_ids': [(6, 0, self.tax_tag_pos.ids)],
+                }),
+            ],
+            'refund_repartition_line_ids': [
+                (0, 0, {
+                    'repartition_type': 'base',
+                    'factor_percent': 100.0,
+                    'tag_ids': [(6, 0, self.base_tag_neg.ids)],
+                }),
+                (0, 0, {
+                    'repartition_type': 'tax',
+                    'factor_percent': 100.0,
+                    'tag_ids': [(6, 0, self.tax_tag_neg.ids)],
+                }),
+            ],
+        })
+
+        # === Tax in debit ===
+
+        move_form = Form(self.env['account.move'])
+        move_form.ref = 'azerty'
+
+        # Debit base tax line.
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'debit_line_1'
+            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.debit = 1000.0
+            credit_line.tax_ids.clear()
+            credit_line.tax_ids.add(purch_tax)
+
+            self.assertTrue(credit_line.recompute_tax_line)
+
+        # Balance the journal entry.
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'balance'
+            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.credit = 1100.0
+
+        move = move_form.save()
+
+        self.assertRecordValues(move.line_ids.sorted('balance'), [
+            {'balance': -1100.0,    'tax_ids': [],              'tag_ids': []},
+            {'balance': 100.0,      'tax_ids': [],              'tag_ids': self.tax_tag_pos.ids},
+            {'balance': 1000.0,     'tax_ids': purch_tax.ids,   'tag_ids': self.base_tag_pos.ids},
+        ])
+
+        # === Tax in credit ===
+
+        move_form = Form(self.env['account.move'])
+        move_form.ref = 'azerty'
+
+        # Debit base tax line.
+        with move_form.line_ids.new() as credit_line:
+            credit_line.name = 'debit_line_1'
+            credit_line.account_id = self.company_data['default_account_revenue']
+            credit_line.credit = 1000.0
+            credit_line.tax_ids.clear()
+            credit_line.tax_ids.add(purch_tax)
+
+            self.assertTrue(credit_line.recompute_tax_line)
+
+        # Balance the journal entry.
+        with move_form.line_ids.new() as debit_line:
+            debit_line.name = 'balance'
+            debit_line.account_id = self.company_data['default_account_revenue']
+            debit_line.debit = 1100.0
+
+        move = move_form.save()
+
+        self.assertRecordValues(move.line_ids.sorted('balance'), [
+            {'balance': -1000.0,    'tax_ids': purch_tax.ids,   'tag_ids': self.base_tag_pos.ids},
+            {'balance': -100.0,     'tax_ids': [],              'tag_ids': self.tax_tag_pos.ids},
+            {'balance': 1100.0,     'tax_ids': [],              'tag_ids': []},
+        ])

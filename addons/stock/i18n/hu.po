@@ -9,10 +9,10 @@
 # Tibor Kőnig <konig.tibor@evitalit.hu>, 2019
 # krnkris, 2019
 # Kisrobert <kisrobi@gmail.com>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # Martin Trigaux, 2019
 # gezza <geza.nagy@oregional.hu>, 2020
 # Tamás Németh <ntomasz81@gmail.com>, 2020
+# Ákos Nagy <akos.nagy@oregional.hu>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2020\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -818,13 +818,19 @@ msgstr "Elérhetőség"
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_move__state__assigned
 msgid "Available"
-msgstr "Rendelkezésre álló"
+msgstr "Elérhető"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.product_template_search_form_view_stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "Elérhető termékek"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -1076,7 +1082,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_picking_form
 msgid "Check Availability"
-msgstr "Rendelkezésre állás ellenőrzése"
+msgstr "Elérhetőség ellenőrzése"
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_picking__has_packages
@@ -1511,12 +1517,12 @@ msgstr "Létrehozva"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Cross-Dock"
-msgstr "Ipari-út a raktárhoz"
+msgstr "Cross-Dock"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_warehouse__crossdock_route_id
 msgid "Crossdock Route"
-msgstr "Ipari-út útvonala a raktárhoz"
+msgstr "Cross-Dock útvonal"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.location_open_quants
@@ -1668,7 +1674,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_warehouse_form
 msgid "Define a new warehouse"
-msgstr "Új raktár meghatározása"
+msgstr "Új raktár megadása"
 
 #. module: stock
 #: model_terms:ir.actions.act_window,help:stock.action_location_form
@@ -1714,13 +1720,13 @@ msgstr "Szállítás 1 lépésben (szállítás)"
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 2 steps (pick + ship)"
-msgstr "Szállítás 2 lépésben (felvétel + szállítás)"
+msgstr "Szállítás 2 lépésben (kigyűjtés + szállítás)"
 
 #. module: stock
 #: code:addons/stock/models/stock_warehouse.py:0
 #, python-format
 msgid "Deliver in 3 steps (pick + pack + ship)"
-msgstr "Szállítás 3 lépésben (felvétel + csomagolás + szállítás)"
+msgstr "Szállítás 3 lépésben (kigyűjtés + csomagolás + szállítás)"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -1975,7 +1981,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty__display_name
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap__display_name
 msgid "Display Name"
-msgstr "Megjelenített név"
+msgstr "Név megjelenítése"
 
 #. module: stock
 #: model:res.groups,name:stock.group_lot_on_delivery_slip
@@ -2194,7 +2200,7 @@ msgstr "Követők (Partnerek)"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_category__removal_strategy_id
 msgid "Force Removal Strategy"
-msgstr "Eröltesse a megszüntető stratégiát"
+msgstr "Erőltesse a megszüntető stratégiát"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__virtual_available
@@ -2234,7 +2240,7 @@ msgstr "Előrejelzett szállítások"
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action_product
 #: model:ir.ui.menu,name:stock.menu_forecast_inventory
 msgid "Forecasted Inventory"
-msgstr "Előrejelzett leltár"
+msgstr "Előrejelzett készlet"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -2260,7 +2266,7 @@ msgstr "Előrejelzett készlet"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
 msgid "Free To Use Quantity "
-msgstr ""
+msgstr "Szabadon használható mennyiség"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__location_id
@@ -2623,7 +2629,7 @@ msgstr "Azonnali átvitel"
 #: code:addons/stock/models/stock_picking.py:0
 #, python-format
 msgid "Immediate Transfer?"
-msgstr "Azonnali Átvitel?"
+msgstr "Azonnali átvitel?"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_immediate_transfer
@@ -2773,12 +2779,12 @@ msgstr ""
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_quant__inventory_quantity
 msgid "Inventoried Quantity"
-msgstr "Leltározott mennyiség"
+msgstr "Raktározott mennyiség"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__line_ids
 msgid "Inventories"
-msgstr "Leltárak"
+msgstr "Raktárak"
 
 #. module: stock
 #: model:ir.actions.report,name:stock.action_report_inventory
@@ -2792,57 +2798,57 @@ msgstr "Leltárak"
 #: model_terms:ir.ui.view,arch_db:stock.view_partner_stock_form
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_quant_pivot
 msgid "Inventory"
-msgstr "Leltár"
+msgstr "Raktár"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_form
 msgid "Inventory Adjustment"
-msgstr "Leltári kiigazítás"
+msgstr "Raktári kiigazítás"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_inventory_form
 #: model:ir.ui.menu,name:stock.menu_action_inventory_form
 msgid "Inventory Adjustments"
-msgstr "Leltári kiigazítások"
+msgstr "Raktári kiigazítások"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory__date
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__inventory_date
 #: model_terms:ir.ui.view,arch_db:stock.view_inventory_filter
 msgid "Inventory Date"
-msgstr "Leltár dátuma"
+msgstr "Raktár dátuma"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "Inventory Details"
-msgstr "Leltár részletei"
+msgstr "Raktár részletei"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_inventory_line
 msgid "Inventory Line"
-msgstr "Leltár sor"
+msgstr "Raktár sor"
 
 #. module: stock
 #: code:addons/stock/models/stock_inventory.py:0
 #, python-format
 msgid "Inventory Lines"
-msgstr "Leltár sorok"
+msgstr "Raktár sorok"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__property_stock_inventory
 #: model:ir.model.fields,field_description:stock.field_product_template__property_stock_inventory
 msgid "Inventory Location"
-msgstr "Leltár helye"
+msgstr "Raktár helye"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location
 msgid "Inventory Locations"
-msgstr "Leltár helyek"
+msgstr "Raktár helyszínek"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_location__usage__inventory
 msgid "Inventory Loss"
-msgstr "Leltárhiány"
+msgstr "Raktárhiány"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.stock_picking_type_action
@@ -2857,7 +2863,7 @@ msgstr "Készlet hivatkozás"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Inventory Report"
-msgstr "Leltár riport"
+msgstr "Raktár jelentés"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -2881,7 +2887,7 @@ msgstr "Készlet ezen a dátumon"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_inventory_line__is_editable
 msgid "Is Editable"
-msgstr ""
+msgstr "Szerkeszthető"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_picking__message_is_follower
@@ -2905,7 +2911,7 @@ msgstr "Zárolt"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__return_location
 msgid "Is a Return Location?"
-msgstr "Ez egy visszavételezési helyszín"
+msgstr "Ez egy visszavételezési helyszín?"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_location__scrap_location
@@ -5318,7 +5324,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Sell and purchase products in different units of measure"
-msgstr ""
+msgstr "Termékek eladása és vásárlása eltérő mértékegységekben"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6930,14 +6936,8 @@ msgstr "Súlyozott termék"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Ha egy raktárat kiválasztott ehhez az útvonalhoz, ezt az útvonalat az "
-"alapértelmezett útvonalként kell látnia, ha egy termék áthalad ezen a "
-"raktáron.  Ezt a viselkedést felülírhatja a Termékek/Termék kategóriás vagy "
-"a Beszerzéseknél a Javasolt Útvonalakban az  útvonalazóval "
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -6948,19 +6948,13 @@ msgstr "Amikor minden termék rendelkezésre áll"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Ha bejelölt, az útvonal kiválasztható lesz a Termék űrlap Leltárkészlet "
-"fülén. Elsőbbséget élvez a Raktár útvonalával szemben."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Ha bejelölt, az útvonal kiválasztható lesz a Termék Kategórián. Elsőbbséget "
-"élvez a Raktár útvonalával szemben."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

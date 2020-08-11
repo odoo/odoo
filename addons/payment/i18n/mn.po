@@ -60,6 +60,8 @@ msgid ""
 "<h3>Please make a payment to: </h3><ul><li>Bank: %s</li><li>Account Number: "
 "%s</li><li>Account Holder: %s</li></ul>"
 msgstr ""
+"<h3>Дараах дансанд төлбөрөө хийн үү: </h3><ul><li>Банк: %s</li><li>Дансны "
+"дугаар: %s</li><li>Дансны нэр: %s</li></ul>"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.confirm
@@ -1144,6 +1146,13 @@ msgid "Never"
 msgstr "Хэзээ ч үгүй"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid ""
+"This partner has no email, which may cause issues with some payment "
+"acquirers. Setting an email for this partner is advised."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
 #, python-format
 msgid ""
@@ -1447,7 +1456,7 @@ msgstr "Төлбөр хүлээн авагчийг тохируулна уу."
 #. module: payment
 #: model_terms:payment.acquirer,pending_msg:payment.payment_acquirer_transfer
 msgid "Please make a payment to:"
-msgstr ""
+msgstr "Дараах дансанд төлбөрөө хийнэ үү:"
 
 #. module: payment
 #. openerp-web

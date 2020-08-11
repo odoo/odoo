@@ -87,7 +87,7 @@ class LeaveReport(models.Model):
         if 'name' in field_names:
             if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
                 return
-            current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
+            current_employee = self.env.user.employee_id
             for record in self:
                 emp_id = record._cache.get('employee_id', [False])[0]
                 if emp_id != current_employee.id:

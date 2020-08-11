@@ -1,22 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_stock
+# 	* website_sale_stock
 # 
 # Translators:
-# Rivo Zängov <eraser@eraser.ee>, 2018
-# Arma Gedonsky <armagedonsky@hot.ee>, 2018
-# Gert Valdek <gert@airobot.ee>, 2018
-# Egon Raamat <egon@avalah.ee>, 2018
-# Eneli Õigus <enelioigus@gmail.com>, 2018
-# Martin Aavastik <martin@avalah.ee>, 2018
+# Rivo Zängov <eraser@eraser.ee>, 2020
+# Martin Trigaux, 2020
+# Maidu Targama <m.targama@gmail.com>, 2020
+# Gert Valdek <gert@airobot.ee>, 2020
+# Egon Raamat <egon@avalah.ee>, 2020
+# Martin Aavastik <martin@avalah.ee>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Martin Aavastik <martin@avalah.ee>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -56,7 +57,7 @@ msgstr "Ostukorvi kogus"
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Seadistused"
 
 #. module: website_sale_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_product_product__custom_message
@@ -66,24 +67,14 @@ msgstr "Kohandatud sõnum"
 
 #. module: website_sale_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default Mode"
-msgstr ""
-
-#. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
 msgid ""
 "Default availability mode set on newly created storable products. This can "
 "be changed at the product level."
 msgstr ""
 
 #. module: website_sale_stock
-#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
-msgid "Default threshold"
-msgstr "Vaikimisi piirmäär"
-
-#. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:16
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "In stock"
 msgstr "Laos"
@@ -108,6 +99,11 @@ msgid ""
 msgstr ""
 
 #. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Mode"
+msgstr "Mudel"
+
+#. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_product_product
 msgid "Product"
 msgstr "Toode"
@@ -119,8 +115,8 @@ msgstr "Toote mall"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order
-msgid "Sale Order"
-msgstr "Müügitellimus"
+msgid "Sales Order"
+msgstr "Müügi tellimus"
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_sale_order_line
@@ -128,31 +124,37 @@ msgid "Sales Order Line"
 msgstr "Müügitellimuse rida"
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__never
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__never
 msgid "Sell regardless of inventory"
 msgstr ""
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__threshold
 msgid "Show inventory below a threshold and prevent sales if not enough stock"
 msgstr ""
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__always
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__always
 msgid "Show inventory on website and prevent sales if not enough stock"
 msgstr ""
 
 #. module: website_sale_stock
-#: selection:product.template,inventory_availability:0
-#: selection:res.config.settings,inventory_availability:0
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__threshold
+msgid ""
+"Show inventory when below the threshold and prevent sales if not enough "
+"stock"
+msgstr ""
+
+#. module: website_sale_stock
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__product_template__inventory_availability__custom
+#: model:ir.model.fields.selection,name:website_sale_stock.selection__res_config_settings__inventory_availability__custom
 msgid "Show product-specific notifications"
 msgstr ""
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:30
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
 "Some products became unavailable and your cart has been updated. We're sorry"
@@ -161,10 +163,15 @@ msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "Temporarily out of stock"
 msgstr "Ajutiselt laost otsas"
+
+#. module: website_sale_stock
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Threshold"
+msgstr ""
 
 #. module: website_sale_stock
 #: model:ir.model,name:website_sale_stock.model_stock_picking
@@ -172,9 +179,16 @@ msgid "Transfer"
 msgstr "Ülekanne"
 
 #. module: website_sale_stock
+#: model:ir.model.fields,field_description:website_sale_stock.field_res_config_settings__website_warehouse_id
+#: model:ir.model.fields,field_description:website_sale_stock.field_website__warehouse_id
+#: model_terms:ir.ui.view,arch_db:website_sale_stock.res_config_settings_view_form
+msgid "Warehouse"
+msgstr "Ladu"
+
+#. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:13
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:22
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order__warning_stock
 #: model:ir.model.fields,field_description:website_sale_stock.field_sale_order_line__warning_stock
 #: model_terms:ir.ui.view,arch_db:website_sale_stock.website_sale_stock_cart_lines
@@ -196,35 +210,35 @@ msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:19
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "You already added"
 msgstr "Sa juba lisasid"
 
 #. module: website_sale_stock
-#: code:addons/website_sale_stock/models/sale_order.py:27
+#: code:addons/website_sale_stock/models/sale_order.py:0
 #, python-format
 msgid "You ask for %s products but only %s is available"
 msgstr ""
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "all"
 msgstr "kõik"
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:9
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:14
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "available"
 msgstr "saadaval"
 
 #. module: website_sale_stock
 #. openerp-web
-#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:20
+#: code:addons/website_sale_stock/static/src/xml/website_sale_stock_product_availability.xml:0
 #, python-format
 msgid "in your cart."
 msgstr "sinu ostkorvis"

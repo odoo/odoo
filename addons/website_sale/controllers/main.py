@@ -248,7 +248,7 @@ class WebsiteSale(http.Controller):
 
         Product = request.env['product.template'].with_context(bin_size=True)
 
-        search_product = Product.search(domain)
+        search_product = Product.search(domain, order=self._get_search_order(post))
         website_domain = request.website.website_domain()
         categs_domain = [('parent_id', '=', False)] + website_domain
         if search:
@@ -263,7 +263,8 @@ class WebsiteSale(http.Controller):
 
         product_count = len(search_product)
         pager = request.website.pager(url=url, total=product_count, page=page, step=ppg, scope=7, url_args=post)
-        products = Product.search(domain, limit=ppg, offset=pager['offset'], order=self._get_search_order(post))
+        offset = pager['offset']
+        products = search_product[offset: offset + ppg]
 
         ProductAttribute = request.env['product.attribute']
         if products:
@@ -1230,7 +1231,7 @@ class WebsiteSale(http.Controller):
                 ['product_id', 'visit_datetime:max'], ['product_id'], limit=max_number_of_product_for_carousel, orderby='visit_datetime DESC')
             products_ids = [product['product_id'][0] for product in products]
             if products_ids:
-                viewed_products = request.env['product.product'].browse(products_ids)
+                viewed_products = request.env['product.product'].with_context(display_default_code=False).browse(products_ids)
 
                 FieldMonetary = request.env['ir.qweb.field.monetary']
                 monetary_options = {

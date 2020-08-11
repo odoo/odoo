@@ -3,12 +3,13 @@
 # 	* website_crm
 # 
 # Translators:
-# Robert Kirschner <robertkirschner@yahoo.com>, 2019
 # Martin Trigaux, 2019
 # Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
+# Rastislav Brenčič <rastislav.brencic99@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +17,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-23 11:31+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,17 +28,17 @@ msgstr ""
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website_visitor__lead_count
 msgid "# Leads"
-msgstr ""
+msgstr "# Potenciálne príležitosti"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_page_count
 msgid "# Page Views"
-msgstr "# Zobrazení stránky"
+msgstr "# Zobrazenia stránky"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Add a contact form in the"
-msgstr ""
+msgstr "Pridajte kontaktný formulár do"
 
 #. module: website_crm
 #. openerp-web
@@ -45,6 +46,8 @@ msgstr ""
 #, python-format
 msgid "Assign leads/opportunities to a sales channel."
 msgstr ""
+"Priradenie Potenciálne príležitosti / Obchodné príležitosti k predajnému "
+"kanálu."
 
 #. module: website_crm
 #. openerp-web
@@ -52,6 +55,7 @@ msgstr ""
 #, python-format
 msgid "Assign leads/opportunities to a salesperson."
 msgstr ""
+"Priradenie Potenciálne príležitosti / Obchodné príležitosti k obchodníkovi."
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -66,7 +70,7 @@ msgstr "Nastavenie konfigurácie"
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Contact Form"
-msgstr "Kontaktný formulár"
+msgstr "Kontaktný Formulár"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
@@ -76,30 +80,34 @@ msgstr "Kontaktujte nás"
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_team_id
 msgid "Default Sales Team"
-msgstr "Východzí Obchodný tím"
+msgstr "Predvolený obchodný tím"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_team_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Team for new leads created through the Contact Us form."
 msgstr ""
+"Predvolený obchodný tím pre nových Potenciálnych zákazníkov vytvorených "
+"prostredníctvom formulára kontaktujte nás."
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_team_id
 msgid "Default Sales Teams"
-msgstr ""
+msgstr "Predvolené obchodné tímy"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,field_description:website_crm.field_website__crm_default_user_id
 msgid "Default Salesperson"
-msgstr "Predvolený predajca"
+msgstr "Predvolený obchodník"
 
 #. module: website_crm
 #: model:ir.model.fields,help:website_crm.field_res_config_settings__crm_default_user_id
 #: model:ir.model.fields,help:website_crm.field_website__crm_default_user_id
 msgid "Default salesperson for new leads created through the Contact Us form."
 msgstr ""
+"Predvolený obchodník pre nové Potenciálne príležitosti vytvorené "
+"prostredníctvom formulára Kontaktujte nás"
 
 #. module: website_crm
 #. openerp-web
@@ -112,7 +120,7 @@ msgstr "Email"
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_crm_lead
 msgid "Lead/Opportunity"
-msgstr "Iniciatíva/Príležitosť"
+msgstr "Potenciálna priležitosť / obchodný prípad "
 
 #. module: website_crm
 #: model:ir.actions.act_window,name:website_crm.website_visitor_crm_lead_action
@@ -120,22 +128,24 @@ msgstr "Iniciatíva/Príležitosť"
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_form
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
 msgid "Leads"
-msgstr "Iniciatívy"
+msgstr "Potenciálne priležitosti"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_kanban
 msgid "Leads/Opportunities"
-msgstr "Iniciatívy/Príležitosti"
+msgstr "Potenciálne priležitosti / Obchodné príležitosti"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "New messages are managed as leads or opportunities in your CRM app."
 msgstr ""
+"Nové správy sú v aplikácii CRM spravované ako Potenciálne príležitosti alebo"
+" Obchodné príležitosti."
 
 #. module: website_crm
 #: model_terms:ir.actions.act_window,help:website_crm.website_visitor_crm_lead_action
 msgid "No lead linked for this visitor"
-msgstr ""
+msgstr "Pre tohto návštevníka nie je pripojená žiadna Potenciálna príležitosť"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.crm_lead_view_form
@@ -156,6 +166,8 @@ msgid ""
 "Please set a Sales Team for the website. Otherwise you can't follow related "
 "events."
 msgstr ""
+"Prosím, nastavte predajný tím pre túto webstránku. V opačnom prípade "
+"nemôžete sledovať súvisiace udalosti."
 
 #. module: website_crm
 #. openerp-web
@@ -167,7 +179,7 @@ msgstr "Predajný kanál"
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "Sales Team"
-msgstr "Predajný tým"
+msgstr "Obchodný tím"
 
 #. module: website_crm
 #. openerp-web
@@ -175,7 +187,7 @@ msgstr "Predajný tým"
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 #, python-format
 msgid "Salesperson"
-msgstr "Predajca"
+msgstr "Obchodník"
 
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
@@ -193,17 +205,17 @@ msgstr "Predmet"
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.website_visitor_view_search
 msgid "Visitors"
-msgstr ""
+msgstr "Návštevníci"
 
 #. module: website_crm
 #: model:ir.model.fields,field_description:website_crm.field_crm_lead__visitor_ids
 msgid "Web Visitors"
-msgstr ""
+msgstr "Návštevníci webstránky"
 
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website
 msgid "Website"
-msgstr "Webová stránka"
+msgstr "Webstránka"
 
 #. module: website_crm
 #: model:ir.actions.act_url,name:website_crm.action_open_website
@@ -213,7 +225,7 @@ msgstr "Kontaktný formulár webstránky"
 #. module: website_crm
 #: model:ir.model,name:website_crm.model_website_visitor
 msgid "Website Visitor"
-msgstr ""
+msgstr "Návštevník webstránky"
 
 #. module: website_crm
 #. openerp-web
@@ -221,7 +233,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_crm.contactus_form
 #, python-format
 msgid "Your Company"
-msgstr "Tvoja firma"
+msgstr "Vaša firma"
 
 #. module: website_crm
 #. openerp-web
@@ -242,4 +254,4 @@ msgstr "Vaša otázka"
 #. module: website_crm
 #: model_terms:ir.ui.view,arch_db:website_crm.res_config_settings_view_form
 msgid "page"
-msgstr ""
+msgstr "strana"

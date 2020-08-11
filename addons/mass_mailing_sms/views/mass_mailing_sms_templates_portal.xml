@@ -12,7 +12,7 @@
                             <div class="form-group row">
                                 <label for="sms_number" class="col-sm-2 col-form-label">Number</label>
                                 <div class="col-sm-10">
-                                    <input type="text" class="form-control" name="sms_number" id="sms_number"/>
+                                    <input type="text" class="form-control" name="sms_number" id="sms_number" t-att-required="true"/>
                                 </div>
                             </div>
                             <input type="hidden" name="csrf_token" t-att-value="request.csrf_token()"/>

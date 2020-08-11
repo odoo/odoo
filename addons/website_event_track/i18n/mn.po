@@ -11,6 +11,8 @@
 # baaska sh <sh.baaskash@gmail.com>, 2020
 # Baskhuu Lodoikhuu <baskhuujacara@gmail.com>, 2020
 # Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020
+# Батболд <batbold.ts@gmail.com>, 2020
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Munkhbaatar Gombosuren <muuguu17@gmail.com>, 2020\n"
+"Last-Translator: Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -45,6 +47,21 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div>\n"
+"    Хүндэт ${object.partner_name or ''}<br/>\n"
+"    ${object.name} саналыг  ${object.event_id.name}. арга хэмжээнд зориулан хүлээн авснаа мэдэгдэхэд таатай байна \n"
+"    <br/>\n"
+"    Та дэлэнгэрэнгүй мэдээллийг эндээс авна уу \n"
+"    <div style=\"margin: 16px 0px 16px 0px;\">\n"
+"        <a href=\"/event/${object.event_id.id}/track/${object.id}\" style=\"padding: 8px 16px 8px 16px; font-size: 14px; color: #FFFFFF; text-decoration: none !important; background-color: #875A7B; border: 0px solid #875A7B; border-radius:3px\">\n"
+"           Ярилцлага харах\n"
+"        </a>\n"
+"    </div>\n"
+"    <br/><br/>\n"
+"    Баярлалаа,\n"
+"</div>\n"
+"            "
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
@@ -82,6 +99,8 @@ msgid ""
 "<br/>\n"
 "                                <b>Duration</b><br/>"
 msgstr ""
+"<br/>\n"
+"                                <b>Үргэлжлэх хугацаа</b><br/>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.track_view
@@ -89,6 +108,8 @@ msgid ""
 "<br/>\n"
 "                                <b>Location</b><br/>"
 msgstr ""
+"<br/>\n"
+"                                <b>Байршил</b><br/>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -105,7 +126,7 @@ msgstr "<span id=\"search_number\">0</span> олдов"
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_form
 msgid "<span>hours</span>"
-msgstr ""
+msgstr "<span> цаг</span>"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -152,7 +173,7 @@ msgstr ""
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_done
 msgid "Accepted Stage"
-msgstr ""
+msgstr "Зөвшөөрсөн үе шат"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_needaction
@@ -182,13 +203,13 @@ msgstr "Ажилбарын төлөв"
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.event_track_stage_action
 msgid "Add a new stage in the task pipeline"
-msgstr ""
+msgstr "Даалгаврын суваг т шинэ үе шат нэмэх"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track_from_event
 msgid "Add a new track"
-msgstr ""
+msgstr "Шинэ зам нэмэх"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track19
@@ -198,7 +219,7 @@ msgstr ""
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track13
 msgid "Advanced reporting"
-msgstr ""
+msgstr "Дэвшилтэт тайлан"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event.py:0
@@ -264,12 +285,12 @@ msgstr "Санал дуудах"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Нийтлэж болно"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track_stage__is_cancel
 msgid "Canceled Stage"
-msgstr ""
+msgstr "Цуцлагдсан үе шат"
 
 #. module: website_event_track
 #: model:event.track.stage,name:website_event_track.event_track_stage5
@@ -439,12 +460,12 @@ msgstr "Арга хэмжээний байрлалууд"
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_proposal_menu_ids
 #: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track_proposal
 msgid "Event Proposals Menus"
-msgstr ""
+msgstr "Арга хэмжээний саналын цэсүүд"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor
 msgid "Event Sponsor"
-msgstr ""
+msgstr "Арга хэмжээний ивээн тэтгэгч"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_sponsor_type
@@ -472,12 +493,12 @@ msgstr "Арга хэмжээний Зам"
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_location
 msgid "Event Track Location"
-msgstr ""
+msgstr "Арга хэмжээний замын байршил"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_stage
 msgid "Event Track Stage"
-msgstr ""
+msgstr "Арга хэмжээний замын үе гат"
 
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_event_track_tag
@@ -500,7 +521,7 @@ msgstr "Арга хэмжээний Замууд"
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_menu_ids
 #: model:ir.model.fields.selection,name:website_event_track.selection__website_event_menu__menu_type__track
 msgid "Event Tracks Menus"
-msgstr ""
+msgstr "Арга хэмжээний замын цэсүүд"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
@@ -640,7 +661,7 @@ msgstr "Дүрс"
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ажилбар дээр сануулга гарсныг илэрхийлэх зураг."
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__message_needaction
@@ -679,7 +700,7 @@ msgstr "Дагагч эсэх"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "Нийтлэгдсэн эсэх"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__kanban_state
@@ -777,7 +798,7 @@ msgstr "Цэс"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_website_event_menu__menu_type
 msgid "Menu Type"
-msgstr ""
+msgstr "Цэсийн төрөл"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__message_has_error
@@ -807,7 +828,7 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_track_search
 msgid "My Tracks"
-msgstr ""
+msgstr "Миний замууд"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_name
@@ -817,7 +838,7 @@ msgstr "Нэр"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track20
 msgid "New Certification Program"
-msgstr ""
+msgstr "Шинэ Гэрчилгэний Хөтөлбөр"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_event_track
@@ -1015,7 +1036,7 @@ msgstr "Нийтийн Урсгал"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__partner_id
 msgid "Speaker"
-msgstr ""
+msgstr "Чанга яригч"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
@@ -1026,22 +1047,22 @@ msgstr ""
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Biography"
-msgstr ""
+msgstr "Илтгэгч (нарын) намтар"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Email"
-msgstr ""
+msgstr "Илтгэгч (нарын) имэйл"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Name"
-msgstr ""
+msgstr "Илтэгч (нарын) нэр"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_proposal
 msgid "Speaker(s) Phone"
-msgstr ""
+msgstr "Илтгэгч (нарын) утас"
 
 #. module: website_event_track
 #: code:addons/website_event_track/models/event_track.py:0
@@ -1101,7 +1122,7 @@ msgstr "Үе шатын нэр"
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track28
 msgid "Status & Strategy"
-msgstr ""
+msgstr "Статус & Стратеги"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_state
@@ -1183,7 +1204,7 @@ msgstr "Вебсайтаар дамжин баримт руу хандах бү�
 #: model:event.track,name:website_event_track.event_track17
 #: model:event.track,name:website_event_track.event_track29
 msgid "The new marketing strategy"
-msgstr ""
+msgstr "Шинэ маркетингийн стратеги"
 
 #. module: website_event_track
 #: model:event.track,name:website_event_track.event_track5
@@ -1229,12 +1250,12 @@ msgstr "Зам"
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_blocked
 msgid "Track Blocked"
-msgstr ""
+msgstr "Зам хориглогдсон"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_count
 msgid "Track Count"
-msgstr ""
+msgstr "Замын тоо"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date
@@ -1244,12 +1265,12 @@ msgstr "Замын Огноо"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__date_end
 msgid "Track End Date"
-msgstr ""
+msgstr "Замын дуусах огноо"
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
 msgid "Track Proposals on Website"
-msgstr ""
+msgstr "Вебсайт дээрх замын саналууд"
 
 #. module: website_event_track
 #: model:mail.message.subtype,name:website_event_track.mt_track_ready
@@ -1259,21 +1280,21 @@ msgstr ""
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_ready
 msgid "Track Ready for Next Stage"
-msgstr ""
+msgstr "Дараагийн шатанд бэлэн "
 
 #. module: website_event_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_form
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_tree
 msgid "Track Stage"
-msgstr ""
+msgstr "Замын үе шат"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.event_track_stage_action
 #: model:ir.ui.menu,name:website_event_track.event_track_stage_menu
 #: model_terms:ir.ui.view,arch_db:website_event_track.event_track_stage_view_search
 msgid "Track Stages"
-msgstr ""
+msgstr "Замын үе шатууд"
 
 #. module: website_event_track
 #: model:ir.actions.act_window,name:website_event_track.action_event_track_tag
@@ -1285,12 +1306,12 @@ msgstr "Замын пайзууд"
 #. module: website_event_track
 #: model:mail.message.subtype,description:website_event_track.mt_track_blocked
 msgid "Track blocked"
-msgstr ""
+msgstr "Зам хориглогдсон"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__duration
 msgid "Track duration in hours."
-msgstr ""
+msgstr "Замын хугацааг цагаар"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_event__track_ids
@@ -1303,7 +1324,7 @@ msgstr "Замууд"
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track_proposal
 msgid "Tracks Proposals on Website"
-msgstr ""
+msgstr "Вебсайт дээрх замуудын саналууд"
 
 #. module: website_event_track
 #: model_terms:ir.actions.act_window,help:website_event_track.action_event_track
@@ -1318,7 +1339,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_event_track.field_event_type__website_track
 #: model_terms:ir.ui.view,arch_db:website_event_track.view_event_form
 msgid "Tracks on Website"
-msgstr ""
+msgstr "Вебсайт дээрх замууд"
 
 #. module: website_event_track
 #: model:ir.model.fields,help:website_event_track.field_event_track__activity_exception_decoration
@@ -1385,7 +1406,7 @@ msgstr "Бид таны саналыг үнэлээд удахгүй танта�
 #. module: website_event_track
 #: model:ir.model,name:website_event_track.model_website_event_menu
 msgid "Website Event Menu"
-msgstr ""
+msgstr "Арга хэмжээний Цэс"
 
 #. module: website_event_track
 #: model:ir.model.fields,field_description:website_event_track.field_event_track__website_message_ids

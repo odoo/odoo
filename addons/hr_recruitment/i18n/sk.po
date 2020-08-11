@@ -3,12 +3,15 @@
 # 	* hr_recruitment
 # 
 # Translators:
+# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
 # Martin Trigaux, 2019
 # Matus Krnac <matus.krnac@gmail.com>, 2019
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
+# Stefan Stieranka <stieranka@itec.sk>, 2020
+# Michal Matus <misko.matus@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,7 +30,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread messages\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-comments\" role=\"img\" aria-label=\"Unread messages\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -37,17 +40,17 @@ msgstr "<i class=\"fa fa-ellipsis-v\" role=\"img\" aria-label=\"Manage\" title=\
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-envelope-o\" role=\"img\" aria-label=\"Alias\" title=\"Alias\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\"Mobile\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-mobile mr4\" role=\"img\" aria-label=\"Mobile\" title=\"Mobile\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
-msgstr ""
+msgstr "<i class=\"fa fa-paperclip\" role=\"img\" aria-label=\"Documents\"/>"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
@@ -57,7 +60,7 @@ msgstr "<span class=\"o_stat_text\">Sledovače</span>"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_recruitment_stage_kanban
 msgid "<span>Folded in Recruitment Pipe: </span>"
-msgstr ""
+msgstr "<span>Zložené v náborovom zozname: </span>"
 
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
@@ -149,6 +152,87 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Dobrý deň,\n"
+"                <br/><br/>\n"
+"                Potvrdzujeme, že sme úspešne dostali vašu žiadosť o prácu\n"
+"                \"<a href=\"${object.job_id.website_url or ''}\" style=\"color:#9A6C8E;\"><strong>${object.job_id.name}</strong></a>\" at <strong>${object.company_id.name}</strong>.\n"
+"                <br/><br/>\n"
+"                Čoskoro vás budeme informovať.\n"
+"\n"
+"                % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                    <div style=\"margin: 16px 8px 16px 8px;\">\n"
+"                        <a href=\"${object.job_id.website_url}\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Popis práce</a>\n"
+"                    </div>\n"
+"                % endif\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                % if object.user_id:\n"
+"                    <h3 style=\"color:#9A6C8E;\"><strong>Váš kontakt:</strong></h3>\n"
+"                    <table>\n"
+"                        <tr>\n"
+"                            <td width=\"75\">\n"
+"                                <img src=\"/web/image/res.users/${object.user_id.id}/image_128\" alt=\"Avatar\" style=\"vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;\"/>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <strong>${object.user_id.name}</strong><br/>\n"
+"                                <span>Email: ${object.user_id.email or ''}</span><br/>\n"
+"                                <span>Phone: ${object.user_id.phone or ''}</span>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                % endif\n"
+"\n"
+"                <h3 style=\"color:#9A6C8E;\"><strong>Aký je ďalší krok?</strong></h3>\n"
+"                Zvyčajne <strong>odpovedáme kandidátom do 3 dní.</strong><br/><br/>\n"
+"                Neváhajte <strong>kontaktujte nás, ak chcete rýchlejšie\n"
+"                spätnú väzbu</strong> alebo ak od nás nedostanete správu\n"
+"dostatočne rýchlo (stačí odpovedať na tento e-mail).\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"                % set location = ''\n"
+"                % if object.job_id.address_id.name:\n"
+"                    <strong>${object.job_id.address_id.name}</strong><br/>\n"
+"                % endif\n"
+"                % if object.job_id.address_id.street:\n"
+"                    ${object.job_id.address_id.street}<br/>\n"
+"                    % set location = object.job_id.address_id.street\n"
+"                % endif\n"
+"                % if object.job_id.address_id.street2:\n"
+"                    ${object.job_id.address_id.street2}<br/>\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)\n"
+"                % endif\n"
+"                % if object.job_id.address_id.city:\n"
+"                    ${object.job_id.address_id.city},\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.city)\n"
+"                % endif\n"
+"                % if object.job_id.address_id.state_id.name:\n"
+"                    ${object.job_id.address_id.state_id.name},\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)\n"
+"                % endif\n"
+"                % if object.job_id.address_id.zip:\n"
+"                    ${object.job_id.address_id.zip}\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)\n"
+"                % endif\n"
+"                <br/>\n"
+"                % if object.job_id.address_id.country_id.name:\n"
+"                    ${object.job_id.address_id.country_id.name}<br/>\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
+"                % endif\n"
+"                <br/>\n"
+"                % if object.job_id.address_id:\n"
+"                    <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                        <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
+"                    </a>\n"
+"                % endif\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_interest
@@ -251,6 +335,103 @@ msgid ""
 "    </tr>\n"
 "</table>"
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"background-color: white; border-collapse: collapse; margin-left: 20px;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\" style=\"padding: 0px 10px;\">\n"
+"            <div style=\"text-align: center\">\n"
+"                <h2>Blahoželáme!</h2>\n"
+"                <div style=\"color:grey;\">Váš životopis bol pozitívne zhodnotený.</div>\n"
+"                <img src=\"/hr_recruitment/static/src/img/congratulations.png\" alt=\"Congratulations!\" style=\"width:175px;margin:20px 0;\"/>\n"
+"            </div>\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Práve sme skontrolovali váš životopis a veľmi nás zaujal.\n"
+" Myslíme si, že by ste boli vhodný kandidát \n"
+"na hladanú pozíciu a preto sme vaša prihlášku zaradili na užší zozanam\n"
+"pre osobné stretnutie alebo telefonický rozhovor.\n"
+"                <br/><br/>\n"
+"                % if 'website_url' in object.job_id and object.job_id.website_url:\n"
+"                    <div style=\"margin: 16px 8px 16px 8px;\">\n"
+"                        <a href=\"${object.job_id.website_url}\" style=\"background-color: #875a7b; text-decoration: none; color: #fff; padding: 8px 16px 8px 16px; border-radius: 5px;\">Popis práce</a>\n"
+"                    </div>\n"
+"                % endif\n"
+"\n"
+"                % if object.user_id:\n"
+"                    Čoskoro vás bude kontaktovať:\n"
+"                    <table>\n"
+"                        <tr>\n"
+"                            <td width=\"75\">\n"
+"                                <img src=\"/web/image/res.users/${object.user_id.id}/image_128\" alt=\"Avatar\" style=\"vertical-align:baseline; width: 64px; height: 64px; object-fit: cover;\"/>\n"
+"                            </td>\n"
+"                            <td>\n"
+"                                <strong>${object.user_id.name}</strong><br/>\n"
+"                                <span>Email: ${object.user_id.email or ''}</span><br/>\n"
+"                                <span>Phone: ${object.user_id.phone or ''}</span>\n"
+"                            </td>\n"
+"                        </tr>\n"
+"                    </table>\n"
+"                    <br/><br/>\n"
+"                % endif\n"
+"                Do skorého videnia,\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    -- <br/>\n"
+"                    HR tím\n"
+"                    % if 'website_url' in object.job_id and object.job_id.website_url\n"
+"                      Objavte všetky naše pracovné miesta</a>.<br/>\n"
+"                    % endif\n"
+"                </div>\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 16px 0px 16px 0px;\"/>\n"
+"                <h3 style=\"color:#9A6C8E;\"><strong>Aký je ďalší krok?</strong></h3>\n"
+"                Zvyčajne <strong>odpovedáme na žiadosti do 3 dní</strong>.\n"
+"                <br/><br/>\n"
+"                Ďalším krokom je stretnutie v našich kanceláriách.\n"
+"                <br/>\n"
+"                Neváhajte <strong>nás kontaktovať, ak chcete rýchlejšie\n"
+"odpoveď </strong>  alebo ak od nás nedostanete odpoveď\n"
+"                dostatočne rýchlo (stačí odpovedať na tento e-mail).\n"
+"                <br/>\n"
+"\n"
+"                <hr width=\"97%\" style=\"background-color: rgb(204,204,204); border: medium none; clear: both; display: block; font-size: 0px; min-height: 1px; line-height: 0; margin: 17px 0px 16px 0px;\"/>\n"
+"                % set location = ''\n"
+"                % if object.job_id.address_id.name:\n"
+"                    <strong>${object.job_id.address_id.name}</strong><br/>\n"
+"                % endif\n"
+"                % if object.job_id.address_id.street:\n"
+"                    ${object.job_id.address_id.street}<br/>\n"
+"                    % set location = object.job_id.address_id.street\n"
+"                % endif\n"
+"                % if object.job_id.address_id.street2:\n"
+"                    ${object.job_id.address_id.street2}<br/>\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.street2)\n"
+"                % endif\n"
+"                % if object.job_id.address_id.city:\n"
+"                    ${object.job_id.address_id.city},\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.city)\n"
+"                % endif\n"
+"                % if object.job_id.address_id.state_id.name:\n"
+"                    ${object.job_id.address_id.state_id.name},\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.state_id.name)\n"
+"                % endif\n"
+"                % if object.job_id.address_id.zip:\n"
+"                    ${object.job_id.address_id.zip}\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.zip)\n"
+"                % endif\n"
+"                <br/>\n"
+"                % if object.job_id.address_id.country_id.name:\n"
+"                    ${object.job_id.address_id.country_id.name}<br/>\n"
+"                    % set location = '%s, %s' % (location, object.job_id.address_id.country_id.name)\n"
+"                % endif\n"
+"                <br/>\n"
+"\n"
+"                % if object.job_id.address_id:\n"
+"                    <a href=\"https://maps.google.com/maps?q=${location}\" target=\"new\">\n"
+"                        <img src=\"http://maps.googleapis.com/maps/api/staticmap?autoscale=1&amp;size=598x200&amp;maptype=roadmap&amp;format=png&amp;visual_refresh=true&amp;markers=size:mid%7Ccolor:0xa5117d%7Clabel:%7C${location}\" style=\"vertical-align:bottom;\"/>\n"
+"                    </a>\n"
+"                % endif\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>"
 
 #. module: hr_recruitment
 #: model:mail.template,body_html:hr_recruitment.email_template_data_applicant_refuse
@@ -298,6 +479,43 @@ msgid ""
 "</table>\n"
 "        "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"    <tr>\n"
+"        <td valign=\"top\">\n"
+"            <div style=\"font-size: 13px; margin: 0px; padding: 0px;\">\n"
+"                Hello,<br/><br/>\n"
+"               Ďakujeme za váš záujem byť súčasťou\n"
+"                <b>${object.company_id.name}</b>nášho tímu.  Chceli sme\n"
+"                vám dať vedieť, že je váš životopis síce vyhovujúci\n"
+"                a náš náborový tím preskúmal všetky okolnosti, ale <b> vašu žiadosť neposunul do dalšieho výberového procesu.</b>.\n"
+"                <br/><br/>\n"
+"                Upozorňujeme, že náborový proces je zložitý a stáva sa, že urobíme\n"
+"chybu. Neváhajte nás kontaktovať odpoveďou na tento e-mail\n"
+"pokial chcete viac informácií o našom rozhodnutí.\n"
+"                <br/><br/>\n"
+"                Váš životopis však budeme priebežne sledovať a v prípade budúcich príležitostí, ktoré budú lepšie vyhovovať vašim schopnostiam a skúsenostiam, vás budeme kontaktovať.\n"
+"                <br/><br/>\n"
+"                Prajeme vám všetko najlepšie pri hľadaní zamestnania a veríme, že\n"
+"budeme mať šancu vás zvážiť, pre inú pracovnú pozíciu v budúcnosti.\n"
+"                <br/><br/>\n"
+"                Ďakujeme,\n"
+"                <div style=\"font-size: 11px; color: grey;\">\n"
+"                    % if object.user_id:\n"
+"                        -- <br/>\n"
+"                        <strong>${object.user_id.name}</strong><br/>\n"
+"                        Email: ${object.user_id.email or ''}<br/>\n"
+"                        Phone: ${object.user_id.phone or ''}\n"
+"                    % else:\n"
+"                        -- <br/>\n"
+"                        ${object.company_id.name}<br/>\n"
+"                        HR tím\n"
+"                    % endif\n"
+"                </div>\n"
+"            </div>\n"
+"        </td>\n"
+"    </tr>\n"
+"</table>\n"
+"        "
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_needaction
@@ -317,7 +535,7 @@ msgstr "Aktivity"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Označenie výnimky v aktivite"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__activity_state
@@ -349,7 +567,7 @@ msgstr "Adresa kde pracujú zamestnanci"
 #. module: hr_recruitment
 #: model:res.groups,name:hr_recruitment.group_hr_recruitment_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Správca"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__alias_id
@@ -387,39 +605,39 @@ msgstr "Uchádzač prijatý"
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_job_applicant_stage_changed
 msgid "Applicant Stage Changed"
-msgstr "Fáza uchádzača zmenená"
+msgstr "Fáza kandidáta zmenená"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_new
 msgid "Applicant created"
-msgstr "Uchádzač vytvorený"
+msgstr "Kandidát vytvorený"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_from
 msgid "Applicant email"
-msgstr ""
+msgstr "Email kandidáta"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_hired
 msgid "Applicant hired"
-msgstr "Uchádzač prijatý"
+msgstr "Kandidát prijatý"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Applicant hired<br/>"
-msgstr ""
+msgstr "Kandidát prijatý<br/>"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__partner_name
 msgid "Applicant's Name"
-msgstr "Meno uchádzača"
+msgstr "Meno kandidáta"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.crm_case_tree_view_job
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_calendar_view
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_activity
 msgid "Applicants"
-msgstr "Uchádzači"
+msgstr "Kandidáti"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_applications
@@ -428,7 +646,7 @@ msgid ""
 "                If you install the document management modules, all resumes are indexed automatically,\n"
 "                so that you can easily search through their content."
 msgstr ""
-"Uchádzači a ich priložené CV-čka sú automaticky vytvorené keď sa pošle email.\n"
+"Kandidáti a ich priložené CV-čka sú automaticky vytvorené keď sa pošle email.\n"
 "Ak nainštalujete moduly pre správu dokumentov, všetky životopisy sú indexované automaticky,\n"
 "takže môžete ľahko prehľadávať ich obsah."
 
@@ -440,8 +658,8 @@ msgid ""
 "            so that you can easily search through their content."
 msgstr ""
 "Žiadatelia a ich priložený životopis sa vytvárajú automaticky pri odoslaní e-mailu.\n"
-"            Ak inštalujete moduly správy dokumentov, všetky životopisy sa automaticky indexujú,\n"
-"            tak, aby ste mohli jednoducho prehľadávať ich obsah."
+"Ak inštalujete moduly správy dokumentov, všetky životopisy sa automaticky indexujú\n"
+" tak, aby ste mohli jednoducho prehľadávať ich obsah."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
@@ -483,12 +701,12 @@ msgstr "Žiadosti"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__application_count
 msgid "Applications with the same email"
-msgstr ""
+msgstr "Aplikácie s rovnakým e-mailom"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__job_id
 msgid "Applied Job"
-msgstr "Uchádzaná práca"
+msgstr "Žiadaná práca"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__priority
@@ -505,7 +723,7 @@ msgstr "Archivovaný"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Are you sure?"
-msgstr ""
+msgstr "Ste si istý?"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__date_open
@@ -575,7 +793,7 @@ msgstr "Podľa práce"
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_job_position
 msgid "By Job Positions"
-msgstr ""
+msgstr "Podľa pracovných pozícií"
 
 #. module: hr_recruitment
 #: model:ir.filters,name:hr_recruitment.hr_applicant_filter_recruiter
@@ -585,7 +803,7 @@ msgstr "Podľa náborového pracovníka"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_calendar_event
 msgid "Calendar Event"
-msgstr ""
+msgstr "Udalosť kalendára"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__campaign_id
@@ -600,7 +818,7 @@ msgstr "Prípady podľa fáz a odhadov"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_applicant_category
 msgid "Category of applicant"
-msgstr "Kategória uchádzača"
+msgstr "Kategória kandidáta"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -761,7 +979,7 @@ msgstr "Stupeň"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_degree__name
 msgid "Degree Name"
-msgstr ""
+msgstr "Názov titulu"
 
 #. module: hr_recruitment
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_degree
@@ -817,7 +1035,7 @@ msgstr "Zrušiť"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_source__display_name
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/digest.py:0
@@ -872,7 +1090,7 @@ msgstr "Email"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_survey
 msgid "Email Alias"
-msgstr "Alias Email"
+msgstr "Emailový alias"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__template_id
@@ -891,7 +1109,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Email kópia"
 
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_employee
@@ -907,12 +1125,12 @@ msgstr "Meno zamestnanca"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__emp_id
 msgid "Employee linked to the applicant."
-msgstr "Zamestnanec prepojený na uchádzača."
+msgstr "Zamestnanec spojený s kandidátom."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.applicant_hired_template
 msgid "Employee:"
-msgstr ""
+msgstr "Zamestnanec:"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues
@@ -932,12 +1150,12 @@ msgstr "Očakávaný zamestnanec"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected
 msgid "Expected Salary"
-msgstr "Očakávaný plat"
+msgstr "Očakávaná mzda"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_expected_extra
 msgid "Expected Salary Extra"
-msgstr "Očakávaný extra plat"
+msgstr "Očakávaná extra mzda"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -952,7 +1170,7 @@ msgstr "Extra výhody..."
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__favorite_user_ids
 msgid "Favorite User"
-msgstr ""
+msgstr "Obľúbený užívateľ"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -977,12 +1195,12 @@ msgstr "Odberatelia"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
+msgstr "Odberatelia (kanály)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -992,7 +1210,7 @@ msgstr "Budúce aktivity"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Generate email alias"
-msgstr ""
+msgstr "Vytvorte e-mailový alias"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_degree__sequence
@@ -1002,7 +1220,7 @@ msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu stupňov."
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__sequence
 msgid "Gives the sequence order when displaying a list of stages."
-msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu fáz."
+msgstr "Dáva sekvenčné poradie pri zobrazovaní zoznamu štádií."
 
 #. module: hr_recruitment
 #: model:ir.model.fields.selection,name:hr_recruitment.selection__hr_applicant__priority__1
@@ -1067,7 +1285,7 @@ msgstr "Ikona"
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona indikujúca výnimočnú aktivitu."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction
@@ -1141,7 +1359,7 @@ msgstr "Formuláre pohovoru"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_job__is_favorite
 msgid "Is Favorite"
-msgstr ""
+msgstr "Je obľúbený"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_is_follower
@@ -1246,7 +1464,7 @@ msgstr "Kanban platný"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_digest_digest__kpi_hr_recruitment_new_colleagues_value
 msgid "Kpi Hr Recruitment New Colleagues Value"
-msgstr ""
+msgstr "Hodnota KPI HR nábor nových kolegov"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant____last_update
@@ -1303,12 +1521,12 @@ msgstr "Vytvor pracovnú pozíciu."
 #, python-format
 msgid ""
 "Let's have a look at the <b>applications pipeline</b> for this job position."
-msgstr "Pozrime sa <b>na aplikačný kanál</b> pre túto pracovnú pozíciu."
+msgstr "Pozrime sa <b>na aplikačný zoznam</b> pre túto pracovnú pozíciu."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Zoznam cc z prichádzajúcich emailov."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_main_attachment_id
@@ -1318,7 +1536,7 @@ msgstr "Hlavná príloha"
 #. module: hr_recruitment
 #: model:hr.recruitment.degree,name:hr_recruitment.degree_licenced
 msgid "Master Degree"
-msgstr "Magisterský titul"
+msgstr "Vysokoškolský titul"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__medium_id
@@ -1329,7 +1547,7 @@ msgstr "Stredné"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__meeting_count
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__meeting_count
 msgid "Meeting Count"
-msgstr ""
+msgstr "Počet stretnutí"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
@@ -1364,7 +1582,7 @@ msgstr "Moje obľúbené"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_search_view
 msgid "My Job Positions"
-msgstr ""
+msgstr "Moje pracovné pozície"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -1375,12 +1593,12 @@ msgstr "Nové"
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_department__new_applicant_count
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_new
 msgid "New Applicant"
-msgstr "Nový uchádzač"
+msgstr "Nový kandidát"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_department_view_kanban
 msgid "New Applicants"
-msgstr "Nový uchádzači"
+msgstr "Nový kandidáti"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_job_new_application
@@ -1396,7 +1614,7 @@ msgstr "Nové žiadosti"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "New Applications <br/>"
-msgstr ""
+msgstr "Nové žiadosti<br/>"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1486,6 +1704,7 @@ msgid ""
 "Number of applications that are new in the flow (typically at first step of "
 "the flow)"
 msgstr ""
+"Počet aplikácií, ktoré sú nové v procese (zvyčajne v prvom kroku procesu)"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__delay_close
@@ -1495,7 +1714,7 @@ msgstr "Počet dní do uzavretia"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Číslo chýb"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__message_needaction_counter
@@ -1549,7 +1768,7 @@ msgstr "Podané online"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Other Applications"
-msgstr ""
+msgstr "Ďalší kandidáti"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_job__hr_responsible_id
@@ -1569,17 +1788,17 @@ msgstr "Pravdepodobnosť"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Proposed Salary"
-msgstr "Navrhnutý plat"
+msgstr "Navrhnutá mzda"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__salary_proposed_extra
 msgid "Proposed Salary Extra"
-msgstr "Navrhnutý extra plat"
+msgstr "Navrhnutá extra mzda"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.res_config_settings_view_form
 msgid "Publish available jobs on your website"
-msgstr "Publikujte voľné miesta na webovej stránke"
+msgstr "Publikujte voľné miesta na webstránke"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
@@ -1711,42 +1930,42 @@ msgstr "Obnoviť"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Chyba doručenia SMS"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected
 msgid "Salary Expected by Applicant"
-msgstr "Uchádzačov očakávaný plat"
+msgstr "Očakávaná mzda kandidátom"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_expected_extra
 msgid "Salary Expected by Applicant, extra advantages"
-msgstr "Uchádzačov očakávaný plat, extra výhody"
+msgstr "Mzda a extra benefity očakávané kandidátom"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed
 msgid "Salary Proposed by the Organisation"
-msgstr "Plat navrhnutý organizáciou"
+msgstr "Mzda navrhnutá organizáciou"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__salary_proposed_extra
 msgid "Salary Proposed by the Organisation, extra advantages"
-msgstr "Plat navrhnutý organizáciou, extra výhody"
+msgstr "Mzda navrhnutá organizáciou, extra benefity"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_kanban_view_applicant
 msgid "Schedule Interview"
-msgstr "Naplánovať pohovor"
+msgstr "Naplánujte pohovor"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_form
 msgid "Schedule interview with this applicant"
-msgstr "Naplánovať pohovor s týmto uchádzačom"
+msgstr "Naplánujte pohovor s týmto kandidátom"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 msgid "Search Applicants"
-msgstr "Hľadať uchádzačov"
+msgstr "Hľadať kandidátov "
 
 #. module: hr_recruitment
 #: model:hr.recruitment.stage,name:hr_recruitment.stage_job3
@@ -1762,7 +1981,7 @@ msgstr "Postupnosť"
 #. module: hr_recruitment
 #: model_terms:digest.tip,tip_description:hr_recruitment.digest_tip_hr_recruitment_0
 msgid "Set Email Aliases"
-msgstr "Nastaviť aliasy emailu"
+msgstr "Nastavte emailové aliasy"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.action_hr_recruitment_configuration
@@ -1773,7 +1992,7 @@ msgstr "Nastavenia"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "Share Trackers"
-msgstr ""
+msgstr "Zdieľajte sledovače"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1794,20 +2013,22 @@ msgstr "Meno zdroja"
 #. module: hr_recruitment
 #: model:ir.model,name:hr_recruitment.model_hr_recruitment_source
 msgid "Source of Applicants"
-msgstr "Zdroj uchádzačov"
+msgstr "Zdroj kandidátov"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_source_action
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_source
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_source_tree
 msgid "Sources of Applicants"
-msgstr "Zdroje uchádzačov"
+msgstr "Zdroje kandidátov"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_recruitment_stage__job_ids
 msgid ""
 "Specific jobs that uses this stage. Other jobs will not use this stage."
 msgstr ""
+"Konkrétne úlohy, ktoré používajú toto štádium. Ostatné pracovné pozície toto"
+" štádium nevyužijú."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__stage_id
@@ -1815,27 +2036,27 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Stage"
-msgstr "Fáza"
+msgstr "Štádium"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,name:hr_recruitment.mt_applicant_stage_changed
 msgid "Stage Changed"
-msgstr "Fáza zmenená"
+msgstr "Štádium zmenené"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Stage Definition"
-msgstr "Definícia fázy"
+msgstr "Definícia štádia"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_recruitment_stage__name
 msgid "Stage Name"
-msgstr "Názov etapy"
+msgstr "Názov štádia"
 
 #. module: hr_recruitment
 #: model:mail.message.subtype,description:hr_recruitment.mt_applicant_stage_changed
 msgid "Stage changed"
-msgstr "Fáza zmenená"
+msgstr "Štádium zmenené"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__last_stage_id
@@ -1843,15 +2064,15 @@ msgid ""
 "Stage of the applicant before being in the current stage. Used for lost "
 "cases analysis."
 msgstr ""
-"Fáza uchádzača než bol v súčasnej fáze. Používa sa pre analýzu stratených "
-"prípadov."
+"Štádium uchádzača než bol v súčasnej fáze. Používa sa pre analýzu stratených"
+" prípadov."
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_recruitment_stage_act
 #: model:ir.ui.menu,name:hr_recruitment.menu_hr_recruitment_stage
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_tree
 msgid "Stages"
-msgstr "Fázy"
+msgstr "Štádia"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
@@ -1884,12 +2105,12 @@ msgstr "Predmet / Názov žiadosti"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant_category__name
 msgid "Tag Name"
-msgstr "Názov visačky"
+msgstr "Názov tagu"
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_applicant_category_name_uniq
 msgid "Tag name already exists !"
-msgstr "Názov visačky už existuje !"
+msgstr "Názov tagu už existuje !"
 
 #. module: hr_recruitment
 #: model:ir.actions.act_window,name:hr_recruitment.hr_applicant_category_action
@@ -1898,17 +2119,17 @@ msgstr "Názov visačky už existuje !"
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_form
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_category_view_tree
 msgid "Tags"
-msgstr "Štítky"
+msgstr "Tagy"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__availability
 msgid "The date at which the applicant will be available to start working"
-msgstr "Dátum kedy bude uchádzač schopný začať pracovať."
+msgstr "Dátum kedy bude uchádzač schopný nastúpiť do zamestnania."
 
 #. module: hr_recruitment
 #: model:ir.model.constraint,message:hr_recruitment.constraint_hr_recruitment_degree_name_uniq
 msgid "The name of the Degree of Recruitment must be unique!"
-msgstr "Meno stupňa musí byť jedinečné!"
+msgstr "Meno stupňa náboru musí byť jedinečné!"
 
 #. module: hr_recruitment
 #: model_terms:ir.actions.act_window,help:hr_recruitment.action_hr_job_sources
@@ -1955,7 +2176,7 @@ msgstr ""
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.view_hr_job_kanban
 msgid "To Recruit"
-msgstr ""
+msgstr "Robiť nábor"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search_bis
@@ -1965,7 +2186,7 @@ msgstr "Dnešné aktivity"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
 msgid "Tooltips"
-msgstr ""
+msgstr "Popisy"
 
 #. module: hr_recruitment
 #. openerp-web
@@ -1975,11 +2196,12 @@ msgid ""
 "Try to send an email to this address, it will create an application "
 "automatically."
 msgstr ""
+"Pokúste sa na túto adresu poslať e-mail, automaticky to vytvorí aplikáciu."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ výnimočnej aktivity na zázname."
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_applicant_view_search
@@ -2020,7 +2242,7 @@ msgstr ""
 #: code:addons/hr_recruitment/static/src/js/tours/hr_recruitment.js:0
 #, python-format
 msgid "Use the breadcrumbs to <b>go back to the dashboard</b>."
-msgstr ""
+msgstr "Use the breadcrumbs to <b>go back to the dashboard</b>."
 
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__user_email
@@ -2043,12 +2265,12 @@ msgstr "Chcete <b>začať nábor</b> ako profesionál?<i> Začnite tu.</i>"
 #. module: hr_recruitment
 #: model:ir.model.fields,field_description:hr_recruitment.field_hr_applicant__website_message_ids
 msgid "Website Messages"
-msgstr "Správy Webových stránok"
+msgstr "Správy webstránok"
 
 #. module: hr_recruitment
 #: model:ir.model.fields,help:hr_recruitment.field_hr_applicant__website_message_ids
 msgid "Website communication history"
-msgstr "História komunikácie webových stránok"
+msgstr "História komunikácie webstránok"
 
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_recruitment_stage_form
@@ -2056,12 +2278,14 @@ msgid ""
 "You can define here the labels that will be displayed for the kanban state instead\n"
 "                        of the default labels."
 msgstr ""
+"Tu môžete definovať štítky, ktoré sa namiesto toho zobrazia v stave kanban\n"
+"predvolených štítkov."
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "You must define a Contact Name for this applicant."
-msgstr ""
+msgstr "Pre tohto kandidáta musíte definovať kontaktné meno."
 
 #. module: hr_recruitment
 #: model:mail.template,subject:hr_recruitment.email_template_data_applicant_congratulations
@@ -2073,15 +2297,15 @@ msgstr "Vaša žiadosť: ${object.job_id.name | safe}"
 #. module: hr_recruitment
 #: model_terms:ir.ui.view,arch_db:hr_recruitment.hr_job_simple_form
 msgid "e.g. Sales Manager"
-msgstr "napr. vedúci predaja"
+msgstr "napr. Obchodný riaditeľ"
 
 #. module: hr_recruitment
 #: model:ir.actions.server,name:hr_recruitment.hr_applicant_resumes_server
 msgid "hr.applicant.resumes.server"
-msgstr ""
+msgstr "hr.applicant.resumes.server"
 
 #. module: hr_recruitment
 #: code:addons/hr_recruitment/models/hr_recruitment.py:0
 #, python-format
 msgid "job applicant"
-msgstr "Uchádzač"
+msgstr "kandidát"

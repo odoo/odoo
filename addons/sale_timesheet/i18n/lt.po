@@ -9,14 +9,15 @@
 # digitouch UAB <digitouchagencyeur@gmail.com>, 2019
 # Edgaras Kriukonis <edgaras@focusate.eu>, 2019
 # Linas Versada <linaskrisiukenas@gmail.com>, 2019
+# Denis Knotko <denis_knotko@yahoo.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Linas Versada <linaskrisiukenas@gmail.com>, 2019\n"
+"Last-Translator: Denis Knotko <denis_knotko@yahoo.com>, 2020\n"
 "Language-Team: Lithuanian (https://www.transifex.com/odoo/teams/41243/lt/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -252,6 +253,7 @@ msgid "Choose the Sales Order to invoice"
 msgstr "Pasirinkite pardavimo užsakymą sąskaitos pateikimui"
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Company"
 msgstr "Įmonė"
@@ -1063,6 +1065,7 @@ msgstr "Užduotis, sugeneruota pardavimų užsakymo įrašo"
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__tasks_count
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#: model:project.project,label_tasks:sale_timesheet.project_support
 #, python-format
 msgid "Tasks"
 msgstr "Užduotys"
@@ -1345,7 +1348,7 @@ msgstr "Pardavimo užsakymo įrašo vieneto kaina."
 #: model:product.product,uom_name:sale_timesheet.product_service_deliver_manual
 #: model:product.template,uom_name:sale_timesheet.product_service_deliver_manual_product_template
 msgid "Units"
-msgstr ""
+msgstr "Vienetai"
 
 #. module: sale_timesheet
 #: model:ir.model.fields,field_description:sale_timesheet.field_project_profitability_report__amount_untaxed_invoiced
@@ -1400,17 +1403,17 @@ msgstr ""
 "sąskaitos (susieti su pardavimų užsakymais pagal laiką ir medžiagas)."
 
 #. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:0
+#, python-format
+msgid "You can not modify timesheets from different employees"
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "You can only apply this action from a project."
 msgstr "Galite taikyti šį veiksmą tik iš projekto."
-
-#. module: sale_timesheet
-#: code:addons/sale_timesheet/models/account.py:76
-#, python-format
-msgid "You can not modify timesheets from different employees"
-msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0

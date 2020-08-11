@@ -9,6 +9,11 @@
 # Matus Krnac <matus.krnac@gmail.com>, 2019
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # Jan Prokop, 2019
+# Stefan Stieranka <stieranka@itec.sk>, 2020
+# Michal Matus <misko.matus@gmail.com>, 2020
+# Filip Brenčič <brencicf5@gmail.com>, 2020
+# Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -454,7 +459,7 @@ msgstr "Aktivity"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Označenie výnimky v aktivite"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__activity_state
@@ -496,7 +501,7 @@ msgstr ""
 #. module: survey
 #: model:res.groups,name:survey.group_survey_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Správca"
 
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_col3
@@ -609,7 +614,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model,name:survey.model_ir_autovacuum
 msgid "Automatic Vacuum"
-msgstr ""
+msgstr "Automatické Vákuum"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_score_avg
@@ -674,7 +679,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Certification"
-msgstr ""
+msgstr "Osvedčenie"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id
@@ -705,7 +710,7 @@ msgstr ""
 #: model:ir.actions.report,name:survey.certification_report
 #: model:ir.model.fields.selection,name:survey.selection__gamification_challenge__category__certification
 msgid "Certifications"
-msgstr ""
+msgstr "Certifikácie"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_res_partner__certifications_count
@@ -1138,12 +1143,12 @@ msgstr "Odberatelia"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
+msgstr "Odberatelia (kanály)"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_question_form
@@ -1267,7 +1272,7 @@ msgstr "Ikona"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona indikujúca výnimočnú aktivitu."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__token
@@ -1749,7 +1754,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Číslo chýb"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
@@ -2030,7 +2035,7 @@ msgstr "Príjemcovia"
 #: model:ir.model.fields,field_description:survey.field_survey_survey__answer_count
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Registered"
-msgstr ""
+msgstr "registrovaný"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_invite__existing_text
@@ -2100,7 +2105,7 @@ msgstr "Rady matrice"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Chyba doručenia SMS"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_score
@@ -2560,6 +2565,20 @@ msgid "The checkout process is clear and secure"
 msgstr ""
 
 #. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey.js:0
+#, python-format
+msgid "The date you selected is greater than the maximum date: "
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey.js:0
+#, python-format
+msgid "The date you selected is lower than the minimum date: "
+msgstr ""
+
+#. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__description
 msgid ""
 "The description will be displayed on the home page of the survey. You can "
@@ -2775,7 +2794,7 @@ msgstr "Typ odpovede"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ výnimočnej aktivity na zázname."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__labels_ids

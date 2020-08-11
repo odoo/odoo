@@ -123,7 +123,7 @@ class L10nInAccountInvoiceReport(models.Model):
                 am.l10n_in_shipping_bill_number AS shipping_bill_number,
                 am.l10n_in_shipping_bill_date AS shipping_bill_date,
                 am.l10n_in_shipping_port_code_id AS shipping_port_code_id,
-                am.amount_total AS total,
+                ABS(am.amount_total_signed) AS total,
                 am.journal_id,
                 aj.company_id,
                 am.type AS move_type,

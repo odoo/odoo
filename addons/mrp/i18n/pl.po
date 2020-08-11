@@ -20,7 +20,6 @@
 # Marcin Młynarczyk <mlynarczyk@gmail.com>, 2019
 # Piotr Cierkosz <piotr.w.cierkosz@gmail.com>, 2019
 # Radosław Biegalski <radoslaw.biegalski@openglobe.pl>, 2019
-# Zbigniew Łukasiak <z.lukasiak@archimedes.pl>, 2019
 # Martin Trigaux, 2019
 # Tomasz Leppich <t.leppich@gmail.com>, 2019
 # Natalia Gros <nag@odoo.com>, 2019
@@ -28,6 +27,7 @@
 # Piotr Szlązak <szlazakpiotr@gmail.com>, 2019
 # Paweł Wodyński <pw@myodoo.pl>, 2020
 # Maksym <ms@myodoo.pl>, 2020
+# Zbigniew Łukasiak <z.lukasiak@archimedes.pl>, 2020
 # 
 msgid ""
 msgstr ""
@@ -35,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Maksym <ms@myodoo.pl>, 2020\n"
+"Last-Translator: Zbigniew Łukasiak <z.lukasiak@archimedes.pl>, 2020\n"
 "Language-Team: Polish (https://www.transifex.com/odoo/teams/41243/pl/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -358,6 +358,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "A BoM of type kit is used to split the product into its components."
 msgstr ""
+"BoM typu Kit, to lista składowych produktu, które trzeba skompletować."
 
 #. module: mrp
 #: code:addons/mrp/models/mrp_workorder.py:0
@@ -369,7 +370,7 @@ msgstr "Zlecenie produkcji zostało zrealizowane lub anulowane."
 #: code:addons/mrp/models/mrp_workcenter.py:0
 #, python-format
 msgid "A workcenter cannot be an alternative of itself"
-msgstr ""
+msgstr "Gniazdo produkcyjne nie może być alternatywne do samego siebie"
 
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_abstract_workorder_line
@@ -498,7 +499,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
 msgid "Alternative Workcenters"
-msgstr ""
+msgstr "Alternatywne gniazda produkcyjne"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -533,6 +534,15 @@ msgstr "Aprobuj"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Archiwalne"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"At least one work order has a quantity produced lower than the quantity "
+"produced in the manufacturing order. You must complete the work orders "
+"before posting the inventory."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -3871,6 +3881,8 @@ msgstr ""
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
 msgid "The quantity to produce must be positive!"
 msgstr "Ilość do wyprodukowania musi być dodatnia!"
 

@@ -52,7 +52,8 @@ class Website(models.Model):
         return def_lang_id or self._active_languages()[0]
 
     name = fields.Char('Website Name', required=True)
-    domain = fields.Char('Website Domain')
+    domain = fields.Char('Website Domain',
+        help='Will be prefixed by http in canonical URLs if no scheme is specified')
     country_group_ids = fields.Many2many('res.country.group', 'website_country_group_rel', 'website_id', 'country_group_id',
                                          string='Country Groups', help='Used when multiple websites have the same domain.')
     company_id = fields.Many2one('res.company', string="Company", default=lambda self: self.env.company, required=True)
@@ -218,7 +219,7 @@ class Website(models.Model):
         homepage_page = Page.search([
             ('website_id', '=', self.id),
             ('key', '=', standard_homepage.key),
-        ])
+        ], limit=1)
         if not homepage_page:
             homepage_page = Page.create({
                 'website_published': True,

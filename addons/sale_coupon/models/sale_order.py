@@ -25,9 +25,6 @@ class SaleOrder(models.Model):
     def _get_no_effect_on_threshold_lines(self):
         self.ensure_one()
         lines = self.env['sale.order.line']
-        # Do not count already applied promo_code discount; Do not substract itself
-        if self.code_promo_program_id and self.code_promo_program_id.reward_type == 'discount':
-            lines = self.order_line.filtered(lambda l: l.product_id == self.code_promo_program_id.discount_line_product_id)
         return lines
 
     def recompute_coupon_lines(self):
@@ -89,6 +86,11 @@ class SaleOrder(models.Model):
             program_in_order = max_product_qty // (program.rule_min_quantity + program.reward_product_quantity)
             # multipled by the reward qty
             reward_product_qty = program.reward_product_quantity * program_in_order
+            # do not give more free reward than products
+            reward_product_qty = min(reward_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
+            if program.rule_minimum_amount:
+                order_total = sum(order_lines.mapped('price_total')) - (program.reward_product_quantity * program.reward_product_id.lst_price)
+                reward_product_qty = min(reward_product_qty, order_total // program.rule_minimum_amount)
         else:
             reward_product_qty = min(max_product_qty, self.order_line.filtered(lambda x: x.product_id == program.reward_product_id).product_uom_qty)
 
@@ -270,6 +272,7 @@ class SaleOrder(models.Model):
         self.ensure_one()
         programs = self.env['sale.coupon.program'].search([
             ('promo_code_usage', '=', 'no_code_needed'),
+            '|', ('company_id', '=', self.company_id.id), ('company_id', '=', False),
         ])._filter_programs_from_common_rules(self)
         return programs
 

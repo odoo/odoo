@@ -18,8 +18,10 @@ from cups import Connection as cups_connection
 from glob import glob
 from base64 import b64decode
 from pathlib import Path
+import requests
 import socket
 import ctypes
+from datetime import datetime, timedelta
 
 from odoo import http, _
 from odoo.modules.module import get_resource_path
@@ -88,10 +90,9 @@ class StatusController(http.Controller):
                 helpers.add_credential(db_uuid, enterprise_code)
             try:
                 subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
-                helpers.check_certificate()
                 m.send_alldevices()
-                m.load_drivers()
                 image = get_resource_path('hw_drivers', 'static/img', 'True.jpg')
+                helpers.odoo_restart(3)
             except subprocess.CalledProcessError as e:
                 _logger.error('A error encountered : %s ' % e.output)
         if os.path.isfile(image):
@@ -112,7 +113,7 @@ class ExceptionLogger:
 
     def write(self, message):
         if message != '\n':
-            self.logger.err(message)
+            self.logger.error(message)
 
     def flush(self):
         pass
@@ -250,6 +251,63 @@ class IoTDevice(object):
 
 event_manager = EventManager()
 
+#----------------------------------------------------------
+# ConnectionManager
+#----------------------------------------------------------
+
+class ConnectionManager(Thread):
+    def __init__(self):
+        super(ConnectionManager, self).__init__()
+        self.pairing_code = False
+        self.pairing_uuid = False
+
+    def run(self):
+        if not helpers.get_odoo_server_url():
+            end_time = datetime.now() + timedelta(minutes=5)
+            while (datetime.now() < end_time):
+                self._connect_box()
+                time.sleep(10)
+            self.pairing_code = False
+            self.pairing_uuid = False
+            self._refresh_displays()
+
+    def _connect_box(self):
+        data = {
+            'jsonrpc': 2.0,
+            'params': {
+                'pairing_code': self.pairing_code,
+                'pairing_uuid': self.pairing_uuid,
+            }
+        }
+
+        urllib3.disable_warnings()
+        req = requests.post('https://iot-proxy.odoo.com/odoo-enterprise/iot/connect-box', json=data, verify=False)
+        result = req.json().get('result', {})
+
+        if all(key in result for key in ['pairing_code', 'pairing_uuid']):
+            self.pairing_code = result['pairing_code']
+            self.pairing_uuid = result['pairing_uuid']
+        elif all(key in result for key in ['url', 'token', 'db_uuid', 'enterprise_code']):
+            self._connect_to_server(result['url'], result['token'], result['db_uuid'], result['enterprise_code'])
+
+    def _connect_to_server(self, url, token, db_uuid, enterprise_code):
+        if db_uuid and enterprise_code:
+            helpers.add_credential(db_uuid, enterprise_code)
+
+        # Save DB URL and token
+        subprocess.check_call([get_resource_path('point_of_sale', 'tools/posbox/configuration/connect_to_server.sh'), url, '', token, 'noreboot'])
+        # Notify the DB, so that the kanban view already shows the IoT Box
+        m.send_alldevices()
+        # Restart to checkout the git branch, get a certificate, load the IoT handlers...
+        subprocess.check_call(["sudo", "service", "odoo", "restart"])
+
+    def _refresh_displays(self):
+        """Refresh all displays to hide the pairing code"""
+        for d in iot_devices:
+            if iot_devices[d].device_type == 'display':
+                iot_devices[d].action({
+                    'action': 'display_refresh'
+                })
 
 #----------------------------------------------------------
 # Manager
@@ -331,15 +389,17 @@ class Manager(Thread):
         x_screen = 0
         for match in finditer('Display Number (\d), type HDMI (\d)', displays):
             display_id, hdmi_id = match.groups()
-            display_name = subprocess.check_output(['tvservice', '-nv', display_id]).decode().rstrip().split('=')[1]
-            display_identifier = sub('[^a-zA-Z0-9 ]+', '', display_name).replace(' ', '_') + "_" + str(hdmi_id)
-            iot_device = IoTDevice({
-                'identifier': display_identifier,
-                'name': display_name,
-                'x_screen': str(x_screen),
-            }, 'display')
-            display_devices[display_identifier] = iot_device
-            x_screen += 1
+            tvservice_output = subprocess.check_output(['tvservice', '-nv', display_id]).decode().rstrip()
+            if tvservice_output:
+                display_name = tvservice_output.split('=')[1]
+                display_identifier = sub('[^a-zA-Z0-9 ]+', '', display_name).replace(' ', '_') + "_" + str(hdmi_id)
+                iot_device = IoTDevice({
+                    'identifier': display_identifier,
+                    'name': display_name,
+                    'x_screen': str(x_screen),
+                }, 'display')
+                display_devices[display_identifier] = iot_device
+                x_screen += 1
 
         if not len(display_devices):
             # No display connected, create "fake" device to be accessed from another computer
@@ -538,6 +598,10 @@ else:
         subprocess.check_call(["pkill", "-9", "eftdvs"])  # Check if MPD server is running
     except subprocess.CalledProcessError:
         pass
+
+cm = ConnectionManager()
+cm.daemon = True
+cm.start()
 
 m = Manager()
 m.daemon = True

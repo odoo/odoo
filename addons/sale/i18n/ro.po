@@ -6,6 +6,7 @@
 # Martin Trigaux, 2019
 # Vacaru Adrian <adrian.vacaru@gmail.com>, 2019
 # Cozmin Candea <office@terrabit.ro>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
 # 
 msgid ""
@@ -347,7 +348,7 @@ msgstr ""
 "        <table width=\"100%\" style=\"color: #454748; font-size: 12px; border-spacing: 0px 4px;\" align=\"right\">\n"
 "            <tr>\n"
 "                <td style=\"width: 60%\"/>\n"
-"                <td style=\"width: 30%;\" align=\"right\"><strong>Taxes:</strong></td>\n"
+"                <td style=\"width: 30%;\" align=\"right\"><strong>Taxe:</strong></td>\n"
 "                <td style=\"width: 10%;\" align=\"right\">${format_amount(object.amount_tax, object.currency_id)}</td>\n"
 "            </tr>\n"
 "            <tr>\n"
@@ -372,7 +373,7 @@ msgstr ""
 "            </tr>\n"
 "            <tr>\n"
 "                <td>\n"
-"                    <strong>Payment Method:</strong>\n"
+"                    <strong>Metodă de plată:</strong>\n"
 "                    % if transaction.payment_token_id:\n"
 "                        ${transaction.payment_token_id.name}\n"
 "                    % else:\n"
@@ -390,7 +391,7 @@ msgstr ""
 "            <tr>\n"
 "                <td>\n"
 "                    <br/>\n"
-"                    <strong>Ship to:</strong>\n"
+"                    <strong>Livrare la:</strong>\n"
 "                    ${object.partner_shipping_id.street or ''}\n"
 "                    ${object.partner_shipping_id.city or ''}\n"
 "                    ${object.partner_shipping_id.state_id.name or ''}\n"
@@ -457,7 +458,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<i class=\"fa fa-comment\"/> Contact us to get a new quotation."
-msgstr ""
+msgstr "<i class=\"fa fa-comment\"/>Contactați-ne pentru a obține o ofertă nouă."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -497,7 +498,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_quotations
 msgid "<i class=\"fa fa-fw fa-remove\"/> Cancelled"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-remove\"/> Anulat"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.crm_lead_partner_kanban_view
@@ -592,23 +593,27 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>Accepted on the behalf of:</span>"
-msgstr ""
+msgstr "<span>Acceptat în numele:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By paying this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>Prin plata acestei propuneri, sunt de acord cu următorii "
+"termeni:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<span>By signing this proposal, I agree to the following terms:</span>"
 msgstr ""
+"<span>Prin semnarea acestei propuneri, sunt de acord cu următorii "
+"termeni:</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<span>Disc.%</span>"
-msgstr ""
+msgstr "<span>Disc.%</span>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -638,7 +643,7 @@ msgstr "<strong class=\"d-block mb-1\">Facturi</strong>"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "<strong class=\"d-block mb-1\">Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong class=\"d-block mb-1\">Adresă livrare:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -687,7 +692,7 @@ msgstr "<strong>Agent vânzări:</strong>"
 #: model_terms:ir.ui.view,arch_db:sale.report_invoice_document_inherit_sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 msgid "<strong>Shipping Address:</strong>"
-msgstr ""
+msgstr "<strong>Adresă livrare:</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -714,7 +719,7 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "<strong>This quotation has been canceled.</strong>"
-msgstr ""
+msgstr "<strong>Această ofertă a fost anulată.</strong>"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
@@ -743,7 +748,7 @@ msgstr "Trebuie să fie specificat un jurnal colectorul de plată %s."
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
-msgstr ""
+msgstr "Un achizitor de plată este necesar pentru a crea o tranzacție."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__advance_payment_method
@@ -790,12 +795,12 @@ msgstr ""
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "Accept &amp; Pay"
-msgstr ""
+msgstr "Acceptați și plătiți"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.mail_notification_paynow_online
 msgid "Accept &amp; Pay Quotation"
-msgstr ""
+msgstr "Acceptați și plătiți oferta"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -830,7 +835,7 @@ msgstr "Numar de Cont"
 #. module: sale
 #: model:ir.model,name:sale.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr ""
+msgstr "Widget de reconciliere al contului"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_advance_payment_inv__deposit_account_id
@@ -970,6 +975,8 @@ msgid ""
 "Are you sure you want to void the authorized transaction? This action can't "
 "be undone."
 msgstr ""
+"Sunteți sigur că doriți să anulați tranzacția autorizată? Această acțiune nu"
+" poate fi anulată."
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__expense_policy__cost
@@ -995,7 +1002,7 @@ msgstr "Atribute"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Tranzacții Autorizate"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__automatic_invoice
@@ -1063,7 +1070,7 @@ msgstr "Anulat(ă)"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Capturare Tranzacție"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__product_uom_category_id
@@ -1285,7 +1292,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__stripe
 msgid "Credit card (via Stripe)"
-msgstr ""
+msgstr "Card Credit (via Stripe)"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__currency_id
@@ -1349,7 +1356,7 @@ msgstr "Țara clientului"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__commercial_partner_id
 msgid "Customer Entity"
-msgstr ""
+msgstr "Entitate Client"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__industry_id
@@ -1360,7 +1367,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__access_url
 msgid "Customer Portal URL"
-msgstr ""
+msgstr "URL Portal Clienți"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__client_order_ref
@@ -1370,7 +1377,7 @@ msgstr "Referință Client"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Customer Signature"
-msgstr ""
+msgstr "Semnătură client"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__deposit_taxes_id
@@ -1534,7 +1541,7 @@ msgstr "Conținut digital"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Disc.%"
-msgstr ""
+msgstr "Disc.%"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__discount
@@ -1785,12 +1792,12 @@ msgstr "Activități viitoare"
 #. module: sale
 #: model:ir.model,name:sale.model_payment_link_wizard
 msgid "Generate Sales Payment Link"
-msgstr ""
+msgstr "Generați linkul de plată a vânzărilor"
 
 #. module: sale
 #: model:ir.actions.act_window,name:sale.action_sale_order_generate_link
 msgid "Generate a Payment Link"
-msgstr ""
+msgstr "Generați un link de plată"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -1863,7 +1870,7 @@ msgstr "Pictogramă"
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Pictograma pentru a indica o activitate de excepție."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction
@@ -1891,6 +1898,8 @@ msgid ""
 "If we store your payment information on our server, subscription payments "
 "will be made automatically."
 msgstr ""
+"Dacă stocăm informațiile dvs. de plată pe serverul nostru, plățile pentru "
+"abonamente vor fi efectuate automat."
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__pricelist_id
@@ -1934,13 +1943,13 @@ msgstr ""
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Token nevalid este găsit! Dobânditor jetoane %s != %s"
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Jeton nevalid găsit! Partener de jetoane%s != %s"
 
 #. module: sale
 #: code:addons/sale/models/account_invoice.py:0
@@ -1961,7 +1970,7 @@ msgstr "Factură confirmată"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__invoice_count
 msgid "Invoice Count"
-msgstr ""
+msgstr "Numărul facturilor"
 
 #. module: sale
 #: model:mail.message.subtype,name:sale.mt_salesteam_invoice_created
@@ -2061,7 +2070,7 @@ msgstr "Facturare"
 #: model_terms:ir.ui.view,arch_db:sale.report_saleorder_document
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Invoicing Address:"
-msgstr ""
+msgstr "Adresă de facturare:"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_product_product__invoice_policy
@@ -2224,7 +2233,7 @@ msgstr "Arată grozav!"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Atașament principal"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -2239,7 +2248,7 @@ msgstr "Manual"
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__manual
 msgid "Manual Payment"
-msgstr ""
+msgstr "Plată Manuală"
 
 #. module: sale
 #: model:ir.model.fields.selection,name:sale.selection__product_template__service_type__manual
@@ -2263,7 +2272,7 @@ msgstr "Marje"
 #. module: sale
 #: model:ir.actions.server,name:sale.model_sale_order_action_quotation_sent
 msgid "Mark Quotation as Sent"
-msgstr ""
+msgstr "Marchează oferta ca trimisă"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.account_invoice_form
@@ -2286,12 +2295,12 @@ msgstr "Mediu"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_seller_account
 msgid "Merchant Account ID"
-msgstr ""
+msgstr "ID Cont Comerciant"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Eroare livrare mesaj"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_warn_msg
@@ -2365,7 +2374,7 @@ msgstr "Ofertă nouă"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Data limită pentru următoarea activitate"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_summary
@@ -2445,7 +2454,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Numărul de erori"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__message_needaction_counter
@@ -2567,7 +2576,7 @@ msgstr "Comandă #"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_advance_payment_inv__count
 msgid "Order Count"
-msgstr ""
+msgstr "Nr. Comenzi"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -2675,7 +2684,7 @@ msgstr "Alt colector de plată"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_payment_acquirer_onboarding_wizard__paypal_pdt_token
 msgid "PDT Identity Token"
-msgstr ""
+msgstr "Token de identitate PDT"
 
 #. module: sale
 #: model:ir.actions.report,name:sale.action_report_pro_forma_invoice
@@ -2696,7 +2705,7 @@ msgstr "Țara parteneră"
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "Pay & Confirm"
-msgstr ""
+msgstr "Plătiți și confirmați"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
@@ -2724,7 +2733,7 @@ msgstr "Plata cu un alt colector de plăți"
 #: model:ir.model.fields.selection,name:sale.selection__res_company__sale_onboarding_payment_method__paypal
 #: model:ir.model.fields.selection,name:sale.selection__sale_payment_acquirer_onboarding_wizard__payment_method__paypal
 msgid "PayPal"
-msgstr ""
+msgstr "PayPal"
 
 #. module: sale
 #: model:ir.model,name:sale.model_payment_acquirer
@@ -2785,7 +2794,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__access_url
 msgid "Portal Access URL"
-msgstr ""
+msgstr "Adresă URL Portal"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order_line__price_reduce
@@ -3175,7 +3184,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Eroare livrare SMS"
 
 #. module: sale
 #. openerp-web
@@ -3189,7 +3198,7 @@ msgstr "Comadă vânzare"
 #: model:ir.model.fields,field_description:sale.field_res_partner__sale_order_count
 #: model:ir.model.fields,field_description:sale.field_res_users__sale_order_count
 msgid "Sale Order Count"
-msgstr ""
+msgstr "Numărul comenzilor de vânzare"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__group_warning_sale
@@ -3476,6 +3485,8 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
 msgid "Sell variants of a product using attributes (size, color, etc.)"
 msgstr ""
+"Vindeți variante ale unui produs folosind atribute (dimensiune, culoare "
+"etc.)"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
@@ -3598,7 +3609,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sale.field_sale_order__signature
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_content
 msgid "Signature"
-msgstr "Semnatură"
+msgstr "Semnătură"
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3841,7 +3852,7 @@ msgstr ""
 #: code:addons/sale/controllers/portal.py:0
 #, python-format
 msgid "The order is not in a state requiring customer signature."
-msgstr ""
+msgstr "Comanda nu este într-o stare care necesită semnătura clientului."
 
 #. module: sale
 #: code:addons/sale/models/payment.py:0
@@ -3908,7 +3919,7 @@ msgstr "Valoarea avansului trebuie să fie pozitivă"
 #: code:addons/sale/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "There are"
-msgstr ""
+msgstr "Sunt"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.portal_my_orders
@@ -3944,6 +3955,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Acesta este un nume care vă ajută să țineți evidența diferitelor eforturi de"
+" campanie, e.g. Fall_Drive, Christmas_Special"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
@@ -3956,6 +3969,7 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
+"Aceasta este metoda de livrare, de ex. Carte poștală, e-mail sau Banner"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__source_id
@@ -3963,6 +3977,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Aceasta este sursa link-ului, de ex. Motor de căutare, un alt domeniu sau "
+"numele listei de e-mailuri"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4039,6 +4055,9 @@ msgid ""
 "list view and click on 'Portal Access Management' option in the dropdown "
 "menu *Action*."
 msgstr ""
+"Pentru a trimite invitații în modul B2B, deschideți un contact sau selectați"
+" mai multe din vizualizarea listelor și faceți clic pe opțiunea „Portal "
+"Acces Management” din meniul derulant * Action"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_filter
@@ -4097,7 +4116,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipul activității de excepție din înregistrare."
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_config_settings__module_delivery_ups
@@ -4152,7 +4171,7 @@ msgstr "Unități de măsură"
 #. module: sale
 #: model:ir.ui.menu,name:sale.menu_product_uom_categ_form_action
 msgid "Units of Measure Categories"
-msgstr ""
+msgstr "Categorii unități de măsură"
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_sales_order_auto_done_setting

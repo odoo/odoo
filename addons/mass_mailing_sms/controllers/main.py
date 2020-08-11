@@ -42,19 +42,19 @@ class MailingSMSController(http.Controller):
         if not check_res.get('trace'):
             return werkzeug.utils.redirect('/web')
         country_code = request.session.get('geoip', False) and request.session.geoip.get('country_code', False) if request.session.get('geoip') else None
-        trace = check_res['trace']
-        mailing_list_ids = trace.mass_mailing_id.contact_list_ids
-
         # parse and validate number
         sms_number = post.get('sms_number', '').strip(' ')
         sanitize_res = phone_validation.phone_sanitize_numbers([sms_number], country_code, None)[sms_number]
         tocheck_number = sanitize_res['sanitized'] or sms_number
 
+        trace = check_res['trace'].filtered(lambda r: r.sms_number == tocheck_number)[:1]
+        mailing_list_ids = trace.mass_mailing_id.contact_list_ids
+
         # compute opt-out / blacklist information
         lists_optout = request.env['mailing.list'].sudo()
         lists_optin = request.env['mailing.list'].sudo()
         unsubscribe_error = False
-        if tocheck_number and trace.sms_number == tocheck_number:
+        if tocheck_number and trace:
             if mailing_list_ids:
                 subscriptions = request.env['mailing.contact.subscription'].sudo().search([
                     ('list_id', 'in', mailing_list_ids.ids),
@@ -72,7 +72,7 @@ class MailingSMSController(http.Controller):
                 ('list_id', 'not in', mailing_list_ids.ids),
                 ('opt_out', '=', False),
             ]).mapped('list_id')
-        elif tocheck_number and trace.sms_number != tocheck_number:
+        elif tocheck_number:
             unsubscribe_error = _('Number %s not found' % tocheck_number)
         else:
             unsubscribe_error = sanitize_res['msg']

@@ -9,14 +9,17 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
+# Stefan Stieranka <stieranka@itec.sk>, 2020
+# Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,7 +31,7 @@ msgstr ""
 #: code:addons/gamification/models/challenge.py:0
 #, python-format
 msgid "%s has joined the challenge"
-msgstr ""
+msgstr "%s sa pripojil k výzve"
 
 #. module: gamification
 #: code:addons/gamification/models/challenge.py:0
@@ -533,6 +536,7 @@ msgid "Appears in"
 msgstr "Objavuje sa v"
 
 #. module: gamification
+#: model_terms:ir.ui.view,arch_db:gamification.badge_form_view
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Archived"
 msgstr "Archivovaný"
@@ -798,7 +802,7 @@ msgid ""
 "specific access to the applications they need to use in the system."
 msgstr ""
 "Vytvor a spravuj používateľov ktorý sa budú prihlasovať do systému. "
-"Používatelia môžu byť deaktivovaný, môžu mať určené časy počas ktorých sa "
+"Používatelia môžu byť deaktivovaní, môžu mať určené časy počas ktorých sa "
 "budú alebo nebudú môcť pripojiť k systému. Môžu im byť pridelené skupiny pre"
 " sprístupnenie aplikácií ktoré potrebujú používať v systéme."
 
@@ -1014,13 +1018,13 @@ msgstr "Odberatelia"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_channel_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
+msgstr "Odberatelia (kanály)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_partner_ids
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__reward_first_id
@@ -1309,25 +1313,25 @@ msgstr "Obrázok"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_1024
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_1024
 msgid "Image 1024"
-msgstr ""
+msgstr "Obrázok 1024"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_128
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_128
 msgid "Image 128"
-msgstr ""
+msgstr "Obrázok 128"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_256
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_256
 msgid "Image 256"
-msgstr ""
+msgstr "Obrázok 256"
 
 #. module: gamification
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__image_512
 #: model:ir.model.fields,field_description:gamification.field_gamification_karma_rank__image_512
 msgid "Image 512"
-msgstr ""
+msgstr "Obrázok 512"
 
 #. module: gamification
 #: model:ir.model.fields.selection,name:gamification.selection__gamification_challenge__state__inprogress
@@ -1661,7 +1665,7 @@ msgstr "Počet akcií"
 #: model:ir.model.fields,field_description:gamification.field_gamification_badge__message_has_error_counter
 #: model:ir.model.fields,field_description:gamification.field_gamification_challenge__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Číslo chýb"
 
 #. module: gamification
 #: model:ir.model.fields,help:gamification.field_gamification_badge__message_needaction_counter
@@ -1946,7 +1950,7 @@ msgstr "Naplánovať"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_badge_view_search
 msgid "Search Badge"
-msgstr ""
+msgstr "Vyhľadávací znak"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.challenge_search_view
@@ -1956,17 +1960,17 @@ msgstr "Vyhľadať výzvy"
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_definition_search_view
 msgid "Search Goal Definitions"
-msgstr "Vyhľadať definície cieľov"
+msgstr "Hľadať definície cieľov"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.goal_search_view
 msgid "Search Goals"
-msgstr "Vyhľadať ciele"
+msgstr "Hľadať ciele"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.gamification_karma_ranks_view_search
 msgid "Search Ranks"
-msgstr ""
+msgstr "Hľadať hodnosť"
 
 #. module: gamification
 #: model_terms:ir.ui.view,arch_db:gamification.badge_form_view

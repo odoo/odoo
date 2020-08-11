@@ -26,14 +26,14 @@
 # Marko Happonen <marko.happonen@sprintit.fi>, 2019
 # Jenni Heikkilä <jenni.heikkila@sv-oy.fi>, 2019
 # Tommi Rintala <tommi.rintala@gmail.com>, 2019
-# Martin Trigaux, 2019
 # Kari Lindgren <kari.lindgren@emsystems.fi>, 2019
 # Svante Suominen <svante.suominen@web-veistamo.fi>, 2019
 # Veikko Väätäjä <veikko.vaataja@gmail.com>, 2019
-# Miku Laitinen <miku.laitinen@gmail.com>, 2019
 # Tuomas Lyyra <tuomas.lyyra@legenda.fi>, 2019
 # Tuomo Aura <tuomo.aura@web-veistamo.fi>, 2020
+# Martin Trigaux, 2020
 # Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020
+# Miku Laitinen <miku.laitinen@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -41,7 +41,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Jarmo Kortetjärvi <jarmo.kortetjarvi@gmail.com>, 2020\n"
+"Last-Translator: Miku Laitinen <miku.laitinen@gmail.com>, 2020\n"
 "Language-Team: Finnish (https://www.transifex.com/odoo/teams/41243/fi/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,7 +82,7 @@ msgstr "${(object.name or '').replace('/','-')}"
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
 msgid "${object.company_id.name} Invoice (Ref ${object.name or 'n/a'})"
-msgstr ""
+msgstr "${object.company_id.name} Lasku (viite ${object.name or '-'})"
 
 #. module: account
 #: model:mail.template,subject:account.mail_template_data_payment_receipt
@@ -111,7 +111,7 @@ msgstr "%s (kopio)"
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "%s (rounding)"
-msgstr ""
+msgstr "%s (pyöristys)"
 
 #. module: account
 #: code:addons/account/models/account.py:0
@@ -236,6 +236,36 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        Hei\n"
+"        % if object.partner_id.parent_id:\n"
+"            ${object.partner_id.name} (${object.partner_id.parent_id.name}),\n"
+"        % else:\n"
+"            ${object.partner_id.name},\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Tässä on\n"
+"        % if object.name:\n"
+"            laskunne <strong>${object.name}</strong>\n"
+"        % else:\n"
+"            laskunne\n"
+"        %endif\n"
+"        % if object.invoice_origin:\n"
+"            (tilausviite: ${object.invoice_origin})\n"
+"        % endif\n"
+"        summaltaan <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        toimittajalta ${object.company_id.name}.\n"
+"        % if object.invoice_payment_state == 'paid':\n"
+"            Lasku on jo maksettu.\n"
+"        % else:\n"
+"            Pyydämme maksamaan laskun eräpäivään mennessä.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        Älä epäröi ottaa meihin yhteyttä, jos sinulla on kysyttävää.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -319,6 +349,8 @@ msgid ""
 "<span attrs=\"{'invisible':[('reconciled_invoices_count','&gt;',1)]}\">Invoice</span>\n"
 "                                <span attrs=\"{'invisible':[('reconciled_invoices_count','&lt;=',1)]}\">Invoices</span>"
 msgstr ""
+"<span attrs=\"{'invisible':[('reconciled_invoices_count','&gt;',1)]}\">Lasku</span>\n"
+"                                <span attrs=\"{'invisible':[('reconciled_invoices_count','&lt;=',1)]}\">Laskuja</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_invoices
@@ -359,6 +391,8 @@ msgid ""
 "<span class=\"badge badge-warning text-uppercase "
 "o_sample_data_label\">Sample data</span>"
 msgstr ""
+"<span class=\"badge badge-warning text-uppercase "
+"o_sample_data_label\">Esimerkkidata</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -388,6 +422,10 @@ msgid ""
 "False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', "
 "'in_refund', 'out_receipt', 'in_receipt'))]}\"> or </span>"
 msgstr ""
+"<span class=\"o_form_label mx-3 oe_edit_only\" attrs=\"{'invisible': [ '|', "
+"'|', '|', ('state', '!=', 'draft'), ('invoice_payment_term_id', '!=', "
+"False), ('type', 'not in', ('out_invoice', 'out_refund', 'in_invoice', "
+"'in_refund', 'out_receipt', 'in_receipt'))]}\"> tai </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -396,6 +434,9 @@ msgid ""
 "[('invoice_sequence_number_next_prefix', '=', False)]}\">First "
 "Number:</span>"
 msgstr ""
+"<span class=\"o_form_label\" attrs=\"{'invisible': "
+"[('invoice_sequence_number_next_prefix', '=', False)]}\">Ensimmäinen "
+"numero:</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -418,12 +459,12 @@ msgstr ""
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Default Incoterm</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Oletus Incoterm</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "<span class=\"o_form_label\">Default Sending Options</span>"
-msgstr ""
+msgstr "<span class=\"o_form_label\">Lähetyksen oletusasetukset</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -440,6 +481,8 @@ msgid ""
 "<span class=\"o_form_label\">Fiscal Localization</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Verotuksen lokalisointi</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -456,6 +499,8 @@ msgid ""
 "<span class=\"o_form_label\">Rounding Method</span>\n"
 "                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 msgstr ""
+"<span class=\"o_form_label\">Pyöristystapa</span>\n"
+"                                    <span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-specific.\" aria-label=\"Values set here are company-specific.\" groups=\"base.group_multi_company\" role=\"img\"/>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_payment_term_line_form
@@ -508,7 +553,7 @@ msgstr "<span role = \"separator\"> Näytä </span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in General Ledger\">Pääkirjan saldo</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -563,7 +608,7 @@ msgstr "<span>Uusi lasku</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>New Entry</span>"
-msgstr ""
+msgstr "<span>Uusi merkintä</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -593,7 +638,7 @@ msgstr "<span>Määrä</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>Viite</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -618,12 +663,12 @@ msgstr "<span>Yksikköhinta</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Bills</span>"
-msgstr ""
+msgstr "<span>Lataa toimittajalaskuja</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span>Upload Invoices</span>"
-msgstr ""
+msgstr "<span>Lataa asiakaslaskuja </span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -686,7 +731,7 @@ msgstr "<strong>Eräpäivä:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Ending Balance</strong>"
-msgstr ""
+msgstr "<strong>Loppusaldo</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -736,7 +781,7 @@ msgstr "<strong>Lähde:</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_statement
 msgid "<strong>Starting Balance</strong>"
-msgstr ""
+msgstr "<strong>Alkusaldo</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
@@ -1293,7 +1338,7 @@ msgstr "Kirjanpidon yleiskatsaus"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #, python-format
 msgid "Accounting Periods"
-msgstr ""
+msgstr "Kirjanpitojaksot"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -2287,7 +2332,7 @@ msgstr "Pankin tiliote"
 #: code:addons/account/models/account_bank_statement.py:0
 #, python-format
 msgid "Bank Statement %s"
-msgstr "% Tiliotteet"
+msgstr "Tiliote %s"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -2878,7 +2923,7 @@ msgstr "Tarkasta sulkeva tase"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Check all"
-msgstr ""
+msgstr "Valitse kaikki"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_bank_statement__is_difference_zero
@@ -4507,7 +4552,7 @@ msgstr "EU: n digitaalisten tavaroiden arvonlisävero"
 #. module: account
 #: model:account.incoterms,name:account.incoterm_EXW
 msgid "EX WORKS"
-msgstr "EX toimii"
+msgstr "EX WORKS"
 
 #. module: account
 #: code:addons/account/models/chart_template.py:0
@@ -6275,7 +6320,7 @@ msgstr "Päiväkirjaviennin numero"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal_group__name
 msgid "Journal Group"
-msgstr ""
+msgstr "Päiväkirjaryhmä"
 
 #. module: account
 #: model:ir.actions.act_window,name:account.action_account_journal_group_list
@@ -7360,6 +7405,7 @@ msgstr ""
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "Maksamaton"
 
@@ -7699,16 +7745,16 @@ msgid ""
 "otherwise it would make a gap in the numbering. You should book an entry and"
 " make a regular revert of it in case you want to cancel it."
 msgstr ""
-"Toiminto ei ole sallittu. Koska lausuntorivisi on jo saanut numeron (% s), "
-"et voi sovittaa sitä kokonaan olemassa oleviin lokimerkintöihin, sillä "
-"muutoin numerointiin tulisi aukko. Sinun pitäisi varata merkintä ja tehdä se"
-" säännöllisesti, jos haluat peruuttaa sen."
+"Toiminto ei ole sallittu. Koska tilioterivisi on jo saanut numeron (%s), et "
+"voi hyvittää sitä kokonaan kun päiväkirjan kirjauksia on olemassa. Muutoin "
+"numerointiin tulisi aukko. Sinun pitäisi tehdä kirjaus ja tehdä normaali "
+"vastakirjaus, jos haluat perua sen.."
 
 #. module: account
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Operation not supported"
-msgstr ""
+msgstr "Toiminto ei ole tuettu"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -8023,7 +8069,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_payment.xml:0
 #, python-format
 msgid "Payment Journal:"
-msgstr ""
+msgstr "Maksupäiväkirja"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_form
@@ -8775,7 +8821,7 @@ msgstr "Tallenna valuuttatapahtumat"
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "Recursion found for tax '%s'."
-msgstr "Vero '% s' löytyi rekursiosta."
+msgstr "Verolle '%s' löytyi rekursio."
 
 #. module: account
 #. openerp-web
@@ -9116,7 +9162,7 @@ msgstr "Tarkasta"
 #: model:ir.model.fields,field_description:account.field_account_account__root_id
 #: model:ir.model.fields,field_description:account.field_account_account_template__root_id
 msgid "Root"
-msgstr ""
+msgstr "Juuri"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__res_company__tax_calculation_rounding_method__round_globally
@@ -11774,13 +11820,13 @@ msgstr "Siirrä"
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Transfer from %s"
-msgstr "Siirto kohteesta% s"
+msgstr "Siirrä kohteesta %s"
 
 #. module: account
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "Transfer to %s"
-msgstr "Siirrä kohteeseen% s"
+msgstr "Siirrä kohteeseen %s"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_payment_search
@@ -12497,7 +12543,7 @@ msgid ""
 "You cannot add/modify entries prior to and inclusive of the lock date %s. "
 "Check the company settings or ask someone with the 'Adviser' role"
 msgstr ""
-"Et voi lisätä / muokata merkintöjä ennen lukituksen päivämäärää% s. Tarkista"
+"Et voi lisätä / muokata merkintöjä ennen lukituksen päivämäärää %s. Tarkista"
 " yrityksen asetukset tai kysy joltain, jolla on neuvonantajan rooli"
 
 #. module: account
@@ -12757,7 +12803,7 @@ msgstr ""
 #: code:addons/account/models/account_payment.py:0
 #, python-format
 msgid "You have to define a sequence for %s in your company."
-msgstr "Yrityksessäsi on määritettävä sekvenssi% s: lle."
+msgstr "Yrityksessäsi on määritettävä sekvenssi %s: lle."
 
 #. module: account
 #: code:addons/account/wizard/pos_box.py:0
@@ -12820,6 +12866,12 @@ msgstr ""
 "Sinun pitäisi määrittää Loss Exchange Rate -tilin kirjanpitoasetuksissa, "
 "jotta voit hallita automaattisesti valuuttakurssien välisiin eroihin "
 "liittyviä kirjanpitotietoja."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -12956,7 +13008,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "reconcile"
-msgstr ""
+msgstr "täsmäytä"
 
 #. module: account
 #. openerp-web
@@ -13018,7 +13070,7 @@ msgstr "tapahtumia"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "unpaid invoices"
-msgstr ""
+msgstr "maksamattomat laskut"
 
 #. module: account
 #. openerp-web

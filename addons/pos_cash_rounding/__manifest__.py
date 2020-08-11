@@ -10,6 +10,7 @@
     'description': "",
     'depends': ['point_of_sale'],
     'data': [
+        'security/ir.model.access.csv',
         'views/res_config_settings_view.xml',
         'views/pos_config_view.xml',
         'views/account_cash_rounding_view.xml',

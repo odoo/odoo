@@ -2255,7 +2255,7 @@ msgstr "銀行帳戶"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_journal__bank_statements_source
 msgid "Bank Feeds"
-msgstr "銀行費用"
+msgstr "銀行提要"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_setup_bank_manual_config__bank_bic
@@ -2265,7 +2265,7 @@ msgstr "銀行識別代碼"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__module_account_yodlee
 msgid "Bank Interface - Sync your bank feeds automatically"
-msgstr "銀行接口－自動同步銀行費用"
+msgstr "銀行接口－自動同步銀行提要"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_company__bank_journal_ids
@@ -3218,7 +3218,7 @@ msgstr "計算餘額"
 msgid ""
 "Computed field, listing the tax grids impacted by this line, and the amount "
 "it applies to each of them."
-msgstr "計算字段，列出受此行影響的稅網，以及它應用於每個稅網的金額。"
+msgstr "計算字段，列出受此行影響的稅務統計，以及它應用於每個稅務統計的金額。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_reconcile_model_form
@@ -3775,7 +3775,7 @@ msgstr "流動負債"
 #. module: account
 #: model:account.account.type,name:account.data_unaffected_earnings
 msgid "Current Year Earnings"
-msgstr "當本年度收入"
+msgstr "目前年度收入"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_payment__partner_type__customer
@@ -5698,7 +5698,7 @@ msgstr "貿易條款用來在買家和賣家之間區分交易成本和責任。
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move_line__tax_line_id
 msgid "Indicates that this journal item is a tax line"
-msgstr "表示此日記帳專案是稅行"
+msgstr "表示此日記帳項目是稅行"
 
 #. module: account
 #. openerp-web
@@ -6691,12 +6691,12 @@ msgstr "行數"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__show_line_subtotals_tax_selection
 msgid "Line Subtotals Tax Display"
-msgstr "本行總稅額"
+msgstr "訂單行的小計稅金顯示"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Line subtotals tax display"
-msgstr "本行總稅額"
+msgstr "訂單行的小計稅金顯示"
 
 #. module: account
 #: code:addons/account/models/account_move.py:0
@@ -7290,6 +7290,7 @@ msgstr "未到期"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "未付"
 
@@ -8150,7 +8151,7 @@ msgstr "價格百分比"
 #: model:ir.model.fields.selection,name:account.selection__account_tax__amount_type__division
 #: model:ir.model.fields.selection,name:account.selection__account_tax_template__amount_type__division
 msgid "Percentage of Price Tax Included"
-msgstr "價格百分比"
+msgstr "含稅價格百分比"
 
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_reconcile_model_template__second_amount_type__percentage
@@ -8708,7 +8709,7 @@ msgstr "參考."
 #: model:ir.model.fields,field_description:account.field_account_move_line__ref
 #, python-format
 msgid "Reference"
-msgstr "編號"
+msgstr "摘要"
 
 #. module: account
 #: model:ir.model.fields,help:account.field_account_payment__payment_reference
@@ -8787,14 +8788,14 @@ msgstr "相關的單據模型"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Repartition for Credit Notes"
-msgstr "重新分配信用票據"
+msgstr "折讓單區塊"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__invoice_repartition_line_ids
 #: model:ir.model.fields,field_description:account.field_account_tax_template__invoice_repartition_line_ids
 #: model_terms:ir.ui.view,arch_db:account.view_tax_form
 msgid "Repartition for Invoices"
-msgstr "重新分配憑單"
+msgstr "憑單區塊"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax__refund_repartition_line_ids
@@ -9759,7 +9760,7 @@ msgstr "有待被確認的樣品報價單步驟的狀態"
 #: model:ir.model.fields,field_description:account.field_account_move_line__statement_id
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "Statement"
-msgstr "結算單"
+msgstr "對帳單"
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -10024,7 +10025,7 @@ msgstr "未稅"
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
 #: model_terms:ir.ui.view,arch_db:account.view_move_line_tree_grouped
 msgid "Tax Grids"
-msgstr "稅收網"
+msgstr "稅務統計"
 
 #. module: account
 #: model:ir.model,name:account.model_account_tax_group
@@ -10933,7 +10934,7 @@ msgstr "因為憑單不是打開狀態所以付款不能完成!"
 #. module: account
 #: model:ir.model.fields,help:account.field_account_move__invoice_payment_ref
 msgid "The payment reference to set on journal items."
-msgstr "在日記帳專案上設定的付款參考。"
+msgstr "在日記帳項目上設定的付款參考。"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
@@ -11544,7 +11545,7 @@ msgstr "所有的交易行."
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.res_config_settings_view_form
 msgid "Track costs &amp; revenues by project, department, etc"
-msgstr "按專案，追蹤成本 &amp; 收入等等"
+msgstr "按項目，追蹤成本 &amp; 收入等等"
 
 #. module: account
 #. openerp-web
@@ -12586,6 +12587,12 @@ msgid ""
 "settings, to manage automatically the booking of accounting entries related "
 "to differences between exchange rates."
 msgstr "您應該在會計配置配置 '匯率損失科目' ，自動管理與匯率之間的差額的會計分錄的預訂."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

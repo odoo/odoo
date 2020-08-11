@@ -7,14 +7,15 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:12+0000\n"
+"POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,7 +31,7 @@ msgstr "Stôl pre štyroch"
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.report_saleorder_document_inherit_sale_management
 msgid "<span>Options</span>"
-msgstr ""
+msgstr "<span>Možnosti</span>"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_template__active
@@ -74,6 +75,7 @@ msgid "All Sales"
 msgstr "Všetky predaje"
 
 #. module: sale_management
+#: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_search
 msgid "Archived"
 msgstr "Archivovaný"
@@ -191,7 +193,7 @@ msgstr "Prehľad"
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_form_quote
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_portal_content_inherit_sale_management
 msgid "Disc.%"
-msgstr ""
+msgstr "Disc.%"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__discount
@@ -350,7 +352,7 @@ msgstr "Možnosti"
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__is_present
 msgid "Present on Quotation"
-msgstr ""
+msgstr "Prezentácia ponuky"
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__product_id
@@ -536,6 +538,8 @@ msgid ""
 "This field will be checked if the option line's product is already present "
 "in the quotation."
 msgstr ""
+"Toto pole sa skontroluje, ak je možnosť produktových riadkov už v cenovej "
+"ponuke."
 
 #. module: sale_management
 #: model:ir.model.fields,field_description:sale_management.field_sale_order_option__price_unit
@@ -601,12 +605,14 @@ msgid ""
 "Your quotation contains products from company %s whereas your quotation belongs to company %s. \n"
 " Please change the company of your quotation or remove the products from other companies (%s)."
 msgstr ""
+"Vaša ponuka obsahuje produkty od spoločnosti %s zatiaľ čo vaša Cenová ponuka patrí spoločnosti %s. \n"
+" Zmeňte spoločnosť v Cenovej ponuke alebo odstráňte produkty od iných spoločností (%s)."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
 #, python-format
 msgid "Your template cannot contain products from multiple companies."
-msgstr ""
+msgstr "Vaša šablóna nemôže obsahovať produkty od viacerých spoločností."
 
 #. module: sale_management
 #: code:addons/sale_management/models/sale_order_template.py:0
@@ -615,6 +621,8 @@ msgid ""
 "Your template contains products from company %s whereas your template belongs to company %s. \n"
 " Please change the company of your template or remove the products from other companies."
 msgstr ""
+"Vaša šablóna obsahuje produkty od spoločnosti %s zatiaľ čo vaša šablóna patrí spoločnosti %s. \n"
+" Zmeňte šablónu spoločnosti alebo odstráňte produkty od iných spoločností."
 
 #. module: sale_management
 #: model_terms:ir.ui.view,arch_db:sale_management.sale_order_template_view_form

@@ -3,9 +3,9 @@
 # 	* survey
 # 
 # Translators:
-# Marius Stedjan <marius@stedjan.com>, 2019
 # Martin Trigaux, 2019
 # Jorunn D. Newth, 2019
+# Marius Stedjan <marius@stedjan.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -13,7 +13,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jorunn D. Newth, 2019\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -480,7 +480,7 @@ msgstr ""
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_form
 msgid "Add a section"
-msgstr ""
+msgstr "Legg til seksjon"
 
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_invite_view_form
@@ -673,7 +673,7 @@ msgstr "Sertifikat"
 #. module: survey
 #: model_terms:ir.ui.view,arch_db:survey.survey_survey_view_search
 msgid "Certification"
-msgstr ""
+msgstr "Sertifisering"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__certification_badge_id
@@ -1167,12 +1167,12 @@ msgstr "Fra"
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_badge
 msgid "Gamification Badge"
-msgstr ""
+msgstr "Spillifiseringsmedalje"
 
 #. module: survey
 #: model:ir.model,name:survey.model_gamification_challenge
 msgid "Gamification Challenge"
-msgstr ""
+msgstr "Spillifiseringsutfordring"
 
 #. module: survey
 #: model:survey.question,question:survey.survey_feedback_p1
@@ -1266,7 +1266,7 @@ msgstr "Ikon"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikon for å indikere aktivitetsunntak."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input__token
@@ -1277,13 +1277,13 @@ msgstr "Identifikasjonstoken"
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread
 msgid "If checked, new messages require your attention."
-msgstr ""
+msgstr "Hvis huket av, vil nye meldinger kreve din oppmerksomhet."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "Hvis huket av, har enkelte meldinger leveringsfeil."
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__users_can_go_back
@@ -1498,7 +1498,7 @@ msgstr "Innlogging påkrevd"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Hovedvedlegg"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__constr_mandatory
@@ -1574,7 +1574,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Melding for feil ved levering"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_ids
@@ -1748,7 +1748,7 @@ msgstr ""
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Antall feil"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_needaction_counter
@@ -1758,7 +1758,7 @@ msgstr "Antall meldinger som krever handling"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "Antall meldinger med leveringsfeil"
 
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__message_unread_counter
@@ -2099,7 +2099,7 @@ msgstr "Matriserader"
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_survey__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "SMS Leveringsfeil"
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_user_input_line__answer_score
@@ -2430,7 +2430,7 @@ msgstr "Tittel på undersøkelse"
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input
 msgid "Survey User Input"
-msgstr ""
+msgstr "Survey User Input"
 
 #. module: survey
 #: model:ir.model,name:survey.model_survey_user_input_line
@@ -2556,6 +2556,20 @@ msgstr ""
 #. module: survey
 #: model:survey.label,value:survey.survey_feedback_p2_q2_row4
 msgid "The checkout process is clear and secure"
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey.js:0
+#, python-format
+msgid "The date you selected is greater than the maximum date: "
+msgstr ""
+
+#. module: survey
+#. openerp-web
+#: code:addons/survey/static/src/js/survey.js:0
+#, python-format
+msgid "The date you selected is lower than the minimum date: "
 msgstr ""
 
 #. module: survey
@@ -2777,7 +2791,7 @@ msgstr "Type svar"
 #. module: survey
 #: model:ir.model.fields,help:survey.field_survey_survey__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Type for unntaksaktiviteten på posten."
 
 #. module: survey
 #: model:ir.model.fields,field_description:survey.field_survey_question__labels_ids

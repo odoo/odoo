@@ -183,9 +183,7 @@ var DateWidget = Widget.extend({
         this.set({'value': value});
         var formatted_value = value ? this._formatClient(value) : null;
         this.$input.val(formatted_value);
-        this.__libInput++;
-        this.$el.datetimepicker('date', value || null);
-        this.__libInput--;
+        this._setLibInputValue(value);
     },
 
     //--------------------------------------------------------------------------
@@ -230,6 +228,15 @@ var DateWidget = Widget.extend({
      */
     _parseClient: function (v) {
         return field_utils.parse[this.type_of_date](v, null, {timezone: false});
+    },
+    /**
+     * @private
+     * @param {Moment|false} value
+     */
+    _setLibInputValue: function (value) {
+        this.__libInput++;
+        this.$el.datetimepicker('date', value || null);
+        this.__libInput--;
     },
     /**
      * @private

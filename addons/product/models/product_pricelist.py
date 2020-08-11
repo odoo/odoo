@@ -409,7 +409,7 @@ class PricelistItem(models.Model):
              "Expressed in the default unit of measure of the product.")
     applied_on = fields.Selection([
         ('3_global', 'All Products'),
-        ('2_product_category', ' Product Category'),
+        ('2_product_category', 'Product Category'),
         ('1_product', 'Product'),
         ('0_product_variant', 'Product Variant')], "Apply On",
         default='3_global', required=True,

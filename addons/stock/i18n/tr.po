@@ -900,6 +900,12 @@ msgid "Available Products"
 msgstr "Uygun Ürünler"
 
 #. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
@@ -3087,7 +3093,7 @@ msgstr "LN/SN:"
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty____last_update
 #: model:ir.model.fields,field_description:stock.field_stock_warn_insufficient_qty_scrap____last_update
 msgid "Last Modified on"
-msgstr "Son Güncelleme"
+msgstr "Son Düzenleme"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_procurement_group__write_uid
@@ -7098,14 +7104,8 @@ msgstr "Tartılmış Ürün"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Bu rota için bir depo seçildiğinde, ürünler bu depoya geçtiğinde bu rota "
-"varsayılan rota olarak görülmelidir. Bu hareket, Ürün veya Ürün Kategorileri"
-" üzerindeki rotalar veya satınalma hakkındaki tercih edilen rotalar "
-"tarafından geçersiz kılınabilir"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7116,19 +7116,13 @@ msgstr "Tüm ürünler hazır olduğunda"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"İşaretlendiğinde, rota ürün formunun Envanter sekmesinde seçilebilir "
-"olacaktır. Depo rotasına göre öncelik verilecek."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"İşaretlendiğinde, rota ürün kategorisi üzerinde seçilebilir olacaktır. Depo "
-"rotasına göre öncelik verilecek."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

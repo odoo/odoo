@@ -760,6 +760,8 @@ def remove_accents(input_str):
     """Suboptimal-but-better-than-nothing way to replace accented
     latin letters by an ASCII equivalent. Will obviously change the
     meaning of input_str and work only for some cases"""
+    if not input_str:
+        return input_str
     input_str = ustr(input_str)
     nkfd_form = unicodedata.normalize('NFKD', input_str)
     return u''.join([c for c in nkfd_form if not unicodedata.combining(c)])
@@ -1426,9 +1428,10 @@ def traverse_containers(val, type_):
     through standard containers (non-string mappings or sequences) *unless*
     they're selected by the type filter
     """
+    from odoo.models import BaseModel
     if isinstance(val, type_):
         yield val
-    elif isinstance(val, (str, bytes)):
+    elif isinstance(val, (str, bytes, BaseModel)):
         return
     elif isinstance(val, Mapping):
         for k, v in val.items():

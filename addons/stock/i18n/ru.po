@@ -6,7 +6,7 @@
 # Victor Safronovich <vsafronovich@suvit.ru>, 2019
 # Denis Trepalin <zekarious@gmail.com>, 2019
 # Oleg Kuryan <oleg@ventor.tech>, 2019
-# Konstantin Korovin <korovin74@gmail.com>, 2019
+# Константин Коровин <korovin74@gmail.com>, 2019
 # Andrey Samorukov <andrey.samorukov@me.com>, 2019
 # Андрей Гусев <gaussgss@gmail.com>, 2019
 # Max Belyanin <maxbelyanin@gmail.com>, 2019
@@ -19,6 +19,7 @@
 # Pavel Kedrinskiy <pavel.py3@gmail.com>, 2019
 # Ivan Yelizariev <yelizariev@it-projects.info>, 2020
 # Martin Trigaux, 2020
+# Polina Alexandrova <polinaalexnder@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -26,7 +27,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Polina Alexandrova <polinaalexnder@gmail.com>, 2020\n"
 "Language-Team: Russian (https://www.transifex.com/odoo/teams/41243/ru/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -847,6 +848,12 @@ msgstr "Доступно"
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "Доступные продукты"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -2270,7 +2277,7 @@ msgstr ""
 #: model:ir.actions.act_window,name:stock.report_stock_quantity_action_product
 #: model:ir.ui.menu,name:stock.menu_forecast_inventory
 msgid "Forecasted Inventory"
-msgstr ""
+msgstr "Прогнозируемые запасы"
 
 #. module: stock
 #: code:addons/stock/models/product.py:0
@@ -2291,7 +2298,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:stock.selection__report_stock_quantity__state__forecast
 #: model_terms:ir.ui.view,arch_db:stock.stock_report_view_search
 msgid "Forecasted Stock"
-msgstr ""
+msgstr " Прогнозируемый склад"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_product_product__free_qty
@@ -6360,7 +6367,7 @@ msgstr ""
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
 msgid "This note is added to delivery orders."
-msgstr ""
+msgstr "Примечание для заказов на доставку"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6368,6 +6375,7 @@ msgid ""
 "This note is added to internal transfer orders (e.g. where to pick the "
 "product in the warehouse)."
 msgstr ""
+"Примечание для внутренних перемещений (например, где найти товар на складе)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_template_property_form
@@ -6375,6 +6383,7 @@ msgid ""
 "This note is added to receipt orders (e.g. where to store the product in the"
 " warehouse)."
 msgstr ""
+"Примечание для поступления товаров (например, где хранить товар на складе)"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_return_picking_form
@@ -6704,7 +6713,7 @@ msgstr "единицы"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
 msgid "Units Of Measure"
-msgstr "единицы измерения"
+msgstr "Единицы измерения товара"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_unit_measure_stock
@@ -6766,7 +6775,7 @@ msgstr "Разрезервировать"
 #: model:ir.ui.menu,name:stock.menu_stock_uom_form_action
 #: model_terms:ir.ui.view,arch_db:stock.stock_inventory_line_tree2
 msgid "UoM"
-msgstr "UoM"
+msgstr "ЕИТ"
 
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_stock_uom_categ_form_action
@@ -7042,14 +7051,8 @@ msgstr "Взвешенный Продукт"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"Если выбран склад для данного маршрута, то этот маршрут следует "
-"рассматривать как маршрут товаров по умолчанию для этого склада. Такое "
-"поведение может быть изменено с помощью маршрутов в Товарах/Категориях "
-"товаров или в предпочтительных маршрутах в Закупках"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7060,19 +7063,13 @@ msgstr "Когда все товары готовы"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Когда этот флажок установлен, маршрут будет выбран на вкладке Ресурсы в "
-"форме Продукт. Он будет иметь приоритет над маршрутом Склад. "
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Если установлено, маршрут будет выбираться для категории Продуктов. Он будет"
-" иметь приоритет перед складским маршрутом. "
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

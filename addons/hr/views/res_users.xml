@@ -216,9 +216,10 @@
                 <xpath expr="//header" position="inside">
                     <field name="share" invisible="1"/>
                     <field name="employee_ids" invisible="1"/>
+                    <field name="employee_id" invisible="1"/>
                     <button string="Create employee"
                             type="object" name="action_create_employee"
-                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('share', '=', True), ('employee_count', '>', 0)]}"/>
+                            attrs="{'invisible': ['|', '|', ('id', '=', False), ('share', '=', True), ('employee_id', '!=', False)]}"/>
                             <!-- share is not correctly recomputed because it depends on fields of reified view => invisible before saving (id=False) -->
                 </xpath>
                 <xpath expr="//div[@name='button_box']" position="inside">

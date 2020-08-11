@@ -72,7 +72,7 @@ class MaintenanceRequest(models.Model):
 
     @api.returns('self')
     def _default_employee_get(self):
-        return self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        return self.env.user.employee_id
 
     employee_id = fields.Many2one('hr.employee', string='Employee', default=_default_employee_get)
     department_id = fields.Many2one('hr.department', string='Department')
@@ -127,7 +127,7 @@ class MaintenanceRequest(models.Model):
         email = tools.email_split(msg.get('from')) and tools.email_split(msg.get('from'))[0] or False
         user = self.env['res.users'].search([('login', '=', email)], limit=1)
         if user:
-            employee = self.env['hr.employee'].search([('user_id', '=', user.id)], limit=1)
+            employee = self.env.user.employee_id
             if employee:
                 custom_values['employee_id'] = employee and employee[0].id
         return super(MaintenanceRequest, self).message_new(msg, custom_values=custom_values)

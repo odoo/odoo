@@ -141,6 +141,10 @@ class CustomerPortal(Controller):
         return groups
 
     def _prepare_portal_layout_values(self):
+        """Values for /my/* templates rendering.
+
+        Does not include the record counts.
+        """
         # get customer sales rep
         sales_user = False
         partner = request.env.user.partner_id
@@ -153,9 +157,16 @@ class CustomerPortal(Controller):
             'archive_groups': [],
         }
 
+    def _prepare_home_portal_values(self):
+        """Values for /my & /my/home routes template rendering.
+
+        Includes the record count for the displayed badges.
+        """
+        return self._prepare_portal_layout_values()
+
     @route(['/my', '/my/home'], type='http', auth="user", website=True)
     def home(self, **kw):
-        values = self._prepare_portal_layout_values()
+        values = self._prepare_home_portal_values()
         return request.render("portal.portal_my_home", values)
 
     @route(['/my/account'], type='http', auth='user', website=True)
@@ -174,10 +185,12 @@ class CustomerPortal(Controller):
             if not error:
                 values = {key: post[key] for key in self.MANDATORY_BILLING_FIELDS}
                 values.update({key: post[key] for key in self.OPTIONAL_BILLING_FIELDS if key in post})
-                values.update({'country_id': int(values.pop('country_id', 0))})
+                for field in set(['country_id', 'state_id']) & set(values.keys()):
+                    try:
+                        values[field] = int(values[field])
+                    except:
+                        values[field] = False
                 values.update({'zip': values.pop('zipcode', '')})
-                if values.get('state_id') == '':
-                    values.update({'state_id': False})
                 partner.sudo().write(values)
                 if redirect:
                     return request.redirect(redirect)

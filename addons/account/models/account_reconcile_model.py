@@ -447,6 +447,41 @@ class AccountReconcileModel(models.Model):
         with_tables += ', partners_table AS (' + partners_table + ')'
         return with_tables
 
+    def _get_select_communication_flag(self):
+        return r'''
+            -- Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
+            (
+                aml.name IS NOT NULL
+                AND
+                substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                AND
+                    regexp_split_to_array(substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+            )
+            OR
+                regexp_split_to_array(substring(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+            OR
+            (
+                move.ref IS NOT NULL
+                AND
+                substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
+                AND
+                    regexp_split_to_array(substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
+                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
+            )                                   AS communication_flag
+        '''
+
+    def _get_select_payment_reference_flag(self):
+        return r'''
+            -- Determine a matching or not with the statement line communication using the move.invoice_payment_ref.
+            (
+                move.invoice_payment_ref IS NOT NULL
+                AND
+                regexp_replace(move.invoice_payment_ref, '\s+', '', 'g') = regexp_replace(st_line.name, '\s+', '', 'g')
+            )                                   AS payment_reference_flag
+        '''
+
     def _get_invoice_matching_query(self, st_lines, excluded_ids=None, partner_map=None):
         ''' Get the query applying all rules trying to match existing entries with the given statement lines.
         :param st_lines:        Account.bank.statement.lines recordset.
@@ -475,34 +510,7 @@ class AccountReconcileModel(models.Model):
                 aml.balance                         AS aml_balance,
                 aml.amount_currency                 AS aml_amount_currency,
                 account.internal_type               AS account_internal_type,
-
-                -- Determine a matching or not with the statement line communication using the aml.name, move.name or move.ref.
-                (
-                    aml.name IS NOT NULL
-                    AND
-                    substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                    AND
-                        regexp_split_to_array(substring(REGEXP_REPLACE(aml.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                        && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-                )
-                OR
-                    regexp_split_to_array(substring(REGEXP_REPLACE(move.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                    && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-                OR
-                (
-                    move.ref IS NOT NULL
-                    AND
-                    substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*') != ''
-                    AND
-                        regexp_split_to_array(substring(REGEXP_REPLACE(move.ref, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'),'\s+')
-                        && regexp_split_to_array(substring(REGEXP_REPLACE(st_line.name, '[^0-9|^\s]', '', 'g'), '\S(?:.*\S)*'), '\s+')
-                )                                   AS communication_flag,
-                -- Determine a matching or not with the statement line communication using the move.invoice_payment_ref.
-                (
-                    move.invoice_payment_ref IS NOT NULL
-                    AND
-                    regexp_replace(move.invoice_payment_ref, '\s+', '', 'g') = regexp_replace(st_line.name, '\s+', '', 'g')
-                )                                   AS payment_reference_flag
+                ''' + rule._get_select_communication_flag() + r''', ''' + rule._get_select_payment_reference_flag() + r'''
             FROM account_bank_statement_line st_line
             LEFT JOIN account_journal journal       ON journal.id = st_line.journal_id
             LEFT JOIN jnl_precision                 ON jnl_precision.journal_id = journal.id
@@ -587,7 +595,7 @@ class AccountReconcileModel(models.Model):
                     (
                     -- black lines appearance conditions
                     account.reconcile IS TRUE
-                    AND aml.reconciled IS FALSE
+                    AND aml.reconciled IS NOT TRUE
                     )
                 )
             '''
@@ -659,14 +667,18 @@ class AccountReconcileModel(models.Model):
             return False
 
         # Match total residual amount.
+        line_residual = statement_line.currency_id and statement_line.amount_currency or statement_line.amount
+        line_currency = statement_line.currency_id or statement_line.journal_id.currency_id or statement_line.company_id.currency_id
         total_residual = 0.0
         for aml in candidates:
             if aml['account_internal_type'] == 'liquidity':
-                total_residual += aml['aml_currency_id'] and aml['aml_amount_currency'] or aml['aml_balance']
+                partial_residual = aml['aml_currency_id'] and aml['aml_amount_currency'] or aml['aml_balance']
             else:
-                total_residual += aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual']
-        line_residual = statement_line.currency_id and statement_line.amount_currency or statement_line.amount
-        line_currency = statement_line.currency_id or statement_line.journal_id.currency_id or statement_line.company_id.currency_id
+                partial_residual = aml['aml_currency_id'] and aml['aml_amount_residual_currency'] or aml['aml_amount_residual']
+            partial_currency = aml['aml_currency_id'] and self.env['res.currency'].browse(aml['aml_currency_id']) or self.company_id.currency_id
+            if partial_currency != line_currency:
+                partial_residual = partial_currency._convert(partial_residual, line_currency, self.company_id, statement_line.date)
+            total_residual += partial_residual
 
         # Statement line amount is equal to the total residual.
         if float_is_zero(total_residual - line_residual, precision_rounding=line_currency.rounding):

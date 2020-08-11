@@ -240,7 +240,7 @@ msgstr "<span>Нов</span>"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
 msgid "<span>PLAN ORDERS</span>"
-msgstr ""
+msgstr "<span>ПЛАНИРАЙ ПОРЪЧКИ</span>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_kanban
@@ -523,6 +523,15 @@ msgstr "Одобрете"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Архивиран"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"At least one work order has a quantity produced lower than the quantity "
+"produced in the manufacturing order. You must complete the work orders "
+"before posting the inventory."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view

@@ -20,6 +20,8 @@ echo "export LC_ALL=en_US.UTF-8" >> ~/.bashrc
 locale-gen
 source ~/.bashrc
 
+apt-mark hold firmware-brcm80211
+# upgrade firmware-brcm80211 broke access point on rpi4
 apt-get update && apt-get -y upgrade
 # Do not be too fast to upgrade to more recent firmware and kernel than 4.38
 # Firmware 4.44 seems to prevent the LED mechanism from working
@@ -148,6 +150,7 @@ update-rc.d -f dnsmasq remove
 update-rc.d timesyncd defaults
 
 systemctl enable ramdisks.service
+systemctl enable led-status.service
 systemctl disable dphys-swapfile.service
 systemctl enable ssh
 systemctl set-default graphical.target

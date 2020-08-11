@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
@@ -7,11 +7,11 @@ from odoo.exceptions import UserError, ValidationError
 
 
 @tagged('post_install', '-at_install')
-class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
+class TestAccountMoveInInvoiceOnchanges(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAccountMoveInInvoiceOnchanges, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.invoice = cls.init_invoice('in_invoice')
 
@@ -1765,3 +1765,27 @@ class TestAccountMoveInInvoiceOnchanges(InvoiceTestCommon):
             {'amount_currency': 96.0,   'debit': 48.0,  'credit': 0.0,      'account_id': self.product_line_vals_2['account_id'],   'reconciled': False},
             {'amount_currency': -96.0,  'debit': 0.0,   'credit': 48.0,     'account_id': wizard.expense_accrual_account.id,        'reconciled': True},
         ])
+
+    def test_in_invoice_name(self):
+        # Test that the invoice name uses the invoice_date and not the current date.
+        journal = self.company_data['default_journal_purchase'].copy()
+        seq = self.env['ir.sequence'].create({
+                'code': 'test_sequence_type_2',
+                'name': 'Test sequence',
+                'implementation': 'no_gap',
+                'prefix': 'INV/%(year)s/%(month)s/',
+                })
+        journal.sequence_id = seq
+        move = self.env['account.move'].create({
+            'type': 'in_invoice',
+            'partner_id': self.partner_a.id,
+            'journal_id': journal.id,
+            'invoice_date': fields.Date.from_string('2019-01-01'),
+            'currency_id': self.currency_data['currency'].id,
+            'invoice_payment_term_id': self.pay_terms_a.id,
+            'invoice_line_ids': [
+                (0, None, self.product_line_vals_1),
+            ]
+        })
+        move.post()
+        self.assertEquals(move.name, 'INV/2019/01/1')

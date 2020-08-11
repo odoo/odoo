@@ -10,7 +10,7 @@
                             <t t-esc="line[0]"/>:
                         </td>
                         <td class="oe_tax_group_editable" t-att-data-tax-group-id="line[6]">
-                            <t t-if="displayEditWidget">
+                            <t t-if="displayEditWidget and line[1] !== 0">
                                 <span class="tax_group_edit">
                                     <i class="fa fa-pencil"></i>
                                     <span class="oe_tax_group_amount_value">
@@ -21,7 +21,7 @@
                                     <input type="text" class="o_field_float o_field_number o_input" t-att-data-original-value="line[1]"/>
                                 </span>
                             </t>
-                            <t t-if="!displayEditWidget">
+                            <t t-if="!displayEditWidget or line[1] === 0">
                                 <span class="oe_tax_group_amount_value">
                                     <t t-esc="line[3]"/>
                                 </span>

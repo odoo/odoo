@@ -64,7 +64,7 @@ class ResConfigSettings(models.TransientModel):
             self.group_stock_multi_locations = True
 
     def set_values(self):
-        super(ResConfigSettings, self).set_values()
+        res = super(ResConfigSettings, self).set_values()
 
         if not self.user_has_groups('stock.group_stock_manager'):
             return
@@ -85,9 +85,6 @@ class ResConfigSettings(models.TransientModel):
             active = False
         warehouses.mapped('int_type_id').write({'active': active})
 
-    def execute(self):
-        res = super(ResConfigSettings, self).execute()
-        self.ensure_one()
         if self.group_stock_multi_locations or self.group_stock_production_lot or self.group_stock_tracking_lot:
             picking_types = self.env['stock.picking.type'].with_context(active_test=False).search([
                 ('code', '!=', 'incoming'),

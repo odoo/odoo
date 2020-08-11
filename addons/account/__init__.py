@@ -16,8 +16,13 @@ def _auto_install_l10n(cr, registry):
     country_code = env.company.country_id.code
     if country_code:
         #auto install localization module(s) if available
+        to_install_l10n = env['ir.module.module'].search_count([('name', 'like', 'l10n_'), ('state', '=', 'to install')])
         module_list = []
-        if country_code in SYSCOHADA_LIST:
+        if to_install_l10n:
+            # We don't install a CoA if one was passed in the command line
+            # or has been selected to install
+            pass
+        elif country_code in SYSCOHADA_LIST:
             #countries using OHADA Chart of Accounts
             module_list.append('l10n_syscohada')
         elif country_code == 'GB':
@@ -35,9 +40,8 @@ def _auto_install_l10n(cr, registry):
                 module_list.append('l10n_generic_coa')
         if country_code == 'US':
             module_list.append('account_plaid')
-            module_list.append('l10n_us_check_printing')
-        if country_code == 'CA':
-            module_list.append('l10n_ca_check_printing')
+        if country_code in ['US', 'CA']:
+            module_list.append('account_check_printing')
         if country_code in ['US', 'AU', 'NZ', 'CA', 'CO', 'EC', 'ES', 'FR', 'IN', 'MX', 'GB']:
             module_list.append('account_yodlee')
         if country_code in SYSCOHADA_LIST + [

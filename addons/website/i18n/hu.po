@@ -11,9 +11,9 @@
 # gezza <geza.nagy@oregional.hu>, 2019
 # Martin Trigaux, 2019
 # krnkris, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # Istvan <leki69@gmail.com>, 2019
 # Tamás Németh <ntomasz81@gmail.com>, 2019
+# Ákos Nagy <akos.nagy@oregional.hu>, 2020
 # 
 msgid ""
 msgstr ""
@@ -21,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Tamás Németh <ntomasz81@gmail.com>, 2019\n"
+"Last-Translator: Ákos Nagy <akos.nagy@oregional.hu>, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -41,6 +41,18 @@ msgstr "Képek hozzáadása"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
 msgstr "\"riasztás a"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" can not be empty."
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must start with a leading slash."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
@@ -1674,7 +1686,7 @@ msgstr "Egyéni"
 #: model:ir.model.fields,field_description:website.field_res_config_settings__auth_signup_uninvited
 #: model:ir.model.fields,field_description:website.field_website__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "Ügyfél számla"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_search
@@ -3140,6 +3152,8 @@ msgstr "Bal menü"
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
 msgstr ""
+"Engedje meg az ügyfeleinek a bejelentkezést a dokumentumaik megtekintése "
+"érdekében"
 
 #. module: website
 #. openerp-web
@@ -4206,7 +4220,7 @@ msgstr ""
 #: model:ir.model.fields,help:website.field_website_page__website_id
 #: model:ir.model.fields,help:website.field_website_published_multi_mixin__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "Közzététel korlátozása erre a weboldalra."
 
 #. module: website
 #: model:res.groups,name:website.group_website_publisher
@@ -4260,7 +4274,7 @@ msgstr "SEO meta adat"
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__is_seo_optimized
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
 msgid "SEO optimized"
-msgstr ""
+msgstr "SEO optimalizált"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -5619,7 +5633,7 @@ msgstr "Honlap meta cím"
 #: model:ir.model.fields,field_description:website.field_website_page__website_meta_og_img
 #: model:ir.model.fields,field_description:website.field_website_seo_metadata__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Weboldal opengraph kép"
 
 #. module: website
 #: model:ir.model,name:website.model_website_rewrite
@@ -5672,6 +5686,12 @@ msgstr "Mit akarsz csinálni?"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "White"
 msgstr "Fehér"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_domain
+#: model:ir.model.fields,help:website.field_website__domain
+msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel

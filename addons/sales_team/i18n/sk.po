@@ -4,18 +4,20 @@
 # 
 # Translators:
 # Martin Trigaux, 2019
-# Pavol Krnáč <pavol.krnac@ekoenergo.sk>, 2019
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
+# Stefan Stieranka <stieranka@itec.sk>, 2020
+# Rastislav Brenčič <rastislav.brencic99@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-12-05 12:33+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -64,11 +66,13 @@ msgid ""
 "Add members to automatically assign their documents to this sales team. You "
 "can only be member of one team."
 msgstr ""
+"Pridajte členov, aby automaticky priradili svoje dokumenty tomuto obchodnému"
+" tímu. Môžete byť len členom jedného tímu."
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Správca"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.crm_team_1
@@ -77,6 +81,7 @@ msgstr "Amerika"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
+#: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Archived"
 msgstr "Archivovaný"
 
@@ -100,7 +105,7 @@ msgstr "Veľký pekný gombík :)"
 #: code:addons/sales_team/models/crm_team.py:0
 #, python-format
 msgid "Cannot delete default team \"%s\""
-msgstr ""
+msgstr "Predvolený tím nie je možné odstrániť \"%s\""
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__member_ids
@@ -145,24 +150,24 @@ msgstr "Mena"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_button_name
 msgid "Dashboard Button"
-msgstr "Tlačítko nástenky"
+msgstr "Tlačítko riadiaceho panelu"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__dashboard_graph_data
 msgid "Dashboard Graph Data"
-msgstr "Dáta grafu nástenky"
+msgstr "Dáta grafu riadiaceho panelu"
 
 #. module: sales_team
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_act
 #: model_terms:ir.actions.act_window,help:sales_team.crm_team_salesteams_pipelines_act
 #: model_terms:ir.actions.act_window,help:sales_team.sales_team_config_action
 msgid "Define a new sales team"
-msgstr ""
+msgstr "Definujte nový obchodný tím"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.team_sales_department
@@ -186,8 +191,8 @@ msgid ""
 "Follow this salesteam to automatically track the events associated to users "
 "of this team."
 msgstr ""
-"Odoberajte tohoto predajcu pre automatické sledovanie udalostí spojených s "
-"používateľmi tohto týmu."
+"Nasledujte tohoto obchodníka pre automatické sledovanie udalostí spojených s"
+" používateľmi tohto tímu."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_follower_ids
@@ -197,12 +202,12 @@ msgstr "Odberatelia"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
+msgstr "Odberatelia (kanály)"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_salesteams_search
@@ -218,12 +223,12 @@ msgstr "ID"
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_unread
 msgid "If checked, new messages require your attention."
-msgstr "Ak zaškrtnuté, nové správy vyžadujú vašu pozornosť."
+msgstr "Ak zaznačené, nové správy vyžadujú vašu pozornosť."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_has_error
 msgid "If checked, some messages have a delivery error."
-msgstr "Ak zaškrtnuté, niektoré správy majú chybu dodania."
+msgstr "Ak zaznačené, niektoré správy majú chybu dodania."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_partner__team_id
@@ -232,7 +237,7 @@ msgid ""
 "If set, this Sales Team will be used for sales and assignations related to "
 "this partner"
 msgstr ""
-"Ak je nastavené, tento predajný tím bude použitý pre predaje a asignácie "
+"Ak je nastavené, tento predajný tím bude použitý pre predaj a menovania "
 "priradené tomuto partnerovi"
 
 #. module: sales_team
@@ -247,7 +252,7 @@ msgstr ""
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_is_follower
 msgid "Is Follower"
-msgstr "Je odberateľ"
+msgstr "Nasledovník"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team____last_update
@@ -287,7 +292,7 @@ msgstr "Počet akcií"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Číslo chýb"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__message_needaction_counter
@@ -317,12 +322,12 @@ msgstr "Miesto predaja"
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_tree
 msgid "Sales Team"
-msgstr "Predajný tým"
+msgstr "Obchodný tím"
 
 #. module: sales_team
 #: model_terms:ir.ui.view,arch_db:sales_team.crm_team_view_form
 msgid "Sales Team name..."
-msgstr ""
+msgstr "Názov obchodného tímu..."
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_res_users__sale_team_id
@@ -330,8 +335,8 @@ msgid ""
 "Sales Team the user is member of. Used to compute the members of a Sales "
 "Team through the inverse one2many"
 msgstr ""
-"Predajný tím ktorého je užívateľ členom. Používa sa na výpočet počtu členov "
-"predajného tímu pomocou inverzie one2many."
+"Predajný tím, ktorého je užívateľ členom. Používa sa na výpočet počtu členov"
+" predajného tímu pomocou inverzie one2many."
 
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_act
@@ -357,7 +362,7 @@ msgstr "Nastavenia"
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__is_favorite
 msgid "Show on dashboard"
-msgstr "Zobraziť na nástenke"
+msgstr "Zobraziť na riadiacom panely"
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_crm_team__user_id
@@ -373,7 +378,7 @@ msgstr "Členovia tímu"
 #. module: sales_team
 #: model:ir.actions.act_window,name:sales_team.crm_team_salesteams_pipelines_act
 msgid "Team Pipelines"
-msgstr "Reťazové spracovanie tímu"
+msgstr "Tímová Obchodná nástenka"
 
 #. module: sales_team
 #: model:ir.model.fields,help:sales_team.field_crm_team__color
@@ -405,11 +410,13 @@ msgid ""
 "Use Sales Teams to organize your sales departments.\n"
 "                    Each team will work with a separate pipeline."
 msgstr ""
+"Použite obchodné tímy pre riadnie obchodného oddelenia.\n"
+"                      Každý tím bude pracovať so samostatnou Obchodnou nástenkou."
 
 #. module: sales_team
 #: model:ir.model.fields,field_description:sales_team.field_res_users__sale_team_id
 msgid "User's Sales Team"
-msgstr "Predajný tím užívateľa"
+msgstr "Užívateľský obchodný tím"
 
 #. module: sales_team
 #: model:res.groups,name:sales_team.group_sale_salesman_all_leads
@@ -424,17 +431,17 @@ msgstr "Užívateľ: len vlastné dokumenty"
 #. module: sales_team
 #: model:ir.model,name:sales_team.model_res_users
 msgid "Users"
-msgstr "Používatelia"
+msgstr "Užívatelia"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.salesteam_website_sales
 msgid "Website"
-msgstr "Webová stránka"
+msgstr "Webstránka"
 
 #. module: sales_team
 #: model:crm.team,name:sales_team.ebay_sales_team
 msgid "eBay"
-msgstr ""
+msgstr "eBay"
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman_all_leads
@@ -442,13 +449,13 @@ msgid ""
 "the user will have access to all records of everyone in the sales "
 "application."
 msgstr ""
-"používateľ bude mať prístup ku všetkým záznamom o všetkých v aplikácii "
+"užívateľ bude mať prístup ku všetkým záznamom o všetkých v aplikácii "
 "predaja."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_salesman
 msgid "the user will have access to his own data in the sales application."
-msgstr "používateľ bude mať prístup ku svojim záznamom v aplikácii predaja."
+msgstr "užívateľ bude mať prístup ku svojim záznamom v aplikácii predaja."
 
 #. module: sales_team
 #: model:res.groups,comment:sales_team.group_sale_manager
@@ -456,5 +463,5 @@ msgid ""
 "the user will have an access to the sales configuration as well as statistic"
 " reports."
 msgstr ""
-"používateľ bude mať prísup k nastaveniam predajov ako aj k štatistickým "
+"užívateľ bude mať prísup k nastaveniam predaju ako aj k štatistickým "
 "výkazom."

@@ -5,8 +5,9 @@
 # Translators:
 # Martin Trigaux, 2019
 # Attila Tatár <atta@nvm.ro>, 2020
-# Eugen Ionica <eugen.ionica@gmail.com>, 2020
+# Gplease Any <eugen.ionica@gmail.com>, 2020
 # Dorin Hongu <dhongu@gmail.com>, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
@@ -14,7 +15,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Dorin Hongu <dhongu@gmail.com>, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -159,6 +160,9 @@ msgid ""
 "specific.\" role=\"img\" aria-label=\"Values set here are company-"
 "specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workcenter_view
@@ -306,13 +310,13 @@ msgstr "<strong>Document sursă:</strong><br/>"
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 msgid "<strong>Start Date: </strong>"
-msgstr ""
+msgstr "Data de început"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_workorder_view_gantt
 #: model_terms:ir.ui.view,arch_db:mrp.workcenter_line_gantt_production
 msgid "<strong>Stop Date: </strong>"
-msgstr ""
+msgstr "<strong>Data de încheiere : </strong>"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrporder
@@ -428,7 +432,7 @@ msgstr ""
 #. module: mrp
 #: model:res.groups,name:mrp.group_mrp_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.stock_production_type_kanban
@@ -506,6 +510,15 @@ msgstr "Aprobă"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Arhivat"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"At least one work order has a quantity produced lower than the quantity "
+"produced in the manufacturing order. You must complete the work orders "
+"before posting the inventory."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -613,7 +626,7 @@ msgstr "Listă de materiale"
 #. module: mrp
 #: model:ir.model,name:mrp.model_mrp_bom_line
 msgid "Bill of Material Line"
-msgstr ""
+msgstr "Linie Factură Materiale"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
@@ -1651,7 +1664,7 @@ msgstr "Pictogramă"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_icon
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Pictograma pentru a indica o activitate de excepție."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__product_id
@@ -2061,7 +2074,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_main_attachment_id
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Atașament principal"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -2255,7 +2268,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Eroare livrare mesaj"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom__message_ids
@@ -2328,7 +2341,7 @@ msgstr "Nou(ă)"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_date_deadline
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Data limită pentru următoarea activitate"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_summary
@@ -2427,7 +2440,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_error_counter
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Numărul de erori"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_bom__message_needaction_counter
@@ -2544,7 +2557,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__orderpoint_id
 msgid "Orderpoint"
-msgstr ""
+msgstr "Orderpoint"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__order_ids
@@ -3045,7 +3058,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date
 msgid "Propagate Rescheduling"
-msgstr ""
+msgstr "Propagare Reporgramare"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_cancel
@@ -3203,7 +3216,7 @@ msgstr "Referință:"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__ir_attachment_id
 msgid "Related attachment"
-msgstr ""
+msgstr "Atașament aferent"
 
 #. module: mrp
 #. openerp-web
@@ -3225,7 +3238,7 @@ msgstr "Necesită serial"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__propagate_date_minimum_delta
 msgid "Reschedule if Higher Than"
-msgstr ""
+msgstr "Reprogramați dacă este mai mare decât"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_abstract_workorder_line__qty_reserved
@@ -3323,7 +3336,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__message_has_sms_error
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Eroare livrare SMS"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
@@ -3662,7 +3675,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Raport Regulă Stoc"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -3796,6 +3809,8 @@ msgstr ""
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_date_minimum_delta
 msgid "The change must be higher than this value to be propagated"
 msgstr ""
+"Modificarea trebuie să fie mai mare decât această valoare pentru a fi "
+"propagată"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_model
@@ -3873,7 +3888,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_date
 msgid "The rescheduling is propagated to the next move."
-msgstr ""
+msgstr "Reprogramarea este propagată la următoarea mutare."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_routing_workcenter__routing_id
@@ -3944,6 +3959,8 @@ msgid ""
 "This menu gives you the full traceability of inventory operations on a specific product.\n"
 "                    You can filter on the product to see all the past movements for the product."
 msgstr ""
+"Acest meniu vă oferă trasabilitatea completă a operațiunilor de inventar pentru un anumit produs.\n"
+"                     Puteți filtra produsul pentru a vedea toate mișcările anterioare ale produsului."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__production_location_id
@@ -4159,7 +4176,7 @@ msgstr "Tip operație"
 #: model:ir.model.fields,help:mrp.field_mrp_unbuild__activity_exception_decoration
 #: model:ir.model.fields,help:mrp.field_mrp_workorder__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Tipul activității de excepție din înregistrare."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_production_workorder_form_view_inherit
@@ -4912,7 +4929,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "cancelled"
-msgstr ""
+msgstr "anulat"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.res_config_settings_view_form
@@ -4944,7 +4961,7 @@ msgstr "minute"
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo
 msgid "of"
-msgstr ""
+msgstr "de"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.exception_on_mo

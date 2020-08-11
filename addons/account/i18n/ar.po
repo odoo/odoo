@@ -21,7 +21,6 @@
 # Yihya Hugirat <hugirat@gmail.com>, 2019
 # Osama Ahmaro <osamaahmaro@gmail.com>, 2019
 # Mahmood Al Halwachi <mahmood.alhalwachi@gmail.com>, 2019
-# Amer Hazaa <eng.amer.it@gmail.com>, 2019
 # amrnegm <amrnegm.01@gmail.com>, 2019
 # Mohammed Ibrahim <m.ibrahim@mussder.com>, 2019
 # Ghaith Gammar <g.gammar@saharaifs.net>, 2019
@@ -37,9 +36,12 @@
 # ADADI REDOUANE <odadi332014@gmail.com>, 2019
 # Othman Gabr <jabor4u@hotmail.com>, 2020
 # Tasneem Sarhan <tsa@odoo.com>, 2020
-# Ali Alrehawi <alrehawi@hotmail.com>, 2020
 # Mustafa Rawi <mustafa@cubexco.com>, 2020
 # Enjy Abu-Taleb <ema@odootec.com>, 2020
+# Amer Hazaa <eng.amer.it@gmail.com>, 2020
+# MOHAMMAD IBRAHIM <m.moamir@outlook.com>, 2020
+# Saleh Albannay <saleh@cm.codes>, 2020
+# Ali Alrehawi <alrehawi@hotmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -47,7 +49,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Enjy Abu-Taleb <ema@odootec.com>, 2020\n"
+"Last-Translator: Ali Alrehawi <alrehawi@hotmail.com>, 2020\n"
 "Language-Team: Arabic (https://www.transifex.com/odoo/teams/41243/ar/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -93,7 +95,7 @@ msgstr "#العملات / فواتير"
 #. module: account
 #: model:mail.template,report_name:account.mail_template_data_payment_receipt
 msgid "${(object.name or '').replace('/','-')}"
-msgstr "${(object.name or '').replace('/','-')}"
+msgstr "${(object.name او '').استبدل الاسم('/','-')}"
 
 #. module: account
 #: model:mail.template,subject:account.email_template_edi_invoice
@@ -217,6 +219,22 @@ msgid ""
 "    </p>\n"
 "</div>\n"
 msgstr ""
+"<?xml version=\"1.0\"?>\n"
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        عميلنا العزيز ${object.partner_id.name}<br/><br/>\n"
+"        نشكركم على إتمامكم عملية السداد.\n"
+"        إليكم تفاصيل إيصال السداد <strong>${(object.name or '').replace('/','-')}</strong> بقيمة\n"
+"        وقدرها <strong>${format_amount(object.amount, object.currency_id)}</strong> من ${object.company_id.name}.\n"
+"        <br/><br/>\n"
+"        لا تترددوا في التواصل معنا في حال كان لديكم أي استفسارات.\n"
+"        <br/><br/>\n"
+"        مع أطيب تحياتنا،<br/>\n"
+"        % if user and user.signature:\n"
+"        ${user.signature | safe}\n"
+"        % endif\n"
+"    </p>\n"
+"</div>\n"
 
 #. module: account
 #: model:mail.template,body_html:account.email_template_edi_invoice
@@ -252,6 +270,34 @@ msgid ""
 "</div>\n"
 "            "
 msgstr ""
+"<div style=\"margin: 0px; padding: 0px;\">\n"
+"    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
+"        عميلنا العزيز ${object.partner_id.name}\n"
+"        % if object.partner_id.parent_id:\n"
+"            (${object.partner_id.parent_id.name})\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        تجد أدناه \n"
+"        % if object.number:\n"
+"            فاتورتك<strong>${object.number}</strong>\n"
+"        % else:\n"
+"            الفاتورة\n"
+"        %endif\n"
+"        % if object.origin:\n"
+"            (with reference: ${object.origin})\n"
+"        % endif\n"
+"        بقيمة وقدرها <strong>${format_amount(object.amount_total, object.currency_id)}</strong>\n"
+"        من ${object.company_id.name}.\n"
+"        % if object.state=='paid':\n"
+"            تم سداد قيمة الفاتورة بالفعل.\n"
+"        % else:\n"
+"            برجاء سداد قيمة الفاتورة في أقرب وقت مناسب لكم.\n"
+"        % endif\n"
+"        <br/><br/>\n"
+"        لا تترددوا في التواصل معنا في حال كان لديكم أي استفسارات.\n"
+"    </p>\n"
+"</div>\n"
+"            "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.portal_my_home_menu_invoice
@@ -548,7 +594,7 @@ msgstr "<span role=\"separator\">عرض</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
 msgid "<span title=\"Balance in General Ledger\">Balance in GL</span>"
-msgstr ""
+msgstr "<span title=\"Balance in General Ledger\">رصيد دفتر الاستاذ العام</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -633,7 +679,7 @@ msgstr "<span>الكمية</span>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_payment_receipt_document
 msgid "<span>Reference</span>"
-msgstr ""
+msgstr "<span>مرجع</span>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_journal_dashboard_kanban_view
@@ -909,7 +955,7 @@ msgstr "تمت تسوية أحد بنود كشف الحساب المُختارة
 #: code:addons/account/models/account.py:0
 #, python-format
 msgid "A tag defined to be used on taxes must always have a country set."
-msgstr ""
+msgstr "العلامة المعرفة للضرائب يجب أن تحتوي دائماً على معرف الدولة."
 
 #. module: account
 #: model:ir.model.constraint,message:account.constraint_account_fiscal_position_tax_tax_src_dest_uniq
@@ -925,6 +971,11 @@ msgid ""
 "either in 'Tax-Included' or in 'Tax-Excluded' mode\n"
 "(or switch twice the mode if you are already in the desired one)."
 msgstr ""
+"لا يمكن للمستخدم أن يستخدم ضرائب الشركات B2B وضرائب الأفراد B2C في نفس الوقت.\n"
+"المستخدمـ(ين) بهذه المشكلة: \n"
+"يتوجب عليك أن تذهب إلى الإعدادات العامة، وأن تختار عرض أسعار المنتجات\n"
+"إما 'شاملة الضرائب' أو 'غير شاملة الضرائب'\n"
+"(أو التبديل بين الاختيارين مرتين إذا كان الاختيار المطلوب محدد مسبقاً)."
 
 #. module: account
 #: model:res.groups,name:account.group_warning_account
@@ -1284,11 +1335,14 @@ msgid ""
 "reconciled ; at reconciliation, this amount cancelled on this account and "
 "put on the regular tax account."
 msgstr ""
+"الحساب المستخدم لتحويل مبلغ الضريبة للضرائب على الأساس النقدي. يحتوي على "
+"مبلغ الضريبة طالما لم يتم تسوية الفاتورة الأصلية ؛ عند التسوية ، يتم إلغاء "
+"هذا المبلغ من هذا الحساب ووضعه على حساب الضريبة العادي."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_search
 msgid "Account with Entries"
-msgstr ""
+msgstr "حساب مع القيود"
 
 #. module: account
 #: model:ir.actions.server,name:account.ir_cron_auto_post_draft_entry_ir_actions_server
@@ -1333,7 +1387,7 @@ msgstr "لوحة المعلومات"
 #: model_terms:ir.ui.view,arch_db:account.onboarding_fiscal_year_step
 #, python-format
 msgid "Accounting Periods"
-msgstr ""
+msgstr "الفترات المحاسبية"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_partner_property_form
@@ -1393,12 +1447,12 @@ msgstr ""
 #: model:ir.model.fields,field_description:account.field_account_accrual_accounting_wizard__journal_id
 #: model:ir.model.fields,field_description:account.field_res_company__accrual_default_journal_id
 msgid "Accrual Default Journal"
-msgstr ""
+msgstr "دفتر اليومية المجمع"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.account_accrual_accounting_wizard_form_view
 msgid "Accrued Account"
-msgstr ""
+msgstr "الحساب المستحق"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_bank_statement__message_needaction
@@ -1583,12 +1637,12 @@ msgstr "نوع التعديلات"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_tax_group__property_advance_tax_payment_account_id
 msgid "Advance Tax payment account"
-msgstr ""
+msgstr "حساب مدفوعات الضرائب"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_chart_template__property_advance_tax_payment_account_id
 msgid "Advance tax payment account"
-msgstr ""
+msgstr "حساب مدفوعات الضرائب"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_tax_template_form
@@ -1661,13 +1715,13 @@ msgstr "القيود المرحلة"
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "All accounts on the lines must be from the same type."
-msgstr ""
+msgstr "جميع البنود في هذه الحسابات يجب أن تكون من نفس النوع."
 
 #. module: account
 #: code:addons/account/models/company.py:0
 #, python-format
 msgid "All entries are hashed."
-msgstr ""
+msgstr "جميع القيود مجزأة."
 
 #. module: account
 #. openerp-web
@@ -1682,7 +1736,7 @@ msgstr "تم مطابقة كافة الفواتير والمدفوعات، أر�
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "All lines must be from the same company."
-msgstr ""
+msgstr "جميع البنود يجب أن تكون لنفس المؤسسة."
 
 #. module: account
 #: code:addons/account/models/account_bank_statement.py:0
@@ -3196,7 +3250,7 @@ msgstr "عملة المؤسسة"
 #. module: account
 #: model:ir.model,name:account.model_base_document_layout
 msgid "Company Document Layout"
-msgstr ""
+msgstr "تخطيط مستندات الشركة"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_res_config_settings__has_chart_of_accounts
@@ -5729,6 +5783,8 @@ msgid ""
 "Incorrect fiscal year date: day is out of range for month. Month: %s; Day: "
 "%s"
 msgstr ""
+"تاريخ غير صحيح للسنة المالية: اليوم المدخل غير موجود في هذا الشهر. "
+"الشهر:%s;اليوم:%s"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move__invoice_incoterm_id
@@ -7320,6 +7376,8 @@ msgid ""
 "No users can edit journal entries related to a tax prior and inclusive of "
 "this date."
 msgstr ""
+"لايمكن للمستخدمين تعديل القيود المدخلة في دفتر اليومية المرتبطة بضرائب سابقة"
+" وشاملة لهذا التاريخ."
 
 #. module: account
 #: model:ir.model.fields,help:account.field_res_company__fiscalyear_lock_date
@@ -7375,6 +7433,7 @@ msgstr "غير مستحق"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "لم يدفع"
 
@@ -12741,7 +12800,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "ليس لديك صلاحيات الوصول لمشاركة الفاتورة"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -12818,6 +12877,12 @@ msgid ""
 msgstr ""
 "عليك تكوين 'حساب الخسارة في سعر الصرف' في إعدادات المحاسبة, لإدارة حجز قيود "
 "المحاسبة للفروق بين أسعار الصرف تلقائيًا."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr ""
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form
@@ -13032,7 +13097,7 @@ msgstr "إدخالات غير مسويّة"
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "vendor bills"
-msgstr "سند مورد"
+msgstr "فواتير المورد "
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_bank_statement_form

@@ -42,6 +42,18 @@ msgid "\" alert with a"
 msgstr "\" התראה עם"
 
 #. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" can not be empty."
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must start with a leading slash."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
 msgstr "מס' הדפים שביקרו בהם"
@@ -1276,7 +1288,7 @@ msgstr "גבול"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "Bordered"
-msgstr ""
+msgstr "עם גבולות"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -3629,7 +3641,7 @@ msgstr "אין גלילה"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 #: model_terms:ir.ui.view,arch_db:website.theme_customize
 msgid "None"
-msgstr "אף אחד"
+msgstr "ללא"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -4504,7 +4516,7 @@ msgstr "שקופית"
 #: code:addons/website/static/src/xml/website.gallery.xml:0
 #, python-format
 msgid "Slide image"
-msgstr ""
+msgstr "תמונת שקופית"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -4622,7 +4634,7 @@ msgstr "תרגם"
 #: code:addons/website/static/src/xml/website.facebook_page.xml:0
 #, python-format
 msgid "Tabs"
-msgstr ""
+msgstr "כרטיסיות"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_ir_attachment__key
@@ -5365,7 +5377,7 @@ msgstr "תאריך ביקור"
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_ids
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Visited Pages"
-msgstr "דפים שביקרו בהם"
+msgstr "דפים שביקר בהם"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__website_track_ids
@@ -5711,6 +5723,12 @@ msgid "White"
 msgstr "לבן"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_domain
+#: model:ir.model.fields,help:website.field_website__domain
+msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid ""
@@ -5947,7 +5965,7 @@ msgstr "עמוד, קטעי טקסט, ...)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "px"
-msgstr ""
+msgstr "פיקסל"
 
 #. module: website
 #. openerp-web

@@ -1357,6 +1357,64 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('button in form view and long willStart', async function (assert) {
+        assert.expect(6);
+
+        var rpcCount = 0;
+
+        var FieldChar = fieldRegistry.get('char');
+        fieldRegistry.add('asyncwidget', FieldChar.extend({
+            willStart: function () {
+                assert.step('load '+rpcCount);
+                if (rpcCount === 2) {
+                    return $.Deferred();
+                }
+                return $.Deferred().resolve();
+            },
+        }));
+
+        var form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: '<form string="Partners">' +
+                    '<field name="state" invisible="1"/>' +
+                    '<header>' +
+                        '<button name="post" class="p" string="Confirm" type="object"/>' +
+                    '</header>' +
+                    '<sheet>' +
+                        '<group>' +
+                            '<field name="foo" widget="asyncwidget"/>' +
+                        '</group>' +
+                    '</sheet>' +
+                '</form>',
+            res_id: 2,
+            mockRPC: function () {
+                rpcCount++;
+                return this._super.apply(this, arguments);
+            },
+        });
+        assert.verifySteps(['load 1']);
+
+        await testUtils.mock.intercept(form, 'execute_action', function (ev) {
+            ev.data.on_success();
+            ev.data.on_closed();
+        });
+
+        await testUtils.dom.click('.o_form_statusbar button.p', form);
+        assert.verifySteps(['load 2']);
+
+        testUtils.mock.intercept(form, 'execute_action', function (ev) {
+            ev.data.on_success();
+            ev.data.on_closed();
+        });
+
+        await testUtils.dom.click('.o_form_statusbar button.p', form);
+        assert.verifySteps(['load 3']);
+
+        form.destroy();
+    });
+
     QUnit.test('buttons in form view, new record', async function (assert) {
         // this simulates a situation similar to the settings forms.
         assert.expect(7);
@@ -4386,6 +4444,52 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('navigation with tab key selects a value in form view', async function (assert) {
+        assert.expect(5);
+
+        const form = await createView({
+            View: FormView,
+            model: 'partner',
+            data: this.data,
+            arch: `
+                <form>
+                    <field name="display_name"/>
+                    <field name="int_field"/>
+                    <field name="qux"/>
+                    <field name="trululu"/>
+                    <field name="date"/>
+                    <field name="datetime"/>
+                </form>`,
+            res_id: 1,
+            viewOptions: {
+                mode: 'edit',
+            },
+        });
+
+        await testUtils.dom.click(form.$('input[name="display_name"]'));
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "10",
+            "int_field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "0.4",
+            "qux field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "aaa",
+            "trululu field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "01/25/2017",
+            "date field value should be selected");
+
+        await testUtils.fields.triggerKeydown($(document.activeElement), 'tab');
+        assert.strictEqual(document.getSelection().toString(), "12/12/2016 10:55:05",
+            "datetime field value should be selected");
+
+        form.destroy();
+    });
+
     QUnit.test('clicking on a stat button with a context', async function (assert) {
         assert.expect(1);
 
@@ -6703,7 +6807,7 @@ QUnit.module('Views', {
             model: 'partner',
             data: this.data,
             arch: '<form>' +
-                    '<header><field name="trululu" widget="statusbar" clickable="True"/></header>' +
+                    '<header><field name="trululu" widget="statusbar" clickable="true"/></header>' +
                 '</form>',
             res_id: 1,
             mockRPC: function (route, args) {

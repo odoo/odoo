@@ -130,6 +130,7 @@ class ServerActions(models.Model):
         if action.activity_date_deadline_range > 0:
             vals['date_deadline'] = fields.Date.context_today(action) + relativedelta(**{action.activity_date_deadline_range_type: action.activity_date_deadline_range})
         for record in records:
+            user = False
             if action.activity_user_type == 'specific':
                 user = action.activity_user_id
             elif action.activity_user_type == 'generic' and action.activity_user_field_name in record:

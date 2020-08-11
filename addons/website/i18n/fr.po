@@ -55,6 +55,7 @@
 # Pauline Thiry <pth@odoo.com>, 2020
 # Priscilla Sanchez <prs@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
+# Digvijay Singh Gehlot <dih@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -62,7 +63,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Julien Goergen <jgo@odoo.com>, 2020\n"
+"Last-Translator: Digvijay Singh Gehlot <dih@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -82,6 +83,18 @@ msgstr "Ajouter des images"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
 msgstr "\" alerte avec un"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" can not be empty."
+msgstr "\"URL vers\" ne peut pas être vide."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must start with a leading slash."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
@@ -5887,6 +5900,12 @@ msgstr "Que voulez-vous faire?"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "White"
 msgstr "Blanc"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_domain
+#: model:ir.model.fields,help:website.field_website__domain
+msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel

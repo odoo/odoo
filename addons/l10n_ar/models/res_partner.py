@@ -50,9 +50,9 @@ class ResPartner(models.Model):
         """ We add this computed field that returns cuit (VAT AR) or nothing if this one is not set for the partner.
         This Validation can be also done by calling ensure_vat() method that returns the cuit (VAT AR) or error if this
         one is not found """
-        recs_ar_vat = self.filtered(lambda x: x.l10n_latam_identification_type_id.l10n_ar_afip_code == '80')
+        recs_ar_vat = self.filtered(lambda x: x.l10n_latam_identification_type_id.l10n_ar_afip_code == '80' and x.vat)
         for rec in recs_ar_vat:
-            rec.l10n_ar_vat = rec.vat
+            rec.l10n_ar_vat = stdnum.ar.cuit.compact(rec.vat)
         remaining = self - recs_ar_vat
         remaining.l10n_ar_vat = False
 

@@ -65,7 +65,7 @@
                         <div class="oe_button_box" name="button_box">
                             <button name="action_schedule_meeting" type="object"
                                 class="oe_stat_button" icon="fa-calendar"
-                                context="{'partner_id': partner_id, 'search_default_opportunity_id': active_id}"
+                                context="{'partner_id': partner_id, 'search_default_opportunity_id': id}"
                                 attrs="{'invisible': [('type', '=', 'lead')]}">
                                 <div class="o_stat_info">
                                     <field name="meeting_count" class="o_stat_value"/>
@@ -414,7 +414,7 @@
             <field name="arch" type="xml">
                 <form>
                     <group>
-                        <field name="name"/>
+                        <field name="name" string="Name"/>
                         <field name="partner_id" widget="res_partner_many2one" context="{'res_partner_search_mode': 'customer', 'show_vat': True}"/>
                         <field name="planned_revenue" widget="monetary" options="{'currency_field': 'company_currency'}"/>
                         <field name="company_currency" invisible="1"/>

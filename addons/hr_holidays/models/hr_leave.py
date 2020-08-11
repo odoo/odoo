@@ -78,7 +78,7 @@ class HolidaysRequest(models.Model):
         return defaults
 
     def _default_employee(self):
-        return self.env.context.get('default_employee_id') or self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        return self.env.context.get('default_employee_id') or self.env.user.employee_id
 
     def _default_get_request_parameters(self, values):
         new_values = dict(values)
@@ -382,7 +382,7 @@ class HolidaysRequest(models.Model):
     def _onchange_type(self):
         if self.holiday_type == 'employee':
             if not self.employee_id:
-                self.employee_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1).id
+                self.employee_id = self.env.user.employee_id.id
             self.mode_company_id = False
             self.category_id = False
         elif self.holiday_type == 'company':
@@ -395,7 +395,7 @@ class HolidaysRequest(models.Model):
             self.mode_company_id = False
             self.category_id = False
             if not self.department_id:
-                self.department_id = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1).department_id.id
+                self.department_id = self.env.user.employee_id.department_id.id
         elif self.holiday_type == 'category':
             self.employee_id = False
             self.mode_company_id = False
@@ -684,7 +684,7 @@ class HolidaysRequest(models.Model):
         if 'name' in fields:
             if self.user_has_groups('hr_holidays.group_hr_holidays_user'):
                 return
-            current_employee = self.env['hr.employee'].sudo().search([('user_id', '=', self.env.uid)], limit=1)
+            current_employee = self.env.user.employee_id
             managed_employee_ids = self.env['hr.employee'].sudo().search([('leave_manager_id', '=', self.env.uid)]).ids
             for record in self:
                 emp_id = record._cache.get('employee_id') or False
@@ -868,7 +868,7 @@ class HolidaysRequest(models.Model):
         if any(holiday.state != 'confirm' for holiday in self):
             raise UserError(_('Time off request must be confirmed ("To Approve") in order to approve it.'))
 
-        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        current_employee = self.env.user.employee_id
         self.filtered(lambda hol: hol.validation_type == 'both').write({'state': 'validate1', 'first_approver_id': current_employee.id})
 
 
@@ -884,7 +884,7 @@ class HolidaysRequest(models.Model):
         return True
 
     def action_validate(self):
-        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        current_employee = self.env.user.employee_id
         if any(holiday.state not in ['confirm', 'validate1'] for holiday in self):
             raise UserError(_('Time off request must be confirmed in order to approve it.'))
 
@@ -991,7 +991,7 @@ class HolidaysRequest(models.Model):
         return True
 
     def action_refuse(self):
-        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        current_employee = self.env.user.employee_id
         if any(holiday.state not in ['draft', 'confirm', 'validate', 'validate1'] for holiday in self):
             raise UserError(_('Time off request must be confirmed or validated in order to refuse it.'))
 
@@ -1021,7 +1021,7 @@ class HolidaysRequest(models.Model):
         if self.env.is_superuser():
             return
 
-        current_employee = self.env['hr.employee'].search([('user_id', '=', self.env.uid)], limit=1)
+        current_employee = self.env.user.employee_id
         is_officer = self.env.user.has_group('hr_holidays.group_hr_holidays_user')
         is_manager = self.env.user.has_group('hr_holidays.group_hr_holidays_manager')
 

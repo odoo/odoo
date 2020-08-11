@@ -504,7 +504,8 @@ class TestSaleMrpFlow(common.SavepointCase):
         """ Test delivered quantity on SO based on delivered quantity in pickings."""
         # intial so
         product = self.env.ref('mrp.product_product_table_kit')
-        product.type = 'consu'
+        qty_available = self.env['stock.quant']._get_available_quantity(product, self.stock_location)
+        self.env['stock.quant']._update_available_quantity(product, self.stock_location, -qty_available)
         product.invoice_policy = 'delivery'
         # Remove the MTO route as purchase is not installed and since the procurement removal the exception is directly raised
         product.write({'route_ids': [(6, 0, [self.warehouse.manufacture_pull_id.route_id.id])]})

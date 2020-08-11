@@ -9,6 +9,9 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
+# Stefan Stieranka <stieranka@itec.sk>, 2020
+# Michal Matus <misko.matus@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -42,7 +45,7 @@ msgstr "Potrebná akcia"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_mail_activity_type__category
 msgid "Action to Perform"
-msgstr ""
+msgstr "Akcia na vykonanie"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_mail_activity_type__category
@@ -50,6 +53,8 @@ msgid ""
 "Actions may trigger specific behavior like opening calendar view or "
 "automatically mark as done when a document is uploaded"
 msgstr ""
+"Akcie môžu spustiť určité správanie, napríklad otvoriť zobrazenie kalendára "
+"alebo automaticky označiť ako vykonané pri odovzdávaní dokumentu"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__open
@@ -70,7 +75,7 @@ msgstr "Aktivita"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Označenie výnimky v aktivite"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__activity_state
@@ -90,7 +95,7 @@ msgstr ""
 #. module: note
 #: model_terms:ir.actions.act_window,help:note.note_tag_action
 msgid "Add a new tag"
-msgstr "Pridaj nový štítok"
+msgstr "Pridaj nový tag"
 
 #. module: note
 #. openerp-web
@@ -193,12 +198,12 @@ msgstr "Odberatelia"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
+msgstr "Odberatelia (kanály)"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
@@ -225,7 +230,7 @@ msgstr "Ikona"
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona indikujúca výnimočnú aktivitu."
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction
@@ -324,7 +329,7 @@ msgstr "Obsah poznámky"
 #. module: note
 #: model:ir.model,name:note.model_note_stage
 msgid "Note Stage"
-msgstr "Etapa poznámky"
+msgstr "Štádium poznámky"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__name
@@ -334,7 +339,7 @@ msgstr "Zhrnutie poznámky"
 #. module: note
 #: model:ir.model,name:note.model_note_tag
 msgid "Note Tag"
-msgstr "Visačka poznámky"
+msgstr "Tag poznámky"
 
 #. module: note
 #: code:addons/note/models/res_users.py:0
@@ -361,7 +366,7 @@ msgstr "Počet akcií"
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Číslo chýb"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__message_needaction_counter
@@ -441,12 +446,12 @@ msgstr "Zobraz všetky záznamy ktorých následná aktivita je pred dnešným d
 #: model:ir.model.fields,field_description:note.field_note_note__stage_id
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_filter
 msgid "Stage"
-msgstr "Fáza"
+msgstr "Štádium"
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_stage__name
 msgid "Stage Name"
-msgstr "Názov etapy"
+msgstr "Názov štádia"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_form
@@ -458,7 +463,7 @@ msgstr "Etapa poznámok"
 #: model:ir.ui.menu,name:note.menu_notes_stage
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_tree
 msgid "Stages"
-msgstr "Fázy"
+msgstr "Štádia"
 
 #. module: note
 #: model_terms:ir.ui.view,arch_db:note.view_note_stage_tree
@@ -486,12 +491,12 @@ msgstr ""
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_tag__name
 msgid "Tag Name"
-msgstr "Názov visačky"
+msgstr "Názov tagu"
 
 #. module: note
 #: model:ir.model.constraint,message:note.constraint_note_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "Názov visačky už existuje !"
+msgstr "Názov tagu už existuje !"
 
 #. module: note
 #: model:ir.actions.act_window,name:note.note_tag_action
@@ -501,7 +506,7 @@ msgstr "Názov visačky už existuje !"
 #: model_terms:ir.ui.view,arch_db:note.note_tag_view_tree
 #: model_terms:ir.ui.view,arch_db:note.view_note_note_form
 msgid "Tags"
-msgstr "Štítky"
+msgstr "Tagy"
 
 #. module: note
 #. openerp-web
@@ -518,12 +523,12 @@ msgstr "Dnešné aktivity"
 #. module: note
 #: model:note.stage,name:note.note_stage_03
 msgid "Todo"
-msgstr "Zostáva"
+msgstr "Zoznam úloh"
 
 #. module: note
 #: model:ir.model.fields,help:note.field_note_note__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ výnimočnej aktivity na zázname."
 
 #. module: note
 #: model:ir.model.fields,field_description:note.field_note_note__message_unread
@@ -543,4 +548,4 @@ msgstr "Používa sa na zoradenie fáz poznámok."
 #. module: note
 #: model:ir.model,name:note.model_res_users
 msgid "Users"
-msgstr "Používatelia"
+msgstr "Užívatelia"

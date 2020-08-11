@@ -3,12 +3,9 @@
 # 	* stock_account
 # 
 # Translators:
-# Jeanphy <hzh0292@qq.com>, 2019
-# Maie <m@maie.name>, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # 苏州远鼎 <tiexinliu@126.com>, 2019
 # bf2549c5415a9287249cba2b8a5823c7, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # bower Guo <124358678@qq.com>, 2019
 # roye w <159820@qq.com>, 2019
@@ -16,8 +13,9 @@
 # Felix Yuen <fyu@odoo.com>, 2019
 # Martin Trigaux, 2019
 # 山西清水欧度(QQ:54773801) <54773801@qq.com>, 2019
-# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # inspur qiuguodong <qiuguodong@inspur.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
+# Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -25,7 +23,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: inspur qiuguodong <qiuguodong@inspur.com>, 2020\n"
+"Last-Translator: Jeffery CHEN Fan <jeffery9@gmail.com>, 2020\n"
 "Language-Team: Chinese (China) (https://www.transifex.com/odoo/teams/41243/zh_CN/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -53,7 +51,7 @@ msgstr "会计凭证"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_reconciliation_widget
 msgid "Account Reconciliation widget"
-msgstr "会计核销挂件"
+msgstr "科目对账挂件"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_category_property_form
@@ -69,7 +67,7 @@ msgstr "会计日期"
 #: model_terms:ir.ui.view,arch_db:stock_account.view_inventory_form_inherit
 #: model_terms:ir.ui.view,arch_db:stock_account.view_move_form_inherit
 msgid "Accounting Entries"
-msgstr "会计分录"
+msgstr "会计凭证"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.view_location_form_inherit
@@ -227,7 +225,7 @@ msgstr "日期"
 msgid ""
 "Date at which the accounting entries will be created in case of automated "
 "inventory valuation. If empty, the inventory date will be used."
-msgstr "在自动库存评估的情况下创建会计分录的日期。 如果为空，将使用库存日期。"
+msgstr "在自动库存评估的情况下创建会计凭证的日期。 如果为空，将使用库存日期。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_stock_valuation_layer__uom_id
@@ -252,7 +250,7 @@ msgid ""
 "Due to a change of product category (from %s to %s), the costing method"
 "                                has changed for product template %s: from %s"
 " to %s."
-msgstr "由于产品类别的变化（从 %s 至%s ），成本定价方法已更改为产品模板 %s：从 %s 至%s 。"
+msgstr "由于产品类别的变更（从 %s 至%s ），成本定价方法已更改为产品模板 %s：从 %s 至%s 。"
 
 #. module: stock_account
 #: model:ir.model.fields.selection,name:stock_account.selection__product_category__property_cost_method__fifo
@@ -323,17 +321,17 @@ msgstr "是昂格鲁-撒克逊行"
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move
 msgid "Journal Entries"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_stock_valuation_layer__account_move_id
 msgid "Journal Entry"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: stock_account
 #: model:ir.model,name:stock_account.model_account_move_line
 msgid "Journal Item"
-msgstr "日记账项"
+msgstr "会计分录"
 
 #. module: stock_account
 #: model:ir.model.fields,field_description:stock_account.field_res_config_settings__module_stock_landed_costs
@@ -377,8 +375,8 @@ msgid ""
 "        Automated: An accounting entry is automatically created to value the inventory when a product enters or leaves the company.\n"
 "        "
 msgstr ""
-"手动：盘点存货的会计分录不会自动过帐。\n"
-"自动化：当产品进入或离开公司时，自动创建一个会计分录来评估库存。"
+"手动：盘点存货的会计凭证不会自动过账。\n"
+"自动化：当产品进入或离开公司时，自动创建一个会计凭证来评估库存。"
 
 #. module: stock_account
 #: model_terms:ir.ui.view,arch_db:stock_account.stock_valuation_layer_form
@@ -691,7 +689,7 @@ msgstr "警告"
 msgid ""
 "When automated inventory valuation is enabled on a product, this account "
 "will hold the current value of the products."
-msgstr "在产品上启用自动库存评估后，此帐户将保留产品的当前值。"
+msgstr "在产品上启用自动库存评估后，此账户将保留产品的当前值。"
 
 #. module: stock_account
 #: model:ir.model.fields,help:stock_account.field_product_category__property_stock_account_input_categ_id
@@ -700,8 +698,8 @@ msgid ""
 "                unless there is a specific valuation account set on the source location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"在进行自动库存估价时，所有进货库存凭证的对应日记帐项目将在此帐户中过帐，\n"
-"                除非在来源位置设置了特定的评估帐户。这是此类别中所有产品的默认值。\n"
+"在进行自动库存估价时，所有进货库存凭证的对应会计分录目将在此账户中过账，\n"
+"                除非在来源位置设置了特定的评估账户。这是此类别中所有产品的默认值。\n"
 "          它也可以直接在每个产品上设置。 "
 
 #. module: stock_account
@@ -711,8 +709,8 @@ msgid ""
 "                unless there is a specific valuation account set on the destination location. This is the default value for all products in this category.\n"
 "                It can also directly be set on each product."
 msgstr ""
-"在进行自动库存评估时，所有外发库存凭证的对应日记帐项目将在此帐户中过帐，\n"
-"               除非在目的地设置了特定的评估帐户。 这是此类别中所有产品的默认值。\n"
+"在进行自动库存评估时，所有外发库存凭证的对应会计分录目将在此账户中过账，\n"
+"               除非在目的地设置了特定的评估账户。 这是此类别中所有产品的默认值。\n"
 "                它也可以直接在每个产品上设置。"
 
 #. module: stock_account
@@ -720,7 +718,7 @@ msgstr ""
 msgid ""
 "When doing automated inventory valuation, this is the Accounting Journal in "
 "which entries will be automatically posted when stock moves are processed."
-msgstr "在进行自动库存评估时，这是会计日记账，其中处理库存凭证时将自动过帐条目。"
+msgstr "在进行自动库存评估时，这是会计日记账，其中处理库存凭证时将自动过账条目。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/product.py:0
@@ -728,7 +726,7 @@ msgstr "在进行自动库存评估时，这是会计日记账，其中处理库
 msgid ""
 "You don't have any input valuation account defined on your product category."
 " You must define one before processing this operation."
-msgstr "你没有在产品类别中定义任何输入评估帐户。你必须在处理此操作之前定义一个。"
+msgstr "你没有在产品类别中定义任何输入评估账户。你必须在处理此操作之前定义一个。"
 
 #. module: stock_account
 #: code:addons/stock_account/models/stock_move.py:0

@@ -1,38 +1,30 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * sale_stock
+# 	* sale_stock
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Morovat Guivi <tarjomac@gmail.com>, 2018
-# Hamid Darabi, 2018
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
-# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2018
-# mehdi samadi <mehsamadi@gmail.com>, 2018
-# Maziar Niaki <maziarmn@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Martin Trigaux, 2020
+# Morovat Guivi <tarjomac@gmail.com>, 2020
+# Hamid Darabi, 2020
+# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2020
+# سید محمد آذربرا <mohammadazarbara98@gmail.com>, 2020
+# mehdi samadi <mehsamadi@gmail.com>, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 12.0\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-10-24 09:34+0000\n"
-"PO-Revision-Date: 2018-10-24 09:34+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2019-09-27 09:11+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
 "Content-Transfer-Encoding: \n"
 "Language: fa\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:273
-#, python-format
-msgid ""
-"\n"
-"There are %s %s available across all warehouses.\n"
-"\n"
-msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -43,40 +35,50 @@ msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid ""
-"<span class=\"badge badge-danger label-text-align\"><i class=\"fa fa-fw fa-"
-"times\"/> Cancelled</span>"
+msgid "<i class=\"fa fa-fw fa-clock-o\"/> <b>Preparation</b>"
 msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid ""
-"<span class=\"badge badge-info label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Preparation</span>"
+msgid "<i class=\"fa fa-fw fa-times\"/> <b>Cancelled</b>"
 msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
-msgid ""
-"<span class=\"badge badge-success label-text-align\"><i class=\"fa fa-fw fa-"
-"truck\"/> Shipped</span>"
+msgid "<i class=\"fa fa-fw fa-truck\"/> <b>Shipped</b>"
 msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid ""
-"<span class=\"badge badge-warning label-text-align\"><i class=\"fa fa-fw fa-"
-"clock-o\"/> Partially Available</span>"
+"<span class=\"fa fa-lg fa-building-o\" title=\"Values set here are company-"
+"specific.\" role=\"img\" aria-label=\"Values set here are company-"
+"specific.\" groups=\"base.group_multi_company\"/>"
 msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.stock_production_lot_view_form
-msgid "<span class=\"o_stat_text\">Sale Orders</span>"
+msgid "<span class=\"o_stat_text\">Sales</span>"
 msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "<span class=\"o_stat_text\">Sold</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
+msgid "<span>Product</span>"
+msgstr ""
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
+msgid "<span>Quantity</span>"
+msgstr "<span>تعداد</span>"
+
+#. module: sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
+msgid "<span>SN/LN</span>"
 msgstr ""
 
 #. module: sale_stock
@@ -90,10 +92,22 @@ msgid "<strong>Delivery Orders</strong>"
 msgstr "<strong>درخواستهای تحویلی</strong>"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.report_invoice_document_inherit_sale_stock
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "<strong>Incoterm: </strong>"
+msgstr ""
+
+#. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.report_saleorder_document_inherit_sale_stock
-msgid "<strong>Incoterms:</strong>"
-msgstr "<strong>قواعد بین المللی:</strong>"
+msgid "<strong>Incoterm:</strong>"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order_line__product_type
+msgid ""
+"A storable product is a product for which you manage stock. The Inventory app has to be installed.\n"
+"A consumable product is a product for which stock is not managed.\n"
+"A service is a non-material product you provide."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -111,19 +125,35 @@ msgid "After-Sale"
 msgstr "پس از فروش"
 
 #. module: sale_stock
-#: selection:sale.order.line,qty_delivered_method:0
-msgid "Analytic From Expenses"
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "All planned operations included"
 msgstr ""
-
-#. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Apply special routes from orders (e.g. dropshipping, MTO)"
-msgstr "درخواست مسیرهای ویژه برای سفارشات (به‌عنوان مثال dropshipping، MTO)"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_rules_report__so_route_ids
-msgid "Apply specific rotues"
+msgid "Apply specific routes"
 msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__direct
+msgid "As soon as possible"
+msgstr "هر چه زودتر"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/js/qty_at_date_widget.js:0
+#, python-format
+msgid "Availability"
+msgstr "موجود بودن"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Available"
+msgstr "موجود"
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
@@ -143,17 +173,12 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "تنظیمات پیکربندی"
 
 #. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver all products at once"
-msgstr "تحویل همه‌ی محصولات با هم"
-
-#. module: sale_stock
-#: selection:sale.order,picking_policy:0
-msgid "Deliver each product when available"
-msgstr "تحویل هر محصول زمانی که موجود بود"
+#: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
+msgid "Date:"
+msgstr "تاریخ:‌"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.view_order_form_inherit_sale_stock
@@ -166,6 +191,30 @@ msgid "Delivery Orders"
 msgstr "سفارشات تحویل"
 
 #. module: sale_stock
+#: model:ir.model.fields,help:sale_stock.field_sale_order__expected_date
+msgid ""
+"Delivery date you can promise to the customer, computed from the minimum "
+"lead time of the order lines in case of Service products. In case of "
+"shipping, the shipping policy of the order will be taken into account to "
+"either use the minimum or maximum lead time of the order lines."
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
+msgid "Display Lots & Serial Numbers on Invoices"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__display_qty_widget
+msgid "Display Qty Widget"
+msgstr ""
+
+#. module: sale_stock
+#: model:res.groups,name:sale_stock.group_lot_on_invoice
+msgid "Display Serial & Lot Number on Invoices"
+msgstr ""
+
+#. module: sale_stock
 #: model:res.groups,name:sale_stock.group_display_incoterm
 msgid "Display incoterms on Sales Order and related invoices"
 msgstr "نمایش قواعد بین المللی نافذ بر سفارشات خرید و فاکتورهای مربوطه"
@@ -176,14 +225,16 @@ msgid "Display incoterms on orders &amp; invoices"
 msgstr "نمایش قواعد بین المللی سفارشات و فاکتورها"
 
 #. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:0
+#, python-format
+msgid ""
+"Do not forget to change the partner on the following delivery orders: %s"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
 msgid "Effective Date"
 msgstr "تاریخ موثر"
-
-#. module: sale_stock
-#: model:res.groups,name:sale_stock.group_route_so_lines
-msgid "Enable Route on Sales Order Line"
-msgstr "فعال کردن مسیر در خط سفارش فروش"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -202,6 +253,30 @@ msgid "Exception(s):"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__expected_date
+msgid "Expected Date"
+msgstr "تاریخ مورد انتظار"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Expected Delivery"
+msgstr ""
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "Forecasted Stock"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__free_qty_today
+msgid "Free Qty Today"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__picking_policy
 msgid ""
 "If you deliver all products at once, the delivery order will be scheduled "
@@ -215,23 +290,15 @@ msgid "Impacted Transfer(s):"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_account_invoice__incoterms_id
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__incoterm
+msgid "Incoterm"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_display_incoterm
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Incoterms"
 msgstr "شرایط و استانداردهای بین المللی"
-
-#. module: sale_stock
-#: model:ir.model.fields,help:sale_stock.field_account_invoice__incoterms_id
-msgid ""
-"Incoterms are series of sales terms. They are used to divide transaction "
-"costs and responsibilities between buyer and seller and reflect state-of-"
-"the-art transportation practices."
-msgstr ""
-"اینکوترم یک سری شرایط و استانداردهای فروش می‌باشد. از این قواعد برای تقسیم "
-"هزینه‌های معامله و مسئولیت‌ها بین خریدار و فروشنده استفاده می‌شود و "
-"منعکس‌کننده‌ی امور حمل و نقل در سطح پیشرفته است."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__incoterm
@@ -248,19 +315,24 @@ msgid "Inventory Routes"
 msgstr "مسیرهای موجودی"
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_invoice
-msgid "Invoice"
-msgstr "فاکتور"
-
-#. module: sale_stock
-#: model:ir.model,name:sale_stock.model_account_invoice_line
-msgid "Invoice Line"
-msgstr "سطر فاکتور"
-
-#. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_invoiced
 msgid "Invoicing"
 msgstr "صدور فاکتور"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__is_mto
+msgid "Is Mto"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_move
+msgid "Journal Entries"
+msgstr "داده های روزنامه"
+
+#. module: sale_stock
+#: model:ir.model,name:sale_stock.model_account_move_line
+msgid "Journal Item"
+msgstr "آیتم روزنامه"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_production_lot
@@ -268,15 +340,15 @@ msgid "Lot/Serial"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:418
+#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
+msgid "Lots &amp; Serial numbers will appear on the invoice"
+msgstr ""
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Make To Order"
 msgstr "تولید بر اساس سفارش"
-
-#. module: sale_stock
-#: selection:sale.order.line,qty_delivered_method:0
-msgid "Manual"
-msgstr "دستی"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -312,18 +384,14 @@ msgid "Move forward expected delivery dates by"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:280
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
 #, python-format
-msgid "Not enough inventory!"
-msgstr ""
+msgid "On"
+msgstr "روشن"
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_route_so_lines
-msgid "Order-Specific Routes"
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:294
+#: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
 msgstr ""
@@ -339,11 +407,6 @@ msgid "Picking Policy"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
-msgid "Pickings"
-msgstr "برداشت ها"
-
-#. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__procurement_group_id
 msgid "Procurement Group"
@@ -353,6 +416,21 @@ msgstr ""
 #: model:ir.model,name:sale_stock.model_product_template
 msgid "Product Template"
 msgstr "قالب محصول"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_type
+msgid "Product Type"
+msgstr "نوع محصول"
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_available_today
+msgid "Qty Available Today"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_to_deliver
+msgid "Qty To Deliver"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -369,17 +447,11 @@ msgid "Route"
 msgstr "مسیر"
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
-msgid "Routes for Sales Order Lines"
-msgstr ""
-
-#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
 msgstr ""
 
 #. module: sale_stock
-#: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
 msgid "Sale Order"
 msgstr "سفارش فروش"
@@ -400,6 +472,7 @@ msgid "Sales Analysis Report"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model,name:sale_stock.model_sale_order
 #: model:ir.model.fields,field_description:sale_stock.field_stock_picking__sale_id
 msgid "Sales Order"
 msgstr "سفارش فروش"
@@ -430,6 +503,11 @@ msgid "Schedule deliveries earlier to avoid delays"
 msgstr ""
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
+msgid "Scheduled Date"
+msgstr "تاریخ برنامه ریزی شده"
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__security_lead
 msgid "Security Lead Time"
 msgstr ""
@@ -445,12 +523,12 @@ msgid "Selectable on Sales Order Line"
 msgstr ""
 
 #. module: sale_stock
-#: selection:res.config.settings,default_picking_policy:0
+#: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
 msgid "Ship all products at once"
 msgstr ""
 
 #. module: sale_stock
-#: selection:res.config.settings,default_picking_policy:0
+#: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
 msgstr ""
 
@@ -471,7 +549,7 @@ msgstr "انتقال موجودی"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__move_ids
-#: selection:sale.order.line,qty_delivered_method:0
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order_line__qty_delivered_method__stock_move
 msgid "Stock Moves"
 msgstr "انتقالهای موجودی"
 
@@ -491,24 +569,26 @@ msgid "Stock rule report"
 msgstr ""
 
 #. module: sale_stock
-#: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
+#: code:addons/sale_stock/models/sale_order.py:0
+#, python-format
 msgid ""
-"This allows to apply a special route on sales order lines (e.g. "
-"dropshipping, make-to-order) in case of unusual order scenario. To be "
-"available in sales orders, routes must have 'Sales Order Line' option "
-"checked in their setup form."
+"The delivery address has been changed on the Sales Order<br/>\n"
+"                        From <strong>\"%s\"</strong> To <strong>\"%s\"</strong>,\n"
+"                        You should probably update the partner on this document."
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:397
+#: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "This product is packaged by %.2f %s. You should sell %.2f %s."
 msgstr ""
 
 #. module: sale_stock
-#: selection:sale.order.line,qty_delivered_method:0
-msgid "Timesheets"
-msgstr "برگه ساعات کارکرد"
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "This product is replenished on demand."
+msgstr ""
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_picking
@@ -516,16 +596,45 @@ msgid "Transfer"
 msgstr "انتقال"
 
 #. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_ids
+msgid "Transfers"
+msgstr "انتقال ها"
+
+#. module: sale_stock
+#. openerp-web
+#: code:addons/sale_stock/static/src/xml/qty_at_date.xml:0
+#, python-format
+msgid "View Forecast"
+msgstr ""
+
+#. module: sale_stock
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__virtual_available_at_date
+msgid "Virtual Available At Date"
+msgstr ""
+
+#. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__warehouse_id
+#: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__warehouse_id
 #: model:ir.model.fields,field_description:sale_stock.field_sale_report__warehouse_id
 msgid "Warehouse"
 msgstr "انبار"
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:396
+#: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Warning"
 msgstr "هشدار"
+
+#. module: sale_stock
+#: code:addons/sale_stock/models/sale_order.py:0
+#, python-format
+msgid "Warning!"
+msgstr "هشدار!"
+
+#. module: sale_stock
+#: model:ir.model.fields.selection,name:sale_stock.selection__sale_order__picking_policy__one
+msgid "When all products are ready"
+msgstr ""
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -538,7 +647,7 @@ msgid "When to start shipping"
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:295
+#: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
 "You are decreasing the ordered quantity! Do not forget to manually update "
@@ -546,19 +655,11 @@ msgid ""
 msgstr ""
 
 #. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:437
+#: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
-msgstr ""
-
-#. module: sale_stock
-#: code:addons/sale_stock/models/sale_order.py:269
-#, python-format
-msgid ""
-"You plan to sell %s %s of %s but you only have %s %s available in %s "
-"warehouse."
 msgstr ""
 
 #. module: sale_stock

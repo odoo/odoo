@@ -1,17 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * auth_signup
+# 	* auth_signup
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Boško Stojaković <bluesoft83@gmail.com>, 2018
+# Martin Trigaux, 2020
+# Boško Stojaković <bluesoft83@gmail.com>, 2020
+# Igor Krizanovic <krizanovic.igor@gmail.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Boško Stojaković <bluesoft83@gmail.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:16+0000\n"
+"PO-Revision-Date: 2019-08-26 09:09+0000\n"
+"Last-Translator: Igor Krizanovic <krizanovic.igor@gmail.com>, 2020\n"
 "Language-Team: Bosnian (https://www.transifex.com/odoo/teams/41243/bs/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -27,10 +29,10 @@ msgid ""
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:126
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "%s connected"
-msgstr ""
+msgstr "1%s spojen"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -38,12 +40,60 @@ msgid ""
 "<strong>A password reset has been requested for this user. An email "
 "containing the following link has been sent:</strong>"
 msgstr ""
+"<strong>Za ovog korisnika zatraženo je resetiranje lozinke. Poslat  je "
+"e-pošta sa sljedećom vezom:</strong>"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid ""
 "<strong>An invitation email containing the following subscription link has "
 "been sent:</strong>"
+msgstr ""
+"<strong>Poslata je e-pošta sa pozivnicom koja sadrži sljedeću vezu za "
+"pretplatu</strong>"
+
+#. module: auth_signup
+#: model:mail.template,body_html:auth_signup.mail_template_data_unregistered_users
+msgid ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                 % set invited_users = ctx['invited_users']\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Pending Invitations\n"
+"                    </span><br/><br/>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dear ${object.name or ''},<br/> <br/>\n"
+"                        You added the following user(s) to your database but they haven't registered yet:\n"
+"                        <ul>\n"
+"                            % for invited_user in invited_users:\n"
+"                                <li>${invited_user}</li>\n"
+"                            % endfor\n"
+"                        </ul>\n"
+"                        Follow up with them so they can access your database and start working with you.\n"
+"                        <br/><br/>\n"
+"                        Have a nice day!<br/>\n"
+"                        --<br/>The ${object.company_id.name} Team\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 msgstr ""
 
 #. module: auth_signup
@@ -86,7 +136,7 @@ msgid ""
 "                        % set website_url = object.env['ir.config_parameter'].sudo().get_param('web.base.url')\n"
 "                        Your Odoo domain is: <b><a href=\"${website_url}\">${website_url}</a></b><br/>\n"
 "                        Your sign in email is: <b><a href=\"/web/login?login=${object.email}\" target=\"_blank\">${object.email}</a></b><br/><br/>\n"
-"                        Never heard of Odoo? It’s a all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.\n"
+"                        Never heard of Odoo? It’s an all-in-one business software loved by 3+ million users. It will considerably improve your experience at work and increase your productivity.\n"
 "                        <br/><br/>\n"
 "                        Have a look at the <a href=\"https://www.odoo.com/page/tour?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo Tour</a> to discover the tool.\n"
 "                        <br/><br/>\n"
@@ -307,25 +357,25 @@ msgstr ""
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Already have an account?"
-msgstr ""
+msgstr "Već imate račun?"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:80
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "An email has been sent with credentials to reset your password"
-msgstr ""
+msgstr "Poslat je e-mail sa vjerodajnicama za resetiranje lozinke"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:52
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Another user is already registered using this email address."
-msgstr ""
+msgstr "Drugi korisnik je već registrovan pomoću ove adrese e-pošte."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:137
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Authentication Failed."
-msgstr ""
+msgstr "Autentifikacija nije uspjela."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -333,10 +383,10 @@ msgid "Back to Login"
 msgstr "Vrati se na prijavu"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:199
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Cannot send email: user %s has no email address."
-msgstr ""
+msgstr "Ne mogu poslati e-poštu: korisnik %snema adresu e-pošte."
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
@@ -346,7 +396,7 @@ msgstr "Zatvori"
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "Config Settings"
-msgstr ""
+msgstr "Postavke konfiguracije"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -359,7 +409,7 @@ msgid "Confirm Password"
 msgstr "Potvrdi šifru"
 
 #. module: auth_signup
-#: selection:res.users,state:0
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__active
 msgid "Confirmed"
 msgstr "Potvrđeno"
 
@@ -369,64 +419,74 @@ msgid "Contact"
 msgstr "Kontakt"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:55
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Could not create a new account."
-msgstr ""
+msgstr "Nije moguće stvoriti novi račun."
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:84
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Could not reset your password"
-msgstr ""
+msgstr "Vašu lozinku nije moguće resetirati"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_uninvited
 msgid "Customer Account"
-msgstr ""
+msgstr "Korisnički račun"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Default Access Rights"
-msgstr ""
+msgstr "Standardna prava pristupa"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Don't have an account?"
-msgstr ""
+msgstr "Nemate račun?"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_config_settings__auth_signup_reset_password
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Enable password reset from Login page"
-msgstr ""
+msgstr "Omogući vraćanje lozinke sa stranice za prijavu"
+
+#. module: auth_signup
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2c
+msgid "Free sign up"
+msgstr "Besplatna registracija"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_ir_http
 msgid "HTTP Routing"
-msgstr ""
+msgstr "HTTP Rutiranje"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:115
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Invalid signup token"
-msgstr ""
+msgstr "Nevažeći token za prijavu"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Let your customers log in to see their documents"
-msgstr ""
+msgstr "Neka se kupci prijave kako bi vidjeli njihove dokumente"
 
 #. module: auth_signup
-#: selection:res.users,state:0
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_users__state__new
 msgid "Never Connected"
-msgstr ""
+msgstr "Nikada povezano"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:75
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "No login provided."
-msgstr ""
+msgstr "Nije data prijava."
+
+#. module: auth_signup
+#: model:ir.model.fields.selection,name:auth_signup.selection__res_config_settings__auth_signup_uninvited__b2b
+msgid "On invitation"
+msgstr "Na poziv"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
@@ -436,56 +496,61 @@ msgstr "Šifra"
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
 msgid "Password Reset"
-msgstr ""
+msgstr "Poništavanje lozinke"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.reset_password_email
 msgid "Password reset"
-msgstr ""
+msgstr "Poništavanje lozinke"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:125
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "Passwords do not match; please retype them."
+msgstr "Lozinke se ne podudaraju; molim vas ponovno ih unesite."
+
+#. module: auth_signup
+#: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
+msgid "Reminder for unregistered users"
 msgstr ""
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
 msgid "Reset Password"
-msgstr ""
+msgstr "Poništi lozinku"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:163
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Reset password: invalid username or email"
-msgstr ""
+msgstr "Poništi lozinku: nevažeće korisničko ime ili e-pošta"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send Reset Password Instructions"
-msgstr ""
+msgstr "Pošalji upute za poništavanje lozinke"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Send an Invitation Email"
-msgstr ""
+msgstr "Pošaljite pozivnicu"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.signup
 msgid "Sign up"
-msgstr ""
+msgstr "Prijaviti se"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_expiration
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_expiration
 msgid "Signup Expiration"
-msgstr ""
+msgstr "Istek prijava"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_token
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_token
 msgid "Signup Token"
-msgstr ""
+msgstr "Token za prijavu"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_type
@@ -503,43 +568,43 @@ msgstr ""
 #: model:ir.model.fields,field_description:auth_signup.field_res_partner__signup_url
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__signup_url
 msgid "Signup URL"
-msgstr ""
+msgstr "URL za registraciju"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:117
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup is not allowed for uninvited users"
-msgstr ""
+msgstr "Registracija nije dozvoljena za nepozvane korisnike"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:149
+#: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is no longer valid"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_partner.py:145
+#: code:addons/auth_signup/models/res_partner.py:0
 #, python-format
 msgid "Signup token '%s' is not valid"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:138
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: invalid template user"
 msgstr ""
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:141
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no login given for new user"
-msgstr ""
+msgstr "Registracija: nije data prijava za novog korisnika"
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:143
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "Signup: no name or partner given for new user"
-msgstr ""
+msgstr "Registracija: za novog korisnika nije dato ime ili partner"
 
 #. module: auth_signup
 #: model:ir.model.fields,field_description:auth_signup.field_res_users__state
@@ -552,16 +617,16 @@ msgid "Template user for new users created through signup"
 msgstr "Prijedlog korisnika za nove korisnike putem prijave"
 
 #. module: auth_signup
-#: code:addons/auth_signup/controllers/main.py:123
+#: code:addons/auth_signup/controllers/main.py:0
 #, python-format
 msgid "The form was not properly filled in."
-msgstr ""
+msgstr "Obrazac nije pravilno ispunjen."
 
 #. module: auth_signup
-#: code:addons/auth_signup/models/res_users.py:127
+#: code:addons/auth_signup/models/res_users.py:0
 #, python-format
 msgid "This is his first connection. Wish him welcome"
-msgstr ""
+msgstr "Ovo mu je prva veza. Zaželite mu dobrodošlicu"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_config_settings_view_form
@@ -577,15 +642,22 @@ msgid "Users"
 msgstr "Korisnici"
 
 #. module: auth_signup
+#: model:ir.actions.server,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder_ir_actions_server
+#: model:ir.cron,cron_name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
+#: model:ir.cron,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
+msgid "Users: Notify About Unregistered Users"
+msgstr ""
+
+#. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created
 msgid "Welcome to ${object.company_id.name}!"
-msgstr ""
+msgstr "Dobrodošli na ${object.company_id.name}!"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
 msgid "Your Email"
-msgstr ""
+msgstr "Vaša e-pošta"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.fields

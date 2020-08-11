@@ -77,11 +77,12 @@ class ReturnPicking(models.TransientModel):
 
     @api.model
     def _prepare_stock_return_picking_line_vals_from_move(self, stock_move):
-        quantity = stock_move.product_qty - sum(
-            stock_move.move_dest_ids
-            .filtered(lambda m: m.state in ['partially_available', 'assigned', 'done'])
-            .mapped('move_line_ids.product_qty')
-        )
+        quantity = stock_move.product_qty
+        for move in stock_move.move_dest_ids:
+            if move.state in ('partially_available', 'assigned'):
+                quantity -= sum(move.move_line_ids.mapped('product_qty'))
+            elif move.state in ('done'):
+                quantity -= move.product_qty
         quantity = float_round(quantity, precision_rounding=stock_move.product_uom.rounding)
         return {
             'product_id': stock_move.product_id.id,
@@ -142,8 +143,22 @@ class ReturnPicking(models.TransientModel):
                 # |       return pick(Add as dest)          return toLink                    return ship(Add as orig)
                 # +--------------------------------------------------------------------------------------------------------+
                 move_orig_to_link = return_line.move_id.move_dest_ids.mapped('returned_move_ids')
+                # link to original move
+                move_orig_to_link |= return_line.move_id
+                # link to siblings of original move, if any
+                move_orig_to_link |= return_line.move_id\
+                    .mapped('move_dest_ids').filtered(lambda m: m.state not in ('cancel'))\
+                    .mapped('move_orig_ids').filtered(lambda m: m.state not in ('cancel'))
                 move_dest_to_link = return_line.move_id.move_orig_ids.mapped('returned_move_ids')
-                vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link | return_line.move_id]
+                # link to children of originally returned moves, if any. Note that the use of
+                # 'return_line.move_id.move_orig_ids.returned_move_ids.move_orig_ids.move_dest_ids'
+                # instead of 'return_line.move_id.move_orig_ids.move_dest_ids' prevents linking a
+                # return directly to the destination moves of its parents. However, the return of
+                # the return will be linked to the destination moves.
+                move_dest_to_link |= return_line.move_id.move_orig_ids.mapped('returned_move_ids')\
+                    .mapped('move_orig_ids').filtered(lambda m: m.state not in ('cancel'))\
+                    .mapped('move_dest_ids').filtered(lambda m: m.state not in ('cancel'))
+                vals['move_orig_ids'] = [(4, m.id) for m in move_orig_to_link]
                 vals['move_dest_ids'] = [(4, m.id) for m in move_dest_to_link]
                 r.write(vals)
         if not returned_lines:

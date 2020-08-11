@@ -1,24 +1,26 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_bank_statement_import
+# 	* account_bank_statement_import
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Wanradt Koell <wanradt@gmail.com>, 2018
-# Arma Gedonsky <armagedonsky@hot.ee>, 2018
-# Egon Raamat <egon@avalah.ee>, 2018
-# Eneli Õigus <enelioigus@gmail.com>, 2018
-# Marek Pontus, 2018
-# Martin Aavastik <martin@avalah.ee>, 2018
-# Helen Sulaoja <helen@avalah.ee>, 2018
+# Rivo Zängov <eraser@eraser.ee>, 2020
+# Martin Trigaux, 2020
+# Wanradt Koell <wanradt@gmail.com>, 2020
+# Arma Gedonsky <armagedonsky@hot.ee>, 2020
+# Egon Raamat <egon@avalah.ee>, 2020
+# Marek Pontus, 2020
+# Martin Aavastik <martin@avalah.ee>, 2020
+# Helen Sulaoja <helen@avalah.ee>, 2020
+# Algo Kärp <algokarp@gmail.com>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-08-24 09:15+0000\n"
-"Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2018\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"PO-Revision-Date: 2019-08-26 09:08+0000\n"
+"Last-Translator: Eneli Õigus <enelioigus@gmail.com>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -28,25 +30,25 @@ msgstr ""
 
 #. module: account_bank_statement_import
 #. openerp-web
-#: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:13
+#: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:0
 #, python-format
 msgid " Import Template for Bank Statements"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
 msgstr "%d tehingud on varem imporditud ja neid ignoreeriti."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr "1 kanne on juba imporditud ja seda ignoreeriti."
 
 #. module: account_bank_statement_import
-#: sql_constraint:account.bank.statement.line:0
+#: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
 msgid "A bank account transactions can be imported only once !"
 msgstr "Pangaväljavõtte saab importida ühe korra !"
 
@@ -71,9 +73,29 @@ msgid "Accounts Allowed"
 msgstr "Lubatud kontod"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+msgid "Action Needed"
+msgstr "Vajalik toiming"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
 msgid "Active"
 msgstr "Aktiivne"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_ids
+msgid "Activities"
+msgstr "Tegevused"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
+msgid "Activity State"
+msgstr "Tegevuse staatus"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_id
@@ -82,8 +104,8 @@ msgstr "Alias"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
-msgid "Alias Name for Vendor Bills"
-msgstr ""
+msgid "Alias Name"
+msgstr "Aliase nimi"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_domain
@@ -91,12 +113,7 @@ msgid "Alias domain"
 msgstr "Aliase domeen"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
-msgid "Allow Cancelling Entries"
-msgstr "Luba tühistada kirjeid"
-
-#. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "Already imported items"
 msgstr "Juba imporditud read"
@@ -112,7 +129,12 @@ msgid "At Least One Outbound"
 msgstr "Vähemalt üks väljuv"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:82
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_id
 #, python-format
 msgid "Bank"
@@ -134,11 +156,6 @@ msgid "Bank Journal Name"
 msgstr "Pangaandmiku nimi"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__data_file
-msgid "Bank Statement File"
-msgstr "Pangaväljavõtte fail"
-
-#. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "Pangaväljavõtte rida"
@@ -149,18 +166,13 @@ msgid "Bank setup manual config"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__belongs_to_company
-msgid "Belong to the user's current company"
-msgstr "Kuulub kasutaja praegusele ettevõttele"
-
-#. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Cancel"
 msgstr "Tühista"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:171
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
@@ -179,23 +191,19 @@ msgstr ""
 "osas selles andmikus "
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
-msgid ""
-"Check this box if you want to allow the cancellation the entries related to "
-"this journal or of the invoice related to this journal"
-msgstr ""
-"Vali see, kui sa soovid lubada kannete tühistamist selles andmikus või "
-"arvete tühistamist seotud selle andmikuga"
-
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "Choose a file to import..."
-msgstr "Vali fail importimiseks..."
-
-#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__color
 msgid "Color Index"
 msgstr "Värvikood"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_model
+msgid "Communication Standard"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type
+msgid "Communication Type"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_id
@@ -208,7 +216,7 @@ msgid "Company related to this journal"
 msgstr "Andmikuga seotud ettevõte"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:112
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "Could not make sense of the given file.\n"
@@ -236,8 +244,8 @@ msgstr "Kreeditarve kirje järjekord"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
-msgid "Credit Notes: Next Number"
-msgstr "Kreeditarve: Järgmine number"
+msgid "Credit Notes Next Number"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -271,21 +279,29 @@ msgid "Display Name"
 msgstr "Näidatav nimi"
 
 #. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid ""
-"Download a bank statement from your bank and import it here. Supported "
-"formats:"
-msgstr "Lae alla pangaväljavõte ja impordi siin. Toetatud formaadid:"
-
-#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
 msgid "Entry Sequence"
 msgstr "Kirje järjekord"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__filename
-msgid "Filename"
-msgstr "Faili nimi"
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__attachment_ids
+msgid "Files"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_follower_ids
+msgid "Followers"
+msgstr "Jälgijad"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "Jälgijad (kanalid)"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "Jälgijad (partnerid)"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
@@ -298,16 +314,11 @@ msgid "For Outgoing Payments"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import__data_file
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import__attachment_ids
 msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
 msgstr "Hankige pangaväljavõtted elektroonilises vormis ja valige need siin."
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__group_invoice_lines
-msgid "Group Invoice Lines"
-msgstr "Grupeeri arve read"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__id
@@ -316,17 +327,44 @@ msgid "ID"
 msgstr "ID"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__group_invoice_lines
-msgid ""
-"If this box is checked, the system will try to group the accounting lines "
-"when generating them from invoices."
-msgstr ""
-"Kui see on märgitud, siis arve genereerimisel süsteem grupeerib "
-"raamatupidamise kanded."
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_icon
+msgid "Icon"
+msgstr "Ikoon"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_journal.py:20
-#: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread
+msgid "If checked, new messages require your attention."
+msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
+#, python-format
+msgid ""
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
+msgid ""
+"If ticked, the accounting entry or invoice receives a hash as soon as it is "
+"posted and cannot be modified anymore."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_journal.py:0
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 #, python-format
 msgid "Import"
@@ -336,11 +374,6 @@ msgstr "Impordi"
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
 msgid "Import Bank Statement"
 msgstr "Impordi pangaväljavõte"
-
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "Import Bank Statements"
-msgstr "Impordi pangaväljavõtted"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
@@ -358,6 +391,11 @@ msgid "Install Import Format"
 msgstr ""
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_is_follower
+msgid "Is Follower"
+msgstr "Jälgija"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
 msgid "It acts as a default account for credit amount"
 msgstr "See toimib kui vaikimisi konto kreeditsummale"
@@ -369,7 +407,7 @@ msgstr "See toimib kui vaikimisi konto deebetsummale"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
-msgid "It creates draft vendor bill by sending an email."
+msgid "It creates draft invoices and bills by sending an email."
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -379,7 +417,7 @@ msgid "Journal"
 msgstr "Andmik"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:73
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
@@ -391,18 +429,26 @@ msgid "Journal Creation on Bank Statement Import"
 msgstr ""
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__journal_group_ids
+msgid "Journal Groups"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__name
 msgid "Journal Name"
 msgstr "Andmiku nimi"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__json_activity_data
+msgid "Json Activity Data"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
-"Just click OK to create the account/journal and finish the import. If this "
-"was a mistake, hit cancel to abort the import."
+"Just click OK to create the account/journal and finish the upload. If this "
+"was a mistake, hit cancel to abort the upload."
 msgstr ""
-"Vajuta OK konto/andmiku loomiseks ja lõpeta andmete importimine. Kui see on "
-"viga, vajuta Tühista."
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__kanban_dashboard
@@ -433,9 +479,19 @@ msgid "Last Updated on"
 msgstr "Viimati uuendatud (millal)"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
+msgid "Lock Posted Entries with Hash"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
 msgid "Loss Account"
 msgstr "Kahjukonto"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "Peamine manus"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
@@ -459,15 +515,65 @@ msgstr ""
 "SEPA Credit Transfer: Maksa arved SEPA maksefailiga laadides selle üles panka."
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
+msgid "Message Delivery error"
+msgstr "Sõnumi edastamise viga"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_ids
+msgid "Messages"
+msgstr "Sõnumid"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr "Järgmise tegevuse kuupäev"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_summary
+msgid "Next Activity Summary"
+msgstr "Järgmise tegevuse kokkuvõte"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_type_id
+msgid "Next Activity Type"
+msgstr "Järgmise tegevuse tüüp"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "Next Number"
 msgstr "Järgmine number"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:142
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "No currency found matching '%s'."
 msgstr "%s valuutat ei leitud."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
+msgid "Number of Actions"
+msgstr "Toimingute arv"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "Tegutsemist nõudvate sõnumite arv"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread_counter
+msgid "Number of unread messages"
+msgstr "Lugemata sõnumite arv"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -475,14 +581,29 @@ msgid "OK"
 msgstr "OK"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
-msgid "Post At Bank Reconciliation"
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at
+msgid "Post At"
 msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
 msgid "Profit Account"
 msgstr "Kasumi konto"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_user_id
+msgid "Responsible User"
+msgstr "Vastutav kasutaja"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
+msgid "Secure Sequence"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -499,13 +620,18 @@ msgstr ""
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "Select a bank statement file to import"
-msgstr "Vali importimiseks pangaväljavõtte fail"
+msgid "Select Files"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
 msgid "Sequence"
 msgstr "Järjestus"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
+msgid "Sequence to use to ensure the securisation of data"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
@@ -523,17 +649,24 @@ msgid "Show journal on dashboard"
 msgstr "Näita andmikku töölaual"
 
 #. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
 msgid ""
-"The account of the statement you are importing is not yet recorded in Odoo. "
-"In order to proceed with the import, you need to create a bank journal for "
-"this account."
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
 msgstr ""
-"Väljavõte konto, mida üritate importida, ei ole veel salvestatud Odoosse. "
-"Impordi jätkamiseks peate looma panga andmiku selle konto jaoks."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:157
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
+msgid ""
+"The account of the statement you are uploading is not yet recorded in Odoo. "
+"In order to proceed with the upload, you need to create a bank journal for "
+"this account."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
@@ -541,7 +674,7 @@ msgstr ""
 "Selle pangaväljavõtte pangakonto (%s) ei ole sama, mis on andmikus (%s)."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:167
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
@@ -586,21 +719,47 @@ msgstr ""
 "andmikus."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:117
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any statement."
-msgstr "See fail ei sisalda pangaväljavõtet."
+msgid "This file doesn't contain any statement for account %s."
+msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:125
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any transaction."
-msgstr "See fail ei sisalda ühtegi kannet."
+msgid "This file doesn't contain any transaction for account %s."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
 msgid "Type"
 msgstr "Tüüp"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread
+msgid "Unread Messages"
+msgstr "Lugemata sõnumid"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "Lugemata sõnumite loendur"
+
+#. module: account_bank_statement_import
+#: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Upload"
+msgstr "Üleslaadimine"
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Upload Bank Statements"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
@@ -626,12 +785,14 @@ msgstr ""
 " registreerimiseks"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
-msgid ""
-"Whether or not the payments made in this journal should be generated in "
-"draft state, so that the related journal entries are only posted when "
-"performing bank reconciliation."
-msgstr ""
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
+msgid "Website Messages"
+msgstr "Veebilehe sõnumid"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
+msgid "Website communication history"
+msgstr "Veebilehe suhtluse ajalugu"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
@@ -639,18 +800,33 @@ msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr "Kas näidata seda andmiku töölaual või mitte"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "You already have imported that file."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "You can install more file formats by"
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_model
+msgid ""
+"You can choose different models for each type of reference. The default one "
+"is the Odoo reference."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:47
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type
+msgid ""
+"You can set here the default communication that will appear on customer "
+"invoices, once validated, to help the customer to refer to that particular "
+"invoice when making the payment."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "You can upload your bank statement using:"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "You have to set a Default Debit Account and a Default Credit Account for the"
@@ -658,16 +834,6 @@ msgid ""
 msgstr ""
 "Te peate määrama vaikimisi kreeditkonto ja deebetkonto selle andmiku jaoks: "
 "%s"
-
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "_Import"
-msgstr "_Impordi"
-
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "installing the related modules"
-msgstr ""
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit

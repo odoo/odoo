@@ -1151,6 +1151,13 @@ msgid "Never"
 msgstr "אף פעם"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid ""
+"This partner has no email, which may cause issues with some payment "
+"acquirers. Setting an email for this partner is advised."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
 #, python-format
 msgid ""
@@ -1675,12 +1682,12 @@ msgstr "Stripe"
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr "Stripe מפתח שניתן לפרסם"
+msgstr "מפתח Stripe שניתן לפרסם"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr "Stripe מפתח סודי של"
+msgstr "מפתח סודי של Stripe "
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids

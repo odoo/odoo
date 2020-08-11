@@ -21,7 +21,6 @@
 # Youfu Sheng <wdmsyf@sina.com>, 2019
 # Martin Trigaux, 2019
 # aishiby Ail <15287995117@189.cn>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # keecome <7017511@qq.com>, 2019
 # Emily Jia <eji@odoo.com>, 2019
 # roye w <159820@qq.com>, 2019
@@ -38,6 +37,7 @@
 # Shiping Lv <lvshiping@sina.com>, 2019
 # liAnGjiA <liangjia@qq.com>, 2020
 # as co02 <asco02@163.com>, 2020
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
@@ -513,7 +513,7 @@ msgstr "操作可能触发特定的行为，如打开日历视图或在上传单
 #. module: mail
 #: model:ir.model.fields,help:mail.field_mail_message_subtype__default
 msgid "Activated by default when subscribing."
-msgstr "订阅时默认激活"
+msgstr "订阅时默认启用"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__active
@@ -6244,6 +6244,14 @@ msgid ""
 "You do not have the rights to modify fields related to moderation on one of "
 "the channels you are modifying."
 msgstr "您无权在通道上修改与审核相关的字段。"
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:89
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

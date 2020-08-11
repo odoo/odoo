@@ -201,6 +201,7 @@ class MergePartnerAutomatic(models.TransientModel):
             update_records('calendar', src=partner, field_model='model_id.model')
             update_records('ir.attachment', src=partner, field_model='res_model')
             update_records('mail.followers', src=partner, field_model='res_model')
+            update_records('mail.activity', src=partner, field_model='res_model')
             update_records('mail.message', src=partner)
             update_records('ir.model.data', src=partner)
 
@@ -311,9 +312,10 @@ class MergePartnerAutomatic(models.TransientModel):
 
         # Make the company of all related users consistent with destination partner company
         if dst_partner.company_id:
-            for user in partner_ids.mapped('user_ids'):
-                user.sudo().write({'company_ids': [(6, 0, [dst_partner.company_id.id])],
-                            'company_id': dst_partner.company_id.id})
+            partner_ids.mapped('user_ids').sudo().write({
+                'company_ids': [(4, dst_partner.company_id.id)],
+                'company_id': dst_partner.company_id.id
+            })
 
         # call sub methods to do the merge
         self._update_foreign_keys(src_partners, dst_partner)

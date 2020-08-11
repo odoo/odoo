@@ -5,14 +5,15 @@
 # Translators:
 # Dorin Hongu <dhongu@gmail.com>, 2019
 # Martin Trigaux, 2020
+# Foldi Robert <foldirobert@nexterp.ro>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-02-06 19:08+0000\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Martin Trigaux, 2020\n"
+"Last-Translator: Foldi Robert <foldirobert@nexterp.ro>, 2020\n"
 "Language-Team: Romanian (https://www.transifex.com/odoo/teams/41243/ro/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -30,6 +31,12 @@ msgid ""
 "there is no running contract for this employee or employee's contract is "
 "about to expire.\"/>"
 msgstr ""
+"<i class=\"fa fa-exclamation-triangle text-danger\" role=\"img\" "
+"title=\"There is something wrong with the contract. Either there is no "
+"running contract for this employee or employee's contract is about to "
+"expire.\" aria-label=\"There is something wrong with the contract. Either "
+"there is no running contract for this employee or employee's contract is "
+"about to expire.\"/>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -50,6 +57,11 @@ msgid ""
 "                                Calendar Mismatch : The employee's calendar does not match its current contract calendar. This could lead to unexpected behaviors.\n"
 "                            </span>"
 msgstr ""
+"<span attrs=\"{'invisible': [('calendar_mismatch', '=', False)]}\" class=\"fa fa-exclamation-triangle text-danger o_calendar_warning pl-3\">\n"
+"                            </span>\n"
+"                            <span class=\"o_calendar_warning_tooltip text-danger\">\n"
+"                                Nepotrivire Calendar: Calendarul angajatului nu se potrivește cu calendarul contractual actual. Acest lucru ar putea duce la comportamente neașteptate.\n"
+"                            </span>"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -91,7 +103,7 @@ msgstr "Stare activitate"
 #. module: hr_contract
 #: model:res.groups,name:hr_contract.group_hr_contract_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Administrator"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__advantages
@@ -110,6 +122,8 @@ msgid ""
 "An employee can only have one contract at the same time. (Excluding Draft "
 "and Cancelled contracts)"
 msgstr ""
+"Un angajat poate avea un singur contract în același timp. (Excluzând "
+"proiecte și contracte anulate)"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -131,7 +145,7 @@ msgstr "Numar de cont bancar"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__calendar_mismatch
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__calendar_mismatch
 msgid "Calendar Mismatch"
-msgstr ""
+msgstr "Nepotrivire Calendar"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__state__cancel
@@ -158,12 +172,12 @@ msgstr "Contract"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contracts_count
 msgid "Contract Count"
-msgstr ""
+msgstr "Nr. Contracte"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
 msgid "Contract Details"
-msgstr ""
+msgstr "Detalii Contract"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__name
@@ -180,7 +194,7 @@ msgstr "Termeni contract"
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__contract_warning
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_employee_view_search
 msgid "Contract Warning"
-msgstr ""
+msgstr "Avertisment Contract"
 
 #. module: hr_contract
 #: model:mail.message.subtype,description:hr_contract.mt_contract_pending
@@ -198,6 +212,8 @@ msgstr "Contract expirat"
 #, python-format
 msgid "Contract start date must be earlier than contract end date."
 msgstr ""
+"Data de începere a contractului trebuie să fie anterioară datei de încheiere"
+" a contractului"
 
 #. module: hr_contract
 #: model:mail.message.subtype,name:hr_contract.mt_department_contract_pending
@@ -244,7 +260,7 @@ msgstr "Contract curent"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_employee__contract_id
 msgid "Current contract of the employee"
-msgstr ""
+msgstr "Contract curent angajat"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -264,7 +280,7 @@ msgstr "Nume afișat"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Meniul derulant"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_kanban
@@ -274,7 +290,7 @@ msgstr "Editare contract"
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Employed"
-msgstr ""
+msgstr "Angajat"
 
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_hr_employee
@@ -341,6 +357,11 @@ msgid "Followers (Partners)"
 msgstr "Urmăritori (Parteneri)"
 
 #. module: hr_contract
+#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
+msgid "Future Activities"
+msgstr "Activități viitoare"
+
+#. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__done
 msgid "Green"
 msgstr "Verde"
@@ -348,12 +369,7 @@ msgstr "Verde"
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__normal
 msgid "Grey"
-msgstr ""
-
-#. module: hr_contract
-#: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
-msgid "Future Activities"
-msgstr "Activități viitoare"
+msgstr "Gri"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
@@ -365,12 +381,12 @@ msgstr "Grupează după"
 #: model:ir.cron,cron_name:hr_contract.ir_cron_data_contract_update_state
 #: model:ir.cron,name:hr_contract.ir_cron_data_contract_update_state
 msgid "HR Contract: update state"
-msgstr ""
+msgstr "Contract HR: actualizare stare"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__hr_responsible_id
 msgid "HR Responsible"
-msgstr ""
+msgstr "Responsabil HR"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__id
@@ -385,7 +401,7 @@ msgstr "Pictogramă"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Pictograma pentru a indica o activitate de excepție."
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction
@@ -438,7 +454,7 @@ msgstr "Activități întârziate"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Atașament principal"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_employee__medic_exam
@@ -449,7 +465,7 @@ msgstr "Data Examenului Medical"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Eroare livrare mesaj"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_ids
@@ -474,7 +490,7 @@ msgstr "Nou(ă)"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_date_deadline
 msgid "Next Activity Deadline"
-msgstr ""
+msgstr "Data limită pentru următoarea activitate"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_summary
@@ -500,7 +516,7 @@ msgstr "Număr de acțiuni"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Numărul de erori"
 
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__message_needaction_counter
@@ -520,7 +536,7 @@ msgstr "Număr de mesaje necitite"
 #. module: hr_contract
 #: model:ir.model.fields,help:hr_contract.field_hr_contract__hr_responsible_id
 msgid "Person responsible for validating the employee's contracts."
-msgstr ""
+msgstr "Persoana responsabilă pentru validare contracte angajați"
 
 #. module: hr_contract
 #: model:ir.model.fields.selection,name:hr_contract.selection__hr_contract__kanban_state__blocked
@@ -530,7 +546,7 @@ msgstr "Rosu"
 #. module: hr_contract
 #: model:ir.model,name:hr_contract.model_resource_calendar
 msgid "Resource Working Time"
-msgstr ""
+msgstr "Timpul Lucru Resurse"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__activity_user_id
@@ -546,7 +562,7 @@ msgstr "În execuție"
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Eroare livrare SMS"
 
 #. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_form
@@ -562,6 +578,7 @@ msgstr "Cauta Contract"
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Show all records which have a next action date before today"
 msgstr ""
+"Afișați toate înregistrările care au o dată de acțiune înainte de astăzi"
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__date_start
@@ -603,14 +620,14 @@ msgid "To Renew"
 msgstr "De Reînnoit"
 
 #. module: hr_contract
-#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
-msgid "Type of the exception activity on record."
-msgstr ""
-
-#. module: hr_contract
 #: model_terms:ir.ui.view,arch_db:hr_contract.hr_contract_view_search
 msgid "Today Activities"
 msgstr "Activitățile de astăzi"
+
+#. module: hr_contract
+#: model:ir.model.fields,help:hr_contract.field_hr_contract__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr "Tipul activității de excepție din înregistrare."
 
 #. module: hr_contract
 #: model:ir.model.fields,field_description:hr_contract.field_hr_contract__message_unread

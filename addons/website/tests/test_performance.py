@@ -52,7 +52,7 @@ class TestWebsitePerformance(HttpCase):
     def test_20_perf_sql_queries_homepage(self):
         # homepage "/" has its own controller
         # add 5 queries for test environment (RELEASE/SAVEPOINT/ROLLBACK test_cursor)
-        expected_sql = 19 + EXTRA_REQUEST
+        expected_sql = 21 + EXTRA_REQUEST
         self.assertEqual(self._get_url_hot_query('/'), expected_sql)
 
     def test_30_perf_sql_queries_page_no_layout(self):

@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo.addons.account.tests.invoice_test_common import InvoiceTestCommon
+from odoo.addons.account.tests.account_test_savepoint import AccountTestInvoicingCommon
 from odoo.tests.common import Form
 from odoo.tests import tagged
 from odoo import fields
@@ -8,11 +8,11 @@ from unittest.mock import patch
 
 
 @tagged('post_install', '-at_install')
-class TestAccountInvoiceReport(InvoiceTestCommon):
+class TestAccountInvoiceReport(AccountTestInvoicingCommon):
 
     @classmethod
-    def setUpClass(cls):
-        super(TestAccountInvoiceReport, cls).setUpClass()
+    def setUpClass(cls, chart_template_ref=None):
+        super().setUpClass(chart_template_ref=chart_template_ref)
 
         cls.invoices = cls.env['account.move'].create([
             {
@@ -117,7 +117,7 @@ class TestAccountInvoiceReport(InvoiceTestCommon):
             [1000,          1000,           1000,           1000,       1],
             [1000,          1000,           1000,           1000,       3],
             [6,             6,              6,              6,          1],
-            [-20,           -20,            -20,            -20,        1],
-            [-20,           -20,            -20,            -20,        1],
-            [-600,          -600,           -600,           -600,       1],
+            [-20,           -20,            -20,            -20,        -1],
+            [-20,           -20,            -20,            -20,        -1],
+            [-600,          -600,           -600,           -600,       -1],
         ])

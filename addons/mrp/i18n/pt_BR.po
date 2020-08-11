@@ -22,7 +22,12 @@
 # Mateus Lopes <mateus1@gmail.com>, 2019
 # Fernanda Marques <fem@odoo.com>, 2020
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
-# Luiz Fernando Gondin <lfpsgs@outlook.com>, 2020
+# Luiz Fernando <lfpsgs@outlook.com>, 2020
+# Maurício Liell <mauricio@liell.com.br>, 2020
+# André Carvalho <and2carvalho@gmail.com>, 2020
+# PopSolutions Cooperativa Digital <popsolutions.co@gmail.com>, 2020
+# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
+# Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
 # 
 msgid ""
 msgstr ""
@@ -30,7 +35,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-12-05 12:32+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Luiz Fernando Gondin <lfpsgs@outlook.com>, 2020\n"
+"Last-Translator: Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -413,7 +418,7 @@ msgstr "Atividades"
 #: model:ir.model.fields,field_description:mrp.field_mrp_unbuild__activity_exception_decoration
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Decoração de atividade excepcional "
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__activity_state
@@ -536,6 +541,15 @@ msgstr "Aprovar"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Arquivado"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"At least one work order has a quantity produced lower than the quantity "
+"produced in the manufacturing order. You must complete the work orders "
+"before posting the inventory."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -1329,7 +1343,7 @@ msgstr "Provisório"
 #: model:product.product,name:mrp.product_product_drawer_drawer
 #: model:product.template,name:mrp.product_product_drawer_drawer_product_template
 msgid "Drawer Black"
-msgstr ""
+msgstr "Gaveteiro Preto"
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_drawer_case
@@ -2280,7 +2294,7 @@ msgstr "Dados Principais"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_res_config_settings__module_mrp_mps
 msgid "Master Production Schedule"
-msgstr ""
+msgstr "Master Production Schedule"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_production__reservation_state
@@ -3697,7 +3711,7 @@ msgstr "Movimentos de Estoque"
 #. module: mrp
 #: model:ir.model,name:mrp.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Regra de estoque"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_stock_warehouse__sam_loc_id
@@ -3707,7 +3721,7 @@ msgstr ""
 #. module: mrp
 #: model:ir.model,name:mrp.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Relatório de regra de estoque"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
@@ -3913,7 +3927,7 @@ msgstr "A quantidade para produzir deve ser positiva!"
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_document__res_id
 msgid "The record id this is attached to."
-msgstr ""
+msgstr "The record id this is attached to."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_production__propagate_date
@@ -3958,6 +3972,8 @@ msgid ""
 "This field is used in order to define in which timezone the resources will "
 "work."
 msgstr ""
+"Este campo é usado para definir em qual fuso horário os colaboradores irão "
+"trabalhar."
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__time_efficiency

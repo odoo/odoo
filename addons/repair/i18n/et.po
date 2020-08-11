@@ -1,26 +1,27 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * repair
+# 	* repair
 # 
 # Translators:
-# Rivo Zängov <eraser@eraser.ee>, 2018
-# Martin Trigaux, 2018
-# Wanradt Koell <wanradt@gmail.com>, 2018
-# Arma Gedonsky <armagedonsky@hot.ee>, 2018
-# Gert Valdek <gert@airobot.ee>, 2018
-# Egon Raamat <egon@avalah.ee>, 2018
-# Eneli Õigus <enelioigus@gmail.com>, 2018
-# Marek Pontus, 2018
-# Martin Aavastik <martin@avalah.ee>, 2018
-# Helen Sulaoja <helen@avalah.ee>, 2018
+# Rivo Zängov <eraser@eraser.ee>, 2020
+# Wanradt Koell <wanradt@gmail.com>, 2020
+# Arma Gedonsky <armagedonsky@hot.ee>, 2020
+# Gert Valdek <gert@airobot.ee>, 2020
+# Egon Raamat <egon@avalah.ee>, 2020
+# Marek Pontus, 2020
+# Martin Trigaux, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
+# Martin Aavastik <martin@avalah.ee>, 2020
+# Helen Sulaoja <helen@avalah.ee>, 2020
+# Algo Kärp <algokarp@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2018\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Algo Kärp <algokarp@gmail.com>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,9 +41,16 @@ msgstr ""
 "${object.partner_id.name} Repair Orders (Ref ${object.name or 'n/a' })"
 
 #. module: repair
+#: model:ir.actions.report,print_report_name:repair.action_report_repair_order
+msgid ""
+"(                 object.state == 'draft' and 'Repair Quotation - %s' % "
+"(object.name) or                 'Repair Order - %s' % (object.name))"
+msgstr ""
+
+#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "(<i>Remove</i>)"
-msgstr "(<i>Remove</i>)"
+msgstr "(<i>Eemalda</i>)"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -92,7 +100,7 @@ msgstr ""
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<i>(Add)</i>"
-msgstr "<i>(Add)</i>"
+msgstr "<i>(Lisa)</i>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_cancel_repair
@@ -102,24 +110,31 @@ msgid ""
 msgstr ""
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid ""
+"<span class=\"o_stat_text\">1</span>\n"
+"                                <span class=\"o_stat_text\">Invoices</span>"
+msgstr ""
+
+#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Lot/Serial Number:</strong>"
-msgstr "<strong>Lot/Serial Number:</strong>"
+msgstr "<strong>Partii/seerianumber:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Operations</strong>"
-msgstr "<strong>Operations</strong>"
+msgstr "<strong>Operatsioonid</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Parts</strong>"
-msgstr "<strong>Parts</strong>"
+msgstr "<strong>Osad</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Printing Date:</strong>"
-msgstr "<strong>Printing Date:</strong>"
+msgstr "<strong>Printimise kuupäev:</strong>"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -144,7 +159,7 @@ msgstr "<strong>Kokku</strong>"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "<strong>Warranty:</strong>"
-msgstr "<strong>Warranty:</strong>"
+msgstr "<strong>Garantii:</strong>"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_needaction
@@ -157,27 +172,32 @@ msgid "Activities"
 msgstr "Tegevused"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_state
 msgid "Activity State"
 msgstr "Tegevuse staatus"
 
 #. module: repair
-#: selection:repair.line,type:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__type__add
 msgid "Add"
 msgstr "Lisa"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add internal notes..."
-msgstr "Add internal notes..."
+msgstr "Lisage sisemisi märkmeid..."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Add quotation notes..."
-msgstr "Add quotation notes..."
+msgstr "Lisage pakkumiste märkmeid..."
 
 #. module: repair
-#: selection:repair.order,invoice_method:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__after_repair
 msgid "After Repair"
 msgstr "Parandusjärgne"
 
@@ -187,7 +207,7 @@ msgid "Attachment Count"
 msgstr ""
 
 #. module: repair
-#: selection:repair.order,invoice_method:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__b4repair
 msgid "Before Repair"
 msgstr "Paranduseelne"
 
@@ -210,15 +230,23 @@ msgid "Cancel Repair Order"
 msgstr "Tühista parandustellimus"
 
 #. module: repair
-#: selection:repair.line,state:0 selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__cancel
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__cancel
 msgid "Cancelled"
 msgstr "Tühistatud"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:244
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Cannot cancel completed repairs."
 msgstr "Ei saa tühistada valmis parandustöid"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_fee__product_uom_category_id
+#: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_category_id
+#: model:ir.model.fields,field_description:repair.field_repair_order__product_uom_category_id
+msgid "Category"
+msgstr "Kategooria"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__partner_id
@@ -228,10 +256,20 @@ msgid ""
 msgstr ""
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_tags__color
+msgid "Color Index"
+msgstr "Värvikood"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__company_id
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Company"
 msgstr "Ettevõte"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_config
+msgid "Configuration"
+msgstr "Seadistused"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -239,14 +277,25 @@ msgid "Confirm Repair"
 msgstr "Kinnita parandustöö"
 
 #. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__confirmed
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__confirmed
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-#: selection:repair.line,state:0 selection:repair.order,state:0
 msgid "Confirmed"
 msgstr "Kinnitatud"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:607
-#: code:addons/repair/models/repair.py:667
+#: model:ir.model.fields,help:repair.field_repair_fee__product_uom_category_id
+#: model:ir.model.fields,help:repair.field_repair_line__product_uom_category_id
+#: model:ir.model.fields,help:repair.field_repair_order__product_uom_category_id
+msgid ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+msgstr ""
+"Conversion between Units of Measure can only occur if they belong to the "
+"same category. The conversion will be made based on the ratios."
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
 "Couldn't find a pricelist line matching this product and quantity.\n"
@@ -256,7 +305,6 @@ msgstr ""
 "You have to change either the product, the quantity or the pricelist."
 
 #. module: repair
-#: model:ir.actions.act_window,name:repair.act_repair_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Create Invoice"
@@ -273,6 +321,12 @@ msgid "Create a new reparation order"
 msgstr ""
 
 #. module: repair
+#: model_terms:ir.actions.act_window,help:repair.action_repair_order_tag
+msgid "Create a new tag"
+msgstr "Loo uus silt"
+
+#. module: repair
+#: model:ir.actions.act_window,name:repair.act_repair_invoice
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Create invoices"
 msgstr "Loo arve"
@@ -283,6 +337,7 @@ msgstr "Loo arve"
 #: model:ir.model.fields,field_description:repair.field_repair_line__create_uid
 #: model:ir.model.fields,field_description:repair.field_repair_order__create_uid
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__create_uid
+#: model:ir.model.fields,field_description:repair.field_repair_tags__create_uid
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_uid
 msgid "Created by"
 msgstr "Loonud"
@@ -293,19 +348,21 @@ msgstr "Loonud"
 #: model:ir.model.fields,field_description:repair.field_repair_line__create_date
 #: model:ir.model.fields,field_description:repair.field_repair_order__create_date
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__create_date
+#: model:ir.model.fields,field_description:repair.field_repair_tags__create_date
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__create_date
 msgid "Created on"
 msgstr "Loomise kuupäev"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__partner_id
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Customer"
 msgstr "Klient"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__default_address_id
 msgid "Default Address"
-msgstr "Default Address"
+msgstr "Aadress vaikimisi"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__address_id
@@ -330,6 +387,7 @@ msgstr "Sihtkoht"
 #: model:ir.model.fields,field_description:repair.field_repair_line__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order__display_name
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__display_name
+#: model:ir.model.fields,field_description:repair.field_repair_tags__display_name
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__display_name
 msgid "Display Name"
 msgstr "Näidatav nimi"
@@ -337,15 +395,15 @@ msgstr "Näidatav nimi"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_make_invoice
 msgid "Do you really want to create the invoice(s)?"
-msgstr "Do you really want to create the invoice(s)?"
+msgstr "Kas soovite tõesti arve(d) luua?"
 
 #. module: repair
-#: selection:repair.line,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__done
 msgid "Done"
 msgstr "Tehtud"
 
 #. module: repair
-#: selection:repair.line,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__state__draft
 msgid "Draft"
 msgstr "Mustand"
 
@@ -357,7 +415,7 @@ msgstr "Parandustööde lõpp"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__tracking
 msgid "Ensure the traceability of a storable product in your warehouse."
-msgstr ""
+msgstr "Tagage oma lattu ladustava toote jälgitavus."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -392,7 +450,7 @@ msgstr "Tulevased tegevused"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Group By"
-msgstr "Rühmitamine"
+msgstr "Grupeerimine"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__group
@@ -410,22 +468,30 @@ msgstr "Ajalugu"
 #: model:ir.model.fields,field_description:repair.field_repair_line__id
 #: model:ir.model.fields,field_description:repair.field_repair_order__id
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__id
+#: model:ir.model.fields,field_description:repair.field_repair_tags__id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__id
 msgid "ID"
 msgstr "ID"
 
 #. module: repair
-#: model:ir.model.fields,help:repair.field_repair_order__message_unread
-msgid "If checked new messages require your attention."
-msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
+#: model:ir.model.fields,field_description:repair.field_repair_order__activity_exception_icon
+msgid "Icon"
+msgstr "Ikoon"
+
+#. module: repair
+#: model:ir.model.fields,help:repair.field_repair_order__activity_exception_icon
+msgid "Icon to indicate an exception activity."
+msgstr ""
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_needaction
+#: model:ir.model.fields,help:repair.field_repair_order__message_unread
 msgid "If checked, new messages require your attention."
 msgstr "Kui kontrollitud, siis uued sõnumid nõuavad Su tähelepanu."
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__message_has_error
+#: model:ir.model.fields,help:repair.field_repair_order__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
 msgstr ""
 
@@ -441,7 +507,7 @@ msgstr ""
 "                operations."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:210
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Insufficient Quantity"
 msgstr "Pole vajaliku kogust"
@@ -458,12 +524,11 @@ msgstr "Laoliikumine"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__invoice_id
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Invoice"
 msgstr "Arve"
 
 #. module: repair
-#: selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__invoice_except
 msgid "Invoice Exception"
 msgstr "Arve erand"
 
@@ -489,10 +554,10 @@ msgid "Invoice and shipping address:"
 msgstr "Arve ja tarne aadress:"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:385
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Invoice created"
-msgstr "Invoice created"
+msgstr "Arve loodud"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__invoiced
@@ -513,11 +578,22 @@ msgid "Is Follower"
 msgstr "Jälgija"
 
 #. module: repair
+#: model:ir.model,name:repair.model_account_move
+msgid "Journal Entries"
+msgstr "Andmike kanded"
+
+#. module: repair
+#: model:ir.model,name:repair.model_account_move_line
+msgid "Journal Item"
+msgstr "Andmiku kanderida"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_cancel____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_fee____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_line____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_order____last_update
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice____last_update
+#: model:ir.model.fields,field_description:repair.field_repair_tags____last_update
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair____last_update
 msgid "Last Modified on"
 msgstr "Viimati muudetud (millal)"
@@ -528,6 +604,7 @@ msgstr "Viimati muudetud (millal)"
 #: model:ir.model.fields,field_description:repair.field_repair_line__write_uid
 #: model:ir.model.fields,field_description:repair.field_repair_order__write_uid
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__write_uid
+#: model:ir.model.fields,field_description:repair.field_repair_tags__write_uid
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_uid
 msgid "Last Updated by"
 msgstr "Viimati uuendatud (kelle poolt)"
@@ -538,6 +615,7 @@ msgstr "Viimati uuendatud (kelle poolt)"
 #: model:ir.model.fields,field_description:repair.field_repair_line__write_date
 #: model:ir.model.fields,field_description:repair.field_repair_order__write_date
 #: model:ir.model.fields,field_description:repair.field_repair_order_make_invoice__write_date
+#: model:ir.model.fields,field_description:repair.field_repair_tags__write_date
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__write_date
 msgid "Last Updated on"
 msgstr "Viimati uuendatud (millal)"
@@ -545,7 +623,7 @@ msgstr "Viimati uuendatud (millal)"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Late Activities"
-msgstr "Hilinenud tegevused"
+msgstr "Üle tähtaja tegevused"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__location_id
@@ -562,12 +640,12 @@ msgstr "Partii/seerianumber"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "Peamine manus"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "Sõnumi edastamise viga"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_ids
@@ -577,17 +655,12 @@ msgstr "Sõnumid"
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__move_id
 msgid "Move"
-msgstr "Suuna"
+msgstr "Siirda"
 
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__move_id
 msgid "Move created by the repair order"
-msgstr "Move created by the repair order"
-
-#. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-msgid "My Activities"
-msgstr "Minu tegevused"
+msgstr "Parandustellimusega loodud liikumine"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_date_deadline
@@ -605,39 +678,30 @@ msgid "Next Activity Type"
 msgstr "Järgmise tegevuse tüüp"
 
 #. module: repair
-#: selection:repair.order,invoice_method:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__invoice_method__none
 msgid "No Invoice"
 msgstr "Arve puudub"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:308
-#, python-format
-msgid "No account defined for partner \"%s\"."
-msgstr "No account defined for partner \"%s\"."
-
-#. module: repair
-#: code:addons/repair/models/repair.py:334
-#: code:addons/repair/models/repair.py:362
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No account defined for product \"%s\"."
-msgstr "No account defined for product \"%s\"."
+msgstr "Partnerile pole määratud kontot \"%s\"."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:598
-#: code:addons/repair/models/repair.py:658
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No pricelist found."
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:355
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No product defined on fees."
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:605
-#: code:addons/repair/models/repair.py:665
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid "No valid pricelist line found."
 msgstr ""
@@ -654,7 +718,7 @@ msgstr "Toimingute arv"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: repair
@@ -673,7 +737,7 @@ msgid "Number of unread messages"
 msgstr "Lugemata sõnumite arv"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:232
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Only draft repairs can be confirmed."
 msgstr ""
@@ -685,25 +749,16 @@ msgid "Operations"
 msgstr "Tegevused"
 
 #. module: repair
-#: selection:repair.order,activity_state:0
-msgid "Overdue"
-msgstr "Hilinenud"
-
-#. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
-msgid "Partner"
-msgstr "Partner"
-
-#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__operations
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Parts"
-msgstr "Parts"
+msgstr "Osad"
 
 #. module: repair
-#: selection:repair.order,activity_state:0
-msgid "Planned"
-msgstr "Planned"
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "Please define an accounting sales journal for the company %s (%s)."
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -718,12 +773,12 @@ msgstr "Hinnakiri"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__pricelist_id
 msgid "Pricelist of the selected partner."
-msgstr "Pricelist of the selected partner."
+msgstr "Valitud partneri hinnakiri."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Print Quotation"
-msgstr "Print Quotation"
+msgstr "Prindi pakkumine"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__product_id
@@ -753,7 +808,7 @@ msgstr "Parandatav toode"
 #. module: repair
 #: model:ir.model.fields,help:repair.field_repair_order__lot_id
 msgid "Products repaired are all belonging to this lot"
-msgstr "Products repaired are all belonging to this lot"
+msgstr "Kõik remonditud tooted kuuluvad sellele partiile"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__quant_ids
@@ -765,11 +820,12 @@ msgstr "Koguseosa"
 #: model:ir.model.fields,field_description:repair.field_repair_line__product_uom_qty
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Quantity"
 msgstr "Kogus"
 
 #. module: repair
-#: selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__draft
 msgid "Quotation"
 msgstr "Pakkumine"
 
@@ -791,23 +847,29 @@ msgstr "Pakkumised"
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Ready To Repair"
-msgstr "Valmis parandamiseks"
+msgstr "Valmis parandustöödeks"
 
 #. module: repair
-#: selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__ready
 msgid "Ready to Repair"
 msgstr "Valmis parandustöödeks"
 
 #. module: repair
-#: selection:repair.line,type:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_line__type__remove
 msgid "Remove"
 msgstr "Eemalda"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move__repair_ids
 #: model:ir.model.fields,field_description:repair.field_stock_move__repair_id
 #: model:ir.model.fields,field_description:repair.field_stock_warn_insufficient_qty_repair__repair_id
 msgid "Repair"
 msgstr "Paranda"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_account_move_line__repair_fee_ids
+msgid "Repair Fee"
+msgstr ""
 
 #. module: repair
 #: model:ir.model,name:repair.model_repair_fee
@@ -815,7 +877,7 @@ msgid "Repair Fees"
 msgstr ""
 
 #. module: repair
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model:ir.model.fields,field_description:repair.field_account_move_line__repair_line_ids
 msgid "Repair Line"
 msgstr "Parandustööde järjekord"
 
@@ -827,6 +889,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model,name:repair.model_repair_order
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
 msgid "Repair Order"
 msgstr "Parandustellimus"
 
@@ -842,10 +905,17 @@ msgid "Repair Order Reference"
 msgstr "Paranda tellimusviide"
 
 #. module: repair
+#: model:ir.actions.act_window,name:repair.action_repair_order_graph
 #: model:ir.actions.act_window,name:repair.action_repair_order_tree
-#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_graph
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_pivot
 msgid "Repair Orders"
-msgstr "parandustellimused"
+msgstr "Parandustellimused"
+
+#. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_tag
+msgid "Repair Orders Tags"
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
@@ -858,43 +928,56 @@ msgid "Repair Reference"
 msgstr "Paranda viide"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:196
+#: model:product.product,name:repair.product_service_order_repair
+#: model:product.template,name:repair.product_service_order_repair_product_template
+msgid "Repair Services"
+msgstr ""
+
+#. module: repair
+#: model:ir.model,name:repair.model_repair_tags
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_form
+msgid "Repair Tags"
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be canceled in order to reset it to draft."
 msgstr "Parandustöö peab olema tühistatud, et seda saaks muuta mustandiks."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:404
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be confirmed before starting reparation."
-msgstr "Repair must be confirmed before starting reparation."
+msgstr "Parandustöö tuleb enne remondi alustamist kinnitada."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:432
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be repaired in order to make the product moves."
 msgstr "Repair must be repaired in order to make the product moves."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:415
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Repair must be under repair in order to end reparation."
 msgstr "Repair must be under repair in order to end reparation."
 
 #. module: repair
-#: code:addons/repair/wizard/repair_cancel.py:20
+#: code:addons/repair/wizard/repair_cancel.py:0
 #, python-format
 msgid "Repair order is not invoiced."
-msgstr "Parandustellimuse eest ei ole arvet esitatud."
+msgstr "Parandustööde eest ei ole arvet esitatud."
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__repaired
-#: selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__done
 msgid "Repaired"
 msgstr "Parandatud"
 
 #. module: repair
 #: model:ir.ui.menu,name:repair.menu_repair_order
+#: model:ir.ui.menu,name:repair.repair_menu
 msgid "Repairs"
 msgstr "Parandustööd"
 
@@ -905,9 +988,24 @@ msgid "Repairs order"
 msgstr "Parandustellimused"
 
 #. module: repair
+#: model:ir.ui.menu,name:repair.repair_menu_reporting
+msgid "Reporting"
+msgstr "Aruandlus"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__user_id
+msgid "Responsible"
+msgstr "Vastutaja"
+
+#. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__activity_user_id
 msgid "Responsible User"
 msgstr "Vastutav kasutaja"
+
+#. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_order__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -921,17 +1019,17 @@ msgid ""
 "invoice before or after the repair is done respectively. 'No invoice' means "
 "you don't want to generate invoice for this repair order."
 msgstr ""
-"Selecting 'Before Repair' or 'After Repair' will allow you to generate "
-"invoice before or after the repair is done respectively. 'No invoice' means "
-"you don't want to generate invoice for this repair order."
+"Valiku „Enne parandamist” või „Peale parandamist” valimine võimaldab teil "
+"luua arve enne või pärast parandustööde teostamist. „Ei ole arve” tähendab, "
+"et te ei soovi selle parandustöö jaoks arvet genereerida."
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
 msgid "Send Quotation"
-msgstr "Send Quotation"
+msgstr "Saada pakkumine"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:545
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Serial number is required for operation line with product '%s'"
 msgstr "Serial number is required for operation line with product '%s'"
@@ -951,7 +1049,7 @@ msgstr ""
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_line__location_id
 msgid "Source Location"
-msgstr "Lähtekoht"
+msgstr "Lähteasukoht"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
@@ -986,9 +1084,27 @@ msgid "Subtotal"
 msgstr "Vahesumma"
 
 #. module: repair
+#: model:ir.model.fields,field_description:repair.field_repair_tags__name
+msgid "Tag Name"
+msgstr "Sildi nimi"
+
+#. module: repair
+#: model:ir.model.constraint,message:repair.constraint_repair_tags_name_uniq
+msgid "Tag name already exists!"
+msgstr ""
+
+#. module: repair
+#: model:ir.actions.act_window,name:repair.action_repair_order_tag
+#: model:ir.model.fields,field_description:repair.field_repair_order__tag_ids
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_search
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_tag_tree
+msgid "Tags"
+msgstr "Sildid"
+
+#. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.report_repairorder
 msgid "Tax"
-msgstr "Tulumaks"
+msgstr "Maksud"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_fee__tax_id
@@ -999,12 +1115,12 @@ msgid "Taxes"
 msgstr "Maksud"
 
 #. module: repair
-#: sql_constraint:repair.order:0
+#: model:ir.model.constraint,message:repair.constraint_repair_order_name
 msgid "The name of the Repair Order must be unique!"
-msgstr "The name of the Repair Order must be unique!"
+msgstr "Parandustöö tellimuse nimi peab olema unikaalne!"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:172
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
 "The product unit of measure you chose has a different category than the "
@@ -1012,7 +1128,7 @@ msgid ""
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:246
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "The repair order is already invoiced."
 msgstr ""
@@ -1043,14 +1159,9 @@ msgid "This is the location where the product to repair is located."
 msgstr ""
 
 #. module: repair
-#: selection:repair.order,state:0
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__2binvoiced
 msgid "To be Invoiced"
 msgstr "Tehakse arve"
-
-#. module: repair
-#: selection:repair.order,activity_state:0
-msgid "Today"
-msgstr "Täna"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form_filter
@@ -1083,7 +1194,12 @@ msgid "Type"
 msgstr "Tüüp"
 
 #. module: repair
-#: selection:repair.order,state:0
+#: model:ir.model.fields,help:repair.field_repair_order__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: repair
+#: model:ir.model.fields.selection,name:repair.selection__repair_order__state__under_repair
 msgid "Under Repair"
 msgstr "Parandamises"
 
@@ -1096,8 +1212,15 @@ msgstr "Ühiku hind"
 
 #. module: repair
 #: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_tree
 msgid "Unit of Measure"
 msgstr "Mõõtühik"
+
+#. module: repair
+#: model:product.product,uom_name:repair.product_service_order_repair
+#: model:product.template,uom_name:repair.product_service_order_repair_product_template
+msgid "Units"
+msgstr "Ühikud"
 
 #. module: repair
 #: model:ir.model.fields,field_description:repair.field_repair_order__message_unread
@@ -1120,12 +1243,17 @@ msgid "Untaxed amount"
 msgstr "Maksudeta summa"
 
 #. module: repair
+#: model_terms:ir.ui.view,arch_db:repair.view_repair_order_form
+msgid "UoM"
+msgstr "Mõõtühikud"
+
+#. module: repair
 #: model:ir.model,name:repair.model_stock_warn_insufficient_qty_repair
 msgid "Warn Insufficient Repair Quantity"
 msgstr ""
 
 #. module: repair
-#: code:addons/repair/models/repair.py:172
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "Warning"
 msgstr "Hoiatus"
@@ -1152,8 +1280,13 @@ msgid "Yes"
 msgstr "Jah"
 
 #. module: repair
-#: code:addons/repair/models/repair.py:600
-#: code:addons/repair/models/repair.py:660
+#: code:addons/repair/models/repair.py:0
+#, python-format
+msgid "You can not enter negative quantities."
+msgstr ""
+
+#. module: repair
+#: code:addons/repair/models/repair.py:0 code:addons/repair/models/repair.py:0
 #, python-format
 msgid ""
 "You have to select a pricelist in the Repair form !\n"
@@ -1163,7 +1296,7 @@ msgstr ""
 " Palun seadistage üks enne toote valimist."
 
 #. module: repair
-#: code:addons/repair/models/repair.py:296
+#: code:addons/repair/models/repair.py:0
 #, python-format
 msgid "You have to select an invoice address in the repair form."
 msgstr ""

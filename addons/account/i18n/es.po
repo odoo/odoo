@@ -63,10 +63,12 @@
 # Platon BJS <raul.caballero.girol@gmail.com>, 2019
 # gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # Juventino Villegas <2tino480@gmail.com>, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Carlos Dauden <carlos.dauden@tecnativa.com>, 2020
+# Haider Ilich López Areiza <hlopez@itsoluciones.com.co>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -74,7 +76,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:06+0000\n"
-"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
+"Last-Translator: Pedro M. Baeza <pedro.baeza@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -247,13 +249,13 @@ msgstr ""
 "<div style=\"margin: 0px; padding: 0px;\">\n"
 "    <p style=\"margin: 0px; padding: 0px; font-size: 13px;\">\n"
 "        Estimado/a ${object.partner_id.name}<br/><br/>\n"
-"        Gracias por tu pago.\n"
-"        Aquí está su recibo de pago <strong>${(object.name or '').replace('/','-')}</strong> costando\n"
-"        para <strong>${format_amount(object.amount, object.currency_id)}</strong> de ${object.company_id.name}.\n"
+"        Gracias por su pago.\n"
+"        Aquí tiene su recibo <strong>${(object.name or '').replace('/','-')}</strong> de ${object.company_id.name} por un importe\n"
+"        de <strong>${format_amount(object.amount, object.currency_id)}</strong>.\n"
 "        <br/><br/>\n"
 "        No dude en contactarnos si tiene alguna pregunta.\n"
 "        <br/><br/>\n"
-"        Sludos cordiales,<br/>\n"
+"        Saludos cordiales,<br/>\n"
 "        % if user and user.signature:\n"
 "        ${user.signature | safe}\n"
 "        % endif\n"
@@ -303,7 +305,7 @@ msgstr ""
 "             ${object.partner_id.name},\n"
 "        % endif\n"
 "        <br/><br/>\n"
-"        Adjunta su\n"
+"        Se remite adjunta su\n"
 "        % if object.name:\n"
 "            factura <strong>${object.name}</strong>\n"
 "        % else:\n"
@@ -317,7 +319,7 @@ msgstr ""
 "        % if object.invoice_payment_state == 'paid':\n"
 "            Esta factura ya se encuentra pagada.\n"
 "        % else:\n"
-"            Por favor, remita su pago tan pronto como le sea posible.\n"
+"            Consulte los detalles de plazo y modo de pago en el documento.\n"
 "        % endif\n"
 "        <br/><br/>\n"
 "        En caso de requerir cualquier aclaración, por favor no dude en contactarnos.\n"
@@ -766,7 +768,7 @@ msgstr "<strong class=\"text-muted\">Vendedor</strong>"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document_with_payments
 msgid "<strong>Amount Due</strong>"
-msgstr "<strong>Importe vencido</strong>"
+msgstr "<strong>Importe adeudado</strong>"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_journal
@@ -4624,7 +4626,7 @@ msgstr "Vencido"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_invoice_report__residual
 msgid "Due Amount"
-msgstr "Importe vencido"
+msgstr "Importe adeudado"
 
 #. module: account
 #. openerp-web
@@ -8002,7 +8004,7 @@ msgstr "Emisor del pago"
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_line_id
 #: model_terms:ir.ui.view,arch_db:account.view_account_move_line_filter
 msgid "Originator Tax"
-msgstr "Impuesto de origen"
+msgstr "Impuesto (cuota)"
 
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_repartition_line_id
@@ -8012,7 +8014,7 @@ msgstr "Línea de reparto de impuestos origen"
 #. module: account
 #: model:ir.model.fields,field_description:account.field_account_move_line__tax_group_id
 msgid "Originator tax group"
-msgstr "Grupo de impuestos origen"
+msgstr "Grupo de impuestos (cuota)"
 
 #. module: account
 #. openerp-web
@@ -13326,6 +13328,12 @@ msgstr ""
 "Debería configurar la 'Cuenta de pérdidas por tasa de cambio' en las "
 "opciones de contabilidad para gestionar automáticamente los asientos "
 "relacionados con diferencias entre tipos de cambio."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr "Establezca un valor de redondeo positivo."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

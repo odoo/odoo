@@ -7,12 +7,12 @@
 # Daniel Gerstenbrand <daniel.gerstenbrand@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Kovács Tibor <kovika@gmail.com>, 2019
-# Ákos Nagy <akos.nagy@oregional.hu>, 2019
 # Istvan <leki69@gmail.com>, 2019
 # krnkris, 2019
-# gezza <geza.nagy@oregional.hu>, 2020
 # Tamás Németh <ntomasz81@gmail.com>, 2020
 # A . <tiboreu@protonmail.com>, 2020
+# Ákos Nagy <akos.nagy@oregional.hu>, 2020
+# gezza <geza.nagy@oregional.hu>, 2020
 # 
 msgid ""
 msgstr ""
@@ -20,7 +20,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: A . <tiboreu@protonmail.com>, 2020\n"
+"Last-Translator: gezza <geza.nagy@oregional.hu>, 2020\n"
 "Language-Team: Hungarian (https://www.transifex.com/odoo/teams/41243/hu/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -156,13 +156,14 @@ msgstr ""
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A journal must be specified of the acquirer %s."
-msgstr ""
+msgstr "Meg kell adni egy naplót a lebonyolítóhoz: %s."
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "A payment acquirer is required to create a transaction."
 msgstr ""
+"Kötelező megadni egy fizetési szolgáltatót a tranzakció létrehozásához."
 
 #. module: payment
 #: code:addons/payment/models/account_payment.py:0
@@ -365,7 +366,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_account_move__authorized_transaction_ids
 msgid "Authorized Transactions"
-msgstr ""
+msgstr "Jóváhagyott tranzakciók"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.acquirer_form
@@ -460,7 +461,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.account_invoice_view_form_inherit_payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
 msgid "Capture Transaction"
-msgstr ""
+msgstr "Tranzakció rögzítése"
 
 #. module: payment
 #: model:ir.model.fields,help:payment.field_payment_acquirer__capture_manually
@@ -671,7 +672,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__payment_acquirer_onboarding_wizard__payment_method__manual
 msgid "Custom payment instructions"
-msgstr ""
+msgstr "Egyéni fizetési utasítások"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_id
@@ -956,13 +957,13 @@ msgstr "Belső szerverhiba"
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token acquirer %s != %s"
-msgstr ""
+msgstr "Érvénytelen token! Token szolgáltató %s != %s"
 
 #. module: payment
 #: code:addons/payment/models/account_invoice.py:0
 #, python-format
 msgid "Invalid token found! Token partner %s != %s"
-msgstr ""
+msgstr "Érvénytelen token! Token partner %s != %s"
 
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.transaction_form
@@ -989,7 +990,7 @@ msgstr ""
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_acquirer_onboarding_state__just_done
 msgid "Just done"
-msgstr ""
+msgstr "Éppen elkészült"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_transaction__partner_lang
@@ -1148,6 +1149,13 @@ msgid "Never"
 msgstr "Soha"
 
 #. module: payment
+#: model_terms:ir.ui.view,arch_db:payment.payment_link_wizard_view_form
+msgid ""
+"This partner has no email, which may cause issues with some payment "
+"acquirers. Setting an email for this partner is advised."
+msgstr ""
+
+#. module: payment
 #: code:addons/payment/wizards/payment_acquirer_onboarding_wizard.py:0
 #, python-format
 msgid ""
@@ -1228,7 +1236,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "Or scan me with your banking app."
-msgstr ""
+msgstr "Vagy szkenneljen engem a banki alkalmazásával."
 
 #. module: payment
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__other
@@ -1317,12 +1325,12 @@ msgstr ""
 #: model:ir.actions.act_window,name:payment.action_payment_icon
 #: model:ir.ui.menu,name:payment.payment_icon_menu
 msgid "Payment Icons"
-msgstr ""
+msgstr "Fizetési ikonok"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__manual_post_msg
 msgid "Payment Instructions"
-msgstr ""
+msgstr "Fizetési útmutató"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__journal_id
@@ -1632,7 +1640,7 @@ msgstr "Szerverhiba:"
 #. module: payment
 #: model_terms:ir.ui.view,arch_db:payment.onboarding_payment_acquirer_step
 msgid "Set payments"
-msgstr ""
+msgstr "Fizetések beállítása"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_token__short_name
@@ -1664,17 +1672,17 @@ msgstr "Állapot"
 #: model:ir.model.fields.selection,name:payment.selection__res_company__payment_onboarding_payment_method__stripe
 #: model:payment.acquirer,name:payment.payment_acquirer_stripe
 msgid "Stripe"
-msgstr ""
+msgstr "Stripe"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_publishable_key
 msgid "Stripe Publishable Key"
-msgstr ""
+msgstr "Stripe publikus kulcs"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer_onboarding_wizard__stripe_secret_key
 msgid "Stripe Secret Key"
-msgstr ""
+msgstr "Stripe titkos kulcs"
 
 #. module: payment
 #: model:ir.model.fields,field_description:payment.field_payment_acquirer__payment_icon_ids
@@ -1703,7 +1711,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:payment.confirm
 #: model_terms:ir.ui.view,arch_db:payment.payment_confirmation_status
 msgid "The SEPA QR Code informations are not set correctly."
-msgstr ""
+msgstr "A SEPA QR-kód adatai nincsenek helyesen beállítva."
 
 #. module: payment
 #: code:addons/payment/models/payment_acquirer.py:0

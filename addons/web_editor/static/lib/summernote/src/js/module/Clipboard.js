@@ -27,6 +27,7 @@ define([
                 var item = list.head(clipboardData.items);
                 if (item.kind === 'file' && item.type.indexOf('image/') !== -1) {
                     handler.insertImages(layoutInfo, [item.getAsFile()]);
+                    event.preventDefault();
                 }
                 handler.invoke('editor.afterCommand', $editable);
             }

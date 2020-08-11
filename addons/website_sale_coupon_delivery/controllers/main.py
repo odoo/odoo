@@ -11,8 +11,12 @@ class WebsiteSaleCouponDelivery(WebsiteSaleDelivery):
         Monetary = request.env['ir.qweb.field.monetary']
         result = super(WebsiteSaleCouponDelivery, self).update_eshop_carrier(**post)
         order = request.website.sale_get_order()
-        order.recompute_coupon_lines()
-        free_shipping_lines = order._get_free_shipping_lines()
+        free_shipping_lines = None
+
+        if order:
+            order.recompute_coupon_lines()
+            free_shipping_lines = order._get_free_shipping_lines()
+
         if free_shipping_lines:
             currency = order.currency_id
             amount_free_shipping = sum(free_shipping_lines.mapped('price_subtotal'))

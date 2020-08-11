@@ -15,7 +15,7 @@
 # Alejandro Santana <alejandrosantana@anubia.es>, 2019
 # Lina Maria Avendaño Carvajal <lina8823@gmail.com>, 2019
 # Carlos rodriguez <carlosalbertor436@gmail.com>, 2019
-# Glen Sojo <inactive+glen.sojo@transifex.com>, 2019
+# b7db2840ea95169a8b66b2e8c18d323d_52caf48 <e188a842d22a1f8229ec8e1ab8414c94_389188>, 2019
 # Nans Lefebvre <len@odoo.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # AleEscandon <alejandra.escandon@jarsa.com.mx>, 2019
@@ -36,10 +36,11 @@
 # Rick Hunter <rick.hunter.ec@gmail.com>, 2019
 # Jon Perez <jop@odoo.com>, 2019
 # Jesús Alan Ramos Rodríguez <alan.ramos@jarsa.com.mx>, 2020
-# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
 # Martin Trigaux, 2020
 # Pablo Rojas <rojaspablo88@gmail.com>, 2020
 # Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020
+# Pedro M. Baeza <pedro.baeza@gmail.com>, 2020
+# Juan José Scarafía <scarafia.juanjose@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -47,7 +48,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Osiris Román <osiris.roman@yachaytech.edu.ec>, 2020\n"
+"Last-Translator: Juan José Scarafía <scarafia.juanjose@gmail.com>, 2020\n"
 "Language-Team: Spanish (https://www.transifex.com/odoo/teams/41243/es/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -925,6 +926,12 @@ msgstr "Reservado"
 #: model_terms:ir.ui.view,arch_db:stock.stock_product_search_form_view
 msgid "Available Products"
 msgstr "Productos disponibles"
+
+#. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
@@ -2995,7 +3002,7 @@ msgstr "Referencia de inventario"
 #. module: stock
 #: model:ir.ui.menu,name:stock.menu_valuation
 msgid "Inventory Report"
-msgstr "Reporte de inventario"
+msgstr "Informe de inventario"
 
 #. module: stock
 #: model:ir.model,name:stock.model_stock_location_route
@@ -7189,14 +7196,11 @@ msgstr "Producto Pesado"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
 "Cuando se selecciona un almacén para esta ruta, esta ruta debe considerarse "
 "como la ruta predeterminada cuando los productos pasan a través de este "
-"almacén. Este comportamiento puede ser anulado por las rutas en las "
-"categorías de producto o por las rutas preferidas en el abastecimiento"
+"almacén."
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -7207,19 +7211,16 @@ msgstr "Cuando todos los productos estén listos"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
+"Product form."
 msgstr ""
-"Cuando se selecciona, la ruta será seleccionable en la pestaña Inventario "
-"del formulario de Producto. Tendrá prioridad sobre la ruta del almacén."
+"Cuando se marca, la ruta será seleccionable en la pestaña Inventario del "
+"formulario de producto."
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
+msgid "When checked, the route will be selectable on the Product Category."
 msgstr ""
-"Cuando se selecciona, la ruta será seleccionable en la categoría de "
-"producto. Tendrá prioridad sobre la ruta del almacén."
+"Cuando se marca, la ruta será seleccionable en las categorías de producto."
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

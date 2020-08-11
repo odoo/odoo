@@ -1420,6 +1420,8 @@ var BasicModel = AbstractModel.extend({
      * @param {boolean} [options.doNotSetDirty=false] if this flag is set to
      *   true, then we will not tag the record as dirty.  This should be avoided
      *   for most situations.
+     * @param {boolean} [options.forceFail=false] if this flag is set to true, then
+     *   promise will fail when onchange fails (added as local patch only in stable)
      * @param {boolean} [options.notifyChange=true] if this flag is set to
      *   false, then we will not notify and not trigger the onchange, even though
      *   it was changed.
@@ -1482,7 +1484,12 @@ var BasicModel = AbstractModel.extend({
                         self._visitChildren(record, function (elem) {
                             _.extend(elem, initialData[elem.id]);
                         });
-                        resolve({});
+                        // safe fix for stable version, for opw-2267444
+                        if (!options.force_fail) {
+                            resolve({});
+                        } else {
+                            reject({});
+                        }
                     });
                 } else {
                     resolve(_.keys(changes));

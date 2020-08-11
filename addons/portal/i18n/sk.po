@@ -11,6 +11,7 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -18,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:14+0000\n"
 "PO-Revision-Date: 2019-08-26 09:12+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -37,7 +38,7 @@ msgstr "%d dní po termíne"
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "%s is not the reference of a report"
-msgstr ""
+msgstr "%s nie je odkazom na správu"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_show_sign_in
@@ -47,7 +48,7 @@ msgstr "<b>Prihlásiť sa</b>"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
 msgid "<i class=\"fa fa-arrow-right mr-1\"/>Back to edit mode"
-msgstr ""
+msgstr "<i class=\"fa fa-arrow-right mr-1\"/>Späť na režim úprav"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.record_pager
@@ -298,7 +299,7 @@ msgstr "Pridať ďalší obsah na zobrazenie v emaile"
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid "An access token must be provided for each attachment."
-msgstr ""
+msgstr "Pre každú prílohu musí byť poskytnutý prístupový token."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.wizard_view
@@ -339,6 +340,8 @@ msgid ""
 "Changing company name is not allowed once document(s) have been issued for "
 "your account. Please contact us directly for this operation."
 msgstr ""
+"Zmena názvu spoločnosti nie je povolená po vydaní dokladov pre váš účet. "
+"Prosím kontaktujte nás priamo pre túto operáciu."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -360,7 +363,7 @@ msgstr "Zatvor"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
 msgid "Company Name"
-msgstr "Názov Spoločnosti"
+msgstr "Názov spoločnosti"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -440,7 +443,7 @@ msgstr "Detaily"
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__display_name
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_404
@@ -482,7 +485,7 @@ msgstr "Umožniť prístup na portál"
 #. module: portal
 #: model:ir.actions.act_window,name:portal.partner_wizard_action
 msgid "Grant portal access"
-msgstr ""
+msgstr "Udeliť prístup na portál"
 
 #. module: portal
 #: model:ir.model,name:portal.model_ir_http
@@ -517,7 +520,7 @@ msgstr "Neplatný email! Prosím uveďte platnú emailovú adresu."
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "Invalid report type: %s"
-msgstr ""
+msgstr "Neplatný typ prehľadu: %s"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard__welcome_message
@@ -583,7 +586,7 @@ msgstr "Správa"
 #, python-format
 msgid ""
 "Model %s does not support token signature, as it does not have %s field."
-msgstr ""
+msgstr "Model %s nepodporuje tokenový podpis, pretože nemá %s pole."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.my_account_link
@@ -633,12 +636,12 @@ msgstr "URL portálového prístupu"
 #. module: portal
 #: model:ir.model,name:portal.model_portal_mixin
 msgid "Portal Mixin"
-msgstr ""
+msgstr "Portál mixin"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_share
 msgid "Portal Sharing"
-msgstr ""
+msgstr "Zdieľanie portálu"
 
 #. module: portal
 #: model:ir.model,name:portal.model_portal_wizard_user
@@ -749,7 +752,7 @@ msgstr "Niektoré vyžadované polia sú prázdne."
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "Something went wrong."
-msgstr ""
+msgstr "Niečo sa pokazilo."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details
@@ -766,48 +769,48 @@ msgstr "Ulica"
 #: code:addons/portal/static/src/xml/portal_signature.xml:0
 #, python-format
 msgid "Thank You!"
-msgstr ""
+msgstr "Ďakujem!"
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "The attachment %s cannot be removed because it is linked to a message."
-msgstr ""
+msgstr "Prílohu %s nie je možné odstrániť, pretože je prepojený so správou."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment %s cannot be removed because it is not in a pending state."
-msgstr ""
+msgstr "Prílohu %snie je možné odstrániť, pretože nie je v čakajúcom stave."
 
 #. module: portal
 #: code:addons/portal/controllers/mail.py:0
 #, python-format
 msgid ""
 "The attachment %s does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Príloha %s neexistuje alebo nemáte k nej prístupové práva."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The attachment does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Príloha neexistuje alebo k nej nemáte prístupové práva."
 
 #. module: portal
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid ""
 "The document does not exist or you do not have the rights to access it."
-msgstr ""
+msgstr "Dokument neexistuje alebo k nemu nemáte prístupové práva."
 
 #. module: portal
 #. openerp-web
 #: code:addons/portal/static/src/js/portal_composer.js:0
 #, python-format
 msgid "The file <strong>%s</strong> could not be saved."
-msgstr ""
+msgstr "Súbor <strong>%s</strong> sa nepodarilo uložiť."
 
 #. module: portal
 #. openerp-web
@@ -820,7 +823,7 @@ msgstr "Zatiaľ nie sú komentáre."
 #: code:addons/portal/controllers/portal.py:0
 #, python-format
 msgid "This document does not exist."
-msgstr ""
+msgstr "Tento dokument neexistuje."
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_back_in_edit_mode
@@ -895,7 +898,7 @@ msgstr "VAT Number"
 #: model:ir.model.fields,field_description:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,field_description:portal.field_res_users__website_message_ids
 msgid "Website Messages"
-msgstr "Správy Webových stránok"
+msgstr "Správy Webstránok"
 
 #. module: portal
 #: model:ir.model.fields,help:portal.field_account_analytic_account__website_message_ids
@@ -927,7 +930,7 @@ msgstr "Správy Webových stránok"
 #: model:ir.model.fields,help:portal.field_res_partner__website_message_ids
 #: model:ir.model.fields,help:portal.field_res_users__website_message_ids
 msgid "Website communication history"
-msgstr "História komunikácie webových stránok"
+msgstr "História komunikácie webstránok"
 
 #. module: portal
 #: model:ir.model.fields,field_description:portal.field_portal_wizard_user__wizard_id
@@ -989,7 +992,7 @@ msgstr "PSČ / Poštový kód"
 #: code:addons/portal/static/src/xml/portal_chatter.xml:0
 #, python-format
 msgid "avatar"
-msgstr ""
+msgstr "avatar"
 
 #. module: portal
 #. openerp-web
@@ -1015,7 +1018,7 @@ msgstr "prihlásený"
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_record_sidebar
 msgid "odoo"
-msgstr ""
+msgstr "odoo"
 
 #. module: portal
 #: model_terms:ir.ui.view,arch_db:portal.portal_my_details

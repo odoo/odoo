@@ -37,6 +37,16 @@ msgid ""
 "                %endif\n"
 "            "
 msgstr ""
+"\n"
+"                %if object.origin:\n"
+"                    ${object.company_id.name}: אנו שמחים להודיע ​​לך שהזמנה שלך מס' ${object.origin} נשלחה.\n"
+"                %else:\n"
+"                    ${object.company_id.name}: אנו שמחים להודיע ​​לך שההזמנה שלך נשלחה.\n"
+"                %endif\n"
+"                %if object.carrier_tracking_ref:\n"
+"                    מזהה המעקב שלך הוא ${object.carrier_tracking_ref}.\n"
+"                %endif\n"
+"            "
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
@@ -66,7 +76,7 @@ msgstr "אשר"
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_confirm_stock_sms
 msgid "Confirm Stock SMS"
-msgstr ""
+msgstr "אשר מלאי SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__create_uid
@@ -81,12 +91,12 @@ msgstr "נוצר ב-"
 #. module: stock_sms
 #: model:sms.template,name:stock_sms.sms_template_data_stock_delivery
 msgid "Delivery: Send by SMS Text Message"
-msgstr ""
+msgstr "משלוח: שלח באמצעות הודעת SMS"
 
 #. module: stock_sms
 #: model_terms:ir.ui.view,arch_db:stock_sms.view_confirm_stock_sms
 msgid "Disable SMS"
-msgstr ""
+msgstr "השבת SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__display_name
@@ -96,12 +106,12 @@ msgstr "הצג שם"
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_company__has_received_warning_stock_sms
 msgid "Has Received Warning Stock Sms"
-msgstr ""
+msgstr "קיבל sms אזהרת מלאי"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms__id
 msgid "ID"
-msgstr "תעודה מזהה"
+msgstr "מזהה"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_confirm_stock_sms____last_update
@@ -140,18 +150,18 @@ msgstr "אישור SMS"
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 #: model_terms:ir.ui.view,arch_db:stock_sms.res_config_settings_view_form_stock
 msgid "SMS Template"
-msgstr ""
+msgstr "תבנית SMS"
 
 #. module: stock_sms
 #: model:ir.model.fields,field_description:stock_sms.field_res_config_settings__stock_move_sms_validation
 msgid "SMS Validation with stock move"
-msgstr ""
+msgstr "אימות SMS עם תנועת מלאי"
 
 #. module: stock_sms
 #: model:ir.model.fields,help:stock_sms.field_res_company__stock_sms_confirmation_template_id
 #: model:ir.model.fields,help:stock_sms.field_res_config_settings__stock_sms_confirmation_template_id
 msgid "SMS sent to the customer once the order is done."
-msgstr ""
+msgstr "SMS שנשלח ללקוח לאחר ביצוע ההזמנה."
 
 #. module: stock_sms
 #: model:ir.model,name:stock_sms.model_stock_picking
@@ -164,3 +174,5 @@ msgid ""
 "You are about to confirm this Delivery Order by SMS Text Message.<br/>\n"
 "                This feature can easily be disabled from the Settings of Inventory or by clicking on \"Disable SMS\".<br/>"
 msgstr ""
+"אתה עומד לאשר את הזמנת המשלוח הזו בהודעת SMS.<br/>\n"
+"                ניתן לבטל בקלות את התכונה הזו מהגדרות המלאי או על ידי לחיצה על \"השבת SMS\".<br/>"

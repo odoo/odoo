@@ -1402,13 +1402,15 @@ msgid ""
 "Accrual Adjusting Entries ({percent}%% recognized) have been created for "
 "this invoice on {date}"
 msgstr ""
+"Записи налаштувань нарахувань ({percent}%% визнано) створено для цього "
+"рахунка {date}"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #: code:addons/account/wizard/account_accrual_accounting.py:0
 #, python-format
 msgid "Accrual Adjusting Entry (%s%% recognized) for invoice: %s"
-msgstr ""
+msgstr "Запис регулювань нарахувань (%s%% узгоджено) для рахунка: %s"
 
 #. module: account
 #: code:addons/account/wizard/account_accrual_accounting.py:0
@@ -7430,6 +7432,8 @@ msgstr "Не надано жодного прикріплення"
 #, python-format
 msgid "No default debit and credit account defined on journal %s (ids: %s)."
 msgstr ""
+"У журналі не визначено дебетового та кредитового рахунка за замовчуванням %s"
+" (id: %s)."
 
 #. module: account
 #: code:addons/account/models/account_reconcile_model.py:0
@@ -7515,6 +7519,7 @@ msgstr "Не належить"
 #. module: account
 #: model:ir.model.fields.selection,name:account.selection__account_invoice_report__invoice_payment_state__not_paid
 #: model:ir.model.fields.selection,name:account.selection__account_move__invoice_payment_state__not_paid
+#: model_terms:ir.ui.view,arch_db:account.view_account_invoice_filter
 msgid "Not Paid"
 msgstr "Не оплачено"
 
@@ -8616,7 +8621,7 @@ msgstr ""
 #: code:addons/account/static/src/xml/account_reconciliation.xml:0
 #, python-format
 msgid "Presets config"
-msgstr ""
+msgstr "Налаштування"
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -10338,7 +10343,7 @@ msgstr "Групи податку"
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.report_invoice_document
 msgid "Tax ID"
-msgstr "ID податку"
+msgstr "ІПН"
 
 #. module: account
 #. openerp-web
@@ -13103,7 +13108,7 @@ msgstr ""
 #: code:addons/account/models/account_move.py:0
 #, python-format
 msgid "You don't have the access rights to post an invoice."
-msgstr ""
+msgstr "У вас немає прав публікувати рахунок."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_move_form
@@ -13185,6 +13190,12 @@ msgstr ""
 "Вам слід налаштувати \"Рахунок витрат курсових різниць\" у налаштуваннях "
 "обліку, щоб автоматично керувати бронюванням бухгалтерських записів, "
 "пов'язаними з відмінностями між обмінними курсами."
+
+#. module: account
+#: code:addons/account/models/account_cash_rounding.py:33
+#, python-format
+msgid "Please set a positive rounding value."
+msgstr "Встановіть значення округлення більше нуля."
 
 #. module: account
 #: model_terms:ir.ui.view,arch_db:account.view_account_position_form

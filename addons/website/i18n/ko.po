@@ -42,6 +42,18 @@ msgid "\" alert with a"
 msgstr "\" 다음으로 경고 "
 
 #. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" can not be empty."
+msgstr "'URL'은 비워 둘 수 없습니다."
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must start with a leading slash."
+msgstr "\"URL\"은 슬래시로 시작해야 합니다."
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
 msgstr "# 방문한 페이지"
@@ -5733,6 +5745,12 @@ msgstr "무엇을 하고 싶습니까?"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "White"
 msgstr "흰색"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_domain
+#: model:ir.model.fields,help:website.field_website__domain
+msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
+msgstr "구성표가 지정되지 않은 경우 표준 URL에서 http로 접두사가 지정됩니다."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel

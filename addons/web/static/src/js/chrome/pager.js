@@ -182,6 +182,7 @@ var Pager = Widget.extend({
 
         if (size === 0 || (this.options.single_page_hidden && this._singlePage())) {
             this.do_hide();
+            this.$value.html('');
         } else {
             this.do_show();
             this._updateArrows();

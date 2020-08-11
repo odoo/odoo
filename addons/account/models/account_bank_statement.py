@@ -37,6 +37,7 @@ class AccountBankStmtCashWizard(models.Model):
     """
     _name = 'account.bank.statement.cashbox'
     _description = 'Bank Statement Cashbox'
+    _rec_name = 'id'
 
     cashbox_lines_ids = fields.One2many('account.cashbox.line', 'cashbox_id', string='Cashbox Lines')
     start_bank_stmt_ids = fields.One2many('account.bank.statement', 'cashbox_start_id')
@@ -462,7 +463,6 @@ class AccountBankStatementLine(models.Model):
     ####################################################
 
     def _get_common_sql_query(self, overlook_partner = False, excluded_ids = None, split = False):
-        acc_type = "acc.reconcile = true"
         select_clause = "SELECT aml.id "
         from_clause = "FROM account_move_line aml JOIN account_account acc ON acc.id = aml.account_id "
         account_clause = ''
@@ -471,7 +471,7 @@ class AccountBankStatementLine(models.Model):
         where_clause = """WHERE aml.company_id = %(company_id)s
                           AND (
                                     """ + account_clause + """
-                                    ("""+acc_type+""" AND aml.reconciled = false)
+                                    (acc.reconcile = true AND aml.reconciled IS NOT TRUE)
                           )"""
         where_clause = where_clause + ' AND aml.partner_id = %(partner_id)s' if self.partner_id else where_clause
         where_clause = where_clause + ' AND aml.id NOT IN %(excluded_ids)s' if excluded_ids else where_clause

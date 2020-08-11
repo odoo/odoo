@@ -249,7 +249,7 @@ msgid ""
 "<span>There is a difference between the expected and actual closing in cash."
 " Are you sure you want to close the session and post the accounting "
 "entries?</span>"
-msgstr "<span>预期现金和实际结算之间存在差异。 您确定要关闭会话并发布会计分录吗？</span>"
+msgstr "<span>预期现金和实际结算之间存在差异。 您确定要关闭会话并发布会计凭证吗？</span>"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_config_kanban
@@ -362,7 +362,7 @@ msgstr "科目表模版"
 msgid ""
 "Account used as counterpart of the income account in the accounting entry "
 "representing the pos sales."
-msgstr "帐户用作代表销售额的会计分录中的收入帐户的对应方。"
+msgstr "账户用作代表销售额的会计凭证中的收入账户的对应方。"
 
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
@@ -779,7 +779,7 @@ msgstr "现金日记账"
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__cash_register_id
 msgid "Cash Register"
-msgstr "现金出纳机"
+msgstr "收银机"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__statement_ids
@@ -1033,7 +1033,7 @@ msgstr "配置"
 #. module: point_of_sale
 #: model_terms:ir.ui.view,arch_db:point_of_sale.pos_config_view_form
 msgid "Configuration for journal entries of PoS orders"
-msgstr "配置 PoS 订单的日记账分录"
+msgstr "配置 PoS 订单的会计凭证"
 
 #. module: point_of_sale
 #: model_terms:ir.actions.act_window,help:point_of_sale.action_pos_config_kanban
@@ -1940,7 +1940,7 @@ msgstr "如果选中此项，您将可以选择批次/序列号。 您也可以�
 msgid ""
 "If ticked, each payment will generate a separated journal item. Ticking that"
 " option will slow the closing of the PoS."
-msgstr "如果勾选此项，每笔付款将生成一个单独的日记账项目。勾选该选项将减慢PoS的关闭速度。"
+msgstr "如果勾选此项，每笔付款将生成一个单独的会计分录目。勾选该选项将减慢PoS的关闭速度。"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_category__image_128
@@ -2113,24 +2113,24 @@ msgstr "日记账"
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move
 msgid "Journal Entries"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_pos_session__move_id
 msgid "Journal Entry"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: point_of_sale
 #: model:ir.model,name:point_of_sale.model_account_move_line
 msgid "Journal Item"
-msgstr "日记账项"
+msgstr "会计分录"
 
 #. module: point_of_sale
 #: code:addons/point_of_sale/models/pos_session.py:0
 #: model_terms:ir.ui.view,arch_db:point_of_sale.view_pos_session_form
 #, python-format
 msgid "Journal Items"
-msgstr "日记账项"
+msgstr "会计分录"
 
 #. module: point_of_sale
 #: model:ir.model.fields,field_description:point_of_sale.field_digest_digest__kpi_pos_total_value
@@ -2237,7 +2237,7 @@ msgstr "行号"
 #: code:addons/point_of_sale/wizard/pos_open_statement.py:0
 #, python-format
 msgid "List of Cash Registers"
-msgstr "出纳机列表"
+msgstr "收银机列表"
 
 #. module: point_of_sale
 #. openerp-web
@@ -2960,7 +2960,7 @@ msgstr "按会话"
 msgid ""
 "Person who uses the cash register. It can be a reliever, a student or an "
 "interim employee."
-msgstr "使用现金登记的人可以是救援者，学生或者临时工"
+msgstr "使用收银机的人可以是救援者，学生或者临时工"
 
 #. module: point_of_sale
 #. openerp-web
@@ -5157,6 +5157,13 @@ msgid ""
 "You must be connected to the internet to save your changes.\n"
 "\n"
 "Orders that where not synced before will be synced next time you close an order while connected to the internet or when you close the session."
+msgstr ""
+
+#. module: point_of_sale
+#: code:addons/point_of_sale/models/pos_config.py:0
+#, python-format
+msgid ""
+"You must configure an intermediary account for the payment methods: %s."
 msgstr ""
 
 #. module: point_of_sale

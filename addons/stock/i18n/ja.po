@@ -640,7 +640,7 @@ msgstr "高度：調達ルールの適用"
 #: model:ir.model.fields,field_description:stock.field_stock_move__delay_alert
 #: model:ir.model.fields,field_description:stock.field_stock_rule__delay_alert
 msgid "Alert if Delay"
-msgstr ""
+msgstr "遅延の際に通知"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.stock_picking_type_kanban
@@ -814,6 +814,12 @@ msgid "Available Products"
 msgstr "利用可能プロダクト"
 
 #. module: stock
+#: code:addons/stock/models/product.py:581
+#, python-format
+msgid "Available quantity should be set to zero before changing type"
+msgstr ""
+
+#. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__backorder_id
 #: model:ir.model.fields,field_description:stock.field_stock_picking__backorder_id
 msgid "Back Order of"
@@ -971,7 +977,7 @@ msgstr "棚卸取消"
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_cancel
 msgid "Cancel Next Move"
-msgstr ""
+msgstr "次の移動を取消"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_inventory__state__cancel
@@ -2238,7 +2244,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "From"
-msgstr "開始日"
+msgstr "移動元"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move_line__owner_id
@@ -4427,7 +4433,7 @@ msgstr "展開"
 #: model:ir.model.fields,field_description:stock.field_stock_move__propagate_date
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_date
 msgid "Propagate Rescheduling"
-msgstr ""
+msgstr "再計画を展開"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_move__propagate_cancel
@@ -4437,7 +4443,7 @@ msgstr "取消/分割を展開"
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.view_stock_rule_form
 msgid "Propagation"
-msgstr ""
+msgstr "展開"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_rule__group_propagation_option
@@ -4908,7 +4914,7 @@ msgstr "レポーティング"
 #: model:ir.model.fields,field_description:stock.field_stock_move__propagate_date_minimum_delta
 #: model:ir.model.fields,field_description:stock.field_stock_rule__propagate_date_minimum_delta
 msgid "Reschedule if Higher Than"
-msgstr ""
+msgstr "再計画閾日数"
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_res_config_settings__module_procurement_jit
@@ -6204,7 +6210,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:stock.view_move_tree
 #: model_terms:ir.ui.view,arch_db:stock.vpicktree
 msgid "To"
-msgstr "宛先"
+msgstr "移動先"
 
 #. module: stock
 #: model:ir.actions.act_window,name:stock.action_picking_tree_ready
@@ -6558,7 +6564,7 @@ msgid ""
 "Use this assistant to replenish your stock.\n"
 "                Depending on your product configuration, launching a replenishment may trigger a request for quotation,\n"
 "                a manufacturing order or a transfer."
-msgstr ""
+msgstr "在庫補充にこちらのアシスタントをご利用ください。プロダクト設定に応じ、補充を行うと見積依頼、製造オーダまたは運送が生成されます。"
 
 #. module: stock
 #: model_terms:ir.ui.view,arch_db:stock.res_config_settings_view_form
@@ -6795,12 +6801,8 @@ msgstr "計量対象プロダクト"
 #: model:ir.model.fields,help:stock.field_stock_location_route__warehouse_selectable
 msgid ""
 "When a warehouse is selected for this route, this route should be seen as "
-"the default route when products pass through this warehouse.  This behaviour"
-" can be overridden by the routes on the Product/Product Categories or by the"
-" Preferred Routes on the Procurement"
+"the default route when products pass through this warehouse."
 msgstr ""
-"このルートで倉庫を選択すると、製品がこの倉庫を通過する際にこのルートがデフォルトルートとして認識されます。 "
-"この現象は、製品/製品カテゴリのルート、または調達の優先ルートによって上書きすることができます"
 
 #. module: stock
 #: model:ir.model.fields.selection,name:stock.selection__stock_picking__move_type__one
@@ -6811,15 +6813,13 @@ msgstr "全プロダクトが準備できてから"
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_selectable
 msgid ""
 "When checked, the route will be selectable in the Inventory tab of the "
-"Product form.  It will take priority over the Warehouse route. "
-msgstr "オンにすると、ルートは製品フォームの在庫タブで選択できます。 倉庫ルートよりも優先されます。"
+"Product form."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,help:stock.field_stock_location_route__product_categ_selectable
-msgid ""
-"When checked, the route will be selectable on the Product Category.  It will"
-" take priority over the Warehouse route. "
-msgstr "オンにすると、ルートは製品カテゴリで選択可能になります。 倉庫ルートよりも優先されます。"
+msgid "When checked, the route will be selectable on the Product Category."
+msgstr ""
 
 #. module: stock
 #: model:ir.model.fields,field_description:stock.field_stock_putaway_rule__location_in_id

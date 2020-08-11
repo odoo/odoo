@@ -54,11 +54,9 @@ class PosOrder(models.Model):
 
     @api.model
     def _payment_fields(self, order, ui_paymentline):
-        payment_date = ui_paymentline['name']
-        payment_date = fields.Date.context_today(self, fields.Datetime.from_string(payment_date))
         return {
             'amount': ui_paymentline['amount'] or 0.0,
-            'payment_date': payment_date,
+            'payment_date': ui_paymentline['name'],
             'payment_method_id': ui_paymentline['payment_method_id'],
             'card_type': ui_paymentline.get('card_type'),
             'transaction_id': ui_paymentline.get('transaction_id'),
@@ -345,7 +343,11 @@ class PosOrder(models.Model):
         }
 
     def _is_pos_order_paid(self):
-        return float_is_zero(self.amount_total - self.amount_paid, precision_rounding=self.currency_id.rounding)
+        return float_is_zero(self._get_rounded_amount(self.amount_total) - self.amount_paid, precision_rounding=self.currency_id.rounding)
+
+    def _get_rounded_amount(self, amount):
+        currency = self.currency_id
+        return currency.round(amount) if currency else amount
 
     def action_pos_order_paid(self):
         if not self._is_pos_order_paid():
@@ -359,6 +361,7 @@ class PosOrder(models.Model):
 
     def _prepare_invoice_vals(self):
         self.ensure_one()
+        timezone = pytz.timezone(self._context.get('tz') or self.env.user.tz or 'UTC')
         vals = {
             'invoice_payment_ref': self.name,
             'invoice_origin': self.name,
@@ -370,7 +373,7 @@ class PosOrder(models.Model):
             # considering partner's sale pricelist's currency
             'currency_id': self.pricelist_id.currency_id.id,
             'invoice_user_id': self.user_id.id,
-            'invoice_date': self.date_order.date(),
+            'invoice_date': self.date_order.astimezone(timezone).date(),
             'fiscal_position_id': self.fiscal_position_id.id,
             'invoice_line_ids': [(0, None, self._prepare_invoice_line(line)) for line in self.lines],
         }
@@ -473,7 +476,7 @@ class PosOrder(models.Model):
             if picking_type:
                 message = _("This transfer has been created from the point of sale session: <a href=# data-oe-model=pos.order data-oe-id=%d>%s</a>") % (order.id, order.name)
                 picking_vals = {
-                    'origin': order.name,
+                    'origin': '%s - %s' % (order.session_id.name, order.name),
                     'partner_id': address.get('delivery', False),
                     'user_id': False,
                     'date_done': order.date_order,
@@ -503,7 +506,7 @@ class PosOrder(models.Model):
                     if self.env.user.partner_id.email:
                         return_picking.message_post(body=message)
                     else:
-                        return_picking.message_post(body=message)
+                        return_picking.sudo().message_post(body=message)
 
             for line in order.lines.filtered(lambda l: l.product_id.type in ['product', 'consu'] and not float_is_zero(l.qty, precision_rounding=l.product_id.uom_id.rounding)):
                 moves |= Move.create({
@@ -790,7 +793,6 @@ class PosOrderLine(models.Model):
             values['name'] = self.env['ir.sequence'].next_by_code('pos.order.line')
         return super(PosOrderLine, self).create(values)
 
-    @api.model
     def write(self, values):
         if values.get('pack_lot_line_ids'):
             for pl in values.get('pack_lot_ids'):

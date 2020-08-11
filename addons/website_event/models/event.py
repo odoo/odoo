@@ -96,7 +96,7 @@ class Event(models.Model):
 
     def _create_menu(self, sequence, name, url, xml_id):
         if not url:
-            self.env['ir.ui.view'].search([('name', '=', name + ' ' + self.name)]).unlink()
+            self.env['ir.ui.view'].with_context(_force_unlink=True).search([('name', '=', name + ' ' + self.name)]).unlink()
             newpath = self.env['website'].new_page(name + ' ' + self.name, template=xml_id, ispage=False)['url']
             url = "/event/" + slug(self) + "/page/" + newpath[1:]
         menu = self.env['website.menu'].create({

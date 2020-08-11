@@ -1,23 +1,23 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_sale_wishlist
+# 	* website_sale_wishlist
 # 
 # Translators:
-# Rivo Zängov <eraser@eraser.ee>, 2018
-# Martin Trigaux, 2018
-# Wanradt Koell <wanradt@gmail.com>, 2018
-# Arma Gedonsky <armagedonsky@hot.ee>, 2018
-# Eneli Õigus <enelioigus@gmail.com>, 2018
-# Martin Aavastik <martin@avalah.ee>, 2018
-# Helen Sulaoja <helen@avalah.ee>, 2018
+# Rivo Zängov <eraser@eraser.ee>, 2020
+# Martin Trigaux, 2020
+# Wanradt Koell <wanradt@gmail.com>, 2020
+# Arma Gedonsky <armagedonsky@hot.ee>, 2020
+# Eneli Õigus <enelioigus@gmail.com>, 2020
+# Martin Aavastik <martin@avalah.ee>, 2020
+# Helen Sulaoja <helen@avalah.ee>, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-08-24 09:35+0000\n"
-"Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:16+0000\n"
+"Last-Translator: Helen Sulaoja <helen@avalah.ee>, 2020\n"
 "Language-Team: Estonian (https://www.transifex.com/odoo/teams/41243/et/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -40,6 +40,18 @@ msgid "<small><i class=\"fa fa-trash-o\"/> Remove</small>"
 msgstr "<small><i class=\"fa fa-trash-o\"/> Eemalda</small>"
 
 #. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
+msgid "<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/>"
+msgstr ""
+
+#. module: website_sale_wishlist
+#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
+msgid ""
+"<span class=\"fa fa-heart\" role=\"img\" aria-label=\"Add to wishlist\"/> "
+"Add to wishlist"
+msgstr ""
+
+#. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__active
 msgid "Active"
 msgstr "Aktiivne"
@@ -57,7 +69,6 @@ msgstr ""
 
 #. module: website_sale_wishlist
 #: model_terms:ir.ui.view,arch_db:website_sale_wishlist.add_to_wishlist
-#: model_terms:ir.ui.view,arch_db:website_sale_wishlist.product_add_to_wishlist
 msgid "Add to Wishlist"
 msgstr "Lisa soovide nimekirja"
 
@@ -90,6 +101,11 @@ msgstr "Valuuta"
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__display_name
 msgid "Display Name"
 msgstr "Näidatav nimi"
+
+#. module: website_sale_wishlist
+#: model:ir.model.constraint,message:website_sale_wishlist.constraint_product_wishlist_product_unique_partner_id
+msgid "Duplicated wishlisted product for this partner."
+msgstr ""
 
 #. module: website_sale_wishlist
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__id
@@ -142,9 +158,15 @@ msgid "Pricelist when added"
 msgstr "Hinnakiri lisamisel"
 
 #. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_product
 #: model:ir.model.fields,field_description:website_sale_wishlist.field_product_wishlist__product_id
 msgid "Product"
 msgstr "Toode"
+
+#. module: website_sale_wishlist
+#: model:ir.model,name:website_sale_wishlist.model_product_template
+msgid "Product Template"
+msgstr "Toote mall"
 
 #. module: website_sale_wishlist
 #: model:ir.model,name:website_sale_wishlist.model_product_wishlist

@@ -895,7 +895,7 @@ class Field(MetaField('DummyField', (object,), {})):
                 model.flush([self.name])
 
         if self.required and not has_notnull:
-            model.pool.post_constraint(sql.set_not_null, model._cr, model._table, self.name)
+            model.pool.post_constraint(apply_required, model, self.name)
         elif not self.required and has_notnull:
             sql.drop_not_null(model._cr, model._table, self.name)
 
@@ -986,10 +986,16 @@ class Field(MetaField('DummyField', (object,), {})):
         if self.compute and (record.id in env.all.tocompute.get(self, ())) \
                 and not env.is_protected(self, record):
             # self must be computed on record
-            recs = record if self.recursive else env.records_to_compute(self)
+            if self.recursive:
+                recs = record
+            else:
+                recs = env.records_to_compute(self)
+                # compute the field on real records only (if 'record' is real)
+                # or new records only (if 'record' is new)
+                recs = recs.filtered(lambda rec: bool(rec.id) == bool(record.id))
             try:
                 self.compute_value(recs)
-            except AccessError:
+            except (AccessError, MissingError):
                 self.compute_value(record)
 
         try:
@@ -1018,7 +1024,7 @@ class Field(MetaField('DummyField', (object,), {})):
                     recs = record if self.recursive else record._in_cache_without(self)
                     try:
                         self.compute_value(recs)
-                    except AccessError:
+                    except (AccessError, MissingError):
                         self.compute_value(record)
                     value = env.cache.get(record, self)
 
@@ -2039,11 +2045,19 @@ class Binary(Field):
 class Image(Binary):
     """Encapsulates an image, extending :class:`Binary`.
 
-    :param int max_width: the maximum width of the image
-    :param int max_height: the maximum height of the image
+    If image size is greater than the ``max_width``/``max_height`` limit of pixels, the image will be
+    resized to the limit by keeping aspect ratio.
+
+    :param int max_width: the maximum width of the image (default: ``0``, no limit)
+    :param int max_height: the maximum height of the image (default: ``0``, no limit)
     :param bool verify_resolution: whether the image resolution should be verified
         to ensure it doesn't go over the maximum image resolution (default: ``True``).
         See :class:`odoo.tools.image.ImageProcess` for maximum image resolution (default: ``45e6``).
+
+    .. note::
+
+        If no ``max_width``/``max_height`` is specified (or is set to 0) and ``verify_resolution`` is False,
+        the field content won't be verified at all and a :class:`Binary` field should be used.
     """
     _slots = {
         'max_width': 0,
@@ -2148,9 +2162,11 @@ class Selection(Field):
                     ):
                         _logger.warning("%s: selection=%r overrides existing selection; use selection_add instead", self, selection)
                     values = [kv[0] for kv in selection]
-                    labels.update(selection)
+                    labels = dict(selection)
                 else:
                     self.selection = selection
+                    values = None
+                    labels = {}
 
             if 'selection_add' in field.args:
                 selection_add = field.args['selection_add']
@@ -2531,9 +2547,6 @@ class Many2one(_Relational):
         # update the cache of self
         cache.update(records, self, [cache_value] * len(records))
 
-        # update the cache of one2many fields of new corecord
-        self._update_inverses(records, cache_value)
-
         # update towrite
         if self.store:
             towrite = records.env.all.towrite[self.model_name]
@@ -2541,15 +2554,22 @@ class Many2one(_Relational):
                 # cache_value is already in database format
                 towrite[record.id][self.name] = cache_value
 
+        # update the cache of one2many fields of new corecord
+        self._update_inverses(records, cache_value)
+
         return records
 
     def _remove_inverses(self, records, value):
         """ Remove `records` from the cached values of the inverse fields of `self`. """
         cache = records.env.cache
         record_ids = set(records._ids)
+
+        # align(id) returns a NewId if records are new, a real id otherwise
+        align = (lambda id_: id_) if all(record_ids) else (lambda id_: id_ and NewId(id_))
+
         for invf in records._field_inverses[self]:
             corecords = records.env[self.comodel_name].browse(
-                id_ for id_ in cache.get_values(records, self)
+                align(id_) for id_ in cache.get_values(records, self)
             )
             for corecord in corecords:
                 ids0 = cache.get(corecord, invf, None)
@@ -3061,6 +3081,11 @@ class One2many(_RelationalMulti):
 
         if self.store:
             inverse = self.inverse_name
+
+            # make sure self's inverse is in cache
+            inverse_field = comodel._fields[inverse]
+            for record in records:
+                cache.update(record[self.name], inverse_field, itertools.repeat(record.id))
 
             for recs, commands in records_commands_list:
                 for command in commands:
@@ -3606,6 +3631,16 @@ def prefetch_x2many_ids(record, field):
     records = record.browse(record._prefetch_ids)
     ids_list = record.env.cache.get_values(records, field)
     return unique(id_ for ids in ids_list for id_ in ids)
+
+
+def apply_required(model, field_name):
+    """ Set a NOT NULL constraint on the given field, if necessary. """
+    # At the time this function is called, the model's _fields may have been reset, although
+    # the model's class is still the same. Retrieve the field to see whether the NOT NULL
+    # constraint still applies
+    field = model._fields[field_name]
+    if field.store and field.required:
+        sql.set_not_null(model.env.cr, model._table, field_name)
 
 
 # imported here to avoid dependency cycle issues

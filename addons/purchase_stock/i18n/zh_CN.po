@@ -4,7 +4,6 @@
 # 
 # Translators:
 # 黎伟杰 <674416404@qq.com>, 2019
-# Jeanphy <hzh0292@qq.com>, 2019
 # Martin Trigaux, 2019
 # liAnGjiA <liangjia@qq.com>, 2019
 # ChinaMaker <liuct@chinamaker.net>, 2019
@@ -12,6 +11,7 @@
 # snow wang <147156565@qq.com>, 2019
 # inspur qiuguodong <qiuguodong@inspur.com>, 2019
 # ryan ryan <itechr@outlook.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
@@ -55,6 +55,9 @@ msgid ""
 "  - Manual: the quantity is set manually on the line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"根据产品配置，接收数量可由机构自动计算:\n"
+" -手动:数量在\n"
+"线上手动设置-存货变动:数量来自已确认的拣选\n"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_stock_rule__action
@@ -102,7 +105,7 @@ msgid ""
 "Depending on the modules installed, this will allow you to define the route "
 "of the product: whether it will be bought, manufactured, replenished on "
 "order, etc."
-msgstr ""
+msgstr "根据所安装的模块，这将允许您定义路由产品:是否会购买，制造，补充订单，等。"
 
 #. module: purchase_stock
 #: model:ir.model.fields,field_description:purchase_stock.field_purchase_order__default_location_dest_id_usage
@@ -159,7 +162,7 @@ msgstr "销售模块是否已安装"
 #. module: purchase_stock
 #: model:ir.model,name:purchase_stock.model_account_move
 msgid "Journal Entries"
-msgstr "日记账分录"
+msgstr "会计凭证"
 
 #. module: purchase_stock
 #: model_terms:ir.ui.view,arch_db:purchase_stock.res_config_settings_view_form_purchase
@@ -338,7 +341,7 @@ msgstr "技术字段用于显示代发货地址"
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date_minimum_delta
 msgid "The change must be higher than this value to be propagated"
-msgstr ""
+msgstr "要传播的更改必须大于此值"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/purchase.py:0
@@ -351,7 +354,7 @@ msgstr "您的采购订单上的数量表明少于账单。 你应该要求退�
 #. module: purchase_stock
 #: model:ir.model.fields,help:purchase_stock.field_purchase_order_line__propagate_date
 msgid "The rescheduling is propagated to the next move."
-msgstr ""
+msgstr "重新调度被传播到下一个移动。"
 
 #. module: purchase_stock
 #: code:addons/purchase_stock/models/stock_rule.py:0

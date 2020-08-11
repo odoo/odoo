@@ -4,9 +4,9 @@
 # 
 # Translators:
 # Aleksander, 2019
-# Marius Stedjan <marius@stedjan.com>, 2019
 # Martin Trigaux, 2019
 # Jorunn D. Newth, 2019
+# Marius Stedjan <marius@stedjan.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -14,7 +14,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jorunn D. Newth, 2019\n"
+"Last-Translator: Marius Stedjan <marius@stedjan.com>, 2020\n"
 "Language-Team: Norwegian Bokmål (https://www.transifex.com/odoo/teams/41243/nb/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -60,7 +60,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "<span class=\"o_stat_text\">Sold</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Solgt</span>"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_stock_report_invoice_document
@@ -114,6 +114,11 @@ msgid ""
 "  - Timesheet: the quantity is the sum of hours recorded on tasks linked to this sale line\n"
 "  - Stock Moves: the quantity comes from confirmed pickings\n"
 msgstr ""
+"Avhengig av produktkonfigurasjonen, kan levert antall bli kalkulert automatisk med følgende metoder:\n"
+"- Manuelt: antallet settes manuelt på salgslinjen\n"
+"- Analytisk fra utgifter: antallet er summen av antall fra posterte utgifter\n"
+"- Timeliste: antallet er summen av timer registrert på oppgaver linket til salgslinjen\n"
+"- Lagerbevegelser: antallet kommer fra bekreftede plukk\n"
 
 #. module: sale_stock
 #: model:ir.ui.menu,name:sale_stock.menu_aftersale
@@ -194,6 +199,10 @@ msgid ""
 "shipping, the shipping policy of the order will be taken into account to "
 "either use the minimum or maximum lead time of the order lines."
 msgstr ""
+"Leveringsdato du kan garantere kunden. Ved tjenester utregnes denne fra "
+"minste ledetid for ordrelinjene. Ved frakt av varer utregnes denne i henhold"
+" til fraktbetingelsene i ordren (enten maks eller minimum ledetid for "
+"ordrelinjene)."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__group_lot_on_invoice
@@ -240,7 +249,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Ett eller flere problemer oppstod med salgsordren(e):"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -372,7 +381,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__qty_delivered_method
 msgid "Method to update delivered qty"
-msgstr ""
+msgstr "Metode for oppdatering av levert antall"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
@@ -390,7 +399,7 @@ msgstr "På"
 #: code:addons/sale_stock/models/sale_order.py:0
 #, python-format
 msgid "Ordered quantity decreased!"
-msgstr ""
+msgstr "Bestilt antall er redusert!"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__product_packaging
@@ -465,7 +474,7 @@ msgstr ""
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
 msgid "Sales Analysis Report"
-msgstr ""
+msgstr "Salgsanalyserapport"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_order
@@ -536,7 +545,7 @@ msgstr "Fraktpolicy"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.product_template_view_form_inherit_stock
 msgid "Sold in the last 365 days"
-msgstr ""
+msgstr "Solgt de siste 365 dager"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_move
@@ -661,7 +670,7 @@ msgstr ""
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "cancelled"
-msgstr ""
+msgstr "kansellert"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock

@@ -4,7 +4,6 @@
 # 
 # Translators:
 # yizhaq agronov <yizhaq@gmail.com>, 2019
-# Moshe Flam <pashute@gmail.com>, 2019
 # Martin Trigaux, 2019
 # Fishfur A Banter <fishfurbanter@gmail.com>, 2019
 # ExcaliberX <excaliberx@gmail.com>, 2019
@@ -379,7 +378,7 @@ msgstr "הוסף פסקה"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Add several variants to the purchase order from a grid"
-msgstr "הוסף להזמנת הרכש מספר וריאנטים מרשת רכש"
+msgstr "הוסף להזמנת הרכש מספר וריאנטים מתצוגת רשת"
 
 #. module: purchase
 #: model:res.groups,name:purchase.group_purchase_manager
@@ -441,7 +440,7 @@ msgstr "השלמה אוטומטית מהזמנת רכש בעבר."
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Automatically lock confirmed orders to prevent edition"
-msgstr "נעל אוטומטית הזמנות מאושרות כדי למנוע מהדורה חדשה"
+msgstr "נעל אוטומטית הזמנות מאושרות כדי למנוע עריכה"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_report__price_average
@@ -798,7 +797,7 @@ msgstr "עוקבים (לקוחות/ספקים)"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_non_accountable_null_fields
 msgid "Forbidden values on non-accountable purchase order line"
-msgstr ""
+msgstr "ערכים אסורים בשורת הזמנת רכש שאינה מובאת בחשבון חשבונאית"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__invoice_status__invoiced
@@ -929,7 +928,7 @@ msgstr "האם עוקב"
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.purchase_form_action
 msgid "It will be converted into a purchase order."
-msgstr "תתבצע המרה להזמנת רכש."
+msgstr "הצעת המחיר תהפוך להזמנת רכש."
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_account_move
@@ -992,7 +991,7 @@ msgstr "נעל הזמנות מאושרות"
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order__state__done
 #, python-format
 msgid "Locked"
-msgstr "נעול"
+msgstr "נעולה"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__message_main_attachment_id
@@ -1008,7 +1007,7 @@ msgstr "וודא שאתה משלם רק חשבוניות שעבורן קיבלת
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Manage your purchase agreements (call for tenders, blanket orders)"
-msgstr "נהל את הסכמי הרכישה שלך (מכרזים, הסכמי מסגרת)"
+msgstr "נהל את הסכמי הרכש שלך (מכרזים, הסכמי מסגרת)"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_order_line__qty_received_method__manual
@@ -1084,7 +1083,7 @@ msgstr "סכום מינימלי שעבורו נדרש אימות כפול"
 #. module: purchase
 #: model:ir.model.constraint,message:purchase.constraint_purchase_order_line_accountable_required_fields
 msgid "Missing required fields on accountable purchase order line."
-msgstr ""
+msgstr "חסרים ערכים בשדות חובה עבור שורת הזמנת רכש המובאת בחשבון חשבונאית."
 
 #. module: purchase
 #: model:ir.filters,name:purchase.filter_purchase_order_monthly_purchases
@@ -1126,7 +1125,7 @@ msgstr "מועד אחרון לפעילות הבאה"
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_summary
 msgid "Next Activity Summary"
-msgstr "תקציר הפעילות הבאה "
+msgstr "תיאור הפעילות הבאה "
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__activity_type_id
@@ -1312,7 +1311,7 @@ msgstr "מוצר"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_category_config_purchase
 msgid "Product Categories"
-msgstr "קטגוריות מוצר"
+msgstr "קטגוריות מוצרים"
 
 #. module: purchase
 #: model:ir.model,name:purchase.model_product_category
@@ -1738,7 +1737,7 @@ msgstr "מס' בקשות להצעת מחיר"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Request managers to approve orders above a minimum amount"
-msgstr "בקש ממנהלים לאשר הזמנות מעל סכום מינימלי"
+msgstr "בקש ממנהלים לאשר הזמנות מעל סכום מינימום מסוים"
 
 #. module: purchase
 #: model:ir.actions.act_window,name:purchase.purchase_rfq
@@ -1930,8 +1929,8 @@ msgid ""
 "The quotation contains the history of the discussion\n"
 "                you had with your vendor."
 msgstr ""
-"הצעת המחיר מכילה את היסטוריית הדיון\n"
-"                שהייתה לך עם הספק."
+"הצעת המחיר מכילה את היסטוריית השיחות\n"
+"                שהיו לך עם הספק."
 
 #. module: purchase
 #: model_terms:ir.actions.act_window,help:purchase.act_res_partner_2_purchase_order
@@ -2007,7 +2006,7 @@ msgstr "לספק זה אין הזמנת רכש. צור בקשה להצעת מח�
 #: model:ir.model.fields.selection,name:purchase.selection__purchase_report__state__to_approve
 #: model_terms:ir.ui.view,arch_db:purchase.view_purchase_order_filter
 msgid "To Approve"
-msgstr "על מנת לאשר"
+msgstr "ממתין לאישור מנהל"
 
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.purchase_order_view_search
@@ -2134,7 +2133,7 @@ msgstr "שדה שירות לביטוי סכום מטבע"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.res_config_settings_view_form_purchase
 msgid "Variant Grid Entry"
-msgstr "רשומת רשת וריאנט"
+msgstr "וריאנט מתצוגת רשת"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_bill_union__partner_id
@@ -2169,7 +2168,7 @@ msgstr "ארץ ספק"
 #. module: purchase
 #: model:ir.ui.menu,name:purchase.menu_product_pricelist_action2_purchase
 msgid "Vendor Pricelists"
-msgstr "מחירוני ספק"
+msgstr "מחירוני ספקים"
 
 #. module: purchase
 #: model:ir.model.fields,field_description:purchase.field_purchase_order__partner_ref
@@ -2278,3 +2277,11 @@ msgid ""
 msgstr ""
 "הצעת המחיר מכילה מוצרים של חברת  %s ואילו הצעת המחיר שייכת לחברה%s. \n"
 "אנא שנה את החברה בהצעת המחיר או הסר את המוצרים מחברות אחרות  (%s)."
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid ""
+"You cannot change the type of a purchase order line. Instead you should "
+"delete the current line and create a new line of the proper type."
+msgstr ""

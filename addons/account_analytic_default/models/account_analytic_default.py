@@ -75,6 +75,8 @@ class AccountMoveLine(models.Model):
     @api.depends('product_id', 'account_id', 'partner_id', 'date_maturity')
     def _compute_analytic_account(self):
         for record in self:
+            record.analytic_account_id = (record._origin or record).analytic_account_id
+            record.analytic_tag_ids = (record._origin or record).analytic_tag_ids
             rec = self.env['account.analytic.default'].account_get(
                 product_id=record.product_id.id,
                 partner_id=record.partner_id.commercial_partner_id.id or record.move_id.partner_id.commercial_partner_id.id,
@@ -83,5 +85,12 @@ class AccountMoveLine(models.Model):
                 date=record.date_maturity,
                 company_id=record.move_id.company_id.id
             )
-            record.analytic_account_id = (record._origin or record).analytic_account_id or rec.analytic_id
-            record.analytic_tag_ids = (record._origin or record).analytic_tag_ids or rec.analytic_tag_ids
+            if rec and not record.exclude_from_invoice_tab:
+                record.analytic_account_id = rec.analytic_id
+                record.analytic_tag_ids = rec.analytic_tag_ids
+
+    def _copy_data_extend_business_fields(self, values):
+        # OVERRIDE to copy the 'analytic_account_id' if set
+        super(AccountMoveLine, self)._copy_data_extend_business_fields(values)
+        if self.analytic_account_id:
+            values['analytic_account_id'] = self.analytic_account_id.id

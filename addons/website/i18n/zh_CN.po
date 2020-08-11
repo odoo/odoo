@@ -17,7 +17,6 @@
 # glovebx <ruinning@163.com>, 2019
 # SHOM <shanmuxin@yeah.net>, 2019
 # 老窦 北京 <2662059195@qq.com>, 2019
-# guohuadeng <guohuadeng@hotmail.com>, 2019
 # John An <johnxan@163.com>, 2019
 # e2f <projects@e2f.com>, 2019
 # Maie <m@maie.name>, 2019
@@ -40,6 +39,7 @@
 # Shane Tsoi <sso@odoo.com>, 2019
 # snow wang <147156565@qq.com>, 2019
 # Manga Tsang <mts@odoo.com>, 2019
+# guohuadeng <guohuadeng@hotmail.com>, 2020
 # Jeffery CHEN Fan <jeffery9@gmail.com>, 2020
 # 
 msgid ""
@@ -68,6 +68,18 @@ msgstr "添加图像"
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
 msgstr "’警告带有"
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" can not be empty."
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must start with a leading slash."
+msgstr ""
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
@@ -399,6 +411,8 @@ msgid ""
 "<i class=\"fa fa-arrow-right\"/>\n"
 "                                            Enable billing on your Google Project"
 msgstr ""
+"<i class=\"fa fa-arrow-right\"/>\n"
+"                                            在您的谷歌项目上启用计费"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -561,7 +575,7 @@ msgstr "<i class=\"fa fa-fw fa-pencil\"/>风格"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "<i class=\"fa fa-fw fa-picture-o\"/> Background"
-msgstr ""
+msgstr "<i class=\"fa fa-fw fa-picture-o\"/> 背景板"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -948,7 +962,7 @@ msgstr "如果最后一次连接时间超过8小时，则会考虑重新访问�
 #. module: website
 #: model:ir.model.constraint,message:website.constraint_website_visitor_partner_uniq
 msgid "A partner is linked to only one visitor."
-msgstr ""
+msgstr "一个伙伴仅与一个访问者链接"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features
@@ -1195,7 +1209,7 @@ msgstr "已归档"
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__specific_user_account
 msgid "Are newly created user accounts website specific"
-msgstr "新建的用户帐户是否符合网站"
+msgstr "新建的用户账户是否符合网站"
 
 #. module: website
 #. openerp-web
@@ -1408,7 +1422,7 @@ msgstr "更改图标"
 #: code:addons/website/static/src/js/widgets/theme.js:0
 #, python-format
 msgid "Changing this color will regenerate the default theme color scheme"
-msgstr ""
+msgstr "更改此颜色将重新生成默认主题颜色方案"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__field_parent
@@ -2350,7 +2364,7 @@ msgstr "页脚"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
 msgid "Force your user to create an account per website"
-msgstr "强制你的用户为每个网站创建一个帐户"
+msgstr "强制你的用户为每个网站创建一个账户"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
@@ -2771,7 +2785,7 @@ msgstr "图标"
 #. module: website
 #: model:ir.model.fields,help:website.field_website__specific_user_account
 msgid "If True, new accounts will be associated to the current website"
-msgstr "如果为正确的，新帐户将与当前网站相关联"
+msgstr "如果为正确的，新账户将与当前网站相关联"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__social_default_image
@@ -2905,7 +2919,7 @@ msgstr "已安装的应用程序"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "Installed Localizations / Account Charts"
-msgstr ""
+msgstr "安装了本地化/账户图表"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website__theme_id
@@ -3109,7 +3123,7 @@ msgstr "上月"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.website_visitor_view_kanban
 msgid "Last Page"
-msgstr ""
+msgstr "最后一页"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website__write_uid
@@ -3134,7 +3148,7 @@ msgstr "更新时间"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__last_visited_page_id
 msgid "Last Visited Page"
-msgstr ""
+msgstr "上次访问的页面"
 
 #. module: website
 #. openerp-web
@@ -4049,7 +4063,7 @@ msgstr "首要的"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
 msgid "Products Recently Viewed"
-msgstr ""
+msgstr "最近查看的产品"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.external_snippets
@@ -4815,7 +4829,7 @@ msgstr "目前没有可用的数据。"
 #: code:addons/website/models/website_visitor.py:0
 #, python-format
 msgid "There is no email linked this visitor."
-msgstr ""
+msgstr "没有链接此访问者的电子邮件"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -5008,12 +5022,12 @@ msgstr "网站顶级菜单 %s"
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__page_count
 msgid "Total number of tracked page visited"
-msgstr ""
+msgstr "已跟踪的页面访问总数"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_website_visitor__visitor_page_count
 msgid "Total number of visits on tracked pages"
-msgstr ""
+msgstr "跟踪页面的总访问次数"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__track
@@ -5140,7 +5154,7 @@ msgstr "UA-XXXXXXXX-Y"
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_from
 #: model_terms:ir.ui.view,arch_db:website.view_website_rewrite_form
 msgid "URL from"
-msgstr ""
+msgstr "URL从"
 
 #. module: website
 #: model:ir.model.fields,help:website.field_res_config_settings__cdn_filters
@@ -5151,7 +5165,7 @@ msgstr "网址匹配这些筛选将被使用CDN基本网址重写"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_rewrite__url_to
 msgid "URL to"
-msgstr ""
+msgstr "URL到"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -5440,7 +5454,7 @@ msgstr "访问"
 #: model_terms:ir.actions.act_window,help:website.website_visitor_view_action
 msgid ""
 "Wait for visitors to come to your website to see the pages they viewed."
-msgstr ""
+msgstr "等待访问者来到你的网站,看看他们看到的页面"
 
 #. module: website
 #: model_terms:ir.actions.act_window,help:website.website_visitors_action
@@ -5723,6 +5737,12 @@ msgid "White"
 msgstr "白色"
 
 #. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_domain
+#: model:ir.model.fields,help:website.field_website__domain
+msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
+msgstr ""
+
+#. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel
 #: model_terms:ir.ui.view,arch_db:website.s_tabs
 msgid ""
@@ -5800,7 +5820,7 @@ msgstr "您没有发布/取消发布的权限"
 #: code:addons/website/static/src/xml/website.backend.xml:0
 #, python-format
 msgid "You do not seem to have access to this Analytics Account."
-msgstr "你好像对此分析帐户没有访问权限。"
+msgstr "你好像对此分析账户没有访问权限。"
 
 #. module: website
 #. openerp-web

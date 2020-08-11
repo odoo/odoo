@@ -553,7 +553,8 @@ class Picking(models.Model):
         defaults = self.default_get(['name', 'picking_type_id'])
         picking_type = self.env['stock.picking.type'].browse(vals.get('picking_type_id', defaults.get('picking_type_id')))
         if vals.get('name', '/') == '/' and defaults.get('name', '/') == '/' and vals.get('picking_type_id', defaults.get('picking_type_id')):
-            vals['name'] = picking_type.sequence_id.next_by_id()
+            if picking_type.sequence_id:
+                vals['name'] = picking_type.sequence_id.next_by_id()
 
         # As the on_change in one2many list is WIP, we will overwrite the locations on the stock moves here
         # As it is a create the format will be a list of (0, 0, dict)
@@ -571,7 +572,12 @@ class Picking(models.Model):
                     if 'picking_type_id' not in move[2] or move[2]['picking_type_id'] != picking_type.id:
                         move[2]['picking_type_id'] = picking_type.id
                         move[2]['company_id'] = picking_type.company_id.id
+        # make sure to write `schedule_date` *after* the `stock.move` creation in
+        # order to get a determinist execution of `_set_scheduled_date`
+        scheduled_date = vals.pop('scheduled_date', False)
         res = super(Picking, self).create(vals)
+        if scheduled_date:
+            res.with_context(mail_notrack=True).write({'scheduled_date': scheduled_date})
         res._autoconfirm_picking()
 
         # set partner as follower
@@ -1202,7 +1208,13 @@ class Picking(models.Model):
                     done_to_keep = ml.qty_done
                     new_move_line = ml.copy(
                         default={'product_uom_qty': 0, 'qty_done': ml.qty_done})
-                    ml.write({'product_uom_qty': quantity_left_todo, 'qty_done': 0.0})
+                    vals = {'product_uom_qty': quantity_left_todo, 'qty_done': 0.0}
+                    if pick.picking_type_id.code == 'incoming':
+                        if ml.lot_id:
+                            vals['lot_id'] = False
+                        if ml.lot_name:
+                            vals['lot_name'] = False
+                    ml.write(vals)
                     new_move_line.write({'product_uom_qty': done_to_keep})
                     move_lines_to_pack |= new_move_line
             package_level = self.env['stock.package_level'].create({

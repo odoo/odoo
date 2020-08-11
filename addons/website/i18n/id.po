@@ -21,6 +21,8 @@
 # Mochamad Millah <numusai@gmail.com>, 2019
 # PAS IRVANUS <ipankbiz@gmail.com>, 2019
 # pnyet <david@zeromail.us>, 2020
+# Gradien Foundation <gradien.co@gmail.com>, 2020
+# whenwesober.. <gulmugurzu@yevme.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -28,7 +30,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: pnyet <david@zeromail.us>, 2020\n"
+"Last-Translator: whenwesober.. <gulmugurzu@yevme.com>, 2020\n"
 "Language-Team: Indonesian (https://www.transifex.com/odoo/teams/41243/id/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -47,6 +49,18 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.bs_debug_page_ir_ui_view
 #: model_terms:website.page,arch_db:website.bs_debug_page
 msgid "\" alert with a"
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" can not be empty."
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must start with a leading slash."
 msgstr ""
 
 #. module: website
@@ -1993,7 +2007,7 @@ msgstr ""
 #: code:addons/website/static/src/xml/website.contentMenu.xml:0
 #, python-format
 msgid "Dropdown menu"
-msgstr ""
+msgstr "Menu dropdown"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_features_grid
@@ -2214,6 +2228,8 @@ msgid ""
 "File from where the view originates.\n"
 "                                                          Useful to (hard) reset broken views or to read arch from file in dev-xml mode."
 msgstr ""
+"Berkas darimana tampilannya berasal.\n"
+"                                                          Sangat berguna untuk mereset (keseluruhan) tampilan yang rusak atau untuk membaca arch dari berkas dalam mode dev-xml."
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
@@ -2469,7 +2485,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:website.field_res_config_settings__has_google_maps
 #: model_terms:ir.ui.view,arch_db:website.company_description
 msgid "Google Maps"
-msgstr ""
+msgstr "Peta Google"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_res_config_settings__google_maps_api_key
@@ -5250,7 +5266,7 @@ msgstr "Lihat Arsitektur"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__name
 msgid "View Name"
-msgstr ""
+msgstr "Nama Tampilan"
 
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__type
@@ -5271,7 +5287,7 @@ msgstr "Tampilan"
 #. module: website
 #: model:ir.model.fields,field_description:website.field_website_page__inherit_children_ids
 msgid "Views which inherit from this one"
-msgstr ""
+msgstr "Bagan yang diturunkan dari yang satu ini"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.one_page_line
@@ -5640,6 +5656,12 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "White"
 msgstr "Putih"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_domain
+#: model:ir.model.fields,help:website.field_website__domain
+msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel

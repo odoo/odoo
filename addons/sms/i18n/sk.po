@@ -9,6 +9,11 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2020
+# Adam Levrinc <adam.levrinc@26house.com>, 2020
+# Michal Matus <misko.matus@gmail.com>, 2020
+# Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# karolína schusterová <karolina.schusterova@vdp.sk>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +21,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-10-07 07:13+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Jan Prokop, 2020\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -147,7 +152,7 @@ msgstr "Telo"
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Buy credits"
-msgstr ""
+msgstr "Kúpiť kredity"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
@@ -177,7 +182,7 @@ msgstr ""
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
 msgid "Choose a language:"
-msgstr ""
+msgstr "Vyberte jazyk:"
 
 #. module: sms
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_preview_form
@@ -277,12 +282,12 @@ msgstr "Vypusť oznámenie pre opätovné zaslanie podľa modelu"
 #: model:ir.model.fields,field_description:sms.field_sms_template__display_name
 #: model:ir.model.fields,field_description:sms.field_sms_template_preview__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: sms
 #: model:ir.model,name:sms.model_mail_followers
 msgid "Document Followers"
-msgstr "Sledujúci dokument"
+msgstr "Dokument odberateľov"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_composer__res_id
@@ -583,7 +588,7 @@ msgstr "Notifikácia"
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_mail_notification__notification_type
 msgid "Notification Type"
-msgstr ""
+msgstr "Typ Notifikácie"
 
 #. module: sms
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__sms_number
@@ -691,7 +696,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_sms_resend_recipient__resend
 #: model_terms:ir.ui.view,arch_db:sms.mail_resend_message_view_form
 msgid "Resend"
-msgstr ""
+msgstr "Znovu odoslať"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_resend_recipient
@@ -709,7 +714,7 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:sms.sms_tsms_view_form
 #, python-format
 msgid "SMS"
-msgstr ""
+msgstr "SMS"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_api
@@ -746,7 +751,7 @@ msgstr "SMS API"
 #: model:ir.model.fields,field_description:sms.field_res_partner__message_has_sms_error
 #: model:ir.model.fields,field_description:sms.field_res_users__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Chyba doručenia SMS"
 
 #. module: sms
 #. openerp-web
@@ -787,7 +792,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:sms.field_ir_actions_server__sms_template_id
 #: model_terms:ir.ui.view,arch_db:sms.sms_template_view_form
 msgid "SMS Template"
-msgstr ""
+msgstr "SMS šablóna"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_template_preview
@@ -863,7 +868,7 @@ msgstr ""
 #: model:ir.model.fields.selection,name:sms.selection__ir_actions_server__state__sms
 #, python-format
 msgid "Send SMS Text Message"
-msgstr ""
+msgstr "Poslať SMS textovú správu"
 
 #. module: sms
 #: model:ir.model,name:sms.model_sms_composer
@@ -997,6 +1002,14 @@ msgid ""
 "- 'Add Followers': add followers to a record (Discuss)\n"
 "- 'Create Next Activity': create an activity (Discuss)"
 msgstr ""
+"Typ akcie servera. K dispozícii sú nasledujúce hodnoty:\n"
+"- 'Execute Python Code': blok pythonového kódu, ktorý bude vykonaný\n"
+"- „Vytvoriť“: vytvorenie nového záznamu s novými hodnotami\n"
+"- „Aktualizovať záznam“: aktualizovať hodnoty záznamu\n"
+"- „Vykonať niekoľko akcií“: definuje akciu, ktorá spustí niekoľko ďalších akcií servera\n"
+"- „Poslať e-mail“: automaticky odošle e-mail (Diskusia)\n"
+"- „Pridať sledovateľov“: pridajte sledovateľov do záznamu (Diskusia)\n"
+"- „Vytvoriť ďalšiu aktivitu“: vytvoriť aktivitu (Diskusia)"
 
 #. module: sms
 #: model:ir.model.fields,help:sms.field_sms_composer__active_domain_count

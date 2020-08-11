@@ -1,22 +1,24 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * stock_picking_batch
+# 	* stock_picking_batch
 # 
 # Translators:
-# Zahed Alfak <tamass4116@gmail.com>, 2018
-# Martin Trigaux, 2018
-# Morovat Guivi <tarjomac@gmail.com>, 2018
-# Hamid Darabi, 2018
-# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2018
-# morteza zakaye <zibazokaye@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Zahed Alfak <tamass4116@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Morovat Guivi <tarjomac@gmail.com>, 2020
+# Hamid Darabi, 2020
+# Sahar Daraye <sahar.daraye.1369@gmail.com>, 2020
+# morteza zakaye <zibazokaye@gmail.com>, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
+"PO-Revision-Date: 2019-08-26 09:14+0000\n"
+"Last-Translator: Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +38,11 @@ msgstr "<strong>بسته</strong>"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "<strong>Product Barcode</strong>"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "<strong>Responsible:</strong>"
 msgstr ""
 
@@ -45,21 +52,40 @@ msgid "Action Needed"
 msgstr "اقدام مورد نیاز است"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_ids
+msgid "Activities"
+msgstr "فعالیت‌ها"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_state
+msgid "Activity State"
+msgstr "وضعیت فعالیت"
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add pickings to batch"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action
-#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_to_batch_form
 msgid "Add to Batch"
 msgstr ""
 
 #. module: stock_picking_batch
+#: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_to_batch_action_stock_picking
+msgid "Add to batch"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_attachment_count
 msgid "Attachment Count"
-msgstr ""
+msgstr "تعداد پیوست"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -67,40 +93,36 @@ msgid "Barcode"
 msgstr "بارکد"
 
 #. module: stock_picking_batch
-#: code:addons/stock_picking_batch/models/stock_picking_batch.py:64
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #: model:ir.actions.report,name:stock_picking_batch.action_report_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking__batch_id
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__batch_id
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #, python-format
-msgid "Batch Picking"
+msgid "Batch Transfer"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking_to_batch
-msgid "Batch Picking Lines"
-msgstr ""
-
-#. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__name
-msgid "Batch Picking Name"
+msgid "Batch Transfer Lines"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.actions.act_window,name:stock_picking_batch.stock_picking_batch_action
 #: model:ir.ui.menu,name:stock_picking_batch.stock_picking_batch_menu
-msgid "Batch Pickings"
+msgid "Batch Transfers"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-msgid "Batch Pickings not finished"
+msgid "Batch Transfers not finished"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking__batch_id
-msgid "Batch associated to this picking"
+msgid "Batch associated to this transfer"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -115,14 +137,14 @@ msgid "Cancel picking"
 msgstr ""
 
 #. module: stock_picking_batch
-#: selection:stock.picking.batch,state:0
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__cancel
 msgid "Cancelled"
 msgstr "لغو شد"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
-msgid "Commitment Date"
-msgstr ""
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__company_id
+msgid "Company"
+msgstr "شرکت"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
@@ -136,7 +158,7 @@ msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
-msgid "Create a new batch picking"
+msgid "Create a new batch transfer"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -152,24 +174,21 @@ msgid "Created on"
 msgstr "ایجاد شده در"
 
 #. module: stock_picking_batch
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
-msgid "Destination"
-msgstr "مقصد"
-
-#. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__display_name
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_to_batch__display_name
 msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__done
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-#: selection:stock.picking.batch,state:0
 msgid "Done"
 msgstr "انجام شد"
 
 #. module: stock_picking_batch
-#: selection:stock.picking.batch,state:0
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__draft
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Draft"
 msgstr "پیشنویس"
 
@@ -190,6 +209,11 @@ msgstr "پیروان (شرکاء)"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Future Activities"
+msgstr "فعالیتهای آینده"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
 msgid "Group By"
 msgstr "گروه‌بندی برمبنای"
 
@@ -200,21 +224,27 @@ msgid "ID"
 msgstr "شناسه"
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread
-msgid "If checked new messages require your attention."
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
+msgid "Icon"
+msgstr "شمایل"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_icon
+msgid "Icon to indicate an exception activity."
 msgstr ""
-"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_needaction
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread
 msgid "If checked, new messages require your attention."
 msgstr ""
 "اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
 msgid "If checked, some messages have a delivery error."
-msgstr ""
+msgstr "در صورت بررسی ، برخی پیام ها خطای تحویل دارند."
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_immediate_transfer
@@ -222,10 +252,15 @@ msgid "Immediate Transfer"
 msgstr "انتقال فوری"
 
 #. module: stock_picking_batch
-#: code:addons/stock_picking_batch/models/stock_picking_batch.py:92
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Immediate Transfer?"
 msgstr "انتقال فوری؟"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields.selection,name:stock_picking_batch.selection__stock_picking_batch__state__in_progress
+msgid "In progress"
+msgstr "در حال پیشرفت"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_is_follower
@@ -251,19 +286,24 @@ msgid "Last Updated on"
 msgstr "آخرین به روز رسانی در"
 
 #. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Late Activities"
+msgstr "فعالیتهای اخیر"
+
+#. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__picking_ids
-msgid "List of picking associated to this batch"
+msgid "List of transfers associated to this batch"
 msgstr ""
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_main_attachment_id
 msgid "Main Attachment"
-msgstr ""
+msgstr "پیوست اصلی"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error
 msgid "Message Delivery error"
-msgstr ""
+msgstr "خطای تحویل پیام"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_ids
@@ -272,11 +312,26 @@ msgstr "پیام‌ها"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__name
-msgid "Name of the batch picking"
+msgid "Name of the batch transfer"
 msgstr ""
 
 #. module: stock_picking_batch
-#: code:addons/stock_picking_batch/models/stock_picking_batch.py:52
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: stock_picking_batch
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Nothing to print."
 msgstr ""
@@ -288,7 +343,7 @@ msgstr "تعداد اقدامات"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
-msgid "Number of error"
+msgid "Number of errors"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -299,7 +354,7 @@ msgstr "تعداد پیام ها که نیاز به عمل"
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_has_error_counter
 msgid "Number of messages with delivery error"
-msgstr ""
+msgstr "تعداد پیامهای با خطای تحویل"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__message_unread_counter
@@ -308,7 +363,7 @@ msgstr "تعداد پیام‌های خوانده نشده"
 
 #. module: stock_picking_batch
 #: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__user_id
-msgid "Person responsible for this batch picking"
+msgid "Person responsible for this batch transfer"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -332,12 +387,6 @@ msgid "Picking to backorder"
 msgstr ""
 
 #. module: stock_picking_batch
-#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
-#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
-msgid "Pickings"
-msgstr "برداشت ها"
-
-#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 msgid "Print"
 msgstr "چاپ"
@@ -359,10 +408,19 @@ msgid "Responsible"
 msgstr "پاسخگو"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-#: selection:stock.picking.batch,state:0
 msgid "Running"
 msgstr "در حال اجرا"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
@@ -371,7 +429,7 @@ msgstr "تاریخ برنامه ریزی شده"
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
-msgid "Search Batch Picking"
+msgid "Search Batch Transfer"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -380,17 +438,22 @@ msgid "Select a batch"
 msgstr ""
 
 #. module: stock_picking_batch
-#: code:addons/stock_picking_batch/models/stock_picking_batch.py:59
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Show all records which has next action date is before today"
+msgstr "تمام رکوردهایی که تاریخ اعمال بعدی قبل از امروز است را نشان بده"
+
+#. module: stock_picking_batch
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid ""
-"Some pickings are still waiting for goods. Please check or force their "
-"availability before setting this batch to done."
+msgid "Some products require lots/serial numbers."
 msgstr ""
 
 #. module: stock_picking_batch
-#: code:addons/stock_picking_batch/models/stock_picking_batch.py:77
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
-msgid "Some products require lots/serial numbers."
+msgid ""
+"Some transfers are still waiting for goods. Please check or force their "
+"availability before setting this batch to done."
 msgstr ""
 
 #. module: stock_picking_batch
@@ -411,9 +474,18 @@ msgid "Status"
 msgstr "وضعیت"
 
 #. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_tree
-msgid "Stock Batch Picking"
+msgid "Stock Batch Transfer"
 msgstr ""
 
 #. module: stock_picking_batch
@@ -424,7 +496,7 @@ msgstr "خلاصه"
 #. module: stock_picking_batch
 #: model_terms:ir.actions.act_window,help:stock_picking_batch.stock_picking_batch_action
 msgid ""
-"The goal of the batch picking is to group operations that may\n"
+"The goal of the batch transfer is to group operations that may\n"
 "            (needs to) be done together in order to increase their efficiency.\n"
 "            It may also be useful to assign jobs (one person = one batch) or\n"
 "            help the timing management of operations (tasks to be done at 1pm)."
@@ -432,8 +504,18 @@ msgstr ""
 
 #. module: stock_picking_batch
 #: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
+msgid "To"
+msgstr "به"
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.report_picking_batch
 msgid "To take from:"
 msgstr ""
+
+#. module: stock_picking_batch
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_filter
+msgid "Today Activities"
+msgstr "فعالیتها امروز"
 
 #. module: stock_picking_batch
 #: model:ir.model,name:stock_picking_batch.model_stock_picking
@@ -441,9 +523,20 @@ msgid "Transfer"
 msgstr "انتقال"
 
 #. module: stock_picking_batch
-#: code:addons/stock_picking_batch/models/stock_picking_batch.py:63
+#: code:addons/stock_picking_batch/models/stock_picking_batch.py:0
 #, python-format
 msgid "Transferred by"
+msgstr ""
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,field_description:stock_picking_batch.field_stock_picking_batch__picking_ids
+#: model_terms:ir.ui.view,arch_db:stock_picking_batch.stock_picking_batch_form
+msgid "Transfers"
+msgstr "انتقال ها"
+
+#. module: stock_picking_batch
+#: model:ir.model.fields,help:stock_picking_batch.field_stock_picking_batch__activity_exception_decoration
+msgid "Type of the exception activity on record."
 msgstr ""
 
 #. module: stock_picking_batch

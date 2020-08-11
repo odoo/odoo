@@ -1,18 +1,19 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * website_event_sale
+# 	* website_event_sale
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
+# Martin Trigaux, 2020
+# Hamid Darabi, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:18+0000\n"
-"PO-Revision-Date: 2018-09-21 13:18+0000\n"
-"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2018\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
+"PO-Revision-Date: 2019-08-26 09:15+0000\n"
+"Last-Translator: Hamed Mohammadi <hamed@dehongi.com>, 2020\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -22,23 +23,44 @@ msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Free</span>"
-msgstr "<span>آزاد</span>"
+msgid "(Available seats:"
+msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>Unlimited</span>"
-msgstr "<span>نامحدود</span>"
+msgid "<i class=\"fa fa-ban mr-2\"/>Sold Out"
+msgstr ""
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
-msgid "<span>left</span>"
+msgid "<i class=\"fa fa-check mr-2\"/>Registered"
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity cannot be applied to this "
+"event tickets product."
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid ""
+"A pricelist item with a positive min. quantity will not be applied to the "
+"event tickets products."
 msgstr ""
 
 #. module: website_event_sale
 #: model:ir.model.fields,field_description:website_event_sale.field_product_product__event_ticket_ids
 msgid "Event Tickets"
 msgstr ""
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Free"
+msgstr "رایگان"
 
 #. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
@@ -51,12 +73,22 @@ msgid "Only"
 msgstr "تنها"
 
 #. module: website_event_sale
+#: model:ir.model,name:website_event_sale.model_product_pricelist_item
+msgid "Pricelist Rule"
+msgstr ""
+
+#. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_product_product
 msgid "Product"
 msgstr "محصول"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/controllers/main.py:59
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Register"
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/controllers/main.py:0
 #, python-format
 msgid "Registration"
 msgstr "ثبت"
@@ -68,7 +100,7 @@ msgstr "باقی مانده"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_sale_order
-msgid "Sale Order"
+msgid "Sales Order"
 msgstr "سفارش فروش"
 
 #. module: website_event_sale
@@ -77,18 +109,23 @@ msgid "Sales Order Line"
 msgstr "سطر سفارش‌فروش"
 
 #. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid "Sales end on"
+msgstr ""
+
+#. module: website_event_sale
 #: model_terms:ir.ui.view,arch_db:website_event_sale.index
 msgid "Sold Out"
 msgstr "تمام شد"
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:71
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "Sorry, The %(ticket)s tickets for the %(event)s event are sold out."
 msgstr "متاسفیم، بلیط %(ticket)s برای رویداد %(event)s تمام شد."
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:77
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid ""
 "Sorry, only %(remaining_seats)d seats are still available for the %(ticket)s"
@@ -96,7 +133,7 @@ msgid ""
 msgstr ""
 
 #. module: website_event_sale
-#: code:addons/website_event_sale/models/sale_order.py:39
+#: code:addons/website_event_sale/models/sale_order.py:0
 #, python-format
 msgid "The ticket doesn't match with this product."
 msgstr ""
@@ -105,6 +142,19 @@ msgstr ""
 #: model_terms:ir.ui.view,arch_db:website_event_sale.registration_complete_inherit_website_event_sale
 msgid "Ticket"
 msgstr "تیکت"
+
+#. module: website_event_sale
+#: model_terms:ir.ui.view,arch_db:website_event_sale.registration_template
+msgid ""
+"Tickets\n"
+"                    <span class=\"close\">×</span>"
+msgstr ""
+
+#. module: website_event_sale
+#: code:addons/website_event_sale/models/product_pricelist.py:0
+#, python-format
+msgid "Warning"
+msgstr "هشدار"
 
 #. module: website_event_sale
 #: model:ir.model,name:website_event_sale.model_website

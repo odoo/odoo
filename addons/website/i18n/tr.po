@@ -7,7 +7,7 @@
 # Doğan Altunbay <doganaltunbay@gmail.com>, 2019
 # Volkan Gezer <volkangezer@gmail.com>, 2019
 # Güven YILMAZ <guvenyilmaz@outlook.com.tr>, 2019
-# Alper Çiftçi <inactive+alprciftci@transifex.com>, 2019
+# 8bbc36517816c0507c9ca350a0e523fd_9e68207 <90a3963e59612d1681dec64fbc906ae0_331927>, 2019
 # İlknur Püskül <ilknurpuskull@gmail.com>, 2019
 # Ayhan KIZILTAN <akiziltan76@hotmail.com>, 2019
 # checkyoursix <batuhan.akpinar@gmail.com>, 2019
@@ -16,7 +16,6 @@
 # Buket Şeker <buket_skr@hotmail.com>, 2019
 # ANIL TAN SAĞIR <anils@projetgrup.com>, 2019
 # Osman Karagöz <osmank3@gmail.com>, 2019
-# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2019
 # Gökhan Erdoğdu <gokhan.erdogdu@mechsoft.com.tr>, 2019
 # Cécile Collart <cco@odoo.com>, 2019
 # Levent Karakaş <levent@mektup.at>, 2019
@@ -31,6 +30,7 @@
 # Yedigen, 2019
 # Ediz Duman <neps1192@gmail.com>, 2019
 # abc Def <hdogan1974@gmail.com>, 2020
+# Ertuğrul Güreş <ertugrulg@projetgrup.com>, 2020
 # Murat Durmuş <muratd@projetgrup.com>, 2020
 # Murat Kaplan <muratk@projetgrup.com>, 2020
 # 
@@ -62,6 +62,18 @@ msgid "\" alert with a"
 msgstr "* ile uyarı"
 
 #. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" can not be empty."
+msgstr ""
+
+#. module: website
+#: code:addons/website/models/website_rewrite.py:0
+#, python-format
+msgid "\"URL to\" must start with a leading slash."
+msgstr ""
+
+#. module: website
 #: model:ir.model.fields,field_description:website.field_website_visitor__page_count
 msgid "# Visited Pages"
 msgstr "# Ziyaret Edilen Sayfalar"
@@ -76,7 +88,7 @@ msgstr "%s (id:%s)"
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.show_website_info
 msgid "&amp;times;"
-msgstr "&amp;kere;"
+msgstr "&amp;times;"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.sitemap_index_xml
@@ -3160,7 +3172,7 @@ msgstr "Son Menü"
 #: model:ir.model.fields,field_description:website.field_website_track____last_update
 #: model:ir.model.fields,field_description:website.field_website_visitor____last_update
 msgid "Last Modified on"
-msgstr "Son Güncelleme"
+msgstr "Son Düzenleme"
 
 #. module: website
 #. openerp-web
@@ -5113,7 +5125,7 @@ msgstr "İzlenen sayfalardaki toplam ziyaret sayısı"
 #: model:ir.model.fields,field_description:website.field_ir_ui_view__track
 #: model:ir.model.fields,field_description:website.field_website_page__track
 msgid "Track"
-msgstr "Parça"
+msgstr "İzle"
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.res_config_settings_view_form
@@ -5839,6 +5851,12 @@ msgstr "Ne yapmak istiyorsunuz?"
 #: model_terms:ir.ui.view,arch_db:website.snippet_options
 msgid "White"
 msgstr "Beyaz"
+
+#. module: website
+#: model:ir.model.fields,help:website.field_res_config_settings__website_domain
+#: model:ir.model.fields,help:website.field_website__domain
+msgid "Will be prefixed by http in canonical URLs if no scheme is specified"
+msgstr ""
 
 #. module: website
 #: model_terms:ir.ui.view,arch_db:website.s_quotes_carousel

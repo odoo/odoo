@@ -7,13 +7,13 @@
 # Pietro Della Notte <pdellanotte@gmail.com>, 2019
 # Francesco Garganese <francesco.garganese@aeromnia.aero>, 2019
 # SebastianoPistore <SebastianoPistore.info@protonmail.ch>, 2019
+# Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2019
 # Christian <chris@effeci.info>, 2019
 # maiolif <maiolif@mgftools.com>, 2019
 # Martin Trigaux, 2019
 # Lorenzo Battistini <lb@takobi.online>, 2019
 # Luigi Di Naro <gigidn@gmail.com>, 2019
 # Simone Bernini <simone@aperturelabs.it>, 2019
-# Maurizio Delmonte <maurizio.delmonte@gmail.com>, 2019
 # Paolo Valier, 2019
 # Manuela Feliciani <mfeliciani@alice.it>, 2019
 # Léonie Bouchat <lbo@odoo.com>, 2019
@@ -24,6 +24,7 @@
 # Sergio Zanchetta <primes2h@gmail.com>, 2020
 # Loris Balsamo <et94@live.it>, 2020
 # Iacopo Simonelli <lsi@odoo.com>, 2020
+# Fabio Benedetti <benedetti.fabio@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -31,7 +32,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:10+0000\n"
-"Last-Translator: Iacopo Simonelli <lsi@odoo.com>, 2020\n"
+"Last-Translator: Fabio Benedetti <benedetti.fabio@gmail.com>, 2020\n"
 "Language-Team: Italian (https://www.transifex.com/odoo/teams/41243/it/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -107,43 +108,43 @@ msgstr "%s : %.2f ore"
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s are only valid between %s and %s"
-msgstr ""
+msgstr "%ssono validi soltanto fra %s e %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s are only valid starting from %s"
-msgstr ""
+msgstr "%s sono validi soltanto a partire da %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s are only valid until %s"
-msgstr ""
+msgstr "%s sono validi soltato fino %s"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on %s : %.2f hours"
-msgstr ""
+msgstr "%s su %s : %.2f ore"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on %s: %.2f days"
-msgstr ""
+msgstr "%s su %s : %.2f giorni"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on Time Off : %.2f day(s)"
-msgstr ""
+msgstr "%s in Ferie : %.2f giorno(i)"
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave.py:0
 #, python-format
 msgid "%s on Time Off : %.2f hour(s)"
-msgstr ""
+msgstr "%s in Ferie : %.2f ora(e)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.report_holidayssummary
@@ -503,6 +504,9 @@ msgid ""
 "                                    Time Off\n"
 "                                </span>"
 msgstr ""
+"<span class=\"o_stat_text\">\n"
+"                                  Ferie\n"
+"                                 </span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_public_form_view_inherit
@@ -526,12 +530,12 @@ msgstr ""
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Days Allocated</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Gruppo di Giorni Assegnato</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 msgid "<span class=\"o_stat_text\">Group Time Off</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\"> Gruppo di Ferie</span>"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_form
@@ -576,7 +580,7 @@ msgstr "Un permesso non può essere duplicato."
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__show_leaves
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__show_leaves
 msgid "Able to see Remaining Time Off"
-msgstr ""
+msgstr "Abilitato a vedere i giorni di ferie rimanenti"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_department_view_kanban
@@ -609,24 +613,24 @@ msgstr "Impiegati Assenti"
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__is_absent
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_employee_view_search
 msgid "Absent Today"
-msgstr "Assenti Oggi"
+msgstr "Assente Oggi"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_allocation__allocation_type__accrual
 msgid "Accrual Allocation"
-msgstr ""
+msgstr "Quota Maturata"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Accrual Allocations"
-msgstr "Assegnazioni accumulo"
+msgstr "Quote Maturate"
 
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.hr_leave_allocation_cron_accrual_ir_actions_server
 #: model:ir.cron,cron_name:hr_holidays.hr_leave_allocation_cron_accrual
 #: model:ir.cron,name:hr_holidays.hr_leave_allocation_cron_accrual
 msgid "Accrual Time Off: Updates the number of time off"
-msgstr ""
+msgstr "Ferie Maturate: Aggiorna il numero delle ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__message_needaction
@@ -642,13 +646,13 @@ msgstr "Attivo"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Active Allocations"
-msgstr "Assegnazioni attive"
+msgstr "Quote Attive"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
 msgid "Active Time Off"
-msgstr ""
+msgstr "Ferie Assegnate"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -691,6 +695,8 @@ msgid ""
 "Adding validity to types of time off so that it cannot be selected outside "
 "this time period"
 msgstr ""
+"Aggiungere un periodo valido per le ferie cosicché non possano essere "
+"richieste al di fuori di quel periodo"
 
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_manager
@@ -715,7 +721,7 @@ msgstr "Tutte le allocazioni"
 #. module: hr_holidays
 #: model:res.groups,name:hr_holidays.group_hr_holidays_user
 msgid "All Approver"
-msgstr ""
+msgstr "Chi può approvare"
 
 #. module: hr_holidays
 #: model:ir.actions.act_window,name:hr_holidays.action_hr_holidays_dashboard
@@ -730,18 +736,18 @@ msgstr "Assegnati (giorni/ore)"
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed
 msgid "Allocated by HR only"
-msgstr ""
+msgstr "Assegnate esclusivamente dalle Risorse Umane"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.edit_holiday_status_form
 #: model:mail.message.subtype,name:hr_holidays.mt_leave_allocation
 msgid "Allocation"
-msgstr "Allocazione"
+msgstr "Assegnazione"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_approval
 msgid "Allocation Approval"
-msgstr "Approvazione allocazione"
+msgstr "Approvazione Assegnazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_display
@@ -749,26 +755,26 @@ msgstr "Approvazione allocazione"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_display
 msgid "Allocation Display"
-msgstr ""
+msgstr "Mostra l' Assegnazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__holiday_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__holiday_type
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_report__holiday_type
 msgid "Allocation Mode"
-msgstr "Modalità allocazione"
+msgstr "Modalità Assegnazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__allocation_notif_subtype_id
 msgid "Allocation Notification Subtype"
-msgstr ""
+msgstr "Sottotipo Notifica Assegnazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_report__leave_type__allocation
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 #: model:mail.message.subtype,description:hr_holidays.mt_leave_allocation
 msgid "Allocation Request"
-msgstr "Richiesta Allocazione"
+msgstr "Assegnazione Richiesta"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.menu_open_allocation
@@ -776,7 +782,7 @@ msgstr "Richiesta Allocazione"
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_activity
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_tree
 msgid "Allocation Requests"
-msgstr "Richieste Allocazione"
+msgstr "Assegnazioni Richieste"
 
 #. module: hr_holidays
 #: model:mail.activity.type,name:hr_holidays.mail_act_leave_allocation_second_approval
@@ -786,7 +792,7 @@ msgstr "Seconda approvazione allocazione"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__allocation_type
 msgid "Allocation Type"
-msgstr ""
+msgstr "Tipo di Assegnazione"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__allocation_used_display
@@ -794,7 +800,7 @@ msgstr ""
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__allocation_used_display
 #: model:ir.model.fields,field_description:hr_holidays.field_res_users__allocation_used_display
 msgid "Allocation Used Display"
-msgstr ""
+msgstr "Mostra le Assegnazioni "
 
 #. module: hr_holidays
 #: code:addons/hr_holidays/models/hr_leave_allocation.py:0
@@ -848,13 +854,13 @@ msgstr ""
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_department__allocation_to_approve_count
 msgid "Allocation to Approve"
-msgstr "Allocazioni da Approvare"
+msgstr "Assegnazioni da Approvare"
 
 #. module: hr_holidays
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_all_allocations
 #: model:ir.ui.menu,name:hr_holidays.hr_holidays_menu_manager_approve_allocations
 msgid "Allocations"
-msgstr "Allocazioni"
+msgstr "Assegnazioni"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__holiday_type
@@ -897,7 +903,7 @@ msgstr "Approva"
 #. module: hr_holidays
 #: model:ir.actions.server,name:hr_holidays.ir_actions_server_approve_allocations
 msgid "Approve Allocations"
-msgstr ""
+msgstr "Approva le Assegnazioni"
 
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_employee__current_leave_state__validate
@@ -913,7 +919,7 @@ msgstr "Approvata"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_leave_allocation_filter
 msgid "Approved Allocations"
-msgstr "Allocazioni approvate"
+msgstr "Assegnazioni approvate"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -940,7 +946,7 @@ msgstr "Numero allegati"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_allocation__accrual_limit
 msgid "Balance limit"
-msgstr ""
+msgstr "Limite di Bilancio"
 
 #. module: hr_holidays
 #: model:ir.model,name:hr_holidays.model_hr_employee_base
@@ -1098,13 +1104,13 @@ msgstr "Contatto"
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_approve_department
 msgid "Create a new time off allocation"
-msgstr ""
+msgstr "Crea un assegnazione per le ferie"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_all
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_allocation_action_my
 msgid "Create a new time off allocation request"
-msgstr ""
+msgstr "Crea una nuova richiesta di assegnazione per le ferie"
 
 #. module: hr_holidays
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_action_approve_department
@@ -1113,7 +1119,7 @@ msgstr ""
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_new_request
 #: model_terms:ir.actions.act_window,help:hr_holidays.hr_leave_action_payroll
 msgid "Create a new time off request"
-msgstr ""
+msgstr "Crea una nuova richiesta di ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__create_uid
@@ -1136,14 +1142,14 @@ msgstr "Creato il"
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_state
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_state
 msgid "Current Time Off Status"
-msgstr ""
+msgstr "Stato Ferie Corrente "
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee__current_leave_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_base__current_leave_id
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_employee_public__current_leave_id
 msgid "Current Time Off Type"
-msgstr ""
+msgstr "Tipo Ferie Corrente"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -1244,7 +1250,7 @@ msgstr "Nome visualizzato"
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave_type__create_calendar_meeting
 msgid "Display Time Off in Calendar"
-msgstr ""
+msgstr "Mostra le Ferie nel Calendario"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_kanban
@@ -1296,7 +1302,7 @@ msgstr "Modifica assegnazione"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_view_kanban
 msgid "Edit Time Off"
-msgstr ""
+msgstr "Edita Ferie"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__employee_id
@@ -1341,7 +1347,7 @@ msgstr "Tutti"
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.hr_leave_allocation_view_form
 msgid "Extra days"
-msgstr ""
+msgstr "Giorni Extra"
 
 #. module: hr_holidays
 #: model:ir.model.fields,help:hr_holidays.field_hr_leave_allocation__duration_display
@@ -1367,6 +1373,8 @@ msgid ""
 "Filters only on allocations that belong to an time off type that is 'active'"
 " (active field is True)"
 msgstr ""
+"Filtra solo le assegnazioni che corrispondono ad un tipo di ferie che "
+"risulta 'attivo' (il campo attivo è Vero)"
 
 #. module: hr_holidays
 #: model_terms:ir.ui.view,arch_db:hr_holidays.view_hr_holidays_filter_report
@@ -1374,6 +1382,8 @@ msgid ""
 "Filters only on requests that belong to an time off type that is 'active' "
 "(active field is True)"
 msgstr ""
+"Filtra solo le richieste che corrispondono ad un tipo di ferie che risulta "
+"'attivo' (il campo attivo è Vero)"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_leave__first_approver_id
@@ -1408,7 +1418,7 @@ msgstr "Modulo senza contenuto, impossibile stampare il rendiconto."
 #. module: hr_holidays
 #: model:ir.model.fields.selection,name:hr_holidays.selection__hr_leave_type__allocation_type__fixed_allocation
 msgid "Free Allocation Request"
-msgstr ""
+msgstr "Richiesta di Assegnazione Libera"
 
 #. module: hr_holidays
 #: model:ir.model.fields,field_description:hr_holidays.field_hr_holidays_summary_employee__date_from

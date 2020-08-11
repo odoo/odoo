@@ -59,6 +59,16 @@ class TestTax(AccountTestUsers):
                 (4, self.percent_tax.id, 0)
             ]
         })
+        self.group_tax_percent = self.tax_model.create({
+            'name': "Group tax percent",
+            'amount_type': 'group',
+            'amount': 0,
+            'sequence': 6,
+            'children_tax_ids': [
+                (4, self.percent_tax.id, 0),
+                (4, self.percent_tax_bis.id, 0)
+            ]
+        })
         self.group_of_group_tax = self.tax_model.create({
             'name': "Group of group tax",
             'amount_type': 'group',
@@ -105,6 +115,18 @@ class TestTax(AccountTestUsers):
                     'account_id': some_account.id,
                 }),
             ],
+        })
+
+        self.tax_0_percent = self.tax_model.create({
+            'name': "test_0_percent",
+            'amount_type': 'percent',
+            'amount': 0,
+        })
+
+        self.tax_8_percent = self.tax_model.create({
+            'name': "test_8_percent",
+            'amount_type': 'percent',
+            'amount': 8,
         })
 
         self.tax_12_percent = self.tax_model.create({
@@ -168,6 +190,21 @@ class TestTax(AccountTestUsers):
                 # ---------------------------------------------------
                 (200.0, 10.0),    # |  1  |    10  |      |
                 (200.0, 20.0),    # |  3  |    10% |      |
+                # ---------------------------------------------------
+            ],
+            res
+        )
+
+    def test_tax_group_percent(self):
+        res = self.group_tax_percent.with_context({'force_price_include':True}).compute_all(100.0)
+        self._check_compute_all_results(
+            100,    # 'total_included'
+            83.33,    # 'total_excluded'
+            [
+                # base , amount     | seq | amount | incl | incl_base
+                # ---------------------------------------------------
+                (83.33, 8.33),    # |  1  |    10% |      |
+                (83.33, 8.34),    # |  2  |    10% |      |
                 # ---------------------------------------------------
             ],
             res
@@ -751,6 +788,45 @@ class TestTax(AccountTestUsers):
                 # -------------
             ],
             res1
+        )
+
+    def test_rounding_tax_included_round_per_line_03(self):
+        ''' Test the rounding of a 8% and 0% price included tax in an invoice having 8 * 15.55 as line.
+        The decimal precision is set to 2.
+        '''
+        self.tax_0_percent.company_id.currency_id.rounding = 0.01
+        self.tax_0_percent.price_include = True
+        self.tax_8_percent.price_include = True
+
+        self.group_tax.children_tax_ids = [(6, 0, self.tax_0_percent.ids)]
+        self.group_tax_bis.children_tax_ids = [(6, 0, self.tax_8_percent.ids)]
+
+        res1 = (self.tax_8_percent | self.tax_0_percent).compute_all(15.55, quantity=8.0)
+        self._check_compute_all_results(
+            124.40,      # 'total_included'
+            115.19,      # 'total_excluded'
+            [
+                # base , amount
+                # -------------
+                (115.19, 9.21),
+                (115.19, 0.00),
+                # -------------
+            ],
+            res1
+        )
+
+        res2 = (self.tax_0_percent | self.tax_8_percent).compute_all(15.55, quantity=8.0)
+        self._check_compute_all_results(
+            124.40,      # 'total_included'
+            115.19,      # 'total_excluded'
+            [
+                # base , amount
+                # -------------
+                (115.19, 0.00),
+                (115.19, 9.21),
+                # -------------
+            ],
+            res2
         )
 
     def test_rounding_tax_included_round_globally_01(self):

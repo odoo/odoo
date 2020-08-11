@@ -34,15 +34,15 @@
 # Julien Martin <204336@supinfo.com>, 2019
 # omaodoo <oma@odoo.com>, 2019
 # lcaodoo <lca@odoo.com>, 2019
-# Jonathan <jcs@odoo.com>, 2020
+# Jonathan Castillo <jcs@odoo.com>, 2020
 # Alexandra Jubert <aju@odoo.com>, 2020
 # Fabien Pinckaers <fp@openerp.com>, 2020
 # Cécile Collart <cco@odoo.com>, 2020
 # Pauline Thiry <pth@odoo.com>, 2020
 # Julien Goergen <jgo@odoo.com>, 2020
 # Priscilla Sanchez <prs@odoo.com>, 2020
-# Jonathan Quique <jqu@odoo.com>, 2020
 # Vallen Delobel <edv@odoo.com>, 2020
+# Jonathan Quique <jqu@odoo.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -50,7 +50,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: Vallen Delobel <edv@odoo.com>, 2020\n"
+"Last-Translator: Jonathan Quique <jqu@odoo.com>, 2020\n"
 "Language-Team: French (https://www.transifex.com/odoo/teams/41243/fr/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -3257,7 +3257,7 @@ msgstr "Enregistrer"
 #: code:addons/mail/static/src/xml/chatter.xml:0
 #, python-format
 msgid "Log a note. Followers will not be notified."
-msgstr "Enregistrez une note. Les abonnés en seront avertis. "
+msgstr "Enregistrez une note. Les abonnés ne seront pas notifiés. "
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_activity_view_form_popup
@@ -4621,7 +4621,7 @@ msgstr "Indiquez les informations du client"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "Please contact us instead using"
-msgstr "Merci de nous contacter plutôt que d'utiliser"
+msgstr "Pour nous contacter, merci de plutôt utiliser"
 
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_channel_send_guidelines
@@ -5622,7 +5622,7 @@ msgstr "Merci !"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "The"
-msgstr "Le"
+msgstr "L'équipe"
 
 #. module: mail
 #: code:addons/mail/models/ir_actions.py:0
@@ -6463,6 +6463,14 @@ msgstr ""
 "l'un des canaux que vous modifiez."
 
 #. module: mail
+#: code:addons/mail/models/mail_alias.py:89
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
+
+#. module: mail
 #: code:addons/mail/models/mail_thread.py:0
 #, python-format
 msgid "You have been assigned to %s"
@@ -6840,7 +6848,7 @@ msgstr "modèle cible non défini"
 #. module: mail
 #: model_terms:ir.ui.view,arch_db:mail.mail_bounce_catchall
 msgid "team."
-msgstr "équipe."
+msgstr "."
 
 #. module: mail
 #. openerp-web

@@ -317,7 +317,7 @@ class AccountReconciliation(models.AbstractModel):
         # show entries that are not reconciled with other partner. Asking for a specific partner on a specific account
         # is never done.
         accounts_data = []
-        if not partner_ids:
+        if not partner_ids or not any(partner_ids):
             accounts_data = self.get_data_for_manual_reconciliation('account', account_ids)
         return {
             'customers': self.get_data_for_manual_reconciliation('partner', partner_ids, 'receivable'),

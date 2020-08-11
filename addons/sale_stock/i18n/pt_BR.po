@@ -14,7 +14,9 @@
 # Martin Trigaux, 2019
 # grazziano <gra.negocia@gmail.com>, 2019
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
-# Luiz Fernando Gondin <lfpsgs@outlook.com>, 2020
+# Luiz Fernando <lfpsgs@outlook.com>, 2020
+# Maurício Liell <mauricio@liell.com.br>, 2020
+# Vanderlei Romera <vanderleiromera@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -22,7 +24,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-09-27 09:11+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: Luiz Fernando Gondin <lfpsgs@outlook.com>, 2020\n"
+"Last-Translator: Vanderlei Romera <vanderleiromera@gmail.com>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -36,6 +38,8 @@ msgid ""
 ".\n"
 "                Manual actions may be needed."
 msgstr ""
+".\n"
+"            Ações manuais podem ser requeridas."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.sale_order_portal_content_inherit_sale_stock
@@ -115,6 +119,9 @@ msgid ""
 "A consumable product is a product for which stock is not managed.\n"
 "A service is a non-material product you provide."
 msgstr ""
+"Um produto armazenável é um produto no qual você pode gerenciar o estoque. O aplicativo Inventário deve ser instalado.\n"
+"Um produto consumível é um produto para o qual o estoque não é gerenciado.\n"
+"Um serviço é um produto não material que você fornece."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order_line__qty_delivered_method
@@ -170,7 +177,7 @@ msgstr "Disponível"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_stock_rules_report__so_route_ids
 msgid "Choose to apply SO lines specific routes."
-msgstr ""
+msgstr "Escolha aplicar rotas específicas de linhas SO."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_company
@@ -180,7 +187,7 @@ msgstr "Empresas"
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_sale_order__effective_date
 msgid "Completion date of the first delivery order."
-msgstr ""
+msgstr "Data de conclusão do primeiro pedido de entrega."
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_res_config_settings
@@ -238,7 +245,7 @@ msgstr "Exibir incoterms no pedido de venda e faturas relacionadas"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_sale
 msgid "Display incoterms on orders &amp; invoices"
-msgstr ""
+msgstr "Exibir incoterms em pedidos & amp; faturas"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -246,6 +253,7 @@ msgstr ""
 msgid ""
 "Do not forget to change the partner on the following delivery orders: %s"
 msgstr ""
+"Não se esqueça de alterar o parceiro nas seguintes ordens de entrega:%s"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__effective_date
@@ -255,12 +263,12 @@ msgstr "Data Efetiva"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
 msgid "Exception(s) occurred on the picking:"
-msgstr ""
+msgstr "Ocorreram exceções na separação:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
 msgid "Exception(s) occurred on the sale order(s):"
-msgstr ""
+msgstr "Exceções(s) ocorreram na ordem de venda:"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_picking
@@ -299,6 +307,9 @@ msgid ""
 "based on the greatest product lead time. Otherwise, it will be based on the "
 "shortest."
 msgstr ""
+"Se você entregar todos os produtos de uma só vez, a ordem de entrega será "
+"agendada com base no maior prazo de entrega do produto. Caso contrário, será"
+" baseado no mais curto."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so
@@ -378,6 +389,10 @@ msgid ""
 "for delivery that many days earlier than the actual promised date, to cope "
 "with unexpected delays in the supply chain."
 msgstr ""
+"Margem de erro para as datas prometidas para os clientes. Os produtos serão "
+"programados para a aquisição e entrega que muitos dias antes da data "
+"prometida real, para lidar com atrasos inesperados na cadeia de "
+"abastecimento."
 
 #. module: sale_stock
 #: model:ir.model.fields,help:sale_stock.field_res_company__security_lead
@@ -401,7 +416,7 @@ msgstr "Método para atualizar a quantidade entregue"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Move forward expected delivery dates by"
-msgstr ""
+msgstr "Avance as datas de entrega previstas por"
 
 #. module: sale_stock
 #. openerp-web
@@ -424,7 +439,7 @@ msgstr "Pacote"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__default_picking_policy
 msgid "Picking Policy"
-msgstr ""
+msgstr "Política de Separação"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_procurement_group
@@ -460,6 +475,10 @@ msgid ""
 "or/and frequent stock-outs. By default, the scheduler runs automatically "
 "every 24 hours."
 msgstr ""
+"Aconselha-se a reserva manual de produtos em pedidos de entrega ou a "
+"execução do agendador para gerenciar melhor as prioridades em caso de longos"
+" prazos de entrega ou / e frequentes estoques. Por padrão, o planejador é "
+"executado automaticamente a cada 24 horas."
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__route_id
@@ -469,7 +488,7 @@ msgstr "Rota"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_move__sale_line_id
 msgid "Sale Line"
-msgstr ""
+msgstr "Linha de Venda"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_procurement_group__sale_id
@@ -484,7 +503,7 @@ msgstr "Ordens de Venda"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_production_lot__sale_order_count
 msgid "Sale order count"
-msgstr ""
+msgstr "Contagem Pedido de Venda"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_sale_report
@@ -520,7 +539,7 @@ msgstr "Dias Seguros de Vendas"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "Schedule deliveries earlier to avoid delays"
-msgstr ""
+msgstr "Agende entregas mais cedo para evitar atrasos"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order_line__scheduled_date
@@ -535,7 +554,7 @@ msgstr "Lead Time de Segurança"
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_res_config_settings__use_security_lead
 msgid "Security Lead Time for Sales"
-msgstr ""
+msgstr "Margem de Segurança de Tempo para Vendas"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_stock_location_route__sale_selectable
@@ -545,12 +564,12 @@ msgstr "Selecionável na Linha do Pedido de Vendas"
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__one
 msgid "Ship all products at once"
-msgstr ""
+msgstr "Envie todos os produtos de uma vez"
 
 #. module: sale_stock
 #: model:ir.model.fields.selection,name:sale_stock.selection__res_config_settings__default_picking_policy__direct
 msgid "Ship products as soon as available, with back orders"
-msgstr ""
+msgstr "Envie produtos o mais rápido possível, com pedidos em atraso"
 
 #. module: sale_stock
 #: model:ir.model.fields,field_description:sale_stock.field_sale_order__picking_policy
@@ -576,7 +595,7 @@ msgstr "Movimentos de Estoque"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rule
 msgid "Stock Rule"
-msgstr ""
+msgstr "Regra de estoque"
 
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_stock_rules_report
@@ -586,7 +605,7 @@ msgstr "Relatório de Regras de Estoque"
 #. module: sale_stock
 #: model:ir.model,name:sale_stock.model_report_stock_report_stock_rule
 msgid "Stock rule report"
-msgstr ""
+msgstr "Relatório de regra de estoque"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -660,12 +679,12 @@ msgstr "Quando todos os produtos estiverem prontos"
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to reserve sold products"
-msgstr ""
+msgstr "Quando reservar produtos vendidos"
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.res_config_settings_view_form_stock
 msgid "When to start shipping"
-msgstr ""
+msgstr "Quando iniciar o envio"
 
 #. module: sale_stock
 #: code:addons/sale_stock/models/sale_order.py:0
@@ -684,6 +703,8 @@ msgid ""
 "You cannot decrease the ordered quantity below the delivered quantity.\n"
 "Create a return first."
 msgstr ""
+"Você não pode diminuir a quantidade ordenada abaixo da quantidade entregue.\n"
+"Crie um retorno primeiro."
 
 #. module: sale_stock
 #: model_terms:ir.ui.view,arch_db:sale_stock.exception_on_so

@@ -256,7 +256,7 @@
                                 help="Remove 'More' top-menu contextual action related to this action"/>
                         <button name="run" string="Run" type="object"
                                 class="btn-primary"
-                                attrs="{'invisible':[('model_id', '!=', %(base.model_ir_actions_server)s)]}"
+                                attrs="{'invisible':['|', ('model_id', '!=', %(base.model_ir_actions_server)s), ('state', '!=', 'code')]}"
                                 help="Run this action manually."/>
                     </header>
                     <sheet>

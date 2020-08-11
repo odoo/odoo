@@ -412,9 +412,9 @@ class Survey(http.Controller):
                     answer_tag = "%s_%s" % (survey_sudo.id, question.id)
                     request.env['survey.user_input_line'].sudo().save_lines(answer_sudo.id, question, post, answer_tag)
 
+            go_back = False
             vals = {}
             if answer_sudo.is_time_limit_reached or survey_sudo.questions_layout == 'one_page':
-                go_back = False
                 answer_sudo._mark_done()
             elif 'button_submit' in post:
                 go_back = post['button_submit'] == 'previous'
@@ -454,13 +454,10 @@ class Survey(http.Controller):
 
         survey_sudo, answer_sudo = access_data['survey_sudo'], access_data['answer_sudo']
 
-        if survey_sudo.scoring_type == 'scoring_without_answers':
-            return request.render("survey.403", {'survey': survey_sudo})
-
         return request.render('survey.survey_print', {
             'review': review,
             'survey': survey_sudo,
-            'answer': answer_sudo,
+            'answer': answer_sudo if survey_sudo.scoring_type != 'scoring_without_answers' else answer_sudo.browse(),
             'page_nr': 0,
             'quizz_correction': survey_sudo.scoring_type != 'scoring_without_answers' and answer_sudo})
 

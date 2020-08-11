@@ -8,7 +8,7 @@
 # Martin Trigaux, 2019
 # Andy Cheng <andy.cheng@richsoda.com>, 2019
 # sejun huang <sejun.huang@gmail.com>, 2019
-# 敬雲 林 <chingyun@yuanchih-consult.com>, 2019
+# 敬雲 林 <chingyun@yuanchih-consult.com>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:11+0000\n"
-"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2019\n"
+"Last-Translator: 敬雲 林 <chingyun@yuanchih-consult.com>, 2020\n"
 "Language-Team: Chinese (Taiwan) (https://www.transifex.com/odoo/teams/41243/zh_TW/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -1833,7 +1833,7 @@ msgstr "單據名稱"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Document not downloadable"
-msgstr ""
+msgstr "文件無法下載"
 
 #. module: mail
 #. openerp-web
@@ -3324,7 +3324,7 @@ msgstr "標記為完成"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Mark as todo"
-msgstr ""
+msgstr "標記為待辦"
 
 #. module: mail
 #: model:ir.ui.menu,name:mail.mail_blacklist_menu
@@ -3534,7 +3534,7 @@ msgstr " ID信箱缺少域名 '%s'"
 #: model_terms:ir.ui.view,arch_db:mail.view_email_template_search
 #: model_terms:ir.ui.view,arch_db:mail.view_mail_alias_search
 msgid "Model"
-msgstr "型號"
+msgstr "可應用模型"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__res_model_change
@@ -4562,7 +4562,7 @@ msgstr "前一活動類型"
 #: code:addons/mail/static/src/xml/thread.xml:0
 #, python-format
 msgid "Print"
-msgstr "打印"
+msgstr "列印"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_channel__public
@@ -4987,7 +4987,7 @@ msgstr "安排活動"
 #: model:ir.model.fields,field_description:mail.field_mail_activity_type__delay_count
 #: model:ir.model.fields,field_description:mail.field_mail_template__scheduled_date
 msgid "Scheduled Date"
-msgstr "預定交貨日期"
+msgstr "預定日期"
 
 #. module: mail
 #: model:ir.model.fields,field_description:mail.field_mail_mail__scheduled_date
@@ -5116,7 +5116,7 @@ msgstr "發送消息"
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "Send by mail"
-msgstr ""
+msgstr "發送信件"
 
 #. module: mail
 #: model:ir.actions.act_window,name:mail.action_partner_mass_mail
@@ -5937,21 +5937,21 @@ msgstr "使用者字段名字"
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "User is idle"
-msgstr ""
+msgstr "使用者待機"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "User is offline"
-msgstr ""
+msgstr "使用者離線"
 
 #. module: mail
 #. openerp-web
 #: code:addons/mail/static/src/xml/discuss.xml:0
 #, python-format
 msgid "User is online"
-msgstr ""
+msgstr "使用者上線"
 
 #. module: mail
 #. openerp-web
@@ -6174,7 +6174,7 @@ msgstr "您在頻道 <b>#%s</b>。"
 #: code:addons/mail/static/src/js/attachment_box.js:0
 #, python-format
 msgid "You are not allowed to upload an attachment here."
-msgstr ""
+msgstr "您無權限進行附件的更新"
 
 #. module: mail
 #. openerp-web
@@ -6218,6 +6218,14 @@ msgid ""
 "You do not have the rights to modify fields related to moderation on one of "
 "the channels you are modifying."
 msgstr "您無權在通道上修改與審核相關的字段。"
+
+#. module: mail
+#: code:addons/mail/models/mail_alias.py:89
+#, python-format
+msgid ""
+"You cannot use anything else than unaccented latin characters in the alias "
+"address."
+msgstr ""
 
 #. module: mail
 #: code:addons/mail/models/mail_thread.py:0

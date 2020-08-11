@@ -10,17 +10,18 @@
 # Khishigbat Ganbold <khishigbat@asterisk-tech.mn>, 2019
 # Martin Trigaux, 2019
 # Batmunkh Ganbat <batmunkh.g@bumanit.mn>, 2019
-# nurbahyt baha <nurbahyt.kh@gmail.com>, 2019
+# Nurbahyt Kh <nurbahyt.kh@gmail.com>, 2019
 # Minj P <pminj322@gmail.com>, 2019
 # baaska sh <sh.baaskash@gmail.com>, 2019
+# Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-11-25 15:03+0000\n"
+"POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:14+0000\n"
-"Last-Translator: baaska sh <sh.baaskash@gmail.com>, 2019\n"
+"Last-Translator: Uuganbayar Batbaatar <uuganaaub33@gmail.com>, 2020\n"
 "Language-Team: Mongolian (https://www.transifex.com/odoo/teams/41243/mn/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -239,6 +240,7 @@ msgid "Choose the Sales Order to invoice"
 msgstr ""
 
 #. module: sale_timesheet
+#: model:ir.model.fields,field_description:sale_timesheet.field_project_create_sale_order__company_id
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.project_profitability_report_view_search
 msgid "Company"
 msgstr "Компани"
@@ -947,6 +949,10 @@ msgid ""
 "Mapping' of the project, the timesheet entry will be linked to this sales "
 "order item."
 msgstr ""
+"Борлуулалтын захиалга нь аль нэг даалгавартай холбогдсон байна .Хэрвээ энэ "
+"даалгаварт  ажилтны цагийн хуудас ,эсвэл  'Ажилтан /Борлуулатын захиалгын "
+"зураглалд' ажилтан байхгүй бол , цагийн хуудсыг энэ борлуулалтын захиалагт "
+"холбоно."
 
 #. module: sale_timesheet
 #: model:ir.model.fields,help:sale_timesheet.field_project_project__sale_order_id
@@ -1042,6 +1048,7 @@ msgstr "Борлуулалтын захиалгын бараанаас үүсс�
 #: code:addons/sale_timesheet/models/project_overview.py:0
 #: model:ir.model.fields,field_description:sale_timesheet.field_sale_order__tasks_count
 #: model_terms:ir.ui.view,arch_db:sale_timesheet.view_order_form_inherit_sale_timesheet
+#: model:project.project,label_tasks:sale_timesheet.project_support
 #, python-format
 msgid "Tasks"
 msgstr "Даалгаврууд"
@@ -1378,17 +1385,17 @@ msgstr ""
 "барааны цаг болон биет гүйцэтгэлтэй холбоотой)."
 
 #. module: sale_timesheet
+#: code:addons/sale_timesheet/models/account.py:0
+#, python-format
+msgid "You can not modify timesheets from different employees"
+msgstr ""
+
+#. module: sale_timesheet
 #: code:addons/sale_timesheet/wizard/project_create_invoice.py:0
 #: code:addons/sale_timesheet/wizard/project_create_sale_order.py:0
 #, python-format
 msgid "You can only apply this action from a project."
 msgstr "Энэ үйлдлийг зөрвөн төслөөс хэрэгжүүлэх боломжтой."
-
-#. module: sale_timesheet
-#: code:addons/sale_timesheet/models/account.py:76
-#, python-format
-msgid "You can not modify timesheets from different employees"
-msgstr ""
 
 #. module: sale_timesheet
 #: code:addons/sale_timesheet/models/project.py:0

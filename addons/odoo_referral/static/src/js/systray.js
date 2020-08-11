@@ -1,9 +1,11 @@
 odoo.define('systray.systray_odoo_referral', function (require) {
     "use strict";
+    var core = require('web.core');
     var localStorage = require('web.local_storage');
     var SystrayMenu = require('web.SystrayMenu');
     var Widget = require('web.Widget');
 
+    var _t = core._t;
     var ActionMenu = Widget.extend({
         template: 'systray_odoo_referral.gift_icon',
         events: {
@@ -44,7 +46,13 @@ odoo.define('systray.systray_odoo_referral', function (require) {
             }).then(function (result) {
                 localStorage.setItem('odoo_referral.has_clicked', 1);
                 self.$('.o_notification_counter').text('');
-                window.open(result.link, '_blank', 'noopener noreferrer');
+                var w = window.open(result.link, '_blank', 'noreferrer noopener');
+                if (!w || w.closed || typeof w.closed === 'undefined') {
+                    var message = _t('A popup window has been blocked. You ' +
+                                 'may need to change your browser settings to allow ' +
+                                 'popup windows for this page.');
+                    self.do_warn(_t('Warning'), message, true);
+                }
             });
         },
     });

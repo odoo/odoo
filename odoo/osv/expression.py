@@ -760,13 +760,13 @@ class expression(object):
                     for rec in left_model.browse(ids)
                 ])
                 if prefix:
-                    return [(left, 'in', left_model.search(doms).ids)]
+                    return [(left, 'in', left_model.search(doms, order='id').ids)]
                 return doms
             else:
                 parent_name = parent or left_model._parent_name
                 child_ids = set(ids)
                 while ids:
-                    ids = left_model.search([(parent_name, 'in', ids)]).ids
+                    ids = left_model.search([(parent_name, 'in', ids)], order='id').ids
                     child_ids.update(ids)
                 return [(left, 'in', list(child_ids))]
 
@@ -904,13 +904,13 @@ class expression(object):
                 raise NotImplementedError('auto_join attribute not supported on field %s' % field)
 
             elif len(path) > 1 and field.store and field.type == 'many2one':
-                right_ids = comodel.with_context(active_test=False).search([('.'.join(path[1:]), operator, right)]).ids
+                right_ids = comodel.with_context(active_test=False).search([('.'.join(path[1:]), operator, right)], order='id').ids
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
             # Making search easier when there is a left operand as one2many or many2many
             elif len(path) > 1 and field.store and field.type in ('many2many', 'one2many'):
-                right_ids = comodel.search([('.'.join(path[1:]), operator, right)]).ids
+                right_ids = comodel.search([('.'.join(path[1:]), operator, right)], order='id').ids
                 leaf.leaf = (path[0], 'in', right_ids)
                 push(leaf)
 
@@ -926,16 +926,13 @@ class expression(object):
                 else:
                     # Let the field generate a domain.
                     if len(path) > 1:
-                        right = comodel.search([('.'.join(path[1:]), operator, right)]).ids
+                        right = comodel.search([('.'.join(path[1:]), operator, right)], order='id').ids
                         operator = 'in'
                     domain = field.determine_domain(model, operator, right)
 
-                if not domain:
-                    leaf.leaf = TRUE_LEAF
-                    push(leaf)
-                else:
-                    for elem in reversed(domain):
-                        push(create_substitution_leaf(leaf, elem, model, internal=True))
+                # replace current leaf by normalized domain
+                for elem in reversed(normalize_domain(domain)):
+                    push(create_substitution_leaf(leaf, elem, model, internal=True))
 
             # -------------------------------------------------
             # RELATIONAL FIELDS
@@ -953,7 +950,7 @@ class expression(object):
 
             elif field.type == 'one2many':
                 domain = field.get_domain_list(model)
-                inverse_is_int = comodel._fields[field.inverse_name].type == 'integer'
+                inverse_is_int = comodel._fields[field.inverse_name].type in ('integer', 'many2one_reference')
                 unwrap_inverse = (lambda ids: ids) if inverse_is_int else (lambda recs: recs.ids)
 
                 if right is not False:
@@ -967,7 +964,7 @@ class expression(object):
                     else:
                         ids2 = [right]
                     if ids2 and inverse_is_int and domain:
-                        ids2 = comodel.search([('id', 'in', ids2)] + domain).ids
+                        ids2 = comodel.search([('id', 'in', ids2)] + domain, order='id').ids
 
                     # determine ids1 in model related to ids2
                     if not ids2:
@@ -992,7 +989,7 @@ class expression(object):
                         comodel_domain = [(field.inverse_name, '!=', False)]
                         if inverse_is_int and domain:
                             comodel_domain += domain
-                        recs = comodel.search(comodel_domain).sudo().with_context(prefetch_fields=False)
+                        recs = comodel.search(comodel_domain, order='id').sudo().with_context(prefetch_fields=False)
                         # determine ids1 = records with lines
                         ids1 = unwrap_inverse(recs.mapped(field.inverse_name))
                         # rewrite condition to match records with/without lines
@@ -1006,7 +1003,7 @@ class expression(object):
                     # determine ids2 in comodel
                     ids2 = to_ids(right, comodel, leaf.leaf)
                     domain = HIERARCHY_FUNCS[operator]('id', ids2, comodel)
-                    ids2 = comodel.search(domain).ids
+                    ids2 = comodel.search(domain, order='id').ids
 
                     # rewrite condition in terms of ids2
                     if comodel == model:
@@ -1209,8 +1206,12 @@ class expression(object):
                     query = '(%s."%s" IS NULL)' % (table_alias, left)
                 params = []
             elif isinstance(right, (list, tuple)):
-                params = [it for it in right if it != False]
-                check_null = len(params) < len(right)
+                if model._fields[left].type == "boolean":
+                    params = [it for it in (True, False) if it in right]
+                    check_null = False in right
+                else:
+                    params = [it for it in right if it != False]
+                    check_null = len(params) < len(right)
                 if params:
                     if left == 'id':
                         instr = ','.join(['%s'] * len(params))

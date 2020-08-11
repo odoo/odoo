@@ -377,6 +377,8 @@ msgid ""
 "Abstract model to implement product_produce_line as well as    "
 "workorder_line"
 msgstr ""
+"Mô hình trừu tượng để triển khai product_produce_line cũng như "
+"workorder_line"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_document__access_token
@@ -505,7 +507,7 @@ msgstr "Cho phép không lấy trước"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workcenter__alternative_workcenter_ids
 msgid "Alternative Workcenters"
-msgstr ""
+msgstr "Khu vực sản xuất dự trù"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_mrp_workcenter__alternative_workcenter_ids
@@ -513,6 +515,8 @@ msgid ""
 "Alternative workcenters that can be substituted to this one in order to "
 "dispatch production"
 msgstr ""
+"Khu vực sản xuất dự trù có thể được thay thế thực hiện cho lệnh này để nhanh"
+" chóng sản xuất"
 
 #. module: mrp
 #: model_terms:ir.actions.act_window,help:mrp.mrp_unbuild
@@ -541,6 +545,15 @@ msgstr "Duyệt"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_workcenter_search
 msgid "Archived"
 msgstr "Đã lưu"
+
+#. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"At least one work order has a quantity produced lower than the quantity "
+"produced in the manufacturing order. You must complete the work orders "
+"before posting the inventory."
+msgstr ""
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
@@ -792,6 +805,8 @@ msgid ""
 "BoM cannot concern product %s and have a line with attributes (%s) at the "
 "same time."
 msgstr ""
+"BoM không thể liên quan đến sản phẩm %s và có một dòng với các thuộc tính "
+"(%s) cùng một lúc."
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_line_view_form
@@ -802,7 +817,7 @@ msgstr "Chi tiết Định mức"
 #: code:addons/mrp/models/mrp_bom.py:0 code:addons/mrp/models/mrp_bom.py:0
 #, python-format
 msgid "BoM line product %s should not be the same as BoM product."
-msgstr ""
+msgstr "BOM của sản phẩm %s không nên giống với BOM sản phẩm."
 
 #. module: mrp
 #: model:product.product,name:mrp.product_product_computer_desk_bolt
@@ -970,7 +985,7 @@ msgstr "Thành phần của lệnh làm việc"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce_line__raw_product_produce_id
 msgid "Component in Produce wizard"
-msgstr ""
+msgstr "Thuật sĩ thành phần trong sản xuất"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__raw_workorder_line_ids
@@ -2656,7 +2671,7 @@ msgstr "PDF"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_product_produce__move_raw_ids
 msgid "PO Components"
-msgstr ""
+msgstr "Thành phần PO"
 
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_bom_line__bom_id
@@ -3943,6 +3958,8 @@ msgstr "Lệnh sản xuất với '%s' không được chỉ định số lượ
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
 msgid "The quantity to produce must be positive!"
 msgstr "Số lượng để sản xuất phải là số dương!"
 
@@ -4011,7 +4028,7 @@ msgstr ""
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom_line
 msgid "This is a BoM of type Kit!"
-msgstr ""
+msgstr "Đây là loại BOM Kit!"
 
 #. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.report_mrp_bom
@@ -4819,7 +4836,7 @@ msgstr "Bảng làm việc"
 #. module: mrp
 #: model:ir.model.fields,field_description:mrp.field_mrp_workorder__worksheet_google_slide
 msgid "Worksheet URL"
-msgstr ""
+msgstr "URL tài liệu công việc"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_production_lot.py:0

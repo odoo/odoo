@@ -122,16 +122,13 @@ class AccountJournal(models.Model):
                     'l10n_latam_use_documents')
     def _check_afip_configurations(self):
         """ Do not let to update journal if already have confirmed invoices """
-        self.ensure_one()
-        if self.company_id.country_id != self.env.ref('base.ar'):
-            return True
-        if self.type != 'sale' and self._origin.type != 'sale':
-            return True
-        invoices = self.env['account.move'].search([('journal_id', '=', self.id), ('state', '!=', 'draft')])
+        arg_sale_journals = self.filtered(lambda x: x.company_id.country_id == self.env.ref('base.ar') and
+                                          x.type == 'sale' and x._origin.type == 'sale')
+        invoices = self.env['account.move'].search([('journal_id', 'in', arg_sale_journals.ids), ('state', '!=', 'draft')])
         if invoices:
-            raise ValidationError(_(
-                'You can not change the journal configuration for a journal that already have validate invoices') +
-                ':<br/><br/> - %s' % ('<br/>- '.join(invoices.mapped('display_name'))))
+            raise ValidationError(
+                _("You can not change the journal's configuration if journal already have validated invoices") + ' ('
+                + ', '.join(invoices.mapped('journal_id').mapped('name')) + ')')
 
     def _l10n_ar_create_document_sequences(self):
         """ IF AFIP Configuration change try to review if this can be done and then create / update the document

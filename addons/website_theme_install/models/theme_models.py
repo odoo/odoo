@@ -157,6 +157,16 @@ class Theme(models.AbstractModel):
         if not website:  # remove optional website in master
             website = self.env['website'].get_current_website()
 
+        # Call specific theme post copy
+        theme_post_copy = '_%s_post_copy' % mod.name
+        if hasattr(self, theme_post_copy):
+            _logger.info('Executing method %s' % theme_post_copy)
+            method = getattr(self.with_context(website_id=website.id), theme_post_copy)
+            return method(mod)
+        return False
+
+    @api.model
+    def _reset_default_config(self):
         # Reinitialize font customizations
         self.env['web_editor.assets'].make_scss_customization(
             '/website/static/src/scss/options/user_values.scss',
@@ -167,14 +177,6 @@ class Theme(models.AbstractModel):
                 'buttons-font-number': 'null',
             }
         )
-
-        # Call specific theme post copy
-        theme_post_copy = '_%s_post_copy' % mod.name
-        if hasattr(self, theme_post_copy):
-            _logger.info('Executing method %s' % theme_post_copy)
-            method = getattr(self.with_context(website_id=website.id), theme_post_copy)
-            return method(mod)
-        return False
 
     @api.model
     def _toggle_view(self, xml_id, active):
@@ -212,6 +214,20 @@ class IrUiView(models.Model):
 
     theme_template_id = fields.Many2one('theme.ir.ui.view')
 
+    def write(self, vals):
+        no_arch_updated_views = other_views = self.env['ir.ui.view']
+        for record in self:
+            # Do not mark the view as user updated if original view arch is similar
+            arch = vals.get('arch', vals.get('arch_base'))
+            if record.theme_template_id and record.theme_template_id.arch == arch:
+                no_arch_updated_views += record
+            else:
+                other_views += record
+        res = super(IrUiView, other_views).write(vals)
+        if no_arch_updated_views:
+            vals['arch_updated'] = False
+            res &= super(IrUiView, no_arch_updated_views).write(vals)
+        return res
 
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'

@@ -194,3 +194,30 @@ class TestSurveyInvite(common.SurveyCase):
             set(answers.mapped('email')),
             set([self.user_emp.email]))
         self.assertEqual(answers.mapped('partner_id'), self.user_emp.partner_id)
+
+    def test_survey_invite_token_by_email_nosignup(self):
+        """
+        Case: have multiples partners with the same email address
+        If I set one email address, I expect one email to be sent
+        """
+
+        first_partner = self.env['res.partner'].create({
+            'name': 'Test 1',
+            'email': 'test@example.com',
+        })
+
+        self.env['res.partner'].create({
+            'name': 'Test 2',
+            'email': '"Raoul Poilvache" <TEST@example.COM>',
+        })
+
+        self.survey.write({'access_mode': 'token', 'users_login_required': False})
+        action = self.survey.action_send_survey()
+        invite_form = Form(self.env[action['res_model']].with_context(action['context']))
+        invite_form.emails = 'test@example.com'
+        invite = invite_form.save()
+        invite.action_invite()
+
+        answers = self.env['survey.user_input'].search([('survey_id', '=', self.survey.id)])
+        self.assertEqual(len(answers), 1)
+        self.assertEqual(answers.partner_id.display_name, first_partner.display_name)

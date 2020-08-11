@@ -55,7 +55,7 @@ class MailMessage(models.Model):
                 - raise if the type is comment and subtype NULL (internal note)
         """
         if self.user_has_groups('base.group_public'):
-            self.env.cr.execute('SELECT id FROM "%s" WHERE website_published IS FALSE AND id = ANY (%%s)' % (self._table), (self.ids,))
+            self.env.cr.execute('SELECT id FROM "%s" WHERE website_published IS NOT TRUE AND id = ANY (%%s)' % (self._table), (self.ids,))
             if self.env.cr.fetchall():
                 raise AccessError(
                     _('The requested operation cannot be completed due to security restrictions. Please contact your system administrator.\n\n(Document type: %s, Operation: %s)') % (self._description, operation)

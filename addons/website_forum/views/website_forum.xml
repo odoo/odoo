@@ -613,7 +613,7 @@
                             <t t-if="no_filters"> All</t>
                             <t t-elif="filters == 'solved'"> Solved</t>
                             <t t-elif="filters == 'unsolved'"> Unsolved</t>
-                            <t t-elif="filters == 'unanswered'"> Unsolved</t>
+                            <t t-elif="filters == 'unanswered'"> Unanswered</t>
                         </a>
                         <div class="dropdown-menu" role="menu">
                             <a t-att-href="url_for('') + '?' + keep_query( 'search', 'sorting', filters='all')"

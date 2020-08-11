@@ -21,7 +21,7 @@ class AccountMove(models.Model):
         compute='_compute_l10n_latam_document_number', inverse='_inverse_l10n_latam_document_number',
         string='Document Number', readonly=True, states={'draft': [('readonly', False)]})
     l10n_latam_use_documents = fields.Boolean(related='journal_id.l10n_latam_use_documents')
-    l10n_latam_country_code = fields.Char(
+    l10n_latam_country_code = fields.Char("Country Code (LATAM)",
         related='company_id.country_id.code', help='Technical field used to hide/show fields regarding the localization')
 
     def _get_sequence_prefix(self):
@@ -134,6 +134,11 @@ class AccountMove(models.Model):
                 raise ValidationError(_('You can not use a %s document type with a refund invoice') % internal_type)
             elif internal_type == 'credit_note' and invoice_type in ['out_invoice', 'in_invoice']:
                 raise ValidationError(_('You can not use a %s document type with a invoice') % (internal_type))
+
+    def _get_name_invoice_report(self, report_xml_id):
+        """ method to be inherit by latam localizations that have an custom invoice reports """
+        self.ensure_one()
+        return report_xml_id
 
     def _get_l10n_latam_documents_domain(self):
         self.ensure_one()

@@ -531,6 +531,15 @@ msgid "Archived"
 msgstr "封存"
 
 #. module: mrp
+#: code:addons/mrp/models/mrp_production.py:0
+#, python-format
+msgid ""
+"At least one work order has a quantity produced lower than the quantity "
+"produced in the manufacturing order. You must complete the work orders "
+"before posting the inventory."
+msgstr ""
+
+#. module: mrp
 #: model_terms:ir.ui.view,arch_db:mrp.mrp_bom_form_view
 msgid "At the creation of a Manufacturing Order."
 msgstr "在創建制造訂單時。"
@@ -2805,13 +2814,13 @@ msgstr "庫存過帳"
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Post-Production"
-msgstr "生產前"
+msgstr "生產後"
 
 #. module: mrp
 #: code:addons/mrp/models/stock_warehouse.py:0
 #, python-format
 msgid "Pre-Production"
-msgstr "生產後"
+msgstr "生產前"
 
 #. module: mrp
 #. openerp-web
@@ -2856,7 +2865,7 @@ msgstr "補貨組"
 #: model_terms:ir.ui.view,arch_db:mrp.view_mrp_product_produce_wizard
 #, python-format
 msgid "Produce"
-msgstr "產品"
+msgstr "生產"
 
 #. module: mrp
 #: model:ir.model.fields,help:mrp.field_stock_warehouse__manufacture_steps
@@ -3869,6 +3878,8 @@ msgstr "'%s '的生產訂單沒有指定的數量"
 
 #. module: mrp
 #: model:ir.model.constraint,message:mrp.constraint_mrp_production_qty_positive
+#: code:addons/mrp/models/mrp_bom.py:0
+#, python-format
 msgid "The quantity to produce must be positive!"
 msgstr "待生產的數量必須是正數!"
 

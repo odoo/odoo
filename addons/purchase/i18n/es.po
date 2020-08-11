@@ -12,7 +12,7 @@
 # Martin Trigaux, 2019
 # Alejandro Santana <alejandrosantana@anubia.es>, 2019
 # Carlos Lopez <celm1990@hotmail.com>, 2019
-# Gabriel Umana <gabriel.umana@delfixcr.com>, 2019
+# gabriumaa <gabriel.umana@delfixcr.com>, 2019
 # RGB Consulting <odoo@rgbconsulting.com>, 2019
 # Miguel Orueta <mo@landoo.es>, 2019
 # 36700cd705c35e1852bdffcd0b296648, 2019
@@ -1262,7 +1262,7 @@ msgstr "Estado del pedido"
 #. module: purchase
 #: model_terms:ir.ui.view,arch_db:purchase.track_po_line_template
 msgid "Ordered Quantity:"
-msgstr "Cantidad ordenada:"
+msgstr "Cantidad pedida:"
 
 #. module: purchase
 #: model:ir.model.fields.selection,name:purchase.selection__res_config_settings__default_purchase_method__purchase
@@ -2323,3 +2323,11 @@ msgid ""
 msgstr ""
 "Su presupuesto contiene productos de la compañía %s mientras que pertenece a la compañía %s. \n"
 "Cambie por favor cambie la compañía del presupuesto o elimine los productos de otras compañías (%s)."
+
+#. module: purchase
+#: code:addons/purchase/models/purchase.py:0
+#, python-format
+msgid ""
+"You cannot change the type of a purchase order line. Instead you should "
+"delete the current line and create a new line of the proper type."
+msgstr ""

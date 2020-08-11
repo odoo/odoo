@@ -1068,7 +1068,9 @@
                             </t>
                         </div>
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
-                            <t t-call="website_sale.cart_summary"/>
+                            <t t-call="website_sale.cart_summary">
+                                <t t-set="redirect">/shop/checkout</t>
+                            </t>
                         </div>
                         <div class="col-12 col-xl order-xl-1 oe_cart">
                             <div class="row">
@@ -1177,6 +1179,7 @@
                     <div class="row">
                         <div class="col-12 col-xl-auto order-xl-2 d-none d-xl-block">
                             <t t-call="website_sale.cart_summary">
+                                <t t-set="hide_coupon">True</t>
                                 <t t-set="redirect">/shop/address</t>
                             </t>
                         </div>
@@ -1197,7 +1200,7 @@
                                 <t t-if="partner_id == website_sale_order.partner_shipping_id.id == website_sale_order.partner_invoice_id.id">
                                     <div class="alert alert-warning" role="alert">
                                         <h4 class="alert-heading">Be aware!</h4>
-                                        <p>
+                                        <p t-if="not only_services" groups="sale.group_delivery_invoice_address">
                                             You are editing your <b>billing and shipping</b> addresses at the same time!<br/>
                                             If you want to modify your shipping address, create a <a href='/shop/address'>new address</a>.
                                         </p>
@@ -1510,7 +1513,7 @@
                                         </h2>
                                     </div>
                                 </t>
-                                <t t-if="request.env['ir.config_parameter'].sudo().get_param('auth_signup.invitation_scope', 'b2b') == 'b2c' and request.website.is_public_user()">
+                                <t t-if="request.env['res.users']._get_signup_invitation_scope() == 'b2c' and request.website.is_public_user()">
                                     <p class="alert alert-info mt-3" role="status">
                                         <a role="button" t-att-href='order.partner_id.signup_prepare() and order.partner_id.with_context(relative_url=True).signup_url' class='btn btn-primary'>Sign Up</a>
                                          to follow your order.

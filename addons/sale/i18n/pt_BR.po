@@ -16,7 +16,6 @@
 # Adriel Kotviski <kotviski@gmail.com>, 2019
 # mariana rodrigues <mariana12v@gmail.com>, 2019
 # Fernando Alencar <fernando@fernandoalencar.com.br>, 2019
-# danimaribeiro <danimaribeiro@gmail.com>, 2019
 # Emanuel Martins <emanuel.breno@gmail.com>, 2019
 # Mateus Lopes <mateus1@gmail.com>, 2019
 # Luiz Carlos de Lima <luiz.carlos@akretion.com.br>, 2019
@@ -33,6 +32,10 @@
 # Fernanda Marques <fem@odoo.com>, 2020
 # Marcel Savegnago <marcel.savegnago@gmail.com>, 2020
 # Luiz Fernando <lfpsgs@outlook.com>, 2020
+# Maurício Liell <mauricio@liell.com.br>, 2020
+# danimaribeiro <danimaribeiro@gmail.com>, 2020
+# PopSolutions Cooperativa Digital <popsolutions.co@gmail.com>, 2020
+# Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020
 # 
 msgid ""
 msgstr ""
@@ -40,7 +43,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:22+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Luiz Fernando <lfpsgs@outlook.com>, 2020\n"
+"Last-Translator: Lucas Rabelo <lucas.rabelo@nextsolucoes.net.br>, 2020\n"
 "Language-Team: Portuguese (Brazil) (https://www.transifex.com/odoo/teams/41243/pt_BR/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -97,7 +100,7 @@ msgstr "&amp;nbsp;<span>em</span>&amp;nbsp;"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.sale_order_portal_template
 msgid "&amp;times;"
-msgstr "&amp;vezes;"
+msgstr "&amp;times;"
 
 #. module: sale
 #: model:ir.actions.report,print_report_name:sale.action_report_pro_forma_invoice
@@ -741,7 +744,7 @@ msgstr "Atividades"
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Decoração de atividade excepcional "
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__activity_state
@@ -3622,7 +3625,7 @@ msgstr ""
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_res_company__sale_quotation_onboarding_state
 msgid "State of the sale onboarding panel"
-msgstr ""
+msgstr "Estado do painel de integração da venda"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_order__state
@@ -3794,6 +3797,9 @@ msgid ""
 "The invoice is marked as paid and the payment is registered in the payment journal defined in the configuration of the payment acquirer.\n"
 "This mode is advised if you issue the final invoice at the order and not after the delivery."
 msgstr ""
+"A fatura é gerada automaticamente e fica disponível no portal do cliente quando a transação é confirmada pelo adquirente do pagamento.\n"
+"A fatura é marcada como paga e o pagamento é registrado no diário de pagamentos definido na configuração do adquirente do pagamento.\n"
+"Este modo é recomendado se você emitir a fatura final no pedido e não após a entrega."
 
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.res_config_settings_view_form
@@ -3801,6 +3807,8 @@ msgid ""
 "The margin is computed as the sum of product sales prices minus the cost set"
 " in their detail form."
 msgstr ""
+"A margem é calculada a partir da soma dos preços de venda do produto menos o"
+" custo definido."
 
 #. module: sale
 #: code:addons/sale/controllers/portal.py:0
@@ -3815,6 +3823,8 @@ msgid ""
 "The order was not confirmed despite response from the acquirer (%s): order "
 "total is %r but acquirer replied with %r."
 msgstr ""
+"O pedido não foi confirmado pela resposta do adquirinte  (%s): o valor total"
+" é %r mas o adquirinte respondeu com %r."
 
 #. module: sale
 #: code:addons/sale/models/sale.py:0
@@ -3859,7 +3869,7 @@ msgstr ""
 msgid ""
 "The rate of the currency to the currency of rate 1 applicable at the date of"
 " the order"
-msgstr ""
+msgstr "A taxa da moeda para a moeda da taxa 1 aplicável na data do pedido"
 
 #. module: sale
 #: code:addons/sale/wizard/sale_make_invoice_advance.py:0
@@ -3910,6 +3920,8 @@ msgid ""
 "This is a name that helps you keep track of your different campaign efforts,"
 " e.g. Fall_Drive, Christmas_Special"
 msgstr ""
+"Este é um nome que ajuda você a manter o controle de seus diferentes "
+"esforços de campanha, por exemplo, Black Friday, Natal"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__commitment_date
@@ -3925,6 +3937,8 @@ msgstr ""
 #: model:ir.model.fields,help:sale.field_sale_order__medium_id
 msgid "This is the method of delivery, e.g. Postcard, Email, or Banner Ad"
 msgstr ""
+"Este é o método de entrega, por exemplo, cartão postal, e-mail ou anúncio de"
+" banner"
 
 #. module: sale
 #: model:ir.model.fields,help:sale.field_sale_order__source_id
@@ -3932,6 +3946,8 @@ msgid ""
 "This is the source of the link, e.g. Search Engine, another domain, or name "
 "of email list"
 msgstr ""
+"Esta é a fonte do link, por exemplo, Mecanismo de busca, outro domínio ou "
+"nome da lista de e-mail"
 
 #. module: sale
 #: model_terms:ir.actions.act_window,help:sale.action_order_report_all
@@ -4222,7 +4238,7 @@ msgstr "Visualizar Cotação"
 #. module: sale
 #: model_terms:ir.ui.view,arch_db:sale.view_order_form
 msgid "Void Transaction"
-msgstr ""
+msgstr "Transação nula"
 
 #. module: sale
 #: model:ir.model.fields,field_description:sale.field_sale_report__volume

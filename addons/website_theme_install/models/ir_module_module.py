@@ -325,6 +325,12 @@ class IrModuleModule(models.Model):
 
             :param website: ``website`` model for which the themes have to be removed
         """
+
+        # _theme_remove is the entry point of any change of theme for a website
+        # (either removal or installation of a theme and its dependencies). In
+        # either case, we need to reset some default configuration before.
+        self.env['theme.utils'].with_context(website_id=website.id)._reset_default_config()
+
         if not website.theme_id:
             return
 

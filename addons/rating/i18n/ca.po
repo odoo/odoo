@@ -1,19 +1,20 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * rating
+# 	* rating
 # 
 # Translators:
-# Martin Trigaux, 2018
-# RGB Consulting <odoo@rgbconsulting.com>, 2018
-# Quim - eccit <quim@eccit.com>, 2018
+# Martin Trigaux, 2020
+# RGB Consulting <odoo@rgbconsulting.com>, 2020
+# Quim - eccit <quim@eccit.com>, 2020
+# Arnau Ros, 2020
 # 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server saas~12.5\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-18 09:49+0000\n"
-"PO-Revision-Date: 2018-08-24 09:24+0000\n"
-"Last-Translator: Quim - eccit <quim@eccit.com>, 2018\n"
+"POT-Creation-Date: 2019-08-26 08:17+0000\n"
+"PO-Revision-Date: 2019-08-26 09:13+0000\n"
+"Last-Translator: Arnau Ros, 2020\n"
 "Language-Team: Catalan (https://www.transifex.com/odoo/teams/41243/ca/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -29,25 +30,36 @@ msgid ""
 msgstr "en els nostres serveis en \""
 
 #. module: rating
+#: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
+msgid ""
+"<i class=\"fa fa-check-circle fa-5x text-success\" role=\"img\" aria-"
+"label=\"Thank you!\" title=\"Thank you!\"/>"
+msgstr ""
+"<i class=\"fa fa-check-circle fa-5x text-success\" role=\"img\" aria-"
+"label=\"Thank you!\" title=\"Thank you!\"/>"
+
+#. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 msgid "<span class=\"o_stat_text\">Resource</span>"
-msgstr ""
+msgstr "<span class=\"o_stat_text\">Recurs</span>"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__access_token
 msgid "Access token to set the rating of the value"
-msgstr ""
+msgstr "Token d'accés per configurar la qualificació del valor"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__message_id
 msgid ""
 "Associated message when posting a review. Mainly used in website addons."
 msgstr ""
+"Missatge associat quan es publica una revisió. Utilitzat principalment en "
+"addons de la pàgina web."
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__partner_id
 msgid "Author of the rating"
-msgstr ""
+msgstr "Autor de la qualificació"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__feedback
@@ -77,6 +89,7 @@ msgstr "Data"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__display_name
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__display_name
 #: model:ir.model.fields,field_description:rating.field_rating_rating__display_name
 msgid "Display Name"
 msgstr "Mostrar Nom"
@@ -89,7 +102,7 @@ msgstr "Document"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model
 msgid "Document Model"
-msgstr ""
+msgstr "Model de document"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_thread
@@ -99,17 +112,17 @@ msgstr "Notificacions del sistema"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__consumed
 msgid "Enabled if the rating has been filled."
-msgstr ""
+msgstr "Habilitat si la valoració ja estat omplerta."
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__consumed
 msgid "Filled Rating"
-msgstr ""
+msgstr "Valoració omplerta"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "Go to our website"
-msgstr ""
+msgstr "Ves al nostre lloc web"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -117,13 +130,14 @@ msgid "Group By"
 msgstr "Agrupar per"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__highly_dissatisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Highly dissatisfied"
-msgstr ""
+msgstr "Molt insatisfet"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__id
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__id
 #: model:ir.model.fields,field_description:rating.field_rating_rating__id
 msgid "ID"
 msgstr "ID"
@@ -131,7 +145,7 @@ msgstr "ID"
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_id
 msgid "Identifier of the rated object"
-msgstr ""
+msgstr "Identificador de l'objecte valorat"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating_image
@@ -140,6 +154,7 @@ msgstr "Imatge"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin____last_update
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin____last_update
 #: model:ir.model.fields,field_description:rating.field_rating_rating____last_update
 msgid "Last Modified on"
 msgstr "Última modificació el "
@@ -157,7 +172,7 @@ msgstr "Última actualització el"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__message_id
 msgid "Linked message"
-msgstr ""
+msgstr "Missatge enllaçat"
 
 #. module: rating
 #: model:ir.model,name:rating.model_mail_message
@@ -172,58 +187,63 @@ msgstr "Model del recurs seguit"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "My Ratings"
-msgstr ""
+msgstr "Les meves valoracions"
 
 #. module: rating
-#: selection:rating.rating,rating_text:0
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__no_rating
 msgid "No Rating yet"
-msgstr ""
+msgstr "Encara sense valoracions"
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.action_view_rating
 msgid "No rating yet"
-msgstr ""
+msgstr "Encara sense valoracions"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__not_satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Not satisfied"
-msgstr ""
+msgstr "Insatisfet"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rated_partner_id
 msgid "Owner of the rated resource"
-msgstr ""
+msgstr "Propietari del recurs valorat"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_id
 msgid "Parent Document"
-msgstr ""
+msgstr "Document pare"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model
 msgid "Parent Document Model"
-msgstr ""
+msgstr "Model de document pare"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_name
 msgid "Parent Document Name"
-msgstr ""
+msgstr "Nom de document pare"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__parent_res_model_id
 msgid "Parent Related Document Model"
+msgstr "Model de document pare relacionat"
+
+#. module: rating
+#: model:ir.model.fields,help:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Percentage of happy ratings"
 msgstr ""
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Rated User"
-msgstr ""
+msgstr "Usuari valorat"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rated_partner_id
 msgid "Rated person"
-msgstr ""
+msgstr "Persona valorada"
 
 #. module: rating
 #: model:ir.actions.act_window,name:rating.action_view_rating
@@ -237,20 +257,21 @@ msgid "Rating"
 msgstr "Classificació"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_avg
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_graph
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_pivot
 msgid "Rating Average"
-msgstr ""
+msgstr "Qualificació mitjana"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr ""
+msgstr "Valoració darrers comentaris"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_image
 msgid "Rating Last Image"
-msgstr ""
+msgstr "Valorant la darrera imatge"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_last_value
@@ -260,19 +281,28 @@ msgstr "Classificar últim valor"
 #. module: rating
 #: model:ir.model,name:rating.model_rating_mixin
 msgid "Rating Mixin"
-msgstr ""
+msgstr "Barreja de classificacions"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__rating
 msgid "Rating Number"
+msgstr "Número de valoració"
+
+#. module: rating
+#: model:ir.model,name:rating.model_rating_parent_mixin
+msgid "Rating Parent Mixin"
 msgstr ""
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_value
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_percentage_satisfaction
+msgid "Rating Satisfaction"
+msgstr ""
+
+#. module: rating
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_value
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_value
 msgid "Rating Value"
-msgstr ""
+msgstr "Valor de la qualificació"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_mixin__rating_count
@@ -280,9 +310,9 @@ msgid "Rating count"
 msgstr "Classificar recompte"
 
 #. module: rating
-#: sql_constraint:rating.rating:0
+#: model:ir.model.constraint,message:rating.constraint_rating_rating_rating_range
 msgid "Rating should be between 0 to 10"
-msgstr ""
+msgstr "La valoració ha de ser entre 0 i 10"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__rating
@@ -290,15 +320,16 @@ msgid "Rating value: 0=Unhappy, 10=Happy"
 msgstr "Valor de qualificació: 0=Descontent, 10=Feliç"
 
 #. module: rating
+#: model:ir.model.fields,field_description:rating.field_rating_parent_mixin__rating_ids
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
 msgid "Ratings"
-msgstr ""
+msgstr "Valoracions"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_mixin__rating_last_feedback
 #: model:ir.model.fields,help:rating.field_rating_rating__feedback
 msgid "Reason of the rating"
-msgstr ""
+msgstr "Raó de la valoració"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_model_id
@@ -306,11 +337,10 @@ msgid "Related Document Model"
 msgstr "Model de document relacionat"
 
 #. module: rating
-#: model:ir.model.fields,field_description:rating.field_mail_compose_message__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_mail__rating_ids
 #: model:ir.model.fields,field_description:rating.field_mail_message__rating_ids
 msgid "Related ratings"
-msgstr ""
+msgstr "Qualificacions relacionades"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
@@ -320,13 +350,13 @@ msgstr "Recurs"
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__res_name
 msgid "Resource name"
-msgstr ""
+msgstr "Nom del recurs"
 
 #. module: rating
+#: model:ir.model.fields.selection,name:rating.selection__rating_rating__rating_text__satisfied
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_search
-#: selection:rating.rating,rating_text:0
 msgid "Satisfied"
-msgstr ""
+msgstr "Satisfet"
 
 #. module: rating
 #: model:ir.model.fields,field_description:rating.field_rating_rating__access_token
@@ -336,43 +366,43 @@ msgstr "Token de Seguretat"
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Send Feedback"
-msgstr ""
+msgstr "Enviar comentaris"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_form
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_tree
 msgid "Submitted on"
-msgstr ""
+msgstr "Enviat a"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Thanks! We appreciate your feedback."
-msgstr ""
+msgstr "Gràcies! Apreciem els teus comentaris"
 
 #. module: rating
 #: model:ir.model.fields,help:rating.field_rating_rating__res_name
 msgid "The name of the rated resource."
-msgstr ""
+msgstr "Nom del recurs valorat"
 
 #. module: rating
 #: model_terms:ir.actions.act_window,help:rating.action_view_rating
 msgid "There is no rating for this object at the moment."
-msgstr ""
+msgstr "No hi ha valoració per aquest objecte en aquest moment"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_view
 msgid "We appreciate your feedback!"
-msgstr ""
+msgstr "Apreciem els teus comentaris"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Would be great if you can provide more information:"
-msgstr ""
+msgstr "Estaria molt bé si poguessis donar més informació:"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "Your rating has been submitted."
-msgstr ""
+msgstr "La teva valoració ha estat enviada."
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
@@ -386,16 +416,16 @@ msgid "for"
 msgstr "per"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:21
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "highly dissatisfied"
-msgstr ""
+msgstr "Altament insatisfet"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:20
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "not satisfied"
-msgstr ""
+msgstr "Insatisfet"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_rating_view_kanban
@@ -403,12 +433,12 @@ msgid "on"
 msgstr "en"
 
 #. module: rating
-#: code:addons/rating/controllers/main.py:22
+#: code:addons/rating/controllers/main.py:0
 #, python-format
 msgid "satisfied"
-msgstr ""
+msgstr "Satisfet"
 
 #. module: rating
 #: model_terms:ir.ui.view,arch_db:rating.rating_external_page_submit
 msgid "you are"
-msgstr ""
+msgstr "Estàs"

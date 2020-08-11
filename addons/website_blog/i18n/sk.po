@@ -4,19 +4,22 @@
 # 
 # Translators:
 # Matus Krnac <matus.krnac@gmail.com>, 2019
-# Stefan Stieranka <stieranka@itec.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
 # Martin Trigaux, 2019
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
+# Stefan Stieranka <stieranka@itec.sk>, 2020
+# Michal Matus <misko.matus@gmail.com>, 2020
+# Alexandra Brencicova <alexandra.brencicova@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
 "Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2019-10-07 07:13+0000\n"
+"POT-Creation-Date: 2019-12-05 12:34+0000\n"
 "PO-Revision-Date: 2019-08-26 09:15+0000\n"
-"Last-Translator: Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -415,6 +418,8 @@ msgstr "Archív"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_blog_view_search
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_blog_form
+#: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_search
 msgid "Archived"
 msgstr "Archivovaný"
@@ -588,7 +593,7 @@ msgstr "Podtitul blogu"
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_tag
 msgid "Blog Tag"
-msgstr "Štítok blogu"
+msgstr "Tag blogu"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_blog_tag_category
@@ -598,7 +603,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_tags
 msgid "Blog Tags"
-msgstr "Štítky blogu"
+msgstr "Tagy blogu"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post_fullwidth_design
@@ -647,7 +652,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__can_publish
 msgid "Can Publish"
-msgstr ""
+msgstr "Môže publikovať"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__category_id
@@ -756,7 +761,7 @@ msgstr "Vytvorené"
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__display_name
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag_category__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_edit_options
@@ -839,13 +844,13 @@ msgstr "Odberatelia"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_channel_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
+msgstr "Odberatelia (kanály)"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_partner_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_4
@@ -990,7 +995,7 @@ msgstr "Je odberateľ"
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__is_published
 msgid "Is Published"
-msgstr ""
+msgstr "Publikované"
 
 #. module: website_blog
 #: model_terms:blog.post,content:website_blog.blog_post_5
@@ -1280,7 +1285,7 @@ msgstr "Počet akcií"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_has_error_counter
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Číslo chýb"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__message_needaction_counter
@@ -1321,7 +1326,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
 msgid "Others"
-msgstr "ostatné"
+msgstr "Ostatné"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_blogs_display
@@ -1417,7 +1422,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post
 msgid "Read more"
-msgstr ""
+msgstr "Čítaj viac"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.posts_loop
@@ -1433,7 +1438,7 @@ msgstr ""
 #: model:ir.model.fields,help:website_blog.field_blog_blog__website_id
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_id
 msgid "Restrict publishing to this website."
-msgstr ""
+msgstr "Obmedzte publikovanie na túto webovú stránku."
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.view_blog_post_form
@@ -1445,13 +1450,13 @@ msgstr ""
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__is_seo_optimized
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__is_seo_optimized
 msgid "SEO optimized"
-msgstr ""
+msgstr "Optimalizované SEO"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__message_has_sms_error
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Chyba doručenia SMS"
 
 #. module: website_blog
 #. openerp-web
@@ -1608,7 +1613,7 @@ msgstr "Titulka"
 #: model:ir.ui.menu,name:website_blog.menu_website_blog_tag_category_global
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_category_tree
 msgid "Tag Categories"
-msgstr ""
+msgstr "Tag kategórie"
 
 #. module: website_blog
 #: model:ir.actions.act_window,name:website_blog.action_tag_category
@@ -1623,12 +1628,12 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_form
 msgid "Tag Form"
-msgstr "Formulár menovky"
+msgstr "Formulár tagu"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_tag_tree
 msgid "Tag List"
-msgstr "Zoznam menovky"
+msgstr "Zoznam tagu"
 
 #. module: website_blog
 #: model:ir.model.constraint,message:website_blog.constraint_blog_tag_category_name_uniq
@@ -1638,7 +1643,7 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.constraint,message:website_blog.constraint_blog_tag_name_uniq
 msgid "Tag name already exists !"
-msgstr "Názov visačky už existuje !"
+msgstr "Názov tagu už existuje !"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__tag_ids
@@ -1647,7 +1652,7 @@ msgstr "Názov visačky už existuje !"
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_tags_display
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_sidebar_blog_index_tags
 msgid "Tags"
-msgstr "Štítky"
+msgstr "Tagy"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__teaser
@@ -1817,7 +1822,7 @@ msgstr ""
 #: code:addons/website_blog/static/src/js/website_blog.editor.js:0
 #, python-format
 msgid "Tiny"
-msgstr ""
+msgstr "Malý"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__name
@@ -1927,14 +1932,14 @@ msgstr ""
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_published
 msgid "Visible on current website"
-msgstr ""
+msgstr "Viditeľné na aktuálnej webstránke"
 
 #. module: website_blog
 #: model:ir.model,name:website_blog.model_website
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_id
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_id
 msgid "Website"
-msgstr "Webová stránka"
+msgstr "Webstránka"
 
 #. module: website_blog
 #: model:ir.actions.act_url,name:website_blog.action_open_website
@@ -1945,46 +1950,46 @@ msgstr "Blogy webstránky"
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_message_ids
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_message_ids
 msgid "Website Messages"
-msgstr "Správy Webových stránok"
+msgstr "Správy Webstránok"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_url
 msgid "Website URL"
-msgstr "URL Webových stránok"
+msgstr "URL Webstránok"
 
 #. module: website_blog
 #: model:ir.model.fields,help:website_blog.field_blog_blog__website_message_ids
 #: model:ir.model.fields,help:website_blog.field_blog_post__website_message_ids
 msgid "Website communication history"
-msgstr "História komunikácie webových stránok"
+msgstr "História komunikácie webstránok"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_meta_description
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_meta_description
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__website_meta_description
 msgid "Website meta description"
-msgstr "Meta popis web stránky"
+msgstr "Meta popis webstránky"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_meta_keywords
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_meta_keywords
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__website_meta_keywords
 msgid "Website meta keywords"
-msgstr "Meta kľúčové slová web stránky"
+msgstr "Meta kľúčové slová webstránky"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_meta_title
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_meta_title
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__website_meta_title
 msgid "Website meta title"
-msgstr "Meta nadpis web stránky"
+msgstr "Meta nadpis webstránky"
 
 #. module: website_blog
 #: model:ir.model.fields,field_description:website_blog.field_blog_blog__website_meta_og_img
 #: model:ir.model.fields,field_description:website_blog.field_blog_post__website_meta_og_img
 #: model:ir.model.fields,field_description:website_blog.field_blog_tag__website_meta_og_img
 msgid "Website opengraph image"
-msgstr ""
+msgstr "Obrázok otvorenej webstránky"
 
 #. module: website_blog
 #: model:blog.post,name:website_blog.blog_post_5
@@ -2059,13 +2064,13 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.post_breadcrumbs
 msgid "breadcrumb"
-msgstr ""
+msgstr "strúhanka"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_post_regular_cover
 #: model_terms:ir.ui.view,arch_db:website_blog.post_heading
 msgid "by"
-msgstr " by"
+msgstr "pomocou"
 
 #. module: website_blog
 #: model:blog.tag,name:website_blog.blog_tag_5
@@ -2090,7 +2095,7 @@ msgstr ""
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.blog_post_content
 msgid "in"
-msgstr "in"
+msgstr "v"
 
 #. module: website_blog
 #: model_terms:ir.ui.view,arch_db:website_blog.opt_blog_cover_post

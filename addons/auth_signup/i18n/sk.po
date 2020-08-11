@@ -8,6 +8,7 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -15,7 +16,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2019-08-26 08:16+0000\n"
 "PO-Revision-Date: 2019-08-26 09:09+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -99,6 +100,45 @@ msgid ""
 "</table>\n"
 "            "
 msgstr ""
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" style=\"background-color: #F1F1F1; font-family:Verdana, Arial,sans-serif; color: #454748; width: 100%; border-collapse:separate;\"><tr><td align=\"center\">\n"
+"<table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"padding: 16px; background-color: white; color: #454748; border-collapse:separate;\">\n"
+"<tbody>\n"
+"    <!-- CONTENT -->\n"
+"    <tr>\n"
+"        <td align=\"center\" style=\"min-width: 590px;\">\n"
+"            <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: white; padding: 0px 8px 0px 8px; border-collapse:separate;\">\n"
+"                 % set invited_users = ctx['invited_users']\n"
+"                <td style=\"text-align : left\">\n"
+"                    <span style=\"font-size: 20px; font-weight: bold;\">\n"
+"                        Čakajúce pozvánky\n"
+"                    </span><br/><br/>\n"
+"                </td>\n"
+"                <tr><td valign=\"top\" style=\"font-size: 13px;\">\n"
+"                    <div>\n"
+"                        Dobrý deň ${object.name or ''},<br/> <br/>\n"
+"                        Do svojej databázy ste pridali nasledujúcich používateľov, ale zatiaľ sa nezaregistrovali:\n"
+"                        <ul>\n"
+"                            % for invited_user in invited_users:\n"
+"                                <li>${invited_user}</li>\n"
+"                            % endfor\n"
+"                        </ul>\n"
+"                        Sledujte ich, aby mali prístup k vašej databáze a začali s vami pracovať.\n"
+"                        <br/><br/>\n"
+"                        Pekný deň!<br/>\n"
+"                        --<br/>The ${object.company_id.name} Team\n"
+"                    </div>\n"
+"                </td></tr>\n"
+"                <tr><td style=\"text-align:center;\">\n"
+"                  <hr width=\"100%\" style=\"background-color:rgb(204,204,204);border:medium none;clear:both;display:block;font-size:0px;min-height:1px;line-height:0; margin: 16px 0px 16px 0px;\"/>\n"
+"                </td></tr>\n"
+"            </table>\n"
+"        </td>\n"
+"    </tr>\n"
+"</tbody>\n"
+"</table>\n"
+"</td></tr>\n"
+"</table>\n"
+"            "
 
 #. module: auth_signup
 #: model:mail.template,body_html:auth_signup.set_password_email
@@ -267,7 +307,7 @@ msgstr ""
 "<tr><td align=\"center\" style=\"min-width: 590px;\">\n"
 "    <table border=\"0\" cellpadding=\"0\" cellspacing=\"0\" width=\"590\" style=\"min-width: 590px; background-color: #F1F1F1; color: #454748; padding: 8px; border-collapse:separate;\">\n"
 "      <tr><td style=\"text-align: center; font-size: 13px;\">\n"
-"        Poháňané <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
+"        Prinášané <a target=\"_blank\" href=\"https://www.odoo.com?utm_source=db&amp;utm_medium=auth\" style=\"color: #875A7B;\">Odoo</a>\n"
 "      </td></tr>\n"
 "    </table>\n"
 "</td></tr>\n"
@@ -638,12 +678,12 @@ msgstr "Nemožno odoslať email: používateľ %s nemá žiadnu emailovú adresu
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.res_users_view_form
 msgid "Close"
-msgstr "Zatvor"
+msgstr "Zatvoriť"
 
 #. module: auth_signup
 #: model:ir.model,name:auth_signup.model_res_config_settings
 msgid "Config Settings"
-msgstr "Nastavenie konfigurácie"
+msgstr "Nastavenia konfigurácie"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.reset_password
@@ -759,7 +799,7 @@ msgstr "Heslá nie sú totožne; prosím zadajte znova."
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_data_unregistered_users
 msgid "Reminder for unregistered users"
-msgstr ""
+msgstr "Pripomenutie pre neregistrovaných používateľov"
 
 #. module: auth_signup
 #: model_terms:ir.ui.view,arch_db:auth_signup.login
@@ -898,7 +938,7 @@ msgstr "Používatelia"
 #: model:ir.cron,cron_name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 #: model:ir.cron,name:auth_signup.ir_cron_auth_signup_send_pending_user_reminder
 msgid "Users: Notify About Unregistered Users"
-msgstr ""
+msgstr "Užívatelia: Upozorniť na neregistrovaných používateľov"
 
 #. module: auth_signup
 #: model:mail.template,subject:auth_signup.mail_template_user_signup_account_created

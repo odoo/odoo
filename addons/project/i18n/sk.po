@@ -9,6 +9,9 @@
 # Jaroslav Bosansky <jaro.bosansky@ekoenergo.sk>, 2019
 # gebri <gebri@inmail.sk>, 2019
 # Jan Prokop, 2019
+# Stefan Stieranka <stieranka@itec.sk>, 2020
+# Michal Matus <misko.matus@gmail.com>, 2020
+# Rastislav Brencic <rastislav.brencic@azet.sk>, 2020
 # 
 msgid ""
 msgstr ""
@@ -16,7 +19,7 @@ msgstr ""
 "Report-Msgid-Bugs-To: \n"
 "POT-Creation-Date: 2020-04-27 09:21+0000\n"
 "PO-Revision-Date: 2019-08-26 09:13+0000\n"
-"Last-Translator: Jan Prokop, 2019\n"
+"Last-Translator: Rastislav Brencic <rastislav.brencic@azet.sk>, 2020\n"
 "Language-Team: Slovak (https://www.transifex.com/odoo/teams/41243/sk/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -315,7 +318,7 @@ msgstr "<span class=\"fa fa-tasks\" role=\"img\" aria-label=\"Tasks\" title=\"Ú
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
 msgid "<span class=\"o_label\">Profitability</span>"
-msgstr ""
+msgstr "<span class=\"o_label\">Ziskovosť</span>"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -407,7 +410,7 @@ msgstr "Aktivity"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_exception_decoration
 msgid "Activity Exception Decoration"
-msgstr ""
+msgstr "Označenie výnimky v aktivite"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__activity_state
@@ -434,13 +437,13 @@ msgid ""
 "Add columns to configure <b>stages for your tasks</b>.<br/><i>e.g. New - In "
 "Progress - Done</i>"
 msgstr ""
-"Pridaj stĺpce pre kofiguráciu <b>fáz vašich úloh</b>.<br/><i>napr. Nový  - V"
-" riešení - Hotovo</i>"
+"Pridaj stĺpce pre kofiguráciu <b>štádia vašich úloh</b>.<br/><i>napr. Nový  "
+"- V riešení - Hotovo</i>"
 
 #. module: project
 #: model:res.groups,name:project.group_project_manager
 msgid "Administrator"
-msgstr ""
+msgstr "Správca"
 
 #. module: project
 #: model:project.task.type,name:project.project_stage_data_2
@@ -493,7 +496,7 @@ msgstr "Všetky úlohy"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__employees
 msgid "All employees"
-msgstr ""
+msgstr "Všetci zamestananci"
 
 #. module: project
 #. openerp-web
@@ -514,6 +517,8 @@ msgid ""
 "Analytic account to which this project is linked for financial management. "
 "Use an analytic account to record cost and revenue on your project."
 msgstr ""
+"Analytický účet, s ktorým je tento projekt spojený pre finančné riadenie. Na"
+" zaznamenanie nákladov a výnosov z projektu použite analytický účet."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -570,7 +575,7 @@ msgid ""
 "                                You can define here labels that will be displayed for the state instead\n"
 "                                of the default labels."
 msgstr ""
-"V každej fáze môžu zamestnanci blokovať alebo pripravovať úlohy / problémy na ďalšiu fázu.\n"
+"V každom štádium môžu zamestnanci blokovať alebo pripravovať úlohy / problémy na ďalšiu fázu.\n"
 "Tu môžete určiť štítky ktoré budú zobrazené pre stav namiesto\n"
 "prednastavených štítkov."
 
@@ -657,7 +662,7 @@ msgstr "Blokované"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Brainstorm"
-msgstr ""
+msgstr "Spontánna diskusia"
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_10
@@ -748,6 +753,10 @@ msgid ""
 "designs to the task, so that information flow from designers to the workers "
 "who print the t-shirt. Organize priorities amongst orders %s using the icon."
 msgstr ""
+"Komunikujte so zákazníkmi o úlohe pomocou e-mailovej brány. K úlohe pripojte"
+" návrhy loga, aby informácie od dizajnérov smerovali k pracovníkom, ktorí "
+"tlačia tričko. Pomocou ikony môžete usporiadať %s priority medzi "
+"objednávkami."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__company_id
@@ -799,7 +808,7 @@ msgstr "Kontakt"
 #: code:addons/project/static/src/js/project_task_kanban_examples.js:0
 #, python-format
 msgid "Copywriting"
-msgstr ""
+msgstr "Copywriting"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__displayed_image_id
@@ -830,7 +839,7 @@ msgstr "Kliknite pre novú fázu v postupnosti úloh."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.project_tags_action
 msgid "Create a new tag"
-msgstr "Vytvoriť novú menovku"
+msgstr "Vytvoriť nový tag "
 
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.action_view_task
@@ -875,7 +884,7 @@ msgstr "Mena"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
 msgid "Current stage of the task"
-msgstr "Súčasná fáza úlohy"
+msgstr "Súčasné štádium úlohy"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_task
@@ -936,7 +945,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_status
 msgid "Customer(s) Ratings"
-msgstr "Zákaznícke Hodnotenie"
+msgstr "Zákaznícke hodnotenie"
 
 #. module: project
 #. openerp-web
@@ -960,7 +969,7 @@ msgstr "Denne"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__date_deadline_formatted
 msgid "Date Deadline Formatted"
-msgstr ""
+msgstr "Formát dátumu uzávierky"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_form2
@@ -1000,6 +1009,11 @@ msgid ""
 "- Portal users and all employees: employees may see everything.   Portal users may see project and tasks followed by.\n"
 "   them or by someone of their company."
 msgstr ""
+"Definuje viditeľnosť úloh projektu:\n"
+"- Pozvaní zamestnanci: zamestnanci môžu vidieť iba sledovaný projekt a úlohy.\n"
+"- Všetci zamestnanci: zamestnanci môžu vidieť všetky projekty a úlohy.\n"
+"- Používatelia portálu a všetci zamestnanci: zamestnanci môžu vidieť všetko. Používatelia portálu môžu vidieť projekt a úlohy, ktoré nasledujú.\n"
+"nimi alebo niekým z ich spoločnosti."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
@@ -1059,7 +1073,7 @@ msgstr "Zrušiť"
 #: model:ir.model.fields,field_description:project.field_project_task_type__display_name
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__display_name
 msgid "Display Name"
-msgstr "Zobrazovaný Názov"
+msgstr "Zobrazovaný názov"
 
 #. module: project
 #: code:addons/project/models/digest.py:0
@@ -1131,7 +1145,7 @@ msgstr "Email"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Email Alias"
-msgstr "Alias Email"
+msgstr "Emailový alias"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__mail_template_id
@@ -1141,7 +1155,7 @@ msgstr "Šablóna emailu"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__email_cc
 msgid "Email cc"
-msgstr ""
+msgstr "Kópia emailu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
@@ -1238,7 +1252,7 @@ msgstr "Odberaný"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 msgid "Followed Tasks"
-msgstr ""
+msgstr "Sledované úlohy"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_follower_ids
@@ -1250,13 +1264,13 @@ msgstr "Odberatelia"
 #: model:ir.model.fields,field_description:project.field_project_project__message_channel_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_channel_ids
 msgid "Followers (Channels)"
-msgstr "Odberatelia (Kanály)"
+msgstr "Odberatelia (kanály)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_partner_ids
 #: model:ir.model.fields,field_description:project.field_project_task__message_partner_ids
 msgid "Followers (Partners)"
-msgstr "Odberatelia (Partneri)"
+msgstr "Odberatelia (partneri)"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_res_config_settings__module_project_forecast
@@ -1276,7 +1290,7 @@ msgstr "Pracuje sa na tom"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.edit_project
 msgid "Get customer feedback"
-msgstr ""
+msgstr "Získajte spätnú väzbu od zákazníkov"
 
 #. module: project
 #. openerp-web
@@ -1332,6 +1346,9 @@ msgid ""
 " in the chatter of the tasks. Use the %s and %s to signalize what is the "
 "current status of your Idea"
 msgstr ""
+"Zaobchádzajte so zhromažďovaním vašich nápadov v rámci úloh nového projektu "
+"a diskutujte o nich v rozhovore o úlohách. Použite %s na %s signalizáciu "
+"aktuálneho stavu vášho nápadu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_progressbar
@@ -1342,7 +1359,7 @@ msgstr "Spokojný"
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Happy face"
-msgstr ""
+msgstr "Šťastná tvár"
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__2
@@ -1363,6 +1380,11 @@ msgid ""
 "\n"
 "Don't forget to set up the mail templates on the stages for which you want to get the customer's feedbacks."
 msgstr ""
+"Ako získať spätnú väzbu od zákazníkov?\n"
+"- Hodnotenie pri zmene fázy: e-mail bude odoslaný, keď je úloha stiahnutá v inej fáze.\n"
+"- Pravidelné hodnotenie: e-mail bude zasielaný pravidelne.\n"
+"\n"
+"Nezabudnite nastaviť poštové šablóny v štádiách, pre ktoré chcete získať spätnú väzbu od zákazníka."
 
 #. module: project
 #: code:addons/project/models/project.py:0
@@ -1396,7 +1418,7 @@ msgstr "Ikona"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_icon
 msgid "Icon to indicate an exception activity."
-msgstr ""
+msgstr "Ikona indikujúca výnimočnú aktivitu."
 
 #. module: project
 #. openerp-web
@@ -1531,7 +1553,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__followers
 msgid "Invited employees"
-msgstr ""
+msgstr "Pozvaní zamestnanci"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_is_follower
@@ -1587,7 +1609,7 @@ msgstr "Kpi projekt počet otvorených úloh"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__label_tasks
 msgid "Label used for the tasks of the project."
-msgstr ""
+msgstr "Štítok používaný pre úlohy projektu."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.rating_project_rating_page
@@ -1624,7 +1646,7 @@ msgstr "Posledná modifikácia"
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__date_last_stage_update
 #, python-format
 msgid "Last Stage Update"
-msgstr "Posledná aktualizácia fázy"
+msgstr "Posledná aktualizácia štádia "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__write_date
@@ -1686,11 +1708,13 @@ msgid ""
 "Lets the company customize which Pad installation should be used to link to "
 "new pads (for example: http://etherpad.com/)."
 msgstr ""
+"Umožňuje spoločnosti prispôsobiť, ktorá inštalácia podložky by sa mala "
+"použiť na prepojenie na nové podložky (napríklad: http://etherpad.com/)."
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__email_cc
 msgid "List of cc from incoming emails."
-msgstr ""
+msgstr "Zoznam kópií z prichádzajúcich emailov."
 
 #. module: project
 #. openerp-web
@@ -1721,7 +1745,7 @@ msgstr "Dlhodobý"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__priority__0
 msgid "Low"
-msgstr "Nízka"
+msgstr "Nízky"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__message_main_attachment_id
@@ -1743,6 +1767,9 @@ msgid ""
 "acquired project, assign them and use the %s and %s to define if the project"
 " is ready for the next step."
 msgstr ""
+"Spravujte životný cyklus projektu pomocou zobrazenia kanban. Pridajte novo "
+"získaný projekt, priraďte ho a použite %s a %s definujte, či je projekt "
+"pripravený na ďalší krok."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__favorite_user_ids
@@ -1934,7 +1961,7 @@ msgstr "Počet priloženych dokumentov"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_error_counter
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_error_counter
 msgid "Number of errors"
-msgstr ""
+msgstr "Číslo chýb"
 
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__message_needaction_counter
@@ -2002,7 +2029,7 @@ msgstr ""
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Others"
-msgstr "ostatné"
+msgstr "Ostatné"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.action_view_task_overpassed_draft
@@ -2037,12 +2064,12 @@ msgid ""
 "selection, when the task or issue is in that stage."
 msgstr ""
 "Prepísať predvolenú hodnotu zobrazenú pre stav normálny pre Kanban výber, "
-"keď úloha alebo problém je v tejto fáze."
+"keď úloha alebo problém je v tomto štádiu."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__alias_user_id
 msgid "Owner"
-msgstr "Vlastník"
+msgstr "Majiteľ"
 
 #. module: project
 #. openerp-web
@@ -2083,7 +2110,7 @@ msgstr ""
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__rating_percentage_satisfaction
 msgid "Percentage of happy ratings"
-msgstr ""
+msgstr "Percento šťastných hodnotení"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_project_kanban
@@ -2143,7 +2170,7 @@ msgstr "URL portálového prístupu"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__privacy_visibility__portal
 msgid "Portal users and all employees"
-msgstr ""
+msgstr "Používatelia portálu a všetci zamestnanci"
 
 #. module: project
 #. openerp-web
@@ -2154,6 +2181,9 @@ msgid ""
 "your colleagues that a task is ready for the next stage.%s Use the %s to "
 "signalize a problem or a need for discussion on a task."
 msgstr ""
+"Uprednostniť úlohy pomocou %s ikony.%s Použite %s, aby ste svojim kolegom "
+"oznámili, že úloha je pripravená na ďalšiu fázu.%s Použite %s aby ste "
+"signalizovali problém alebo potrebu diskusie o úlohe."
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__priority
@@ -2211,7 +2241,7 @@ msgstr "Prejektová spokojnosť"
 #. module: project
 #: model:ir.model,name:project.model_project_tags
 msgid "Project Tags"
-msgstr "Štítky projektu"
+msgstr "Tagy projektu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.project_task_view_activity
@@ -2227,6 +2257,8 @@ msgid ""
 "Project in which sub-tasks of the current project will be created. It can be"
 " the current project itself."
 msgstr ""
+"Projekt, v ktorom sa vytvoria čiastkové úlohy aktuálneho projektu. Môže to "
+"byť samotný aktuálny projekt."
 
 #. module: project
 #: model:ir.actions.act_window,name:project.dblc_proj
@@ -2307,7 +2339,7 @@ msgstr "Frekvencia hodnotenia"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_feedback
 msgid "Rating Last Feedback"
-msgstr "najnovšie spätné väzby hodnotenia"
+msgstr "Najnovšie spätné väzby hodnotenia"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_last_image
@@ -2327,7 +2359,7 @@ msgstr "Konečný termín na vyžiadanie hodnotenia"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_percentage_satisfaction
 msgid "Rating Satisfaction"
-msgstr ""
+msgstr "Hodnotenie spokojnosti"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task__rating_count
@@ -2342,7 +2374,7 @@ msgstr "Hodnotenie viditeľné verejne"
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__project_project__rating_status__stage
 msgid "Rating when changing stage"
-msgstr "Hodnotenie pri zmene fázy"
+msgstr "Hodnotenie pri zmene štádia"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__rating_ids
@@ -2386,12 +2418,12 @@ msgstr "Hodnotenia %s"
 #: model:project.task.type,legend_done:project.project_stage_data_2
 #, python-format
 msgid "Ready for Next Stage"
-msgstr "Pripravené pre ďalšiu fázu"
+msgstr "Pripravené pre ďalšie štádium "
 
 #. module: project
 #: model:ir.model.fields.selection,name:project.selection__report_project_task_user__state__done
 msgid "Ready for next stage"
-msgstr "Pripravené pre ďalšiu fázu"
+msgstr "Pripravené pre ďalšie štádium "
 
 #. module: project
 #: model:project.task,legend_done:project.project_task_19
@@ -2478,13 +2510,13 @@ msgstr "Zodpovedný používateľ"
 #: model:ir.model.fields,field_description:project.field_project_project__message_has_sms_error
 #: model:ir.model.fields,field_description:project.field_project_task__message_has_sms_error
 msgid "SMS Delivery error"
-msgstr ""
+msgstr "Chyba doručenia SMS"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_project_rating_partner_stat
 #: model_terms:ir.ui.view,arch_db:project.view_task_kanban
 msgid "Sad face"
-msgstr "smutný"
+msgstr "Smutná tvár"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -2525,7 +2557,7 @@ msgstr "Hľadať v správach"
 #: code:addons/project/controllers/portal.py:0
 #, python-format
 msgid "Search in Stages"
-msgstr "Hľadať vo fázach"
+msgstr "Hľadať vo štádiach "
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__access_token
@@ -2553,7 +2585,7 @@ msgstr "Nastaviť aliasy emailu"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Set Email Template to Stages"
-msgstr "Nastaviť šablónu emailu na fázy"
+msgstr "Nastaviť šablónu emailu na štádium"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_config_settings_action
@@ -2608,33 +2640,33 @@ msgstr "Rozdeľ úlohy pre organizovanie práce v čiastkových etapách"
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
 #, python-format
 msgid "Stage"
-msgstr "Fáza"
+msgstr "Štádium "
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_task_stage
 msgid "Stage Changed"
-msgstr "Fáza zmenená"
+msgstr "Štádium zmenené"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 msgid "Stage Description and Tooltips"
-msgstr "Popis fázy a tipy nástroja"
+msgstr "Popis štádia a tipy nástroja"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_task_type__name
 msgid "Stage Name"
-msgstr "Názov etapy"
+msgstr "Názov štádia "
 
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_stage
 msgid "Stage changed"
-msgstr "Fáza zmenená"
+msgstr "Štádium zmenené"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.open_task_type_form
 #: model:ir.ui.menu,name:project.menu_project_config_project
 msgid "Stages"
-msgstr "Fázy"
+msgstr "Štádia"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_search_form
@@ -2693,12 +2725,12 @@ msgstr "Tlač tričiek"
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_tags__name
 msgid "Tag Name"
-msgstr "Názov visačky"
+msgstr "Názov tagu"
 
 #. module: project
 #: model:ir.model.constraint,message:project.constraint_project_tags_name_uniq
 msgid "Tag name already exists!"
-msgstr "Názov štítku už existuje !"
+msgstr "Názov tagu už existuje !"
 
 #. module: project
 #: model:ir.actions.act_window,name:project.project_tags_action
@@ -2707,7 +2739,7 @@ msgstr "Názov štítku už existuje !"
 #: model_terms:ir.ui.view,arch_db:project.project_tags_form_view
 #: model_terms:ir.ui.view,arch_db:project.project_tags_tree_view
 msgid "Tags"
-msgstr "Štítky"
+msgstr "Tagy"
 
 #. module: project
 #: model:ir.model,name:project.model_project_task
@@ -2772,12 +2804,12 @@ msgstr "Úloha pripravená"
 #: model_terms:ir.ui.view,arch_db:project.task_type_edit
 #: model_terms:ir.ui.view,arch_db:project.task_type_tree
 msgid "Task Stage"
-msgstr "Fáza úlohy"
+msgstr "Štádium úlohy"
 
 #. module: project
 #: model:mail.message.subtype,name:project.mt_project_task_stage
 msgid "Task Stage Changed"
-msgstr "Fáza úlohy zmenená"
+msgstr "Štádium úlohy zmenená"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_report_project_task_user__name
@@ -2809,7 +2841,7 @@ msgstr ""
 #. module: project
 #: model:mail.message.subtype,description:project.mt_task_ready
 msgid "Task ready for Next Stage"
-msgstr "Úloha je pripravená pre ďalšiu fázu"
+msgstr "Úloha je pripravená pre ďalšie štádium "
 
 #. module: project
 #: model:ir.actions.act_window,name:project.act_project_project_2_project_task_all
@@ -2851,7 +2883,7 @@ msgstr "Riadenie úloh"
 #: model:ir.model.fields,field_description:project.field_project_project__type_ids
 #: model_terms:ir.ui.view,arch_db:project.task_type_search
 msgid "Tasks Stages"
-msgstr "Fázy úloh"
+msgstr "Štádia úloh"
 
 #. module: project
 #. openerp-web
@@ -2932,7 +2964,7 @@ msgstr "Žiadne projekty."
 #. module: project
 #: model_terms:ir.actions.act_window,help:project.rating_rating_action_view_project_rating
 msgid "There are no ratings for this object at the moment"
-msgstr ""
+msgstr "Momentálne nie sú k dispozícii žiadne hodnotenia tohto objektu"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.portal_my_tasks
@@ -2974,7 +3006,7 @@ msgid ""
 "This stage is folded in the kanban view when there are no records in that "
 "stage to display."
 msgstr ""
-"Táto fáza je zložená v kanban zobrazení keď v tejto fáze nie sú žiadne "
+"Toto štádium je zložené v kanban zobrazení keď v tomto štádiu nie sú žiadne "
 "záznamy na zobrazenie."
 
 #. module: project
@@ -2988,7 +3020,7 @@ msgstr ""
 #: code:addons/project/static/src/js/tours/project.js:0
 #, python-format
 msgid "This will create a new project and redirect us to its stages."
-msgstr "Toto vytvorí nový projekt a presmeruje na jeho fázy"
+msgstr "Toto vytvorí nový projekt a presmeruje na jeho štádium"
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
@@ -3015,7 +3047,7 @@ msgstr "Titul"
 #. module: project
 #: model:project.task.type,name:project.project_stage_0
 msgid "To Do"
-msgstr "Na spravenie"
+msgstr "Urobiť"
 
 #. module: project
 #. openerp-web
@@ -3063,7 +3095,7 @@ msgstr "Dvakrát mesačne"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_task__activity_exception_decoration
 msgid "Type of the exception activity on record."
-msgstr ""
+msgstr "Typ výnimočnej aktivity na zázname."
 
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.view_task_project_user_search
@@ -3110,7 +3142,7 @@ msgstr "Použiť úlohy ako"
 #. module: project
 #: model_terms:ir.ui.view,arch_db:project.res_config_settings_view_form
 msgid "Use collaborative rich text pads on tasks"
-msgstr ""
+msgstr "Používajte dobre spolupráce texty na úlohy"
 
 #. module: project
 #. openerp-web
@@ -3177,7 +3209,7 @@ msgstr "Týždenne"
 #. module: project
 #: model:ir.model.fields,help:project.field_project_project__is_favorite
 msgid "Whether this project should be displayed on your dashboard."
-msgstr ""
+msgstr "Či má byť tento projekt zobrazený na vašom kontrolnom paneli"
 
 #. module: project
 #: model:ir.model.fields,field_description:project.field_project_project__resource_calendar_id
@@ -3238,7 +3270,7 @@ msgid ""
 " and purpose of the stage."
 msgstr ""
 "Taktiež môžte pridať popis ktorý pomôže vašim spolupracovníkom pochopiť "
-"zmysel a účel fázy."
+"zmysel a účel štádia."
 
 #. module: project
 #: code:addons/project/models/analytic_account.py:0
@@ -3246,7 +3278,7 @@ msgstr ""
 msgid ""
 "You cannot change the company of an analytical account if it is related to a"
 " project."
-msgstr ""
+msgstr "Nemôžete zmeniť spoločnosť analytického účtu, ak súvisí s projektom."
 
 #. module: project
 #: code:addons/project/models/project.py:0

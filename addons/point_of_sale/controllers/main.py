@@ -32,6 +32,18 @@ class PosController(http.Controller):
         if config_id:
             domain = AND([domain,[('config_id', '=', int(config_id))]])
         pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
+
+        # The same POS session can be opened by a different user => search without restricting to
+        # current user. Note: the config must be explicitly given to avoid fallbacking on a random
+        # session.
+        if not pos_session and config_id:
+            domain = [
+                ('state', '=', 'opened'),
+                ('rescue', '=', False),
+                ('config_id', '=', int(config_id)),
+            ]
+            pos_session = request.env['pos.session'].sudo().search(domain, limit=1)
+
         if not pos_session:
             return werkzeug.utils.redirect('/web#action=point_of_sale.action_client_pos_menu')
         # The POS only work in one company, so we enforce the one of the session in the context

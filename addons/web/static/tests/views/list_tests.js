@@ -973,6 +973,52 @@ QUnit.module('Views', {
         form.destroy();
     });
 
+    QUnit.test('edit field in editable field without editing the row', async function (assert) {
+        // some widgets are editable in readonly (e.g. priority, boolean_toggle...) and they
+        // thus don't require the row to be switched in edition to be edited
+        assert.expect(13);
+
+        const list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: `
+                <tree editable="top">
+                    <field name="foo"/>
+                    <field name="bar" widget="boolean_toggle"/>
+                </tree>`,
+            mockRPC(route, args) {
+                if (args.method === 'write') {
+                    assert.step('write: ' + args.args[1].bar);
+                }
+                return this._super(...arguments);
+            },
+        });
+
+        // toggle the boolean value of the first row without editing the row
+        assert.ok(list.$('.o_data_row:first .o_boolean_toggle input')[0].checked);
+        assert.containsNone(list, '.o_selected_row');
+        await testUtils.dom.click(list.$('.o_data_row:first .o_boolean_toggle'));
+        assert.notOk(list.$('.o_data_row:first .o_boolean_toggle input')[0].checked);
+        assert.containsNone(list, '.o_selected_row');
+        assert.verifySteps(['write: false']);
+
+        // toggle the boolean value after switching the row in edition
+        assert.containsNone(list, '.o_selected_row');
+        await testUtils.dom.click(list.$('.o_data_row .o_data_cell:first'));
+        assert.containsOnce(list, '.o_selected_row');
+        await testUtils.dom.click(list.$('.o_selected_row .o_boolean_toggle'));
+        assert.containsOnce(list, '.o_selected_row');
+        assert.verifySteps([]);
+
+        // save
+        await testUtils.dom.click(list.$('.o_list_button_save'));
+        assert.containsNone(list, '.o_selected_row');
+        assert.verifySteps(['write: true']);
+
+        list.destroy();
+    });
+
     QUnit.test('basic operations for editable list renderer', async function (assert) {
         assert.expect(2);
 
@@ -2334,6 +2380,38 @@ QUnit.module('Views', {
 
         assert.strictEqual(list.$('th[data-name="datetime"]')[0].offsetWidth, 146);
         assert.strictEqual(list.$('th[data-name="int_field"]')[0].offsetWidth, 200);
+
+        list.destroy();
+    });
+
+    QUnit.test('list view with data: text columns are not crushed', async function (assert) {
+        assert.expect(2);
+
+        const longText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do ' +
+            'eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim ' +
+            'veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo ' +
+            'consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum ' +
+            'dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, ' +
+            'sunt in culpa qui officia deserunt mollit anim id est laborum';
+        this.data.foo.records[0].foo = longText;
+        this.data.foo.records[0].text = longText;
+        this.data.foo.records[1].foo = "short text";
+        this.data.foo.records[1].text = "short text";
+        var list = await createView({
+            View: ListView,
+            model: 'foo',
+            data: this.data,
+            arch: '<tree><field name="foo"/><field name="text"/></tree>',
+        });
+
+        const fooWidth = list.$('th[data-name="foo"]')[0].offsetWidth;
+        const textWidth = list.$('th[data-name="text"]')[0].offsetWidth;
+        assert.strictEqual(fooWidth, textWidth, "both columns should have been given the same width");
+
+        const firstRowHeight = list.$('.o_data_row:nth(0)')[0].offsetHeight;
+        const secondRowHeight = list.$('.o_data_row:nth(1)')[0].offsetHeight;
+        assert.ok(firstRowHeight > secondRowHeight,
+            "in the first row, the (long) text field should be properly displayed on several lines");
 
         list.destroy();
     });

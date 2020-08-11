@@ -626,3 +626,39 @@ class TestPacking(SavepointCase):
             putaway_A.location_out_id.id,
             "The move line destination location must be the one from the picking.")
         internal_transfer.button_validate()
+
+    def test_partial_put_in_pack(self):
+        """ Create a simple move in a delivery. Reserve the quantity but set as quantity done only a part.
+        Call Put In Pack button. """
+        self.productA.tracking = 'lot'
+        lot1 = self.env['stock.production.lot'].create({
+            'product_id': self.productA.id,
+            'name': '00001',
+            'company_id': self.warehouse.company_id.id
+        })
+        self.env['stock.quant']._update_available_quantity(self.productA, self.stock_location, 20.0, lot_id=lot1)
+        ship_move_a = self.env['stock.move'].create({
+            'name': 'The ship move',
+            'product_id': self.productA.id,
+            'product_uom_qty': 5.0,
+            'product_uom': self.productA.uom_id.id,
+            'location_id': self.ship_location.id,
+            'location_dest_id': self.customer_location.id,
+            'warehouse_id': self.warehouse.id,
+            'picking_type_id': self.warehouse.out_type_id.id,
+            'procure_method': 'make_to_order',
+            'state': 'draft',
+        })
+        ship_move_a._assign_picking()
+        ship_move_a._action_confirm()
+        pack_move_a = ship_move_a.move_orig_ids[0]
+        pick_move_a = pack_move_a.move_orig_ids[0]
+
+        pick_picking = pick_move_a.picking_id
+
+        pick_picking.picking_type_id.show_entire_packs = True
+
+        pick_picking.action_assign()
+
+        pick_picking.move_line_ids.qty_done = 3
+        first_pack = pick_picking.put_in_pack()

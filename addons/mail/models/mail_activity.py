@@ -210,16 +210,20 @@ class MailActivity(models.Model):
     @api.onchange('activity_type_id')
     def _onchange_activity_type_id(self):
         if self.activity_type_id:
-            self.summary = self.activity_type_id.summary
-            # Date.context_today is correct because date_deadline is a Date and is meant to be
-            # expressed in user TZ
-            base = fields.Date.context_today(self)
-            if self.activity_type_id.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
-                base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
-            self.date_deadline = base + relativedelta(**{self.activity_type_id.delay_unit: self.activity_type_id.delay_count})
+            if self.activity_type_id.summary:
+                self.summary = self.activity_type_id.summary
+            self.date_deadline = self._calculate_date_deadline(self.activity_type_id)
             self.user_id = self.activity_type_id.default_user_id or self.env.user
             if self.activity_type_id.default_description:
                 self.note = self.activity_type_id.default_description
+
+    def _calculate_date_deadline(self, activity_type):
+        # Date.context_today is correct because date_deadline is a Date and is meant to be
+        # expressed in user TZ
+        base = fields.Date.context_today(self)
+        if activity_type.delay_from == 'previous_activity' and 'activity_previous_deadline' in self.env.context:
+            base = fields.Date.from_string(self.env.context.get('activity_previous_deadline'))
+        return base + relativedelta(**{activity_type.delay_unit: activity_type.delay_count})
 
     @api.onchange('recommended_activity_type_id')
     def _onchange_recommended_activity_type_id(self):
@@ -294,7 +298,7 @@ class MailActivity(models.Model):
         assigned user should be able to at least read the document. We therefore
         raise an UserError if the assigned user has no access to the document. """
         for activity in self:
-            model = self.env[activity.res_model].with_user(activity.user_id)
+            model = self.env[activity.res_model].with_user(activity.user_id).with_context(allowed_company_ids=activity.user_id.company_ids.ids)
             try:
                 model.check_access_rights('read')
             except exceptions.AccessError:

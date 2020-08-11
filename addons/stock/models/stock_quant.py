@@ -573,7 +573,7 @@ class StockQuant(models.Model):
             'product_id': self.product_id.id,
             'product_uom': self.product_uom_id.id,
             'product_uom_qty': qty,
-            'company_id': self.company_id.id or self.env.user.company_id.id,
+            'company_id': self.company_id.id or self.env.company.id,
             'state': 'confirmed',
             'location_id': location_id.id,
             'location_dest_id': location_dest_id.id,
@@ -583,7 +583,7 @@ class StockQuant(models.Model):
                 'qty_done': qty,
                 'location_id': location_id.id,
                 'location_dest_id': location_dest_id.id,
-                'company_id': self.company_id.id or self.env.user.company_id.id,
+                'company_id': self.company_id.id or self.env.company.id,
                 'lot_id': self.lot_id.id,
                 'package_id': out and self.package_id.id or False,
                 'result_package_id': (not out) and self.package_id.id or False,
@@ -720,6 +720,11 @@ class QuantPackage(models.Model):
             ])
             move_line_to_modify.write({'package_id': False})
             package.mapped('quant_ids').sudo().write({'package_id': False})
+
+        # Quant clean-up, mostly to avoid multiple quants of the same product. For example, unpack
+        # 2 packages of 50, then reserve 100 => a quant of -50 is created at transfer validation.
+        self.env['stock.quant']._merge_quants()
+        self.env['stock.quant']._unlink_zero_quants()
 
     def action_view_picking(self):
         action = self.env.ref('stock.action_picking_tree_all').read()[0]

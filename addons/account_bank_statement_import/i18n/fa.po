@@ -1,22 +1,25 @@
 # Translation of Odoo Server.
 # This file contains the translation of the following modules:
-# * account_bank_statement_import
+# 	* account_bank_statement_import
 # 
 # Translators:
-# Martin Trigaux, 2018
-# Hamid Darabi, 2018
-# Mohammad Ghadimi <mohammadghadimi88@gmail.com>, 2018
-# Faraz Sadri Alamdari <ifarazir@gmail.com>, 2018
-# Hamed Mohammadi <hamed@dehongi.com>, 2018
-# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2018
-# Arash Sardari <arashss77@gmail.com>, 2018
+# Zahed Alfak <tamass4116@gmail.com>, 2020
+# Martin Trigaux, 2020
+# Morovat Guivi <tarjomac@gmail.com>, 2020
+# Hamid Darabi, 2020
+# Mohammad Ghadimi <mohammadghadimi88@gmail.com>, 2020
+# Hamed Mohammadi <hamed@dehongi.com>, 2020
+# Sepehr Khoshnood <sepehr.kho@gmail.com>, 2020
+# Arash Sardari <arashss77@gmail.com>, 2020
+# Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020
+# 
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server saas~11.5\n"
+"Project-Id-Version: Odoo Server 13.0\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-09-21 13:17+0000\n"
-"PO-Revision-Date: 2018-09-21 13:17+0000\n"
-"Last-Translator: Arash Sardari <arashss77@gmail.com>, 2018\n"
+"POT-Creation-Date: 2020-04-27 09:21+0000\n"
+"PO-Revision-Date: 2019-08-26 09:08+0000\n"
+"Last-Translator: Hamid Reza Kaveh <hamidrkp@riseup.net>, 2020\n"
 "Language-Team: Persian (https://www.transifex.com/odoo/teams/41243/fa/)\n"
 "MIME-Version: 1.0\n"
 "Content-Type: text/plain; charset=UTF-8\n"
@@ -26,25 +29,25 @@ msgstr ""
 
 #. module: account_bank_statement_import
 #. openerp-web
-#: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:13
+#: code:addons/account_bank_statement_import/static/src/js/account_bank_statement_import.js:0
 #, python-format
 msgid " Import Template for Bank Statements"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "%d transactions had already been imported and were ignored."
 msgstr "%d تراکنش قبلاً وارد شده و نادیده گرفته شده."
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:236
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "1 transaction had already been imported and was ignored."
 msgstr "1 تراکنش قبلا وارد شده و نادیده گرفته شد."
 
 #. module: account_bank_statement_import
-#: sql_constraint:account.bank.statement.line:0
+#: model:ir.model.constraint,message:account_bank_statement_import.constraint_account_bank_statement_line_unique_import_id
 msgid "A bank account transactions can be imported only once !"
 msgstr "ترکنشهای حساب بانکی تنها یک بار می‌توانند از فایل وارد شوند."
 
@@ -69,9 +72,29 @@ msgid "Accounts Allowed"
 msgstr "حسابهای مجاز"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+msgid "Action Needed"
+msgstr "اقدام مورد نیاز است"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
 msgid "Active"
 msgstr "فعال"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_ids
+msgid "Activities"
+msgstr "فعالیت‌ها"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_decoration
+msgid "Activity Exception Decoration"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
+msgid "Activity State"
+msgstr "وضعیت فعالیت"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_id
@@ -80,8 +103,8 @@ msgstr "مستعار"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
-msgid "Alias Name for Vendor Bills"
-msgstr ""
+msgid "Alias Name"
+msgstr "نام مستعار"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_domain
@@ -89,12 +112,7 @@ msgid "Alias domain"
 msgstr "دامین مستعار"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
-msgid "Allow Cancelling Entries"
-msgstr "اجازه لغو داده ها"
-
-#. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:238
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "Already imported items"
 msgstr "آیتمهای قبلا وارد شده"
@@ -110,7 +128,12 @@ msgid "At Least One Outbound"
 msgstr "حداقل یک خروجی"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:82
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_attachment_count
+msgid "Attachment Count"
+msgstr "تعداد پیوست"
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__bank_id
 #, python-format
 msgid "Bank"
@@ -132,11 +155,6 @@ msgid "Bank Journal Name"
 msgstr "نام روزنامه بانک"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__data_file
-msgid "Bank Statement File"
-msgstr "فایل صورتحساب بانک"
-
-#. module: account_bank_statement_import
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_line
 msgid "Bank Statement Line"
 msgstr "سطر صورتحساب بانک"
@@ -147,18 +165,13 @@ msgid "Bank setup manual config"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__belongs_to_company
-msgid "Belong to the user's current company"
-msgstr "مطلق به شرکت فعلی کاربر است"
-
-#. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
 msgid "Cancel"
 msgstr "لغو"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:171
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "Cannot find in which journal import this statement. Please manually select a"
@@ -173,21 +186,19 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__update_posted
-msgid ""
-"Check this box if you want to allow the cancellation the entries related to "
-"this journal or of the invoice related to this journal"
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__color
+msgid "Color Index"
+msgstr "شاخص رنگ"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_model
+msgid "Communication Standard"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "Choose a file to import..."
-msgstr "انتخاب فایل برای ورود..."
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__color
-msgid "Color Index"
-msgstr "رنگ پس زمینه"
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type
+msgid "Communication Type"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__company_id
@@ -200,7 +211,7 @@ msgid "Company related to this journal"
 msgstr "شرکت مربوط به این روزنامه"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:112
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "Could not make sense of the given file.\n"
@@ -226,8 +237,8 @@ msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__refund_sequence_number_next
-msgid "Credit Notes: Next Number"
-msgstr "یادداشهای اعتباری: عدد بعدی"
+msgid "Credit Notes Next Number"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__currency_id
@@ -261,21 +272,29 @@ msgid "Display Name"
 msgstr "نام نمایشی"
 
 #. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid ""
-"Download a bank statement from your bank and import it here. Supported "
-"formats:"
-msgstr ""
-
-#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_id
 msgid "Entry Sequence"
 msgstr "دنباله‌ی ورودی"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__filename
-msgid "Filename"
-msgstr "نام فایل"
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__attachment_ids
+msgid "Files"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_follower_ids
+msgid "Followers"
+msgstr "دنبال‌کنندگان"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_channel_ids
+msgid "Followers (Channels)"
+msgstr "پیروان (کانال ها)"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_partner_ids
+msgid "Followers (Partners)"
+msgstr "پیروان (شرکاء)"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
@@ -288,16 +307,11 @@ msgid "For Outgoing Payments"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import__data_file
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import__attachment_ids
 msgid ""
 "Get you bank statements in electronic format from your bank and select them "
 "here."
 msgstr ""
-
-#. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__group_invoice_lines
-msgid "Group Invoice Lines"
-msgstr "گروه بندی سطرهای فاکتور"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import__id
@@ -306,15 +320,45 @@ msgid "ID"
 msgstr "شناسه"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__group_invoice_lines
-msgid ""
-"If this box is checked, the system will try to group the accounting lines "
-"when generating them from invoices."
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_icon
+msgid "Icon"
+msgstr "شمایل"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_icon
+msgid "Icon to indicate an exception activity."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_journal.py:20
-#: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread
+msgid "If checked, new messages require your attention."
+msgstr ""
+"اگر این گزینه را انتخاب کنید، پیام‌های جدید به توجه شما نیاز خواهند داشت."
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_sms_error
+msgid "If checked, some messages have a delivery error."
+msgstr "در صورت بررسی ، برخی پیام ها خطای تحویل دارند."
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
+#, python-format
+msgid ""
+"If it contains transactions for more than one account, it must be imported "
+"on each of them."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
+msgid ""
+"If ticked, the accounting entry or invoice receives a hash as soon as it is "
+"posted and cannot be modified anymore."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_journal.py:0
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.journal_dashboard_view_inherit
 #, python-format
 msgid "Import"
@@ -324,11 +368,6 @@ msgstr "درونش"
 #: model:ir.model,name:account_bank_statement_import.model_account_bank_statement_import
 msgid "Import Bank Statement"
 msgstr "وارد کردن بیانیه بانک"
-
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "Import Bank Statements"
-msgstr "ورود از فایل صورتحساب بانک"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_line__unique_import_id
@@ -346,6 +385,11 @@ msgid "Install Import Format"
 msgstr ""
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_is_follower
+msgid "Is Follower"
+msgstr "دنبال می کند"
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__default_credit_account_id
 msgid "It acts as a default account for credit amount"
 msgstr ""
@@ -357,7 +401,7 @@ msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__alias_name
-msgid "It creates draft vendor bill by sending an email."
+msgid "It creates draft invoices and bills by sending an email."
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -367,7 +411,7 @@ msgid "Journal"
 msgstr "روزنامه"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:73
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 #, python-format
 msgid "Journal Creation"
@@ -379,15 +423,25 @@ msgid "Journal Creation on Bank Statement Import"
 msgstr ""
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__journal_group_ids
+msgid "Journal Groups"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__name
 msgid "Journal Name"
 msgstr "نام روزنامه"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__json_activity_data
+msgid "Json Activity Data"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
-"Just click OK to create the account/journal and finish the import. If this "
-"was a mistake, hit cancel to abort the import."
+"Just click OK to create the account/journal and finish the upload. If this "
+"was a mistake, hit cancel to abort the upload."
 msgstr ""
 
 #. module: account_bank_statement_import
@@ -419,9 +473,19 @@ msgid "Last Updated on"
 msgstr "آخرین به روز رسانی در"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__restrict_mode_hash_table
+msgid "Lock Posted Entries with Hash"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__loss_account_id
 msgid "Loss Account"
 msgstr "حساب زیان"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_main_attachment_id
+msgid "Main Attachment"
+msgstr "پیوست اصلی"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__inbound_payment_method_ids
@@ -440,15 +504,65 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error
+msgid "Message Delivery error"
+msgstr "خطای تحویل پیام"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_ids
+msgid "Messages"
+msgstr "پیام‌ها"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence_number_next
 msgid "Next Number"
 msgstr "شماره بعدی"
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:142
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "No currency found matching '%s'."
 msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
+msgid "Number of Actions"
+msgstr "تعداد اقدامات"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
+msgid "Number of errors"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr "تعداد پیام ها که نیاز به عمل"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr "تعداد پیامهای با خطای تحویل"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread_counter
+msgid "Number of unread messages"
+msgstr "تعداد پیام‌های خوانده نشده"
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
@@ -456,14 +570,29 @@ msgid "OK"
 msgstr "تایید"
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
-msgid "Post At Bank Reconciliation"
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at
+msgid "Post At"
 msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__profit_account_id
 msgid "Profit Account"
 msgstr "حساب سود"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_has_sms_error
+msgid "SMS Delivery error"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
+msgid "Secure Sequence"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
@@ -476,13 +605,18 @@ msgstr ""
 
 #. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "Select a bank statement file to import"
-msgstr "انتخاب فایل صورتحساب بانک برای ورود"
+msgid "Select Files"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
 msgid "Sequence"
 msgstr "دنباله"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__secure_sequence_id
+msgid "Sequence to use to ensure the securisation of data"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__active
@@ -500,22 +634,31 @@ msgid "Show journal on dashboard"
 msgstr "نمایش روزنامه روی داشبورد"
 
 #. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_state
+msgid ""
+"Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: account_bank_statement_import
 #: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_journal_creation_view
 msgid ""
-"The account of the statement you are importing is not yet recorded in Odoo. "
-"In order to proceed with the import, you need to create a bank journal for "
+"The account of the statement you are uploading is not yet recorded in Odoo. "
+"In order to proceed with the upload, you need to create a bank journal for "
 "this account."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:157
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "The account of this statement (%s) is not the same as the journal (%s)."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:167
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "The currency of the bank statement (%s) is not the same as the currency of "
@@ -557,21 +700,47 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:117
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any statement."
-msgstr "این فایل دارای هیچ صورتحسابی نیست"
+msgid "This file doesn't contain any statement for account %s."
+msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:125
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
-msgid "This file doesn't contain any transaction."
-msgstr "این فایل دارای هیچ تراکنسی نیست."
+msgid "This file doesn't contain any transaction for account %s."
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__type
 msgid "Type"
 msgstr "نوع"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__activity_exception_decoration
+msgid "Type of the exception activity on record."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread
+msgid "Unread Messages"
+msgstr "پیام های ناخوانده"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr "شمارنده پیام‌های خوانده‌نشده"
+
+#. module: account_bank_statement_import
+#: model:ir.actions.act_window,name:account_bank_statement_import.action_account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Upload"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "Upload Bank Statements"
+msgstr ""
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__sequence
@@ -593,12 +762,14 @@ msgid ""
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__post_at_bank_rec
-msgid ""
-"Whether or not the payments made in this journal should be generated in "
-"draft state, so that the related journal entries are only posted when "
-"performing bank reconciliation."
-msgstr ""
+#: model:ir.model.fields,field_description:account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
+msgid "Website Messages"
+msgstr "پیام‌های وب‌سایت"
+
+#. module: account_bank_statement_import
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__website_message_ids
+msgid "Website communication history"
+msgstr "تاریخچه ارتباط با وبسایت"
 
 #. module: account_bank_statement_import
 #: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__show_on_dashboard
@@ -606,32 +777,37 @@ msgid "Whether this journal should be displayed on the dashboard or not"
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:228
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid "You already have imported that file."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "You can install more file formats by"
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_model
+msgid ""
+"You can choose different models for each type of reference. The default one "
+"is the Odoo reference."
 msgstr ""
 
 #. module: account_bank_statement_import
-#: code:addons/account_bank_statement_import/account_bank_statement_import.py:47
+#: model:ir.model.fields,help:account_bank_statement_import.field_account_bank_statement_import_journal_creation__invoice_reference_type
+msgid ""
+"You can set here the default communication that will appear on customer "
+"invoices, once validated, to help the customer to refer to that particular "
+"invoice when making the payment."
+msgstr ""
+
+#. module: account_bank_statement_import
+#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
+msgid "You can upload your bank statement using:"
+msgstr ""
+
+#. module: account_bank_statement_import
+#: code:addons/account_bank_statement_import/account_bank_statement_import.py:0
 #, python-format
 msgid ""
 "You have to set a Default Debit Account and a Default Credit Account for the"
 " journal: %s"
-msgstr ""
-
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "_Import"
-msgstr "ـ‌وارد کردن"
-
-#. module: account_bank_statement_import
-#: model_terms:ir.ui.view,arch_db:account_bank_statement_import.account_bank_statement_import_view
-msgid "installing the related modules"
 msgstr ""
 
 #. module: account_bank_statement_import

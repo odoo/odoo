@@ -9,7 +9,7 @@ class StockQuant(models.Model):
     _inherit = 'stock.quant'
 
     value = fields.Monetary('Value', compute='_compute_value', groups='stock.group_stock_manager')
-    currency_id = fields.Many2one(related='product_id.currency_id', groups='stock.group_stock_manager')
+    currency_id = fields.Many2one('res.currency', compute='_compute_value', groups='stock.group_stock_manager')
 
     @api.depends('company_id', 'location_id', 'owner_id', 'product_id', 'quantity')
     def _compute_value(self):
@@ -20,6 +20,7 @@ class StockQuant(models.Model):
         average cost is the same for all location and the valuation field is
         a estimation more than a real value).
         """
+        self.currency_id = self.env.company.currency_id
         for quant in self:
             # If the user didn't enter a location yet while enconding a quant.
             if not quant.location_id:

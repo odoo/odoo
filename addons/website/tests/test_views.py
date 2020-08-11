@@ -221,6 +221,21 @@ class TestViewSaving(common.TransactionCase):
             'text node characters wrongly unescaped when rendering'
         )
 
+    def test_save_oe_structure_with_attr(self):
+        """ Test saving oe_structure with attributes """
+        view = self.env['ir.ui.view'].create({
+            'arch': u'<t t-name="dummy"><div class="oe_structure" t-att-test="1" data-test="1" id="oe_structure_test"/></t>',
+            'type': 'qweb'
+        }).with_context(website_id=1, load_all_views=True)
+        replacement = u'<div class="oe_structure" data-test="1" id="oe_structure_test" data-oe-id="55" test="2">hello</div>'
+        view.save(replacement, xpath='/t/div')
+        # branding data-oe-* should be stripped
+        self.assertIn(
+            '<div class="oe_structure" data-test="1" id="oe_structure_test" test="2">hello</div>',
+            view.read_combined(['arch'])['arch'],
+            'saved element attributes are saved excluding branding ones'
+        )
+
     def test_save_only_embedded(self):
         Company = self.env['res.company']
         company_id = 1
@@ -756,6 +771,10 @@ class TestCowViewSaving(common.TransactionCase):
             'arch': '<div position="replace"><p>COMPARE</p></div>',
             'key': '_website_sale_comparison.product_add_to_compare',
         })])
+        Website.with_context(load_all_views=True).viewref('_website_sale_comparison.product_add_to_compare').invalidate_cache()
+
+        # Simulate end of installation/update
+        View._create_all_specific_views(['_website_sale_comparison'])
 
         specific_view = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product')
         specific_view_arch = specific_view.read_combined(['arch'])['arch']
@@ -766,7 +785,6 @@ class TestCowViewSaving(common.TransactionCase):
         View._load_records([dict(xml_id='_website_sale_comparison.product_add_to_compare', values={
             'arch': '<div position="replace"><p>COMPARE EDITED</p></div>',
         })])
-
         specific_view_arch = Website.with_context(load_all_views=True, website_id=1).viewref('_website_sale.product').read_combined(['arch'])['arch']
         self.assertEqual(specific_view_arch, '<p>COMPARE EDITED</p>', "When a module updates an inherited view (on a generic tree), it should also update the copies of that view (COW).")
 
@@ -805,6 +823,7 @@ class TestCowViewSaving(common.TransactionCase):
             'model': self.base_view._name,
             'res_id': self.base_view.id,
         })
+        self.base_view.invalidate_cache()
         View._load_records([dict(xml_id='_website_sale.product', values={
             'website_meta_title': 'A bug got fixed by updating this field',
         })])
@@ -944,6 +963,33 @@ class TestCowViewSaving(common.TransactionCase):
             })])
         finally:
             View.pool._init = original_pool_init
+
+    def test_specific_view_translation(self):
+        Translation = self.env['ir.translation']
+
+        Translation.insert_missing(self.base_view._fields['arch_db'],  self.base_view)
+        translation = Translation.search([
+            ('res_id', '=', self.base_view.id), ('name', '=', 'ir.ui.view,arch_db')
+        ])
+        translation.value = 'hello'
+        translation.module = 'website'
+
+        self.base_view.with_context(website_id=1).write({'active': True})
+        specific_view = self.base_view._get_specific_views() - self.base_view
+
+        self.assertEquals(specific_view.with_context(lang='en_US').arch, '<div>hello</div>',
+            "copy on write (COW) also copy existing translations")
+
+        translation.value = 'hi'
+        self.assertEquals(specific_view.with_context(lang='en_US').arch, '<div>hello</div>',
+            "updating translation of base view doesn't update specific view")
+
+        Translation.with_context(overwrite=True)._load_module_terms(['website'], ['en_US'])
+
+        specific_view.invalidate_cache(['arch_db', 'arch'])
+        self.assertEquals(specific_view.with_context(lang='en_US').arch, '<div>hi</div>',
+            "loading module translation copy translation from base to specific view")
+
 
 class Crawler(HttpCase):
     def setUp(self):
