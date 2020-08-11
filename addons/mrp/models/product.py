@@ -2,7 +2,8 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 from datetime import timedelta
-from odoo import api, fields, models
+from odoo import api, fields, models, _
+from odoo.exceptions import UserError
 from odoo.tools.float_utils import float_round, float_is_zero
 
 
@@ -48,6 +49,13 @@ class ProductTemplate(models.Model):
             'time_ranges': {'field': 'date_planned_start', 'range': 'last_365_days'}
         }
         return action
+
+    @api.onchange('route_ids')
+    def _onchange_routes(self):
+        route_manufacture = self.env.ref('mrp.route_warehouse0_manufacture')
+        if route_manufacture.id in self.route_ids.ids:
+            if not self.env['mrp.bom']._bom_find(product_tmpl=self, bom_type='phantom'):
+                raise UserError(_('There is no Bill of Material of type manufacture or kit found for this product. Please define a Bill of Material for this product.'))
 
 
 class ProductProduct(models.Model):

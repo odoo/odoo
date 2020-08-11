@@ -35,7 +35,6 @@ class TestSaleMrpProcurement(TransactionCase):
         product.uom_id = uom_unit
         product.uom_po_id = uom_unit
         product.route_ids.clear()
-        product.route_ids.add(warehouse0.manufacture_pull_id.route_id)
         product.route_ids.add(warehouse0.mto_pull_id.route_id)
         product_template_slidermobile0 = product.save()
 
@@ -53,6 +52,7 @@ class TestSaleMrpProcurement(TransactionCase):
                 line.product_id = product_product_bettery
                 line.product_qty = 4
 
+        product_template_slidermobile0.route_ids += self.env.ref('mrp.route_warehouse0_manufacture')
         # I create a sale order for product Slider mobile
         so_form = Form(self.env['sale.order'])
         so_form.partner_id = self.env.ref('base.res_partner_4')
