@@ -13,35 +13,6 @@ class UtmMedium(models.Model):
     name = fields.Char(string='Medium Name', required=True)
     active = fields.Boolean(default=True)
 
-
-class UtmCampaign(models.Model):
-    # OLD crm.case.resource.type
-    _name = 'utm.campaign'
-    _description = 'UTM Campaign'
-
-    name = fields.Char(string='Campaign Name', required=True, translate=True)
-
-    user_id = fields.Many2one(
-        'res.users', string='Responsible',
-        required=True, default=lambda self: self.env.uid)
-    stage_id = fields.Many2one('utm.stage', string='Stage', ondelete='restrict', required=True,
-        default=lambda self: self.env['utm.stage'].search([], limit=1),
-        group_expand='_group_expand_stage_ids')
-    tag_ids = fields.Many2many(
-        'utm.tag', 'utm_tag_rel',
-        'tag_id', 'campaign_id', string='Tags')
-
-    is_website = fields.Boolean(default=False, help="Allows us to filter relevant Campaign")
-    color = fields.Integer(string='Color Index')
-
-    @api.model
-    def _group_expand_stage_ids(self, stages, domain, order):
-        """ Read group customization in order to display all the stages in the
-            kanban view, even if they are empty
-        """
-        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
-        return stages.browse(stage_ids)
-
 class UtmSource(models.Model):
     _name = 'utm.source'
     _description = 'UTM Source'
@@ -70,3 +41,31 @@ class UtmTag(models.Model):
     _sql_constraints = [
             ('name_uniq', 'unique (name)', "Tag name already exists !"),
     ]
+
+class UtmCampaign(models.Model):
+    # OLD crm.case.resource.type
+    _name = 'utm.campaign'
+    _description = 'UTM Campaign'
+
+    name = fields.Char(string='Campaign Name', required=True, translate=True)
+
+    user_id = fields.Many2one(
+        'res.users', string='Responsible',
+        required=True, default=lambda self: self.env.uid)
+    stage_id = fields.Many2one('utm.stage', string='Stage', ondelete='restrict', required=True,
+        default=lambda self: self.env['utm.stage'].search([], limit=1),
+        group_expand='_group_expand_stage_ids')
+    tag_ids = fields.Many2many(
+        'utm.tag', 'utm_tag_rel',
+        'tag_id', 'campaign_id', string='Tags')
+
+    is_website = fields.Boolean(default=False, help="Allows us to filter relevant Campaign")
+    color = fields.Integer(string='Color Index')
+
+    @api.model
+    def _group_expand_stage_ids(self, stages, domain, order):
+        """ Read group customization in order to display all the stages in the
+            kanban view, even if they are empty
+        """
+        stage_ids = stages._search([], order=order, access_rights_uid=SUPERUSER_ID)
+        return stages.browse(stage_ids)
