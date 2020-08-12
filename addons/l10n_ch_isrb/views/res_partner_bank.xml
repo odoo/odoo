@@ -10,7 +10,9 @@
             </field>
 
             <!-- remove l10n_ch_postal from view when the account is current company -->
-            <label for="l10n_ch_postal" position="replace"/>
+            <label for="l10n_ch_postal" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </label>
             <xpath expr="//field[@name='l10n_ch_postal' and @nolabel='1']" position="replace"/>
         </field>
     </record>
