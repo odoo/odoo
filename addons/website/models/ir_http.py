@@ -216,7 +216,7 @@ class Http(models.AbstractModel):
     @classmethod
     def _get_frontend_langs(cls):
         if get_request_website():
-            return [code for code, _, _ in request.env['res.lang'].get_available()]
+            return [code for code, *_ in request.env['res.lang'].get_available()]
         else:
             return super()._get_frontend_langs()
 
