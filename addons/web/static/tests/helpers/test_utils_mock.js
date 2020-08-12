@@ -55,6 +55,9 @@ async function _getMockedOwlEnv(params, mockServer) {
     const debug = params.debug;
     const services = {};
     const env = Object.assign({}, params.env, {
+        browser: Object.assign({
+            fetch: (resource, init) => mockServer.performFetch(resource, init),
+        }, params.env.browser),
         bus: params.bus || params.env.bus || new Bus(),
         dataManager: Object.assign({
             load_action: (actionID, context) => {

@@ -269,11 +269,12 @@ class MailController(http.Controller):
             'mention_partner_suggestions': request.env['res.partner'].get_static_mention_suggestions(),
             'shortcodes': request.env['mail.shortcode'].sudo().search_read([], ['source', 'substitution', 'description']),
             'menu_id': request.env['ir.model.data'].xmlid_to_res_id('mail.menu_root_discuss'),
-            'is_moderator': request.env.user.is_moderator,
             'moderation_counter': request.env.user.moderation_counter,
             'moderation_channel_ids': request.env.user.moderation_channel_ids.ids,
             'partner_root': request.env.ref('base.partner_root').sudo().mail_partner_format(),
             'public_partner': request.env.ref('base.public_partner').sudo().mail_partner_format(),
+            'current_partner': request.env.user.partner_id.mail_partner_format(),
+            'current_user_id': request.env.user.id,
         }
         return values
 

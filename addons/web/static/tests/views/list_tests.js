@@ -6240,7 +6240,7 @@ QUnit.module('Views', {
         var newRecs = [];
         for (var i=0; i<8; i++) {
             var newRec = _.extend({}, rec);
-            newRec.id = 10 + i;
+            newRec.id = 1 + i;
             newRec.cornichon = 'extra fin';
             newRecs.push(newRec);
         }
