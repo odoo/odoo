@@ -691,7 +691,8 @@ class MrpProduction(models.Model):
             self._create_workorder()
 
     def write(self, vals):
-        if 'workorder_ids' in self:
+        production_to_replan = self.env['mrp.production']
+        if 'workorder_ids' in vals:
             production_to_replan = self.filtered(lambda p: p.is_planned)
         res = super(MrpProduction, self).write(vals)
 
