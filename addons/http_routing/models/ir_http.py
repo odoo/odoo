@@ -147,7 +147,7 @@ def url_lang(path_or_uri, lang_code=None):
     # relative URL with either a path or a force_lang
     if not url.netloc and not url.scheme and (url.path or force_lang):
         location = werkzeug.urls.url_join(request.httprequest.path, location)
-        lang_url_codes = [url_code for _, url_code, _ in Lang.get_available()]
+        lang_url_codes = [url_code for _, url_code, *_ in Lang.get_available()]
         lang_code = pycompat.to_text(lang_code or request.context['lang'])
         lang_url_code = Lang._lang_code_to_urlcode(lang_code)
         lang_url_code = lang_url_code if lang_url_code in lang_url_codes else lang_code
@@ -208,7 +208,7 @@ def is_multilang_url(local_url, lang_url_codes=None):
         2. If not matching 1., everything not under /static/ will be translatable
     '''
     if not lang_url_codes:
-        lang_url_codes = [url_code for _, url_code, _ in request.env['res.lang'].get_available()]
+        lang_url_codes = [url_code for _, url_code, *_ in request.env['res.lang'].get_available()]
     spath = local_url.split('/')
     # if a language is already in the path, remove it
     if spath[1] in lang_url_codes:
@@ -388,8 +388,7 @@ class IrHttp(models.AbstractModel):
             path = request.httprequest.path.split('/')
             is_a_bot = cls.is_a_bot()
 
-            available_langs = Lang.get_available()
-            lang_codes = [code for code, _, _ in available_langs]
+            lang_codes = [code for code, *_ in Lang.get_available()]
             nearest_lang = not func and cls.get_nearest_lang(Lang._lang_get_code(path[1]))
             cook_lang = request.httprequest.cookies.get('frontend_lang')
             cook_lang = cook_lang in lang_codes and cook_lang

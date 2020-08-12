@@ -40,6 +40,32 @@
                 </div>
             </div>
         </xpath>
+        <xpath expr="//*[hasclass('o_footer_copyright_name')]" position="after">
+            <t t-call="portal.language_selector"/>
+        </xpath>
+    </template>
+
+    <template id="language_selector" name="Language Selector">
+        <t t-set="language_selector_visible" t-value="len(languages) &gt; 1"/>
+        <ul class="js_language_selector mb0 list-inline" t-if="language_selector_visible">
+            <li class="list-inline-item">
+                <div class="dropup">
+                    <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                        <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][2].split('/').pop()"/>
+                        <span class="caret ml4"/>
+                    </button>
+                    <div class="dropdown-menu" role="menu">
+                        <t t-foreach="languages" t-as="lg">
+                            <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])"
+                            class="dropdown-item js_change_lang"
+                            t-att-data-url_code="lg[1]">
+                                <t t-esc="lg[2].split('/').pop()"/>
+                            </a>
+                        </t>
+                    </div>
+                </div>
+            </li>
+        </ul>
     </template>
 
     <template id="portal_breadcrumbs" name="Portal Breadcrumbs">
