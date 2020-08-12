@@ -72,7 +72,7 @@
             <field name="model">mrp.workcenter.productivity</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <graph string="Workcenter Productivity" type="pie">
+                <graph string="Workcenter Productivity" type="pie" sample="1">
                     <field name="loss_id"/>
                     <field name="duration" type="measure"/>
                 </graph>
@@ -87,9 +87,9 @@
             <field name="domain">[('workcenter_id','=',active_id')]</field>
             <field name="context">{'search_default_thismonth':True}</field>
             <field name="help" type="html">
-              <p class="o_view_nocontent_empty_folder">
-                Overall Equipment Effectiveness: no working or blocked time
-              </p>
+                <p class="o_view_nocontent_smiling_face">
+                    Overall Equipment Effectiveness: no working or blocked time
+                </p>
             </field>
         </record>
         <record model="ir.actions.act_window" id="mrp_workcenter_productivity_report_blocked">
@@ -565,7 +565,7 @@
         <field name="name">mrp.workcenter.productivity.graph</field>
         <field name="model">mrp.workcenter.productivity</field>
         <field name="arch" type="xml">
-            <graph string="Workcenter Productivity">
+            <graph string="Workcenter Productivity" sample="1">
                 <field name="workcenter_id"/>
                 <field name="loss_id"/>
                 <field name="duration" type="measure"/>
@@ -593,9 +593,9 @@
         <field name="domain">[]</field>
         <field name="context">{'search_default_workcenter_group': 1, 'search_default_thismonth':True, 'create':False,'edit':False}</field>
         <field name="help" type="html">
-          <p class="o_view_nocontent_empty_folder">
-            Overall Equipment Effectiveness: no working or blocked time
-          </p>
+            <p class="o_view_nocontent_smiling_face">
+                Overall Equipment Effectiveness: no working or blocked time
+            </p>
         </field>
     </record>
 

@@ -37,7 +37,7 @@
         <field name="name">hr.holidays.graph</field>
         <field name="model">hr.leave</field>
         <field name="arch" type="xml">
-            <graph string="Appraisal Analysis" stacked="True">
+            <graph string="Appraisal Analysis" stacked="True" sample="1">
                 <field name="employee_id" type="row"/>
                 <field name="holiday_status_id" type="row"/>
                 <field name="date_from" type="col"/>
@@ -695,6 +695,11 @@
             'default_department_id': active_id}
         </field>
         <field name="domain">[('holiday_type','=','employee')]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="view_holiday_pivot" model="ir.ui.view">
@@ -715,7 +720,7 @@
         <field name="model">hr.leave</field>
         <field name="priority">20</field>
         <field name="arch" type="xml">
-            <graph string="Time Off Summary">
+            <graph string="Time Off Summary" sample="1">
                 <field name="employee_id"/>
                 <field name="number_of_days" type="measure"/>
             </graph>
@@ -727,6 +732,11 @@
         <field name="res_model">hr.leave</field>
         <field name="view_mode">graph,pivot,calendar,form</field>
         <field name="context">{'search_default_year': 1, 'search_default_group_employee': 1, 'search_default_group_type': 1}</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p>
+        </field>
     </record>
 
     <record id="action_window_leave_graph" model="ir.actions.act_window.view">

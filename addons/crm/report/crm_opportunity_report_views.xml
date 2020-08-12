@@ -32,7 +32,7 @@
             <field name="name">crm.opportunity.report.graph</field>
             <field name="model">crm.lead</field>
             <field name="arch" type="xml">
-                <graph string="Pipeline Analysis" stacked="True">
+                <graph string="Pipeline Analysis" stacked="True" sample="1">
                     <field name="stage_id" type="row"/>
                     <field name="date_deadline" type="row" interval="month"/>
                     <field name="expected_revenue" type="measure"/>
@@ -45,7 +45,7 @@
             <field name="model">crm.lead</field>
             <field name="priority">20</field>
             <field name="arch" type="xml">
-                <graph string="Leads Analysis" stacked="True">
+                <graph string="Leads Analysis" stacked="True" sample="1">
                     <field name="create_date" interval="month" type="col"/>
                     <field name="team_id" type="col"/>
                 </graph>

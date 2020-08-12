@@ -240,7 +240,7 @@
             <field name="name">hr.expense.graph</field>
             <field name="model">hr.expense</field>
             <field name="arch" type="xml">
-                <graph string="Expenses Analysis">
+                <graph string="Expenses Analysis" sample="1">
                     <field name="date" type="col"/>
                     <field name="employee_id" type="row"/>
                     <field name="total_amount" type="measure"/>
@@ -635,7 +635,7 @@
             <field name="name">hr.expense.sheet.graph</field>
             <field name="model">hr.expense.sheet</field>
             <field name="arch" type="xml">
-                <graph string="Expenses Analysis">
+                <graph string="Expenses Analysis" sample="1">
                     <field name="employee_id" type="col"/>
                     <field name="accounting_date" interval="month" type="row"/>
                     <field name="total_amount" type="measure"/>
@@ -827,6 +827,11 @@
             <field name="context">{
                 'search_default_department_id': [active_id],
                 'default_department_id': active_id}
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    No data yet!
+                </p>
             </field>
         </record>
 

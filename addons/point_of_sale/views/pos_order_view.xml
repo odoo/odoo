@@ -212,6 +212,13 @@
         <field name="res_model">pos.order</field>
         <field name="view_mode">graph,tree,form,kanban,pivot</field>
         <field name="domain">[('state', 'not in', ['draft', 'cancel', 'invoiced'])]</field>
+        <field name="help" type="html">
+            <p class="o_view_nocontent_smiling_face">
+                No data yet!
+            </p><p>
+                Create a new POS order
+            </p>
+        </field>
     </record>
 
     <record id="view_pos_order_tree" model="ir.ui.view">
