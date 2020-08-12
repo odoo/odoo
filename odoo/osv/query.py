@@ -1,16 +1,23 @@
 # -*- coding: utf-8 -*-
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
+import re
 import warnings
 from zlib import crc32
 
 from odoo.tools import lazy_property
 
+IDENT_RE = re.compile(r'^[a-z_][a-z0-9_$]*$', re.I)
 
-def _quote(to_quote):
-    if '"' not in to_quote:
-        return '"%s"' % to_quote
-    return to_quote
+
+def _from_table(table, alias):
+    """ Return a FROM clause element from ``table`` and ``alias``. """
+    if alias == table:
+        return f'"{alias}"'
+    elif IDENT_RE.match(table):
+        return f'"{table}" AS "{alias}"'
+    else:
+        return f'({table}) AS "{alias}"'
 
 
 def _generate_table_alias(src_table_alias, link):
@@ -44,36 +51,36 @@ class Query(object):
     """ Simple implementation of a query object, managing tables with aliases,
     join clauses (with aliases, condition and parameters), where clauses (with
     parameters), order, limit and offset.
+
+    :param cr: database cursor (for lazy evaluation)
+    :param alias: name or alias of the table
+    :param table: if given, a table expression (identifier or query)
     """
 
-    def __init__(self, cr, table, where_clause=None, where_params=()):
+    def __init__(self, cr, alias, table=None):
         # database cursor
         self._cr = cr
 
         # tables {alias: table}
-        self._tables = {table: table}
+        self._tables = {alias: table or alias}
 
         # joins {alias: (kind, table, condition, condition_params)}
         self._joins = {}
 
-        # holds the list of WHERE clause elements, to be joined with
-        # 'AND' when generating the final query
-        self._where_clauses = [where_clause] if where_clause else []
-
-        # holds the parameters for the formatting of `where_clause`, to be
-        # passed to psycopg's execute method.
-        self._where_params = list(where_params)
+        # holds the list of WHERE clause elements (to be joined with 'AND'), and
+        # the list of parameters
+        self._where_clauses = []
+        self._where_params = []
 
         # order, limit, offset
         self.order = None
         self.limit = None
         self.offset = None
 
-    def add_table(self, table, alias=None):
+    def add_table(self, alias, table=None):
         """ Add a table with a given alias to the from clause. """
-        alias = alias or table
         assert alias not in self._tables and alias not in self._joins, "Alias %r already in %s" % (alias, str(self))
-        self._tables[alias] = table
+        self._tables[alias] = table or alias
 
     def add_where(self, where_clause, where_params=()):
         """ Add a condition to the where clause. """
@@ -116,7 +123,7 @@ class Query(object):
         """ Return the SELECT query as a pair ``(query_string, query_params)``. """
         from_clause, where_clause, params = self.get_sql()
         query_str = 'SELECT {} FROM {} WHERE {}{}{}{}'.format(
-            ", ".join(args or [_quote(next(iter(self._tables))) + ".id"]),
+            ", ".join(args or [f'"{next(iter(self._tables))}".id']),
             from_clause,
             where_clause or "TRUE",
             (" ORDER BY %s" % self.order) if self.order else "",
@@ -127,13 +134,11 @@ class Query(object):
 
     def get_sql(self):
         """ Returns (query_from, query_where, query_params). """
-        tables = []
+        tables = [_from_table(table, alias) for alias, table in self._tables.items()]
         joins = []
         params = []
-        for alias, table in self._tables.items():
-            tables.append(f'"{table}"' if alias == table else f'"{table}" AS "{alias}"')
         for alias, (kind, table, condition, condition_params) in self._joins.items():
-            joins.append(f'{kind} "{table}" AS "{alias}" ON ({condition})')
+            joins.append(f'{kind} {_from_table(table, alias)} ON ({condition})')
             params.extend(condition_params)
 
         from_clause = " ".join([", ".join(tables)] + joins)
@@ -165,10 +170,7 @@ class Query(object):
     def tables(self):
         warnings.warn("deprecated Query.tables, use Query.get_sql() instead",
                       DeprecationWarning)
-        return tuple(
-            f'"{table}"' if alias == table else f'"{table}" AS "{alias}"'
-            for alias, table in self._tables
-        )
+        return tuple(_from_table(table, alias) for alias, table in self._tables.items())
 
     @property
     def where_clause(self):
@@ -184,4 +186,4 @@ class Query(object):
         lhs_alias, rhs_table, lhs_column, rhs_column, link = connection
         kind = '' if implicit else ('LEFT JOIN' if outer else 'JOIN')
         rhs_alias = self._join(kind, lhs_alias, lhs_column, rhs_table, rhs_column, link, extra, extra_params)
-        return rhs_alias, f'"{rhs_table}" AS "{rhs_alias}"'
+        return rhs_alias, _from_table(rhs_table, rhs_alias)
