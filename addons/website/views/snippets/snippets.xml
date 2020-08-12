@@ -529,9 +529,13 @@
          data-no-check="true"
          groups="website.group_website_designer">
         <we-checkbox string="Sign In" data-customize-website-views="portal.user_sign_in" data-reload="/"/>
-        <we-colorpicker string="Colors"
-                        data-customize-website-color="" data-color="menu"
-                        data-with-combinations="true"/>
+        <we-row string="Colors">
+            <we-colorpicker data-customize-website-color="" data-color="menu"
+                            data-with-combinations="true"/>
+            <we-colorpicker data-dependencies="header_boxed_opt"
+                            data-customize-website-color="" data-color="header-boxed"
+                            data-with-combinations="true"/>
+        </we-row>
         <we-checkbox id="option_header_shadow" string="Shadow"
                      data-customize-website-views="website.header_shadow"
                      data-select-class="shadow"
@@ -589,6 +593,9 @@
             <we-button data-name="header_minimalist_opt"
                        data-customize-website-views="website.template_header_minimalist"
                        data-customize-website-variable="'minimalist'">Minimalist</we-button>
+            <we-button data-name="header_boxed_opt"
+                       data-customize-website-views="website.template_header_boxed"
+                       data-customize-website-variable="'boxed'">Boxed</we-button>
         </we-select>
 
         <!-- Header Sidebar Template - Options -->

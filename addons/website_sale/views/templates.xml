@@ -163,6 +163,16 @@
         </xpath>
     </template>
 
+    <template id="template_header_boxed" inherit_id="website.template_header_boxed">
+        <xpath expr="//t[@t-call='portal.placeholder_user_sign_in']" position="before">
+            <t t-call="website_sale.header_cart_link">
+                <t t-set="_text" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
     <!-- Products Search Bar input-group template -->
     <template id="website_sale_products_search_box" inherit_id="website.website_search_box" primary="True">
         <xpath expr="//input[@name='search']" position="attributes">
