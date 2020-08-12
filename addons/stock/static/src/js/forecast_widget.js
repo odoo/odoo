@@ -14,6 +14,8 @@ const ForecastWidgetField = AbstractField.extend({
         if (!forecastData) {
             this.$el.html('');
         } else {
+            // Don't display the graph button for non-storable products or if was explicited.
+            forecastData.hideReportButton = this.recordData.product_type !== 'product';
             this.$el.html(QWeb.render('stock.forecastWidget', forecastData));
             this.$el.on('click', this._onOpenReport.bind(this));
         }
