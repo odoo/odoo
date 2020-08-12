@@ -9,7 +9,6 @@ import werkzeug
 from odoo import api, fields, models
 from odoo import tools
 from odoo.addons import website
-from odoo.addons.http_routing.models.ir_http import url_for
 from odoo.exceptions import AccessError
 from odoo.osv import expression
 from odoo.http import request
@@ -431,13 +430,10 @@ class View(models.Model):
                 ]
 
             qcontext.update(dict(
-                self._context.copy(),
                 main_object=self,
                 website=request.website,
                 is_view_active=request.website.is_view_active,
-                url_for=url_for,
                 res_company=request.website.company_id.sudo(),
-                languages=request.env['res.lang'].get_available(),
                 translatable=translatable,
                 editable=editable,
             ))

@@ -156,9 +156,6 @@
         <!-- Background now controlled by css configuration, using color combinations -->
         <attribute name="class" add="o_colored_level o_cc" separator=" "/>
     </xpath>
-    <xpath expr="//div[hasclass('o_footer_copyright')]//span[hasclass('o_footer_copyright_name')]" position="after">
-        <t t-call="website.language_selector"/>
-    </xpath>
     <xpath expr="//t[@t-call='web.brand_promotion']/.." position="attributes">
         <attribute name="class" add="o_not_editable" separator=" "/>
         <attribute name="t-if">not editable</attribute>
@@ -594,25 +591,14 @@
     </xpath>
 </template>
 
-<template id="language_selector" name="Language Selector">
-    <ul class="js_language_selector mb0 list-inline" t-if="(request and request.is_frontend_multilang and len(languages) &gt; 1) or (website and (editable or translatable))">
-        <li class="list-inline-item">
-            <div class="dropup">
-                <button class="btn btn-sm btn-secondary dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
-                    <span t-esc="list(filter(lambda lg : lg[0] == lang, languages))[0][2].split('/').pop()"/>
-                    <span class="caret ml4"/>
-                </button>
-                <div class="dropdown-menu" role="menu">
-                    <t t-foreach="languages" t-as="lg">
-                        <a t-att-href="url_for(request.httprequest.path + '?' + keep_query(), lang_code=lg[0])"
-                           class="dropdown-item js_change_lang"
-                           t-att-data-url_code="lg[1]">
-                            <t t-esc="lg[2].split('/').pop()"/>
-                        </a>
-                    </t>
-                </div>
-            </div>
-        </li>
+<template id="language_selector" inherit_id="portal.language_selector">
+    <!-- Always show the language selector on editable websites -->
+    <xpath expr="//t[@t-set='language_selector_visible']" position="after">
+        <t t-set="language_selector_visible" t-value="language_selector_visible or (website and (editable or translatable))"/>
+    </xpath>
+
+    <!-- Add the button to add a language -->
+    <xpath expr="//ul/li" position="after">
         <li groups="website.group_website_publisher" class="list-inline-item">
             <t t-set="url_return" t-value="quote_plus(url_for('', '[lang]') + '?' + keep_query())"/>
             <a class="d-none d-sm-block" t-attf-href="/web#action=base.action_view_base_language_install&amp;website_id=#{website.id if website else ''}&amp;url_return=#{url_return}">
@@ -620,7 +606,7 @@
                 Add a language...
             </a>
         </li>
-    </ul>
+    </xpath>
 </template>
 
 <template id="record_cover">
