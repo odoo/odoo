@@ -986,7 +986,7 @@ class HolidaysRequest(models.Model):
 
                 split_leaves.filtered(lambda l: l.state in 'validate')._validate_leave_request()
 
-            values = holiday._prepare_holiday_values(employees)
+            values = holiday._prepare_employees_holiday_values(employees)
             leaves = self.env['hr.leave'].with_context(
                 tracking_disable=True,
                 mail_activity_automation_skip=True,
