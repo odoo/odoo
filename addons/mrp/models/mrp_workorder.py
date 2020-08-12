@@ -266,6 +266,12 @@ class MrpWorkorder(models.Model):
                     qties_done_per_lot[finished_workorder_line.lot_id.id].append(finished_workorder_line.qty_done)
 
             qty_to_produce = production.product_qty
+            if production.product_id.tracking == 'serial':
+                qty_to_produce = production.product_uom_id._compute_quantity(
+                    production.product_qty,
+                    production.product_id.uom_id,
+                    round=False
+                )
             allowed_lot_ids = self.env['stock.production.lot']
             qty_produced = sum([max(qty_dones) for qty_dones in qties_done_per_lot.values()])
             if float_compare(qty_produced, qty_to_produce, precision_rounding=rounding) < 0:
@@ -301,12 +307,24 @@ class MrpWorkorder(models.Model):
         self.mapped('leave_id').unlink()
         return super(MrpWorkorder, self).unlink()
 
+    def _get_real_uom_qty(self, qty, to_production_uom=False):
+        if self.product_id.tracking == 'serial' and self.production_id.product_uom_id.uom_type != 'reference':
+            if to_production_uom:
+                uom_from = self.product_uom_id
+                uom_to = self.production_id.product_uom_id
+            else:
+                uom_from = self.production_id.product_uom_id
+                uom_to = self.product_uom_id
+            return uom_from._compute_quantity(qty, uom_to, round=False)
+        return qty
+
     @api.depends('production_id.product_qty', 'qty_produced')
     def _compute_is_produced(self):
         self.is_produced = False
         for order in self.filtered(lambda p: p.production_id):
             rounding = order.production_id.product_uom_id.rounding
-            order.is_produced = float_compare(order.qty_produced, order.production_id.product_qty, precision_rounding=rounding) >= 0
+            production_qty = order._get_real_uom_qty(order.production_id.product_qty)
+            order.is_produced = float_compare(order.qty_produced, production_qty, precision_rounding=rounding) >= 0
 
     @api.depends('time_ids.duration', 'qty_produced')
     def _compute_duration(self):
@@ -394,6 +412,7 @@ class MrpWorkorder(models.Model):
         )
         for move in moves:
             qty_to_consume = self._prepare_component_quantity(move, self.qty_producing)
+            qty_to_consume = self._get_real_uom_qty(qty_to_consume, True)
             line_values = self._generate_lines_values(move, qty_to_consume)
             self.env['mrp.workorder.line'].create(line_values)
 
@@ -431,6 +450,7 @@ class MrpWorkorder(models.Model):
 
                     qty_already_consumed += wl.qty_done
                 qty_to_consume = self._prepare_component_quantity(move, workorder.qty_producing)
+                qty_to_consume = self._get_real_uom_qty(qty_to_consume, True)
                 wl_to_unlink.unlink()
                 if float_compare(qty_to_consume, qty_already_consumed, precision_rounding=rounding) > 0:
                     line_values = workorder._generate_lines_values(move, qty_to_consume - qty_already_consumed)
@@ -497,7 +517,8 @@ class MrpWorkorder(models.Model):
 
         # Test if the production is done
         rounding = self.production_id.product_uom_id.rounding
-        if float_compare(self.qty_produced, self.production_id.product_qty, precision_rounding=rounding) < 0:
+        production_qty = self._get_real_uom_qty(self.qty_production)
+        if float_compare(self.qty_produced, production_qty, precision_rounding=rounding) < 0:
             previous_wo = self.env['mrp.workorder']
             if self.product_tracking != 'none':
                 previous_wo = self.env['mrp.workorder'].search([
@@ -529,7 +550,7 @@ class MrpWorkorder(models.Model):
         2. Save final lot and quantity producing to suggest on next workorder
         """
         self.ensure_one()
-        final_lot_quantity = self.qty_production
+        final_lot_quantity = self._get_real_uom_qty(self.qty_production)
         rounding = self.product_uom_id.rounding
         # Get the max quantity possible for current lot in other workorders
         for workorder in (self.production_id.workorder_ids - self):
@@ -569,9 +590,10 @@ class MrpWorkorder(models.Model):
 
     def _start_nextworkorder(self):
         rounding = self.product_id.uom_id.rounding
+        production_qty = self._get_real_uom_qty(self.qty_production)
         if self.next_work_order_id.state == 'pending' and (
                 (self.operation_id.batch == 'no' and
-                 float_compare(self.qty_production, self.qty_produced, precision_rounding=rounding) <= 0) or
+                 float_compare(production_qty, self.qty_produced, precision_rounding=rounding) <= 0) or
                 (self.operation_id.batch == 'yes' and
                  float_compare(self.operation_id.batch_size, self.qty_produced, precision_rounding=rounding) <= 0)):
             self.next_work_order_id.state = 'ready'
@@ -759,7 +781,8 @@ class MrpWorkorder(models.Model):
     @api.depends('qty_production', 'qty_produced')
     def _compute_qty_remaining(self):
         for wo in self:
-            wo.qty_remaining = float_round(wo.qty_production - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding)
+            production_qty = wo._get_real_uom_qty(wo.qty_production)
+            wo.qty_remaining = float_round(production_qty - wo.qty_produced, precision_rounding=wo.production_id.product_uom_id.rounding)
 
     def _get_conflicted_workorder_ids(self):
         """Get conlicted workorder(s) with self.
