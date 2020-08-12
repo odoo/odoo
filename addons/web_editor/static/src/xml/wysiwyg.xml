@@ -125,7 +125,7 @@
             <t t-call="wysiwyg.widgets.files.submenu"/>
             <div class="form-text o_we_error_text"/>
             <div class="o_we_existing_attachments"/>
-            <div class="mt-4 text-center mx-auto">
+            <div class="mt-4 text-center mx-auto o_we_load_more">
                 <button class="btn btn-primary o_load_more d-none" type="button">Load more...</button>
                 <div class="mt-4 o_load_done_msg d-none">
                     <span><i>All images have been loaded</i></span>
@@ -170,12 +170,17 @@
             <t t-set="searchPlaceholder">Search an image</t>
             <t t-set="urlWarningTitle">The URL does not contain any image. The file will be added in the document section.</t>
             <div class="d-flex justify-content-end flex-grow-1 pr-3">
-                <div t-attf-class="custom-control custom-switch #{__debug__ or 'd-none'}">
+                <div t-attf-class="custom-control custom-switch #{__debug__ and 'd-flex' or 'd-none'} align-items-center mr-2">
                     <input class="o_we_show_optimized ml-2 custom-control-input" type="checkbox" id="o_we_show_optimized_switch"/>
                     <label class="custom-control-label" for="o_we_show_optimized_switch">
                         Show optimized images
                     </label>
                 </div>
+                <select class="custom-select o_we_search_select">
+                    <option value="all">All</option>
+                    <option value="database">My Images</option>
+                    <option value="media-library">Illustrations</option>
+                </select>
             </div>
         </t>
     </t>
@@ -288,13 +293,21 @@
 
     <t t-name="wysiwyg.widgets.image.existing.attachments">
         <div class="o_we_existing_attachments o_we_images d-flex flex-wrap w-100 justify-content-between align-items-stretch my-0">
-            <div t-if="!attachments.length" class="o_nocontent_help">
-                <p class="o_empty_folder_image">No images found.</p>
-                <p class="o_empty_folder_subtitle">You can upload images with the button located in the top left of the screen.</p>
-            </div>
+            <t t-if="!widget.hasContent()">
+                <div t-if="widget.needle" class="o_nocontent_help">
+                    <p class="o_empty_folder_image">No images found.</p>
+                    <p class="o_empty_folder_subtitle">You can upload images with the button located in the top left of the screen.</p>
+                </div>
+                <div t-else="" class="o_we_search_prompt">
+                    <h2>Get the perfect image by searching in our library of copyright free photos and illustrations.</h2>
+                </div>
+            </t>
             <t t-else="">
-                <t t-foreach="attachments" t-as="attachment">
+                <t t-if="['all', 'database'].includes(widget.searchService)" t-foreach="attachments" t-as="attachment">
                     <t t-call="wysiwyg.widgets.image.existing.attachment"/>
+                </t>
+                <t t-if="['all', 'media-library'].includes(widget.searchService)" t-foreach="libraryMedia" t-as="media">
+                    <t t-call="wysiwyg.widgets.image.library_media"/>
                 </t>
                 <!-- 20 placeholders is just enough for a 5K screen, change this if ImageWidget.MIN_ROW_HEIGHT changes -->
                 <t t-foreach="20">
@@ -309,10 +322,18 @@
         <div t-attf-class="o_existing_attachment_cell position-relative bg-light #{isOptimized and 'o_we_attachment_optimized d-none' or ''} align-items-center justify-content-center" t-att-data-id="attachment.id">
             <t t-call="wysiwyg.widgets.file.existing.remove"/>
             <div class="o_we_media_dialog_img_wrapper">
-                <!-- 256 is 2 * ImageWidget.MIN_ROW_HEIGHT, hopefully the highest display width of any image -->
-                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.image_src}?height=256" t-att-alt="attachment.name" t-att-title="attachment.name"/>
+                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{attachment.thumbnail_src or attachment.image_src}" t-att-alt="attachment.name" t-att-title="attachment.name"/>
             </div>
             <span t-if="isOptimized" class="badge badge-success">Optimized</span>
+        </div>
+    </t>
+
+    <t t-name="wysiwyg.widgets.image.library_media">
+        <div t-attf-class="o_existing_attachment_cell position-relative bg-light align-items-center justify-content-center o_library_media_cell" t-att-data-media-id="media.id">
+            <div class="o_we_media_dialog_img_wrapper">
+                <img class="img img-fluid o_we_attachment_highlight" t-attf-src="#{media.thumbnail_url}" t-att-title="media.tooltip or ''" crossorigin="anonymous"/>
+                <a t-if="media.author" class="o_we_media_author" t-att-href="media.author_link" target="_blank" t-esc="media.author"/>
+            </div>
         </div>
     </t>
 
