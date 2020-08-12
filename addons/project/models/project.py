@@ -155,11 +155,17 @@ class Project(models.Model):
         return [(6, 0, [self.env.uid])]
 
     name = fields.Char("Name", index=True, required=True, tracking=True)
-    description = fields.Text()
+    description = fields.Html()
     active = fields.Boolean(default=True,
         help="If the active field is set to False, it will allow you to hide the project without removing it.")
     sequence = fields.Integer(default=10, help="Gives the sequence order when displaying a list of Projects.")
     partner_id = fields.Many2one('res.partner', string='Customer', auto_join=True, tracking=True, domain="['|', ('company_id', '=', False), ('company_id', '=', company_id)]")
+    partner_email = fields.Char(
+        compute='_compute_partner_email', inverse='_inverse_partner_email',
+        string='Email', readonly=False, store=True)
+    partner_phone = fields.Char(
+        compute='_compute_partner_phone', inverse='_inverse_partner_phone',
+        string="Phone", readonly=False, store=True)
     company_id = fields.Many2one('res.company', string='Company', required=True, default=lambda self: self.env.company)
     currency_id = fields.Many2one('res.currency', related="company_id.currency_id", string="Currency", readonly=True)
     analytic_account_id = fields.Many2one('account.analytic.account', string="Analytic Account", copy=False, ondelete='set null',
@@ -236,6 +242,28 @@ class Project(models.Model):
     _sql_constraints = [
         ('project_date_greater', 'check(date >= date_start)', 'Error! project start-date must be lower than project end-date.')
     ]
+
+    @api.depends('partner_id.email')
+    def _compute_partner_email(self):
+        for project in self:
+            if project.partner_id and project.partner_id.email != project.partner_email:
+                project.partner_email = project.partner_id.email
+
+    def _inverse_partner_email(self):
+        for project in self:
+            if project.partner_id and project.partner_email != project.partner_id.email:
+                project.partner_id.email = project.partner_email
+
+    @api.depends('partner_id.phone')
+    def _compute_partner_phone(self):
+        for project in self:
+            if project.partner_id and project.partner_phone != project.partner_id.phone:
+                project.partner_phone = project.partner_id.phone
+
+    def _inverse_partner_phone(self):
+        for project in self:
+            if project.partner_id and project.partner_phone != project.partner_id.phone:
+                project.partner_id.phone = project.partner_phone
 
     def _compute_alias_enabled(self):
         for project in self:
@@ -396,7 +424,11 @@ class Project(models.Model):
             self.mapped('tasks').message_subscribe(
                 partner_ids=partner_ids, channel_ids=channel_ids, subtype_ids=task_subtypes)
         if partner_ids:
-            self.allowed_portal_user_ids |= self.env['res.partner'].browse(partner_ids).user_ids.filtered('share')
+            all_users = self.env['res.partner'].browse(partner_ids).user_ids
+            portal_users = all_users.filtered('share')
+            internal_users = all_users - portal_users
+            self.allowed_portal_user_ids |= portal_users
+            self.allowed_internal_user_ids |= internal_users
         return res
 
     def message_unsubscribe(self, partner_ids=None, channel_ids=None):
@@ -1384,7 +1416,7 @@ class ProjectTags(models.Model):
         return randint(1, 11)
 
     name = fields.Char('Name', required=True)
-    color = fields.Integer(string='Color Index', default=_get_default_color)
+    color = fields.Integer(string='Color', default=_get_default_color)
 
     _sql_constraints = [
         ('name_uniq', 'unique (name)', "Tag name already exists!"),

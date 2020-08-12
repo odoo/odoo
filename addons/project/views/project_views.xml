@@ -64,7 +64,7 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Click <i>Create</i> to start a new task
+                    No tasks found. Let's create one!
                 </p><p>
                     To get things done, use activities and status on tasks.<br/>
                     Chat in real time or by email to collaborate efficiently.
@@ -79,7 +79,7 @@
             <field name="search_view_id" ref="project.view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Click <i>Create</i> to start a new task
+                    No tasks found. Let's create one!
                 </p><p>
                     To get things done, use activities and status on tasks.<br/>
                     Chat in real time or by email to collaborate efficiently.
@@ -284,22 +284,44 @@
                             </div>
                         </div>
                     </div>
-                    <field name="description" placeholder="Describe your project..."/>
                     <notebook>
+                        <page name="description_page" string="Description">
+                            <field name="description" nolabel="1" placeholder="Describe your project..." type="html"/>
+                            <div class="oe_clear"/>
+                        </page>
                         <page name="settings" string="Settings">
                             <group>
                                 <group>
                                     <field name="active" invisible="1"/>
                                     <field name="user_id" string="Project Manager" widget="many2one_avatar_user" attrs="{'readonly':[('active','=',False)]}" domain="[('share', '=', False)]"/>
                                     <field name="partner_id" string="Customer"/>
+                                    <field name="partner_phone" widget="phone"
+                                           attrs="{'invisible': [('partner_id', '=', False)]}"/>
+                                    <field name="partner_email" widget="email"
+                                           attrs="{'invisible': [('partner_id', '=', False)]}"/>
                                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                                        <label for="alias_enabled" class="font-weight-bold" string="Create tasks by sending an email to"/>
-                                        <field name="alias_enabled"/>
-                                        <span attrs="{'invisible': [('alias_enabled', '=', False)]}">
-                                            <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_enabled', '=', True)]}"/>@<field name="alias_domain" class="oe_inline" readonly="1" />
+                                        <!-- Always display the whole alias in edit mode. It depends in read only -->
+                                        <label for="alias_enabled" class="font-weight-bold" string="Create tasks by sending an email"/>
+                                        <field name="alias_enabled" invisible="1"/>
+                                        <span>
+                                            <span class="font-weight-bold oe_read_only" attrs="{'invisible':  [('alias_name', '=', False)]}">to </span>
+                                            <span class="font-weight-bold oe_edit_only">to </span>
+                                            <field name="alias_name" class="oe_inline"/>
+                                            <span class="oe_read_only" attrs="{'invisible':  [('alias_name', '=', False)]}">@</span>
+                                            <span class="oe_edit_only">@</span>
+                                            <field name="alias_domain"
+                                                   attrs="{'invisible':  [('alias_name', '=', False)]}"
+                                                   class="oe_inline oe_read_only"
+                                                   readonly="1"/>
+                                            <field name="alias_domain"
+                                                   class="oe_inline oe_edit_only"
+                                                   readonly="1"/>
                                         </span>
                                     </div>
-                                    <field name="alias_contact" class="oe_inline oe_edit_only" string="Accept Emails From" attrs="{'invisible': ['|', ('alias_domain', '=', False), ('alias_enabled', '=', False)]}"/>
+                                    <!-- the alias contact must appear when the user start typing and it must disappear
+                                        when the string is deleted. -->
+                                    <field name="alias_contact" class="oe_inline oe_edit_only" string="Accept Emails From"
+                                           attrs="{'invisible': ['|', ('alias_name', '=', ''), ('alias_name', '=', False)]}"/>
                                 </group>
                                 <group>
                                     <field name="analytic_account_id" domain="['|', ('company_id', '=', company_id), ('company_id', '=', False)]" context="{'default_partner_id': partner_id}" groups="analytic.group_analytic_accounting"/>
@@ -404,7 +426,7 @@
                     <field name="sequence" optional="show" widget="handle"/>
                     <field name="message_needaction" invisible="1"/>
                     <field name="active" invisible="1"/>
-                    <field name="name" string="Name"/>
+                    <field name="name" string="Name" class="font-weight-bold"/>
                     <field name="user_id" optional="show" string="Project Manager" widget="many2one_avatar_user"/>
                     <field name="partner_id" optional="show" string="Customer"/>
                     <field name="analytic_account_id" optional="hide"/>
@@ -413,37 +435,6 @@
                     <field name="label_tasks" optional="hide"/>
                     <field name="company_id" optional="show"  groups="base.group_multi_company"/>
                 </tree>
-            </field>
-        </record>
-
-        <record id="project_view_kanban" model="ir.ui.view">
-            <field name="name">project.project.kanban</field>
-            <field name="model">project.project</field>
-            <field name="arch" type="xml">
-                <kanban class="o_kanban_mobile">
-                    <field name="user_id" string="Project Manager"/>
-                    <templates>
-                        <t t-name="kanban-box">
-                            <div t-attf-class="oe_kanban_content oe_kanban_global_click o_kanban_get_form">
-                                <div class="row">
-                                    <div class="col-12">
-                                        <strong><field name="name" string="Project Name"/></strong>
-                                    </div>
-                                </div>
-                                <div class="row">
-                                    <div class="col-8">
-                                        <field name="partner_id" string="Contact"/>
-                                    </div>
-                                    <div class="col-4">
-                                        <div class="oe_kanban_bottom_right float-right">
-                                            <field name="user_id" widget="many2one_avatar_user"/>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </t>
-                    </templates>
-                </kanban>
             </field>
         </record>
 
@@ -459,12 +450,10 @@
                         <field name="allow_recurring_tasks" groups="project.group_project_recurring_tasks" />
                     </group>
                     <div name="alias_def" colspan="2" attrs="{'invisible': [('alias_domain', '=', False)]}">
-                        <label for="alias_enabled" class="oe_inline" string="Create tasks by sending an email to"/>
-                        <field name="alias_enabled"/>
-                        <span attrs="{'invisible': [('alias_enabled', '=', False)]}">
-                            <field name="alias_name" class="oe_inline" attrs="{'required': [('alias_enabled', '=', True)]}" placeholder="e.g. office-party"/>
-                            @
-                            <field name="alias_domain" class="oe_inline" readonly="1" />
+                        <label for="alias_name" class="oe_inline" string="Create tasks by sending an email to"/>
+                        <field name="alias_enabled" invisible="1"/>
+                        <span>
+                            <field name="alias_name" class="oe_inline" placeholder="e.g. office-party"/>@<field name="alias_domain" class="oe_inline" readonly="1" />
                         </span>
                     </div>
                 </form>
@@ -585,7 +574,7 @@
             <field name="target">main</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a project
+                    No projects found. Let's create one!
                 </p><p>
                     Projects regroup tasks on the same topic and each have their own dashboard.
                 </p>
@@ -599,12 +588,12 @@
             <field name="view_mode">tree,kanban,form</field>
             <field name="view_ids" eval="[(5, 0, 0),
                 (0, 0, {'view_mode': 'tree', 'view_id': ref('view_project')}),
-                (0, 0, {'view_mode': 'kanban', 'view_id': ref('project_view_kanban')})]"/>
+                (0, 0, {'view_mode': 'kanban', 'view_id': ref('view_project_kanban')})]"/>
             <field name="search_view_id" ref="view_project_project_filter"/>
             <field name="context">{}</field>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a project
+                   No projects found. Let's create one!
                 </p><p>
                     Projects regroup tasks on the same topic and each have their own dashboard.
                 </p>
@@ -677,14 +666,14 @@
                         </group>
                         <group>
                             <field name="project_id" required="1" domain="[('active', '=', True), ('company_id', '=', company_id)]"/>
-                            <field name="user_id"
-                                class="o_task_user_field"
-                                domain="[('share', '=', False)]"/>
                             <field
                                 name="parent_id"
                                 domain="[('parent_id', '=', False)]"
                                 attrs="{'invisible' : [('allow_subtasks', '=', False)]}"
                             />
+                            <field name="user_id"
+                                class="o_task_user_field"
+                                domain="[('share', '=', False)]"/>
                             <field name="date_deadline" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
                             <field name="recurring_task" attrs="{'invisible': [('allow_recurring_tasks', '=', False)]}" />
                             <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color', 'no_create_edit': True}"/>
@@ -861,7 +850,7 @@
                                             <span class="fa fa-ellipsis-v"/>
                                         </a>
                                         <div class="dropdown-menu" role="menu">
-                                            <a t-if="widget.editable" role="menuitem" type="set_cover" data-auto-open="1" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
+                                            <a t-if="widget.editable" role="menuitem" type="set_cover" class="dropdown-item" data-field="displayed_image_id">Set Cover Image</a>
                                             <a name="%(portal.portal_share_action)d" role="menuitem" type="action" class="dropdown-item">Share</a>
                                             <a t-if="widget.editable" role="menuitem" type="edit" class="dropdown-item">Edit</a>
                                             <a t-if="widget.editable" role="menuitem" class="dropdown-item" name="toggle_active" type="object">
@@ -915,18 +904,17 @@
                 <tree string="Tasks" multi_edit="1" sample="1">
                     <field name="message_needaction" invisible="1" readonly="1"/>
                     <field name="is_closed" invisible="1" />
-                    <field name="sequence" invisible="not context.get('seq_visible', False)" readonly="1"/>
+                    <field name="sequence" invisible="1" readonly="1"/>
                     <field name="name"/>
-                    <!-- YTI TODO user_invisible and seq_visible seem to be useless -->
-                    <field name="project_id" invisible="context.get('user_invisible', False)" optional="show" readonly="1"/>
+                    <field name="project_id" optional="show" readonly="1"/>
                     <field name="partner_id" optional="hide"/>
                     <field name="parent_id" groups="project.group_subtask_project" optional="hide"/>
-                    <field name="user_id" invisible="context.get('user_invisible', False)" optional="show" widget="many2one_avatar_user"/>
+                    <field name="user_id" optional="show" widget="many2one_avatar_user"/>
                     <field name="company_id" groups="base.group_multi_company" optional="show"/>
                     <field name="activity_ids" widget="list_activity" optional="show"/>
                     <field name="date_deadline" optional="hide" widget="remaining_days" attrs="{'invisible': [('is_closed', '=', True)]}"/>
+                    <field name="tag_ids" widget="many2many_tags" options="{'color_field': 'color'}"/>
                     <field name="stage_id" invisible="context.get('set_visible',False)" optional="show" readonly="1"/>
-                    <field name="tag_ids" optional="hide" widget="many2many_tags" options="{'color_field': 'color'}"/>
                 </tree>
             </field>
         </record>
@@ -1013,10 +1001,10 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new task
+                    No tasks found. Let's create one!
                 </p><p>
-                    Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br/>
-                    You can track progress, discuss on tasks, attach documents, etc.
+                    To get things done, use activities and status on tasks.<br/>
+                    Chat in real time or by email to collaborate efficiently.
                 </p>
             </field>
         </record>
@@ -1029,10 +1017,10 @@
             <field name="search_view_id" ref="view_task_search_form"/>
             <field name="help" type="html">
                 <p class="o_view_nocontent_smiling_face">
-                    Create a new task
+                    No tasks found. Let's create one!
                 </p><p>
-                    Odoo's project management allows you to manage the pipeline of your tasks efficiently.<br/>
-                    You can track progress, discuss on tasks, attach documents, etc.
+                     To get things done, use activities and status on tasks.<br/>
+                    Chat in real time or by email to collaborate efficiently.
                 </p>
             </field>
         </record>
@@ -1136,10 +1124,10 @@
             <field name="res_model">project.tags</field>
             <field name="help" type="html">
               <p class="o_view_nocontent_smiling_face">
-                Create a new tag
+                No tags found. Let's create one!
               </p>
               <p>
-                Tags are perfect to categorize your tasks.
+                  Tags are perfect to categorize your tasks.
               </p>
             </field>
         </record>

@@ -42,6 +42,9 @@
             <div name="rating_image_container" position="replace">
                 <field name="rating_text" string="Rating"/>
             </div>
+            <xpath expr="//field[@name='is_internal']" position="attributes">
+                <attribute name="invisible">1</attribute>
+            </xpath>
         </field>
     </record>
 
