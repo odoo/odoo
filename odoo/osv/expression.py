@@ -432,7 +432,7 @@ class expression(object):
         self.expression = distribute_not(normalize_domain(domain))
 
         # this object handles all the joins
-        self.query = Query(model.env.cr, model._table) if query is None else query
+        self.query = Query(model.env.cr, model._table, model._table_query) if query is None else query
 
         # parse the domain expression
         self.parse()

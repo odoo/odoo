@@ -316,6 +316,7 @@ class BaseModel(MetaModel('DummyModel', (object,), {'_register': False})):
       correspond to the last one (in the inherits list order).
     """
     _table = None               #: SQL table name used by model if :attr:`_auto`
+    _table_query = None         #: SQL expression of the table's content (optional)
     _sequence = None            #: SQL sequence to use for ID field
     _sql_constraints = []       #: SQL constraints [(name, sql_def, message)]
 
@@ -3058,7 +3059,7 @@ Fields:
             cr, user, context, su = env.args
 
             # make a query object for selecting ids, and apply security rules to it
-            query = Query(self.env.cr, self._table)
+            query = Query(self.env.cr, self._table, self._table_query)
             self._apply_ir_rules(query, 'read')
 
             # the query may involve several tables: we need fully-qualified names
@@ -3321,7 +3322,7 @@ Fields:
         if not self._ids:
             return self
 
-        query = Query(self._cr, self._table)
+        query = Query(self.env.cr, self._table, self._table_query)
         self._apply_ir_rules(query, operation)
         if not query.where_clause:
             return self
@@ -4153,7 +4154,7 @@ Fields:
         if domain:
             return expression.expression(domain, self).query
         else:
-            return Query(self.env.cr, self._table)
+            return Query(self.env.cr, self._table, self._table_query)
 
     def _check_qorder(self, word):
         if not regex_order.match(word):
