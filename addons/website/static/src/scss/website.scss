@@ -933,9 +933,7 @@ header {
             margin-bottom: $spacer;
         }
     }
-}
-
-@if o-website-value('header-template') == 'sidebar' {
+} @else if o-website-value('header-template') == 'sidebar' {
     @include media-breakpoint-up(lg) {
         #wrapwrap {
             // Hack: padding is used by layout option (boxed, etc) so use
@@ -992,6 +990,12 @@ header {
 } @else if o-website-value('header-template') == 'boxed' {
     #wrapwrap:not(.o_header_overlay) .o_header_boxed_background {
         @include o-apply-colors('header-boxed');
+    }
+} @else if o-website-value('header-template') == 'centered_logo' {
+    header .o_header_centered_logo {
+        @include media-breakpoint-up(lg) {
+            width: 50%;
+        }
     }
 }
 
