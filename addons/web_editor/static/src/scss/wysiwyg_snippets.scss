@@ -1060,13 +1060,15 @@ body.editor_enable.editor_has_snippets {
         }
 
         .o_we_image_weight {
-            margin-top: $o-we-sidebar-content-field-spacing;
-            text-align: right;
-            color: $o-we-color-success;
-            line-height: $o-we-sidebar-content-field-height;
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin: $o-we-sidebar-content-field-spacing *.25 $o-we-item-border-width $o-we-sidebar-content-field-spacing*2;
 
-            > .fa {
-                margin-right: $o-we-sidebar-content-field-label-spacing;
+            b {
+                margin-left: $o-we-sidebar-content-field-label-spacing;
+                font: 1em/1 bold $o-we-sidebar-content-field-input-font-family;
+                color: $o-we-color-success;
             }
         }
 
