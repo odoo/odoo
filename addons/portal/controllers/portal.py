@@ -123,25 +123,6 @@ class CustomerPortal(Controller):
 
     _items_per_page = 20
 
-    def _get_archive_groups(self, model, domain=None, fields=None, groupby="create_date", order="create_date desc"):
-        if not model:
-            return []
-        if domain is None:
-            domain = []
-        if fields is None:
-            fields = ['name', 'create_date']
-        groups = []
-        for group in request.env[model]._read_group_raw(domain, fields=fields, groupby=groupby, orderby=order):
-            dates, label = group[groupby]
-            date_begin, date_end = dates.split('/')
-            groups.append({
-                'date_begin': odoo_fields.Date.to_string(odoo_fields.Date.from_string(date_begin)),
-                'date_end': odoo_fields.Date.to_string(odoo_fields.Date.from_string(date_end)),
-                'name': label,
-                'item_count': group[groupby + '_count']
-            })
-        return groups
-
     def _prepare_portal_layout_values(self):
         """Values for /my/* templates rendering.
 
@@ -156,7 +137,6 @@ class CustomerPortal(Controller):
         return {
             'sales_user': sales_user,
             'page_name': 'home',
-            'archive_groups': [],
         }
 
     def _prepare_home_portal_values(self, counters):

@@ -58,7 +58,6 @@ class PortalAccount(CustomerPortal):
             filterby = 'all'
         domain += searchbar_filters[filterby]['domain']
 
-        archive_groups = self._get_archive_groups('account.move', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -81,7 +80,6 @@ class PortalAccount(CustomerPortal):
             'invoices': invoices,
             'page_name': 'invoice',
             'pager': pager,
-            'archive_groups': archive_groups,
             'default_url': '/my/invoices',
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,

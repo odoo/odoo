@@ -44,7 +44,6 @@ class CustomerPortal(CustomerPortal):
 
         domain = []
 
-        archive_groups = self._get_archive_groups('purchase.order', domain) if values.get('my_details') else []
         if date_begin and date_end:
             domain += [('create_date', '>', date_begin), ('create_date', '<=', date_end)]
 
@@ -93,7 +92,6 @@ class CustomerPortal(CustomerPortal):
             'orders': orders,
             'page_name': 'purchase',
             'pager': pager,
-            'archive_groups': archive_groups,
             'searchbar_sortings': searchbar_sortings,
             'sortby': sortby,
             'searchbar_filters': OrderedDict(sorted(searchbar_filters.items())),
