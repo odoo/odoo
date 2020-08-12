@@ -23,6 +23,7 @@
     'data': [
         'security/project_security.xml',
         'security/ir.model.access.csv',
+        'data/digest_data.xml',
         'report/project_report_views.xml',
         'views/analytic_views.xml',
         'views/digest_views.xml',
