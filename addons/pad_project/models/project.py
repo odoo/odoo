@@ -42,8 +42,11 @@ class ProjectTask(models.Model):
 
 
 class ProjectProject(models.Model):
-    _inherit = "project.project"
+    _name = "project.project"
+    _inherit = ["project.project", 'pad.common']
+    _description = 'Project'
 
+    description_pad = fields.Char('Pad URL', pad_content_field='description', copy=False)
     use_pads = fields.Boolean("Use collaborative pads", default=True,
         help="Use collaborative pad for the tasks on this project.")
 
