@@ -112,7 +112,7 @@ class Digest(models.Model):
                 digest.write({'periodicity': 'weekly'})
             digest.next_run_date = digest._get_next_run_date()
 
-    def _action_send_to_user(self, user, tips_count=1):
+    def _action_send_to_user(self, user, tips_count=1, consum_tips=True):
         web_base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url')
 
         rendered_body = self.env['mail.render.mixin']._render_template(
@@ -130,7 +130,7 @@ class Digest(models.Model):
                 'formatted_date': datetime.today().strftime('%B %d, %Y'),
                 'display_mobile_banner': True,
                 'kpi_data': self.compute_kpis(user.company_id, user),
-                'tips': self.compute_tips(user.company_id, user, tips_count=tips_count),
+                'tips': self.compute_tips(user.company_id, user, tips_count=tips_count, consumed=consum_tips),
                 'preferences': self.compute_preferences(user.company_id, user),
             },
             post_process=True
@@ -228,7 +228,7 @@ class Digest(models.Model):
         # filter failed KPIs
         return [kpi for kpi in kpis if kpi['kpi_name'] not in invalid_fields]
 
-    def compute_tips(self, company, user, tips_count=1):
+    def compute_tips(self, company, user, tips_count=1, consumed=True):
         tips = self.env['digest.tip'].search([
             ('user_ids', '!=', user.id),
             '|', ('group_id', 'in', user.groups_id.ids), ('group_id', '=', False)
@@ -237,7 +237,8 @@ class Digest(models.Model):
             self.env['mail.render.mixin']._render_template(tools.html_sanitize(tip.tip_description), 'digest.tip', tip.ids, post_process=True)[tip.id]
             for tip in tips
         ]
-        tips.user_ids += user
+        if consumed:
+            tips.user_ids += user
         return tip_descriptions
 
     def _compute_kpis_actions(self, company, user):
