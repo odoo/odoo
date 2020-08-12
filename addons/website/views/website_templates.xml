@@ -895,6 +895,47 @@
     </xpath>
 </template>
 
+<template id="template_header_centered_logo" inherit_id="website.layout" name="Template Header Centered Logo" active="False">
+    <xpath expr="//header//nav" position="replace">
+        <nav class="navbar navbar-light navbar-expand-lg o_colored_level o_cc">
+            <div id="top_menu_container" class="container">
+                <!-- Navbar Toggler -->
+                <t t-call="website.navbar_toggler"/>
+                <!-- Navbar Collapse -->
+                <div id="top_menu_collapse" class="collapse navbar-collapse o_header_centered_logo order-last order-lg-first">
+                    <t t-call="website.navbar_nav">
+                        <!-- Menu -->
+                        <t t-foreach="website.menu_id.child_id" t-as="submenu">
+                            <t t-call="website.submenu">
+                                <t t-set="item_class" t-value="'nav-item'"/>
+                                <t t-set="link_class" t-value="'nav-link'"/>
+                            </t>
+                        </t>
+                    </t>
+                </div>
+                <!-- Brand -->
+                <t t-call="website.placeholder_header_brand">
+                    <t t-set="_link_class" t-value="'m-0'"/>
+                </t>
+                <!-- Right -->
+                <ul class="nav navbar-nav o_header_centered_logo justify-content-end">
+                    <!-- Sign In -->
+                    <t t-call="portal.placeholder_user_sign_in">
+                        <t t-set="_item_class" t-value="'nav-item ml-3'"/>
+                        <t t-set="_link_class" t-value="'nav-link'"/>
+                    </t>
+                    <!-- User Dropdown -->
+                    <t t-call="portal.user_dropdown">
+                        <t t-set="_icon" t-value="true"/>
+                        <t t-set="_item_class" t-value="'nav-item dropdown ml-3'"/>
+                        <t t-set="_link_class" t-value="'nav-link'"/>
+                    </t>
+                </ul>
+            </div>
+        </nav>
+    </xpath>
+</template>
+
 <!-- Navbar Hamburger Options -->
 <template id="option_header_off_canvas" inherit_id="website.navbar_nav" name="Off-Canvas Header" active="False">
     <xpath expr="//ul[@id='top_menu']" position="attributes">
