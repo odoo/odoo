@@ -5,10 +5,11 @@ const components = {
     FileUploader: require('mail/static/src/components/file_uploader/file_uploader.js'),
 };
 const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
+    afterEach,
+    beforeEach,
+    createRootComponent,
     nextAnimationFrame,
-    start: utilsStart,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 const {
@@ -23,26 +24,19 @@ QUnit.module('components', {}, function () {
 QUnit.module('file_uploader', {}, function () {
 QUnit.module('file_uploader_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
         this.components = [];
 
-        this.createFileUploaderComponent = async props => {
-            const FileUploaderComponent = components.FileUploader;
-            FileUploaderComponent.env = this.env;
-            const fileUploader = new FileUploaderComponent(
-                null,
-                Object.assign({ attachmentLocalIds: [] }, props)
-            );
-            await fileUploader.mount(this.widget.el);
-            this.components.push(fileUploader);
-            return fileUploader;
+        this.createFileUploaderComponent = async otherProps => {
+            const props = Object.assign({ attachmentLocalIds: [] }, otherProps);
+            return createRootComponent(this, components.FileUploader, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            if (this.widget) {
-                this.widget.destroy();
-            }
-            const { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -50,15 +44,7 @@ QUnit.module('file_uploader_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        for (const fileUploader of this.components) {
-            fileUploader.destroy();
-        }
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        delete components.FileUploader.env;
-        this.env = undefined;
+        afterEach(this);
     },
 });
 

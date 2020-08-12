@@ -31,14 +31,14 @@ function factory(dependencies) {
             if ('notification_type' in data) {
                 data2.notification_type = data.notification_type;
             }
-            if ('partner_id' in data) {
+            if ('res_partner_id' in data) {
                 if (!data.partner_id) {
                     data2.partner = [['unlink-all']];
                 } else {
                     data2.partner = [
                         ['insert', {
-                            display_name: data.partner_id[1],
-                            id: data.partner_id[0],
+                            display_name: data.res_partner_id[1],
+                            id: data.res_partner_id[0],
                         }],
                     ];
                 }

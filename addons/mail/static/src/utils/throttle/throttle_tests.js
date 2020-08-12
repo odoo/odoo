@@ -1,11 +1,7 @@
 odoo.define('mail/static/src/utils/throttle/throttle_tests.js', function (require) {
 'use strict';
 
-const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start,
-} = require('mail/static/src/utils/test_utils.js');
+const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
 const throttle = require('mail/static/src/utils/throttle/throttle.js');
 const { nextTick } = require('mail/static/src/utils/utils.js');
 
@@ -16,23 +12,24 @@ QUnit.module('utils', {}, function () {
 QUnit.module('throttle', {}, function () {
 QUnit.module('throttle_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
         this.throttles = [];
 
-        this.start = async (...args) => {
-            const { env, widget } = await start(...args);
+        this.start = async params => {
+            const { env, widget } = await start(Object.assign({}, params, {
+                data: this.data,
+            }));
             this.env = env;
             this.widget = widget;
         };
     },
     afterEach() {
-        utilsAfterEach(this);
         // Important: tests should cleanly intercept cancelation errors that
         // may result from this teardown.
-        this.widget.destroy();
         for (const t of this.throttles) {
             t.clear();
         }
+        afterEach(this);
     },
 });
 

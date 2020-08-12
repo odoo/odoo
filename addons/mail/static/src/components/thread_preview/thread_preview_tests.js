@@ -6,10 +6,11 @@ const components = {
 };
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
-    start: utilsStart,
+    beforeEach,
+    createRootComponent,
+    start,
 } = require('mail/static/src/utils/test_utils.js');
 
 QUnit.module('mail', {}, function () {
@@ -17,18 +18,17 @@ QUnit.module('components', {}, function () {
 QUnit.module('thread_preview', {}, function () {
 QUnit.module('thread_preview_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.createThreadPreviewComponent = async props => {
-            const ThreadPreviewComponent = components.ThreadPreview;
-            ThreadPreviewComponent.env = this.env;
-            this.component = new ThreadPreviewComponent(null, props);
-            delete ThreadPreviewComponent.env;
-            await afterNextRender(() => this.component.mount(this.widget.el));
+            await createRootComponent(this, components.ThreadPreview, {
+                props,
+                target: this.widget.el,
+            });
         };
 
         this.start = async params => {
-            let { env, widget } = await utilsStart(Object.assign({}, params, {
+            const { env, widget } = await start(Object.assign({}, params, {
                 data: this.data,
             }));
             this.env = env;
@@ -36,16 +36,7 @@ QUnit.module('thread_preview_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.component) {
-            this.component.destroy();
-            this.component = undefined;
-        }
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
-        this.env = undefined;
+        afterEach(this);
     },
 });
 

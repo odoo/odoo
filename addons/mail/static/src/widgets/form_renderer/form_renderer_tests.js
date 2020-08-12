@@ -2,9 +2,9 @@ odoo.define('mail/static/src/widgets/form_renderer/form_renderer_tests.js', func
 "use strict";
 
 const {
-    afterEach: utilsAfterEach,
+    afterEach,
     afterNextRender,
-    beforeEach: utilsBeforeEach,
+    beforeEach,
     start,
 } = require('mail/static/src/utils/test_utils.js');
 
@@ -12,7 +12,6 @@ const config = require('web.config');
 const FormView = require('web.FormView');
 const {
     dom: { triggerEvent },
-    fields: { editInput },
 } = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
@@ -20,7 +19,8 @@ QUnit.module('widgets', {}, function () {
 QUnit.module('form_renderer', {}, function () {
 QUnit.module('form_renderer_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
+
         // FIXME archs could be removed once task-2248306 is done
         // The mockServer will try to get the list view
         // of every relational fields present in the main view.
@@ -28,34 +28,31 @@ QUnit.module('form_renderer_tests.js', {
         // but they still need to be defined.
         this.createView = async (viewParams, ...args) => {
             await afterNextRender(async () => {
-                const viewArgs = Object.assign({
-                    archs: {
-                        'mail.activity,false,list': '<tree/>',
-                        'mail.followers,false,list': '<tree/>',
-                        'mail.message,false,list': '<tree/>',
-                    }},
+                const viewArgs = Object.assign(
+                    {
+                        archs: {
+                            'mail.activity,false,list': '<tree/>',
+                            'mail.followers,false,list': '<tree/>',
+                            'mail.message,false,list': '<tree/>',
+                        },
+                    },
                     viewParams,
                 );
-                const { widget } = await start(viewArgs, ...args);
+                const { env, widget } = await start(viewArgs, ...args);
+                this.env = env;
                 this.widget = widget;
             });
         };
     },
     afterEach() {
-        if (this.widget) {
-            this.widget.destroy();
-        }
-        utilsAfterEach(this);
+        afterEach(this);
     },
 });
 
 QUnit.test('basic chatter rendering', async function (assert) {
     assert.expect(1);
 
-    this.data['res.partner'].records = [{
-        id: 2,
-        display_name: "second partner",
-    }];
+    this.data['res.partner'].records.push({ display_name: "second partner", id: 12, });
     await this.createView({
         data: this.data,
         hasView: true,
@@ -70,9 +67,8 @@ QUnit.test('basic chatter rendering', async function (assert) {
                 <div class="oe_chatter"></div>
             </form>
         `,
-        res_id: 2,
+        res_id: 12,
     });
-
     assert.strictEqual(
         document.querySelectorAll(`.o_Chatter`).length,
         1,
@@ -83,13 +79,7 @@ QUnit.test('basic chatter rendering', async function (assert) {
 QUnit.test('basic chatter rendering without followers', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records = [{
-        activity_ids: [],
-        id: 2,
-        display_name: "second partner",
-        message_ids: [],
-        message_follower_ids: [],
-    }];
+    this.data['res.partner'].records.push({ display_name: "second partner", id: 12 });
     await this.createView({
         data: this.data,
         hasView: true,
@@ -107,9 +97,8 @@ QUnit.test('basic chatter rendering without followers', async function (assert) 
                 </div>
             </form>
         `,
-        res_id: 2,
+        res_id: 12,
     });
-
     assert.containsOnce(
         document.body,
         '.o_Chatter',
@@ -145,13 +134,7 @@ QUnit.test('basic chatter rendering without followers', async function (assert) 
 QUnit.test('basic chatter rendering without activities', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records = [{
-        activity_ids: [],
-        id: 2,
-        display_name: "second partner",
-        message_ids: [],
-        message_follower_ids: [],
-    }];
+    this.data['res.partner'].records.push({ display_name: "second partner", id: 12 });
     await this.createView({
         data: this.data,
         hasView: true,
@@ -169,9 +152,8 @@ QUnit.test('basic chatter rendering without activities', async function (assert)
                 </div>
             </form>
         `,
-        res_id: 2,
+        res_id: 12,
     });
-
     assert.containsOnce(
         document.body,
         '.o_Chatter',
@@ -207,13 +189,7 @@ QUnit.test('basic chatter rendering without activities', async function (assert)
 QUnit.test('basic chatter rendering without messages', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records = [{
-        activity_ids: [],
-        id: 2,
-        display_name: "second partner",
-        message_ids: [],
-        message_follower_ids: [],
-    }];
+    this.data['res.partner'].records.push({ display_name: "second partner", id: 12 });
     await this.createView({
         data: this.data,
         hasView: true,
@@ -231,9 +207,8 @@ QUnit.test('basic chatter rendering without messages', async function (assert) {
                 </div>
             </form>
         `,
-        res_id: 2,
+        res_id: 12,
     });
-
     assert.containsOnce(
         document.body,
         '.o_Chatter',
@@ -269,54 +244,20 @@ QUnit.test('basic chatter rendering without messages', async function (assert) {
 QUnit.test('chatter updating', async function (assert) {
     assert.expect(3);
 
-    this.data['ir.attachment'].records = [{
-        id: 1,
-        mimetype: 'image/png',
-        name: 'filename.jpg',
-        res_id: 7,
-        res_model: 'partner',
-        type: 'url',
-    }, {
-        id: 2,
-        mimetype: "application/x-msdos-program",
-        name: "file2.txt",
-        res_id: 7,
-        res_model: 'partner',
-        type: 'binary',
-    }, {
-        id: 3,
-        mimetype: "application/x-msdos-program",
-        name: "file3.txt",
-        res_id: 5,
-        res_model: 'partner',
-        type: 'binary',
-    }];
-    this.data['mail.message'].records = [{
-        id: 1000,
-        body: "<p>test 1</p>",
-        author_id: [100, "Someone"],
-        model: 'res.partner',
-        res_id: 2,
-        moderation_status: 'accepted',
-    }];
-    this.data['res.partner'].records = [{
-        id: 1,
-        display_name: "first partner",
-        message_ids: [],
-    }, {
-        id: 2,
-        display_name: "second partner",
-        message_ids: [],
-    }];
+    this.data['mail.message'].records.push({ model: 'res.partner', res_id: 12 });
+    this.data['res.partner'].records.push(
+        { display_name: "first partner", id: 11 },
+        { display_name: "second partner", id: 12 }
+    );
     await this.createView({
         data: this.data,
         hasView: true,
         // View params
         View: FormView,
         model: 'res.partner',
-        res_id: 1,
+        res_id: 11,
         viewOptions: {
-            ids: [1, 2],
+            ids: [11, 12],
             index: 0,
         },
         arch: `
@@ -429,8 +370,8 @@ QUnit.test('chatter should become enabled when creation done', async function (a
 QUnit.test('read more/less links are not duplicated when switching from read to edit mode', async function (assert) {
     assert.expect(5);
 
-    this.data['mail.message'].records = [{
-        author_id: [100, "Someone"],
+    this.data['mail.message'].records.push({
+        author_id: 100,
         // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
         body: `
             <div>
@@ -446,19 +387,19 @@ QUnit.test('read more/less links are not duplicated when switching from read to 
         `,
         id: 1000,
         model: 'res.partner',
-        res_id: 1,
-    }];
-    this.data['res.partner'].records = [{
-        display_name: "first partner",
-        id: 1,
-    }];
+        res_id: 2,
+    });
+    this.data['res.partner'].records.push({
+        display_name: "Someone",
+        id: 100,
+    });
     await this.createView({
         data: this.data,
         hasView: true,
         // View params
         View: FormView,
         model: 'res.partner',
-        res_id: 1,
+        res_id: 2,
         arch: `
             <form string="Partners">
                 <sheet>
@@ -509,7 +450,7 @@ QUnit.test('read more links becomes read less after being clicked', async functi
     assert.expect(6);
 
     this.data['mail.message'].records = [{
-        author_id: [100, "Someone"],
+        author_id: 100,
         // "data-o-mail-quote" added by server is intended to be compacted in read more/less blocks
         body: `
             <div>
@@ -525,19 +466,19 @@ QUnit.test('read more links becomes read less after being clicked', async functi
         `,
         id: 1000,
         model: 'res.partner',
-        res_id: 1,
+        res_id: 2,
     }];
-    this.data['res.partner'].records = [{
-        display_name: "first partner",
-        id: 1,
-    }];
+    this.data['res.partner'].records.push({
+        display_name: "Someone",
+        id: 100,
+    });
     await this.createView({
         data: this.data,
         hasView: true,
         // View params
         View: FormView,
         model: 'res.partner',
-        res_id: 1,
+        res_id: 2,
         arch: `
             <form string="Partners">
                 <sheet>
@@ -592,31 +533,22 @@ QUnit.test('read more links becomes read less after being clicked', async functi
 QUnit.test('Form view not scrolled when switching record', async function (assert) {
     assert.expect(6);
 
-    this.data['res.partner'].records = [{
-        activity_ids: [],
-        id: 1,
-        display_name: "Partner 1",
-        description: [...Array(60).keys()].join('\n'),
-        message_ids: [],
-        message_follower_ids: [],
-    }, {
-        activity_ids: [],
-        id: 2,
-        display_name: "Partner 2",
-        message_ids: [],
-        message_follower_ids: [],
-    }];
+    this.data['res.partner'].records.push(
+        {
+            id: 11,
+            display_name: "Partner 1",
+            description: [...Array(60).keys()].join('\n'),
+        },
+        {
+            id: 12,
+            display_name: "Partner 2",
+        }
+    );
 
     const messages = [...Array(60).keys()].map(id => {
         return {
-            author_id: [10, "Demo User"],
-            body: `<p>Message ${id + 1}</p>`,
-            date: "2019-04-20 10:00:00",
-            id: id + 1,
-            message_type: 'comment',
             model: 'res.partner',
-            record_name: `Partner ${id % 2 ? 1 : 2}`,
-            res_id: id % 2 ? 1 : 2,
+            res_id: id % 2 ? 11 : 12,
         };
     });
     this.data['mail.message'].records = messages;
@@ -639,8 +571,8 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
             </form>
         `,
         viewOptions: {
-            currentId: 1,
-            ids: [1, 2],
+            currentId: 11,
+            ids: [11, 12],
         },
         config: {
             device: { size_class: config.device.SIZES.LG },
@@ -651,7 +583,6 @@ QUnit.test('Form view not scrolled when switching record', async function (asser
     });
 
     const controllerContentEl = document.querySelector('.o_content');
-    const formViewEl = document.querySelector('.o_form_view');
 
     assert.strictEqual(
         document.querySelector('.breadcrumb-item.active').textContent,

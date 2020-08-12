@@ -1,11 +1,7 @@
 odoo.define('mail_bot/static/src/widgets/notification_alert/notification_alert_tests.js', function (require) {
 'use strict';
 
-const {
-    afterEach: utilsAfterEach,
-    beforeEach: utilsBeforeEach,
-    start,
-} = require('mail/static/src/utils/test_utils.js');
+const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
 
 const FormView = require('web.FormView');
 
@@ -13,7 +9,7 @@ QUnit.module('mail_bot', {}, function () {
 QUnit.module('widgets', {}, function () {
 QUnit.module('notification_alert_tests.js', {
     beforeEach() {
-        utilsBeforeEach(this);
+        beforeEach(this);
 
         this.start = async params => {
             let { widget } = await start(Object.assign({
@@ -32,11 +28,7 @@ QUnit.module('notification_alert_tests.js', {
         };
     },
     afterEach() {
-        utilsAfterEach(this);
-        if (this.widget) {
-            this.widget.destroy();
-            this.widget = undefined;
-        }
+        afterEach(this);
     },
 });
 

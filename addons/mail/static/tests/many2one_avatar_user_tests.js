@@ -1,7 +1,7 @@
 odoo.define('mail.Many2OneAvatarUserTests', function (require) {
 "use strict";
 
-const { start } = require('mail/static/src/utils/test_utils.js');
+const { afterEach, beforeEach, start } = require('mail/static/src/utils/test_utils.js');
 
 const FormView = require('web.FormView');
 const KanbanView = require('web.KanbanView');
@@ -12,11 +12,13 @@ const { dom, mock } = require('web.test_utils');
 
 QUnit.module('mail', {}, function () {
     QUnit.module('Many2OneAvatarUser', {
-        beforeEach: function () {
+        beforeEach() {
+            beforeEach(this);
+
             // reset the cache before each test
             Many2OneAvatarUser.prototype.partnerIds = {};
 
-            this.data = {
+            Object.assign(this.data, {
                 'foo': {
                     fields: {
                         user_id: { string: "User", type: 'many2one', relation: 'res.users' },
@@ -28,41 +30,21 @@ QUnit.module('mail', {}, function () {
                         { id: 4, user_id: 23 },
                     ],
                 },
-                'res.users': {
-                    fields: {
-                        display_name: { string: "Name", type: "char" },
-                        partner_id: { string: "Partner", type: "many2one", relation: 'res.partner' },
-                    },
-                    records: [{
-                        id: 11,
-                        name: "Mario",
-                        partner_id: 1,
-                    }, {
-                        id: 7,
-                        name: "Luigi",
-                        partner_id: 2,
-                    }, {
-                        id: 23,
-                        name: "Yoshi",
-                        partner_id: 3,
-                    }],
-                },
-                'res.partner': {
-                    fields: {
-                        display_name: { string: "Name", type: "char" },
-                    },
-                    records: [{
-                        id: 1,
-                        display_name: "Partner 1",
-                    }, {
-                        id: 2,
-                        display_name: "Partner 2",
-                    }, {
-                        id: 3,
-                        display_name: "Partner 3",
-                    }],
-                },
-            };
+            });
+
+            this.data['res.partner'].records.push(
+                { id: 11, display_name: "Partner 1" },
+                { id: 12, display_name: "Partner 2" },
+                { id: 13, display_name: "Partner 3" }
+            );
+            this.data['res.users'].records.push(
+                { id: 11, name: "Mario", partner_id: 11 },
+                { id: 7, name: "Luigi", partner_id: 12 },
+                { id: 23, name: "Yoshi", partner_id: 13 }
+            );
+        },
+        afterEach() {
+            afterEach(this);
         },
     });
 
