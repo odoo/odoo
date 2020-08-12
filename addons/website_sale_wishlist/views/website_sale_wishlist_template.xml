@@ -132,6 +132,16 @@
         </xpath>
     </template>
 
+    <template id="template_header_centered_logo" inherit_id="website_sale.template_header_centered_logo">
+        <xpath expr="//t[@t-call='website_sale.header_cart_link']" position="after">
+            <t t-call="website_sale_wishlist.header_wishlist_link">
+                <t t-set="_icon" t-value="True"/>
+                <t t-set="_item_class" t-value="'nav-item ml-1'"/>
+                <t t-set="_link_class" t-value="'nav-link'"/>
+            </t>
+        </xpath>
+    </template>
+
     <template id="product_wishlist" name="Wishlist Page">
         <t t-call="website.layout">
             <t t-set="additional_title">Shop Wishlist</t>
