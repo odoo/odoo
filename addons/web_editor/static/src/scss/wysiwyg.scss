@@ -394,6 +394,15 @@ img.o_we_selected_image {
 img::selection {
     background: transparent;
 }
+.o_we_media_author {
+    font-size: 11px;
+    @include o-position-absolute($bottom: 0, $left: 0, $right: 0);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-align: center;
+    background-color: rgba(255, 255, 255, .7);
+}
 
 @include media-breakpoint-down(md) {
     #web_editor-top-edit {
