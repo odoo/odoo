@@ -100,7 +100,11 @@ class StockMove(models.Model):
         """ Overridden to return the vendor bills related to this stock move.
         """
         rslt = super(StockMove, self)._get_related_invoices()
+<<<<<<< HEAD
         rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.state == 'posted')
+=======
+        rslt += self.mapped('picking_id.purchase_id.invoice_ids').filtered(lambda x: x.sudo().state not in ('draft', 'cancel'))
+>>>>>>> fd6635ff6a4... temp
         return rslt
 
 
