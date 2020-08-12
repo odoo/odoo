@@ -53,21 +53,13 @@ var Notification = Widget.extend({
         this._closeCallback = params.onClose;
 
         if (this.type === 'danger') {
-            this.icon = 'fa-exclamation';
             this.className += ' bg-danger';
         } else if (this.type === 'warning') {
-            this.icon = 'fa-lightbulb-o';
             this.className += ' bg-warning';
         } else if (this.type === 'success') {
-            this.icon = 'fa-check';
             this.className += ' bg-success';
         } else if (this.type === 'info') {
-            this.icon = 'fa-info';
             this.className += ' bg-info';
-        }
-
-        if (this.buttons && this.buttons.length) {
-            this.icon = 'fa-question-circle-o';
         }
     },
     /**
