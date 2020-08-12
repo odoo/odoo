@@ -14,15 +14,17 @@ import datetime
 import distutils.util
 import itertools
 import os
+import re
 import tempfile
-import warnings
 import shlex
 import sys
 import traceback
+import warnings
 from collections import ChainMap
 from collections.abc import (
     Iterable, Set, MutableMapping, Sequence, Collection
 )
+from numbers import Number
 from pathlib import Path
 from textwrap import dedent, wrap
 from typing import Any, Callable, Optional, List
@@ -223,6 +225,43 @@ def strtobool(rawopt: str):
     if isinstance(rawopt, bool):
         return rawopt
     return distutils.util.strtobool(rawopt)
+
+
+class Gigs(float):
+    __units = {
+        'Ti': 1 << 40,
+        'T': 1000 ** 4,
+        'Gi': 1 << 30,
+        'G': 1000 ** 3,
+        'Mi': 1 << 20,
+        'M': 1000 ** 2,
+        'ki': 1 << 10,
+        'k': 1000 ** 1,
+        '':  1,
+    }
+
+    # https://docs.python.org/3/library/re.html#simulating-scanf
+    __re = re.compile(
+        r"^(?P<float>[-+]?(\d+(\.\d*)?|\.\d+))"
+        r"(?P<unit>k|M|G|T|ki|Mi|Gi|Ti)?B?$")
+
+    def __new__(cls, x=0):
+        if isinstance(x, Number):
+            return super().__new__(cls, x)
+
+        match = cls.__re.match(x)
+        if not match:
+            return ValueError(f"could not convert string to float: {x!r}")
+        base = float(match.group('float'))
+        magnitude = cls.__units[match.group('unit') or '']
+        return super().__new__(cls, base * magnitude)
+
+    def __str__(self):
+        for unit, magnitude in type(self).__units:
+            base, rest = divmod(value, magnitude)
+            if not rest:
+                return f"{base}{unit}"
+        return super().__str__()
 
 
 def choices(selection: list, cast: callable=str):
@@ -649,8 +688,8 @@ Option('stop_after_init', args=["--stop-after-init"], parse=strtobool, action='s
 Option('geoip_database', args=["--geoip-db"], parse=str, action='store', default='/usr/share/GeoIP/GeoLite2-City.mmdb', help="Absolute path to the GeoIP database file.")
 
 Option('workers', args=["--workers"], parse=int, action='store', default=0, help="Specify the number of workers, 0 disable prefork mode.")
-Option('limit_memory_soft', args=["--limit-memory-soft"], parse=int, action='store', default=2048*1024*1024, metavar="BYTES", help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 2048MiB).")
-Option('limit_memory_hard', args=["--limit-memory-hard"], parse=int, action='store', default=2560*1024*1024, metavar="BYTES", help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory allocation will fail (default 2560MiB).")
+Option('limit_memory_soft', args=["--limit-memory-soft"], parse=Gigs, action='store', default=Gigs('2GiB'), metavar="BYTES", help="Maximum allowed virtual memory per worker, when reached the worker be reset after the current request (default 2048MiB).")
+Option('limit_memory_hard', args=["--limit-memory-hard"], parse=Gigs, action='store', default=Gigs('2.5GiB'), metavar="BYTES", help="Maximum allowed virtual memory per worker (in bytes), when reached, any memory allocation will fail (default 2560MiB).")
 Option('limit_time_cpu', args=["--limit-time-cpu"], parse=int, action='store', default=60, metavar="SECONDS", help="Maximum allowed CPU time per request (default 60).")
 Option('limit_time_real', args=["--limit-time-real"], parse=int, action='store', default=120, metavar="SECONDS", help="Maximum allowed Real time per request (default 120).")
 Option('limit_request', args=["--limit-request"], parse=int, action='store', default=8192, help="Maximum number of request to be processed per worker (default 8192).")
