@@ -10,6 +10,7 @@ var options = require('web_editor.snippets.options');
 var Wysiwyg = require('web_editor.wysiwyg');
 const {ColorPaletteWidget} = require('web_editor.ColorPalette');
 const SmoothScrollOnDrag = require('web/static/src/js/core/smooth_scroll_on_drag.js');
+const {getCSSVariableValue} = require('web_editor.utils');
 
 var _t = core._t;
 
@@ -1853,6 +1854,12 @@ var SnippetsMenu = Widget.extend({
                     }
 
                     $toInsert = $baseBody.clone();
+                    // Color-customize dynamic SVGs in dropped snippets with current theme colors.
+                    [...$toInsert.find('img[src^="/web_editor/shape/"]')].forEach(dynamicSvg => {
+                        const colorCustomizedURL = new URL(dynamicSvg.getAttribute('src'), window.location.origin);
+                        colorCustomizedURL.searchParams.set('c1', getCSSVariableValue('o-color-1'));
+                        dynamicSvg.src = colorCustomizedURL.pathname + colorCustomizedURL.search;
+                    });
 
                     if (!$selectorSiblings.length && !$selectorChildren.length) {
                         console.warn($snippet.find('.oe_snippet_thumbnail_title').text() + " have not insert action: data-drop-near or data-drop-in");

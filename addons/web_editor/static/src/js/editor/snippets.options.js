@@ -3578,6 +3578,30 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
             this.$target.trigger('background_changed', [previewMode]);
         }
     },
+    /**
+     * Changes the main color of dynamic SVGs.
+     *
+     * @see this.selectClass for parameters
+     */
+    async dynamicColor(previewMode, widgetValue, params) {
+        const currentSrc = getBgImageURL(this.$target[0]);
+        switch (previewMode) {
+            case true:
+                this.previousSrc = currentSrc;
+                break;
+            case 'reset':
+                this.$target.css('background-image', `url('${this.previousSrc}')`);
+                return;
+        }
+        const newURL = new URL(currentSrc, window.location.origin);
+        newURL.searchParams.set('c1', normalizeColor(widgetValue));
+        const src = newURL.pathname + newURL.search;
+        await loadImage(src);
+        this.$target.css('background-image', `url('${src}')`);
+        if (!previewMode) {
+            this.previousSrc = src;
+        }
+    },
 
     //--------------------------------------------------------------------------
     // Public
@@ -3608,8 +3632,21 @@ registry.BackgroundImage = SnippetOptionWidget.extend({
      * @override
      */
     _computeWidgetState: function (methodName) {
-        if (methodName === 'background') {
-            return getBgImageURL(this.$target[0]);
+        switch (methodName) {
+            case 'background':
+                return getBgImageURL(this.$target[0]);
+            case 'dynamicColor':
+                return new URL(getBgImageURL(this.$target[0]), window.location.origin).searchParams.get('c1');
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeWidgetVisibility(widgetName, params) {
+        if (widgetName === 'dynamic_color_opt') {
+            const src = new URL(getBgImageURL(this.$target[0]), window.location.origin);
+            return src.origin === window.location.origin && src.pathname.startsWith('/web_editor/shape/');
         }
         return this._super(...arguments);
     },
@@ -4505,6 +4542,86 @@ registry.SnippetSave = SnippetOptionWidget.extend({
     },
 });
 
+/**
+ * Handles the dynamic colors for dynamic SVGs.
+ */
+registry.DynamicSvg = SnippetOptionWidget.extend({
+    /**
+     * @override
+     */
+    start() {
+        this.$target.on('image_changed.DynamicSvg', this._onImageChanged.bind(this));
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    destroy() {
+        this.$target.off('.DynamicSvg');
+        return this._super(...arguments);
+    },
+
+    //--------------------------------------------------------------------------
+    // Options
+    //--------------------------------------------------------------------------
+
+    /**
+     * Sets the dynamic SVG's dynamic color.
+     *
+     * @see this.selectClass for params
+     */
+    async color(previewMode, widgetValue, params) {
+        const target = this.$target[0];
+        switch (previewMode) {
+            case true:
+                this.previousSrc = target.getAttribute('src');
+                break;
+            case 'reset':
+                target.src = this.previousSrc;
+                return;
+        }
+        const newURL = new URL(target.src, window.location.origin);
+        newURL.searchParams.set('c1', normalizeColor(widgetValue));
+        const src = newURL.pathname + newURL.search;
+        await loadImage(src);
+        target.src = src;
+        if (!previewMode) {
+            this.previousSrc = src;
+        }
+    },
+
+    //--------------------------------------------------------------------------
+    // Private
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _computeWidgetState(methodName, params) {
+        switch (methodName) {
+            case 'color':
+                return new URL(this.$target[0].src, window.location.origin).searchParams.get('c1');
+        }
+        return this._super(...arguments);
+    },
+    /**
+     * @override
+     */
+    _computeVisibility(methodName, params) {
+        return this.$target.is("img[src^='/web_editor/shape/']");
+    },
+
+    //--------------------------------------------------------------------------
+    // Handlers
+    //--------------------------------------------------------------------------
+
+    /**
+     * @override
+     */
+    _onImageChanged(methodName, params) {
+        return this.updateUI();
+    },
+});
 
 return {
     SnippetOptionWidget: SnippetOptionWidget,

@@ -2,25 +2,27 @@
 <templates id="template" xml:space="preserve">
 
 <t t-extend="wysiwyg.widgets.file">
-    <t t-jquery=".o_we_existing_attachments" t-operation="after">
+    <t t-jquery=".o_we_load_more" t-operation="after">
         <div class="unsplash_error"></div>
     </t>
 </t>
+<t t-extend="wysiwyg.widgets.image">
+    <t t-jquery="option[value='media-library']" t-operation="after">
+        <option value="unsplash">Photos (via Unsplash)</option>
+    </t>
+</t>
 <t t-extend="wysiwyg.widgets.image.existing.attachments">
-    <t t-jquery="t[t-call]" t-operation="replace">
-        <t t-if="typeof(attachment.id) === 'number'">
-            <t t-call="wysiwyg.widgets.image.existing.attachment"/>
-        </t>
-        <t t-else="">
+    <t t-jquery="t[t-foreach='libraryMedia']" t-operation="after">
+        <t t-if="['all', 'unsplash'].includes(widget.searchService)" t-foreach="widget.unsplashRecords" t-as="record">
             <t t-call="web_unsplash.dialog.image.content"/>
         </t>
     </t>
 </t>
 
 <t t-name="web_unsplash.dialog.image.content">
-    <div class="o_existing_attachment_cell o_unsplash_attachment_cell position-relative align-items-center justify-content-center bg-light" t-att-data-imgid="attachment.id" t-att-data-id="attachment.id" t-att-data-url="attachment.urls.regular" t-att-data-download-url="attachment.links.download_location" t-att-data-description="attachment.alt_description">
-        <img class="img img-fluid o_we_attachment_highlight" t-att-src="attachment.url" t-att-alt="attachment.alt_description" style="max-height: 100%;"/>
-        <a class="o_we_unplash_author" t-att-href="attachment.user.links.html" target="_blank" t-esc="attachment.user.name" t-att-title="attachment.user.name"/>
+    <div class="o_existing_attachment_cell o_unsplash_attachment_cell position-relative align-items-center justify-content-center bg-light" t-att-data-imgid="record.id" t-att-data-id="record.id" t-att-data-url="record.urls.regular" t-att-data-download-url="record.links.download_location" t-att-data-description="record.alt_description">
+        <img class="img img-fluid o_we_attachment_highlight" t-att-src="record.url" t-att-alt="record.alt_description" style="max-height: 100%;"/>
+        <a class="o_we_media_author" t-att-href="record.user.links.html" target="_blank" t-esc="record.user.name" t-att-title="record.user.name"/>
     </div>
 </t>
 

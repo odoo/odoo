@@ -469,6 +469,31 @@ a.o_underline {
     }
 }
 
+.o_we_search_prompt {
+    position: relative;
+    min-height: 250px;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    & > h2 {
+        max-width: 500px;
+        text-align: center;
+    }
+
+    &::before {
+        content: "";
+        @include o-position-absolute($top: 0, $right: 50px);
+        width: 100px;
+        height: 150px;
+        opacity: .5;
+        background-image: url('/web_editor/static/src/img/curved_arrow.svg');
+        background-size: 100%;
+        background-repeat: no-repeat;
+    }
+}
+
 @include media-breakpoint-down(sm) {
     odoo-wysiwyg-container {
         .panel-heading.note-toolbar {
