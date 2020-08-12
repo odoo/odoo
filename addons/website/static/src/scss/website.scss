@@ -691,6 +691,10 @@ $-transition-duration: 200ms;
         transition: transform $-transition-duration;
     }
 
+    @if o-website-value('header-template') == 'boxed' {
+        background: transparent;
+    }
+
     &.o_header_is_scrolled {
         .navbar-brand {
             font-size: $o-theme-navbar-fixed-logo-height / $line-height-base;
@@ -984,6 +988,10 @@ header {
         body.o_connected_user #wrapwrap > header {
             top: $o-navbar-height;
         }
+    }
+} @else if o-website-value('header-template') == 'boxed' {
+    #wrapwrap:not(.o_header_overlay) .o_header_boxed_background {
+        @include o-apply-colors('header-boxed');
     }
 }
 
